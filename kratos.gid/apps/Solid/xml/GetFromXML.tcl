@@ -54,18 +54,18 @@ proc Solid::xml::ProcGetSolutionStrategiesSolid { domNode args } {
 
 proc Solid::xml::ProcCheckNodalConditionStateSolid {domNode args} {
      # Overwritten the base function to add Solution Type restrictions
-		set parts_un SLParts
-	    if {[spdAux::getRoute $parts_un] ne ""} {
-			set conditionId [$domNode @n]
-			set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
-			set elemnames [list ]
-			foreach elem $elems { lappend elemnames [$elem @v]}
-			set elemnames [lsort -unique $elemnames]
-			
-			set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLSoluType]] v]
-			set params [list analysis_type $solutionType]
-			if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
-		} {return "normal"}
+     set parts_un SLParts
+     if {[spdAux::getRoute $parts_un] ne ""} {
+          set conditionId [$domNode @n]
+          set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
+          set elemnames [list ]
+          foreach elem $elems { lappend elemnames [$elem @v]}
+          set elemnames [lsort -unique $elemnames]
+          
+          set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLSoluType]] v]
+          set params [list analysis_type $solutionType]
+          if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
+     } {return "normal"}
 }
 
 proc Solid::xml::ProcCheckGeometrySolid {domNode args} {

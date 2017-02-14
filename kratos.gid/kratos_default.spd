@@ -23,6 +23,11 @@
     </value>
   </blockdata>     
   <procs>
+	<proc n='OkNewCondition' args='args'>
+	  <![CDATA[
+	  return [spdAux::ProcOkNewCondition $domNode $args]
+	  ]]>
+	</proc>
 	<proc n='GetElements' args='args'>
 	  <![CDATA[
 	  return [spdAux::ProcGetElements $domNode $args]
@@ -273,6 +278,8 @@
 	<dynamicnode command="spdAux::injectProcs" args=""/>
   </procs>
   <container n="files" state="hidden">
+  </container>
+  <container n="interval_groups" state="hidden">
   </container>
   <translations>
     <translation pn="User defined"/>

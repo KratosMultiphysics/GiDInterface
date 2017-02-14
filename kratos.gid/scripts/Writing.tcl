@@ -281,6 +281,17 @@ proc write::writeGroupElementConnectivities { gNode } {
     }
 }
 
+proc write::GetWriteGroupName { group_id } {
+    # Interval trick
+    foreach parent [dict keys $spdAux::GroupsEdited] {
+        if {$group_id in [dict get $spdAux::GroupsEdited $parent]} {
+            set group_id $parent
+            break
+        }
+    }
+    return $group_id
+}
+
 proc write::writeConditions { baseUN } {
     set dictGroupsIterators [dict create]
     set doc $gid_groups_conds::doc
@@ -291,33 +302,36 @@ proc write::writeConditions { baseUN } {
     foreach groupNode [$root selectNodes $xp1] {
         set condid [[$groupNode parent] @n]
         set groupid [get_domnode_attribute $groupNode n]
-        if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
-        set cond [::Model::getCondition $condid]
-        lassign [write::getEtype $ov $groupid] etype nnodes
-        set kname [$cond getTopologyKratosName $etype $nnodes]
-        if {$kname ne ""} {
-            set obj [list ]
-            WriteString "Begin Conditions $kname// GUI group identifier: $groupid"
-            if {$etype eq "Point"} {
-                set formats [dict create $groupid "%10d \n"]
-
-                #set obj [GiD_WriteCalculationFile nodes -return $formats]
-                #set obj [list 3 5]
-                set obj [GiD_EntitiesGroups get $groupid nodes]
-            } else {
-                set formats [write::GetFormatDict $groupid 0 $nnodes]
-                set elems [GiD_WriteCalculationFile connectivities -return $formats]
-                set obj [GetListsOfNodes $elems $nnodes 2]
+        set groupid [GetWriteGroupName $groupid]
+        if {![dict exists $dictGroupsIterators $groupid]} {
+            if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
+            set cond [::Model::getCondition $condid]
+            lassign [write::getEtype $ov $groupid] etype nnodes
+            set kname [$cond getTopologyKratosName $etype $nnodes]
+            if {$kname ne ""} {
+                set obj [list ]
+                WriteString "Begin Conditions $kname// GUI group identifier: $groupid"
+                if {$etype eq "Point"} {
+                    set formats [dict create $groupid "%10d \n"]
+    
+                    #set obj [GiD_WriteCalculationFile nodes -return $formats]
+                    #set obj [list 3 5]
+                    set obj [GiD_EntitiesGroups get $groupid nodes]
+                } else {
+                    set formats [write::GetFormatDict $groupid 0 $nnodes]
+                    set elems [GiD_WriteCalculationFile connectivities -return $formats]
+                    set obj [GetListsOfNodes $elems $nnodes 2]
+                }
+                set initial $iter
+                for {set i 0} {$i <[llength $obj]} {incr iter; incr i} {
+                    set nids [lindex $obj $i]
+                    WriteString "$iter 0 $nids"
+                }
+                set final [expr $iter -1]
+                WriteString "End Conditions"
+                WriteString ""
+                dict set dictGroupsIterators $groupid [list $initial $final]
             }
-            set initial $iter
-            for {set i 0} {$i <[llength $obj]} {incr iter; incr i} {
-                set nids [lindex $obj $i]
-                WriteString "$iter 0 $nids"
-            }
-            set final [expr $iter -1]
-            WriteString "End Conditions"
-            WriteString ""
-            dict set dictGroupsIterators $groupid [list $initial $final]
         }
     }
     return $dictGroupsIterators
@@ -367,6 +381,7 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
     variable groups_type_name
 
     set gtn $groups_type_name
+    set group [GetWriteGroupName $group]
     if {![dict exists $meshes [list $cid ${group}]]} {
         set mid [expr [llength [dict keys $meshes]] +1]
         if {$gtn ne "Mesh"} {
@@ -423,6 +438,7 @@ proc write::writeNodalConditions { keyword } {
     foreach group $groups {
         set cid [[$group parent] @n]
         set groupid [$group @n]
+        set groupid [GetWriteGroupName $groupid]
         ::write::writeGroupMesh $cid $groupid "nodal"
     }
 }
@@ -767,6 +783,7 @@ proc write::getSubModelPartNames { args } {
     }
     foreach group $groups {
         set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
         set gname [::write::getMeshId $cid $groupName]
         if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
@@ -827,6 +844,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
     foreach group $groups {
         set groupName [$group @n]
         set cid [[$group parent] @n]
+        set groupName [write::GetWriteGroupName $groupName]
         set groupId [::write::getMeshId $cid $groupName]
         set condId [[$group parent] @n]
         if {$condition_type eq "Condition"} {
@@ -988,6 +1006,7 @@ proc write::GetMeshFromCondition { base_UN condition_id } {
     set meshes [list ]
     foreach gNode $groups {
         set group [$gNode @n]
+        set group [write::GetWriteGroupName $group]
         set meshid [getMeshId $condition_id $group]
         lappend meshes $meshid
     }

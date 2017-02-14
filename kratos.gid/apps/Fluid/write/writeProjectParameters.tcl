@@ -116,6 +116,7 @@ proc Fluid::write::getDragProcessList {} {
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
         set submodelpart [::write::getMeshId $cid $groupName]
 
@@ -177,6 +178,7 @@ proc Fluid::write::getBoundaryConditionMeshId {} {
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "True"} {
@@ -201,6 +203,7 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     set dragGroups [$root selectNodes $xp1]
     foreach dragGroup $dragGroups {
         set groupName [$dragGroup @n]
+        set groupName [write::GetWriteGroupName $groupName]
         set cid [[$dragGroup parent] @n]
         set submodelpart [::write::getMeshId $cid $groupName]
         if {$submodelpart ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $submodelpart}
@@ -211,6 +214,7 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "False"} {

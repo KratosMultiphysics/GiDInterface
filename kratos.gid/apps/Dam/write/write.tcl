@@ -92,6 +92,7 @@ proc Dam::write::writeNodalConditions { keyword } {
     foreach group $groups {
         set condid [[$group parent] @n]
         set groupid [$group @n]
+        set groupid [write::GetWriteGroupName $groupid]
         set tableid [list ]
         if {[dict exists $TableDict $condid $groupid]} {
             set groupdict [dict get $TableDict $condid $groupid]
@@ -112,6 +113,7 @@ proc Dam::write::writeLoads { } {
     foreach group [$root selectNodes $xp1] {
         set condid [get_domnode_attribute [$group parent] n]
         set groupid [get_domnode_attribute $group n]
+        set groupid [write::GetWriteGroupName $groupid]
         #W "Writing mesh of Load $condid $groupid"
         set tableid [list ]
         if {[dict exists $TableDict $condid $groupid]} {

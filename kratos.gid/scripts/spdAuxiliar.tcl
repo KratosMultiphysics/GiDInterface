@@ -15,6 +15,7 @@ namespace eval spdAux {
     variable TreeVisibility
     
     variable ProjectIsNew
+    variable GroupsEdited
 }
 
 proc spdAux::Init { } {
@@ -25,7 +26,8 @@ proc spdAux::Init { } {
     variable refreshTreeTurn
     variable TreeVisibility
     variable ProjectIsNew
-    
+    variable GroupsEdited
+
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
     set initwind ""
@@ -33,6 +35,7 @@ proc spdAux::Init { } {
     set refreshTreeTurn 0
     set TreeVisibility 0
     set ProjectIsNew 0
+    set GroupsEdited [dict create]
 
 }
 
@@ -152,6 +155,7 @@ proc spdAux::activeApp { appid } {
     if {$nd eq ""} {catch {set nd [$root selectNodes "hiddenfield\[@n='nDim'\]"]}}
     if {[$nd getAttribute v] ne "wait"} {
         if {[$nd getAttribute v] ne "undefined"} {
+            set ::Model::SpatialDimension [$nd getAttribute v]
             spdAux::SwitchDimAndCreateWindow $::Model::SpatialDimension
             spdAux::TryRefreshTree
         } {
@@ -701,7 +705,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             set state [$cnd getAttribute state]
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
-        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='$check'>"
+        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
         #foreach processinput [$process getInputs] {lappend inputs $processinput}
         set inputs [$process getInputs] 
         foreach {inName in} $inputs {
@@ -1855,6 +1859,50 @@ proc spdAux::ProcCambioMat {domNode args} {
     }
     RequestRefresh
 }
+proc spdAux::ProcOkNewCondition {domNode args} {
+    set cnd_id [$domNode @n]
+    set condition [Model::getCondition $cnd_id]
+    
+    set group_node [$domNode lastChild]
+    set interval [$group_node selectNodes "./value\[@n='Interval'\]"]
+    if {$interval ne ""} {
+        set group_id [$group_node @n]
+        set interval_id [get_domnode_attribute $interval v]
+        set new_group_id "$group_id//$interval_id"
+        set i 0
+        while {[GiD_Groups exists $new_group_id]} {
+            set new_group_id "$group_id//$interval_id - $i"
+            incr i
+        }
+        GiD_Groups create $new_group_id
+        foreach ent [list points lines surfaces volumes nodes elements] {
+            GiD_EntitiesGroups assign $new_group_id $ent [GiD_EntitiesGroups get $group_id $ent]
+        }
+        #GiD_Groups edit state $new_group_id hidden
+        $group_node setAttribute n $new_group_id
+        AddIntervalGroup $group_id $new_group_id
+        
+        GiD_Groups window update
+        RequestRefresh
+    }
+}
+
+
+proc spdAux::LoadIntervalGroups { } {
+    customlib::UpdateDocument
+    variable GroupsEdited
+    
+    foreach elem [[customlib::GetBaseRoot] getElementsByTagName "interval_group"] {
+        dict lappend GroupsEdited [$elem @parent] [$elem @child]
+    }
+}
+proc spdAux::AddIntervalGroup { parent child } {
+    variable GroupsEdited
+    dict lappend GroupsEdited $parent $child
+    customlib::UpdateDocument
+    gid_groups_conds::addF {container[@n='interval_groups']} interval_group [list parent ${parent} child ${child}]
+}
+
 
 proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
     set doc $gid_groups_conds::doc
