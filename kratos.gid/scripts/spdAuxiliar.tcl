@@ -701,7 +701,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             set state [$cnd getAttribute state]
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
-        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='$check'>"
+        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
         #foreach processinput [$process getInputs] {lappend inputs $processinput}
         set inputs [$process getInputs] 
         foreach {inName in} $inputs {
@@ -1854,6 +1854,9 @@ proc spdAux::ProcCambioMat {domNode args} {
         }
     }
     RequestRefresh
+}
+proc spdAux::ProcOkNewCondition {domNode args} {
+
 }
 
 proc spdAux::AddConditionGroupOnXPath {xpath groupid} {

@@ -23,6 +23,11 @@
     </value>
   </blockdata>     
   <procs>
+	<proc n='OkNewCondition' args='args'>
+	  <![CDATA[
+	  return [spdAux::ProcOkNewCondition $domNode $args]
+	  ]]>
+	</proc>
 	<proc n='GetElements' args='args'>
 	  <![CDATA[
 	  return [spdAux::ProcGetElements $domNode $args]
