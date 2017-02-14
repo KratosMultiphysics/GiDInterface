@@ -181,6 +181,7 @@ proc Kratos::LoadGiDProject { filespd } {
     #spdAux::reactiveApp
     update
     spdAux::LoadModelFiles
+    spdAux::LoadIntervalGroups
 }
 
 proc Kratos::RestoreVariables { } {

@@ -279,6 +279,8 @@
   </procs>
   <container n="files" state="hidden">
   </container>
+  <container n="interval_groups" state="hidden">
+  </container>
   <translations>
     <translation pn="User defined"/>
   </translations>

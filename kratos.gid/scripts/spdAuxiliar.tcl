@@ -1865,28 +1865,44 @@ proc spdAux::ProcOkNewCondition {domNode args} {
     
     set group_node [$domNode lastChild]
     set interval [$group_node selectNodes "./value\[@n='Interval'\]"]
-    
-    set group_id [$group_node @n]
-    set interval_id [get_domnode_attribute $interval v]
-    set new_group_id "$group_id//$interval_id"
-    set i 0
-    while {[GiD_Groups exists $new_group_id]} {
-        set new_group_id "$group_id//$interval_id - $i"
-        incr i
+    if {$interval ne ""} {
+        set group_id [$group_node @n]
+        set interval_id [get_domnode_attribute $interval v]
+        set new_group_id "$group_id//$interval_id"
+        set i 0
+        while {[GiD_Groups exists $new_group_id]} {
+            set new_group_id "$group_id//$interval_id - $i"
+            incr i
+        }
+        GiD_Groups create $new_group_id
+        foreach ent [list points lines surfaces volumes nodes elements] {
+            GiD_EntitiesGroups assign $new_group_id $ent [GiD_EntitiesGroups get $group_id $ent]
+        }
+        #GiD_Groups edit state $new_group_id hidden
+        $group_node setAttribute n $new_group_id
+        AddIntervalGroup $group_id $new_group_id
+        
+        GiD_Groups window update
+        RequestRefresh
     }
-    GiD_Groups create $new_group_id
-    foreach ent [list points lines surfaces volumes nodes elements] {
-        GiD_EntitiesGroups assign $new_group_id $ent [GiD_EntitiesGroups get $group_id $ent]
-    }
-    #GiD_Groups edit state $new_group_id hidden
-    $group_node setAttribute n $new_group_id
-    
-    variable GroupsEdited
-    dict lappend GroupsEdited $group_id $new_group_id
-    
-    GiD_Groups window update
-    RequestRefresh
 }
+
+
+proc spdAux::LoadIntervalGroups { } {
+    customlib::UpdateDocument
+    variable GroupsEdited
+    
+    foreach elem [[customlib::GetBaseRoot] getElementsByTagName "interval_group"] {
+        dict lappend GroupsEdited [$elem @parent] [$elem @child]
+    }
+}
+proc spdAux::AddIntervalGroup { parent child } {
+    variable GroupsEdited
+    dict lappend GroupsEdited $parent $child
+    customlib::UpdateDocument
+    gid_groups_conds::addF {container[@n='interval_groups']} interval_group [list parent ${parent} child ${child}]
+}
+
 
 proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
     set doc $gid_groups_conds::doc
