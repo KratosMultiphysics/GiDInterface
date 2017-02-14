@@ -94,7 +94,15 @@ proc Solid::write::getParametersDict { } {
     dict set contraintsDict incremental_load false
     dict set contraintsDict incremental_displacement false
     dict set projectParametersDict constraints_data $contraintsDict
-
+    
+    set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
+    foreach elem $check_list {
+        if {$elem in [Solid::write::GetUsedElements Name]} {
+            dict set projectParametersDict pressure_dofs true
+            break
+        }
+    }
+    
     return $projectParametersDict
 }
 

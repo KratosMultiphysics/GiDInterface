@@ -136,4 +136,16 @@ def AssignMaterial(Properties):
     
 }
 
+proc Solid::write::GetUsedElements { {get "Objects"} } {
+    set xp1 "[spdAux::getRoute SLParts]/group"
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
+        set e [Model::getElement $elem_name]
+        if {$get eq "Name"} { set e [$e getName] }
+        lappend lista $e
+    }
+    return $lista
+}
+
 Solid::write::Init
