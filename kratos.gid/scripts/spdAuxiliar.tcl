@@ -155,6 +155,7 @@ proc spdAux::activeApp { appid } {
     if {$nd eq ""} {catch {set nd [$root selectNodes "hiddenfield\[@n='nDim'\]"]}}
     if {[$nd getAttribute v] ne "wait"} {
         if {[$nd getAttribute v] ne "undefined"} {
+            set ::Model::SpatialDimension [$nd getAttribute v]
             spdAux::SwitchDimAndCreateWindow $::Model::SpatialDimension
             spdAux::TryRefreshTree
         } {
