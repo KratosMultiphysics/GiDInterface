@@ -139,6 +139,7 @@ proc Fluid::write::writeConditionsMesh { } {
     #W "Conditions $xp1 [$root selectNodes $xp1]"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
+        set groupid [write::GetWriteGroupName $groupid]
         set condid [[$group parent] @n]
         set ini $FluidConditions($groupid,initial)
         set end $FluidConditions($groupid,final)
@@ -162,6 +163,7 @@ proc Fluid::write::writeSkinMesh { } {
     set listgroups [list ]
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
+        set groupid [write::GetWriteGroupName $groupid]
         set ini $FluidConditions($groupid,initial)
         set end $FluidConditions($groupid,final)
         lappend listiniend $ini $end
