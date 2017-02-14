@@ -15,6 +15,7 @@ namespace eval spdAux {
     variable TreeVisibility
     
     variable ProjectIsNew
+    variable GroupsEdited
 }
 
 proc spdAux::Init { } {
@@ -25,7 +26,8 @@ proc spdAux::Init { } {
     variable refreshTreeTurn
     variable TreeVisibility
     variable ProjectIsNew
-    
+    variable GroupsEdited
+
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
     set initwind ""
@@ -33,6 +35,7 @@ proc spdAux::Init { } {
     set refreshTreeTurn 0
     set TreeVisibility 0
     set ProjectIsNew 0
+    set GroupsEdited [dict create]
 
 }
 
@@ -1860,13 +1863,28 @@ proc spdAux::ProcOkNewCondition {domNode args} {
     set condition [Model::getCondition $cnd_id]
     
     set group_node [$domNode lastChild]
-    set interval [$group_node selectNodes "../value\[@n='Interval'\]"]
+    set interval [$group_node selectNodes "./value\[@n='Interval'\]"]
     
     set group_id [$group_node @n]
     set interval_id [get_domnode_attribute $interval v]
     set new_group_id "$group_id//$interval_id"
+    set i 0
+    while {[GiD_Groups exists $new_group_id]} {
+        set new_group_id "$group_id//$interval_id - $i"
+        incr i
+    }
     GiD_Groups create $new_group_id
-    #$domNode setAttribute n $new_group_id
+    foreach ent [list points lines surfaces volumes nodes elements] {
+        GiD_EntitiesGroups assign $new_group_id $ent [GiD_EntitiesGroups get $group_id $ent]
+    }
+    #GiD_Groups edit state $new_group_id hidden
+    $group_node setAttribute n $new_group_id
+    
+    variable GroupsEdited
+    dict lappend GroupsEdited $group_id $new_group_id
+    
+    GiD_Groups window update
+    RequestRefresh
 }
 
 proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
