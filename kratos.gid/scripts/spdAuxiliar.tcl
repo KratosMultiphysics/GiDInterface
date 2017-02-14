@@ -1856,7 +1856,17 @@ proc spdAux::ProcCambioMat {domNode args} {
     RequestRefresh
 }
 proc spdAux::ProcOkNewCondition {domNode args} {
-
+    set cnd_id [$domNode @n]
+    set condition [Model::getCondition $cnd_id]
+    
+    set group_node [$domNode lastChild]
+    set interval [$group_node selectNodes "../value\[@n='Interval'\]"]
+    
+    set group_id [$group_node @n]
+    set interval_id [get_domnode_attribute $interval v]
+    set new_group_id "$group_id//$interval_id"
+    GiD_Groups create $new_group_id
+    #$domNode setAttribute n $new_group_id
 }
 
 proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
