@@ -616,7 +616,7 @@ proc spdAux::injectSolStratParams {basenode args} {
                     lappend pv [lindex $values $i]
                     lappend pv [lindex $pvalues $i] 
                 }
-                set pv [join $pvalues ,]
+                set pv [join $pv ,]
                 #W " values='$vs' dict='$pv' "
                 append node " values='$vs' dict='$pv' "
             } 
