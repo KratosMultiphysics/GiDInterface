@@ -96,7 +96,6 @@ proc Fluid::write::writeBoundaryConditions { } {
     # Write the conditions
     set dict_group_intervals [write::writeConditions $BCUN]
 
-    # Vamos a construir el array que nos permite escribir submodel parts y la malla de condiciones de contorno
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
@@ -104,6 +103,7 @@ proc Fluid::write::writeBoundaryConditions { } {
     foreach group [$root selectNodes $xp1] {
         set condid [[$group parent] @n]
         set groupid [get_domnode_attribute $group n]
+        set groupid [write::GetWriteGroupName $groupid]
         set cond [::Model::getCondition $condid]
         if {[$cond getAttribute SkinConditions]} {
             lassign [dict get $dict_group_intervals $groupid] ini fin
