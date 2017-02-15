@@ -37,6 +37,7 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
     
     set solStratName [write::getValue $sol_stratUN]
     set schemes [::Model::GetAvailableSchemes $solStratName]
+    
     set ids [list ]
     if {[llength $schemes] == 0} {
         if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v "None"}
@@ -51,9 +52,10 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
     }
     
     $domNode setAttribute values [join $names ","]
-    if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
-    #spdAux::RequestRefresh
     
+    if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
+    if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]}
+    spdAux::RequestRefresh
     return [join $pnames ","]
 }
 
