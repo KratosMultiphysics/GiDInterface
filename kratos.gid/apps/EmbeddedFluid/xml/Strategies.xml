@@ -10,19 +10,17 @@
 
     <!-- list of options to be filled -->
     <parameter_list>
-	  <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
-	  <parameter n="oss_switch" pn="Use orthogonal subscales" type="combo" v="0" values="0,1" help=""/>
-    <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
-    <parameter n="consider_periodic_conditions" pn="Consider periodic conditions " type="bool" v="false"/>
-    <parameter n="time_order" pn="Time order" type="int" v="2" help=""/>
-    <parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="0.01" help=""/>
-	  <parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
-    <parameter n="divergence_clearance_steps" pn="Divergence clearance steps" type="int" v="0" help=""/>
-    <parameter n="reform_dofs_at_each_step" pn="Reform DOFs at each step" type="bool" v="false" help=""/>
-	  <parameter n="relative_velocity_tolerance" pn="Relative velocity tolerance" v="1E-3" type="double" help="Relative velocity tolerance"/>
-	  <parameter n="absolute_velocity_tolerance" pn="Absolute velocity tolerance" v="1E-5" type="double" help="Absolute velocity tolerance"/>
-	  <parameter n="relative_pressure_tolerance" pn="Relative pressure tolerance" v="1E-3" type="double" help="Relative pressure tolerance"/>
-	  <parameter n="absolute_pressure_tolerance" pn="Absolute pressure tolerance" v="1E-5" type="double" help="Absolute pressure tolerance"/>
+        <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
+        <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
+        <parameter n="time_order" pn="Time order" type="int" v="2" help=""/>
+        <parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="0.01" help=""/>
+	    <parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
+        <!-- <parameter n="divergence_clearance_steps" pn="Divergence clearance steps" type="int" v="0" help=""/> -->
+        <parameter n="reform_dofs_at_each_step" pn="Reform DOFs at each step" type="bool" v="false" help=""/>
+	    <parameter n="relative_velocity_tolerance" pn="Relative velocity tolerance" v="1E-3" type="double" help="Relative velocity tolerance"/>
+	    <parameter n="absolute_velocity_tolerance" pn="Absolute velocity tolerance" v="1E-5" type="double" help="Absolute velocity tolerance"/>
+	    <parameter n="relative_pressure_tolerance" pn="Relative pressure tolerance" v="1E-3" type="double" help="Relative pressure tolerance"/>
+	    <parameter n="absolute_pressure_tolerance" pn="Absolute pressure tolerance" v="1E-5" type="double" help="Absolute pressure tolerance"/>
     </parameter_list>
 
     <linearSolvers>
