@@ -22,6 +22,7 @@
 		<value n="AutomaticDeltaTime" pn="Automatic delta time" un="FLAutomaticDeltaTime" v="No" values="Yes,No" help=""/>
 		<value n="DeltaTime" pn="Delta time" v="0.01" help="User-defined time step" state="[checkStateByUniqueName FLAutomaticDeltaTime No]"/>
 		<value n="CFLNumber" pn="CFL number" v="1" help="Desired CFL number for automatic time step computation" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
+		<value n="MinimumDeltaTime" pn="Minimum delta time" v="0.0001" help="Minimum delta time allowed" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
 		<value n="MaximumDeltaTime" pn="Maximum delta time" v="0.01" help="Maximum delta time allowed" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
 	</container>
   </container>
