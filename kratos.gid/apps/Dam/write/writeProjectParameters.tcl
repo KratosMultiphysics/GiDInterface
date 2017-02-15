@@ -5,22 +5,30 @@ proc Dam::write::getParametersDict { } {
     
     ### Problem data
     ### Create section
-    set generalDataDict [dict create]
+    set problemDataDict [dict create]
     
     ### Add items to section
     set model_name [file tail [GiD_Info Project ModelName]]
-    dict set generalDataDict problem_name $model_name
-    dict set generalDataDict model_part_name "MainModelPart"
+    dict set problemDataDict problem_name $model_name
+    dict set problemDataDict model_part_name "MainModelPart"
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set generalDataDict domain_size $nDim
-    dict set generalDataDict NumberofThreads [write::getValue DamNumThreads ]
-    dict set generalDataDict type_of_problem [write::getValue DamTypeofProblem ]
-    dict set generalDataDict time_scale [write::getValue DamTimeParameters TimeScale]
-    dict set generalDataDict delta_time [write::getValue DamTimeParameters DeltaTime]
-    dict set generalDataDict ending_time [write::getValue DamTimeParameters EndingTime]
+    dict set problemDataDict domain_size $nDim
+    dict set problemDataDict start_time [write::getValue DamTimeParameters StartTime]
+    dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
+    dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
+    set paralleltype [write::getValue ParallelType]
+    dict set generalDataDict "parallel_type" $paralleltype
+    if {$paralleltype eq "OpenMP"} {
+        set nthreads [write::getValue Parallelization OpenMPNumberOfThreads]
+        dict set problemDataDict parallel_type "OpenMP"
+        dict set problemDataDict number_of_threads $nthreads
+    } else {
+        dict set problemDataDict parallel_type "MPI"
+    }
+    dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
     
     ### Add section to document
-    dict set projectParametersDict general_data $generalDataDict
+    dict set projectParametersDict problem_data $problemDataDict
     
     ### Solver Data
     
@@ -43,27 +51,27 @@ proc Dam::write::getParametersDict { } {
     }     
        
     ### Mechanical Settings
-    set mechanicalSolverSettingsDict [dict create]
-    dict set mechanicalSolverSettingsDict solver_type "dam_new_mechanical_solver"
-    set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename $model_name
-    dict set mechanicalSolverSettingsDict model_import_settings $modelDict
-    dict set mechanicalSolverSettingsDict solution_type [write::getValue DamSoluType]
-    dict set mechanicalSolverSettingsDict analysis_type [write::getValue DamAnalysisType]
-    dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
-    dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
-    set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    dict set mechanicalSolverSettingsDict type_of_builder [write::getValue DamTypeofbuilder]
-    dict set mechanicalSolverSettingsDict type_of_solver [write::getValue DamTypeofsolver]
-    set typeofsolver [write::getValue DamTypeofsolver]
-    if {$typeofsolver eq "Direct"} {
-        dict set mechanicalSolverSettingsDict solver_class [write::getValue DamDirectsolver]
-    } elseif {$typeofsolver eq "Iterative"} {
-        dict set mechanicalSolverSettingsDict solver_class [write::getValue DamIterativesolver]
-    }
-    ### Add section to document
-    dict set projectParametersDict mechanical_settings $mechanicalSolverSettingsDict
+    #~ set mechanicalSolverSettingsDict [dict create]
+    #~ dict set mechanicalSolverSettingsDict solver_type "dam_new_mechanical_solver"
+    #~ set modelDict [dict create]
+    #~ dict set modelDict input_type "mdpa"
+    #~ dict set modelDict input_filename $model_name
+    #~ dict set mechanicalSolverSettingsDict model_import_settings $modelDict
+    #~ dict set mechanicalSolverSettingsDict solution_type [write::getValue DamSoluType]
+    #~ dict set mechanicalSolverSettingsDict analysis_type [write::getValue DamAnalysisType]
+    #~ dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
+    #~ dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
+    #~ set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
+    #~ dict set mechanicalSolverSettingsDict type_of_builder [write::getValue DamTypeofbuilder]
+    #~ dict set mechanicalSolverSettingsDict type_of_solver [write::getValue DamTypeofsolver]
+    #~ set typeofsolver [write::getValue DamTypeofsolver]
+    #~ if {$typeofsolver eq "Direct"} {
+        #~ dict set mechanicalSolverSettingsDict solver_class [write::getValue DamDirectsolver]
+    #~ } elseif {$typeofsolver eq "Iterative"} {
+        #~ dict set mechanicalSolverSettingsDict solver_class [write::getValue DamIterativesolver]
+    #~ }
+    #~ ### Add section to document
+    #~ dict set projectParametersDict mechanical_settings $mechanicalSolverSettingsDict
     
     ### Boundary conditions processes
     set body_part_list [list ]
@@ -117,7 +125,7 @@ proc Dam::write::ChangeFileNameforTableid { processList } {
 proc Dam::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::WriteJSON $projectParametersDict
-    write::SetEnvironmentVariable OMP_NUM_THREADS [write::getValue DamNumThreads]
+    #~ write::SetEnvironmentVariable OMP_NUM_THREADS [write::getValue DamNumThreads]
     #write::SetParallelismConfiguration DamNumThreads ""
 }
 

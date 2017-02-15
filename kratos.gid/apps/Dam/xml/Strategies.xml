@@ -112,7 +112,7 @@
           <filter field="solver_type" value="Iterative"/>    -->
         </filterFeatures>
 		<defaults>
-		  <solver n="AMGCL">
+		  <solver n="BICGSTAB">
 			<!--Not ready yet-->
 			<!--<parameter n="verbosity" v="3"/>-->
 		  </solver>
