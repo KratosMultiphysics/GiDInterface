@@ -15,7 +15,7 @@
       <parameter n="consider_periodic_conditions" pn="Consider periodic conditions" type="bool" v="false" help=""/>
       <parameter n="reform_dofs_at_each_step" pn="Reform DOFs at each iteration " type="bool" v="false" help=""/>
       <parameter n="time_order" pn="Time order " type="int" v="2" help=""/>
-      <parameter n="divergence_clearance_steps" pn="Divergence clearance steps" type="int" v="0" help=""/>
+      <!-- <parameter n="divergence_clearance_steps" pn="Divergence clearance steps" type="int" v="0" help=""/> -->
       <parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="0.001" help=""/>
 	  <parameter n="predictor_corrector" pn="Predictor corrector" type="bool" v="False" help=""/>
 	  <parameter n="maximum_velocity_iterations" pn="Maximum velocity iterations" type="integer" v="4" help=""/>
@@ -28,8 +28,6 @@
       <linearSolverItem n="velocity_linear_solver_settings" pn="Velocity linear solver">
         <filterFeatures>
 		   <filter field="SolverType" value="Standard"/>
-	      <!--<filter field="symmetric" value="false"/>
-              <filter field="solver_type" value="Iterative"/>    -->
         </filterFeatures>
 		<defaults>
 		</defaults>
@@ -69,8 +67,8 @@
       <parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
       <parameter n="consider_periodic_conditions" pn="Consider periodic conditions " type="bool" v="false"/>
       <parameter n="reform_dofs_at_each_step" pn="Reform DOFs at each step" type="bool" v="false" help=""/>
-      <parameter n="time_order" pn="Time order" type="int" v="2" help=""/>
-      <parameter n="divergence_clearance_steps" pn="Divergence clearance steps" type="int" v="0" help=""/>
+      <parameter n="alpha" pn="Alpha" type="double" v="-0.3" help="Bossak scheme alpha coefficient"/>
+      <!-- <parameter n="divergence_clearance_steps" pn="Divergence clearance steps" type="int" v="0" help=""/> -->
       <parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="0.001" help=""/>
       <parameter n="oss_switch" pn="Use orthogonal subscales" type="combo" v="0" values="0,1" help=""/>
       <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
