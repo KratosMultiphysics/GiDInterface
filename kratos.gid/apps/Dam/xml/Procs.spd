@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="procs" pn="procs" includeContainer="No" >
 
+	<!--<proc n='GetElementsValues' args='args'>-->
+	<!--  <![CDATA[-->
+	<!--  return [Dam::xml::ProcGetElementsValues $domNode $args]-->
+	<!--  ]]>-->
+	<!--</proc>-->
 	<proc n='GetConstitutiveLaws' args='args'>
 	  <![CDATA[
 	  return [Dam::xml::ProcGetConstitutiveLaws $domNode $args]
@@ -16,50 +21,18 @@
 	</proc>
 	<proc n='GetSolutionStrategies' args='args'>
 	  <![CDATA[
-		set names ""
-		set pnames ""
-		set ids [list ]
-		set type_of_problem [lindex $args 0]
-		if {$type_of_problem eq "Mechanic"} {set n [list "Newton-Raphson" "Arc-length"]} {set n "Generic"}
-        if {$type_of_problem eq "UP_Mechanic"} {set n [list "Newton-Raphson"]}
-		set Sols [::Model::GetSolutionStrategies [list n $n] ]
-		foreach ss $Sols {
-        lappend names [$ss getName]
-        lappend pnames [$ss getName]
-        lappend pnames [$ss getPublicName] 
-    }
-    
-    $domNode setAttribute values [join $names ","]
-    set dv [lindex $names 0]
-    #W "dv $dv"
-    if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
-    if {[$domNode getAttribute v] ni $names} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
-    
-    return [join $pnames ","]
-	  
+	  		return [Dam::xml::ProcGetSolutionStrategies $domNode $args]
 	  ]]>
 	</proc>
 		  			
 		  <proc n='CheckNodalConditionState' args='args'>
 	  <![CDATA[
 	  # Overwritten the base function to add Solution Type restrictions
-		set parts_un DamParts
-	    if {[spdAux::getRoute $parts_un] ne ""} {
-			set conditionId [$domNode @n]
-			set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
-			set elemnames [list ]
-			foreach elem $elems { lappend elemnames [$elem @v]}
-			set elemnames [lsort -unique $elemnames]
-			
-			set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamSoluType]] v]
-			set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
-			set params [list analysis_type $solutionType TypeofProblem $TypeofProblem]
-			if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
-		} {return "hidden"}
+		return [Dam::xml::ProcCheckNodalConditionState $domNode $args]
+
 	  ]]>
 	</proc>		
 	 
-	  
 	          <proc n='CheckGeometryStructural' args='args'>
           <![CDATA[                
                 if {$::Model::SpatialDimension eq "3D"} {return surface,volume} {return surface}                

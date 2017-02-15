@@ -131,4 +131,90 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
      return $values
 }
 
+proc Dam::xml::ProcCheckNodalConditionState {domNode args} {
+     set parts_un DamParts
+     if {[spdAux::getRoute $parts_un] ne ""} {
+           set conditionId [$domNode @n]
+           set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
+           set elemnames [list ]
+           foreach elem $elems { lappend elemnames [$elem @v]}
+           set elemnames [lsort -unique $elemnames]
+           
+           # Mirar Type of problem y acceder al contenedor correcto
+           set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+           switch $TypeofProblem {
+               "Mechanical" {
+                    set solutionType [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamMechanicalData]/value\[@n='SolutionType'\]"] v]
+                    set params [list analysis_type $solutionType TypeofProblem $TypeofProblem]
+               }
+               "Thermo-Mechanical" {
+                    set solutionType [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamThermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='SolutionType'\]"] v]
+                    set params [list analysis_type $solutionType TypeofProblem $TypeofProblem]                    
+               }
+               "UP_Mechanical" {
+                    set solutionType [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='SolutionType'\]"] v]
+                    set params [list analysis_type $solutionType TypeofProblem $TypeofProblem]
+               }
+               "Acoustic" {
+                    set params [list TypeofProblem $TypeofProblem]
+               }
+               default {
+                    error [= "Check type of problem"]
+               }
+           }
+           if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
+      } {return "hidden"}
+}
+
+
+proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
+     set names ""
+     set pnames ""
+     set ids [list ]
+     set type_of_problem [lindex $args 0]
+     if {$type_of_problem eq "Mechanic"} {set n [list "Newton-Raphson" "Arc-length"]} {set n "Generic"}
+     if {$type_of_problem eq "UP_Mechanic"} {set n "Newton-Raphson"}
+     set Sols [::Model::GetSolutionStrategies [list n $n] ]
+     foreach ss $Sols {
+          lappend names [$ss getName]
+          lappend pnames [$ss getName]
+          lappend pnames [$ss getPublicName] 
+    }
+    
+    $domNode setAttribute values [join $names ","]
+    set dv [lindex $names 0]
+    #W "dv $dv"
+    if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
+    if {[$domNode getAttribute v] ni $names} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
+    
+    return [join $pnames ","]
+}
+
+proc Dam::xml::ProcGetElementsValues {domNode args} {
+     set nodeApp [GetAppIdFromNode $domNode]
+     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
+     set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
+     if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
+     }
+     if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
+     }
+     
+     set solStratName [::write::getValue $sol_stratUN]
+     set schemeName [write::getValue $schemeUN]
+     set elems [::Model::GetAvailableElements $solStratName $schemeName]
+     
+     set names [list ]
+     foreach elem $elems {
+        if {[$elem cumple {*}$args]} {
+            lappend names [$elem getName]
+        }
+     }
+     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
+     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
+     set values [join $names ","]
+     return $values
+}
+
 Dam::xml::Init
