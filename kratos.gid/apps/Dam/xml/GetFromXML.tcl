@@ -192,6 +192,16 @@ proc Dam::xml::ProcCheckNodalConditionState {domNode args} {
       } {return "hidden"}
 }
 
+proc Dam::xml::ProcCheckConditionState {domNode args} {
+     if {[spdAux::ProcActiveIfAnyPartState $domNode $args] eq "hidden"} {return "hidden"}
+     set resp [::Model::CheckConditionState $domNode]
+     if {$resp} {
+          set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+          if {$TypeofProblem ni [dict get [[Model::getCondition [$domNode @n]] getAttributes ] TypeofProblem]} {set resp 0}
+     }
+     if {$resp} {return "normal"} else {return "hidden"}
+}
+
 
 proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
      set names ""

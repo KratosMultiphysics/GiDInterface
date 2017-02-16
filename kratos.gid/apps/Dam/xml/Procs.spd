@@ -48,9 +48,7 @@
 		
 			<proc n='ConditionState' args='args'>
 	  <![CDATA[
-	  if {[spdAux::ProcActiveIfAnyPartState $domNode $args] eq "hidden"} {return "hidden"}
-		set resp [::Model::CheckConditionState $domNode]
-	  if {$resp} {return "normal"} else {return "hidden"}
+	  return [Dam::xml::ProcCheckConditionState $domNode $args]
 	  ]]>
 	</proc>
 
