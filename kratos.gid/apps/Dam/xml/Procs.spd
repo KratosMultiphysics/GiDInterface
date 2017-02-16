@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="procs" pn="procs" includeContainer="No" >
 
-	<!--<proc n='GetElementsValues' args='args'>-->
-	<!--  <![CDATA[-->
-	<!--  return [Dam::xml::ProcGetElementsValues $domNode $args]-->
-	<!--  ]]>-->
-	<!--</proc>-->
+	<proc n='GetElementsValues' args='args'>
+	  <![CDATA[
+	  return [Dam::xml::ProcGetElementsValues $domNode $args]
+	  ]]>
+	</proc>
 	<proc n='GetConstitutiveLaws' args='args'>
 	  <![CDATA[
 	  return [Dam::xml::ProcGetConstitutiveLaws $domNode $args]

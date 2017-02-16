@@ -107,14 +107,36 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
      }
      set Claws $goodList
      set analysis_type [write::getValue DamAnalysisType]
+     set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+           switch $TypeofProblem {
+               "Mechanical" {
+                    set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamMechanicalData]/value\[@n='AnalysisType'\]"] v]                    
+               }
+               "Thermo-Mechanical" {
+                    set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamThermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
+               }
+               "UP_Mechanical" {
+                    set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='AnalysisType'\]"] v]
+               }
+               "Acoustic" {
+                    set analysis_type ""
+               }
+               default {
+                    error [= "Check type of problem"]
+               }
+           }
      set goodList [list ]
      foreach cl $Claws {
-          set type [$cl getAttribute AnalysisType]
-          if {$analysis_type eq "Non-Linear"} {
+          if {$analysis_type eq ""} {
                lappend goodList $cl
-          }
-          if {$type ne "Non-Linear" && $analysis_type eq "Linear"} {
-               lappend goodList $cl
+          } else {
+               set type [$cl getAttribute AnalysisType]
+               if {$analysis_type eq "Non-Linear"} {
+                    lappend goodList $cl
+               }
+               if {$type ne "Non-Linear" && $analysis_type eq "Linear"} {
+                    lappend goodList $cl
+               }
           }
      }
      set Claws $goodList
@@ -195,7 +217,8 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
 }
 
 proc Dam::xml::ProcGetElementsValues {domNode args} {
-     set nodeApp [GetAppIdFromNode $domNode]
+     set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+     set nodeApp [spdAux::GetAppIdFromNode $domNode]
      set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
      set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
      if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
@@ -214,6 +237,16 @@ proc Dam::xml::ProcGetElementsValues {domNode args} {
         if {[$elem cumple {*}$args]} {
             lappend names [$elem getName]
         }
+     }
+     if {$TypeofProblem ni [list UP_Mechanical Acoustic]} {
+          set names [lsearch -all -inline -not -exact $names WaveEquationElement2D]
+          set names [lsearch -all -inline -not -exact $names WaveEquationElement3D]
+     }
+     if {$TypeofProblem in [list Acoustic]} {
+          set names [list WaveEquationElement2D]
+          if {$::Model::SpatialDimension eq "3D"} {
+               set names [list WaveEquationElement3D]
+          }
      }
      if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
      if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
