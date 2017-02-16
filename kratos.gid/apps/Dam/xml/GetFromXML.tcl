@@ -28,35 +28,39 @@ proc ::Dam::xml::MultiAppEvent {args} {
 }
 
 proc Dam::xml::ProcGetSchemes {domNode args} {
-    set type_of_problem [lindex $args 0]
-    
-    set sol_stratUN "DamSolStratTherm"
-    if {$type_of_problem eq "Mechanic"} {
-          set sol_stratUN "DamSolStratMech"
-    }
-    
-    set solStratName [write::getValue $sol_stratUN]
-    set schemes [::Model::GetAvailableSchemes $solStratName]
-    
-    set ids [list ]
-    if {[llength $schemes] == 0} {
-        if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v "None"}
-        return "None"
-    }
-    set names [list ]
-    set pnames [list ]
-    foreach cl $schemes {
-        lappend names [$cl getName]
-        lappend pnames [$cl getName] 
-        lappend pnames [$cl getPublicName]
-    }
-    
-    $domNode setAttribute values [join $names ","]
-    
-    if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
-    if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]}
-    spdAux::RequestRefresh
-    return [join $pnames ","]
+     set type_of_problem [write::getValue DamTypeofProblem]
+     
+     set sol_stratUN "DamSolStratTherm"
+     if {$type_of_problem ne "Thermal"} {
+           set sol_stratUN "DamSolStrat"
+     }
+     
+     set solStratName [write::getValue $sol_stratUN]
+     set schemes [::Model::GetAvailableSchemes $solStratName]
+     
+     set ids [list ]
+     if {[llength $schemes] == 0} {
+         if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v "None"}
+         return "None"
+     }
+     set names [list ]
+     set pnames [list ]
+     foreach cl $schemes {
+         lappend names [$cl getName]
+         lappend pnames [$cl getName] 
+         lappend pnames [$cl getPublicName]
+     }
+     if {$type_of_problem in [list "Acoustic" "UP_Mechanical"]} {
+          set names [list "Newmark"]
+          set pnames [list "Newmark" "Newmark"]
+     }
+     
+     $domNode setAttribute values [join $names ","]
+     
+     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
+     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]}
+     spdAux::RequestRefresh
+     return [join $pnames ","]
 }
 
 
@@ -64,7 +68,7 @@ proc Dam::xml::SolStratParamState {outnode} {
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
     
-    set solstrat_un "DamSolStratMech"
+    set solstrat_un "DamSolStrat"
     
     #W $solstrat_un
     if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] v] eq ""} {

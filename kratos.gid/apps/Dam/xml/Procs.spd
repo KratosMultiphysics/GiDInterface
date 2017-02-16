@@ -12,13 +12,13 @@
 	  ]]>
 	</proc>
 	
-	  <proc n='SolStratParamState' args='args'>
+	 <!-- <proc n='SolStratParamState' args='args'>
 	  <![CDATA[
 		    
 			set resp [Dam::xml::SolStratParamState $domNode]
 			if {$resp} {return "normal"} else {return "hidden"}
 	  ]]>
-	</proc>
+	</proc>-->
 	<proc n='GetSolutionStrategies' args='args'>
 	  <![CDATA[
 	  		return [Dam::xml::ProcGetSolutionStrategies $domNode $args]

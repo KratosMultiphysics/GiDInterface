@@ -2,14 +2,12 @@
 <container n="ModelInfo" pn="Model information" icon="information16" help="Model information" state="normal" open_window="0">
     <value n="TypeofProblem" pn="Type of Problem" un="DamTypeofProblem" v="Mechanical" values="Mechanical,Thermo-Mechanical,UP_Mechanical,Acoustic" help="Type of problem" actualize_tree="1"/>
     
-    <value n="SolStratCombo" pn="Solution strategy" un="DamSolStrat" v="" values="" dict="[GetSolutionStrategies]" actualize_tree="1" state="normal"/>
-    <value n="MechanicalScheme" pn="Scheme" v=""    un="DamScheme" values="" dict="[GetSchemes Mechanical]" actualize_tree="1"/>
+    <value n="SolStratCombo" pn="Mechanical solution strategy" un="DamSolStrat" v="" values="" dict="[GetSolutionStrategies Mechanic]" actualize_tree="1" state="normal"/>
+    <value n="MechanicalScheme" pn="Mechanical scheme" v=""    un="DamScheme" values="" dict="[GetSchemes]" actualize_tree="1"/>
     <container n="MechanicalProblem" pn="Mechanical Problem" un="DamMechanicalData" state="[checkStateByUniqueName DamTypeofProblem Mechanical]" actualize_tree="1" open_window="0">
         
         <value n="SolutionType" pn="Solution type" v="Quasi-Static" values="Quasi-Static,Dynamic" help="Solution type" actualize_tree="1"/>
         <value n="AnalysisType" pn="Analysis type" v="Linear" values="Linear,Non-Linear" help="Analysis type" />
-        <value n="SolStratCombo" pn="Solution strategy" v="" values="" dict="[GetSolutionStrategies]" actualize_tree="1" state="normal"/>
-        <value n="MechanicalScheme" pn="Scheme" v="" values="" dict="[GetSchemes Mechanic]" actualize_tree="1"/>
          <container n="StratParams" pn="Strategy parameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">
             <dynamicnode command="spdAux::injectSolStratParams" args=""/>
             <dynamicnode command="spdAux::injectSolvers" args=""/>
@@ -38,7 +36,7 @@
 
     <container n="UP_MechanicalProblem" pn="UP Mechanical Problem" un="DamUP_MechanicalData" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical]" actualize_tree="1" open_window="0">
         
-        <value n="SolutionType" pn="Solution type" un="DamSoluType" v="Dynamic" actualize_tree="1"/>
+        <value n="SolutionType" pn="Solution type" un="DamSoluType" v="Dynamic" values="Dynamic" actualize_tree="1"/>
         <value n="AnalysisType" pn="Analysis type" un="DamAnalysisType" v="Linear" values="Linear,Non-Linear" help="Analysis type" state="readonly" />
         <container n="StratParams" pn="Strategy parameters" un="DamStratParams" icon="groupsTreeNew.gif"  state="normal" open_window="0">
             <dynamicnode command="spdAux::injectSolStratParams" args=""/>
