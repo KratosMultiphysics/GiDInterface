@@ -2,8 +2,8 @@
 <container n="ModelInfo" pn="Model information" icon="information16" help="Model information" state="normal" open_window="0">
     <value n="TypeofProblem" pn="Type of Problem" un="DamTypeofProblem" v="Mechanical" values="Mechanical,Thermo-Mechanical,UP_Mechanical,Acoustic" help="Type of problem" actualize_tree="1"/>
     
-    <value n="SolStratCombo" pn="Mechanical solution strategy" un="DamSolStrat" v="" values="" dict="[GetSolutionStrategies Mechanic]" actualize_tree="1" state="normal"/>
-    <value n="MechanicalScheme" pn="Mechanical scheme" v=""    un="DamScheme" values="" dict="[GetSchemes]" actualize_tree="1"/>
+    <value n="SolStratCombo" pn="Strategy" un="DamSolStrat" v="" values="" dict="[GetSolutionStrategies Mechanic]" actualize_tree="1" state="normal"/>
+    <value n="MechanicalScheme" pn="Scheme" v=""    un="DamScheme" values="" dict="[GetSchemes]" actualize_tree="1"/>
     <container n="MechanicalProblem" pn="Mechanical Problem" un="DamMechanicalData" state="[checkStateByUniqueName DamTypeofProblem Mechanical]" actualize_tree="1" open_window="0">
         
         <value n="SolutionType" pn="Solution type" v="Quasi-Static" values="Quasi-Static,Dynamic" help="Solution type" actualize_tree="1"/>
@@ -27,8 +27,8 @@
             </container>
             
             <container n="ThermalProblem" pn="Thermal Problem"  state="normal" actualize_tree="1" open_window="0">
-                <value n="SolStratCombo" pn="Solution strategy" un="DamSolStratTherm" v="" values="" dict="[GetSolutionStrategies Thermal]" actualize_tree="1" state="disabled"/>
-                <value n="ThermalScheme" pn="Scheme" un="DamMechanicalSchemeTherm" v=""  values="" dict="[GetSchemes Thermal]" actualize_tree="1"/>
+                <value n="SolStratCombo" pn="Thermal strategy" un="DamSolStratTherm" v="" values="" dict="[GetSolutionStrategies Thermal]" actualize_tree="1" state="disabled"/>
+                <value n="ThermalScheme" pn="Thermal Scheme" un="DamMechanicalSchemeTherm" v=""  values="" dict="[GetSchemes Thermal]" actualize_tree="1"/>
                 <value n="ReferenceTemperature" pn="Reference Temeperature" un="DamReferenceTemperature" type="double" v="10.0" actualize_tree="1"/>
             </container>
             
