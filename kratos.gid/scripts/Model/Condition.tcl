@@ -174,13 +174,13 @@ proc Model::GetAllCondInputs {} {
     return $inputs
 }
 
-proc Model::CheckConditionState {node} {
+proc Model::CheckConditionState {node args} {
     variable Conditions
     set condid [get_domnode_attribute $node n]
     set cumple 1
     foreach cond $Conditions {
         if {[$cond getName] eq $condid} {
-            if {![$cond cumple ""]} {
+            if {![$cond cumple {*}$args]} {
                 set cumple 0
                 break
             } {
