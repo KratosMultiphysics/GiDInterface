@@ -135,9 +135,7 @@ for process in list_of_processes:
 solver.Initialize()
 
 ## Stepping and time settings
-Dt = ProjectParameters["fluid_solver_settings"]["problem_data"]["time_step"].GetDouble()
 end_time = ProjectParameters["fluid_solver_settings"]["problem_data"]["end_time"].GetDouble()
-
 time = 0.0
 step = 0
 out = 0.0
@@ -156,6 +154,7 @@ if ((parallel_type == "OpenMP") or (KratosMPI.mpi.rank == 0)) and (verbosity > 0
 
 while(time <= end_time):
 
+    Dt = (self.solver).ComputeDeltaTime()
     time = time + Dt
     step = step + 1
 
