@@ -214,12 +214,16 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
      set names ""
      set pnames ""
      set ids [list ]
-     set type_of_problem [lindex $args 0]
-     if {$type_of_problem eq "Mechanic"} {set n [list "Newton-Raphson" "Arc-length"]} {set n "Generic"}
-     
-     #~ TODO- Hacer filtro de las estrategias
-     #~ if {$type_of_problem eq "UP_Mechanical"} {set n "Newton-Raphson"}
-     #~ if {$type_of_problem eq "UP_Thermo-Mechanical"} {set n "Newton-Raphson"}
+     set type_of_strategy [lindex $args 0]
+     if {$type_of_strategy eq "Mechanic"} {
+          set n [list "Newton-Raphson" "Arc-length"]
+          set type_of_problem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+          if {$type_of_problem eq "UP_Mechanical"} {set n "Newton-Raphson"}
+          if {$type_of_problem eq "UP_Thermo-Mechanical"} {set n "Newton-Raphson"}
+     } else {
+          # Thermal
+          set n "Generic"
+     }
      
      set Sols [::Model::GetSolutionStrategies [list n $n] ]
      foreach ss $Sols {
