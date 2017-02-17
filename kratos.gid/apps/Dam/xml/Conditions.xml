@@ -197,7 +197,7 @@
     <ConditionItem n="HydroDynamicLinePressure2D" pn="Hydrodynamic Westergaard Pressure" ImplementedInFile="apply_scalar_on_conditions_processs"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="HydrodynamicConditionsProcess" help="Hydrostatic + Hydrodynamic pressure on lines (based on the Westergaard Approximated Formula),0 oriented pointing against the line outer normal"
+	ElementType="Line" ProcessName="HydrodynamicConditionsProcess" help="Hydrostatic + Hydrodynamic pressure on lines (based on the Westergaard Approximated Formula). Positive direction of acceleration: upstream to downstream. Hydrodinamic pressure just acts when the accelaration is negative, for positive accelerations hydrostatic pressure is used"
 	VariableName="NEGATIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
@@ -213,8 +213,8 @@
   <ConditionItem n="HydroDynamicSurfacePressure3D" pn="Hydrodynamic Westergaard Pressure" ImplementedInFile="apply_scalar_on_conditions_process"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Surface" ProcessName="HydrodynamicConditionsProcess" help="Hydrostatic + Hydrodynamic pressure on surfaces (based on the Westergaard Approximated Formula, oriented pointing against the surface outer normal"
-	VariableName="NEGATIVE_FACE_PRESSURE">
+	ElementType="Surface" ProcessName="HydrodynamicConditionsProcess" help="Hydrostatic + Hydrodynamic pressure on surfaces (based on the Westergaard Approximated Formula). Positive direction of acceleration: upstream to downstream. Hydrodinamic pressure just acts when the accelaration is negative, for positive accelerations hydrostatic pressure is used."
+    VariableName="NEGATIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
