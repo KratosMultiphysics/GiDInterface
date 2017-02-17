@@ -50,7 +50,7 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
          lappend pnames [$cl getName] 
          lappend pnames [$cl getPublicName]
      }
-     if {$type_of_problem in [list "Acoustic" "UP_Mechanical"]} {
+     if {$type_of_problem in [list "Acoustic" "UP_Mechanical" "UP_Thermo-Mechanical"]} {
           set names [list "Newmark"]
           set pnames [list "Newmark" "Newmark"]
      }
@@ -118,6 +118,9 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
                "UP_Mechanical" {
                     set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='AnalysisType'\]"] v]
                }
+               "UP_Thermo-Mechanical" {
+                    set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_Thermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
+               }
                "Acoustic" {
                     set analysis_type ""
                }
@@ -181,6 +184,10 @@ proc Dam::xml::ProcCheckNodalConditionState {domNode args} {
                     set solutionType [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='SolutionType'\]"] v]
                     set params [list analysis_type $solutionType TypeofProblem $TypeofProblem]
                }
+               "UP_Thermo-Mechanical" {
+                    set solutionType [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_Thermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='SolutionType'\]"] v]
+                    set params [list analysis_type $solutionType TypeofProblem $TypeofProblem]                    
+               }
                "Acoustic" {
                     set params [list TypeofProblem $TypeofProblem]
                }
@@ -209,7 +216,11 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
      set ids [list ]
      set type_of_problem [lindex $args 0]
      if {$type_of_problem eq "Mechanic"} {set n [list "Newton-Raphson" "Arc-length"]} {set n "Generic"}
-     if {$type_of_problem eq "UP_Mechanic"} {set n "Newton-Raphson"}
+     
+     #~ TODO- Hacer filtro de las estrategias
+     #~ if {$type_of_problem eq "UP_Mechanical"} {set n "Newton-Raphson"}
+     #~ if {$type_of_problem eq "UP_Thermo-Mechanical"} {set n "Newton-Raphson"}
+     
      set Sols [::Model::GetSolutionStrategies [list n $n] ]
      foreach ss $Sols {
           lappend names [$ss getName]
@@ -248,7 +259,7 @@ proc Dam::xml::ProcGetElementsValues {domNode args} {
             lappend names [$elem getName]
         }
      }
-     if {$TypeofProblem ni [list UP_Mechanical Acoustic]} {
+     if {$TypeofProblem ni [list UP_Mechanical UP_Thermo-Mechanical Acoustic]} {
           set names [lsearch -all -inline -not -exact $names WaveEquationElement2D]
           set names [lsearch -all -inline -not -exact $names WaveEquationElement3D]
      }

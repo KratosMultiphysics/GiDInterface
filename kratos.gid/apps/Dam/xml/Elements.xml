@@ -24,7 +24,6 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
@@ -66,7 +65,6 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
@@ -104,7 +102,6 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
@@ -142,7 +139,6 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
@@ -181,7 +177,6 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="PRESSURE"/>
     </NodalConditions>
@@ -210,10 +205,10 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="PRESSURE"/>
     </NodalConditions>
+       
 
     <inputs>      
     </inputs>
