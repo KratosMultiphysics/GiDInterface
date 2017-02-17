@@ -8,6 +8,7 @@ proc Dam::xml::Init { } {
 
      Model::getSolutionStrategies Strategies.xml
      Model::getElements Elements.xml
+     Model::getMaterials Materials.xml
      Model::getNodalConditions NodalConditions.xml
      Model::getConstitutiveLaws ConstitutiveLaws.xml
      Model::getProcesses Processes.xml
