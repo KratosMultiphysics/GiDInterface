@@ -5,7 +5,7 @@
   <ElementItem n="SmallDisplacementElement2D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help="">
+	       ElementType="Solid" help="" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -46,7 +46,7 @@
   <ElementItem n="SmallDisplacementElement3D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help="">
+	       ElementType="Solid" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -88,7 +88,7 @@
   <ElementItem n="SmallDisplacementIntefaceElement3D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Joint" help="">
+	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -124,7 +124,7 @@
   <ElementItem n="SmallDisplacementInterfaceElement2D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Joint" help="">
+	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -163,7 +163,7 @@
  <ElementItem n="WaveEquationElement2D" pn="Acoustic Element" ImplementedInFile="wave_equation_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Acoustic" help="">
+	       ElementType="Acoustic" help=""  TypeofProblem="Acoustic,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -191,7 +191,7 @@
  <ElementItem n="WaveEquationElement3D" pn="Acoustic Element" ImplementedInFile="wave_equation_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Acoustic" help="">
+	       ElementType="Acoustic" help=""  TypeofProblem="Acoustic,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
