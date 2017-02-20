@@ -14,3 +14,6 @@ The interface of Kratos with GiD
 * Run GiD
 * Go to: Data / Problem type / kratos
 * kratos top menu / Developer mode (recommended)
+
+## Want to develop?
+* Ask for access -> contact fjgarate@cimne.upc.edu
