@@ -28,8 +28,19 @@
             
             <container n="ThermalProblem" pn="Thermal Problem"  state="normal" actualize_tree="1" open_window="0">
                 <value n="SolStratCombo" pn="Thermal strategy" un="DamSolStratTherm" v="" values="" dict="[GetSolutionStrategies Thermal]" actualize_tree="1" state="disabled"/>
-                <value n="ThermalScheme" pn="Thermal Scheme" un="DamMechanicalSchemeTherm" v=""  values="" dict="[GetSchemes Thermal]" actualize_tree="1"/>
+                <value n="ThermalScheme" pn="Theta Scheme" un="DamMechanicalSchemeTherm" v="1.0" actualize_tree="1" help= " 1.0 corresponds to backward Euler, 0.5 Cranck Nicolson and 0.0 Forward Euler"/>
                 <value n="ReferenceTemperature" pn="Reference Temeperature" un="DamReferenceTemperature" type="double" v="10.0" actualize_tree="1"/>
+				<container n="ThermalStratParams" pn="Strategy parameters" un="DamThermalStratParams" icon="groupsTreeNew.gif"  state="normal" open_window="0">
+					<value n="thermal_echo_level" pn="Echo level" un="DamThermalEcholevel" v="1" values="0,1,2,3" state="readonly" help="" />
+					<value n="thermal_reform_dofs_at_each_step" pn="Reforms steps" un="DamThermalReformsSteps" v="false" values="true,false" state="readonly" help="" />
+					<value n="thermal_clear_storage" pn="Clear Storage" un="DamThermalClearStorage" v="false" values="true,false" state="readonly" help="" />
+					<value n="thermal_compute_reactions" pn="Compute Reactions" un="DamThermalComputeReactions" v="false" values="true,false" state="readonly" help="" />
+					<value n="thermal_move_mesh_flag" pn="Move Mesh" un="DamThermalMoveMeshFlag" v="false" values="true,false" state="readonly" help="" />
+					<value n="thermal_compute_norm_dx_flag" pn="Compute Norm Dx" un="DamThermalComputeNormDx" v="false" values="true,false" state="readonly" help="" />
+					<value n="thermal_block_builder" pn="Block Builder" un="DamThermalBlockBuilder" v="true" values="true,false" state="readonly" help="" />
+					<dynamicnode command="spdAux::injectSolvers" args=""/>
+                </container>
+            
             </container>
             
     </container> 
@@ -58,7 +69,9 @@
             
             <container n="ThermalProblem" pn="Thermal Problem"  state="normal" actualize_tree="1" open_window="0">
                 <value n="SolStratCombo" pn="Thermal strategy" un="DamSolStratTherm" v="" values="" dict="[GetSolutionStrategies Thermal]" actualize_tree="1" state="disabled"/>
+<!--
                 <value n="ThermalScheme" pn="Thermal Scheme" un="DamMechanicalSchemeTherm" v=""  values="" dict="[GetSchemes Thermal]" actualize_tree="1"/>
+-->
                 <value n="ReferenceTemperature" pn="Reference Temeperature" un="DamReferenceTemperature" type="double" v="10.0" actualize_tree="1"/>
             </container>
             

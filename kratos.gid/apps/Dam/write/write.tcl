@@ -23,13 +23,16 @@ proc Dam::write::Init { } {
 proc Dam::write::writeCustomFilesEvent { } {
     
     set damTypeofProblem [write::getValue DamTypeofProblem]
-    if {$damTypeofProblem eq "Acoustic"}{
+    if {$damTypeofProblem eq "Acoustic"} {
         write::CopyFileIntoModel "python/dam_acoustic_script.py"
-        write::RenameFileInModel "dam_thermo_mechanic_script.py" "MainKratos.py"
+        write::RenameFileInModel "dam_acoustic_script.py" "MainKratos.py"
     } else {
         write::CopyFileIntoModel "python/dam_main.py"
-        write::RenameFileInModel "dam_thermo_mechanic_script.py" "MainKratos.py"
+        write::RenameFileInModel "dam_main.py" "MainKratos.py"
     }
+    
+    #~ write::CopyFileIntoModel "python/dam_main.py"
+    #~ write::RenameFileInModel "dam_main.py" "MainKratos.py"
     
 }
 

@@ -36,41 +36,75 @@ proc Dam::write::getParametersDict { } {
     
     ### Preguntar el solver haciendo los ifs correspondientes
     set damTypeofProblem [write::getValue DamTypeofProblem]
-    if {$damTypeofProblem eq "Thermo-Mechanical"}{
-        set solver_type 
-    }   
-    
-        
-    #~ dict set solversettingsDict solver_type $solver_type 
+    if {$paralleltype eq "OpenMP"} {
+		if {$damTypeofProblem eq "Mechanical"} {
+			dict set solversettingsDict solver_type "dam_mechanical_solver"
+		} elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
+			dict set solversettingsDict solver_type "dam_thermo_mechanic_solver"
+		} elseif {$damTypeofProblem eq "UP_Mechanical"} {
+			dict set solversettingsDict solver_type "dam_UP_mechanical_solver"
+		} elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
+			dict set solversettingsDict solver_type "dam_UP_thermo_mechanic_solver"
+		} else {
+			dict set solversettingsDict solver_type "dam_P_solver"
+		}
+	} else {
+		if {$damTypeofProblem eq "Mechanical"} {
+			dict set solversettingsDict solver_type "dam_MPI_mechanical_solver"
+		} elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
+			dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
+		} elseif {$damTypeofProblem eq "UP_Mechanical"} {
+			dict set solversettingsDict solver_type "dam_MPI_UP_mechanical_solver"
+		} elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
+			dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
+		} else {
+			dict set solversettingsDict solver_type "dam_MPI_P_solver"
+		}
+	}
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
     dict set modelDict input_filename $model_name
     dict set modelDict input_file_label 0
     dict set solversettingsDict model_import_settings $modelDict
-    dict set solversettingsDict echo_level
-    dict set solversettingsDict buffer_size
-    dict set solversettingsDict reference_temperature
-    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
     
-    set thermalsettingDict [dict create]
-    dict set thermalsettingDict echo_level
-    dict set thermalsettingDict reform_dofs_at_each_step
-    dict set thermalsettingDict clear_storage
-    dict set thermalsettingDict compute_reactions
-    dict set thermalsettingDict move_mesh_flag
-    dict set thermalsettingDict compute_norm_dx_flag
-    dict set thermalsettingDict theta_scheme
+    if {$damTypeofProblem eq "Thermo-Mechanical" || $damTypeofProblem eq "UP_Thermo-Mechanical" } {
+    	dict set solversettingsDict echo_level 1
+		dict set solversettingsDict buffer_size 2
+		dict set solversettingsDict reference_temperature [write::getValue DamReferenceTemperature]
+		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+	
+		set thermalsettingDict [dict create]
+		dict set thermalsettingDict echo_level [write::getValue DamThermalEcholevel]
+		dict set thermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalReformsSteps]
+		dict set thermalsettingDict clear_storage [write::getValue DamThermalClearStorage]
+		dict set thermalsettingDict compute_reactions [write::getValue DamThermalComputeReactions]
+		dict set thermalsettingDict move_mesh_flag [write::getValue DamThermalMoveMeshFlag]
+		dict set thermalsettingDict compute_norm_dx_flag [write::getValue DamThermalComputeNormDx]
+		dict set thermalsettingDict theta_scheme [write::getValue DamMechanicalSchemeTherm]
+		
+		set thermallinearDict [dict create]
+		#~ dict set thermallinearDict solver_type
+		#~ dict set thermalsettingDict linear_solver_settings $thermallinearDict
+		dict set thermalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
+		dict set solversettingsDict thermal_solver_settings $thermalsettingDict
+		
+	}
+        
+    ### Mechanical Settings
+    set mechanicalSolverSettingsDict [dict create]
+    dict set mechanicalSolverSettingsDict solution_type [write::getValue DamSoluType]
+    dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
+    dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
+    set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
+    ### Add section to document
+    dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
     
-    set thermallinearDict [dict create]
-    dict set thermallinearDict solver_type
-    dict set thermalsettingDict linear_solver_settings $thermallinearDict
-    dict set thermalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
+    dict set projectParametersDict solver_settings $solversettingsDict
     
-    set mechanicalsettingDict [dict create]
-    dict set mechanicalsettingDict solution_type [write::getValue DamSoluType]
-    dict set mechanicalsettingDict strategy_type [write::getValue DamSolStrat]
-    set mechanicalsettingDict [dict merge $mechanicalsettingDict [write::getSolutionStrategyParametersDict] ]
-
+ ### Boundary conditions processes
+    set body_part_list [list ]
+    set joint_part_list [list ]
+    set mat_dict [write::getMatDict]
     foreach part_name [dict keys $mat_dict] {
         if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Joint"} {
             lappend joint_part_list [write::getMeshId Parts $part_name]
@@ -78,17 +112,23 @@ proc Dam::write::getParametersDict { } {
             lappend body_part_list [write::getMeshId Parts $part_name]
         }
     }
-    dict set mechanicalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
-    dict set mechanicalsettingDict body_domain_sub_model_part_list $body_part_list
-    dict set mechanicalsettingDict problem_domain_joint_sub_model_part_list $joint_part_list
+    dict set projectParametersDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
+    dict set projectParametersDict problem_domain_body_sub_model_part_list $body_part_list
+    dict set projectParametersDict problem_domain_joint_sub_model_part_list $joint_part_list
+    dict set projectParametersDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+    set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
+    set load_process_list [write::getConditionsParametersDict DamLoads ]
+    
+    dict set projectParametersDict nodal_processes_sub_model_part_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
+    dict set projectParametersDict load_processes_sub_model_part_list [Dam::write::ChangeFileNameforTableid $load_process_list]
     set strategytype [write::getValue DamSolStrat]
     if {$strategytype eq "Arc-length"} {
         dict set projectParametersDict loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
         dict set projectParametersDict loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
-    }{
-        dict set projectParametersDict loads_sub_model_part_list []
-        dict set projectParametersDict loads_variable_list []
     }
+    
+    
+   
     
     ### GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
