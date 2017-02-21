@@ -18,7 +18,7 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress,PlaneStrain,ThermalPlaneStress,ThermalPlaneStrain,DamageStrain,DamageStress"/>
+      <filter field="Type" value="PlaneStress,PlaneStrain,ThermalPlaneStress,ThermalPlaneStrain,DamageStrain,DamageStress,ThermalDamageStrain,ThermalDamageStress"/>
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
     </ConstitutiveLaw_FilterFeatures>
@@ -59,7 +59,7 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="Linear3D,Thermal3D,Damage3D"/>
+      <filter field="Type" value="Linear3D,Thermal3D,Damage3D,ThermalDamage3D"/>
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
     </ConstitutiveLaw_FilterFeatures>

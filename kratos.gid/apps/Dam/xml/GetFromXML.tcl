@@ -98,47 +98,55 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
      
      set type_of_problem [write::getValue DamTypeofProblem]
      set goodList [list ]
+     #W "Pre type problem -> $type_of_problem"
      foreach cl $Claws {
           set type [$cl getAttribute Type]
+               #W "cl -> [$cl getName]"
+               #W "type -> $type"
           if {[string first "Therm" $type] eq -1 && $type_of_problem ne "Thermo-Mechanical"} {
                lappend goodList $cl
           } elseif {[string first "Therm" $type] ne -1 && $type_of_problem eq "Thermo-Mechanical"} {
                lappend goodList $cl
           } elseif {[string first "Interface" $type] ne -1} {lappend goodList $cl}
      }
+     #W "good $goodList"
      set Claws $goodList
-     set analysis_type [write::getValue DamAnalysisType]
+     set analysis_type ""
      set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
-           switch $TypeofProblem {
-               "Mechanical" {
-                    set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamMechanicalData]/value\[@n='AnalysisType'\]"] v]                    
-               }
-               "Thermo-Mechanical" {
-                    set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamThermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
-               }
-               "UP_Mechanical" {
-                    set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='AnalysisType'\]"] v]
-               }
-               "UP_Thermo-Mechanical" {
-                    set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_Thermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
-               }
-               "Acoustic" {
-                    set analysis_type ""
-               }
-               default {
-                    error [= "Check type of problem"]
-               }
-           }
+     switch $TypeofProblem {
+         "Mechanical" {
+              set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamMechanicalData]/value\[@n='AnalysisType'\]"] v]                    
+         }
+         "Thermo-Mechanical" {
+              set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamThermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
+         }
+         "UP_Mechanical" {
+              set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='AnalysisType'\]"] v]
+         }
+         "UP_Thermo-Mechanical" {
+              set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_Thermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
+         }
+         "Acoustic" {
+              set analysis_type ""
+         }
+         default {
+              error [= "Check type of problem"]
+         }
+     }
      set goodList [list ]
+     #W "Pre analysis -> $analysis_type"
+     #W $Claws
      foreach cl $Claws {
           if {$analysis_type eq ""} {
                lappend goodList $cl
           } else {
-               set type [$cl getAttribute AnalysisType]
-               if {$analysis_type eq "Non-Linear"} {
+               set type [split [$cl getAttribute AnalysisType] ","]
+               #W "cl -> [$cl getName]"
+               #W "type -> $type"
+               if {"Non-Linear" in $type && $analysis_type eq "Non-Linear"} {
                     lappend goodList $cl
                }
-               if {$type ne "Non-Linear" && $analysis_type eq "Linear"} {
+               if {"Linear" in $type && $analysis_type eq "Linear"} {
                     lappend goodList $cl
                }
           }
@@ -156,7 +164,7 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
      }
      set values [join $names ","]
      if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
-     
+     #W $values
      
      return $values
 }
