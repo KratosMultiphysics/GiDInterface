@@ -70,7 +70,7 @@ proc Dam::write::getParametersDict { } {
     if {$damTypeofProblem eq "Thermo-Mechanical" || $damTypeofProblem eq "UP_Thermo-Mechanical" } {
     	dict set solversettingsDict echo_level 1
 		dict set solversettingsDict buffer_size 2
-		dict set solversettingsDict reference_temperature [write::getValue DamReferenceTemperature]
+		dict set solversettingsDict reference_temperature [write::getValue DamThermalReferenceTemperature]
 		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
 	
 		set thermalsettingDict [dict create]
@@ -80,7 +80,7 @@ proc Dam::write::getParametersDict { } {
 		dict set thermalsettingDict compute_reactions [write::getValue DamThermalComputeReactions]
 		dict set thermalsettingDict move_mesh_flag [write::getValue DamThermalMoveMeshFlag]
 		dict set thermalsettingDict compute_norm_dx_flag [write::getValue DamThermalComputeNormDx]
-		dict set thermalsettingDict theta_scheme [write::getValue DamMechanicalSchemeTherm]
+		dict set thermalsettingDict theta_scheme [write::getValue DamThermalScheme]
 		
 		set thermallinearDict [dict create]
 		#~ dict set thermallinearDict solver_type
@@ -89,7 +89,30 @@ proc Dam::write::getParametersDict { } {
 		dict set solversettingsDict thermal_solver_settings $thermalsettingDict
 		
 	}
-        
+	
+	if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
+    	dict set solversettingsDict echo_level 1
+		dict set solversettingsDict buffer_size 2
+		dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
+		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+	
+		set thermalsettingDict [dict create]
+		dict set thermalsettingDict echo_level [write::getValue DamThermalUPEcholevel]
+		dict set thermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalUPReformsSteps]
+		dict set thermalsettingDict clear_storage [write::getValue DamThermalUPClearStorage]
+		dict set thermalsettingDict compute_reactions [write::getValue DamThermalUPComputeReactions]
+		dict set thermalsettingDict move_mesh_flag [write::getValue DamThermalUPMoveMeshFlag]
+		dict set thermalsettingDict compute_norm_dx_flag [write::getValue DamThermalUPComputeNormDx]
+		dict set thermalsettingDict theta_scheme [write::getValue DamThermalUPScheme]
+		
+		set thermallinearDict [dict create]
+		#~ dict set thermallinearDict solver_type
+		#~ dict set thermalsettingDict linear_solver_settings $thermallinearDict
+		dict set thermalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
+		dict set solversettingsDict thermal_solver_settings $thermalsettingDict
+		
+	}
+	   
     ### Mechanical Settings
     set mechanicalSolverSettingsDict [dict create]
     dict set mechanicalSolverSettingsDict solution_type [write::getValue DamSoluType]
