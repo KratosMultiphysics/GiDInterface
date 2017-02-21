@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="ModelInfo" pn="Model information" icon="information16" help="Model information" state="normal" open_window="0">
     <value n="TypeofProblem" pn="Type of Problem" un="DamTypeofProblem" v="Mechanical" values="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Acoustic" help="Type of problem" actualize_tree="1"/>
-    
     <value n="SolStratCombo" pn="Strategy" un="DamSolStrat" v="" values="" dict="[GetSolutionStrategies Mechanic]" actualize_tree="1" state="normal"/>
     <value n="MechanicalScheme" pn="Scheme" v=""    un="DamScheme" values="" dict="[GetSchemes]" actualize_tree="1"/>
     <container n="MechanicalProblem" pn="Mechanical Problem" un="DamMechanicalData" state="[checkStateByUniqueName DamTypeofProblem Mechanical]" actualize_tree="1" open_window="0">
-        
         <value n="SolutionType" pn="Solution type" v="Quasi-Static" values="Quasi-Static,Dynamic" help="Solution type" actualize_tree="1"/>
         <value n="AnalysisType" pn="Analysis type" v="Linear" values="Linear,Non-Linear" help="Analysis type" />
          <container n="StratParams" pn="Strategy parameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">
             <dynamicnode command="spdAux::injectSolStratParams" args=""/>
             <dynamicnode command="spdAux::injectSolvers" args=""/>
         </container>
-        
     </container>
     
     <container n="ThermoMechanicalProblem" pn="Thermo-Mechanical Problem"  un="DamThermo-MechanicalData" state="[checkStateByUniqueName DamTypeofProblem Thermo-Mechanical]"  actualize_tree="1" open_window="0">
-            
             <container n="MechanicalPartProblem" pn="Mechanical Problem"  state="normal" actualize_tree="1" open_window="0">
                 <value n="SolutionType" pn="Solution type" un="DamSoluType" v="Quasi-Static" values="Quasi-Static,Dynamic" help="Solution type" state="readonly" actualize_tree="1"/>
                 <value n="AnalysisType" pn="Analysis type" un="DamAnalysisType" v="Linear" values="Linear,Non-Linear" state="readonly" help="Analysis type" />
@@ -40,24 +36,19 @@
 					<value n="thermal_block_builder" pn="Block Builder" un="DamThermalBlockBuilder" v="true" values="true,false" state="readonly" help="" />
 					<dynamicnode command="spdAux::injectSolvers" args=""/>
                 </container>
-            
             </container>
-            
     </container> 
 
     <container n="UP_MechanicalProblem" pn="UP Mechanical Problem" un="DamUP_MechanicalData" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical]" actualize_tree="1" open_window="0">
-        
         <value n="SolutionType" pn="Solution type" un="DamSoluType" v="Dynamic" values="Dynamic" actualize_tree="1"/>
         <value n="AnalysisType" pn="Analysis type" un="DamAnalysisType" v="Linear" values="Linear,Non-Linear" help="Analysis type" state="readonly" />
         <container n="StratParams" pn="Strategy parameters" un="DamStratParams" icon="groupsTreeNew.gif"  state="normal" open_window="0">
             <dynamicnode command="spdAux::injectSolStratParams" args=""/>
             <dynamicnode command="spdAux::injectSolvers" args=""/>
-        </container>
-        
+        </container>   
     </container>
     
     <container n="UP_ThermoMechanicalProblem" pn="UP Thermo-Mechanical Problem"  un="DamUP_Thermo-MechanicalData" state="[checkStateByUniqueName DamTypeofProblem UP_Thermo-Mechanical]"  actualize_tree="1" open_window="0">
-            
             <container n="MechanicalPartProblem" pn="UP Mechanical Problem"  state="normal" actualize_tree="1" open_window="0">
                 <value n="SolutionType" pn="Solution type" un="DamSoluType" v="Dynamic" values="Dynamic" actualize_tree="1"/>
                 <value n="AnalysisType" pn="Analysis type" un="DamAnalysisType" v="Linear" values="Linear,Non-Linear" state="readonly" help="Analysis type" />
@@ -81,9 +72,7 @@
 					<value n="thermal_block_builder" pn="Block Builder" un="DamThermalUPBlockBuilder" v="true" values="true,false" state="readonly" help="" />
 					<dynamicnode command="spdAux::injectSolvers" args=""/>
                 </container>
-            
-            </container>
-            
+            </container>       
     </container> 
 
     <container n="AcousticProblem" pn="Acoustic Problem" state="[checkStateByUniqueName DamTypeofProblem Acoustic]"  actualize_tree="1" open_window="0">
@@ -92,7 +81,7 @@
 			<value n="residual_relative_tolerance" pn="Residual relative tolerance" un="DamAcousticRelTol" type="double" v="1e-4" help=""/> 
 			<value n="residual_absolute_tolerance" pn="Residual absolute tolerance" un="DamAcousticAbsTol" type="double" v="1e-9" help=""/>
 		    <value n="max_iteration" pn="Maximum iterations" un="DamAcousticMaxIteration" type="integer" v="10" help="This number will break the iterative loop when reached"/> 
-			<value n="move_mesh_flag" pn="Move mesh flag" un="DamAcousticMoveMeshFlag" type="bool" v="true" values="false,true" help="Move the mesh"/>
+			<value n="move_mesh_flag" pn="Move mesh flag" un="DamAcousticMoveMeshFlag" type="bool" v="false" values="false,true" help="Move the mesh"/>
 			<container n="AcousticLinearSolver" pn="Linear Solver" un="DamAcousticLinearSolver" state="normal" open_window="0">
 					<value n="solver_type" pn="Solver" un="DamAcousticSolver" v="AMGCL" state="readonly" help=""/>
 					<value n="max_iteration" pn="Max iterations" un="DamAcousticMaxIter" type="integer" v="200" help=""/>
@@ -100,10 +89,7 @@
 					<value n="verbosity" pn="Verbosity" un="DamAcousticVerbosity" v="0" values="0,1,2" state="readonly" help="#0->shows no information, 1->some information, 2->all the information" />
 					<value n="GMRES_size" pn="GMRES Size" un="DamAcousticGMRESSize" type="integer" v="50" help=""/>
 			</container>
-
         </container>
-
     </container> 
-
 
 </container>  
