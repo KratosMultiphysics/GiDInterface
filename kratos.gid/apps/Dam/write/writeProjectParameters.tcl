@@ -140,6 +140,7 @@ proc Dam::write::getParametersDict { } {
 		dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
 		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
 		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
+		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolversParametersDict Dam] ]
 		### Add section to document
 		dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
 	}
