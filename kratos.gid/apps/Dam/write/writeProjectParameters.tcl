@@ -66,10 +66,10 @@ proc Dam::write::getParametersDict { } {
     dict set modelDict input_filename $model_name
     dict set modelDict input_file_label 0
     dict set solversettingsDict model_import_settings $modelDict
+    dict set solversettingsDict echo_level 1
+	dict set solversettingsDict buffer_size 2
     
     if {$damTypeofProblem eq "Thermo-Mechanical" || $damTypeofProblem eq "UP_Thermo-Mechanical" } {
-    	dict set solversettingsDict echo_level 1
-		dict set solversettingsDict buffer_size 2
 		dict set solversettingsDict reference_temperature [write::getValue DamThermalReferenceTemperature]
 		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
 	
@@ -91,9 +91,7 @@ proc Dam::write::getParametersDict { } {
 	}
 	
 	if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
-    	dict set solversettingsDict echo_level 1
-		dict set solversettingsDict buffer_size 2
-		dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
+    	dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
 		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
 	
 		set thermalsettingDict [dict create]
@@ -107,21 +105,44 @@ proc Dam::write::getParametersDict { } {
 		
 		set thermallinearDict [dict create]
 		#~ dict set thermallinearDict solver_type
+		## Adding linear solver settings to acoustic solver
 		#~ dict set thermalsettingDict linear_solver_settings $thermallinearDict
 		dict set thermalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
 		dict set solversettingsDict thermal_solver_settings $thermalsettingDict
 		
 	}
-	   
-    ### Mechanical Settings
-    set mechanicalSolverSettingsDict [dict create]
-    dict set mechanicalSolverSettingsDict solution_type [write::getValue DamSoluType]
-    dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
-    dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
-    set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    ### Add section to document
-    dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
-    
+	 
+	if {$damTypeofProblem eq "Acoustic"} {  
+		### Acostic Settings
+		set acousticSolverSettingsDict [dict create]
+		dict set acousticSolverSettingsDict strategy_type "Newton-Raphson"
+		dict set acousticSolverSettingsDict scheme_type "Newmark"
+		dict set acousticSolverSettingsDict convergence_criterion [write::getValue DamAcousticConvergencecriterion]
+		dict set acousticSolverSettingsDict residual_relative_tolerance [write::getValue DamAcousticRelTol]
+		dict set acousticSolverSettingsDict residual_absolute_tolerance [write::getValue DamAcousticAbsTol]
+		dict set acousticSolverSettingsDict max_iteration [write::getValue DamAcousticMaxIteration]
+		dict set acousticSolverSettingsDict move_mesh_flag [write::getValue DamAcousticMoveMeshFlag]
+		
+		set acousticlinearDict [dict create]
+		dict set acousticlinearDict solver_type [write::getValue DamAcousticSolver]
+		dict set acousticlinearDict max_iteration [write::getValue DamAcousticMaxIter]
+		dict set acousticlinearDict tolerance [write::getValue DamAcousticTolerance]
+		dict set acousticlinearDict verbosity [write::getValue DamAcousticVerbosity]
+		dict set acousticlinearDict GMRES_size [write::getValue DamAcousticGMRESSize]
+		## Adding linear solver settings to acoustic solver
+		dict set acousticSolverSettingsDict linear_solver_settings $acousticlinearDict
+				
+		dict set solversettingsDict acoustic_settings $acousticSolverSettingsDict
+	} else {
+	    ### Mechanical Settings
+		set mechanicalSolverSettingsDict [dict create]
+		dict set mechanicalSolverSettingsDict solution_type [write::getValue DamSoluType]
+		dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
+		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
+		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
+		### Add section to document
+		dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
+	}
     dict set projectParametersDict solver_settings $solversettingsDict
     
  ### Boundary conditions processes
@@ -150,9 +171,7 @@ proc Dam::write::getParametersDict { } {
         dict set projectParametersDict loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
     }
     
-    
-   
-    
+
     ### GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
