@@ -362,7 +362,7 @@
     </CLaw>
     
         <!-- Von Mises Modified -->
-    <CLaw n="ModifiedMisesNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Isotropic Modified Von Mises Damage Plane Strain" ProductionReady="ProductionReady" Type="DamageStrain" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="ModifiedMisesNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Isotropic Modified Von Mises Damage Plane Strain" ProductionReady="ProductionReady" Type="DamageStrain" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
 	  help="Modified Von Mises 2D Planes Strain for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -378,7 +378,7 @@
         </outputs>
     </CLaw>
     
-        <CLaw n="ModifiedMisesNonlocalDamagePlaneStress2DLaw" pn="Non-Local Isotropic Modified Von Mises Damage Plane Stress" ProductionReady="ProductionReady" Type="DamageStress" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+        <CLaw n="ModifiedMisesNonlocalDamagePlaneStress2DLaw" pn="Non-Local Isotropic Modified Von Mises Damage Plane Stress" ProductionReady="ProductionReady" Type="DamageStress" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
 	  help="Modified Von Mises 2D Planes Strees for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
