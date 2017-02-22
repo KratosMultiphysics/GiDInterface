@@ -16,7 +16,7 @@
         <value n="NODAL_JOINT_WIDTH" pn="Nodal Joint Width" v="No" values="Yes,No" help=""/>
         <value n="Vi_POSITIVE" pn="Traction Principal Stress Vector" v="No" values="Yes,No" help=""/>
         <value n="Viii_POSITIVE" pn="Compression Principal Stress Vector" v="No" values="Yes,No" help=""/>
-        <value n="TEMPERATURE" pn="Temperature" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem Thermo-Mechanical]" />
+        <value n="TEMPERATURE" pn="Temperature" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem Thermo-Mechanical DamTypeofProblem UP_Thermo-Mechanical]" />
     </container>
     <container n="GiDOptions" pn="Options" help="GiD postprocess options" open_window="0">
 <!--
