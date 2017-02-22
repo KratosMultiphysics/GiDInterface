@@ -260,6 +260,7 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
           set type_of_problem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
           if {$type_of_problem eq "UP_Mechanical"} {set n "Newton-Raphson"}
           if {$type_of_problem eq "UP_Thermo-Mechanical"} {set n "Newton-Raphson"}
+          if {$type_of_problem eq "Acoustic"} {set n "Newton-Raphson"}
      } else {
           # Thermal
           set n "Generic"
