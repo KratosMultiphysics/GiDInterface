@@ -106,7 +106,7 @@ proc Dam::write::getParametersDict { } {
 		set thermallinearDict [dict create]
 		#~ dict set thermallinearDict solver_type
 		## Adding linear solver settings to acoustic solver
-		#~ dict set thermalsettingDict linear_solver_settings $thermallinearDict
+		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolversParametersDict Dam DamSolStrat DamMechanicalData] ]
 		dict set thermalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
 		dict set solversettingsDict thermal_solver_settings $thermalsettingDict
 		
@@ -133,10 +133,22 @@ proc Dam::write::getParametersDict { } {
 		dict set acousticSolverSettingsDict linear_solver_settings $acousticlinearDict
 				
 		dict set solversettingsDict acoustic_settings $acousticSolverSettingsDict
-	} else {
+        
+	} elseif {$damTypeofProblem eq "UP_Mechanical"} {
+        	    ### Mechanical Settings
+		set UPmechanicalSolverSettingsDict [dict create]
+		dict set UPmechanicalSolverSettingsDict solution_type [write::getValue DamUPThermoMechaSoluType]
+		dict set UPmechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
+		dict set UPmechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
+		set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
+		set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [write::getSolversParametersDict Dam DamSolStrat DamUP_MechanicalData] ]
+		### Add section to document
+		dict set solversettingsDict mechanical_settings $UPmechanicalSolverSettingsDict   
+        
+    } else {
 	    ### Mechanical Settings
 		set mechanicalSolverSettingsDict [dict create]
-		dict set mechanicalSolverSettingsDict solution_type [write::getValue DamSoluType]
+		dict set mechanicalSolverSettingsDict solution_type [write::getValue DamMechaSoluType]
 		dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
 		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
 		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
