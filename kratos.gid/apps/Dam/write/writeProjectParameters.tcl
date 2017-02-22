@@ -140,8 +140,8 @@ proc Dam::write::getParametersDict { } {
 		dict set UPmechanicalSolverSettingsDict solution_type [write::getValue DamUPThermoMechaSoluType]
 		dict set UPmechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
 		dict set UPmechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
-		set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
-		set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [write::getSolversParametersDict Dam DamSolStrat DamUP_MechanicalData] ]
+		set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict] ]
+		set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [Dam::write::getSolversParametersDict Dam DamSolStrat DamUP_MechanicalData] ]
 		### Add section to document
 		dict set solversettingsDict mechanical_settings $UPmechanicalSolverSettingsDict   
         
@@ -151,8 +151,8 @@ proc Dam::write::getParametersDict { } {
 		dict set mechanicalSolverSettingsDict solution_type [write::getValue DamMechaSoluType]
 		dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
 		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
-		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
-		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolversParametersDict Dam DamSolStrat DamMechanicalData] ]
+		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict] ]
+		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::getSolversParametersDict Dam DamSolStrat DamMechanicalData] ]
 		### Add section to document
 		dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
 	}
@@ -318,8 +318,11 @@ proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {probl
     foreach se [$sol getSolversEntries] {
         set solverEntryDict [dict create]
         set base_node_path [spdAux::getRoute $problem_base_UN]
-        foreach cont [[customlib::GetBaseRoot] getElementsByTagName "containter"] {
-            if {[$cont @un] eq [apps::getAppUniqueName $appid "$solstratName[$se getName]} {set base_node $cont; break}
+        #~ foreach cont [[customlib::GetBaseRoot] getElementsByTagName "containter"] {
+            #~ if {[$cont @un] eq [apps::getAppUniqueName $appid "$solstratName[$se getName]"} {set base_node $cont; break}
+        #~ }
+        foreach cont [[[customlib::GetBaseRoot] selectNodes $base_node_path] getElementsByTagName "containter"] {
+            if {[$cont @un] eq [apps::getAppUniqueName $appid "$solstratName[$se getName]"} {set base_node $cont; break}
         }
         #set un [apps::getAppUniqueName $appid "$solstratName[$se getName]"]
         if {$base_node ne ""} {
