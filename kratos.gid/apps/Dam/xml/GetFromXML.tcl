@@ -95,7 +95,8 @@ proc Dam::xml::SolStratParamState {outnode} {
 proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
      set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
      set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
-     
+     #W "Round 1 $Claws"
+     #foreach cl $Claws {W [$cl getName]}
      set type_of_problem [write::getValue DamTypeofProblem]
      set goodList [list ]
      #W "Pre type problem -> $type_of_problem"
@@ -103,14 +104,17 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
           set type [$cl getAttribute Type]
                #W "cl -> [$cl getName]"
                #W "type -> $type"
-          if {[string first "Therm" $type] eq -1 && $type_of_problem ne "Thermo-Mechanical"} {
+          if {[string first "Therm" $type] eq -1 && $type_of_problem ni [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]} {
                lappend goodList $cl
-          } elseif {[string first "Therm" $type] ne -1 && $type_of_problem eq "Thermo-Mechanical"} {
+          } elseif {[string first "Therm" $type] ne -1 && $type_of_problem in [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]} {
                lappend goodList $cl
           } elseif {[string first "Interface" $type] ne -1} {lappend goodList $cl}
      }
      #W "good $goodList"
      set Claws $goodList
+     #W "Round 2 $Claws"
+     #foreach cl $Claws {W [$cl getName]}
+
      set analysis_type ""
      set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
      switch $TypeofProblem {
@@ -152,7 +156,9 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
           }
      }
      set Claws $goodList
-   
+        #W "Round 3 $Claws"
+     #foreach cl $Claws {W [$cl getName]}
+
      #W "Const Laws que han pasado la criba: $Claws"
      if {[llength $Claws] == 0} {
          if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v "None"}
