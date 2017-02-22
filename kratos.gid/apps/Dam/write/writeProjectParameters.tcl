@@ -140,7 +140,7 @@ proc Dam::write::getParametersDict { } {
 		dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
 		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
 		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolutionStrategyParametersDict] ]
-		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolversParametersDict Dam] ]
+		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [write::getSolversParametersDict Dam DamSolStrat DamMechanicalData] ]
 		### Add section to document
 		dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
 	}
@@ -174,7 +174,7 @@ proc Dam::write::getParametersDict { } {
     
 
     ### GiD output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    dict set projectParametersDict output_configuration [Dam::write::GetDefaultOutputDict]
 
     set constraints_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
     set loads_process_list [write::getConditionsParametersDict DamLoads ]
@@ -278,7 +278,7 @@ proc Dam::write::writeParametersEvent { } {
     #write::SetParallelismConfiguration DamNumThreads ""
 }
 
-proc write::GetDefaultOutputDict {} {
+proc Dam::write::GetDefaultOutputDict {} {
     set outputDict [dict create]
     set resultDict [dict create]
     
@@ -297,3 +297,40 @@ proc write::GetDefaultOutputDict {} {
     return $outputDict
 }
 
+ # appid Dam solStratUN DamSolStrat problem_base_UN DamMechanicalData
+proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {problem_base_UN ""}} {
+
+    set solstratName [write::getValue $solStratUN]
+    set sol [::Model::GetSolutionStrategy $solstratName]
+    set solverSettingsDict [dict create]
+    foreach se [$sol getSolversEntries] {
+        set solverEntryDict [dict create]
+        set base_node_path [spdAux::getRoute $problem_base_UN]
+        foreach cont [[customlib::GetBaseRoot] getElementsByTagName "containter"] {
+            if {[$cont @un] eq [apps::getAppUniqueName $appid "$solstratName[$se getName]} {set base_node $cont; break}
+        }
+        #set un [apps::getAppUniqueName $appid "$solstratName[$se getName]"]
+        if {$base_node ne ""} {
+            set solver_node [$base_node selectNodes "./value\[@n='Solver'\]"]
+            set solverName [write::getValueByNode $solver_node]
+            if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI"]} {
+                dict set solverEntryDict solver_type $solverName
+                set solver [::Model::GetSolver $solverName]
+                foreach {n in} [$solver getInputs] {
+                    # JG temporal, para la precarga de combos
+                    if {[$in getType] ni [list "bool" "integer" "double"]} {
+                        set v ""
+                        catch {set v [write::getValueByNode [$base_node selectNodes "./value\[@n='$n'\]"]]}
+                        if {$v eq ""} {set v [write::getValueByNode [$base_node selectNodes "./value\[@n='$n'\]"]]}
+                        dict set solverEntryDict $n $v
+                    } {
+                        dict set solverEntryDict $n [write::getValueByNode [$base_node selectNodes "./value\[@n='$n'\]"]]
+                    }
+                }
+                dict set solverSettingsDict [$se getName] $solverEntryDict
+            }
+        }
+        unset solverEntryDict
+    }
+    return $solverSettingsDict
+}

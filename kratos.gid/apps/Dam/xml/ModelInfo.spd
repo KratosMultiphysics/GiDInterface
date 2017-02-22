@@ -75,7 +75,7 @@
             </container>       
     </container> 
 
-    <container n="AcousticProblem" pn="Acoustic Problem" state="[checkStateByUniqueName DamTypeofProblem Acoustic]"  actualize_tree="1" open_window="0">
+    <container n="AcousticProblem" pn="Acoustic Problem" state="[checkStateByUniqueName DamTypeofProblem Acoustic]" un="DamUAcousticData"   actualize_tree="1" open_window="0">
          <container n="StratParams" pn="Strategy parameters" un="DamAcousticStratParams" icon="groupsTreeNew.gif"  state="normal" open_window="0">
 			<value n="convergence_criterion" pn="Convergence criterion" un="DamAcousticConvergencecriterion" v="Residual_criterion" state="readonly" help="" />
 			<value n="residual_relative_tolerance" pn="Residual relative tolerance" un="DamAcousticRelTol" type="double" v="1e-4" help=""/> 
