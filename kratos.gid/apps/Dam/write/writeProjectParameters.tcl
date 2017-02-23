@@ -152,11 +152,16 @@ proc Dam::write::getParametersDict { } {
 		dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
 		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
 		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict] ]
-		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::getSolversParametersDict Dam DamSolStrat DamMechanicalData] ]
+		#~ set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::getSolversParametersDict Dam DamSolStrat DamMechanicalData] ]
 		### Add section to document
 		dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
 	}
     dict set projectParametersDict solver_settings $solversettingsDict
+    
+    
+    ### GiD output configuration
+    dict set projectParametersDict output_configuration [Dam::write::GetDefaultOutputDict]
+    
     
  ### Boundary conditions processes
     set body_part_list [list ]
@@ -184,9 +189,6 @@ proc Dam::write::getParametersDict { } {
         dict set projectParametersDict loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
     }
     
-
-    ### GiD output configuration
-    dict set projectParametersDict output_configuration [Dam::write::GetDefaultOutputDict]
 
     set constraints_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
     set loads_process_list [write::getConditionsParametersDict DamLoads ]
@@ -286,8 +288,6 @@ proc Dam::write::ChangeFileNameforTableid { processList } {
 proc Dam::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::WriteJSON $projectParametersDict
-    #~ write::SetEnvironmentVariable OMP_NUM_THREADS [write::getValue DamNumThreads]
-    #write::SetParallelismConfiguration DamNumThreads ""
 }
 
 proc Dam::write::GetDefaultOutputDict {} {
@@ -302,8 +302,8 @@ proc Dam::write::GetDefaultOutputDict {} {
     dict set resultDict gidpost_flags $GiDPostDict
     
     dict set resultDict output_frequency [write::getValue Results OutputDeltaTime]   
-    dict set resultDict nodal_results [GetResultsList NodalResults]
-    dict set resultDict gauss_point_results [GetResultsList ElementResults]
+    dict set resultDict nodal_results [write::GetResultsList NodalResults]
+    dict set resultDict gauss_point_results [write::GetResultsList ElementResults]
     
     dict set outputDict "result_file_configuration" $resultDict
     return $outputDict
