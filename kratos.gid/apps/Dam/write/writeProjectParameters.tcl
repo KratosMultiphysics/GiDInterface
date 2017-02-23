@@ -68,7 +68,13 @@ proc Dam::write::getParametersDict { } {
     dict set solversettingsDict model_import_settings $modelDict
     dict set solversettingsDict echo_level 1
 	dict set solversettingsDict buffer_size 2
-    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]    
+    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+    
+    set MechanicalSolutionStrategyUN "DamSolStrat"
+    set MechanicalSchemeUN "DamScheme"
+    set MechanicalDataUN "DamMechanicalData"
+    set MechanicalDataParametersUN "DamMechanicalDataParameters"
+    
     if {$damTypeofProblem eq "Thermo-Mechanical" || $damTypeofProblem eq "UP_Thermo-Mechanical" } {
 		dict set solversettingsDict reference_temperature [write::getValue DamThermalReferenceTemperature]
 		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
@@ -86,8 +92,11 @@ proc Dam::write::getParametersDict { } {
 		#~ dict set thermallinearDict solver_type
 		#~ dict set thermalsettingDict linear_solver_settings $thermallinearDict
 		dict set thermalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
-		dict set solversettingsDict thermal_solver_settings $thermalsettingDict
-		
+		dict set thermalsettingDict linear_solver_settings [dict merge $thermallinearDict [::Dam::write::getSolversParametersDict Dam DamSolStratTherm "DamThermo-Mechanical-ThermData"] ]
+        dict set solversettingsDict thermal_solver_settings $thermalsettingDict
+        
+        set MechanicalDataUN "DamThermo-Mechanical-MechData"
+        set MechanicalDataParametersUN "DamThermo-Mechanical-MechDataParameters"
 	}
 	
 	if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
@@ -151,10 +160,10 @@ proc Dam::write::getParametersDict { } {
 		dict set mechanicalSolverSettingsDict solution_type [write::getValue DamMechaSoluType]
 		dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
 		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
-		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict] ]
-		#~ set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::getSolversParametersDict Dam DamSolStrat DamMechanicalData] ]
+		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict $MechanicalSolutionStrategyUN $MechanicalSchemeUN $MechanicalDataParametersUN] ]
+		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::Dam::write::getSolversParametersDict Dam $MechanicalSolutionStrategyUN $MechanicalDataUN] ]
 		### Add section to document
-        dict set mechanicalSolverSettingsDict domain_list [Dam::write::DefinitionDomains]
+        set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
 		dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
         
 	}
@@ -162,7 +171,7 @@ proc Dam::write::getParametersDict { } {
     
     
     ### GiD output configuration
-    dict set projectParametersDict output_configuration [Dam::write::GetDefaultOutputDict]
+    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
     
     set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
     set load_process_list [write::getConditionsParametersDict DamLoads ]
@@ -249,7 +258,7 @@ proc Dam::write::getParametersDict { } {
 proc Dam::write::DefinitionDomains { } {
     
  ### Boundary conditions processes
-    set domainsDict [list]
+    set domainsDict [dict create]
  
     set body_part_list [list ]
     set joint_part_list [list ]
@@ -337,19 +346,29 @@ proc Dam::write::GetDefaultOutputDict {} {
 
  # appid Dam solStratUN DamSolStrat problem_base_UN DamMechanicalData
 proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {problem_base_UN ""}} {
-
+    #W "Params -> $appid $solStratUN $problem_base_UN"
     set solstratName [write::getValue $solStratUN]
+    #W "sol strat name $solstratName"
     set sol [::Model::GetSolutionStrategy $solstratName]
     set solverSettingsDict [dict create]
     foreach se [$sol getSolversEntries] {
         set solverEntryDict [dict create]
         set base_node_path [spdAux::getRoute $problem_base_UN]
-        #~ foreach cont [[customlib::GetBaseRoot] getElementsByTagName "containter"] {
-            #~ if {[$cont @un] eq [apps::getAppUniqueName $appid "$solstratName[$se getName]"} {set base_node $cont; break}
-        #~ }
-        foreach cont [[[customlib::GetBaseRoot] selectNodes $base_node_path] getElementsByTagName "containter"] {
-            if {[$cont @un] eq [apps::getAppUniqueName $appid "$solstratName[$se getName]"} {set base_node $cont; break}
+        set containers [[[customlib::GetBaseRoot] selectNodes $base_node_path] getElementsByTagName "container"]
+        foreach cont $containers {
+            #W [$cont @n]
+            if {[$cont hasAttribute un]} {
+                set cont_un [$cont @un]
+                set active_solver_entry [apps::getAppUniqueName $appid "$solstratName[$se getName]"]
+                #W "cont_un : $cont_un"
+                #W "active_solver_entry : $active_solver_entry"
+                if {$cont_un eq $active_solver_entry} {
+                    set base_node $cont
+                    break
+                }
+            }
         }
+        #W [$base_node asXML]
         #set un [apps::getAppUniqueName $appid "$solstratName[$se getName]"]
         if {$base_node ne ""} {
             set solver_node [$base_node selectNodes "./value\[@n='Solver'\]"]
