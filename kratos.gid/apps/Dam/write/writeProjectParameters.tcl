@@ -68,7 +68,7 @@ proc Dam::write::getParametersDict { } {
     dict set solversettingsDict model_import_settings $modelDict
     dict set solversettingsDict echo_level 1
 	dict set solversettingsDict buffer_size 2
-    
+    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]    
     if {$damTypeofProblem eq "Thermo-Mechanical" || $damTypeofProblem eq "UP_Thermo-Mechanical" } {
 		dict set solversettingsDict reference_temperature [write::getValue DamThermalReferenceTemperature]
 		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
@@ -154,7 +154,9 @@ proc Dam::write::getParametersDict { } {
 		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict] ]
 		#~ set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::getSolversParametersDict Dam DamSolStrat DamMechanicalData] ]
 		### Add section to document
+        dict set mechanicalSolverSettingsDict domain_list [Dam::write::DefinitionDomains]
 		dict set solversettingsDict mechanical_settings $mechanicalSolverSettingsDict
+        
 	}
     dict set projectParametersDict solver_settings $solversettingsDict
     
@@ -162,36 +164,14 @@ proc Dam::write::getParametersDict { } {
     ### GiD output configuration
     dict set projectParametersDict output_configuration [Dam::write::GetDefaultOutputDict]
     
-    
- ### Boundary conditions processes
-    set body_part_list [list ]
-    set joint_part_list [list ]
-    set mat_dict [write::getMatDict]
-    foreach part_name [dict keys $mat_dict] {
-        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Joint"} {
-            lappend joint_part_list [write::getMeshId Parts $part_name]
-        } {
-            lappend body_part_list [write::getMeshId Parts $part_name]
-        }
-    }
-    dict set projectParametersDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
-    dict set projectParametersDict problem_domain_body_sub_model_part_list $body_part_list
-    dict set projectParametersDict problem_domain_joint_sub_model_part_list $joint_part_list
-    dict set projectParametersDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
     set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
     set load_process_list [write::getConditionsParametersDict DamLoads ]
-    
-    dict set projectParametersDict nodal_processes_sub_model_part_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
-    dict set projectParametersDict load_processes_sub_model_part_list [Dam::write::ChangeFileNameforTableid $load_process_list]
-    set strategytype [write::getValue DamSolStrat]
-    if {$strategytype eq "Arc-length"} {
-        dict set projectParametersDict loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
-        dict set projectParametersDict loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
-    }
-    
+    dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
+    dict set projectParametersDict loads_process_list [Dam::write::ChangeFileNameforTableid $load_process_list]
+       
 
-    set constraints_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
-    set loads_process_list [write::getConditionsParametersDict DamLoads ]
+    #~ set constraints_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
+    #~ set loads_process_list [write::getConditionsParametersDict DamLoads ]
 
     return $projectParametersDict
 
@@ -263,9 +243,44 @@ proc Dam::write::getParametersDict { } {
     #~ }
     #~ ### GiD output configuration
     #~ dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
-        
     #~ return $projectParametersDict
 
+
+proc Dam::write::DefinitionDomains { } {
+    
+ ### Boundary conditions processes
+    set domainsDict [list]
+ 
+    set body_part_list [list ]
+    set joint_part_list [list ]
+    set mat_dict [write::getMatDict]
+    foreach part_name [dict keys $mat_dict] {
+        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Joint"} {
+            lappend joint_part_list [write::getMeshId Parts $part_name]
+        } {
+            lappend body_part_list [write::getMeshId Parts $part_name]
+        }
+    }
+    dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
+    dict set domainsDict body_domain_sub_model_part_list $body_part_list
+    #~ dict set domainsDict problem_domain_joint_sub_model_part_list $joint_part_list
+    
+    set loads_sub_model_part_list [list]
+    set loads_variable_list [list]
+    set strategytype [write::getValue DamSolStrat]
+    if {$strategytype eq "Arc-length"} {
+        #~ dict set projectParametersDict loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
+        #~ dict set projectParametersDict loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
+       lappend loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
+       lappend loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
+    }
+    
+    dict set domainsDict problem_loads_sub_model_part_list $loads_sub_model_part_list
+    dict set domainsDict problem_loads_variable_list $loads_variable_list
+    
+    return $domainsDict
+    
+}
 
 proc Dam::write::ChangeFileNameforTableid { processList } {
     set returnList [list ]
