@@ -77,6 +77,7 @@ proc ::Fluid::write::getParametersDict { } {
     dict set timeSteppingDict automatic_time_step $automaticDeltaTime
     if {$automaticDeltaTime eq "Yes"} {
         dict set timeSteppingDict "CFL_number" [write::getValue FLTimeParameters CFLNumber]
+        dict set timeSteppingDict "minimum_delta_time" [write::getValue FLTimeParameters MinimumDeltaTime]
         dict set timeSteppingDict "maximum_delta_time" [write::getValue FLTimeParameters MaximumDeltaTime]
     } else {
         dict set timeSteppingDict "time_step" [write::getValue FLTimeParameters DeltaTime]

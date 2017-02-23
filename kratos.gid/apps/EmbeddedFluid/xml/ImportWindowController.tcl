@@ -53,7 +53,7 @@ proc EmbeddedFluid::xml::ImportMeshWindow { } {
 }
 
 proc EmbeddedFluid::xml::MoreImportOptions { f } {
-    if {$EmbeddedFluid::xml::lastImportMeshSize == 0} {set EmbeddedFluid::xml::lastImportMeshSize 0.5}
+    if {$EmbeddedFluid::xml::lastImportMeshSize == 0} {set EmbeddedFluid::xml::lastImportMeshSize 1000}
     ttk::label $f.lblGeometry -text [= "Mesh size"]:
     ttk::entry $f.entGeometry -textvariable EmbeddedFluid::xml::lastImportMeshSize
     grid columnconfigure $f 1 -weight 1
