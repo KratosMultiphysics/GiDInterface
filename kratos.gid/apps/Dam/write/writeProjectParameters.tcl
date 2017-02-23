@@ -301,7 +301,18 @@ proc Dam::write::GetDefaultOutputDict {} {
     dict set GiDPostDict MultiFileFlag              [write::getValue Results GiDMultiFileFlag]
     dict set resultDict gidpost_flags $GiDPostDict
     
-    dict set resultDict output_frequency [write::getValue Results OutputDeltaTime]   
+    dict set resultDict file_label [write::getValue Results FileLabel] 
+    dict set resultDict output_control_type [write::getValue Results OutputControlType] 
+    set output_control [write::getValue DamOutputControlType]
+    if {$output_control eq "step"} {
+        dict set resultDict output_frequency [write::getValue Results OutputDeltaStep]
+    } else {
+        dict set resultDict output_frequency [write::getValue Results OutputDeltaTime]
+    }
+    dict set resultDict body_output [write::getValue Results BodyOutput] 
+    dict set resultDict node_output [write::getValue Results NodeOutput] 
+    dict set resultDict skin_output [write::getValue Results SkinOutput]
+    dict set resultDict plane_output [write::GetResultsList Results CutPlanes]   
     dict set resultDict nodal_results [write::GetResultsList NodalResults]
     dict set resultDict gauss_point_results [write::GetResultsList ElementResults]
     
