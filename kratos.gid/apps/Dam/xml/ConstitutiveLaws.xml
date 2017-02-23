@@ -241,6 +241,7 @@
     <!--3D  Damage laws-->
     <!-- Simo-Ju -->
     <CLaw n="SimoJuLocalDamagePlaneStrain2DLaw" pn="Isotropic Damage Simo-Ju Plane Strain" ProductionReady="ProductionReady" Type="DamageStrain" behaviour="Elastic" StrainSize="3"
+		  DamageType="Local"
           help="Simo-Ju 2D Plane Strain Law for Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AnalysisType="Non-Linear" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -255,6 +256,7 @@
         </outputs>
     </CLaw>
     <CLaw n="SimoJuLocalDamagePlaneStress2DLaw" pn="Isotropic Damage Simo-Ju Plane Stress" ProductionReady="ProductionReady" Type="DamageStress" behaviour="Elastic" StrainSize="3"
+		  DamageType="Local"
           help="Simo-Ju 2D Plane Stress Law for Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AnalysisType="Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -270,6 +272,7 @@
         </outputs>
     </CLaw>
         <CLaw n="SimoJuNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Isotropic Damage Simo-Ju Plane Strain" ProductionReady="ProductionReady" Type="DamageStrain" behaviour="Elastic" StrainSize="3"
+			  DamageType="NonLocal"
           help="Simo-Ju 2D Plane Strain Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AnalysisType="Non-Linear" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -284,6 +287,7 @@
         </outputs>
     </CLaw>
     <CLaw n="SimoJuNonlocalDamagePlaneStress2DLaw" pn="Non-Local Isotropic Damage Simo-Ju Plane Stress" ProductionReady="ProductionReady" Type="DamageStress" behaviour="Elastic" StrainSize="3"
+		  DamageType="NonLocal"
           help="Simo-Ju 2D Plane Stress Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AnalysisType="Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -299,7 +303,8 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalSimoJuLocalDamagePlaneStrain2DLaw" pn="Local Thermal Isotropic Damage Simo-Ju Plane Strain" ProductionReady="ProductionReady" Type="ThermalDamageStrain" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
+    <CLaw n="ThermalSimoJuLocalDamagePlaneStrain2DLaw" pn="Local Thermal Isotropic Damage Simo-Ju Plane Strain" ProductionReady="ProductionReady" Type="ThermalDamageStrain" behaviour="Elastic"
+		  StrainSize="3" AnalysisType="Non-Linear" DamageType="Local"
 	  help="Simo-Ju 2D Plane Strain Thermo-Mechanical Law for Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -314,7 +319,8 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalSimoJuLocalDamagePlaneStress2DLaw" pn="Local Thermal Isotropic Damage Simo-Ju Plane Stress" ProductionReady="ProductionReady" Type="ThermalDamageStress" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
+    <CLaw n="ThermalSimoJuLocalDamagePlaneStress2DLaw" pn="Local Thermal Isotropic Damage Simo-Ju Plane Stress" ProductionReady="ProductionReady" Type="ThermalDamageStress" behaviour="Elastic"
+		  StrainSize="3" AnalysisType="Non-Linear" DamageType="Local"
 	  help="Simo-Ju 2D Plane Stress Thermo-Mechanical Law for Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -330,7 +336,8 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalSimoJuNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Thermal Isotropic Damage Simo-Ju Plane Strain" ProductionReady="ProductionReady" Type="ThermalDamageStrain" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
+    <CLaw n="ThermalSimoJuNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Thermal Isotropic Damage Simo-Ju Plane Strain" ProductionReady="ProductionReady" Type="ThermalDamageStrain" behaviour="Elastic"
+		  StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Simo-Ju 2D Plane Strain Thermo-Mechanical Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -345,7 +352,8 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalSimoJuNonlocalDamagePlaneStress2DLaw" pn="Non-Local Thermal Isotropic Damage Simo-Ju Plane Stress" ProductionReady="ProductionReady" Type="ThermalDamageStress" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
+    <CLaw n="ThermalSimoJuNonlocalDamagePlaneStress2DLaw" pn="Non-Local Thermal Isotropic Damage Simo-Ju Plane Stress" ProductionReady="ProductionReady" Type="ThermalDamageStress" behaviour="Elastic"
+		  StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Simo-Ju 2D Plane Stress Thermo-Mechanical Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -362,7 +370,8 @@
     </CLaw>
     
         <!-- Von Mises Modified -->
-    <CLaw n="ModifiedMisesNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Isotropic Modified Von Mises Damage Plane Strain" ProductionReady="ProductionReady" Type="DamageStrain" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
+    <CLaw n="ModifiedMisesNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Isotropic Modified Von Mises Damage Plane Strain" ProductionReady="ProductionReady" Type="DamageStrain"
+		  behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 2D Planes Strain for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -378,7 +387,8 @@
         </outputs>
     </CLaw>
     
-        <CLaw n="ModifiedMisesNonlocalDamagePlaneStress2DLaw" pn="Non-Local Isotropic Modified Von Mises Damage Plane Stress" ProductionReady="ProductionReady" Type="DamageStress" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
+        <CLaw n="ModifiedMisesNonlocalDamagePlaneStress2DLaw" pn="Non-Local Isotropic Modified Von Mises Damage Plane Stress" ProductionReady="ProductionReady" Type="DamageStress"
+			  behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 2D Planes Strees for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -395,7 +405,8 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalModifiedMisesNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Thermal Isotropic Modified Von Mises Damage Plane Strain" ProductionReady="ProductionReady" Type="ThermalDamageStrain" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
+    <CLaw n="ThermalModifiedMisesNonlocalDamagePlaneStrain2DLaw" pn="Non-Local Thermal Isotropic Modified Von Mises Damage Plane Strain" ProductionReady="ProductionReady"
+		  Type="ThermalDamageStrain" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 2D Plane Strain Thermo-mechanical Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -411,7 +422,8 @@
         </outputs>
     </CLaw>
     
-        <CLaw n="ThermalModifiedMisesNonlocalDamagePlaneStress2DLaw" pn="Non-Local Thermal Isotropic Mdified Von Mises Damage Plane Stress" ProductionReady="ProductionReady" Type="ThermalDamageStress" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear"
+        <CLaw n="ThermalModifiedMisesNonlocalDamagePlaneStress2DLaw" pn="Non-Local Thermal Isotropic Mdified Von Mises Damage Plane Stress" ProductionReady="ProductionReady" Type="ThermalDamageStress"
+			  behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 2D Plane Stress Thermo-mechanical Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>

@@ -116,22 +116,28 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
      #foreach cl $Claws {W [$cl getName]}
 
      set analysis_type ""
+     set damage_type ""
      set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
      switch $TypeofProblem {
          "Mechanical" {
-              set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamMechanicalData]/value\[@n='AnalysisType'\]"] v]                    
+               set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamMechanicalData]/value\[@n='AnalysisType'\]"] v]
+               set damage_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamMechanicalData]/value\[@n='DamageType'\]"] v]
          }
          "Thermo-Mechanical" {
-              set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamThermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
+               set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamThermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
+               set damage_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamThermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='DamageType'\]"] v]
          }
          "UP_Mechanical" {
-              set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='AnalysisType'\]"] v]
+               set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='AnalysisType'\]"] v]
+               set damage_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_MechanicalData"]/value\[@n='DamageType'\]"] v]
          }
          "UP_Thermo-Mechanical" {
-              set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_Thermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
+               set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_Thermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='AnalysisType'\]"] v]
+               set damage_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute "DamUP_Thermo-MechanicalData"]/container\[@n='MechanicalPartProblem'\]/value\[@n='DamageType'\]"] v]
          }
          "Acoustic" {
-              set analysis_type ""
+               set analysis_type ""
+               set damage_type ""
          }
          default {
               error [= "Check type of problem"]
@@ -148,7 +154,10 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
                #W "cl -> [$cl getName]"
                #W "type -> $type"
                if {"Non-Linear" in $type && $analysis_type eq "Non-Linear"} {
-                    lappend goodList $cl
+                    set cl_damage_type [split [$cl getAttribute DamageType] ","]
+                    if {$damage_type in $cl_damage_type} {
+                         lappend goodList $cl
+                    }
                }
                if {"Linear" in $type && $analysis_type eq "Linear"} {
                     lappend goodList $cl

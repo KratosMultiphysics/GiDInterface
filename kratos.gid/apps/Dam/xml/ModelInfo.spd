@@ -7,8 +7,8 @@
     <container n="MechanicalProblem" pn="Mechanical Problem" un="DamMechanicalData" state="[checkStateByUniqueName DamTypeofProblem Mechanical]" actualize_tree="1" open_window="0">
         <value n="SolutionType" pn="Solution type" v="Quasi-Static" un="DamMechaSoluType" values="Quasi-Static,Dynamic" help="Solution type" actualize_tree="1"/>
         <value n="AnalysisType" pn="Analysis type" v="Linear"  un="DamMechaAnalysisType" values="Linear,Non-Linear" help="Analysis type" />
-        <value n="DamageType" pn="Damage type" v="Local" values="Local,Non-Local" un="DamMechaDamageType" state="[checkStateByUniqueName DamMechaAnalysisType Non-Linear]"/>
-        <value n="Par1" pn="par 1" v="0" state="[checkStateByUniqueName DamMechaDamageType Non-Local]"/>
+        <value n="DamageType" pn="Damage type" v="Local" values="Local,NonLocal" dict="Local,Local,NonLocal,Non Local" un="DamMechaDamageType" state="[checkStateByUniqueName DamMechaAnalysisType Non-Linear]"/>
+        <value n="Par1" pn="par 1" v="0" state="[checkStateByUniqueName DamMechaDamageType NonLocal]"/>
          <container n="StratParams" pn="Strategy parameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">
             <dynamicnode command="spdAux::injectSolStratParams" args=""/>
             <dynamicnode command="spdAux::injectSolvers" args=""/>
