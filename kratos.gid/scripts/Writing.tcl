@@ -746,22 +746,28 @@ proc write::GetDataType {value} {
     return $type
 }
 
-proc write::getSolutionStrategyParametersDict {} {
-    set solStratUN [apps::getCurrentUniqueName SolStrat]
-    set schemeUN [apps::getCurrentUniqueName Scheme]
+proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {StratParamsUN ""} } {
+    if {$solStratUN eq ""} {
+        set solStratUN [apps::getCurrentUniqueName SolStrat]
+    }
+    if {$schemeUN eq ""} {
+        set schemeUN [apps::getCurrentUniqueName Scheme]
+    }
+    if {$StratParamsUN eq ""} {
+        set StratParamsUN [apps::getCurrentUniqueName StratParams]
+    }
 
     set solstratName [write::getValue $solStratUN]
     set schemeName [write::getValue $schemeUN]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
 
-    set paramsPath [apps::getCurrentUniqueName StratParams]
 
     foreach {n in} [$sol getInputs] {
-        dict set solverSettingsDict $n [write::getValue $paramsPath $n ]
+        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
     }
     foreach {n in} [$sch getInputs] {
-        dict set solverSettingsDict $n [write::getValue $paramsPath $n ]
+        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
     }
     return $solverSettingsDict
 }
