@@ -5,7 +5,7 @@
   <ElementItem n="SmallDisplacementElement2D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help="">
+	       ElementType="Solid" help="" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -18,13 +18,12 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress,PlaneStrain,ThermalPlaneStress,ThermalPlaneStrain,DamageStrain,DamageStress"/>
+      <filter field="Type" value="PlaneStress,PlaneStrain,ThermalPlaneStress,ThermalPlaneStrain,DamageStrain,DamageStress,ThermalDamageStrain,ThermalDamageStress"/>
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
@@ -47,7 +46,7 @@
   <ElementItem n="SmallDisplacementElement3D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help="">
+	       ElementType="Solid" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -60,13 +59,12 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="Linear3D,Thermal3D,Damage3D"/>
+      <filter field="Type" value="Linear3D,Thermal3D,Damage3D,ThermalDamage3D"/>
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
@@ -90,7 +88,7 @@
   <ElementItem n="SmallDisplacementIntefaceElement3D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Joint" help="">
+	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -104,7 +102,6 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
@@ -127,7 +124,7 @@
   <ElementItem n="SmallDisplacementInterfaceElement2D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Joint" help="">
+	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -142,7 +139,6 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
@@ -167,7 +163,7 @@
  <ElementItem n="WaveEquationElement2D" pn="Acoustic Element" ImplementedInFile="wave_equation_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Acoustic" help="">
+	       ElementType="Acoustic" help=""  TypeofProblem="Acoustic,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -181,7 +177,6 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="PRESSURE"/>
     </NodalConditions>
@@ -196,7 +191,7 @@
  <ElementItem n="WaveEquationElement3D" pn="Acoustic Element" ImplementedInFile="wave_equation_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Acoustic" help="">
+	       ElementType="Acoustic" help=""  TypeofProblem="Acoustic,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -210,10 +205,10 @@
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
-    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
     <NodalConditions>
       <NodalCondition n="PRESSURE"/>
     </NodalConditions>
+       
 
     <inputs>      
     </inputs>
