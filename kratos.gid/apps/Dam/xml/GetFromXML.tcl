@@ -39,6 +39,13 @@ proc Dam::xml::CustomTree { args } {
             [$nodal_results_base selectNodes "./value\[@n='$item'\]"] delete
         }
         
+        ## It has special filter
+        set add_special_list [list TEMPERATURE]
+        set add_special_list_pn [list Temperature]
+        foreach it $add_special_list pn $add_special_list_pn {
+               gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $it pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Thermo-Mechanical\]"]
+        }
+        
         set add_list [list NEGATIVE_FACE_PRESSURE NODAL_CAUCHY_STRESS_TENSOR NODAL_JOINT_WIDTH Vi_POSITIVE Viii_POSITIVE]
         set add_list_pn [list "Water Loads" "Nodal Total Stress" "Nodal Joint Width" "Traction Principal Stress Vector" "Compression Principal Stress Vector"]
         foreach item $add_list pn $add_list_pn {
