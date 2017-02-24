@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--3D laws-->
-    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Linear3D" behaviour="Elastic" StrainSize="6" AnalysisType="Linear"
+    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Linear3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Linear"
 	  help="Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -12,7 +13,8 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="ThermalLinearElastic3DLaw" pn="Thermal Linear Elastic" ProductionReady="ProductionReady" Type="Thermal3D" behaviour="Elastic" StrainSize="6"  AnalysisType="Linear,Non-Linear"
+    <CLaw n="ThermalLinearElastic3DLaw" pn="Thermal Linear Elastic" ProductionReady="ProductionReady" Type="Thermal3D" behaviour="Elastic" 
+    StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Thermal Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -28,7 +30,8 @@
     </CLaw>
     
     <!--3D  Interface laws-->
-    <CLaw n="BilinearCohesive3DLaw" pn="Bilinear Cohesive 3D" ProductionReady="ProductionReady" Type="Interface3D" behaviour="Elastic" StrainSize="6"  AnalysisType="Linear,Non-Linear"
+    <CLaw n="BilinearCohesive3DLaw" pn="Bilinear Cohesive 3D" ProductionReady="ProductionReady" Type="Interface3D" behaviour="Elastic" 
+    StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Bilinear Cohesive law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -48,7 +51,8 @@
     <!--3D  Damage laws-->
     
     <!-- Simo-Ju -->
-    <CLaw n="SimoJuLocalDamage3DLaw" pn="Local Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="SimoJuLocalDamage3DLaw" pn="Local Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Non-Linear" DamageType="Local"
 	  help="Simo-Ju 3D Law for Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -63,7 +67,8 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="SimoJuNonlocalDamage3DLaw" pn="Non-Local Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="SimoJuNonlocalDamage3DLaw" pn="Non-Local Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic"
+     StrainSize="6" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Simo-Ju 3D Law for Non-Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -78,7 +83,8 @@
         </outputs>
     </CLaw>
     
-        <CLaw n="ThermalSimoJuLocalDamage3DLaw" pn="Local Thermal Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+        <CLaw n="ThermalSimoJuLocalDamage3DLaw" pn="Local Thermal Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic"
+         StrainSize="6" AnalysisType="Non-Linear" DamageType="Local"
 	  help="Simo-Ju 3D Thermo-Mechanical Law for Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -93,7 +99,8 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalSimoJuNonlocalDamage3DLaw" pn="Non-Local Thermal Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="ThermalSimoJuNonlocalDamage3DLaw" pn="Non-Local Thermal Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Simo-Ju 3D Thermo-Mechanical Law for Non-Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -109,7 +116,8 @@
     </CLaw>
     
     <!-- Von Mises Modified -->
-    <CLaw n="ModifiedMisesNonlocalDamage3DLaw" pn="Non-Local Isotropic Modified Von Mises Damage" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="ModifiedMisesNonlocalDamage3DLaw" pn="Non-Local Isotropic Modified Von Mises Damage" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 3D Law for Non-Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
@@ -125,7 +133,8 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalModifiedMisesNonlocalDamage3DLaw" pn="Non-Local Thermal Isotropic Modified Von Mises Damage" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="ThermalModifiedMisesNonlocalDamage3DLaw" pn="Non-Local Thermal Isotropic Modified Von Mises Damage" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 3D Thermo-mechanical Law for Non-Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
