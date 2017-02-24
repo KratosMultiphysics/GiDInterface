@@ -40,7 +40,7 @@
                     <value n="thermal_compute_reactions" pn="Compute Reactions" un="DamThermalComputeReactions" v="false" values="true,false" state="readonly" help="" />
                     <value n="thermal_move_mesh_flag" pn="Move Mesh" un="DamThermalMoveMeshFlag" v="false" values="true,false" state="readonly" help="" />
                     <value n="thermal_compute_norm_dx_flag" pn="Compute Norm Dx" un="DamThermalComputeNormDx" v="false" values="true,false" state="readonly" help="" />
-                    <value n="thermal_block_builder" pn="Block Builder" un="DamThermalBlockBuilder" v="true" values="true,false" state="readonly" help="" />
+                    <value n="thermal_block_builder" pn="Block Builder" un="DamThermalBlockBuilder" v="false" values="true,false" state="readonly" help="" />
                     <dynamicnode command="spdAux::injectSolvers" args=""/>
                 </container>
             </container>
@@ -82,7 +82,7 @@
                     <value n="thermal_compute_reactions" pn="Compute Reactions" un="DamThermalUPComputeReactions" v="false" values="true,false" state="readonly" help="" />
                     <value n="thermal_move_mesh_flag" pn="Move Mesh" un="DamThermalUPMoveMeshFlag" v="false" values="true,false" state="readonly" help="" />
                     <value n="thermal_compute_norm_dx_flag" pn="Compute Norm Dx" un="DamThermalUPComputeNormDx" v="false" values="true,false" state="readonly" help="" />
-                    <value n="thermal_block_builder" pn="Block Builder" un="DamThermalUPBlockBuilder" v="true" values="true,false" state="readonly" help="" />
+                    <value n="thermal_block_builder" pn="Block Builder" un="DamThermalUPBlockBuilder" v="false" values="true,false" state="readonly" help="" />
                     <dynamicnode command="spdAux::injectSolvers" args=""/>
                 </container>
             </container>       

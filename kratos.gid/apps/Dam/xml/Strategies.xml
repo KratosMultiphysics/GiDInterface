@@ -28,8 +28,10 @@
       <parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help="Level of printing information"/> 
       <parameter n="buffer_size" pn="Buffer size" type="combo" v="2" values="1,2,3" help="Number of previous solutions"/>
       <parameter n="compute_reactions" pn="Compute reactions" type="bool" v="true" values="false,true" help="Compute the reactions"/> 
-      <parameter n="reform_step_dofs" pn="Reform Steps" type="bool" v="false" values="false,true" help="Reform the dofs at each iteration"/>
+      <parameter n="reform_dofs_at_each_step" pn="Reform Steps" type="bool" v="false" values="false,true" help="Reform the dofs at each iteration"/>
       <parameter n="move_mesh_flag" pn="Move mesh flag" type="bool" v="true" values="false,true" help="Move the mesh"/>
+      <parameter n="block_builder" pn="Block Builder" type="bool" v="false" values="true,false" help="" />
+      <parameter n="clear_storage" pn="Clear Storage" type="bool" v="false" values="true,false" help="" />
     </parameter_list>
     
     <linearSolvers>
@@ -102,6 +104,8 @@
       <parameter n="compute_reactions" pn="Compute reactions" type="bool" v="true" values="false,true" help="Compute the reactions"/> 
       <parameter n="reform_step_dofs" pn="Reform Steps" type="bool" v="false" values="false,true" help="Reform the dofs at each iteration"/>
       <parameter n="move_mesh_flag" pn="Move mesh flag" type="bool" v="true" values="false,true" help="Move the mesh"/>
+      <parameter n="block_builder" pn="Block Builder" type="bool" v="false" values="true,false" help="" />
+      <parameter n="clear_storage" pn="Clear Storage" type="bool" v="false" values="true,false" help="" />
     </parameter_list>
     
     <linearSolvers>
