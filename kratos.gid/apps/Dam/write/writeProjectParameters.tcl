@@ -93,7 +93,7 @@ proc Dam::write::getParametersDict { } {
 		
         ## Adding linear solver for thermal part
 		set thermalsettingDict  [dict merge $thermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratTherm "DamThermo-Mechanical-ThermData"] ]
-        dict set thermalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
+        dict set thermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
         
         ## Adding thermal solver settings to solver settings
         dict set solversettingsDict thermal_solver_settings $thermalsettingDict

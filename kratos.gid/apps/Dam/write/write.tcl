@@ -2,6 +2,8 @@ namespace eval Dam::write {
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable TableDict
+    
+    variable ThermalSubModelPartDict
 }
 
 proc Dam::write::Init { } {
@@ -50,8 +52,15 @@ proc Dam::write::writeModelPartEvent { } {
     Dam::write:::writeTables
     write::writeNodalCoordinates
     write::writeElementConnectivities
+
+    set damTypeofProblem [write::getValue DamTypeofProblem]
+    if {$damTypeofProblem eq "Thermo-Mechanical" || $damTypeofProblem eq "UP_Thermo-Mechanical"} {
+        Dam::write::writeThermalElements
+    }
+    
     writeConditions
     writeMeshes
+    
     #writeCustomBlock
 }
 
@@ -79,6 +88,11 @@ proc Dam::write::writeConditions { } {
 proc Dam::write::writeMeshes { } {
     
     write::writePartMeshes
+    
+    set damTypeofProblem [write::getValue DamTypeofProblem]
+    if {$damTypeofProblem eq "Thermo-Mechanical" || $damTypeofProblem eq "UP_Thermo-Mechanical"} {
+        Dam::write::ThermalSubModelPart
+    }
     
     # Solo Malla , no en conditions
     writeNodalConditions "DamNodalConditions"
@@ -241,5 +255,135 @@ proc Dam::write::GetPrinTables {} {
     }
     return $listaTablas
 }
+
+#-------------------------------------------------------------------------------
+
+proc Dam::write::writeThermalElements {} {
+    
+    set ThermalGroups [list]
+    
+    set mat_dict [write::getMatDict]
+    foreach part_name [dict keys $mat_dict] {
+        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
+            lappend ThermalGroups $part_name
+        }
+    }
+    
+    set ElementId [GiD_Info Mesh MaxNumElements]
+    variable ThermalSubModelPartDict
+    set ThermalSubModelPartDict [dict create]
+        
+    for {set i 0} {$i < [llength $ThermalGroups]} {incr i} {
+        
+        set ElementList [list]
+        
+        # EulerianConvDiff2D
+        Dam::write::writeThermalConnectivities [lindex $ThermalGroups $i] triangle EulerianConvDiff2D "Dam::write::Triangle2D3Connectivities" ElementId ElementList
+        # EulerianConvDiff2D4N
+        Dam::write::writeThermalConnectivities [lindex $ThermalGroups $i] quadrilateral EulerianConvDiff2D4N "Dam::write::Quadrilateral2D4Connectivities" ElementId ElementList
+        # EulerianConvDiff3D
+        Dam::write::writeThermalConnectivities [lindex $ThermalGroups $i] tetrahedra EulerianConvDiff3D "Dam::write::Quadrilateral2D4Connectivities" ElementId ElementList
+        # EulerianConvDiff3D8N
+        Dam::write::writeThermalConnectivities [lindex $ThermalGroups $i] hexahedra EulerianConvDiff3D8N "Dam::write::Hexahedron3D8Connectivities" ElementId ElementList
+        
+        dict set ThermalSubModelPartDict [lindex $ThermalGroups $i] Elements $ElementList
+        dict set ThermalSubModelPartDict [lindex $ThermalGroups $i] SubModelPartName "Thermal_Part_Auto_[expr {$i+1}]"
+    }
+    
+
+}
+
+proc Dam::write::writeThermalConnectivities {Group ElemType ElemName ConnectivityType ElementId ElementList} {
+    set Entities [GiD_EntitiesGroups get $Group elements -element_type $ElemType]
+    if {[llength $Entities] > 0} {
+        upvar $ElementId MyElementId
+        upvar $ElementList MyElementList
+        
+        write::WriteString "Begin Elements $ElemName // GUI group identifier: $Group"
+        for {set j 0} {$j < [llength $Entities]} {incr j} {
+            incr MyElementId
+            lappend MyElementList $MyElementId
+            write::WriteString "  $MyElementId  0  [$ConnectivityType [lindex $Entities $j]]"
+        }
+        write::WriteString "End Elements"
+        write::WriteString ""
+    }
+}
+
+proc Dam::write::Triangle2D3Connectivities { ElemId } {
+    
+    set ElementInfo [GiD_Mesh get element $ElemId]
+    #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
+    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5]"
+}
+
+
+proc Dam::write::Quadrilateral2D4Connectivities { ElemId } {
+    
+    #Note: It is the same for the Tethrahedron3D4
+    
+    set ElementInfo [GiD_Mesh get element $ElemId]
+    #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
+    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5]\
+    [lindex $ElementInfo 6]"
+}
+
+proc Dam::write::Hexahedron3D8Connectivities { ElemId } {
+    
+    #It is the same for Quadrilateral2D8
+    
+    set ElementInfo [GiD_Mesh get element $ElemId]
+    #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
+    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5]\
+    [lindex $ElementInfo 6] [lindex $ElementInfo 7] [lindex $ElementInfo 8]\
+    [lindex $ElementInfo 9] [lindex $ElementInfo 10]"
+}
+
+#-------------------------------------------------------------------------------
+
+
+proc Dam::write::ThermalSubModelPart { } {
+    
+    variable ThermalSubModelPartDict
+
+    dict for {Group ThermalPart} $ThermalSubModelPartDict {
+        
+        write::WriteString "Begin SubModelPart [dict get $ThermalPart SubModelPartName] // Group $Group // Subtree Parts"
+        # Nodes
+        set ThermalNodes [GiD_EntitiesGroups get $Group nodes]
+        write::WriteString "  Begin SubModelPartNodes"
+        for {set i 0} {$i < [llength $ThermalNodes]} {incr i} {
+            write::WriteString "    [lindex $ThermalNodes $i]"
+        }
+        write::WriteString "  End SubModelPartNodes"
+        # Elements
+        set ThermalElements [dict get $ThermalPart Elements]
+        write::WriteString "  Begin SubModelPartElements"
+        for {set i 0} {$i < [llength $ThermalElements]} {incr i} {
+            write::WriteString "    [lindex $ThermalElements $i]"
+        }
+        write::WriteString "  End SubModelPartElements"
+        # Conditions
+        write::WriteString "  Begin SubModelPartConditions"
+        write::WriteString "  End SubModelPartConditions"
+        write::WriteString "End SubModelPart"
+        write::WriteString ""
+    }
+}
+
+#-------------------------------------------------------------------------------
+
+proc Dam::write::getSubModelPartThermalNames { } {
+    
+    set submodelThermalPartsNames [list]
+    
+    variable ThermalSubModelPartDict
+    dict for {Group ThermalPart} $ThermalSubModelPartDict {
+        lappend submodelThermalPartsNames [dict get $ThermalPart SubModelPartName]  
+    }
+    
+    return $submodelThermalPartsNames
+}
+
 
 Dam::write::Init
