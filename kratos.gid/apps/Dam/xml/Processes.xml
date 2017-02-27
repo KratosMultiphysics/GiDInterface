@@ -81,8 +81,7 @@
 <!---  CONDITION PROCESSES --> 
 <!---  Point Loads -->       
   <Process n="ApplyLoadVectorDamTableProcess" pn="Constant vector value" python_module="apply_load_vector_dam_table_process"
-		kratos_module="KratosMultiphysics.DamApplication" check="DirectorVectorNonZero direction"
-		help="This process ">
+		kratos_module="KratosMultiphysics.DamApplication" check="DirectorVectorNonZero direction">
     <inputs>
       <parameter n="modulus" pn="Modulus" type="double" v="1.0"/>
       <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" />

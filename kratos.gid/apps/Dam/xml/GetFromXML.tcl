@@ -34,7 +34,7 @@ proc Dam::xml::CustomTree { args } {
     set nodal_results_base [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
     $nodal_results_base setAttribute state "\[ActiveIfAnyPartState\]"
     if {$nodal_results_base ne ""} {
-        set delete_list [list "INITIALTEMPERATURE" "BOFANGTEMPERATURE" "THERMALPARAMETERS"]
+        set delete_list [list "INITIALTEMPERATURE" "BOFANGTEMPERATURE"]
         foreach item $delete_list {
             [$nodal_results_base selectNodes "./value\[@n='$item'\]"] delete
         }
