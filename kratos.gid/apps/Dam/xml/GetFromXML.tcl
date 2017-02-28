@@ -34,13 +34,20 @@ proc Dam::xml::CustomTree { args } {
     set nodal_results_base [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
     $nodal_results_base setAttribute state "\[ActiveIfAnyPartState\]"
     if {$nodal_results_base ne ""} {
-        set delete_list [list "INITIALTEMPERATURE" "BOFANGTEMPERATURE" "THERMALPARAMETERS"]
+        set delete_list [list "INITIALTEMPERATURE" "BOFANGTEMPERATURE"]
         foreach item $delete_list {
             [$nodal_results_base selectNodes "./value\[@n='$item'\]"] delete
         }
         
-        set add_list [list NEGATIVE_FACE_PRESSURE NODAL_CAUCHY_STRESS_TENSOR NODAL_JOINT_WIDTH Vi_POSITIVE Viii_POSITIVE]
-        set add_list_pn [list "Water Loads" "Nodal Total Stress" "Nodal Joint Width" "Traction Principal Stress Vector" "Compression Principal Stress Vector"]
+        ## It has special filter
+        set add_special_list [list TEMPERATURE]
+        set add_special_list_pn [list Temperature]
+        foreach it $add_special_list pn $add_special_list_pn {
+               gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $it pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Thermo-Mechanical\]"]
+        }
+        
+        set add_list [list POINT_LOAD LINE_LOAD SURFACE_LOAD NEGATIVE_FACE_PRESSURE NODAL_CAUCHY_STRESS_TENSOR NODAL_JOINT_WIDTH Vi_POSITIVE Viii_POSITIVE]
+        set add_list_pn [list "Point Loads" "Line Loads" "Surface Loads" "Normal Loads" "Nodal Total Stress" "Nodal Joint Width" "Traction Principal Stress Vector" "Compression Principal Stress Vector"]
         foreach item $add_list pn $add_list_pn {
                gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $item pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical\]"]
         }
@@ -127,13 +134,17 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
             lappend goodList $cl
         } elseif {[string first "Therm" $type] ne -1 && $type_of_problem in [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]} {
             lappend goodList $cl
-        } elseif {[string first "Interface" $type] ne -1} {lappend goodList $cl}
+        } elseif {[string first "Interface" $type] ne -1} {
+            lappend goodList $cl
+        } elseif {[string first "WaveEquationElement" $Elementname] ne -1 && $type eq "Wave"} {
+            lappend goodList $cl
+        } 
     }
     #W "good $goodList"
     set Claws $goodList
     #W "Round 2 $Claws"
     #foreach cl $Claws {W [$cl getName]}
-    
+    #
     set analysis_type ""
     set damage_type ""
     set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]

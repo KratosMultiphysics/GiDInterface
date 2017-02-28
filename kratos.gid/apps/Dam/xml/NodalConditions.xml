@@ -15,16 +15,12 @@
                       analysis_type="Dynamic" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" >
   </NodalConditionItem>
     
-  <NodalConditionItem n="INITIALTEMPERATURE" pn="Initial Temperature" ProcessName="ImposeUniformTemperatureProcess" VariableName="TEMPERATURE"
+  <NodalConditionItem n="INITIALTEMPERATURE" pn="Temperature" ProcessName="ImposeUniformTemperatureProcess" VariableName="TEMPERATURE"
                       analysis_type="Quasi-Static,Dynamic" TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" >
   </NodalConditionItem>
   
   <NodalConditionItem n="BOFANGTEMPERATURE" pn="Bofang Temperature" ProcessName="ImposeBofangConditionProcess" VariableName="TEMPERATURE"
                       analysis_type="Quasi-Static,Dynamic" TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" ov="[CheckGeometry 2]" >
-  </NodalConditionItem>
-  
-  <NodalConditionItem n="THERMALPARAMETERS" pn="Thermal Parameters" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
-                      analysis_type="Quasi-Static,Dynamic" TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" ov="[CheckGeometry 1]">
   </NodalConditionItem>
   
   <NodalConditionItem n="PRESSURE" pn="Pressure" ProcessName="ImposeUniformPressureProcess" VariableName="PRESSURE"

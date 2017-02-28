@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-    
+
+    <!---  Conditions: THERMAL PARAMETERS -->  
+  <ConditionItem n="ThermalParameters3D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	ElementType="Volume" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
+    help="Application of the thermal parameters into the body">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <DefaultValues>
+        <value n="ThermalDensity" pn="Density" type="double" v="2400"/>
+        <value n="Conductivity" pn="Conductivity" type="double" v="1.0" />
+        <value n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
+    </DefaultValues>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+ <ConditionItem n="ThermalParameters2D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	ElementType="Surface" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
+    help="Application of the thermal parameters into the body">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <DefaultValues>
+        <value n="ThermalDensity" pn="Density" type="double" v="2400"/>
+        <value n="Conductivity" pn="Conductivity" type="double" v="1.0" />
+        <value n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
+    </DefaultValues>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+
    <!---  Conditions: SELF WEIGHT -->    
-  <ConditionItem n="SelfWeight3D" pn="Self weight" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
+  <ConditionItem n="SelfWeight3D" pn="Body Acceleration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Volume" ProcessName="ApplyLoadVectorDamTableProcess" VariableName="VOLUME_ACCELERATION"
@@ -20,7 +58,7 @@
     </outputs>
   </ConditionItem>
   
-  <ConditionItem n="SelfWeight2D" pn="Self weight" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
+  <ConditionItem n="SelfWeight2D" pn="Body Acceleration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface"  ProcessName="ApplyLoadVectorDamTableProcess" VariableName="VOLUME_ACCELERATION" 
@@ -37,7 +75,7 @@
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
   </ConditionItem>
-
+  
    <!---  Conditions: POINT LOADS -->    
   <ConditionItem n="PointLoad2D" pn="Point Load" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"

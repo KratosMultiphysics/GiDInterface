@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--3D laws-->
-    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Linear3D" behaviour="Elastic" StrainSize="6" AnalysisType="Linear"
+    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Linear3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Linear"
 	  help="Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
         </inputs>
         <outputs>
             
         </outputs>
     </CLaw>
-    <CLaw n="ThermalLinearElastic3DLaw" pn="Thermal Linear Elastic" ProductionReady="ProductionReady" Type="Thermal3D" behaviour="Elastic" StrainSize="6"  AnalysisType="Linear,Non-Linear"
+    <CLaw n="ThermalLinearElastic3DLaw" pn="Thermal Linear Elastic" ProductionReady="ProductionReady" Type="Thermal3D" behaviour="Elastic" 
+    StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Thermal Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
         </inputs>
@@ -28,11 +30,12 @@
     </CLaw>
     
     <!--3D  Interface laws-->
-    <CLaw n="BilinearCohesive3DLaw" pn="Bilinear Cohesive 3D" ProductionReady="ProductionReady" Type="Interface3D" behaviour="Elastic" StrainSize="6"  AnalysisType="Linear,Non-Linear"
-	  help="Bilinear Cohesive law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
+    <CLaw n="BilinearCohesive3DLaw" pn="Bilinear Cohesive 3D" ProductionReady="ProductionReady" Type="Interface3D" behaviour="Elastic" 
+    StrainSize="6"  AnalysisType="Linear,Non-Linear"
+	  help="Bilinear Cohesive law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
             <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
@@ -48,11 +51,12 @@
     <!--3D  Damage laws-->
     
     <!-- Simo-Ju -->
-    <CLaw n="SimoJuLocalDamage3DLaw" pn="Local Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="SimoJuLocalDamage3DLaw" pn="Local Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Non-Linear" DamageType="Local"
 	  help="Simo-Ju 3D Law for Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -63,11 +67,12 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="SimoJuNonlocalDamage3DLaw" pn="Non-Local Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="SimoJuNonlocalDamage3DLaw" pn="Non-Local Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic"
+     StrainSize="6" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Simo-Ju 3D Law for Non-Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -78,11 +83,12 @@
         </outputs>
     </CLaw>
     
-        <CLaw n="ThermalSimoJuLocalDamage3DLaw" pn="Local Thermal Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+        <CLaw n="ThermalSimoJuLocalDamage3DLaw" pn="Local Thermal Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic"
+         StrainSize="6" AnalysisType="Non-Linear" DamageType="Local"
 	  help="Simo-Ju 3D Thermo-Mechanical Law for Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -93,11 +99,12 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalSimoJuNonlocalDamage3DLaw" pn="Non-Local Thermal Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="ThermalSimoJuNonlocalDamage3DLaw" pn="Non-Local Thermal Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Simo-Ju 3D Thermo-Mechanical Law for Non-Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -109,11 +116,12 @@
     </CLaw>
     
     <!-- Von Mises Modified -->
-    <CLaw n="ModifiedMisesNonlocalDamage3DLaw" pn="Non-Local Isotropic Modified Von Mises Damage" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="ModifiedMisesNonlocalDamage3DLaw" pn="Non-Local Isotropic Modified Von Mises Damage" ProductionReady="ProductionReady" Type="Damage3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 3D Law for Non-Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -125,11 +133,12 @@
         </outputs>
     </CLaw>
     
-    <CLaw n="ThermalModifiedMisesNonlocalDamage3DLaw" pn="Non-Local Thermal Isotropic Modified Von Mises Damage" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" StrainSize="6" AnalysisType="Non-Linear"
+    <CLaw n="ThermalModifiedMisesNonlocalDamage3DLaw" pn="Non-Local Thermal Isotropic Modified Von Mises Damage" ProductionReady="ProductionReady" Type="ThermalDamage3D" behaviour="Elastic" 
+    StrainSize="6" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 3D Thermo-mechanical Law for Non-Local Damage" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -142,7 +151,7 @@
     </CLaw>
     
     <!--Acoustic laws 2D-3D-->
-	<CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" Type="Wave">
+	<CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" Type="Wave"   AnalysisType="Linear,Non-Linear"  DamageType="Local,NonLocal">
         <inputs>
             <parameter n="DENSITY_WATER" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="BULK_MODULUS_FLUID" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2.21e9" help="Set the bulk modulus."/>
@@ -155,8 +164,8 @@
     <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Elastic" StrainSize="3"
           help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
         </inputs>
         <outputs>
@@ -165,8 +174,8 @@
     <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3"
           help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />  
         </inputs>
@@ -176,8 +185,8 @@
         <CLaw n="ThermalLinearElastic2DPlaneStrain" pn="Thermal Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="ThermalPlaneStrain" behaviour="Elastic" StrainSize="3"
           help="Thermal Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
         </inputs>
@@ -190,8 +199,8 @@
     <CLaw n="ThermalLinearElastic2DPlaneStress" pn="Thermal Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="ThermalPlaneStress" behaviour="Elastic" StrainSize="3"
           help="Thermal Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
             <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
@@ -202,11 +211,11 @@
             <parameter n="THERMAL_STRAIN_TENSOR" pn="Thermal Strain" v="False" />
         </outputs>
     </CLaw>
-    <CLaw n="BilinearCohesive2DPlaneStrain" pn="Bilinear Cohesive Plane Strain" ProductionReady="ProductionReady" Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"
+    <CLaw n="BilinearCohesive2DPlaneStrain" pn="Bilinear Cohesive Plane Strain" ProductionReady="ProductionReady" Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
             <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
@@ -220,11 +229,11 @@
     </CLaw>
     
     <!--3D  Interface laws-->
-    <CLaw n="BilinearCohesive2DPlaneStress" pn="Bilinear Cohesive Plane Stress" ProductionReady="ProductionReady" Type="InterfaceStress" behaviour="Elastic" StrainSize="3"
+    <CLaw n="BilinearCohesive2DPlaneStress" pn="Bilinear Cohesive Plane Stress" ProductionReady="ProductionReady" Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
             <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
@@ -244,8 +253,8 @@
 		  DamageType="Local"
           help="Simo-Ju 2D Plane Strain Law for Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AnalysisType="Non-Linear" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -259,8 +268,8 @@
 		  DamageType="Local"
           help="Simo-Ju 2D Plane Stress Law for Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AnalysisType="Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
@@ -275,8 +284,8 @@
 			  DamageType="NonLocal"
           help="Simo-Ju 2D Plane Strain Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AnalysisType="Non-Linear" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -290,8 +299,8 @@
 		  DamageType="NonLocal"
           help="Simo-Ju 2D Plane Stress Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AnalysisType="Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10"/>
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
@@ -307,8 +316,8 @@
 		  StrainSize="3" AnalysisType="Non-Linear" DamageType="Local"
 	  help="Simo-Ju 2D Plane Strain Thermo-Mechanical Law for Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -323,8 +332,8 @@
 		  StrainSize="3" AnalysisType="Non-Linear" DamageType="Local"
 	  help="Simo-Ju 2D Plane Stress Thermo-Mechanical Law for Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
@@ -340,8 +349,8 @@
 		  StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Simo-Ju 2D Plane Strain Thermo-Mechanical Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -356,8 +365,8 @@
 		  StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Simo-Ju 2D Plane Stress Thermo-Mechanical Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10"/>
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
@@ -374,8 +383,8 @@
 		  behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 2D Planes Strain for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -391,8 +400,8 @@
 			  behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 2D Planes Strees for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
@@ -409,8 +418,8 @@
 		  Type="ThermalDamageStrain" behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 2D Plane Strain Thermo-mechanical Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
@@ -426,8 +435,8 @@
 			  behaviour="Elastic" StrainSize="3" AnalysisType="Non-Linear" DamageType="NonLocal"
 	  help="Modified Von Mises 2D Plane Stress Thermo-mechanical Law for Non-Local Damage" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
