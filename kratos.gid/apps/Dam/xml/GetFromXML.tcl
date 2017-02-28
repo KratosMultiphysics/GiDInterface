@@ -134,13 +134,17 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
             lappend goodList $cl
         } elseif {[string first "Therm" $type] ne -1 && $type_of_problem in [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]} {
             lappend goodList $cl
-        } elseif {[string first "Interface" $type] ne -1} {lappend goodList $cl}
+        } elseif {[string first "Interface" $type] ne -1} {
+            lappend goodList $cl
+        } elseif {[string first "WaveEquationElement" $Elementname] ne -1 && $type eq "Wave"} {
+            lappend goodList $cl
+        } 
     }
     #W "good $goodList"
     set Claws $goodList
     #W "Round 2 $Claws"
     #foreach cl $Claws {W [$cl getName]}
-    
+    #
     set analysis_type ""
     set damage_type ""
     set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]

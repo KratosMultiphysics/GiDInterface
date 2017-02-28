@@ -32,7 +32,7 @@
     <!--3D  Interface laws-->
     <CLaw n="BilinearCohesive3DLaw" pn="Bilinear Cohesive 3D" ProductionReady="ProductionReady" Type="Interface3D" behaviour="Elastic" 
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
-	  help="Bilinear Cohesive law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
+	  help="Bilinear Cohesive law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
@@ -151,7 +151,7 @@
     </CLaw>
     
     <!--Acoustic laws 2D-3D-->
-	<CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" Type="Wave">
+	<CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" Type="Wave"   AnalysisType="Linear,Non-Linear"  DamageType="Local,NonLocal">
         <inputs>
             <parameter n="DENSITY_WATER" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="BULK_MODULUS_FLUID" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2.21e9" help="Set the bulk modulus."/>
@@ -211,7 +211,7 @@
             <parameter n="THERMAL_STRAIN_TENSOR" pn="Thermal Strain" v="False" />
         </outputs>
     </CLaw>
-    <CLaw n="BilinearCohesive2DPlaneStrain" pn="Bilinear Cohesive Plane Strain" ProductionReady="ProductionReady" Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"
+    <CLaw n="BilinearCohesive2DPlaneStrain" pn="Bilinear Cohesive Plane Strain" ProductionReady="ProductionReady" Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -229,7 +229,7 @@
     </CLaw>
     
     <!--3D  Interface laws-->
-    <CLaw n="BilinearCohesive2DPlaneStress" pn="Bilinear Cohesive Plane Stress" ProductionReady="ProductionReady" Type="InterfaceStress" behaviour="Elastic" StrainSize="3"
+    <CLaw n="BilinearCohesive2DPlaneStress" pn="Bilinear Cohesive Plane Stress" ProductionReady="ProductionReady" Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
