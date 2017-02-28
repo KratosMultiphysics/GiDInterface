@@ -305,23 +305,21 @@ proc Dam::write::DefinitionDomains { } {
     }
     dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
     dict set domainsDict body_domain_sub_model_part_list $body_part_list
-    #~ dict set domainsDict problem_domain_joint_sub_model_part_list $joint_part_list
-    
-    set loads_sub_model_part_list [list]
-    set loads_variable_list [list]
+
     set strategytype [write::getValue DamSolStrat]
     if {$strategytype eq "Arc-length"} {
-        #~ dict set projectParametersDict loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
-        #~ dict set projectParametersDict loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
-       lappend loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
-       lappend loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
+        dict set domainsDict loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
+        dict set domainsDict loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
+    } {
+    
+        set loads_sub_model_part_list [list]
+        set loads_variable_list [list]
+        dict set domainsDict loads_sub_model_part_list $loads_sub_model_part_list
+        dict set domainsDict loads_variable_list $loads_variable_list
     }
     
-    dict set domainsDict loads_sub_model_part_list $loads_sub_model_part_list
-    dict set domainsDict loads_variable_list $loads_variable_list
-    
     return $domainsDict
-    
+   
 }
 
 proc Dam::write::ChangeFileNameforTableid { processList } {
