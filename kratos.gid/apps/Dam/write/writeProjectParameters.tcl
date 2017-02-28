@@ -308,10 +308,9 @@ proc Dam::write::DefinitionDomains { } {
 
     set strategytype [write::getValue DamSolStrat]
     if {$strategytype eq "Arc-length"} {
-        dict set domainsDict loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
-        dict set domainsDict loads_variable_list [Dam::write::getVariableParametersDict DamLoads]
+        dict set domainsDict loads_sub_model_part_list [write::getSubModelPartNames DamLoads]
+        dict set domainsDict loads_variable_list [Dam::write::getVariableNameList DamLoads]
     } {
-    
         set loads_sub_model_part_list [list]
         set loads_variable_list [list]
         dict set domainsDict loads_sub_model_part_list $loads_sub_model_part_list

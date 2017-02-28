@@ -153,13 +153,11 @@ proc Dam::write::writeLoads { } {
     }
 }
 
-proc Dam::write::getVariableParametersDict {un {condition_type "Condition"}} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
-    
+proc Dam::write::getVariableNameList {un {condition_type "Condition"}} {
     set xp1 "[spdAux::getRoute $un]/condition/group"
-    set groups [$root selectNodes $xp1]
+    set groups [[customlib::GetBaseRoot] selectNodes $xp1]
 
+    set variable_list [list ]
     foreach group $groups {
         set groupName [$group @n]
         #W "GROUP $groupName"
@@ -171,16 +169,10 @@ proc Dam::write::getVariableParametersDict {un {condition_type "Condition"}} {
         } {
             set condition [::Model::getNodalConditionbyId $condId]
         }
-        #W "Condition = $condition"
-        catch {
-            set variable_name [$condition getAttribute VariableName]
-            #W $variable_name
-            # "lindex" is a rough solution. Look for a better one.
-            if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
-        }        
-        
-        return $variable_name
+        set variable_name [$condition getAttribute VariableName]
+        if {$variable_name ne ""} {lappend variable_list [lindex $variable_name 0]}  
     }
+    return $variable_list
 }
 
 proc Dam::write::GetTableidFromFileid { filename } {
