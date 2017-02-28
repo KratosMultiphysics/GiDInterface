@@ -176,7 +176,7 @@ proc Dam::write::getParametersDict { } {
         ### Adding solvers parameters
         set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [::Dam::write::getSolversParametersDict Dam $MechanicalSolutionStrategyUN "DamUP_MechanicalData"] ]
         ### Adding domains to the problem
-        set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
+        set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
 		### Add section to document
         dict set solversettingsDict mechanical_solver_settings $UPmechanicalSolverSettingsDict 
         
