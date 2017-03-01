@@ -141,7 +141,8 @@ proc Dam::write::getParametersDict { } {
 		dict set acousticSolverSettingsDict residual_absolute_tolerance [write::getValue DamAcousticAbsTol]
 		dict set acousticSolverSettingsDict max_iteration [write::getValue DamAcousticMaxIteration]
 		dict set acousticSolverSettingsDict move_mesh_flag [write::getValue DamAcousticMoveMeshFlag]
-		
+        dict set acousticSolverSettingsDict echo_level [write::getValue DamAcousticSolverEchoLevel]
+
 		set acousticlinearDict [dict create]
 		dict set acousticlinearDict solver_type [write::getValue DamAcousticSolver]
 		dict set acousticlinearDict max_iteration [write::getValue DamAcousticMaxIter]
