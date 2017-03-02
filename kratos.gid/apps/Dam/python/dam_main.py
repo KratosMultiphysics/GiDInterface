@@ -40,6 +40,7 @@ problem_name = ProjectParameters["problem_data"]["problem_name"].GetString()
 problem_path = os.getcwd()
 echo_level = ProjectParameters["solver_settings"]["echo_level"].GetInt()
 buffer_size = ProjectParameters["solver_settings"]["buffer_size"].GetInt()
+use_streamline_utility = ProjectParameters["problem_data"]["streamlines_utility"].GetBool()
 delta_time = ProjectParameters["problem_data"]["time_step"].GetDouble()
 end_time = ProjectParameters["problem_data"]["end_time"].GetDouble()
 time = ProjectParameters["problem_data"]["start_time"].GetDouble()
@@ -146,8 +147,7 @@ gid_output.ExecuteBeforeSolutionLoop()
 
 # Initialize streamlines_output_utility 
 UseStreamlineUtility = False
-#~ TODO: use a proper bool defined in the GUI to activate or deactivate streamlines_output_utility
-if (parallel_type == "OpenMP" and domain_size==3):
+if (use_streamline_utility == True and domain_size==3):
     UseStreamlineUtility = True
     import streamlines_output_utility
     streamline_utility = streamlines_output_utility.StreamlinesOutputUtility(domain_size)    
@@ -176,7 +176,7 @@ while( (time+tol) <= end_time ):
     solver.Solve()
 
     # streamlines_output_utility
-    if UseStreamlineUtility:
+    if (UseStreamlineUtility== True):
         streamline_utility.ComputeOutputStep( main_model_part ,domain_size)
     
     gid_output.ExecuteFinalizeSolutionStep()

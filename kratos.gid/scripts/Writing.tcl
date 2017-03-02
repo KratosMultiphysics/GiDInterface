@@ -818,9 +818,7 @@ proc write::getSolversParametersDict { {appid ""} } {
                 foreach {n in} [$solver getInputs] {
                     # JG temporal, para la precarga de combos
                     if {[$in getType] ni [list "bool" "integer" "double"]} {
-                        set v ""
-                        catch {set v [write::getValue $un $n]}
-                        if {$v eq ""} {set v [write::getValue $un $n]}
+                        set v [write::getValue $un $n check]
                         dict set solverEntryDict $n $v
                     } {
                         dict set solverEntryDict $n [write::getValue $un $n]
@@ -1100,25 +1098,28 @@ proc write::Duration { int_time } {
     return [join $timeList]
 }
 
+proc write::forceUpdateNode {node} {
+    catch {get_domnode_attribute $node dict}
+    catch {get_domnode_attribute $node values}
+    catch {get_domnode_attribute $node value}
+}
 proc write::getValueByNode { node } {
     if {[get_domnode_attribute $node v] eq ""} {
-        catch {get_domnode_attribute $node dict}
-        catch {get_domnode_attribute $node values}
-        catch {get_domnode_attribute $node value}
+        write::forceUpdateNode $node
     }
     set v ""
     catch {set v [expr [get_domnode_attribute $node v]]}
     if {$v eq "" } {set v [get_domnode_attribute $node v]}
     return $v
 }
-proc write::getValue { name { it "" } } {
+proc write::getValue { name { it "" } {what noforce} } {
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
     ##
     set xp [spdAux::getRoute $name]
     set node [$root selectNodes $xp]
     if {$it ne ""} {set node [$node find n $it]}
-
+    if {$what eq "force"} {write::forceUpdateNode $node}
     return [getValueByNode $node]
  }
 
