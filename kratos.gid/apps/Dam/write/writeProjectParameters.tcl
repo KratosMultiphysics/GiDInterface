@@ -241,9 +241,7 @@ proc Dam::write::DefinitionDomains { } {
     set joint_part_list [list ]
     set mat_dict [write::getMatDict]
     foreach part_name [dict keys $mat_dict] {
-        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Joint"} {
-            lappend joint_part_list [write::getMeshId Parts $part_name]
-        } {
+        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] ne "Acoustic"} {
             lappend body_part_list [write::getMeshId Parts $part_name]
         }
     }
