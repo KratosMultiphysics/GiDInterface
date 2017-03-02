@@ -190,15 +190,26 @@ proc Dam::write::getParametersDict { } {
 		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
 		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict $MechanicalSolutionStrategyUN $MechanicalSchemeUN $MechanicalDataParametersUN] ]
         ### Damage Variables
-        set typeofDamage [write::getValue DamMechaDamageType]
-        if {$typeofDamage eq "NonLocal"} { 
-            dict set mechanicalSolverSettingsDict nonlocal_damage true
-            dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamMechaDamageTypeLength]
-            dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamMechaDamageTypeSearch]
+        if {$damTypeofProblem eq "Thermo-Mechanical" } {
+            set typeofDamage [write::getValue DamThermo-Mechanical-MechaDamageType]
+            if {$typeofDamage eq "NonLocal"} { 
+                dict set mechanicalSolverSettingsDict nonlocal_damage true
+                dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamThermo-Mechanical-MechaDamageTypeLength]
+                dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamThermo-Mechanical-MechaDamageTypeSearch]
+            } else {
+                dict set mechanicalSolverSettingsDict nonlocal_damage false
+            }
+            
         } else {
-            dict set mechanicalSolverSettingsDict nonlocal_damage false
+            set typeofDamage [write::getValue DamMechaDamageType]
+            if {$typeofDamage eq "NonLocal"} { 
+                dict set mechanicalSolverSettingsDict nonlocal_damage true
+                dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamMechaDamageTypeLength]
+                dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamMechaDamageTypeSearch]
+            } else {
+                dict set mechanicalSolverSettingsDict nonlocal_damage false
+            }
         }
-        
         ### Adding solvers parameters
         set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::Dam::write::getSolversParametersDict Dam $MechanicalSolutionStrategyUN $MechanicalDataUN] ]
 		### Add section to document
