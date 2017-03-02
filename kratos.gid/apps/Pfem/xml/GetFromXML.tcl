@@ -77,10 +77,16 @@ proc Pfem::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem values OpenMP ParallelType 
     
     #boundary conditions
+    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
+    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
+    spdAux::SetValueOnTreeItem state hidden PFEM_NodalConditions BODYDISPLACEMENT
+    
     spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions DISPLACEMENT
     spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions VELOCITY
     spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions ACCELERATION
     spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions PRESSURE
+    
+    
     [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/container\[@n='BODYDISPLACEMENT'\]"] setAttribute icon sheets
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/container\[@n='BODYDISPLACEMENT'\]/blockdata"] {
         $node setAttribute icon select
@@ -101,7 +107,13 @@ proc Pfem::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem icon folder PFEM_Loads LinePressure2DAxisym
     spdAux::SetValueOnTreeItem icon folder PFEM_Loads SurfacePressure3D
    
-    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
+    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits        
+        
+}
+
+proc Pfem::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
+    
+    return hidden
 }
 
 proc Pfem::xml::CheckElementOutputState { domNode args } {
