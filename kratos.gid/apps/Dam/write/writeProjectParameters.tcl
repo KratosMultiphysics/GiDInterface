@@ -333,13 +333,15 @@ proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {probl
                 set solver [::Model::GetSolver $solverName]
                 foreach {n in} [$solver getInputs] {
                     # JG temporal, para la precarga de combos
+                    set param_node [$base_node selectNodes "./value\[@n='$n'\]"]
+                    write::forceUpdateNode $param_node
                     if {[$in getType] ni [list "bool" "integer" "double"]} {
                         set v ""
-                        catch {set v [write::getValueByNode [$base_node selectNodes "./value\[@n='$n'\]"]]}
-                        if {$v eq ""} {set v [write::getValueByNode [$base_node selectNodes "./value\[@n='$n'\]"]]}
+                        catch {set v [write::getValueByNode $param_node]}
+                        if {$v eq ""} {set v [write::getValueByNode $param_node]}
                         dict set solverEntryDict $n $v
                     } {
-                        dict set solverEntryDict $n [write::getValueByNode [$base_node selectNodes "./value\[@n='$n'\]"]]
+                        dict set solverEntryDict $n [write::getValueByNode $param_node]
                     }
                 }
                 dict set solverSettingsDict [$se getName] $solverEntryDict
