@@ -2,12 +2,15 @@ namespace eval ::Solid {
     # Variable declaration
     variable dir
     variable attributes
+    variable kratos_name
 }
 
 proc ::Solid::Init { } {
     # Variable initialization
     variable dir
     variable attributes
+    variable kratos_name
+    set kratos_name SolidMechanicsApplication
     
     set dir [apps::getMyDir "Solid"]
     set ::Model::ValidSpatialDimensions [list 2D 2Da 3D]

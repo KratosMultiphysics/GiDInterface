@@ -9,8 +9,7 @@
             <include n="InitialConditions" active="1" path="apps/Fluid/xml/InitialConditions.spd"/>
             <include n="BoundaryConditions" active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
             <include n="SolutionStrategy" active="1" path="apps/FSI/xml/SolutionStrategyFluid.spd"/>
-            <include n="Results" active="1" path="apps/FSI/xml/ResultsFluid.spd" un="FLResults"/>
-            <include n="Results" active="1" path="apps/Common/xml/Results.spd"/>
+            <include n="Results" active="1" path="apps/Common/xml/Results.spd" un="FLResults"/>
             <include n="Materials" active="1" path="apps/Fluid/xml/Materials.spd"/>
         </container>
     
@@ -21,7 +20,7 @@
             <include n="BoundaryConditions" active="1" path="apps/Structural/xml/BoundaryConditions.spd"/>
             <include n="Loads" active="1" path="apps/Structural/xml/Loads.spd" pn="Conditions"/>
             <include n="SolutionStrategy" active="1" path="apps/FSI/xml/SolutionStrategyStructural.spd"/>
-            <include n="Results" active="1" path="apps/FSI/xml/ResultsStructural.spd"/>
+            <include n="Results" active="1" path="apps/Common/xml/Results.spd"  un="STResults"/>
             <include n="Materials" active="1" path="apps/Solid/xml/Materials.spd"/>
         </container>
     

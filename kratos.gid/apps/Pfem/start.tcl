@@ -2,12 +2,15 @@ namespace eval ::Pfem {
     # Variable declaration
     variable dir
     variable attributes
+    variable kratos_name
 }
 
 proc ::Pfem::Init { } {
     # Variable initialization
     variable dir
     variable attributes
+    variable kratos_name
+    set kratos_name PfemFluidDynamicsApplication
     
     set dir [apps::getMyDir "Pfem"]
     set ::Model::ValidSpatialDimensions [list 2D 2Da 3D]
