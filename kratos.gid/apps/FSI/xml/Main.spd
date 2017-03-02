@@ -28,7 +28,6 @@
             <include n="AnalysisType" active="1" path="apps/FSI/xml/AnalysisType.spd"/>
             <include n="SolutionStrategy" active="1" path="apps/FSI/xml/SolutionStrategy.spd"/>
             <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
-            <include n="Results" active="0" path="apps/FSI/xml/Results.spd"/>
         </container>
         
     </container>
