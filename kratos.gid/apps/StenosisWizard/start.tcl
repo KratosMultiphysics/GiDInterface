@@ -1,11 +1,14 @@
 namespace eval ::StenosisWizard {
     # Variable declaration
     variable dir
+    variable kratos_name
 }
 
 proc ::StenosisWizard::Init { } {
     # Variable initialization
     variable dir
+    variable kratos_name
+    set kratos_name $::Fluid::kratos_name
     
     # Init Working directory
     set dir [apps::getMyDir "StenosisWizard"]

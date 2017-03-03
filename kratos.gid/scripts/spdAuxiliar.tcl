@@ -911,31 +911,42 @@ proc spdAux::injectConstitutiveLawInputs { basenode args} {
 }
 
 proc spdAux::injectElementOutputs { basenode args} {
-    set parts [$basenode parent]
-    set outputs [::Model::GetAllElemOutputs {*}$args]
+    set args {*}$args
+    return [spdAux::injectElementOutputs_do $basenode $args]
+}
+proc spdAux::injectElementOutputs_do { basenode args} {
+    set base [$basenode parent]
+    set args {*}$args
+
+    set outputs [::Model::GetAllElemOutputs $args]
     foreach in [dict keys $outputs] {
         set pn [[dict get $outputs $in] getPublicName]
         set v [GetBooleanForTree [[dict get $outputs $in] getDv]]
         
         set node "<value n='$in' pn='$pn' state='\[ElementOutputState\]' v='$v' values='Yes,No' />"
         catch {
-            $parts appendXML $node
-            set orig [$parts lastChild]
+            $base appendXML $node
+            set orig [$base lastChild]
             set new [$orig cloneNode]
             $orig delete
-            $parts insertBefore $new $basenode
+            $base insertBefore $new $basenode
         }
     }
     $basenode delete
 }
 
 proc spdAux::injectNodalConditionsOutputs { basenode args} {
-    set parts [$basenode parent]
-    
-    if {$args eq "{}"} {
+    set args {*}$args
+    return [spdAux::injectNodalConditionsOutputs_do $basenode $args]
+}
+proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
+    set base [$basenode parent]
+    set args {*}$args
+
+    if {$args eq ""} {
         set nodal_conditions [::Model::getAllNodalConditions]
     } {
-        set nodal_conditions [::Model::GetNodalConditions {*}$args]
+        set nodal_conditions [::Model::GetNodalConditions $args]
     }
     foreach nc $nodal_conditions {
         set n [$nc getName]
@@ -943,14 +954,14 @@ proc spdAux::injectNodalConditionsOutputs { basenode args} {
         set v [$nc getAttribute v]
         if {$v eq ""} {set v "Yes"}
         set node "<value n='$n' pn='$pn' v='$v' values='Yes,No' state='\[CheckNodalConditionState $n\]'/>"
-        catch {$parts appendXML $node}
+        catch {$base appendXML $node}
         foreach {n1 output} [$nc getOutputs] {
             set nout [$output getName]
             set pn [$output getPublicName]
             set v [$output getAttribute v]
             if {$v eq ""} {set v "Yes"}
             set node "<value n='$nout' pn='$pn' v='$v' values='Yes,No' state='\[CheckNodalConditionOutputState $n\]'/>"
-            catch {$parts appendXML $node}
+            catch {$base appendXML $node}
         }
     }
     $basenode delete
@@ -1336,11 +1347,20 @@ proc spdAux::ProcGetSolverParameterDict { domNode args } {
 proc spdAux::ProcGetSolverParameterValues { domNode args } {
     
     set solver_node [[$domNode parent] selectNodes "./value\[@n='Solver'\]"]
-    get_domnode_attribute $solver_node values
+    #get_domnode_attribute $solver_node values
     set solver [Model::GetSolver [get_domnode_attribute $solver_node v]]
     set param_name [get_domnode_attribute $domNode n]
     set param [$solver getInputPn $param_name]
-    if {$param ne ""} {return [join [$param getValues] ","]}
+    set values [$param getValues]
+    set v [get_domnode_attribute $domNode v]
+    if {$v eq "" || $v ni $values} {
+        set v [$param getDv]
+        if {$v eq "" || $v ni $values} {
+            set v [lindex $values 0]
+        }
+        $domNode setAttribute v $v
+    }
+    if {$param ne ""} {return [join $values ","]}
     return ""
 }
 proc spdAux::ProcGetSolversValues { domNode args } {

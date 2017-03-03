@@ -2,18 +2,21 @@ namespace eval ::Structural {
     # Variable declaration
     variable dir
     variable attributes
+    variable kratos_name
 }
 
 proc ::Structural::Init { } {
     # Variable initialization
     variable dir
     variable attributes
+    variable kratos_name
     
     set dir [apps::getMyDir "Structural"]
     set attributes [dict create]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
     apps::LoadAppById "Solid"
+    set kratos_name [list StructuralMechanicsApplication $::Solid::kratos_name]
     
     LoadMyFiles
 }

@@ -4,6 +4,7 @@ namespace eval ::EmbeddedFluid {
     variable prefix
     variable attributes
     variable oldVolumeMesher
+    variable kratos_name
 }
 
 proc ::EmbeddedFluid::Init { } {
@@ -11,6 +12,8 @@ proc ::EmbeddedFluid::Init { } {
     variable dir
     variable prefix
     variable attributes
+    variable kratos_name
+    set kratos_name $::Fluid::kratos_name
 
     apps::LoadAppById "Fluid"
 

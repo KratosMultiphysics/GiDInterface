@@ -3,6 +3,7 @@ namespace eval ::Fluid {
     variable dir
     variable prefix
     variable attributes
+    variable kratos_name
 }
 
 proc ::Fluid::Init { } {
@@ -10,7 +11,9 @@ proc ::Fluid::Init { } {
     variable dir
     variable prefix
     variable attributes
+    variable kratos_name
 
+    set kratos_name "FluidDynamicsApplication"
     set dir [apps::getMyDir "Fluid"]
     set attributes [dict create]
 

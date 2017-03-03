@@ -95,6 +95,7 @@
             <value n="residual_absolute_tolerance" pn="Residual absolute tolerance" un="DamAcousticAbsTol" type="double" v="1e-9" help=""/>
             <value n="max_iteration" pn="Maximum iterations" un="DamAcousticMaxIteration" type="integer" v="10" help="This number will break the iterative loop when reached"/> 
             <value n="move_mesh_flag" pn="Move mesh flag" un="DamAcousticMoveMeshFlag" type="bool" v="false" values="false,true" help="Move the mesh"/>
+            <value n="echo_level" pn="Echo level" un="DamAcousticSolverEchoLevel" type="combo" v="0" values="0,1,2,3" help="Level of printing information"/> 
             <container n="AcousticLinearSolver" pn="Linear Solver" un="DamAcousticLinearSolver" state="normal" open_window="0">
                     <value n="solver_type" pn="Solver" un="DamAcousticSolver" v="AMGCL" state="readonly" help=""/>
                     <value n="max_iteration" pn="Max iterations" un="DamAcousticMaxIter" type="integer" v="200" help=""/>

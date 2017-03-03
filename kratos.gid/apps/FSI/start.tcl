@@ -3,12 +3,16 @@ namespace eval ::FSI {
     variable dir
     variable prefix
     variable attributes
+    variable kratos_name
 }
 
 proc ::FSI::Init { } {
     # Variable initialization
     variable dir
     variable prefix
+    variable kratos_name
+    set kratos_name FSIapplication
+    
     #W "Sourced FSI"
     set dir [apps::getMyDir "FSI"]
     set prefix FSI

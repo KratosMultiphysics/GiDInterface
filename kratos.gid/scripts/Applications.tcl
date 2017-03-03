@@ -251,6 +251,9 @@ oo::class create App {
         variable public
         return $public
     }
+    method getKratosApplicationName { } {
+        return [set ${name}::kratos_name]
+    }
 }
 
 proc apps::loadAppFile {fileName} {

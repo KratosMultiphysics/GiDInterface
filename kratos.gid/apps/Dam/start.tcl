@@ -1,11 +1,14 @@
 namespace eval ::Dam {
     # Variable declaration
     variable dir
+    variable kratos_name
 }
 
 proc ::Dam::Init { } {
     # Variable initialization
     variable dir
+    variable kratos_name
+    set kratos_name "DamApplication"
     
     set dir [apps::getMyDir "Dam"]
     set ::Model::ValidSpatialDimensions [list 2D 3D]
