@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+    <Process n="AssignPFEMInletProcess" pn="Inlet" python_module="apply_hydrostatic_outlet_process"
+        kratos_module="KratosMultiphysics.PfemFluidDynamicsApplication">
+		<inputs>
+			<parameter n="value" pn="Value" type="vector" vectorType="double" function="1" v="0.0" has_units="1"/>
+		</inputs>
+    </Process>
+</ProcessList>

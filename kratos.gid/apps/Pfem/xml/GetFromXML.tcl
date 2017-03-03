@@ -16,11 +16,11 @@ proc Pfem::xml::Init { } {
     Model::getConstitutiveLaws "../../Solid/xml/ConstitutiveLaws.xml"
     Model::getConstitutiveLaws "../../Pfem/xml/ConstitutiveLaws.xml"
     Model::getProcesses "../../Solid/xml/Processes.xml"
+    Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getNodalConditions "../../Solid/xml/NodalConditions.xml"
+    Model::getNodalConditions NodalConditions.xml
     Model::getConditions "../../Solid/xml/Conditions.xml"
     Model::getSolvers "../../Pfem/xml/Solvers.xml"
-    Pfem::xml::getBodyNodalConditions BodyNodalConditions.xml
-    
 }
 
 proc Pfem::xml::getUniqueName {name} {
@@ -79,18 +79,12 @@ proc Pfem::xml::CustomTree { args } {
     #boundary conditions
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
-    spdAux::SetValueOnTreeItem state hidden PFEM_NodalConditions BODYDISPLACEMENT
     
     spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions DISPLACEMENT
     spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions VELOCITY
+    spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions INLET
     spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions ACCELERATION
     spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions PRESSURE
-    
-    
-    [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/container\[@n='BODYDISPLACEMENT'\]"] setAttribute icon sheets
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/container\[@n='BODYDISPLACEMENT'\]/blockdata"] {
-        $node setAttribute icon select
-    } 
     
     #loads
     spdAux::SetValueOnTreeItem icon setLoad PFEM_Loads 

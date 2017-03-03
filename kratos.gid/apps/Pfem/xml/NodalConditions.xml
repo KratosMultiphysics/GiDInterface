@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodalConditionList>
+  <NodalConditionItem n="INLET" pn="Inlet" ProcessName="ApplyConstantVectorValueProcess" VariableName="VELOCITY" Interval="Total"
+					  unit_magnitude="Velocity" units="m/s" App="Pfem" ImplementedInApplication="PFEMapplication" ov="[CheckGeometry 2]">
+  </NodalConditionItem>
+</NodalConditionList>
