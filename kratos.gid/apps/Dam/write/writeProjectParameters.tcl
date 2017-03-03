@@ -120,15 +120,15 @@ proc Dam::write::getParametersDict { } {
         dict set UPthermalsettingDict block_builder [write::getValue DamThermalUPBlockBuilder]
 
         ## Adding linear solver for thermal part
-		set UPthermalsettingDict  [dict merge $UPthermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratThermUP "DamUPThermo-Mechanical-ThermData"] ]
-        dict set UPthermalsettingDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
+		set UPthermalsettingDict [dict merge $UPthermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratThermUP "DamUP_Thermo-Mechanical-ThermData"] ]
+        dict set UPthermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
        
         ## Adding UP thermal solver settings to solver settings
         dict set solversettingsDict thermal_solver_settings $UPthermalsettingDict
         
         ## Resetting Variables for the mechanical problem according to the selected problem
-        set MechanicalDataUN "DamUPThermo-Mechanical-MechData"
-        set MechanicalDataParametersUN "DamUPThermo-Mechanical-MechDataParameters"
+        set MechanicalDataUN "DamUP_Thermo-Mechanical-MechData"
+        set MechanicalDataParametersUN "DamUP_Thermo-Mechanical-MechDataParameters"
 	}
 	 
 	if {$damTypeofProblem eq "Acoustic"} {  
@@ -241,8 +241,9 @@ proc Dam::write::DefinitionDomains { } {
     set joint_part_list [list ]
     set mat_dict [write::getMatDict]
     foreach part_name [dict keys $mat_dict] {
-        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] ne "Acoustic"} {
+        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
             lappend body_part_list [write::getMeshId Parts $part_name]
+            #~ W $body_part_list
         }
     }
     dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
