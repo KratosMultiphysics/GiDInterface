@@ -198,7 +198,7 @@ proc Dam::write::writeTables { } {
         dict set TableDict $condid $groupid $valueid fileid $fileid
         if {$tableid ni $printed_tables} {
             lappend printed_tables $tableid
-            write::WriteString "Begin Table $tableid // $fileid"
+            write::WriteString "Begin Table $tableid TIME VALUE"
             if {[string index $fileid 0] eq "."} {
                 set modelname [GiD_Info project ModelName]
                 set filename [string range $fileid 2 end]
