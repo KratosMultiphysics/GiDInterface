@@ -199,7 +199,16 @@ proc Dam::write::getParametersDict { } {
             } else {
                 dict set mechanicalSolverSettingsDict nonlocal_damage false
             }
-            
+        } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
+            set typeofDamage [write::getValue DamUPThermo-Mechanical-MechaDamageType]
+            if {$typeofDamage eq "NonLocal"} { 
+                dict set mechanicalSolverSettingsDict nonlocal_damage true
+                dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamUPThermo-Mechanical-MechaDamageTypeLength]
+                dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamUPThermo-Mechanical-MechaDamageTypeSearch]
+            } else {
+                dict set mechanicalSolverSettingsDict nonlocal_damage false
+            }
+                
         } else {
             set typeofDamage [write::getValue DamMechaDamageType]
             if {$typeofDamage eq "NonLocal"} { 
