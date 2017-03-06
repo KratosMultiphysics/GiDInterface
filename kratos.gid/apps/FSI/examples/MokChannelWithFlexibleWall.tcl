@@ -176,7 +176,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC3D'\]"
         set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_full]
         $fluidDisplacementNode setAttribute ov surface
-        set props [list is_fixed_X 1 is_fixed_Y 1 is_fixed_Z 1 valueX 0.0 valueY 0.0 valueZ 0.0]
+        set props [list is_fixed_x 1 is_fixed_y 1 is_fixed_z 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -187,7 +187,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         }
         set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_lat]
         $fluidDisplacementNode setAttribute ov surface
-        set props [list is_fixed_X 0 is_fixed_Y 0 is_fixed_Z 1 valueX 0.0 valueY 0.0 valueZ 0.0]
+        set props [list is_fixed_x 0 is_fixed_y 0 is_fixed_z 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
