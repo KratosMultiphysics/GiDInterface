@@ -31,10 +31,6 @@ structure_main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["s
 fluid_main_model_part = ModelPart(ProjectParameters["fluid_solver_settings"]["problem_data"]["model_part_name"].GetString())
 fluid_main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["fluid_solver_settings"]["problem_data"]["domain_size"].GetInt())
 
-###TODO replace this "model" for real one once available
-FluidModel = {ProjectParameters["fluid_solver_settings"]["problem_data"]["model_part_name"].GetString() : fluid_main_model_part}
-SolidModel = {ProjectParameters["structure_solver_settings"]["problem_data"]["model_part_name"].GetString() : structure_main_model_part}
-
 ## Solver construction
 solver_module = __import__("partitioned_fsi_solver") # Currently there is only one FSI solver up to date
 solver = solver_module.CreateSolver(structure_main_model_part, fluid_main_model_part, ProjectParameters)
@@ -70,31 +66,36 @@ elif (parallel_type == "MPI"):
 gid_output_structure.ExecuteInitialize()
 gid_output_fluid.ExecuteInitialize()
 
-##TODO: replace MODEL for the Kratos one ASAP
-## Get the list of the skin submodel parts in the object Model (FLUID)
-for i in range(ProjectParameters["fluid_solver_settings"]["solver_settings"]["skin_parts"].size()):
-    skin_part_name = ProjectParameters["fluid_solver_settings"]["solver_settings"]["skin_parts"][i].GetString()
-    FluidModel.update({skin_part_name: fluid_main_model_part.GetSubModelPart(skin_part_name)})
+## Creation of Kratos models
+FluidModel = Model()
+FluidModel.AddModelPart(fluid_main_model_part)
+SolidModel = Model()
+SolidModel.AddModelPart(structure_main_model_part)
 
-## Get the list of the no-skin submodel parts in the object Model (FLUID)
-for i in range(ProjectParameters["fluid_solver_settings"]["solver_settings"]["no_skin_parts"].size()):
-    no_skin_part_name = ProjectParameters["fluid_solver_settings"]["solver_settings"]["no_skin_parts"][i].GetString()
-    FluidModel.update({no_skin_part_name: fluid_main_model_part.GetSubModelPart(no_skin_part_name)})
+## Get the list of the skin submodel parts in the object Model
+for i in range(ProjectParameters["solver_settings"]["skin_parts"].size()):
+    skin_part_name = ProjectParameters["solver_settings"]["skin_parts"][i].GetString()
+    FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(skin_part_name))
 
-## Get the list of the initial conditions submodel parts in the object Model (FLUID)
-for i in range(ProjectParameters["fluid_solver_settings"]["initial_conditions_process_list"].size()):
-    initial_cond_part_name = ProjectParameters["fluid_solver_settings"]["initial_conditions_process_list"][i]["Parameters"]["model_part_name"].GetString()
-    FluidModel.update({initial_cond_part_name: fluid_main_model_part.GetSubModelPart(initial_cond_part_name)})
+## Get the list of the no-skin submodel parts in the object Model (results processes and no-skin conditions)
+for i in range(ProjectParameters["solver_settings"]["no_skin_parts"].size()):
+    no_skin_part_name = ProjectParameters["solver_settings"]["no_skin_parts"][i].GetString()
+    FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(no_skin_part_name))
 
-## Get the gravity submodel part in the object Model (FLUID)
-for i in range(ProjectParameters["fluid_solver_settings"]["gravity"].size()):
-    gravity_part_name = ProjectParameters["fluid_solver_settings"]["gravity"][i]["Parameters"]["model_part_name"].GetString()
-    FluidModel.update({gravity_part_name: fluid_main_model_part.GetSubModelPart(gravity_part_name)})
+## Get the list of the initial conditions submodel parts in the object Model
+for i in range(ProjectParameters["initial_conditions_process_list"].size()):
+    initial_cond_part_name = ProjectParameters["initial_conditions_process_list"][i]["Parameters"]["model_part_name"].GetString()
+    FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(initial_cond_part_name))
+
+## Get the gravity submodel part in the object Model
+for i in range(ProjectParameters["gravity"].size()):
+    gravity_part_name = ProjectParameters["gravity"][i]["Parameters"]["model_part_name"].GetString()
+    FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(gravity_part_name))
 
 ## Get the list of the submodel part in the object Model (STRUCTURE)
 for i in range(ProjectParameters["structure_solver_settings"]["solver_settings"]["processes_sub_model_part_list"].size()):
     part_name = ProjectParameters["structure_solver_settings"]["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-    SolidModel.update({part_name: structure_main_model_part.GetSubModelPart(part_name)})
+    SolidModel.AddModelPart(structure_main_model_part.GetSubModelPart(part_name))
 
 # Print model_parts and properties
 if(fluid_verbosity > 1):
