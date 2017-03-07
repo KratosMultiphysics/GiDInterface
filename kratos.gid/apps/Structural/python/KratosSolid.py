@@ -53,9 +53,7 @@ verbosity = ProjectParameters["problem_data"]["echo_level"].GetInt()
 main_model_part = ModelPart(ProjectParameters["problem_data"]["model_part_name"].GetString())
 main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["problem_data"]["domain_size"].GetInt())
 
-Model = {ProjectParameters["problem_data"]["model_part_name"].GetString() : main_model_part}
-
-#construct the solver (main setting methods are located in the solver_module)
+# Construct the solver (main setting methods are located in the solver_module)
 solver_module = __import__(ProjectParameters["solver_settings"]["solver_type"].GetString())
 solver = solver_module.CreateSolver(main_model_part, ProjectParameters["solver_settings"])
 
@@ -70,11 +68,15 @@ solver.ImportModelPart()
 # If we integrate it in the model part we cannot use combined solvers
 solver.AddDofs()
 
+# Creation of Kratos model
+SolidModel = Model()
+SolidModel.AddModelPart(main_model_part)
+
 # Build sub_model_parts or submeshes (rearrange parts for the application of custom processes)
 ## Get the list of the submodel part in the object Model
 for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
     part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-    Model.update({part_name: main_model_part.GetSubModelPart(part_name)})
+    SolidModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
 
 #print model_part and properties
 if(verbosity>1):
@@ -90,23 +92,13 @@ if(verbosity>1):
 #obtain the list of the processes to be applied
 
 import process_factory
-list_of_processes = process_factory.KratosProcessFactory(Model).ConstructListOfProcesses( ProjectParameters["constraints_process_list"] )
+list_of_processes = process_factory.KratosProcessFactory(SolidModel).ConstructListOfProcesses( ProjectParameters["constraints_process_list"] )
 
-list_of_processes += process_factory.KratosProcessFactory(Model).ConstructListOfProcesses( ProjectParameters["loads_process_list"] )
+list_of_processes += process_factory.KratosProcessFactory(SolidModel).ConstructListOfProcesses( ProjectParameters["loads_process_list"] )
 
-#list_of_processes += process_factory.KratosProcessFactory(Model).ConstructListOfProcesses(ProjectParameters["list_other_processes"])
+#list_of_processes += process_factory.KratosProcessFactory(SolidModel).ConstructListOfProcesses(ProjectParameters["list_other_processes"])
 
-#list_of_processes = []
-#process_definition = ProjectParameters["boundary_conditions_process_list"]
-#for i in range(process_definition.size()):
-#    item = process_definition[i]
-#    module = __import__(item["kratos_module"].GetString())
-#    interface_file = __import__(item["python_module"].GetString())
-#    p = interface_file.Factory(item, Model)
-#    list_of_processes.append( p )
-#    print("done ",i)
-
-#print list of constructed processes
+# Print list of constructed processes
 if(verbosity>1):
     for process in list_of_processes:
         print(process)
