@@ -137,12 +137,12 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
     # Fluid Interface
-    set fluidInlet "$fluidConditions/condition\[@n='Inlet$nd'\]"
+    set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
     
     # Fluid Inlet
     set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet Inlet]
     $inletNode setAttribute ov $condtype
-    set props [list modulus 0.6067 directionX 1.0 directionY 0.0 directionZ 0.0]
+    set props [list ByFunction No modulus 0.6067 direction automatic_inwards_normal Interval Total]
     foreach {prop val} $props {
          set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -176,7 +176,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC3D'\]"
         set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_full]
         $fluidDisplacementNode setAttribute ov surface
-        set props [list is_fixed_X 1 is_fixed_Y 1 is_fixed_Z 1 valueX 0.0 valueY 0.0 valueZ 0.0]
+        set props [list is_fixed_x 1 is_fixed_y 1 is_fixed_z 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -187,7 +187,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         }
         set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_lat]
         $fluidDisplacementNode setAttribute ov surface
-        set props [list is_fixed_X 0 is_fixed_Y 0 is_fixed_Z 1 valueX 0.0 valueY 0.0 valueZ 0.0]
+        set props [list is_fixed_x 0 is_fixed_y 0 is_fixed_z 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -200,13 +200,13 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
         set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshBC]
         $fluidDisplacementNode setAttribute ov line
-        set props [list is_fixed_X 1 is_fixed_Y 1 is_fixed_Z 1 valueX 0.0 valueY 0.0 valueZ 0.0]
+        set props [list is_fixed_x 1 is_fixed_y 1 is_fixed_z 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
                   $propnode setAttribute v $val
              } else {
-                W "Warning - Couldn't find property ALEMeshDisplacementBC3D $prop"
+                W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
              }
         }
     }
@@ -217,8 +217,9 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     # Structural Parts
     set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
     set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
-    $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}] 
-    set props [list Element SmallDisplacementElement$nd ConstitutiveLaw LinearElasticPlaneStrain${nd}Law SECTION_TYPE 0 THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6]
+    $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
+    set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStrain2DLaw"}]
+    set props [list Element SmallDisplacementElement$nd ConstitutiveLaw $constLawNameStruc SECTION_TYPE 0 THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6]
     lappend props YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45 KINEMATIC_HARDENING_MODULUS 0 REFERENCE_HARDENING_MODULUS 0 INFINITY_HARDENING_MODULUS 0
     lappend props HARDENING_EXPONENT 0 DAMAGE_THRESHOLD 0 STRENGTH_RATIO 0 FRACTURE_ENERGY 0
     foreach {prop val} $props {
