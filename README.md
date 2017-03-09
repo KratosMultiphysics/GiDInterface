@@ -1,5 +1,5 @@
 # GiDInterface
-The interface of Kratos with GiD
+The interface of Kratos with GiD 
 
 ## First steps
 * Install GiD -> [Developer version](http://www.gidhome.com/download/developer-versions)
@@ -15,5 +15,9 @@ The interface of Kratos with GiD
 * Go to: Data / Problem type / kratos
 * kratos top menu / Developer mode (recommended)
 
+## Warning
+* This repository is in Beta version. This means that everything can change, and there is no "transform from older versions" yet.
+
 ## Want to develop?
 * Ask for access -> contact fjgarate@cimne.upc.edu
+
