@@ -83,8 +83,8 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
     }
     
     if {$type_of_problem in [list "Modal-Analysis"]} {
-        set names [list "EigenSolver"]
-        set pnames [list "EigenSolver" "Eigen Solver"]
+        set names [list "Eigen-Solver"]
+        set pnames [list "Eigen-Solver" "Eigen Solver"]
     }
     
     $domNode setAttribute values [join $names ","]
@@ -129,12 +129,12 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
     #W "Round 1 $Claws"
     #foreach cl $Claws {W [$cl getName]}
     set type_of_problem [write::getValue DamTypeofProblem]
-    W $type_of_problem
+    #W $type_of_problem
     set goodList [list ]
     #W "Pre type problem -> $type_of_problem"
     foreach cl $Claws {
         set type [$cl getAttribute Type]
-        W $type
+        #W $type
         #W "cl -> [$cl getName]"
         #W "type -> $type"
         if {[string first "Therm" $type] eq -1 && $type_of_problem ni [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]} {
@@ -177,7 +177,7 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
             set damage_type ""
         }
         "Modal-Analysis" {
-            set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamUModalData]/value\[@n='AnalysisType'\]"] v]
+            set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamUModalData]/container\[@n='StratParams'\]/value\[@n='AnalysisType'\]"] v]
             set damage_type ""
         }
         default {
