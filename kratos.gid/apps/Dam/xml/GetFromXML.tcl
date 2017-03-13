@@ -30,6 +30,14 @@ proc ::Dam::xml::MultiAppEvent {args} {
 
 
 proc Dam::xml::CustomTree { args } {
+	
+	#~ set type_of_problem [write::getValue DamTypeofProblem]
+	#~ W $type_of_problem
+    #~ if {$type_of_problem in [list "Modal-Analysis"]} {
+        #~ W $type_of_problem
+    #~ }
+	
+	
     # Add some nodal results
     set nodal_results_base [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
     $nodal_results_base setAttribute state "\[ActiveIfAnyPartState\]"
@@ -52,6 +60,7 @@ proc Dam::xml::CustomTree { args } {
                gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $item pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical\]"]
         }
     }
+       
 }
 
 proc Dam::xml::ProcGetSchemes {domNode args} {
@@ -83,8 +92,8 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
     }
     
     if {$type_of_problem in [list "Modal-Analysis"]} {
-        set names [list "Eigen-Solver"]
-        set pnames [list "Eigen-Solver" "Eigen Solver"]
+        set names [list "Eigen-Dynamic-Scheme"]
+        set pnames [list "Eigen-Dynamic-Scheme" "Eigen Dynamic Scheme"]
     }
     
     $domNode setAttribute values [join $names ","]
@@ -313,7 +322,7 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
         if {$type_of_problem eq "Acoustic"} {
             set n "Newton-Raphson"
         } elseif {$type_of_problem eq "Modal-Analysis"} {
-            set n "Eigen-Solver"
+            set n "Eigen-Strategy"
         } else {       
             set n [list "Newton-Raphson" "Arc-length"]
             set type_of_problem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
@@ -370,6 +379,12 @@ proc Dam::xml::ProcGetElementsValues {domNode args} {
         set names [list WaveEquationElement2D]
         if {$::Model::SpatialDimension eq "3D"} {
             set names [list WaveEquationElement3D]
+        }
+    }
+    if {$TypeofProblem in [list Modal-Analysis]} {
+        set names [list SmallDisplacementElement2D]
+        if {$::Model::SpatialDimension eq "3D"} {
+            set names [list SmallDisplacementElement3D]
         }
     }
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}

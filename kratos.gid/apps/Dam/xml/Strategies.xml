@@ -146,11 +146,11 @@
 	</schemes>
   
   </StrategyItem>
-	<StrategyItem n="Eigen-Solver" pn="Eigen solver">
+	<StrategyItem n="Eigen-Strategy" pn="Eigen Strategy">
 		<schemes>
-			<scheme n="Eigen-Solver" pn="Eigen Solver">
+			<scheme n="Eigen-Dynamic-Scheme" pn="Eigen Dynamic Scheme">
 				 <element_filters>
-            </element_filters>
+				</element_filters>
 			</scheme>
 		</schemes>
 		<linearSolvers>
