@@ -1,14 +1,14 @@
-namespace eval EmbeddedFluid::write {
+namespace eval PotentialFluid::write {
 
 }
 
-proc EmbeddedFluid::write::Init { } {
+proc PotentialFluid::write::Init { } {
     # Namespace variables inicialization
 }
 
 # Events
-proc EmbeddedFluid::write::writeModelPartEvent { } {
-    Fluid::write::AddValidApps "EmbeddedFluid"
+proc PotentialFluid::write::writeModelPartEvent { } {
+    Fluid::write::AddValidApps "PotentialFluid"
     set err [Fluid::write::Validate]
     if {$err ne ""} {error $err}
     write::initWriteData $Fluid::write::PartsUN "EMBFLMaterials"
@@ -21,12 +21,12 @@ proc EmbeddedFluid::write::writeModelPartEvent { } {
     Fluid::write::writeMeshes
     writeDistances
 }
-proc EmbeddedFluid::write::writeCustomFilesEvent { } {
+proc PotentialFluid::write::writeCustomFilesEvent { } {
     write::CopyFileIntoModel "python/KratosFluid.py"
     write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
 }
 
-proc EmbeddedFluid::write::writeDistances { } {
+proc PotentialFluid::write::writeDistances { } {
     set must_write [write::getValue EMBFLDistanceSettings ReadingMode]
     if {$must_write eq "from_mdpa"} {
         set go 0
@@ -49,4 +49,4 @@ proc EmbeddedFluid::write::writeDistances { } {
     }
 }
 
-EmbeddedFluid::write::Init
+PotentialFluid::write::Init

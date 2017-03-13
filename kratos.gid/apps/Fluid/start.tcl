@@ -101,12 +101,15 @@ proc ::Fluid::FluidAppSelectorWindow { } {
 proc ::Fluid::ChangeAppTo {appid} {
     switch $appid {
         "Fluid" {
-            set doc $gid_groups_conds::doc
-            set root [$doc documentElement]
-            [$root selectNodes "value\[@n='nDim'\]"] setAttribute v undefined
+            [[customlib::GetBaseRoot] selectNodes "value\[@n='nDim'\]"] setAttribute v undefined
             ::spdAux::CreateDimensionWindow
         }
         "EmbeddedFluid" {
+            spdAux::deactiveApp Fluid
+            apps::setActiveApp $appid
+        }
+        "PotentialFluid" {
+            [[customlib::GetBaseRoot] selectNodes "value\[@n='nDim'\]"] setAttribute v undefined
             spdAux::deactiveApp Fluid
             apps::setActiveApp $appid
         }
