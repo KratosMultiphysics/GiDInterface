@@ -81,7 +81,7 @@ proc ::Fluid::FluidAppSelectorWindow { } {
 
         ttk::frame $w.information  -relief ridge
         set i 0
-        set apps [list Fluid EmbeddedFluid]
+        set apps [list Fluid EmbeddedFluid PotentialFluid]
         foreach app $apps {
             set img [::apps::getImgFrom $app]
             set app_publicname [[::apps::getAppById $app] getPublicName]
