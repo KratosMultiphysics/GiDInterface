@@ -96,7 +96,6 @@ proc Model::ParseConditions { doc } {
 
 proc Model::ParseCondNode { node } {
     set name [$node getAttribute n]
-    
     set cnd [::Model::Condition new $name]
     $cnd setPublicName [$node getAttribute pn]
     $cnd setHelp [$node getAttribute help]

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+    <Process n="DefineWakeProcess" pn="Scalar value" python_module="define_wake_process" kratos_module="KratosMultiphysics.CompressiblePotentialFlowApplication">
+		<inputs>
+			<parameter n="direction" pn="Direction" type="vector" v="1.0,0.0,0.0" vectorType="double" help=""/>
+			<parameter n="epsilon" pn="Epsilon" type="double" v="1e-6" help=""/>
+		</inputs>
+    </Process>
+</ProcessList>

@@ -13,7 +13,7 @@ proc ::PotentialFluid::Init { } {
     variable prefix
     variable attributes
     variable kratos_name
-    set kratos_name $::Fluid::kratos_name
+    set kratos_name CompressiblePotentialFlowApplication
 
     apps::LoadAppById "Fluid"
 

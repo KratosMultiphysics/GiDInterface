@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+  <ConditionItem n="Wake2D" pn="Wake" ImplementedInFile=".cpp" Interval="Total"
+	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="False" VariableName="" App="Fluid"
+	ElementType="Point" ProcessName="DefineWakeProcess" help="">
+    <TopologyFeatures>
+    </TopologyFeatures>
+	<DegreesOfFreedom>
+	</DegreesOfFreedom>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+  <ConditionItem n="Wake3D" pn="Wake" ImplementedInFile=".cpp" Interval="Total"
+	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False" VariableName="" App="Fluid"
+	ElementType="Line" ProcessName="DefineWakeProcess" help="" >
+    <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="WallCondition3D3N"/>
+    </TopologyFeatures>
+	<DegreesOfFreedom>
+	</DegreesOfFreedom>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+</ConditionList>

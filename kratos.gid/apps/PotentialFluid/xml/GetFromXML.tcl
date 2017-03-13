@@ -18,10 +18,12 @@ proc PotentialFluid::xml::Init { } {
     Model::getElements "../../Fluid/xml/Elements.xml"
     Model::getMaterials Materials.xml
     Model::getNodalConditions "../../Fluid/xml/NodalConditions.xml"
-    Model::getConstitutiveLaws ConstitutiveLaws.xml
+    Model::getConstitutiveLaws "../../Fluid/xml/ConstitutiveLaws.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses "../../Fluid/xml/Processes.xml"
+    Model::getProcesses Processes.xml
     Model::getConditions "../../Fluid/xml/Conditions.xml"
+    Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
 }
 
@@ -40,6 +42,12 @@ proc PotentialFluid::xml::getUniqueName {name} {
 proc PotentialFluid::xml::CustomTree { args } {
     # Hide Results Cut planes
     #Fluid::xml::CustomTree {*}$args
+}
+
+proc spdAux::injectConditions { basenode args} {
+    set conditions [::Model::GetConditions [list ImplementedInApplication {FluidApplication CompressiblePotentialFlowApplication}]]
+    spdAux::_injectCondsToTree $basenode $conditions
+    $basenode delete
 }
 
 PotentialFluid::xml::Init
