@@ -84,7 +84,7 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
     
     if {$type_of_problem in [list "Modal-Analysis"]} {
         set names [list "EigenSolver"]
-        set pnames [list "EigenSolver" "EigenSolver"]
+        set pnames [list "EigenSolver" "Eigen Solver"]
     }
     
     $domNode setAttribute values [join $names ","]
@@ -308,17 +308,21 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
     set pnames ""
     set ids [list ]
     set type_of_strategy [lindex $args 0]
+    set type_of_problem [write::getValue DamTypeofProblem]
     if {$type_of_strategy eq "Mechanic"} {
-        set n [list "Newton-Raphson" "Arc-length"]
-        set type_of_problem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+        if {$type_of_problem eq "Acoustic"} {
+            set n "Newton-Raphson"
+        } elseif {$type_of_problem eq "Modal-Analysis"} {
+            set n "Eigen-Solver"
+        } else {       
+            set n [list "Newton-Raphson" "Arc-length"]
+            set type_of_problem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+        }
     } else {
         # Thermal
         set n "Newton-Raphson"
     }
     
-    if {$type_of_strategy eq "Modal-Analysis"} {
-        set n "Eigen-Solver"
-    }
     
     set Sols [::Model::GetSolutionStrategies [list n $n] ]
     foreach ss $Sols {
