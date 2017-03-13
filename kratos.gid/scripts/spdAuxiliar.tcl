@@ -728,14 +728,14 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             if {$has_units ne ""} { set has_units "units='$units'  unit_magnitude='$um'"}
             if {$type eq "vector"} {
                 set vector_type [$in getAttribute "vectorType"]
-                lassign [split $v ","] v1 v2 v3
+                lassign [split $v ","] vX vY vZ
                 if {$vector_type eq "bool"} {
                     set zstate "\[CheckDimension 3D\]"
                     if {$state eq "hidden"} {set zstate hidden}
                     append node "
-                        <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$v1' values='1,0' help='' state='$state'/>
-                        <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$v2' values='1,0' help='' state='$state'/>
-                        <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$v3' values='1,0' help='' state='$zstate'/>"
+                        <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state'/>
+                        <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state'/>
+                        <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate'/>"
                 } {
                     foreach i [list "X" "Y" "Z"] {
                         set fname "function_$inName"
@@ -788,7 +788,8 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
                                 </value>"
                             append node "<value n='$fname' pn='$i function' v='' help='$help'  $zstate />"
                         }
-                        append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='$v1' $has_units help='$help'  $zstate />"
+                        set v "v$i"
+                        append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate />"
                     }
                 }
                 
