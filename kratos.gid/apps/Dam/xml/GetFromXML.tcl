@@ -82,6 +82,11 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
         set pnames [list "Newmark" "Newmark"]
     }
     
+    if {$type_of_problem in [list "Modal-Analysis"]} {
+        set names [list "EigenSolver"]
+        set pnames [list "EigenSolver" "EigenSolver"]
+    }
+    
     $domNode setAttribute values [join $names ","]
     
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
@@ -124,10 +129,12 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
     #W "Round 1 $Claws"
     #foreach cl $Claws {W [$cl getName]}
     set type_of_problem [write::getValue DamTypeofProblem]
+    W $type_of_problem
     set goodList [list ]
     #W "Pre type problem -> $type_of_problem"
     foreach cl $Claws {
         set type [$cl getAttribute Type]
+        W $type
         #W "cl -> [$cl getName]"
         #W "type -> $type"
         if {[string first "Therm" $type] eq -1 && $type_of_problem ni [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]} {
@@ -167,6 +174,10 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
         }
         "Acoustic" {
             set analysis_type ""
+            set damage_type ""
+        }
+        "Modal-Analysis" {
+            set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamUModalData]/value\[@n='AnalysisType'\]"] v]
             set damage_type ""
         }
         default {
@@ -245,6 +256,9 @@ proc Dam::xml::ProcCheckNodalConditionState {domNode args} {
             "Acoustic" {
                 set params [list TypeofProblem $TypeofProblem]
             }
+            "Modal-Analysis" {
+                set params [list TypeofProblem $TypeofProblem]
+            }
             default {
                 error [= "Check type of problem"]
             }
@@ -300,6 +314,10 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
     } else {
         # Thermal
         set n "Newton-Raphson"
+    }
+    
+    if {$type_of_strategy eq "Modal-Analysis"} {
+        set n "Eigen-Solver"
     }
     
     set Sols [::Model::GetSolutionStrategies [list n $n] ]
