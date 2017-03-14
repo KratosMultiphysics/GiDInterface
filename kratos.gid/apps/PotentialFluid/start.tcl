@@ -27,7 +27,7 @@ proc ::PotentialFluid::Init { } {
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
 
-    dict set attributes UseIntervals 1
+    dict set attributes UseIntervals 0
 
     LoadMyFiles
     Kratos::AddRestoreVar "::GidPriv(DuplicateEntities)"

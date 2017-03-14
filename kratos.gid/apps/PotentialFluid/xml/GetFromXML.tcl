@@ -9,8 +9,6 @@ namespace eval PotentialFluid::xml {
 proc PotentialFluid::xml::Init { } {
     # Namespace variables inicialization
     variable dir
-    variable lastImportMeshSize
-    set lastImportMeshSize 0
     Model::DestroyEverything
     Model::InitVariables dir $PotentialFluid::dir
 
@@ -22,7 +20,7 @@ proc PotentialFluid::xml::Init { } {
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses "../../Fluid/xml/Processes.xml"
     Model::getProcesses Processes.xml
-    Model::getConditions "../../Fluid/xml/Conditions.xml"
+    #Model::getConditions "../../Fluid/xml/Conditions.xml"
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
 }
