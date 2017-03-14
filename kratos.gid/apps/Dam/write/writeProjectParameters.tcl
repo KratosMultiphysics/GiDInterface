@@ -46,8 +46,10 @@ proc Dam::write::getParametersDict { } {
 			dict set solversettingsDict solver_type "dam_UP_mechanical_solver"
 		} elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
 			dict set solversettingsDict solver_type "dam_UP_thermo_mechanic_solver"
-		} else {
+		} elseif {$damTypeofProblem eq "Acoustic"} {
 			dict set solversettingsDict solver_type "dam_P_solver"
+        } else {
+			dict set solversettingsDict solver_type "dam_eigen_solver"
 		}
 	} else {
 		if {$damTypeofProblem eq "Mechanical"} {
@@ -58,9 +60,11 @@ proc Dam::write::getParametersDict { } {
 			dict set solversettingsDict solver_type "dam_MPI_UP_mechanical_solver"
 		} elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
 			dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
+		} elseif {$damTypeofProblem eq "Acoustic"} {
+			W "Acoustic Problem in MPI is not yet implemented, please select an OpenMP option"
 		} else {
-			dict set solversettingsDict solver_type "dam_MPI_P_solver"
-		}
+            W "Eigen Analysis in MPI is not yet implemented, please select an OpenMP option"
+        }
 	}
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
@@ -68,169 +72,197 @@ proc Dam::write::getParametersDict { } {
     dict set modelDict input_file_label 0
     dict set solversettingsDict model_import_settings $modelDict
     dict set solversettingsDict echo_level 1
-	dict set solversettingsDict buffer_size 2
-    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+    dict set solversettingsDict buffer_size 2
     
-    ## Default Values
-    set MechanicalSolutionStrategyUN "DamSolStrat"
-    set MechanicalSchemeUN "DamScheme"
-    set MechanicalDataUN "DamMechanicalData"
-    set MechanicalDataParametersUN "DamMechanicalDataParameters"
-    
-    if {$damTypeofProblem eq "Thermo-Mechanical" } {
+    if {$damTypeofProblem eq "Modal-Analysis"} {
+        dict set solversettingsDict solution_type [write::getValue DamModalSoluType]
+        dict set solversettingsDict analysis_type [write::getValue DamModalAnalysisType]
+        set eigensolversetDict [dict create]
+        dict set eigensolversetDict solver_type [write::getValue DamModalSolver]
+        dict set eigensolversetDict print_feast_output [write::getValue DamModalfeastOutput]
+        dict set eigensolversetDict perform_stochastic_estimate [write::getValue DamModalStochastic]
+        dict set eigensolversetDict solve_eigenvalue_problem [write::getValue DamModalSolve]
+        dict set eigensolversetDict lambda_min [write::getValue DamModalLambdaMin]
+        dict set eigensolversetDict lambda_max [write::getValue DamModalLambdaMax]
+        dict set eigensolversetDict search_dimension [write::getValue DamModalSearchDimension]
         
-		dict set solversettingsDict reference_temperature [write::getValue DamThermalReferenceTemperature]
-		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
-	
-		set thermalsettingDict [dict create]
-		dict set thermalsettingDict echo_level [write::getValue DamThermalEcholevel]
-		dict set thermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalReformsSteps]
-		dict set thermalsettingDict clear_storage [write::getValue DamThermalClearStorage]
-		dict set thermalsettingDict compute_reactions [write::getValue DamThermalComputeReactions]
-		dict set thermalsettingDict move_mesh_flag [write::getValue DamThermalMoveMeshFlag]
-		dict set thermalsettingDict compute_norm_dx_flag [write::getValue DamThermalComputeNormDx]
-		dict set thermalsettingDict theta_scheme [write::getValue DamThermalScheme]
-        dict set thermalsettingDict block_builder [write::getValue DamThermalBlockBuilder]
-		
-        ## Adding linear solver for thermal part
-		set thermalsettingDict  [dict merge $thermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratTherm "DamThermo-Mechanical-ThermData"] ]
-        dict set thermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
+        ## Adding Eigen Dictionary
+        dict set solversettingsDict eigensolver_settings $eigensolversetDict
         
-        ## Adding thermal solver settings to solver settings
-        dict set solversettingsDict thermal_solver_settings $thermalsettingDict
-        
-        ## Resetting Variables for the mechanical problem according to the selected problem
-        set MechanicalDataUN "DamThermo-Mechanical-MechData"
-        set MechanicalDataParametersUN "DamThermo-Mechanical-MechDataParameters"
-	}
-	
-	if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
-        
-    	dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
-		dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
-	
-		set UPthermalsettingDict [dict create]
-		dict set UPthermalsettingDict echo_level [write::getValue DamThermalUPEcholevel]
-		dict set UPthermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalUPReformsSteps]
-		dict set UPthermalsettingDict clear_storage [write::getValue DamThermalUPClearStorage]
-		dict set UPthermalsettingDict compute_reactions [write::getValue DamThermalUPComputeReactions]
-		dict set UPthermalsettingDict move_mesh_flag [write::getValue DamThermalUPMoveMeshFlag]
-		dict set UPthermalsettingDict compute_norm_dx_flag [write::getValue DamThermalUPComputeNormDx]
-		dict set UPthermalsettingDict theta_scheme [write::getValue DamThermalUPScheme]
-        dict set UPthermalsettingDict block_builder [write::getValue DamThermalUPBlockBuilder]
-
-        ## Adding linear solver for thermal part
-		set UPthermalsettingDict [dict merge $UPthermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratThermUP "DamUP_Thermo-Mechanical-ThermData"] ]
-        dict set UPthermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
-       
-        ## Adding UP thermal solver settings to solver settings
-        dict set solversettingsDict thermal_solver_settings $UPthermalsettingDict
-        
-        ## Resetting Variables for the mechanical problem according to the selected problem
-        set MechanicalDataUN "DamUP_Thermo-Mechanical-MechData"
-        set MechanicalDataParametersUN "DamUP_Thermo-Mechanical-MechDataParameters"
-	}
-	 
-	if {$damTypeofProblem eq "Acoustic"} {  
-        
-		### Acostic Settings
-		set acousticSolverSettingsDict [dict create]
-		dict set acousticSolverSettingsDict strategy_type "Newton-Raphson"
-		dict set acousticSolverSettingsDict scheme_type "Newmark"
-		dict set acousticSolverSettingsDict convergence_criterion [write::getValue DamAcousticConvergencecriterion]
-		dict set acousticSolverSettingsDict residual_relative_tolerance [write::getValue DamAcousticRelTol]
-		dict set acousticSolverSettingsDict residual_absolute_tolerance [write::getValue DamAcousticAbsTol]
-		dict set acousticSolverSettingsDict max_iteration [write::getValue DamAcousticMaxIteration]
-		dict set acousticSolverSettingsDict move_mesh_flag [write::getValue DamAcousticMoveMeshFlag]
-        dict set acousticSolverSettingsDict echo_level [write::getValue DamAcousticSolverEchoLevel]
-
-		set acousticlinearDict [dict create]
-		dict set acousticlinearDict solver_type [write::getValue DamAcousticSolver]
-		dict set acousticlinearDict max_iteration [write::getValue DamAcousticMaxIter]
-		dict set acousticlinearDict tolerance [write::getValue DamAcousticTolerance]
-		dict set acousticlinearDict verbosity [write::getValue DamAcousticVerbosity]
-		dict set acousticlinearDict GMRES_size [write::getValue DamAcousticGMRESSize]
-        
-		## Adding linear solver settings to acoustic solver
-		dict set acousticSolverSettingsDict linear_solver_settings $acousticlinearDict
-
-        ## Adding Acoustic solver settings to solver settings
-		dict set solversettingsDict acoustic_solver_settings $acousticSolverSettingsDict
-        
-    } elseif {$damTypeofProblem eq "UP_Mechanical"} {
-        
-        ### UP Mechanical Settings
-		set UPmechanicalSolverSettingsDict [dict create]
-		dict set UPmechanicalSolverSettingsDict solution_type [write::getValue DamUPMechaSoluType]
-		dict set UPmechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
-		dict set UPmechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
-		set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict $MechanicalSolutionStrategyUN $MechanicalSchemeUN "DamUP_MechanicalDataParameters"] ]
-        ### Damage Variables
-        set typeofDamage [write::getValue DamUPMechaDamageType]
-        if {$typeofDamage eq "NonLocal"} { 
-            dict set UPmechanicalSolverSettingsDict nonlocal_damage true
-            dict set UPmechanicalSolverSettingsDict characteristic_length [write::getValue DamUPMechaDamageTypeLength]
-            dict set UPmechanicalSolverSettingsDict search_neighbours_step [write::getValue DamUPMechaDamageTypeSearch]
-        } else {
-            dict set UPmechanicalSolverSettingsDict nonlocal_damage false
-        }
-        
-        ### Adding solvers parameters
-        set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [::Dam::write::getSolversParametersDict Dam $MechanicalSolutionStrategyUN "DamUP_MechanicalData"] ]
-        ### Adding domains to the problem
-        set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
-		### Add section to document
-        dict set solversettingsDict mechanical_solver_settings $UPmechanicalSolverSettingsDict 
+        # Adding submodel and processes
+        dict set solversettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
+        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
         
     } else {
-	    ### Mechanical Settings
-		set mechanicalSolverSettingsDict [dict create]
-		dict set mechanicalSolverSettingsDict solution_type [write::getValue DamMechaSoluType]
-		dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
-		dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
-		set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict $MechanicalSolutionStrategyUN $MechanicalSchemeUN $MechanicalDataParametersUN] ]
-        ### Damage Variables
-        if {$damTypeofProblem eq "Thermo-Mechanical" } {
-            set typeofDamage [write::getValue DamThermo-Mechanical-MechaDamageType]
-            if {$typeofDamage eq "NonLocal"} { 
-                dict set mechanicalSolverSettingsDict nonlocal_damage true
-                dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamThermo-Mechanical-MechaDamageTypeLength]
-                dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamThermo-Mechanical-MechaDamageTypeSearch]
-            } else {
-                dict set mechanicalSolverSettingsDict nonlocal_damage false
-            }
-        } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
-            set typeofDamage [write::getValue DamUPThermo-Mechanical-MechaDamageType]
-            if {$typeofDamage eq "NonLocal"} { 
-                dict set mechanicalSolverSettingsDict nonlocal_damage true
-                dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamUPThermo-Mechanical-MechaDamageTypeLength]
-                dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamUPThermo-Mechanical-MechaDamageTypeSearch]
-            } else {
-                dict set mechanicalSolverSettingsDict nonlocal_damage false
-            }
-                
-        } else {
-            set typeofDamage [write::getValue DamMechaDamageType]
-            if {$typeofDamage eq "NonLocal"} { 
-                dict set mechanicalSolverSettingsDict nonlocal_damage true
-                dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamMechaDamageTypeLength]
-                dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamMechaDamageTypeSearch]
-            } else {
-                dict set mechanicalSolverSettingsDict nonlocal_damage false
-            }
-        }
-        ### Adding solvers parameters
-        set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::Dam::write::getSolversParametersDict Dam $MechanicalSolutionStrategyUN $MechanicalDataUN] ]
-		### Add section to document
-        set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
-        ### Add section to document
-		dict set solversettingsDict mechanical_solver_settings $mechanicalSolverSettingsDict
+        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
         
-	}
+        ## Default Values
+        set MechanicalSolutionStrategyUN "DamSolStrat"
+        set MechanicalSchemeUN "DamScheme"
+        set MechanicalDataUN "DamMechanicalData"
+        set MechanicalDataParametersUN "DamMechanicalDataParameters"
+        
+        if {$damTypeofProblem eq "Thermo-Mechanical" } {
+            
+            dict set solversettingsDict reference_temperature [write::getValue DamThermalReferenceTemperature]
+            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+        
+            set thermalsettingDict [dict create]
+            dict set thermalsettingDict echo_level [write::getValue DamThermalEcholevel]
+            dict set thermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalReformsSteps]
+            dict set thermalsettingDict clear_storage [write::getValue DamThermalClearStorage]
+            dict set thermalsettingDict compute_reactions [write::getValue DamThermalComputeReactions]
+            dict set thermalsettingDict move_mesh_flag [write::getValue DamThermalMoveMeshFlag]
+            dict set thermalsettingDict compute_norm_dx_flag [write::getValue DamThermalComputeNormDx]
+            dict set thermalsettingDict theta_scheme [write::getValue DamThermalScheme]
+            dict set thermalsettingDict block_builder [write::getValue DamThermalBlockBuilder]
+            
+            ## Adding linear solver for thermal part
+            set thermalsettingDict  [dict merge $thermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratTherm "DamThermo-Mechanical-ThermData"] ]
+            dict set thermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
+            
+            ## Adding thermal solver settings to solver settings
+            dict set solversettingsDict thermal_solver_settings $thermalsettingDict
+            
+            ## Resetting Variables for the mechanical problem according to the selected problem
+            set MechanicalDataUN "DamThermo-Mechanical-MechData"
+            set MechanicalDataParametersUN "DamThermo-Mechanical-MechDataParameters"
+        }
+        
+        if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
+            
+            dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
+            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+        
+            set UPthermalsettingDict [dict create]
+            dict set UPthermalsettingDict echo_level [write::getValue DamThermalUPEcholevel]
+            dict set UPthermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalUPReformsSteps]
+            dict set UPthermalsettingDict clear_storage [write::getValue DamThermalUPClearStorage]
+            dict set UPthermalsettingDict compute_reactions [write::getValue DamThermalUPComputeReactions]
+            dict set UPthermalsettingDict move_mesh_flag [write::getValue DamThermalUPMoveMeshFlag]
+            dict set UPthermalsettingDict compute_norm_dx_flag [write::getValue DamThermalUPComputeNormDx]
+            dict set UPthermalsettingDict theta_scheme [write::getValue DamThermalUPScheme]
+            dict set UPthermalsettingDict block_builder [write::getValue DamThermalUPBlockBuilder]
+
+            ## Adding linear solver for thermal part
+            set UPthermalsettingDict [dict merge $UPthermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratThermUP "DamUP_Thermo-Mechanical-ThermData"] ]
+            dict set UPthermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
+           
+            ## Adding UP thermal solver settings to solver settings
+            dict set solversettingsDict thermal_solver_settings $UPthermalsettingDict
+            
+            ## Resetting Variables for the mechanical problem according to the selected problem
+            set MechanicalDataUN "DamUP_Thermo-Mechanical-MechData"
+            set MechanicalDataParametersUN "DamUP_Thermo-Mechanical-MechDataParameters"
+        }
+         
+        if {$damTypeofProblem eq "Acoustic"} {  
+            
+            ### Acostic Settings
+            set acousticSolverSettingsDict [dict create]
+            dict set acousticSolverSettingsDict strategy_type "Newton-Raphson"
+            dict set acousticSolverSettingsDict scheme_type "Newmark"
+            dict set acousticSolverSettingsDict convergence_criterion [write::getValue DamAcousticConvergencecriterion]
+            dict set acousticSolverSettingsDict residual_relative_tolerance [write::getValue DamAcousticRelTol]
+            dict set acousticSolverSettingsDict residual_absolute_tolerance [write::getValue DamAcousticAbsTol]
+            dict set acousticSolverSettingsDict max_iteration [write::getValue DamAcousticMaxIteration]
+            dict set acousticSolverSettingsDict move_mesh_flag [write::getValue DamAcousticMoveMeshFlag]
+            dict set acousticSolverSettingsDict echo_level [write::getValue DamAcousticSolverEchoLevel]
+
+            set acousticlinearDict [dict create]
+            dict set acousticlinearDict solver_type [write::getValue DamAcousticSolver]
+            dict set acousticlinearDict max_iteration [write::getValue DamAcousticMaxIter]
+            dict set acousticlinearDict tolerance [write::getValue DamAcousticTolerance]
+            dict set acousticlinearDict verbosity [write::getValue DamAcousticVerbosity]
+            dict set acousticlinearDict GMRES_size [write::getValue DamAcousticGMRESSize]
+            
+            ## Adding linear solver settings to acoustic solver
+            dict set acousticSolverSettingsDict linear_solver_settings $acousticlinearDict
+
+            ## Adding Acoustic solver settings to solver settings
+            dict set solversettingsDict acoustic_solver_settings $acousticSolverSettingsDict
+            
+        } elseif {$damTypeofProblem eq "UP_Mechanical"} {
+            
+            ### UP Mechanical Settings
+            set UPmechanicalSolverSettingsDict [dict create]
+            dict set UPmechanicalSolverSettingsDict solution_type [write::getValue DamUPMechaSoluType]
+            dict set UPmechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
+            dict set UPmechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
+            set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict $MechanicalSolutionStrategyUN $MechanicalSchemeUN "DamUP_MechanicalDataParameters"] ]
+            ### Damage Variables
+            set typeofDamage [write::getValue DamUPMechaDamageType]
+            if {$typeofDamage eq "NonLocal"} { 
+                dict set UPmechanicalSolverSettingsDict nonlocal_damage true
+                dict set UPmechanicalSolverSettingsDict characteristic_length [write::getValue DamUPMechaDamageTypeLength]
+                dict set UPmechanicalSolverSettingsDict search_neighbours_step [write::getValue DamUPMechaDamageTypeSearch]
+            } else {
+                dict set UPmechanicalSolverSettingsDict nonlocal_damage false
+            }
+            
+            ### Adding solvers parameters
+            set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [::Dam::write::getSolversParametersDict Dam $MechanicalSolutionStrategyUN "DamUP_MechanicalData"] ]
+            ### Adding domains to the problem
+            set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
+            ### Add section to document
+            dict set solversettingsDict mechanical_solver_settings $UPmechanicalSolverSettingsDict 
+            
+        } else {
+            ### Mechanical Settings
+            set mechanicalSolverSettingsDict [dict create]
+            dict set mechanicalSolverSettingsDict solution_type [write::getValue DamMechaSoluType]
+            dict set mechanicalSolverSettingsDict strategy_type [write::getValue DamSolStrat]
+            dict set mechanicalSolverSettingsDict scheme_type [write::getValue DamScheme]
+            set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::write::getSolutionStrategyParametersDict $MechanicalSolutionStrategyUN $MechanicalSchemeUN $MechanicalDataParametersUN] ]
+            ### Damage Variables
+            if {$damTypeofProblem eq "Thermo-Mechanical" } {
+                set typeofDamage [write::getValue DamThermo-Mechanical-MechaDamageType]
+                if {$typeofDamage eq "NonLocal"} { 
+                    dict set mechanicalSolverSettingsDict nonlocal_damage true
+                    dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamThermo-Mechanical-MechaDamageTypeLength]
+                    dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamThermo-Mechanical-MechaDamageTypeSearch]
+                } else {
+                    dict set mechanicalSolverSettingsDict nonlocal_damage false
+                }
+            } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
+                set typeofDamage [write::getValue DamUPThermo-Mechanical-MechaDamageType]
+                if {$typeofDamage eq "NonLocal"} { 
+                    dict set mechanicalSolverSettingsDict nonlocal_damage true
+                    dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamUPThermo-Mechanical-MechaDamageTypeLength]
+                    dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamUPThermo-Mechanical-MechaDamageTypeSearch]
+                } else {
+                    dict set mechanicalSolverSettingsDict nonlocal_damage false
+                }
+                    
+            } else {
+                set typeofDamage [write::getValue DamMechaDamageType]
+                if {$typeofDamage eq "NonLocal"} { 
+                    dict set mechanicalSolverSettingsDict nonlocal_damage true
+                    dict set mechanicalSolverSettingsDict characteristic_length [write::getValue DamMechaDamageTypeLength]
+                    dict set mechanicalSolverSettingsDict search_neighbours_step [write::getValue DamMechaDamageTypeSearch]
+                } else {
+                    dict set mechanicalSolverSettingsDict nonlocal_damage false
+                }
+            }
+            ### Adding solvers parameters
+            set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [::Dam::write::getSolversParametersDict Dam $MechanicalSolutionStrategyUN $MechanicalDataUN] ]
+            ### Add section to document
+            set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
+            ### Add section to document
+            dict set solversettingsDict mechanical_solver_settings $mechanicalSolverSettingsDict
+            
+        }
+    }
     dict set projectParametersDict solver_settings $solversettingsDict
     
     ### GiD output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    if {$damTypeofProblem eq "Modal-Analysis" } {
+        set post_eigen_values_list [list ]
+        lappend post_eigen_values_list [Dam::write::EigenOutputDict]
+        dict set projectParametersDict post_eigen_values $post_eigen_values_list
+    } else {
+        dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    }
     
     set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
     set load_process_list [write::getConditionsParametersDict DamLoads ]
@@ -306,6 +338,25 @@ proc Dam::write::StremalinesUtility {} {
     }
     return $streamlines
 }
+
+proc Dam::write::EigenOutputDict {} {
+
+    set posteigenDict [dict create]
+    dict set posteigenDict python_module "postprocess_eigenvalues_process"
+    dict set posteigenDict kratos_module "KratosMultiphysics.StructuralMechanicsApplication"
+    dict set posteigenDict help "This process postprocces the eigen values in GiD"
+    dict set posteigenDict process_name "PostProcessEigenvaluesProcess"
+    set eigenParamDict [dict create]
+    dict set eigenParamDict model_part_name "MainModelPart"
+    dict set eigenParamDict dof_variable_name "DISPLACEMENT"
+    dict set eigenParamDict animation_steps 10
+    
+    ## Adding parameters in the Eigen Dictionary
+    dict set posteigenDict Parameters $eigenParamDict
+    
+    return $posteigenDict
+}
+
 
  # appid Dam solStratUN DamSolStrat problem_base_UN DamMechanicalData
 proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {problem_base_UN ""}} {
