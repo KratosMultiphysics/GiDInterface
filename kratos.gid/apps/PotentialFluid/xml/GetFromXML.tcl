@@ -16,7 +16,7 @@ proc PotentialFluid::xml::Init { } {
     Model::getElements "../../Fluid/xml/Elements.xml"
     Model::getMaterials Materials.xml
     Model::getNodalConditions "../../Fluid/xml/NodalConditions.xml"
-    Model::getConstitutiveLaws "../../Fluid/xml/ConstitutiveLaws.xml"
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses "../../Fluid/xml/Processes.xml"
     Model::getProcesses Processes.xml
@@ -40,6 +40,9 @@ proc PotentialFluid::xml::getUniqueName {name} {
 proc PotentialFluid::xml::CustomTree { args } {
     # Hide Results Cut planes
     #Fluid::xml::CustomTree {*}$args
+    
+    spdAux::SetValueOnTreeItem state hidden PTFLGravity
+
 }
 
 proc spdAux::injectConditions { basenode args} {
