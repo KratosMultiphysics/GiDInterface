@@ -95,11 +95,7 @@ solver.Initialize()
 #TODO: think if there is a better way to do this
 fluid_model_part = solver.GetComputingModelPart()
 
-vinfinity = Vector(3)
-vinfinity[0] = 10.0
-vinfinity[1] = 0.0
-vinfinity[2] = 0.0
-main_model_part.ProcessInfo.SetValue(VELOCITY,vinfinity)
+
 
 
 ## Stepping and time settings
