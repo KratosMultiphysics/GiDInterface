@@ -21,8 +21,8 @@ proc PotentialFluid::write::writeModelPartEvent { } {
     Fluid::write::writeMeshes
 }
 proc PotentialFluid::write::writeCustomFilesEvent { } {
-    write::CopyFileIntoModel "python/KratosFluid.py"
-    write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
+    write::CopyFileIntoModel "python/KratosPotentialFlow.py"
+    write::RenameFileInModel "KratosPotentialFlow.py" "MainKratos.py"
 }
 
 
