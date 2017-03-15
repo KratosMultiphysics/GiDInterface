@@ -6,6 +6,7 @@ proc Dam::write::getParametersDict { } {
     ### Problem data
     ### Create section
     set problemDataDict [dict create]
+    set damTypeofProblem [write::getValue DamTypeofProblem]
     
     ### Add items to section
     set model_name [file tail [GiD_Info Project ModelName]]
@@ -13,10 +14,6 @@ proc Dam::write::getParametersDict { } {
     dict set problemDataDict model_part_name "MainModelPart"
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set problemDataDict domain_size $nDim
-    dict set problemDataDict start_time [write::getValue DamTimeParameters StartTime]
-    dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
-    dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
-    dict set problemDataDict streamlines_utility [Dam::write::StremalinesUtility]
     set paralleltype [write::getValue ParallelType]
     dict set generalDataDict "parallel_type" $paralleltype
     if {$paralleltype eq "OpenMP"} {
@@ -27,16 +24,21 @@ proc Dam::write::getParametersDict { } {
         dict set problemDataDict parallel_type "MPI"
         dict set problemDataDict number_of_threads 1
     }
-    dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
-    
-    ### Add section to document
-    dict set projectParametersDict problem_data $problemDataDict
-    
+    if {$damTypeofProblem eq "Modal-Analysis"} {
+        dict set projectParametersDict problem_data $problemDataDict
+    } else {
+        dict set problemDataDict start_time [write::getValue DamTimeParameters StartTime]
+        dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
+        dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
+        dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
+        dict set problemDataDict streamlines_utility [Dam::write::StremalinesUtility]
+        ### Add section to document
+        dict set projectParametersDict problem_data $problemDataDict
+    }
     ### Solver Data   
     set solversettingsDict [dict create]
     
     ### Preguntar el solver haciendo los ifs correspondientes
-    set damTypeofProblem [write::getValue DamTypeofProblem]
     if {$paralleltype eq "OpenMP"} {
 		if {$damTypeofProblem eq "Mechanical"} {
 			dict set solversettingsDict solver_type "dam_mechanical_solver"
@@ -253,16 +255,10 @@ proc Dam::write::getParametersDict { } {
             
         }
     }
+    
     dict set projectParametersDict solver_settings $solversettingsDict
     
-    ### GiD output configuration
-    if {$damTypeofProblem eq "Modal-Analysis" } {
-        set post_eigen_values_list [list ]
-        lappend post_eigen_values_list [Dam::write::EigenOutputDict]
-        dict set projectParametersDict post_eigen_values $post_eigen_values_list
-    } else {
-        dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
-    }
+    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
     
     set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
     set load_process_list [write::getConditionsParametersDict DamLoads ]
@@ -338,25 +334,6 @@ proc Dam::write::StremalinesUtility {} {
     }
     return $streamlines
 }
-
-proc Dam::write::EigenOutputDict {} {
-
-    set posteigenDict [dict create]
-    dict set posteigenDict python_module "postprocess_eigenvalues_process"
-    dict set posteigenDict kratos_module "KratosMultiphysics.StructuralMechanicsApplication"
-    dict set posteigenDict help "This process postprocces the eigen values in GiD"
-    dict set posteigenDict process_name "PostProcessEigenvaluesProcess"
-    set eigenParamDict [dict create]
-    dict set eigenParamDict model_part_name "MainModelPart"
-    dict set eigenParamDict dof_variable_name "DISPLACEMENT"
-    dict set eigenParamDict animation_steps 10
-    
-    ## Adding parameters in the Eigen Dictionary
-    dict set posteigenDict Parameters $eigenParamDict
-    
-    return $posteigenDict
-}
-
 
  # appid Dam solStratUN DamSolStrat problem_base_UN DamMechanicalData
 proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {problem_base_UN ""}} {
