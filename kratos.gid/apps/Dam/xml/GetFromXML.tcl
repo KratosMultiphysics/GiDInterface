@@ -31,13 +31,6 @@ proc ::Dam::xml::MultiAppEvent {args} {
 
 proc Dam::xml::CustomTree { args } {
 	
-	#~ set type_of_problem [write::getValue DamTypeofProblem]
-	#~ W $type_of_problem
-    #~ if {$type_of_problem in [list "Modal-Analysis"]} {
-        #~ W $type_of_problem
-    #~ }
-	
-	
     # Add some nodal results
     set nodal_results_base [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
     $nodal_results_base setAttribute state "\[ActiveIfAnyPartState\]"
@@ -60,11 +53,6 @@ proc Dam::xml::CustomTree { args } {
                gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $item pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical\]"]
         }
     }
-    
-     #~ set type_of_problem [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute DamTypeofProblem]]
-     #~ $type_of_problem setAttribute state  "\[checkStateByUniqueName DamTypeofProblem Modal-Analysis\]"
-     #~ W $type_of_problem
-    
        
 }
 
