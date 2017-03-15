@@ -13,7 +13,7 @@
 			<parameter n="velocity_infinity" pn="Velocity infinity" type="vector" v="1.0,0.0,0.0" vectorType="double" help=""/>
 		</inputs>
     </Process>
-	<Process n="Body" pn="Body" python_module="" kratos_module="">
+	<Process n="PlaceholderProcess" pn="Placeholder Process" python_module="placeholder_process" kratos_module="KratosMultiphysics.CompressiblePotentialFlowApplication">
 		<inputs>
 		</inputs>
     </Process>
