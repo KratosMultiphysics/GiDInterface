@@ -13,9 +13,9 @@ proc PotentialFluid::xml::Init { } {
     Model::InitVariables dir $PotentialFluid::dir
 
     Model::getSolutionStrategies Strategies.xml
-    Model::getElements "../../Fluid/xml/Elements.xml"
+    Model::getElements Elements.xml
     Model::getMaterials Materials.xml
-    Model::getNodalConditions "../../Fluid/xml/NodalConditions.xml"
+    Model::getNodalConditions NodalConditions.xml
     Model::getConstitutiveLaws ConstitutiveLaws.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses "../../Fluid/xml/Processes.xml"
@@ -42,7 +42,7 @@ proc PotentialFluid::xml::CustomTree { args } {
     #Fluid::xml::CustomTree {*}$args
     
     spdAux::SetValueOnTreeItem state hidden PTFLGravity
-
+    
 }
 
 proc spdAux::injectConditions { basenode args} {

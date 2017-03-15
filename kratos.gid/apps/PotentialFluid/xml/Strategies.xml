@@ -29,7 +29,6 @@
 	      <parameter_list>
 		    </parameter_list>
   		  <element_filters>
-			   <filter field="n" value="Monolithic2D,Monolithic3D"/>
 		    </element_filters>
 	    </scheme>
 	  </schemes>
