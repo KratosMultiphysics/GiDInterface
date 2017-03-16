@@ -114,7 +114,7 @@
             <container n="ModalLinearSolver" pn="Linear Solver" un="DamModalLinearSolver" state="normal" open_window="0">
                     <value n="solver_type" pn="Solver" un="DamModalSolver" v="FEAST" state="readonly" help=""/>
                     <value n="print_feast_output" pn="Feast output" un="DamModalfeastOutput" v="true" values="true,false" help=""/>
-                    <value n="perform_stochastic_estimate" pn="Tolerance" un="DamModalStochastic" v="false" values="true,false" help=""/>
+                    <value n="perform_stochastic_estimate" pn="Stochastic Estimation" un="DamModalStochastic" v="false" values="true,false" help=""/>
                     <value n="solve_eigenvalue_problem" pn="Solve Eigenvalue Problem" un="DamModalSolve" v="true" values="true,false" help="" />
                     <value n="lambda_min" pn="Lambda Min" un="DamModalLambdaMin" type="double" v="0.0" help=""/>
                     <value n="lambda_max" pn="Lambda Max" un="DamModalLambdaMax" type="double" v="1e3" help=""/>
