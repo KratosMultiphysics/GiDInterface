@@ -1,2 +1,5 @@
 *.komodoproject
 *.lnk
+
+# Kratos execution folder
+kratos.gid/exec/Kratos/*
