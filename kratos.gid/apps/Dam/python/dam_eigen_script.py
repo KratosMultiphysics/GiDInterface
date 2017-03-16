@@ -147,7 +147,7 @@ for process in list_of_processes:
 
 # Finalizing output files
 eigen_values = [ev for ev in main_model_part.ProcessInfo[KratosStructural.EIGENVALUE_VECTOR]]
-print ("The Eigen Values are:")
+print ("The Eigenvalues are:")
 print (eigen_values)
 eigen_utility = KratosStructural.EigenvectorToSolutionStepVariableTransferUtility()
 for step in range(len(eigen_values)):
@@ -156,9 +156,15 @@ for step in range(len(eigen_values)):
     gid_output.PrintOutput()
 
 gid_output.ExecuteFinalize()
-
+	
 for process in list_of_processes:
     process.ExecuteFinalize()
+    
+# Writing an output file
+output_name = 'Eigenvalues.txt'
+with open(output_name, 'w') as output:
+    output.write ("The Eigenvalues are:")
+    output.write (str(eigen_values))
 
 # Time control
 print("Analysis Completed. Elapsed Time = %.3f" % (timer.perf_counter() - initial_time)," seconds.")
