@@ -4,6 +4,11 @@ proc FSI::write::getParametersDict { } {
 
    # FSI section
    set FSIParametersDict [dict create]
+   # Problem data
+   set problemDataDict [dict create]
+   set paralleltype [write::getValue ParallelType]
+   dict set problemDataDict parallel_type $paralleltype
+   dict set FSIParametersDict problem_data $problemDataDict
    # Solver settings
    set solverSettingsDict [dict create]
    set currentStrategyId [write::getValue FSISolStrat]
