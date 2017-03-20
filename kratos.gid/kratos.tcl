@@ -92,6 +92,10 @@ proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args 
     
 }
 
+proc GiD_Event_BeforeSaveGIDProject { modelname} {
+    WV modelname
+}
+
 ##########################################################
 #################### Kratos namespace ####################
 ##########################################################
