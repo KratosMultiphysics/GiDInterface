@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
-  <StrategyItem n="DirichletNeumann" pn="Dirichlet-Neumann" 
+  <StrategyItem n="DirichletNeumann" pn="Dirichlet-Neumann"
 		ImplementedInFile="partitioned_fsi_solver.py"
 		ImplementedInApplication="FSIApplication"
 		ImplementedInPythonFile="partitioned_fsi_solver"
 		MinimumKratosVersion="8500" App="FSI"
 		ProductionReady="Developer"
 		help="">
-    
+
     <!-- list of options to be filled -->
     <parameter_list>
         <parameter n="nl_tol" pn="Non-linear tolerance" type="double" v="1e-5" help="Interface residual tolerance."/>
         <parameter n="nl_max_it" pn="Non-linear max. iterations" type="integer" v="50" help="Maximum number of non-linear iterations."/>
-        <parameter n="move_interface" pn="Interface update" type="bool" values="true,false" v="true" help="Decides wether the interface is updated or not at each non-linear iteration."/>
-        <parameter n="mesh_prediction" pn="Mesh prediction" type="bool" values="true,false" v="true" help="Perform a mesh prediction at the current step with the previous time step information."/>
+        <parameter n="solve_mesh_at_each_iteration" pn="Solve mesh at each iteration" type="bool" values="true,false" v="true" help="Decides wether the mesh problem is solved or not at each FSI iteration."/>
+        <!-- <parameter n="move_interface" pn="Interface update" type="bool" values="true,false" v="true" help="Decides wether the interface is updated or not at each non-linear iteration."/> -->
+        <!-- <parameter n="mesh_prediction" pn="Mesh prediction" type="bool" values="true,false" v="true" help="Perform a mesh prediction at the current step with the previous time step information."/> -->
     </parameter_list>
-    
+
     <linearSolvers>
       <linearSolverItem n="coupling_strategy" pn="Coupling strategy" default="MVQN">
         <filterFeatures>
-            <filter field="SolverType" value="FSICoupling"/>  
+            <filter field="SolverType" value="FSICoupling"/>
         </filterFeatures>
 		<defaults>
 		</defaults>
@@ -36,18 +37,18 @@
 	  </scheme>
 	</schemes>
 
-  
+
   </StrategyItem>
-  
-  
-  <StrategyItem n="NeumannNeumann" pn="Neumann-Neumann" 
+
+
+  <StrategyItem n="NeumannNeumann" pn="Neumann-Neumann"
 		ImplementedInFile="partitioned_fsi_solver.py"
 		ImplementedInApplication="FSIApplication"
 		ImplementedInPythonFile="partitioned_fsi_solver"
 		MinimumKratosVersion="8500" App="FSI"
 		ProductionReady="Developer"
 		help="">
-    
+
     <!-- list of options to be filled -->
     <parameter_list>
         <parameter n="nl_tol" pn="Non-linear tolerance" type="double" v="1e-5" help="Interface residual tolerance."/>
@@ -55,17 +56,17 @@
         <parameter n="move_interface" pn="Interface update" type="bool" values="true,false" v="true" help="Decides wether the interface is updated or not at each non-linear iteration."/>
         <parameter n="mesh_prediction" pn="Mesh prediction" type="bool" values="true,false" v="true" help="Perform a mesh prediction at the current step with the previous time step information."/>
     </parameter_list>
-    
+
     <linearSolvers>
       <linearSolverItem n="coupling_strategy" pn="Coupling strategy" default="MVQN" >
         <filterFeatures>
-            <filter field="SolverType" value="FSICoupling"/>  
+            <filter field="SolverType" value="FSICoupling"/>
         </filterFeatures>
 		<defaults>
 		</defaults>
-      </linearSolverItem>     
+      </linearSolverItem>
     </linearSolvers>
-	
+
 	<schemes>
 	  <scheme n="GenericNN" pn="Partitioned scheme" help="FilterElements" ProductionReady="ProductionReady">
 	     <parameter_list>
@@ -76,5 +77,5 @@
 	  </scheme>
 	</schemes>
   </StrategyItem>
-    
+
 </StrategyList>
