@@ -71,7 +71,7 @@ proc AfterWriteCalcFileGIDProject { filename errorflag } {
     if {$errcode} {return "-cancel-"}
 }
 proc BeforeMeshGeneration { elementsize } {
-    Kratos::BeforeMeshGeneration $elementsize
+    return [Kratos::BeforeMeshGeneration $elementsize]
 }
 proc AfterMeshGeneration { fail } {
     Kratos::AfterMeshGeneration $fail
@@ -361,7 +361,9 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape Mescape
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
     }
-    catch {apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize}
+    set ret ""
+    catch {set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]}
+    return $ret
 }
 proc Kratos::AfterMeshGeneration {fail} {
     catch {apps::ExecuteOnCurrentApp AfterMeshGeneration $fail}
