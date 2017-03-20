@@ -54,6 +54,12 @@ proc write::writeEvent { filename } {
     variable dir
     set dir [file dirname $filename]
     set errcode 0
+    set fail [::Kratos::CheckValidProjectName [file rootname $filename]]
+    
+    if {$fail} {
+        W [= "Wrong project name. Avoid boolean and numeric names."]
+        return 1
+    }
     #set inittime [clock seconds]
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
