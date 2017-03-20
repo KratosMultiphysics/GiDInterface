@@ -112,8 +112,13 @@ proc Pfem::xml::CustomTree { args } {
 }
 
 proc Pfem::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
-    
-    return hidden
+    set domain_type [write::getValue PFEM_DomainType]
+    set fluid_exclusive_conditions [list "VELOCITY" "INLET"]
+    set current_condition [$domNode @n]
+    if {$domain_type eq "Fluids" && $current_condition ni $fluid_exclusive_conditions} {
+        return hidden
+    }
+    return normal
 }
 
 proc Pfem::xml::CheckElementOutputState { domNode args } {

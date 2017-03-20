@@ -62,11 +62,18 @@ proc ::EmbeddedFluid::CustomToolbarItems { } {
 
 proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
     variable oldVolumeMesher
-    catch {file delete -force [file join $::write::dir "[file tail [GiD_Info project modelname] ].post.res"]}
-    GiD_Process Escape Escape Utilities Variables EmbeddedMesh Activated 1 escape escape
-    # Set Octree
-    set oldVolumeMesher [GiD_Set VolumeMesher]
-    ::GiD_Set VolumeMesher 3
+    
+    set project_path [GiD_Info project modelname]
+    if {$project_path ne "UNNAMED"} {
+        catch {file delete -force [file join $::write::dir "[file tail [GiD_Info project modelname] ].post.res"]}
+        GiD_Process Escape Escape Utilities Variables EmbeddedMesh Activated 1 escape escape
+        # Set Octree
+        set oldVolumeMesher [GiD_Set VolumeMesher]
+        ::GiD_Set VolumeMesher 3
+    } else {
+        after 500 {WarnWin "You need to save the project before meshing"}
+        return "-cancel-"
+    }
 }
 
 proc ::EmbeddedFluid::AfterMeshGeneration {fail} {
