@@ -93,7 +93,12 @@ proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args 
 }
 
 proc GiD_Event_BeforeSaveGIDProject { modelname} {
-    WV modelname
+    set fail [::Kratos::CheckValidProjectName $modelname]
+    
+    if {$fail} {
+        W [= "Wrong project name. Avoid boolean and numeric names."]
+        return "-cancel-"
+    }
 }
 
 ##########################################################
@@ -371,6 +376,14 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
 }
 proc Kratos::AfterMeshGeneration {fail} {
     catch {apps::ExecuteOnCurrentApp AfterMeshGeneration $fail}
+}
+proc Kratos::CheckValidProjectName {modelname} {
+    set fail 0
+    set filename [file tail $modelname]
+    if {[string is double $filename]} {set fail 1}
+    if {[write::isBoolean $filename]} {set fail 1}
+    return $fail
+    
 }
 
 proc Kratos::PrintArray {a {pattern *}} {
