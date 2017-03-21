@@ -148,8 +148,7 @@ proc Kratos::InitGIDProject { dir } {
     #customlib::UpdateDocument
     Kratos::LoadEnvironment
     Kratos::ChangeMenus
-    #set HeaderBackground [$doc selectNodes string(Infoproblemtype/Program/HeaderBackground)]
-    #gid_groups_conds::SetHeaderBackground $HeaderBackground
+    gid_groups_conds::SetProgramName "Kratos"
     gid_groups_conds::SetLibDir [file join $dir exec]
     set spdfile [file join $dir kratos_default.spd]
     if { [GidUtils::VersionCmp 13.1.4d] < 0 } {
