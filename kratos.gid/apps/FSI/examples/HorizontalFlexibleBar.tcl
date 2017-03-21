@@ -120,15 +120,16 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
     set condtype line
     if {$nd eq "3D"} { set condtype surface }
     set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
-    gid_groups_conds::addF $fluidParts group {n Fluid}
-    set fluidGroup "$fluidParts/group\[@n='Fluid'\]"
-    gid_groups_conds::addF $fluidGroup value "n Element pn Element dict {\[GetElements\]} actualize_tree 1 values FractionalStep$nd state hidden v FractionalStep$nd"
-    gid_groups_conds::addF $fluidGroup value {n ConstitutiveLaw pn {Fluid type} actualize_tree 1 values Newtonian,HerschelBulkley dict {[GetConstitutiveLaws]} state normal v Newtonian}
-    gid_groups_conds::addF -resolve_parametric 1 $fluidGroup value {n DENSITY pn Density state {[PartParamState]} unit_magnitude Density help {} v 956.0 units kg/m^3}
-    gid_groups_conds::addF -resolve_parametric 1 $fluidGroup value {n VISCOSITY pn {Kinematic viscosity} state {[PartParamState]} unit_magnitude L^2/T help {Fluidized viscosity.} v 0.145 units m^2/s}
-    gid_groups_conds::addF $fluidGroup value {n YIELD_STRESS pn {Yield Stress} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF $fluidGroup value {n POWER_LAW_K pn {Consistency index (k)} state {[PartParamState]} unit_magnitude {} help {} v 1}
-    gid_groups_conds::addF $fluidGroup value {n POWER_LAW_N pn {Flow index (n)} state {[PartParamState]} unit_magnitude {} help {} v 1}
+    set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
+    set props [list Element FractionalStep$nd ConstitutiveLaw Newtonian DENSITY 956.0 VISCOSITY 0.145 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    foreach {prop val} $props {
+        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property Fluid $prop"
+        }
+    }
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
     # Fluid Interface
