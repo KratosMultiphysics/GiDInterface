@@ -133,27 +133,40 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
     # Fluid Interface
-    set fluidInlet "$fluidConditions/condition\[@n='Inlet$nd'\]"
+    set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
     
     # Fluid Inlet
-    gid_groups_conds::addF $fluidInlet group {n Inlet}
-    set fluidInletGroup "$fluidInlet/group\[@n='Inlet'\]"
-    gid_groups_conds::addF -resolve_parametric 1 $fluidInletGroup value {n factor pn Modulus unit_magnitude Velocity help {} state {} v 0.6067 units m/s}
-    gid_groups_conds::addF $fluidInletGroup value "n directionX wn {Inlet$nd _X} pn {Direction X} help {} state {} v 1.0"
-    gid_groups_conds::addF $fluidInletGroup value "n directionY wn {Inlet$nd _Y} pn {Direction Y} help {} state {} v 0.0"
-    gid_groups_conds::addF $fluidInletGroup value "n directionZ wn {Inlet$nd _Z} pn {Direction Z} help {} state {\[CheckDimension 3D\]} v 0.0"
-        
+    set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet Inlet]
+    $inletNode setAttribute ov $condtype
+    set props [list ByFunction No modulus 0.6067 direction automatic_inwards_normal Interval Total]
+    foreach {prop val} $props {
+         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Inlet $prop"
+        }
+    }  
+
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-    gid_groups_conds::addF $fluidOutlet group "n Outlet ov $condtype"
-    gid_groups_conds::addF -resolve_parametric 1 "$fluidOutlet/group\[@n='Outlet'\]" value {n value pn Value unit_magnitude P help {} state {} v 0.0 units Pa}
-    
+    set outletNode [spdAux::AddConditionGroupOnXPath $fluidOutlet Outlet]
+    $outletNode setAttribute ov $condtype
+    set props [list value 0.0]
+    foreach {prop val} $props {
+         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Outlet $prop"
+        }
+    }
     # Fluid Conditions
     if {$nd eq "3D"} {
-        gid_groups_conds::addF "$fluidConditions/condition\[@n='NoSlip$nd'\]" group {n NoSlip}
+        [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" NoSlip] setAttribute ov $condtype
     }
-    gid_groups_conds::addF "$fluidConditions/condition\[@n='Slip$nd'\]" group {n Slip}
-    gid_groups_conds::addF "$fluidConditions/condition\[@n='FluidNoSlipInterface$nd'\]" group {n FluidInterface}
+    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Slip] setAttribute ov $condtype
+    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='FluidNoSlipInterface$nd'\]" FluidInterface] setAttribute ov $condtype  
     
     # Displacement 3D
     if {$nd eq "3D"} {
@@ -167,35 +180,28 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
         gid_groups_conds::addF $fluidDisplacementGroup value {n valueY wn {DISPLACEMENT _Y} pn {Value Y} help {} state {} v 0.0}
         gid_groups_conds::addF $fluidDisplacementGroup value {n valueZ wn {DISPLACEMENT _Z} pn {Value Z} help {} state {[CheckDimension 3D]} v 0.0}
     }
+    
+    
 
     # Structural
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
     
     # Structural Parts
     set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
-    if {$nd eq "3D"} {
-        gid_groups_conds::addF $structParts group {n Structure ov volume}
-    } {
-        gid_groups_conds::addF $structParts group {n Structure ov surface}
+    set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
+    $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
+    set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStrain2DLaw"}]
+    set props [list Element SmallDisplacementElement$nd ConstitutiveLaw $constLawNameStruc SECTION_TYPE 0 THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6]
+    lappend props YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45 KINEMATIC_HARDENING_MODULUS 0 REFERENCE_HARDENING_MODULUS 0 INFINITY_HARDENING_MODULUS 0
+    lappend props HARDENING_EXPONENT 0 DAMAGE_THRESHOLD 0 STRENGTH_RATIO 0 FRACTURE_ENERGY 0
+    foreach {prop val} $props {
+         set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Structure $prop"
+         }
     }
-    
-    set structPartsGroup "$structParts/group\[@n='Structure'\]"
-    gid_groups_conds::addF $structPartsGroup value "n Element pn Element actualize_tree 1 dict {\[GetElements\]} state normal v SmallDisplacementElement$nd"
-    gid_groups_conds::addF $structPartsGroup value "n ConstitutiveLaw pn {Constitutive law} actualize_tree 1 dict \[GetConstitutiveLaws\] state normal v LinearElasticPlaneStrain${nd}Law"
-    gid_groups_conds::addF $structPartsGroup value {n SECTION_TYPE pn {Section type} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF -resolve_parametric 1 $structPartsGroup value {n THICKNESS pn Thickness state {[PartParamState]} unit_magnitude L help {} v 1.0 units m}
-    gid_groups_conds::addF -resolve_parametric 1 $structPartsGroup value {n DENSITY pn Density state {[PartParamState]} unit_magnitude Density help {} v 1500.0 units kg/m^3}
-    gid_groups_conds::addF -resolve_parametric 1 $structPartsGroup value {n VISCOSITY pn {Kinematic viscosity} state {[PartParamState]} unit_magnitude L^2/T help {Fluidized viscosity.} v 1e-6 units m^2/s}
-    gid_groups_conds::addF $structPartsGroup value {n YIELD_STRESS pn {Yield Stress} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF -resolve_parametric 1 $structPartsGroup value {n YOUNG_MODULUS pn {Young Modulus} state {[PartParamState]} unit_magnitude P help {} v 2.3e6 units Pa}
-    gid_groups_conds::addF $structPartsGroup value {n POISSON_RATIO pn {Poisson Ratio} state {[PartParamState]} unit_magnitude {} help {} v 0.45}
-    gid_groups_conds::addF $structPartsGroup value {n KINEMATIC_HARDENING_MODULUS pn {Kinematic Hardening Modulus} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF $structPartsGroup value {n REFERENCE_HARDENING_MODULUS pn {Reference Hardening Modulus} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF $structPartsGroup value {n INFINITY_HARDENING_MODULUS pn {Infinity Hardening Modulus} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF $structPartsGroup value {n HARDENING_EXPONENT pn {Hardening Exponent} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF $structPartsGroup value {n DAMAGE_THRESHOLD pn {Damage Threshold} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF $structPartsGroup value {n STRENGTH_RATIO pn {Strength Ratio} state {[PartParamState]} unit_magnitude {} help {} v 0}
-    gid_groups_conds::addF $structPartsGroup value {n FRACTURE_ENERGY pn {Fracture Energy} state {[PartParamState]} unit_magnitude {} help {} v 0}
     
     # Structural Displacement
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
