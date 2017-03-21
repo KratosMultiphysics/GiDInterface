@@ -124,7 +124,6 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     # Fluid Parts
     set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
     set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
-    #gid_groups_conds::addF $fluidParts group {n Fluid}
     set props [list Element FractionalStep$nd ConstitutiveLaw Newtonian DENSITY 956.0 VISCOSITY 0.145 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
