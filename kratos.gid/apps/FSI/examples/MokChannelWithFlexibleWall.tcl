@@ -1,6 +1,7 @@
 
 proc ::FSI::examples::MokChannelFlexibleWall {args} {
     DrawMokChannelFlexibleWallGeometry
+    AssignMokChannelFlexibleWallMeshSizes
     TreeAssignationMokChannelFlexibleWall
 }
 
@@ -82,6 +83,16 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
     GiD_Groups create FixedDisplacement
     GiD_Groups create StructureInterface
 
+    GiD_Groups create StructureLongSides
+    GiD_Groups edit state StructureLongSides hidden
+    GiD_Groups create StructureShortSides
+    GiD_Groups edit state StructureShortSides hidden
+    GiD_Groups create FluidLongSides
+    GiD_Groups edit state FluidLongSides hidden
+    GiD_Groups create FluidShortSides
+    GiD_Groups edit state FluidShortSides hidden
+
+
     # Group entities
     if {$::Model::SpatialDimension eq "3D"} {
         GiD_Groups create FluidFixedDisplacement_full
@@ -111,12 +122,36 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
         GiD_EntitiesGroups assign FluidALEMeshBC lines $fluidLines
         GiD_EntitiesGroups assign FixedDisplacement lines [lindex $strucLines end]
         GiD_EntitiesGroups assign StructureInterface lines [lrange $strucLines 0 end-1]
+
+        GiD_EntitiesGroups assign StructureLongSides lines {15 17}
+        GiD_EntitiesGroups assign StructureShortSides lines {16 18}
+        GiD_EntitiesGroups assign FluidLongSides lines {12 14}
+        GiD_EntitiesGroups assign FluidShortSides lines 13
+
     }
     GidUtils::UpdateWindow GROUPS
 }
 
+proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes {args} {
+    set long_side_divisions 100
+    set short_side_divisions 4
+    set outlet_element_size 0.01
+    set noslip_element_size 0.01
+    set fluid_element_size 0.02
+
+    GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
+    GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure surfaces] escape
+    GiD_Process Mescape Meshing Structured Surfaces [GiD_EntitiesGroups get Structure surfaces] escape $long_side_divisions [GiD_EntitiesGroups get StructureLongSides lines] escape $short_side_divisions [GiD_EntitiesGroups get StructureShortSides lines] escape escape
+    GiD_Process Mescape Meshing Structured Lines $long_side_divisions {*}[GiD_EntitiesGroups get FluidLongSides lines] escape $short_side_divisions [GiD_EntitiesGroups get FluidShortSides lines] escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $outlet_element_size {*}[GiD_EntitiesGroups get Outlet lines] escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $noslip_element_size {*}[GiD_EntitiesGroups get NoSlip lines] escape escape
+    GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_element_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
+    GiD_Process Mescape Meshing ElemType Triangle [GiD_EntitiesGroups get Fluid surfaces] escape
+}
+
 proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set nd $::Model::SpatialDimension
+    set root [customlib::GetBaseRoot]
 
     set condtype line
     if {$::Model::SpatialDimension eq "3D"} { set condtype surface }
@@ -210,6 +245,34 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         }
     }
 
+    # Fluid domain time parameters
+    set change_list [list EndTime 25.0 DeltaTime 0.1]
+    set xpath [spdAux::getRoute FLTimeParameters]
+    foreach {name value} $change_list {
+        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check MOK script"
+        }
+    }
+
+    # Fluid domain output parameters
+    set change_list [list OutputControlType step]
+    set xpath [spdAux::getRoute FLResults]
+    foreach {name value} $change_list {
+        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check MOK script"
+        }
+    }
+
+    # Fluid domain mesh parameters
+
+
+
     # Structural
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
@@ -234,7 +297,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement FixedDisplacement]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
-    set props [list Enabled_X 1 ByFunctionX No valueX 0.0 Enabled_Y 1 ByFunctionY No valueY 0.0 Enabled_Z 1 ByFunctionZ No valueZ 0.0]
+    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -246,6 +309,55 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Structural Interface
     spdAux::AddConditionGroupOnXPath "container\[@n='FSI'\]/container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='StructureInterface$nd'\]" StructureInterface
+
+    # Structure domain time parameters
+    set change_list [list EndTime 25.0 DeltaTime 0.1]
+    set xpath [spdAux::getRoute STTimeParameters]
+    foreach {name value} $change_list {
+        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check MOK script"
+        }
+    }
+
+    # Structure domain output parameters
+    set change_list [list OutputControlType step]
+    set xpath [spdAux::getRoute STResults]
+    foreach {name value} $change_list {
+        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check MOK script"
+        }
+    }
+
+    # Structure domain mesh parameters
+
+    # Coupling settings
+    set change_list [list nl_tol "1e-6" nl_max_it 25]
+    set xpath [spdAux::getRoute FSIStratParams]
+    foreach {name value} $change_list {
+        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check MOK script"
+        }
+    }
+
+    set change_list [list Solver MVQN_recursive buffer_size 7]
+    set xpath [spdAux::getRoute FSIDirichletNeumanncoupling_strategy]
+    foreach {name value} $change_list {
+        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check MOK script"
+        }
+    }
 
     spdAux::RequestRefresh
 }
