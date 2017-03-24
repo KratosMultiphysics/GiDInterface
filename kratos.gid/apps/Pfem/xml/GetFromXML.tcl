@@ -17,6 +17,7 @@ proc Pfem::xml::Init { } {
     Model::getConstitutiveLaws "../../Pfem/xml/ConstitutiveLaws.xml"
     Model::getProcesses "../../Solid/xml/Processes.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
+    Model::getProcesses Processes.xml
     Model::getNodalConditions "../../Solid/xml/NodalConditions.xml"
     Model::getNodalConditions NodalConditions.xml
     Model::getConditions "../../Solid/xml/Conditions.xml"
@@ -101,7 +102,10 @@ proc Pfem::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem icon folder PFEM_Loads LinePressure2DAxisym
     spdAux::SetValueOnTreeItem icon folder PFEM_Loads SurfacePressure3D
    
-    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits        
+    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
+    
+    set inlet_result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
+    if {$inlet_result_node ne "" } {$inlet_result_node delete}
         
 }
 
