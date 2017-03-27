@@ -42,6 +42,18 @@
       <parameter n="value" pn="Value" type="double" v="0.0" function="1"/>
     </inputs>
   </Process>
+  <Process n="ALMContactProcess" pn="Apply a scalar value over a condition" python_module="alm_contact_process"
+	   kratos_module="KratosMultiphysics.ContactStructuralMechanicsApplication" help="This process sets a scalar variable value over a condition" > 
+    <inputs>
+      <parameter n="search_factor" pn="Search factor" type="double" v="1.5"/>
+      <parameter n="contact_type" pn="Contact type" type="combo" v="Frictionless" values="Frictionless"/>
+      <parameter n="active_check_factor" pn="Active check factor" type="double" v="0.01" />
+      <parameter n="max_number_results" pn="max_number_results" type="double" v="1000" />
+      <parameter n="normal_variation" pn="normal_variation" type="bool" v="false" />
+      <parameter n="type_search" pn="type_search" type="combo" v="InRadius" values="InRadius" />
+      <parameter n="integration_order" pn="integration_order" type="double" v="5" />
+    </inputs>
+  </Process>
 
  </ProcessList>
 

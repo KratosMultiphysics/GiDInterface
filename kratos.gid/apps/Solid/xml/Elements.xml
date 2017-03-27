@@ -31,6 +31,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
 
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />-->
@@ -72,6 +73,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -113,6 +115,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -154,6 +157,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
 
     <inputs>
@@ -195,6 +199,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -234,6 +239,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
 
     <inputs>
@@ -274,6 +280,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
     <inputs>      
     </inputs>
@@ -314,6 +321,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -348,6 +356,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="CONTACT"/>
     </NodalConditions>
     <inputs>
       
