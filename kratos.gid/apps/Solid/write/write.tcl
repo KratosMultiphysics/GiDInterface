@@ -130,9 +130,10 @@ def AssignMaterial(Properties):
     mat = [dict get $mat ConstitutiveLaw]()
     prop.SetValue(CONSTITUTIVE_LAW, mat.Clone())
         "
-            write::WriteString $str
         }
     }
+    
+    write::WriteString $str
     write::CloseFile
     
 }
