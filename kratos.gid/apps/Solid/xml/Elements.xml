@@ -32,6 +32,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
 
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />-->
@@ -74,6 +75,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -116,6 +118,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -158,6 +161,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
 
     <inputs>
@@ -200,6 +204,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -240,6 +245,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
 
     <inputs>
@@ -281,6 +287,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs>      
     </inputs>
@@ -322,6 +329,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -357,6 +365,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs>
       
@@ -394,6 +403,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs>
     </inputs>

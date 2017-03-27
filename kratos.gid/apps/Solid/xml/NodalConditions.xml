@@ -18,7 +18,10 @@
   <NodalConditionItem  n="PRESSURE" pn="Pressure" ProcessName="AssignScalarToNodesProcess" VariableName="PRESSURE" ImplementedInApplication="SolidMechanicsApplication"
 		       analysis_type="Static,Dynamic"  unit_magnitude="P"  units="Pa" v="Yes" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
-  <NodalConditionItem  n="CONTACT" pn="Contact" ProcessName="ALMContactProcess" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
+  <NodalConditionItem  n="CONTACT" pn="Contact master" ProcessName="ALMContactProcess" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
+		       analysis_type="Static,Dynamic"  App="Solid" state="" Interval="False"  ov="[CheckGeometry 2]" >
+  </NodalConditionItem>
+	<NodalConditionItem  n="CONTACT_SLAVE" pn="Contact slave" ProcessName="ALMContactProcessSlave" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
 		       analysis_type="Static,Dynamic"  App="Solid" state="" Interval="False"  ov="[CheckGeometry 2]" >
   </NodalConditionItem>
 </NodalConditionList>

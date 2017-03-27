@@ -55,6 +55,12 @@
       <parameter n="integration_order" pn="Integration order" type="double" v="5" />
     </inputs>
   </Process>
+	<Process n="ALMContactProcessSlave" pn="Apply a scalar value over a condition" python_module="alm_contact_process_slave"
+	   kratos_module="KratosMultiphysics.ContactStructuralMechanicsApplication" help="This process sets a scalar variable value over a condition" > 
+    <inputs>
+			<parameter n="contact_id" pn="Contact pair id" v="1" type="integer" help="Only 2 contacts with the same pair id"/>
+    </inputs>
+  </Process>
 
  </ProcessList>
 
