@@ -110,24 +110,13 @@ proc Solid::write::getParametersDict { } {
 
 proc Solid::write::ProcessContacts { nodal_conditions_dict } {
     set process_list [list ]
-    foreach elem_slave $nodal_conditions_dict {
-        if {[dict get $elem_slave python_module] in {"alm_contact_process_slave" "alm_contact_process"}} {
-            if {[dict get $elem_slave python_module] eq "alm_contact_process_slave"} {
-                set id_slave [dict get $elem_slave Parameters contact_id]
-                foreach elem_master $nodal_conditions_dict {
-                    if {[dict get $elem_master python_module] eq "alm_contact_process"} {
-                        set id_master [dict get $elem_master Parameters contact_id]
-                        if {$id_slave eq $id_master} {
-                            dict set elem_master Parameters origin_model_part_name [dict get $elem_master Parameters model_part_name]
-                            dict set elem_master Parameters destination_model_part_name [dict get $elem_slave Parameters model_part_name]
-                            lappend process_list $elem_master
-                        }
-                    }
-                }
-            }
-        } else {
-            lappend process_list $elem_slave
-        }
+    foreach elem $nodal_conditions_dict {
+        if {[dict get $elem python_module] in {"alm_contact_process"}} {
+            dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
+            dict set elem Parameters model_part_name "Structure"
+            dict set elem Parameters computing_model_part_name "computing_domain"
+        } 
+        lappend process_list $elem
     }
     return $process_list
 }

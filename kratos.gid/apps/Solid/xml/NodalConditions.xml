@@ -21,7 +21,4 @@
   <NodalConditionItem  n="CONTACT" pn="Contact master" ProcessName="ALMContactProcess" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
 		       analysis_type="Static,Dynamic"  App="Solid" state="" Interval="False"  ov="[CheckGeometry 2]" >
   </NodalConditionItem>
-	<NodalConditionItem  n="CONTACT_SLAVE" pn="Contact slave" ProcessName="ALMContactProcessSlave" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
-		       analysis_type="Static,Dynamic"  App="Solid" state="" Interval="False"  ov="[CheckGeometry 2]" >
-  </NodalConditionItem>
 </NodalConditionList>
