@@ -74,7 +74,9 @@ proc Solid::write::getParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
-    dict set projectParametersDict constraints_process_list [write::getConditionsParametersDict SLNodalConditions "Nodal"]
+    set nodal_conditions_dict [write::getConditionsParametersDict SLNodalConditions "Nodal"]
+    set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]    
+    dict set projectParametersDict constraints_process_list $nodal_conditions_dict
 
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict SLLoads]
 
@@ -104,6 +106,18 @@ proc Solid::write::getParametersDict { } {
     }
     
     return $projectParametersDict
+}
+
+proc Solid::write::ProcessContacts { nodal_conditions_dict } {
+    set process_list [list ]
+    foreach elem $nodal_conditions_dict {
+        if {[dict get $elem python_module] eq "alm_contact_process"} {
+            W $elem
+        } else {
+            lappend process_list $elem
+        }
+    }
+    return $process_list
 }
 
 proc Solid::write::writeParametersEvent { } {
