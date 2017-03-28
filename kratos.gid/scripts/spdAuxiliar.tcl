@@ -235,9 +235,11 @@ proc spdAux::CreateDimensionWindow { } {
     if {$nd eq ""} {catch {set nd [ [$root selectNodes "hiddenfield\[@n='nDim'\]"] getAttribute v]}}
     if { $nd ne "undefined" } {
         spdAux::SwitchDimAndCreateWindow $nd
+        spdAux::RequestRefresh
     } {
         if {[llength $::Model::ValidSpatialDimensions] == 1} {
             spdAux::SwitchDimAndCreateWindow [lindex $::Model::ValidSpatialDimensions 0]
+            spdAux::RequestRefresh
             return ""
         }
         set dir $::Kratos::kratos_private(Path)
@@ -284,6 +286,7 @@ proc spdAux::CreateDimensionWindow { } {
         
         grid $w.information
     }
+    
 }
 
 proc spdAux::SetSpatialDimmension {ndim} {
