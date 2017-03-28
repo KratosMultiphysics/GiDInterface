@@ -1,6 +1,7 @@
 # Project Parameters
 
 proc Solid::write::getParametersDict { } {
+    set model_part_name "Structure"
     set projectParametersDict [dict create]
 
     # Problem data
@@ -10,7 +11,7 @@ proc Solid::write::getParametersDict { } {
     # Add items to section
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name "Structure"
+    dict set problemDataDict model_part_name $model_part_name
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set problemDataDict domain_size $nDim
 
@@ -113,7 +114,7 @@ proc Solid::write::ProcessContacts { nodal_conditions_dict } {
     foreach elem $nodal_conditions_dict {
         if {[dict get $elem python_module] in {"alm_contact_process"}} {
             dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
-            dict set elem Parameters model_part_name "Structure"
+            dict set elem Parameters model_part_name $model_part_name
             dict set elem Parameters computing_model_part_name "computing_domain"
         } 
         lappend process_list $elem
