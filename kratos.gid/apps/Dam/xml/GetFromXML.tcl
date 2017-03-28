@@ -37,7 +37,8 @@ proc Dam::xml::CustomTree { args } {
     if {$nodal_results_base ne ""} {
         set delete_list [list "INITIALTEMPERATURE" "BOFANGTEMPERATURE"]
         foreach item $delete_list {
-            [$nodal_results_base selectNodes "./value\[@n='$item'\]"] delete
+            set i [$nodal_results_base selectNodes "./value\[@n='$item'\]"]
+            if {$i ne ""} {$i delete}
         }
         
         ## It has special filter
