@@ -13,9 +13,9 @@ proc ::EmbeddedFluid::Init { } {
     variable prefix
     variable attributes
     variable kratos_name
-    set kratos_name $::Fluid::kratos_name
 
     apps::LoadAppById "Fluid"
+    set kratos_name $::Fluid::kratos_name
 
     set dir [apps::getMyDir "EmbeddedFluid"]
     set attributes [dict create]
