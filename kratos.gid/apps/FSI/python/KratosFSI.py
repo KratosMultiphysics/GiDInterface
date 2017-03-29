@@ -32,7 +32,7 @@ fluid_main_model_part = ModelPart(ProjectParameters["fluid_solver_settings"]["pr
 fluid_main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["fluid_solver_settings"]["problem_data"]["domain_size"].GetInt())
 
 ## Solver construction
-solver_module = __import__("partitioned_fsi_solver") # Currently there is only one FSI solver up to date
+solver_module = __import__(ProjectParameters["coupling_solver_settings"]["solver_settings"]["solver_type"].GetString())
 solver = solver_module.CreateSolver(structure_main_model_part, fluid_main_model_part, ProjectParameters)
 
 solver.AddVariables()
