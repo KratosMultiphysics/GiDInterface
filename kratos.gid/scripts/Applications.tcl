@@ -129,10 +129,10 @@ proc apps::ExecuteOnCurrentXML { func args} {
 }
 proc apps::ExecuteOnApp {appid func args} {
     set response ""
-    catch {
+    #catch {
         set app [getAppById $appid]
         set response [$app execute $func {*}$args]   
-    }
+    #}
     return $response
 }
 proc apps::ExecuteOnCurrentApp {func args} {
@@ -240,7 +240,7 @@ oo::class create App {
         #W "func $func "
         variable name
         set f ${name}::${func}
-        $f {*}$args
+        if {[info procs $f] ne ""} {$f {*}$args}
 	}
     
     method setPublic {v} {

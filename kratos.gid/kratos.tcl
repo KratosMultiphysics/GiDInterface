@@ -370,11 +370,15 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
     }
     set ret ""
-    catch {set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]}
+    #catch {
+        set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
+        #}
     return $ret
 }
 proc Kratos::AfterMeshGeneration {fail} {
-    catch {apps::ExecuteOnCurrentApp AfterMeshGeneration $fail}
+    #catch {
+        apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
+    #}
 }
 proc Kratos::CheckValidProjectName {modelname} {
     set fail 0
