@@ -19,7 +19,7 @@
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="" App="Fluid"
 	ElementType="Surface" ProcessName="FarFieldProcess" help="" >
     <TopologyFeatures>
-      <item  GeometryType="Triangle" nodes="2" KratosName="SurfaceCondition3D3N"/>
+      <item  GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
     </TopologyFeatures>
 	<DegreesOfFreedom>
 	</DegreesOfFreedom>
