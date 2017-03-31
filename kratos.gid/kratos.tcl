@@ -66,7 +66,7 @@ proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
 
 proc AfterWriteCalcFileGIDProject { filename errorflag } {
     FileSelector::CopyFilesIntoModel [file dirname $filename]
-    catch {write::Init}
+    write::Init
     set errcode [::write::writeEvent $filename]
     if {$errcode} {return "-cancel-"}
 }
