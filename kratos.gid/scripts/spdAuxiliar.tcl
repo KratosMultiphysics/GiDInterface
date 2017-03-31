@@ -226,9 +226,7 @@ proc spdAux::CreateDimensionWindow { } {
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
     
-    set nd ""
-    catch {set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]} 
-    if {$nd eq ""} {catch {set nd [ [$root selectNodes "hiddenfield\[@n='nDim'\]"] getAttribute v]}}
+    set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
     if { $nd ne "undefined" } {
         spdAux::SwitchDimAndCreateWindow $nd
         spdAux::RequestRefresh
