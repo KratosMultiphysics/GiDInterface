@@ -3,8 +3,8 @@
     <include n="ModelInfo" active="1" path="apps/Dam/xml/ModelInfo.spd"/>
     <include n="Parts" active="1" path="apps/Dam/xml/Parts.spd"/>
     <include n="DirichletBoundaryConditions" active="1" path="apps/Dam/xml/DirichletBoundaryConditions.spd"/>
-    <include n="Loads" active="1" path="apps/Dam/xml/Loads.spd"/> 
-    <include n="Solution" active="1" path="apps/Dam/xml/Solution.spd"/> 
+    <include n="Loads" active="1" path="apps/Dam/xml/Loads.spd" state="[HideIfUniqueName DamTypeofProblem Modal-Analysis]"/> 
+    <include n="Solution" active="1" path="apps/Dam/xml/Solution.spd" state="[HideIfUniqueName DamTypeofProblem Modal-Analysis]"/> 
     <include n="Results" active="1" path="apps/Common/xml/Results.spd"/>
     <include n="Materials" active="1" path="apps/Dam/xml/Materials.spd"/>            
   </container>

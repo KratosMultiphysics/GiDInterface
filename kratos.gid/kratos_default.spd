@@ -196,6 +196,12 @@
 		return [spdAux::ProcDisableIfUniqueName $domNode $args]
 	  ]]>
 	</proc>
+		  <proc n='HideIfUniqueName' args='args'>
+	  <![CDATA[
+		catch {[get_domnode_attribute $domNode dict]}
+		return [spdAux::ProcHideIfUniqueName $domNode $args]
+	  ]]>
+	</proc>
 		<proc n='CheckGeometry' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcCheckGeometry $domNode $args]

@@ -1605,6 +1605,12 @@ proc spdAux::ProcActiveIfRestartAvailable { domNode args } {
 }
 
 proc spdAux::ProcDisableIfUniqueName { domNode args } {
+    return [ProcChangeStateIfUniqueName $domNode disabled {*}$args]
+}
+proc spdAux::ProcHideIfUniqueName { domNode args } {
+    return [ProcChangeStateIfUniqueName $domNode hidden {*}$args]
+}
+proc spdAux::ProcChangeStateIfUniqueName { domNode newState args } {
     set total 1
     foreach {un val} {*}$args {
         set xpath [spdAux::getRoute $un]
@@ -1622,7 +1628,7 @@ proc spdAux::ProcDisableIfUniqueName { domNode args } {
             } 
         }
     }
-    if {!$total} {return "normal"} else {return "disabled"}
+    if {!$total} {return "normal"} else {return $newState}
 }
 proc spdAux::ProcCheckGeometry { domNode args } {
     
