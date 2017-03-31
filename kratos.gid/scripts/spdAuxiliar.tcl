@@ -282,9 +282,7 @@ proc spdAux::SetSpatialDimmension {ndim} {
     set root [$doc documentElement]
     set ::Model::SpatialDimension $ndim
     
-    set nd ""
-    catch {set nd [$root selectNodes "value\[@n='nDim'\]"]} 
-    if {$nd eq ""} {catch {set nd [$root selectNodes "hiddenfield\[@n='nDim'\]"] }}
+    set nd [$root selectNodes "value\[@n='nDim'\]"]
     
     $nd setAttribute v $::Model::SpatialDimension
 }

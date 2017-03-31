@@ -129,10 +129,9 @@ proc apps::ExecuteOnCurrentXML { func args} {
 }
 proc apps::ExecuteOnApp {appid func args} {
     set response ""
-    #catch {
-        set app [getAppById $appid]
-        set response [$app execute $func {*}$args]   
-    #}
+    set app [getAppById $appid]
+    set response [$app execute $func {*}$args]   
+
     return $response
 }
 proc apps::ExecuteOnCurrentApp {func args} {
@@ -231,13 +230,11 @@ oo::class create App {
     method getWriteCustomEvent { } {variable writeCustomEvent; return $writeCustomEvent}
     
     method executexml { func args } {
-        #W "func $func "
         variable name
         set f ${name}::xml::${func}
-        $f {*}$args
+        if {[info procs $f] ne ""} {$f {*}$args} 
 	}
     method execute { func args } {
-        #W "func $func "
         variable name
         set f ${name}::${func}
         if {[info procs $f] ne ""} {$f {*}$args}
