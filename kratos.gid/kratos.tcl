@@ -255,7 +255,7 @@ proc Kratos::RegisterEnvironment { } {
     dict set preferences DevMode $kratos_private(DevMode)
     #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
     set fp [open [Kratos::GetPreferencesFilePath] w]
-    catch {set data [puts $fp [write::tcl2json $preferences]]}
+    if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W [="Problems saving user prefecences"]; W $data}
     close $fp
 }
 proc Kratos::LoadEnvironment { } {
@@ -370,15 +370,11 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
     }
     set ret ""
-    #catch {
-        set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
-        #}
+    set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
     return $ret
 }
 proc Kratos::AfterMeshGeneration {fail} {
-    #catch {
         apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
-    #}
 }
 proc Kratos::CheckValidProjectName {modelname} {
     set fail 0
