@@ -6,7 +6,7 @@
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Volume" ProcessName="ImposeNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
-  help="Application of variable young modulus in the nodes">
+    help="Application of variable young modulus in the nodes">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -31,6 +31,41 @@
     <outputs>
     </outputs>
   </ConditionItem>
+  
+  
+      <!---  Conditions: CONSTRUCTION PROCESS -->  
+  <ConditionItem n="ConstructionProcess3D" pn="Construction Process" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical" 
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	ElementType="Volume" ProcessName="ConstructionProcess" VariableName=""
+    help="Process for simulating the construction phase according the inputs parameters">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <DefaultValues>
+    </DefaultValues>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+ <ConditionItem n="ConstructionProcess2D" pn="Construction Process" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical" 
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	ElementType="Surface" ProcessName="ConstructionProcess" VariableName=""
+    help="Process for simulating the construction phase according the inputs parameters">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <DefaultValues>
+    </DefaultValues>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+  
+  
 
 
     <!---  Conditions: THERMAL PARAMETERS -->  
