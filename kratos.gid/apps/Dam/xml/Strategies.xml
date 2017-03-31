@@ -146,4 +146,27 @@
 	</schemes>
   
   </StrategyItem>
+	<StrategyItem n="Eigen-Strategy" pn="Eigen Strategy">
+		<schemes>
+			<scheme n="Eigen-Dynamic-Scheme" pn="Eigen Dynamic Scheme">
+				 <element_filters>
+				</element_filters>
+			</scheme>
+		</schemes>
+		<linearSolvers>
+      <linearSolverItem n="linear_solver_settings" pn="Linear Solver" help="Default solver Super LU" >
+        <filterFeatures>
+	  <!--<filter field="n" value="BiConjugate"/>
+	      <filter field="symmetric" value="false"/>
+          <filter field="solver_type" value="Iterative"/>    -->
+        </filterFeatures>
+		<defaults>
+		  <solver n="BICGSTAB">
+			<!--Not ready yet-->
+			<!--<parameter n="verbosity" v="3"/>-->
+		  </solver>
+		</defaults>
+      </linearSolverItem>
+		</linearSolvers>
+	</StrategyItem>
 </StrategyList>
