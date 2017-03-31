@@ -122,7 +122,7 @@ proc spdAux::reactiveApp { } {
     set root [$doc documentElement]
     set ::Model::SpatialDimension [[$root selectNodes "value\[@n='nDim'\]"] getAttribute v ]
     set appname [[$root selectNodes "hiddenfield\[@n='activeapp'\]"] @v ]
-    #spdAux::activeApp $appname
+
     apps::setActiveApp $appname
 }
 
@@ -171,32 +171,28 @@ proc spdAux::CreateWindow {} {
     
     set activeapp [ [$root selectNodes "hiddenfield\[@n='activeapp'\]"] getAttribute v]
     
+    if {[winfo exist $initwind]} {destroy $initwind}
+        
     if { $activeapp ne "" } {
-        #W "Reactivando $activeapp"
         apps::setActiveApp $activeapp
-        catch {destroy $initwind}
         return ""
     }
-    if { [ winfo exist .gid.win_example]} {
-        destroy .gid.win_example        
-    }   
-    
-    toplevel .gid.win_example
-    wm withdraw .gid.win_example
     
     set w .gid.win_example
+    toplevel $w
+    wm withdraw $w
+    
     
     set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
     set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
     
-    wm geom .gid.win_example +$x+$y
-    wm transient .gid.win_example .gid    
+    wm geom $w +$x+$y
+    wm transient $w .gid    
     
     InitWindow $w [_ "Kratos Multiphysics"] Kratos "" "" 1
     set initwind $w
     ttk::frame $w.top
     ttk::label $w.top.title_text -text [_ " Application market"]
-    
     ttk::frame $w.information  -relief ridge 
     
     set appsid [::apps::getAllApplicationsID]
@@ -270,15 +266,9 @@ proc spdAux::CreateDimensionWindow { } {
             set imagepath [getImagePathDim $dim]
             if {![file exists $imagepath]} {set imagepath [file nativename [file join $dir images "$dim.png"]]}
             set img [gid_themes::GetImageModule $imagepath ""]
-            #W [file extension $imagepath]
             set but [ttk::button $w.information.img$dim -image $img -command [list spdAux::SwitchDimAndCreateWindow $dim] ]
             
             grid $w.information.img$dim -column $i -row 0
-            #if {[file extension $imagepath] eq ".gif"} {
-                #    ::anigif::anigif $imagepath $but
-                #    ::anigif::restart $but
-                #    W $but
-                #}
             incr i
         }
         grid $w.top
