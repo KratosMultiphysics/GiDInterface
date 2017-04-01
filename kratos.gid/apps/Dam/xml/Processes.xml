@@ -215,7 +215,7 @@
   </Process> 
 
 <!---  CONSTRUCTION PROCESS --> 
-  <Process n="ConstructionProcess" pn="Construction Phase" python_module="dam_construction_process"
+  <Process n="DamConstructionProcess" pn="Construction Phase" python_module="dam_construction_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process simulates the construction process activating the elements according to the input parameters" > 
     <inputs>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Y" values="X,Y,Z" />
