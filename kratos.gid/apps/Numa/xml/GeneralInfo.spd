@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="GeneralInfo" pn="General information" icon="information16" help="General information" state="normal" open_window="0">
+
+    <value n="TypeofProblem" pn="Type of Problem" un="NumaTypeofProblem" v="Mechanical" values="Mechanical,Thermo-Mechanical" help="Type of problem" actualize_tree="1"/>
+    <value n="SolStratCombo" pn="Strategy" un="NumaSolStrat" v="Newton-Raphson" state="readonly"/>
+    <value n="MechanicalScheme" pn="Scheme" v="Newmark" un="NumaScheme" state="readonly"/>
+    
+    <container n="MechanicalProblem" pn="Mechanical Problem" un="NumaMechanicalData" state="[checkStateByUniqueName NumaTypeofProblem Mechanical]" actualize_tree="1" open_window="0">
+        <value n="SolutionType" pn="Solution type" v="Quasi-Static" un="NumaMechaSoluType" values="Quasi-Static,Dynamic" help="Solution type" actualize_tree="1"/>
+        <value n="AnalysisType" pn="Analysis type" v="Linear"  un="NumaMechaAnalysisType" values="Linear" help="Analysis type" state="readonly" />
+        <container n="StratParams" pn="Strategy parameters" un="NumaMechanicalDataParameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">
+            <dynamicnode command="spdAux::injectSolStratParams" args=""/>
+            <dynamicnode command="spdAux::injectSolvers" args=""/>
+        </container>
+    </container>
+    
+    <container n="ThermoMechanicalProblem" pn="Thermo-Mechanical Problem"  un="NumaThermo-MechanicalData" state="[checkStateByUniqueName NumaTypeofProblem Thermo-Mechanical]"  actualize_tree="1" open_window="0">
+            <container n="MechanicalPartProblem" pn="Mechanical Problem" un="NumaThermo-Mechanical-MechData" state="normal" actualize_tree="1" open_window="0">
+                <value n="SolutionType" pn="Solution type" un="NumaThermoMechaSoluType" v="Quasi-Static" values="Quasi-Static,Dynamic" help="Solution type" state="readonly" actualize_tree="1"/>
+                <value n="AnalysisType" pn="Analysis type" un="NumaThermoMechaAnalysisType" v="Linear" values="Linear" state="readonly" help="Analysis type" />
+                <container n="StratParams" pn="Strategy parameters" un="NumaThermo-Mechanical-MechDataParameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">
+                    <dynamicnode command="spdAux::injectSolStratParams" args=""/>
+                    <dynamicnode command="spdAux::injectSolvers" args=""/>
+                </container>
+            </container>
+            
+            <container n="ThermalProblem" pn="Thermal Problem" un="NumaThermo-Mechanical-ThermData" state="normal" actualize_tree="1" open_window="0">
+                <value n="SolStratCombo" pn="Thermal strategy" un="NumaSolStratTherm" v="" values="" dict="[GetSolutionStrategies Thermal]" actualize_tree="1" state="disabled"/>
+                <value n="ThermalScheme" pn="Theta Scheme" un="NumaThermalScheme" v="1.0" actualize_tree="1" help= " 1.0 corresponds to backward Euler, 0.5 Cranck Nicolson and 0.0 Forward Euler"/>
+                <value n="ReferenceTemperature" pn="Reference Temeperature" un="NumaThermalReferenceTemperature" type="double" v="10.0" actualize_tree="1"/>
+                <container n="ThermalStratParams" pn="Strategy parameters" un="NumaThermo-Mechanical-ThermDataParameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">
+                    <value n="thermal_echo_level" pn="Echo level" un="NumaThermalEcholevel" v="1" values="0,1,2,3" state="readonly" help="" />
+                    <value n="thermal_reform_dofs_at_each_step" pn="Reforms steps" un="NumaThermalReformsSteps" v="false" values="true,false" state="readonly" help="" />
+                    <value n="thermal_clear_storage" pn="Clear Storage" un="NumaThermalClearStorage" v="false" values="true,false" state="readonly" help="" />
+                    <value n="thermal_compute_reactions" pn="Compute Reactions" un="NumaThermalComputeReactions" v="false" values="true,false" state="readonly" help="" />
+                    <value n="thermal_move_mesh_flag" pn="Move Mesh" un="NumaThermalMoveMeshFlag" v="false" values="true,false" state="readonly" help="" />
+                    <value n="thermal_compute_norm_dx_flag" pn="Compute Norm Dx" un="NumaThermalComputeNormDx" v="false" values="true,false" state="readonly" help="" />
+                    <value n="thermal_block_builder" pn="Block Builder" un="NumaThermalBlockBuilder" v="false" values="true,false" state="readonly" help="" />
+                    <dynamicnode command="spdAux::injectSolvers" args=""/>
+                </container>
+            </container>
+    </container> 
+
+</container>  

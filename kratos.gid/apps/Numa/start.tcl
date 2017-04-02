@@ -8,18 +8,15 @@ proc ::Numa::Init { } {
     # Variable initialization
     variable dir
     variable kratos_name
-    
-    apps::LoadAppById "Dam"
-    set kratos_name $::Dam::kratos_name
+    set kratos_name "NuaApplication"
     
     set dir [apps::getMyDir "Numa"]
     set ::Model::ValidSpatialDimensions [list 2D 3D]
-    spdAux::CreateDimensionWindow
     
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
     LoadMyFiles
-    spdAux::CreateDimensionWindow
+    ::spdAux::CreateDimensionWindow
     
 }
 
