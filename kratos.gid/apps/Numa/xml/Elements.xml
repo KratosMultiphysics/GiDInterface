@@ -5,7 +5,7 @@
   <ElementItem n="SmallDisplacementElement2D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help="" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Modal-Analysis">
+	       ElementType="Solid" help="" TypeofProblem="Mechanical,Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -30,7 +30,6 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="INITIALTEMPERATURE"/>
       <NodalCondition n="BOFANGTEMPERATURE"/>
-      <NodalCondition n="THERMALPARAMETERS"/>
     </NodalConditions>
 
     <inputs>      
@@ -46,7 +45,7 @@
   <ElementItem n="SmallDisplacementElement3D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Modal-Analysis">
+	       ElementType="Solid" help=""  TypeofProblem="Mechanical,Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -71,7 +70,6 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="INITIALTEMPERATURE"/>
       <NodalCondition n="BOFANGTEMPERATURE"/>
-      <NodalCondition n="THERMALPARAMETERS"/>
     </NodalConditions>
 
     <inputs>      
@@ -88,7 +86,7 @@
   <ElementItem n="SmallDisplacementIntefaceElement3D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
+	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -108,7 +106,6 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="INITIALTEMPERATURE"/>
       <NodalCondition n="BOFANGTEMPERATURE"/>
-      <NodalCondition n="THERMALPARAMETERS"/>
     </NodalConditions>
 
     <inputs>      
@@ -124,7 +121,7 @@
   <ElementItem n="SmallDisplacementInterfaceElement2D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
+	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -145,7 +142,6 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="INITIALTEMPERATURE"/>
       <NodalCondition n="BOFANGTEMPERATURE"/>
-      <NodalCondition n="THERMALPARAMETERS"/>
     </NodalConditions>
 
     <inputs>      

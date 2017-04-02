@@ -5,7 +5,7 @@
                 ImplementedInApplication="Dam"
                 ImplementedInPythonFile="dam_new_mechanical_solver"
                 MinimumKratosVersion="8500"
-                App="Dam"
+                App="Numa"
                 ProductionReady=""
                 help="">
     

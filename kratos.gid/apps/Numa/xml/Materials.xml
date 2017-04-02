@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Materials>
     
-  <Material n="Concrete-Dam" MaterialType="Dam" help="">
+  <Material n="Concrete-Dam" MaterialType="Numa" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="2400" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="1.962e10" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
@@ -10,7 +10,7 @@
     </inputs>
   </Material>
         
-  <Material n="Soil" MaterialType="Dam" help="">
+  <Material n="Soil" MaterialType="Numa" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="3000" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="4.9e10" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
@@ -19,7 +19,7 @@
     </inputs>
   </Material>
   
-  <Material n="Strong-Joint" MaterialType="Dam" help="">
+  <Material n="Strong-Joint" MaterialType="Numa" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
@@ -32,7 +32,7 @@
     </inputs>
   </Material>
   
-    <Material n="Weak-Joint" MaterialType="Dam" help="">
+    <Material n="Weak-Joint" MaterialType="Numa" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0" />
