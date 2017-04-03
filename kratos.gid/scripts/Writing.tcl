@@ -268,9 +268,8 @@ proc write::writeGroupElementConnectivities { gNode } {
         if {$nnodes ne ""} {
             set formats [GetFormatDict $group $mid $nnodes]
             if {$etype ne "none"} {
-                set kelemtype [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
+                set kelemtype [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
                 set elem [::Model::getElement $kelemtype]
-                #W $kelemtype
                 set top [$elem getTopologyFeature $etype $nnodes]
                 if {$top ne ""} {
                     set kratosElemName [$top getKratosName]
