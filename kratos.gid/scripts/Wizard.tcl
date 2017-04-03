@@ -99,7 +99,7 @@ proc Wizard::CreateWindow {} {
 proc Wizard::DestroyWindow {} {
     variable wizwindow
     
-    if {winfo exists $wizwindow} {destroy $wizwindow}
+    if {[winfo exists $wizwindow]} {destroy $wizwindow}
     return ""
 }
 
