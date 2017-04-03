@@ -11,6 +11,7 @@ namespace eval write {
     variable meshes
     variable groups_type_name
     variable MDPA_loop_control
+    variable time_monitor
 }
 
 proc write::Init { } {
@@ -28,6 +29,9 @@ proc write::Init { } {
 
     variable MDPA_loop_control
     set MDPA_loop_control 0
+    
+    variable time_monitor
+    set time_monitor 1
 }
 
 proc write::initWriteData {partes mats} {
@@ -52,6 +56,7 @@ proc write::setGroupsTypeName {name} {
 # Write Events
 proc write::writeEvent { filename } {
     variable dir
+    variable time_monitor
     set dir [file dirname $filename]
     set errcode 0
     set fail [::Kratos::CheckValidProjectName [file rootname $filename]]
@@ -60,7 +65,7 @@ proc write::writeEvent { filename } {
         W [= "Wrong project name. Avoid boolean and numeric names."]
         return 1
     }
-    #set inittime [clock seconds]
+    if {$time_monitor} {set inittime [clock seconds]}
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
@@ -70,34 +75,37 @@ proc write::writeEvent { filename } {
     #### Project Parameters Write ####
     set wevent [$activeapp getWriteParametersEvent]
     set filename "ProjectParameters.json"
+    
+    if {$errcode eq 0} {
+        set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
+    }
+    if {$errcode eq 0} {
+        set errcode [write::singleFileEvent $filename $wevent "Custom file" 0]
+    }
+    if {$time_monitor}  {
+        set endtime [clock seconds]
+        set ttime [expr {$endtime-$inittime}]
+        W "Total time: [Duration $ttime]"
+    }
+    return $errcode
+}
 
+proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
+    set errcode 0
+    
     catch {CloseFile}
     OpenFile $filename
     if {$::kratos_debug} {
         eval $wevent
     } else {
-        if {$errcode eq 0 && [catch {eval $wevent} fid] } {
-            W "Problem Writing Project Parameters block:\n$fid\nEnd problems"
+        if {[catch {eval $wevent} fid] } {
+            W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
             set errcode 1
         }
     }
-
     catch {CloseFile}
-
-    #### Custom File Write ####
-    set wevent [$activeapp getWriteCustomEvent]
-
-    catch {CloseFile}
-    if { [catch {eval $wevent} fid] } {
-        W "Problem Writing Custom block:\n$fid\nEnd problems"
-        set errcode 1
-    }
-    catch {CloseFile}
-
+    
     return $errcode
-    # set endtime [clock seconds]
-    # set ttime [expr {$endtime-$inittime}]
-    # W "Total time: [Duration $ttime]"
 }
 
 proc write::writeAppMDPA {appid} {

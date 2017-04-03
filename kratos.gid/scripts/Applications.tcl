@@ -49,7 +49,7 @@ proc apps::setActiveAppSoft { appid } {
 proc apps::getActiveAppId { } {
     variable activeApp;
     set id ""
-    catch {
+    if {$activeApp ne ""} {
         set id [$activeApp getName]
     }
     return $id
