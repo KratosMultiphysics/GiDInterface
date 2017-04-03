@@ -24,14 +24,14 @@ proc Numa::write::Init { } {
 
 proc Numa::write::writeCustomFilesEvent { } {
     
-    write::CopyFileIntoModel "python/dam_main.py"
-    write::RenameFileInModel "dam_main.py" "MainKratos.py"    
+    write::CopyFileIntoModel "python/numa_main.py"
+    write::RenameFileInModel "numa_main.py" "MainKratos.py"    
 }
 
 # MDPA Blocks
 
 proc Numa::write::writeModelPartEvent { } {
-    
+
     write::initWriteData "NumaParts" "NumaMaterials"
     
     write::writeModelPartData

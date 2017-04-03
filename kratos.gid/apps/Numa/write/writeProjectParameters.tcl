@@ -15,7 +15,7 @@ proc Numa::write::getParametersDict { } {
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set problemDataDict domain_size $nDim
     dict set problemDataDict parallel_type "OpenMP"
-    dict set problemDataDict number_of_threads $nthreads
+    dict set problemDataDict number_of_threads 1
     dict set problemDataDict start_time [write::getValue NumaTimeParameters StartTime]
     dict set problemDataDict end_time [write::getValue NumaTimeParameters EndTime]
     dict set problemDataDict time_step [write::getValue NumaTimeParameters DeltaTime]
@@ -66,17 +66,17 @@ proc Numa::write::getParametersDict { } {
         set thermal_linear_solver [dict create]
         set thermal_solver_type [write::getValue NumaThermoMechaSolverType]
         if {$thermal_solver_type eq "Direct"} {
-            dict set linear_solver solver_type SuperLUSolver
-            dict set linear_solver scaling false
+            dict set thermal_linear_solver solver_type SuperLUSolver
+            dict set thermal_linear_solver scaling false
         } else {
-            dict set linear_solver solver_type AMGCL
-            dict set linear_solver max_iteration 200
-            dict set linear_solver tolerance 1e-7
-            dict set linear_solver provide_coordinates false
-            dict set linear_solver smoother_type ilu0
-            dict set linear_solver krylov_type lgmres
-            dict set linear_solver coarsening_type aggregation
-            dict set linear_solver scaling false
+            dict set thermal_linear_solver solver_type AMGCL
+            dict set thermal_linear_solver max_iteration 200
+            dict set thermal_linear_solver tolerance 1e-7
+            dict set thermal_linear_solver provide_coordinates false
+            dict set thermal_linear_solver smoother_type ilu0
+            dict set thermal_linear_solver krylov_type lgmres
+            dict set thermal_linear_solver coarsening_type aggregation
+            dict set thermal_linear_solver scaling false
         }
 
         ## Adding thermal solver settings to solver settings
@@ -107,10 +107,11 @@ proc Numa::write::getParametersDict { } {
         dict set mechanicalSolverSettingsDict clear_storage false
         dict set mechanicalSolverSettingsDict rayleigh_m [write::getValue NumaThermoMechaDampMass]
         dict set mechanicalSolverSettingsDict rayleigh_k [write::getValue NumaThermoMechaDampStiff]
+        dict set mechanicalSolverSettingsDict nonlocal_damage false
 
          ## Adding linear solver for mechanical part
         set linear_solver [dict create]
-        set mwchanical_solver_type [write::getValue NumaThermoMechaSolverType]
+        set mechanical_solver_type [write::getValue NumaThermoMechaSolverType]
         if {$mechanical_solver_type eq "Direct"} {
             dict set linear_solver solver_type SuperLUSolver
             dict set linear_solver scaling false
@@ -135,7 +136,7 @@ proc Numa::write::getParametersDict { } {
 
     } else {
         
-set mechanicalSolverSettingsDict [dict create]
+        set mechanicalSolverSettingsDict [dict create]
         dict set mechanicalSolverSettingsDict solution_type [write::getValue NumaMechaSoluType]
         dict set mechanicalSolverSettingsDict strategy_type Newton-Raphson
         dict set mechanicalSolverSettingsDict scheme_type Newmark
@@ -154,10 +155,11 @@ set mechanicalSolverSettingsDict [dict create]
         dict set mechanicalSolverSettingsDict clear_storage false
         dict set mechanicalSolverSettingsDict rayleigh_m [write::getValue NumaMechaDampMass]
         dict set mechanicalSolverSettingsDict rayleigh_k [write::getValue NumaMechaDampStiff]
+        dict set mechanicalSolverSettingsDict nonlocal_damage false
 
          ## Adding linear solver for mechanical part
         set linear_solver [dict create]
-        set mwchanical_solver_type [write::getValue NumaMechaSolverType]
+        set mechanical_solver_type [write::getValue NumaMechaSolverType]
         if {$mechanical_solver_type eq "Direct"} {
             dict set linear_solver solver_type SuperLUSolver
             dict set linear_solver scaling false
