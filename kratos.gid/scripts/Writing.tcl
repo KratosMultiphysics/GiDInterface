@@ -31,7 +31,7 @@ proc write::Init { } {
     set MDPA_loop_control 0
     
     variable time_monitor
-    set time_monitor 1
+    set time_monitor 0
 }
 
 proc write::initWriteData {partes mats} {
