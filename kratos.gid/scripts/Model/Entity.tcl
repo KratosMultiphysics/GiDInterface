@@ -31,10 +31,14 @@ oo::class create Entity {
     
     #method setAttribute {att val} {variable name; W "$name -> adding $att : $val"; variable attributes; dict set attributes $att $val}
     method setAttribute {att val} {variable attributes; dict set attributes $att $val}
+    method hasAttribute {att} {
+        variable attributes
+        return [dict exists $attributes $att]
+    }
     method getAttribute {att} {
         variable attributes
         set v ""
-        catch {
+        if {[dict exists $attributes $att]} {
             set v [dict get $attributes $att]
         }
         return $v
@@ -73,7 +77,7 @@ oo::class create Entity {
     method getInputPn {in} {
         variable inputs
         set pn ""
-        catch {
+        if {[dict exists $inputs $in]} {
             set pn [dict get $inputs $in]
         }
         return $pn
@@ -81,7 +85,7 @@ oo::class create Entity {
     method getInputDv {in} {
         variable inputs
         set dv ""
-        catch {
+        if {[dict exists $inputs $in]} {
             set i [dict get $inputs $in]
             set dv [$i getDv]
         }
@@ -92,7 +96,7 @@ oo::class create Entity {
     method getOutputPn {in} {
         variable outputs
         set pn ""
-        catch {
+        if {[dict exists $outputs $in]} {
             set pn [dict get $outputs $in]
         }
         return $pn

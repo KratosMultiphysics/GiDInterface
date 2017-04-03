@@ -471,8 +471,7 @@ proc StenosisWizard::Wizard::Mesh { } {
      GiD_Process Mescape Meshing Generate $mesh MeshingParametersFrom=Preferences Mescape Meshing MeshView
 }
 proc StenosisWizard::Wizard::Run { } {
-     set doc $gid_groups_conds::doc
-     set root [$doc documentElement]
+     set root [customlib::GetBaseRoot]
      set solstrat_un [apps::getCurrentUniqueName SolStrat]
      #W $solstrat_un
      if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] v] eq ""} {
@@ -536,11 +535,8 @@ proc AfterMeshGeneration { fail } {
      GiD_Process Mescape Files Save 
      if {$fail eq 0} {
           set Button .gid.activewizard.w.layoutFrame.wiz.layout.fr1.lfr1.b3
-          catch {
-               $Button configure -state normal
-          }
+          $Button configure -state normal
      }
-    
 }
 
 StenosisWizard::Wizard::Init

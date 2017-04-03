@@ -53,8 +53,8 @@ proc Pfem::write::writeMeshes { } {
 proc Pfem::write::writeNodalConditions { keyword } {
     write::writeNodalConditions $keyword
     return ""
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $keyword]/container/blockdata"
     set groups [$root selectNodes $xp1]
     foreach group $groups {

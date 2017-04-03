@@ -11,6 +11,7 @@ namespace eval write {
     variable meshes
     variable groups_type_name
     variable MDPA_loop_control
+    variable time_monitor
 }
 
 proc write::Init { } {
@@ -28,6 +29,9 @@ proc write::Init { } {
 
     variable MDPA_loop_control
     set MDPA_loop_control 0
+    
+    variable time_monitor
+    set time_monitor 0
 }
 
 proc write::initWriteData {partes mats} {
@@ -52,6 +56,8 @@ proc write::setGroupsTypeName {name} {
 # Write Events
 proc write::writeEvent { filename } {
     variable dir
+    variable time_monitor
+    customlib::UpdateDocument
     set dir [file dirname $filename]
     set errcode 0
     set fail [::Kratos::CheckValidProjectName [file rootname $filename]]
@@ -60,7 +66,7 @@ proc write::writeEvent { filename } {
         W [= "Wrong project name. Avoid boolean and numeric names."]
         return 1
     }
-    #set inittime [clock seconds]
+    if {$time_monitor} {set inittime [clock seconds]}
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
@@ -70,34 +76,37 @@ proc write::writeEvent { filename } {
     #### Project Parameters Write ####
     set wevent [$activeapp getWriteParametersEvent]
     set filename "ProjectParameters.json"
+    
+    if {$errcode eq 0} {
+        set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
+    }
+    if {$errcode eq 0} {
+        set errcode [write::singleFileEvent $filename $wevent "Custom file" 0]
+    }
+    if {$time_monitor}  {
+        set endtime [clock seconds]
+        set ttime [expr {$endtime-$inittime}]
+        W "Total time: [Duration $ttime]"
+    }
+    return $errcode
+}
 
-    catch {CloseFile}
+proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
+    set errcode 0
+    
+    CloseFile
     OpenFile $filename
     if {$::kratos_debug} {
         eval $wevent
     } else {
-        if {$errcode eq 0 && [catch {eval $wevent} fid] } {
-            W "Problem Writing Project Parameters block:\n$fid\nEnd problems"
+        if {[catch {eval $wevent} fid] } {
+            W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
             set errcode 1
         }
     }
-
-    catch {CloseFile}
-
-    #### Custom File Write ####
-    set wevent [$activeapp getWriteCustomEvent]
-
-    catch {CloseFile}
-    if { [catch {eval $wevent} fid] } {
-        W "Problem Writing Custom block:\n$fid\nEnd problems"
-        set errcode 1
-    }
-    catch {CloseFile}
-
+    CloseFile
+    
     return $errcode
-    # set endtime [clock seconds]
-    # set ttime [expr {$endtime-$inittime}]
-    # W "Total time: [Duration $ttime]"
 }
 
 proc write::writeAppMDPA {appid} {
@@ -112,7 +121,7 @@ proc write::writeAppMDPA {appid} {
     set wevent [$activeapp getWriteModelPartEvent]
     set filename "[file tail [GiD_Info project ModelName]].mdpa"
 
-    catch {CloseFile}
+    CloseFile
     OpenFile $filename
 
     if {$::kratos_debug} {
@@ -123,7 +132,7 @@ proc write::writeAppMDPA {appid} {
             set errcode 1
         }
     }
-    catch {CloseFile}
+    CloseFile
     return $errcode
 }
 
@@ -192,8 +201,7 @@ proc write::processMaterials { } {
     variable parts
     variable matun
     variable mat_dict
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts]/group"
     set xp2 ".//value\[@n='Material']"
@@ -239,8 +247,8 @@ proc write::processMaterials { } {
 
 proc write::writeElementConnectivities { } {
     variable parts
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts]/group"
     foreach gNode [$root selectNodes $xp1] {
@@ -300,8 +308,8 @@ proc write::GetWriteGroupName { group_id } {
 
 proc write::writeConditions { baseUN } {
     set dictGroupsIterators [dict create]
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
     set iter 1
@@ -433,8 +441,8 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
 }
 
 proc write::writeNodalConditions { keyword } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $keyword]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
@@ -532,11 +540,7 @@ proc write::getEtype {ov group} {
     return $ret
 }
 proc write::isquadratic {} {
-    set err [catch { GiD_Set Model(QuadraticType) } isquadratic]
-    if { $err } {
-	set isquadratic [lindex [GiD_Info Project] 5]
-    }
-    return $isquadratic
+    return [GiD_Set Model(QuadraticType)]
 }
 
 # GiD_Mesh get element $elem_id face $face_id
@@ -567,8 +571,8 @@ proc write::GetNodesFromElementFace {elem_id face_id} {
 
 proc write::getPartsGroupsId {} {
     variable parts
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set listOfGroups [list ]
     set xp1 "[spdAux::getRoute $parts]/group"
@@ -582,8 +586,8 @@ proc write::getPartsGroupsId {} {
 }
 proc write::getPartsMeshId {} {
     variable parts
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set listOfGroups [list ]
 
@@ -716,8 +720,8 @@ proc write::GetEmptyList { } {
     return $a
 }
 proc write::GetCutPlanesList { {results_UN Results} } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set list_of_planes [list ]
 
@@ -780,8 +784,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
 
 
 proc write::getSubModelPartNames { args } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set listOfProcessedGroups [list ]
     set groups [list ]
@@ -840,8 +844,8 @@ proc write::getSolversParametersDict { {appid ""} } {
 
 
 proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set bcCondsDict [list ]
 
@@ -877,7 +881,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         dict unset process_attributes pn
 
         set processDict [dict merge $processDict $process_attributes]
-        catch {
+        if {[$condition hasAttribute VariableName]} {
             set variable_name [$condition getAttribute VariableName]
             # "lindex" is a rough solution. Look for a better one.
             if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
@@ -889,7 +893,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                     set ValX [expr [get_domnode_attribute [$group find n ${inputName}X] v] ? True : False]
                     set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
                     set ValZ [expr False]
-                    catch {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
+                    if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 } {
                     if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
@@ -916,7 +920,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                         set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
                         set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
                         set ValZ [expr 0.0]
-                        catch {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
+                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 }
@@ -957,8 +961,8 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
 }
 
 proc write::GetResultsList { un {cnd ""} } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set result [list ]
     if {$cnd eq ""} {set xp1 "[spdAux::getRoute $un]/value"} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]/value"}
@@ -973,8 +977,8 @@ proc write::GetResultsList { un {cnd ""} } {
 }
 
 proc write::GetRestartProcess { {un ""} {name "" } } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set resultDict [dict create ]
     if {$un eq ""} {set un "Restart"}
@@ -1007,8 +1011,8 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
 }
 
 proc write::GetMeshFromCondition { base_UN condition_id } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $base_UN]/condition\[@n='$condition_id'\]/group"
     set groups [$root selectNodes $xp1]
@@ -1025,8 +1029,8 @@ proc write::GetMeshFromCondition { base_UN condition_id } {
 
 proc write::getAllMaterialParametersDict {matname} {
     variable matun
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set md [dict create]
 
@@ -1041,8 +1045,8 @@ proc write::getAllMaterialParametersDict {matname} {
 }
 
 proc write::getIntervalsDict { { un "Intervals" } {appid "" } } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set intervalsDict [dict create]
     set xp3 "[spdAux::getRoute $un]/blockdata\[@n='Interval'\]"
@@ -1118,10 +1122,9 @@ proc write::getValueByNode { node } {
     if {$v eq "" } {set v [get_domnode_attribute $node v]}
     return $v
 }
-proc write::getValue { name { it "" } {what noforce} } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
-    ##
+proc write::getValue { name { it "" } {what noforce} } {    
+    set root [customlib::GetBaseRoot]
+
     set xp [spdAux::getRoute $name]
     set node [$root selectNodes $xp]
     if {$it ne ""} {set node [$node find n $it]}
@@ -1154,7 +1157,7 @@ proc write::getStringBinaryFromValue {v} {
 proc write::OpenFile { fn } {
     variable dir
     set filename [file join $dir $fn]
-    catch {CloseFile}
+    CloseFile
     customlib::InitWriteFile $filename
 }
 

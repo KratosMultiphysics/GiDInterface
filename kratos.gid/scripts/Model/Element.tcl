@@ -28,7 +28,7 @@ oo::class create Element {
         variable constLawFilters;
         
         set v ""
-        catch {
+        if {[dict exists $constLawFilters $key]} {
             set v [dict get $constLawFilters $key]
         }
         return $v
@@ -62,13 +62,12 @@ oo::class create Element {
     method getNodalCondition {key} {
         variable ElementNodalCondition
         set v ""
-        catch {
-            foreach nc [::Model::getAllNodalConditions] {
+        foreach nc [::Model::getAllNodalConditions] {
             if {[$nc getName] in $ElementNodalCondition} {
                 return $nc
             }
         }
-        }
+        
         return $v
     }
     
@@ -141,7 +140,7 @@ proc Model::ParseElemNode { node } {
     
     set el [::Model::Element new $name]
     $el setPublicName [$node getAttribute pn]
-    catch {$el setDv [$node getAttribute v]}
+    if {[$node hasAttribute v]} {$el setDv [$node getAttribute v]}
     
     foreach att [$node attributes] {
         $el setAttribute $att [split [$node getAttribute $att] ","]
@@ -158,7 +157,7 @@ proc Model::ParseElemNode { node } {
         set n [$out @n]
         set pn [$out @pn]
         set v false
-        catch {set v [$out @v]}
+        if {[$out hasAttribute v]} {set v [$out @v]}
         set outobj [::Model::Parameter new $n $pn bool $v "" "" "" ]
         $el addOutputDone $outobj
     }
@@ -179,7 +178,7 @@ proc Model::ParseNodalConditionsNode { node } {
     set el [::Model::NodalCondition new $name]
     $el setPublicName [$node getAttribute pn]
     
-    catch {
+    if {[$node hasAttribute ov]} {
         set ov [$node getAttribute ov]
         $el setOv $ov
     }
@@ -202,14 +201,15 @@ proc Model::ParseNodalConditionsNode { node } {
             set n [$out @n]
             set pn [$out @pn]
             set v false
-            catch {set v [$out @v]}
+            if {[$out hasAttribute v]} {set v [$out @v]}
             set outobj [::Model::Parameter new $n $pn bool $v "" "" "" ]
             $el addOutputDone $outobj
         }
     }
     $el setProcessName [$node getAttribute ProcessName]
-    catch {
-        foreach def [[$node getElementsByTagName DefaultValues] getElementsByTagName value]  {
+    set defaultValuesList [$node getElementsByTagName DefaultValues]
+    if {[llength $defaultValuesList]} {
+        foreach def [$defaultValuesList getElementsByTagName value]  {
             set itemName [$def @n]
             foreach att [$def attributes] {
                 if {$att ne "n"} {

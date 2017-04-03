@@ -99,9 +99,8 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
 }
 
 
-proc Dam::xml::SolStratParamState {outnode} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+proc Dam::xml::SolStratParamState {outnode} {    
+    set root [customlib::GetBaseRoot]
     
     set solstrat_un "DamSolStrat"
     

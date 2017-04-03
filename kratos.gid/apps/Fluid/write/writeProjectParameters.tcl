@@ -171,9 +171,8 @@ proc Fluid::write::getGravityProcessDict {} {
 # Skin SubModelParts ids
 proc Fluid::write::getBoundaryConditionMeshId {} {
     variable BCUN
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
-
+    
+    set root [customlib::GetBaseRoot]
     set listOfBCGroups [list ]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
     set groups [$root selectNodes $xp1]
@@ -194,9 +193,8 @@ proc Fluid::write::getBoundaryConditionMeshId {} {
 # No-skin SubModelParts ids
 proc Fluid::write::getNoSkinConditionMeshId {} {
     variable BCUN
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
-
+    
+    set root [customlib::GetBaseRoot]
     set listOfNoSkinGroups [list ]
 
     # Append drag processes model parts names

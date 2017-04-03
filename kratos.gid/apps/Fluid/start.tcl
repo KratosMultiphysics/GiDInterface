@@ -40,17 +40,15 @@ proc ::Fluid::LoadMyFiles { } {
 proc ::Fluid::GetAttribute {name} {
     variable attributes
     set value ""
-    catch {set value [dict get $attributes $name]}
+    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
 }
 
 proc ::Fluid::FluidAppSelectorWindow { } {
     set initwind $::spdAux::initwind
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
-    set nd ""
-    catch {set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]}
-    if {$nd eq ""} {catch {set nd [ [$root selectNodes "hiddenfield\[@n='nDim'\]"] getAttribute v]}}
+    
+    set root [customlib::GetBaseRoot]
+    set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
     if { $nd ne "undefined" } {
         if {[apps::getActiveAppId] eq "Fluid"} {
             spdAux::SwitchDimAndCreateWindow $nd
@@ -101,8 +99,8 @@ proc ::Fluid::FluidAppSelectorWindow { } {
 proc ::Fluid::ChangeAppTo {appid} {
     switch $appid {
         "Fluid" {
-            set doc $gid_groups_conds::doc
-            set root [$doc documentElement]
+            
+            set root [customlib::GetBaseRoot]
             [$root selectNodes "value\[@n='nDim'\]"] setAttribute v undefined
             ::spdAux::CreateDimensionWindow
         }

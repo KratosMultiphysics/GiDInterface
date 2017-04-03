@@ -480,8 +480,7 @@ proc Pfem::write::ProcessBodiesList { } {
 }
 
 proc Pfem::write::GetNodalDataDict { } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
     set NodalData [list ]
     set parts [list "PFEM_Rigid2DParts" "PFEM_Rigid3DParts" "PFEM_Deformable2DParts" "PFEM_Deformable3DParts" "PFEM_Fluid2DParts" "PFEM_Fluid3DParts"]
     
@@ -546,9 +545,8 @@ proc Pfem::write::CalculateMyVariables { } {
 
 
 
-proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition"}} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition"}} {    
+    set root [customlib::GetBaseRoot]
     return [list ]
     set bcCondsDict [list ]
     
@@ -594,7 +592,7 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
                     set ValX [expr [get_domnode_attribute [$block find n ${inputName}X] v] ? True : False]
                     set ValY [expr [get_domnode_attribute [$block find n ${inputName}Y] v] ? True : False]
                     set ValZ [expr False]
-                    catch {set ValZ [expr [get_domnode_attribute [$block find n ${inputName}Z] v] ? True : False]}
+                    if {[$block find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$block find n ${inputName}Z] v] ? True : False]}
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 } {
                     if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
@@ -621,7 +619,7 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
                         set ValX [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}X]] ]
                         set ValY [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Y]] ] 
                         set ValZ [expr 0.0]
-                        catch {set ValZ [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Z]]]}
+                        if {[$block find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Z]]]}
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 } 
