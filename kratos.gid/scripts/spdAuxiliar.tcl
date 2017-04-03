@@ -430,7 +430,6 @@ proc spdAux::insertDependencies { baseNode originUN } {
         #    W [$insertonnode asXML]
         #}
 }
-# Dependencies
 proc spdAux::insertDependenciesSoft { originxpath relativepath n attn attv} {
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
@@ -841,7 +840,6 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
     }
     
 }
-#.gid.central.boundaryconds.gg.data.f0.e2
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
     if {$inputs eq ""} {
@@ -1132,10 +1130,7 @@ proc spdAux::getFields {} {
 
 spdAux::Init
 
-
-
 ############# procs #################
-
 proc spdAux::ProcGetElements { domNode args } {
     set nodeApp [GetAppIdFromNode $domNode]
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
@@ -1237,11 +1232,12 @@ proc spdAux::ProcGetSchemes {domNode args} {
     set nodeApp [GetAppIdFromNode $domNode]
     #W $nodeApp
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
-    #W "GS sol $sol_stratUN"
-    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
+    set sol_stat_path [spdAux::getRoute $sol_stratUN]
+    
+    if {[get_domnode_attribute [$domNode selectNodes $sol_stat_path] v] eq ""} {
         #W "entra"
-        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
-        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] values
+        get_domnode_attribute [$domNode selectNodes $sol_stat_path] dict
+        get_domnode_attribute [$domNode selectNodes $sol_stat_path] values
     }
     set solStratName [::write::getValue $sol_stratUN]
     #W "Unique name: $sol_stratUN - Nombre $solStratName"

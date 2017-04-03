@@ -231,12 +231,12 @@ oo::class create App {
     
     method executexml { func args } {
         variable name
-        set f ${name}::xml::${func}
-        if {[info procs $f] ne ""} {$f {*}$args} 
+        set f ::${name}::xml::${func}
+        if {[info procs $f] ne ""} {$f {*}$args}
 	}
     method execute { func args } {
         variable name
-        set f ${name}::${func}
+        set f ::${name}::${func}
         if {[info procs $f] ne ""} {$f {*}$args}
 	}
     
