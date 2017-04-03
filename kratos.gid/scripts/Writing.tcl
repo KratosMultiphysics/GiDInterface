@@ -57,6 +57,7 @@ proc write::setGroupsTypeName {name} {
 proc write::writeEvent { filename } {
     variable dir
     variable time_monitor
+    customlib::UpdateDocument
     set dir [file dirname $filename]
     set errcode 0
     set fail [::Kratos::CheckValidProjectName [file rootname $filename]]
@@ -200,8 +201,7 @@ proc write::processMaterials { } {
     variable parts
     variable matun
     variable mat_dict
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts]/group"
     set xp2 ".//value\[@n='Material']"
@@ -247,8 +247,8 @@ proc write::processMaterials { } {
 
 proc write::writeElementConnectivities { } {
     variable parts
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts]/group"
     foreach gNode [$root selectNodes $xp1] {
@@ -308,8 +308,8 @@ proc write::GetWriteGroupName { group_id } {
 
 proc write::writeConditions { baseUN } {
     set dictGroupsIterators [dict create]
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
     set iter 1
@@ -441,8 +441,8 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
 }
 
 proc write::writeNodalConditions { keyword } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $keyword]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
@@ -575,8 +575,8 @@ proc write::GetNodesFromElementFace {elem_id face_id} {
 
 proc write::getPartsGroupsId {} {
     variable parts
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set listOfGroups [list ]
     set xp1 "[spdAux::getRoute $parts]/group"
@@ -590,8 +590,8 @@ proc write::getPartsGroupsId {} {
 }
 proc write::getPartsMeshId {} {
     variable parts
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set listOfGroups [list ]
 
@@ -724,8 +724,8 @@ proc write::GetEmptyList { } {
     return $a
 }
 proc write::GetCutPlanesList { {results_UN Results} } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set list_of_planes [list ]
 
@@ -788,8 +788,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
 
 
 proc write::getSubModelPartNames { args } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set listOfProcessedGroups [list ]
     set groups [list ]
@@ -848,8 +848,8 @@ proc write::getSolversParametersDict { {appid ""} } {
 
 
 proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set bcCondsDict [list ]
 
@@ -965,8 +965,8 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
 }
 
 proc write::GetResultsList { un {cnd ""} } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set result [list ]
     if {$cnd eq ""} {set xp1 "[spdAux::getRoute $un]/value"} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]/value"}
@@ -981,8 +981,8 @@ proc write::GetResultsList { un {cnd ""} } {
 }
 
 proc write::GetRestartProcess { {un ""} {name "" } } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set resultDict [dict create ]
     if {$un eq ""} {set un "Restart"}
@@ -1015,8 +1015,8 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
 }
 
 proc write::GetMeshFromCondition { base_UN condition_id } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $base_UN]/condition\[@n='$condition_id'\]/group"
     set groups [$root selectNodes $xp1]
@@ -1033,8 +1033,8 @@ proc write::GetMeshFromCondition { base_UN condition_id } {
 
 proc write::getAllMaterialParametersDict {matname} {
     variable matun
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set md [dict create]
 
@@ -1049,8 +1049,8 @@ proc write::getAllMaterialParametersDict {matname} {
 }
 
 proc write::getIntervalsDict { { un "Intervals" } {appid "" } } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
 
     set intervalsDict [dict create]
     set xp3 "[spdAux::getRoute $un]/blockdata\[@n='Interval'\]"
@@ -1126,10 +1126,9 @@ proc write::getValueByNode { node } {
     if {$v eq "" } {set v [get_domnode_attribute $node v]}
     return $v
 }
-proc write::getValue { name { it "" } {what noforce} } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
-    ##
+proc write::getValue { name { it "" } {what noforce} } {    
+    set root [customlib::GetBaseRoot]
+
     set xp [spdAux::getRoute $name]
     set node [$root selectNodes $xp]
     if {$it ne ""} {set node [$node find n $it]}

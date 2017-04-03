@@ -80,8 +80,8 @@ proc spdAux::EndRefreshTree { } {
 
 # Includes
 proc spdAux::processIncludes { } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    customlib::UpdateDocument
+    set root [customlib::GetBaseRoot]
     spdAux::processAppIncludes $root
     spdAux::processDynamicNodes $root
 }
@@ -118,8 +118,8 @@ proc spdAux::reactiveApp { } {
     #W "Reactive"
     variable initwind
     destroy $initwind
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set ::Model::SpatialDimension [[$root selectNodes "value\[@n='nDim'\]"] getAttribute v ]
     set appname [[$root selectNodes "hiddenfield\[@n='activeapp'\]"] @v ]
 
@@ -127,8 +127,8 @@ proc spdAux::reactiveApp { } {
 }
 
 proc spdAux::deactiveApp { appid } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v ""
     foreach elem [$root getElementsByTagName "appLink"] {
         if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "1"} {
@@ -140,8 +140,8 @@ proc spdAux::deactiveApp { appid } {
 proc spdAux::activeApp { appid } {
     #W "Active $appid"
     variable initwind
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v $appid
     foreach elem [$root getElementsByTagName "appLink"] {
         if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
@@ -166,8 +166,8 @@ proc spdAux::activeApp { appid } {
 
 proc spdAux::CreateWindow {} {
     variable initwind
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     
     set activeapp [ [$root selectNodes "hiddenfield\[@n='activeapp'\]"] getAttribute v]
     
@@ -223,8 +223,8 @@ proc spdAux::CreateWindow {} {
 proc spdAux::CreateDimensionWindow { } {
     #package require anigif 1.3
     variable initwind
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     
     set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
     if { $nd ne "undefined" } {
@@ -278,8 +278,8 @@ proc spdAux::CreateDimensionWindow { } {
 }
 
 proc spdAux::SetSpatialDimmension {ndim} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set ::Model::SpatialDimension $ndim
     
     set nd [$root selectNodes "value\[@n='nDim'\]"]
@@ -313,8 +313,8 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
 }
 
 proc spdAux::ForceExtremeLoad { } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     foreach contNode [$root getElementsByTagName "container"] {
         W "Opening [$contNode  @n]"
         $contNode setAttribute tree_state "open"
@@ -351,14 +351,14 @@ proc spdAux::setRoute {name route} {
     set uniqueNames [dict set uniqueNames $name $route]
     set uniqueNames [dict remove $uniqueNames dummy]
     #W "Add $name $route"
-    # set doc $gid_groups_conds::doc
-    # set root [$doc documentElement]
+    # 
+    # set root [customlib::GetBaseRoot]
     # W "checking [[$root selectNodes $route] asXML]"
 }
 
 proc spdAux::parseRoutes { } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     parseRecurse $root
 }
 
@@ -383,7 +383,7 @@ proc spdAux::parseRecurse { root } {
 proc spdAux::ExploreAllRoutes { } {
     variable uniqueNames
     
-    set root [$gid_groups_conds::doc documentElement]
+    set root [customlib::GetBaseRoot]
     W [dict keys $uniqueNames]
     foreach routeName [dict keys $uniqueNames] {
         set route [getRoute $routeName]
@@ -407,8 +407,8 @@ proc spdAux::GetAppIdFromNode {domNode} {
 
 # Dependencies
 proc spdAux::insertDependencies { baseNode originUN } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     catch {
         set originxpath [$baseNode toXPath]
         set insertxpath [getRoute $originUN]
@@ -431,8 +431,8 @@ proc spdAux::insertDependencies { baseNode originUN } {
         #}
 }
 proc spdAux::insertDependenciesSoft { originxpath relativepath n attn attv} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set insertonnode [$root selectNodes $originxpath]
     
     # Aun no soy capaz de insertar y que funcione
@@ -463,13 +463,13 @@ proc spdAux::chk_loads_function_time { domNode load_name } {
 }
 
 proc spdAux::ViewDoc {} {
-    W [[$gid_groups_conds::doc documentElement] asXML]
+    W [[customlib::GetBaseRoot] asXML]
 }
 
 
 proc spdAux::ConvertAllUniqueNames {oldPrefix newPrefix} {
     variable uniqueNames
-    set root [$gid_groups_conds::doc documentElement]
+    set root [customlib::GetBaseRoot]
     
     foreach routeName [dict keys $uniqueNames] {
         if {[string first $oldPrefix $routeName] eq 0} {
@@ -489,8 +489,8 @@ proc spdAux::ConvertAllUniqueNames {oldPrefix newPrefix} {
 
 # Modify the tree: field newValue UniqueName OptionalChild
 proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     #W "$field $value $name $it"
     set node ""
     catch {
@@ -1005,8 +1005,8 @@ proc spdAux::injectProcs { basenode  args} {
 }
 
 proc spdAux::CheckConstLawOutputState {outnode} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     
     set nodeApp [GetAppIdFromNode $outnode]
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
@@ -1022,8 +1022,8 @@ proc spdAux::CheckConstLawOutputState {outnode} {
 }
 
 proc spdAux::CheckElementOutputState {outnode} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     
     set nodeApp [GetAppIdFromNode $outnode]
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
@@ -1038,8 +1038,8 @@ proc spdAux::CheckElementOutputState {outnode} {
 }
 
 proc spdAux::SolStratParamState {outnode} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set nodeApp [GetAppIdFromNode $outnode]
     
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
@@ -1066,8 +1066,8 @@ proc spdAux::SolStratParamState {outnode} {
 }
 
 proc spdAux::SchemeParamState {outnode} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set nodeApp [GetAppIdFromNode $outnode]
     
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
@@ -1087,8 +1087,8 @@ proc spdAux::SchemeParamState {outnode} {
 }
 
 proc spdAux::getIntervals { {un ""} } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     if {$un eq ""} {
         set un "Intervals"
     } 
@@ -1102,8 +1102,8 @@ proc spdAux::getIntervals { {un ""} } {
 }
 
 proc spdAux::getTimeFunctions {} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set functions_un [apps::getCurrentUniqueName Functions]
     set xp1 "[spdAux::getRoute $functions_un]/blockdata\[@n='Function'\]"
     set lista [list ]
@@ -1115,8 +1115,8 @@ proc spdAux::getTimeFunctions {} {
 }
 
 proc spdAux::getFields {} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set fields_un [apps::getCurrentUniqueName Fields]
     set xp1 "[spdAux::getRoute $fields_un]/blockdata\[@n='Field'\]"
     set lista [list ]
@@ -1454,8 +1454,8 @@ proc spdAux::ProcSolverParamState { domNode args } {
 
 
 proc spdAux::CheckPartParamValue {node material_name} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     #W "Searching [get_domnode_attribute $node n] $material_name"
     if {[$node hasAttribute n] || $material_name ne ""} {
         set id [$node getAttribute n]
@@ -1702,8 +1702,8 @@ proc spdAux::ProcGetIntervals {domNode args} {
 
 proc spdAux::PreChargeTree { } {
     return ""
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     
     foreach field [list value condition container] {
         foreach cndNode [$root getElementsByTagName $field] {
@@ -1809,8 +1809,8 @@ proc spdAux::ProcGive_materials_list {domNode args} {
 
 proc spdAux::ProcEdit_database_list {domNode args} {
     #W $domNode
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set matname ""
     set xnode "[$domNode @n]:"
     set baseframe ".gid.central.boundaryconds.gg.data.f0"
@@ -1919,8 +1919,8 @@ proc spdAux::AddIntervalGroup { parent child } {
 
 
 proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set node [$root selectNodes $xpath]
     return [AddConditionGroupOnNode $node $groupid]
 }

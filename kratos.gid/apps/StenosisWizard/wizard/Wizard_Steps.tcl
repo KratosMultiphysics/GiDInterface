@@ -471,8 +471,7 @@ proc StenosisWizard::Wizard::Mesh { } {
      GiD_Process Mescape Meshing Generate $mesh MeshingParametersFrom=Preferences Mescape Meshing MeshView
 }
 proc StenosisWizard::Wizard::Run { } {
-     set doc $gid_groups_conds::doc
-     set root [$doc documentElement]
+     set root [customlib::GetBaseRoot]
      set solstrat_un [apps::getCurrentUniqueName SolStrat]
      #W $solstrat_un
      if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] v] eq ""} {

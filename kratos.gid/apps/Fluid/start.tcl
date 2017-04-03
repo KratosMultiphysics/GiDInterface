@@ -46,8 +46,8 @@ proc ::Fluid::GetAttribute {name} {
 
 proc ::Fluid::FluidAppSelectorWindow { } {
     set initwind $::spdAux::initwind
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set nd ""
     catch {set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]}
     if {$nd eq ""} {catch {set nd [ [$root selectNodes "hiddenfield\[@n='nDim'\]"] getAttribute v]}}
@@ -101,8 +101,8 @@ proc ::Fluid::FluidAppSelectorWindow { } {
 proc ::Fluid::ChangeAppTo {appid} {
     switch $appid {
         "Fluid" {
-            set doc $gid_groups_conds::doc
-            set root [$doc documentElement]
+            
+            set root [customlib::GetBaseRoot]
             [$root selectNodes "value\[@n='nDim'\]"] setAttribute v undefined
             ::spdAux::CreateDimensionWindow
         }

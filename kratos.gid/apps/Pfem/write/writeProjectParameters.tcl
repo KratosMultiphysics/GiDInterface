@@ -480,8 +480,7 @@ proc Pfem::write::ProcessBodiesList { } {
 }
 
 proc Pfem::write::GetNodalDataDict { } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
     set NodalData [list ]
     set parts [list "PFEM_Rigid2DParts" "PFEM_Rigid3DParts" "PFEM_Deformable2DParts" "PFEM_Deformable3DParts" "PFEM_Fluid2DParts" "PFEM_Fluid3DParts"]
     
@@ -546,9 +545,8 @@ proc Pfem::write::CalculateMyVariables { } {
 
 
 
-proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition"}} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition"}} {    
+    set root [customlib::GetBaseRoot]
     return [list ]
     set bcCondsDict [list ]
     
