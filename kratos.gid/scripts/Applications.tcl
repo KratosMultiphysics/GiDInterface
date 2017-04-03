@@ -249,7 +249,7 @@ oo::class create App {
         return $public
     }
     method getKratosApplicationName { } {
-        return [set ${name}::kratos_name]
+        return [set ::${name}::kratos_name]
     }
 }
 
