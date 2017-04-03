@@ -74,6 +74,10 @@ proc Numa::write::UpdateMaterials { } {
 proc Numa::write::writeConditions { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions "NumaLoads"]
+    #set CalibrationGroups [write::writeConditions "NumaCalibration"]
+    #W $CalibrationGroups
+    #lappend ConditionsDictGroupIterators $CalibrationGroups
+
 }
 
 proc Numa::write::writeMeshes { } {

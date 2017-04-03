@@ -190,6 +190,8 @@ proc Numa::write::getParametersDict { } {
     
     set nodal_process_list [write::getConditionsParametersDict NumaNodalConditions "Nodal"]
     set load_process_list [write::getConditionsParametersDict NumaLoads ]
+    #lappend load_process_list [write::getConditionsParametersDict NumaCalibration ]
+
     dict set projectParametersDict constraints_process_list [Numa::write::ChangeFileNameforTableid $nodal_process_list]
     dict set projectParametersDict loads_process_list [Numa::write::ChangeFileNameforTableid $load_process_list]
        
