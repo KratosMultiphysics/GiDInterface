@@ -8,7 +8,7 @@ proc ::Numa::Init { } {
     # Variable initialization
     variable dir
     variable kratos_name
-    set kratos_name "NumaApplication"
+    set kratos_name "DamApplication"
     
     set dir [apps::getMyDir "Numa"]
     set ::Model::ValidSpatialDimensions [list 2D 3D]
