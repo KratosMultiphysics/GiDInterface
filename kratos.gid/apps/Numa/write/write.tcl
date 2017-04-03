@@ -31,6 +31,7 @@ proc Numa::write::writeCustomFilesEvent { } {
 # MDPA Blocks
 
 proc Numa::write::writeModelPartEvent { } {
+    
     write::initWriteData "NumaParts" "NumaMaterials"
     
     write::writeModelPartData

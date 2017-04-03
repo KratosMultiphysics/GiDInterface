@@ -1,0 +1,256 @@
+### Project Parameters
+proc Numa::write::getParametersDict { } {
+    
+    set projectParametersDict [dict create]
+    
+    ### Problem data
+    ### Create section
+    set problemDataDict [dict create]
+    set numaTypeofProblem [write::getValue NumaTypeofProblem]
+    
+    ### Add items to section
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set problemDataDict problem_name $model_name
+    dict set problemDataDict model_part_name "MainModelPart"
+    set nDim [expr [string range [write::getValue nDim] 0 0] ]
+    dict set problemDataDict domain_size $nDim
+    dict set problemDataDict parallel_type "OpenMP"
+    dict set problemDataDict number_of_threads $nthreads
+    dict set problemDataDict start_time [write::getValue NumaTimeParameters StartTime]
+    dict set problemDataDict end_time [write::getValue NumaTimeParameters EndTime]
+    dict set problemDataDict time_step [write::getValue NumaTimeParameters DeltaTime]
+    dict set problemDataDict time_scale [write::getValue NumaTimeParameters TimeScale]
+    dict set problemDataDict streamlines_utility [Numa::write::StremalinesUtility]
+
+    ### Add section to document
+    dict set projectParametersDict problem_data $problemDataDict
+
+    ### Solver Data   
+    set solversettingsDict [dict create]
+    
+    ### Preguntar el solver haciendo los ifs correspondientes
+	if {$numaTypeofProblem eq "Thermo-Mechanical"} {
+		dict set solversettingsDict solver_type "dam_thermo_mechanic_solver"
+	} else {
+		dict set solversettingsDict solver_type "dam_mechanical_solver"
+	} 
+
+    set modelDict [dict create]
+    dict set modelDict input_type "mdpa"
+    dict set modelDict input_filename $model_name
+    dict set modelDict input_file_label 0
+    dict set solversettingsDict model_import_settings $modelDict
+    dict set solversettingsDict echo_level 1
+    dict set solversettingsDict buffer_size 2
+    
+    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "NumaNodalConditions" "NumaLoads"]
+        
+    if {$numaTypeofProblem eq "Thermo-Mechanical" } {
+            
+        ## Thermal part
+
+        dict set solversettingsDict reference_temperature [write::getValue NumaThermalReferenceTemperature]
+        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "NumaNodalConditions" "NumaLoads"]
+        
+        set thermalsettingDict [dict create]
+        dict set thermalsettingDict echo_level 1
+        dict set thermalsettingDict reform_dofs_at_each_step false
+        dict set thermalsettingDict clear_storage false
+        dict set thermalsettingDict compute_reactions false
+        dict set thermalsettingDict move_mesh_flag false
+        dict set thermalsettingDict compute_norm_dx_flag false
+        dict set thermalsettingDict theta_scheme [write::getValue NumaThermalScheme]
+        dict set thermalsettingDict block_builder false
+            
+        ## Adding linear solver for thermal part
+        set thermal_linear_solver [dict create]
+        set thermal_solver_type [write::getValue NumaThermoMechaSolverType]
+        if {$thermal_solver_type eq "Direct"} {
+            dict set linear_solver solver_type SuperLUSolver
+            dict set linear_solver scaling false
+        } else {
+            dict set linear_solver solver_type AMGCL
+            dict set linear_solver max_iteration 200
+            dict set linear_solver tolerance 1e-7
+            dict set linear_solver provide_coordinates false
+            dict set linear_solver smoother_type ilu0
+            dict set linear_solver krylov_type lgmres
+            dict set linear_solver coarsening_type aggregation
+            dict set linear_solver scaling false
+        }
+
+        ## Adding thermal solver settings to solver settings
+        dict set thermalsettingDict linear_solver_settings $thermal_linear_solver
+        dict set thermalsettingDict problem_domain_sub_model_part_list [Numa::write::getSubModelPartThermalNames]
+            
+        ## Adding thermal solver settings to solver settings
+        dict set solversettingsDict thermal_solver_settings $thermalsettingDict
+            
+
+        # Mechanical Part
+        set mechanicalSolverSettingsDict [dict create]
+        dict set mechanicalSolverSettingsDict solution_type [write::getValue NumaThermoMechaSoluType]
+        dict set mechanicalSolverSettingsDict strategy_type Newton-Raphson
+        dict set mechanicalSolverSettingsDict scheme_type Newmark
+        dict set mechanicalSolverSettingsDict convergence_criterion And_criterion
+        dict set mechanicalSolverSettingsDict displacement_relative_tolerance 0.0001
+        dict set mechanicalSolverSettingsDict displacement_absolute_tolerance 1e-9
+        dict set mechanicalSolverSettingsDict residual_relative_tolerance 0.0001
+        dict set mechanicalSolverSettingsDict residual_absolute_tolerance 1e-9
+        dict set mechanicalSolverSettingsDict max_iteration 10
+        dict set mechanicalSolverSettingsDict echo_level 1
+        dict set mechanicalSolverSettingsDict buffer_size 2
+        dict set mechanicalSolverSettingsDict compute_reactions false
+        dict set mechanicalSolverSettingsDict reform_dofs_at_each_step false
+        dict set mechanicalSolverSettingsDict move_mesh_flag false
+        dict set mechanicalSolverSettingsDict block_builder false
+        dict set mechanicalSolverSettingsDict clear_storage false
+        dict set mechanicalSolverSettingsDict rayleigh_m [write::getValue NumaThermoMechaDampMass]
+        dict set mechanicalSolverSettingsDict rayleigh_k [write::getValue NumaThermoMechaDampStiff]
+
+         ## Adding linear solver for mechanical part
+        set linear_solver [dict create]
+        set mwchanical_solver_type [write::getValue NumaThermoMechaSolverType]
+        if {$mechanical_solver_type eq "Direct"} {
+            dict set linear_solver solver_type SuperLUSolver
+            dict set linear_solver scaling false
+        } else {
+            dict set linear_solver solver_type AMGCL
+            dict set linear_solver max_iteration 200
+            dict set linear_solver tolerance 1e-7
+            dict set linear_solver provide_coordinates false
+            dict set linear_solver smoother_type ilu0
+            dict set linear_solver krylov_type lgmres
+            dict set linear_solver coarsening_type aggregation
+            dict set linear_solver scaling false
+        }
+
+        ## Adding mechanical solver settings to solver settings
+        dict set mechanicalSolverSettingsDict linear_solver_settings $linear_solver
+
+        ### Add section to document
+        set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Numa::write::DefinitionDomains] ]
+        ### Add section to document
+        dict set solversettingsDict mechanical_solver_settings $mechanicalSolverSettingsDict
+
+    } else {
+        
+set mechanicalSolverSettingsDict [dict create]
+        dict set mechanicalSolverSettingsDict solution_type [write::getValue NumaMechaSoluType]
+        dict set mechanicalSolverSettingsDict strategy_type Newton-Raphson
+        dict set mechanicalSolverSettingsDict scheme_type Newmark
+        dict set mechanicalSolverSettingsDict convergence_criterion And_criterion
+        dict set mechanicalSolverSettingsDict displacement_relative_tolerance 0.0001
+        dict set mechanicalSolverSettingsDict displacement_absolute_tolerance 1e-9
+        dict set mechanicalSolverSettingsDict residual_relative_tolerance 0.0001
+        dict set mechanicalSolverSettingsDict residual_absolute_tolerance 1e-9
+        dict set mechanicalSolverSettingsDict max_iteration 10
+        dict set mechanicalSolverSettingsDict echo_level 1
+        dict set mechanicalSolverSettingsDict buffer_size 2
+        dict set mechanicalSolverSettingsDict compute_reactions false
+        dict set mechanicalSolverSettingsDict reform_dofs_at_each_step false
+        dict set mechanicalSolverSettingsDict move_mesh_flag false
+        dict set mechanicalSolverSettingsDict block_builder false
+        dict set mechanicalSolverSettingsDict clear_storage false
+        dict set mechanicalSolverSettingsDict rayleigh_m [write::getValue NumaMechaDampMass]
+        dict set mechanicalSolverSettingsDict rayleigh_k [write::getValue NumaMechaDampStiff]
+
+         ## Adding linear solver for mechanical part
+        set linear_solver [dict create]
+        set mwchanical_solver_type [write::getValue NumaMechaSolverType]
+        if {$mechanical_solver_type eq "Direct"} {
+            dict set linear_solver solver_type SuperLUSolver
+            dict set linear_solver scaling false
+        } else {
+            dict set linear_solver solver_type AMGCL
+            dict set linear_solver max_iteration 200
+            dict set linear_solver tolerance 1e-7
+            dict set linear_solver provide_coordinates false
+            dict set linear_solver smoother_type ilu0
+            dict set linear_solver krylov_type lgmres
+            dict set linear_solver coarsening_type aggregation
+            dict set linear_solver scaling false
+        }
+
+        ## Adding mechanical solver settings to solver settings
+        dict set mechanicalSolverSettingsDict linear_solver_settings $linear_solver
+
+        ### Add section to document
+        set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Numa::write::DefinitionDomains] ]
+        ### Add section to document
+        dict set solversettingsDict mechanical_solver_settings $mechanicalSolverSettingsDict
+            
+    }
+    
+    dict set projectParametersDict solver_settings $solversettingsDict
+    
+    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    
+    set nodal_process_list [write::getConditionsParametersDict NumaNodalConditions "Nodal"]
+    set load_process_list [write::getConditionsParametersDict NumaLoads ]
+    dict set projectParametersDict constraints_process_list [Numa::write::ChangeFileNameforTableid $nodal_process_list]
+    dict set projectParametersDict loads_process_list [Numa::write::ChangeFileNameforTableid $load_process_list]
+       
+    return $projectParametersDict
+
+}
+
+proc Numa::write::DefinitionDomains { } {
+    
+ ### Boundary conditions processes
+    set domainsDict [dict create]
+ 
+    set body_part_list [list ]
+    set joint_part_list [list ]
+    set mat_dict [write::getMatDict]
+    foreach part_name [dict keys $mat_dict] {
+        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
+            lappend body_part_list [write::getMeshId Parts $part_name]
+            #~ W $body_part_list
+        }
+    }
+    dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "NumaParts"]
+    dict set domainsDict body_domain_sub_model_part_list $body_part_list
+
+    set loads_sub_model_part_list [list]
+    set loads_variable_list [list]
+    dict set domainsDict loads_sub_model_part_list $loads_sub_model_part_list
+    dict set domainsDict loads_variable_list $loads_variable_list
+
+    return $domainsDict
+   
+}
+
+proc Numa::write::ChangeFileNameforTableid { processList } {
+    set returnList [list ]
+    foreach nodalProcess $processList {
+        set processName [dict get $nodalProcess process_name]
+        set process [::Model::GetProcess $processName]
+        set params [$process getInputs]
+        foreach {paramName param} $params {
+            if {[$param getType] eq "tablefile" && [dict exists $nodalProcess Parameters $paramName] } {
+                set filename [dict get $nodalProcess Parameters $paramName]
+                set value [Numa::write::GetTableidFromFileid $filename]
+                dict set nodalProcess Parameters $paramName $value
+            }
+        }
+        lappend returnList $nodalProcess
+    }
+    return $returnList
+}
+
+proc Numa::write::writeParametersEvent { } {
+    set projectParametersDict [getParametersDict]
+    write::WriteJSON $projectParametersDict
+}
+
+proc Numa::write::StremalinesUtility {} {
+
+    set nodalList [write::GetResultsList NodalResults]
+    if {[lsearch $nodalList Vi_POSITIVE] >= 0 || [lsearch $nodalList Viii_POSITIVE] >= 0} {
+        set streamlines true
+    } {
+        set streamlines false
+    }
+    return $streamlines
+}
