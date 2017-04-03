@@ -341,16 +341,13 @@ proc StenosisWizard::Wizard::Fluid { win } {
 proc StenosisWizard::Wizard::NextFluid { } {
      # Inlet
      gid_groups_conds::delete {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='Inlet3D']/group}
-     set where {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='Inlet3D']}
+     set where {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='AutomaticInlet3D']}
      set gnode [spdAux::AddConditionGroupOnXPath $where "Inlet"]
-     [$gnode selectNodes "./value\[@n = 'directionX'\]"] setAttribute v 1.0
-     [$gnode selectNodes "./value\[@n = 'directionY'\]"] setAttribute v 0.0
-     [$gnode selectNodes "./value\[@n = 'directionZ'\]"] setAttribute v 0.0
+     [$gnode selectNodes "./value\[@n = 'direction'\]"] setAttribute v "automatic_inwards_normal"
 
      set propnode [$gnode selectNodes "./value\[@n = 'modulus'\]"]
-     if {$propnode ne "" } {
-          $propnode setAttribute v [Wizard::GetProperty Fluid Inlet,value]
-     }
+     $propnode setAttribute v [Wizard::GetProperty Fluid Inlet,value]
+     
      
           
      # Outlet
@@ -358,9 +355,8 @@ proc StenosisWizard::Wizard::NextFluid { } {
      set where {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='Outlet3D']}
      set gnode [spdAux::AddConditionGroupOnXPath $where "Outlet"]
      set propnode [$gnode selectNodes "./value\[@n = 'value'\]"]
-     if {$propnode ne "" } {
-          $propnode setAttribute v [Wizard::GetProperty Fluid Outlet,value]
-     }
+     $propnode setAttribute v [Wizard::GetProperty Fluid Outlet,value]
+     
      
      gid_groups_conds::delete {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='NoSlip3D']/group}
      set where {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='NoSlip3D']}
