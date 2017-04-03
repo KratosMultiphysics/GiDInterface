@@ -1,5 +1,5 @@
 # GiDInterface
-The interface of Kratos with GiD 
+The interface of Kratos with [GiD](http://www.gidhome.com)
 
 ## First steps
 * Install GiD -> [Developer version](http://www.gidhome.com/download/developer-versions)
