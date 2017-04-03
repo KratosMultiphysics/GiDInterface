@@ -8,7 +8,7 @@ proc ::Numa::Init { } {
     # Variable initialization
     variable dir
     variable kratos_name
-    set kratos_name "NuaApplication"
+    set kratos_name "NumaApplication"
     
     set dir [apps::getMyDir "Numa"]
     set ::Model::ValidSpatialDimensions [list 2D 3D]
@@ -24,8 +24,8 @@ proc ::Numa::LoadMyFiles { } {
     variable dir
     
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
-    #uplevel #0 [list source [file join $dir write write.tcl]]
-    #uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
+    uplevel #0 [list source [file join $dir write write.tcl]]
+    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
 }
 
 ::Numa::Init
