@@ -168,7 +168,7 @@ proc Fluid::write::writeSkinMesh { } {
         lappend listgroups $groupid
     }
     set skinconfgroup "SKINCONDITIONS"
-    catch {GiD_Groups delete $skinconfgroup}
+    if {[GiD_Groups exist $skinconfgroup]} {GiD_Groups delete $skinconfgroup}
     GiD_Groups create $skinconfgroup
     GiD_Groups edit state $skinconfgroup hidden
     foreach group $listgroups {

@@ -44,7 +44,7 @@ proc SorterWindow::Window { } {
     variable winpath
     set w $winpath
     
-    catch {destroy $w}
+    if {winfo exists $w} {destroy $w}
     
     ###################
     # CREATING WIDGETS
@@ -136,7 +136,7 @@ proc SorterWindow::SortByDragListbox { w XNull YNull width height } {
     variable Scrollposition
     variable Scrollarea
     variable window_state
-    catch {destroy $w.cv}
+    if {winfo exists $w.cv} {destroy $w.cv}
     set Canv [canvas $w.cv -borderwidth 0 -highlightthickness 0  -height [expr $height + 2*$YNull] -width [expr $width + 2*$XNull] ]
 
     $Canv create rectangle $XNull $YNull [expr $XNull + $width] [expr $YNull + $height] -outline black -width 1 -fill white -tags Box
@@ -148,7 +148,7 @@ proc SorterWindow::SortByDragListbox { w XNull YNull width height } {
         $Canv create rectangle [expr $XNull - 1] [expr $YNull - 1] [expr $XNull + $width + 1] [expr $YNull + $height + 1] -outline grey50 -width 1 -tags Box
     }
     
-    catch {destroy $w.lbscroll}
+    if {winfo exists $w.lbscroll} {destroy $w.lbscroll}
     ttk::scrollbar $w.lbscroll -command "SorterWindow::SortByDragListboxScroll $w" -orient vert
     grid $Canv -row 0 -column 0 -sticky nsew
     grid $w.lbscroll -row 0 -column 1 -sticky wns
@@ -310,7 +310,7 @@ proc SorterWindow::FillListado { } {
     variable Listado
     variable data_source
     variable data
-    catch {unset Index }
+    unset -nocomplain Index 
     set Items [list ]
     
     if {$data_source ni [dict keys $data]} {set data_source [lindex [dict keys $data] 0]}

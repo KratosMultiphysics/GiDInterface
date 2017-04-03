@@ -94,7 +94,7 @@ proc write::writeEvent { filename } {
 proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
     set errcode 0
     
-    catch {CloseFile}
+    CloseFile
     OpenFile $filename
     if {$::kratos_debug} {
         eval $wevent
@@ -104,7 +104,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
             set errcode 1
         }
     }
-    catch {CloseFile}
+    CloseFile
     
     return $errcode
 }
@@ -121,7 +121,7 @@ proc write::writeAppMDPA {appid} {
     set wevent [$activeapp getWriteModelPartEvent]
     set filename "[file tail [GiD_Info project ModelName]].mdpa"
 
-    catch {CloseFile}
+    CloseFile
     OpenFile $filename
 
     if {$::kratos_debug} {
@@ -132,7 +132,7 @@ proc write::writeAppMDPA {appid} {
             set errcode 1
         }
     }
-    catch {CloseFile}
+    CloseFile
     return $errcode
 }
 
@@ -540,11 +540,7 @@ proc write::getEtype {ov group} {
     return $ret
 }
 proc write::isquadratic {} {
-    set err [catch { GiD_Set Model(QuadraticType) } isquadratic]
-    if { $err } {
-	set isquadratic [lindex [GiD_Info Project] 5]
-    }
-    return $isquadratic
+    return [GiD_Set Model(QuadraticType)]
 }
 
 # GiD_Mesh get element $elem_id face $face_id
@@ -885,7 +881,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         dict unset process_attributes pn
 
         set processDict [dict merge $processDict $process_attributes]
-        catch {
+        if {[$condition hasAttribute VariableName]} {
             set variable_name [$condition getAttribute VariableName]
             # "lindex" is a rough solution. Look for a better one.
             if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
@@ -897,7 +893,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                     set ValX [expr [get_domnode_attribute [$group find n ${inputName}X] v] ? True : False]
                     set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
                     set ValZ [expr False]
-                    catch {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
+                    if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 } {
                     if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
@@ -924,7 +920,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                         set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
                         set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
                         set ValZ [expr 0.0]
-                        catch {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
+                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 }
@@ -1161,7 +1157,7 @@ proc write::getStringBinaryFromValue {v} {
 proc write::OpenFile { fn } {
     variable dir
     set filename [file join $dir $fn]
-    catch {CloseFile}
+    CloseFile
     customlib::InitWriteFile $filename
 }
 

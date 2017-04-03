@@ -101,7 +101,7 @@ proc spdAux::processAppIncludes { root } {
         set pn [$elem getAttribute "pn"]
         set prefix [$elem getAttribute "prefix"]
         set public 0
-        catch {set public [$elem getAttribute "public"]}
+        if {[$elem hasAttribute "public"]} {set public [$elem getAttribute "public"]}
         set app [apps::NewApp $appid $pn $prefix]
         $app setPublic $public
         if {$active} {
@@ -150,9 +150,7 @@ proc spdAux::activeApp { appid } {
             $elem setAttribute "active" 0
         }
     }
-    set nd ""
-    catch {set nd [$root selectNodes "value\[@n='nDim'\]"]} 
-    if {$nd eq ""} {catch {set nd [$root selectNodes "hiddenfield\[@n='nDim'\]"]}}
+    set nd [$root selectNodes "value\[@n='nDim'\]"]
     if {[$nd getAttribute v] ne "wait"} {
         if {[$nd getAttribute v] ne "undefined"} {
             set ::Model::SpatialDimension [$nd getAttribute v]
@@ -297,10 +295,10 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
     processIncludes
     parseRoutes
     
-    catch {apps::ExecuteOnCurrentXML MultiAppEvent init }
+    apps::ExecuteOnCurrentXML MultiAppEvent init
     
     if { $ProjectIsNew eq 0} {
-        catch {apps::ExecuteOnCurrentXML CustomTree "" }
+        apps::ExecuteOnCurrentXML CustomTree ""
     }
 
     if {$TreeVisibility} {
@@ -333,14 +331,14 @@ proc spdAux::getImagePathDim { dim } {
 }
 proc spdAux::DestroyWindow {} {
     variable initwind
-    catch {destroy $initwind}
+    if {[winfo exists $initwind]} {destroy $initwind}
 }
 
 # Routes
 proc spdAux::getRoute {name} {
     variable uniqueNames
     set v ""
-    catch {
+    if {[dict exists $uniqueNames $name]} {
         set v [dict get $uniqueNames $name]
     }
     return $v
@@ -357,24 +355,21 @@ proc spdAux::setRoute {name route} {
 }
 
 proc spdAux::parseRoutes { } {
-    
     set root [customlib::GetBaseRoot]
     parseRecurse $root
 }
 
 proc spdAux::parseRecurse { root } {
     foreach node [$root childNodes] {
-        #catch {W "Nombre: [$node getAttribute n] Tiene uniquename: [$node hasAttribute un]"}
-        catch {
-            #W [$node asXML]
-            if {[$node hasAttribute un] == "1"} {
+        if {[$node nodeType] eq "ELEMENT_NODE"} {
+            if {[$node hasAttribute un]} {
                 foreach u [split [$node getAttribute un] ","] {
                     setRoute $u [$node toXPath]
                 }
             }
-        }
-        if {[$node hasChildNodes]} {
-            parseRecurse $node
+            if {[$node hasChildNodes]} {
+                parseRecurse $node
+            }
         }
     }
 }
@@ -409,13 +404,13 @@ proc spdAux::GetAppIdFromNode {domNode} {
 proc spdAux::insertDependencies { baseNode originUN } {
     
     set root [customlib::GetBaseRoot]
-    catch {
-        set originxpath [$baseNode toXPath]
-        set insertxpath [getRoute $originUN]
-        set insertonnode [$root selectNodes $insertxpath]
-        # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
-        $insertonnode setAttribute "actualize_tree" 1
-    }
+    
+    set originxpath [$baseNode toXPath]
+    set insertxpath [getRoute $originUN]
+    set insertonnode [$root selectNodes $insertxpath]
+    # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
+    $insertonnode setAttribute "actualize_tree" 1
+    
     ## Aun no soy capaz de insertar y que funcione
     #set ready 1
     #foreach c [$insertonnode getElementsByTagName "dependencies"] {
@@ -493,11 +488,13 @@ proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
     set root [customlib::GetBaseRoot]
     #W "$field $value $name $it"
     set node ""
-    catch {
-        set xp [getRoute $name]
+    
+    set xp [getRoute $name]
+    if {$xp ne ""} {
         set node [$root selectNodes $xp]
         if {$it ne ""} {set node [$node find n $it]}
     }
+    
     if {$node ne ""} {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
     } {
@@ -609,13 +606,12 @@ proc spdAux::injectSolStratParams {basenode args} {
                 append node " values='$vs' dict='$pv' "
             } 
             append node "/>"
-            catch {
-                $contnode appendXML $node
-                set orig [$contnode lastChild]
-                set new [$orig cloneNode]
-                $orig delete
-                $contnode insertBefore $new $basenode
-            }
+            
+            $contnode appendXML $node
+            set orig [$contnode lastChild]
+            set new [$orig cloneNode]
+            $orig delete
+            $contnode insertBefore $new $basenode
         }
     }
     
@@ -634,7 +630,7 @@ proc spdAux::injectSolStratParams {basenode args} {
                 append node " values='Yes,No' "
             } 
             append node "/>"
-            catch {$contnode appendXML $node}
+            $contnode appendXML $node
         }
     }
     $basenode delete
@@ -854,13 +850,12 @@ proc spdAux::injectPartInputs { basenode {inputs ""} } {
         set v [$in getDv]
         set node "<value n='$inName' pn='$pn' state='\[PartParamState\]' v='$v' units='$units' unit_magnitude='$um' help='$help' />"
         #set node "<value n='$inName' pn='$pn' state='\[PartParamState\]' v='$v' help='$help' />"
-        catch {
-            $base appendXML $node
-            set orig [$base lastChild]
-            set new [$orig cloneNode]
-            $orig delete
-            $base insertBefore $new $basenode
-        }
+        
+        $base appendXML $node
+        set orig [$base lastChild]
+        set new [$orig cloneNode]
+        $orig delete
+        $base insertBefore $new $basenode
         
         #set originxpath "[$parts toXPath]/value\[@n='Material'\]"
         #set relativexpath "../value\[@n='$inName'\]"
@@ -914,13 +909,13 @@ proc spdAux::injectElementOutputs_do { basenode args} {
         set v [GetBooleanForTree [[dict get $outputs $in] getDv]]
         
         set node "<value n='$in' pn='$pn' state='\[ElementOutputState\]' v='$v' values='Yes,No' />"
-        catch {
-            $base appendXML $node
-            set orig [$base lastChild]
-            set new [$orig cloneNode]
-            $orig delete
-            $base insertBefore $new $basenode
-        }
+        
+        $base appendXML $node
+        set orig [$base lastChild]
+        set new [$orig cloneNode]
+        $orig delete
+        $base insertBefore $new $basenode
+        
     }
     $basenode delete
 }
@@ -944,14 +939,14 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
         set v [$nc getAttribute v]
         if {$v eq ""} {set v "Yes"}
         set node "<value n='$n' pn='$pn' v='$v' values='Yes,No' state='\[CheckNodalConditionState $n\]'/>"
-        catch {$base appendXML $node}
+        $base appendXML $node
         foreach {n1 output} [$nc getOutputs] {
             set nout [$output getName]
             set pn [$output getPublicName]
             set v [$output getAttribute v]
             if {$v eq ""} {set v "Yes"}
             set node "<value n='$nout' pn='$pn' v='$v' values='Yes,No' state='\[CheckNodalConditionOutputState $n\]'/>"
-            catch {$base appendXML $node}
+            $base appendXML $node
         }
     }
     $basenode delete
@@ -962,24 +957,22 @@ proc spdAux::GetBooleanForTree {raw} {
     if {$raw in $goodList} {return "Yes" } {return "No"}
 }
 
-proc spdAux::injectConstitutiveLawOutputs { basenode  args} {
-    set parts [$basenode parent]
+proc spdAux::injectConstitutiveLawOutputs { tempnode  args} {
+    set basenode [$tempnode parent]
     set outputs [::Model::GetAllCLOutputs {*}$args]
     foreach in [dict keys $outputs] {
-        if {[$parts find n $in] eq ""} {
+        if {[$basenode find n $in] eq ""} {
             set pn [[dict get $outputs $in] getPublicName]
             set v [GetBooleanForTree [[dict get $outputs $in] getDv]]
             set node "<value n='$in' pn='$pn' state='\[ConstLawOutputState\]' v='$v' values='Yes,No' />"
-            catch {
-                $parts appendXML $node
-                set orig [$parts lastChild]
-                set new [$orig cloneNode]
-                $orig delete
-                $parts insertBefore $new $basenode
-            }
+            $basenode appendXML $node
+            set orig [$basenode lastChild]
+            set new [$orig cloneNode]
+            $orig delete
+            $basenode insertBefore $new $tempnode
         }
     }
-    $basenode delete
+    $tempnode delete
 }
 
 proc spdAux::injectProcs { basenode  args} {
@@ -1419,11 +1412,10 @@ proc spdAux::ProcRefreshTree { domNode args } {
 }
 
 proc spdAux::ProccheckStateByUniqueName { domNode args } {
-    
     set total 0
     foreach {un val} {*}$args {
-        catch {
-            set xpath [spdAux::getRoute $un]
+        set xpath [spdAux::getRoute $un]
+        if {$xpath ne ""} {
             spdAux::insertDependencies $domNode $un
             set node [$domNode selectNodes $xpath]
             set realval [get_domnode_attribute $node v]
@@ -1432,7 +1424,7 @@ proc spdAux::ProccheckStateByUniqueName { domNode args } {
                 set total 1
                 break
             }
-        }
+        } else {W "Warning: Check unique name $un"}
     }
     if {$total} {return "normal"} else {return "hidden"}
 }
@@ -1580,8 +1572,9 @@ proc spdAux::ProcActiveIfAnyPartState { domNode args } {
     set parts ""
     set nodeApp [GetAppIdFromNode $domNode]
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
-    catch {
-        set parts [$domNode selectNodes "[spdAux::getRoute $parts_un]/group"]
+    set parts_path [spdAux::getRoute $parts_un]
+    if {$parts_path ne ""} {
+        set parts [$domNode selectNodes "$parts_path/group"]
     }
     if {$parts ne ""} {return "normal"} else {return "hidden"}
 }

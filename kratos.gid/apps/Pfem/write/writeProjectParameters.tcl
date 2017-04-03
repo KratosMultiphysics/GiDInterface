@@ -592,7 +592,7 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
                     set ValX [expr [get_domnode_attribute [$block find n ${inputName}X] v] ? True : False]
                     set ValY [expr [get_domnode_attribute [$block find n ${inputName}Y] v] ? True : False]
                     set ValZ [expr False]
-                    catch {set ValZ [expr [get_domnode_attribute [$block find n ${inputName}Z] v] ? True : False]}
+                    if {[$block find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$block find n ${inputName}Z] v] ? True : False]}
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 } {
                     if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
@@ -619,7 +619,7 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
                         set ValX [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}X]] ]
                         set ValY [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Y]] ] 
                         set ValZ [expr 0.0]
-                        catch {set ValZ [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Z]]]}
+                        if {[$block find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Z]]]}
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 } 

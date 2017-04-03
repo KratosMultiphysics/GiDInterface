@@ -48,9 +48,7 @@ proc ::Fluid::FluidAppSelectorWindow { } {
     set initwind $::spdAux::initwind
     
     set root [customlib::GetBaseRoot]
-    set nd ""
-    catch {set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]}
-    if {$nd eq ""} {catch {set nd [ [$root selectNodes "hiddenfield\[@n='nDim'\]"] getAttribute v]}}
+    set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
     if { $nd ne "undefined" } {
         if {[apps::getActiveAppId] eq "Fluid"} {
             spdAux::SwitchDimAndCreateWindow $nd

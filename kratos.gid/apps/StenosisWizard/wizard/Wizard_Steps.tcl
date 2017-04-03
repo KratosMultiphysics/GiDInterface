@@ -535,11 +535,8 @@ proc AfterMeshGeneration { fail } {
      GiD_Process Mescape Files Save 
      if {$fail eq 0} {
           set Button .gid.activewizard.w.layoutFrame.wiz.layout.fr1.lfr1.b3
-          catch {
-               $Button configure -state normal
-          }
+          $Button configure -state normal
      }
-    
 }
 
 StenosisWizard::Wizard::Init
