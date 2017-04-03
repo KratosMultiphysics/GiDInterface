@@ -6,8 +6,8 @@
     <value n="MechanicalScheme" pn="Scheme" v="Newmark" un="NumaScheme" state="disabled"/>
     
     <container n="MechanicalProblem" pn="Mechanical Problem" un="NumaMechanicalData" state="[checkStateByUniqueName NumaTypeofProblem Mechanical]" actualize_tree="1" open_window="0">
-        <value n="SolutionType" pn="Solution type" v="Quasi-Static" un="NumaMechaSoluType" values="Quasi-Static,Dynamic" help="Solution type" actualize_tree="1"/>
-        <value n="AnalysisType" pn="Analysis type" v="Linear"  un="NumaMechaAnalysisType" values="Linear" help="Analysis type" state="readonly" />
+        <value n="SolutionType" pn="Solution type" v="Quasi-Static" un="NumaMechaSoluType" values="Quasi-Static,Dynamic" help="Solution type" state="normal" actualize_tree="1"/>
+        <value n="AnalysisType" pn="Analysis type" v="Linear"  un="NumaMechaAnalysisType" values="Linear" help="Analysis type" state="normal" />
         <!--
         
         <container n="StratParams" pn="Strategy parameters" un="NumaMechanicalDataParameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">
@@ -20,8 +20,8 @@
     
     <container n="ThermoMechanicalProblem" pn="Thermo-Mechanical Problem"  un="NumaThermo-MechanicalData" state="[checkStateByUniqueName NumaTypeofProblem Thermo-Mechanical]"  actualize_tree="1" open_window="0">
             <container n="MechanicalPartProblem" pn="Mechanical Problem" un="NumaThermo-Mechanical-MechData" state="normal" actualize_tree="1" open_window="0">
-                <value n="SolutionType" pn="Solution type" un="NumaThermoMechaSoluType" v="Quasi-Static" values="Quasi-Static,Dynamic" help="Solution type" state="readonly" actualize_tree="1"/>
-                <value n="AnalysisType" pn="Analysis type" un="NumaThermoMechaAnalysisType" v="Linear" values="Linear" state="readonly" help="Analysis type" />
+                <value n="SolutionType" pn="Solution type" un="NumaThermoMechaSoluType" v="Quasi-Static" values="Quasi-Static,Dynamic" help="Solution type" state="normal" actualize_tree="1"/>
+                <value n="AnalysisType" pn="Analysis type" un="NumaThermoMechaAnalysisType" v="Linear" values="Linear" state="normal" help="Analysis type" />
                 <!--
                 <container n="StratParams" pn="Strategy parameters" un="NumaThermo-Mechanical-MechDataParameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">
                     <dynamicnode command="spdAux::injectSolStratParams" args=""/>
@@ -31,7 +31,7 @@
             </container>
             
             <container n="ThermalProblem" pn="Thermal Problem" un="NumaThermo-Mechanical-ThermData" state="normal" actualize_tree="1" open_window="0">
-                <value n="ThermalScheme" pn="Theta Scheme" un="NumaThermalScheme" v="1.0" actualize_tree="1" help= " 1.0 corresponds to backward Euler, 0.5 Cranck Nicolson and 0.0 Forward Euler"/>
+                <value n="ThermalScheme" pn="Theta Scheme" un="NumaThermalScheme" v="1.0" actualize_tree="1" help= " 1.0 corresponds to backward Euler, 0.5 Crank Nicolson and 0.0 Forward Euler"/>
                 <value n="ReferenceTemperature" pn="Reference Temeperature" un="NumaThermalReferenceTemperature" type="double" v="10.0" actualize_tree="1"/>
                 <!--
                 <container n="ThermalStratParams" pn="Strategy parameters" un="NumaThermo-Mechanical-ThermDataParameters" icon="groupsTreeNew.gif"  state="normal" open_window="0">

@@ -13,7 +13,7 @@ proc Numa::xml::Init { } {
     Model::getConstitutiveLaws ConstitutiveLaws.xml
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
-    Model::getSolvers "../../Common/xml/Solvers.xml"
+    
 }
 
 proc Numa::xml::getUniqueName {name} {
@@ -73,5 +73,44 @@ proc Numa::xml::ProcCheckConditionState {domNode args} {
     if {$resp} {return "normal"} else {return "hidden"}
 }
 
+
+proc Numa::xml::ProcGetConstitutiveLaws {domNode args} {
+    set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
+    set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
+    #W "Round 1 $Claws"
+    #foreach cl $Claws {W [$cl getName]}
+    set type_of_problem [write::getValue NumaTypeofProblem]
+    #W $type_of_problem
+    set goodList [list ]
+    #W "Pre type problem -> $type_of_problem"
+    foreach cl $Claws {
+        set type [$cl getAttribute Type]
+        #W $type
+        #W "cl -> [$cl getName]"
+        #W "type -> $type"
+        if {[string first "Therm" $type] eq -1 && $type_of_problem ni [list "Thermo-Mechanical"]} {
+            lappend goodList $cl
+        } elseif {[string first "Therm" $type] ne -1 && $type_of_problem in [list "Thermo-Mechanical"]} {
+            lappend goodList $cl
+        } 
+    }
+    #W "good $goodList"
+    set Claws $goodList
+    
+    #W "Const Laws que han pasado la criba: $Claws"
+    if {[llength $Claws] == 0} {
+        if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v "None"}
+        return "None"
+    }
+    set names [list ]
+    foreach cl $Claws {
+        lappend names [$cl getName]
+    }
+    set values [join $names ","]
+    if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
+    #W $values
+    
+    return $values
+}
 
 Numa::xml::Init

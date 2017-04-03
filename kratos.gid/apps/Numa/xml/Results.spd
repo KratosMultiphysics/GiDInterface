@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="Results" pn="Results" un="Results" icon="results16" state="normal" open="1" open_window="0">
     <value n="FileLabel" pn="File Label" v="step" values="time,step" dict="time,Time,step,Step" help=""/>
-    <value n="OutputControlType" pn="Units used for output frequency" un="DamOutputControlType" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
+    <value n="OutputControlType" pn="Units used for output frequency" un="NumaOutputControlType" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
         <dependencies node="../value" actualize="1"/>
     </value>
     <value n="OutputDeltaTime" pn="Time between outputs (s)" v="1.0" help="Output will be printed in intervals of this time" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} time]"/>

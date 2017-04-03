@@ -7,13 +7,15 @@
 	  return [Dam::xml::ProcGetElementsValues $domNode $args]
 	  ]]>
 	</proc>
+-->
 
 	<proc n='GetConstitutiveLaws' args='args'>
 	  <![CDATA[
-	  return [Dam::xml::ProcGetConstitutiveLaws $domNode $args]
+	  return [Numa::xml::ProcGetConstitutiveLaws $domNode $args]
 	  ]]>
 	</proc>
-
+	
+<!--
 	<proc n='SolStratParamState' args='args'>
 	  <![CDATA[
 			set resp [Dam::xml::SolStratParamState $domNode]
