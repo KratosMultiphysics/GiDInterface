@@ -74,10 +74,11 @@ proc Numa::write::UpdateMaterials { } {
 proc Numa::write::writeConditions { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions "NumaLoads"]
-    #set CalibrationGroups [write::writeConditions "NumaCalibration"]
-    #W $CalibrationGroups
-    #lappend ConditionsDictGroupIterators $CalibrationGroups
-
+    set CalibrationGroups [write::writeConditions "NumaCalibration"]
+    
+    if {$CalibrationGroups ne ""} {
+        lappend ConditionsDictGroupIterators $CalibrationGroups
+    }
 }
 
 proc Numa::write::writeMeshes { } {
@@ -93,7 +94,8 @@ proc Numa::write::writeMeshes { } {
     writeNodalConditions "NumaNodalConditions"
     
     # A Condition y a meshes-> salvo lo que no tenga topologia
-    writeLoads
+    writeLoads "NumaLoads"
+    writeLoads "NumaCalibration"
 }
 
 proc Numa::write::writeNodalConditions { keyword } {
@@ -121,12 +123,12 @@ proc Numa::write::writeNodalConditions { keyword } {
     }
 }
 
-proc Numa::write::writeLoads { } {
+proc Numa::write::writeLoads { baseUN } {
     variable TableDict
     variable ConditionsDictGroupIterators
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
-    set xp1 "[spdAux::getRoute "NumaLoads"]/condition/group"
+    set xp1 "[spdAux::getRoute $baseUN]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set condid [get_domnode_attribute [$group parent] n]
         set groupid [get_domnode_attribute $group n]

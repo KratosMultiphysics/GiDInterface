@@ -43,14 +43,14 @@ proc Numa::write::getParametersDict { } {
     dict set solversettingsDict echo_level 1
     dict set solversettingsDict buffer_size 2
     
-    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "NumaNodalConditions" "NumaLoads"]
+    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "NumaNodalConditions" "NumaLoads" "NumaCalibration"]
         
     if {$numaTypeofProblem eq "Thermo-Mechanical" } {
             
         ## Thermal part
 
         dict set solversettingsDict reference_temperature [write::getValue NumaThermalReferenceTemperature]
-        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "NumaNodalConditions" "NumaLoads"]
+        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "NumaNodalConditions" "NumaLoads" "NumaCalibration"]
         
         set thermalsettingDict [dict create]
         dict set thermalsettingDict echo_level 1
@@ -190,7 +190,9 @@ proc Numa::write::getParametersDict { } {
     
     set nodal_process_list [write::getConditionsParametersDict NumaNodalConditions "Nodal"]
     set load_process_list [write::getConditionsParametersDict NumaLoads ]
-    #lappend load_process_list [write::getConditionsParametersDict NumaCalibration ]
+    set calibration_process_list [write::getConditionsParametersDict NumaCalibration ]
+    
+    set load_process_list [concat $load_process_list $calibration_process_list]
 
     dict set projectParametersDict constraints_process_list [Numa::write::ChangeFileNameforTableid $nodal_process_list]
     dict set projectParametersDict loads_process_list [Numa::write::ChangeFileNameforTableid $load_process_list]
