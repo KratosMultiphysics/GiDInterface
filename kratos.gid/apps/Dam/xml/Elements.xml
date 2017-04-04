@@ -5,7 +5,7 @@
   <ElementItem n="SmallDisplacementElement2D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help="" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
+	       ElementType="Solid" help="" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Modal-Analysis">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -46,7 +46,7 @@
   <ElementItem n="SmallDisplacementElement3D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
+	       ElementType="Solid" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Modal-Analysis">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>

@@ -9,7 +9,7 @@ set ::kratos_debug 1 ;# could be 0,1,-1
 #################### GiD Tcl events ######################
 ##########################################################
 proc InitGIDProject { dir } {
-    font configure SmallFont -size 16
+    if {$::kratos_debug} {font configure SmallFont -size 16}
     #uplevel #0 [list Kratos::InitGIDProject $dir]
     Kratos::InitGIDProject $dir
 }
@@ -66,7 +66,7 @@ proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
 
 proc AfterWriteCalcFileGIDProject { filename errorflag } {
     FileSelector::CopyFilesIntoModel [file dirname $filename]
-    catch {write::Init}
+    write::Init
     set errcode [::write::writeEvent $filename]
     if {$errcode} {return "-cancel-"}
 }
@@ -90,6 +90,15 @@ proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args 
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written." ]]
     }
     
+}
+
+proc GiD_Event_BeforeSaveGIDProject { modelname} {
+    set fail [::Kratos::CheckValidProjectName $modelname]
+    
+    if {$fail} {
+        W [= "Wrong project name. Avoid boolean and numeric names."]
+        return "-cancel-"
+    }
 }
 
 ##########################################################
@@ -139,8 +148,7 @@ proc Kratos::InitGIDProject { dir } {
     #customlib::UpdateDocument
     Kratos::LoadEnvironment
     Kratos::ChangeMenus
-    #set HeaderBackground [$doc selectNodes string(Infoproblemtype/Program/HeaderBackground)]
-    #gid_groups_conds::SetHeaderBackground $HeaderBackground
+    gid_groups_conds::SetProgramName "Kratos"
     gid_groups_conds::SetLibDir [file join $dir exec]
     set spdfile [file join $dir kratos_default.spd]
     if { [GidUtils::VersionCmp 13.1.4d] < 0 } {
@@ -247,7 +255,7 @@ proc Kratos::RegisterEnvironment { } {
     dict set preferences DevMode $kratos_private(DevMode)
     #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
     set fp [open [Kratos::GetPreferencesFilePath] w]
-    catch {set data [puts $fp [write::tcl2json $preferences]]}
+    if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W [="Problems saving user prefecences"]; W $data}
     close $fp
 }
 proc Kratos::LoadEnvironment { } {
@@ -362,11 +370,19 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
     }
     set ret ""
-    catch {set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]}
+    set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
     return $ret
 }
 proc Kratos::AfterMeshGeneration {fail} {
-    catch {apps::ExecuteOnCurrentApp AfterMeshGeneration $fail}
+        apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
+}
+proc Kratos::CheckValidProjectName {modelname} {
+    set fail 0
+    set filename [file tail $modelname]
+    if {[string is double $filename]} {set fail 1}
+    if {[write::isBoolean $filename]} {set fail 1}
+    return $fail
+    
 }
 
 proc Kratos::PrintArray {a {pattern *}} {

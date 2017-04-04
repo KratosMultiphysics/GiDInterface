@@ -8,7 +8,6 @@ proc ::StenosisWizard::Init { } {
     # Variable initialization
     variable dir
     variable kratos_name
-    set kratos_name $::Fluid::kratos_name
     
     # Init Working directory
     set dir [apps::getMyDir "StenosisWizard"]
@@ -16,6 +15,7 @@ proc ::StenosisWizard::Init { } {
     spdAux::SetSpatialDimmension "3D"
     # Load Fluid App
     apps::LoadAppById "Fluid"
+    set kratos_name $::Fluid::kratos_name
     # Don't open the tree
     set ::spdAux::TreeVisibility 0
     

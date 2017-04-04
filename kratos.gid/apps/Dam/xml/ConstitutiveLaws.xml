@@ -90,6 +90,7 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture_Energy" v="100.0"/>
@@ -106,6 +107,7 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture_Energy" v="100.0"/>
@@ -140,6 +142,7 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="RESIDUAL_STRENGTH" pn="Residual Strength" v="0.8"/>
@@ -319,6 +322,7 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture_Energy" v="100.0"/>
@@ -336,6 +340,7 @@
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture_Energy" v="100.0"/>
@@ -352,6 +357,7 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture_Energy" v="100.0"/>
@@ -369,6 +375,7 @@
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10"/>
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture_Energy" v="100.0"/>
@@ -421,6 +428,7 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="RESIDUAL_STRENGTH" pn="Residual Strength" v="0.8"/>
@@ -438,7 +446,8 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.962e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  /> 
+            <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+            <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05"/> 
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.5"/>
             <parameter n="STRENGTH_RATIO" pn="Strength_Ratio" v="10.0"/>
             <parameter n="RESIDUAL_STRENGTH" pn="Residual Strength" v="0.8"/>

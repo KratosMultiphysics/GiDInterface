@@ -7,8 +7,8 @@
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the selected components of a given vector variable">
     <inputs>
         <parameter n="is_fixed_X" pn="Imposed X" type="bool" v="1"/>
-		<parameter n="is_fixed_Y" pn="Imposed Y" type="bool" v="1"/>
-		<parameter n="is_fixed_Z" pn="Imposed Z" type="bool" v="1" state="[CheckDimension 3D]"/>
+		    <parameter n="is_fixed_Y" pn="Imposed Y" type="bool" v="1"/>
+		    <parameter n="is_fixed_Z" pn="Imposed Z" type="bool" v="1" state="[CheckDimension 3D]"/>
         <parameter n="value" pn="Value" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Value_X_Table" pn="Value X table filename" type="tablefile" v=""/>
         <parameter n="Value_Y_Table" pn="Value Y table filename" type="tablefile" v=""/>
@@ -203,5 +203,28 @@
     </inputs>
   </Process> 
   
+<!---  YOUNG VARIABLE PROCESS --> 
+  <Process n="ImposeNodalYoungModulusProcess" pn="Variable Young Modulus" python_module="impose_nodal_young_modulus_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according an spatial formulation" > 
+    <inputs>
+        <parameter n="Young_Modulus_1" pn="Young Modulus 1" type="double" v="0.0"/>
+        <parameter n="Young_Modulus_2" pn="Young Modulus 2" type="double" v="0.0"/>
+        <parameter n="Young_Modulus_3" pn="Young Modulus 3" type="double" v="0.0"/>
+        <parameter n="Young_Modulus_4" pn="Young Modulus 4" type="double" v="0.0"/>
+    </inputs>
+  </Process> 
+
+<!---  CONSTRUCTION PROCESS --> 
+  <Process n="DamConstructionProcess" pn="Construction Phase" python_module="dam_construction_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process simulates the construction process activating the elements according to the input parameters" > 
+    <inputs>
+        <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Y" values="X,Y,Z" />
+        <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
+        <parameter n="Height_Dam" pn="Height Dam" type="double" v="0.0"/>
+        <parameter n="Number_of_phases" pn="Number of phases" type="integer" v="0"/>
+    </inputs>
+  </Process> 
+
+
   </ProcessList>
 

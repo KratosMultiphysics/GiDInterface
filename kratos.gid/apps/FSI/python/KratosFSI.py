@@ -32,7 +32,7 @@ fluid_main_model_part = ModelPart(ProjectParameters["fluid_solver_settings"]["pr
 fluid_main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["fluid_solver_settings"]["problem_data"]["domain_size"].GetInt())
 
 ## Solver construction
-solver_module = __import__("partitioned_fsi_solver") # Currently there is only one FSI solver up to date
+solver_module = __import__(ProjectParameters["coupling_solver_settings"]["solver_settings"]["solver_type"].GetString())
 solver = solver_module.CreateSolver(structure_main_model_part, fluid_main_model_part, ProjectParameters)
 
 solver.AddVariables()
@@ -73,23 +73,23 @@ SolidModel = Model()
 SolidModel.AddModelPart(structure_main_model_part)
 
 ## Get the list of the skin submodel parts in the object Model
-for i in range(ProjectParameters["solver_settings"]["skin_parts"].size()):
-    skin_part_name = ProjectParameters["solver_settings"]["skin_parts"][i].GetString()
+for i in range(ProjectParameters["fluid_solver_settings"]["solver_settings"]["skin_parts"].size()):
+    skin_part_name = ProjectParameters["fluid_solver_settings"]["solver_settings"]["skin_parts"][i].GetString()
     FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(skin_part_name))
 
 ## Get the list of the no-skin submodel parts in the object Model (results processes and no-skin conditions)
-for i in range(ProjectParameters["solver_settings"]["no_skin_parts"].size()):
-    no_skin_part_name = ProjectParameters["solver_settings"]["no_skin_parts"][i].GetString()
+for i in range(ProjectParameters["fluid_solver_settings"]["solver_settings"]["no_skin_parts"].size()):
+    no_skin_part_name = ProjectParameters["fluid_solver_settings"]["solver_settings"]["no_skin_parts"][i].GetString()
     FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(no_skin_part_name))
 
 ## Get the list of the initial conditions submodel parts in the object Model
-for i in range(ProjectParameters["initial_conditions_process_list"].size()):
-    initial_cond_part_name = ProjectParameters["initial_conditions_process_list"][i]["Parameters"]["model_part_name"].GetString()
+for i in range(ProjectParameters["fluid_solver_settings"]["initial_conditions_process_list"].size()):
+    initial_cond_part_name = ProjectParameters["fluid_solver_settings"]["initial_conditions_process_list"][i]["Parameters"]["model_part_name"].GetString()
     FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(initial_cond_part_name))
 
 ## Get the gravity submodel part in the object Model
-for i in range(ProjectParameters["gravity"].size()):
-    gravity_part_name = ProjectParameters["gravity"][i]["Parameters"]["model_part_name"].GetString()
+for i in range(ProjectParameters["fluid_solver_settings"]["gravity"].size()):
+    gravity_part_name = ProjectParameters["fluid_solver_settings"]["gravity"][i]["Parameters"]["model_part_name"].GetString()
     FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(gravity_part_name))
 
 ## Get the list of the submodel part in the object Model (STRUCTURE)
@@ -98,13 +98,13 @@ for i in range(ProjectParameters["structure_solver_settings"]["solver_settings"]
     SolidModel.AddModelPart(structure_main_model_part.GetSubModelPart(part_name))
 
 # Print model_parts and properties
-if(fluid_verbosity > 1):
+if(verbosity_fluid > 1):
     print("")
     print(fluid_main_model_part)
     for properties in fluid_main_model_part.Properties:
         print(properties)
 
-if(structure_verbosity > 1):
+if(verbosity_structure > 1):
     print("")
     print(structure_main_model_part)
     for properties in structure_main_model_part.Properties:
@@ -155,7 +155,7 @@ if ((parallel_type == "OpenMP") or (KratosMPI.mpi.rank == 0)) and (verbosity > 0
 
 while(time <= end_time):
 
-    Dt = (self.solver).ComputeDeltaTime()
+    Dt = solver.ComputeDeltaTime()
     time = time + Dt
     step = step + 1
 

@@ -30,13 +30,15 @@ proc ::Dam::xml::MultiAppEvent {args} {
 
 
 proc Dam::xml::CustomTree { args } {
+	
     # Add some nodal results
     set nodal_results_base [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
     $nodal_results_base setAttribute state "\[ActiveIfAnyPartState\]"
     if {$nodal_results_base ne ""} {
         set delete_list [list "INITIALTEMPERATURE" "BOFANGTEMPERATURE"]
         foreach item $delete_list {
-            [$nodal_results_base selectNodes "./value\[@n='$item'\]"] delete
+            set i [$nodal_results_base selectNodes "./value\[@n='$item'\]"]
+            if {$i ne ""} {$i delete}
         }
         
         ## It has special filter
@@ -52,6 +54,7 @@ proc Dam::xml::CustomTree { args } {
                gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $item pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical\]"]
         }
     }
+       
 }
 
 proc Dam::xml::ProcGetSchemes {domNode args} {
@@ -82,6 +85,11 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
         set pnames [list "Newmark" "Newmark"]
     }
     
+    if {$type_of_problem in [list "Modal-Analysis"]} {
+        set names [list "Eigen-Dynamic-Scheme"]
+        set pnames [list "Eigen-Dynamic-Scheme" "Eigen Dynamic Scheme"]
+    }
+    
     $domNode setAttribute values [join $names ","]
     
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
@@ -91,9 +99,8 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
 }
 
 
-proc Dam::xml::SolStratParamState {outnode} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+proc Dam::xml::SolStratParamState {outnode} {    
+    set root [customlib::GetBaseRoot]
     
     set solstrat_un "DamSolStrat"
     
@@ -124,10 +131,12 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
     #W "Round 1 $Claws"
     #foreach cl $Claws {W [$cl getName]}
     set type_of_problem [write::getValue DamTypeofProblem]
+    #W $type_of_problem
     set goodList [list ]
     #W "Pre type problem -> $type_of_problem"
     foreach cl $Claws {
         set type [$cl getAttribute Type]
+        #W $type
         #W "cl -> [$cl getName]"
         #W "type -> $type"
         if {[string first "Therm" $type] eq -1 && $type_of_problem ni [list "Thermo-Mechanical" "UP_Thermo-Mechanical"]} {
@@ -167,6 +176,10 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
         }
         "Acoustic" {
             set analysis_type ""
+            set damage_type ""
+        }
+        "Modal-Analysis" {
+            set analysis_type [get_domnode_attribute [$domNode selectNodes "[spdAux::getRoute DamUModalData]/container\[@n='StratParams'\]/value\[@n='AnalysisType'\]"] v]
             set damage_type ""
         }
         default {
@@ -245,6 +258,9 @@ proc Dam::xml::ProcCheckNodalConditionState {domNode args} {
             "Acoustic" {
                 set params [list TypeofProblem $TypeofProblem]
             }
+            "Modal-Analysis" {
+                set params [list TypeofProblem $TypeofProblem]
+            }
             default {
                 error [= "Check type of problem"]
             }
@@ -294,13 +310,21 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
     set pnames ""
     set ids [list ]
     set type_of_strategy [lindex $args 0]
+    set type_of_problem [write::getValue DamTypeofProblem]
     if {$type_of_strategy eq "Mechanic"} {
-        set n [list "Newton-Raphson" "Arc-length"]
-        set type_of_problem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+        if {$type_of_problem eq "Acoustic"} {
+            set n "Newton-Raphson"
+        } elseif {$type_of_problem eq "Modal-Analysis"} {
+            set n "Eigen-Strategy"
+        } else {       
+            set n [list "Newton-Raphson" "Arc-length"]
+            set type_of_problem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
+        }
     } else {
         # Thermal
         set n "Newton-Raphson"
     }
+    
     
     set Sols [::Model::GetSolutionStrategies [list n $n] ]
     foreach ss $Sols {
@@ -348,6 +372,12 @@ proc Dam::xml::ProcGetElementsValues {domNode args} {
         set names [list WaveEquationElement2D]
         if {$::Model::SpatialDimension eq "3D"} {
             set names [list WaveEquationElement3D]
+        }
+    }
+    if {$TypeofProblem in [list Modal-Analysis]} {
+        set names [list SmallDisplacementElement2D]
+        if {$::Model::SpatialDimension eq "3D"} {
+            set names [list SmallDisplacementElement3D]
         }
     }
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}

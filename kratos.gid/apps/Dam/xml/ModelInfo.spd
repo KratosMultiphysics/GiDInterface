@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="ModelInfo" pn="Model information" icon="information16" help="Model information" state="normal" open_window="0">
-    <value n="TypeofProblem" pn="Type of Problem" un="DamTypeofProblem" v="Mechanical" values="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Acoustic" help="Type of problem" actualize_tree="1"/>
+    <value n="TypeofProblem" pn="Type of Problem" un="DamTypeofProblem" v="Mechanical" values="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Acoustic,Modal-Analysis" help="Type of problem" actualize_tree="1"/>
     <value n="SolStratCombo" pn="Strategy" un="DamSolStrat" v="" values="" dict="[GetSolutionStrategies Mechanic]" actualize_tree="1" state="normal"/>
     <value n="MechanicalScheme" pn="Scheme" v=""    un="DamScheme" values="" dict="[GetSchemes]" actualize_tree="1"/>
     
@@ -102,6 +102,23 @@
                     <value n="tolerance" pn="Tolerance" un="DamAcousticTolerance" type="integer"  v="1e-7" help=""/>
                     <value n="verbosity" pn="Verbosity" un="DamAcousticVerbosity" v="0" values="0,1,2" state="readonly" help="#0->shows no information, 1->some information, 2->all the information" />
                     <value n="GMRES_size" pn="GMRES Size" un="DamAcousticGMRESSize" type="integer" v="50" help=""/>
+            </container>
+        </container>
+    </container> 
+    
+    <container n="ModalAnalysis" pn="Modal Analysis" state="[checkStateByUniqueName DamTypeofProblem Modal-Analysis]" un="DamUModalData"   actualize_tree="1" open_window="0">
+         <container n="StratParams" pn="Strategy parameters" un="DamModalStratParams" icon="groupsTreeNew.gif" state="normal" open_window="0">
+            <value n="SolutionType" pn="Solution type" v="Quasi-Static" un="DamModalSoluType" values="Dynamic" help="Solution type" actualize_tree="1"/>
+            <value n="AnalysisType" pn="Analysis type" v="Linear"  un="DamModalAnalysisType" values="Linear" help="Analysis type" />
+            <value n="echo_level" pn="Echo level" un="DamModalSolverEchoLevel" type="combo" v="0" values="0,1,2,3" help="Level of printing information"/> 
+            <container n="ModalLinearSolver" pn="Linear Solver" un="DamModalLinearSolver" state="normal" open_window="0">
+                    <value n="solver_type" pn="Solver" un="DamModalSolver" v="FEAST" state="readonly" help=""/>
+                    <value n="print_feast_output" pn="Feast output" un="DamModalfeastOutput" v="true" values="true,false" help=""/>
+                    <value n="perform_stochastic_estimate" pn="Stochastic Estimation" un="DamModalStochastic" v="false" values="true,false" help=""/>
+                    <value n="solve_eigenvalue_problem" pn="Solve Eigenvalue Problem" un="DamModalSolve" v="true" values="true,false" help="" />
+                    <value n="lambda_min" pn="Lambda Min" un="DamModalLambdaMin" type="double" v="0.0" help=""/>
+                    <value n="lambda_max" pn="Lambda Max" un="DamModalLambdaMax" type="double" v="1e3" help=""/>
+                    <value n="search_dimension" pn="Search Dimension" un="DamModalSearchDimension" type="interger" v="2" help=""/>
             </container>
         </container>
     </container> 

@@ -60,9 +60,8 @@ proc Fluid::write::writeCustomFilesEvent { } {
 
 proc Fluid::write::Validate {} {
     variable PartsUN
-    set err ""
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set err ""    
+    set root [customlib::GetBaseRoot]
 
     # Check only 1 part in Parts
     set xp1 "[spdAux::getRoute $PartsUN]/group"
@@ -96,8 +95,7 @@ proc Fluid::write::writeBoundaryConditions { } {
     # Write the conditions
     set dict_group_intervals [write::writeConditions $BCUN]
 
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
     set iter 1
     foreach group [$root selectNodes $xp1] {
@@ -133,8 +131,8 @@ proc Fluid::write::writeMeshes { } {
 proc Fluid::write::writeConditionsMesh { } {
     variable FluidConditions
     variable BCUN
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
     #W "Conditions $xp1 [$root selectNodes $xp1]"
     foreach group [$root selectNodes $xp1] {
@@ -155,8 +153,8 @@ proc Fluid::write::writeConditionsMesh { } {
 proc Fluid::write::writeSkinMesh { } {
     variable FluidConditions
     variable BCUN
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
     #W "Conditions $xp1 [$root selectNodes $xp1]"
     set listiniend [list ]
@@ -170,7 +168,7 @@ proc Fluid::write::writeSkinMesh { } {
         lappend listgroups $groupid
     }
     set skinconfgroup "SKINCONDITIONS"
-    catch {GiD_Groups delete $skinconfgroup}
+    if {[GiD_Groups exist $skinconfgroup]} {GiD_Groups delete $skinconfgroup}
     GiD_Groups create $skinconfgroup
     GiD_Groups edit state $skinconfgroup hidden
     foreach group $listgroups {
@@ -183,8 +181,8 @@ proc Fluid::write::CheckClosedVolume {} {
     variable BCUN
     set isclosed 1
 
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
 
     set listgroups [list ]

@@ -1,6 +1,7 @@
 # Project Parameters
 
 proc Solid::write::getParametersDict { } {
+    set model_part_name "Structure"
     set projectParametersDict [dict create]
 
     # Problem data
@@ -10,7 +11,7 @@ proc Solid::write::getParametersDict { } {
     # Add items to section
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name "Structure"
+    dict set problemDataDict model_part_name $model_part_name
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set problemDataDict domain_size $nDim
 
@@ -74,7 +75,9 @@ proc Solid::write::getParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
-    dict set projectParametersDict constraints_process_list [write::getConditionsParametersDict SLNodalConditions "Nodal"]
+    set nodal_conditions_dict [write::getConditionsParametersDict SLNodalConditions "Nodal"]
+    set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]    
+    dict set projectParametersDict constraints_process_list $nodal_conditions_dict
 
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict SLLoads]
 
@@ -104,6 +107,20 @@ proc Solid::write::getParametersDict { } {
     }
     
     return $projectParametersDict
+}
+
+proc Solid::write::ProcessContacts { nodal_conditions_dict } {
+    set process_list [list ]
+    foreach elem $nodal_conditions_dict {
+        if {[dict get $elem python_module] in {"alm_contact_process"}} {
+            set model_part_name "Structure"
+            dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
+            dict set elem Parameters model_part_name $model_part_name
+            dict set elem Parameters computing_model_part_name "computing_domain"
+        } 
+        lappend process_list $elem
+    }
+    return $process_list
 }
 
 proc Solid::write::writeParametersEvent { } {

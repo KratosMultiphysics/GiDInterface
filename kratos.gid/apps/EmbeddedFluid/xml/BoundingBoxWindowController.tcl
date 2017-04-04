@@ -23,7 +23,7 @@ proc EmbeddedFluid::xml::BoundingBox::CreateWindow { } {
     #Init
     set w $winpath
     
-    catch {destroy $w}
+    if {[winfo exists $w]} {destroy $w}
     
     toplevel $w -class Toplevel -relief groove 
     #wm maxsize $w 500 300

@@ -4,6 +4,11 @@ proc FSI::write::getParametersDict { } {
 
    # FSI section
    set FSIParametersDict [dict create]
+   # Problem data
+   set problemDataDict [dict create]
+   set paralleltype [write::getValue ParallelType]
+   dict set problemDataDict parallel_type $paralleltype
+   dict set FSIParametersDict problem_data $problemDataDict
    # Solver settings
    set solverSettingsDict [dict create]
    set currentStrategyId [write::getValue FSISolStrat]
@@ -29,6 +34,7 @@ proc FSI::write::getParametersDict { } {
    # Structural section
    UpdateUniqueNames Structural
    apps::setActiveAppSoft Structural
+   set ::write::parts STParts
 
    set StructuralParametersDict [Structural::write::getParametersEvent]
    set current [dict get $StructuralParametersDict solver_settings model_import_settings input_filename]
@@ -37,7 +43,8 @@ proc FSI::write::getParametersDict { } {
    # Fluid section
    UpdateUniqueNames Fluid
    apps::setActiveAppSoft Fluid
-
+   set ::write::parts FLParts
+   
    set FluidParametersDict [Fluid::write::getParametersDict]
    set current [dict get $FluidParametersDict solver_settings model_import_settings input_filename]
    dict set FluidParametersDict solver_settings model_import_settings input_filename "${current}_Fluid"

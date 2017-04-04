@@ -1,5 +1,5 @@
 # GiDInterface
-The interface of Kratos with GiD 
+The interface of Kratos with [GiD](http://www.gidhome.com)
 
 ## First steps
 * Install GiD -> [Developer version](http://www.gidhome.com/download/developer-versions)
@@ -7,7 +7,7 @@ The interface of Kratos with GiD
 * Create there a link to our [kratos.gid](./kratos.gid/)
 * Navigate to kratos.gid/exec/
 * Create there a symbolic link to the kratos installation folder (where runkratos is located)
-  * Unix : ln -s /home/Kratos Kratos
+  * Unix : ln -s ~/Kratos Kratos
   * Windows : mklink /J Kratos C:/kratos (Kratos installation folder)
 
 ## Usage

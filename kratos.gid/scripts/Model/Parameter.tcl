@@ -39,7 +39,7 @@ oo::class create Parameter {
         set type $t
         set dv $v
         my setHelp $h
-        #if {$h ne ""} {W "$n $h [my getHelp]"}
+        
         set depname ""
         set depv ""
         
@@ -93,19 +93,19 @@ proc Model::ParseInputParamNode {st in} {
     set n [$in @n]
     set pn [$in @pn]
     set t "double"
-    catch {set t [$in @type]}
+    if {[$in hasAttribute type]} {set t [$in @type]}
     set v 0
-    catch {set v [$in @v]}
+    if {[$in hasAttribute v]} {set v [$in @v]}
     set h ""
-    catch {set h [$in @help]}
+    if {[$in hasAttribute help]} {set h [$in @help]}
     set vs ""
     set pvs ""
-    catch {set vs [$in @values]}
-    catch {set pvs [$in @pvalues]}
+    if {[$in hasAttribute values]} {set vs [$in @values]}
+    if {[$in hasAttribute pvalues]} {set pvs [$in @pvalues]}
     set units ""
     set unitMagnitude ""
-    catch {set units [$in @units]}
-    catch {set unitMagnitude [$in @unit_magnitude]}
+    if {[$in hasAttribute units]} {set units [$in @units]}
+    if {[$in hasAttribute unit_magnitude]} {set unitMagnitude [$in @unit_magnitude]}
     set input [::Model::Parameter new $n $pn $t $v $units $unitMagnitude $h $vs $pvs]
     if {[$in hasChildNodes]} {$input setActualize 1}
     foreach att [$in attributes] {

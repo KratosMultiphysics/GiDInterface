@@ -28,6 +28,9 @@ proc Dam::write::writeCustomFilesEvent { } {
     if {$damTypeofProblem eq "Acoustic"} {
         write::CopyFileIntoModel "python/dam_acoustic_script.py"
         write::RenameFileInModel "dam_acoustic_script.py" "MainKratos.py"
+    } elseif {$damTypeofProblem eq "Modal-Analysis" } {
+        write::CopyFileIntoModel "python/dam_eigen_script.py"
+        write::RenameFileInModel "dam_eigen_script.py" "MainKratos.py"
     } else {
         write::CopyFileIntoModel "python/dam_main.py"
         write::RenameFileInModel "dam_main.py" "MainKratos.py"
@@ -103,8 +106,7 @@ proc Dam::write::writeMeshes { } {
 
 proc Dam::write::writeNodalConditions { keyword } {
     variable TableDict
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::]
     set xp1 "[spdAux::getRoute $keyword]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
@@ -129,8 +131,8 @@ proc Dam::write::writeNodalConditions { keyword } {
 proc Dam::write::writeLoads { } {
     variable TableDict
     variable ConditionsDictGroupIterators
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute "DamLoads"]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set condid [get_domnode_attribute [$group parent] n]
@@ -213,8 +215,8 @@ proc Dam::write::writeTables { } {
 }
 
 proc Dam::write::GetPrinTables {} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    
+    set root [customlib::GetBaseRoot]
     FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]
     set listaTablas [list ]
     set listaFiles [list ]
