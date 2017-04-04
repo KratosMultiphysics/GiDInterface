@@ -34,15 +34,14 @@ proc Structural::write::writeParametersEvent { } {
 }
 
 proc Structural::write::UsingRotationDofElements { } {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute STParts]/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
         set elemid [$element_node @v]
         set elem [Model::getElement $elemid]
-        catch {if {[$elem getAttribute "RotationDofs"]} {set bool true; break}}
+        if {[write::isBooleanTrue [$elem getAttribute "RotationDofs"]]} {set bool true; break}
     }
     
     return $bool

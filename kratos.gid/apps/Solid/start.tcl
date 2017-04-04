@@ -39,7 +39,7 @@ proc ::Solid::LoadMyFiles { } {
 proc ::Solid::GetAttribute {name} {
     variable attributes
     set value ""
-    catch {set value [dict get $attributes $name]}
+    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
 }
 

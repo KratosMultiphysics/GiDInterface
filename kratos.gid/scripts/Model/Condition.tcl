@@ -56,7 +56,7 @@ oo::class create Condition {
     method getDefault {itemName itemField } {
         variable defaults
         set ret ""
-        catch {
+        if {[dict exists $defaults $itemName $itemField]} {
             set ret [dict get $defaults $itemName $itemField]
         }
         return $ret
@@ -96,7 +96,6 @@ proc Model::ParseConditions { doc } {
 
 proc Model::ParseCondNode { node } {
     set name [$node getAttribute n]
-    
     set cnd [::Model::Condition new $name]
     $cnd setPublicName [$node getAttribute pn]
     $cnd setHelp [$node getAttribute help]
@@ -106,13 +105,15 @@ proc Model::ParseCondNode { node } {
         $cnd setAttribute $att [split [$node getAttribute $att] ","]
         #W "$att : [$el getAttribute $att]"
     }
-    catch {
-        foreach top [[$node getElementsByTagName TopologyFeatures] getElementsByTagName item]  {
+    set topology_base [$node getElementsByTagName TopologyFeatures]
+    if {[llength $topology_base] eq 1} {
+        foreach top [$topology_base getElementsByTagName item]  {
             set cnd [ParseTopologyNode $cnd $top]
         }
     }
-    catch {
-        foreach def [[$node getElementsByTagName DefaultValues] getElementsByTagName value]  {
+    set defaults_base [$node getElementsByTagName DefaultValues]
+    if {[llength $defaults_base] eq 1} {
+        foreach def [$defaults_base getElementsByTagName value]  {
             set itemName [$def @n]
             foreach att [$def attributes] {
                 if {$att ne "n"} {
@@ -123,14 +124,15 @@ proc Model::ParseCondNode { node } {
             }
         }
     }
-    catch {
-        set inputsNode [$node getElementsByTagName inputs]
-        foreach in [$inputsNode getElementsByTagName parameter]  {
+    set inputs_base [$node getElementsByTagName inputs]
+    if {[llength $inputs_base] eq 1} {
+        foreach in [$inputs_base getElementsByTagName parameter]  {
             set cnd [ParseInputParamNode $cnd $in]
         }
     }
-    catch {
-        foreach out [[$node getElementsByTagName outputs] getElementsByTagName parameter] {
+    set outputs_base [$node getElementsByTagName outputs]
+    if {[llength $outputs_base] eq 1} {
+        foreach out [$outputs_base getElementsByTagName parameter] {
             set n [$out @n]
             set pn [$out @pn]
             $cnd addOutput $n $pn

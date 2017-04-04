@@ -9,7 +9,7 @@ set ::kratos_debug 1 ;# could be 0,1,-1
 #################### GiD Tcl events ######################
 ##########################################################
 proc InitGIDProject { dir } {
-    font configure SmallFont -size 16
+    if {$::kratos_debug} {font configure SmallFont -size 16}
     #uplevel #0 [list Kratos::InitGIDProject $dir]
     Kratos::InitGIDProject $dir
 }
@@ -66,7 +66,7 @@ proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
 
 proc AfterWriteCalcFileGIDProject { filename errorflag } {
     FileSelector::CopyFilesIntoModel [file dirname $filename]
-    catch {write::Init}
+    write::Init
     set errcode [::write::writeEvent $filename]
     if {$errcode} {return "-cancel-"}
 }
@@ -255,7 +255,7 @@ proc Kratos::RegisterEnvironment { } {
     dict set preferences DevMode $kratos_private(DevMode)
     #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
     set fp [open [Kratos::GetPreferencesFilePath] w]
-    catch {set data [puts $fp [write::tcl2json $preferences]]}
+    if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W [="Problems saving user prefecences"]; W $data}
     close $fp
 }
 proc Kratos::LoadEnvironment { } {
@@ -370,15 +370,11 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
     }
     set ret ""
-    #catch {
-        set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
-        #}
+    set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
     return $ret
 }
 proc Kratos::AfterMeshGeneration {fail} {
-    #catch {
         apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
-    #}
 }
 proc Kratos::CheckValidProjectName {modelname} {
     set fail 0

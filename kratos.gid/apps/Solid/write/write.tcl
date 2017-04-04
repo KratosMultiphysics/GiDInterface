@@ -34,8 +34,6 @@ proc Solid::write::writeCustomFilesEvent { } {
     set orig_name "KratosSolid.py"
     
     write::RenameFileInModel $orig_name "MainKratos.py"
-    
-    #write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 }
 
 proc Solid::write::SetCoordinatesByGroups {value} {
@@ -80,10 +78,8 @@ proc Solid::write::writeMeshes { } {
 }
 
 proc Solid::write::writeLoads { } {
-    #writeGravity "SLGravity"
     variable ConditionsDictGroupIterators
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute "SLLoads"]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]

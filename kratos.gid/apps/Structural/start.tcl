@@ -31,7 +31,7 @@ proc ::Structural::LoadMyFiles { } {
 proc ::Structural::GetAttribute {name} {
     variable attributes
     set value ""
-    catch {set value [dict get $attributes $name]}
+    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     if {$value eq ""} {set value [::Solid::GetAttribute $name]}
     return $value
 }
