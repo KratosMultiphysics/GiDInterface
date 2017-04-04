@@ -80,6 +80,10 @@ proc write::writeEvent { filename } {
     if {$errcode eq 0} {
         set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
     }
+    
+    #### Custom files block ####
+    set wevent [$activeapp getWriteCustomEvent]
+    set filename ""
     if {$errcode eq 0} {
         set errcode [write::singleFileEvent $filename $wevent "Custom file" 0]
     }
@@ -95,7 +99,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
     set errcode 0
     
     CloseFile
-    OpenFile $filename
+    if {$needsOpen} {OpenFile $filename}
     if {$::kratos_debug} {
         eval $wevent
     } else {
