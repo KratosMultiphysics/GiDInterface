@@ -526,7 +526,7 @@ proc StenosisWizard::Wizard::Save { } {
      }
 }
 
-proc AfterMeshGeneration { fail } {
+proc StenosisWizard::AfterMeshGeneration { fail } {
      GiD_Process Mescape Mescape Mescape
      GiD_Process Mescape Files Save 
      if {$fail eq 0} {
