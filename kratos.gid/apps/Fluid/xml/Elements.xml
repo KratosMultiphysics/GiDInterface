@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
   <ElementItem n="FractionalStep2D" pn="Fractional Step 2D" ImplementedInFile="fractional_step.cpp"
-	       ImplementedInApplication="FluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY"
 	       ElementType="Fluid" help="This element implements a Fractional Step Element">
 
@@ -29,7 +29,7 @@
 
   
   <ElementItem n="FractionalStep3D" pn="Fractional Step 3D" ImplementedInFile="fractional_step.cpp"
-	       ImplementedInApplication="FluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY"
 	       ElementType="Fluid" help="This element implements a Fractional Step Element">
 
