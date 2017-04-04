@@ -203,17 +203,6 @@
     </inputs>
   </Process> 
   
-<!---  YOUNG VARIABLE PROCESS --> 
-  <Process n="ImposeNodalYoungModulusProcess" pn="Variable Young Modulus" python_module="impose_nodal_young_modulus_process"
-		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according an spatial formulation" > 
-    <inputs>
-        <parameter n="Young_Modulus_1" pn="Young Modulus 1" type="double" v="0.0"/>
-        <parameter n="Young_Modulus_2" pn="Young Modulus 2" type="double" v="0.0"/>
-        <parameter n="Young_Modulus_3" pn="Young Modulus 3" type="double" v="0.0"/>
-        <parameter n="Young_Modulus_4" pn="Young Modulus 4" type="double" v="0.0"/>
-    </inputs>
-  </Process> 
-
 <!---  CONSTRUCTION PROCESS --> 
   <Process n="DamConstructionProcess" pn="Construction Phase" python_module="dam_construction_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process simulates the construction process activating the elements according to the input parameters" > 
@@ -225,6 +214,5 @@
     </inputs>
   </Process> 
 
-
-  </ProcessList>
+</ProcessList>
 
