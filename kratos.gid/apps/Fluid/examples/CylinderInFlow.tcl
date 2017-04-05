@@ -1,10 +1,22 @@
 
 proc ::Fluid::examples::CylinderInFlow {args} {
     DrawCylinderInFlowGeometry$::Model::SpatialDimension
-    AssignCylinderInFlowMeshSizes
-    TreeAssignationCylinderInFlow
+    AssignGroupsCylinderInFlow$::Model::SpatialDimension
+    AssignCylinderInFlowMeshSizes$::Model::SpatialDimension
+    TreeAssignationCylinderInFlow$::Model::SpatialDimension
+    
+    GiD_Process 'Redraw
+    GidUtils::UpdateWindow GROUPS
+    GidUtils::UpdateWindow LAYER
 }
-proc Fluid::examples::DrawCylinderInFlowGeometry3D {args} {W "Not Implemented"}
+
+# Draw Geometry
+proc Fluid::examples::DrawCylinderInFlowGeometry3D {args} {
+    DrawCylinderInFlowGeometry2D
+    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape 
+    GiD_Layers edit opaque Fluid 0
+    
+}
 proc Fluid::examples::DrawCylinderInFlowGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
@@ -44,7 +56,12 @@ proc Fluid::examples::DrawCylinderInFlowGeometry2D {args} {
     GiD_Layers edit to_use Fluid
     GiD_Process MEscape Geometry Edit HoleNurb 1 5 escape escape
     
-    # Create the groups
+}
+
+
+# Group assign
+proc Fluid::examples::AssignGroupsCylinderInFlow2D {args} {
+        # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -64,12 +81,16 @@ proc Fluid::examples::DrawCylinderInFlowGeometry2D {args} {
     GiD_Groups create No_Slip_Cylinder
     GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
     GiD_EntitiesGroups assign No_Slip_Cylinder lines 5
-    
-    GidUtils::UpdateWindow GROUPS
-    GidUtils::UpdateWindow LAYER
+}
+proc Fluid::examples::AssignGroupsCylinderInFlow3D {args} {
+    W "Assign groups not implemented 3D"
 }
 
-proc Fluid::examples::AssignCylinderInFlowMeshSizes {args} {
+# Mesh sizes
+proc Fluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
+    W "Assign mesh size not implemented 3D"
+}
+proc Fluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
     set cylinder_mesh_size 0.005
     set fluid_mesh_size 0.05
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
@@ -78,7 +99,12 @@ proc Fluid::examples::AssignCylinderInFlowMeshSizes {args} {
     Kratos::BeforeMeshGeneration $fluid_mesh_size
 }
 
-proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
+
+# Tree assign
+proc Fluid::examples::TreeAssignationCylinderInFlow3D {args} {
+    W "Not implemented tree assign 3D"
+}
+proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
     
