@@ -61,7 +61,7 @@ proc Fluid::examples::DrawCylinderInFlowGeometry2D {args} {
 
 # Group assign
 proc Fluid::examples::AssignGroupsCylinderInFlow2D {args} {
-        # Create the groups
+    # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -83,7 +83,26 @@ proc Fluid::examples::AssignGroupsCylinderInFlow2D {args} {
     GiD_EntitiesGroups assign No_Slip_Cylinder lines 5
 }
 proc Fluid::examples::AssignGroupsCylinderInFlow3D {args} {
-    W "Assign groups not implemented 3D"
+    # Create the groups
+    GiD_Groups create Fluid
+    GiD_Groups edit color Fluid "#26d1a8ff"
+    GiD_EntitiesGroups assign Fluid volumes 1
+    
+    GiD_Groups create Inlet
+    GiD_Groups edit color Inlet "#e0210fff"
+    GiD_EntitiesGroups assign Inlet surfaces 5
+    
+    GiD_Groups create Outlet
+    GiD_Groups edit color Outlet "#42eb71ff"
+    GiD_EntitiesGroups assign Outlet surfaces 3
+    
+    GiD_Groups create No_Slip_Walls
+    GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
+    GiD_EntitiesGroups assign No_Slip_Walls surfaces {1 2 4 7}
+    
+    GiD_Groups create No_Slip_Cylinder
+    GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
+    GiD_EntitiesGroups assign No_Slip_Cylinder surfaces 6
 }
 
 # Mesh sizes
