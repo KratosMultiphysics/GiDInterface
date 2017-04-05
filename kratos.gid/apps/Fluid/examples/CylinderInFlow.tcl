@@ -57,16 +57,25 @@ proc Fluid::examples::DrawCylinderInFlowGeometry2D {args} {
     GiD_Groups edit color Outlet "#42eb71ff"
     GiD_EntitiesGroups assign Outlet lines 2
     
-    GiD_Groups create No_Slip
-    GiD_Groups edit color No_Slip "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip lines {1 3 5}
+    GiD_Groups create No_Slip_Walls
+    GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
+    GiD_EntitiesGroups assign No_Slip_Walls lines {1 3}
+    
+    GiD_Groups create No_Slip_Cylinder
+    GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
+    GiD_EntitiesGroups assign No_Slip_Cylinder lines 5
     
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
 proc Fluid::examples::AssignCylinderInFlowMeshSizes {args} {
-    
+    set cylinder_mesh_size 0.005
+    set fluid_mesh_size 0.05
+    GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $cylinder_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cylinder lines] escape escape
+    GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
+    Kratos::BeforeMeshGeneration $fluid_mesh_size
 }
 
 proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
@@ -120,7 +129,8 @@ proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
     }
     
     # Fluid Conditions
-    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" NoSlip] setAttribute ov $condtype
+    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
+    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
     
     spdAux::RequestRefresh
 }
