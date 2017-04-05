@@ -106,7 +106,7 @@ proc Dam::write::writeMeshes { } {
 
 proc Dam::write::writeNodalConditions { keyword } {
     variable TableDict
-    set root [customlib::]
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $keyword]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
