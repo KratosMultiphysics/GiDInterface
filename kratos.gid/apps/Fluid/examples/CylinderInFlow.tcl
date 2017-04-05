@@ -121,7 +121,7 @@ proc Fluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
 
 # Tree assign
 proc Fluid::examples::TreeAssignationCylinderInFlow3D {args} {
-    W "Not implemented tree assign 3D"
+    TreeAssignationCylinderInFlow2D
 }
 proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     set nd $::Model::SpatialDimension
