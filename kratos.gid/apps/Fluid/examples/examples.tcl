@@ -11,4 +11,4 @@ proc Fluid::examples::Init { } {
     GiDMenu::UpdateMenus
 }
 
-FSI::examples::Init
+Fluid::examples::Init
