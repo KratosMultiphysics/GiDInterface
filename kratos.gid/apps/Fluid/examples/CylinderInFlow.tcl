@@ -102,10 +102,11 @@ proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
 
     # Fluid Inlet
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
-    set inlets [list inlet1 0 1 "y*(1-y)*sin(pi*t*0.5)" inlet2 1 end "y*(1-y)"]
+    set inlets [list inlet1 0 1 "y*(1-y)*sin(pi*t*0.5)" inlet2 1 End "y*(1-y)"]
     foreach {inlet_name ini end function} $inlets {
         spdAux::CreateInterval $inlet_name $ini $end
         GiD_Groups create "Inlet//$inlet_name"
+        spdAux::AddIntervalGroup Inlet "Inlet//$inlet_name"
         set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//$inlet_name"]
         $inletNode setAttribute ov $condtype
         set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $inlet_name]
