@@ -139,8 +139,20 @@ proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
     [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
     
     # Time parameters
-    set time_parameters [list EndTime 20 DeltaTime 0.1]
+    set time_parameters [list EndTime 35 DeltaTime 0.1]
     set time_params_path [spdAux::getRoute "FLTimeParameters"]
+    foreach {n v} $time_parameters {
+        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+    }
+    # Output
+    set time_parameters [list OutputControlType 35 OutputDeltaStep 1]
+    set time_params_path [spdAux::getRoute "Results"]
+    foreach {n v} $time_parameters {
+        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+    }
+    # Parallelism
+    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set time_params_path [spdAux::getRoute "Parallelization"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
