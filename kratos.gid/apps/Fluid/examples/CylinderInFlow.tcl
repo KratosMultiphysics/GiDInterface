@@ -137,5 +137,13 @@ proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
     [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
     [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
     
+    # Time parameters
+    set time_parameters [list EndTime 20 DeltaTime 0.1]
+    set time_params_path [spdAux::getRoute "FLTimeParameters"]
+    foreach {n v} $time_parameters {
+        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+    }
+
+    
     spdAux::RequestRefresh
 }
