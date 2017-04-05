@@ -118,4 +118,8 @@ proc ::Fluid::ChangeAppTo {appid} {
 
 }
 
+proc ::Fluid::CustomToolbarItems { } {
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Fluid::examples::CylinderInFlow] [= "Example\nCylinder in air flow"]   
+}
+
 ::Fluid::Init
