@@ -70,5 +70,57 @@ proc Fluid::examples::AssignCylinderInFlowMeshSizes {args} {
 }
 
 proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
+    set nd $::Model::SpatialDimension
+    set root [customlib::GetBaseRoot]
     
+    set condtype line
+    if {$nd eq "3D"} { set condtype surface }
+
+    # Fluid Parts
+    set fluidParts [spdAux::getRoute "FLParts"]
+    set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
+    set props [list Element FractionalStep$nd ConstitutiveLaw Newtonian DENSITY 1.225 VISCOSITY 1.4776e-5 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    foreach {prop val} $props {
+        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property Fluid $prop"
+        }
+    }
+
+    set fluidConditions [spdAux::getRoute "FLBC"]
+
+    # Fluid Inlet
+    set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
+    set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet Inlet]
+    $inletNode setAttribute ov $condtype
+    set props [list ByFunction Yes function_modulus {0.1214*(1-cos(0.1*pi*t))*y*(1-y) if t<10 else 0.2428*y*(1-y)} direction automatic_inwards_normal Interval Total]
+    foreach {prop val} $props {
+         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Inlet $prop"
+        }
+    }
+
+    # Fluid Outlet
+    set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
+    set outletNode [spdAux::AddConditionGroupOnXPath $fluidOutlet Outlet]
+    $outletNode setAttribute ov $condtype
+    set props [list value 0.0]
+    foreach {prop val} $props {
+         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Outlet $prop"
+        }
+    }
+    
+    # Fluid Conditions
+    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" NoSlip] setAttribute ov $condtype
+    
+    spdAux::RequestRefresh
 }
