@@ -103,6 +103,7 @@ proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
     # Fluid Inlet
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
     set inlets [list inlet1 0 1 "y*(1-y)*sin(pi*t*0.5)" inlet2 1 End "y*(1-y)"]
+    ErasePreviousIntervals
     foreach {inlet_name ini end function} $inlets {
         spdAux::CreateInterval $inlet_name $ini $end
         GiD_Groups create "Inlet//$inlet_name"
@@ -145,7 +146,7 @@ proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
     # Output
-    set time_parameters [list OutputControlType 35 OutputDeltaStep 1]
+    set time_parameters [list OutputControlType step OutputDeltaStep 1]
     set time_params_path [spdAux::getRoute "Results"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
@@ -159,4 +160,12 @@ proc Fluid::examples::TreeAssignationCylinderInFlow {args} {
 
     
     spdAux::RequestRefresh
+}
+
+proc Fluid::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
