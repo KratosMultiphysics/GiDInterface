@@ -709,7 +709,15 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             }
             
             set has_units [$in getAttribute "has_units"]
-            if {$has_units ne ""} { set has_units "units='$units'  unit_magnitude='$um'"}
+            if {$has_units ne ""} { 
+                set has_units "units='$units'  unit_magnitude='$um'"
+            } else {
+                set param_units [$in getAttribute "units"]
+                set param_unitm [$in getAttribute "unit_magnitude"]
+                if {$param_units ne "" && $param_unitm ne ""} {
+                    set has_units "units='$param_units'  unit_magnitude='$param_unitm'"
+                }
+            }
             if {$type eq "vector"} {
                 set vector_type [$in getAttribute "vectorType"]
                 lassign [split $v ","] vX vY vZ
@@ -749,7 +757,6 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
                                 append node "\" att1='state' v1='hidden'/>"
                                 append node "<dependencies value='Yes' node=\""
                                 append node $nodeb
-                                #append node "\" att1='state' v1='normal' att2='v' v2='No'/>"
                                 append node "\" att1='state' v1='normal'/>"
                             }
                             append node "</value>"
@@ -798,7 +805,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             } elseif { $type eq "file" || $type eq "tablefile" } {
                 append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
             } elseif { $type eq "integer" } {
-                append node "<value n='$inName' pn='$pn' v='$v'  units='$units'  unit_magnitude='$um'  help='$help' string_is='integer'/>"
+                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'/>"
             } else {
                 if {[$in getAttribute "function"] eq "1"} {
                     set fname "function_$inName"
@@ -821,7 +828,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
                     
                     append node "<value n='$fname' pn='Function' v='' help='$help'/>"
                 }
-                append node "<value n='$inName' pn='$pn' v='$v'  units='$units'  unit_magnitude='$um'  help='$help' string_is='double'/>"
+                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'/>"
                 
                 #append node "<value n='$inName' pn='$pn' v='$v'   help='$help'/>"
             }

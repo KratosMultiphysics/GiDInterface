@@ -28,7 +28,7 @@
             <parameter n="value" pn="Value" type="double" function="1" v="0.0" has_units="1"/>
 			<parameter n="add_hydrostatic" pn="Add hydrostatic contribution" type="bool" v="False" values="True,False" help="Set eiter a constant pressure distribution or a hydrostatic one.">
 				<parameter parent="True" n="h_top" pn="Top height" type="double" v="0.0" unit_magnitude="L" units="m" help="Fluid height above the outlet. If equals 0.0 triangular distribution is considered."/>
-				<parameter parent="True" n="hyd_rho" pn="Hydrostatic density" type="double" v="1000.0" unit_magnitude="m/L" units="kg/m^3" help="Density of the fluid that yields the outlet pressure distribution."/>
+				<parameter parent="True" n="hyd_rho" pn="Hydrostatic density" type="double" v="1000.0" unit_magnitude="Density" units="kg/m^3" help="Density of the fluid that yields the outlet pressure distribution."/>
 			</parameter>
         </inputs>
     </Process>
