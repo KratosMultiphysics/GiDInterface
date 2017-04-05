@@ -1929,3 +1929,16 @@ proc spdAux::AddConditionGroupOnNode {basenode groupid} {
     }
     return $newNode
 }
+proc spdAux::ProcGetParts {domNode args} {
+    set parts ""
+    set nodeApp [GetAppIdFromNode $domNode]
+    set parts_un [apps::getAppUniqueName $nodeApp Parts]
+    set parts_path [spdAux::getRoute $parts_un]
+    if {$parts_path ne ""} {
+        foreach part [$domNode selectNodes "$parts_path/group"] {
+            lappend parts [$part @n]
+        }
+    }
+    if {[llength $parts]} { if {[$domNode @v] ni $parts} {$domNode setAttribute v [lindex $parts 0]}}
+    return [join $parts ","]
+}

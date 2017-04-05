@@ -40,34 +40,34 @@ proc Dam::write::getParametersDict { } {
     
     ### Preguntar el solver haciendo los ifs correspondientes
     if {$paralleltype eq "OpenMP"} {
-		if {$damTypeofProblem eq "Mechanical"} {
-			dict set solversettingsDict solver_type "dam_mechanical_solver"
-		} elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
-			dict set solversettingsDict solver_type "dam_thermo_mechanic_solver"
-		} elseif {$damTypeofProblem eq "UP_Mechanical"} {
-			dict set solversettingsDict solver_type "dam_UP_mechanical_solver"
-		} elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
-			dict set solversettingsDict solver_type "dam_UP_thermo_mechanic_solver"
-		} elseif {$damTypeofProblem eq "Acoustic"} {
-			dict set solversettingsDict solver_type "dam_P_solver"
+                if {$damTypeofProblem eq "Mechanical"} {
+                        dict set solversettingsDict solver_type "dam_mechanical_solver"
+                } elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
+                        dict set solversettingsDict solver_type "dam_thermo_mechanic_solver"
+                } elseif {$damTypeofProblem eq "UP_Mechanical"} {
+                        dict set solversettingsDict solver_type "dam_UP_mechanical_solver"
+                } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
+                        dict set solversettingsDict solver_type "dam_UP_thermo_mechanic_solver"
+                } elseif {$damTypeofProblem eq "Acoustic"} {
+                        dict set solversettingsDict solver_type "dam_P_solver"
         } else {
-			dict set solversettingsDict solver_type "dam_eigen_solver"
-		}
-	} else {
-		if {$damTypeofProblem eq "Mechanical"} {
-			dict set solversettingsDict solver_type "dam_MPI_mechanical_solver"
-		} elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
-			dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
-		} elseif {$damTypeofProblem eq "UP_Mechanical"} {
-			dict set solversettingsDict solver_type "dam_MPI_UP_mechanical_solver"
-		} elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
-			dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
-		} elseif {$damTypeofProblem eq "Acoustic"} {
-			W "Acoustic Problem in MPI is not yet implemented, please select an OpenMP option"
-		} else {
+                        dict set solversettingsDict solver_type "dam_eigen_solver"
+                }
+        } else {
+                if {$damTypeofProblem eq "Mechanical"} {
+                        dict set solversettingsDict solver_type "dam_MPI_mechanical_solver"
+                } elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
+                        dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
+                } elseif {$damTypeofProblem eq "UP_Mechanical"} {
+                        dict set solversettingsDict solver_type "dam_MPI_UP_mechanical_solver"
+                } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
+                        dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
+                } elseif {$damTypeofProblem eq "Acoustic"} {
+                        W "Acoustic Problem in MPI is not yet implemented, please select an OpenMP option"
+                } else {
             W "Eigen Analysis in MPI is not yet implemented, please select an OpenMP option"
         }
-	}
+        }
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
     dict set modelDict input_filename $model_name
@@ -263,8 +263,15 @@ proc Dam::write::getParametersDict { } {
     set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
     set load_process_list [write::getConditionsParametersDict DamLoads ]
     dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
-    dict set projectParametersDict loads_process_list [Dam::write::ChangeFileNameforTableid $load_process_list]
-       
+    set loads [Dam::write::ChangeFileNameforTableid $load_process_list]
+    set construction_process [Dam::write::GetConstructionDomainProcessDict]
+    if {[llength $construction_process]} {
+        set loads [lappend loads [dict create {*}$construction_process]]
+        set li [dict get $projectParametersDict solver_settings processes_sub_model_part_list]
+        lappend li [dict get $construction_process Parameters model_part_name]
+        dict set projectParametersDict solver_settings processes_sub_model_part_list $li
+    }
+    dict set projectParametersDict loads_process_list $loads
     return $projectParametersDict
 
 }
@@ -386,4 +393,24 @@ proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {probl
         unset solverEntryDict
     }
     return $solverSettingsDict
+}
+
+proc Dam::write::GetConstructionDomainProcessDict { } {
+    set construction_dict [dict create]
+    set data_basenode [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamConstructionProcess"]]
+    set activate [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Activate_construction'\]"] v]
+    if {[write::isBooleanTrue $activate]} {
+        dict set construction_dict "python_module" "dam_construction_process"
+        dict set construction_dict "kratos_module" "KratosMultiphysics.DamApplication"
+        dict set construction_dict "process_name" "DamConstructionProcess"
+        set params_dict [dict create]
+            set params [list Gravity_Direction Reservoir_Bottom_Coordinate_in_Gravity_Direction Height_Dam Number_of_phases]
+            foreach param $params {
+                dict set params_dict $param [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='$param'\]"] v]
+            }
+            dict set params_dict mesh_id 0
+            dict set params_dict model_part_name [write::getMeshId Parts [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Construction_part'\]"] v]]
+        dict set construction_dict Parameters $params_dict
+    }
+    return $construction_dict
 }

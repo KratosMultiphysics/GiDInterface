@@ -119,6 +119,11 @@
 		return [spdAux::ProcPartParamValue $domNode $args]
 	  ]]>
 	</proc>
+	<proc n='GetParts' args='args'>
+	  <![CDATA[
+		return [spdAux::ProcGetParts $domNode $args]
+	  ]]>
+	</proc>
 	  <proc n='PartParamState' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcPartParamState $domNode $args]
