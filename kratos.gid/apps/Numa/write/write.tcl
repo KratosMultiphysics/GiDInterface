@@ -100,8 +100,7 @@ proc Numa::write::writeMeshes { } {
 
 proc Numa::write::writeNodalConditions { keyword } {
     variable TableDict
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $keyword]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
@@ -126,8 +125,7 @@ proc Numa::write::writeNodalConditions { keyword } {
 proc Numa::write::writeLoads { baseUN } {
     variable TableDict
     variable ConditionsDictGroupIterators
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set condid [get_domnode_attribute [$group parent] n]
@@ -210,8 +208,7 @@ proc Numa::write::writeTables { } {
 }
 
 proc Numa::write::GetPrinTables {} {
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
     FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]
     set listaTablas [list ]
     set listaFiles [list ]
