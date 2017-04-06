@@ -361,6 +361,12 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     }
 
     # Coupling settings
+    set parallelization_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set parallelization_params_path [spdAux::getRoute "Parallelization"]
+    foreach {n v} $parallelization_parameters {
+        [$root selectNodes "$parallelization_params_path/value\[@n = '$n'\]"] setAttribute v $v
+    }
+
     set change_list [list nl_tol "1e-6" nl_max_it 25]
     set xpath [spdAux::getRoute FSIStratParams]
     foreach {name value} $change_list {
