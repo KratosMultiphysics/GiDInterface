@@ -690,7 +690,6 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
         set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
-        #foreach processinput [$process getInputs] {lappend inputs $processinput}
         set inputs [$process getInputs] 
         foreach {inName in} $inputs {
             set pn [$in getPublicName]
@@ -699,11 +698,13 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             set cnd_v [$cnd getDefault $inName v]
             if {$cnd_v ne ""} {set v $cnd_v}
             set help [$in getHelp]
-            set state [$in getAttribute "state"]
-            set cnd_state [$cnd getDefault $inName state]
-            if {$cnd_state ne ""} {set state $cnd_state}
 
-            if {$state eq ""} {set state "normal"}
+            # set state [$in getAttribute "state"]
+            # set cnd_state [$cnd getDefault $inName state]
+            # if {$cnd_state ne ""} {set state $cnd_state}
+            # if {$state eq ""} {set state "normal"}
+            set state {[ConditionParameterState]}
+
             foreach key [$cnd getDefaults $inName] {
                 set $key [$cnd getDefault $inName $key]
             }
@@ -798,10 +799,21 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
                 if {[llength $pv]} {
                     append node " dict='$pvalues' "
                 }
-                append node " state='$state' help='$help'/>"
+                if {[$in getActualize]} {
+                    append node "  actualize_tree='1'  "
+                }
+                append node " state='$state' help='$help'>"
+                append node [_insert_cond_param_dependencies $process $inName]
+                append node "</value>"
             } elseif { $type eq "bool" } {
                 set values "1,0"
-                append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help' state='$state'/>"
+                append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
+                if {[$in getActualize]} {
+                    append node "  actualize_tree='1'  "
+                }
+                append node " state='$state'>"
+                append node [_insert_cond_param_dependencies $process $inName]
+                append node "</value>"
             } elseif { $type eq "file" || $type eq "tablefile" } {
                 append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
             } elseif { $type eq "integer" } {
@@ -811,7 +823,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
                     set fname "function_$inName"
                     set nodev "../value\[@n='$inName'\]"
                     set nodef "../value\[@n='$fname'\]"
-                    append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1'>
+                    append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'>
                         <dependencies value='No' node=\""
                     append node $nodev
                     append node "\" att1='state' v1='normal'/>
@@ -826,11 +838,9 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
                     append node "\" att1='state' v1='normal'/>
                         </value>"
                     
-                    append node "<value n='$fname' pn='Function' v='' help='$help'/>"
+                    append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'/>"
                 }
-                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'/>"
-                
-                #append node "<value n='$inName' pn='$pn' v='$v'   help='$help'/>"
+                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'  state='$state'/>"
             }
         }
         
@@ -842,6 +852,26 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
         $conds appendXML $node
     }
     
+}
+
+proc spdAux::_insert_cond_param_dependencies {process param_name} {
+    set dep_list [list ]
+    foreach {pn param} [$process getInputs] {
+        if {[$param getDepN] eq $param_name} {
+            lappend dep_list [$param getName] [$param getDepV]
+        }
+    }
+    set ret ""
+    foreach {name value} $dep_list {
+        set nodev "../value\[@n='$name'\]"
+        append ret " <dependencies value='$value' node=\""
+                    append ret $nodev
+                    append ret "\"  att1='state' v1='normal'/>"
+        append ret " <dependencies condition=\"@v!='$value'\" node=\""
+                    append ret $nodev
+                    append ret "\"  att1='state' v1='hidden'/>"
+    }
+    return $ret
 }
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
@@ -855,18 +885,12 @@ proc spdAux::injectPartInputs { basenode {inputs ""} } {
         set um [$in getUnitMagnitude]
         set help [$in getHelp] 
         set v [$in getDv]
-        set node "<value n='$inName' pn='$pn' state='\[PartParamState\]' v='$v' units='$units' unit_magnitude='$um' help='$help' />"
-        #set node "<value n='$inName' pn='$pn' state='\[PartParamState\]' v='$v' help='$help' />"
-        
+        set node "<value n='$inName' pn='$pn' state='\[PartParamState\]' v='$v' units='$units' unit_magnitude='$um' help='$help' />"        
         $base appendXML $node
         set orig [$base lastChild]
         set new [$orig cloneNode]
         $orig delete
         $base insertBefore $new $basenode
-        
-        #set originxpath "[$parts toXPath]/value\[@n='Material'\]"
-        #set relativexpath "../value\[@n='$inName'\]"
-        #spdAux::insertDependenciesSoft $originxpath $relativexpath $inName v "\[PartParamValue\]"
     }
     $basenode delete
 }
@@ -1901,6 +1925,28 @@ proc spdAux::ProcOkNewCondition {domNode args} {
     }
 }
 
+proc spdAux::ProcConditionParameterState {domNode args} {
+    set param_name [get_domnode_attribute $domNode n]
+    set cond_node [$domNode parent]
+    if {[$cond_node nodeName] eq "group"} {set cond_node [$cond_node parent]}
+    set cond_name [get_domnode_attribute $cond_node n]
+
+    set cond [Model::getCondition $cond_name]
+    if {$cond eq ""} {W "No condition found with name $cond_name" ; return normal}
+    set process_name [$cond getProcessName]
+    set process [Model::GetProcess $process_name]
+    set param [$process getInputPn $param_name]
+    if {$param eq ""} {return normal}
+
+    set depN [$param getDepN]
+    if {$depN ne ""} {
+        set depV [$param getDepV]
+        set realV [get_domnode_attribute [$domNode selectNodes "../value\[@n='$depN'\]"] v]
+        if {$depV ne $realV} {return hidden}
+    }
+
+    return normal
+}
 
 proc spdAux::LoadIntervalGroups { } {
     customlib::UpdateDocument
