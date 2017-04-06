@@ -159,7 +159,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     # Fluid Parts
     set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
     set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element FractionalStep$nd ConstitutiveLaw Newtonian DENSITY 956.0 VISCOSITY 0.145 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    set props [list Element FractionalStep$nd ConstitutiveLaw Newtonian DENSITY 956.0 VISCOSITY 1.51670E-04 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -269,9 +269,20 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         }
     }
 
-    # Fluid domain mesh parameters
+    # Fluid monolithic strategy setting
+    spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
 
-
+    # Fluid domain strategy settings
+    set str_change_list [list relative_velocity_tolerance "1e-6" absolute_velocity_tolerance "1e-8" relative_pressure_tolerance "1e-6" absolute_pressure_tolerance "1e-8" maximum_iterations "20"]
+    set xpath [spdAux::getRoute FLStratParams]
+    foreach {name value} $str_change_list {
+        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check MOK script"
+        }
+    }
 
     # Structural
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
@@ -280,7 +291,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
     set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
-    set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStrain2DLaw"}]
+    set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
     set props [list Element SmallDisplacementElement$nd ConstitutiveLaw $constLawNameStruc SECTION_TYPE 0 THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6]
     lappend props YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45 KINEMATIC_HARDENING_MODULUS 0 REFERENCE_HARDENING_MODULUS 0 INFINITY_HARDENING_MODULUS 0
     lappend props HARDENING_EXPONENT 0 DAMAGE_THRESHOLD 0 STRENGTH_RATIO 0 FRACTURE_ENERGY 0
@@ -334,7 +345,20 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         }
     }
 
-    # Structure domain mesh parameters
+    # Structure Bossak scheme setting
+    spdAux::SetValueOnTreeItem v "Bossak" STScheme
+
+    # Structure domain strategy settings
+    set str_change_list [list residual_relative_tolerance "1e-6" residual_absolute_tolerance "1e-8" max_iteration "20"]
+    set xpath [spdAux::getRoute SLStratParams]
+    foreach {name value} $str_change_list {
+        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check MOK script"
+        }
+    }
 
     # Coupling settings
     set change_list [list nl_tol "1e-6" nl_max_it 25]
