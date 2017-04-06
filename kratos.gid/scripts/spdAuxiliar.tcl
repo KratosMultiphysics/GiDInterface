@@ -1079,12 +1079,9 @@ proc spdAux::SchemeParamState {outnode} {
     return [::Model::CheckSchemeInputState $SolStrat $Scheme $paramName]
 }
 
-proc spdAux::getIntervals { {un ""} } {
-    
+proc spdAux::getIntervals { {un "Intervals"} } {
     set root [customlib::GetBaseRoot]
-    if {$un eq ""} {
-        set un "Intervals"
-    } 
+
     set xp1 "[spdAux::getRoute $un]/blockdata\[@n='Interval'\]"
     set lista [list ]
     foreach node [$root selectNodes $xp1] {
@@ -1092,6 +1089,18 @@ proc spdAux::getIntervals { {un ""} } {
     }
     
     return $lista
+}
+
+proc spdAux::CreateInterval {name ini end {un "Intervals"}} {
+    if {$name in [getIntervals $un]} {error [= "Interval %s already exists" $name]}
+    set root [customlib::GetBaseRoot]
+    set interval_path [spdAux::getRoute $un]
+    
+    set interval_string "<blockdata n='Interval' pn='Interval' name='$name' sequence='1' editable_name='unique' sequence_type='non_void_disabled' help='Interval'>
+        <value n='IniTime' pn='Start time' v='$ini' help='When do the interval starts?'/>
+        <value n='EndTime' pn='End time' v='$end' help='When do the interval ends?'/>
+    </blockdata>"
+    [$root selectNodes $interval_path] appendXML $interval_string
 }
 
 proc spdAux::getTimeFunctions {} {

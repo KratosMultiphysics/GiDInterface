@@ -360,7 +360,7 @@ proc Kratos::ResetModel { } {
         GiD_Process 'Layers Delete $layer Yes escape escape
     }
     foreach group [GiD_Groups list] {
-        GiD_Groups delete $group
+        if {[GiD_Groups exists $group]} {GiD_Groups delete $group}
     }
 }
 

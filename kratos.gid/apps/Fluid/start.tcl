@@ -118,4 +118,10 @@ proc ::Fluid::ChangeAppTo {appid} {
 
 }
 
+proc ::Fluid::CustomToolbarItems { } {
+    variable dir
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Fluid::examples::CylinderInFlow] [= "Example\nCylinder in air flow"]   
+}
+
 ::Fluid::Init
