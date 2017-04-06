@@ -2,4 +2,5 @@
 *.lnk
 
 # Kratos execution folder
-kratos.gid/exec/Kratos/*
+kratos.gid/exec
+kratos.gid/exec/*
