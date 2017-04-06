@@ -404,12 +404,12 @@ proc Dam::write::GetConstructionDomainProcessDict { } {
         dict set construction_dict "kratos_module" "KratosMultiphysics.DamApplication"
         dict set construction_dict "process_name" "DamConstructionProcess"
         set params_dict [dict create]
+            dict set params_dict mesh_id 0
+            dict set params_dict model_part_name [write::getMeshId Parts [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Construction_part'\]"] v]]
             set params [list Gravity_Direction Reservoir_Bottom_Coordinate_in_Gravity_Direction Height_Dam Number_of_phases]
             foreach param $params {
                 dict set params_dict $param [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='$param'\]"] v]
             }
-            dict set params_dict mesh_id 0
-            dict set params_dict model_part_name [write::getMeshId Parts [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Construction_part'\]"] v]]
         dict set construction_dict Parameters $params_dict
     }
     return $construction_dict
