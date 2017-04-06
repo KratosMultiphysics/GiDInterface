@@ -1,7 +1,7 @@
 
 proc ::FSI::examples::MokChannelFlexibleWall {args} {
     DrawMokChannelFlexibleWallGeometry
-    AssignMokChannelFlexibleWallMeshSizes
+    AssignMokChannelFlexibleWallMeshSizes$::Model::SpatialDimension
     TreeAssignationMokChannelFlexibleWall
 }
 
@@ -132,7 +132,7 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes {args} {
+proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes2D {args} {
     set long_side_divisions 100
     set short_side_divisions 4
     set outlet_element_size 0.01
@@ -145,8 +145,11 @@ proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes {args} {
     GiD_Process Mescape Meshing Structured Lines $long_side_divisions {*}[GiD_EntitiesGroups get FluidLongSides lines] escape $short_side_divisions [GiD_EntitiesGroups get FluidShortSides lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $outlet_element_size {*}[GiD_EntitiesGroups get Outlet lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $noslip_element_size {*}[GiD_EntitiesGroups get NoSlip lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_element_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    GiD_Process Mescape Meshing ElemType Triangle [GiD_EntitiesGroups get Fluid surfaces] escape
+    GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_element_size {*}[GiD_EntitiesGroups get Fluid surfaces] escape escape
+    GiD_Process Mescape Meshing ElemType Triangle [GiD_EntitiesGroups get Fluid surfaces] escape escape
+}
+proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes3D {args} {
+    W "Not implemented - Mesh assignation for 3D"
 }
 
 proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
