@@ -109,9 +109,9 @@ proc Fluid::examples::AssignGroupsCylinderInFlow3D {args} {
 
 # Mesh sizes
 proc Fluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
-    set cylinder_mesh_size 0.01
-    set walls_mesh_size 0.1
-    set fluid_mesh_size 0.1
+    set cylinder_mesh_size 0.005
+    set walls_mesh_size 0.05
+    set fluid_mesh_size 0.05
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $cylinder_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cylinder surfaces] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get Inlet surfaces] escape escape
@@ -199,7 +199,7 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
 
     # Time parameters
-    set time_parameters [list EndTime 30 DeltaTime 0.1]
+    set time_parameters [list EndTime 45 DeltaTime 0.1]
     set time_params_path [spdAux::getRoute "FLTimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
