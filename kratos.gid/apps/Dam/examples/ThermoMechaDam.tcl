@@ -2,13 +2,13 @@
 proc ::Dam::examples::ThermoMechaDam {args} {
     
     DrawDamGeometry
-    #~ AssignGroupsDam
+    AssignGroupsDam
     #~ AssignDamMeshSizes
     #~ TreeAssignationDam
 
     GiD_Process 'Redraw
-    #~ GidUtils::UpdateWindow GROUPS
-    #~ GidUtils::UpdateWindow LAYER
+    GidUtils::UpdateWindow GROUPS
+    GidUtils::UpdateWindow LAYER
 }
 
 proc Dam::examples::DrawDamGeometry {args} {
@@ -56,7 +56,7 @@ proc Dam::examples::DrawDamGeometry {args} {
         lappend soilLines [GiD_Geometry create line append stline Soil $initial $point]
         set initial $point
     }
-    lappend soilLines [GiD_Geometry create line append stline Dam $initial [lindex $damPoints 1]]
+    lappend soilLines [GiD_Geometry create line append stline Soil $initial [lindex $damPoints 1]]
     
     
     lappend soilLines 1
@@ -64,6 +64,38 @@ proc Dam::examples::DrawDamGeometry {args} {
     ## Surface ##
     GiD_Process Mescape Geometry Create NurbsSurface {*}$soilLines escape escape
         
-    
 }
 
+proc Dam::examples::AssignGroupsDam {args} {
+    
+    # Create the groups
+    GiD_Groups create Dam
+    GiD_Groups edit color Dam "#26d1a8ff"
+    GiD_EntitiesGroups assign Dam surfaces 1
+    
+    GiD_Groups create Soil
+    GiD_Groups edit color Soil "#e0210fff"
+    GiD_EntitiesGroups assign Soil surfaces 2
+    
+    GiD_Groups create Displacement
+    GiD_Groups edit color Displacement "#3b3b3bff"
+    GiD_EntitiesGroups assign Displacement lines 7
+      
+    GiD_Groups create Initial
+    GiD_Groups edit color Initial "#26d1a8ff"
+    GiD_EntitiesGroups assign Initial surfaces {1 2}
+    
+    GiD_Groups create Hydrostatic
+    GiD_Groups edit color Hydrostatic "#26d1a8fe"
+    GiD_EntitiesGroups assign Hydrostatic lines {4 5}
+
+    GiD_Groups create Bofang
+    GiD_Groups edit color Bofang "#42eb71ff"
+    GiD_EntitiesGroups assign Bofang lines {4 5}
+
+    GiD_Groups create Uniform
+    GiD_Groups edit color Uniform "#3b3b3bff"
+    GiD_EntitiesGroups assign Uniform lines {3 2 9}   
+    
+    
+}
