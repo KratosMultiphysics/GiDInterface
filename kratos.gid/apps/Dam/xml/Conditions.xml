@@ -1,41 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
 
-      <!---  Conditions: CONSTRUCTION PROCESS -->  
-  <ConditionItem n="ConstructionProcess3D" pn="Construction Process" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
-	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Volume" ProcessName="DamConstructionProcess" VariableName=""
-    help="Process for simulating the construction phase according the inputs parameters">
-    <TopologyFeatures>
-    </TopologyFeatures>
-    <inputs>
-    </inputs>
-    <DefaultValues>
-    </DefaultValues>
-    <outputs>
-    </outputs>
-  </ConditionItem>
-  
- <ConditionItem n="ConstructionProcess2D" pn="Construction Process" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
-	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Surface" ProcessName="DamConstructionProcess" VariableName=""
-    help="Process for simulating the construction phase according the inputs parameters">
-    <TopologyFeatures>
-    </TopologyFeatures>
-    <inputs>
-    </inputs>
-    <DefaultValues>
-    </DefaultValues>
-    <outputs>
-    </outputs>
-  </ConditionItem>
-  
-  
-  
-
-
     <!---  Conditions: THERMAL PARAMETERS -->  
   <ConditionItem n="ThermalParameters3D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
