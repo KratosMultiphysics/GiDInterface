@@ -1941,7 +1941,12 @@ proc spdAux::ProcConditionParameterState {domNode args} {
     set cond_name [get_domnode_attribute $cond_node n]
 
     set cond [Model::getCondition $cond_name]
-    if {$cond eq ""} {W "No condition found with name $cond_name" ; return normal}
+    if {$cond eq ""} {
+        set cond [Model::getNodalConditionbyId $cond_name]
+        if {$cond eq ""} {
+            W "No condition found with name $cond_name" ; return normal
+        }
+    }
     set process_name [$cond getProcessName]
     set process [Model::GetProcess $process_name]
     set param [$process getInputPn $param_name]
