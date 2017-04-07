@@ -6,9 +6,7 @@
   <Process n="ImposeVectorValueByComponentsProcess" pn="Impose vector value by components process" python_module="apply_constraint_vector_dam_table_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the selected components of a given vector variable">
     <inputs>
-        <parameter n="is_fixed_X" pn="Imposed X" type="bool" v="1"/>
-		    <parameter n="is_fixed_Y" pn="Imposed Y" type="bool" v="1"/>
-		    <parameter n="is_fixed_Z" pn="Imposed Z" type="bool" v="1" state="[CheckDimension 3D]"/>
+		<parameter n="is_fixed" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
         <parameter n="value" pn="Value" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Value_X_Table" pn="Value X table filename" type="tablefile" v=""/>
         <parameter n="Value_Y_Table" pn="Value Y table filename" type="tablefile" v=""/>
