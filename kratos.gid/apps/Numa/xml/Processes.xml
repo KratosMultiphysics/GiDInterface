@@ -14,11 +14,11 @@
     </inputs>
   </Process>
 
-  <Process n="ApplyLoadVectorDamTableProcess" pn="Apply a vector value over a condition" python_module="apply_load_vector_dam_table_proces"
+  <Process n="ApplyLoadVectorDamTableProcess" pn="Apply a vector value over a condition" python_module="apply_load_vector_dam_table_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process sets a vector variable value over a condition" check="DirectorVectorNonZero direction"> 
     <inputs>
       <parameter n="modulus" pn="Modulus" type="double"  v="1.0"/>
-      <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" unit_magnitude="0" units="0" />
+      <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0"/>
       <parameter n="table" pn="Value table filename" type="tablefile" v=""/>
     </inputs>
   </Process>
