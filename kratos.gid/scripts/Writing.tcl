@@ -892,7 +892,8 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         foreach {inputName in_obj} $process_parameters {
             set in_type [$in_obj getType]
             if {$in_type eq "vector"} {
-                if {[$in_obj getAttribute vectorType] eq "bool"} {
+                set vector_type [$in_obj getAttribute "vectorType"]
+                if {$vector_type eq "bool"} {
                     set ValX [expr [get_domnode_attribute [$group find n ${inputName}X] v] ? True : False]
                     set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
                     set ValZ [expr False]
@@ -919,6 +920,11 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                                 }
                             }
                         }
+                    } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
+                        set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
+                        set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
+                        set ValZ "0"
+                        if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
                     } else {
                         set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
                         set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
