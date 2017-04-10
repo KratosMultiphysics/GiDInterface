@@ -320,6 +320,15 @@ proc Dam::write::ChangeFileNameforTableid { processList } {
                 set value [Dam::write::GetTableidFromFileid $filename]
                 dict set nodalProcess Parameters $paramName $value
             }
+            if {[$param getType] eq "vector" && [$param getAttribute vectorType] eq "tablefile" && [dict exists $nodalProcess Parameters $paramName] } {
+                for {set i 0} {$i < [llength [dict get $nodalProcess Parameters $paramName]]} {incr i} {
+                    set filename [lindex [dict get $nodalProcess Parameters $paramName] $i]
+                    set value [Dam::write::GetTableidFromFileid $filename]
+                    set values_list [dict get $nodalProcess Parameters $paramName]
+                    set values_list [lreplace $values_list $i $i $value]
+                    dict set nodalProcess Parameters $paramName $values_list
+                }
+            }
         }
         lappend returnList $nodalProcess
     }
