@@ -63,6 +63,8 @@ proc Dam::examples::DrawDamGeometry {args} {
     
     ## Surface ##
     GiD_Process Mescape Geometry Create NurbsSurface {*}$soilLines escape escape
+    
+    GiD_Process 'Zoom Frame
         
 }
 
