@@ -273,33 +273,41 @@ proc Numa::write::StremalinesUtility { } {
 }
 
 proc Numa::write::DevicesOutput { } {
-    
-    #~ set root [customlib::GetBaseRoot]
-    #~ set xp1 "[spdAux::getRoute NumaDevices]/blockdata\[@n='device'\]"
-    #~ set lista [list ]
-    #~ foreach node [$root selectNodes $xp1] {
-        #~ lappend lista [$node @name]
-        #~ W $lista
-    #~ }
-    
-    #~ return $lista
-    
+        
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute NumaDevices]/blockdata\[@n='device'\]"
     set lista [list ]
-    set devices [$root selectNodes $xp1]
+    set nodes [$root selectNodes $xp1]
 
-    foreach device $devices {
-        set processDict [dict create]
-        set paramDict [dict create]
-        dict set paramDict python_module "point_output_process"
-        dict set paramDict kratos_module "KratosMultiphysics"
-        dict set paramDict help "This process sets a vector variable value over a condition"
-        dict set paramDict process_name "PointOutputProcess"
+    foreach node $nodes {
+        
+        set deviceDict [dict create]
+        dict set deviceDict python_module "point_output_process"
+        dict set deviceDict kratos_module "KratosMultiphysics"
+        dict set deviceDict help "This process print the value according the selected variable"
+        dict set deviceDict process_name "PointOutputProcess"
         
         
+        set xp2 "[spdAux::getRoute NumaDevices]/blockdata/value\[@n='Variable'\]"
+        set var_nodes [$root selectNodes $xp2]
+        W $xp2
+        W $var_nodes
         
-        lappend lista $processDict
+        set variable [$var_nodes @v]
+        W $variable
+               
+        set parameterDict [dict create]
+        set positionList [list ]
+        lappend positionList 1.0 1.0 0
+        dict set parameterDict position $positionList
+        dict set parameterDict model_part_name "MainModelPart"
+        dict set parameterDict output_file_name [$node @name]
+        set outputlist [list ]
+        lappend outputlist "DISPLACEMENT"
+        dict set parameterDict output_variables $outputlist
+        dict set deviceDict Parameters $parameterDict     
+        
+        lappend lista $deviceDict
     }
     
     return $lista
