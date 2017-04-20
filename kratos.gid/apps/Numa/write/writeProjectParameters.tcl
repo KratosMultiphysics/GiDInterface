@@ -278,23 +278,24 @@ proc Numa::write::DevicesOutput { } {
     set xp1 "[spdAux::getRoute NumaDevices]/blockdata\[@n='device'\]"
     set lista [list ]
     set nodes [$root selectNodes $xp1]
-
+    
     foreach node $nodes {
         
         set deviceDict [dict create]
         dict set deviceDict python_module "point_output_process"
         dict set deviceDict kratos_module "KratosMultiphysics"
-        dict set deviceDict help "This process print the value according the selected variable"
+        dict set deviceDict help "This process print the selected value according its position"
         dict set deviceDict process_name "PointOutputProcess"
         
-        
-        set xp2 "[spdAux::getRoute NumaDevices]/blockdata/value\[@n='Variable'\]"
+        set xp2 "[spdAux::getRoute NumaDevices]/blockdata/value"
         set var_nodes [$root selectNodes $xp2]
-        W $xp2
-        W $var_nodes
-        
-        set variable [$var_nodes @v]
-        W $variable
+ 
+        # "[spdAux::getRoute NumaDevices]/blockdata\[@name='device'\]/value\[@n='Variable'\]"
+
+        foreach var $var_nodes {
+            lappend prueba [get_domnode_attribute $var v]
+            W $prueba
+        }
                
         set parameterDict [dict create]
         set positionList [list ]
