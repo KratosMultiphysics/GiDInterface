@@ -23,7 +23,7 @@ proc Pfem::xml::Init { } {
     Model::getConditions "../../Solid/xml/Conditions.xml"
     Model::getSolvers "../../Pfem/xml/Solvers.xml"
 
-    Model::ForgetCondition "CONTACT"
+    Model::ForgetNodalCondition "CONTACT"
 }
 
 proc Pfem::xml::getUniqueName {name} {
