@@ -19,6 +19,6 @@
 		       analysis_type="Static,Dynamic"  unit_magnitude="P"  units="Pa" v="Yes" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   <NodalConditionItem  n="CONTACT" pn="Contact" ProcessName="ALMContactProcess" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
-		       analysis_type="Static,Dynamic"  App="Solid" state="" Interval="False"  ov="[CheckGeometry 2]" >
+		       analysis_type="Static,Dynamic"  App="Solid" state="" Interval="False"  ov="[CheckGeometry 2]"  ProductionReady="Developer">
   </NodalConditionItem>
 </NodalConditionList>
