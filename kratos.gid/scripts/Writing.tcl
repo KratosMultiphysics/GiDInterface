@@ -306,7 +306,7 @@ proc write::GetWriteGroupName { group_id } {
     return $group_id
 }
 
-proc write::writeConditions { baseUN {iter 1} {cond_id ""}} {
+proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
     set dictGroupsIterators [dict create]
     
     set root [customlib::GetBaseRoot]
@@ -321,19 +321,27 @@ proc write::writeConditions { baseUN {iter 1} {cond_id ""}} {
         if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
-        if {![dict exists $dictGroupsIterators $groupid]} {
-            if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
-            set cond [::Model::getCondition $condid]
-            if {$cond ne ""} {
-                lassign [write::getEtype $ov $groupid] etype nnodes
-                set kname [$cond getTopologyKratosName $etype $nnodes]
-                if {$kname ne ""} {
-                    lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final iter
-                    dict set dictGroupsIterators $groupid [list $initial $final]
-                }
-            } else {
-                error "Could not find conditon named $condid"
+        set dictGroupsIterators [writeGroupNodeCondition $dictGroupsIterators $groupNode $condid [incr iter]]
+        set iter [lindex [dict get $dictGroupsIterators $groupid] 1]
+    }
+    return $dictGroupsIterators
+}
+
+proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
+    set groupid [get_domnode_attribute $groupNode n]
+    set groupid [GetWriteGroupName $groupid]
+    if {![dict exists $dictGroupsIterators $groupid]} {
+        if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
+        set cond [::Model::getCondition $condid]
+        if {$cond ne ""} {
+            lassign [write::getEtype $ov $groupid] etype nnodes
+            set kname [$cond getTopologyKratosName $etype $nnodes]
+            if {$kname ne ""} {
+                lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
+                dict set dictGroupsIterators $groupid [list $initial $final]
             }
+        } else {
+            error "Could not find conditon named $condid"
         }
     }
     return $dictGroupsIterators
@@ -358,7 +366,7 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
     set final [expr $iter -1]
     WriteString "End Conditions"
     WriteString ""
-    return [list $initial $final $iter]
+    return [list $initial $final]
 }
 
 proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
@@ -400,10 +408,12 @@ proc write::transformGroupName {groupid} {
     return [join $new_parts /]
 }
 
+# what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable meshes
     variable groups_type_name
-    
+
+    set what [split $what "&"]
     set gtn $groups_type_name
     set group [GetWriteGroupName $group]
     if {![dict exists $meshes [list $cid ${group}]]} {
@@ -429,12 +439,12 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
         GiD_WriteCalculationFile nodes -sorted $gdict
         WriteString "    End ${gtn}Nodes"
         WriteString "    Begin ${gtn}Elements"
-        if {$what eq "Elements"} {
+        if {"Elements" in $what} {
             GiD_WriteCalculationFile elements -sorted $gdict
         }
         WriteString "    End ${gtn}Elements"
         WriteString "    Begin ${gtn}Conditions"
-        if {$what eq "Conditions"} {
+        if {"Conditions" in $what} {
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
                 #W $iniend
@@ -457,17 +467,32 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     Model::getElements "../../Common/xml/Elements.xml"
     Model::getConditions "../../Common/xml/Conditions.xml"
     set conditions_dict [dict create ]
+    set elements_list [list ]
     foreach group $groups {
         set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
-        if {$needElems} {writeGroupElementConnectivities $group "GENERIC_ELEMENT"}
+        if {$needElems} {
+            writeGroupElementConnectivities $group "GENERIC_ELEMENT"
+            lappend elements_list [$group @n]
+        }
         if {$needConds} {
-            set iters [write::writeConditions $un $cond_iter "GENERIC_CONDITION"]
+            set iters [write::writeGroupNodeCondition $conditions_dict $group "GENERIC_CONDITION" [incr cond_iter]]
             set conditions_dict [dict merge $conditions_dict $iters]
+            set cond_iter [lindex $iters 1 1]
         }
     }
     Model::ForgetElement GENERIC_ELEMENT
     Model::ForgetCondition GENERIC_CONDITIONS
+
+    foreach group $groups {
+        set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
+        set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        set what "nodal"
+        set iters ""
+        if {$needElems} {append what "&Elements"}
+        if {$needConds} {append what "&Conditions"; set iters [dict get $conditions_dict [$group @n]]}
+        ::write::writeGroupMesh "GENERIC" [$group @n] $what $iters
+    }
     return $conditions_dict
 }
 
