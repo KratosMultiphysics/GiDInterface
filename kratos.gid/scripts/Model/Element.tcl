@@ -117,6 +117,21 @@ oo::class create NodalCondition {
 }
 }
 
+proc Model::ForgetElements { } {
+    variable Elements
+    set Elements [list ]
+}
+proc Model::ForgetElement { elem_id } {
+    variable Elements
+    set Elements2 [list ]
+    foreach elem $Elements {
+        if {[$elem getName] ne $elem_id} {
+            lappend Elements2 $elem
+        }
+    }
+    set Elements $Elements2
+}
+
 proc Model::ParseElements { doc } {
     variable Elements
     
@@ -146,28 +161,41 @@ proc Model::ParseElemNode { node } {
         $el setAttribute $att [split [$node getAttribute $att] ","]
         #W "$att : [$el getAttribute $att]"
     }
-    
-    foreach top [[$node getElementsByTagName TopologyFeatures] childNodes]  {
-        set el [ParseTopologyNode $el $top]
+    set top_node [$node getElementsByTagName TopologyFeatures]
+    if {$top_node ne "" && [$top_node hasChildNodes]} {
+        foreach top [$top_node childNodes]  {
+            set el [ParseTopologyNode $el $top]
+        }
     }
-    foreach in [[$node getElementsByTagName inputs] childNodes]  {
-        set el [ParseInputParamNode $el $in]
+    set inputs_node [$node getElementsByTagName inputs]
+    if {$inputs_node ne "" && [$inputs_node hasChildNodes]} {
+        foreach in [$inputs_node childNodes]  {
+            set el [ParseInputParamNode $el $in]
+        }
     }
-    foreach out [[$node getElementsByTagName outputs] childNodes] {
-        set n [$out @n]
-        set pn [$out @pn]
-        set v false
-        if {[$out hasAttribute v]} {set v [$out @v]}
-        set outobj [::Model::Parameter new $n $pn bool $v "" "" "" ]
-        $el addOutputDone $outobj
+    set outputs_node [$node getElementsByTagName outputs]
+    if {$outputs_node ne "" && [$outputs_node hasChildNodes]} {
+        foreach out [$outputs_node childNodes] {
+            set n [$out @n]
+            set pn [$out @pn]
+            set v false
+            if {[$out hasAttribute v]} {set v [$out @v]}
+            set outobj [::Model::Parameter new $n $pn bool $v "" "" "" ]
+            $el addOutputDone $outobj
+        }
     }
-    foreach clf [[$node getElementsByTagName ConstitutiveLaw_FilterFeatures] childNodes]  {
-        $el addConstLawFilter [$clf getAttribute field] [$clf getAttribute value]
-        #W "CL Filter [$clf nodeName] -> [$el getConstLawFilterValue [$clf nodeName]]"
+    set const_laws_node [$node getElementsByTagName ConstitutiveLaw_FilterFeatures]
+    if {$const_laws_node ne "" && [$const_laws_node hasChildNodes]} {
+        foreach clf [$const_laws_node childNodes]  {
+            $el addConstLawFilter [$clf getAttribute field] [$clf getAttribute value]
+        }
     }
-    foreach ncnode [[$node getElementsByTagName NodalConditions] childNodes]  {
-        set n [$ncnode @n]
-        $el addNodalCondition $n
+    set nodal_conds_node [$node getElementsByTagName NodalConditions]
+    if {$nodal_conds_node ne "" && [$nodal_conds_node hasChildNodes]} {
+        foreach ncnode [$nodal_conds_node childNodes]  {
+            set n [$ncnode @n]
+            $el addNodalCondition $n
+        }
     }
     
     return $el
@@ -356,15 +384,17 @@ proc Model::CheckElementsNodalCondition {conditionId elemnames {restrictions "" 
         #
     } else {
         foreach eid $elemnames {
-            set elem [getElement $eid]
-            foreach elemNCNode [$elem getNodalConditions] {
-                set elemNC [$elemNCNode getName]
-                if {$elemNC eq $conditionId} {
-                    set ret 1
-                    foreach {key value} $restrictions {
-                        # JG: Revisar bidireccionalidad
-                        set nc [getNodalConditionbyId $conditionId]
-                        if {$value ni [$nc getAttribute $key]} {set ret 0;break}
+            if {$eid ne ""} {
+                set elem [getElement $eid]
+                foreach elemNCNode [$elem getNodalConditions] {
+                    set elemNC [$elemNCNode getName]
+                    if {$elemNC eq $conditionId} {
+                        set ret 1
+                        foreach {key value} $restrictions {
+                            # JG: Revisar bidireccionalidad
+                            set nc [getNodalConditionbyId $conditionId]
+                            if {$value ni [$nc getAttribute $key]} {set ret 0;break}
+                        }
                     }
                 }
             }
