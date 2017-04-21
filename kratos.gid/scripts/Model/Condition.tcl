@@ -70,6 +70,20 @@ oo::class create Condition {
     
 }
 }
+proc Model::ForgetConditions { } {
+    variable Conditions
+    set Conditions [list ]
+}
+proc Model::ForgetCondition { cnd_id } {
+    variable Conditions
+    set Conditions2 [list ]
+    foreach cnd $Conditions {
+        if {[$cnd getName] ne $cnd_id} {
+            lappend Conditions2 $cnd
+        }
+    }
+    set Conditions $Conditions2
+}
 proc Model::GetConditions {args} { 
     variable Conditions
     if {$args eq ""} {
@@ -98,8 +112,8 @@ proc Model::ParseCondNode { node } {
     set name [$node getAttribute n]
     set cnd [::Model::Condition new $name]
     $cnd setPublicName [$node getAttribute pn]
-    $cnd setHelp [$node getAttribute help]
-    $cnd setProcessName [$node getAttribute ProcessName]
+    if {[$node hasAttribute help]} {$cnd setHelp [$node getAttribute help]}
+    if {[$node hasAttribute ProcessName]} {$cnd setProcessName [$node getAttribute ProcessName]}
     
     foreach att [$node attributes] {
         $cnd setAttribute $att [split [$node getAttribute $att] ","]
