@@ -116,9 +116,10 @@ import process_factory
 # Note that the conditions are firstly constructed. Otherwise, they may overwrite the BCs information.
 
 # FLUID DOMAIN PROCESSES
-list_of_processes = process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["fluid_solver_settings"]["initial_conditions_process_list"] )
+list_of_processes  = process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["fluid_solver_settings"]["gravity"] )
+list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["fluid_solver_settings"]["initial_conditions_process_list"] )
 list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["fluid_solver_settings"]["boundary_conditions_process_list"] )
-list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["fluid_solver_settings"]["gravity"] )
+list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["fluid_solver_settings"]["auxiliar_process_list"] )
 
 # SOLID DOMAIN PROCESSES
 list_of_processes += process_factory.KratosProcessFactory(SolidModel).ConstructListOfProcesses( ProjectParameters["structure_solver_settings"]["constraints_process_list"] )
