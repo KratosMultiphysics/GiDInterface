@@ -287,24 +287,33 @@ proc Numa::write::DevicesOutput { } {
         dict set deviceDict help "This process print the selected value according its position"
         dict set deviceDict process_name "PointOutputProcess"
         
-        set xp2 "[spdAux::getRoute NumaDevices]/blockdata/value"
-        set var_nodes [$root selectNodes $xp2]
- 
-        # "[spdAux::getRoute NumaDevices]/blockdata\[@name='device'\]/value\[@n='Variable'\]"
+		set name [$node @name]
+		set extension ".txt"
+		
+        set xp2 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='Variable'\]"
+		set node_xp2 [$root selectNodes $xp2]
+		set variable [get_domnode_attribute $node_xp2 v]
+		
+		set xp3 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='XPosition'\]"
+		set node_xp3 [$root selectNodes $xp3]
+		set xposition [get_domnode_attribute $node_xp3 v]
+	
+		set xp4 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='YPosition'\]"
+		set node_xp4 [$root selectNodes $xp4]
+		set yposition [get_domnode_attribute $node_xp4 v]
 
-        foreach var $var_nodes {
-            lappend prueba [get_domnode_attribute $var v]
-            W $prueba
-        }
-               
+		set xp5 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='ZPosition'\]"
+		set node_xp5 [$root selectNodes $xp5]
+		set zposition [get_domnode_attribute $node_xp5 v]
+    
         set parameterDict [dict create]
         set positionList [list ]
-        lappend positionList 1.0 1.0 0
+        lappend positionList $xposition $yposition $zposition
         dict set parameterDict position $positionList
         dict set parameterDict model_part_name "MainModelPart"
-        dict set parameterDict output_file_name [$node @name]
+        dict set parameterDict output_file_name $name$extension
         set outputlist [list ]
-        lappend outputlist "DISPLACEMENT"
+        lappend outputlist $variable
         dict set parameterDict output_variables $outputlist
         dict set deviceDict Parameters $parameterDict     
         
