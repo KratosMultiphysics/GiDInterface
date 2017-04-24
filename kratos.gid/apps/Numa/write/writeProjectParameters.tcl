@@ -296,15 +296,15 @@ proc Numa::write::DevicesOutput { } {
 		
 		set xp3 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='XPosition'\]"
 		set node_xp3 [$root selectNodes $xp3]
-		set xposition [get_domnode_attribute $node_xp3 v]
+		set xposition [write::getValueByNode $node_xp3]
 	
 		set xp4 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='YPosition'\]"
 		set node_xp4 [$root selectNodes $xp4]
-		set yposition [get_domnode_attribute $node_xp4 v]
+		set yposition [write::getValueByNode $node_xp4]
 
 		set xp5 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='ZPosition'\]"
 		set node_xp5 [$root selectNodes $xp5]
-		set zposition [get_domnode_attribute $node_xp5 v]
+		set zposition [write::getValueByNode $node_xp5]
     
         set parameterDict [dict create]
         set positionList [list ]
