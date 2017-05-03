@@ -149,6 +149,20 @@ proc Model::ParseNodalConditions { doc } {
     }
 }
 
+proc Model::ForgetNodalConditions { } {
+    variable NodalConditions
+    set NodalConditions [list ]
+}
+proc Model::ForgetNodalCondition { cnd_id } {
+    variable NodalConditions
+    set NodalConditions2 [list ]
+    foreach cnd $NodalConditions {
+        if {[$cnd getName] ne $cnd_id} {
+            lappend NodalConditions2 $cnd
+        }
+    }
+    set NodalConditions $NodalConditions2
+}
 
 proc Model::ParseElemNode { node } {
     set name [$node getAttribute n]

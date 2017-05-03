@@ -22,6 +22,8 @@ proc Pfem::xml::Init { } {
     Model::getNodalConditions NodalConditions.xml
     Model::getConditions "../../Solid/xml/Conditions.xml"
     Model::getSolvers "../../Pfem/xml/Solvers.xml"
+
+    Model::ForgetNodalCondition "CONTACT"
 }
 
 proc Pfem::xml::getUniqueName {name} {

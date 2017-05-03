@@ -196,6 +196,8 @@ proc Numa::write::getParametersDict { } {
 
     dict set projectParametersDict constraints_process_list [Numa::write::ChangeFileNameforTableid $nodal_process_list]
     dict set projectParametersDict loads_process_list [Numa::write::ChangeFileNameforTableid $load_process_list]
+     
+    dict set projectParametersDict output_device_list [Numa::write::DevicesOutput]
        
     return $projectParametersDict
 
@@ -239,6 +241,15 @@ proc Numa::write::ChangeFileNameforTableid { processList } {
                 set value [Numa::write::GetTableidFromFileid $filename]
                 dict set nodalProcess Parameters $paramName $value
             }
+            if {[$param getType] eq "vector" && [$param getAttribute vectorType] eq "tablefile" && [dict exists $nodalProcess Parameters $paramName] } {
+                for {set i 0} {$i < [llength [dict get $nodalProcess Parameters $paramName]]} {incr i} {
+                    set filename [lindex [dict get $nodalProcess Parameters $paramName] $i]
+                    set value [Numa::write::GetTableidFromFileid $filename]
+                    set values_list [dict get $nodalProcess Parameters $paramName]
+                    set values_list [lreplace $values_list $i $i $value]
+                    dict set nodalProcess Parameters $paramName $values_list
+                }
+            }
         }
         lappend returnList $nodalProcess
     }
@@ -250,7 +261,7 @@ proc Numa::write::writeParametersEvent { } {
     write::WriteJSON $projectParametersDict
 }
 
-proc Numa::write::StremalinesUtility {} {
+proc Numa::write::StremalinesUtility { } {
 
     set nodalList [write::GetResultsList NodalResults]
     if {[lsearch $nodalList Vi_POSITIVE] >= 0 || [lsearch $nodalList Viii_POSITIVE] >= 0} {
@@ -259,4 +270,56 @@ proc Numa::write::StremalinesUtility {} {
         set streamlines false
     }
     return $streamlines
+}
+
+proc Numa::write::DevicesOutput { } {
+        
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute NumaDevices]/blockdata\[@n='device'\]"
+    set lista [list ]
+    set nodes [$root selectNodes $xp1]
+    
+    foreach node $nodes {
+        
+        set deviceDict [dict create]
+        dict set deviceDict python_module "point_output_process"
+        dict set deviceDict kratos_module "KratosMultiphysics"
+        dict set deviceDict help "This process print the selected value according its position"
+        dict set deviceDict process_name "PointOutputProcess"
+        
+		set name [$node @name]
+		set extension ".txt"
+		
+        set xp2 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='Variable'\]"
+		set node_xp2 [$root selectNodes $xp2]
+		set variable [get_domnode_attribute $node_xp2 v]
+		
+		set xp3 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='XPosition'\]"
+		set node_xp3 [$root selectNodes $xp3]
+		set xposition [write::getValueByNode $node_xp3]
+	
+		set xp4 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='YPosition'\]"
+		set node_xp4 [$root selectNodes $xp4]
+		set yposition [write::getValueByNode $node_xp4]
+
+		set xp5 "[spdAux::getRoute NumaDevices]/blockdata\[@name='$name'\]/value\[@n='ZPosition'\]"
+		set node_xp5 [$root selectNodes $xp5]
+		set zposition [write::getValueByNode $node_xp5]
+    
+        set parameterDict [dict create]
+        set positionList [list ]
+        lappend positionList $xposition $yposition $zposition
+        dict set parameterDict position $positionList
+        dict set parameterDict model_part_name "MainModelPart"
+        dict set parameterDict output_file_name $name$extension
+        set outputlist [list ]
+        lappend outputlist $variable
+        dict set parameterDict output_variables $outputlist
+        dict set deviceDict Parameters $parameterDict     
+        
+        lappend lista $deviceDict
+    }
+    
+    return $lista
+
 }
