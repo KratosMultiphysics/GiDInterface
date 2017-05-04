@@ -80,7 +80,7 @@ proc EmbeddedFluid::examples::AssignGroupsCylinderInFlow3D {args} {
 
     GiD_Groups create No_Slip_Walls
     GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Walls surfaces {1 3 4 7}
+    GiD_EntitiesGroups assign No_Slip_Walls surfaces {1 3 5 7}
 
     GiD_Groups create No_Slip_Cylinder
     GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
@@ -177,7 +177,7 @@ proc EmbeddedFluid::examples::TreeAssignationCylinderInFlow2D {args} {
 
     # Fluid Conditions
     [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
-    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
+    # [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
 
     # Time parameters
     set time_parameters [list EndTime 45 DeltaTime 0.1]
