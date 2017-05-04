@@ -15,6 +15,7 @@ proc ::EmbeddedFluid::examples::CylinderInFlow {args} {
 proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry3D {args} {
     DrawCylinderInFlowGeometry2D
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
+    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 2 escape escape escape
     GiD_Layers edit opaque Fluid 0
 
 }
@@ -51,38 +52,18 @@ proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry2D {args} {
     set circle_center_z 0.0
     set center_radius 0.1
     GiD_Process Mescape Geometry Create Object CirclePNR $circle_center_x $circle_center_y $circle_center_z 0.0 0.0 1.0 $center_radius escape
-    GiD_Geometry delete surface 2
+    GiD_Process escape MEscape Geometry Edit DivideLine Multiple NumDivisions 2 5 escape escape 
+
+    # GiD_Geometry delete surface 2
 
     # Create the hole
     GiD_Layers edit to_use Fluid
-    GiD_Process MEscape Geometry Edit HoleNurb 1 5 escape escape
+    # GiD_Process MEscape Geometry Edit HoleNurb 1 5 escape escape
 
 }
 
 
 # Group assign
-proc EmbeddedFluid::examples::AssignGroupsCylinderInFlow2D {args} {
-    # Create the groups
-    GiD_Groups create Fluid
-    GiD_Groups edit color Fluid "#26d1a8ff"
-    GiD_EntitiesGroups assign Fluid surfaces 1
-
-    GiD_Groups create Inlet
-    GiD_Groups edit color Inlet "#e0210fff"
-    GiD_EntitiesGroups assign Inlet lines 4
-
-    GiD_Groups create Outlet
-    GiD_Groups edit color Outlet "#42eb71ff"
-    GiD_EntitiesGroups assign Outlet lines 2
-
-    GiD_Groups create No_Slip_Walls
-    GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Walls lines {1 3}
-
-    GiD_Groups create No_Slip_Cylinder
-    GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Cylinder lines 5
-}
 proc EmbeddedFluid::examples::AssignGroupsCylinderInFlow3D {args} {
     # Create the groups
     GiD_Groups create Fluid
@@ -91,19 +72,19 @@ proc EmbeddedFluid::examples::AssignGroupsCylinderInFlow3D {args} {
 
     GiD_Groups create Inlet
     GiD_Groups edit color Inlet "#e0210fff"
-    GiD_EntitiesGroups assign Inlet surfaces 5
+    GiD_EntitiesGroups assign Inlet surfaces 6
 
     GiD_Groups create Outlet
     GiD_Groups edit color Outlet "#42eb71ff"
-    GiD_EntitiesGroups assign Outlet surfaces 3
+    GiD_EntitiesGroups assign Outlet surfaces 4
 
     GiD_Groups create No_Slip_Walls
     GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Walls surfaces {1 2 4 7}
+    GiD_EntitiesGroups assign No_Slip_Walls surfaces {1 3 4 7}
 
     GiD_Groups create No_Slip_Cylinder
     GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Cylinder surfaces 6
+    GiD_EntitiesGroups assign No_Slip_Cylinder surfaces {8 9}
 }
 
 
