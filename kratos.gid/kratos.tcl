@@ -366,7 +366,7 @@ proc Kratos::ResetModel { } {
 
 proc Kratos::BeforeMeshGeneration {elementsize} {
     foreach group [GiD_Groups list] {
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape Mescape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
     }
     set ret ""
