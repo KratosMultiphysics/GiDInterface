@@ -58,6 +58,10 @@ proc ::EmbeddedFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "ImportMesh" "Import.png" [list -np- EmbeddedFluid::xml::ImportMeshWindow] [= "Import embedded mesh"]
     Kratos::ToolbarAddItem "Move" "move.png" [list -np- CopyMove Move] [= "Move the geometry/mesh"]
     Kratos::ToolbarAddItem "Box" "box.png" [list -np- EmbeddedFluid::xml::BoundingBox::CreateWindow] [= "Generate the bounding box"]
+    Kratos::ToolbarAddItem "ExampleSpacer" "" "" ""
+    variable dir
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::EmbeddedFluid::examples::CylinderInFlow] [= "Example\nCylinder in air flow"]   
 }
 
 proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
