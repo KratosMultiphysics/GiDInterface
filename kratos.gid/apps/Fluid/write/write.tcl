@@ -79,7 +79,7 @@ proc Fluid::write::Validate {} {
 proc Fluid::write::getLastConditionId { } { 
     variable FluidConditions
     set top 1
-    Kratos::PrintArray FluidConditions
+    # Kratos::PrintArray FluidConditions
     if {[array size FluidConditions]} {
         foreach name [array names FluidConditions] {
             set top [expr max($top,$FluidConditions($name))]
