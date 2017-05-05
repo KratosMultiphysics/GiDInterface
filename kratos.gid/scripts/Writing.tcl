@@ -256,45 +256,42 @@ proc write::writeElementConnectivities { } {
     
     set xp1 "[spdAux::getRoute $parts]/group"
     foreach gNode [$root selectNodes $xp1] {
-        write::writeGroupElementConnectivities $gNode
+        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        write::writeGroupElementConnectivities $gNode $elem
     }
 }
 
 # gNode must be a tree group, have a value n = Element
-proc write::writeGroupElementConnectivities { gNode } {
+proc write::writeGroupElementConnectivities { gNode kelemtype} {
     variable mat_dict
     set formats ""
     set group [get_domnode_attribute $gNode n]
     if { [dict exists $mat_dict $group] } {
         set mid [dict get $mat_dict $group MID]
-        if {[$gNode hasAttribute ov]} {set ov [get_domnode_attribute $gNode ov] } {set ov [get_domnode_attribute [$gNode parent] ov] }
-        lassign [getEtype $ov $group] etype nnodes
-        if {$nnodes ne ""} {
-            set formats [GetFormatDict $group $mid $nnodes]
-            if {$etype ne "none"} {
-                set kelemtype [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
-                set elem [::Model::getElement $kelemtype]
-                set top [$elem getTopologyFeature $etype $nnodes]
-                if {$top ne ""} {
-                    set kratosElemName [$top getKratosName]
-                    WriteString "Begin Elements $kratosElemName// GUI group identifier: $group"
-                    # formats -> tcl dict -> key : group id | value : format of printable information
-                    # "%10d [format "%10d" $mid] [string repeat "%10d " $num]\n"
-                    # "%10d 1 %10d %10d %10d %10d" -> Tetrahedra with property 1 assigned
-                    GiD_WriteCalculationFile connectivities $formats
-                    WriteString "End Elements"
-                    WriteString ""
-                } else {
-                    error [= "Element $kelemtype not available for $ov entities on group $group"]
-                }
+    } else {
+        set mid 0
+    }
+    if {[$gNode hasAttribute ov]} {set ov [get_domnode_attribute $gNode ov] } {set ov [get_domnode_attribute [$gNode parent] ov] }
+    lassign [getEtype $ov $group] etype nnodes
+    if {$nnodes ne ""} {
+        set formats [GetFormatDict $group $mid $nnodes]
+        if {$etype ne "none"} {
+            set elem [::Model::getElement $kelemtype]
+            set top [$elem getTopologyFeature $etype $nnodes]
+            if {$top ne ""} {
+                set kratosElemName [$top getKratosName]
+                WriteString "Begin Elements $kratosElemName// GUI group identifier: $group"
+                GiD_WriteCalculationFile connectivities $formats
+                WriteString "End Elements"
+                WriteString ""
             } else {
-                error [= "You have not assigned a proper entity to group $group"]
+                error [= "Element $kelemtype not available for $ov entities on group $group"]
             }
         } else {
             error [= "You have not assigned a proper entity to group $group"]
         }
     } else {
-        error [= "Group $group not in the material database. Call write::initWriteData first"]
+        error [= "You have not assigned a proper entity to group $group"]
     }
 }
 
@@ -309,49 +306,67 @@ proc write::GetWriteGroupName { group_id } {
     return $group_id
 }
 
-proc write::writeConditions { baseUN } {
+proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
     set dictGroupsIterators [dict create]
     
     set root [customlib::GetBaseRoot]
     
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
-    set iter 1
-    foreach groupNode [$root selectNodes $xp1] {
-        set condid [[$groupNode parent] @n]
+    set groupNodes [$root selectNodes $xp1]
+    if {[llength $groupNodes] < 1} {
+        set xp1 "[spdAux::getRoute $baseUN]/group"
+        set groupNodes [$root selectNodes $xp1]
+    }
+    foreach groupNode $groupNodes {
+        if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
-        if {![dict exists $dictGroupsIterators $groupid]} {
-            if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
-            set cond [::Model::getCondition $condid]
+        set dictGroupsIterators [writeGroupNodeCondition $dictGroupsIterators $groupNode $condid [incr iter]]
+        set iter [lindex [dict get $dictGroupsIterators $groupid] 1]
+    }
+    return $dictGroupsIterators
+}
+
+proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
+    set groupid [get_domnode_attribute $groupNode n]
+    set groupid [GetWriteGroupName $groupid]
+    if {![dict exists $dictGroupsIterators $groupid]} {
+        if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
+        set cond [::Model::getCondition $condid]
+        if {$cond ne ""} {
             lassign [write::getEtype $ov $groupid] etype nnodes
             set kname [$cond getTopologyKratosName $etype $nnodes]
             if {$kname ne ""} {
-                set obj [list ]
-                WriteString "Begin Conditions $kname// GUI group identifier: $groupid"
-                if {$etype eq "Point"} {
-                    set formats [dict create $groupid "%10d \n"]
-                    
-                    #set obj [GiD_WriteCalculationFile nodes -return $formats]
-                    #set obj [list 3 5]
-                    set obj [GiD_EntitiesGroups get $groupid nodes]
-                } else {
-                    set formats [write::GetFormatDict $groupid 0 $nnodes]
-                    set elems [GiD_WriteCalculationFile connectivities -return $formats]
-                    set obj [GetListsOfNodes $elems $nnodes 2]
-                }
-                set initial $iter
-                for {set i 0} {$i <[llength $obj]} {incr iter; incr i} {
-                    set nids [lindex $obj $i]
-                    WriteString "$iter 0 $nids"
-                }
-                set final [expr $iter -1]
-                WriteString "End Conditions"
-                WriteString ""
+                lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
                 dict set dictGroupsIterators $groupid [list $initial $final]
             }
+        } else {
+            error "Could not find conditon named $condid"
         }
     }
     return $dictGroupsIterators
+}
+
+proc write::writeGroupCondition {groupid kname nnodes iter} {
+    set obj [list ]
+    WriteString "Begin Conditions $kname// GUI group identifier: $groupid"
+    if {$nnodes == 1} {
+        set formats [dict create $groupid "%10d \n"]
+        set obj [GiD_EntitiesGroups get $groupid nodes]
+    } else {
+        set formats [write::GetFormatDict $groupid 0 $nnodes]
+        set elems [GiD_WriteCalculationFile connectivities -return $formats]
+        set obj [GetListsOfNodes $elems $nnodes 2]
+    }
+    set initial $iter
+    for {set i 0} {$i <[llength $obj]} {incr iter; incr i} {
+        set nids [lindex $obj $i]
+        WriteString "$iter 0 $nids"
+    }
+    set final [expr $iter -1]
+    WriteString "End Conditions"
+    WriteString ""
+    return [list $initial $final]
 }
 
 proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
@@ -393,10 +408,12 @@ proc write::transformGroupName {groupid} {
     return [join $new_parts /]
 }
 
+# what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable meshes
     variable groups_type_name
-    
+
+    set what [split $what "&"]
     set gtn $groups_type_name
     set group [GetWriteGroupName $group]
     if {![dict exists $meshes [list $cid ${group}]]} {
@@ -422,12 +439,12 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
         GiD_WriteCalculationFile nodes -sorted $gdict
         WriteString "    End ${gtn}Nodes"
         WriteString "    Begin ${gtn}Elements"
-        if {$what eq "Elements"} {
+        if {"Elements" in $what} {
             GiD_WriteCalculationFile elements -sorted $gdict
         }
         WriteString "    End ${gtn}Elements"
         WriteString "    Begin ${gtn}Conditions"
-        if {$what eq "Conditions"} {
+        if {"Conditions" in $what} {
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
                 #W $iniend
@@ -441,6 +458,42 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
         WriteString "    End ${gtn}Conditions"
         WriteString "End $gtn"
     }
+}
+
+proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $un]/group"
+    set groups [$root selectNodes $xp1]
+    Model::getElements "../../Common/xml/Elements.xml"
+    Model::getConditions "../../Common/xml/Conditions.xml"
+    set conditions_dict [dict create ]
+    set elements_list [list ]
+    foreach group $groups {
+        set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
+        set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        if {$needElems} {
+            writeGroupElementConnectivities $group "GENERIC_ELEMENT"
+            lappend elements_list [$group @n]
+        }
+        if {$needConds} {
+            set iters [write::writeGroupNodeCondition $conditions_dict $group "GENERIC_CONDITION" [incr cond_iter]]
+            set conditions_dict [dict merge $conditions_dict $iters]
+            set cond_iter [lindex $iters 1 1]
+        }
+    }
+    Model::ForgetElement GENERIC_ELEMENT
+    Model::ForgetCondition GENERIC_CONDITIONS
+
+    foreach group $groups {
+        set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
+        set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        set what "nodal"
+        set iters ""
+        if {$needElems} {append what "&Elements"}
+        if {$needConds} {append what "&Conditions"; set iters [dict get $conditions_dict [$group @n]]}
+        ::write::writeGroupMesh "GENERIC" [$group @n] $what $iters
+    }
+    return $conditions_dict
 }
 
 proc write::writeNodalConditions { keyword } {

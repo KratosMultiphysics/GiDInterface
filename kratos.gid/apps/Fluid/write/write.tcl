@@ -52,6 +52,7 @@ proc Fluid::write::writeModelPartEvent { } {
     write::writeElementConnectivities
     writeConditions
     writeMeshes
+    write::writeBasicSubmodelParts [getLastConditionId]
 }
 proc Fluid::write::writeCustomFilesEvent { } {
     write::CopyFileIntoModel "python/KratosFluid.py"
@@ -73,6 +74,18 @@ proc Fluid::write::Validate {} {
     #    append err "Check boundary conditions."
     #}
     return $err
+}
+
+proc Fluid::write::getLastConditionId { } { 
+    variable FluidConditions
+    set top 1
+    # Kratos::PrintArray FluidConditions
+    if {[array size FluidConditions]} {
+        foreach name [array names FluidConditions] {
+            set top [expr max($top,$FluidConditions($name))]
+        }
+    }
+    return $top
 }
 
 # MDPA Blocks
