@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+    
+  <ConditionItem n="GENERIC_CONDITION" pn="GENERIC_CONDITION" ProductionReady="Developer">
+    <TopologyFeatures>
+      <item GeometryType="Point"         nodes="1"  KratosName="Condition2D1N"/>
+      <item GeometryType="Line"          nodes="2"  KratosName="Condition2D2N"/>
+      <item GeometryType="Line"          nodes="3"  KratosName="Condition2D3N"/>
+      <item GeometryType="Triangle"      nodes="3"  KratosName="Condition2D3N"/>
+      <item GeometryType="Triangle"      nodes="6"  KratosName="Condition2D6N"/>
+      <item GeometryType="Quadrilateral" nodes="4"  KratosName="Condition2D4N"/>
+      <item GeometryType="Quadrilateral" nodes="8"  KratosName="Condition2D8N"/>
+      <item GeometryType="Quadrilateral" nodes="9"  KratosName="Condition2D9N"/>
+      <item GeometryType="Tetrahedra"    nodes="4"  KratosName="Condition3D4N"/>
+      <item GeometryType="Tetrahedra"    nodes="10" KratosName="Condition3D10N"/>
+      <item GeometryType="Hexahedra"     nodes="8"  KratosName="Condition3D8N"/>
+      <item GeometryType="Hexahedra"     nodes="20" KratosName="Condition3D20N"/>
+      <item GeometryType="Hexahedra"     nodes="27" KratosName="Condition3D27N"/>
+      <item GeometryType="Prism"         nodes="6"  KratosName="Condition3D6N"/>
+      <item GeometryType="Prism"         nodes="15" KratosName="Condition3D15N"/>
+    </TopologyFeatures>
+  </ConditionItem>
+  
+</ConditionList>

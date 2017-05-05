@@ -46,6 +46,7 @@ proc Solid::write::SetCoordinatesByGroups {value} {
 proc Solid::write::writeModelPartEvent { } {
     variable writeCoordinatesByGroups
     variable validApps
+    variable ConditionsDictGroupIterators
     write::initWriteData "SLParts" "SLMaterials"
     
     write::writeModelPartData
@@ -57,6 +58,9 @@ proc Solid::write::writeModelPartEvent { } {
     write::writeElementConnectivities
     writeConditions
     writeMeshes
+    set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
+    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
+    # W $ConditionsDictGroupIterators
     #writeCustomBlock
 }
 
@@ -99,6 +103,17 @@ proc Solid::write::writeCustomBlock { } {
     write::WriteString "Custom write for Solid, any app can call me, so be careful!"
     write::WriteString "End Custom"
     write::WriteString ""
+}
+
+proc Solid::write::getLastConditionId { } { 
+    variable ConditionsDictGroupIterators
+    set top 1
+    if {$ConditionsDictGroupIterators ne ""} {
+        foreach {group iters} $ConditionsDictGroupIterators {
+            set top [expr max($top,[lindex $iters 1])]
+        }
+    }
+    return $top
 }
 
 # Custom files
