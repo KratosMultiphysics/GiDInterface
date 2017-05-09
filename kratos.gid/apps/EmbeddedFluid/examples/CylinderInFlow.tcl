@@ -219,4 +219,6 @@ proc EmbeddedFluid::examples::AddMeshOptimizationPoints { } {
     set points_to_control [list 13 14 15 16 17 18 19 20 21]
     GiD_EntitiesGroups assign $optimized_group points $points_to_control
     GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 15 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.166,0.0,0.0 {*}$points_to_control escape Mescape escape 
+    GiD_Process Mescape Meshing MeshCriteria ForcePointsTo VolumeMesh 1 escape {*}[GiD_EntitiesGroups get $optimized_group points] escape 
+    GiD_Process Mescape Meshing AssignSizes Points 0.005 {*}[GiD_EntitiesGroups get $optimized_group points] escape escape
 }
