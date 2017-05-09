@@ -1,9 +1,11 @@
 
 proc ::EmbeddedFluid::examples::CylinderInFlow {args} {
-    DrawCylinderInFlowGeometry$::Model::SpatialDimension
-    AssignGroupsCylinderInFlow$::Model::SpatialDimension
-    AssignCylinderInFlowMeshSizes$::Model::SpatialDimension
-    TreeAssignationCylinderInFlow$::Model::SpatialDimension
+    DrawCylinderInFlowGeometry3D
+    AssignGroupsCylinderInFlow3D
+    AssignCylinderInFlowMeshSizes3D
+    TreeAssignationCylinderInFlow3D
+
+    AddMeshOptimizationPoints
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -26,7 +28,7 @@ proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry2D {args} {
 
     # Geometry creation
     ## Points ##
-    set coordinates [list 0 1 0 5 1 0 5 0 0 0 0 0]
+    set coordinates [list 0 1 0 3.5 1 0 3.5 0 0 0 0 0]
     set fluidPoints [list ]
     foreach {x y z} $coordinates {
         lappend fluidPoints [GiD_Geometry create point append Fluid $x $y $z]
@@ -47,7 +49,7 @@ proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry2D {args} {
     # Body #
     GiD_Layers create Body
     GiD_Layers edit to_use Body
-    set circle_center_x 1.25
+    set circle_center_x 0.75
     set circle_center_y 0.5
     set circle_center_z 0.0
     set center_radius 0.1
@@ -207,4 +209,14 @@ proc EmbeddedFluid::examples::ErasePreviousIntervals { } {
     foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
         if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
     }
+}
+
+
+proc EmbeddedFluid::examples::AddMeshOptimizationPoints { } {
+    set optimized_group "Optimized mesh"
+    GiD_Process Mescape Geometry Edit DivideLine Multiple NumDivisions 10 18 escape escape 
+    GiD_Groups create $optimized_group
+    set points_to_control [list 13 14 15 16 17 18 19 20 21]
+    GiD_EntitiesGroups assign $optimized_group points $points_to_control
+    GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 15 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.166,0.0,0.0 {*}$points_to_control escape Mescape escape 
 }
