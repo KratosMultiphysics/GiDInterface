@@ -7,6 +7,7 @@ proc ::EmbeddedFluid::examples::CylinderInFlow {args} {
 
     AddMeshOptimizationPoints
 
+    GiD_Process 'Zoom Frame
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
@@ -64,7 +65,6 @@ proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry2D {args} {
 
 }
 
-
 # Group assign
 proc EmbeddedFluid::examples::AssignGroupsCylinderInFlow3D {args} {
     # Create the groups
@@ -89,7 +89,6 @@ proc EmbeddedFluid::examples::AssignGroupsCylinderInFlow3D {args} {
     GiD_EntitiesGroups assign No_Slip_Cylinder surfaces {8 9}
 }
 
-
 # Mesh sizes
 proc EmbeddedFluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
     set cylinder_mesh_size 0.005
@@ -111,7 +110,6 @@ proc EmbeddedFluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
     # Kratos::BeforeMeshGeneration $fluid_mesh_size
 }
-
 
 # Tree assign
 proc EmbeddedFluid::examples::TreeAssignationCylinderInFlow3D {args} {
@@ -211,7 +209,6 @@ proc EmbeddedFluid::examples::ErasePreviousIntervals { } {
     }
 }
 
-
 proc EmbeddedFluid::examples::AddMeshOptimizationPoints { } {
     set optimized_group "Optimized mesh"
     GiD_Process Mescape Geometry Edit DivideLine Multiple NumDivisions 10 18 escape escape 
@@ -219,6 +216,12 @@ proc EmbeddedFluid::examples::AddMeshOptimizationPoints { } {
     set points_to_control [list 13 14 15 16 17 18 19 20 21]
     GiD_EntitiesGroups assign $optimized_group points $points_to_control
     GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 15 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.166,0.0,0.0 {*}$points_to_control escape Mescape escape 
-    GiD_Process Mescape Meshing MeshCriteria ForcePointsTo VolumeMesh 1 escape {*}[GiD_EntitiesGroups get $optimized_group points] escape 
-    GiD_Process Mescape Meshing AssignSizes Points 0.005 {*}[GiD_EntitiesGroups get $optimized_group points] escape escape
+    
+    set original_points [GiD_EntitiesGroups get $optimized_group points]
+    GiD_Process Mescape Meshing MeshCriteria ForcePointsTo VolumeMesh 1 escape {*}$original_points escape 
+    GiD_Process Mescape Meshing AssignSizes Points 0.005 {*}$original_points escape escape
+
+    # GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.1,0.0  {*}$original_points escape 
+    # GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,-0.1,0.0 {*}$original_points escape 
+
 }
