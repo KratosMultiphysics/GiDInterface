@@ -322,7 +322,11 @@ proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
         set dictGroupsIterators [writeGroupNodeCondition $dictGroupsIterators $groupNode $condid [incr iter]]
-        set iter [lindex [dict get $dictGroupsIterators $groupid] 1]
+        if { [dict exists $dictGroupsIterators $groupid] } {
+            set iter [lindex [dict get $dictGroupsIterators $groupid] 1]
+        } else {
+            incr iter -1
+        }
     }
     return $dictGroupsIterators
 }
@@ -339,6 +343,9 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
             if {$kname ne ""} {
                 lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
                 dict set dictGroupsIterators $groupid [list $initial $final]
+            } else {
+                # If kname eq "" => no topology feature match, condition written as nodal
+                if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
             }
         } else {
             error "Could not find conditon named $condid"
