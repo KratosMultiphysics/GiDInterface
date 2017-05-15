@@ -73,6 +73,9 @@ proc AfterWriteCalcFileGIDProject { filename errorflag } {
 proc BeforeMeshGeneration { elementsize } {
     return [Kratos::BeforeMeshGeneration $elementsize]
 }
+proc GiD_Event_BeforeMeshGeneration { elementsize } {
+    return [Kratos::BeforeMeshGeneration $elementsize]
+}
 proc AfterMeshGeneration { fail } {
     Kratos::AfterMeshGeneration $fail
 }
