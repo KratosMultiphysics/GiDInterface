@@ -4,7 +4,7 @@
   <Program>
     <Name>Kratos</Name>
     <Version>5.0</Version>
-    <MinimumGiDVersion>13.1.1d</MinimumGiDVersion>
+    <MinimumGiDVersion>13.1.6d</MinimumGiDVersion>
     <CustomLibAutomatic>0</CustomLibAutomatic>
     <CustomLibNativeGroups>1</CustomLibNativeGroups>
     <ImageFileBrowser>images/ImageFileBrowser.gif</ImageFileBrowser>
