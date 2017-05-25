@@ -1,5 +1,5 @@
 namespace eval EmbeddedFluid::examples {
-
+    variable CylinderInFlow_Data
 }
 
 proc EmbeddedFluid::examples::Init { } {

@@ -1,5 +1,6 @@
 
 proc ::EmbeddedFluid::examples::CylinderInFlow {args} {
+    InitVariables
     DrawCylinderInFlowGeometry3D
     AssignGroupsCylinderInFlow3D
     AssignCylinderInFlowMeshSizes3D
@@ -11,6 +12,14 @@ proc ::EmbeddedFluid::examples::CylinderInFlow {args} {
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
+}
+
+proc EmbeddedFluid::examples::InitVariables { } {
+    variable CylinderInFlow_Data
+    set CylinderInFlow_Data(circle_center_x) 0.75
+    set CylinderInFlow_Data(circle_center_y) 0.5
+    set CylinderInFlow_Data(circle_center_z) 0.0
+    set CylinderInFlow_Data(circle_radius)   0.1
 }
 
 
@@ -50,11 +59,12 @@ proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry2D {args} {
     # Body #
     GiD_Layers create Body
     GiD_Layers edit to_use Body
-    set circle_center_x 0.75
-    set circle_center_y 0.5
-    set circle_center_z 0.0
-    set center_radius 0.1
-    GiD_Process Mescape Geometry Create Object CirclePNR $circle_center_x $circle_center_y $circle_center_z 0.0 0.0 1.0 $center_radius escape
+    variable CylinderInFlow_Data
+    set circle_center_x $CylinderInFlow_Data(circle_center_x)
+    set circle_center_y $CylinderInFlow_Data(circle_center_y)
+    set circle_center_z $CylinderInFlow_Data(circle_center_z)
+    set circle_radius   $CylinderInFlow_Data(circle_radius)
+    GiD_Process Mescape Geometry Create Object CirclePNR $circle_center_x $circle_center_y $circle_center_z 0.0 0.0 1.0 $circle_radius escape
     GiD_Process escape MEscape Geometry Edit DivideLine Multiple NumDivisions 2 5 escape escape 
 
     # GiD_Geometry delete surface 2
@@ -211,17 +221,29 @@ proc EmbeddedFluid::examples::ErasePreviousIntervals { } {
 
 proc EmbeddedFluid::examples::AddMeshOptimizationPoints { } {
     set optimized_group "Optimized mesh"
-    GiD_Process Mescape Geometry Edit DivideLine Multiple NumDivisions 10 18 escape escape 
+    
+    GiD_Layers create Mesh_Optimization
+    GiD_Layers edit to_use Mesh_Optimization
+    
+    variable CylinderInFlow_Data
+    set radius   $CylinderInFlow_Data(circle_radius)
+    set center_x [expr $CylinderInFlow_Data(circle_center_x) + $radius]
+    set center_y $CylinderInFlow_Data(circle_center_y)
+    set center_z $CylinderInFlow_Data(circle_center_z)
+    set origin_point [GiD_Geometry create point append Mesh_Optimization $center_x $center_y $center_z]
+
     GiD_Groups create $optimized_group
-    set points_to_control [list 13 14 15 16 17 18 19 20 21]
-    GiD_EntitiesGroups assign $optimized_group points $points_to_control
-    GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 15 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.166,0.0,0.0 {*}$points_to_control escape Mescape escape 
+    GiD_EntitiesGroups assign $optimized_group points $origin_point
+    GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 10 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.1 $origin_point escape Mescape escape 
+    
+    set original_points [GiD_EntitiesGroups get $optimized_group points]
+    GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 15 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.166,0.0,0.0 {*}$original_points escape Mescape escape 
     
     set original_points [GiD_EntitiesGroups get $optimized_group points]
     GiD_Process Mescape Meshing MeshCriteria ForcePointsTo VolumeMesh 1 escape {*}$original_points escape 
     GiD_Process Mescape Meshing AssignSizes Points 0.005 {*}$original_points escape escape
 
-    # GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.1,0.0  {*}$original_points escape 
-    # GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,-0.1,0.0 {*}$original_points escape 
+    GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.1,0.0  {*}$original_points escape 
+    GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,-0.1,0.0 {*}$original_points escape 
 
 }
