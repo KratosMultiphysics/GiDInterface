@@ -70,9 +70,7 @@ proc AfterWriteCalcFileGIDProject { filename errorflag } {
     set errcode [::write::writeEvent $filename]
     if {$errcode} {return "-cancel-"}
 }
-proc BeforeMeshGeneration { elementsize } {
-    return [Kratos::BeforeMeshGeneration $elementsize]
-}
+
 proc GiD_Event_BeforeMeshGeneration { elementsize } {
     return [Kratos::BeforeMeshGeneration $elementsize]
 }
