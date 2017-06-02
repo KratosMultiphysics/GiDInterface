@@ -25,11 +25,12 @@ proc FSI::write::getParametersDict { } {
    lappend solidInterfacesList {*}[write::GetMeshFromCondition STLoads StructureInterface3D]
    dict set solverSettingsDict structure_interfaces_list $solidInterfacesList
 
-   set fluidInterfacesList [write::GetMeshFromCondition FLBC FluidNoSlipInterface2D]
-   lappend fluidInterfacesList {*}[write::GetMeshFromCondition FLBC FluidNoSlipInterface3D]
+   set fluid_interface_UniqueName FluidNoSlipInterface$::Model::SpatialDimension
+   set fluidInterfacesList [write::GetMeshFromCondition FLBC $fluid_interface_UniqueName]
    dict set solverSettingsDict fluid_interfaces_list $fluidInterfacesList
 
    dict set FSIParametersDict solver_settings $solverSettingsDict
+   dict set FSIParametersDict mapper_settings [GetMappingSettingsList]
 
    # Structural section
    UpdateUniqueNames Structural
@@ -57,6 +58,7 @@ proc FSI::write::getParametersDict { } {
    dict set projectParametersDict structure_solver_settings $StructuralParametersDict
    dict set projectParametersDict fluid_solver_settings $FluidParametersDict
    dict set projectParametersDict coupling_solver_settings $FSIParametersDict
+
    return $projectParametersDict
 }
 
@@ -73,3 +75,27 @@ proc FSI::write::UpdateUniqueNames { appid } {
          spdAux::setRoute $un [spdAux::getRoute $current_un]
     }
 }
+
+proc FSI::write::GetMappingSettingsList { } {
+    set mappingsList [list ]
+
+    set fluid_interface_name FluidNoSlipInterface$::Model::SpatialDimension
+    set structural_interface_name StructureInterface$::Model::SpatialDimension
+    set structuralInterface [lindex [write::GetMeshFromCondition STLoads $structural_interface_name] 0]
+    foreach fluid_interface [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute FLBC]/condition\[@n = '$fluid_interface_name'\]/group" ] {
+        set map [dict create]
+        set mapper_face [write::getValueByNode [$fluid_interface selectNodes ".//value\[@n='mapper_face']"] ]
+        dict set map mapper_face $mapper_face
+        dict set map fluid_interface_submodelpart_name [write::getMeshId $fluid_interface_name [get_domnode_attribute $fluid_interface n]]
+        dict set map structure_interface_submodelpart_name $structuralInterface
+        lappend mappingsList $map
+    }
+
+    return $mappingsList
+}
+
+# {
+#     "mapper_face" : "Unique" (otherwise "Positive" or "Negative")
+#     "fluid_interface_submodelpart_name" : "FluidNoSlipInterface2D_FluidInterface",
+#     "structure_interface_submodelpart_name" : "StructureInterface2D_StructureInterface"
+# }

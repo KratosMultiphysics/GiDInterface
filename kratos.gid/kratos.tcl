@@ -146,17 +146,12 @@ proc Kratos::InitGIDProject { dir } {
     set kratos_private(UseWizard) 0
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
-    #customlib::UpdateDocument
     Kratos::LoadEnvironment
     Kratos::ChangeMenus
-    gid_groups_conds::SetProgramName "Kratos"
+    gid_groups_conds::SetProgramName $kratos_private(Name)
     gid_groups_conds::SetLibDir [file join $dir exec]
     set spdfile [file join $dir kratos_default.spd]
-    if { [GidUtils::VersionCmp 13.1.4d] < 0 } {
-        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] 
-    } {
-        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
-    }
+    gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
@@ -167,7 +162,6 @@ proc Kratos::InitGIDProject { dir } {
     update
     spdAux::LoadModelFiles
     gid_groups_conds::close_all_windows
-    #after 100 [list gid_groups_conds::close_all_windows]
     after 500 [list spdAux::CreateWindow]
 }
 
