@@ -690,7 +690,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
         set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
-        set inputs [$process getInputs] 
+        set inputs [concat [$process getInputs] [$cnd getInputs] ]
         foreach {inName in} $inputs {
             set pn [$in getPublicName]
             set type [$in getType]

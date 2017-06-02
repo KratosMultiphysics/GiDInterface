@@ -40,6 +40,13 @@ oo::class create Condition {
         set top [my getTopologyFeature $geo $nod]
         if {$top ne ""} {return [$top getKratosName]} {return ""}
     }
+
+    method hasTopologyFeatures { } {
+        variable TopologyFeatures
+        set ret 0
+        if {[llength $TopologyFeatures]} {set ret 1}
+        return $ret
+    }
     
     method setProcessName {pn} {
         variable processName
