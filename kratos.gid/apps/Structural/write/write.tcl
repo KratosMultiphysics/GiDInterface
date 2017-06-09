@@ -3,22 +3,8 @@ namespace eval Structural::write {
 }
 
 proc Structural::write::Init { } {
-    Solid::write::AddValidApps "Structural"
 }
 
-proc Structural::write::SetCoordinatesByGroups {value} {
-    Solid::write::SetCoordinatesByGroups $value
-}
-
-proc Structural::write::writeCustomFilesEvent { } {
-    return [Solid::write::writeCustomFilesEvent]
-}
-
-# MDPA Blocks
-
-proc Structural::write::writeModelPartEvent { } {
-    Solid::write::writeModelPartEvent
-}
 
 # Project Parameters
 proc Structural::write::getParametersEvent { } {

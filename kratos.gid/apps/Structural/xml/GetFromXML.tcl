@@ -5,12 +5,16 @@ namespace eval Structural::xml {
 proc Structural::xml::Init { } {
      variable dir
      Model::InitVariables dir $Structural::dir
-    
-     Model::ForgetSolutionStrategies
-     Model::getSolutionStrategies Strategies.xml
-     Model::getElements Elements.xml
-     Model::getNodalConditions NodalConditions.xml
-     Model::getConstitutiveLaws ConstitutiveLaws.xml
+
+    Model::getSolutionStrategies Strategies.xml
+    Model::getElements Elements.xml
+    Model::getMaterials Materials.xml
+    Model::getNodalConditions NodalConditions.xml
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
+    Model::getProcesses DeprecatedProcesses.xml
+    Model::getProcesses Processes.xml
+    Model::getConditions Conditions.xml
+    Model::getSolvers "../../Common/xml/Solvers.xml"
 }
 
 proc Structural::xml::getUniqueName {name} {
@@ -18,14 +22,12 @@ proc Structural::xml::getUniqueName {name} {
 }
 
 proc ::Structural::xml::MultiAppEvent {args} {
-   if {$args eq "init"} {
-     spdAux::parseRoutes
-     spdAux::ConvertAllUniqueNames SL ST
-   }
+
 }
 
 proc Structural::xml::CustomTree { args } {
-    Solid::xml::CustomTree $args
+    spdAux::SetValueOnTreeItem state hidden Results CutPlanes
+    spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
 }
 
 proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
