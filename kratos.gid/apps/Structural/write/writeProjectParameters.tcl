@@ -1,6 +1,6 @@
 # Project Parameters
 
-proc Structural::write::getParametersDict { } {
+proc Structural::write::getOldParametersDict { } {
     set model_part_name "Structure"
     set projectParametersDict [dict create]
 
@@ -25,7 +25,7 @@ proc Structural::write::getParametersDict { } {
         #set nthreads [write::getValue Parallelization MPINumberOfProcessors]
         #dict set problemDataDict NumberofProcessors $nthreads
     }
-    set solutiontype [write::getValue SLSoluType]
+    set solutiontype [write::getValue STSoluType]
     # Time Parameters
     if {$solutiontype eq "Static"} {
         dict set problemDataDict time_step "1.1"
@@ -33,9 +33,9 @@ proc Structural::write::getParametersDict { } {
         dict set problemDataDict end_time "1.0"
 
     } elseif {$solutiontype eq "Dynamic"} {
-        dict set problemDataDict time_step [write::getValue SLTimeParameters DeltaTime]
-        dict set problemDataDict start_time [write::getValue SLTimeParameters StartTime]
-        dict set problemDataDict end_time [write::getValue SLTimeParameters EndTime]
+        dict set problemDataDict time_step [write::getValue STimeParameters DeltaTime]
+        dict set problemDataDict start_time [write::getValue STimeParameters StartTime]
+        dict set problemDataDict end_time [write::getValue STTimeParameters EndTime]
     }
     set echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict echo_level $echo_level
@@ -44,18 +44,18 @@ proc Structural::write::getParametersDict { } {
 
     # Solution strategy
     set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue SLSolStrat]
+    set currentStrategyId [write::getValue STSolStrat]
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
     dict set solverSettingsDict solver_type $strategy_write_name
     #~ dict set solverSettingsDict domain_size [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
-    dict set solverSettingsDict solution_type [write::getValue SLSoluType]
+    dict set solverSettingsDict solution_type [write::getValue STSoluType]
 
     if {$solutiontype eq "Static"} {
-        dict set solverSettingsDict analysis_type [write::getValue SLAnalysisType]
+        dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
     } elseif {$solutiontype eq "Dynamic"} {
-        dict set solverSettingsDict time_integration_method [write::getValue SLSolStrat]
-        dict set solverSettingsDict scheme_type [write::getValue SLScheme]
+        dict set solverSettingsDict time_integration_method [write::getValue STSolStrat]
+        dict set solverSettingsDict scheme_type [write::getValue STScheme]
     }
 
     # model import settings
@@ -69,17 +69,17 @@ proc Structural::write::getParametersDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Solid] ]
 
-    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "SLParts"]
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "SLNodalConditions" "SLLoads"]
+    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "STParts"]
+    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "STNodalConditions" "STLoads"]
 
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
-    set nodal_conditions_dict [write::getConditionsParametersDict SLNodalConditions "Nodal"]
+    set nodal_conditions_dict [write::getConditionsParametersDict STNodalConditions "Nodal"]
     set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]    
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
 
-    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict SLLoads]
+    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict STLoads]
 
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
@@ -127,3 +127,32 @@ proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
     write::SetParallelismConfiguration
 }
+
+
+# Project Parameters
+proc Structural::write::getParametersEvent { } {
+    set project_parameters_dict [getOldParametersDict]
+    dict set project_parameters_dict solver_settings rotation_dofs [UsingRotationDofElements]
+    set solverSettingsDict [dict get $project_parameters_dict solver_settings]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
+    dict set project_parameters_dict solver_settings $solverSettingsDict
+    return $project_parameters_dict
+}
+proc Structural::write::writeParametersEvent { } {
+    write::WriteJSON [getParametersEvent]
+}
+
+proc Structural::write::UsingRotationDofElements { } {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute STParts]/group/value\[@n='Element'\]"
+    set elements [$root selectNodes $xp1]
+    set bool false
+    foreach element_node $elements {
+        set elemid [$element_node @v]
+        set elem [Model::getElement $elemid]
+        if {[write::isBooleanTrue [$elem getAttribute "RotationDofs"]]} {set bool true; break}
+    }
+    
+    return $bool
+}
+
