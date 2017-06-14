@@ -33,8 +33,8 @@ proc Structural::write::getOldParametersDict { } {
         dict set problemDataDict end_time "1.0"
 
     } elseif {$solutiontype eq "Dynamic"} {
-        dict set problemDataDict time_step [write::getValue STimeParameters DeltaTime]
-        dict set problemDataDict start_time [write::getValue STimeParameters StartTime]
+        dict set problemDataDict time_step [write::getValue STTimeParameters DeltaTime]
+        dict set problemDataDict start_time [write::getValue STTimeParameters StartTime]
         dict set problemDataDict end_time [write::getValue STTimeParameters EndTime]
     }
     set echo_level [write::getValue Results EchoLevel]
@@ -67,7 +67,7 @@ proc Structural::write::getOldParametersDict { } {
 
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Solid] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "STParts"]
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "STNodalConditions" "STLoads"]
@@ -100,7 +100,7 @@ proc Structural::write::getOldParametersDict { } {
     
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
-        if {$elem in [Solid::write::GetUsedElements Name]} {
+        if {$elem in [Structural::write::GetUsedElements Name]} {
             dict set projectParametersDict pressure_dofs true
             break
         }
