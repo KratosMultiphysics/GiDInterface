@@ -1272,9 +1272,6 @@ proc write::RenameFileInModel { src target } {
     file rename -force $srcfile $tgtfile
 }
 
-write::Init
-
-
 proc write::WriteAssignedValues {condNode} {
     set assignedVector [list 1 0 1]
     set valuesVector [list 0.0 null 0.0]
@@ -1286,3 +1283,51 @@ proc write::WriteAssignedValues {condNode} {
     set ret [dict create value $valuesVector]
     return $ret
 }
+
+proc write::writePropertiesJsonFile {{parts_un ""} {filename "materials.json"}} {
+    if {$parts_un eq ""} {variable parts; set parts_un $parts}
+    set mats_json [getPropertiesList $parts_un]
+    write::OpenFile $filename
+    write::WriteJSON $mats_json
+    write::CloseFile
+}
+proc write::getPropertiesList {parts_un} {
+    variable mat_dict
+    set props_dict [dict create]
+    set props [list ]
+    
+    set doc $gid_groups_conds::doc
+    set root [$doc documentElement]
+    #set root [customlib::GetBaseRoot]
+
+    set xp1 "[spdAux::getRoute $parts_un]/group"
+    foreach gNode [$root selectNodes $xp1] {
+        set group [get_domnode_attribute $gNode n]
+        set sub_model_part [write::getMeshId Parts $group]
+        if { [dict exists $mat_dict $group] } {
+            set mid [dict get $mat_dict $group MID]
+            set prop_dict [dict create]
+            dict set prop_dict "model_part_name" $sub_model_part
+            dict set prop_dict "properties_id" $mid
+            set constitutive_law [dict get $mat_dict $group ConstitutiveLaw]
+            set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+            set variables_dict [dict create]
+            foreach prop [dict keys [dict get $mat_dict $group] ] {
+                if {$prop ni $exclusionList} {
+                    dict set variables_list $prop [dict get $mat_dict $group $prop]
+                }
+            }
+            set material_dict [dict create]
+            dict set material_dict constitutive_law [dict create name $constitutive_law]
+            dict set material_dict Variables $variables_list
+            dict set prop_dict Material $material_dict
+            lappend props $prop_dict
+        }
+
+    }
+    
+    dict set props_dict properties $props
+    return $props_dict
+}
+
+write::Init
