@@ -27,6 +27,7 @@ proc Structural::write::AddValidApps {appList} {
 
 proc Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
+    write::writePropertiesJsonFile
     
     write::CopyFileIntoModel "python/KratosStructural.py"
     set paralleltype [write::getValue ParallelType]
