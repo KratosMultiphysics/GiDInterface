@@ -31,9 +31,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
 
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />-->
@@ -76,9 +76,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -120,9 +120,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -165,9 +165,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
 
     <inputs>
@@ -210,9 +210,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -253,9 +253,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
 
     <inputs>
@@ -297,9 +297,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>      
     </inputs>
@@ -341,9 +341,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -383,9 +383,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>
       
@@ -424,9 +424,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -462,9 +462,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>

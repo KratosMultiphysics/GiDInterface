@@ -25,7 +25,16 @@
     </inputs>
   </Process>
 
-  <Process n="ApplyRigidBodyRotationProcess" pn="Assign a rigid body rotation process" python_module="apply_rigid_body_rotation_process"
+  <Process n="ApplyRigidBodyRotationProcess2D" pn="Assign a rigid body rotation process in 2D" python_module="apply_rigid_body_rotation_process"
+	   kratos_module="KratosMultiphysics.SolidMechanicsApplication"
+	   help="This process applies and fixed a rotation movement where the rotation vector point to z axis" check="DirectorVectorNonZero direction">
+    <inputs>
+      <parameter n="modulus" pn="Modulus" type="double"  v="1.0" function="1" has_units="1"/>
+      <parameter n="center" pn="Center" type="vector" v="0.0,0.0,0.0"  />
+    </inputs>
+  </Process>
+
+  <Process n="ApplyRigidBodyRotationProcess3D" pn="Assign a rigid body rotation process in 3D" python_module="apply_rigid_body_rotation_process"
 	   kratos_module="KratosMultiphysics.SolidMechanicsApplication"
 	   help="This process applies and fixed a rotation movement" check="DirectorVectorNonZero direction">
     <inputs>

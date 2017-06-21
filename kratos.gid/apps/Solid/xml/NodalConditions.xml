@@ -19,19 +19,31 @@
 		       analysis_type="Static,Dynamic"  unit_magnitude="P"  units="Pa" v="Yes" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   
-  <NodalConditionItem  n="RIGID_BODY_ROTATION" pn="Rotation" ProcessName="ApplyRigidBodyRotationProcess" VariableName="DISPLACEMENT" ImplementedInApplication="SolidMechanicsApplication"
+  <NodalConditionItem  n="RIGID_BODY_ROTATION_2D" pn="Rotation" ProcessName="ApplyRigidBodyRotationProcess2D" VariableName="DISPLACEMENT" ImplementedInApplication="SolidMechanicsApplication"
 		       analysis_type="Static" unit_magnitude="Angle" units="rad" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   
-  <NodalConditionItem  n="RIGID_BODY_ANGULAR_VELOCITY" pn="Angular Velocity" ProcessName="ApplyRigidBodyRotationProcess" VariableName="VELOCITY" ImplementedInApplication="SolidMechanicsApplication"
+  <NodalConditionItem  n="RIGID_BODY_ANGULAR_VELOCITY_2D" pn="Angular Velocity" ProcessName="ApplyRigidBodyRotationProcess2D" VariableName="VELOCITY" ImplementedInApplication="SolidMechanicsApplication"
 		       analysis_type="Dynamic" unit_magnitude="Angle/T" units="rad/s" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   
-  <NodalConditionItem  n="RIGID_BODY_ANGULAR_ACCELERATION" pn="Angular Acceleration" ProcessName="ApplyRigidBodyRotationProcess" VariableName="ACCELERATION" ImplementedInApplication="SolidMechanicsApplication"
+  <NodalConditionItem  n="RIGID_BODY_ANGULAR_ACCELERATION_2D" pn="Angular Acceleration" ProcessName="ApplyRigidBodyRotationProcess2D" VariableName="ACCELERATION" ImplementedInApplication="SolidMechanicsApplication"
 		       analysis_type="Dynamic" unit_magnitude="Angle/T^2" units="rad/s^2" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
 
-   <NodalConditionItem n="ROTATION" pn="Rotation" ProcessName="AssignVectorComponentsToNodesProcess" App="Structural" ImplementedInApplication="SolidMechanicsApplication"
+  <NodalConditionItem  n="RIGID_BODY_ROTATION_3D" pn="Rotation" ProcessName="ApplyRigidBodyRotationProcess3D" VariableName="DISPLACEMENT" ImplementedInApplication="SolidMechanicsApplication"
+		       analysis_type="Static" unit_magnitude="Angle" units="rad" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
+  </NodalConditionItem>
+  
+  <NodalConditionItem  n="RIGID_BODY_ANGULAR_VELOCITY_3D" pn="Angular Velocity" ProcessName="ApplyRigidBodyRotationProcess3D" VariableName="VELOCITY" ImplementedInApplication="SolidMechanicsApplication"
+		       analysis_type="Dynamic" unit_magnitude="Angle/T" units="rad/s" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
+  </NodalConditionItem>
+  
+  <NodalConditionItem  n="RIGID_BODY_ANGULAR_ACCELERATION_3D" pn="Angular Acceleration" ProcessName="ApplyRigidBodyRotationProcess3D" VariableName="ACCELERATION" ImplementedInApplication="SolidMechanicsApplication"
+		       analysis_type="Dynamic" unit_magnitude="Angle/T^2" units="rad/s^2" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
+  </NodalConditionItem>
+
+  <NodalConditionItem n="ROTATION" pn="Rotation" ProcessName="AssignVectorComponentsToNodesProcess" App="Structural" ImplementedInApplication="SolidMechanicsApplication"
 			analysis_type="Static" unit_magnitude="Angle" units="rad" VariableName="ROTATION" state="CheckNodalConditionStateSolid" Interval="Total">
     <outputs>
       <parameter n="TORQUE" pn="Torque" v="Yes"/>
