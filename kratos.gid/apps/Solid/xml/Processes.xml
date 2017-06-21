@@ -25,7 +25,7 @@
     </inputs>
   </Process>
 
-  <Process n="ApplyRigidBodyRotationProcess" pn="Assign a rigid body rotation process" python_module="assign_rigid_body_rotation_process"
+  <Process n="ApplyRigidBodyRotationProcess" pn="Assign a rigid body rotation process" python_module="apply_rigid_body_rotation_process"
 	   kratos_module="KratosMultiphysics.SolidMechanicsApplication"
 	   help="This process applies and fixed a rotation movement" check="DirectorVectorNonZero direction">
     <inputs>
