@@ -117,7 +117,7 @@ proc Structural::write::getLastConditionId { } {
 
 # Custom files
 proc Structural::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile
+    write::writePropertiesJsonFile "STParts" "StructuralMaterials.json"
 }
 
 proc Structural::write::GetUsedElements { {get "Objects"} } {

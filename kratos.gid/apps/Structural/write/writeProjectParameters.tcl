@@ -107,7 +107,7 @@ proc Structural::write::getOldParametersDict { } {
     }
 
     set materialsDict [dict create]
-    dict set materialsDict materials_filename "materials.json"
+    dict set materialsDict materials_filename "StructuralMaterials.json"
     dict set projectParametersDict material_import_settings $materialsDict
 
     return $projectParametersDict
