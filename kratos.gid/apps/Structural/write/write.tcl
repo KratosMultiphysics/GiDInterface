@@ -27,7 +27,6 @@ proc Structural::write::AddValidApps {appList} {
 
 proc Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
-    write::writePropertiesJsonFile
     
     write::CopyFileIntoModel "python/KratosStructural.py"
     set paralleltype [write::getValue ParallelType]
@@ -118,35 +117,7 @@ proc Structural::write::getLastConditionId { } {
 
 # Custom files
 proc Structural::write::WriteMaterialsFile { } {
-    variable validApps
-    
-    write::OpenFile "materials.py"
-    
-    set str "
-from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
-# Importing the Kratos Library
-from KratosMultiphysics import *
-from KratosMultiphysics.SolidMechanicsApplication import *
-#from beam_sections_python_utility import SetProperties
-#from beam_sections_python_utility import SetMaterialProperties
-
-def AssignMaterial(Properties):
-    # material for solid material
-"
-    foreach {part mat} [write::getMatDict] {
-        if {[dict get $mat APPID] in $validApps} {
-            append str "
-    prop_id = [dict get $mat MID];
-    prop = Properties\[prop_id\]
-    mat = [dict get $mat ConstitutiveLaw]()
-    prop.SetValue(CONSTITUTIVE_LAW, mat.Clone())
-        "
-        }
-    }
-    
-    write::WriteString $str
-    write::CloseFile
-    
+    write::writePropertiesJsonFile
 }
 
 proc Structural::write::GetUsedElements { {get "Objects"} } {
