@@ -1319,7 +1319,7 @@ proc write::getPropertiesList {parts_un} {
             }
             set material_dict [dict create]
             set const_law_application [[Model::getConstitutiveLaw $constitutive_law] getAttribute "ImplementedInApplication"]
-            set const_law_fullname [join [list "KratosMultiPhysics" $const_law_application $constitutive_law] "."]
+            set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law] "."]
             dict set material_dict constitutive_law [dict create name $const_law_fullname]
             dict set material_dict Variables $variables_list
             dict set prop_dict Material $material_dict
