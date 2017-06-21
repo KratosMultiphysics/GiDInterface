@@ -41,26 +41,31 @@ proc Structural::write::SetCoordinatesByGroups {value} {
 }
 
 # MDPA Blocks
-
 proc Structural::write::writeModelPartEvent { } {
     variable writeCoordinatesByGroups
     variable validApps
     variable ConditionsDictGroupIterators
     write::initWriteData "STParts" "STMaterials"
     
+    # Headers
     write::writeModelPartData
-    #write::WriteString "Begin Properties 0"
-    #write::WriteString "End Properties"
-    #write::writeMaterials $validApps
-    #write::writeTables
+
+    # Nodal coordinates (1: only for Structural <inefficient> | 0: the whole mesh <efficient>)
     if {$writeCoordinatesByGroups} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    
+    # Element connectivities (Groups on STParts)
     write::writeElementConnectivities
+
+    # Nodal conditions and conditions
     writeConditions
+
+    # SubmodelParts
     writeMeshes
+
+    # Custom SubmodelParts
     set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
-    # W $ConditionsDictGroupIterators
-    #writeCustomBlock
+
 }
 
 
