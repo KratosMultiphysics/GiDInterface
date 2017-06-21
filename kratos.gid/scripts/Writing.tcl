@@ -1186,10 +1186,7 @@ proc write::getValueByNode { node } {
     if {[get_domnode_attribute $node v] eq ""} {
         write::forceUpdateNode $node
     }
-    set v ""
-    catch {set v [expr [get_domnode_attribute $node v]]}
-    if {$v eq "" } {set v [get_domnode_attribute $node v]}
-    return $v
+    return [getFormattedValue [get_domnode_attribute $node v]]
 }
 proc write::getValue { name { it "" } {what noforce} } {    
     set root [customlib::GetBaseRoot]
@@ -1199,6 +1196,13 @@ proc write::getValue { name { it "" } {what noforce} } {
     if {$it ne ""} {set node [$node find n $it]}
     if {$what eq "force"} {write::forceUpdateNode $node}
     return [getValueByNode $node]
+}
+
+proc write::getFormattedValue {value} {
+    set v ""
+    catch {set v [expr $value]}
+    if {$v eq "" } {set v $value}
+    return $v
 }
 
 proc write::isBoolean {value} {
@@ -1314,7 +1318,7 @@ proc write::getPropertiesList {parts_un} {
             set variables_dict [dict create]
             foreach prop [dict keys [dict get $mat_dict $group] ] {
                 if {$prop ni $exclusionList} {
-                    dict set variables_list $prop [dict get $mat_dict $group $prop]
+                    dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
                 }
             }
             set material_dict [dict create]
