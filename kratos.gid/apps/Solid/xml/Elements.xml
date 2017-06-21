@@ -5,7 +5,7 @@
   <ElementItem n="SmallDisplacementElement2D" pn="Solid small displacements" ImplementedInFile="small_displacement_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in plane state 2D">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -51,7 +51,7 @@
   <ElementItem n="SmallDisplacementElementAxisym" pn="Solid small displacements" ImplementedInFile="axisym_small_displacement_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 2D axisymmetric">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -68,6 +68,7 @@
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="4"/>
       <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -92,7 +93,7 @@
   <ElementItem n="SmallDisplacementElement3D" pn="Solid small displacements" ImplementedInFile="small_displacement_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 3D">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -138,7 +139,7 @@
   <!--total lagrangian-->
   <ElementItem n="TotalLagrangianElement2D" pn="Solid Total Lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -156,6 +157,7 @@
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
       <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -180,7 +182,7 @@
   </ElementItem>
   <ElementItem n="TotalLagrangianElement3D" pn="Solid Total Lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid"  help="This element it implements a Total Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -200,6 +202,7 @@
       <filter field="Dimension" 	value="3D"/>
       <filter field="StrainSize" 	value="6"/>
       <filter field="HybridType" 	value="False"/>
+      <filter field="LargeDeformation"  value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -224,7 +227,7 @@
   <!--updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElement2D" pn="Solid Updated Lagrangian" ImplementedInFile="updated_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -242,6 +245,7 @@
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
       <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -267,7 +271,7 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementAxisym" pn="Solid Updated Lagrangian" ImplementedInFile="axisym_updated_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
+	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -285,6 +289,7 @@
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="4"/>
       <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -308,7 +313,7 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElement3D" pn="Solid Updated Lagrangian" ImplementedInFile="updated_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -328,6 +333,7 @@
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -353,7 +359,7 @@
   <!--hybrid updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid Updated Lagrangian U-P" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian approach to large deformation kinematics"
 		   ElementType="Solid">
 
@@ -364,6 +370,11 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStrain"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="StrainSize" value="3"/>
+      <filter field="HybridType" value="U-P"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -389,7 +400,7 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid Updated Lagrangian U-P" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
+	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       help="This element it implements a Hybrid Displacement-Pressure Updated Lagrangian approach to large deformation kinematics"
 		   ElementType="Solid" >
 
@@ -404,6 +415,7 @@
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="4"/>
       <filter field="HybridType" value="U-P"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -426,6 +438,10 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
+  <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid Updated Lagrangian U-P" ImplementedInFile="updated_lagrangian_element.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
+	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
