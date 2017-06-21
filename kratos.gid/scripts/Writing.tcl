@@ -706,6 +706,7 @@ proc write::tcl2json { value } {
             if {$value eq "false"} {return [expr "false"]}
             if {$value eq "true"} {return [expr "true"]}
             if {$value eq "null"} {return null}
+            if {$value eq "dictnull"} {return {{}}}
             return [json::write string $value]
         }
         dict {
@@ -1326,7 +1327,9 @@ proc write::getPropertiesList {parts_un} {
             set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law] "."]
             dict set material_dict constitutive_law [dict create name $const_law_fullname]
             dict set material_dict Variables $variables_list
+            dict set material_dict Tables dictnull
             dict set prop_dict Material $material_dict
+            
             lappend props $prop_dict
         }
 
