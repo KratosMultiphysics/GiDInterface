@@ -49,9 +49,9 @@ proc Structural::write::writeModelPartEvent { } {
     write::initWriteData "STParts" "STMaterials"
     
     write::writeModelPartData
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-    write::writeMaterials $validApps
+    #write::WriteString "Begin Properties 0"
+    #write::WriteString "End Properties"
+    #write::writeMaterials $validApps
     #write::writeTables
     if {$writeCoordinatesByGroups} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
     write::writeElementConnectivities
