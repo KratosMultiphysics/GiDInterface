@@ -1,8 +1,7 @@
 namespace eval Structural::write {
-    variable validApps
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
-    variable writeCoordinatesByGroups
+    variable writeAttributes
 }
 
 proc Structural::write::Init { } {
@@ -11,47 +10,67 @@ proc Structural::write::Init { } {
     set ConditionsDictGroupIterators [dict create]
     set NodalConditionsGroup [list ]
     
-    variable validApps
-    set validApps [list "Structural"]
-    
-    variable writeCoordinatesByGroups
-    set writeCoordinatesByGroups 0
+    variable writeAttributes
+    set writeAttributes [dict create]
+    SetAttribute validApps [list "Structural"]
+    SetAttribute writeCoordinatesByGroups 0
+    SetAttribute properties_location json 
+    SetAttribute parts_un STParts
+    SetAttribute materials_un STMaterials
+    SetAttribute conditions_un STLoads
+    SetAttribute nodal_conditions_un STNodalConditions
+    SetAttribute materials_file "StructuralMaterials.json"
+    SetAttribute main_script_file "KratosStructural.py"
 }
 
+proc Structural::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
+
+proc Structural::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
+}
+
+proc Structural::write::AddAttribute {att val} {
+    variable writeAttributes
+    dict append writeAttributes $att $val]
+}
 
 proc Structural::write::AddValidApps {appList} {
-    variable validApps
-
-    lappend validApps $appList
+    AddAttribute validApps $appList
 }
 
 proc Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
     
-    write::CopyFileIntoModel "python/KratosStructural.py"
+    set orig_name [GetAttribute main_script_file]
+    write::CopyFileIntoModel [file join "python" $orig_name ]
     set paralleltype [write::getValue ParallelType]
-    set orig_name "KratosStructural.py"
     
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 proc Structural::write::SetCoordinatesByGroups {value} {
-    variable writeCoordinatesByGroups
-    set writeCoordinatesByGroups $value
+    SetAttribute writeCoordinatesByGroups $value
 }
 
 # MDPA Blocks
 proc Structural::write::writeModelPartEvent { } {
-    variable writeCoordinatesByGroups
-    variable validApps
     variable ConditionsDictGroupIterators
-    write::initWriteData "STParts" "STMaterials"
+    variable writeAttributes
+    write::initWriteConfiguration $writeAttributes
     
     # Headers
     write::writeModelPartData
 
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties"
+    # write::writeMaterials $validApps
+
     # Nodal coordinates (1: only for Structural <inefficient> | 0: the whole mesh <efficient>)
-    if {$writeCoordinatesByGroups} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
     
     # Element connectivities (Groups on STParts)
     write::writeElementConnectivities
@@ -71,7 +90,7 @@ proc Structural::write::writeModelPartEvent { } {
 
 proc Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions "STLoads"]
+    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
 }
 
 proc Structural::write::writeMeshes { } {
@@ -79,7 +98,7 @@ proc Structural::write::writeMeshes { } {
     write::writePartMeshes
     
     # Solo Malla , no en conditions
-    write::writeNodalConditions "STNodalConditions"
+    write::writeNodalConditions [GetAttribute nodal_conditions_un]
     
     # A Condition y a meshes-> salvo lo que no tenga topologia
     writeLoads
@@ -88,7 +107,7 @@ proc Structural::write::writeMeshes { } {
 proc Structural::write::writeLoads { } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "STLoads"]/condition/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set groupid [write::GetWriteGroupName $groupid]
@@ -100,7 +119,6 @@ proc Structural::write::writeLoads { } {
         }
     }
 }
-
 
 proc Structural::write::writeCustomBlock { } {
     write::WriteString "Begin Custom"
@@ -122,11 +140,11 @@ proc Structural::write::getLastConditionId { } {
 
 # Custom files
 proc Structural::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile "STParts" "StructuralMaterials.json"
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
 }
 
 proc Structural::write::GetUsedElements { {get "Objects"} } {
-    set xp1 "[spdAux::getRoute STParts]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     set lista [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
@@ -136,7 +154,5 @@ proc Structural::write::GetUsedElements { {get "Objects"} } {
     }
     return $lista
 }
-
-
 
 Structural::write::Init

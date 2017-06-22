@@ -5,60 +5,78 @@
 
 namespace eval write {
     variable mat_dict
-    variable dir
-    variable parts
-    variable matun
     variable meshes
-    variable groups_type_name
     variable MDPA_loop_control
-    variable time_monitor
+    variable current_configuration
 }
 
 proc write::Init { } {
     variable mat_dict
-    variable dir
-    variable parts
     variable meshes
-    variable groups_type_name
+    variable current_configuration
+
+    set current_configuration [dict create]
     
     set mat_dict ""
-    set dir ""
-    set parts ""
     set meshes [dict create]
-    set groups_type_name "SubModelPart"
+
+    SetConfigurationAttribute dir ""
+    SetConfigurationAttribute parts_un ""
+    SetConfigurationAttribute materials_un ""
+    SetConfigurationAttribute groups_type_name "SubModelPart"
+    SetConfigurationAttribute time_monitor 0
     
     variable MDPA_loop_control
     set MDPA_loop_control 0
     
-    variable time_monitor
-    set time_monitor 0
 }
 
-proc write::initWriteData {partes mats} {
-    variable parts
-    variable matun
-    variable meshes
-    set parts $partes
-    set matun $mats
+proc write::initWriteConfiguration {configuration} {
+    variable current_configuration
+    set current_configuration [dict merge $current_configuration $configuration]
     
     variable MDPA_loop_control
     set MDPA_loop_control 0
     
-    #set meshes [dict create]
     processMaterials
+}
+proc write::initWriteData {partes mats} {
+    set configutation [dict create] 
+    dict set configuration parts_un $partes
+    dict set configuration materials_un $mats
+    
+    initWriteConfiguration $configuration
+}
+
+proc write::GetConfigurationAttribute {att} {
+    variable current_configuration
+    set ret ""
+    if {[dict exists $current_configuration $att]} {
+        set ret [dict get $current_configuration $att]
+    }
+    return $ret
+    
+}
+
+proc write::SetConfigurationAttribute {att val} {
+    variable current_configuration
+    dict set current_configuration $att $val
+}
+
+proc write::AddConfigurationAttribute {att val} {
+    variable current_configuration
+    dict append current_configuration $att $val]
 }
 
 proc write::setGroupsTypeName {name} {
-    variable groups_type_name
-    set groups_type_name $name
+    SetConfigurationAttribute groups_type_name $name
 }
 
 # Write Events
 proc write::writeEvent { filename } {
-    variable dir
-    variable time_monitor
+    set time_monitor [GetConfigurationAttribute time_monitor]
     customlib::UpdateDocument
-    set dir [file dirname $filename]
+    SetConfigurationAttribute dir [file dirname $filename]
     set errcode 0
     set fail [::Kratos::CheckValidProjectName [file rootname $filename]]
     
@@ -202,9 +220,10 @@ proc write::writeNodalCoordinates { } {
 }
 
 proc write::processMaterials { } {
-    variable parts
-    variable matun
     variable mat_dict
+
+    set parts [GetConfigurationAttribute parts_un]
+    set materials_un [GetConfigurationAttribute materials_un]
     set root [customlib::GetBaseRoot]
     
     set xp1 "[spdAux::getRoute $parts]/group"
@@ -222,7 +241,7 @@ proc write::processMaterials { } {
             incr material_number
             set mid $material_number
             
-            set xp3 [spdAux::getRoute $matun]
+            set xp3 [spdAux::getRoute $materials_un]
             append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $material_name]
             
             dict set mat_dict $group MID $material_number
@@ -250,8 +269,7 @@ proc write::processMaterials { } {
 }
 
 proc write::writeElementConnectivities { } {
-    variable parts
-    
+    set parts [GetConfigurationAttribute parts_un]
     set root [customlib::GetBaseRoot]
     
     set xp1 "[spdAux::getRoute $parts]/group"
@@ -265,8 +283,10 @@ proc write::writeElementConnectivities { } {
 proc write::writeGroupElementConnectivities { gNode kelemtype} {
     variable mat_dict
     set formats ""
+    set write_properties_in mdpa
+    if {[GetConfigurationAttribute properties_location] ne ""} {set write_properties_in [GetConfigurationAttribute properties_location]} 
     set group [get_domnode_attribute $gNode n]
-    if { [dict exists $mat_dict $group] } {
+    if { [dict exists $mat_dict $group] && $write_properties_in eq "mdpa"} {
         set mid [dict get $mat_dict $group MID]
     } else {
         set mid 0
@@ -418,10 +438,9 @@ proc write::transformGroupName {groupid} {
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable meshes
-    variable groups_type_name
 
     set what [split $what "&"]
-    set gtn $groups_type_name
+    set gtn [GetConfigurationAttribute groups_type_name]
     set group [GetWriteGroupName $group]
     if {![dict exists $meshes [list $cid ${group}]]} {
         set mid [expr [llength [dict keys $meshes]] +1]
@@ -633,12 +652,10 @@ proc write::GetNodesFromElementFace {elem_id face_id} {
 
 
 proc write::getPartsGroupsId {} {
-    variable parts
-    
     set root [customlib::GetBaseRoot]
     
     set listOfGroups [list ]
-    set xp1 "[spdAux::getRoute $parts]/group"
+    set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/group"
     set groups [$root selectNodes $xp1]
     
     foreach group $groups {
@@ -648,8 +665,6 @@ proc write::getPartsGroupsId {} {
     return $listOfGroups
 }
 proc write::getPartsMeshId {} {
-    variable parts
-    
     set root [customlib::GetBaseRoot]
     
     set listOfGroups [list ]
@@ -1087,24 +1102,21 @@ proc write::GetMeshFromCondition { base_UN condition_id } {
     set xp1 "[spdAux::getRoute $base_UN]/condition\[@n='$condition_id'\]/group"
     set groups [$root selectNodes $xp1]
     
-    set meshes [list ]
+    set mesh_list [list ]
     foreach gNode $groups {
         set group [$gNode @n]
         set group [write::GetWriteGroupName $group]
         set meshid [getMeshId $condition_id $group]
-        lappend meshes $meshid
+        lappend mesh_list $meshid
     }
-    return $meshes
+    return $mesh_list
 }
 
 proc write::getAllMaterialParametersDict {matname} {
-    variable matun
-    
     set root [customlib::GetBaseRoot]
-    
     set md [dict create]
     
-    set xp3 [spdAux::getRoute $matun]
+    set xp3 [spdAux::getRoute [GetConfigurationAttribute materials_un]]
     append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $matname]
     
     set props [$root selectNodes $xp3]
@@ -1115,7 +1127,6 @@ proc write::getAllMaterialParametersDict {matname} {
 }
 
 proc write::getIntervalsDict { { un "Intervals" } {appid "" } } {
-    
     set root [customlib::GetBaseRoot]
     
     set intervalsDict [dict create]
@@ -1229,7 +1240,7 @@ proc write::getStringBinaryFromValue {v} {
 }
 
 proc write::OpenFile { fn } {
-    variable dir
+    set dir [GetConfigurationAttribute dir]
     set filename [file join $dir $fn]
     CloseFile
     customlib::InitWriteFile $filename
@@ -1263,7 +1274,7 @@ proc write::getSpacing {number} {
 }
 
 proc write::CopyFileIntoModel { filepath } {
-    variable dir
+    set dir [GetConfigurationAttribute dir]
     
     set activeapp [::apps::getActiveApp]
     set inidir [apps::getMyDir [$activeapp getName]]
@@ -1271,7 +1282,7 @@ proc write::CopyFileIntoModel { filepath } {
     file copy -force $totalpath $dir
 }
 proc write::RenameFileInModel { src target } {
-    variable dir
+    set dir [GetConfigurationAttribute dir]
     set srcfile [file join $dir $src]
     set tgtfile [file join $dir $target]
     file rename -force $srcfile $tgtfile
@@ -1290,7 +1301,7 @@ proc write::WriteAssignedValues {condNode} {
 }
 
 proc write::writePropertiesJsonFile {{parts_un ""} {filename "materials.json"}} {
-    if {$parts_un eq ""} {variable parts; set parts_un $parts}
+    if {$parts_un eq ""} {set parts_un [GetConfigurationAttribute parts_un]}
     set mats_json [getPropertiesList $parts_un]
     write::OpenFile $filename
     write::WriteJSON $mats_json
