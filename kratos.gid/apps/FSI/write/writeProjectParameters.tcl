@@ -44,7 +44,7 @@ proc FSI::write::getParametersDict { } {
    # Fluid section
    UpdateUniqueNames Fluid
    apps::setActiveAppSoft Fluid
-   set ::write::parts FLParts
+   write::SetConfigurationAttribute parts_un FLParts
    
    set FluidParametersDict [Fluid::write::getParametersDict]
    set current [dict get $FluidParametersDict solver_settings model_import_settings input_filename]
