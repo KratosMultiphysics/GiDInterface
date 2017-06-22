@@ -32,17 +32,15 @@ proc write::Init { } {
 }
 
 proc write::initWriteConfiguration {configuration} {
-    variable current_configuration
-    set current_configuration [dict merge $current_configuration $configuration]
-    
+    SetConfigurationAttributes $configuration
     variable MDPA_loop_control
     set MDPA_loop_control 0
     
     processMaterials
 }
-proc write::initWriteData {partes mats} {
+proc write::initWriteData {parts mats} {
     set configutation [dict create] 
-    dict set configuration parts_un $partes
+    dict set configuration parts_un $parts
     dict set configuration materials_un $mats
     
     initWriteConfiguration $configuration
@@ -61,6 +59,11 @@ proc write::GetConfigurationAttribute {att} {
 proc write::SetConfigurationAttribute {att val} {
     variable current_configuration
     dict set current_configuration $att $val
+}
+
+proc write::SetConfigurationAttributes {configuration} {
+    variable current_configuration
+    set current_configuration [dict merge $current_configuration $configuration]
 }
 
 proc write::AddConfigurationAttribute {att val} {

@@ -35,7 +35,7 @@ proc FSI::write::getParametersDict { } {
    # Structural section
    UpdateUniqueNames Structural
    apps::setActiveAppSoft Structural
-   set ::write::parts STParts
+   Structural::write::ApplyConfiguration
 
    set StructuralParametersDict [Structural::write::getParametersEvent]
    set current [dict get $StructuralParametersDict solver_settings model_import_settings input_filename]

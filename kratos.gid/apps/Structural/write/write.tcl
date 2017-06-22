@@ -38,6 +38,11 @@ proc Structural::write::AddAttribute {att val} {
     dict append writeAttributes $att $val]
 }
 
+proc Structural::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
+}
+
 proc Structural::write::AddValidApps {appList} {
     AddAttribute validApps $appList
 }
@@ -54,6 +59,11 @@ proc Structural::write::writeCustomFilesEvent { } {
 
 proc Structural::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
+}
+
+proc Structural::write::ApplyConfiguration { } {
+    variable writeAttributes
+    write::SetConfigurationAttributes $writeAttributes
 }
 
 # MDPA Blocks
