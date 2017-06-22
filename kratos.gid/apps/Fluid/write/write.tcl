@@ -55,6 +55,7 @@ proc Fluid::write::writeModelPartEvent { } {
     write::writeBasicSubmodelParts [getLastConditionId]
 }
 proc Fluid::write::writeCustomFilesEvent { } {
+    write::writePropertiesJsonFile
     write::CopyFileIntoModel "python/KratosFluid.py"
     write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
 }
