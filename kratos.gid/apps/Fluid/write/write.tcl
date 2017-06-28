@@ -19,6 +19,7 @@ proc Fluid::write::Init { } {
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_script_file "KratosFluid.py"
+    SetAttribute materials_file "FluidMaterials.json"
 }
 
 proc Fluid::write::GetAttribute {att} {
@@ -71,7 +72,7 @@ proc Fluid::write::writeModelPartEvent { } {
     write::writeMaterials [GetAttribute validApps]
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {$writeCoordinatesByGroups} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
