@@ -66,7 +66,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict model_import_settings $modelDict
     
     set materialsDict [dict create]
-    dict set materialsDict materials_filename "StructuralMaterials.json"
+    dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
 
     # Solution strategy parameters and Solvers

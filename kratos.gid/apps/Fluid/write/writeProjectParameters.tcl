@@ -62,12 +62,21 @@ proc ::Fluid::write::getParametersDict { } {
     dict set modelDict input_filename $model_name
     dict set solverSettingsDict model_import_settings $modelDict
 
+    if {0} {
+        set materialsDict [dict create]
+        dict set materialsDict materials_filename [GetAttribute materials_file]
+        dict set solverSettingsDict material_import_settings $materialsDict
+    }
+
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]
+
     # Parts
     dict set solverSettingsDict volume_model_part_name {*}[write::getPartsMeshId]
+
     # Skin parts
     dict set solverSettingsDict skin_parts [getBoundaryConditionMeshId]
+    
     # No skin parts
     dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
     # Time stepping settings
