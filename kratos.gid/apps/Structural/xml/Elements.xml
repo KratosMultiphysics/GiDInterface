@@ -106,7 +106,7 @@
   </ElementItem>
   <!--large displacements-->
   <!--total lagrangian-->
-  <ElementItem n="TotalLagrangianElement2D" pn="Solid Total Lagrangian" ImplementedInFile="total_lagrangian_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
+  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="TotalLagrangianElement2D3N"/>
@@ -138,7 +138,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="TotalLagrangianElement3D" pn="Solid Total Lagrangian" ImplementedInFile="total_lagrangian_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
+  <ElementItem n="TotalLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="TotalLagrangianElement3D4N"/>
