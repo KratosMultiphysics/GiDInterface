@@ -22,7 +22,7 @@
     </inputs>
     </Process>
 
-    <Process n="AssignVectorProcess" pn="Impose vector value by components process" python_module="experimental_assign_vector_process"
+    <Process n="AssignVectorProcess" pn="Impose vector value by components process" python_module="assign_vector_process"
 		kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable">
 		<inputs>
 			<parameter n="constrained" pn="Imposed" type="vector" vectorType="bool" v="1,1,1" />
@@ -30,7 +30,7 @@
 		</inputs>
     </Process>
 
-    <Process n="AssignValueProcess" pn="Impose scalar value" python_module="experimental_assign_value_process"
+    <Process n="AssignValueProcess" pn="Impose scalar value" python_module="assign_value_process"
 		kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable">
 		<inputs>
 			<parameter n="constrained" pn="Imposed" type="bool" v="1" />
@@ -38,7 +38,7 @@
 		</inputs>
     </Process>
 
-	<Process n="AssignAutomaticDirectionVectorProcess" pn="Assign Automatic Direction Vector Process" python_module="experimental_assign_vector_by_direction_process"
+	<Process n="AssignAutomaticDirectionVectorProcess" pn="Assign Automatic Direction Vector Process" python_module="assign_vector_by_direction_process"
 		kratos_module="KratosMultiphysics" help="" >
 		<inputs>
             <parameter n="modulus" pn="Value" type="double" v="1.0" function="1" has_units="1"/>
@@ -46,7 +46,7 @@
 		</inputs>
     </Process>
 
-	<Process n="AssignDirectionVectorProcess" pn="Assign Direction Vector Process" python_module="experimental_assign_vector_by_direction_process"
+	<Process n="AssignDirectionVectorProcess" pn="Assign Direction Vector Process" python_module="assign_vector_by_direction_process"
 		kratos_module="KratosMultiphysics" help=""  check="DirectorVectorNonZero direction">
 		<inputs>
             <parameter n="modulus" pn="Value" type="double" v="1.0" function="1" has_units="1"/>
