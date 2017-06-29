@@ -4,8 +4,8 @@
   <ConditionItem n="SelfWeight3D" pn="Self weight" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line,Surface,Volume" ProcessName="AssignVectorByDirectionToConditionProcess" VariableName="VOLUME_ACCELERATION"
-		 help="Self weight application by means of the AssignVectorByDirectionToConditionProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
+		 ElementType="Line,Surface,Volume" ProcessName="AssignDirectionVectorProcess" VariableName="VOLUME_ACCELERATION"
+		 help="Self weight application by means of the AssignDirectionVectorProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -22,8 +22,8 @@
   <ConditionItem n="SelfWeight2D" pn="Self weight" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line,Surface"  ProcessName="AssignVectorByDirectionToConditionProcess" VariableName="VOLUME_ACCELERATION"
-		 help="Self weight application by means of the AssignVectorByDirectionToConditionProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
+		 ElementType="Line,Surface"  ProcessName="AssignDirectionVectorProcess" VariableName="VOLUME_ACCELERATION"
+		 help="Self weight application by means of the AssignDirectionVectorProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -40,8 +40,8 @@
   <ConditionItem n="SelfWeight2Da" pn="Self weight" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line,Surface"  ProcessName="AssignVectorByDirectionToConditionProcess" VariableName="VOLUME_ACCELERATION"
-		 help="Self weight application by means of the AssignVectorByDirectionToConditionProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
+		 ElementType="Line,Surface"  ProcessName="AssignDirectionVectorProcess" VariableName="VOLUME_ACCELERATION"
+		 help="Self weight application by means of the AssignDirectionVectorProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
