@@ -58,10 +58,6 @@ proc ::EmbeddedFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "ImportMesh" "Import.png" [list -np- EmbeddedFluid::xml::ImportMeshWindow] [= "Import embedded mesh"]
     Kratos::ToolbarAddItem "Move" "move.png" [list -np- CopyMove Move] [= "Move the geometry/mesh"]
     Kratos::ToolbarAddItem "Box" "box.png" [list -np- EmbeddedFluid::xml::BoundingBox::CreateWindow] [= "Generate the bounding box"]
-    Kratos::ToolbarAddItem "ExampleSpacer" "" "" ""
-    variable dir
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::EmbeddedFluid::examples::CylinderInFlow] [= "Example\nCylinder in air flow"]   
 }
 
 proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
@@ -69,8 +65,8 @@ proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
     
     set project_path [GiD_Info project modelname]
     if {$project_path ne "UNNAMED"} {
-        catch {file delete -force [file join $::write::dir "[file tail [GiD_Info project modelname] ].post.res"]}
-        GiD_Process Mescape Utilities Variables EmbeddedMesh Activated 1 escape escape
+        catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[file tail [GiD_Info project modelname] ].post.res"]}
+        GiD_Process Escape Escape Utilities Variables EmbeddedMesh Activated 1 escape escape
         # Set Octree
         set oldVolumeMesher [GiD_Set VolumeMesher]
         ::GiD_Set VolumeMesher 3

@@ -48,18 +48,16 @@
 	  return [spdAux::ProcGetElementsValues $domNode $args]
 	  ]]>
 	</proc>
-	
 	<proc n='GetSolutionStrategies' args='args'>
 	  <![CDATA[
 	  return [spdAux::ProcGetSolutionStrategies $domNode $args]
 	  ]]>
 	</proc>
-	    <proc n='GetSchemes' args='args'>
+	<proc n='GetSchemes' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcGetSchemes $domNode $args]
 	  ]]>
 	</proc>
-		
 	<proc n='GetConstitutiveLaws' args='args'>
 	  <![CDATA[
 	  return [spdAux::ProcGetConstitutiveLaws $domNode $args]
@@ -105,13 +103,12 @@
 		spdAux::RequestRefresh
 	  ]]>
 	</proc>
-
 	  <proc n='checkStateByUniqueName' args='args'>
 	  <![CDATA[
 		return [spdAux::ProccheckStateByUniqueName $domNode $args]
 	  ]]>
 	</proc>
-	  	  <proc n='SolverParamState' args='args'>
+	<proc n='SolverParamState' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcSolverParamState $domNode $args]
 	  ]]>
@@ -131,7 +128,7 @@
 		return [spdAux::ProcPartParamState $domNode $args]
 	  ]]>
 	</proc>
-	  	  <proc n='SolverEntryState' args='args'>
+	<proc n='SolverEntryState' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcSolverEntryState $domNode $args]
 	  ]]>
@@ -140,23 +137,22 @@
 	  <![CDATA[
 		return [spdAux::ProcCheckDimension $domNode $args]
 	  ]]>
-	  
 	</proc>
 	<proc n='getStateFromXPathValue' args='args'>
 	  <![CDATA[
 	  return [spdAux::ProcgetStateFromXPathValue $domNode $args]
 	  ]]>
 	</proc>
-    <proc n='give_materials_list' args='args'>
-      <![CDATA[
-	  return [spdAux::ProcGive_materials_list $domNode {*}$args]
-      ]]>
-    </proc>
-    <proc n='edit_database_list' args='args'>
-      <![CDATA[
-	  return [spdAux::ProcEdit_database_list $domNode {*}$args]  
-      ]]>
-    </proc>
+	<proc n='give_materials_list' args='args'>
+		<![CDATA[
+	return [spdAux::ProcGive_materials_list $domNode {*}$args]
+		]]>
+	</proc>
+	<proc n='edit_database_list' args='args'>
+		<![CDATA[
+	return [spdAux::ProcEdit_database_list $domNode {*}$args]  
+		]]>
+	</proc>
 	<proc n='CambioMat' args='args'>
 	  <![CDATA[
 	  return [spdAux::ProcCambioMat $domNode $args] 
@@ -172,8 +168,7 @@
 		return [spdAux::ProcConditionParameterState $domNode $args]
 	  ]]>
 	</proc>
-	
-	  <proc n='SolStratParamState' args='args'>
+	<proc n='SolStratParamState' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcSolStratParamState $domNode $args]
 	  ]]>
@@ -183,18 +178,17 @@
 		return [spdAux::ProcSchemeParamState $domNode $args]
 	  ]]>
 	</proc>	   
-	  <proc n='ConstLawOutputState' args='args'>
+	<proc n='ConstLawOutputState' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcConstLawOutputState $domNode $args]
 	  ]]>
 	</proc>
-	  <proc n='ElementOutputState' args='args'>
+	<proc n='ElementOutputState' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcElementOutputState $domNode $args]
 	  ]]>
 	</proc>
-	  
-	  <proc n='ActiveIfAnyPartState' args='args'>
+	<proc n='ActiveIfAnyPartState' args='args'>
 	  <![CDATA[
 	  return [spdAux::ProcActiveIfAnyPartState $domNode $args]
 	  ]]>
@@ -204,56 +198,54 @@
 	  return [spdAux::ProcActiveIfRestartAvailable $domNode $args]
 	  ]]>
 	</proc>
-	  
-		  <proc n='DisableIfUniqueName' args='args'>
+	<proc n='DisableIfUniqueName' args='args'>
 	  <![CDATA[
 		catch {[get_domnode_attribute $domNode dict]}
 		return [spdAux::ProcDisableIfUniqueName $domNode $args]
 	  ]]>
 	</proc>
-		  <proc n='HideIfUniqueName' args='args'>
+	<proc n='HideIfUniqueName' args='args'>
 	  <![CDATA[
 		catch {[get_domnode_attribute $domNode dict]}
 		return [spdAux::ProcHideIfUniqueName $domNode $args]
 	  ]]>
 	</proc>
-		<proc n='CheckGeometry' args='args'>
+	<proc n='CheckGeometry' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcCheckGeometry $domNode $args]
 	  ]]>
 	</proc>
-	  <proc n='UpdateTree' args='args'>
+	<proc n='UpdateTree' args='args'>
 	  <![CDATA[
 	  gid_groups_conds::actualize_conditions_window
 	  ]]>
 	</proc>
-	  <proc n='DirectorVectorNonZero' args='args'>
+	<proc n='DirectorVectorNonZero' args='args'>
 	  <![CDATA[
 	 return [spdAux::ProcDirectorVectorNonZero $domNode $args]
 	  ]]>
 	</proc>
-	  <proc n='ShowInMode' args='args'>
+	<proc n='ShowInMode' args='args'>
 	  <![CDATA[
 	  return [spdAux::ProcShowInMode $domNode $args]
 	  ]]>
 	</proc>
-	   <proc n='UpdateDictAndReturnState' args='args'>
-          <![CDATA[
-				set dict [spdAux::ProcGetConstitutiveLaws $domNode]
-				$domNode setAttribute dict $dict
-				set values [split [get_domnode_attribute $domNode values] ","]
-				set value [get_domnode_attribute $domNode v]
-				if {$value ni $values} {set value [lindex $values 0]; $domNode setAttribute v $value}
-				return "normal"
-          ]]>
-        </proc>
-	   
-	  <proc n='getIntervals' args='args'>
+	<proc n='UpdateDictAndReturnState' args='args'>
+		<![CDATA[
+		set dict [spdAux::ProcGetConstitutiveLaws $domNode]
+		$domNode setAttribute dict $dict
+		set values [split [get_domnode_attribute $domNode values] ","]
+		set value [get_domnode_attribute $domNode v]
+		if {$value ni $values} {set value [lindex $values 0]; $domNode setAttribute v $value}
+		return "normal"
+			]]>
+	</proc>
+	<proc n='getIntervals' args='args'>
 	  <![CDATA[
 		return [spdAux::ProcGetIntervals $domNode $args]
 	  ]]>
 	</proc>
-	  <proc n='getTimeFunctions' args='args'>
+	<proc n='getTimeFunctions' args='args'>
 	  <![CDATA[
 		set lista [::spdAux::getTimeFunctions]
 		if {[$domNode @v] eq "" || [$domNode @v] ni $lista} {
@@ -263,7 +255,7 @@
 		return $res
 	  ]]>
 	</proc>
-	  <proc n='getFields' args='args'>
+	<proc n='getFields' args='args'>
 	  <![CDATA[
 		set lista [::spdAux::getFields]
 		if {[$domNode @v] eq "" || [$domNode @v] ni $lista} {
@@ -273,29 +265,28 @@
 		return $res
 	  ]]>
 	</proc>
-	  <proc n="loads_function_time" args="load_name">
+	<proc n="loads_function_time" args="load_name">
 		<![CDATA[
-      return [spdAux::chk_loads_function_time $domNode $load_name]
-	  ]]>
-    </proc>
-	  <proc n="FileDict" args="args">
+			return [spdAux::chk_loads_function_time $domNode $load_name]
+		]]>
+	</proc>
+	<proc n="FileDict" args="args">
 		<![CDATA[
 		return [spdAux::ProcFileDict $domNode $args]
-	  ]]>
-    </proc>
-	  
-    <proc n='AddFile' args='args'>
-      <![CDATA[
-	  if {[get_domnode_attribute $domNode v] eq "- Add new file"} {
+		]]>
+	</proc>
+	<proc n='AddFile' args='args'>
+		<![CDATA[
+		if {[get_domnode_attribute $domNode v] eq "- Add new file"} {
 		spdAux::AddFile $domNode
-	  }
-      ]]>
-    </proc>
-    <proc n='GetFilesValues' args='args'>
-      <![CDATA[
+		}
+		]]>
+	</proc>
+	<proc n='GetFilesValues' args='args'>
+		<![CDATA[
 		return [spdAux::ProcGetFilesValues]
-      ]]>
-    </proc>
+		]]>
+	</proc>
 	<dynamicnode command="spdAux::injectProcs" args=""/>
   </procs>
   <container n="files" state="hidden">

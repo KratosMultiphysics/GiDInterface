@@ -22,7 +22,7 @@ proc Solid::write::Init { } {
 
 proc Solid::write::AddValidApps {appList} {
     variable validApps
-    set validApps [list "Solid"]
+    
     lappend validApps $appList
 }
 

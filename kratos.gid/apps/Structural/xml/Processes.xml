@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProcessList>
+
+  <Process n="AssignVectorByDirectionToConditionProcess" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process"
+	   kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction"> 
+    <inputs>
+        <parameter n="modulus" pn="Modulus" type="double"  v="1.0" function="1" has_units="1"/>
+        <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" />
+    </inputs>
+  </Process>
+  
+  <Process n="AssignVectorVariableProcess" pn="Assign a vector value process" python_module="assign_vector_variable_process"
+           kratos_module="KratosMultiphysics"
+	   help="This process fixes the selected components of a given vector variable">
+    <inputs>
+      <parameter n="value" pn="Value" type="vector" enabled="1" function="1" v="0.0,0.0,0.0" has_units="1"/>
+    </inputs>
+  </Process>
+
+  <Process n="AssignScalarVariableProcess" pn="Assign a scalar value process" python_module="assign_scalar_variable_process"
+	   kratos_module="KratosMultiphysics"
+	   help="This process fixes the given scalar variable">
+    <inputs>
+      <parameter n="value" pn="Value" type="double" v="0.0" />
+    </inputs>
+  </Process>
+  
+<!--
+  Processes for conditions
+-->
+  <Process n="AssignModulusAndDirectionToConditionsProcess" pn="Assign a vector value on a condition" python_module="assign_vector_by_direction_to_condition_process"
+	   kratos_module="KratosMultiphysics" help="This process sets a vector variable value over a condition" check="DirectorVectorNonZero direction"> 
+    <inputs>
+      <parameter n="modulus" pn="Modulus" type="double"  v="1.0" function="1" has_units="1"/>
+      <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0"  />
+    </inputs>
+  </Process>
+
+  <Process n="AssignScalarToConditionsProcess" pn="Apply a scalar value over a condition" python_module="assign_scalar_to_conditions_process"
+	   kratos_module="KratosMultiphysics" help="This process sets a scalar variable value over a condition" > 
+    <inputs>
+      <parameter n="value" pn="Value" type="double" v="0.0" function="1"/>
+    </inputs>
+  </Process>
+  <Process n="ALMContactProcess" pn="Consider contact between surfaces" python_module="alm_contact_process"
+	   kratos_module="KratosMultiphysics.ContactStructuralMechanicsApplication" help="This process computes the contact between different surfaces" > 
+    <inputs>
+      <parameter n="search_factor" pn="Search factor" type="double" v="1.5"/>
+      <parameter n="contact_type" pn="Contact type" type="combo" v="Frictionless" values="Frictionless"/>
+      <parameter n="active_check_factor" pn="Active check factor" type="double" v="0.01" />
+      <parameter n="max_number_results" pn="Max number of results" type="double" v="1000" />
+      <parameter n="normal_variation" pn="Normal variation" type="bool" v="false" />
+      <parameter n="type_search" pn="Type of search" type="combo" v="InRadius" values="InRadius" />
+      <parameter n="integration_order" pn="Integration order" type="double" v="2" />
+    </inputs>
+  </Process>
+ </ProcessList>
+
