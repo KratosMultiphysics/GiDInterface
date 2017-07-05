@@ -65,7 +65,7 @@ proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
     
     set project_path [GiD_Info project modelname]
     if {$project_path ne "UNNAMED"} {
-        catch {file delete -force [file join $::write::dir "[file tail [GiD_Info project modelname] ].post.res"]}
+        catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[file tail [GiD_Info project modelname] ].post.res"]}
         GiD_Process Escape Escape Utilities Variables EmbeddedMesh Activated 1 escape escape
         # Set Octree
         set oldVolumeMesher [GiD_Set VolumeMesher]

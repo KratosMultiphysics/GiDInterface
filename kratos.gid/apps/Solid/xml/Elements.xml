@@ -137,7 +137,7 @@
 
   <!--large displacements-->
   <!--total lagrangian-->
-  <ElementItem n="TotalLagrangianElement2D" pn="Solid Total Lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
+  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
@@ -180,7 +180,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="TotalLagrangianElement3D" pn="Solid Total Lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
+  <ElementItem n="TotalLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid"  help="This element it implements a Total Lagrangian approach to large deformation kinematics">
