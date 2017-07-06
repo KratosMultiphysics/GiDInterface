@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Materials>
-  <Material n="Steel" MaterialType="Structural" help="This element implements a Fractional Step Element">
+  <Material n="Default" MaterialType="DEM" help="">
     <inputs>
-        <parameter n="DENSITY" pn="Density" v="7850" help="Density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="206.9e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
-        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29" help="Poisson coefficient of the material"/>
-    </inputs>
-  </Material>
-  <Material n="Aluminium" MaterialType="Structural" help="This element implements a Fractional Step Element">
-    <inputs>
-        <parameter n="DENSITY" pn="Density" v="2650" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="69e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
-        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.22" help="Poisson coefficient of the material"/>
+      <parameter n="Density" pn="Density (Kg/m3)" v="2500.0" icon="prop.gif" help="Density of the material (not bulk density)"/>
+      <parameter n="YoungModulus" pn="Young modulus (Pa)" v="1.0e5" icon="prop.gif" help="The Youngs Modulus of the material (not bulk stiffness)"/>
+      <parameter n="PoissonRatio" pn="Poisson ratio" v="0.20" icon="prop.gif" help="The Poissons Ratio of the material (not bulk Ratio)"/>
+      <parameter n="ParticleSphericity" pn="Sphericity" v="1.0" icon="prop.gif" help="Particle sphericity"/>
+      <parameter n="ParticleCohesion" pn="Cohesion (Pa)" v="0.0" icon="prop.gif" help="Particle cohesion (JKR or DMT)"/>
+      <parameter n="ParticleFrictionAngle" pn="Friction angle (deg)" v="45.0" unit="deg" icon="prop.gif" help="Particle friction angle (for Coulombs friction)"/>
+      <parameter n="CoefficientOfRestitution" pn="Coefficient of restitution" v="0.2" icon="prop.gif" help="Coefficient of restitution"/>
+      <parameter n="RollingFriction" pn="Rolling friction" v="0.01" icon="prop.gif" help="Rolling friction"/>
+      <parameter n="RotationalDampingRatio" pn="Rotational damping ratio" v="0.5" icon="prop.gif" help="Rotational damping ratio"/>
+      <parameter n="Color" pn="Color" v="1" icon="prop.gif" help="Color"/>
+      <parameter n="DEM_ContactLaw" pn="Discontinuous Contact Law" v="Hertz" type="combo" values="Linear,Hertz,LinearCustomized,ConicalDamage" icon="prop.gif" help="Contact Laws based on Thornton, Cummins, Cleary, 2013: LSD and HMD">
+        <parameter n="KNormal" pn="KNormal" parent="LinearCustomized" v="1e5" icon="prop.gif" help="KNormal"/>
+        <parameter n="KTangential" pn="KTangential" parent="LinearCustomized" v="5e4" icon="prop.gif" help="KTangential"/>
+        <parameter n="DEM_CohesionLaw" pn="Cohesion Law" class="DEMCohesionLaw" v="None" values="None,JKR,DMT" icon="prop.gif" help="JKR: larger, flexible spheres. DMT: smaller, rigid ones."/>
+        <parameter n="ContactRadius" pn="Contact Radius" parent="ConicalDamage" v="4e-3" icon="prop.gif" help="Contact Radius"/>
+        <parameter n="MaxStress" pn="Maximum Stress" parent="ConicalDamage" v="2e8" icon="prop.gif" help="Maximum Stress"/>
+        <parameter n="Alpha" pn="Alpha" parent="ConicalDamage" v="81.0" unit="Degrees" icon="prop.gif" help="Alpha"/>
+        <parameter n="Gamma" pn="Gamma" parent="ConicalDamage" v="-0.16" icon="prop.gif" help="Gamma"/></parameter>
     </inputs>
   </Material>
 </Materials>

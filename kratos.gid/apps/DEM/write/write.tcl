@@ -1,53 +1,46 @@
-namespace eval Structural::write {
-    variable ConditionsDictGroupIterators
-    variable NodalConditionsGroup
+namespace eval DEM::write {
     variable writeAttributes
 }
 
-proc Structural::write::Init { } {
-    variable ConditionsDictGroupIterators
-    variable NodalConditionsGroup
-    set ConditionsDictGroupIterators [dict create]
-    set NodalConditionsGroup [list ]
-    
+proc DEM::write::Init { } {    
     variable writeAttributes
     set writeAttributes [dict create]
-    SetAttribute validApps [list "Structural"]
-    SetAttribute writeCoordinatesByGroups 0
-    SetAttribute properties_location json 
-    SetAttribute parts_un STParts
-    SetAttribute materials_un STMaterials
-    SetAttribute conditions_un STLoads
-    SetAttribute nodal_conditions_un STNodalConditions
-    SetAttribute materials_file "StructuralMaterials.json"
-    SetAttribute main_script_file "KratosStructural.py"
+    SetAttribute validApps [list "DEM"]
+    SetAttribute writeCoordinatesByGroups 1
+    SetAttribute properties_location py 
+    SetAttribute parts_un DEMParts
+    SetAttribute materials_un DEMMaterials
+    SetAttribute conditions_un DEMLoads
+    SetAttribute nodal_conditions_un DEMNodalConditions
+    SetAttribute materials_file "DEMMaterials.json"
+    SetAttribute main_script_file "KratosDEM.py"
 }
 
-proc Structural::write::GetAttribute {att} {
+proc DEM::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc Structural::write::SetAttribute {att val} {
+proc DEM::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc Structural::write::AddAttribute {att val} {
+proc DEM::write::AddAttribute {att val} {
     variable writeAttributes
     dict append writeAttributes $att $val]
 }
 
-proc Structural::write::AddAttributes {configuration} {
+proc DEM::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc Structural::write::AddValidApps {appList} {
+proc DEM::write::AddValidApps {appList} {
     AddAttribute validApps $appList
 }
 
-proc Structural::write::writeCustomFilesEvent { } {
+proc DEM::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
     
     set orig_name [GetAttribute main_script_file]
@@ -57,17 +50,17 @@ proc Structural::write::writeCustomFilesEvent { } {
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
-proc Structural::write::SetCoordinatesByGroups {value} {
+proc DEM::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
 
-proc Structural::write::ApplyConfiguration { } {
+proc DEM::write::ApplyConfiguration { } {
     variable writeAttributes
     write::SetConfigurationAttributes $writeAttributes
 }
 
 # MDPA Blocks
-proc Structural::write::writeModelPartEvent { } {
+proc DEM::write::writeModelPartEvent { } {
     variable ConditionsDictGroupIterators
     variable writeAttributes
     write::initWriteConfiguration $writeAttributes
@@ -79,7 +72,7 @@ proc Structural::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
     # write::writeMaterials $validApps
 
-    # Nodal coordinates (1: only for Structural <inefficient> | 0: the whole mesh <efficient>)
+    # Nodal coordinates (1: only for DEM <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
     
     # Element connectivities (Groups on STParts)
@@ -98,12 +91,12 @@ proc Structural::write::writeModelPartEvent { } {
 }
 
 
-proc Structural::write::writeConditions { } {
+proc DEM::write::writeConditions { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
 }
 
-proc Structural::write::writeMeshes { } {
+proc DEM::write::writeMeshes { } {
     
     write::writePartMeshes
     
@@ -114,7 +107,7 @@ proc Structural::write::writeMeshes { } {
     writeLoads
 }
 
-proc Structural::write::writeLoads { } {
+proc DEM::write::writeLoads { } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
@@ -130,39 +123,11 @@ proc Structural::write::writeLoads { } {
     }
 }
 
-proc Structural::write::writeCustomBlock { } {
+proc DEM::write::writeCustomBlock { } {
     write::WriteString "Begin Custom"
-    write::WriteString "Custom write for Structural, any app can call me, so be careful!"
+    write::WriteString "Custom write for DEM, any app can call me, so be careful!"
     write::WriteString "End Custom"
     write::WriteString ""
 }
 
-proc Structural::write::getLastConditionId { } { 
-    variable ConditionsDictGroupIterators
-    set top 1
-    if {$ConditionsDictGroupIterators ne ""} {
-        foreach {group iters} $ConditionsDictGroupIterators {
-            set top [expr max($top,[lindex $iters 1])]
-        }
-    }
-    return $top
-}
-
-# Custom files
-proc Structural::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
-}
-
-proc Structural::write::GetUsedElements { {get "Objects"} } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
-    set lista [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
-        set e [Model::getElement $elem_name]
-        if {$get eq "Name"} { set e [$e getName] }
-        lappend lista $e
-    }
-    return $lista
-}
-
-Structural::write::Init
+DEM::write::Init
