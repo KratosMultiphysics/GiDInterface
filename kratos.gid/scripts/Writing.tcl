@@ -561,8 +561,7 @@ proc write::getEtype {ov group} {
         if {$b} {error "Multiple element types in $group over $ov"}
         switch $isquadratic {
             0 { set ret [list "Linear" 2] }
-            1 { set ret [list "Linear" 3] }
-            default { set ret [list "Linear" 2] }
+            default { set ret [list "Linear" 3] }
         }
     }
     
