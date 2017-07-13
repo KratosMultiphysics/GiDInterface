@@ -43,4 +43,15 @@ proc ::DEM::GetAttribute {name} {
     return $value
 }
 
+proc ::DEM::BeforeMeshGeneration {elementsize} {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute DEMParts]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        foreach volume [GiD_EntitiesGroups get $groupid volumes] {
+            GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape 
+        }
+    }
+}
+
 ::DEM::Init

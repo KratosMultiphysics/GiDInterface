@@ -620,6 +620,13 @@ proc write::getEtype {ov group} {
             }
             set b 1
         }
+        if {[GiD_EntitiesGroups get $group elements -count -element_type Sphere]} {
+            if {$b} {error "Multiple element types in $group over $ov"}
+            switch $isquadratic {
+                0 { set ret [list "Sphere" 1]  }
+            }
+            set b 1
+        }
     }
     
     return $ret
