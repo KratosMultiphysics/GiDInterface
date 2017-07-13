@@ -10,12 +10,13 @@ proc DEM::write::Init { } {
     SetAttribute properties_location py 
     SetAttribute parts_un DEMParts
     SetAttribute materials_un DEMMaterials
-    SetAttribute conditions_un DEMLoads
+    SetAttribute conditions_un DEMConditions
     SetAttribute nodal_conditions_un DEMNodalConditions
     SetAttribute materials_file "DEMMaterials.json"
     SetAttribute main_script_file "KratosDEM.py"
 }
 
+# Attributes block
 proc DEM::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
@@ -36,18 +37,9 @@ proc DEM::write::AddAttributes {configuration} {
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
+# MultiApp events
 proc DEM::write::AddValidApps {appList} {
     AddAttribute validApps $appList
-}
-
-proc DEM::write::writeCustomFilesEvent { } {
-    WriteMaterialsFile
-    
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    set paralleltype [write::getValue ParallelType]
-    
-    write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 proc DEM::write::SetCoordinatesByGroups {value} {
@@ -61,73 +53,34 @@ proc DEM::write::ApplyConfiguration { } {
 
 # MDPA Blocks
 proc DEM::write::writeModelPartEvent { } {
-    variable ConditionsDictGroupIterators
     variable writeAttributes
     write::initWriteConfiguration $writeAttributes
     
-    # Headers
-    write::writeModelPartData
+    # MDPA Parts
+    WriteMDPAParts
+    write::CloseFile
 
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-    # write::writeMaterials $validApps
+    # MDPA Walls
+    write::OpenFile "[file tail [GiD_Info project ModelName]]_FEM_boundary.mdpa"
+    WriteMDPAWalls
+    write::CloseFile
 
-    # Nodal coordinates (1: only for DEM <inefficient> | 0: the whole mesh <efficient>)
-    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
-    
-    # Element connectivities (Groups on STParts)
-    write::writeElementConnectivities
+    # MDPA Inlet
+    write::OpenFile "[file tail [GiD_Info project ModelName]]_Inlet.mdpa"
+    WriteMDPAInlet
+    write::CloseFile
 
-    # Nodal conditions and conditions
-    writeConditions
-
-    # SubmodelParts
-    writeMeshes
-
-    # Custom SubmodelParts
-    set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
-    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
-
+    # MDPA Walls
+    write::OpenFile "[file tail [GiD_Info project ModelName]]_Clusters.mdpa"
+    WriteMDPAClusters
+    write::CloseFile
 }
 
-
-proc DEM::write::writeConditions { } {
-    variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
-}
-
-proc DEM::write::writeMeshes { } {
+proc DEM::write::writeCustomFilesEvent { } {
+    set orig_name [GetAttribute main_script_file]
+    write::CopyFileIntoModel [file join "python" $orig_name ]
     
-    write::writePartMeshes
-    
-    # Solo Malla , no en conditions
-    write::writeNodalConditions [GetAttribute nodal_conditions_un]
-    
-    # A Condition y a meshes-> salvo lo que no tenga topologia
-    writeLoads
-}
-
-proc DEM::write::writeLoads { } {
-    variable ConditionsDictGroupIterators
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
-        #W "Writing mesh of Load $groupid"
-        if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
-            ::write::writeGroupMesh [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
-        } else {
-            ::write::writeGroupMesh [[$group parent] @n] $groupid "nodal"
-        }
-    }
-}
-
-proc DEM::write::writeCustomBlock { } {
-    write::WriteString "Begin Custom"
-    write::WriteString "Custom write for DEM, any app can call me, so be careful!"
-    write::WriteString "End Custom"
-    write::WriteString ""
+    write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 DEM::write::Init

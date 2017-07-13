@@ -33,6 +33,10 @@ proc ::DEM::LoadMyFiles { } {
     
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
+    uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
+    uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
+    uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
+    uplevel #0 [list source [file join $dir write writeMDPA_Clusters.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
 }
 
@@ -51,6 +55,12 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
         foreach volume [GiD_EntitiesGroups get $groupid volumes] {
             GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape 
         }
+    }
+}
+
+proc ::DEM::AfterMeshGeneration { fail } {
+    foreach groupid [concat [DEM::write::GetConditionsGroups] [DEM::write::GetNodalConditionsGroups] ] {
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
     }
 }
 

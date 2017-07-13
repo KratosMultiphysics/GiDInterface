@@ -4,7 +4,7 @@
     <include n="Parts" active="1" path="apps/DEM/xml/Parts.spd"/>
     <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
     <include n="BoundaryConditions" active="1" path="apps/DEM/xml/BoundaryConditions.spd"/>
-    <include n="Loads" active="1" path="apps/DEM/xml/Loads.spd"/>
+    <include n="Conditions" active="1" path="apps/DEM/xml/Conditions.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
     <include n="Results" active="1" path="apps/Common/xml/Results.spd"/>
     <include n="materials" active="1" path="apps/DEM/xml/Materials.spd"/>
