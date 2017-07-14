@@ -369,7 +369,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Structure domain strategy settings
     set str_change_list [list residual_relative_tolerance "1e-7" residual_absolute_tolerance "1e-9" max_iteration "20"]
-    set xpath [spdAux::getRoute SLStratParams]
+    set xpath [spdAux::getRoute STStratParams]
     foreach {name value} $str_change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
