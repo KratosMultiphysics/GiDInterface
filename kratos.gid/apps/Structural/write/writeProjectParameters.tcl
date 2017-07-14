@@ -66,24 +66,24 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict model_import_settings $modelDict
     
     set materialsDict [dict create]
-    dict set materialsDict materials_filename "StructuralMaterials.json"
+    dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
 
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
-    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "STParts"]
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "STNodalConditions" "STLoads"]
+    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
+    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
 
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
-    set nodal_conditions_dict [write::getConditionsParametersDict STNodalConditions "Nodal"]
+    set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
     set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]    
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
 
-    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict STLoads]
+    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
@@ -111,7 +111,7 @@ proc Structural::write::getOldParametersDict { } {
     }
 
     set materialsDict [dict create]
-    dict set materialsDict materials_filename "StructuralMaterials.json"
+    dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set projectParametersDict material_import_settings $materialsDict
 
     return $projectParametersDict
@@ -152,7 +152,7 @@ proc Structural::write::writeParametersEvent { } {
 
 proc Structural::write::UsingRotationDofElements { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute STParts]/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
