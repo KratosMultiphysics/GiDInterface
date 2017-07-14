@@ -2,7 +2,7 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="SmallDisplacementElement2D" pn="Solid small displacements" ImplementedInFile="small_displacement_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="SmallDisplacementElement2D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a small displacement solid element">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementElement2D3N"/>
@@ -37,7 +37,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid small displacements" ImplementedInFile="axisym_small_displacement_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid small displacements" ImplementedInFile="axisym_small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements an axisymetric small displacement solid element">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="AxisymSmallDisplacementElement2D3N"/>
@@ -69,7 +69,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="SmallDisplacementElement3D" pn="Solid small displacements" ImplementedInFile="small_displacement_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="SmallDisplacementElement3D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a small displacement solid element">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="SmallDisplacementElement3D4N"/>
@@ -106,7 +106,7 @@
   </ElementItem>
   <!--large displacements-->
   <!--total lagrangian-->
-  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
+  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="TotalLagrangianElement2D3N"/>
@@ -138,7 +138,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="TotalLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
+  <ElementItem n="TotalLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="TotalLagrangianElement3D4N"/>
@@ -148,6 +148,73 @@
       <item GeometryType="Hexahedra" nodes="27" KratosName="TotalLagrangianElement3D27N"/>
       <item GeometryType="Prism" nodes="6" KratosName="TotalLagrangianElement3D6N"/>
       <item GeometryType="Prism" nodes="15" KratosName="TotalLagrangianElement3D15N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="3D"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="StrainSize" value="6"/>
+      <filter field="HybridType" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  <!--updated lagrangian-->
+  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianElement2D3N"/>
+      <item GeometryType="Triangle" nodes="6" KratosName="UpdatedLagrangianElement2D6N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangianElement2D4N"/>
+      <item GeometryType="Quadrilateral" nodes="8" KratosName="UpdatedLagrangianElement2D8N"/>
+      <item GeometryType="Quadrilateral" nodes="9" KratosName="UpdatedLagrangianElement2D9N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress,PlaneStrain"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="StrainSize" value="3"/>
+      <filter field="HybridType" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangianElement3D4N"/>
+      <item GeometryType="Tetrahedra" nodes="10" KratosName="UpdatedLagrangianElement3D10N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="UpdatedLagrangianElement3D8N"/>
+      <item GeometryType="Hexahedra" nodes="20" KratosName="UpdatedLagrangianElement3D20N"/>
+      <item GeometryType="Hexahedra" nodes="27" KratosName="UpdatedLagrangianElement3D27N"/>
+      <item GeometryType="Prism" nodes="6" KratosName="UpdatedLagrangianElement3D6N"/>
+      <item GeometryType="Prism" nodes="15" KratosName="UpdatedLagrangianElement3D15N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
