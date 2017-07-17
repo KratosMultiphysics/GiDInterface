@@ -80,12 +80,11 @@ for i in range(ProjectParameters["gravity"].size()):
     FluidModel.AddModelPart(main_model_part.GetSubModelPart(gravity_part_name))
 
 ## Print model_part and properties
-if(echo_level > 1):
-    if (parallel_type == "OpenMP") or (mpi.rank == 0):
-        print("")
-        print(main_model_part)
-        for properties in main_model_part.Properties:
-            print(properties)
+if (echo_level > 1) and ((parallel_type == "OpenMP") or (mpi.rank == 0)):
+    print("")
+    print(main_model_part)
+    for properties in main_model_part.Properties:
+        print(properties)
 
 ## Processes construction
 import process_factory
@@ -97,10 +96,9 @@ list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructL
 list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["boundary_conditions_process_list"] )
 list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["auxiliar_process_list"] )
 
-if(echo_level > 1):
-    if (parallel_type == "OpenMP") or (mpi.rank == 0):
-        for process in list_of_processes:
-            print(process)
+if (echo_level > 1) and ((parallel_type == "OpenMP") or (mpi.rank == 0)):
+    for process in list_of_processes:
+        print(process)
 
 ## Processes initialization
 for process in list_of_processes:
@@ -159,7 +157,7 @@ while(time <= end_time):
     for process in list_of_processes:
         process.ExecuteBeforeOutputStep()
 
-    if (gid_output.IsOutputStep()) and (output_post == True)::
+    if (gid_output.IsOutputStep()) and (output_post == True):
         gid_output.PrintOutput()
 
     for process in list_of_processes:
