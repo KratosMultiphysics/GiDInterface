@@ -44,10 +44,10 @@
   </Process>   
    
   <!---  Bofang Temperature -->   
-  <Process n="ImposeBofangConditionProcess" pn="Impose Bofang scalar field value" python_module="impose_bofang_condition_process"
+  <Process n="ImposeBofangConditionProcess" pn="Impose Bofang scalar field value" python_module="impose_reservoir_temperature_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+		<parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Y" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Surface_Temp" pn="Surface Temperature" type="double" v="0.0"/>
@@ -63,6 +63,24 @@
         <parameter n="Month_Table" pn="Month table filename" type="tablefile" v=""/>
     </inputs>
   </Process>
+  
+  
+    <!---  Constant Reservoir Temperature -->   
+  <Process n="ImposeReservoirConstantTemperatureConditionProcess" pn="Impose constant reservoir temeperature value" python_module="impose_reservoir_temperature_condition_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
+    <inputs>
+		<parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+        <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Y" values="X,Y,Z" />
+        <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
+        <parameter n="Water_temp" pn="Water Temperature" type="double" v="0.0"/>
+        <parameter n="Water_temp_Table" pn="Water Temperarure table filename" type="tablefile" v=""/>
+        <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
+        <parameter n="Water_level_Table" pn="Water Level table filename" type="tablefile" v=""/>
+        <parameter n="Outer_temp" pn="Dry Temperature " type="double" v="0.0"/>
+        <parameter n="Outer_temp_Table" pn="Outer Temperature table filename" type="tablefile" v=""/>
+    </inputs>
+  </Process>
+  
     
    <!---  Thermal Parameters -->
     <Process n="ImposeThermalParametersScalarValueProcess" pn="Impose thermal parameters for solving the thermal problem" python_module="impose_thermal_parameters_scalar_value_process"
@@ -172,10 +190,13 @@
   </Process>
   
 <!---  Added Mass Condition --> 
-  <Process n="AddedMassProcess" pn="Adding an extra mass due to reservoir effects" python_module="special_condition_process"
-		kratos_module="KratosMultiphysics.DamApplication" help="" > 
+  <Process n="AddedMassProcess" pn="Adding an extra mass due to reservoir effects" python_module="impose_water_loads_condition_process" kratos_module="KratosMultiphysics.DamApplication" help="" > 
     <inputs>
-        <parameter n="Density_fluid" pn="Density of fluid" type="double" v="1000"/>
+		<parameter n="Modify" pn="Modify" type="bool" v="1"/>
+        <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Y" values="X,Y,Z"/>
+        <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
     </inputs>
   </Process>  
   
