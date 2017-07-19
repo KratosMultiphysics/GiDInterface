@@ -29,9 +29,9 @@ proc Solid::write::AddValidApps {appList} {
 proc Solid::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
     
-    write::CopyFileIntoModel "python/KratosSolid.py"
+    write::CopyFileIntoModel "python/RunSolid.py"
     set paralleltype [write::getValue ParallelType]
-    set orig_name "KratosSolid.py"
+    set orig_name "RunSolid.py"
     
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
