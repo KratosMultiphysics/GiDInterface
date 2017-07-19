@@ -179,10 +179,12 @@ proc write::writeTables { } {
     WriteString ""
 }
 
-proc write::writeMaterials { {appid ""}} {
+proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
     variable mat_dict
     
-    set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+    set exclusionList [list "MID" "APPID" "Material" "Element"]
+    if {$const_law_write_name eq ""} {lappend exclusionList "ConstitutiveLaw"}
+
     # We print all the material data directly from the saved dictionary
     foreach material [dict keys $mat_dict] {
         set matapp [dict get $mat_dict $material APPID]
@@ -190,7 +192,8 @@ proc write::writeMaterials { {appid ""}} {
             WriteString "Begin Properties [dict get $mat_dict $material MID]"
             foreach prop [dict keys [dict get $mat_dict $material] ] {
                 if {$prop ni $exclusionList} {
-                    WriteString "    $prop [dict get $mat_dict $material $prop] "
+                    set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
+                    WriteString "    $propname [dict get $mat_dict $material $prop] "
                 }
             }
             WriteString "End Properties"
