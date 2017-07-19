@@ -106,6 +106,7 @@ oo::class create Entity {
     method addInputDependency {n dn dv} {
         variable inputs
         [dict get $inputs $n] setDep $dn $dv
+
     }
     
     

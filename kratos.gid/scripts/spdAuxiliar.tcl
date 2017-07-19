@@ -896,19 +896,23 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
 }
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    if {$inputs eq ""} {
-        set inputs [dict merge [::Model::GetAllElemInputs] [::Model::GetAllCLInputs] ]
-    }
-
-    foreach {inName in} $inputs {
-        set forcedParams [list state {[PartParamState]} ]
-        set node [GetParameterValueString $in $forcedParams]
-           
-        $base appendXML $node
-        set orig [$base lastChild]
-        set new [$orig cloneNode]
-        $orig delete
-        $base insertBefore $new $basenode
+    set processeds [list ]
+    foreach obj [concat [Model::GetElements] [Model::GetConstitutiveLaws]] {
+        set inputs [$obj getInputs]
+        foreach {inName in} $inputs {
+            if {$inName ni $processeds} {
+                lappend processeds $inName
+                set forcedParams [list state {[PartParamState]} ]
+                if {[$in getActualize]} { lappend forcedParams base $obj }
+                set node [GetParameterValueString $in $forcedParams]
+                
+                $base appendXML $node
+                set orig [$base lastChild]
+                set new [$orig cloneNode -deep]
+                $orig delete
+                $base insertBefore $new $basenode
+            }
+        }
     }
     $basenode delete
 }
@@ -924,7 +928,6 @@ proc spdAux::injectMaterials { basenode args } {
         foreach {inName in} $inputs {
             set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]]]
             append matnode $node
-            
         }
         append matnode "</blockdata> \n"
         $base appendXML $matnode
@@ -1856,8 +1859,6 @@ proc spdAux::ProcGive_materials_list {domNode args} {
 }
 
 proc spdAux::ProcEdit_database_list {domNode args} {
-    #W $domNode
-    
     set root [customlib::GetBaseRoot]
     set matname ""
     set xnode "[$domNode @n]:"
