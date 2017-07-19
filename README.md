@@ -16,7 +16,7 @@ The interface of Kratos with [GiD](http://www.gidhome.com)
 * kratos top menu / Developer mode (recommended)
 
 ## Warnings
-* **NEW!** While Kratos core is getting ready for a release, the proper Core branch to be connected is [Release-5.1](https://github.com/KratosMultiphysics/Kratos/tree/Release-5.1).
+* **NEW!** While Kratos core is getting ready for a release, the proper Core branch to be connected is [Release-5.1](https://github.com/KratosMultiphysics/Kratos/releases).
 * This repository is in Beta version. This means that everything can change, and there is no "transform from older versions" yet.
 
 ## Want to develop?
