@@ -4,7 +4,7 @@ proc DEM::write::WriteMDPAParts { } {
 
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
-    # write::writeMaterials $validApps
+    write::writeMaterials [GetAttribute validApps]
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts
