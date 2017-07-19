@@ -39,22 +39,22 @@
   </StrategyItem>
 
 
-  <StrategyItem n="NeumannNeumann" pn="Neumann-Neumann"
+  <!-- <StrategyItem n="NeumannNeumann" pn="Neumann-Neumann"
 		ImplementedInFile="partitioned_fsi_neumann_neumann_solver.py"
 		ImplementedInApplication="FSIApplication"
 		ImplementedInPythonFile="partitioned_fsi_neumann_neumann_solver"
 		MinimumKratosVersion="8500" App="FSI"
 		ProductionReady="Developer"
-		help="">
+		help=""> -->
 
     <!-- list of options to be filled -->
-    <parameter_list>
+    <!-- <parameter_list>
         <parameter n="nl_tol" pn="Non-linear tolerance" type="double" v="1e-7" help="Interface residual tolerance."/>
         <parameter n="nl_max_it" pn="Non-linear max. iterations" type="integer" v="25" help="Maximum number of non-linear iterations."/>
         <parameter n="solve_mesh_at_each_iteration" pn="Solve mesh at each iteration" type="bool" values="true,false" v="true" help="Decides wether the mesh problem is solved or not at each FSI iteration."/>
-    </parameter_list>
+    </parameter_list> -->
 
-    <linearSolvers>
+    <!-- <linearSolvers>
       <linearSolverItem n="coupling_strategy" pn="Coupling strategy" default="MVQN" >
         <filterFeatures>
             <filter field="SolverType" value="FSICoupling"/>
@@ -62,9 +62,9 @@
 		<defaults>
 		</defaults>
       </linearSolverItem>
-    </linearSolvers>
+    </linearSolvers> -->
 
-	<schemes>
+	<!-- <schemes>
 	  <scheme n="GenericNN" pn="Partitioned scheme" help="FilterElements" ProductionReady="ProductionReady">
 	     <parameter_list>
 		  </parameter_list>
@@ -73,6 +73,6 @@
 		  </element_filters>
 	  </scheme>
 	</schemes>
-  </StrategyItem>
+  </StrategyItem> -->
 
 </StrategyList>

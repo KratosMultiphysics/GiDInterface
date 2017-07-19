@@ -914,7 +914,7 @@ proc write::getSolversParametersDict { {appid ""} } {
         set un [apps::getAppUniqueName $appid "$solstratName[$se getName]"]
         if {[spdAux::getRoute $un] ne ""} {
             set solverName [write::getValue $un Solver]
-            if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI"]} {
+            if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI" "Automatic"]} {
                 dict set solverEntryDict solver_type $solverName
                 set solver [::Model::GetSolver $solverName]
                 foreach {n in} [$solver getInputs] {
