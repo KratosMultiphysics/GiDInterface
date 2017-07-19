@@ -28,6 +28,11 @@ proc Structural::write::GetAttribute {att} {
     return [dict get $writeAttributes $att]
 }
 
+proc Structural::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
 proc Structural::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
@@ -52,8 +57,6 @@ proc Structural::write::writeCustomFilesEvent { } {
     
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
-    set paralleltype [write::getValue ParallelType]
-    
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
@@ -69,17 +72,17 @@ proc Structural::write::ApplyConfiguration { } {
 # MDPA Blocks
 proc Structural::write::writeModelPartEvent { } {
     variable ConditionsDictGroupIterators
-    variable writeAttributes
-    write::initWriteConfiguration $writeAttributes
+    write::initWriteConfiguration [GetAttributes]
     
     # Headers
     write::writeModelPartData
-
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
-    # write::writeMaterials $validApps
 
-    # Nodal coordinates (1: only for Structural <inefficient> | 0: the whole mesh <efficient>)
+    # Materials
+    # write::writeMaterials [GetAttribute validApps 
+
+    # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
     
     # Element connectivities (Groups on STParts)

@@ -110,7 +110,7 @@
         </inputs>
     </solver>
 
-    <solver n="Superludist" pn="Super LU" SolverType="Standard" Parallelism="MPI">
+    <solver n="Klu" pn="KLU" SolverType="Standard" Parallelism="MPI">
         <inputs>
 			<parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>
