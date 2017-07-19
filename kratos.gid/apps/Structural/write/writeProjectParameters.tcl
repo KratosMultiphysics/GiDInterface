@@ -45,7 +45,7 @@ proc Structural::write::getOldParametersDict { } {
     # Solution strategy
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue STSolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
+    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
     dict set solverSettingsDict solver_type $strategy_write_name
     #~ dict set solverSettingsDict domain_size [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
@@ -58,37 +58,37 @@ proc Structural::write::getOldParametersDict { } {
         dict set solverSettingsDict scheme_type [write::getValue STScheme]
     }
 
-    # model import settings
+    # Model import settings
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
     dict set modelDict input_filename $model_name
     dict set modelDict input_file_label 0
     dict set solverSettingsDict model_import_settings $modelDict
-    
+
     set materialsDict [dict create]
-    dict set materialsDict materials_filename "StructuralMaterials.json"
+    dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
 
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
-    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "STParts"]
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "STNodalConditions" "STLoads"]
+    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
+    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
 
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
-    set nodal_conditions_dict [write::getConditionsParametersDict STNodalConditions "Nodal"]
-    set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]    
+    set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
 
-    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict STLoads]
+    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
-    # restart options
+    # Restart options
     set restartDict [dict create ]
     dict set restartDict SaveRestart false
     dict set restartDict RestartFrequency 0
@@ -101,7 +101,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set contraintsDict incremental_load false
     dict set contraintsDict incremental_displacement false
     dict set projectParametersDict constraints_data $contraintsDict
-    
+
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
         if {$elem in [Structural::write::GetUsedElements Name]} {
@@ -111,7 +111,7 @@ proc Structural::write::getOldParametersDict { } {
     }
 
     set materialsDict [dict create]
-    dict set materialsDict materials_filename "StructuralMaterials.json"
+    dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set projectParametersDict material_import_settings $materialsDict
 
     return $projectParametersDict
@@ -125,7 +125,7 @@ proc Structural::write::ProcessContacts { nodal_conditions_dict } {
             dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
             dict set elem Parameters model_part_name $model_part_name
             dict set elem Parameters computing_model_part_name "computing_domain"
-        } 
+        }
         lappend process_list $elem
     }
     return $process_list
@@ -152,7 +152,7 @@ proc Structural::write::writeParametersEvent { } {
 
 proc Structural::write::UsingRotationDofElements { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute STParts]/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
@@ -160,7 +160,6 @@ proc Structural::write::UsingRotationDofElements { } {
         set elem [Model::getElement $elemid]
         if {[write::isBooleanTrue [$elem getAttribute "RotationDofs"]]} {set bool true; break}
     }
-    
+
     return $bool
 }
-

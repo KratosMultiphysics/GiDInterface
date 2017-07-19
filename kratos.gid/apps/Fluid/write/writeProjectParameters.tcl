@@ -1,7 +1,5 @@
 # Project Parameters
 proc ::Fluid::write::getParametersDict { } {
-    variable BCUN
-
     set projectParametersDict [dict create]
 
     # First section -> Problem data
@@ -64,12 +62,21 @@ proc ::Fluid::write::getParametersDict { } {
     dict set modelDict input_filename $model_name
     dict set solverSettingsDict model_import_settings $modelDict
 
+    if {0} {
+        set materialsDict [dict create]
+        dict set materialsDict materials_filename [GetAttribute materials_file]
+        dict set solverSettingsDict material_import_settings $materialsDict
+    }
+
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]
+
     # Parts
     dict set solverSettingsDict volume_model_part_name {*}[write::getPartsMeshId]
+
     # Skin parts
     dict set solverSettingsDict skin_parts [getBoundaryConditionMeshId]
+    
     # No skin parts
     dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
     # Time stepping settings
@@ -87,8 +94,8 @@ proc ::Fluid::write::getParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Boundary conditions processes
-    dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict "FLNodalConditions" "Nodal"]
-    dict set projectParametersDict boundary_conditions_process_list [write::getConditionsParametersDict $BCUN]
+    dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    dict set projectParametersDict boundary_conditions_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
     dict set projectParametersDict gravity [list [getGravityProcessDict] ]
     dict set projectParametersDict auxiliar_process_list [getAuxiliarProcessList]
 
@@ -113,7 +120,7 @@ proc Fluid::write::getDragProcessList {} {
     set root [customlib::GetBaseRoot]
 
     set process_list [list ]
-    set xp1 "[spdAux::getRoute FLDrags]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute drag_un]]/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
@@ -170,11 +177,9 @@ proc Fluid::write::getGravityProcessDict {} {
 
 # Skin SubModelParts ids
 proc Fluid::write::getBoundaryConditionMeshId {} {
-    variable BCUN
-    
     set root [customlib::GetBaseRoot]
     set listOfBCGroups [list ]
-    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
@@ -192,13 +197,11 @@ proc Fluid::write::getBoundaryConditionMeshId {} {
 
 # No-skin SubModelParts ids
 proc Fluid::write::getNoSkinConditionMeshId {} {
-    variable BCUN
-    
     set root [customlib::GetBaseRoot]
     set listOfNoSkinGroups [list ]
 
     # Append drag processes model parts names
-    set xp1 "[spdAux::getRoute FLDrags]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute drag_un]]/group"
     set dragGroups [$root selectNodes $xp1]
     foreach dragGroup $dragGroups {
         set groupName [$dragGroup @n]
@@ -209,7 +212,7 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     }
 
     # Append no skin conditions model parts names
-    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]

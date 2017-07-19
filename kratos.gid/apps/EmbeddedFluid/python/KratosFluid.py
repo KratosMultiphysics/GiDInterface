@@ -14,12 +14,14 @@ parameter_file = open("ProjectParameters.json",'r')
 ProjectParameters = Parameters( parameter_file.read())
 
 ## Get echo level and parallel type
-verbosity = ProjectParameters["problem_data"]["echo_level"].GetInt()
+echo_level = ProjectParameters["problem_data"]["echo_level"].GetInt()
 parallel_type = ProjectParameters["problem_data"]["parallel_type"].GetString()
 
 ## Import KratosMPI if needed
 if (parallel_type == "MPI"):
-    import KratosMultiphysics.mpi as KratosMPI
+    from KratosMultiphysics.mpi import *
+    from KratosMultiphysics.MetisApplication import *
+    from KratosMultiphysics.TrilinosApplication import *
 
 ## Fluid model part definition
 main_model_part = ModelPart(ProjectParameters["problem_data"]["model_part_name"].GetString())
@@ -38,20 +40,22 @@ solver.ImportModelPart()
 solver.AddDofs()
 
 ## Initialize GiD  I/O
-if (parallel_type == "OpenMP"):
-    from gid_output_process import GiDOutputProcess
-    gid_output = GiDOutputProcess(solver.GetComputingModelPart(),
-                                  ProjectParameters["problem_data"]["problem_name"].GetString() ,
-                                  ProjectParameters["output_configuration"])
-elif (parallel_type == "MPI"):
-    from gid_output_process_mpi import GiDOutputProcessMPI
-    gid_output = GiDOutputProcessMPI(solver.GetComputingModelPart(),
-                                     ProjectParameters["problem_data"]["problem_name"].GetString() ,
-                                     ProjectParameters["output_configuration"])
+output_post  = ProjectParameters.Has("output_configuration")
+if (output_post == True):
+    if (parallel_type == "OpenMP"):
+        from gid_output_process import GiDOutputProcess
+        gid_output = GiDOutputProcess(solver.GetComputingModelPart(),
+                                      ProjectParameters["problem_data"]["problem_name"].GetString() ,
+                                      ProjectParameters["output_configuration"])
+    elif (parallel_type == "MPI"):
+        from gid_output_process_mpi import GiDOutputProcessMPI
+        gid_output = GiDOutputProcessMPI(solver.GetComputingModelPart(),
+                                         ProjectParameters["problem_data"]["problem_name"].GetString() ,
+                                         ProjectParameters["output_configuration"])
 
-gid_output.ExecuteInitialize()
+    gid_output.ExecuteInitialize()
 
-## Creation of Kratos model
+## Creation of Kratos model (build sub_model_parts or submeshes)
 FluidModel = Model()
 FluidModel.AddModelPart(main_model_part)
 
@@ -76,7 +80,7 @@ for i in range(ProjectParameters["gravity"].size()):
     FluidModel.AddModelPart(main_model_part.GetSubModelPart(gravity_part_name))
 
 ## Print model_part and properties
-if(verbosity > 1):
+if (echo_level > 1) and ((parallel_type == "OpenMP") or (mpi.rank == 0)):
     print("")
     print(main_model_part)
     for properties in main_model_part.Properties:
@@ -92,7 +96,7 @@ list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructL
 list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["boundary_conditions_process_list"] )
 list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["auxiliar_process_list"] )
 
-if(verbosity > 1):
+if (echo_level > 1) and ((parallel_type == "OpenMP") or (mpi.rank == 0)):
     for process in list_of_processes:
         print(process)
 
@@ -103,37 +107,34 @@ for process in list_of_processes:
 ## Solver initialization
 solver.Initialize()
 
-#TODO: think if there is a better way to do this
-fluid_model_part = solver.GetComputingModelPart()
-
 ## Stepping and time settings
-# Dt = ProjectParameters["problem_data"]["time_step"].GetDouble()
+# delta_time = ProjectParameters["problem_data"]["time_step"].GetDouble()
 start_time = ProjectParameters["problem_data"]["start_time"].GetDouble()
 end_time = ProjectParameters["problem_data"]["end_time"].GetDouble()
 
 time = start_time
 step = 0
-out = 0.0
 
-gid_output.ExecuteBeforeSolutionLoop()
+if (output_post == True):
+    gid_output.ExecuteBeforeSolutionLoop()
 
 for process in list_of_processes:
     process.ExecuteBeforeSolutionLoop()
 
 ## Writing the full ProjectParameters file before solving
-if ((parallel_type == "OpenMP") or (KratosMPI.mpi.rank == 0)) and (verbosity > 0):
+if ((parallel_type == "OpenMP") or (mpi.rank == 0)) and (echo_level > 0):
     f = open("ProjectParametersOutput.json", 'w')
     f.write(ProjectParameters.PrettyPrintJsonString())
     f.close()
 
 while(time <= end_time):
 
-    Dt = solver.ComputeDeltaTime()
+    delta_time = solver.ComputeDeltaTime()
     step += 1
-    time = time + Dt
+    time = time + delta_time
     main_model_part.CloneTimeStep(time)
 
-    if (parallel_type == "OpenMP") or (KratosMPI.mpi.rank == 0):
+    if (parallel_type == "OpenMP") or (mpi.rank == 0):
         print("")
         print("STEP = ", step)
         print("TIME = ", time)
@@ -141,7 +142,8 @@ while(time <= end_time):
     for process in list_of_processes:
         process.ExecuteInitializeSolutionStep()
 
-    gid_output.ExecuteInitializeSolutionStep()
+    if (output_post == True):
+        gid_output.ExecuteInitializeSolutionStep()
 
     if(step >= 3):
         solver.Solve()
@@ -149,21 +151,20 @@ while(time <= end_time):
     for process in list_of_processes:
         process.ExecuteFinalizeSolutionStep()
 
-    gid_output.ExecuteFinalizeSolutionStep()
+    if (output_post == True):
+        gid_output.ExecuteFinalizeSolutionStep()
 
-    #TODO: decide if it shall be done only when output is processed or not
     for process in list_of_processes:
         process.ExecuteBeforeOutputStep()
 
-    if gid_output.IsOutputStep():
+    if (gid_output.IsOutputStep()) and (output_post == True):
         gid_output.PrintOutput()
 
     for process in list_of_processes:
         process.ExecuteAfterOutputStep()
 
-    out = out + Dt
-
 for process in list_of_processes:
     process.ExecuteFinalize()
 
-gid_output.ExecuteFinalize()
+if (output_post == True):
+    gid_output.ExecuteFinalize()
