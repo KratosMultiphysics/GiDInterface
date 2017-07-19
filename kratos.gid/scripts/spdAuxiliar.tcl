@@ -733,7 +733,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
         set $key $value
     }
     if {$cnd_v ne ""} {set v $cnd_v}
-    
+
     set has_units [$param getAttribute "has_units"]
     if {$has_units ne ""} { 
         set has_units "units='$units'  unit_magnitude='$um'"
@@ -833,7 +833,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
             append node "  actualize_tree='1'  "
         }
         append node " state='$state' help='$help'>"
-        append node [_insert_cond_param_dependencies $base $inName]
+        if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
         append node "</value>"
     } elseif { $type eq "bool" } {
         set values "1,0"
@@ -842,7 +842,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
             append node "  actualize_tree='1'  "
         }
         append node " state='$state'>"
-        append node [_insert_cond_param_dependencies $base $inName]
+        if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
         append node "</value>"
     } elseif { $type eq "file" || $type eq "tablefile" } {
         append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
@@ -899,14 +899,11 @@ proc spdAux::injectPartInputs { basenode {inputs ""} } {
     if {$inputs eq ""} {
         set inputs [dict merge [::Model::GetAllElemInputs] [::Model::GetAllCLInputs] ]
     }
-    foreach inName [dict keys $inputs] {
-        set in [dict get $inputs $inName] 
-        set pn [$in getPublicName]
-        set units [$in getUnits]
-        set um [$in getUnitMagnitude]
-        set help [$in getHelp] 
-        set v [$in getDv]
-        set node "<value n='$inName' pn='$pn' state='\[PartParamState\]' v='$v' units='$units' unit_magnitude='$um' help='$help' />"        
+
+    foreach {inName in} $inputs {
+        set forcedParams [list state {[PartParamState]} ]
+        set node [GetParameterValueString $in $forcedParams]
+           
         $base appendXML $node
         set orig [$base lastChild]
         set new [$orig cloneNode]
