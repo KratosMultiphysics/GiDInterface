@@ -199,15 +199,18 @@ proc write::writeMaterials { {appid ""}} {
     }
 }
 
-proc write::writeNodalCoordinatesOnParts { } {
+proc write::writeNodalCoordinatesOnGroups { groups } {
     set formats [dict create]
-    foreach group [getPartsGroupsId] {
+    foreach group $groups {
         dict set formats $group "%5d %14.5f %14.5f %14.5f\n"
     }
     WriteString "Begin Nodes"
     GiD_WriteCalculationFile nodes $formats
     WriteString "End Nodes"
     WriteString "\n"
+}
+proc write::writeNodalCoordinatesOnParts { } {
+    writeNodalCoordinatesOnGroups [getPartsGroupsId]
 }
 proc write::writeNodalCoordinates { } {
     # Write the nodal coordinates block
@@ -308,7 +311,7 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
                 WriteString "End Elements"
                 WriteString ""
             } else {
-                error [= "Element $kelemtype not available for $ov entities on group $group"]
+                error [= "Element $kelemtype $etype ($nnodes nodes) not available for $ov entities on group $group"]
             }
         } else {
             error [= "You have not assigned a proper entity to group $group"]
@@ -617,6 +620,13 @@ proc write::getEtype {ov group} {
                 0 { set ret [list "Hexahedra" 6]  }
                 1 { set ret [list "Hexahedra" 1]  }
                 2 { set ret [list "Hexahedra" 27]  }
+            }
+            set b 1
+        }
+        if {[GiD_EntitiesGroups get $group elements -count -element_type Sphere]} {
+            if {$b} {error "Multiple element types in $group over $ov"}
+            switch $isquadratic {
+                0 { set ret [list "Sphere" 1]  }
             }
             set b 1
         }
