@@ -23,6 +23,10 @@
                       analysis_type="Quasi-Static,Dynamic" TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" ov="[CheckGeometry 2]" >
   </NodalConditionItem>
   
+  <NodalConditionItem n="CONSTANTRESERVOIRTEMPERATURE" pn="Constant Reservoir Temperature" ProcessName="ImposeReservoirConstantTemperatureConditionProcess" VariableName="TEMPERATURE"
+                      analysis_type="Quasi-Static,Dynamic" TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" ov="[CheckGeometry 2]" >
+  </NodalConditionItem>
+  
   <NodalConditionItem n="PRESSURE" pn="Pressure" ProcessName="ImposeUniformPressureProcess" VariableName="PRESSURE"
                       analysis_type="Dynamic" TypeofProblem="UP_Mechanical,UP_Thermo-Mechanical,Acoustic" >
   </NodalConditionItem>
