@@ -590,8 +590,8 @@
       <parameter n="SECTION_TYPE" pn="Section type"/>
     </inputs>
     <outputs>
-      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="false" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
     </outputs>
   </ElementItem>
 
@@ -630,7 +630,7 @@
       <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
     </outputs>
   </ElementItem>
   
@@ -667,7 +667,7 @@
       <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false"/>
     </outputs>
   </ElementItem>
 
@@ -704,7 +704,7 @@
       <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
     </outputs>
   </ElementItem>
   <ElementItem n="ShellThickCorotationalElement" pn="Shell (thick corotational quadrilateral)" ImplementedInFile="shell_thick_element_3D4N.cpp"
@@ -736,7 +736,28 @@
       <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true"/>
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
     </outputs>
   </ElementItem>
+  <ElementItem n="DummyElement3D" pn=" "  MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" ElementType=" " help="This a dummy element to set the deffauld outputs in 3D">
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+    <ElementItem n="DummyElement2D" pn=" "  MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="2D" ElementType=" " help="This a dummy element to set the deffauld outputs in 2D">
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  
 </ElementList>
