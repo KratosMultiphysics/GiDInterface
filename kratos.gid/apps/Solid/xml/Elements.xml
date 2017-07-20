@@ -107,7 +107,7 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Axisymmetric"/>
-      <filter field="Dimension" value="2D"/>
+      <filter field="Dimension" value="2Da"/>
       <filter field="StrainSize" value="4"/>
       <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
@@ -365,7 +365,7 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Axisymmetric"/>
-      <filter field="Dimension" value="2D"/>
+      <filter field="Dimension" value="2Da"/>
       <filter field="StrainSize" value="4"/>
       <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="True"/>
@@ -491,7 +491,7 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Axisymmetric"/>
-      <filter field="Dimension" value="2D"/>
+      <filter field="Dimension" value="2Da"/>
       <filter field="StrainSize" value="4"/>
       <filter field="HybridType" value="U-P"/>
       <filter field="LargeDeformation" value="True"/>
