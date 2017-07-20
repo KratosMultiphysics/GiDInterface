@@ -15,6 +15,9 @@ proc Solid::xml::Init { } {
      Model::getProcesses Processes.xml
      Model::getConditions Conditions.xml
      Model::getSolvers "../../Common/xml/Solvers.xml"
+
+     # Elements not available yet 
+     Model::ForgetElement BeamElement
 }
 
 proc Solid::xml::getUniqueName {name} {
