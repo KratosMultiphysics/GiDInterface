@@ -7,14 +7,14 @@ proc FSI::xml::Init { } {
     # Namespace variables initialization
     variable dir
     Model::InitVariables dir $FSI::dir
-    
+
     Model::ForgetSolutionStrategies
     Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
     Model::getSolutionStrategies "../../Structural/xml/Strategies.xml"
     Model::getSolutionStrategies Strategies.xml
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
-    
+
     Model::ForgetSolvers
     Model::getSolvers "../../Common/xml/Solvers.xml"
     Model::getSolvers Coupling_solvers.xml
@@ -35,17 +35,20 @@ proc FSI::xml::CustomTree { args } {
     FSI::write::UpdateUniqueNames Fluid
     apps::setActiveAppSoft Fluid
     Fluid::xml::CustomTree
-    
+
     FSI::write::UpdateUniqueNames Structural
     apps::setActiveAppSoft Structural
     Structural::xml::CustomTree
-    
+
     FSI::write::UpdateUniqueNames FSI
     apps::setActiveAppSoft FSI
-    
+
     # Modify the tree: field newValue UniqueName OptionalChild
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
     spdAux::SetValueOnTreeItem v "Yes" FLStratParams compute_reactions
+
+    # Disable MPI parallelism until it is fully tested
+    spdAux::SetValueOnTreeItem values "OpenMP" ParallelType
 }
 
 # Overwriting some procs
