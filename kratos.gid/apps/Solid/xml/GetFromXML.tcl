@@ -15,6 +15,11 @@ proc Solid::xml::Init { } {
      Model::getProcesses Processes.xml
      Model::getConditions Conditions.xml
      Model::getSolvers "../../Common/xml/Solvers.xml"
+
+    Model::ForgetElement BeamElement
+    Model::ForgetElement SmallDisplacementBbarElement2D    
+    Model::ForgetElement SmallDisplacementBbarElement3D
+    
 }
 
 proc Solid::xml::getUniqueName {name} {
