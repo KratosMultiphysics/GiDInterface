@@ -298,6 +298,7 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
     apps::ExecuteOnCurrentXML MultiAppEvent init
     
     if { $ProjectIsNew eq 0} {
+        spdAux::CustomTreeCommon
         apps::ExecuteOnCurrentXML CustomTree ""
     }
 
@@ -308,6 +309,15 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
         spdAux::OpenTree
     }
     ::Kratos::CreatePreprocessModelTBar
+}
+
+proc spdAux::CustomTreeCommon { } {
+    set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]
+    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
+    if {!$AppUsesIntervals} {
+        spdAux::SetValueOnTreeItem state hidden Intervals
+    }
+    
 }
 
 proc spdAux::ForceExtremeLoad { } {
