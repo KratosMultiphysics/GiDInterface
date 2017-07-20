@@ -17,8 +17,8 @@ proc ::DEM::Init { } {
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
     
-    # Intervals only in developer mode
-    dict set attributes UseIntervals 1
+    # Intervals not ready yet
+    dict set attributes UseIntervals 0
     
     set kratos_name DEMApplication
     
