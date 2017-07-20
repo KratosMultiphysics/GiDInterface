@@ -1,7 +1,7 @@
 # Project Parameters
 
 proc Solid::write::getParametersDict { } {
-    set model_part_name "Structure"
+    set model_part_name "Solid_Domain"
     set projectParametersDict [dict create]
 
     # Problem data
@@ -27,16 +27,10 @@ proc Solid::write::getParametersDict { } {
     }
     set solutiontype [write::getValue SLSoluType]
     # Time Parameters
-    if {$solutiontype eq "Static"} {
-        dict set problemDataDict time_step "1.1"
-        dict set problemDataDict start_time "0.0"
-        dict set problemDataDict end_time "1.0"
-
-    } elseif {$solutiontype eq "Dynamic"} {
-        dict set problemDataDict time_step [write::getValue SLTimeParameters DeltaTime]
-        dict set problemDataDict start_time [write::getValue SLTimeParameters StartTime]
-        dict set problemDataDict end_time [write::getValue SLTimeParameters EndTime]
-    }
+    dict set problemDataDict time_step [write::getValue SLTimeParameters DeltaTime]
+    dict set problemDataDict start_time [write::getValue SLTimeParameters StartTime]
+    dict set problemDataDict end_time [write::getValue SLTimeParameters EndTime]
+    
     set echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict echo_level $echo_level
     # Add section to document

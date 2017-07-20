@@ -36,7 +36,49 @@
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
 
-    <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />-->
+    <!--<parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />-->
+    <inputs>      
+    </inputs>
+
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="SmallDisplacementBbarElement2D" pn="Solid small displacements B-bar" ImplementedInFile="small_displacement_element.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in plane state 2D">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle"      nodes="3" KratosName="SmallDisplacementBbarElement2D3N"/>
+   </TopologyFeatures>
+
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress,PlaneStrain"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="StrainSize" value="3"/>
+      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
+    </NodalConditions>
+
+    <!--<parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />-->
     <inputs>      
     </inputs>
 
@@ -134,7 +176,44 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
+  <ElementItem n="SmallDisplacementBbarElement3D" pn="Solid small displacements B-bar" ImplementedInFile="small_displacement_element.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 3D">
 
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4"  KratosName="SmallDisplacementBbarElement3D4N"/>
+    </TopologyFeatures>
+    
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="3D"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="StrainSize" value="6"/>
+      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />      
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
   <!--large displacements-->
   <!--total lagrangian-->
   <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
@@ -548,7 +627,7 @@
     </NodalConditions>
 
     <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+      <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
@@ -585,7 +664,7 @@
     </NodalConditions>
 
     <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+      <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
@@ -622,7 +701,7 @@
       <NodalCondition n="ANGULAR_ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+      <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
@@ -654,7 +733,7 @@
       <NodalCondition n="ANGULAR_ACCELERATION" />
     </NodalConditions>
     <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+      <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
