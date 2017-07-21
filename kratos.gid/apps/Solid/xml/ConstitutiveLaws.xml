@@ -85,7 +85,7 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="HyperElastic.PlaneStrain2DLaw" pn="NeoHookean" Type="PlaneStrain" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="HyperElasticPlaneStrain2DLaw" pn="NeoHookean" Type="PlaneStrain" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
 	  help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -96,7 +96,7 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="HyperElastic.Axisymmetric2DLaw" pn="NeoHookean" Type="Axisymmetric" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="HyperElasticAxisym2DLaw" pn="NeoHookean" Type="Axisymmetric" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
 	  help="NeoHookean HyperElastic Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
