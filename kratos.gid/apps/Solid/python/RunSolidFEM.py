@@ -1,6 +1,6 @@
 import KratosMultiphysics
 import KratosMultiphysics.SolidMechanicsApplication
-import MainKratosSolid
+import MainSolidFEM
 
-MainKratosSolid.Solution().Run()
+MainSolidFEM.Solution().Run()
 
