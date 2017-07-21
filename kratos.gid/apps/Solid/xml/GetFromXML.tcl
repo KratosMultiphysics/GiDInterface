@@ -31,8 +31,6 @@ proc Solid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden Results CutPlanes
     spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
     
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
-    if {$result_node ne "" } {$result_node delete}
 }
 
 Solid::xml::Init
