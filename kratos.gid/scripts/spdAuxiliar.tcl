@@ -761,9 +761,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
             set zstate "\[CheckDimension 3D\]"
             if {$state eq "hidden"} {set zstate hidden}
             append node "
-                <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state'/>
-                <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state'/>
-                <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate'/>"
+                <value n='${inName}X' pn='${pn} X' v='$vX' values='1,0' help='' state='$state'/>
+                <value n='${inName}Y' pn='${pn} X' v='$vY' values='1,0' help='' state='$state'/>
+                <value n='${inName}Z' pn='${pn} X' v='$vZ' values='1,0' help='' state='$zstate'/>"
         } else {
             foreach i [list "X" "Y" "Z"] {
                 set fname "function_$inName"
@@ -818,9 +818,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
                 set v "v$i"
                 if { $vector_type eq "file" || $vector_type eq "tablefile" } {
                     if {[set $v] eq ""} {set $v "- No file"}
-                    append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
+                    append node "<value n='${inName}$i' pn='${pn} $i' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
                 } else {
-                    append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate />"
+                    append node "<value n='${inName}$i' pn='${pn} $i' v='[set $v]' $has_units help='$help'  $zstate />"
                 }
             }
         }

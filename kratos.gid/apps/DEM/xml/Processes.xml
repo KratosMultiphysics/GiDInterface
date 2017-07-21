@@ -14,4 +14,19 @@
       <parameter n="PoissonRatio" pn="Poisson Ratio" type="double" dv="0.25" />
     </inputs>
   </Process>
+  <Process n="Angular_Velocity_Process" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
+    <inputs>
+      <parameter n="ANGULAR_VELOCITY" pn="ω" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>
+      <parameter n="ROTATION_CENTER" pn="Center" type="vector" v="0.0,0.0,0.0" />
+      <parameter n="Periodic" pn="Periodic" type="bool" v="0">
+        <parameter n="PERIOD" pn="Period" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+    </inputs>
+  </Process>
+  <Process n="Linear_Velocity_Process" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
+    <inputs>
+      <parameter n="LINEAR_VELOCITY" pn="V" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>
+      <parameter n="Periodic" pn="Periodic" type="bool" v="0">
+        <parameter n="PERIOD" pn="Period" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+    </inputs>
+  </Process>
 </ProcessList>

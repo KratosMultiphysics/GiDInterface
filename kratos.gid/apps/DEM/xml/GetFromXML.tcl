@@ -12,7 +12,6 @@ proc DEM::xml::Init { } {
     Model::getMaterials Materials.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
-    Model::getNodalConditions NodalConditions.xml
     Model::getConditions Conditions.xml
 }
 

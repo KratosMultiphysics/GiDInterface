@@ -54,7 +54,8 @@
 		</inputs>
     </Process>
 
-    <Process n="ImposeVectorValueByComponentsProcess" pn="Impose vector value by components process" python_module="impose_vector_value_by_components_process"
+
+    <Process n="AssignAngularVelocity" pn="Impose vector value by components process" python_module="impose_vector_value_by_components_process"
 		kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable">
     <inputs>
 		<parameter n="is_fixed_x" pn="Imposed X" type="bool" v="1"/>
