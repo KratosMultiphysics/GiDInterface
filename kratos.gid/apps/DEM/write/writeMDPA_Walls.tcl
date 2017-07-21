@@ -5,6 +5,8 @@ proc DEM::write::WriteMDPAWalls { } {
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
 
+    WriteWallProperties
+
     # Nodal coordinates (only for Walls <inefficient> )
     write::writeNodalCoordinatesOnGroups [GetWallsGroups]
     
@@ -13,6 +15,21 @@ proc DEM::write::WriteMDPAWalls { } {
 
     # SubmodelParts
     writeConditionMeshes
+}
+
+proc DEM::write::WriteWallProperties { } {
+    set wall_properties [dict create ]
+    set id 0
+    set cnd [Model::getCondition "DEM-FEM-Wall"]
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        incr i
+        set props [dict create ]
+        foreach prop [$cnd getAllInputs] { W $prop}
+        set groupid [$group @n]
+        lappend groups [write::GetWriteGroupName $groupid]
+    }
+    return $groups
 }
 
 proc DEM::write::writeConditions { } {
