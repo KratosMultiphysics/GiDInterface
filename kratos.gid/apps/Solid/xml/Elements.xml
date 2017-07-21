@@ -20,8 +20,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="3"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -62,8 +60,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="3"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -108,8 +104,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Axisymmetric"/>
       <filter field="Dimension" value="2Da"/>
-      <filter field="StrainSize" value="4"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -152,8 +146,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -190,8 +182,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -234,8 +224,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="3"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -279,8 +267,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" 		value="3D"/>
       <filter field="Dimension" 	value="3D"/>
-      <filter field="StrainSize" 	value="6"/>
-      <filter field="HybridType" 	value="False"/>
       <filter field="LargeDeformation"  value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -322,8 +308,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="3"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -366,8 +350,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Axisymmetric"/>
       <filter field="Dimension" value="2Da"/>
-      <filter field="StrainSize" value="4"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -410,8 +392,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -449,10 +429,8 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStrain"/>
+      <filter field="Type" value="PlaneStrain_UP"/>
       <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="3"/>
-      <filter field="HybridType" value="U-P"/>
       <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -480,8 +458,8 @@
   <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
-	       help="This element it implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
-		   ElementType="Solid" >
+	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
+	       ElementType="Solid" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -490,10 +468,8 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="Axisymmetric"/>
+      <filter field="Type" value="Axisymmetric_UP"/>
       <filter field="Dimension" value="2Da"/>
-      <filter field="StrainSize" value="4"/>
-      <filter field="HybridType" value="U-P"/>
       <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -529,10 +505,8 @@
     
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="3D"/>
+      <filter field="Type" value="3D_UP"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="U-P"/>
       <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -570,10 +544,8 @@
     
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="1D"/>
+      <filter field="Type" value="1D_UR"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
     </ConstitutiveLaw_FilterFeatures>
     
     <!--define list of NodalConditions-->
@@ -610,10 +582,8 @@
     
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress"/>
+      <filter field="Type" value="PlaneStress_UR"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
     </ConstitutiveLaw_FilterFeatures>
     
     <!--define list of NodalConditions-->
@@ -647,10 +617,8 @@
     
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress"/>
+      <filter field="Type" value="PlaneStress_UR"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
     </ConstitutiveLaw_FilterFeatures>
     
     <!--define list of NodalConditions-->
@@ -685,10 +653,8 @@
     
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress"/>
+      <filter field="Type" value="PlaneStress_UR"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
     </ConstitutiveLaw_FilterFeatures>
     
     <!--define list of NodalConditions-->
@@ -718,10 +684,8 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress"/>
+      <filter field="Type" value="PlaneStress_UR"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -750,7 +714,7 @@
     </outputs>
   </ElementItem>
     <ElementItem n="DummyElement2D" pn=" "  MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" ElementType=" " help="This a dummy element to set the deffauld outputs in 2D">
+		 WorkingSpaceDimension="2D" ElementType=" " help="This a dummy element to set the deffauld outputs in 2D">
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
