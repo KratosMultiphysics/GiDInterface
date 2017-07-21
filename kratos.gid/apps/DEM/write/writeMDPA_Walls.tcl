@@ -4,6 +4,7 @@ proc DEM::write::WriteMDPAWalls { } {
     
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
+    write::WriteString ""
     
     set wall_properties [WriteWallProperties]
     
@@ -27,12 +28,13 @@ proc DEM::write::WriteWallProperties { } {
         write::WriteString "Begin Properties $i"
         foreach {prop obj} [$cnd getAllInputs] {
             set v [write::getValueByNode [$group selectNodes "./value\[@n='$prop'\]"]]
-            write::WriteString "$prop $v"
+            write::WriteString "  $prop $v"
         }
         write::WriteString "End Properties"
         set groupid [$group @n]
         dict set wall_properties $groupid $i
     }
+    write::WriteString ""
     return $wall_properties
 }
 
@@ -43,6 +45,7 @@ proc DEM::write::writeConditions { wall_properties } {
         write::WriteString "Begin Conditions RigidFace3D3N // GUI DEM-FEM-Wall group identifier: $group"
         GiD_WriteCalculationFile connectivities $format
         write::WriteString "End Conditions"
+        write::WriteString ""
     }
 }
 
@@ -103,7 +106,7 @@ proc DEM::write::writeConditionMeshes { } {
                 write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
                 set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
                 set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
-                W [$group_node asXML]
+                
                 foreach {prop obj} [$cnd getAllInputs] {
                     if {[$obj  getType] eq "vector"} {
                         set val [list ]
@@ -147,6 +150,7 @@ proc DEM::write::writeConditionMeshes { } {
                 GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
                 write::WriteString "  End SubModelPartNodes"
                 write::WriteString "End SubModelPart"
+                write::WriteString ""
             }
         }
     }
