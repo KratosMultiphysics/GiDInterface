@@ -8,7 +8,7 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
-  <ConditionItem n="Inlet" pn="Inlet" Interval="Total" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface" ProcessName="ApplyConstantVectorValueProcess" help="" VariableName="INLET">
+  <ConditionItem n="Inlet" pn="Inlet" Interval="Total" ProcessName="DEMInletProcess" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface" help="" VariableName="INLET">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs>

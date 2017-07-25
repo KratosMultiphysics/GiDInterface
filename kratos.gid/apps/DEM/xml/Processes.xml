@@ -29,6 +29,14 @@
       </parameter>
     </inputs>
   </Process>
+  <Process n="DEMInletProces" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
+    <inputs>
+      <parameter n="ANGULAR_VELOCITY" pn="ω" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>
+      <parameter n="ROTATION_CENTER" pn="Center" type="vector" v="0.0,0.0,0.0" />
+      <parameter n="ANGULAR_VELOCITY_PERIODIC" pn="Periodic angular velocity" type="bool" v="0">
+        <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+    </inputs>
+  </Process>
   <Process n="Angular_Velocity_Process" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
     <inputs>
       <parameter n="ANGULAR_VELOCITY" pn="ω" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>
