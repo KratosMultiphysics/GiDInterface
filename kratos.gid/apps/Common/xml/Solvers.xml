@@ -51,6 +51,7 @@
         </inputs>
     </solver>
 
+    <!--
     <solver n="Pastix_Direct" pn="Pastix Direct" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
 	    <parameter n="is_symmetric" pn="Symmetric" type="bool" v="True"  help=""/>
@@ -66,8 +67,9 @@
 			<parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>
     </solver>
-
-	<!--Trilinos Solvers-->
+    -->
+    
+    <!--Trilinos Solvers-->
     <solver n="AutomaticMPI" pn="Automatic" SolverType="Standard" Parallelism="MPI" help="Let Kratos to automatically set the default solver according to the selected strategy.">
         <inputs>
         </inputs>
@@ -108,7 +110,7 @@
         </inputs>
     </solver>
 
-    <solver n="Superludist" pn="Super LU" SolverType="Standard" Parallelism="MPI">
+    <solver n="Klu" pn="KLU" SolverType="Standard" Parallelism="MPI">
         <inputs>
 			<parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>

@@ -13,10 +13,15 @@ proc ::Structural::Init { } {
     
     set dir [apps::getMyDir "Structural"]
     set attributes [dict create]
+    
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
-    apps::LoadAppById "Solid"
-    set kratos_name [list StructuralMechanicsApplication $::Solid::kratos_name]
+    
+    # Intervals only in developer mode
+    dict set attributes UseIntervals 0
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {dict set attributes UseIntervals 1}
+    
+    set kratos_name StructuralMechanicsApplication
     
     LoadMyFiles
 }
@@ -26,13 +31,13 @@ proc ::Structural::LoadMyFiles { } {
     
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
+    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
 }
 
 proc ::Structural::GetAttribute {name} {
     variable attributes
     set value ""
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    if {$value eq ""} {set value [::Solid::GetAttribute $name]}
     return $value
 }
 

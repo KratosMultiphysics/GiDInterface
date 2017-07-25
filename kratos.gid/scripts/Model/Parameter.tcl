@@ -70,7 +70,9 @@ oo::class create Parameter {
         
         set depname $dn
         set depv $dv
+
     }
+    
     method getType { } {variable type; return $type}
     method getDv { } {variable dv; return $dv}
     method getValues { } {variable values; return $values}
@@ -89,7 +91,7 @@ oo::class create Parameter {
 }
 }
 
-proc Model::ParseInputParamNode {st in} {
+proc Model::ParseInputParamNode {parent_object in} {
     set n [$in @n]
     set pn [$in @pn]
     set t "double"
@@ -112,12 +114,12 @@ proc Model::ParseInputParamNode {st in} {
         #W "$n $att"
         $input addAttribute $att [$in getAttribute $att]
     }
-    $st addInputDone $input
+    $parent_object addInputDone $input
     if {[$in hasAttribute "parent"]} {
         set dn [[$in parent] @n]
         set dv [$in @parent]
-        $st addInputDependency $n $dn $dv
+        $parent_object addInputDependency $n $dn $dv
     }
     
-    return $st
+    return $parent_object
 }

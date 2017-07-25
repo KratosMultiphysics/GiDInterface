@@ -94,8 +94,8 @@ proc Pfem::write::GetPartsUN { } {
 proc Pfem::write::writeCustomFilesEvent { } {
     Solid::write::WriteMaterialsFile
     
-    write::CopyFileIntoModel "python/script.py"
-    write::RenameFileInModel "script.py" "MainKratos.py"
+    write::CopyFileIntoModel "python/RunPFEM.py"
+    write::RenameFileInModel "RunPFEM.py" "MainKratos.py"
     
     #write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 }

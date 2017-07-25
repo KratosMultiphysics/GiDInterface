@@ -298,6 +298,7 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
     apps::ExecuteOnCurrentXML MultiAppEvent init
     
     if { $ProjectIsNew eq 0} {
+        spdAux::CustomTreeCommon
         apps::ExecuteOnCurrentXML CustomTree ""
     }
 
@@ -308,6 +309,15 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
         spdAux::OpenTree
     }
     ::Kratos::CreatePreprocessModelTBar
+}
+
+proc spdAux::CustomTreeCommon { } {
+    set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]
+    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
+    if {!$AppUsesIntervals} {
+        spdAux::SetValueOnTreeItem state hidden Intervals
+    }
+    
 }
 
 proc spdAux::ForceExtremeLoad { } {
@@ -692,143 +702,104 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
         set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
         set inputs [concat [$process getInputs] [$cnd getInputs] ]
         foreach {inName in} $inputs {
-            set pn [$in getPublicName]
-            set type [$in getType]
-            set v [$in getDv]
-            set cnd_v [$cnd getDefault $inName v]
-            if {$cnd_v ne ""} {set v $cnd_v}
-            set help [$in getHelp]
-
-            # set state [$in getAttribute "state"]
-            # set cnd_state [$cnd getDefault $inName state]
-            # if {$cnd_state ne ""} {set state $cnd_state}
-            # if {$state eq ""} {set state "normal"}
-            set state {[ConditionParameterState]}
-
+            set forcedParams [list cnd_v [$cnd getDefault $inName v] n $n units $units um $um base $process]
             foreach key [$cnd getDefaults $inName] {
-                set $key [$cnd getDefault $inName $key]
+                lappend forcedParams $key [$cnd getDefault $inName $key]
             }
-            
-            set has_units [$in getAttribute "has_units"]
-            if {$has_units ne ""} { 
-                set has_units "units='$units'  unit_magnitude='$um'"
-            } else {
-                set param_units [$in getAttribute "units"]
-                set param_unitm [$in getAttribute "unit_magnitude"]
-                if {$param_units ne "" && $param_unitm ne ""} {
-                    set has_units "units='$param_units'  unit_magnitude='$param_unitm'"
-                }
-            }
-            if {$type eq "vector"} {
-                set vector_type [$in getAttribute "vectorType"]
-                lassign [split $v ","] vX vY vZ
-                if {$vector_type eq "bool"} {
-                    set zstate "\[CheckDimension 3D\]"
-                    if {$state eq "hidden"} {set zstate hidden}
-                    append node "
-                        <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state'/>
-                        <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state'/>
-                        <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate'/>"
-                } else {
-                    foreach i [list "X" "Y" "Z"] {
-                        set fname "function_$inName"
-                        set nodev "../value\[@n='${inName}$i'\]"
-                        set nodef "../value\[@n='$i$fname'\]"
-                        set zstate ""
-                        if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"}
-                        if {[$in getAttribute "enabled"] in [list "1" "0"]} {
-                            set val [expr [$in getAttribute "enabled"] ? "Yes" : "No"]
-                            #if {$i eq "Z"} { set val "No" }
-                            append node "<value n='Enabled_$i' pn='$i component' v='$val' values='Yes,No'  help='Enables the $i ${inName}' $zstate >"
-                            append node "<dependencies value='No' node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='hidden'/>"
-                            append node "<dependencies value='Yes' node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='normal'/>"
-                            if {[$in getAttribute "function"] eq "1"} {
-                                set fname "${i}function_$inName"
-                                set nodef "../value\[@n='$fname'\]"
-                                set nodeb "../value\[@n='ByFunction$i'\]"
-                                append node "<dependencies value='No' node=\""
-                                append node $nodef
-                                append node "\" att1='state' v1='hidden'/>"
-                                append node "<dependencies value='No' node=\""
-                                append node $nodeb
-                                append node "\" att1='state' v1='hidden'/>"
-                                append node "<dependencies value='Yes' node=\""
-                                append node $nodeb
-                                append node "\" att1='state' v1='normal'/>"
-                            }
-                            append node "</value>"
-                        }
-                        if {[$in getAttribute "function"] eq "1"} {
-                            set fname "${i}function_$inName"
-                            append node "<value n='ByFunction$i' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1'  $zstate >
-                                <dependencies value='No' node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='normal'/>
-                                <dependencies value='Yes'  node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='hidden'/>
-                                <dependencies value='No' node=\""
-                            append node $nodef
-                            append node "\" att1='state' v1='hidden'/>
-                                <dependencies value='Yes'  node=\""
-                            append node $nodef
-                            append node "\" att1='state' v1='normal'/>
-                                </value>"
-                            append node "<value n='$fname' pn='$i function' v='' help='$help'  $zstate />"
-                        }
-                        set v "v$i"
-                        if { $vector_type eq "file" || $vector_type eq "tablefile" } {
-                            if {[set $v] eq ""} {set $v "- No file"}
-                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
-                        } else {
-                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate />"
-                        }
+            append node [GetParameterValueString $in $forcedParams]
+        }
+        set CondUsesIntervals [$cnd getAttribute "Interval"]
+        if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
+            append node "<value n='Interval' pn='Time interval' v='$CondUsesIntervals' values='\[getIntervals\]'  help='$help'/>"
+        }
+        append node "</condition>"
+        $conds appendXML $node
+    }
+    
+}
+
+proc spdAux::GetParameterValueString { param {forcedParams ""}} {
+    set node ""
+
+    set inName [$param getName]
+    set pn [$param getPublicName]
+    set type [$param getType]
+    set v [$param getDv]
+    set help [$param getHelp]
+    set cnd_v ""
+    set base ""
+    set units ""
+    set um ""
+    set n ""
+
+    # set state [$in getAttribute "state"]
+    # set cnd_state [$cnd getDefault $inName state]
+    # if {$cnd_state ne ""} {set state $cnd_state}
+    # if {$state eq ""} {set state "normal"}
+    set state {[ConditionParameterState]}
+
+    # Set forced values -> Caution when debugging
+    foreach {key value} $forcedParams {
+        set $key $value
+    }
+    if {$cnd_v ne ""} {set v $cnd_v}
+
+    set has_units [$param getAttribute "has_units"]
+    if {$has_units ne ""} { 
+        set has_units "units='$units'  unit_magnitude='$um'"
+    } else {
+        set param_units [$param getAttribute "units"]
+        set param_unitm [$param getAttribute "unit_magnitude"]
+        if {$param_units ne "" && $param_unitm ne ""} {
+            set has_units "units='$param_units'  unit_magnitude='$param_unitm'"
+        }
+    }
+    if {$type eq "vector"} {
+        set vector_type [$param getAttribute "vectorType"]
+        lassign [split $v ","] vX vY vZ
+        if {$vector_type eq "bool"} {
+            set zstate "\[CheckDimension 3D\]"
+            if {$state eq "hidden"} {set zstate hidden}
+            append node "
+                <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state'/>
+                <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state'/>
+                <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate'/>"
+        } else {
+            foreach i [list "X" "Y" "Z"] {
+                set fname "function_$inName"
+                set nodev "../value\[@n='${inName}$i'\]"
+                set nodef "../value\[@n='$i$fname'\]"
+                set zstate ""
+                if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"}
+                if {[$param getAttribute "enabled"] in [list "1" "0"]} {
+                    set val [expr [$param getAttribute "enabled"] ? "Yes" : "No"]
+                    #if {$i eq "Z"} { set val "No" }
+                    append node "<value n='Enabled_$i' pn='$i component' v='$val' values='Yes,No'  help='Enables the $i ${inName}' $zstate >"
+                    append node "<dependencies value='No' node=\""
+                    append node $nodev
+                    append node "\" att1='state' v1='hidden'/>"
+                    append node "<dependencies value='Yes' node=\""
+                    append node $nodev
+                    append node "\" att1='state' v1='normal'/>"
+                    if {[$param getAttribute "function"] eq "1"} {
+                        set fname "${i}function_$inName"
+                        set nodef "../value\[@n='$fname'\]"
+                        set nodeb "../value\[@n='ByFunction$i'\]"
+                        append node "<dependencies value='No' node=\""
+                        append node $nodef
+                        append node "\" att1='state' v1='hidden'/>"
+                        append node "<dependencies value='No' node=\""
+                        append node $nodeb
+                        append node "\" att1='state' v1='hidden'/>"
+                        append node "<dependencies value='Yes' node=\""
+                        append node $nodeb
+                        append node "\" att1='state' v1='normal'/>"
                     }
+                    append node "</value>"
                 }
-                
-            } elseif { $type eq "combo" } {
-                set values [$in getValues]
-                set pvalues [$in getPValues]
-                set pv ""
-                for {set i 0} {$i < [llength $values]} {incr i} {
-                    lappend pv [lindex $values $i]
-                    lappend pv [lindex $pvalues $i] 
-                }
-                set values [join [$in getValues] ","]
-                set pvalues [join $pv ","]
-                append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
-                if {[llength $pv]} {
-                    append node " dict='$pvalues' "
-                }
-                if {[$in getActualize]} {
-                    append node "  actualize_tree='1'  "
-                }
-                append node " state='$state' help='$help'>"
-                append node [_insert_cond_param_dependencies $process $inName]
-                append node "</value>"
-            } elseif { $type eq "bool" } {
-                set values "1,0"
-                append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
-                if {[$in getActualize]} {
-                    append node "  actualize_tree='1'  "
-                }
-                append node " state='$state'>"
-                append node [_insert_cond_param_dependencies $process $inName]
-                append node "</value>"
-            } elseif { $type eq "file" || $type eq "tablefile" } {
-                append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
-            } elseif { $type eq "integer" } {
-                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'/>"
-            } else {
-                if {[$in getAttribute "function"] eq "1"} {
-                    set fname "function_$inName"
-                    set nodev "../value\[@n='$inName'\]"
-                    set nodef "../value\[@n='$fname'\]"
-                    append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'>
+                if {[$param getAttribute "function"] eq "1"} {
+                    set fname "${i}function_$inName"
+                    append node "<value n='ByFunction$i' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1'  $zstate >
                         <dependencies value='No' node=\""
                     append node $nodev
                     append node "\" att1='state' v1='normal'/>
@@ -842,26 +813,81 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
                     append node $nodef
                     append node "\" att1='state' v1='normal'/>
                         </value>"
-                    
-                    append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'/>"
+                    append node "<value n='$fname' pn='$i function' v='' help='$help'  $zstate />"
                 }
-                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'  state='$state'/>"
+                set v "v$i"
+                if { $vector_type eq "file" || $vector_type eq "tablefile" } {
+                    if {[set $v] eq ""} {set $v "- No file"}
+                    append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
+                } else {
+                    append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate />"
+                }
             }
         }
         
-        set CondUsesIntervals [$cnd getAttribute "Interval"]
-        if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
-            append node "<value n='Interval' pn='Time interval' v='$CondUsesIntervals' values='\[getIntervals\]'  help='$help'/>"
+    } elseif { $type eq "combo" } {
+        set values [$param getValues]
+        set pvalues [$param getPValues]
+        set pv ""
+        for {set i 0} {$i < [llength $values]} {incr i} {
+            lappend pv [lindex $values $i]
+            lappend pv [lindex $pvalues $i] 
         }
-        append node "</condition>"
-        $conds appendXML $node
+        set values [join [$param getValues] ","]
+        set pvalues [join $pv ","]
+        append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
+        if {[llength $pv]} {
+            append node " dict='$pvalues' "
+        }
+        if {[$param getActualize]} {
+            append node "  actualize_tree='1'  "
+        }
+        append node " state='$state' help='$help'>"
+        if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
+        append node "</value>"
+    } elseif { $type eq "bool" } {
+        set values "1,0"
+        append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
+        if {[$param getActualize]} {
+            append node "  actualize_tree='1'  "
+        }
+        append node " state='$state'>"
+        if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
+        append node "</value>"
+    } elseif { $type eq "file" || $type eq "tablefile" } {
+        append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
+    } elseif { $type eq "integer" } {
+        append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'/>"
+    } else {
+        if {[$param getAttribute "function"] eq "1"} {
+            set fname "function_$inName"
+            set nodev "../value\[@n='$inName'\]"
+            set nodef "../value\[@n='$fname'\]"
+            append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'>
+                <dependencies value='No' node=\""
+            append node $nodev
+            append node "\" att1='state' v1='normal'/>
+                <dependencies value='Yes'  node=\""
+            append node $nodev
+            append node "\" att1='state' v1='hidden'/>
+                <dependencies value='No' node=\""
+            append node $nodef
+            append node "\" att1='state' v1='hidden'/>
+                <dependencies value='Yes'  node=\""
+            append node $nodef
+            append node "\" att1='state' v1='normal'/>
+                </value>"
+            
+            append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'/>"
+        }
+        append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'  state='$state'/>"
     }
-    
+    return $node
 }
 
-proc spdAux::_insert_cond_param_dependencies {process param_name} {
+proc spdAux::_insert_cond_param_dependencies {base param_name} {
     set dep_list [list ]
-    foreach {pn param} [$process getInputs] {
+    foreach {pn param} [$base getInputs] {
         if {[$param getDepN] eq $param_name} {
             lappend dep_list [$param getName] [$param getDepV]
         }
@@ -880,22 +906,23 @@ proc spdAux::_insert_cond_param_dependencies {process param_name} {
 }
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    if {$inputs eq ""} {
-        set inputs [dict merge [::Model::GetAllElemInputs] [::Model::GetAllCLInputs] ]
-    }
-    foreach inName [dict keys $inputs] {
-        set in [dict get $inputs $inName] 
-        set pn [$in getPublicName]
-        set units [$in getUnits]
-        set um [$in getUnitMagnitude]
-        set help [$in getHelp] 
-        set v [$in getDv]
-        set node "<value n='$inName' pn='$pn' state='\[PartParamState\]' v='$v' units='$units' unit_magnitude='$um' help='$help' />"        
-        $base appendXML $node
-        set orig [$base lastChild]
-        set new [$orig cloneNode]
-        $orig delete
-        $base insertBefore $new $basenode
+    set processeds [list ]
+    foreach obj [concat [Model::GetElements] [Model::GetConstitutiveLaws]] {
+        set inputs [$obj getInputs]
+        foreach {inName in} $inputs {
+            if {$inName ni $processeds} {
+                lappend processeds $inName
+                set forcedParams [list state {[PartParamState]} ]
+                if {[$in getActualize]} { lappend forcedParams base $obj }
+                set node [GetParameterValueString $in $forcedParams]
+                
+                $base appendXML $node
+                set orig [$base lastChild]
+                set new [$orig cloneNode -deep]
+                $orig delete
+                $base insertBefore $new $basenode
+            }
+        }
     }
     $basenode delete
 }
@@ -908,16 +935,9 @@ proc spdAux::injectMaterials { basenode args } {
         set mathelp [$mat getAttribute help]
         set inputs [$mat getInputs]
         set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='material16' help='Material definition'>"
-        foreach inName [dict keys $inputs] {
-            set in [dict get $inputs $inName] 
-            set pn [$in getPublicName]
-            set units [$in getUnits]
-            set um [$in getUnitMagnitude]
-            set help [$in getHelp] 
-            set v [$in getDv]
-            set node "<value n='$inName' pn='$pn' v='$v' units='$units' unit_magnitude='$um' help='$help' />"
+        foreach {inName in} $inputs {
+            set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]]]
             append matnode $node
-            
         }
         append matnode "</blockdata> \n"
         $base appendXML $matnode
@@ -974,7 +994,10 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
         set pn [$nc getPublicName]
         set v [$nc getAttribute v]
         if {$v eq ""} {set v "Yes"}
-        set node "<value n='$n' pn='$pn' v='$v' values='Yes,No' state='\[CheckNodalConditionState $n\]'/>"
+
+        set state [$nc getAttribute state]
+        if {$state eq ""} {set state "CheckNodalConditionState"}
+        set node "<value n='$n' pn='$pn' v='$v' values='Yes,No' state='\[$state $n\]'/>"
         $base appendXML $node
         foreach {n1 output} [$nc getOutputs] {
             set nout [$output getName]
@@ -1802,7 +1825,7 @@ proc spdAux::ProcGive_materials_list {domNode args} {
     }  
     
     proc give_caption_name { domNode xp database_name } {     
-        set first_time 1   
+        set first_time 1
         foreach gNode [$domNode selectNodes $xp] {        
             if {$first_time} {
                 set caption_name [$gNode @n]
@@ -1846,8 +1869,6 @@ proc spdAux::ProcGive_materials_list {domNode args} {
 }
 
 proc spdAux::ProcEdit_database_list {domNode args} {
-    #W $domNode
-    
     set root [customlib::GetBaseRoot]
     set matname ""
     set xnode "[$domNode @n]:"

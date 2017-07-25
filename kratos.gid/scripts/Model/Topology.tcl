@@ -23,7 +23,7 @@ oo::class create Topology {
     method setGeometryType {geo} {
         variable geometryType
         
-        set accepted [list "Point" "Line" "Triangle" "Quadrilateral" "Tetrahedra" "Hexahedra" "Prism"]
+        set accepted [list "Point" "Line" "Triangle" "Quadrilateral" "Tetrahedra" "Hexahedra" "Prism" "Sphere"]
         if {$geo in $accepted} {
             set geometryType $geo
         } {

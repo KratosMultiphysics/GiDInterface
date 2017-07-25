@@ -22,16 +22,16 @@ proc Solid::write::Init { } {
 
 proc Solid::write::AddValidApps {appList} {
     variable validApps
-    set validApps [list "Solid"]
+    
     lappend validApps $appList
 }
 
 proc Solid::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
     
-    write::CopyFileIntoModel "python/KratosSolid.py"
+    write::CopyFileIntoModel "python/RunSolidFEM.py"
     set paralleltype [write::getValue ParallelType]
-    set orig_name "KratosSolid.py"
+    set orig_name "RunSolidFEM.py"
     
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
@@ -120,6 +120,13 @@ proc Solid::write::getLastConditionId { } {
 proc Solid::write::WriteMaterialsFile { } {
     variable validApps
     
+    # materials.json
+    # set materials_dict [getPropertiesList SLParts "Materials.json"]
+
+    # write::OpenFile $filename
+    # write::WriteJSON $mats_json
+    # write::CloseFile
+
     write::OpenFile "materials.py"
     
     set str "
@@ -148,6 +155,49 @@ def AssignMaterial(Properties):
     write::CloseFile
     
 }
+
+# proc Solid::write::getPropertiesList {parts_un} {
+#     variable mat_dict
+#     set props_dict [dict create]
+#     set props [list ]
+    
+#     set root [customlib::GetBaseRoot]
+
+#     set xp1 "[spdAux::getRoute $parts_un]/group"
+#     foreach gNode [$root selectNodes $xp1] {
+#         set element_id [get_domnode_attribute [$gNode selectNodes "value\[@n = 'Element'\]"] v]
+#         set element [Model::getElement $element_id]
+#         set group [get_domnode_attribute $gNode n]
+#         set sub_model_part [write::getMeshId Parts $group]
+#         if { [dict exists $mat_dict $group] } {
+#             set mid [dict get $mat_dict $group MID]
+#             set prop_dict [dict create]
+#             dict set prop_dict "model_part_name" $sub_model_part
+#             dict set prop_dict "properties_id" $mid
+#             set constitutive_law [dict get $mat_dict $group ConstitutiveLaw]
+#             set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+#             set variables_dict [dict create]
+#             foreach prop [dict keys [dict get $mat_dict $group] ] {
+#                 if {$prop ni $exclusionList} {
+#                     dict set variables_list $prop [write::getFormattedValue [dict get $mat_dict $group $prop]]
+#                 }
+#             }
+#             set material_dict [dict create]
+#             set const_law_application [[Model::getConstitutiveLaw $constitutive_law] getAttribute "ImplementedInApplication"]
+#             set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law] "."]
+#             dict set material_dict constitutive_law [dict create name $const_law_fullname]
+#             dict set material_dict Variables $variables_list
+#             dict set material_dict Tables dictnull
+#             dict set prop_dict Material $material_dict
+            
+#             lappend props $prop_dict
+#         }
+
+#     }
+    
+#     dict set props_dict properties $props
+#     return $props_dict
+# }
 
 proc Solid::write::GetUsedElements { {get "Objects"} } {
     set xp1 "[spdAux::getRoute SLParts]/group"

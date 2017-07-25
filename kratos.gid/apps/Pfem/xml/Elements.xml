@@ -20,7 +20,7 @@
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>    
+      <NodalCondition n="PRESSURE"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -46,7 +46,7 @@
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>        
+      <NodalCondition n="PRESSURE"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -73,7 +73,10 @@
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>    
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
     </NodalConditions>
     <inputs>
     </inputs>
@@ -99,7 +102,10 @@
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>        
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
     </NodalConditions>
     <inputs>
     </inputs>
@@ -127,7 +133,10 @@
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>    
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>       
     </NodalConditions>
     <inputs>
     </inputs>
@@ -153,7 +162,10 @@
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>        
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
     </NodalConditions>
     <inputs>
     </inputs>
@@ -179,7 +191,13 @@
 	  <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>     
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>             
     </NodalConditions>
     <inputs>
     </inputs>
@@ -200,7 +218,13 @@
 	  <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>     
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>                   
     </NodalConditions>
     <inputs>
     </inputs>
@@ -221,7 +245,13 @@
 	  <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>     
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
     </NodalConditions>
     <inputs>
     </inputs>
@@ -242,7 +272,13 @@
 	  <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>     
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
     </NodalConditions>
     <inputs>
     </inputs>
@@ -273,7 +309,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>  
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>       
     </NodalConditions>
     <inputs>
     </inputs>
@@ -306,7 +345,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>  
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>             
     </NodalConditions>
     <inputs>
     </inputs>
@@ -329,7 +371,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+      <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
@@ -339,7 +381,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>  
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -372,7 +417,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>     
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
     </NodalConditions>
     <inputs>
     </inputs>
@@ -405,7 +453,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>          
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>      
     </NodalConditions>
     <inputs>
     </inputs>
@@ -443,6 +494,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>     
     </inputs>
@@ -477,6 +531,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
     </NodalConditions>
     <inputs>
     </inputs>

@@ -1,7 +1,7 @@
 # Project Parameters
 
 proc Solid::write::getParametersDict { } {
-    set model_part_name "Structure"
+    set model_part_name "Solid_Domain"
     set projectParametersDict [dict create]
 
     # Problem data
@@ -27,16 +27,10 @@ proc Solid::write::getParametersDict { } {
     }
     set solutiontype [write::getValue SLSoluType]
     # Time Parameters
-    if {$solutiontype eq "Static"} {
-        dict set problemDataDict time_step "1.1"
-        dict set problemDataDict start_time "0.0"
-        dict set problemDataDict end_time "1.0"
-
-    } elseif {$solutiontype eq "Dynamic"} {
-        dict set problemDataDict time_step [write::getValue SLTimeParameters DeltaTime]
-        dict set problemDataDict start_time [write::getValue SLTimeParameters StartTime]
-        dict set problemDataDict end_time [write::getValue SLTimeParameters EndTime]
-    }
+    dict set problemDataDict time_step [write::getValue SLTimeParameters DeltaTime]
+    dict set problemDataDict start_time [write::getValue SLTimeParameters StartTime]
+    dict set problemDataDict end_time [write::getValue SLTimeParameters EndTime]
+    
     set echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict echo_level $echo_level
     # Add section to document
@@ -65,6 +59,9 @@ proc Solid::write::getParametersDict { } {
     dict set modelDict input_file_label 0
     dict set solverSettingsDict model_import_settings $modelDict
 
+    # Dofs
+    dict set solverSettingsDict rotation_dofs [UsingRotationDofElements]
+
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Solid] ]
@@ -75,8 +72,7 @@ proc Solid::write::getParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
-    set nodal_conditions_dict [write::getConditionsParametersDict SLNodalConditions "Nodal"]
-    set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]    
+    set nodal_conditions_dict [write::getConditionsParametersDict SLNodalConditions "Nodal"] 
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
 
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict SLLoads]
@@ -109,18 +105,18 @@ proc Solid::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc Solid::write::ProcessContacts { nodal_conditions_dict } {
-    set process_list [list ]
-    foreach elem $nodal_conditions_dict {
-        if {[dict get $elem python_module] in {"alm_contact_process"}} {
-            set model_part_name "Structure"
-            dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
-            dict set elem Parameters model_part_name $model_part_name
-            dict set elem Parameters computing_model_part_name "computing_domain"
-        } 
-        lappend process_list $elem
+proc Solid::write::UsingRotationDofElements { } {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute SLParts]/group/value\[@n='Element'\]"
+    set elements [$root selectNodes $xp1]
+    set bool false
+    foreach element_node $elements {
+        set elemid [$element_node @v]
+        set elem [Model::getElement $elemid]
+        if {[write::isBooleanTrue [$elem getAttribute "RotationDofs"]]} {set bool true; break}
     }
-    return $process_list
+
+    return $bool
 }
 
 proc Solid::write::writeParametersEvent { } {

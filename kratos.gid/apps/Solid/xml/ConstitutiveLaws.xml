@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--linear elastic laws-->
-    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="3D" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="SolidMechanicsApplication"
-	  help="Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
+    <CLaw n="LinearElastic3DLaw" pn="Elastic" Type="3D" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -12,8 +12,8 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Elastic" StrainSize="3" ImplementedInApplication="SolidMechanicsApplication"
-          help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Elastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -23,8 +23,8 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3" ImplementedInApplication="SolidMechanicsApplication"
-          help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Elastic (Plane Stress)" Type="PlaneStress" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -35,8 +35,8 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Axisymmetric" behaviour="Elastic" StrainSize="4" ImplementedInApplication="SolidMechanicsApplication"
-          help="Linear Elastic Behaviour in 2D Axisymmetric" Dimension="2Da" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="LinearElasticAxisym2DLaw" pn="Elastic" Type="Axisymmetric" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour in 2D Axisymmetric" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -46,8 +46,9 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticBeamLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="1D" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="SolidMechanicsApplication"
-	  help="Linear Elastic Behaviour in 3D for Beams" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
+    <!--constitutive laws for beams-->
+    <CLaw n="LinearElasticBeamLaw" pn="Elastic" Type="1D_UR" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour in 3D for Beams" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -59,8 +60,8 @@
     </CLaw>
     
     <!--constitutive laws for shells and membranes-->
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="SolidMechanicsApplication"
-	  help="Linear Elastic Behaviour in 3D for Shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
+    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Elastic" Type="PlaneStress_UR" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour in 3D for Shells" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -71,22 +72,10 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3" ImplementedInApplication="SolidMechanicsApplication"
-          help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
-        <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
-            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-            <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />  
-        </inputs>
-        <outputs>
-            
-        </outputs>
-    </CLaw>
     
     <!--hyper elastic laws-->
-    <CLaw n="HyperElastic3DLaw" pn="Hyper Elastic" ProductionReady="ProductionReady" Type="3D" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="SolidMechanicsApplication"
-	  help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="HyperElastic3DLaw" pn="NeoHookean" Type="3D" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -96,8 +85,8 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticPlaneStrain2DLaw" pn="HyperElastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Elastic" StrainSize="3" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="HyperElasticPlaneStrain2DLaw" pn="NeoHookean" Type="PlaneStrain" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -107,8 +96,8 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticAxisym2DLaw" pn="HyperElastic" ProductionReady="ProductionReady" Type="Axisymmetric" behaviour="Elastic" StrainSize="4" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic Behaviour in 2D Axisymmetric" Dimension="2Da" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="HyperElasticAxisym2DLaw" pn="NeoHookean" Type="Axisymmetric" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -120,8 +109,8 @@
     </CLaw>
     
     <!--hyper elastic u-p laws-->
-    <CLaw n="HyperElasticUP3DLaw" pn="Hyper Elastic U-P" ProductionReady="ProductionReady" Type="3D" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="SolidMechanicsApplication"
-	  help="NeoHookean HyperElastic U-P Behaviour in 3D" Dimension="3D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="U-P" >
+   <CLaw n="HyperElasticUP3DLaw" pn="NeoHookean" Type="3D_UP" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -131,8 +120,8 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticUPPlaneStrain2DLaw" pn="HyperElastic U-P Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Elastic" StrainSize="3" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic U-P Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="U-P" >
+    <CLaw n="HyperElasticUPPlaneStrain2DLaw" pn="NeoHookean" Type="PlaneStrain_UP" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -142,8 +131,8 @@
             
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticUPAxisym2DLaw" pn="HyperElastic U-P" ProductionReady="ProductionReady" Type="Axisymmetric" behaviour="Elastic" StrainSize="4" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic U-P Behaviour in 2D Axisymmetric" Dimension="2Da" LargeDeformation="True" RequiresLocalAxes="False" HybridType="U-P" >
+    <CLaw n="HyperElasticUPAxisym2DLaw" pn="NeoHookean" Type="Axisymmetric_UP" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -155,8 +144,8 @@
     </CLaw>
     
     <!--hyper elastic plastic laws-->
-    <CLaw n="HyperElasticPlasticJ23DLaw" pn="Plastic J2" ProductionReady="ProductionReady" Type="3D" behaviour="Plastic" StrainSize="6" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="HyperElasticPlasticJ23DLaw" pn="J2 Plasticity" Type="3D" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -172,10 +161,10 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticPlasticJ2PlaneStrain2DLaw" pn="Plastic J2 Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Plastic" StrainSize="3" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="HyperElasticPlasticJ2PlaneStrain2DLaw" pn="J2 Plasticity" Type="PlaneStrain" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
-			<parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+	    <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress"/>
@@ -189,8 +178,8 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticPlasticJ2Axisym2DLaw" pn="Plastic J2" ProductionReady="ProductionReady" Type="Axisymmetric" behaviour="Plastic" StrainSize="4" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Axisymmetric" Dimension="2Da" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="HyperElasticPlasticJ2Axisym2DLaw" pn="J2 Plasticity" Type="Axisymmetric" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Axisymmetric" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -206,8 +195,9 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticPlasticUPJ23DLaw" pn="Plastic J2 U-P" ProductionReady="ProductionReady" Type="3D" behaviour="Plastic" StrainSize="6" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic Plastic J2 U-P Behaviour in 3D" Dimension="3D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="U-P" >
+    <!--hyper elastic plastic  u-p laws-->
+    <CLaw n="HyperElasticPlasticUPJ23DLaw" pn="J2 Plasticity" Type="3D_UP" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -223,10 +213,10 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticPlasticUPPlaneStrain2DLaw" pn="Plastic J2 U-P Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Plastic" StrainSize="3"  ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic Plastic J2 U-P Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="U-P" >
+    <CLaw n="HyperElasticPlasticUPJ2PlaneStrain2DLaw" pn="J2 Plasticity" Type="PlaneStrain_UP" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+	    <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress"/>
@@ -237,11 +227,11 @@
         </inputs>
         <outputs>
             <parameter n="PLASTIC_STRAIN" pn="Plastic Strain"/>
-            <parameter n="DELTA_PLASTIC_STRAIN" pn="Delta Plastic Strain"/>
+            <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticPlasticUPJ2Axisym2DLaw" pn="Plastic J2 U-P" ProductionReady="ProductionReady" Type="Axisymmetric" behaviour="Plastic" StrainSize="4" ImplementedInApplication="SolidMechanicsApplication"
-          help="NeoHookean HyperElastic Plastic J2 U-P Behaviour in 2D Axisymmetric" Dimension="2Da" LargeDeformation="True" RequiresLocalAxes="False" HybridType="U-P" >
+    <CLaw n="HyperElasticPlasticUPJ2Axisym2DLaw" pn="J2 Plasticity" Type="Axisymmetric_UP" LargeDeformation="True" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -257,10 +247,11 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
+
     
     <!--damage laws-->
-    <CLaw n="IsotropicDamageSimoJu3DLaw" pn="Isotropic Damage Simo-Ju" ProductionReady="ProductionReady" Type="3D" behaviour="Damage" StrainSize="6" ImplementedInApplication="SolidMechanicsApplication"
-          help="Isotropic Damage Simo-Ju Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="IsotropicDamageSimoJu3DLaw" pn="Damage Simo-Ju" Type="3D" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Isotropic Damage Simo-Ju Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -273,8 +264,8 @@
             <parameter n="DAMAGE_VARIABLE" pn="Damage Variable"/>
         </outputs>
     </CLaw>
-    <CLaw n="IsotropicDamageSimoJuPlaneStrain2DLaw" pn="Isotropic Damage Simo-Ju Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Damage" StrainSize="3" ImplementedInApplication="SolidMechanicsApplication"
-          help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="IsotropicDamageSimoJuPlaneStrain2DLaw" pn="Damage Simo-Ju (Plane Strain)" Type="PlaneStrain" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -287,8 +278,8 @@
             <parameter n="DAMAGE_VARIABLE" pn="Damage Variable"/>
         </outputs>
     </CLaw>
-        <CLaw n="IsotropicDamageSimoJuPlaneStress2DLaw" pn="Isotropic Damage Simo-Ju Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Damage" StrainSize="3" ImplementedInApplication="SolidMechanicsApplication"
-          help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+        <CLaw n="IsotropicDamageSimoJuPlaneStress2DLaw" pn="Damage Simo-Ju (Plane Stress)" Type="PlaneStress" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />

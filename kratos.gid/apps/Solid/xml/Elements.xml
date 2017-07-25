@@ -2,10 +2,10 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="SmallDisplacementElement2D" pn="Solid small displacements" ImplementedInFile="small_displacement_element.cpp"
+  <ElementItem n="SmallDisplacementElement2D" pn="Solid (small displacements)" ImplementedInFile="small_displacement_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in plane state 2D">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -20,8 +20,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="3"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -31,11 +29,12 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
 
-    <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />-->
+    <!--<parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />-->
     <inputs>      
     </inputs>
 
@@ -47,10 +46,50 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid small displacements" ImplementedInFile="axisym_small_displacement_element.cpp"
+  <ElementItem n="SmallDisplacementBbarElement2D" pn="Solid (B-bar small displacements)" ImplementedInFile="small_displacement_element.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in plane state 2D">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle"      nodes="3" KratosName="SmallDisplacementBbarElement2D3N"/>
+   </TopologyFeatures>
+
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress,PlaneStrain"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="LargeDeformation" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
+    </NodalConditions>
+
+    <!--<parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />-->
+    <inputs>      
+    </inputs>
+
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid (small displacements)" ImplementedInFile="axisym_small_displacement_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 2D axisymmetric">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -64,9 +103,8 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Axisymmetric"/>
-      <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="4"/>
-      <filter field="HybridType" value="False"/>
+      <filter field="Dimension" value="2Da"/>
+      <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -74,8 +112,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -87,10 +126,10 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="SmallDisplacementElement3D" pn="Solid small displacements" ImplementedInFile="small_displacement_element.cpp"
+  <ElementItem n="SmallDisplacementElement3D" pn="Solid (small displacements)" ImplementedInFile="small_displacement_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 3D">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -107,8 +146,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
 
@@ -117,8 +154,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -130,12 +168,47 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
+  <ElementItem n="SmallDisplacementBbarElement3D" pn="Solid (B-bar small displacements)" ImplementedInFile="small_displacement_element.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
+	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 3D">
 
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4"  KratosName="SmallDisplacementBbarElement3D4N"/>
+    </TopologyFeatures>
+    
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="3D"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="LargeDeformation" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />      
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
   <!--large displacements-->
   <!--total lagrangian-->
-  <ElementItem n="TotalLagrangianElement2D" pn="Solid Total Lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
+  <ElementItem n="TotalLagrangianElement2D" pn="Solid (total lagrangian)" ImplementedInFile="total_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -151,8 +224,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="3"/>
-      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -160,8 +232,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
 
     <inputs>
@@ -174,9 +247,9 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="TotalLagrangianElement3D" pn="Solid Total Lagrangian" ImplementedInFile="total_lagrangian_element.cpp"
+  <ElementItem n="TotalLagrangianElement3D" pn="Solid (total lagrangian)" ImplementedInFile="total_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid"  help="This element it implements a Total Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -194,8 +267,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" 		value="3D"/>
       <filter field="Dimension" 	value="3D"/>
-      <filter field="StrainSize" 	value="6"/>
-      <filter field="HybridType" 	value="False"/>
+      <filter field="LargeDeformation"  value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -203,8 +275,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -217,9 +290,9 @@
     </outputs>
   </ElementItem>
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid Updated Lagrangian" ImplementedInFile="updated_lagrangian_element.cpp"
+  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid (updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -235,8 +308,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="3"/>
-      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -244,8 +316,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
 
     <inputs>
@@ -259,9 +332,9 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElementAxisym" pn="Solid Updated Lagrangian" ImplementedInFile="axisym_updated_lagrangian_element.cpp"
+  <ElementItem n="UpdatedLagrangianElementAxisym" pn="Solid (updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
+	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -276,9 +349,8 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Axisymmetric"/>
-      <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="4"/>
-      <filter field="HybridType" value="False"/>
+      <filter field="Dimension" value="2Da"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -286,8 +358,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>      
     </inputs>
@@ -299,9 +372,9 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid Updated Lagrangian" ImplementedInFile="updated_lagrangian_element.cpp"
+  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid (updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -319,8 +392,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -328,8 +400,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -343,10 +416,10 @@
   </ElementItem>
   <!--hybrid elements-->
   <!--hybrid updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid Updated Lagrangian U-P" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
+  <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian approach to large deformation kinematics"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
+	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
 		   ElementType="Solid">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -356,6 +429,9 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStrain_UP"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -364,8 +440,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="CONTACT"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>
       
@@ -378,11 +455,11 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid Updated Lagrangian U-P" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
+  <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
 	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="This element it implements a Hybrid Displacement-Pressure Updated Lagrangian approach to large deformation kinematics"
-		   ElementType="Solid" >
+	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
+	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
+	       ElementType="Solid" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -391,10 +468,9 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="Axisymmetric"/>
-      <filter field="Dimension" value="2D"/>
-      <filter field="StrainSize" value="4"/>
-      <filter field="HybridType" value="U-P"/>
+      <filter field="Type" value="Axisymmetric_UP"/>
+      <filter field="Dimension" value="2Da"/>
+      <filter field="LargeDeformation" value="True"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -403,7 +479,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -415,5 +493,235 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
+  <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
+	       ElementType="Solid" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
 
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4"  KratosName="UpdatedLagrangianUPElement3D4N"/>
+   </TopologyFeatures>
+    
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="3D_UP"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="LargeDeformation" value="True"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  <!--structural elements-->
+  <!--beam elements-->
+  <ElementItem n="BeamElement" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element_3D2N.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
+	       help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True"
+	       ElementType="Beam" >
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="SmallDisplacementBeamElement3D2N"/>
+    </TopologyFeatures>
+    
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="1D_UR"/>
+      <filter field="Dimension" value="3D"/>
+    </ConstitutiveLaw_FilterFeatures>
+    
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="ROTATION"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="ANGULAR_VELOCITY"/>
+      <NodalCondition n="ANGULAR_ACCELERATION"/>
+    </NodalConditions>
+
+    <inputs>
+      <parameter n="SECTION_TYPE" pn="Section type"/>
+    </inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="false" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+    </outputs>
+  </ElementItem>
+
+  <!--shell elements-->
+  <!--small displacements-->
+  <ElementItem n="ShellThinElement" pn="Shell (thin triangular)" ImplementedInFile="shell_thin_element_3D3N.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
+	       help="This element implements a triangular element for thin shells in a small displacements approach" 
+		   ElementType="Shell" RotationDofs="True" >
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="ShellThinElement3D3N"/>
+    </TopologyFeatures>
+    
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress_UR"/>
+      <filter field="Dimension" value="3D"/>
+    </ConstitutiveLaw_FilterFeatures>
+    
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT" />
+      <NodalCondition n="ROTATION"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="ANGULAR_VELOCITY"/>
+      <NodalCondition n="ANGULAR_ACCELERATION"/>
+    </NodalConditions>
+
+    <inputs>
+      <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
+    </inputs>
+    <outputs>
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+    </outputs>
+  </ElementItem>
+  
+  <ElementItem n="ShellThickElement" pn="Shell (thick quadrilateral)" ImplementedInFile="shell_thick_element_3D4N.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
+	       help="This element implements a quadrilateral element for thick shells in a small displacements approach"
+		   ElementType="Shell" RotationDofs="True">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThickElement3D4N"/>
+    </TopologyFeatures>
+    
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress_UR"/>
+      <filter field="Dimension" value="3D"/>
+    </ConstitutiveLaw_FilterFeatures>
+    
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT" />
+      <NodalCondition n="ROTATION"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="ANGULAR_VELOCITY"/>
+      <NodalCondition n="ANGULAR_ACCELERATION"/>
+    </NodalConditions>
+
+    <inputs>
+      <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
+    </inputs>
+    <outputs>
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false"/>
+    </outputs>
+  </ElementItem>
+
+  <!--large displacements-->
+  <ElementItem n="ShellThinCorotationalElement" pn="Shell (thin corotational triangular)" ImplementedInFile="shell_thin_element_3D3N.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
+	       help="This element implements a triangular corotational element for thin shells in a large displacements approach"
+		   ElementType="Shell" RotationDofs="True" >
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="ShellThinElementCorotational3D3N"/>
+    </TopologyFeatures>
+    
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress_UR"/>
+      <filter field="Dimension" value="3D"/>
+    </ConstitutiveLaw_FilterFeatures>
+    
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="ROTATION"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION" />
+      <NodalCondition n="ANGULAR_VELOCITY"/>
+      <NodalCondition n="ANGULAR_ACCELERATION"/>
+    </NodalConditions>
+    <inputs>
+      <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
+    </inputs>
+    <outputs>
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+    </outputs>
+  </ElementItem>
+  <ElementItem n="ShellThickCorotationalElement" pn="Shell (thick corotational quadrilateral)" ImplementedInFile="shell_thick_element_3D4N.cpp"
+	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
+	       help="This element implements a quadrilateral corotational element for thick shells in a large displacements approach"
+		   ElementType="Shell" RotationDofs="True">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThickElementCorotational3D4N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress_UR"/>
+      <filter field="Dimension" value="3D"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT" />
+      <NodalCondition n="ROTATION"     />
+      <NodalCondition n="VELOCITY"     />
+      <NodalCondition n="ACCELERATION" />
+      <NodalCondition n="ANGULAR_VELOCITY"/>
+      <NodalCondition n="ANGULAR_ACCELERATION" />
+    </NodalConditions>
+    <inputs>
+      <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m"  />
+    </inputs>
+    <outputs>
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+    </outputs>
+  </ElementItem>
+  <ElementItem n="DummyElement3D" pn=" "  MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" ElementType=" " help="This a dummy element to set the deffauld outputs in 3D">
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+    <ElementItem n="DummyElement2D" pn=" "  MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 WorkingSpaceDimension="2D" ElementType=" " help="This a dummy element to set the deffauld outputs in 2D">
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  
 </ElementList>

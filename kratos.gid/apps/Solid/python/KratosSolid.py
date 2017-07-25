@@ -40,7 +40,7 @@ import KratosMultiphysics.ExternalSolversApplication as KratosSolvers
 
 # Import input
 parameter_file = open("ProjectParameters.json",'r')
-ProjectParameters = KratosMultiphysics.Parameters( parameter_file.read())
+ProjectParameters = KratosMultiphysics.Parameters(parameter_file.read())
 
 # Set echo level
 echo_level = ProjectParameters["problem_data"]["echo_level"].GetInt()
@@ -83,6 +83,17 @@ if((main_model_part.ProcessInfo).Has(KratosMultiphysics.IS_RESTARTED)):
         solver.AddDofs()
 else:
     solver.AddDofs()
+
+    
+# Assign material to model_parts (if Materials.json exists)
+if os.path.isfile("Materials.json"):
+    materials_file = open("Materials.json",'r')
+    MaterialParameters = KratosMultiphysics.Parameters(materials_file.read())
+
+    if(MaterialParameters.Has("material_models_list")):
+        assign_materials_process = process_factory.KratosProcessFactory(Model).ConstructListOfProcesses( ProjectParameters["material_models_list"] )
+
+    assign_materials_process.Execute()
     
 # Build sub_model_parts or submeshes (rearrange parts for the application of custom processes)
 ## Get the list of the submodel part in the object Model
@@ -113,7 +124,8 @@ if(ProjectParameters.Has("problem_process_list")):
     list_of_processes += process_factory.KratosProcessFactory(Model).ConstructListOfProcesses( ProjectParameters["problem_process_list"] )
 if(ProjectParameters.Has("output_process_list")):
     list_of_processes += process_factory.KratosProcessFactory(Model).ConstructListOfProcesses( ProjectParameters["output_process_list"] )
-            
+
+    
 #print list of constructed processes
 if(echo_level>1):
     for process in list_of_processes:

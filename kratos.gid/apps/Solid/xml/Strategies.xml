@@ -47,7 +47,7 @@
 	   <filter field="SolverType" value="Standard"/>
         </filterFeatures>
 		<defaults>
-		  <solver n="SuperLUSolver">
+		  <solver n="Automatic">
 			<!--Not ready yet-->
 			<!--<parameter n="verbosity" v="3"/>-->
 		  </solver>
@@ -61,7 +61,7 @@
 			</parameter_list>
             <element_filters>
                 <filter field="ElementType" value="Solid,Shell,Beam"/>
-				<filter field="ImplementedInApplication" value="SolidMechanicsApplication,StructuralMechanicsApplication"/>
+				<filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
 			 <!-- <forceIn field="n" value="MembraneElement"/>
 			 <forceOut field="n" value="SmallDisplacementElement2D"/> -->
             </element_filters>
@@ -72,7 +72,7 @@
 			</parameter_list>
             <element_filters>
                 <filter field="ElementType" value="Solid,Shell,Beam"/>
-				<filter field="ImplementedInApplication" value="SolidMechanicsApplication,StructuralMechanicsApplication"/>
+				<filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
             </element_filters>
 	  </scheme>
 	</schemes>
@@ -116,7 +116,7 @@
 	   <filter field="SolverType" value="Standard"/>
         </filterFeatures>
 		<defaults>
-		  <solver n="SuperLUSolver">
+		  <solver n="Automatic">
 			<!--Not ready yet-->
 			<!--<parameter n="verbosity" v="3"/>-->
 		  </solver>
@@ -132,7 +132,7 @@
 		  </parameter_list>
 		  <element_filters>
 			 <filter field="ElementType" value="Solid"/>
-			 <filter field="ImplementedInApplication" value="SolidMechanicsApplication,StructuralMechanicsApplication"/>
+			 <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
 		  </element_filters>
 	  </scheme>
 	</schemes>
@@ -191,7 +191,7 @@
 		   <filter field="SolverType" value="Standard"/>
         </filterFeatures>
 		<defaults>
-		  <solver n="SuperLUSolver">
+		  <solver n="Automatic">
 			<!--Not ready yet-->
 			<!--<parameter n="verbosity" v="3"/>-->
 		  </solver>
@@ -204,7 +204,7 @@
           <parameter_list>
 		  </parameter_list>
 		  <element_filters>
-			 <filter field="ImplementedInApplication" value="SolidMechanicsApplication,StructuralMechanicsApplication"/>
+			 <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
 		  </element_filters>
 	  </scheme>
 	</schemes>

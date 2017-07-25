@@ -42,7 +42,7 @@
 	  
 		set names ""
 		set pnames ""
-		set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLSoluType]] v]
+		set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
 		set Sols [::Model::GetSolutionStrategies [list "SolutionType" $solutionType] ]
 		foreach ss $Sols {
 			lappend ids [$ss getName]
@@ -93,7 +93,7 @@
 		  <proc n='CheckNodalConditionStateSolid' args='args'>
 	  <![CDATA[
 	  # Overwritten the base function to add Solution Type restrictions
-		set parts_un SLParts
+		set parts_un STParts
 	    if {[spdAux::getRoute $parts_un] ne ""} {
 			set conditionId [$domNode @n]
 			set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
@@ -101,7 +101,7 @@
 			foreach elem $elems { lappend elemnames [$elem @v]}
 			set elemnames [lsort -unique $elemnames]
 			
-			set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLSoluType]] v]
+			set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
 			set params [list analysis_type $solutionType]
 			if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
 		} {return "normal"}
@@ -116,17 +116,17 @@
 			  
 	<proc n='GetSolutionStrategiesSolid' args='args'>
 	  <![CDATA[
-	  return [Solid::xml::ProcGetSolutionStrategiesSolid $domNode $args]
+	  return [Structural::xml::ProcGetSolutionStrategiesSolid $domNode $args]
 	  ]]>
 	</proc>
     <proc n='CheckNodalConditionStateSolid' args='args'>
 	  <![CDATA[
-	  return [Solid::xml::ProcCheckNodalConditionStateSolid $domNode $args]
+	  return [Structural::xml::ProcCheckNodalConditionStateSolid $domNode $args]
 	  ]]>
 	</proc>		
     <proc n='CheckGeometrySolid' args='args'>
       <![CDATA[                
-      return [Solid::xml::ProcCheckGeometrySolid $domNode $args]              
+      return [Structural::xml::ProcCheckGeometrySolid $domNode $args]              
       ]]>
     </proc>
 

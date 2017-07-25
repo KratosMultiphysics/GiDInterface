@@ -20,7 +20,7 @@ proc FSI::write::writeModelPartEvent { } {
 }
 
 proc FSI::write::writeCustomFilesEvent { } {
-    Solid::write::WriteMaterialsFile
+    Structural::write::WriteMaterialsFile
     
     write::CopyFileIntoModel "python/KratosFSI.py"
     write::RenameFileInModel "KratosFSI.py" "MainKratos.py"
