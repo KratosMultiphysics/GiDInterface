@@ -4,10 +4,11 @@ namespace eval ::DEM {
 
 proc ::DEM::Init { } {
     set Kratos::must_quit 1
-    if {[GidUtils::GiveProblemTypeFullname Dem.gid] ne ""} {
-        GiD_Process Mescape Data Defaults ProblemType Dem escape 
+    if {[GidUtils::GiveProblemTypeFullname G-DEMPack/kratos.gid] ne ""} {
+        GiD_Process Mescape Data Defaults ProblemType G-DEMPack/kratos escape 
     } else {
-        W "Dem is not installed"
+        W "Dem is not installed at G-DEMPack/kratos.gid"
+        W "Please, go to Data -> Problemtype -> Internet retrieve and download it (soon!)"
     }
 }
 ::DEM::Init
