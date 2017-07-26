@@ -107,10 +107,13 @@ proc GiD_Event_BeforeSaveGIDProject { modelname} {
 ##########################################################
 namespace eval Kratos {
   variable kratos_private
+  variable must_quit
 }
 
 proc Kratos::InitGIDProject { dir } {
     variable kratos_private
+    variable must_quit
+    set must_quit 0
     unset -nocomplain kratos_private
     set kratos_private(Path) $dir ;#to know where to find the files
     set kratos_private(DevMode) "release" ; #can be dev or release
