@@ -205,7 +205,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangianElement3D4N"/>
