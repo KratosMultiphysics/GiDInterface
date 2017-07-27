@@ -5,7 +5,7 @@
 		ImplementedInApplication="FSIApplication"
 		ImplementedInPythonFile="partitioned_fsi_dirichlet_neumann_solver"
 		MinimumKratosVersion="8500" App="FSI"
-		ProductionReady="Developer"
+		ProductionReady="ProductionReady"
 		help="">
 
     <!-- list of options to be filled -->
