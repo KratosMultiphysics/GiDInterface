@@ -211,6 +211,13 @@ proc spdAux::CreateWindow {} {
             if {$col >= 5} {set col 0; incr row; incr row}
         }
     }
+    set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
+    set img [gid_themes::GetImageModule $more_path]
+    ttk::button $w.information.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]
+    ttk::label $w.information.text_more -text "More..."
+    
+    grid $w.information.img_more -column $col -row $row
+    grid $w.information.text_more -column $col -row [expr $row +1]
     
     grid $w.top
     grid $w.top.title_text
