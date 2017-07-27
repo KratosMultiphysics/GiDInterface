@@ -313,9 +313,12 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
 
 proc spdAux::CustomTreeCommon { } {
     set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]
+    
     if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
     if {!$AppUsesIntervals} {
-        spdAux::SetValueOnTreeItem state hidden Intervals
+        if {[getRoute Intervals] ne ""} {
+            catch {spdAux::SetValueOnTreeItem state hidden Intervals}
+        }
     }
     
 }
