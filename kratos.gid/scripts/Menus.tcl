@@ -111,6 +111,8 @@ proc Kratos::ChangeMenus { } {
         GiDMenu::InsertOption "Kratos" [list "---"] 4 PRE "" "" "" replace =
         GiDMenu::InsertOption "Kratos" [list "Wizard window" ] 5 PRE [list Wizard::CreateWindow] "" "" replace =
     }
+    GiDMenu::InsertOption "Kratos" [list "---"] 6 PRE "" "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "About Kratos" ] 7 PRE [list Kratos::About] "" "" replace =
     GidChangeDataLabel "Data units" ""
     GidChangeDataLabel "Interval" ""
     GidChangeDataLabel "Conditions" ""
@@ -120,10 +122,36 @@ proc Kratos::ChangeMenus { } {
     GidChangeDataLabel "Local axes" "gid_groups_conds::local_axes_menu %W"
     
     GiDMenu::InsertOption "Help" [list ---] end PREPOST {} "" "" insertafter
-    GiDMenu::InsertOption "Help" [list [_ "Visit %s web" Kratos]...] end PREPOST [list VisitWeb "http://www.cimne.com/kratos"] "" "" insertafter
+    GiDMenu::InsertOption "Help" [list [_ "Visit %s web" Kratos]] end PREPOST [list VisitWeb "http://www.cimne.com/kratos"] "" "" insertafter
+    GiDMenu::InsertOption "Help" [list [_ "Do you want to develop Kratos?"]] end PREPOST [list VisitWeb "https://github.com/KratosMultiphysics"] "" "" insertafter
     
     GiDMenu::UpdateMenus
 }
 
-
+proc Kratos::About {} {
+    Splash
+}
  
+
+proc Kratos::Splash { } {
+    variable kratos_private
+    set prev_splash_state [GiD_Set SplashWindow]
+    GiD_Set SplashWindow 1 ;#set temporary to 1 to force show splash without take care of the GiD splash preference
+    set off_x 150
+    set fnt "Sans 10"
+    if { $::tcl_platform(platform) == "windows" } {
+        set fnt "verdana 10"
+        set off_x 130
+    }
+    set line1 "Kratos Multiphysics Version 5.1"
+    ::GidUtils::Splash [file join $kratos_private(Path) images splash.png] .splash 0 \
+        [list $line1 $off_x 230]
+
+
+    .splash.lv configure -font $fnt -background white -foreground black \
+        -relief solid -borderwidth 1 -padx 12 -pady 3
+    update
+    
+    GiD_Set SplashWindow $prev_splash_state
+}
+
