@@ -17,7 +17,7 @@
         <value n="PARTITION_INDEX" pn="Partition index" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName ParallelType MPI]"/>
         <dynamicnode command="spdAux::injectNodalConditionsOutputs" args=""/>
     </container>
-    <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess options" open_window="0">
+    <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess options" open_window="0" icon="options">
         <value n="GiDPostMode" pn="Result format" v="GiD_PostBinary" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped" help="GiD result file format" />
         <value n="GiDWriteMeshFlag" pn="Write deformed mesh" v="WriteDeformed" values="WriteDeformed,WriteUndeformed" dict="WriteDeformed,Write deformed,WriteUndeformed, Write undeformed" help="Write the GiD deformed or undeformed mesh"/>
         <value n="GiDWriteConditionsFlag" pn="Write conditions" v="WriteConditions" values="WriteConditions,WriteElementsOnly,WriteConditionsOnly" dict="WriteConditions,Write conditions,WriteElementsOnly,Write elements only,WriteConditionsOnly,Write conditions only" help="Write the conditions or only element to the GiD result file"/>
@@ -25,7 +25,7 @@
         <value n="EchoLevel" pn="Verbosity of terminal output" v="0" values="0,1,2,3" help="Verbosity on screen output during process. \n0 -> Low verbosity \n3 -> High verbosity"/>
     </container>
     <container n="CutPlanes" pn="Cut planes"  icon="cut" state="[checkStateByUniqueName nDim 3D]" open_window="0">
-        <blockdata n='CutPlane' name='CutPlane' editable_name="unique" sequence='1' can_delete_last_item='1'>
+        <blockdata n='CutPlane' name='CutPlane' editable_name="unique" sequence='1' can_delete_last_item='1' icon="slice">
             <value n="point" pn="Point" fieldtype="vector" dimensions="3" format="%.6g" v="0.0,0.0,0.0" pick_point="0"/>
             <value n="normal" pn="Normal" fieldtype="vector" dimensions="3" format="%.6g" v="0.0,0.0,0.0" pick_point="0"/>
         </blockdata>
