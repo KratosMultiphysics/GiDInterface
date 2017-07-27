@@ -15,6 +15,12 @@ proc apps::Init { } {
     set appList [list ]
 }
 
+proc apps::ClearActiveApp {} {
+    variable activeApp
+    namespace delete "::[apps::getActiveAppId]"
+    set activeApp ""
+}
+
 proc apps::setActiveApp {appid} {
     variable activeApp
     variable appList
@@ -202,6 +208,7 @@ oo::class create App {
     
     method activate { } {
         variable name
+        set ::Kratos::must_quit 0
         set dir [file join $::Kratos::kratos_private(Path) apps $name]
         set fileName [file join $dir start.tcl]
         apps::loadAppFile $fileName
