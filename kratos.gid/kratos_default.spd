@@ -12,6 +12,7 @@
 	<appLink n="EmbeddedFluid" public="0" pn="Embedded fluid" active="0" appid="EmbeddedFluid" prefix="EMBFL"/>
 	<appLink n="FSI" public="1" pn="FSI" active="0" appid="FSI" prefix="FSI"/>
 	<appLink n="DEM" public="1" pn="DEM" active="0" appid="DEM" prefix="DEM"/>
+	<appLink n="Pfem" public="1" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">
 		<value n='units_mesh' pn='Mesh units' unit_mesh_definition="1"/>
 		<value n='units_system' pn='Units system' units_system_definition="1">
