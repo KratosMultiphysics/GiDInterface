@@ -25,6 +25,7 @@ proc write::Init { } {
     SetConfigurationAttribute materials_un ""
     SetConfigurationAttribute groups_type_name "SubModelPart"
     SetConfigurationAttribute time_monitor 0
+    SetConfigurationAttribute model_name ""
     
     variable MDPA_loop_control
     set MDPA_loop_control 0
@@ -80,6 +81,8 @@ proc write::writeEvent { filename } {
     set time_monitor [GetConfigurationAttribute time_monitor]
     customlib::UpdateDocument
     SetConfigurationAttribute dir [file dirname $filename]
+    SetConfigurationAttribute model_name [file rootname [file tail $filename]]
+    
     set errcode 0
     set fail [::Kratos::CheckValidProjectName [file rootname $filename]]
     
@@ -1180,12 +1183,28 @@ proc write::SetParallelismConfiguration {{un "Parallelization"} {n "OpenMPNumber
         catch {set nt [write::getValue $un $n]}
         if {$nt} {write::SetEnvironmentVariable OMP_NUM_THREADS $nt} {return 0}
     } else {
-        #write::SetEnvironmentVariable OMP_NUM_THREADS 1
+        write::SetEnvironmentVariable OMP_NUM_THREADS 1
+        WriteMPIbatFile $un
     }
 }
 
 proc write::SetEnvironmentVariable {name value} {
     set ::env($name) $value
+}
+
+proc write::WriteMPIbatFile {un} {
+    # MPINumberOfProcessors
+    set dir $::Kratos::kratos_private(Path)
+    set model_dir [GetConfigurationAttribute dir]
+    set model_name [GetConfigurationAttribute model_name]
+    set num_nodes [write::getValue $un MPINumberOfProcessors]
+
+    set fd [GiD_File fopen [file join $model_dir "MPILauncher.sh"]]
+    GiD_File fprintf $fd %s "export LD_LIBRARY_PATH=\"$dir/exec/Kratos\":\"$dir/exec/Kratos/libs\""
+    GiD_File fprintf $fd %s "export PYTHONPATH=\"$dir/exec/Kratos/python35.zip\":\"$dir/exec/Kratos\":\$PYTHONPATH"
+    GiD_File fprintf $fd %s "# Run Python using the script MainKratos.py"
+    GiD_File fprintf $fd %s "mpirun --np $num_nodes \"$dir/exec/Kratos/runkratos\" MainKratos.py > \"$model_dir/$model_name.info\" 2> \"$model_dir/$model_name.err\""
+    GiD_File fclose $fd
 }
 
 proc write::Duration { int_time } {
