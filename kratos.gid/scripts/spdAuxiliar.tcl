@@ -140,13 +140,15 @@ proc spdAux::deactiveApp { appid } {
 proc spdAux::activeApp { appid } {
     #W "Active $appid"
     variable initwind
-    set root [customlib::GetBaseRoot]
-    [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v $appid
-    foreach elem [$root getElementsByTagName "appLink"] {
-        if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
-            $elem setAttribute "active" 1
-        } else {
-            $elem setAttribute "active" 0
+    catch {
+        set root [customlib::GetBaseRoot]
+        [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v $appid
+        foreach elem [$root getElementsByTagName "appLink"] {
+            if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
+                $elem setAttribute "active" 1
+            } else {
+                $elem setAttribute "active" 0
+            }
         }
     }
     if {$::Kratos::must_quit} {return ""}
