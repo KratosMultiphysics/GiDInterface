@@ -24,10 +24,7 @@ else
     export LD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs"
 fi
 
-export PYTHONPATH="$3/exec/Kratos/python27.zip":"$3/exec/Kratos":$PYTHONPATH
-
-# Set the number of threads for OpenMP
-# export OMP_NUM_THREADS=$5
+export PYTHONPATH="$3/exec/Kratos/pythonlib.zip":"$3/exec/Kratos":$PYTHONPATH
 
 # Run Python using the script KratosSolidMechanics.py
 "$3/exec/Kratos/runkratos" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
