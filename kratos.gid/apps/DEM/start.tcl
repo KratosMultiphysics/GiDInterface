@@ -9,9 +9,9 @@ proc ::DEM::Init { } {
     } else {
         W "Dem is not installed at G-DEMPack/kratos.gid"
         W "Please, go to Data -> Problemtype -> Internet retrieve and download it"
+        spdAux::deactiveApp DEM
+        apps::ClearActiveApp
     }
 
-    spdAux::deactiveApp DEM
-    apps::ClearActiveApp
 }
 ::DEM::Init
