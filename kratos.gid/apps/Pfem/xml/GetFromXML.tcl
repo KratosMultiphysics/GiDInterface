@@ -74,6 +74,7 @@ proc Pfem::xml::CustomTree { args } {
     
     #restart
     spdAux::SetValueOnTreeItem icon doRestart Restart     
+    spdAux::SetValueOnTreeItem icon select Restart RestartOptions
     
     #parallelism
     spdAux::SetValueOnTreeItem icon select Parallelization
