@@ -83,7 +83,7 @@
                 ImplementedInApplication="SolidMechanicsApplication"
                 ImplementedInPythonFile="solid_mechanics_explicit_dynamic_solver"
                 MinimumKratosVersion="8500" App="Solid"
-                ProductionReady="ProductionReady"
+                ProductionReady="Developer"
                 help="Default solver Super LU">
     
     <!-- list of options to be filled -->
