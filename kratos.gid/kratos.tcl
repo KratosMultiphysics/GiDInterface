@@ -179,6 +179,7 @@ proc Kratos::LoadGiDProject { filespd } {
     gid_groups_conds::close_all_windows
     if { ![file exists $filespd] } { return }
     set versionPT [gid_groups_conds::give_data_version]
+    set kratos_private(problemtype_version) $versionPT
     gid_groups_conds::open_spd_file $filespd
     set versionData [gid_groups_conds::give_data_version]
     if { [package vcompare $versionPT $versionData] == 1 } {

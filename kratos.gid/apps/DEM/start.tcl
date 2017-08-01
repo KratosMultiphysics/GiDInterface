@@ -8,7 +8,10 @@ proc ::DEM::Init { } {
         GiD_Process Mescape Data Defaults ProblemType G-DEMPack/kratos escape 
     } else {
         W "Dem is not installed at G-DEMPack/kratos.gid"
-        W "Please, go to Data -> Problemtype -> Internet retrieve and download it (soon!)"
+        W "Please, go to Data -> Problemtype -> Internet retrieve and download it"
     }
+
+    spdAux::deactiveApp DEM
+    apps::ClearActiveApp
 }
 ::DEM::Init

@@ -140,7 +140,6 @@ proc spdAux::deactiveApp { appid } {
 proc spdAux::activeApp { appid } {
     #W "Active $appid"
     variable initwind
-    if {$::Kratos::must_quit} {return ""}
     set root [customlib::GetBaseRoot]
     [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v $appid
     foreach elem [$root getElementsByTagName "appLink"] {
@@ -150,6 +149,7 @@ proc spdAux::activeApp { appid } {
             $elem setAttribute "active" 0
         }
     }
+    if {$::Kratos::must_quit} {return ""}
     set nd [$root selectNodes "value\[@n='nDim'\]"]
     if {[$nd getAttribute v] ne "wait"} {
         if {[$nd getAttribute v] ne "undefined"} {
@@ -211,7 +211,18 @@ proc spdAux::CreateWindow {} {
             if {$col >= 5} {set col 0; incr row; incr row}
         }
     }
-    
+
+    # More button
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+        set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
+        set img [gid_themes::GetImageModule $more_path]
+        ttk::button $w.information.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]
+        ttk::label $w.information.text_more -text "More..."
+        
+        grid $w.information.img_more -column $col -row $row
+        grid $w.information.text_more -column $col -row [expr $row +1]
+    }
+
     grid $w.top
     grid $w.top.title_text
     
@@ -313,9 +324,12 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
 
 proc spdAux::CustomTreeCommon { } {
     set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]
+    
     if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
     if {!$AppUsesIntervals} {
-        spdAux::SetValueOnTreeItem state hidden Intervals
+        if {[getRoute Intervals] ne ""} {
+            catch {spdAux::SetValueOnTreeItem state hidden Intervals}
+        }
     }
     
 }
@@ -566,7 +580,7 @@ proc spdAux::injectSolvers {basenode args} {
             set help [$se getHelp]
             set appid [GetAppIdFromNode [$basenode parent]]
             set un [apps::getAppUniqueName $appid "$stn$n"]
-            set container "<container help='$help' n='$n' pn='$pn' un='$un' state='\[SolverEntryState\]' solstratname='$stn' open_window='0'>"
+            set container "<container help='$help' n='$n' pn='$pn' un='$un' state='\[SolverEntryState\]' solstratname='$stn' open_window='0' icon='solver'>"
             set defsolver [lindex [$se getDefaultSolvers] 0]
             append container "<value n='Solver' pn='Solver' v='$defsolver' values='\[GetSolversValues\]' dict='\[GetSolvers\]' actualize='1' update_proc='UpdateTree'/>"
             #append container "<dependencies node='../value' actualize='1'/>"
