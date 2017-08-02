@@ -55,6 +55,8 @@ proc Structural::write::AddValidApps {appList} {
 proc Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
     
+    write::SetParallelismConfiguration
+    
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     write::RenameFileInModel $orig_name "MainKratos.py"
