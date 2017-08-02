@@ -47,7 +47,7 @@
     },
     "problem_process_list" : [{
         "python_module"   : "remesh_domains_process",
-        "kratos_module"   : "KratosMultiphysics.PfemBaseApplication",
+        "kratos_module"   : "KratosMultiphysics.PfemApplication",
         "help"            : "This process applies meshing to the problem domains",
         "process_name"    : "RemeshDomainsProcess",
         "Parameters"      : {

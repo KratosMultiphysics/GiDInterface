@@ -13,8 +13,8 @@ proc Pfem::xml::Init { } {
     
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
-    Model::getConstitutiveLaws "../../Solid/xml/ConstitutiveLaws.xml"
     Model::getConstitutiveLaws "../../Pfem/xml/ConstitutiveLaws.xml"
+    Model::getConstitutiveLaws "../../Solid/xml/ConstitutiveLaws.xml"
     Model::getProcesses "../../Solid/xml/Processes.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
@@ -82,6 +82,12 @@ proc Pfem::xml::CustomTree { args } {
     #boundary conditions
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
+
+    #nodal results 
+    spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
+    spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
+    spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
+    
     
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
        $node setAttribute icon folder
