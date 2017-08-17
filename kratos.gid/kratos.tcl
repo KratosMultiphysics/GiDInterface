@@ -88,7 +88,8 @@ proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args 
     if {$run} {
         return ""
     } {
-        return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written." ]]
+        return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
+
     }
     
 }

@@ -133,7 +133,7 @@ proc Structural::write::ProcessContacts { nodal_conditions_dict } {
 
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
-    write::SetParallelismConfiguration
+    
 }
 
 

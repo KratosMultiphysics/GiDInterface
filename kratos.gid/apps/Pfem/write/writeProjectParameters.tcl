@@ -209,7 +209,7 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.PfemBaseApplication"
+    dict set resultDict "kratos_module" "KratosMultiphysics.PfemApplication"
     dict set resultDict "python_module" "remesh_domains_process"
     dict set resultDict "process_name" "RemeshDomainsProcess"
     
@@ -322,7 +322,7 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.PfemBaseApplication"
+    dict set resultDict "kratos_module" "KratosMultiphysics.PfemApplication"
     set problemtype [write::getValue PFEM_DomainType]
     
     dict set resultDict "python_module" "remesh_fluid_domains_process"
@@ -492,7 +492,7 @@ proc Pfem::write::GetNodalDataDict { } {
             set groupid [$group @n]
             set processDict [dict create]
             dict set processDict process_name "ApplyValuesToNodes"
-            dict set processDict kratos_module "KratosMultiphysics.PfemBaseApplication"
+            dict set processDict kratos_module "KratosMultiphysics.PfemApplication"
             
             set params [dict create]
             set xp2 "./value"
