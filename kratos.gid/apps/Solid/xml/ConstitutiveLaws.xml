@@ -47,18 +47,208 @@
         </outputs>
     </CLaw>
     <!--constitutive laws for beams-->
-    <CLaw n="LinearElasticBeamLaw" pn="Elastic" Type="1D_UR" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
-	  help="Linear Elastic Behaviour in 3D for Beams" Dimension="3D" ProductionReady="ProductionReady">
+    <CLaw n="CircularSection2D" pn="Circular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
+	    <parameter n="DIAMETER" pn="Diameter" v="0.1" unit_magnitude="L" units="m" />
             <parameter n="DENSITY" pn="Density"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
         </inputs>
-        <outputs>
-            
+        <outputs>         
         </outputs>
     </CLaw>
-    
+    <CLaw n="CircularSection3D" pn="Circular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+        <inputs>
+	    <parameter n="DIAMETER" pn="Diameter" v="0.1" unit_magnitude="L" units="m" />
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
+    <CLaw n="TubularSection2D" pn="Tubular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="DIAMETER" pn="Diameter" v="0.1" unit_magnitude="L" units="m" />
+	    <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m" />
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="TubularSection3D" pn="Tubular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="DIAMETER" pn="Diameter" v="0.1" unit_magnitude="L" units="m" />
+	    <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m" />
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
+    <CLaw n="RectangularSection2D" pn="Rectangular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="HEIGHT" pn="Height" v="0.1" unit_magnitude="L" units="m" />
+	    <parameter n="WIDTH" pn="Width" v="0.1" unit_magnitude="L" units="m" />
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="RectangularSection3D" pn="Rectangular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="HEIGHT" pn="Height" v="0.1" unit_magnitude="L" units="m" />
+	    <parameter n="WIDTH" pn="Width" v="0.1" unit_magnitude="L" units="m" />
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
+    <CLaw n="IPNSection2D" pn="IPN" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="80"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="IPNSection3D" pn="IPN" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="80"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
+    <CLaw n="IPESection2D" pn="IPE" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="80"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="IPESection3D" pn="IPE" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="80"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
+    <CLaw n="HEBSection2D" pn="HEB" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="100"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="HEBSection3D" pn="HEB" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="100"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
+    <CLaw n="HEASection2D" pn="HEA" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="100"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="HEASection3D" pn="HEA" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="100"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
+    <CLaw n="HEMSection2D" pn="HEM" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="100"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="HEMSection3D" pn="HEM" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="100"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
+    <CLaw n="UPNSection2D" pn="UPN" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="80"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="UPNSection3D" pn="UPN" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+      <inputs>
+   	    <parameter n="SIZE" pn="Profile Size" v="80"/>
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>    
     <!--constitutive laws for shells and membranes-->
     <CLaw n="LinearElasticPlaneStress2DLaw" pn="Elastic" Type="PlaneStress_UR" LargeDeformation="False" ImplementedInApplication="ConstitutiveModelsApplication"
 	  help="Linear Elastic Behaviour in 3D for Shells" Dimension="3D" ProductionReady="ProductionReady">
