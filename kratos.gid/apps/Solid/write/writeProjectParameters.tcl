@@ -13,7 +13,7 @@ proc Solid::write::getParametersDict { } {
     dict set problemDataDict problem_name $model_name
     dict set problemDataDict model_part_name $model_part_name
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict domain_size $nDim
+    dict set problemDataDict dimension $nDim
 
     # Parallelization
     set paralleltype [write::getValue ParallelType]
@@ -41,12 +41,12 @@ proc Solid::write::getParametersDict { } {
     set currentStrategyId [write::getValue SLSolStrat]
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
     dict set solverSettingsDict solver_type $strategy_write_name
-    #~ dict set solverSettingsDict domain_size [expr $nDim]
+    #~ dict set solverSettingsDict dimension [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
     dict set solverSettingsDict solution_type [write::getValue SLSoluType]
 
     if {$solutiontype eq "Static"} {
-        dict set solverSettingsDict analysis_type [write::getValue SLAnalysisType]
+	dict set solverSettingsDict scheme_type [write::getValue SLScheme]
     } elseif {$solutiontype eq "Dynamic"} {
         dict set solverSettingsDict time_integration_method [write::getValue SLSolStrat]
         dict set solverSettingsDict scheme_type [write::getValue SLScheme]

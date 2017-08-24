@@ -185,12 +185,35 @@
     </linearSolvers>
     
     <schemes>
-      <scheme n="GenericScheme" pn="Generic Solids" help="Static Scheme" ProductionReady="ProductionReady">
+      <scheme n="Linear" pn="Single Step" help="Static Scheme" ProductionReady="ProductionReady">
         <parameter_list>
 	</parameter_list>
 	<element_filters>
 	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
 	</element_filters>
+      </scheme>
+      <scheme n="Non-Linear" pn="Multiple Steps" help="Static Scheme" ProductionReady="ProductionReady">
+        <parameter_list>
+	</parameter_list>
+	<element_filters>
+	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+	</element_filters>
+      </scheme>
+      <scheme n="RotationStatic" pn="Large Rotations" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
+        <parameter_list>
+	</parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Beam"/>
+	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
+      <scheme n="RotationEMC" pn="EMC" help="Conservine Scheme for large rotations in beams" ProductionReady="ProductionReady">
+        <parameter_list>
+	</parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Beam"/>
+	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+        </element_filters>
       </scheme>
     </schemes>
     

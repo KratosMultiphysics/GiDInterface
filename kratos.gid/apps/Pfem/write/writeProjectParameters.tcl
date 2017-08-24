@@ -48,7 +48,7 @@ proc Pfem::write::GetPFEM_ProblemDataDict { } {
     dict set problemDataDict model_part_name "Main Domain"
     set nDim $::Model::SpatialDimension
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict domain_size $nDim
+    dict set problemDataDict dimension $nDim
     
     dict set problemDataDict time_step [write::getValue PFEM_TimeParameters DeltaTime]
     dict set problemDataDict start_time [write::getValue PFEM_TimeParameters StartTime]
