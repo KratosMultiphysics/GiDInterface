@@ -14,11 +14,8 @@ import os
 import KratosMultiphysics
 # Including Applications path
 import KratosMultiphysics.ExternalSolversApplication as KratosSolvers
-import KratosMultiphysics.TrilinosApplication as TrilinosApplication
-import KratosMultiphysics.ConvectionDiffusionApplication as KratosConvDiff
+#import KratosMultiphysics.TrilinosApplication as TrilinosApplication
 import KratosMultiphysics.SolidMechanicsApplication as KratosSolid
-import KratosMultiphysics.PoromechanicsApplication as KratosPoro
-import KratosMultiphysics.StructuralMechanicsApplication as KratosStructural
 import KratosMultiphysics.DamApplication as KratosDam
 
 # Parsing the parameters
@@ -146,10 +143,10 @@ for process in list_of_processes:
 ## Finalize --------------------------------------------------------------------------------------------------
 
 # Finalizing output files
-eigen_values = [ev for ev in main_model_part.ProcessInfo[KratosStructural.EIGENVALUE_VECTOR]]
+eigen_values = [ev for ev in main_model_part.ProcessInfo[KratosSolid.EIGENVALUE_VECTOR]]
 print ("The Eigenvalues are:")
 print (eigen_values)
-eigen_utility = KratosStructural.EigenvectorToSolutionStepVariableTransferUtility()
+eigen_utility = KratosSolid.EigenvectorToSolutionStepVariableTransferUtility()
 for step in range(len(eigen_values)):
     main_model_part.ProcessInfo[KratosMultiphysics.TIME] = float(step+1)
     eigen_utility.Transfer(main_model_part,step,0)
