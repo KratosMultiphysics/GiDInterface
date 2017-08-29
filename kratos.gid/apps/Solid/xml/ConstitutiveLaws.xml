@@ -47,6 +47,58 @@
         </outputs>
     </CLaw>
     <!--constitutive laws for beams-->
+    <CLaw n="ElasticParameters2D" pn="UserParameters" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+        <inputs>    
+            <parameter n="DENSITY" pn="Density"/>
+	    <parameter n="YOUNGxAREA" pn="EA" v="10000" />
+	    <parameter n="SHEARxAREA" pn="GAr" v="10000" />
+	    <parameter n="YOUNGxINERTIA_X" pn="IxA" v="500" />
+	    <parameter n="YOUNGxINERTIA_Y" pn="IyA" v="500" />
+	    <parameter n="SHEARxPOLAR_INERTIA" pn="GJ" v="500" />
+	</inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="ElasticParameters3D" pn="UserParameters" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+        <inputs>
+            <parameter n="DENSITY" pn="Density"/>
+	    <parameter n="YOUNGxAREA" pn="EA" v="10000" />
+	    <parameter n="SHEARxREDUCED_AREA" pn="GAr" v="10000" />
+	    <parameter n="YOUNGxINERTIA_X" pn="IxA" v="500" />
+	    <parameter n="YOUNGxINERTIA_Y" pn="IyA" v="500" />
+	    <parameter n="SHEARxPOLAR_INERTIA" pn="GJ" v="500" />
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>     
+    <CLaw n="UserDefined2D" pn="UserDefined" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+        <inputs>
+	    <parameter n="AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
+	    <parameter n="INERTIA_X" pn="Ix" v="1.0" />
+	    <parameter n="INERTIA_Y" pn="Iy" v="1.0" />	    
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="UserDefined3D" pn="UserDefined" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+        <inputs>
+	    <parameter n="AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
+	    <parameter n="INERTIA_X" pn="Ix" />
+	    <parameter n="INERTIA_Y" pn="Iy" />	    	  
+            <parameter n="DENSITY" pn="Density"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>     
     <CLaw n="CircularSection2D" pn="Circular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>

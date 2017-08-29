@@ -136,14 +136,96 @@ from __future__ import print_function, absolute_import, division #makes KratosMu
 # Importing the Kratos Library
 from KratosMultiphysics import *
 from KratosMultiphysics.SolidMechanicsApplication import *
-#from beam_sections_python_utility import SetProperties
-#from beam_sections_python_utility import SetMaterialProperties
+from beam_sections_python_utility import SetProperties
+from beam_sections_python_utility import SetMaterialProperties
 
 def AssignMaterial(Properties):
-    # material for solid material
-"
+    # material for solid material"
     foreach {part mat} [write::getMatDict] {
         if {[dict get $mat APPID] in $validApps} {
+	    set law_name [dict get $mat ConstitutiveLaw]
+	    set law_type [[Model::getConstitutiveLaw $law_name] getAttribute "Type"]
+	    set public_name [[Model::getConstitutiveLaw $law_name] getAttribute "pn"]
+	    if {$law_type eq "1D_UR"} {
+		append str "
+    prop_id = [dict get $mat MID];
+    prop = Properties\[prop_id\]
+"
+		if {$public_name eq "Circular"} {
+		    append str "
+    section_type = \"$public_name\"
+    prop_list = \[\]	    
+    prop_list.append([dict get $mat DIAMETER])
+    prop = SetProperties(section_type,prop_list,prop)
+"
+		} elseif {$public_name eq "Tubular"} {
+		    append str "		    
+    section_type = \"$public_name\"
+    prop_list = \[\]		    
+    prop_list.append([dict get $mat DIAMETER])
+    prop_list.append([dict get $mat THICKNESS])
+    prop = SetProperties(section_type,prop_list,prop)
+"
+		} elseif {$public_name eq "Rectangular"} {
+		    append str "		    
+    section_type = \"$public_name\"
+    prop_list = \[\]		    
+    prop_list.append([dict get $mat HEIGHT])
+    prop_list.append([dict get $mat WIDTH])
+    prop = SetProperties(section_type,prop_list,prop)
+" 
+		} elseif {$public_name eq "UserDefined"} {
+		    append str "	
+    section_type = \"$public_name\"
+    prop_list = \[\]		    
+    prop_list.append([dict get $mat AREA])	    
+    prop_list.append([dict get $mat INERTIA_X])
+    prop_list.append([dict get $mat INERTIA_y])
+    prop = SetProperties(section_type,prop_list,prop)
+" 		
+		} elseif {$public_name eq "UserDefined"} {
+		    append str "	
+    section_type = \"$public_name\"
+    prop_list = \[\]		    
+    prop_list.append([dict get $mat AREA])	    
+    prop_list.append([dict get $mat INERTIA_X])
+    prop_list.append([dict get $mat INERTIA_y])
+    prop = SetProperties(section_type,prop_list,prop)
+"
+		} elseif {$public_name eq "UserParameters"} {
+		    append str "	
+    section_type = \"UserDefined\"
+    prop_list = \[\]		    
+    prop_list.append([dict get $mat YOUNGxAREA])	    
+    prop_list.append([dict get $mat SHEARxREDUCED_AREA])
+    prop_list.append([dict get $mat YOUNGxINERTIA_X])
+    prop_list.append([dict get $mat YOUNGxINERTIA_Y])
+    prop_list.append([dict get $mat SHEARxPOLAR_INERTIA])
+    prop = SetMaterialProperties(section_type,prop_list,prop)
+"
+		} else {
+		    append str "	
+    section_type = \"$public_name\"
+    prop_list = \[\]		    
+    prop_list.append([dict get $mat SIZE])
+    prop = SetProperties(section_type,prop_list,prop)
+"
+		}
+	    } {
+		append str "
+    prop_id = [dict get $mat MID];
+    prop = Properties\[prop_id\]
+    mat = [dict get $mat ConstitutiveLaw]()
+    prop.SetValue(CONSTITUTIVE_LAW, mat.Clone())
+"
+		    
+	    }
+        }
+    }
+    
+if 0 {
+    foreach {part mat} [write::getMatDict] {
+        if {[dict get $mat APPID] in $validApps} {   
             append str "
     prop_id = [dict get $mat MID];
     prop = Properties\[prop_id\]
@@ -152,7 +234,7 @@ def AssignMaterial(Properties):
         "
         }
     }
-    
+}    
     write::WriteString $str
     write::CloseFile
     
