@@ -157,11 +157,6 @@ gid_output.ExecuteFinalize()
 for process in list_of_processes:
     process.ExecuteFinalize()
     
-# Writing an output file
-output_name = 'Eigenvalues.txt'
-with open(output_name, 'w') as output:
-    output.write ("The Eigenvalues are:")
-    output.write (str(eigen_values))
 
 # Time control
 print("Analysis Completed. Elapsed Time = %.3f" % (timer.perf_counter() - initial_time)," seconds.")
