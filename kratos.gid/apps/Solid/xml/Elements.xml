@@ -54,6 +54,10 @@
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle"      nodes="3" KratosName="SmallDisplacementBbarElement2D3N"/>
+      <item GeometryType="Triangle"      nodes="6" KratosName="SmallDisplacementBbarElement2D6N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementBbarElement2D4N"/>
+      <item GeometryType="Quadrilateral" nodes="8" KratosName="SmallDisplacementBbarElement2D8N"/>
+      <item GeometryType="Quadrilateral" nodes="9" KratosName="SmallDisplacementBbarElement2D9N"/>
    </TopologyFeatures>
 
     <!-- here we add the block of features which we require from the constitutive law-->
@@ -176,6 +180,12 @@
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4"  KratosName="SmallDisplacementBbarElement3D4N"/>
+      <item GeometryType="Tetrahedra" nodes="10" KratosName="SmallDisplacementBbarElement3D10N"/>
+      <item GeometryType="Hexahedra"  nodes="8"  KratosName="SmallDisplacementBbarElement3D8N"/>
+      <item GeometryType="Hexahedra"  nodes="20" KratosName="SmallDisplacementBbarElement3D20N"/>
+      <item GeometryType="Hexahedra"  nodes="27" KratosName="SmallDisplacementBbarElement3D27N"/>
+      <item GeometryType="Prism"      nodes="6"  KratosName="SmallDisplacementBbarElement3D6N"/>
+      <item GeometryType="Prism"      nodes="15" KratosName="SmallDisplacementBbarElement3D15N"/>
     </TopologyFeatures>
     
     <!-- here we add the block of features which we require from the constitutive law-->

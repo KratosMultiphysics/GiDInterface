@@ -16,8 +16,8 @@ proc Solid::xml::Init { } {
      Model::getConditions Conditions.xml
      Model::getSolvers "../../Common/xml/Solvers.xml"
 
-     Model::ForgetElement SmallDisplacementBbarElement2D    
-     Model::ForgetElement SmallDisplacementBbarElement3D
+     # Model::ForgetElement SmallDisplacementBbarElement2D    
+     # Model::ForgetElement SmallDisplacementBbarElement3D
     
 }
 
