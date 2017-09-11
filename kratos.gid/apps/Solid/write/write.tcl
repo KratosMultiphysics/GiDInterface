@@ -241,9 +241,14 @@ if 0 {
 }
 
 proc Solid::write::getPropertiesList {parts_un} {
-    variable mat_dict
+    set mat_dict [write::getMatDict]
     set props_dict [dict create]
     set props [list ]
+
+
+    set python_module "assign_materials_process"
+    set process_name  "AssignMaterialsProcess"
+    set help  "This process creates a material and assigns it properties"
     
     #set doc $gid_groups_conds::doc
     #set root [$doc documentElement]
@@ -256,9 +261,13 @@ proc Solid::write::getPropertiesList {parts_un} {
         if { [dict exists $mat_dict $group] } {
             set mid [dict get $mat_dict $group MID]
             set prop_dict [dict create]
-            dict set prop_dict "model_part_name" $sub_model_part
-            dict set prop_dict "properties_id" $mid
-            set constitutive_law [dict get $mat_dict $group ConstitutiveLaw]
+	    set constitutive_law [dict get $mat_dict $group ConstitutiveLaw]
+	    set const_law_application [[Model::getConstitutiveLaw $constitutive_law] getAttribute "ImplementedInApplication"]
+	    dict set prop_dict "python_module" $python_module
+	    dict set prop_dict "kratos_module" $const_law_application
+	    dict set prop_dict "help" $help
+	    dict set prop_dict "process_name" $process_name 
+ 
             set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
             set variables_dict [dict create]
             foreach prop [dict keys [dict get $mat_dict $group] ] {
@@ -267,11 +276,12 @@ proc Solid::write::getPropertiesList {parts_un} {
                 }
             }
             set material_dict [dict create]
-            set const_law_application [[Model::getConstitutiveLaw $constitutive_law] getAttribute "ImplementedInApplication"]
             set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law] "."]
+	    dict set material_dict "model_part_name" $sub_model_part
+            dict set material_dict "properties_id" $mid
             dict set material_dict constitutive_law [dict create name $const_law_fullname]
-            dict set material_dict Variables $variables_list
-            dict set material_dict Tables dictnull
+            dict set material_dict variables $variables_list
+            dict set material_dict tables dictnull
             dict set prop_dict Parameters $material_dict
             
             lappend props $prop_dict
