@@ -322,7 +322,7 @@
     </CLaw>
     
     <!--constitutive laws for beams-->
-    <CLaw n="ElasticParameters2D" pn="UserParameters" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="ElasticParameters2D" pn="UserParameters" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>    
             <parameter n="DENSITY" pn="Density"/>
@@ -335,7 +335,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="ElasticParameters3D" pn="UserParameters" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="ElasticParameters3D" pn="UserParameters" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
@@ -348,7 +348,7 @@
         <outputs>         
         </outputs>
     </CLaw>     
-    <CLaw n="UserDefined2D" pn="UserDefined" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="UserDefined2D" pn="UserDefined" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
 	    <parameter n="AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
@@ -361,7 +361,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="UserDefined3D" pn="UserDefined" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="UserDefined3D" pn="UserDefined" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
 	    <parameter n="AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
@@ -374,7 +374,7 @@
         <outputs>         
         </outputs>
     </CLaw>     
-    <CLaw n="CircularSection2D" pn="Circular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="CircularSection2D" pn="Circular" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
 	    <parameter n="DIAMETER" pn="Diameter" v="0.1" unit_magnitude="L" units="m" />
@@ -385,7 +385,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="CircularSection3D" pn="Circular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="CircularSection3D" pn="Circular" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
 	    <parameter n="DIAMETER" pn="Diameter" v="0.1" unit_magnitude="L" units="m" />
@@ -396,7 +396,7 @@
         <outputs>         
         </outputs>
     </CLaw>    
-    <CLaw n="TubularSection2D" pn="Tubular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="TubularSection2D" pn="Tubular" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="DIAMETER" pn="Diameter" v="0.1" unit_magnitude="L" units="m" />
@@ -408,7 +408,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="TubularSection3D" pn="Tubular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="TubularSection3D" pn="Tubular" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="DIAMETER" pn="Diameter" v="0.1" unit_magnitude="L" units="m" />
@@ -420,7 +420,7 @@
         <outputs>         
         </outputs>
     </CLaw>    
-    <CLaw n="RectangularSection2D" pn="Rectangular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="RectangularSection2D" pn="Rectangular" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="HEIGHT" pn="Height" v="0.1" unit_magnitude="L" units="m" />
@@ -432,7 +432,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="RectangularSection3D" pn="Rectangular" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="RectangularSection3D" pn="Rectangular" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="HEIGHT" pn="Height" v="0.1" unit_magnitude="L" units="m" />
@@ -444,7 +444,7 @@
         <outputs>         
         </outputs>
     </CLaw>    
-    <CLaw n="IPNSection2D" pn="IPN" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="IPNSection2D" pn="IPN" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="80"/>
@@ -455,7 +455,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="IPNSection3D" pn="IPN" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="IPNSection3D" pn="IPN" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="80"/>
@@ -466,7 +466,7 @@
         <outputs>         
         </outputs>
     </CLaw>    
-    <CLaw n="IPESection2D" pn="IPE" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="IPESection2D" pn="IPE" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="80"/>
@@ -477,7 +477,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="IPESection3D" pn="IPE" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="IPESection3D" pn="IPE" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="80"/>
@@ -488,7 +488,7 @@
         <outputs>         
         </outputs>
     </CLaw>    
-    <CLaw n="HEBSection2D" pn="HEB" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="HEBSection2D" pn="HEB" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="100"/>
@@ -499,7 +499,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="HEBSection3D" pn="HEB" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="HEBSection3D" pn="HEB" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="100"/>
@@ -510,7 +510,7 @@
         <outputs>         
         </outputs>
     </CLaw>    
-    <CLaw n="HEASection2D" pn="HEA" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="HEASection2D" pn="HEA" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="100"/>
@@ -521,7 +521,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="HEASection3D" pn="HEA" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="HEASection3D" pn="HEA" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="100"/>
@@ -532,7 +532,7 @@
         <outputs>         
         </outputs>
     </CLaw>    
-    <CLaw n="HEMSection2D" pn="HEM" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="HEMSection2D" pn="HEM" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="100"/>
@@ -543,7 +543,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="HEMSection3D" pn="HEM" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="HEMSection3D" pn="HEM" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="100"/>
@@ -554,7 +554,7 @@
         <outputs>         
         </outputs>
     </CLaw>    
-    <CLaw n="UPNSection2D" pn="UPN" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="UPNSection2D" pn="UPN" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="80"/>
@@ -565,7 +565,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="UPNSection3D" pn="UPN" Type="1D_UR" ImplementedInApplication="ConstitutiveModelsApplication"
+    <CLaw n="UPNSection3D" pn="UPN" Type="1D_UR" ImplementedInApplication="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
       <inputs>
    	    <parameter n="SIZE" pn="Profile Size" v="80"/>

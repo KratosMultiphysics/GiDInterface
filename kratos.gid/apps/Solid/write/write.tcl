@@ -118,6 +118,8 @@ proc Solid::write::getLastConditionId { } {
     return $top
 }
 
+
+# Custom files
 # Custom files
 proc Solid::write::WriteMaterialsFile { } {
     variable validApps
@@ -128,7 +130,18 @@ proc Solid::write::WriteMaterialsFile { } {
     write::OpenFile $filename
     write::WriteJSON $mats_json
     write::CloseFile
+}
 
+proc Solid::write::WriteMaterialsFileOld { } {
+    variable validApps
+    
+    set filename "Materials.json"
+    set mats_json [getPropertiesList SLParts]
+
+    write::OpenFile $filename
+    write::WriteJSON $mats_json
+    write::CloseFile
+    
     write::OpenFile "materials.py"
     
     set str "
@@ -180,18 +193,9 @@ def AssignMaterial(Properties):
     prop_list = \[\]		    
     prop_list.append([dict get $mat AREA])	    
     prop_list.append([dict get $mat INERTIA_X])
-    prop_list.append([dict get $mat INERTIA_y])
+    prop_list.append([dict get $mat INERTIA_Y])
     prop = SetProperties(section_type,prop_list,prop)
 " 		
-		} elseif {$public_name eq "UserDefined"} {
-		    append str "	
-    section_type = \"$public_name\"
-    prop_list = \[\]		    
-    prop_list.append([dict get $mat AREA])	    
-    prop_list.append([dict get $mat INERTIA_X])
-    prop_list.append([dict get $mat INERTIA_y])
-    prop = SetProperties(section_type,prop_list,prop)
-"
 		} elseif {$public_name eq "UserParameters"} {
 		    append str "	
     section_type = \"UserDefined\"
@@ -237,18 +241,18 @@ if 0 {
 }    
     write::WriteString $str
     write::CloseFile
-    
+
 }
 
 proc Solid::write::getPropertiesList {parts_un} {
     set mat_dict [write::getMatDict]
     set props_dict [dict create]
     set props [list ]
-
+    set sections [list ]
 
     set python_module "assign_materials_process"
     set process_name  "AssignMaterialsProcess"
-    set help  "This process creates a material and assigns it properties"
+    set help  "This process creates a material and assigns its properties"
     
     #set doc $gid_groups_conds::doc
     #set root [$doc documentElement]
@@ -259,10 +263,18 @@ proc Solid::write::getPropertiesList {parts_un} {
         set group [get_domnode_attribute $gNode n]
         set sub_model_part [write::getMeshId Parts $group]
         if { [dict exists $mat_dict $group] } {
-            set mid [dict get $mat_dict $group MID]
-            set prop_dict [dict create]
-	    set constitutive_law [dict get $mat_dict $group ConstitutiveLaw]
-	    set const_law_application [[Model::getConstitutiveLaw $constitutive_law] getAttribute "ImplementedInApplication"]
+            set law_id [dict get $mat_dict $group MID]
+	    set law_name [dict get $mat_dict $group ConstitutiveLaw]
+	    set law_type [[Model::getConstitutiveLaw $law_name] getAttribute "Type"]
+	    
+	    if {$law_type eq "1D_UR"} {
+		set python_module "assign_sections_process"
+		set process_name  "AssignSectionsProcess"
+		set help  "This process creates a section and assigns its properties"
+	    }
+	    
+	    set prop_dict [dict create]		
+	    set const_law_application [[Model::getConstitutiveLaw $law_name] getAttribute "ImplementedInApplication"]
 	    dict set prop_dict "python_module" $python_module
 	    dict set prop_dict "kratos_module" $const_law_application
 	    dict set prop_dict "help" $help
@@ -275,21 +287,34 @@ proc Solid::write::getPropertiesList {parts_un} {
                     dict set variables_list $prop [write::getFormattedValue [dict get $mat_dict $group $prop]]
                 }
             }
-            set material_dict [dict create]
-            set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law] "."]
+
+	    set material_dict [dict create]
 	    dict set material_dict "model_part_name" $sub_model_part
-            dict set material_dict "properties_id" $mid
-            dict set material_dict constitutive_law [dict create name $const_law_fullname]
+            dict set material_dict "properties_id" $law_id
+
+	    if {$law_type eq "1D_UR"} {
+		set public_name [[Model::getConstitutiveLaw $law_name] getAttribute "pn"]
+		dict set material_dict "section_type" $public_name
+	    } else { 
+		set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $law_name] "."]
+		dict set material_dict constitutive_law [dict create name $const_law_fullname]
+	    }
             dict set material_dict variables $variables_list
             dict set material_dict tables dictnull
             dict set prop_dict Parameters $material_dict
-            
-            lappend props $prop_dict
+	    
+            if {$law_type eq "1D_UR"} {
+		lappend sections $prop_dict
+	    } else {
+		lappend props $prop_dict
+	    }
         }
 
     }
     
     dict set props_dict material_models_list $props
+    dict set props_dict material_models_list $sections
+    
     return $props_dict
 }
 
