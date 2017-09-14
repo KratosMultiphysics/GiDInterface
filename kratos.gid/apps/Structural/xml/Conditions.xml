@@ -153,7 +153,7 @@
   <ConditionItem n="LinePressure2D" pn="Pressure on lines" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
+		 ElementType="Line" ProcessName="AssignScalarVariableToConditionsProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE ">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
@@ -169,7 +169,7 @@
   <ConditionItem n="LinePressure2DAxisym" pn="Pressure on lines" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
+		 ElementType="Line" ProcessName="AssignScalarVariableToConditionsProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE ">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineLoadCondition2D2N"/>
@@ -185,7 +185,7 @@
   <ConditionItem n="SurfacePressure3D" pn="Pressure on surfaces" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess" help="Normal Pressure on surfaces, oriented pointing against the surface outer normal"
+		 ElementType="Surface" ProcessName="AssignScalarVariableToConditionsProcess" help="Normal Pressure on surfaces, oriented pointing against the surface outer normal"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE ">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
