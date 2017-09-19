@@ -119,7 +119,8 @@ proc Kratos::ChangeMenus { } {
     GidChangeDataLabel "Materials" ""
     GidChangeDataLabel "Interval Data" ""
     GidChangeDataLabel "Problem Data" ""
-    GidChangeDataLabel "Local axes" "gid_groups_conds::local_axes_menu %W"
+    GidChangeDataLabel "Local axes" ""
+    # GidChangeDataLabel "Local axes" "gid_groups_conds::local_axes_window"
     
     GiDMenu::InsertOption "Help" [list ---] end PREPOST {} "" "" insertafter
     GiDMenu::InsertOption "Help" [list [_ "Visit %s web" Kratos]] end PREPOST [list VisitWeb "http://www.cimne.com/kratos"] "" "" insertafter
@@ -153,58 +154,4 @@ proc Kratos::Splash { } {
     update
     
     GiD_Set SplashWindow $prev_splash_state
-}
-
-
-proc Kratos::LocalAxesMenu { menu } {    
-    #if { [$menu index end] ne "none" } { return }
-    $menu delete 0 end
-    set local_axes [GiD_Info localaxes]
-    foreach i [list Point Line Surface] name [list [_ Points] [_ Lines] [_ Surfaces]] {
-        $menu add cascade -label $name -menu $menu.m$i
-        destroy $menu.m$i
-        set m [menu $menu.m$i -tearoff 0]
-        if { [lsearch "Line Surface" $i] != -1 } {
-            $m add command -label [_ "Assign Automatic"] -command [list GiD_Process \
-                    escape escape escape escape Data Conditions AssignCond ${i}_Local_axes \
-                    change -Automatic-]
-            $m add command -label [_ "Assign Automatic alt"] -command [list GiD_Process \
-                    escape escape escape escape Data Conditions AssignCond ${i}_Local_axes \
-                    change -Automatic_alt-]
-            $m add separator
-        }
-        set idx 0
-        foreach j $local_axes {
-            $m add command -label [_ "Assign '%s'" $j] -command [list GiD_Process \
-                    escape escape escape escape Data Conditions AssignCond ${i}_Local_axes \
-                    change $j]
-            incr idx
-        }
-        if { $idx } { $m add separator }
-        $m add command -label [_ "Unassign"] -command [list GiD_Process \
-                escape escape escape escape Data Conditions AssignCond ${i}_Local_axes \
-                Unassign]
-        
-        $m add separator
-        $m add command -label [_ Draw] -command [list GiD_Process \
-                escape escape escape escape Data Conditions DrawCond -LocalAxes- \
-                ${i}_Local_axes -draw-]
-    }
-    set ns [list [_ "Define#C#menu"] --- [_ "Draw#C#menu"] [_ "Draw all#C#menu"] \
-            --- [_ "Delete#C#menu"] [_ "Delete all#C#menu"]]
-    set cs {
-        "Data LocalAxes DefineLocAxes"
-        {} "Data LocalAxes DrawLocAxes"
-        "Data LocalAxes DrawLocAxes -All-"
-        {} "Data LocalAxes DeleteLA"
-        "Data LocalAxes DeleteAllLA"
-    }
-    $menu add separator
-    foreach n $ns c $cs {
-        if { $n eq "---" } {
-            $menu add separator
-        } else {
-            $menu add command -label $n -command [concat "GiD_Process Mescape" $c]
-        }
-    }
 }

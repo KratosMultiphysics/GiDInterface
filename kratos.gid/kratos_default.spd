@@ -25,6 +25,11 @@
 		</value>
 	</blockdata>
 	<procs>
+		<proc n='UpdateParts' args='args'>
+			<![CDATA[
+	  return [spdAux::ProcUpdateParts $domNode $args]
+	  ]]>
+		</proc>
 		<proc n='OkNewCondition' args='args'>
 			<![CDATA[
 	  return [spdAux::ProcOkNewCondition $domNode $args]
