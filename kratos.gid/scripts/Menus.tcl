@@ -101,18 +101,20 @@ proc Kratos::ChangeMenus { } {
     variable kratos_private
     set tomode "developer mode"
     set fromode "release mode"
+    set pos -1
     if {$kratos_private(DevMode) eq "dev"} {set tomode "release mode";set fromode "developer mode"}
-    GiDMenu::InsertOption "Kratos" [list "Kratos data" ] 0 PRE [list gid_groups_conds::open_conditions menu] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "---"] 1 PRE "" "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "You are in $fromode" ] 2 PRE [list ] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "Switch to $tomode" ] 3 PRE [list Kratos::SwitchMode] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Kratos data" ] [incr pos] PRE [list gid_groups_conds::open_conditions menu] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Local axes window" ] [incr pos] PRE [list gid_groups_conds::local_axes_window] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "You are in $fromode" ] [incr pos] PRE [list ] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Switch to $tomode" ] [incr pos] PRE [list Kratos::SwitchMode] "" "" replace =
 
     if {$::Kratos::kratos_private(UseWizard)} {
-        GiDMenu::InsertOption "Kratos" [list "---"] 4 PRE "" "" "" replace =
-        GiDMenu::InsertOption "Kratos" [list "Wizard window" ] 5 PRE [list Wizard::CreateWindow] "" "" replace =
+        GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+        GiDMenu::InsertOption "Kratos" [list "Wizard window" ] [incr pos] PRE [list Wizard::CreateWindow] "" "" replace =
     }
-    GiDMenu::InsertOption "Kratos" [list "---"] 6 PRE "" "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "About Kratos" ] 7 PRE [list Kratos::About] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "About Kratos" ] [incr pos] PRE [list Kratos::About] "" "" replace =
     GidChangeDataLabel "Data units" ""
     GidChangeDataLabel "Interval" ""
     GidChangeDataLabel "Conditions" ""
