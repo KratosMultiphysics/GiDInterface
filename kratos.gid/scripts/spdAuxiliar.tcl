@@ -2063,6 +2063,9 @@ proc spdAux::ProcGetParts {domNode args} {
 
 proc spdAux::ProcUpdateParts {domNode args} {
     # Algo comun?
+    # W "Common"
 
     # Active app executexml
+    set nodeApp [GetAppIdFromNode $domNode]
+    apps::ExecuteOnAppXML $nodeApp UpdateParts $domNode
 }

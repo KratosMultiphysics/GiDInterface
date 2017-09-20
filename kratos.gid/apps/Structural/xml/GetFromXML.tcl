@@ -90,4 +90,26 @@ proc Structural::xml::ProcCheckGeometrySolid {domNode args} {
 }
 
 
+proc Structural::xml::UpdateParts {domNode args} {
+    set current [lindex [$domNode selectNodes "./group"] end]
+    set element_name [get_domnode_attribute [$current selectNodes "./value\[@n = 'Element'\]"] v]
+    set element [Model::getElement $element_name]
+    set LocalAxesAutomaticFunction [$element getAttribute "LocalAxesAutomaticFunction"]
+    if {$LocalAxesAutomaticFunction ne ""} {
+        $LocalAxesAutomaticFunction $current
+    }
+}
+
+proc Structural::xml::AddLocalAxesToBeamElement { current } {
+    # set y_axis_deviation [get_domnode_attribute [$current selectNodes "./value\[@n = 'LOCAL_AXIS_ROTATION'\]"] v]
+    # W $y_axis_deviation
+    set group [get_domnode_attribute $current n]
+    if {[GiD_EntitiesGroups get $group lines -count]} {
+        foreach line [GiD_EntitiesGroups get $group lines] {
+            GiD_Process MEscape Data Conditions AssignCond line_Local_axes change -Automatic- $line escape escape
+            #set raw [lindex [lindex [GiD_Info conditions -localaxesmat line_Local_axes mesh $line] 0] 3]
+        }
+    }
+}
+
 Structural::xml::Init
