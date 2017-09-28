@@ -11,10 +11,10 @@ proc PotentialFluid::write::writeModelPartEvent { } {
     Fluid::write::AddValidApps "PotentialFluid"
     set err [Fluid::write::Validate]
     if {$err ne ""} {error $err}
-    write::initWriteData $Fluid::write::PartsUN "PTFLMaterials"
+    write::initWriteData [::Fluid::GetAttribute parts_un] "PTFLMaterials"
     write::writeModelPartData
     Fluid::write::writeProperties
-    write::writeMaterials $Fluid::write::validApps
+    write::writeMaterials [::Fluid::GetAttribute validApps]
     write::writeNodalCoordinatesOnParts
     write::writeElementConnectivities
     Fluid::write::writeConditions
