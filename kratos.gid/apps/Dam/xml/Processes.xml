@@ -12,17 +12,6 @@
     </inputs>
   </Process>
 
-
-<!--
-    <Process n="AssignVectorComponentsToNodesProcess" pn="Assign a vector value process" python_module="assign_vector_components_to_nodes_process"
-           kratos_module="KratosMultiphysics.SolidMechanicsApplication"
-	   help="This process fixes the selected components of a given vector variable">
-    <inputs>
-      <parameter n="value" pn="Value" type="vector" enabled="1" function="1" v="0.0,0.0,0.0"/>
-    </inputs>
-  </Process>
--->
-
    <!---  Uniform pressure -->
   <Process n="ImposeUniformPressureProcess" pn="Impose vector value by components process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
@@ -64,7 +53,6 @@
     </inputs>
   </Process>
   
-  
     <!---  Constant Reservoir Temperature -->   
   <Process n="ImposeReservoirConstantTemperatureConditionProcess" pn="Impose constant reservoir temeperature value" python_module="impose_reservoir_temperature_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
@@ -91,7 +79,22 @@
         <parameter n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
     </inputs>
   </Process>  
-
+  
+    
+   <!---  Heat Fluxes T Sol Air -->
+    <Process n="ImposeTSolAirHeatFluxProcess" pn="Impose thermal parameters for solving the thermal problem" python_module="impose_t_sol_air_heat_flux_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
+    <inputs>
+        <parameter n="h_0" pn="H 0" type="double" v="2400"/>
+        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="1.0" />
+        <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="table" v="" />
+        <parameter n="emisivity" pn="Emisivity" type="double" v="2400"/>
+        <parameter n="delta_R" pn="Delta R" type="double" v="1.0" />
+        <parameter n="absortion_index" pn="Absortion Index" type="double" v="1000.0" />
+        <parameter n="total_insolation" pn="Total Insolation" type="double" v="1000.0" />
+    </inputs>
+  </Process>
+  
 <!---  CONDITION PROCESSES --> 
 <!---  Point Loads -->       
   <Process n="ApplyLoadVectorDamTableProcess" pn="Constant vector value" python_module="apply_load_vector_dam_table_process"
