@@ -86,6 +86,16 @@ proc Dam::write::UpdateMaterials { } {
 proc Dam::write::writeConditions { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions "DamLoads"]
+    set ThermalConditionGroups [write::writeConditions "DamThermalLoads"]
+
+    if {$ConditionsDictGroupIterators ne "" || $ThermalConditionGroups ne ""} {
+        lappend ConditionsDictGroupIterators $ThermalConditionGroups
+    }
+
+    if {$ConditionsDictGroupIterators eq "" || $ThermalConditionGroups ne ""} {
+        set ConditionsDictGroupIterators [write::writeConditions "DamThermalLoads"]
+    }
+    
 }
 
 proc Dam::write::writeMeshes { } {
@@ -101,7 +111,8 @@ proc Dam::write::writeMeshes { } {
     writeNodalConditions "DamNodalConditions"
     
     # A Condition y a meshes-> salvo lo que no tenga topologia
-    writeLoads
+    writeLoads "DamLoads"
+    writeLoads "DamThermalLoads"
 }
 
 proc Dam::write::writeNodalConditions { keyword } {
@@ -128,12 +139,12 @@ proc Dam::write::writeNodalConditions { keyword } {
     }
 }
 
-proc Dam::write::writeLoads { } {
+proc Dam::write::writeLoads { baseUN } {
     variable TableDict
     variable ConditionsDictGroupIterators
     
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "DamLoads"]/condition/group"
+    set xp1 "[spdAux::getRoute $baseUN]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set condid [get_domnode_attribute [$group parent] n]
         set groupid [get_domnode_attribute $group n]
@@ -221,7 +232,7 @@ proc Dam::write::GetPrinTables {} {
     set listaTablas [list ]
     set listaFiles [list ]
     set num 0
-    set origins [list "DamLoads" "DamNodalConditions"]
+    set origins [list "DamLoads" "DamThermalLoads" "DamNodalConditions"]
     foreach unique_name $origins {
         set xpathCond "[spdAux::getRoute $unique_name]/condition/group/value\[@type='tablefile'\]"
         foreach node [$root selectNodes $xpathCond] {
