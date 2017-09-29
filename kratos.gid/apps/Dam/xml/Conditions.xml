@@ -3,9 +3,9 @@
 
     <!---  Conditions: THERMAL PARAMETERS -->  
   <ConditionItem n="ThermalParameters3D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
-	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Volume" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Volume" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
     help="Application of the thermal parameters into the body">
     <TopologyFeatures>
     </TopologyFeatures>
@@ -21,9 +21,9 @@
   </ConditionItem>
   
  <ConditionItem n="ThermalParameters2D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
-	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Surface" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
     help="Application of the thermal parameters into the body">
     <TopologyFeatures>
     </TopologyFeatures>
@@ -37,9 +37,42 @@
     <outputs>
     </outputs>
   </ConditionItem>
+
+    
+      <!---  Conditions: HEAT FLUX  -->  
+  <ConditionItem n="FluxCondition2D" pn="Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Line" ProcessName="ImposeUniformHeatFluxes" VariableName="FACE_HEAT_FLUX"
+    help="Uniform Heat flux">
+    <TopologyFeatures>
+        <item  GeometryType="Line" nodes="2" KratosName="FluxCondition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+  <ConditionItem n="FluxCondition3D" pn="Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="ImposeUniformHeatFluxes" VariableName="FACE_HEAT_FLUX"
+    help="Uniform Heat flux">
+    <TopologyFeatures>
+        <item  GeometryType="Triangle" nodes="3" KratosName="FluxCondition3D3N"/>
+        <item  GeometryType="Quadrilateral" nodes="4" KratosName="FluxCondition3D4N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>  
+  
+
   
       <!---  Conditions: HEAT FLUX T_SOL_AIR PARAMETERS -->  
-  <ConditionItem n="FluxCondition2D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+  <ConditionItem n="TSolAirFluxCondition2D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="ImposeTSolAirHeatFluxProcess" VariableName="FACE_HEAT_FLUX"
@@ -53,7 +86,7 @@
     </outputs>
   </ConditionItem>
   
-    <ConditionItem n="FluxCondition3D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+    <ConditionItem n="TSolAirFluxCondition3D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface" ProcessName="ImposeTSolAirHeatFluxProcess" VariableName="FACE_HEAT_FLUX"
