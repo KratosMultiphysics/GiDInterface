@@ -119,9 +119,9 @@
   <Process n="ApplyLoadVectorDamTableProcess" pn="Apply a vector value over a condition" python_module="apply_load_vector_dam_table_proces"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process sets a vector variable value over a condition" check="DirectorVectorNonZero direction"> 
     <inputs>
-      <parameter n="modulus" pn="Modulus" type="double"  v="1.0"/>
-      <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" unit_magnitude="0" units="0" />
-      <parameter n="table" pn="Value table filename" type="tablefile" v=""/>
+        <parameter n="modulus" pn="Modulus" type="double"  v="1.0"/>
+        <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" unit_magnitude="0" units="0" />
+        <parameter n="table" pn="Value table filename" type="tablefile" v=""/>
     </inputs>
   </Process>
   
@@ -202,9 +202,10 @@
   </Process>
   
 <!---  Added Mass Condition --> 
-  <Process n="AddedMassProcess" pn="Adding an extra mass due to reservoir effects" python_module="impose_water_loads_condition_process" kratos_module="KratosMultiphysics.DamApplication" help="" > 
+  <Process n="AddedMassProcess" pn="Adding an extra mass due to reservoir effects" python_module="impose_water_loads_condition_process"
+   kratos_module="KratosMultiphysics.DamApplication" help="" > 
     <inputs>
-		<parameter n="Modify" pn="Modify" type="bool" v="1"/>
+		    <parameter n="Modify" pn="Modify" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Y" values="X,Y,Z"/>
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>

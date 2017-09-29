@@ -384,12 +384,11 @@
   </ConditionItem>
 
     <!---  Added Mass condition --> 
-<!--
-    <ConditionItem n="AddedMass2D" pn="Added Mass" ImplementedInFile="special_condition_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+  <ConditionItem n="AddedMass2D" pn="Added Mass" ImplementedInFile="special_condition_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical" 
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="AddedMassProcess" help="Added mass contribution"
-    VariableName="ADDED_MASS">
+  VariableName="ADDED_MASS">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AddedMassCondition2D2N"/>
     </TopologyFeatures>
@@ -400,7 +399,7 @@
   </ConditionItem>
   
   <ConditionItem n="AddedMass3D" pn="Added Mass" ImplementedInFile="special_condition_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface" ProcessName="AddedMassProcess" help="Added mass contributions"
 	VariableName="ADDED_MASS">
@@ -413,7 +412,6 @@
     <outputs>
     </outputs>
   </ConditionItem>
--->
   
   <!---  Conditions: For the acustic problem --> 
   <!---  Free Surface condition --> 
