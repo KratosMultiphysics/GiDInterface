@@ -198,11 +198,11 @@ proc Dam::examples::TreeAssignationDam {args} {
 		}
 	
 	
-	# Load Conditions
+	# Thermal Load Conditions
 	
 		# Thermal Parameters 1
-		set damLoadConditions [spdAux::getRoute "DamLoads"]
-		set thermalparameter "$damLoadConditions/condition\[@n='ThermalParameters2D'\]"
+		set damThermalLoadConditions [spdAux::getRoute "DamThermalLoads"]
+		set thermalparameter "$damThermalLoadConditions/condition\[@n='ThermalParameters2D'\]"
 		set thermalparameternode1 [spdAux::AddConditionGroupOnXPath $thermalparameter Thermal_Parameters_1]
 		
 		# Thermal Parameters 2
@@ -217,7 +217,10 @@ proc Dam::examples::TreeAssignationDam {args} {
 			}
 		}
 		
+	# Load Conditions
+   
 		# Hydrostatic Load
+        set damLoadConditions [spdAux::getRoute "DamLoads"]
 		set hydro "$damLoadConditions/condition\[@n='HydroLinePressure2D'\]"
 		set hydronode [spdAux::AddConditionGroupOnXPath $hydro Hydrostatic]
 		set props_hydro [list Modify 0 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Spe_weight 10000 Water_level 20.0]
