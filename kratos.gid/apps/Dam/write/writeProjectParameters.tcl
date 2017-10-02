@@ -31,6 +31,13 @@ proc Dam::write::getParametersDict { } {
         dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
         dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
         dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
+        set consider_self_weight [write::getValue DamSelfweight ConsiderSelf]
+        if {$consider_self_weight eq "Yes"} {
+            dict set problemDataDict consider_selfweight true
+            dict set problemDataDict selfweight_direction [write::getValue DamSelfweight GravityDirection]
+        } else {
+            dict set problemDataDict consider_selfweight false
+        }
         dict set problemDataDict streamlines_utility [Dam::write::StremalinesUtility]
         ### Add section to document
         dict set projectParametersDict problem_data $problemDataDict
