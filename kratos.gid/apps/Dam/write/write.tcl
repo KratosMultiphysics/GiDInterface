@@ -93,14 +93,12 @@ proc Dam::write::writeConditions { } {
     set ThermalConditionGroups [write::writeConditions "DamThermalLoads"]
 
     if {$ConditionsDictGroupIterators ne "" && $ThermalConditionGroups ne ""} {
-        lappend ConditionsDictGroupIterators $ThermalConditionGroups
+        set ConditionsDictGroupIterators [concat $ConditionsDictGroupIterators $ThermalConditionGroups]
     }
 
     if {$ConditionsDictGroupIterators eq "" && $ThermalConditionGroups ne ""} {
         set ConditionsDictGroupIterators [write::writeConditions "DamThermalLoads"]
     }
-
-    
 }
 
 proc Dam::write::writeMeshes { } {
