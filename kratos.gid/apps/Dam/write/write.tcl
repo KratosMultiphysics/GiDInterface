@@ -25,12 +25,16 @@ proc Dam::write::Init { } {
 proc Dam::write::writeCustomFilesEvent { } {
     
     set damTypeofProblem [write::getValue DamTypeofProblem]
+    set damSelfweight [write::getValue DamSelfweight ConsiderSelf]
     if {$damTypeofProblem eq "Acoustic"} {
         write::CopyFileIntoModel "python/dam_acoustic_script.py"
         write::RenameFileInModel "dam_acoustic_script.py" "MainKratos.py"
     } elseif {$damTypeofProblem eq "Modal-Analysis" } {
         write::CopyFileIntoModel "python/dam_eigen_script.py"
         write::RenameFileInModel "dam_eigen_script.py" "MainKratos.py"
+    } elseif {$damSelfweight eq "Yes" } {
+        write::CopyFileIntoModel "python/dam_main_selfweight.py"
+        write::RenameFileInModel "dam_main_selfweight.py" "MainKratos.py"
     } else {
         write::CopyFileIntoModel "python/dam_main.py"
         write::RenameFileInModel "dam_main.py" "MainKratos.py"
