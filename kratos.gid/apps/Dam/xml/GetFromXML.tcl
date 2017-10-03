@@ -42,8 +42,8 @@ proc Dam::xml::CustomTree { args } {
         }
         
         ## It has special filter
-        set add_special_list [list TEMPERATURE]
-        set add_special_list_pn [list Temperature]
+        set add_special_list [list TEMPERATURE FACE_HEAT_FLUX]
+        set add_special_list_pn [list "Temperature" "Heat Fluxes"]
         foreach it $add_special_list pn $add_special_list_pn {
                gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $it pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Thermo-Mechanical\]"]
         }

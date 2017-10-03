@@ -94,13 +94,13 @@
   <Process n="ImposeTSolAirHeatFluxProcess" pn="Impose thermal parameters for solving the thermal problem" python_module="impose_t_sol_air_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="h_0" pn="H 0" type="double" v="2400"/>
-        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="1.0" />
+        <parameter n="h_0" pn="H 0" type="double" v="3.5"/>
+        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" />
         <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
-        <parameter n="emisivity" pn="Emisivity" type="double" v="2400"/>
+        <parameter n="emisivity" pn="Emisivity" type="double" v="0.7"/>
         <parameter n="delta_R" pn="Delta R" type="double" v="1.0" />
-        <parameter n="absorption_index" pn="Absorption Index" type="double" v="1000.0" />
-        <parameter n="total_insolation" pn="Total Insolation" type="double" v="1000.0" />
+        <parameter n="absorption_index" pn="Absorption Index" type="double" v="0.2" />
+        <parameter n="total_insolation" pn="Total Insolation" type="double" v="300.0" />
     </inputs>
   </Process>
   
