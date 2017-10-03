@@ -99,7 +99,7 @@
         <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
         <parameter n="emisivity" pn="Emisivity" type="double" v="2400"/>
         <parameter n="delta_R" pn="Delta R" type="double" v="1.0" />
-        <parameter n="absortion_index" pn="Absortion Index" type="double" v="1000.0" />
+        <parameter n="absorption_index" pn="Absorption Index" type="double" v="1000.0" />
         <parameter n="total_insolation" pn="Total Insolation" type="double" v="1000.0" />
     </inputs>
   </Process>
