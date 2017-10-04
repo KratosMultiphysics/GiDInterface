@@ -274,9 +274,9 @@ proc Solid::write::getPropertiesList {parts_un} {
 	    }
 	    
 	    set prop_dict [dict create]		
-	    set const_law_application [[Model::getConstitutiveLaw $law_name] getAttribute "ImplementedInApplication"]
+	    set kratos_module [[Model::getConstitutiveLaw $law_name] getAttribute "kratos_module"]
 	    dict set prop_dict "python_module" $python_module
-	    dict set prop_dict "kratos_module" $const_law_application
+	    dict set prop_dict "kratos_module" $kratos_module
 	    dict set prop_dict "help" $help
 	    dict set prop_dict "process_name" $process_name 
  
@@ -296,24 +296,19 @@ proc Solid::write::getPropertiesList {parts_un} {
 		set public_name [[Model::getConstitutiveLaw $law_name] getAttribute "pn"]
 		dict set material_dict "section_type" $public_name
 	    } else { 
-		set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $law_name] "."]
-		dict set material_dict constitutive_law [dict create name $const_law_fullname]
+		set law_full_name [join [list "KratosMultiphysics" $kratos_module $law_name] "."]
+		dict set material_dict constitutive_law [dict create name $law_full_name]
 	    }
             dict set material_dict variables $variables_list
             dict set material_dict tables dictnull
             dict set prop_dict Parameters $material_dict
 	    
-            if {$law_type eq "1D_UR"} {
-		lappend sections $prop_dict
-	    } else {
-		lappend props $prop_dict
-	    }
+	    lappend props $prop_dict
         }
 
     }
-    
+
     dict set props_dict material_models_list $props
-    dict set props_dict material_models_list $sections
     
     return $props_dict
 }
