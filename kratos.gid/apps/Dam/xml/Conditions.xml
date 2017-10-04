@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
 
+  <!---  THERMAL CONDITIONS -->  
+
     <!---  Conditions: THERMAL PARAMETERS -->  
   <ConditionItem n="ThermalParameters3D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
@@ -37,9 +39,8 @@
     <outputs>
     </outputs>
   </ConditionItem>
-
-    
-      <!---  Conditions: HEAT FLUX  -->  
+   
+      <!---  Conditions: FACE HEAT FLUX  -->  
   <ConditionItem n="FluxCondition2D" pn="Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
 	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
@@ -68,9 +69,7 @@
     <outputs>
     </outputs>
   </ConditionItem>  
-  
-
-  
+   
       <!---  Conditions: HEAT FLUX T_SOL_AIR PARAMETERS -->  
   <ConditionItem n="TSolAirFluxCondition2D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
@@ -101,7 +100,34 @@
     </outputs>
   </ConditionItem>  
   
+    <!---  Conditions: NOORZAI HEAT FLUX (HEAT SOURCE) -->  
+  <ConditionItem n="NoorzaiHeatFlux3D" pn="Noorzai Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Volume" ProcessName="NoorzaiHeatSourceProcess" VariableName="HEAT_FLUX"
+    help="Application of the Heat Source according to Noorzai Law">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+ <ConditionItem n="NoorzaiHeatFlux2D" pn="Noorzai Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="NoorzaiHeatSourceProcess" VariableName="HEAT_FLUX"
+    help="Application of the Heat Source according to Noorzai Law">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
 
+  <!---  MECHANICAL CONDITIONS -->  
 
    <!---  Conditions: SELF WEIGHT -->    
   <ConditionItem n="SelfWeight3D" pn="Body Acceleration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 

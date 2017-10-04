@@ -69,7 +69,6 @@
     </inputs>
   </Process>
   
-    
    <!---  Thermal Parameters -->
   <Process n="ImposeThermalParametersScalarValueProcess" pn="Impose thermal parameters for solving the thermal problem" python_module="impose_thermal_parameters_scalar_value_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
@@ -77,6 +76,17 @@
         <parameter n="ThermalDensity" pn="Density" type="double" v="2400"/>
         <parameter n="Conductivity" pn="Conductivity" type="double" v="1.0" />
         <parameter n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
+    </inputs>
+  </Process> 
+
+  <!---  Noorzai Heat Source -->
+  <Process n="NoorzaiHeatSourceProcess" pn="Impose Noorzai Heat Source law" python_module="impose_heat_source_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process provides a heat source field according Noorzai formulation">
+    <inputs>
+        <parameter n="density" pn="Density" type="double" v="2400.0"/>
+        <parameter n="specific_heat" pn="Specific Heat" type="double" v="1000.0"/>
+        <parameter n="t_max" pn="T Max" type="double" v="18.0" help="The maximum temperature of concrete under adiabatic condition"/>
+        <parameter n="alpha" pn="Alpha coefficient" type="double" v="0.025"/>
     </inputs>
   </Process>  
   
