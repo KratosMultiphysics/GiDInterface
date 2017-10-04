@@ -3,7 +3,7 @@
   <!--solid elements-->
   <!--small displacements-->
   <ElementItem n="SmallDisplacementElement2D" pn="Solid (small displacements)" ImplementedInFile="small_displacement_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	       ElementType="Solid" help="This is an element for linear infinitessimal theory in plane state 2D">
 
@@ -47,7 +47,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="SmallDisplacementBbarElement2D" pn="Solid (B-bar small displacements)" ImplementedInFile="small_displacement_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	       ElementType="Solid" help="This is an element for linear infinitessimal theory in plane state 2D">
 
@@ -91,7 +91,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="SmallDisplacementElementAxisym" pn="Solid (small displacements)" ImplementedInFile="axisym_small_displacement_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 2D axisymmetric">
 
@@ -131,7 +131,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="SmallDisplacementElement3D" pn="Solid (small displacements)" ImplementedInFile="small_displacement_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 3D">
 
@@ -173,7 +173,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="SmallDisplacementBbarElement3D" pn="Solid (B-bar small displacements)" ImplementedInFile="small_displacement_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 3D">
 
@@ -217,7 +217,7 @@
   <!--large displacements-->
   <!--total lagrangian-->
   <ElementItem n="TotalLagrangianElement2D" pn="Solid (total lagrangian)" ImplementedInFile="total_lagrangian_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics">
 
@@ -258,7 +258,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="TotalLagrangianElement3D" pn="Solid (total lagrangian)" ImplementedInFile="total_lagrangian_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid"  help="This element it implements a Total Lagrangian approach to large deformation kinematics">
 
@@ -301,7 +301,7 @@
   </ElementItem>
   <!--updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElement2D" pn="Solid (updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
@@ -343,7 +343,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementAxisym" pn="Solid (updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
@@ -383,7 +383,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElement3D" pn="Solid (updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
@@ -427,7 +427,7 @@
   <!--hybrid elements-->
   <!--hybrid updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
 		   ElementType="Solid">
@@ -466,7 +466,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
 	       ElementType="Solid" >
@@ -504,7 +504,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
 
@@ -542,7 +542,7 @@
   <!--structural elements-->
   <!--beam elements-->
   <ElementItem n="SmallDisplacementBeamElement2D" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
 
@@ -575,7 +575,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="SmallDisplacementBeamElement3D" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
 
@@ -608,7 +608,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamElement2D" pn="Beam (large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" >
 
@@ -641,7 +641,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamElement3D" pn="Beam (large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" >
 
@@ -674,7 +674,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamEMCElement2D" pn="Beam (EMC large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" >
 
@@ -707,7 +707,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamEMCElement3D" pn="Beam (EMC large displacements)" ImplementedInFile="large_displacement_beam_emc_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" >
 
@@ -740,7 +740,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamSEMCElement3D" pn="Beam (SEMC large displacements)" ImplementedInFile="large_displacement_beam_semc_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
 
@@ -775,7 +775,7 @@
   <!--shell elements-->
   <!--small displacements-->
   <ElementItem n="ShellThinElement" pn="Shell (thin triangular)" ImplementedInFile="shell_thin_element_3D3N.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a triangular element for thin shells in a small displacements approach" 
 	       ElementType="Shell" RotationDofs="True" >
@@ -810,7 +810,7 @@
   </ElementItem>
   
   <ElementItem n="ShellThickElement" pn="Shell (thick quadrilateral)" ImplementedInFile="shell_thick_element_3D4N.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a quadrilateral element for thick shells in a small displacements approach"
 		   ElementType="Shell" RotationDofs="True">
@@ -846,7 +846,7 @@
 
   <!--large displacements-->
   <ElementItem n="ShellThinCorotationalElement" pn="Shell (thin corotational triangular)" ImplementedInFile="shell_thin_element_3D3N.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a triangular corotational element for thin shells in a large displacements approach"
 		   ElementType="Shell" RotationDofs="True" >
@@ -879,7 +879,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="ShellThickCorotationalElement" pn="Shell (thick corotational quadrilateral)" ImplementedInFile="shell_thick_element_3D4N.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a quadrilateral corotational element for thick shells in a large displacements approach"
 		   ElementType="Shell" RotationDofs="True">

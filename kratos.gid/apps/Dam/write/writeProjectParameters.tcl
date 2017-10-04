@@ -84,6 +84,7 @@ proc Dam::write::getParametersDict { } {
         dict set eigensolversetDict print_feast_output [write::getValue DamModalfeastOutput]
         dict set eigensolversetDict perform_stochastic_estimate [write::getValue DamModalStochastic]
         dict set eigensolversetDict solve_eigenvalue_problem [write::getValue DamModalSolve]
+        dict set eigensolversetDict compute_modal_contribution [write::getValue DamModalContribution]
         dict set eigensolversetDict lambda_min [write::getValue DamModalLambdaMin]
         dict set eigensolversetDict lambda_max [write::getValue DamModalLambdaMax]
         dict set eigensolversetDict search_dimension [write::getValue DamModalSearchDimension]

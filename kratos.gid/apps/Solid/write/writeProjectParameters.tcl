@@ -39,7 +39,7 @@ proc Solid::write::getParametersDict { } {
     # Solution strategy
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue SLSolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
+    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
     dict set solverSettingsDict solver_type $strategy_write_name
     #~ dict set solverSettingsDict dimension [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
