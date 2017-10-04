@@ -31,6 +31,13 @@ proc Dam::write::getParametersDict { } {
         dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
         dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
         dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
+        set consider_self_weight [write::getValue DamSelfweight ConsiderSelf]
+        if {$consider_self_weight eq "Yes"} {
+            dict set problemDataDict consider_selfweight true
+            dict set problemDataDict selfweight_direction [write::getValue DamSelfweight GravityDirection]
+        } else {
+            dict set problemDataDict consider_selfweight false
+        }
         dict set problemDataDict streamlines_utility [Dam::write::StremalinesUtility]
         ### Add section to document
         dict set projectParametersDict problem_data $problemDataDict
@@ -94,10 +101,10 @@ proc Dam::write::getParametersDict { } {
         
         # Adding submodel and processes
         dict set solversettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
-        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
     } else {
-        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
         ## Default Values
         set MechanicalSolutionStrategyUN "DamSolStrat"
@@ -108,7 +115,7 @@ proc Dam::write::getParametersDict { } {
         if {$damTypeofProblem eq "Thermo-Mechanical" } {
             
             dict set solversettingsDict reference_temperature [write::getValue DamThermalReferenceTemperature]
-            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
             set thermalsettingDict [dict create]
             dict set thermalsettingDict echo_level [write::getValue DamThermalEcholevel]
@@ -123,7 +130,9 @@ proc Dam::write::getParametersDict { } {
             ## Adding linear solver for thermal part
             set thermalsettingDict  [dict merge $thermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratTherm "DamThermo-Mechanical-ThermData"] ]
             dict set thermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
-            
+            dict set thermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames "DamThermalLoads"]
+
+
             ## Adding thermal solver settings to solver settings
             dict set solversettingsDict thermal_solver_settings $thermalsettingDict
             
@@ -135,7 +144,7 @@ proc Dam::write::getParametersDict { } {
         if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
             
             dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
-            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
             set UPthermalsettingDict [dict create]
             dict set UPthermalsettingDict echo_level [write::getValue DamThermalUPEcholevel]
@@ -150,7 +159,9 @@ proc Dam::write::getParametersDict { } {
             ## Adding linear solver for thermal part
             set UPthermalsettingDict [dict merge $UPthermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratThermUP "DamUP_Thermo-Mechanical-ThermData"] ]
             dict set UPthermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
-           
+            dict set UPthermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames "DamThermalLoads"]
+
+
             ## Adding UP thermal solver settings to solver settings
             dict set solversettingsDict thermal_solver_settings $UPthermalsettingDict
             
@@ -262,7 +273,9 @@ proc Dam::write::getParametersDict { } {
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
     
     set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
-    set load_process_list [write::getConditionsParametersDict DamLoads ]
+    set mechanical_load_process_list [write::getConditionsParametersDict DamLoads]
+    set thermal_load_process_list [write::getConditionsParametersDict DamThermalLoads]
+    set load_process_list [concat $mechanical_load_process_list $thermal_load_process_list]
     dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
     set loads [Dam::write::ChangeFileNameforTableid $load_process_list]
     set construction_process [Dam::write::GetConstructionDomainProcessDict]

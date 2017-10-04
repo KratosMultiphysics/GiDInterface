@@ -42,13 +42,13 @@ proc Dam::xml::CustomTree { args } {
         }
         
         ## It has special filter
-        set add_special_list [list TEMPERATURE]
-        set add_special_list_pn [list Temperature]
+        set add_special_list [list TEMPERATURE FACE_HEAT_FLUX]
+        set add_special_list_pn [list "Temperature" "Heat Fluxes"]
         foreach it $add_special_list pn $add_special_list_pn {
                gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $it pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Thermo-Mechanical\]"]
         }
         
-        set add_list [list ADDED_MASS VOLUME_ACCELERATION POINT_LOAD LINE_LOAD SURFACE_LOAD POSITIVE_FACE_PRESSURE  NODAL_CAUCHY_STRESS_TENSOR NODAL_JOINT_WIDTH Vi_POSITIVE Viii_POSITIVE]
+        set add_list [list ADDED_MASS VOLUME_ACCELERATION POINT_LOAD LINE_LOAD SURFACE_LOAD POSITIVE_FACE_PRESSURE NODAL_CAUCHY_STRESS_TENSOR NODAL_JOINT_WIDTH Vi_POSITIVE Viii_POSITIVE]
         set add_list_pn [list "Added Mass" "Body Accelerations" "Point Loads" "Line Loads" "Surface Loads" "Normal Loads" "Nodal Total Stress" "Nodal Joint Width" "Traction Principal Stress Vector" "Compression Principal Stress Vector"]
         foreach item $add_list pn $add_list_pn {
                gid_groups_conds::addF [$nodal_results_base toXPath] value [list n $item pn $pn v "No" values "Yes,No" state "\[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical\]"]

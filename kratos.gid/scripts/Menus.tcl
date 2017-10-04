@@ -143,7 +143,7 @@ proc Kratos::Splash { } {
         set fnt "verdana 10"
         set off_x 130
     }
-    set line1 "Kratos Multiphysics Version 5.1"
+    set line1 "Kratos Multiphysics Version $kratos_private(Version)"
     ::GidUtils::Splash [file join $kratos_private(Path) images splash.png] .splash 0 \
         [list $line1 $off_x 230]
 

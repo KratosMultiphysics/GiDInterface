@@ -196,8 +196,8 @@ proc Numa::write::getParametersDict { } {
 
     dict set projectParametersDict constraints_process_list [Numa::write::ChangeFileNameforTableid $nodal_process_list]
     dict set projectParametersDict loads_process_list [Numa::write::ChangeFileNameforTableid $load_process_list]
-     
-    dict set projectParametersDict output_device_list [Numa::write::DevicesOutput]
+    dict set projectParametersDict temperature_by_device_list [Numa::write::TemperaturebyDevices]
+    dict set projectParametersDict output_device_list [Numa::write::DevicesOutput]   
        
     return $projectParametersDict
 
@@ -318,6 +318,67 @@ proc Numa::write::DevicesOutput { } {
         dict set deviceDict Parameters $parameterDict     
         
         lappend lista $deviceDict
+    }
+    
+    return $lista
+
+}
+
+proc Numa::write::TemperaturebyDevices { } {
+        
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute NumaTempDevice]/blockdata\[@n='device'\]"
+    set lista [list ]
+    set nodes [$root selectNodes $xp1]
+    
+    foreach node $nodes {
+        
+        set TempdeviceDict [dict create]
+        dict set TempdeviceDict  python_module "impose_temperature_by_device_process"
+        dict set TempdeviceDict  kratos_module "KratosMultiphysics.DamApplication"
+        dict set TempdeviceDict  help "This process assigns a nodal temperature value according the device spatial position"
+        dict set TempdeviceDict  process_name "ImposeTemperaturebyDeviceProcess"
+        
+		set name [$node @name]
+		
+        set xp2 "[spdAux::getRoute NumaTempDevice]/blockdata\[@name='$name'\]/value\[@n='is_fixed'\]"
+		set node_xp2 [$root selectNodes $xp2]
+		set isfixed [get_domnode_attribute $node_xp2 v]
+        
+        set xp3 "[spdAux::getRoute NumaTempDevice]/blockdata\[@name='$name'\]/value\[@n='value'\]"
+		set node_xp3 [$root selectNodes $xp3]
+		set value [write::getValueByNode $node_xp3]
+	
+		set xp4 "[spdAux::getRoute NumaTempDevice]/blockdata\[@name='$name'\]/value\[@n='table'\]"
+		set node_xp4 [$root selectNodes $xp4]
+		set table [write::getValueByNode $node_xp4]
+        
+		set xp5 "[spdAux::getRoute NumaTempDevice]/blockdata\[@name='$name'\]/value\[@n='XPosition'\]"
+		set node_xp5 [$root selectNodes $xp5]
+		set xposition [write::getValueByNode $node_xp5]
+	
+		set xp6 "[spdAux::getRoute NumaTempDevice]/blockdata\[@name='$name'\]/value\[@n='YPosition'\]"
+		set node_xp6 [$root selectNodes $xp6]
+		set yposition [write::getValueByNode $node_xp6]
+
+		set xp7 "[spdAux::getRoute NumaTempDevice]/blockdata\[@name='$name'\]/value\[@n='ZPosition'\]"
+		set node_xp7 [$root selectNodes $xp7]
+		set zposition [write::getValueByNode $node_xp7]
+    
+        set parameterDict [dict create]
+        set positionList [list ]
+        dict set parameterDict mesh_id 0
+        dict set parameterDict model_part_name "MainModelPart"
+        dict set parameterDict variable_name "TEMPERATURE"
+        dict set parameterDict is_fixed $isfixed
+        dict set parameterDict value $value
+        dict set parameterDict table 0
+        lappend positionList $xposition $yposition $zposition
+        dict set parameterDict position $positionList
+
+        dict set TempdeviceDict  Parameters $parameterDict     
+        
+        lappend lista $TempdeviceDict 
     }
     
     return $lista

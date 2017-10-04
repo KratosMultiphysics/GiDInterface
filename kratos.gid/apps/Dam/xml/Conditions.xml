@@ -3,9 +3,9 @@
 
     <!---  Conditions: THERMAL PARAMETERS -->  
   <ConditionItem n="ThermalParameters3D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
-	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Volume" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Volume" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
     help="Application of the thermal parameters into the body">
     <TopologyFeatures>
     </TopologyFeatures>
@@ -21,9 +21,9 @@
   </ConditionItem>
   
  <ConditionItem n="ThermalParameters2D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
-	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Surface" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="ImposeThermalParametersScalarValueProcess" VariableName="THERMAL_PARAMETERS"
     help="Application of the thermal parameters into the body">
     <TopologyFeatures>
     </TopologyFeatures>
@@ -38,10 +38,74 @@
     </outputs>
   </ConditionItem>
 
+    
+      <!---  Conditions: HEAT FLUX  -->  
+  <ConditionItem n="FluxCondition2D" pn="Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Line" ProcessName="ImposeUniformHeatFluxes" VariableName="FACE_HEAT_FLUX"
+    help="Uniform Heat flux">
+    <TopologyFeatures>
+        <item  GeometryType="Line" nodes="2" KratosName="FluxCondition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+  <ConditionItem n="FluxCondition3D" pn="Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="ImposeUniformHeatFluxes" VariableName="FACE_HEAT_FLUX"
+    help="Uniform Heat flux">
+    <TopologyFeatures>
+        <item  GeometryType="Triangle" nodes="3" KratosName="FluxCondition3D3N"/>
+        <item  GeometryType="Quadrilateral" nodes="4" KratosName="FluxCondition3D4N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>  
+  
+
+  
+      <!---  Conditions: HEAT FLUX T_SOL_AIR PARAMETERS -->  
+  <ConditionItem n="TSolAirFluxCondition2D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	ElementType="Line" ProcessName="ImposeTSolAirHeatFluxProcess" VariableName="FACE_HEAT_FLUX"
+    help="Heat flux according T Sol Air">
+    <TopologyFeatures>
+        <item  GeometryType="Line" nodes="2" KratosName="FluxCondition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+    <ConditionItem n="TSolAirFluxCondition3D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	ElementType="Surface" ProcessName="ImposeTSolAirHeatFluxProcess" VariableName="FACE_HEAT_FLUX"
+    help="Heat flux according T Sol Air">
+    <TopologyFeatures>
+        <item  GeometryType="Triangle" nodes="3" KratosName="FluxCondition3D3N"/>
+        <item  GeometryType="Quadrilateral" nodes="4" KratosName="FluxCondition3D4N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>  
+  
+
 
    <!---  Conditions: SELF WEIGHT -->    
   <ConditionItem n="SelfWeight3D" pn="Body Acceleration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Volume" ProcessName="ApplyLoadVectorDamTableProcess" VariableName="VOLUME_ACCELERATION"
     help="Self weight application by means of the ApplyLoadVectorDamTableProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
@@ -59,7 +123,7 @@
   </ConditionItem>
   
   <ConditionItem n="SelfWeight2D" pn="Body Acceleration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface"  ProcessName="ApplyLoadVectorDamTableProcess" VariableName="VOLUME_ACCELERATION" 
     help="Self weight application by means of the ApplyLoadVectorDamTableProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
@@ -78,7 +142,7 @@
   
    <!---  Conditions: POINT LOADS -->    
   <ConditionItem n="PointLoad2D" pn="Point Load" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Point" ProcessName="ApplyLoadVectorDamTableProcess" help="Load on points, load vector referred to global axes"
 	units='N'  unit_magnitude='F' VariableName="POINT_LOAD">
@@ -93,7 +157,7 @@
   </ConditionItem>
   
   <ConditionItem n="PointLoad3D" pn="Point Load" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Point" ProcessName="ApplyLoadVectorDamTableProcess" help="Load on points, load vector referred to global axes"
 	units='N'  unit_magnitude='F' VariableName="POINT_LOAD">
@@ -109,7 +173,7 @@
   
    <!---  Conditions: LINE LOADS -->    
   <ConditionItem n="LineLoad2D" pn="Line Load" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="ApplyLoadVectorDamTableProcess" help="Load on lines, load vector referred to global axes"
 	units='N/m' unit_magnitude='F/L' VariableName="LINE_LOAD">
@@ -125,7 +189,7 @@
   </ConditionItem>
   
     <ConditionItem n="LineLoad3D" pn="Line Load" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="ApplyLoadVectorDamTableProcess" help="Load on lines, load vector referred to global axes"
 	units='N/m' unit_magnitude='F/L' VariableName="LINE_LOAD">
@@ -143,7 +207,7 @@
   
    <!---  Conditions: SURFACE LOADS -->   
   <ConditionItem n="SurfaceLoad3D" pn="Suface Load" ImplementedInFile="apply_vector_on_conditions_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	units='N/m^2' unit_magnitude='F/L^2' ElementType="Surface"  ProcessName="ApplyLoadVectorDamTableProcess" help="Load on surfaces, load vector referred to global axes"
 	VariableName="SURFACE_LOAD">
@@ -163,10 +227,10 @@
 
    <!---  Conditions: NORMAL PRESSURE LOADS --> 
     <ConditionItem n="LinePressure2D" pn="Normal Load" ImplementedInFile="apply_scalar_on_conditions_processs"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="ApplyLoadScalarTableProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
-	units='N/m^2' unit_magnitude='F/L^2' VariableName="POSITIVE_FACE_PRESSURE ">
+	units='N/m^2' unit_magnitude='F/L^2' VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="LineLoadCondition2D3N"/>
@@ -178,10 +242,10 @@
   </ConditionItem>
 
   <ConditionItem n="SurfacePressure3D" pn="Normal Load" ImplementedInFile="apply_scalar_on_conditions_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface" ProcessName="ApplyLoadScalarTableProcess" help="Normal Pressure on surfaces, oriented pointing against the surface outer normal"
-	units='N/m^2' unit_magnitude='F/L^2' VariableName="POSITIVE_FACE_PRESSURE ">
+	units='N/m^2' unit_magnitude='F/L^2' VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
@@ -198,10 +262,10 @@
   
    <!---  Conditions: HYDROSTATIC PRESSURE LOADS --> 
     <ConditionItem n="HydroLinePressure2D" pn="Hydrostatic Pressure" ImplementedInFile="apply_scalar_on_conditions_processs"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="HydrostaticConditionsProcess" help="Hydrostatic pressure on lines, oriented pointing against the line outer normal"
-	VariableName="POSITIVE_FACE_PRESSURE ">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="LineLoadCondition2D3N"/>
@@ -214,10 +278,10 @@
   
    
   <ConditionItem n="HydroSurfacePressure3D" pn="Hydrostatic Pressure" ImplementedInFile="apply_scalar_on_conditions_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface" ProcessName="HydrostaticConditionsProcess" help="Normal Pressure on surfaces, oriented pointing against the surface outer normal"
-	VariableName="POSITIVE_FACE_PRESSURE ">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
@@ -234,9 +298,9 @@
      <!---  Conditions: HYDRODYNAMIC WESTERGAARD'S APPROXIMATED PRESSURE LOADS --> 
     <ConditionItem n="HydroDynamicLinePressure2D" pn="Hydrodynamic Westergaard Pressure" ImplementedInFile="apply_scalar_on_conditions_processs"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Line" ProcessName="HydrodynamicConditionsProcess" help="Hydrostatic + Hydrodynamic pressure on lines (based on the Westergaard Approximated Formula). Positive direction of acceleration: upstream to downstream. Hydrodinamic pressure just acts when the accelaration is negative, for positive accelerations hydrostatic pressure is used"
-	VariableName="POSITIVE_FACE_PRESSURE ">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="LineLoadCondition2D3N"/>
@@ -250,9 +314,9 @@
   
   <ConditionItem n="HydroDynamicSurfacePressure3D" pn="Hydrodynamic Westergaard Pressure" ImplementedInFile="apply_scalar_on_conditions_process"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Surface" ProcessName="HydrodynamicConditionsProcess" help="Hydrostatic + Hydrodynamic pressure on surfaces (based on the Westergaard Approximated Formula). Positive direction of acceleration: upstream to downstream. Hydrodinamic pressure just acts when the accelaration is negative, for positive accelerations hydrostatic pressure is used."
-    VariableName="POSITIVE_FACE_PRESSURE ">
+    VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
@@ -270,9 +334,9 @@
    <!---  Conditions: UPLIFT PRESSURE LOADS --> 
   <ConditionItem n="StraightUpliftLinePressure2D" pn="Uplift Pressure" ImplementedInFile="apply_scalar_on_conditions_processs"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Line" ProcessName="UpliftConditionsProcess" help="Uplift pressure on lines, oriented pointing against the line outer normal"
-    VariableName="POSITIVE_FACE_PRESSURE ">
+    VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="LineLoadCondition2D3N"/>
@@ -285,9 +349,9 @@
   
   <ConditionItem n="StraightUpliftSurfacePressure3D" pn="Uplift Pressure" ImplementedInFile="apply_scalar_on_conditions_process"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Surface" ProcessName="UpliftConditionsProcess" help="Uplift Pressure on surfaces, oriented pointing against the surface outer normal"
-	VariableName="POSITIVE_FACE_PRESSURE ">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
@@ -303,9 +367,9 @@
 
   <ConditionItem n="CircularUpliftSurfacePressure3D" pn="Circular Uplift Pressure" ImplementedInFile="apply_scalar_on_conditions_process"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
-	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Surface" ProcessName="CircularUpliftConditionsProcess" help="Uplift Pressure on surfaces, oriented pointing against the surface outer normal"
-	VariableName="POSITIVE_FACE_PRESSURE ">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
@@ -320,12 +384,11 @@
   </ConditionItem>
 
     <!---  Added Mass condition --> 
-<!--
-    <ConditionItem n="AddedMass2D" pn="Added Mass" ImplementedInFile="special_condition_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+  <ConditionItem n="AddedMass2D" pn="Added Mass" ImplementedInFile="special_condition_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical" 
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="AddedMassProcess" help="Added mass contribution"
-    VariableName="ADDED_MASS">
+  VariableName="ADDED_MASS">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AddedMassCondition2D2N"/>
     </TopologyFeatures>
@@ -336,7 +399,7 @@
   </ConditionItem>
   
   <ConditionItem n="AddedMass3D" pn="Added Mass" ImplementedInFile="special_condition_process"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface" ProcessName="AddedMassProcess" help="Added mass contributions"
 	VariableName="ADDED_MASS">
@@ -349,12 +412,11 @@
     <outputs>
     </outputs>
   </ConditionItem>
--->
   
   <!---  Conditions: For the acustic problem --> 
   <!---  Free Surface condition --> 
     <ConditionItem n="FreeSurface2D" pn="Free Surface" ImplementedInFile="apply_scalar_on_conditions_process"  TypeofProblem="UP_Mechanical,UP_Thermo-Mechanical,Acoustic" 
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="FreeSurfaceProcess" help="Free surface condition for gravitational surface waves"
     VariableName="Dt2_PRESSURE">
@@ -368,7 +430,7 @@
   </ConditionItem>
   
   <ConditionItem n="FreeSurface3D" pn="Free Surface" ImplementedInFile="apply_scalar_on_conditions_process"  TypeofProblem="UP_Mechanical,UP_Thermo-Mechanical,Acoustic"
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface" ProcessName="FreeSurfaceProcess" help="Free surface condition for gravitational surface waves"
 	VariableName="Dt2_PRESSURE">
@@ -385,7 +447,7 @@
   <!--- Boundary radiation condition --> 
     <ConditionItem n="InfiniteDomain2D" pn="Boundary Radiation" ImplementedInFile="apply_scalar_on_conditions_process"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="UP_Mechanical,UP_Thermo-Mechanical,Acoustic"
-	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Line" ProcessName="InfiniteDomainProcess" help="Free surface condition for gravitational surface waves"
     VariableName="Dt_PRESSURE">
     <TopologyFeatures>
@@ -399,7 +461,7 @@
   
   <ConditionItem n="InfiniteDomain3D" pn="Boundary Radiation" ImplementedInFile="apply_scalar_on_conditions_process"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="UP_Mechanical,UP_Thermo-Mechanical,Acoustic" 
-	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Surface" ProcessName="InfiniteDomainProcess" help="Free surface condition for gravitational surface waves"
 	VariableName="Dt_PRESSURE">
     <TopologyFeatures>
@@ -415,7 +477,7 @@
   <!--- Interface UP condition --> 
     <ConditionItem n="UPCondition2D" pn="Interface Condition" ImplementedInFile="apply_scalar_on_conditions_process"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofProblem="UP_Mechanical,UP_Thermo-Mechanical"
-	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Line" ProcessName="InterfaceDomainProcess" help="Interface Condition for coupling solid and fluid domain"
     VariableName="PRESSURE">
     <TopologyFeatures>
@@ -429,7 +491,7 @@
   
   <ConditionItem n="UPCondition3D" pn="Interface Condition" ImplementedInFile="apply_scalar_on_conditions_proces"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofProblem="UP_Mechanical,UP_Thermo-Mechanical"
-	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Mechanical"
 	ElementType="Surface" ProcessName="InterfaceDomainProcess" help="Interface Condition for coupling solid and fluid domain"
 	VariableName="PRESSURE">
     <TopologyFeatures>
