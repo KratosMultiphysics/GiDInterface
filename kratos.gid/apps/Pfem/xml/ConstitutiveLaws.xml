@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--linear elastic laws-->
-	<CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Pfem" ImplementedInApplication="PfemFluidDynamicsApplication">
+	<CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Pfem" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -10,7 +10,7 @@
         <outputs>
         </outputs>
     </CLaw>
-	<CLaw n="Hypoelastic" pn="Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" App="Pfem" ImplementedInApplication="PfemFluidDynamicsApplication">
+	<CLaw n="Hypoelastic" pn="Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" App="Pfem" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="YOUNG_MODULUS" pn="Young modulus" unit_magnitude="P" units="Pa" v="2.1e+11" help="Set the Young modulus."/>

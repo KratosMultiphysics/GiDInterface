@@ -68,7 +68,7 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue PFEM_SolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
+    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
     dict set solverSettingsDict solver_type $strategy_write_name
     
     set problemtype [write::getValue PFEM_DomainType]

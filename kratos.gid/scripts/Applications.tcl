@@ -130,9 +130,17 @@ proc apps::getAppUniqueName {appName un} {
 proc apps::ExecuteOnCurrentXML { func args} {
     variable activeApp
     if {$activeApp ne ""} {
-        return [$activeApp executexml $func {*}$args]
+        return [ExecuteOnAppXML [$activeApp getName] $func {*}$args]
     }
 }
+proc apps::ExecuteOnAppXML { appid func args} {
+    set response ""
+    set app [getAppById $appid]
+    set response [$app executexml $func {*}$args]   
+
+    return $response
+}
+
 proc apps::ExecuteOnApp {appid func args} {
     set response ""
     set app [getAppById $appid]

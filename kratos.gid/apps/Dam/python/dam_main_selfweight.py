@@ -62,6 +62,87 @@ end_time = end_time * time_unit_converter
 time = time * time_unit_converter
 tol = tol * time_unit_converter
 
+## PREVIOUS SELFWEIGHT PROBLEM ------------------------------------------------------------------------------------------------
+## In case that was needed a previous problem just considering the selfweight is solved. The aim of this is to sum the computed
+## stresses but not the displacements field. This can be controlled through a tab in the inteface.
+
+consider_selfweight = ProjectParameters["problem_data"]["consider_selfweight"].GetBool()
+if(consider_selfweight == True):
+
+    ## Creating Selfweight model part --------------------------------------------------------------
+    self_weight_model_part = KratosMultiphysics.ModelPart("SelfWeight")
+    self_weight_model_part.ProcessInfo.SetValue(KratosMultiphysics.DOMAIN_SIZE, domain_size)
+    self_weight_model_part.ProcessInfo.SetValue(KratosMultiphysics.TIME, time)
+    self_weight_model_part.ProcessInfo.SetValue(KratosMultiphysics.DELTA_TIME, delta_time)
+    self_weight_model_part.ProcessInfo.SetValue(KratosPoro.TIME_UNIT_CONVERTER, time_unit_converter)
+
+    ## Construct the solver for selfweight problem -------------------------------------------------
+    selfweight_solver_module = __import__(ProjectParameters["solver_settings"]["solver_type"].GetString())
+    selfweight_solver = selfweight_solver_module.CreateSolver(self_weight_model_part, ProjectParameters["solver_settings"])
+    selfweight_solver.AddVariables()
+    selfweight_solver.ImportModelPart()
+    selfweight_solver.AddDofs()
+
+    ## Kratos Selfweight Model ---------------------------------------------------------------------
+    DamSelfWeightModel = KratosMultiphysics.Model()
+    DamSelfWeightModel.AddModelPart(self_weight_model_part)
+
+    ## Get the list of the submodel part in the object Model
+    for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
+        self_part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
+        DamSelfWeightModel.AddModelPart(self_weight_model_part.GetSubModelPart(self_part_name))
+
+
+    ## Initialize ----------------------------------------------------------------------------------
+
+    # Construct processes to be applied
+    import process_factory
+    self_list_of_processes = process_factory.KratosProcessFactory(DamSelfWeightModel).ConstructListOfProcesses( ProjectParameters["constraints_process_list"] )
+
+    # Initialize processes
+    for process in self_list_of_processes:
+        process.ExecuteInitialize()
+
+    # Set TIME and DELTA_TIME and fill the previous steps of the buffer with the initial conditions
+    self_time = time - (buffer_size-1)*delta_time
+    self_weight_model_part.ProcessInfo.SetValue(KratosMultiphysics.TIME, time)
+    for step in range(buffer_size-1):
+       self_time = self_time + delta_time
+       self_weight_model_part.CloneTimeStep(self_time)
+
+    # Initialize the solver
+    selfweight_solver.Initialize()
+
+    # ExecuteBeforeSolutionLoop
+    for process in self_list_of_processes:
+        process.ExecuteBeforeSolutionLoop()
+
+    # Getting gravity direction
+    direction_selfweight = ProjectParameters["problem_data"]["selfweight_direction"].GetString()
+    if(direction_selfweight == "X"): 
+        variable_name = KratosMultiphysics.VOLUME_ACCELERATION_X
+    elif(direction_selfweight == "Y"):
+        variable_name = KratosMultiphysics.VOLUME_ACCELERATION_Y
+    else:
+        variable_name = KratosMultiphysics.VOLUME_ACCELERATION_Z
+
+    # Set the acceleration at the nodes according to gravity direction
+    for node in self_weight_model_part.Nodes:
+        node.SetSolutionStepValue(variable_name, -9.81)
+
+    # Solving selfweight problem
+    selfweight_solver.Solve()
+
+    # Cleaning selfweight solver
+    selfweight_solver.Clear()
+
+    # Initialize transfer_selfweight_stress_utility
+    import transfer_selfweight_stress_utility
+    transfer_utility = transfer_selfweight_stress_utility.TransferSelfweightStressToMainModelPartUtility()
+
+
+## DEFINED PROBLEM ------------------------------------------------------------------------------------------------
+
 ## Model part ------------------------------------------------------------------------------------------------
 
 # Defining the model part
@@ -99,7 +180,6 @@ if(echo_level > 1):
     print(main_model_part)
     for properties in main_model_part.Properties:
         print(properties)
-
 
 ## Initialize ------------------------------------------------------------------------------------------------
 
@@ -158,11 +238,6 @@ if (use_streamline_utility == True and domain_size==3):
     import streamlines_output_utility
     streamline_utility = streamlines_output_utility.StreamlinesOutputUtility(domain_size)
 
-if (echo_level > 1):
-    f = open("ProjectParametersOutput.json", 'w')
-    f.write(ProjectParameters.PrettyPrintJsonString())
-    f.close()
-
 ## Temporal loop ---------------------------------------------------------------------------------------------
 
 while( (time+tol) <= end_time ):
@@ -192,6 +267,10 @@ while( (time+tol) <= end_time ):
 
     for process in list_of_processes:
         process.ExecuteBeforeOutputStep()
+
+    # transfer_selfweight_stress_utility
+    if (consider_selfweight== True):
+        transfer_utility.Transfer( self_weight_model_part, main_model_part, domain_size)
 
     # Write GiD results
     if gid_output.IsOutputStep():
