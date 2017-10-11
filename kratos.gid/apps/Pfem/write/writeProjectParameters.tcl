@@ -147,7 +147,6 @@ proc Pfem::write::GetPFEM_ContactDict { } {
         dict set contact_dict "help"          "This process applies contact domain search by remeshing outer boundaries"
         dict set contact_dict "process_name"  "ContactDomainProcess"
         set params [dict create]
-        dict set params "mesh_id"               0
         dict set params "model_part_name"       "model_part_name"
         dict set params "meshing_control_type"  "step"
         dict set params "meshing_frequency"     1.0
@@ -223,7 +222,6 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
         set bodyDict [dict create ]
         set body_name [dict get $body body_name]
         dict set bodyDict "python_module" "meshing_domain"
-        dict set bodyDict "mesh_id" 0
         dict set bodyDict "model_part_name" $body_name
         dict set bodyDict "alpha_shape" 2.4
         dict set bodyDict "offset_factor" 0.0
@@ -337,7 +335,6 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     foreach body $bodies_list {
         set bodyDict [dict create ]
         set body_name [dict get $body body_name]
-        dict set bodyDict "mesh_id" 0
         dict set bodyDict "model_part_name" $body_name
         dict set bodyDict "python_module" "fluid_meshing_domain"
         set nDim $::Model::SpatialDimension
@@ -571,7 +568,6 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
-        dict set paramDict mesh_id 0
         dict set paramDict model_part_name $bodyId
         set vatiable_name [$condition getAttribute VariableName]
         dict set paramDict variable_name [lindex $vatiable_name 0]
