@@ -125,7 +125,7 @@ proc Solid::write::WriteMaterialsFile { } {
     variable validApps
     
     set filename "Materials.json"
-    set mats_json [getPropertiesList SLParts]
+    set mats_json [Solid::write::getPropertiesList SLParts]
 
     write::OpenFile $filename
     write::WriteJSON $mats_json
@@ -136,7 +136,7 @@ proc Solid::write::WriteMaterialsFileOld { } {
     variable validApps
     
     set filename "Materials.json"
-    set mats_json [getPropertiesList SLParts]
+    set mats_json [Solid::write::getPropertiesList SLParts]
 
     write::OpenFile $filename
     write::WriteJSON $mats_json
