@@ -923,6 +923,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
     set processeds [list ]
+    spdAux::injectLocalAxesButton $basenode
     foreach obj [concat [Model::GetElements] [Model::GetConstitutiveLaws]] {
         set inputs [$obj getInputs]
         foreach {inName in} $inputs {
@@ -960,11 +961,19 @@ proc spdAux::injectMaterials { basenode args } {
     }
     $basenode delete
 }
-proc spdAux::injectElementInputs { basenode args} {
-    spdAux::injectPartInputs $basenode [::Model::GetAllElemInputs] 
-}
-proc spdAux::injectConstitutiveLawInputs { basenode args} {
-    spdAux::injectPartInputs $basenode [::Model::GetAllCLInputs] 
+
+proc spdAux::injectLocalAxesButton { basenode } {
+    # set base [$basenode parent]
+    # set node "<value n='Local_axes' pn='Local axes' v='Automatic' values='Automatic' editable='0' local_axes='disabled' help='If the direction to define is not coincident with the global axes, it is possible to define a set of local axes and prescribe the displacements related to that local axes'>
+    # <dependencies node='.' att1='local_axes' v1='normal' value='1'/>
+    # <dependencies node='.' att1='local_axes' v1='disabled' not_value='1'/>
+    # </value>"
+    # $base appendXML $node
+    # W [$base asXML]
+    
+    
+    # GiD_Process MEscape Data Conditions AssignCond line_Local_axes change -Automatic- 1 escape escape 
+
 }
 
 proc spdAux::injectElementOutputs { basenode args} {
@@ -2050,4 +2059,13 @@ proc spdAux::ProcGetParts {domNode args} {
     }
     if {[llength $parts]} { if {[$domNode @v] ni $parts} {$domNode setAttribute v [lindex $parts 0]}}
     return [join $parts ","]
+}
+
+proc spdAux::ProcUpdateParts {domNode args} {
+    # Algo comun?
+    # W "Common"
+
+    # Active app executexml
+    set nodeApp [GetAppIdFromNode $domNode]
+    apps::ExecuteOnAppXML $nodeApp UpdateParts $domNode
 }
