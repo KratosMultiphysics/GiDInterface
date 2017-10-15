@@ -43,24 +43,12 @@
         </filterFeatures>
 	<defaults>
 	  <solver n="Automatic">
-	    <!--Not ready yet-->
-	    <!--<parameter n="verbosity" v="3"/>-->
 	  </solver>
 	</defaults>
       </linearSolverItem>     
     </linearSolvers>
     
     <schemes>
-      <scheme n="Newmark" pn="Newmark" help="Scheme for dynamic problems" ProductionReady="ProductionReady">
-        <parameter_list>
-	</parameter_list>
-        <element_filters>
-          <filter field="ElementType" value="Solid,Shell,Beam"/>
-	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
-	  <!-- <forceIn field="n" value="MembraneElement"/>
-	       <forceOut field="n" value="SmallDisplacementElement2D"/> -->
-        </element_filters>
-      </scheme>
       <scheme n="Bossak" pn="Bossak" help="Scheme for dynamic problems with high frequency accelerations damping" ProductionReady="ProductionReady">
         <parameter_list>
 	  
@@ -71,7 +59,16 @@
         </element_filters>
       </scheme>
     </schemes>
-    
+      <scheme n="Newmark" pn="Newmark" help="Scheme for dynamic problems" ProductionReady="ProductionReady">
+        <parameter_list>
+	</parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Solid,Shell,Beam"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
+	  <!-- <forceIn field="n" value="MembraneElement"/>
+	       <forceOut field="n" value="SmallDisplacementElement2D"/> -->
+        </element_filters>
+      </scheme>    
   </StrategyItem>
   <StrategyItem n="Explicit" pn="Explicit" SolutionType="Dynamic"
                 kratos_module="SolidMechanicsApplication"
@@ -111,8 +108,6 @@
         </filterFeatures>
 	<defaults>
 	  <solver n="Automatic">
-	    <!--Not ready yet-->
-	    <!--<parameter n="verbosity" v="3"/>-->
 	  </solver>
 	</defaults>
       </linearSolverItem>     
@@ -174,8 +169,6 @@
         </filterFeatures>
 	<defaults>
 	  <solver n="Automatic">
-	    <!--Not ready yet-->
-	    <!--<parameter n="verbosity" v="3"/>-->
 	  </solver>
 	</defaults>
       </linearSolverItem>     
