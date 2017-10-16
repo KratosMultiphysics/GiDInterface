@@ -16,9 +16,8 @@ proc Solid::xml::Init { } {
      Model::getConditions Conditions.xml
      Model::getSolvers "../../Common/xml/Solvers.xml"
 
-     Model::ForgetElement BeamElement
-     Model::ForgetElement SmallDisplacementBbarElement2D    
-     Model::ForgetElement SmallDisplacementBbarElement3D
+     # Model::ForgetElement SmallDisplacementBbarElement2D    
+     # Model::ForgetElement SmallDisplacementBbarElement3D
     
 }
 
@@ -75,7 +74,11 @@ proc Solid::xml::ProcCheckNodalConditionStateSolid {domNode args} {
 proc Solid::xml::ProcCheckGeometrySolid {domNode args} {
      set ret "surface"
      if {$::Model::SpatialDimension eq "3D"} {
-          set ret "surface,volume"
+	 set ret "line,surface,volume"
+     } elseif {$::Model::SpatialDimension eq "2D"} {
+	 set ret "line,surface"
+     } elseif {$::Model::SpatialDimension eq "1D"} {
+	 set ret "line"
      }
      return $ret
 }
