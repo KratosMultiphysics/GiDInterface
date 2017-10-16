@@ -91,17 +91,26 @@
   </Process>  
   
   <!---  Uniform Heat FLuxes -->
-  <Process n="ImposeUniformHeatFluxes" pn="Impose uniform value of heat fluxes" python_module="impose_uniform_temperature_process"
+  <Process n="ImposeUniformHeatFluxes" pn="Impose uniform value of heat fluxes" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="is_fixed" pn="Imposed" type="bool" v="0"/>
         <parameter n="value" pn="Value" type="double" v="0.0"/>
         <parameter n="table" pn="Uniform Heat Fluxes table filename" type="tablefile" v=""/>
     </inputs>
-  </Process>  
+  </Process> 
+
+   <!---  Heat Fluxes T Air -->
+  <Process n="ImposeTAmbientHeatFluxProcess" pn="Impose heat flux according to t_air formulation" python_module="impose_heat_flux_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
+    <inputs>
+        <parameter n="h_0" pn="H 0" type="double" v="3.5"/>
+        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" />
+        <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
+    </inputs>
+  </Process> 
     
    <!---  Heat Fluxes T Sol Air -->
-  <Process n="ImposeTSolAirHeatFluxProcess" pn="Impose thermal parameters for solving the thermal problem" python_module="impose_t_sol_air_heat_flux_process"
+  <Process n="ImposeTSolAirHeatFluxProcess" pn="Impose heat flux according to t_sol_air formulation" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
         <parameter n="h_0" pn="H 0" type="double" v="3.5"/>
