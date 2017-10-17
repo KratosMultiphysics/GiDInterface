@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="Construction" pn="Construction" un="DamConstructionProcess" icon="solution16" help="Solution" state="normal" open_window="0">
     <value n="Activate_construction" pn="Activate construction process" un="DamActivateConstruction" v="False" values="True,False" actualize_tree="1"/>
-    <value n="Gravity_Direction" pn="Gravity direction" v="Y" values="X,Y,Z"  state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" v="0.0"  state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="Height_Dam" pn="Height Dam" v="0.0" help="" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="Number_of_phases" pn="Number of phases" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="gravity_direction" pn="Gravity direction" v="Y" values="X,Y,Z"  state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="reservoir_bottom_coordinate_in_gravity_direction" pn="Reservoir Bottom Coordinate in Gravity Direction" v="0.0"  state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="height_dam" pn="Height Dam" v="0.0" help="" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="number_of_phases" pn="Number of Phases" v="0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="density" pn="Density" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="specific_heat" pn="Specific Heat" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="alpha" pn="Alpha" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="tmax" pn="Maximum Temperature" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="h_0" pn="Heat Transfer Coefficient" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="ambient_temp" pn="Ambient Temperature" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="phases_table" pn="Table of Phases" v="1" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="phase_times_table" pn="Table of Time Activaction" v="2" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="ambient_table" pn="Table of Ambient Temp " v="3" state="[HideIfUniqueName DamActivateConstruction False]"/>
+ <!--
     <value n="Construction_part" pn="Construction part" v="" values="[GetParts]" help=""  state="[HideIfUniqueName DamActivateConstruction False]"/>
+-->
 </container>
     
