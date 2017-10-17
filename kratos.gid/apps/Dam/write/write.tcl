@@ -26,6 +26,8 @@ proc Dam::write::writeCustomFilesEvent { } {
     
     set damTypeofProblem [write::getValue DamTypeofProblem]
     set damSelfweight [write::getValue DamSelfweight ConsiderSelf]
+    set damConstructionProcess [write::getValue DamConstructionProcess Activate_construction]
+
     if {$damTypeofProblem eq "Acoustic"} {
         write::CopyFileIntoModel "python/dam_acoustic_script.py"
         write::RenameFileInModel "dam_acoustic_script.py" "MainKratos.py"
@@ -35,6 +37,9 @@ proc Dam::write::writeCustomFilesEvent { } {
     } elseif {$damSelfweight eq "Yes" } {
         write::CopyFileIntoModel "python/dam_main_selfweight.py"
         write::RenameFileInModel "dam_main_selfweight.py" "MainKratos.py"
+    } elseif {$damConstructionProcess eq "True" } { 
+        write::CopyFileIntoModel "python/dam_main_construction.py"
+        write::RenameFileInModel "dam_main_construction.py" "MainKratos.py"
     } else {
         write::CopyFileIntoModel "python/dam_main.py"
         write::RenameFileInModel "dam_main.py" "MainKratos.py"
