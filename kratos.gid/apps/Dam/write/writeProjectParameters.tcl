@@ -278,14 +278,14 @@ proc Dam::write::getParametersDict { } {
     set load_process_list [concat $mechanical_load_process_list $thermal_load_process_list]
     dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
     set loads [Dam::write::ChangeFileNameforTableid $load_process_list]
-    set construction_process [Dam::write::GetConstructionDomainProcessDict]
-    if {[llength $construction_process]} {
-        set loads [lappend loads [dict create {*}$construction_process]]
-        set li [dict get $projectParametersDict solver_settings processes_sub_model_part_list]
-        lappend li [dict get $construction_process Parameters model_part_name]
-        dict set projectParametersDict solver_settings processes_sub_model_part_list $li
-    }
     dict set projectParametersDict loads_process_list $loads
+    dict set projectParametersDict construction_process [Dam::write::GetConstructionDomainProcessDict]
+    ##if {[llength $construction_process]} {
+    ##    set loads [lappend loads [dict create {*}$construction_process]]
+    ##    set li [dict get $projectParametersDict solver_settings processes_sub_model_part_list]
+    ##    lappend li [dict get $construction_process Parameters model_part_name]
+    ##    dict set projectParametersDict solver_settings processes_sub_model_part_list $li
+    ##}
     return $projectParametersDict
 
 }
@@ -423,17 +423,13 @@ proc Dam::write::GetConstructionDomainProcessDict { } {
     set data_basenode [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamConstructionProcess"]]
     set activate [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Activate_construction'\]"] v]
     if {[write::isBooleanTrue $activate]} {
-        dict set construction_dict "python_module" "dam_construction_process"
-        dict set construction_dict "kratos_module" "KratosMultiphysics.DamApplication"
-        dict set construction_dict "process_name" "DamConstructionProcess"
-        set params_dict [dict create]
-            dict set params_dict mesh_id 0
-            dict set params_dict model_part_name [write::getMeshId Parts [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Construction_part'\]"] v]]
-            set params [list Gravity_Direction Reservoir_Bottom_Coordinate_in_Gravity_Direction Height_Dam Number_of_phases]
+        dict set construction_dict mesh_id 0
+            set params [list gravity_direction reservoir_bottom_coordinate_in_gravity_direction height_dam number_of_phases density specific_heat alpha tmax h_0 ambient_temp phases_table phase_times_table ambient_table]
             foreach param $params {
-                dict set params_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
+                dict set construction_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
             }
-        dict set construction_dict Parameters $params_dict
     }
     return $construction_dict
 }
+
+
