@@ -424,7 +424,7 @@ proc Dam::write::GetConstructionDomainProcessDict { } {
     set activate [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Activate_construction'\]"] v]
     if {[write::isBooleanTrue $activate]} {
         dict set construction_dict mesh_id 0
-            set params [list gravity_direction reservoir_bottom_coordinate_in_gravity_direction height_dam number_of_phases density specific_heat alpha tmax h_0 ambient_temp phases_table phase_times_table ambient_table]
+            set params [list gravity_direction reservoir_bottom_coordinate_in_gravity_direction height_dam number_of_phases density specific_heat alpha tmax h_0 phase_input_file_name times_input_file_name ambient_input_file_name]
             foreach param $params {
                 dict set construction_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
             }

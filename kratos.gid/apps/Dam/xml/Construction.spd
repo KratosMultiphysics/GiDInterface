@@ -10,10 +10,9 @@
     <value n="alpha" pn="Alpha" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
     <value n="tmax" pn="Maximum Temperature" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
     <value n="h_0" pn="Heat Transfer Coefficient" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="ambient_temp" pn="Ambient Temperature" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="phases_table" pn="Table of Phases" v="1" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="phase_times_table" pn="Table of Time Activaction" v="2" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="ambient_table" pn="Table of Ambient Temp " v="3" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="phase_input_file_name" pn="Name of Table Phases" v="phases.txt" values="phases.txt" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="times_input_file_name" pn="Name of Table Times" v="times.txt" values="times.txt" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="ambient_input_file_name" pn="Name of Table Ambient Temp" v="ambient.txt" values="ambient.txt" state="[HideIfUniqueName DamActivateConstruction False]"/>
  <!--
     <value n="Construction_part" pn="Construction part" v="" values="[GetParts]" help=""  state="[HideIfUniqueName DamActivateConstruction False]"/>
 -->
