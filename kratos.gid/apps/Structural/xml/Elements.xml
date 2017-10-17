@@ -241,7 +241,7 @@
   </ElementItem>
   <!--structural elements-->
   <!--beam elements-->
-  <ElementItem n="BeamElement" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam">
+  <ElementItem n="BeamElement" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="SmallDisplacementBeamElement3D2N"/>
@@ -263,7 +263,8 @@
       <NodalCondition n="ANGULAR_ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="SECTION_TYPE" pn="Section type"/>
+      <parameter n="LOCAL_AXIS_ROTATION" pn="Local axis rotation" v="0" units="rad" unit_magnitude="Angle" update_proc="ChangeOrientation" command_button="DrawMyLocalAxis"/>
+      <parameter n="SECTION_TYPE" pn="Section type" v="none" type="combo" values="none"/>
     </inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />

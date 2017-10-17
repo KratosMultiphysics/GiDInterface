@@ -2,7 +2,14 @@
 <container n="StageInfo" pn="Analysis type" help="Stage information" icon="analysis" state="normal" open_window="0">
     <value n="SolutionType" pn="Solution type" un="SLSoluType" v="Static" values="Static,Dynamic" help="Solution type" actualize_tree="1"/>
     <value n="SolStratCombo" pn="Solution strategy" un="SLSolStrat" v="" values="" dict="[GetSolutionStrategiesSolid App Solid]" actualize_tree="1" state="[DisableIfUniqueName SLSoluType Static]"/>
-    <value n="Scheme" pn="Scheme" un="SLScheme" v="" values="" dict="[GetSchemes]" state="[DisableIfUniqueName SLSoluType Static]"  actualize_tree="1"/>
-    <value n="AnalysisType" pn="Linear type" un="SLAnalysisType" v="Linear" values="Linear,Non-Linear" help="Analysis type" state="[checkStateByUniqueName SLSoluType Static]"/>
+    <value n="Scheme" pn="Scheme" un="SLScheme" v="" values="" dict="[GetSchemes]" state="normal"  actualize_tree="1"/>
+    <!--  <value n="AnalysisType" pn="Linear type" un="SLAnalysisType" v="Linear" values="Linear,Non-Linear" help="Analysis type" state="[checkStateByUniqueName SLSoluType Static]"/> -->
+    <container n="TimeParameters" pn="Time parameters" un="SLTimeParameters" state="[HideIfUniqueName SLScheme Linear]" help="Problem parameters" icon="time3" open_window="0">
+      <value n="StartTime" pn="Start time" state="hidden" v="0.0"  help=""/>
+      <value n="DeltaTime"  pn="Time Step (s)" v="1.0" help=""/>
+      <value n="EndTime" pn="End time" v="1.0" help=""/>
+      <!--<value n="UseAutomaticDeltaTime" pn="Automatic Delta time" v="Fixed"  values="Fixed,Automatic" help="Select the Delta time option to be used"/>-->
+    </container>    
+    <include n="Intervals" active="1" state="[HideIfUniqueName SLScheme Linear]" path="apps/Common/xml/Intervals.spd"/>
 </container>
     

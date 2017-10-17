@@ -61,8 +61,9 @@ print("::[KSM Simulation]:: [Time Step:", ProjectParameters["problem_data"]["tim
 # Defining the model_part
 main_model_part = KratosMultiphysics.ModelPart(ProjectParameters["problem_data"]["model_part_name"].GetString())
 
-domain_size = ProjectParameters["problem_data"]["domain_size"].GetInt()
-main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DOMAIN_SIZE, domain_size)
+dimension = ProjectParameters["problem_data"]["dimension"].GetInt()
+main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DIMENSION, dimension)
+main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DOMAIN_SIZE, dimension)
 main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DELTA_TIME, ProjectParameters["problem_data"]["time_step"].GetDouble())
 main_model_part.ProcessInfo.SetValue(KratosMultiphysics.TIME, ProjectParameters["problem_data"]["start_time"].GetDouble())
 

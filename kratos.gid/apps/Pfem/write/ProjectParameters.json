@@ -2,7 +2,7 @@
     "problem_data"             : {
         "problem_name"    : "problem_name",
         "model_part_name" : "Main Model",
-        "domain_size"     : 3,
+        "dimension"       : 3,
         "time_step"       : 0.001,
         "start_time"      : 0.0,
         "end_time"        : 0.002,
@@ -58,7 +58,6 @@
 	    "meshing_domains"       : [
 		{
 		    "python_module": "meshing_domain",
-		    "mesh_id": 1,
 		    "model_part_name": "body_1",
 		    "alpha_shape": 2.4,
 		    "offset_factor": 0.0,
@@ -136,7 +135,6 @@
             "parametric_walls" : [
                 {
                     "python_module": "parametric_wall",
-                    "mesh_id": 0,
                     "model_part_name" : "model_part_name",
                     "rigid_body_settings":{
                     "rigid_body_element_type": "TranslatoryRigidElement3D1N",
@@ -227,7 +225,6 @@
         "help"            : "This process applies contact domain search by remeshing outer boundaries",
         "process_name"    : "ContactDomainProcess",
         "Parameters"      : {
-            "mesh_id"               : 0,
             "model_part_name"       : "model_part_name",
             "meshing_control_type"  : "step",
             "meshing_frequency"     : 1.0,
@@ -269,7 +266,6 @@
         "help"            : "This process imposes a constraint",
         "process_name"    : "AssignValueToVectorComponentsProcess",
         "Parameters"      : {
-            "mesh_id"         : 0,
             "model_part_name" : "DISPLACEMENT_Displacement_Auto1",
             "variable_name"   : "DISPLACEMENT",
             "interval"        : [0.0, 100],
@@ -284,7 +280,6 @@
         "help"           : "This process assigns a load value on conditions",
         "process_name"   : "AssignVectorToConditionsProcess",
         "Parameters"     : {
-            "mesh_id"         : 0,
             "model_part_name" : "load_y",
             "variable_name"   : "LINE_LOAD",
             "interval"        : [0.0, 100],
