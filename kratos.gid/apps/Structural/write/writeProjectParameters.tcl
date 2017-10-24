@@ -62,7 +62,6 @@ proc Structural::write::getOldParametersDict { } {
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
     dict set modelDict input_filename $model_name
-    dict set modelDict input_file_label 0
     dict set solverSettingsDict model_import_settings $modelDict
 
     set materialsDict [dict create]
