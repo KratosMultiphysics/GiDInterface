@@ -365,7 +365,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     }
 
     # Structure Bossak scheme setting
-    spdAux::SetValueOnTreeItem v "Bossak" STScheme
+    spdAux::SetValueOnTreeItem v "bossak" STScheme
 
     # Structure domain strategy settings
     set str_change_list [list residual_relative_tolerance "1e-8" residual_absolute_tolerance "1e-10" max_iteration "20"]
