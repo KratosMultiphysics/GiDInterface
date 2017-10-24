@@ -3,7 +3,7 @@
   <ConditionItem n="ALEMeshDisplacementBC2D" pn="ALE mesh displacement BC" ImplementedInFile=".cpp" Interval="Total"
 	ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="False" VariableName="MESH_DISPLACEMENT" App="Fluid"
-	ElementType="Line" ProcessName="ImposeVectorValueByComponentsProcess" help="Process to set custom mesh displacement conditions." >
+	ElementType="Line" ProcessName="AssignVectorVariableProcess" help="Process to set custom mesh displacement conditions." >
     <TopologyFeatures>
     </TopologyFeatures>
     <outputs>
@@ -13,7 +13,7 @@
   <ConditionItem n="ALEMeshDisplacementBC3D" pn="ALE mesh displacement BC" ImplementedInFile=".cpp" Interval="Total"
 	ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="False" VariableName="MESH_DISPLACEMENT" App="Fluid"
-	ElementType="Surface" ProcessName="ImposeVectorValueByComponentsProcess" help="Process to set custom mesh displacement conditions." >
+	ElementType="Surface" ProcessName="AssignVectorVariableProcess" help="Process to set custom mesh displacement conditions." >
     <TopologyFeatures>
     </TopologyFeatures>
     <outputs>
