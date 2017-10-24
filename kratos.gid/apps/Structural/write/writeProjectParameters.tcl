@@ -45,15 +45,14 @@ proc Structural::write::getOldParametersDict { } {
     # Solution strategy
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue STSolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
-    dict set solverSettingsDict solver_type $strategy_write_name
+    set currentStrategyId [write::getValue STSolStrat]
+    # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
+    dict set solverSettingsDict solver_type $solutiontype
     #~ dict set solverSettingsDict domain_size [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
-    dict set solverSettingsDict solution_type [write::getValue STSoluType]
+    dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
 
-    if {$solutiontype eq "Static"} {
-        dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
-    } elseif {$solutiontype eq "Dynamic"} {
+    if {$solutiontype eq "Dynamic"} {
         dict set solverSettingsDict time_integration_method [write::getValue STSolStrat]
         dict set solverSettingsDict scheme_type [write::getValue STScheme]
     }
