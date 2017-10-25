@@ -95,7 +95,9 @@ proc Dam::write::UpdateMaterials { } {
 proc Dam::write::writeConditions { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions "DamLoads"]
-    set ThermalConditionGroups [write::writeConditions "DamThermalLoads"]
+    set pairs [lsort -decreasing -index end [dict values $ConditionsDictGroupIterators] ]
+    set index [lindex [lindex $pairs end] end]
+    set ThermalConditionGroups [write::writeConditions "DamThermalLoads" $index]
 
     if {$ConditionsDictGroupIterators ne "" && $ThermalConditionGroups ne ""} {
         set ConditionsDictGroupIterators [concat $ConditionsDictGroupIterators $ThermalConditionGroups]
