@@ -262,23 +262,23 @@
 
   <!--structural elements-->
   <!--beam elements-->
-  <ElementItem n="BeamElement" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
+  <!--<ElementItem n="BeamElement" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
                MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" 
                LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" 
                help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam">
     <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
+    <!--<TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="SmallDisplacementBeamElement3D2N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
+    <!--<ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="1D"/>
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="D-R"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>
+    <!--<NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="ROTATION"/>
       <NodalCondition n="VELOCITY"/>
