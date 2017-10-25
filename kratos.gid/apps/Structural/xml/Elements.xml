@@ -481,7 +481,7 @@
                help="This element implements a quadrilateral corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="QuadShellThinElementCorotational3D4N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThinElementCorotational3D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
