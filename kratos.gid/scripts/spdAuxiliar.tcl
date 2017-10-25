@@ -1450,7 +1450,7 @@ proc spdAux::ProcGetSolversValues { domNode args } {
     set names [list ]
     set pnames [list ]
     foreach slvr $solvers {
-        if {[$slvr getParallelism] eq $curr_parallel_system} {
+        if {$curr_parallel_system in [$slvr getParallelism] } {
             lappend names [$slvr getName]
         }
     }
