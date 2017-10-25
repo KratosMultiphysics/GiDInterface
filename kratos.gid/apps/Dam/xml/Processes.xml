@@ -73,9 +73,9 @@
   <Process n="ImposeThermalParametersScalarValueProcess" pn="Impose thermal parameters for solving the thermal problem" python_module="impose_thermal_parameters_scalar_value_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="ThermalDensity" pn="Density" type="double" v="2400"/>
-        <parameter n="Conductivity" pn="Conductivity" type="double" v="1.0" />
-        <parameter n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
+        <parameter n="ThermalDensity" pn="Density" type="double" v="2400" help="Kg/m3"/>
+        <parameter n="Conductivity" pn="Conductivity" type="double" v="1.0" help="W/(mºC)"/>
+        <parameter n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" help="J/(KgºC)"/>
     </inputs>
   </Process> 
 
@@ -83,10 +83,10 @@
   <Process n="NoorzaiHeatSourceProcess" pn="Impose Noorzai Heat Source law" python_module="impose_heat_source_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process provides a heat source field according Noorzai formulation">
     <inputs>
-        <parameter n="density" pn="Density" type="double" v="2400.0"/>
-        <parameter n="specific_heat" pn="Specific Heat" type="double" v="1000.0"/>
-        <parameter n="t_max" pn="T Max" type="double" v="18.0" help="The maximum temperature of concrete under adiabatic condition"/>
-        <parameter n="alpha" pn="Alpha coefficient" type="double" v="0.025"/>
+        <parameter n="density" pn="Density" type="double" v="2400.0" help="Kg/m3"/>
+        <parameter n="specific_heat" pn="Specific Heat" type="double" v="1000.0" help="J/(KgºC)"/>
+        <parameter n="t_max" pn="T Max" type="double" v="18.0" help="The maximum temperature of concrete under adiabatic condition (ºC)"/>
+        <parameter n="alpha" pn="Alpha coefficient" type="double" v="6.8e-7" help="1/s"/>
     </inputs>
   </Process>  
   
@@ -94,7 +94,7 @@
   <Process n="ImposeUniformHeatFluxes" pn="Impose uniform value of heat fluxes" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="value" pn="Value" type="double" v="0.0"/>
+        <parameter n="value" pn="Value" type="double" v="0.0" help="W/m^2"/>
         <parameter n="table" pn="Uniform Heat Fluxes table filename" type="tablefile" v=""/>
     </inputs>
   </Process> 
@@ -103,8 +103,8 @@
   <Process n="ImposeTAmbientHeatFluxProcess" pn="Impose heat flux according to t_air formulation" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="h_0" pn="H 0" type="double" v="3.5"/>
-        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" />
+        <parameter n="h_0" pn="h" type="double" v="3.5" help="Heat transfer coefficient W/(m^2 ºC)"/>
+        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" help="ºC"/>
         <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
     </inputs>
   </Process> 
@@ -113,13 +113,13 @@
   <Process n="ImposeTSolAirHeatFluxProcess" pn="Impose heat flux according to t_sol_air formulation" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="h_0" pn="H 0" type="double" v="3.5"/>
-        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" />
+        <parameter n="h_0" pn="h" type="double" v="3.5" help="Heat transfer coefficient W/(m^2 ºC)"/>
+        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" help="ºC" />
         <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
         <parameter n="emisivity" pn="Emisivity" type="double" v="0.7"/>
-        <parameter n="delta_R" pn="Delta R" type="double" v="1.0" />
+        <parameter n="delta_R" pn="Delta R" type="double" v="1.0" help="W/m^2" />
         <parameter n="absorption_index" pn="Absorption Index" type="double" v="0.2" />
-        <parameter n="total_insolation" pn="Total Insolation" type="double" v="300.0" />
+        <parameter n="total_insolation" pn="Total Insolation" type="double" v="300.0" help="W/m^2"/>
     </inputs>
   </Process>
   
