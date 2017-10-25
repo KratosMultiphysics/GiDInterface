@@ -42,11 +42,6 @@
     </TopologyFeatures>
     <inputs>
     </inputs>
-    <DefaultValues>
-        <value n="ThermalDensity" pn="Density" type="double" v="2400"/>
-        <value n="Conductivity" pn="Conductivity" type="double" v="1.0" />
-        <value n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
-    </DefaultValues>
     <outputs>
     </outputs>
   </ConditionItem>
@@ -60,11 +55,6 @@
     </TopologyFeatures>
     <inputs>
     </inputs>
-    <DefaultValues>
-        <value n="ThermalDensity" pn="Density" type="double" v="2400"/>
-        <value n="Conductivity" pn="Conductivity" type="double" v="1.0" />
-        <value n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
-    </DefaultValues>
     <outputs>
     </outputs>
   </ConditionItem>
