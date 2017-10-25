@@ -3,7 +3,7 @@
    <!---  NODAL PROCESSES --> 
    <!---  Nodal Displacement, Acceleration -->
 
-  <Process n="ImposeVectorValueByComponentsProcess" pn="Impose vector value by components process" python_module="apply_constraint_vector_dam_table_process"
+  <Process n="ApplyConstraintVectorDamTableProcess" pn="Impose vector value by components process" python_module="apply_constraint_vector_dam_table_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the selected components of a given vector variable">
     <inputs>
 		    <parameter n="is_fixed" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
@@ -13,7 +13,7 @@
   </Process>
 
    <!---  Uniform pressure -->
-  <Process n="ImposeUniformPressureProcess" pn="Impose vector value by components process" python_module="impose_uniform_temperature_process"
+  <Process n="ImposeUniformPressureProcess" pn="Impose uniform value of pressure by process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
 		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
@@ -23,7 +23,7 @@
   </Process>  
   
    <!---  Uniform tempereature -->
-  <Process n="ImposeUniformTemperatureProcess" pn="Impose vector value by components process" python_module="impose_uniform_temperature_process"
+  <Process n="ImposeUniformTemperatureProcess" pn="Impose uniform value of temperature by process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
 		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
