@@ -48,7 +48,7 @@ proc FSI::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v "Yes" FLStratParams compute_reactions
 
     # Disable MPI parallelism until it is fully tested
-    spdAux::SetValueOnTreeItem values "OpenMP" ParallelType
+    #spdAux::SetValueOnTreeItem values "OpenMP" ParallelType
 }
 
 # Overwriting some procs
