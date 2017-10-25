@@ -95,17 +95,13 @@ proc Dam::write::UpdateMaterials { } {
 proc Dam::write::writeConditions { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions "DamLoads"]
-    set pairs [lsort -decreasing -index end [dict values $ConditionsDictGroupIterators] ]
-    set index [lindex [lindex $pairs end] end]
+    set pairs [lsort -increasing -index end [dict values $ConditionsDictGroupIterators] ]
+    set index [lindex [lindex [lsort -integer -index 0 $pairs] end] end]
+    if {$index eq ""} {
+        set index 0
+    }
+
     set ThermalConditionGroups [write::writeConditions "DamThermalLoads" $index]
-
-    if {$ConditionsDictGroupIterators ne "" && $ThermalConditionGroups ne ""} {
-        set ConditionsDictGroupIterators [concat $ConditionsDictGroupIterators $ThermalConditionGroups]
-    }
-
-    if {$ConditionsDictGroupIterators eq "" && $ThermalConditionGroups ne ""} {
-        set ConditionsDictGroupIterators [write::writeConditions "DamThermalLoads"]
-    }
 }
 
 proc Dam::write::writeMeshes { } {
