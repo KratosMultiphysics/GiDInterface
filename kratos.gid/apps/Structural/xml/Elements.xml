@@ -271,6 +271,55 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
     </outputs>
   </ElementItem>
+  <!--truss elements-->
+  <ElementItem n="TrussElement3D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="TrussElement3D2N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Truss"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="StrainSize" value="1"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+    </NodalConditions>
+    <inputs>
+     </inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="TrussElement2D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="TrussElement3D2N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Truss"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="StrainSize" value="1"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+    </outputs>
+  </ElementItem>
   <!--membrane elements-->
   <ElementItem n="MembraneElement" pn="Membrane" ImplementedInFile="membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane">
     <!--here we could add a list of all of the possible geometries-->
