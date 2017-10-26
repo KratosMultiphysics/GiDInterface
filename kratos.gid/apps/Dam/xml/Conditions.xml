@@ -120,7 +120,7 @@
     </outputs>
   </ConditionItem>  
   
-    <!---  Conditions: NOORZAI HEAT FLUX (HEAT SOURCE) -->  
+    <!---  Conditions: NOORZAI HEAT FLUX (HEAT SOURCE ADIABATIC) -->  
   <ConditionItem n="NoorzaiHeatFlux3D" pn="Noorzai Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
 	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
@@ -146,6 +146,34 @@
     <outputs>
     </outputs>
   </ConditionItem>
+
+      <!---  Conditions: AZENHA HEAT FLUX (HEAT SOURCE NON ADIABATIC) -->  
+  <ConditionItem n="AzenhaHeatFlux3D" pn="Azenha Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Volume" ProcessName="AzenhaHeatSourceProcess" VariableName="HEAT_FLUX"
+    help="Application of the Heat Source according to Azenha Formulation">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+ <ConditionItem n="AzenhaHeatFlux2D" pn="Azenha Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="AzenhaHeatSourceProcess" VariableName="HEAT_FLUX"
+    help="Application of the Heat Source according to Azenha Formulation">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
 
   <!---  MECHANICAL CONDITIONS -->  
 

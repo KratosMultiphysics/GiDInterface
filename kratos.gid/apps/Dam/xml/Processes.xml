@@ -86,7 +86,23 @@
         <parameter n="density" pn="Density" type="double" v="2400.0" help="Kg/m3"/>
         <parameter n="specific_heat" pn="Specific Heat" type="double" v="1000.0" help="J/(KgºC)"/>
         <parameter n="t_max" pn="T Max" type="double" v="18.0" help="The maximum temperature of concrete under adiabatic condition (ºC)"/>
-        <parameter n="alpha" pn="Alpha coefficient" type="double" v="6.8e-7" help="1/s"/>
+        <parameter n="alpha" pn="Alpha coefficient" type="double" v="8.47e-6" help="1/s"/>
+    </inputs>
+  </Process>  
+
+    <!---  Azenha Heat Source -->
+  <Process n="AzenhaHeatSourceProcess" pn="Impose Azenha Heat Source law" python_module="impose_heat_source_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process provides a heat source field according Azenha formulation">
+    <inputs>
+        <parameter n="activation_energy" pn="Activation Energy" type="double" v="45507.0" help="J/mol"/>
+        <parameter n="gas_constant" pn="Universal Constant" type="double" v="8.314472" help="J/(mol ºC)"/>
+        <parameter n="constant_rate" pn="Constant Rate" type="double" v="7.2237e10" help="W/m^3"/>
+        <parameter n="alpha_initial" pn="Initial Alpha" type="double" v="0.015" />
+        <parameter n="q_total" pn="Q Total" type="double" v="6.7939e7" help="J/m^3"/>
+        <parameter n="A" pn="First Factor" type="double" v="0.4" />
+        <parameter n="B" pn="Second Factor" type="double" v="6.9" />
+        <parameter n="C" pn="Third Factor" type="double" v="18.8" />
+        <parameter n="D" pn="Fourth Factor" type="double" v="7.0" />
     </inputs>
   </Process>  
   
@@ -103,7 +119,7 @@
   <Process n="ImposeTAmbientHeatFluxProcess" pn="Impose heat flux according to t_air formulation" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="h_0" pn="h" type="double" v="3.5" help="Heat transfer coefficient W/(m^2 ºC)"/>
+        <parameter n="h_0" pn="Heat transfer coefficient" type="double" v="3.5" help="W/(m^2 ºC)"/>
         <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" help="ºC"/>
         <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
     </inputs>
@@ -113,7 +129,7 @@
   <Process n="ImposeTSolAirHeatFluxProcess" pn="Impose heat flux according to t_sol_air formulation" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="h_0" pn="h" type="double" v="3.5" help="Heat transfer coefficient W/(m^2 ºC)"/>
+        <parameter n="h_0" pn="Heat transfer coefficient" type="double" v="3.5" help="W/(m^2 ºC)"/>
         <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" help="ºC" />
         <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
         <parameter n="emisivity" pn="Emisivity" type="double" v="0.7"/>
