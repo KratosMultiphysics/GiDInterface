@@ -15,7 +15,10 @@ proc Solid::xml::Init { } {
      Model::getProcesses Processes.xml
      Model::getConditions Conditions.xml
      Model::getSolvers "../../Common/xml/Solvers.xml"
-     #Model::getSolvers Solvers.xml
+
+     # Model::ForgetElement SmallDisplacementBbarElement2D    
+     # Model::ForgetElement SmallDisplacementBbarElement3D
+    
 }
 
 proc Solid::xml::getUniqueName {name} {
@@ -23,12 +26,9 @@ proc Solid::xml::getUniqueName {name} {
 }
 
 proc Solid::xml::CustomTree { args } {
-    # Hide Results Cut planes
+    # Hide Results Cut plane
     spdAux::SetValueOnTreeItem state hidden Results CutPlanes
-    spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
-    
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
-    if {$result_node ne "" } {$result_node delete}
+    spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
 }
 
 Solid::xml::Init
@@ -74,7 +74,11 @@ proc Solid::xml::ProcCheckNodalConditionStateSolid {domNode args} {
 proc Solid::xml::ProcCheckGeometrySolid {domNode args} {
      set ret "surface"
      if {$::Model::SpatialDimension eq "3D"} {
-          set ret "surface,volume"
+	 set ret "line,surface,volume"
+     } elseif {$::Model::SpatialDimension eq "2D"} {
+	 set ret "line,surface"
+     } elseif {$::Model::SpatialDimension eq "1D"} {
+	 set ret "line"
      }
      return $ret
 }

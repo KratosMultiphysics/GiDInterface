@@ -48,7 +48,7 @@ import os
 import KratosMultiphysics
 import KratosMultiphysics.SolidMechanicsApplication     as KratosSolid
 import KratosMultiphysics.ExternalSolversApplication    as KratosSolvers
-import KratosMultiphysics.PfemBaseApplication           as KratosPfemBase
+import KratosMultiphysics.PfemApplication               as KratosPfemg
 import KratosMultiphysics.ContactMechanicsApplication   as KratosContact
 import KratosMultiphysics.PfemSolidMechanicsApplication as KratosPfemSolid
 import KratosMultiphysics.PfemFluidDynamicsApplication  as KratosPfemFluid
@@ -84,7 +84,8 @@ print("::[KPFEM Simulation]:: [Time Step:", ProjectParameters["problem_data"]["t
 # Defining the model_part
 main_model_part = KratosMultiphysics.ModelPart(ProjectParameters["problem_data"]["model_part_name"].GetString())
 
-main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DOMAIN_SIZE, ProjectParameters["problem_data"]["domain_size"].GetInt())
+main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DIMENSION, ProjectParameters["problem_data"]["dimension"].GetInt())
+main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DOMAIN_SIZE, ProjectParameters["problem_data"]["dimension"].GetInt())
 main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DELTA_TIME, ProjectParameters["problem_data"]["time_step"].GetDouble())
 main_model_part.ProcessInfo.SetValue(KratosMultiphysics.TIME, ProjectParameters["problem_data"]["start_time"].GetDouble())
 if( ProjectParameters["problem_data"].Has("gravity_vector") ):

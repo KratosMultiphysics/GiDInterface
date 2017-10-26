@@ -230,7 +230,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC3D'\]"
         set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_full]
         $fluidDisplacementNode setAttribute ov surface
-        set props [list is_fixed_x 1 is_fixed_y 1 is_fixed_z 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -241,7 +241,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         }
         set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_lat]
         $fluidDisplacementNode setAttribute ov surface
-        set props [list is_fixed_x 0 is_fixed_y 0 is_fixed_z 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list constrainedX 0 constrainedY 0 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -254,7 +254,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
         set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshBC]
         $fluidDisplacementNode setAttribute ov line
-        set props [list is_fixed_x 1 is_fixed_y 1 is_fixed_z 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -293,7 +293,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
 
     # Fluid domain strategy settings
-    set str_change_list [list relative_velocity_tolerance "1e-7" absolute_velocity_tolerance "1e-9" relative_pressure_tolerance "1e-7" absolute_pressure_tolerance "1e-9" maximum_iterations "20"]
+    set str_change_list [list relative_velocity_tolerance "1e-8" absolute_velocity_tolerance "1e-10" relative_pressure_tolerance "1e-8" absolute_pressure_tolerance "1e-10" maximum_iterations "20"]
     set xpath [spdAux::getRoute FLStratParams]
     foreach {name value} $str_change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
@@ -312,9 +312,8 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
-    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc SECTION_TYPE 0 THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6]
-    lappend props YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45 KINEMATIC_HARDENING_MODULUS 0 REFERENCE_HARDENING_MODULUS 0 INFINITY_HARDENING_MODULUS 0
-    lappend props HARDENING_EXPONENT 0 DAMAGE_THRESHOLD 0 STRENGTH_RATIO 0 FRACTURE_ENERGY 0
+    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6]
+    lappend props YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45
     foreach {prop val} $props {
          set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -328,7 +327,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement FixedDisplacement]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
-    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -366,11 +365,11 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     }
 
     # Structure Bossak scheme setting
-    spdAux::SetValueOnTreeItem v "Bossak" STScheme
+    spdAux::SetValueOnTreeItem v "bossak" STScheme
 
     # Structure domain strategy settings
-    set str_change_list [list residual_relative_tolerance "1e-7" residual_absolute_tolerance "1e-9" max_iteration "20"]
-    set xpath [spdAux::getRoute SLStratParams]
+    set str_change_list [list residual_relative_tolerance "1e-8" residual_absolute_tolerance "1e-10" max_iteration "20"]
+    set xpath [spdAux::getRoute STStratParams]
     foreach {name value} $str_change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
@@ -387,7 +386,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         [$root selectNodes "$parallelization_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
 
-    set change_list [list nl_tol "1e-7" nl_max_it 25]
+    set change_list [list nl_tol "1e-8" nl_max_it 25]
     set xpath [spdAux::getRoute FSIStratParams]
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]

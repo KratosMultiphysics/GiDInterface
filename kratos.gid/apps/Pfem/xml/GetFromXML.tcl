@@ -13,8 +13,8 @@ proc Pfem::xml::Init { } {
     
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
-    Model::getConstitutiveLaws "../../Solid/xml/ConstitutiveLaws.xml"
     Model::getConstitutiveLaws "../../Pfem/xml/ConstitutiveLaws.xml"
+    Model::getConstitutiveLaws "../../Solid/xml/ConstitutiveLaws.xml"
     Model::getProcesses "../../Solid/xml/Processes.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
@@ -48,7 +48,7 @@ proc Pfem::xml::CustomTree { args } {
     
     # Hide Results Cut planes  
     foreach node [[customlib::GetBaseRoot] getElementsByTagName value ] { $node setAttribute icon data }
-
+    
     #intervals
     spdAux::SetValueOnTreeItem icon timeIntervals Intervals
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
@@ -74,6 +74,7 @@ proc Pfem::xml::CustomTree { args } {
     
     #restart
     spdAux::SetValueOnTreeItem icon doRestart Restart     
+    spdAux::SetValueOnTreeItem icon select Restart RestartOptions
     
     #parallelism
     spdAux::SetValueOnTreeItem icon select Parallelization
@@ -82,27 +83,22 @@ proc Pfem::xml::CustomTree { args } {
     #boundary conditions
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
+
+    #nodal results 
+    spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
+    spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
+    spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
     
-    spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions DISPLACEMENT
-    spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions VELOCITY
-    spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions INLET
-    spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions ACCELERATION
-    spdAux::SetValueOnTreeItem icon folder PFEM_NodalConditions PRESSURE
+    
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
+       $node setAttribute icon folder
+    }
     
     #loads
     spdAux::SetValueOnTreeItem icon setLoad PFEM_Loads 
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads SelfWeight3D
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads SelfWeight2D
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads SelfWeight2Da
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads PointLoad2D
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads PointLoad2DAxisym
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads PointLoad3D
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads LineLoad2D
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads LineLoad2DAxisym
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads SurfaceLoad3D
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads LinePressure2D
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads LinePressure2DAxisym
-    spdAux::SetValueOnTreeItem icon folder PFEM_Loads SurfacePressure3D
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Loads]/condition" ] { 
+       $node setAttribute icon folder
+    }
    
     [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
     
@@ -113,7 +109,7 @@ proc Pfem::xml::CustomTree { args } {
 
 proc Pfem::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
     set domain_type [write::getValue PFEM_DomainType]
-    set fluid_exclusive_conditions [list "VELOCITY" "INLET"]
+    set fluid_exclusive_conditions [list "VELOCITY" "INLET" "PRESSURE"]
     set current_condition [$domNode @n]
     if {$domain_type eq "Fluids" && $current_condition ni $fluid_exclusive_conditions} {
         return hidden

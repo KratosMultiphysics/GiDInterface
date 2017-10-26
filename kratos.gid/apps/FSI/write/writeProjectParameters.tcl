@@ -19,7 +19,6 @@ proc FSI::write::getParametersDict { } {
    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict FSI] ]
 
    dict set solverSettingsDict mesh_solver [write::getValue FSIALEParams MeshSolver]
-   dict set solverSettingsDict mesh_reform_dofs_each_step [write::getValue FSIALEParams ReformDOFs]
 
    set solidInterfacesList [write::GetMeshFromCondition STLoads StructureInterface2D]
    lappend solidInterfacesList {*}[write::GetMeshFromCondition STLoads StructureInterface3D]
@@ -35,7 +34,7 @@ proc FSI::write::getParametersDict { } {
    # Structural section
    UpdateUniqueNames Structural
    apps::setActiveAppSoft Structural
-   set ::write::parts STParts
+   Structural::write::ApplyConfiguration
 
    set StructuralParametersDict [Structural::write::getParametersEvent]
    set current [dict get $StructuralParametersDict solver_settings model_import_settings input_filename]
@@ -44,7 +43,7 @@ proc FSI::write::getParametersDict { } {
    # Fluid section
    UpdateUniqueNames Fluid
    apps::setActiveAppSoft Fluid
-   set ::write::parts FLParts
+   write::SetConfigurationAttribute parts_un FLParts
    
    set FluidParametersDict [Fluid::write::getParametersDict]
    set current [dict get $FluidParametersDict solver_settings model_import_settings input_filename]

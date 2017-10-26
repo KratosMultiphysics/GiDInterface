@@ -15,7 +15,7 @@ The interface of Kratos with [GiD](http://www.gidhome.com)
 * Go to: Data / Problem type / kratos
 * kratos top menu / Developer mode (recommended)
 
-## Warning
+## Warnings
 * This repository is in Beta version. This means that everything can change, and there is no "transform from older versions" yet.
 
 ## Want to develop?

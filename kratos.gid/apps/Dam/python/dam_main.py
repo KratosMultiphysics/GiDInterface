@@ -13,7 +13,7 @@ import os
 # Import kratos core and applications
 import KratosMultiphysics
 import KratosMultiphysics.ExternalSolversApplication as KratosSolvers
-#~ import KratosMultiphysics.TrilinosApplication as TrilinosApplication
+#import KratosMultiphysics.TrilinosApplication as TrilinosApplication
 import KratosMultiphysics.ConvectionDiffusionApplication as KratosConvDiff
 import KratosMultiphysics.SolidMechanicsApplication  as KratosSolid
 import KratosMultiphysics.PoromechanicsApplication as KratosPoro
@@ -49,6 +49,8 @@ time_scale = ProjectParameters["problem_data"]["time_scale"].GetString()
 # Time Units Converter
 if(time_scale=="Months"):               # Factor to pass from months to seconds
     time_unit_converter = 2592000.0
+elif(time_scale=="Weeks"):               # Factor to pass from weeks to seconds
+    time_unit_converter = 604800.0
 elif(time_scale=="Days"):               # Factor to pass from days to seconds
     time_unit_converter = 86400.0
 elif(time_scale=="Hours"):              # Factor to pass from hours to seconds

@@ -4,7 +4,7 @@
   <!--fluid elements-->
   <!--updated lagrangian-->
   <ElementItem n="TwoStepUpdatedLagrangianVPFluidElement2D" pn="Fluid Updated Lagrangian" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Fluid">
@@ -15,12 +15,12 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="PfemFluidDynamicsApplication"/>
+	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>    
+      <NodalCondition n="PRESSURE"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -30,7 +30,7 @@
 
 
    <ElementItem n="TwoStepUpdatedLagrangianVPFluidElement3D" pn="Fluid Updated Lagrangian" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Fluid">
@@ -41,12 +41,12 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="PfemFluidDynamicsApplication"/>
+	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>        
+      <NodalCondition n="PRESSURE"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -57,7 +57,7 @@
   <!--solid elements-->
   <!--updated lagrangian-->
   <ElementItem n="TwoStepUpdatedLagrangianVPSolidElement2D" pn="Solid Updated Lagrangian VP" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Solid">
@@ -68,12 +68,15 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="PfemFluidDynamicsApplication"/>
+	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>    
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
     </NodalConditions>
     <inputs>
     </inputs>
@@ -83,7 +86,7 @@
 
 
    <ElementItem n="TwoStepUpdatedLagrangianVPSolidElement3D" pn="Solid Updated Lagrangian VP" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Solid">
@@ -94,12 +97,15 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="PfemFluidDynamicsApplication"/>
+	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>        
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
     </NodalConditions>
     <inputs>
     </inputs>
@@ -111,7 +117,7 @@
   <!--solid elements-->
   <!--updated lagrangian-->
   <ElementItem n="UpdatedLagrangianVSolidElement2D" pn="Solid Updated Lagrangian V" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Solid">
@@ -122,12 +128,15 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="PfemFluidDynamicsApplication"/>
+	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>    
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>       
     </NodalConditions>
     <inputs>
     </inputs>
@@ -137,7 +146,7 @@
 
 
    <ElementItem n="UpdatedLagrangianVSolidElement3D" pn="Solid Updated Lagrangian V" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Solid">
@@ -148,12 +157,15 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="PfemFluidDynamicsApplication"/>
+	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>        
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
     </NodalConditions>
     <inputs>
     </inputs>
@@ -166,7 +178,7 @@
   <!--rigid elements-->
   <!--updated lagrangian-->
   <ElementItem n="SurfaceRigidLagrangianElement2D2N" pn="Rigid Wall" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Rigid">
@@ -179,7 +191,13 @@
 	  <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>     
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>             
     </NodalConditions>
     <inputs>
     </inputs>
@@ -187,7 +205,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="RigidLagrangianElement2D3N" pn="Rigid Body" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Rigid">
@@ -200,7 +218,13 @@
 	  <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>     
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>                   
     </NodalConditions>
     <inputs>
     </inputs>
@@ -208,7 +232,7 @@
     </outputs>
   </ElementItem>  
   <ElementItem n="SurfaceRigidLagrangianElement3D3N" pn="Rigid Wall" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Rigid">
@@ -221,7 +245,13 @@
 	  <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>     
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
     </NodalConditions>
     <inputs>
     </inputs>
@@ -229,7 +259,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="RigidLagrangianElement3D4N" pn="Rigid Body" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Rigid">
@@ -242,7 +272,13 @@
 	  <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
-    <NodalConditions>     
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
     </NodalConditions>
     <inputs>
     </inputs>
@@ -253,7 +289,7 @@
   <!--solid elements-->
   <!--updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElement2D" pn="Solid Updated Lagrangian" ImplementedInFile="updated_lagrangian_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="This element it implements a Updated Lagrangian approach to large deformation kinematics"
 	       ElementType="Solid">
@@ -263,7 +299,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
@@ -273,7 +309,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>  
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>       
     </NodalConditions>
     <inputs>
     </inputs>
@@ -286,7 +325,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementAxisym" pn="Solid Updated Lagrangian" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="This element it implements a Updated Lagrangian approach to large deformation kinematics"
 	       ElementType="Solid">
@@ -296,7 +335,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
       <filter field="Type" value="Axisymmetric"/>
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="4"/>
@@ -306,7 +345,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>  
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>             
     </NodalConditions>
     <inputs>
     </inputs>
@@ -319,7 +361,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElement3D" pn="Solid Updated Lagrangian" ImplementedInFile="updated_lagrangian_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="This element it implements a Updated Lagrangian approach to large deformation kinematics"
 	       ElementType="Solid">
@@ -329,7 +371,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+      <filter field="kratos_module" value="SolidMechanicsApplication"/>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
@@ -339,7 +381,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>  
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -352,7 +397,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="TotalUpdatedLagrangianElement2D" pn="Solid Total Lagrangian" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="PfemSolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="PfemSolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Solid">
@@ -362,7 +407,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
@@ -372,7 +417,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>     
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
     </NodalConditions>
     <inputs>
     </inputs>
@@ -385,7 +433,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="TotalUpdatedLagrangianElement3D" pn="Solid Total Lagrangian" ImplementedInFile="none.cpp"
-	       ImplementedInApplication="PfemSolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
+	       kratos_module="PfemSolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
 	       ElementType="Solid" >
@@ -395,7 +443,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
@@ -405,7 +453,10 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>          
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>      
     </NodalConditions>
     <inputs>
     </inputs>
@@ -421,7 +472,7 @@
   <!--hybrid elements-->
   <!--hybrid updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid Updated Lagrangian U-P" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian approach to large deformation kinematics"
 	       ElementType="Solid">
@@ -431,7 +482,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
       <filter field="Type" value="PlaneStress,PlaneStrain"/>
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
@@ -443,6 +494,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>     
     </inputs>
@@ -455,7 +509,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid Updated Lagrangian U-P" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
-	       ImplementedInApplication="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="This element it implements a Hybrid Displacement-Pressure Updated Lagrangian approach to large deformation kinematics"
 	       ElementType="Solid" >
@@ -465,7 +519,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="ImplementedInApplication" value="SolidMechanicsApplication"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
       <filter field="Type" value="Axisymmetric"/>
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="4"/>
@@ -477,6 +531,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
     </NodalConditions>
     <inputs>
     </inputs>

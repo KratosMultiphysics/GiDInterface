@@ -20,7 +20,7 @@
         <value n="ACCELERATION" pn="Acceleration" v="No" values="Yes,No" help="" state="[checkStateByUniqueName NumaTypeofProblem Mechanical NumaTypeofProblem Thermo-Mechanical]"/>
         <value n="TEMPERATURE" pn="Temperature" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName NumaTypeofProblem Thermo-Mechanical]" />
         <value n="VOLUME_ACCELERATION" pn="Body Accelerations" v="No" values="Yes,No" help="" state="[checkStateByUniqueName NumaTypeofProblem Mechanical NumaTypeofProblem Thermo-Mechanical]"/>
-        <value n="NEGATIVE_FACE_PRESSURE" pn="Hydrostatic Loads" v="No" values="Yes,No" help="This output includes; hydrostatic loads, uplift loads.." state="[checkStateByUniqueName NumaTypeofProblem Mechanical NumaTypeofProblem Thermo-Mechanical]"/>
+        <value n="POSITIVE_FACE_PRESSURE" pn="Hydrostatic Loads" v="No" values="Yes,No" help="This output includes; hydrostatic loads, uplift loads.." state="[checkStateByUniqueName NumaTypeofProblem Mechanical NumaTypeofProblem Thermo-Mechanical]"/>
         <value n="NODAL_CAUCHY_STRESS_TENSOR" pn="Nodal Total Stress" v="No" values="Yes,No" help="" state="[checkStateByUniqueName NumaTypeofProblem Mechanical NumaTypeofProblem Thermo-Mechanical]"/>
         <value n="NODAL_JOINT_WIDTH" pn="Nodal Joint Width" v="No" values="Yes,No" help="" state="[checkStateByUniqueName NumaTypeofProblem Mechanical NumaTypeofProblem Thermo-Mechanical]"/>
         <value n="Vi_POSITIVE" pn="Traction Principal Stress Vector" v="No" values="Yes,No" help="" state="[checkStateByUniqueName NumaTypeofProblem Mechanical NumaTypeofProblem Thermo-Mechanical]"/>

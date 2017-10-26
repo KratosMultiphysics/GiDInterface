@@ -111,7 +111,7 @@
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Simulation"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="HydrostaticConditionsProcess" help="Hydrostatic pressure on lines, oriented pointing against the line outer normal"
-	VariableName="NEGATIVE_FACE_PRESSURE">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="LineLoadCondition2D3N"/>
@@ -127,7 +127,7 @@
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Simulation"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface" ProcessName="HydrostaticConditionsProcess" help="Normal Pressure on surfaces, oriented pointing against the surface outer normal"
-	VariableName="NEGATIVE_FACE_PRESSURE">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
@@ -146,7 +146,7 @@
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Simulation"
 	ElementType="Line" ProcessName="UpliftConditionsProcess" help="Uplift pressure on lines, oriented pointing against the line outer normal"
-    VariableName="NEGATIVE_FACE_PRESSURE">
+    VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="LineLoadCondition2D3N"/>
@@ -161,7 +161,7 @@
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Simulation"
 	ElementType="Surface" ProcessName="UpliftConditionsProcess" help="Uplift Pressure on surfaces, oriented pointing against the surface outer normal"
-	VariableName="NEGATIVE_FACE_PRESSURE">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
@@ -179,7 +179,7 @@
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" TypeofCondition="Simulation"
 	ElementType="Surface" ProcessName="CircularUpliftConditionsProcess" help="Uplift Pressure on surfaces, oriented pointing against the surface outer normal"
-	VariableName="NEGATIVE_FACE_PRESSURE">
+	VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>

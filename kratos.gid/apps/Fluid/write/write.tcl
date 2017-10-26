@@ -1,12 +1,8 @@
 namespace eval Fluid::write {
     # Namespace variables declaration
     variable FluidConditions
-
-    variable PartsUN
-    variable BCUN
     variable writeCoordinatesByGroups
-
-    variable validApps
+    variable writeAttributes
 }
 
 proc Fluid::write::Init { } {
@@ -15,60 +11,101 @@ proc Fluid::write::Init { } {
     set FluidConditions(temp) 0
     unset FluidConditions(temp)
 
-    variable PartsUN
-    set PartsUN "FLParts"
-    variable BCUN
-    set BCUN "FLBC"
+    SetAttribute parts_un FLParts
+    SetAttribute nodal_conditions_un FLNodalConditions
+    SetAttribute conditions_un FLBC
+    SetAttribute materials_un FLMaterials
+    SetAttribute drag_un FLDrags
+    SetAttribute writeCoordinatesByGroups 0
+    SetAttribute validApps [list "Fluid"]
+    SetAttribute main_script_file "KratosFluid.py"
+    SetAttribute materials_file "FluidMaterials.json"
+}
 
-    variable writeCoordinatesByGroups
-    set writeCoordinatesByGroups 0
+proc Fluid::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
 
-    variable validApps
-    set validApps [list "Fluid"]
+proc Fluid::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc Fluid::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
+}
+
+proc Fluid::write::AddAttribute {att val} {
+    variable writeAttributes
+    dict append writeAttributes $att $val]
+}
+
+proc Fluid::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
 proc Fluid::write::AddValidApps {appid} {
-    variable validApps
-    if {$appid ni $validApps} {lappend validApps $appid}
+    AddAttribute validApps $appid
 }
 
 proc Fluid::write::SetCoordinatesByGroups {value} {
-    variable writeCoordinatesByGroups
-    set writeCoordinatesByGroups $value
+    SetAttribute writeCoordinatesByGroups $value
 }
 
 # Events
 proc Fluid::write::writeModelPartEvent { } {
-    variable PartsUN
-    variable writeCoordinatesByGroups
-    variable validApps
+    # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
-    write::initWriteData $PartsUN "FLMaterials"
+
+    # Init data
+    write::initWriteConfiguration [GetAttributes]
+
+    # Headers
     write::writeModelPartData
     writeProperties
-    write::writeMaterials $validApps
-    if {$writeCoordinatesByGroups} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+
+    # Materials
+    write::writeMaterials [GetAttribute validApps]
+
+    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
+    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+
+    # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
+    
+    # Nodal conditions and conditions
     writeConditions
+    
+    # SubmodelParts
     writeMeshes
+    
+    # Custom SubmodelParts
     write::writeBasicSubmodelParts [getLastConditionId]
 }
 proc Fluid::write::writeCustomFilesEvent { } {
-    write::CopyFileIntoModel "python/KratosFluid.py"
-    write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
+    # Materials file
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+
+    # Main python script
+    set orig_name [GetAttribute main_script_file]
+    write::CopyFileIntoModel [file join "python" $orig_name ]
+    write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 proc Fluid::write::Validate {} {
-    variable PartsUN
     set err ""    
     set root [customlib::GetBaseRoot]
 
     # Check only 1 part in Parts
-    set xp1 "[spdAux::getRoute $PartsUN]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     if {[llength [$root selectNodes $xp1]] ne 1} {
-        set err "You must set one part.\n"
+        set err "You must set one part in Parts.\n"
     }
+
     # Check closed volume
     #if {[CheckClosedVolume] ne 1} {
     #    append err "Check boundary conditions."
@@ -103,7 +140,7 @@ proc Fluid::write::writeConditions { } {
 
 proc Fluid::write::writeBoundaryConditions { } {
     variable FluidConditions
-    variable BCUN
+    set BCUN [GetAttribute conditions_un]
 
     # Write the conditions
     set dict_group_intervals [write::writeConditions $BCUN]
@@ -131,22 +168,21 @@ proc Fluid::write::writeBoundaryConditions { } {
 }
 
 proc Fluid::write::writeDrags { } {
-    write::writeNodalConditions "FLDrags"
+    write::writeNodalConditions [GetAttribute drag_un]
 }
 
 proc Fluid::write::writeMeshes { } {
     write::writePartMeshes
-    write::writeNodalConditions "FLNodalConditions"
+    write::writeNodalConditions [GetAttribute nodal_conditions_un]
     writeConditionsMesh
     #writeSkinMesh
 }
 
 proc Fluid::write::writeConditionsMesh { } {
     variable FluidConditions
-    variable BCUN
     
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     #W "Conditions $xp1 [$root selectNodes $xp1]"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
@@ -165,10 +201,9 @@ proc Fluid::write::writeConditionsMesh { } {
 
 proc Fluid::write::writeSkinMesh { } {
     variable FluidConditions
-    variable BCUN
     
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     #W "Conditions $xp1 [$root selectNodes $xp1]"
     set listiniend [list ]
     set listgroups [list ]
@@ -194,9 +229,8 @@ proc Fluid::write::CheckClosedVolume {} {
     variable BCUN
     set isclosed 1
 
-    
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
 
     set listgroups [list ]
     foreach group [$root selectNodes $xp1] {

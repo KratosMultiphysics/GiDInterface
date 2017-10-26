@@ -17,5 +17,5 @@ REM Set the number of threads for OpenMP
 REM export OMP_NUM_THREADS=%5
 REM set OMP_NUM_THREADS=%5
 
-REM Run Python using the script KratosSolidMechanics.py
+REM Run Python using the script MainKratos.py
 "%3\\exec\\kratos\\runkratos" MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"

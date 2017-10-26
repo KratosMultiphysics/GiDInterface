@@ -42,7 +42,7 @@ proc Model::ParseMatNode { node } {
     foreach att [$node attributes] {
         $mat setAttribute $att [split [$node getAttribute $att] ","]
     }
-    foreach in [[$node getElementsByTagName inputs] childNodes]  {
+    foreach in [[$node getElementsByTagName inputs] getElementsByTagName parameter]  {
         set mat [ParseInputParamNode $mat $in]
     }
     

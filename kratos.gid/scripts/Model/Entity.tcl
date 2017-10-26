@@ -50,7 +50,7 @@ oo::class create Entity {
     method getPublicName { } {variable publicname; return $publicname}
     method setPublicName { pn } {variable publicname; set publicname $pn}
     
-    method getHelp { } {variable help; return $help}
+    method getHelp { } {variable help; if {$help eq ""} {variable publicname; return $publicname} {return $help} }
     method setHelp { h } {variable help; set help $h}
 
     method addInputDone {inp} {
@@ -106,6 +106,7 @@ oo::class create Entity {
     method addInputDependency {n dn dv} {
         variable inputs
         [dict get $inputs $n] setDep $dn $dv
+
     }
     
     
