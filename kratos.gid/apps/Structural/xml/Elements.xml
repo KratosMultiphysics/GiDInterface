@@ -2,8 +2,8 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="SmallDisplacementElement2D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" 
+  <ElementItem n="SmallDisplacementElement2D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
                help="This element it implements a small displacement solid element">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -40,8 +40,8 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid small displacements" ImplementedInFile="axisym_small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" 
+  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid small displacements" ImplementedInFile="axisym_small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
                help="This element it implements an axisymetric small displacement solid element">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -75,8 +75,8 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="SmallDisplacementElement3D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" 
+  <ElementItem n="SmallDisplacementElement3D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
                help="This element it implements a small displacement solid element">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -115,8 +115,8 @@
 
   <!--large displacements-->
   <!--total lagrangian-->
-  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" 
+  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid"
                help="This element it implements a Total Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -150,8 +150,8 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TotalLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" 
+  <ElementItem n="TotalLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
                help="This element it implements a Total Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -188,8 +188,8 @@
   </ElementItem>
 
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" 
+  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid"
                help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -223,8 +223,8 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" 
+  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
                help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -264,8 +264,8 @@
   <!--beam elements-->
 
   <!--truss elements-->
-  <ElementItem n="TrussElement3D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" 
+  <ElementItem n="TrussElement3D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -291,8 +291,8 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TrussElement2D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" 
+  <ElementItem n="TrussElement2D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -301,7 +301,7 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
-      <filter field="Dimension" value="3D"/>
+      <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="1"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
@@ -345,7 +345,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TrussLinearElement3D2N" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussLinearElement2D2N" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
                help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss">
     <!--here we could add a list of all of the possible geometries-->
@@ -355,7 +355,7 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
-      <filter field="Dimension" value="3D"/>
+      <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="1"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
@@ -403,8 +403,8 @@
 
   <!--shell elements-->
   <!--small displacements-->
-  <ElementItem n="TriShellThinElement" pn="Thin triangular shell" ImplementedInFile="shell_thin_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False" 
+  <ElementItem n="TriShellThinElement" pn="Thin triangular shell" ImplementedInFile="shell_thin_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
                help="This element implements a triangular element for thin shells in a small displacements approach" ElementType="Shell" RotationDofs="True">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -434,8 +434,8 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="QuadShellThickElement" pn="Thick quadrilateral shell" ImplementedInFile="shell_thick_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False" 
+  <ElementItem n="QuadShellThickElement" pn="Thick quadrilateral shell" ImplementedInFile="shell_thick_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
                help="This element implements a quadrilateral element for thick shells in a small displacements approach" ElementType="Shell" RotationDofs="True">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -466,8 +466,8 @@
   </ElementItem>
 
   <!--large displacements-->
-  <ElementItem n="TriShellThinCorotationalElement" pn="Thin corotational triangular shell" ImplementedInFile="shell_thin_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" 
+  <ElementItem n="TriShellThinCorotationalElement" pn="Thin corotational triangular shell" ImplementedInFile="shell_thin_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
                help="This element implements a triangular corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -497,8 +497,8 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="QuadShellThinCorotationalElement" pn="Thin corotational quadrilateral shell" ImplementedInFile="shell_thin_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" 
+  <ElementItem n="QuadShellThinCorotationalElement" pn="Thin corotational quadrilateral shell" ImplementedInFile="shell_thin_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
                help="This element implements a quadrilateral corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -528,8 +528,8 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TriShellThickCorotationalElement" pn="Thick corotational triangular shell" ImplementedInFile="shell_thick_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" 
+  <ElementItem n="TriShellThickCorotationalElement" pn="Thick corotational triangular shell" ImplementedInFile="shell_thick_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
                help="This element implements a triangular corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -558,9 +558,9 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
     </outputs>
   </ElementItem>
-  
-  <ElementItem n="QuadShellThickCorotationalElement" pn="Thick corotational quadrilateral shell" ImplementedInFile="shell_thick_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication" 
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" 
+
+  <ElementItem n="QuadShellThickCorotationalElement" pn="Thick corotational quadrilateral shell" ImplementedInFile="shell_thick_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
                help="This element implements a quadrilateral corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
