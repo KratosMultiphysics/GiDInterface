@@ -3,18 +3,16 @@
     <value n="Activate_construction" pn="Activate construction process" un="DamActivateConstruction" v="False" values="True,False" actualize_tree="1"/>
     <value n="gravity_direction" pn="Gravity direction" v="Y" values="X,Y,Z"  state="[HideIfUniqueName DamActivateConstruction False]"/>
     <value n="reservoir_bottom_coordinate_in_gravity_direction" pn="Reservoir Bottom Coordinate in Gravity Direction" v="0.0"  state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="height_dam" pn="Height Dam" v="0.0" help="" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="number_of_phases" pn="Number of Phases" v="0" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="density" pn="Density" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="specific_heat" pn="Specific Heat" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="alpha" pn="Alpha" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="tmax" pn="Maximum Temperature" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
-    <value n="h_0" pn="Heat Transfer Coefficient" v="0.0" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="height_dam" pn="Height Dam" v="0.0" help="Total height of dam" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="number_of_phases" pn="Number of Divisions" v="0" help="Number of divisions" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="density" pn="Density" v="2400.0" help="kg/m^3" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="specific_heat" pn="Specific Heat" v="1000.0" help="J/(KgºC)" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="alpha" pn="Alpha" v="8.47e-6" help="1/s" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="tmax" pn="Maximum Temperature" v="18.0" help="The maximum temperature of concrete under adiabatic condition (ºC)" state="[HideIfUniqueName DamActivateConstruction False]"/>
+    <value n="h_0" pn="Heat Transfer Coefficient" v="1.0" help="W/(m^2 ºC)" state="[HideIfUniqueName DamActivateConstruction False]"/>
     <value n="phase_input_file_name" pn="Name of Table Phases" v="phases.txt" values="phases.txt" state="[HideIfUniqueName DamActivateConstruction False]"/>
     <value n="times_input_file_name" pn="Name of Table Times" v="times.txt" values="times.txt" state="[HideIfUniqueName DamActivateConstruction False]"/>
     <value n="ambient_input_file_name" pn="Name of Table Ambient Temp" v="ambient.txt" values="ambient.txt" state="[HideIfUniqueName DamActivateConstruction False]"/>
- <!--
-    <value n="Construction_part" pn="Construction part" v="" values="[GetParts]" help=""  state="[HideIfUniqueName DamActivateConstruction False]"/>
--->
+    <value n="soil_part" pn="Soil part" v="" values="[GetParts]" help="Select the soil part"  state="[HideIfUniqueName DamActivateConstruction False]"/>
 </container>
     
