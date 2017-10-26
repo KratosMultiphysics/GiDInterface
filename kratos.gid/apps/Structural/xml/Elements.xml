@@ -274,7 +274,6 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
-      <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="1"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
@@ -301,7 +300,6 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
-      <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="1"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
@@ -328,7 +326,6 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
-      <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="1"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
@@ -355,7 +352,6 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
-      <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="1"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->

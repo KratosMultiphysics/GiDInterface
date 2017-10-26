@@ -85,20 +85,8 @@
     </CLaw>
 
     <!--constitutive laws for trusses-->
-    <CLaw n="ConstitutiveLaw3D" pn="Linear elastic truss" ProductionReady="ProductionReady" Type="Truss" behaviour="Elastic" StrainSize="1" ImplementedInApplication="KratosMultiphysics"
-          help="Linear elastic behaviour for 3D trusses" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
-        <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
-            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-            <parameter n="CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2"  />
-        </inputs>
-        <outputs>
-
-        </outputs>
-    </CLaw>
-    <CLaw n="ConstitutiveLaw2D" pn="Linear elastic truss" ProductionReady="ProductionReady" Type="Truss" behaviour="Elastic" StrainSize="1" ImplementedInApplication="KratosMultiphysics"
-          help="Linear elastic behaviour for 2D trusses" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    <CLaw n="ConstitutiveLaw" pn="Linear elastic truss" ProductionReady="ProductionReady" Type="Truss" behaviour="Elastic" StrainSize="1" ImplementedInApplication="KratosMultiphysics"
+          help="Linear elastic behaviour for trusses" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
