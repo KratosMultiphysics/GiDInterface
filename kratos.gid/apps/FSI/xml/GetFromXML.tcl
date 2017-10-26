@@ -12,7 +12,6 @@ proc FSI::xml::Init { } {
     Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
     Model::getSolutionStrategies "../../Structural/xml/Strategies.xml"
     Model::getSolutionStrategies Strategies.xml
-    Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
 
     Model::ForgetSolvers
