@@ -1,20 +1,28 @@
 namespace eval EmbeddedFluid::write {
-
+    variable writeAttributes
 }
 
 proc EmbeddedFluid::write::Init { } {
     # Namespace variables inicialization
+    SetAttribute parts_un FLParts
+    SetAttribute nodal_conditions_un FLNodalConditions
+    SetAttribute conditions_un FLBC
+    SetAttribute materials_un EMBFLMaterials
+    SetAttribute writeCoordinatesByGroups 0
+    SetAttribute validApps [list "Fluid" "EmbeddedFluid"]
+    SetAttribute main_script_file "KratosFluid.py"
+    SetAttribute materials_file "FluidMaterials.json"
 }
 
 # Events
 proc EmbeddedFluid::write::writeModelPartEvent { } {
-    Fluid::write::AddValidApps "EmbeddedFluid"
+    # Fluid::write::AddValidApps "EmbeddedFluid"
     set err [Fluid::write::Validate]
     if {$err ne ""} {error $err}
-    write::initWriteData $Fluid::write::PartsUN "EMBFLMaterials"
+    write::initWriteConfiguration [GetAttributes]
     write::writeModelPartData
     Fluid::write::writeProperties
-    write::writeMaterials $Fluid::write::validApps
+    write::writeMaterials [GetAttribute validApps]
     write::writeNodalCoordinatesOnParts
     write::writeElementConnectivities
     Fluid::write::writeConditions
@@ -47,6 +55,21 @@ proc EmbeddedFluid::write::writeDistances { } {
         write::WriteString "End NodalData"
         close $a
     }
+}
+
+proc EmbeddedFluid::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
+
+proc EmbeddedFluid::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc EmbeddedFluid::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
 }
 
 EmbeddedFluid::write::Init
