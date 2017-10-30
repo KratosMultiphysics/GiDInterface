@@ -16,7 +16,7 @@ oo::class create Solver {
         set parallelism OpenMP
     }
     
-    method setParallelism {partype} {variable parallelism; set parallelism $partype}
+    method setParallelism {partype} {variable parallelism; set parallelism [split $partype ","]}
     method getParallelism { } {variable parallelism; return $parallelism}
 }
 
