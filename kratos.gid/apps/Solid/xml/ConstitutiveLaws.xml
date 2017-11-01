@@ -48,7 +48,7 @@
     </CLaw>
 
     <!--linear elastic plastic laws-->
-    <CLaw n="SmallStrain3DLaw.VonMissesLinearElasticPlasticityModel" pn="J2 Plasticity 1" Type="3D" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
+    <CLaw n="SmallStrain3DLaw.VonMisesLinearElasticPlasticityModel" pn="J2 Plasticity 1" Type="3D" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
 	  help="Linear Elastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -65,7 +65,7 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="SmallStrainPlaneStrain2DLaw.VonMissesLinearElasticPlasticityModel" pn="J2 Plasticity 2" Type="PlaneStrain" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
+    <CLaw n="SmallStrainPlaneStrain2DLaw.VonMisesLinearElasticPlasticityModel" pn="J2 Plasticity 2" Type="PlaneStrain" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
 	  help="Linear Elastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
 	    <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -82,7 +82,7 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="SmallStrainAxisymmetric2DLaw.VonMissesLinearElasticPlasticityModel" pn="J2 Plasticity 3" Type="Axisymmetric" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
+    <CLaw n="SmallStrainAxisymmetric2DLaw.VonMisesLinearElasticPlasticityModel" pn="J2 Plasticity 3" Type="Axisymmetric" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
 	  help="Linear Elastic Plastic J2 Behaviour in 2D Axisymmetric" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -171,7 +171,7 @@
     </CLaw>
     
     <!--hyper elastic plastic laws-->
-    <CLaw n="LargeStrain3DLaw.VonMissesNeoHookeanPlasticityModel" pn="J2 Plasticity 4" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
+    <CLaw n="LargeStrain3DLaw.VonMisesNeoHookeanPlasticityModel" pn="J2 Plasticity 4" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
 	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -188,7 +188,7 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="LargeStrainPlaneStrain2DLaw.VonMissesNeoHookeanPlasticityModel" pn="J2 Plasticity 5" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
+    <CLaw n="LargeStrainPlaneStrain2DLaw.VonMisesNeoHookeanPlasticityModel" pn="J2 Plasticity 5" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
 	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
 	    <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -205,7 +205,7 @@
             <parameter n="DELTA_PLASTIC_STRAIN" pn="Plastic Strain Rate"/>
         </outputs>
     </CLaw>
-    <CLaw n="LargeStrainAxisymmetric2DLaw.VonMissesNeoHookeanPlasticityModel" pn="J2 Plasticity 6" Type="Axisymmetric" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
+    <CLaw n="LargeStrainAxisymmetric2DLaw.VonMisesNeoHookeanPlasticityModel" pn="J2 Plasticity 6" Type="Axisymmetric" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
 	  help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Axisymmetric" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -278,7 +278,7 @@
     
     <!--damage laws-->
     <CLaw n="SmallStrain3DLaw.SimoJuExponentialDamageModel" pn="Damage Simo-Ju" Type="3D" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
-	  help="Isotropic Damage Simo-Ju Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
+	  help="Isotropic Damage Simo-Ju Behaviour in 3D" Dimension="3D" ProductionReady="Developer">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -292,7 +292,7 @@
         </outputs>
     </CLaw>
     <CLaw n="SmallStrainPlaneStrain2DLaw.SimoJuExponentialDamageModel" pn="Damage Simo-Ju (Plane Strain)" Type="PlaneStrain" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
-	  help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
+	  help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="Developer">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -306,7 +306,7 @@
         </outputs>
     </CLaw>
     <CLaw n="SmallStrainPlaneStress2DLaw.SimoJuExponentialDamageModel" pn="Damage Simo-Ju (Plane Stress)" Type="PlaneStress" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
-	  help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="ProductionReady">
+	  help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="Developer">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -321,34 +321,8 @@
         </outputs>
     </CLaw>
     
-    <!--constitutive laws for beams-->
-    <CLaw n="ElasticParameters2D" pn="UserParameters" Type="1D_UR" kratos_module="SolidMechanicsApplication"
-	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
-        <inputs>    
-            <parameter n="DENSITY" pn="Density"/>
-	    <parameter n="YOUNGxAREA" pn="EA" v="10000" />
-	    <parameter n="SHEARxAREA" pn="GAr" v="10000" />
-	    <parameter n="YOUNGxINERTIA_X" pn="IxA" v="500" />
-	    <parameter n="YOUNGxINERTIA_Y" pn="IyA" v="500" />
-	    <parameter n="SHEARxPOLAR_INERTIA" pn="GJ" v="500" />
-	</inputs>
-        <outputs>         
-        </outputs>
-    </CLaw>
-    <CLaw n="ElasticParameters3D" pn="UserParameters" Type="1D_UR" kratos_module="SolidMechanicsApplication"
-	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
-        <inputs>
-            <parameter n="DENSITY" pn="Density"/>
-	    <parameter n="YOUNGxAREA" pn="EA" v="10000" />
-	    <parameter n="SHEARxREDUCED_AREA" pn="GAr" v="10000" />
-	    <parameter n="YOUNGxINERTIA_X" pn="IxA" v="500" />
-	    <parameter n="YOUNGxINERTIA_Y" pn="IyA" v="500" />
-	    <parameter n="SHEARxPOLAR_INERTIA" pn="GJ" v="500" />
-        </inputs>
-        <outputs>         
-        </outputs>
-    </CLaw>     
-    <CLaw n="UserDefined2D" pn="UserDefined" Type="1D_UR" kratos_module="SolidMechanicsApplication"
+    <!--constitutive laws for beams-->    
+    <CLaw n="UserDefined2D" pn="GeneralSection" Type="1D_UR" kratos_module="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
         <inputs>
 	    <parameter n="AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
@@ -361,7 +335,7 @@
         <outputs>         
         </outputs>
     </CLaw>
-    <CLaw n="UserDefined3D" pn="UserDefined" Type="1D_UR" kratos_module="SolidMechanicsApplication"
+    <CLaw n="UserDefined3D" pn="GeneralSection" Type="1D_UR" kratos_module="SolidMechanicsApplication"
 	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
         <inputs>
 	    <parameter n="AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
@@ -575,7 +549,33 @@
         </inputs>
         <outputs>         
         </outputs>
-    </CLaw>    
+    </CLaw>
+    <CLaw n="ElasticParameters2D" pn="UserParameters" Type="1D_UR" kratos_module="SolidMechanicsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
+        <inputs>    
+            <parameter n="DENSITY" pn="Density"/>
+	    <parameter n="YOUNGxAREA" pn="EA" v="10000" />
+	    <parameter n="SHEARxAREA" pn="GAr" v="10000" />
+	    <parameter n="YOUNGxINERTIA_X" pn="IxA" v="500" />
+	    <parameter n="YOUNGxINERTIA_Y" pn="IyA" v="500" />
+	    <parameter n="SHEARxPOLAR_INERTIA" pn="GJ" v="500" />
+	</inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
+    <CLaw n="ElasticParameters3D" pn="UserParameters" Type="1D_UR" kratos_module="SolidMechanicsApplication"
+	  help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
+        <inputs>
+            <parameter n="DENSITY" pn="Density"/>
+	    <parameter n="YOUNGxAREA" pn="EA" v="10000" />
+	    <parameter n="SHEARxREDUCED_AREA" pn="GAr" v="10000" />
+	    <parameter n="YOUNGxINERTIA_X" pn="IxA" v="500" />
+	    <parameter n="YOUNGxINERTIA_Y" pn="IyA" v="500" />
+	    <parameter n="SHEARxPOLAR_INERTIA" pn="GJ" v="500" />
+        </inputs>
+        <outputs>         
+        </outputs>
+    </CLaw>
     <!--constitutive laws for shells and membranes-->
     <CLaw n="SmallStrainPlaneStress2DLaw.LinearElasticModel" pn="Elastic" Type="PlaneStress_UR" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
 	  help="Linear Elastic Behaviour in 3D for Shells" Dimension="3D" ProductionReady="ProductionReady">
