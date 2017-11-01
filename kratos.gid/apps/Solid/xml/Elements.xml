@@ -496,7 +496,7 @@
   <!--structural elements-->
   <!--beam elements-->
   <ElementItem n="SmallDisplacementBeamElement2D" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
 
@@ -529,7 +529,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="SmallDisplacementBeamElement3D" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
 
@@ -559,7 +559,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamElement2D" pn="Beam (large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" >
 
@@ -625,7 +625,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamEMCElement2D" pn="Beam (EMC large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" >
 
@@ -658,7 +658,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamEMCElement3D" pn="Beam (EMC large displacements)" ImplementedInFile="large_displacement_beam_emc_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" >
 
@@ -691,7 +691,7 @@
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamSEMCElement3D" pn="Beam (SEMC large displacements)" ImplementedInFile="large_displacement_beam_semc_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
 
