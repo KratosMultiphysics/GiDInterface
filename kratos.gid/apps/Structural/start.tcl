@@ -35,6 +35,11 @@ proc ::Structural::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
 }
 
+
+proc ::Structural::CustomToolbarItems { } {
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::TrussCantilever] [= "Example\nTruss cantilever"]   
+}
+
 proc ::Structural::GetAttribute {name} {
     variable attributes
     set value ""
