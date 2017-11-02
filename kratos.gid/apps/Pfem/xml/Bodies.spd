@@ -9,7 +9,7 @@
     </value>
     <value n="MeshingStrategy" pn="Meshing strategy" icon="data" v="" values="[GetMeshingDomains]" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Fluid,Solid]"/>
     <value n="ContactStrategy" pn="Contact strategy" icon="data" v="" values="[GetContactDomains]" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Solid,Rigid]" />
-    <condition n='BodyRigidParts' pn='Rigid bodies' icon="select" ov="line,surface,volume" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Rigid]">
+    <condition n='BodyRigidParts' pn='Rigid parts' icon="select" ov="line,surface,volume" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Rigid]">
       <value n="Element" pn="Element" actualize_tree="1" v="" values="[GetElementsValues ElementType Rigid]" dict="[GetElementsDict]" state="normal">
         <dependencies node="../value" actualize="1" />
       </value>
@@ -18,7 +18,7 @@
       </value>
       <dynamicnode command="spdAux::injectPartInputs" args=""/>
     </condition>
-    <condition n='BodyFluidParts' pn='Fluid bodies' icon="select" ov="surface,volume" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Fluid]">
+    <condition n='BodyFluidParts' pn='Fluid parts' icon="select" ov="surface,volume" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Fluid]">
       <value n="Element" pn="Element" actualize_tree="1" values="[GetElementsValues ElementType Fluid]" v="" dict="[GetElementsDict]" state="normal">
         <dependencies node="../value" actualize="1" />
       </value>
@@ -27,7 +27,7 @@
       </value>
       <dynamicnode command="spdAux::injectPartInputs" args=""/>
     </condition>
-    <condition n='BodySolidParts' pn='Solid bodies' icon="select" ov="surface,volume" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Solid]">
+    <condition n='BodySolidParts' pn='Solid parts' icon="select" ov="surface,volume" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Solid]">
       <value n="Element" pn="Element" actualize_tree="1" values="[GetElementsValues ElementType Solid]" v="" dict="[GetElementsDict]" state="normal">
         <dependencies node="../value" actualize="1" />
       </value>
