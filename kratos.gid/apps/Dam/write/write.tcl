@@ -27,7 +27,7 @@ proc Dam::write::writeCustomFilesEvent { } {
     set damTypeofProblem [write::getValue DamTypeofProblem]
     set damSelfweight [write::getValue DamSelfweight ConsiderSelf]
     set damConstructionProcess [write::getValue DamConstructionProcess Activate_construction]
-
+    
     if {$damTypeofProblem eq "Acoustic"} {
         write::CopyFileIntoModel "python/dam_acoustic_script.py"
         write::RenameFileInModel "dam_acoustic_script.py" "MainKratos.py"
@@ -64,7 +64,7 @@ proc Dam::write::writeModelPartEvent { } {
     Dam::write:::writeTables
     write::writeNodalCoordinates
     write::writeElementConnectivities
-
+    
     set damTypeofProblem [write::getValue DamTypeofProblem]
     if {$damTypeofProblem eq "Thermo-Mechanical" || $damTypeofProblem eq "UP_Thermo-Mechanical"} {
         Dam::write::writeThermalElements
@@ -86,7 +86,7 @@ proc Dam::write::UpdateMaterials { } {
         if {$constlaw eq "BilinearCohesive2DPlaneStrain"} {
             dict set matdict $mat THICKNESS  1.0000E+00
             set newconstlaw "BilinearCohesive2DLaw"
-            }
+        }
         dict set matdict $mat CONSTITUTIVE_LAW_NAME $newconstlaw
     }
     write::setMatDict $matdict
@@ -100,8 +100,9 @@ proc Dam::write::writeConditions { } {
     if {$index eq ""} {
         set index 0
     }
-
+    
     set ThermalConditionGroups [write::writeConditions "DamThermalLoads" $index]
+    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $ThermalConditionGroups]
 }
 
 proc Dam::write::writeMeshes { } {
@@ -175,7 +176,7 @@ proc Dam::write::writeLoads { baseUN } {
 proc Dam::write::getVariableNameList {un {condition_type "Condition"}} {
     set xp1 "[spdAux::getRoute $un]/condition/group"
     set groups [[customlib::GetBaseRoot] selectNodes $xp1]
-
+    
     set variable_list [list ]
     foreach group $groups {
         set groupName [$group @n]
@@ -283,7 +284,7 @@ proc Dam::write::writeThermalElements {} {
     set ElementId [GiD_Info Mesh MaxNumElements]
     variable ThermalSubModelPartDict
     set ThermalSubModelPartDict [dict create]
-        
+    
     for {set i 0} {$i < [llength $ThermalGroups]} {incr i} {
         
         set ElementList [list]
@@ -301,7 +302,7 @@ proc Dam::write::writeThermalElements {} {
         dict set ThermalSubModelPartDict [lindex $ThermalGroups $i] SubModelPartName "Thermal_Part_Auto_[expr {$i+1}]"
     }
     
-
+    
 }
 
 proc Dam::write::writeThermalConnectivities {Group ElemType ElemName ConnectivityType ElementId ElementList} {
@@ -336,7 +337,7 @@ proc Dam::write::Quadrilateral2D4Connectivities { ElemId } {
     set ElementInfo [GiD_Mesh get element $ElemId]
     #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
     return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5]\
-    [lindex $ElementInfo 6]"
+        [lindex $ElementInfo 6]"
 }
 
 proc Dam::write::Hexahedron3D8Connectivities { ElemId } {
@@ -346,8 +347,8 @@ proc Dam::write::Hexahedron3D8Connectivities { ElemId } {
     set ElementInfo [GiD_Mesh get element $ElemId]
     #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
     return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5]\
-    [lindex $ElementInfo 6] [lindex $ElementInfo 7] [lindex $ElementInfo 8]\
-    [lindex $ElementInfo 9] [lindex $ElementInfo 10]"
+        [lindex $ElementInfo 6] [lindex $ElementInfo 7] [lindex $ElementInfo 8]\
+        [lindex $ElementInfo 9] [lindex $ElementInfo 10]"
 }
 
 #-------------------------------------------------------------------------------
@@ -356,7 +357,7 @@ proc Dam::write::Hexahedron3D8Connectivities { ElemId } {
 proc Dam::write::ThermalSubModelPart { } {
     
     variable ThermalSubModelPartDict
-
+    
     dict for {Group ThermalPart} $ThermalSubModelPartDict {
         
         write::WriteString "Begin SubModelPart [dict get $ThermalPart SubModelPartName] // Group $Group // Subtree Parts"
