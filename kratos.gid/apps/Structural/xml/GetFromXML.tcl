@@ -112,4 +112,51 @@ proc Structural::xml::AddLocalAxesToBeamElement { current } {
     }
 }
 
+
+############# procs #################
+proc Structural::xml::ProcGetElementsStructural { domNode args } {
+    set nodeApp [spdAux::GetAppIdFromNode $domNode]
+    set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
+    set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
+    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
+    }
+    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
+    }
+    
+    #W "solStrat $sol_stratUN sch $schemeUN"
+    set solStratName [::write::getValue $sol_stratUN]
+    set schemeName [write::getValue $schemeUN]
+    #W "$solStratName $schemeName"
+    #W "************************************************************************"
+    #W "$nodeApp $solStratName $schemeName"
+    set elems [::Model::GetAvailableElements $solStratName $schemeName]
+    #W "************************************************************************"
+
+    set analysis_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STAnalysisType]] v]
+    set params [list AnalysisType $analysis_type]
+
+    set names [list ]
+    set pnames [list ]
+    foreach elem $elems {
+        if {[$elem cumple {*}$args]} {
+            set available {*}[split [$elem getAttribute AnalysisType] {,}]
+            if {$analysis_type in $available} {
+                lappend names [$elem getName]
+                lappend pnames [$elem getName] 
+                lappend pnames [$elem getPublicName]
+            }
+        }
+    }
+    set diction [join $pnames ","]
+    set values [join $names ","]
+    #W "[get_domnode_attribute $domNode v] $names"
+    $domNode setAttribute values $values
+    if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
+    if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
+    #spdAux::RequestRefresh
+    return $diction
+}
+
 Structural::xml::Init
