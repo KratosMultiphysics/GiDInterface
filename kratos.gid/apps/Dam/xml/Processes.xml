@@ -3,7 +3,7 @@
    <!---  NODAL PROCESSES --> 
    <!---  Nodal Displacement, Acceleration -->
 
-  <Process n="ImposeVectorValueByComponentsProcess" pn="Impose vector value by components process" python_module="apply_constraint_vector_dam_table_process"
+  <Process n="ApplyConstraintVectorDamTableProcess" pn="Impose vector value by components process" python_module="apply_constraint_vector_dam_table_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the selected components of a given vector variable">
     <inputs>
 		    <parameter n="is_fixed" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
@@ -13,7 +13,7 @@
   </Process>
 
    <!---  Uniform pressure -->
-  <Process n="ImposeUniformPressureProcess" pn="Impose vector value by components process" python_module="impose_uniform_temperature_process"
+  <Process n="ImposeUniformPressureProcess" pn="Impose uniform value of pressure by process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
 		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
@@ -23,7 +23,7 @@
   </Process>  
   
    <!---  Uniform tempereature -->
-  <Process n="ImposeUniformTemperatureProcess" pn="Impose vector value by components process" python_module="impose_uniform_temperature_process"
+  <Process n="ImposeUniformTemperatureProcess" pn="Impose uniform value of temperature by process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
 		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
@@ -69,38 +69,73 @@
     </inputs>
   </Process>
   
-    
    <!---  Thermal Parameters -->
   <Process n="ImposeThermalParametersScalarValueProcess" pn="Impose thermal parameters for solving the thermal problem" python_module="impose_thermal_parameters_scalar_value_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="ThermalDensity" pn="Density" type="double" v="2400"/>
-        <parameter n="Conductivity" pn="Conductivity" type="double" v="1.0" />
-        <parameter n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
+        <parameter n="ThermalDensity" pn="Density" type="double" v="2400" help="Kg/m3"/>
+        <parameter n="Conductivity" pn="Conductivity" type="double" v="1.0" help="W/(mºC)"/>
+        <parameter n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" help="J/(KgºC)"/>
+    </inputs>
+  </Process> 
+
+  <!---  Noorzai Heat Source -->
+  <Process n="NoorzaiHeatSourceProcess" pn="Impose Noorzai Heat Source law" python_module="impose_heat_source_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process provides a heat source field according Noorzai formulation">
+    <inputs>
+        <parameter n="density" pn="Density" type="double" v="2400.0" help="Kg/m3"/>
+        <parameter n="specific_heat" pn="Specific Heat" type="double" v="1000.0" help="J/(KgºC)"/>
+        <parameter n="t_max" pn="T Max" type="double" v="18.0" help="The maximum temperature of concrete under adiabatic condition (ºC)"/>
+        <parameter n="alpha" pn="Alpha coefficient" type="double" v="8.47e-6" help="1/s"/>
+    </inputs>
+  </Process>  
+
+    <!---  Azenha Heat Source -->
+  <Process n="AzenhaHeatSourceProcess" pn="Impose Azenha Heat Source law" python_module="impose_heat_source_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process provides a heat source field according Azenha formulation">
+    <inputs>
+        <parameter n="activation_energy" pn="Activation Energy" type="double" v="45507.0" help="J/mol"/>
+        <parameter n="gas_constant" pn="Universal Constant" type="double" v="8.314472" help="J/(mol ºC)"/>
+        <parameter n="constant_rate" pn="Constant Rate" type="double" v="7.2237e10" help="W/m^3"/>
+        <parameter n="alpha_initial" pn="Initial Alpha" type="double" v="0.015" />
+        <parameter n="q_total" pn="Q Total" type="double" v="6.7939e7" help="J/m^3"/>
+        <parameter n="A" pn="First Factor" type="double" v="0.4" />
+        <parameter n="B" pn="Second Factor" type="double" v="6.9" />
+        <parameter n="C" pn="Third Factor" type="double" v="18.8" />
+        <parameter n="D" pn="Fourth Factor" type="double" v="7.0" />
     </inputs>
   </Process>  
   
   <!---  Uniform Heat FLuxes -->
-  <Process n="ImposeUniformHeatFluxes" pn="Impose uniform value of heat fluxes" python_module="impose_uniform_temperature_process"
+  <Process n="ImposeUniformHeatFluxes" pn="Impose uniform value of heat fluxes" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="is_fixed" pn="Imposed" type="bool" v="0"/>
-        <parameter n="value" pn="Value" type="double" v="0.0"/>
+        <parameter n="value" pn="Value" type="double" v="0.0" help="W/m^2"/>
         <parameter n="table" pn="Uniform Heat Fluxes table filename" type="tablefile" v=""/>
     </inputs>
-  </Process>  
-    
-   <!---  Heat Fluxes T Sol Air -->
-  <Process n="ImposeTSolAirHeatFluxProcess" pn="Impose thermal parameters for solving the thermal problem" python_module="impose_t_sol_air_heat_flux_process"
+  </Process> 
+
+   <!---  Heat Fluxes T Air -->
+  <Process n="ImposeTAmbientHeatFluxProcess" pn="Impose heat flux according to t_air formulation" python_module="impose_heat_flux_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="h_0" pn="H 0" type="double" v="3.5"/>
-        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" />
+        <parameter n="h_0" pn="Heat transfer coefficient" type="double" v="3.5" help="W/(m^2 ºC)"/>
+        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" help="ºC"/>
+        <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
+    </inputs>
+  </Process> 
+    
+   <!---  Heat Fluxes T Sol Air -->
+  <Process n="ImposeTSolAirHeatFluxProcess" pn="Impose heat flux according to t_sol_air formulation" python_module="impose_heat_flux_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
+    <inputs>
+        <parameter n="h_0" pn="Heat transfer coefficient" type="double" v="3.5" help="W/(m^2 ºC)"/>
+        <parameter n="ambient_temperature" pn="Ambient Temperature" type="double" v="10.0" help="ºC" />
         <parameter n="table_ambient_temperature" pn="Ambient Temperature Table" type="tablefile" v="" />
         <parameter n="emisivity" pn="Emisivity" type="double" v="0.7"/>
-        <parameter n="delta_R" pn="Delta R" type="double" v="1.0" />
+        <parameter n="delta_R" pn="Delta R" type="double" v="1.0" help="W/m^2" />
         <parameter n="absorption_index" pn="Absorption Index" type="double" v="0.2" />
-        <parameter n="total_insolation" pn="Total Insolation" type="double" v="300.0" />
+        <parameter n="total_insolation" pn="Total Insolation" type="double" v="300.0" help="W/m^2"/>
     </inputs>
   </Process>
   
