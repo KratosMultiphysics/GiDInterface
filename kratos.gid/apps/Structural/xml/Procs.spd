@@ -18,5 +18,10 @@
 		return [Structural::xml::ProcCheckGeometryStructural $domNode $args]              
 		]]>
 	</proc>
+	<proc n='GetElements' args='args'>
+		<![CDATA[
+		return [Structural::xml::ProcGetElementsStructural $domNode $args]              
+		]]>
+	</proc>
 
 </container>
