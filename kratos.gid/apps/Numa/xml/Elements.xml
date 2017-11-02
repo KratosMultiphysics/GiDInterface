@@ -30,6 +30,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="INITIALTEMPERATURE"/>
       <NodalCondition n="BOFANGTEMPERATURE"/>
+      <NodalCondition n="CONSTANTRESERVOIRTEMPERATURE"/>
     </NodalConditions>
 
     <inputs>      
@@ -70,6 +71,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="INITIALTEMPERATURE"/>
       <NodalCondition n="BOFANGTEMPERATURE"/>
+      <NodalCondition n="CONSTANTRESERVOIRTEMPERATURE"/>
     </NodalConditions>
 
     <inputs>      
@@ -106,6 +108,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="INITIALTEMPERATURE"/>
       <NodalCondition n="BOFANGTEMPERATURE"/>
+      <NodalCondition n="CONSTANTRESERVOIRTEMPERATURE"/>
     </NodalConditions>
 
     <inputs>      
@@ -142,6 +145,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="INITIALTEMPERATURE"/>
       <NodalCondition n="BOFANGTEMPERATURE"/>
+      <NodalCondition n="CONSTANTRESERVOIRTEMPERATURE"/>
     </NodalConditions>
 
     <inputs>      

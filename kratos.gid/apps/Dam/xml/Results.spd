@@ -20,6 +20,7 @@
         <value n="ACCELERATION" pn="Acceleration" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
         <value n="PRESSURE" pn="Pressure" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Acoustic]" />
         <value n="TEMPERATURE" pn="Temperature" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem Thermo-Mechanical DamTypeofProblem UP_Thermo-Mechanical]" />
+        <value n="HEAT_FLUX" pn="Heat Source" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem Thermo-Mechanical DamTypeofProblem UP_Thermo-Mechanical]" />
         <value n="FACE_HEAT_FLUX" pn="Heat Fluxes" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem Thermo-Mechanical DamTypeofProblem UP_Thermo-Mechanical]" />
         <value n="VOLUME_ACCELERATION" pn="Body Accelerations" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
         <value n="POINT_LOAD" pn="Point Loads" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
