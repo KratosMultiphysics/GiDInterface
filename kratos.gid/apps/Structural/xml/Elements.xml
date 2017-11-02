@@ -262,6 +262,30 @@
 
   <!--structural elements-->
   <!--beam elements-->
+  <ElementItem n="BeamElement" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="SmallDisplacementBeamElement3D2N"/>
+    </TopologyFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Beam"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="ROTATION"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="ANGULAR_VELOCITY"/>
+      <NodalCondition n="ANGULAR_ACCELERATION"/>
+    </NodalConditions>
+      <inputs>
+        <parameter n="LOCAL_AXIS_ROTATION" pn="Local axis rotation" v="0" units="rad" unit_magnitude="Angle" update_proc="ChangeOrientation" command_button="DrawMyLocalAxis"/>
+        <parameter n="SECTION_TYPE" pn="Section type" v="none" type="combo" values="none"/>
+      </inputs>
+      <outputs>
+        <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+        <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+      </outputs>
+  </ElementItem>
 
   <!--truss elements-->
   <ElementItem n="TrussElement3D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
