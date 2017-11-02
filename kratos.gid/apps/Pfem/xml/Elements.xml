@@ -7,7 +7,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Fluid">
+	       ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -33,7 +33,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Fluid">
+	       ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -60,7 +60,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Solid">
+	       ElementType="Solid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -89,7 +89,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Solid">
+	       ElementType="Solid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -116,7 +116,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Solid">
+	       ElementType="Solid" Dofs="VELOCITY" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -145,7 +145,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Solid">
+	       ElementType="Solid" Dofs="VELOCITY">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -204,7 +204,7 @@
 	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Rigid">
+	       ElementType="Rigid" Dofs="ROTATION">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
@@ -258,7 +258,7 @@
 	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Rigid">
+	       ElementType="Rigid" Dofs="ROTATION" >
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
@@ -479,7 +479,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
-		   ElementType="Solid">
+	       ElementType="Solid" Dofs="PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -514,7 +514,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
 	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
-	       ElementType="Solid" >
+	       ElementType="Solid" Dofs="PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -548,7 +548,7 @@
   <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
+	       ElementType="Solid" Dofs="PRESSURE" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
