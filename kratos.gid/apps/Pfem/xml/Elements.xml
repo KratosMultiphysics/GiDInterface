@@ -7,7 +7,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Fluid">
+	       ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -33,7 +33,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Fluid">
+	       ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -60,7 +60,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Solid">
+	       ElementType="Solid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -89,7 +89,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Solid">
+	       ElementType="Solid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -120,7 +120,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Solid">
+	       ElementType="Solid" Dofs="VELOCITY" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -149,7 +149,7 @@
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Solid">
+	       ElementType="Solid" Dofs="VELOCITY">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -208,7 +208,7 @@
 	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Rigid">
+	       ElementType="Rigid" Dofs="ROTATION">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
@@ -262,7 +262,7 @@
 	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
-	       ElementType="Rigid">
+	       ElementType="Rigid" Dofs="ROTATION" >
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
@@ -473,9 +473,10 @@
   <!--hybrid updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid Updated Lagrangian U-P" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian approach to large deformation kinematics"
-	       ElementType="Solid">
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
+	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
+	       ElementType="Solid" Dofs="PRESSURE">
+
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianUPElement2D3N"/>
@@ -510,9 +511,10 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid Updated Lagrangian U-P" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="This element it implements a Hybrid Displacement-Pressure Updated Lagrangian approach to large deformation kinematics"
-	       ElementType="Solid" >
+	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
+	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
+	       ElementType="Solid" Dofs="PRESSURE">
+
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="AxisymUpdatedLagrangianUPElement2D3N"/>
@@ -540,6 +542,39 @@
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />      
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />      
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
+	       ElementType="Solid" Dofs="PRESSURE" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangianUPElement3D4N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="3D_UP"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="LargeDeformation" value="True"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
+      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
       <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
       <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>

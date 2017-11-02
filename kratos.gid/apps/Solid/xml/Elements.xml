@@ -427,7 +427,7 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
+	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" Dofs="PRESSURE"
 	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
 	       ElementType="Solid" Dofs="PRESSURE" >
 
@@ -462,7 +462,7 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True" Dofs="PRESSURE"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -761,7 +761,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a quadrilateral element for thick shells in a small displacements approach"
-		   ElementType="Shell" Dofs="ROTATION">
+	       ElementType="Shell" Dofs="ROTATION">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -793,7 +793,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a triangular corotational element for thin shells in a large displacements approach"
-		   ElementType="Shell" Dofs="ROTATION" >
+	       ElementType="Shell" Dofs="ROTATION" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -824,7 +824,8 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a quadrilateral corotational element for thick shells in a large displacements approach"
-		   ElementType="Shell" Dofs="ROTATION">
+	       ElementType="Shell" Dofs="ROTATION">
+    
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThickElementCorotational3D4N"/>
