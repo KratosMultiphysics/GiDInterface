@@ -7,11 +7,11 @@
     </outputs>
   </NodalConditionItem>
   
-  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignVectorComponentsToNodesProcess" VariableName="VELOCITY" kratos_module="SolidMechanicsApplication" v="No"
+  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignVectorComponentsToNodesProcess" VariableName="VELOCITY" kratos_module="SolidMechanicsApplication"
 		      analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   
-  <NodalConditionItem  n="ACCELERATION" pn="Acceleration" ProcessName="AssignVectorComponentsToNodesProcess" VariableName="ACCELERATION" kratos_module="SolidMechanicsApplication" v="No"
+  <NodalConditionItem  n="ACCELERATION" pn="Acceleration" ProcessName="AssignVectorComponentsToNodesProcess" VariableName="ACCELERATION" kratos_module="SolidMechanicsApplication"
 		       analysis_type="Dynamic" unit_magnitude="Acceleration" units="m/s^2" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   
