@@ -74,3 +74,14 @@ proc Model::ForgetMaterials { } {
     variable Materials
     set Materials [list ]
 }
+
+proc Model::ForgetMaterial { mid } {
+    variable Materials
+    set Materials2 [list ]
+    foreach material $Materials {
+        if {[$material getName] ne $mid} {
+            lappend Materials2 $material
+        }
+    }
+    set Materials $Materials2
+}
