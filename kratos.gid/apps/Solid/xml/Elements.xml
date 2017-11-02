@@ -429,7 +429,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" Dofs="PRESSURE"
 	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
-	       ElementType="Solid" Dofs="PRESSURE" >
+	       ElementType="Solid" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
