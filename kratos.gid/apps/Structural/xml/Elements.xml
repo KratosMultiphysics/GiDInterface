@@ -264,7 +264,7 @@
   <!--beam elements-->
   <ElementItem n="BeamElement" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam">
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="SmallDisplacementBeamElement3D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="CrLinearBeamElement3D2N"/>
     </TopologyFeatures>
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Beam"/>
