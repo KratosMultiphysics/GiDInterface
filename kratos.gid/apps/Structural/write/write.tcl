@@ -187,7 +187,7 @@ proc Structural::write::writeLocalAxes { } {
                     set y0 [lindex $raw 1]
                     set y1 [lindex $raw 4]
                     set y2 [lindex $raw 7]
-                    write::WriteString [format "%5d %14.10f %14.10f %14.10f" $line $y0 $y1 $y2]
+                    write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
                 }
                 write::WriteString "End ElementalData"
                 write::WriteString ""
