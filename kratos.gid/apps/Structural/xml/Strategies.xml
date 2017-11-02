@@ -23,14 +23,12 @@
             <scheme n="newmark" pn="Newmark" help="Newmark scheme for dynamic problems." ProductionReady="ProductionReady">
                 <parameter_list></parameter_list>
                 <element_filters>
-                    <filter field="ElementType" value="Solid,Shell,Beam"/>
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
                 </element_filters>
             </scheme>
             <scheme n="bossak" pn="Bossak" help="Bossak scheme for dynamic problems with high frequency accelerations damping." ProductionReady="ProductionReady">
                 <parameter_list></parameter_list>
                 <element_filters>
-                    <filter field="ElementType" value="Solid,Shell,Beam"/>
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
                 </element_filters>
             </scheme>
