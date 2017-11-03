@@ -74,7 +74,7 @@
     </CLaw>
 
     <!--constitutive laws for trusses-->
-    <CLaw n="TrussConstitutiveLaw" pn="Linear elastic truss" ProductionReady="ProductionReady" Type="Truss" behaviour="Elastic" StrainSize="1" ImplementedInApplication="KratosMultiphysics" help="Linear elastic behaviour for trusses" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="TrussConstitutiveLaw" pn="Linear elastic truss" ProductionReady="ProductionReady" Type="Truss" behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for trusses" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -87,7 +87,7 @@
     </CLaw>
 
     <!--constitutive laws for beams-->
-    <CLaw n="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam" behaviour="Elastic" StrainSize="1" ImplementedInApplication="KratosMultiphysics" help="Linear elastic behaviour for beams" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam" behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
