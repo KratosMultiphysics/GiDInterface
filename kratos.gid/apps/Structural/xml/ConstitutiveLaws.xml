@@ -81,7 +81,7 @@
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
             <parameter n="KratosMultiphysics.StructuralMechanicsApplication.CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2" />
             <parameter n="KratosMultiphysics.StructuralMechanicsApplication.TRUSS_PRESTRESS_PK2" pn="Prestress" type="double" v="0.0" unit_magnitude="P" units="Pa" />
-            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.TRUSS_IS_CABLE" pn="Is cable" type="bool" v="0" />
+            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.TRUSS_IS_CABLE" pn="Is cable" type="bool" v="false" />
         </inputs>
         <outputs></outputs>
     </CLaw>
