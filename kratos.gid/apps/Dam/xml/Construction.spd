@@ -22,6 +22,8 @@
         <value n="constant_rate" pn="Constant Rate" v="7.2237e10" help="W/m^3" />
         <value n="alpha_initial" pn="Initial Alpha" v="0.015" />
         <value n="q_total" pn="Q Total" v="6.7939e7" help="J/m^3"/>
+        <value n="aging" pn="Consider Aging" un="DamAging" v="No" values="Yes,No" help="If aging is considered, please select a nodal law"/>
+        <value n="young_inf" pn="Final Young Modulus" state="[checkStateByUniqueName DamAging Yes]" v="2.0e10" help="Young Modulus reached once the curing is completed"/>
         <value n="A" pn="First Factor" v="0.4"/>
         <value n="B" pn="Second Factor" v="6.9"/>
         <value n="C" pn="Third Factor" v="27.0"/>

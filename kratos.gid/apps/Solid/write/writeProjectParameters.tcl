@@ -60,7 +60,7 @@ proc Solid::write::getParametersDict { } {
     dict set solverSettingsDict model_import_settings $modelDict
 
     # Dofs
-    dict set solverSettingsDict rotation_dofs [UsingRotationDofElements]
+    dict set solverSettingsDict dofs [list {*}[DofsInElements] ]
 
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
@@ -93,30 +93,23 @@ proc Solid::write::getParametersDict { } {
     dict set contraintsDict incremental_load false
     dict set contraintsDict incremental_displacement false
     dict set projectParametersDict constraints_data $contraintsDict
-    
-    set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
-    foreach elem $check_list {
-        if {$elem in [Solid::write::GetUsedElements Name]} {
-            dict set projectParametersDict pressure_dofs true
-            break
-        }
-    }
-    
+        
     return $projectParametersDict
 }
 
-proc Solid::write::UsingRotationDofElements { } {
+proc Solid::write::DofsInElements { } {
+    set dofs [list ]
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute SLParts]/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
-    set bool false
     foreach element_node $elements {
         set elemid [$element_node @v]
         set elem [Model::getElement $elemid]
-        if {[write::isBooleanTrue [$elem getAttribute "RotationDofs"]]} {set bool true; break}
+        foreach dof [split [$elem getAttribute "Dofs"] ","] {
+            if {$dof ni $dofs} {lappend dofs $dof}
+        }
     }
-
-    return $bool
+    return {*}$dofs
 }
 
 proc Solid::write::writeParametersEvent { } {
