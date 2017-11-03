@@ -392,7 +392,7 @@
   <!--hybrid updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
+	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" Dofs="PRESSURE"
 	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
 		   ElementType="Solid">
 
@@ -427,7 +427,7 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
+	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" Dofs="PRESSURE"
 	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
 	       ElementType="Solid" >
 
@@ -462,7 +462,7 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True" Dofs="PRESSURE"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
@@ -496,9 +496,9 @@
   <!--structural elements-->
   <!--beam elements-->
   <ElementItem n="SmallDisplacementBeamElement2D" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
-	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
+	       help="This element implements a small displacement beam" ElementType="Beam" Dofs="ROTATION" SolutionType="Static">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -525,13 +525,14 @@
     <inputs>
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="MOMENT" pn="Moment" v="true" />
+      <parameter n="FORCE"  pn="Force" v="true" />
     </outputs>
   </ElementItem>
   <ElementItem n="SmallDisplacementBeamElement3D" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
-	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
+	       help="This element implements a small displacement beam" ElementType="Beam" Dofs="ROTATION" SolutionType="Static">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -555,13 +556,14 @@
     <inputs>
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="MOMENT" pn="Moment" v="true" />
+      <parameter n="FORCE"  pn="Force" v="true" />
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamElement2D" pn="Beam (large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a small displacement beam" ElementType="Beam" RotationDofs="True" >
+	       help="This element implements a small displacement beam" ElementType="Beam" Dofs="ROTATION" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -588,13 +590,14 @@
     <inputs>
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="MOMENT" pn="Moment" v="true" />
+      <parameter n="FORCE"  pn="Force" v="true" />
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamElement3D" pn="Beam (large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" >
+	       help="This element implements a large displacement beam" ElementType="Beam" Dofs="ROTATION" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -621,13 +624,14 @@
     <inputs>
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="MOMENT" pn="Moment" v="true" />
+      <parameter n="FORCE"  pn="Force" v="true" />
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamEMCElement2D" pn="Beam (EMC large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" >
+	       help="This element implements a large displacement beam" ElementType="Beam" Dofs="ROTATION" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -654,13 +658,14 @@
     <inputs>
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="MOMENT" pn="Moment" v="true" />
+      <parameter n="FORCE"  pn="Force" v="true" />
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamEMCElement3D" pn="Beam (EMC large displacements)" ImplementedInFile="large_displacement_beam_emc_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" >
+	       help="This element implements a large displacement beam" ElementType="Beam" Dofs="ROTATION" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -687,13 +692,14 @@
     <inputs>
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="MOMENT" pn="Moment" v="true" />
+      <parameter n="FORCE"  pn="Force" v="true" />
     </outputs>
   </ElementItem>
   <ElementItem n="LargeDisplacementBeamSEMCElement3D" pn="Beam (SEMC large displacements)" ImplementedInFile="large_displacement_beam_semc_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a large displacement beam" ElementType="Beam" RotationDofs="True" SolutionType="Static">
+	       help="This element implements a large displacement beam" ElementType="Beam" Dofs="ROTATION" SolutionType="Static">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -720,7 +726,8 @@
     <inputs>
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="MOMENT" pn="Moment" v="true" />
+      <parameter n="FORCE"  pn="Force" v="true" />
     </outputs>
   </ElementItem>  
   <!--shell elements-->
@@ -729,7 +736,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a triangular element for thin shells in a small displacements approach" 
-	       ElementType="Shell" RotationDofs="True" >
+	       ElementType="Shell" Dofs="ROTATION" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -753,7 +760,8 @@
       <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m" />
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="SHELL_MOMENT_GLOBAL" pn="Moment" v="true"/>
+      <parameter n="SHELL_FORCE_GLOBAL" pn="Force" v="true"/>
     </outputs>
   </ElementItem>
   
@@ -761,7 +769,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
 	       help="This element implements a quadrilateral element for thick shells in a small displacements approach"
-		   ElementType="Shell" RotationDofs="True">
+	       ElementType="Shell" Dofs="ROTATION">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -785,7 +793,8 @@
       <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m" />
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false"/>
+      <parameter n="SHELL_MOMENT_GLOBAL" pn="Moment" v="true"/>
+      <parameter n="SHELL_FORCE_GLOBAL" pn="Force" v="true"/>
     </outputs>
   </ElementItem>
   <!--large displacements-->
@@ -793,7 +802,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a triangular corotational element for thin shells in a large displacements approach"
-		   ElementType="Shell" RotationDofs="True" >
+	       ElementType="Shell" Dofs="ROTATION" >
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -817,14 +826,16 @@
       <parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m" />
     </inputs>
     <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
+      <parameter n="SHELL_MOMENT_GLOBAL" pn="Moment" v="true"/>
+      <parameter n="SHELL_FORCE_GLOBAL" pn="Force" v="true"/>
     </outputs>
   </ElementItem>
   <ElementItem n="ShellThickCorotationalElement" pn="Shell (thick corotational quadrilateral)" ImplementedInFile="shell_thick_element_3D4N.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a quadrilateral corotational element for thick shells in a large displacements approach"
-		   ElementType="Shell" RotationDofs="True">
+	       ElementType="Shell" Dofs="ROTATION">
+    
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThickElementCorotational3D4N"/>
@@ -850,7 +861,7 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="false" />
     </outputs>
   </ElementItem>
-  <ElementItem n="DummyElement3D" pn=" " MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType=" " help="This a dummy element to set the deffauld outputs in 3D">
+  <ElementItem n="DummyElement3D" pn=" " MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType=" " help="This a dummy element to set the default outputs in 3D">
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
@@ -866,6 +877,10 @@
       <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
       <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+      <parameter n="MOMENT" pn="Moment" v="false" state="hidden" />
+      <parameter n="FORCE"  pn="Force" v="false" state="hidden" />
+      <parameter n="SHELL_MOMENT_GLOBAL" pn="Moment" v="false" state="hidden" />
+      <parameter n="SHELL_FORCE_GLOBAL" pn="Force" v="false" state="hidden" />
     </outputs>
   </ElementItem>
 </ElementList>
