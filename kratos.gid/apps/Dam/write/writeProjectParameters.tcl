@@ -441,7 +441,7 @@ proc Dam::write::GetConstructionDomainProcessDict { } {
             }
             if {$source_type eq "NonAdiabatic"} {
                 set data_basenode_azenha [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamAzenhaData"]]
-                set params [list activation_energy gas_constant constant_rate alpha_initial q_total A B C D]
+                set params [list activation_energy gas_constant constant_rate alpha_initial aging young_inf q_total A B C D]
                 foreach param $params {
                     dict set construction_dict $param [write::getValueByNode [$data_basenode_azenha selectNodes "./value\[@n='$param'\]"]]
                 }
