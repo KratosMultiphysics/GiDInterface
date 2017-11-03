@@ -98,6 +98,8 @@
         <parameter n="gas_constant" pn="Universal Constant" type="double" v="8.314472" help="J/(mol ºC)"/>
         <parameter n="constant_rate" pn="Constant Rate" type="double" v="7.2237e10" help="W/m^3"/>
         <parameter n="alpha_initial" pn="Initial Alpha" type="double" v="0.015" />
+        <parameter n="aging" pn="Consider Aging" type="bool" v="No" values="Yes,No" />
+        <parameter n="young_inf" pn="Final Young Modulus" type="double" v="2.0e10"/>
         <parameter n="q_total" pn="Q Total" type="double" v="6.7939e7" help="J/m^3"/>
         <parameter n="A" pn="First Factor" type="double" v="0.4" />
         <parameter n="B" pn="Second Factor" type="double" v="6.9" />
