@@ -312,7 +312,7 @@
   </ElementItem>
 
   <!--truss elements-->
-  <ElementItem n="TrussElement3D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussElement3D" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -338,7 +338,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TrussElement2D2N" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussElement2D" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -364,7 +364,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TrussLinearElement3D2N" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussLinearElement3D" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
                help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -390,7 +390,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TrussLinearElement2D2N" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussLinearElement2D" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
                help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
