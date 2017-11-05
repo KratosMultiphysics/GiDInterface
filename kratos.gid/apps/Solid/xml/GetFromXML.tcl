@@ -30,15 +30,12 @@ proc Solid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden Results CutPlanes
     spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
 
-
     #intervals
     spdAux::SetValueOnTreeItem icon timeIntervals Intervals
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
         $node setAttribute icon select
     }
 
-    #parts
-    
     #results
     spdAux::SetValueOnTreeItem icon seeResults Results 
     spdAux::SetValueOnTreeItem icon select Results OnElement 
@@ -49,10 +46,6 @@ proc Solid::xml::CustomTree { args } {
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLNodalConditions]/condition" ] { 
         $node setAttribute icon folder
     }
-
-    #parallelism
-    spdAux::SetValueOnTreeItem icon select Parallelization
-    spdAux::SetValueOnTreeItem values OpenMP ParallelType
     
     #loads
     spdAux::SetValueOnTreeItem icon setLoad SLLoads
