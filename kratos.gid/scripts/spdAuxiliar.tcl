@@ -862,7 +862,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
         if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
         append node "</value>"
     } elseif { $type eq "bool" } {
-        set values "1,0"
+        set values "true,false"
+        if {$v == 1} {set v true}
+        if {$v == 0} {set v false}
         append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
         if {[$param getActualize]} {
             append node "  actualize_tree='1'  "

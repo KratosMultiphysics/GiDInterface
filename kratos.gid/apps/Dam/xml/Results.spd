@@ -31,6 +31,7 @@
         <value n="NODAL_JOINT_WIDTH" pn="Nodal Joint Width" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
         <value n="Vi_POSITIVE" pn="Traction Principal Stress Vector" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
         <value n="Viii_POSITIVE" pn="Compression Principal Stress Vector" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
+        <value n="NODAL_YOUNG_MODULUS" pn="NOdal Young Modulus" v="No" values="Yes,No" help="" state="[checkStateByUniqueName DamTypeofProblem UP_Mechanical DamTypeofProblem UP_Thermo-Mechanical DamTypeofProblem Mechanical DamTypeofProblem Thermo-Mechanical]"/>
     </container>
     <container n="GiDOptions" pn="Options" help="GiD postprocess options" open_window="0">
         <value n="GiDPostMode" pn="Result format" v="GiD_PostBinary" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped" help="GiD result file format" />
