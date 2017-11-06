@@ -125,7 +125,7 @@
     </parameter_list>
     
     <linearSolvers>
-      <linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+      <linearSolverItem n="linear_solver_settings" pn="Linear Solver">
         <filterFeatures>
 	  <filter field="SolverType" value="Standard"/>
         </filterFeatures>
@@ -186,7 +186,7 @@
     </parameter_list>
     
     <linearSolvers>
-      <linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+      <linearSolverItem n="linear_solver_settings" pn="Linear Solver">
         <filterFeatures>
 	  <filter field="SolverType" value="Standard"/>
         </filterFeatures>

@@ -134,7 +134,7 @@
       
     </outputs>
   </CLaw>
-  <CLaw n="LargeStrain3DLaw.NeoHookeanModel" pn="NeoHookean" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
+  <CLaw n="LargeStrain3DLaw.NeoHookeanJ_1SquaredModel" pn="NeoHookean" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
 	help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -146,7 +146,7 @@
       
     </outputs>
   </CLaw>
-  <CLaw n="LargeStrainPlaneStrain2DLaw.NeoHookeanModel" pn="NeoHookean" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
+  <CLaw n="LargeStrainPlaneStrain2DLaw.NeoHookeanJ_1SquaredModel" pn="NeoHookean" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
 	help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -158,7 +158,7 @@
       
     </outputs>
   </CLaw>
-  <CLaw n="LargeStrainAxisymmetric2DLaw.NeoHookeanModel" pn="NeoHookean" Type="Axisymmetric" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
+  <CLaw n="LargeStrainAxisymmetric2DLaw.NeoHookeanJ_1SquaredModel" pn="NeoHookean" Type="Axisymmetric" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
 	help="NeoHookean HyperElastic Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
