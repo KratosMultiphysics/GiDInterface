@@ -229,12 +229,12 @@ proc EmbeddedFluid::examples::AddMeshOptimizationPoints { } {
     set radius   $CylinderInFlow_Data(circle_radius)
     set center_x [expr $CylinderInFlow_Data(circle_center_x) + $radius]
     set center_y $CylinderInFlow_Data(circle_center_y)
-    set center_z $CylinderInFlow_Data(circle_center_z)
+    set center_z [expr $CylinderInFlow_Data(circle_center_z) + 0.01]
     set origin_point [GiD_Geometry create point append Mesh_Optimization $center_x $center_y $center_z]
 
     GiD_Groups create $optimized_group
     GiD_EntitiesGroups assign $optimized_group points $origin_point
-    GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 10 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.1 $origin_point escape Mescape escape 
+    GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 9 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.1 $origin_point escape Mescape escape 
     
     set original_points [GiD_EntitiesGroups get $optimized_group points]
     GiD_Process Mescape Utilities Copy Points Duplicate MaintainLayers MCopy 15 Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.166,0.0,0.0 {*}$original_points escape Mescape escape 
