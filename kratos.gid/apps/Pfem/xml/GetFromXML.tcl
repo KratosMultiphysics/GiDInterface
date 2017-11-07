@@ -89,15 +89,17 @@ proc Pfem::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
     spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
     
-    
+    #conditions
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
         $node setAttribute icon folder
+	$node setAttribute groups_icon groupCreated
     }
-    
+
     #loads
     spdAux::SetValueOnTreeItem icon setLoad PFEM_Loads 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Loads]/condition" ] { 
         $node setAttribute icon folder
+	$node setAttribute groups_icon groupCreated
     }
     
     [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
