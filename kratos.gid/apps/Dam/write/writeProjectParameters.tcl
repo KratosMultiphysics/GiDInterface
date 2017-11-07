@@ -278,14 +278,14 @@ proc Dam::write::getParametersDict { } {
     set load_process_list [concat $mechanical_load_process_list $thermal_load_process_list]
     dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
     set loads [Dam::write::ChangeFileNameforTableid $load_process_list]
-    set construction_process [Dam::write::GetConstructionDomainProcessDict]
-    if {[llength $construction_process]} {
-        set loads [lappend loads [dict create {*}$construction_process]]
-        set li [dict get $projectParametersDict solver_settings processes_sub_model_part_list]
-        lappend li [dict get $construction_process Parameters model_part_name]
-        dict set projectParametersDict solver_settings processes_sub_model_part_list $li
-    }
     dict set projectParametersDict loads_process_list $loads
+    dict set projectParametersDict construction_process [Dam::write::GetConstructionDomainProcessDict]
+    ##if {[llength $construction_process]} {
+    ##    set loads [lappend loads [dict create {*}$construction_process]]
+    ##    set li [dict get $projectParametersDict solver_settings processes_sub_model_part_list]
+    ##    lappend li [dict get $construction_process Parameters model_part_name]
+    ##    dict set projectParametersDict solver_settings processes_sub_model_part_list $li
+    ##}
     return $projectParametersDict
 
 }
@@ -306,6 +306,7 @@ proc Dam::write::DefinitionDomains { } {
     }
     dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
     dict set domainsDict body_domain_sub_model_part_list $body_part_list
+    dict set domainsDict mechanical_loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
 
     set strategytype [write::getValue DamSolStrat]
     if {$strategytype eq "Arc-length"} {
@@ -423,17 +424,31 @@ proc Dam::write::GetConstructionDomainProcessDict { } {
     set data_basenode [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamConstructionProcess"]]
     set activate [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Activate_construction'\]"] v]
     if {[write::isBooleanTrue $activate]} {
-        dict set construction_dict "python_module" "dam_construction_process"
-        dict set construction_dict "kratos_module" "KratosMultiphysics.DamApplication"
-        dict set construction_dict "process_name" "DamConstructionProcess"
-        set params_dict [dict create]
-            dict set params_dict mesh_id 0
-            dict set params_dict model_part_name [write::getMeshId Parts [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Construction_part'\]"] v]]
-            set params [list Gravity_Direction Reservoir_Bottom_Coordinate_in_Gravity_Direction Height_Dam Number_of_phases]
+        dict set construction_dict mesh_id 0
+            set params [list gravity_direction reservoir_bottom_coordinate_in_gravity_direction height_dam number_of_phases h_0 construction_input_file_name ambient_input_file_name soil_part source_type]
             foreach param $params {
-                dict set params_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
+                dict set construction_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
             }
-        dict set construction_dict Parameters $params_dict
+
+            set source_type [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='source_type'\]"] v]
+
+            if {$source_type eq "Adiabatic"} {
+                set data_basenode_noorzai [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamNoorzaiData"]]
+                set params [list density specific_heat alpha tmax]
+                foreach param $params {
+                    dict set construction_dict $param [write::getValueByNode [$data_basenode_noorzai selectNodes "./value\[@n='$param'\]"]]
+                }
+            }
+            if {$source_type eq "NonAdiabatic"} {
+                set data_basenode_azenha [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamAzenhaData"]]
+                set params [list activation_energy gas_constant constant_rate alpha_initial aging young_inf q_total A B C D]
+                foreach param $params {
+                    dict set construction_dict $param [write::getValueByNode [$data_basenode_azenha selectNodes "./value\[@n='$param'\]"]]
+                }
+            }
+
     }
     return $construction_dict
 }
+
+

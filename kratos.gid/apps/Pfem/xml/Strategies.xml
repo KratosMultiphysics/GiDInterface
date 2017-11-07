@@ -206,7 +206,7 @@
   </parameter_list>
   
   <linearSolvers>
-    <linearSolverItem n="velocity_linear_solver_settings" pn="Velocity linear solver">
+    <linearSolverItem n="velocity_linear_solver_settings" pn="Velocity linear solver" icon="solver" >
       <filterFeatures>
 	<filter field="SolverType" value="Standard"/>
 	<!--<filter field="symmetric" value="false"/>

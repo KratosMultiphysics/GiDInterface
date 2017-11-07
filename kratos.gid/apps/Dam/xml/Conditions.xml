@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
 
+  <!---  THERMAL CONDITIONS -->  
+
     <!---  Conditions: THERMAL PARAMETERS -->  
   <ConditionItem n="ThermalParameters3D" pn="Thermal Parameters" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
@@ -11,11 +13,6 @@
     </TopologyFeatures>
     <inputs>
     </inputs>
-    <DefaultValues>
-        <value n="ThermalDensity" pn="Density" type="double" v="2400"/>
-        <value n="Conductivity" pn="Conductivity" type="double" v="1.0" />
-        <value n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
-    </DefaultValues>
     <outputs>
     </outputs>
   </ConditionItem>
@@ -29,18 +26,12 @@
     </TopologyFeatures>
     <inputs>
     </inputs>
-    <DefaultValues>
-        <value n="ThermalDensity" pn="Density" type="double" v="2400"/>
-        <value n="Conductivity" pn="Conductivity" type="double" v="1.0" />
-        <value n="SpecificHeat" pn="Specific Heat" type="double" v="1000.0" />
-    </DefaultValues>
     <outputs>
     </outputs>
   </ConditionItem>
-
-    
-      <!---  Conditions: HEAT FLUX  -->  
-  <ConditionItem n="FluxCondition2D" pn="Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+   
+      <!---  Conditions: UNIFORM FACE HEAT FLUX  -->  
+  <ConditionItem n="UniformFlux2D" pn="Uniform Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
 	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	  ElementType="Line" ProcessName="ImposeUniformHeatFluxes" VariableName="FACE_HEAT_FLUX"
@@ -54,7 +45,7 @@
     </outputs>
   </ConditionItem>
   
-  <ConditionItem n="FluxCondition3D" pn="Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+  <ConditionItem n="UniformFlux3D" pn="Uniform Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
 	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	  ElementType="Surface" ProcessName="ImposeUniformHeatFluxes" VariableName="FACE_HEAT_FLUX"
@@ -68,11 +59,39 @@
     <outputs>
     </outputs>
   </ConditionItem>  
-  
 
+     <!---  Conditions: T AIR FACE HEAT FLUX  -->  
+  <ConditionItem n="TAmbientFlux2D" pn="T Ambient Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Line" ProcessName="ImposeTAmbientHeatFluxProcess" VariableName="FACE_HEAT_FLUX"
+    help="T Ambient Heat flux">
+    <TopologyFeatures>
+        <item  GeometryType="Line" nodes="2" KratosName="FluxCondition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
   
+  <ConditionItem n="TAmbientFlux3D" pn="T Ambient Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="ImposeTAmbientHeatFluxProcess" VariableName="FACE_HEAT_FLUX"
+    help="T Ambient Heat flux">
+    <TopologyFeatures>
+        <item  GeometryType="Triangle" nodes="3" KratosName="FluxCondition3D3N"/>
+        <item  GeometryType="Quadrilateral" nodes="4" KratosName="FluxCondition3D4N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>  
+   
       <!---  Conditions: HEAT FLUX T_SOL_AIR PARAMETERS -->  
-  <ConditionItem n="TSolAirFluxCondition2D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+  <ConditionItem n="TSolAirFluxCondition2D" pn="T Sol Air Heat Flux" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="ImposeTSolAirHeatFluxProcess" VariableName="FACE_HEAT_FLUX"
@@ -86,7 +105,7 @@
     </outputs>
   </ConditionItem>
   
-    <ConditionItem n="TSolAirFluxCondition3D" pn="Heat Flux T Sol Air" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+    <ConditionItem n="TSolAirFluxCondition3D" pn="T Sol Air Heat Fluxr" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface" ProcessName="ImposeTSolAirHeatFluxProcess" VariableName="FACE_HEAT_FLUX"
@@ -101,7 +120,62 @@
     </outputs>
   </ConditionItem>  
   
+    <!---  Conditions: NOORZAI HEAT FLUX (HEAT SOURCE ADIABATIC) -->  
+  <ConditionItem n="NoorzaiHeatFlux3D" pn="Noorzai Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Volume" ProcessName="NoorzaiHeatSourceProcess" VariableName="HEAT_FLUX"
+    help="Application of the Heat Source according to Noorzai Law">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+ <ConditionItem n="NoorzaiHeatFlux2D" pn="Noorzai Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="NoorzaiHeatSourceProcess" VariableName="HEAT_FLUX"
+    help="Application of the Heat Source according to Noorzai Law">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
 
+      <!---  Conditions: AZENHA HEAT FLUX (HEAT SOURCE NON ADIABATIC) -->  
+  <ConditionItem n="AzenhaHeatFlux3D" pn="Azenha Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Volume" ProcessName="AzenhaHeatSourceProcess" VariableName="HEAT_FLUX"
+    help="Application of the Heat Source according to Azenha Formulation">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+ <ConditionItem n="AzenhaHeatFlux2D" pn="Azenha Heat Source" ImplementedInFile="process_factory"  TypeofProblem="Thermo-Mechanical,UP_Thermo-Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Thermal"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="AzenhaHeatSourceProcess" VariableName="HEAT_FLUX"
+    help="Application of the Heat Source according to Azenha Formulation">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+
+  <!---  MECHANICAL CONDITIONS -->  
 
    <!---  Conditions: SELF WEIGHT -->    
   <ConditionItem n="SelfWeight3D" pn="Body Acceleration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical" 
