@@ -4,5 +4,5 @@
     <dynamicnode command="spdAux::injectSolStratParams" args=""/>
   </container>
   <include n="Parallelism" active="1" icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/> 
-  <dynamicnode command="Solid::xml::injectSolvers" args=""/>
+  <dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>
