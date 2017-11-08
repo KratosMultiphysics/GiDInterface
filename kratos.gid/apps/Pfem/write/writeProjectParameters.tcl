@@ -98,12 +98,16 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Pfem] ]
     
-    set listsubmodelparts [list ]
-    foreach part_un [Pfem::write::GetPartsUN] {
-        lappend listsubmodelparts {*}[write::getSubModelPartNames $part_un]
+    set bodies_parts_list [list ]
+    foreach body $bodies_list {
+        set body_parts [dict get $body parts_list]
+	foreach part $body_parts {
+	    lappend bodies_parts_list $part
+	}
     }
+    
     dict set solverSettingsDict bodies_list $bodies_list
-    dict set solverSettingsDict problem_domain_sub_model_part_list $listsubmodelparts
+    dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
     
     return $solverSettingsDict
