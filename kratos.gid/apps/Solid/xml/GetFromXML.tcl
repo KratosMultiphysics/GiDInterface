@@ -55,6 +55,10 @@ proc Solid::xml::CustomTree { args } {
 	$node setAttribute groups_icon groupCreated
     }
     
+    #materials
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLMaterials]/Material" ] { 
+        $node setAttribute icon select
+    }
     
     #units
     [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
@@ -113,4 +117,79 @@ proc Solid::xml::ProcCheckGeometrySolid {domNode args} {
      return $ret
 }
 
- 
+proc Solid::xml::injectMaterials { basenode args } {
+    set base [$basenode parent]
+    set materials [Model::GetMaterials {*}$args]
+    foreach mat $materials {
+        set matname [$mat getName]
+        set mathelp [$mat getAttribute help]
+        set inputs [$mat getInputs]
+        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='select' help='Material definition'>"
+        foreach {inName in} $inputs {
+            set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]]]
+            append matnode $node
+        }
+        append matnode "</blockdata> \n"
+        $base appendXML $matnode
+    }
+    $basenode delete
+} 
+
+
+proc Solid::xml::injectSolvers {basenode args} {
+    
+    # Get all solvers params
+    set paramspuestos [list ]
+    set paramsnodes ""
+    set params [::Model::GetAllSolversParams]
+    foreach {parname par} $params {
+        if {$parname ni $paramspuestos} {
+            lappend paramspuestos $parname
+            set pn [$par getPublicName]
+            set type [$par getType]
+            set dv [$par getDv]
+            if {$dv ni [list "1" "0"]} {
+                if {[write::isBooleanFalse $dv]} {set dv No}
+                if {[write::isBooleanTrue $dv]} {set dv Yes}  
+            }
+            append paramsnodes "<value n='$parname' pn='$pn' state='\[SolverParamState\]' v='$dv' "
+            if {$type eq "bool"} {
+                append paramsnodes " values='Yes,No' "
+            }
+            if {$type eq "combo"} {
+                append paramsnodes " values='\[GetSolverParameterValues\]' "
+                append paramsnodes " dict='\[GetSolverParameterDict\]' "
+            }
+            
+            append paramsnodes "/>"
+        }
+    }
+    set contnode [$basenode parent]
+    
+    # Get All SolversEntry
+    set ses [list ]
+    foreach st [::Model::GetSolutionStrategies {*}$args] {
+        lappend ses $st [$st getSolversEntries]
+    }
+    
+    # One container per solverEntry 
+    foreach {st ss} $ses {
+        foreach se $ss {
+            set stn [$st getName]
+            set n [$se getName]
+            set pn [$se getPublicName]
+            set help [$se getHelp]
+            set appid [spdAux::GetAppIdFromNode [$basenode parent]]
+            set un [apps::getAppUniqueName $appid "$stn$n"]
+            set container "<container help='$help' n='$n' pn='$pn' un='$un' state='\[SolverEntryState\]' solstratname='$stn' open_window='0' icon='linear_solver'>"
+            set defsolver [lindex [$se getDefaultSolvers] 0]
+            append container "<value n='Solver' pn='Solver' v='$defsolver' values='\[GetSolversValues\]' dict='\[GetSolvers\]' actualize='1' update_proc='UpdateTree'/>"
+            #append container "<dependencies node='../value' actualize='1'/>"
+            #append container "</value>"
+            append container $paramsnodes
+            append container "</container>"
+            $contnode appendXML $container
+        }
+    }
+    $basenode delete
+}
