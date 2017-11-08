@@ -36,22 +36,15 @@ proc Solid::xml::CustomTree { args } {
         $node setAttribute icon select
     }
 
-    #results
-    spdAux::SetValueOnTreeItem icon seeResults Results 
-    spdAux::SetValueOnTreeItem icon select Results OnElement 
-    spdAux::SetValueOnTreeItem icon select Results OnNodes 
-    spdAux::SetValueOnTreeItem icon select Results GiDOptions 
-
-    
     #conditions
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLNodalConditions]/condition" ] { 
-        $node setAttribute icon folder
+        $node setAttribute icon select
 	$node setAttribute groups_icon groupCreated
     }
 
     #loads
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLLoads]/condition" ] { 
-        $node setAttribute icon folder
+        $node setAttribute icon select
 	$node setAttribute groups_icon groupCreated
     }
     
