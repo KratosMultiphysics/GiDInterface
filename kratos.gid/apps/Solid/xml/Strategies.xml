@@ -10,8 +10,6 @@
     <!-- list of options to be filled -->
     <parameter_list>
       <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/> 
-      <!-- <parameter n="rotation_dofs" pn="Rotation DOFs" type="bool" v="false" values="false,true" help="Activate/deactivate rotation degrees of freedom"/> -->
-      <!-- <parameter n="pressure_dofs" pn="Pressure DOFs" type="bool" v="false" values="false,true" help="Activate/deactivate pressure degrees of freedom"/> -->
       <!--<parameter n="stabilization_factor" pn="Stabilization factor" type="double" v="1.0" help=""/> -->
       <!--<parameter n="reform_dofs_at_each_step" pn="Reform DOFs at each iteration" type="bool" v="false"  values="false,true" help=""/> -->
       <!--<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="true" values="true,false" help=""/> -->
@@ -102,7 +100,6 @@
     
     <!-- list of options to be filled -->
     <parameter_list> 
-      <!--<parameter n="rotation_dofs" pn="Rotation DOFs" type="bool" v="false" values="false,true"  -->
       <!--    help="Activate/deactivate rotation degrees of freedom"/> -->
       <!--<parameter n="pressure_dofs" pn="Pressure DOFs" type="bool" v="false" values="false,true"-->
       <!--    help="Activate/deactivate pressure degrees of freedom"/>-->
@@ -159,8 +156,6 @@
     
     <!-- list of options to be filled -->
     <parameter_list> 
-      <!-- <parameter n="rotation_dofs" pn="Rotation DOFs" type="bool" v="false" values="false,true" help="Activate/deactivate rotation degrees of freedom"/> -->
-      <!-- <parameter n="pressure_dofs" pn="Pressure DOFs" type="bool" v="false" values="false,true" help="Activate/deactivate pressure degrees of freedom"/> -->
       <!--<parameter n="stabilization_factor" pn="Stabilization factor" type="double" v="1.0" help=""/> -->
       <!--<parameter n="reform_dofs_at_each_step" pn="Reform DOFs at each iteration" type="bool" v="false"  values="false,true" help=""/> -->
       <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/> 
