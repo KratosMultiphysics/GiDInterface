@@ -249,6 +249,19 @@
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
     </inputs>
   </Process>  
+
+<!---  Chemo-Mechanical Aging Condition --> 
+  <Process n="ImposeChemoMechanicalAgingYoungProcess" pn="Evolution of young modulus according to chemo-mechanical degradation" python_module="impose_chemo_mechanical_aging_process"
+   kratos_module="KratosMultiphysics.DamApplication" help="" > 
+    <inputs>
+		    <parameter n="initial_elastic_modulus" pn="Initial Elastic Modulus" type="double" v="30.0e9"/>
+		    <parameter n="initial_porosity" pn="Initial Porosity" type="double" v="0.2"/>
+		    <parameter n="max_chemical_porosity" pn="Max Chemical Porosity" type="double" v="0.32"/>
+		    <parameter n="chemical_characteristic_aging_time" pn="Chemical Aging time" type="double" v="100.0"/>
+		    <parameter n="max_mechanical_damage" pn="Max Mechanical Damage" type="double" v="0.32"/>
+		    <parameter n="damage_characteristic_aging_time" pn="Damage Aging time" type="double" v="100.0"/>
+    </inputs>
+  </Process>  
   
 <!---  ACOUSTIC CONDITION PROCESSES --> 
 <!---  Free Surface --> 
@@ -258,28 +271,18 @@
     </inputs>
   </Process>      
  
-   <Process n="InfiniteDomainProcess" pn="Apply the first derivative of pressure" python_module="special_condition_process"
+  <Process n="InfiniteDomainProcess" pn="Apply the first derivative of pressure" python_module="special_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="" > 
     <inputs>
     </inputs>
   </Process> 
   
-     <Process n="InterfaceDomainProcess"  pn="Apply the UP condition" python_module="special_condition_process"
+  <Process n="InterfaceDomainProcess"  pn="Apply the UP condition" python_module="special_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="" > 
     <inputs>
     </inputs>
   </Process> 
-  
-<!---  CONSTRUCTION PROCESS --> 
-  <Process n="DamConstructionProcess" pn="Construction Phase" python_module="dam_construction_process"
-		kratos_module="KratosMultiphysics.DamApplication" help="This process simulates the construction process activating the elements according to the input parameters" > 
-    <inputs>
-        <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Y" values="X,Y,Z" />
-        <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
-        <parameter n="Height_Dam" pn="Height Dam" type="double" v="0.0"/>
-        <parameter n="Number_of_phases" pn="Number of phases" type="integer" v="0"/>
-    </inputs>
-  </Process> 
+
 
 </ProcessList>
 
