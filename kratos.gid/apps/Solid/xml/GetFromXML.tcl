@@ -29,6 +29,34 @@ proc Solid::xml::CustomTree { args } {
     # Hide Results Cut plane
     spdAux::SetValueOnTreeItem state hidden Results CutPlanes
     spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
+
+    #intervals
+    spdAux::SetValueOnTreeItem icon timeIntervals Intervals
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
+        $node setAttribute icon select
+    }
+
+    #results
+    spdAux::SetValueOnTreeItem icon seeResults Results 
+    spdAux::SetValueOnTreeItem icon select Results OnElement 
+    spdAux::SetValueOnTreeItem icon select Results OnNodes 
+    spdAux::SetValueOnTreeItem icon select Results GiDOptions 
+
+    spdAux::SetValueOnTreeItem icon boundaryConditions SLNodalConditions
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLNodalConditions]/condition" ] { 
+        $node setAttribute icon folder
+    }
+    
+    #loads
+    spdAux::SetValueOnTreeItem icon setLoad SLLoads
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLLoads]/condition" ] { 
+        $node setAttribute icon folder
+    }
+    
+    
+    #units
+    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
+    
 }
 
 Solid::xml::Init
