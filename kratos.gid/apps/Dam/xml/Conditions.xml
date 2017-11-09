@@ -486,6 +486,34 @@
     <outputs>
     </outputs>
   </ConditionItem>
+
+
+  <!--- Chemo-mechanical-Aging -->  
+  <ConditionItem n="ChemoMechanicalAging3D" pn="Chemo-Mechanical Aging" ImplementedInFile="process_factory"  TypeofProblem="Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
+	  WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Volume" ProcessName="ImposeChemoMechanicalAgingYoungProcess" VariableName="NODAL_YOUNG_MODULUS"
+    help="Application of chemo-mechanical aging young modulus into the body">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  
+ <ConditionItem n="ChemoMechanicalAging2D" pn="Chemo-Mechanical Aging" ImplementedInFile="process_factory"  TypeofProblem="Mechanical" 
+	  ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
+	  WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+	  ElementType="Surface" ProcessName="ImposeChemoMechanicalAgingYoungProcess" VariableName="NODAL_YOUNG_MODULUS"
+    help="Application of chemo-mechanical aging young modulus into the body">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
   
   <!---  Conditions: For the acustic problem --> 
   <!---  Free Surface condition --> 
