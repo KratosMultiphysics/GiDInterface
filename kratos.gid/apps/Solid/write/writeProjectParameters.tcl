@@ -87,12 +87,6 @@ proc Solid::write::getParametersDict { } {
     dict set restartDict LoadRestart false
     dict set restartDict Restart_Step 0
     dict set projectParametersDict restart_options $restartDict
-
-    # Constraints data
-    set contraintsDict [dict create ]
-    dict set contraintsDict incremental_load false
-    dict set contraintsDict incremental_displacement false
-    dict set projectParametersDict constraints_data $contraintsDict
         
     return $projectParametersDict
 }

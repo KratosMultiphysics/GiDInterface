@@ -32,13 +32,7 @@ proc Pfem::write::getParametersDict { } {
     
     ##### output_configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
-    
-    # Constraints data
-    set contraintsDict [dict create ]
-    dict set contraintsDict incremental_load false
-    dict set contraintsDict incremental_displacement false
-    dict set projectParametersDict constraints_data $contraintsDict
-    
+        
     return $projectParametersDict
 }
 proc Pfem::write::GetPFEM_ProblemDataDict { } {
