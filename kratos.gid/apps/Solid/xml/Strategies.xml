@@ -49,6 +49,7 @@
     <schemes>
       <scheme n="Bossak" pn="Bossak" help="Scheme for Solids and Shells, dynamic problems with high frequency accelerations damping" ProductionReady="ProductionReady">
         <parameter_list>
+	  <parameter n="damp_factor_m" pn="Bossak Factor" type="double" v="-0.02" help="Damping factor for the bossak scheme [-0.3,0]"/>
 	</parameter_list>
         <element_filters>
           <filter field="ElementType" value="Solid,Shell"/>
