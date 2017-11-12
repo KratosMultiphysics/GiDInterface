@@ -26,9 +26,9 @@ proc Solid::xml::getUniqueName {name} {
 }
 
 proc Solid::xml::CustomTree { args } {
-    # Hide Results Cut plane
-    spdAux::SetValueOnTreeItem state hidden Results CutPlanes
-    spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
+
+    #set icon data as default
+    foreach node [[customlib::GetBaseRoot] getElementsByTagName value ] { $node setAttribute icon data }
 
     #intervals
     spdAux::SetValueOnTreeItem icon timeIntervals Intervals
@@ -36,30 +36,33 @@ proc Solid::xml::CustomTree { args } {
         $node setAttribute icon select
     }
 
-    #results
-    spdAux::SetValueOnTreeItem icon seeResults Results 
-    spdAux::SetValueOnTreeItem icon select Results OnElement 
-    spdAux::SetValueOnTreeItem icon select Results OnNodes 
-    spdAux::SetValueOnTreeItem icon select Results GiDOptions 
-
-    spdAux::SetValueOnTreeItem icon boundaryConditions SLNodalConditions
+    #conditions
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLNodalConditions]/condition" ] { 
-        $node setAttribute icon folder
+        $node setAttribute icon select
+	$node setAttribute groups_icon groupCreated
     }
-    
+
     #loads
-    spdAux::SetValueOnTreeItem icon setLoad SLLoads
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLLoads]/condition" ] { 
-        $node setAttribute icon folder
+        $node setAttribute icon select
+	$node setAttribute groups_icon groupCreated
     }
     
+    #materials
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLMaterials]/blockdata" ] { 
+        $node setAttribute icon select
+    }
+    
+    #solver settings
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLStratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+        $node setAttribute icon linear_solver
+    }
     
     #units
     [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
     
 }
 
-Solid::xml::Init
 
 proc Solid::xml::ProcGetSolutionStrategiesSolid { domNode args } {
      set names ""
@@ -111,4 +114,5 @@ proc Solid::xml::ProcCheckGeometrySolid {domNode args} {
      return $ret
 }
 
- 
+
+Solid::xml::Init

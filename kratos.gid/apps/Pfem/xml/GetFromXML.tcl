@@ -45,9 +45,14 @@ proc Pfem::xml::CustomTree { args } {
     #arg2: value_of_the_attribute 
     #arg3: unique_name_of_the_node  ('unique name is defined by the attribute un=)
     #arg4 (optional): name_of_the_child_we_want_to_modify  ('name'is defined by the attribute n=)
-    
-    # Hide Results Cut planes  
+
+    #set icon data as default
     foreach node [[customlib::GetBaseRoot] getElementsByTagName value ] { $node setAttribute icon data }
+
+    #problem settings
+    foreach node [[customlib::GetBaseRoot] getElementsByTagName container ] { if {[$node hasAttribute solstratname]} {$node setAttribute icon folder } }
+    #TODO: (for JG) the previous icons should be changed automatically looking at the strategies.xml
+
     
     #intervals
     spdAux::SetValueOnTreeItem icon timeIntervals Intervals
@@ -55,55 +60,56 @@ proc Pfem::xml::CustomTree { args } {
         $node setAttribute icon select
     }        
     
-    #results
-    spdAux::SetValueOnTreeItem v time Results FileLabel
-    spdAux::SetValueOnTreeItem icon results Results
-    spdAux::SetValueOnTreeItem icon seeResults Results 
-    spdAux::SetValueOnTreeItem icon select Results OnElement 
-    spdAux::SetValueOnTreeItem icon select Results OnNodes 
-    spdAux::SetValueOnTreeItem icon select Results GiDOptions 
-    spdAux::SetValueOnTreeItem v time Results OutputControlType
-    spdAux::SetValueOnTreeItem v 0.04 Results OutputDeltaTime
-    spdAux::SetValueOnTreeItem v Yes Results NodeOutput
-    spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
-    
-    #problem settings
-    foreach node [[customlib::GetBaseRoot] getElementsByTagName container ] { if {[$node hasAttribute solstratname]} {$node setAttribute icon folder } }
-    #TODO: (for JG) the previous icons should be changed automatically looking at the strategies.xml
-    
-    
-    #restart
-    spdAux::SetValueOnTreeItem icon doRestart Restart     
-    spdAux::SetValueOnTreeItem icon select Restart RestartOptions
-    
-    #parallelism
-    spdAux::SetValueOnTreeItem icon select Parallelization
-    spdAux::SetValueOnTreeItem values OpenMP ParallelType 
-    
-    #boundary conditions
+    #conditions
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
+
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
+        $node setAttribute icon select
+	$node setAttribute groups_icon groupCreated
+    }
+
+    #loads
+    spdAux::SetValueOnTreeItem icon setLoad PFEM_Loads 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Loads]/condition" ] { 
+        $node setAttribute icon select
+	$node setAttribute groups_icon groupCreated
+    }
+
+    #materials
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Materials]/blockdata" ] { 
+        $node setAttribute icon select
+    }
     
-    #nodal results 
+    #solver settings
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+        $node setAttribute icon linear_solver
+    }
+
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
+        $node setAttribute icon linear_solver
+    }   
+
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
+        $node setAttribute icon linear_solver
+    }   
+
+    
+    #units
+    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
+
+    #results
     spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
     spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
     spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
     
-    
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
-        $node setAttribute icon folder
-    }
-    
-    #loads
-    spdAux::SetValueOnTreeItem icon setLoad PFEM_Loads 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Loads]/condition" ] { 
-        $node setAttribute icon folder
-    }
-    
-    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
-    
     set inlet_result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
     if {$inlet_result_node ne "" } {$inlet_result_node delete}
+
+    #restart
+    spdAux::SetValueOnTreeItem icon doRestart Restart     
+    spdAux::SetValueOnTreeItem icon select Restart RestartOptions
+    
     
 }
 

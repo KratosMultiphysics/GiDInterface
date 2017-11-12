@@ -329,7 +329,7 @@
   </ConditionItem>
   
   <ConditionItem n="PointMoment2D" pn="Moment on points" Interval="Total"
-		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 		 ElementType="Point" ProcessName="AssignScalarToConditionsProcess" help="Point moment application, moment vector referred to plane axis"
 		 units="N*m" unit_magnitude="F*L" VariableName="PLANE_POINT_MOMENT">
@@ -359,7 +359,7 @@
   </ConditionItem>
  
   <ConditionItem n="LineMoment2D" pn="Moment on lines" Interval="Total"
-	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Moment on lines, moment vector referred to plane axis"
 	units="N" unit_magnitude="F" VariableName="PLANE_LINE_MOMENT">
@@ -391,7 +391,7 @@
   </ConditionItem>
   
   <ConditionItem n="SurfaceMoment3D" pn="Moment on surfaces" Interval="Total"
-	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface"  ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Moment on surfaces, moment vector referred to global axes"
 	units="N/m" unit_magnitude="F/L" VariableName="SURFACE_MOMENT">

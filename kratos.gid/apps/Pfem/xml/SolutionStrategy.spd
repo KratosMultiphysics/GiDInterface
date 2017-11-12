@@ -3,6 +3,6 @@
   <container n="StratParams" pn="Strategy parameters" un="PFEM_StratParams" icon="select"  state="normal" open_window="0">
     <dynamicnode command="spdAux::injectSolStratParams" args=""/>
   </container>
-  <include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/> 
+  <include n="Parallelism" active="1"  icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/> 
   <dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>
