@@ -78,7 +78,7 @@ proc Solid::write::getParametersDict { } {
     dict set projectParametersDict loads_process_list [Solid::write::getConditionsParametersDict SLLoads]
 
     # GiD output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    dict set projectParametersDict output_configuration [Solid::write::GetDefaultOutputDict]
 
     # restart options
     set restartDict [dict create ]
