@@ -8,7 +8,7 @@
         <value n="PARTITION_INDEX" pn="Partition index" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName ParallelType MPI]"/>
         <dynamicnode command="spdAux::injectNodalConditionsOutputs" args=""/>
     </container>
-    <container n="FileOptions" pn="Output File" un="FileOptions" help="GiD postprocess options" open_window="0" icon="select">
+    <container n="FileOptions" pn="Output file" un="FileOptions" help="GiD postprocess options" open_window="0" icon="select">
       <value n="FileLabel" pn="File Label" v="step" values="time,step" dict="time,Time,step,Step" help="" icon="data"/>
       <value n="OutputControlType" pn="Output frequency type" v="step" values="time,step" dict="time,Time,step,Steps" help="" update_proc="spdAux::RequestRefresh" icon="data">
 	<dependencies node="../value" actualize="1"/>
@@ -18,7 +18,7 @@
       <value n="GiDMultiFileFlag" pn="Result file" v="MultipleFiles" values="SingleFile,MultipleFiles" dict="SingleFile,Single,MultipleFiles,Multiple" icon="data" help="Write one GiD result file or multiple files"/>
       <value n="GiDPostMode" pn="Result format" v="GiD_PostBinary" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped" icon="data" help="GiD result file format" />
     </container>
-    <container n="GiDOptions" pn="Output Options" un="GiDOptions" help="GiD postprocess options" open_window="0" icon="select">
+    <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess options" open_window="0" icon="select">
       <value n="NodeOutput" pn="Node output" v="No" values="Yes,No" help="The nodes are printed as a separate layer" state="[ShowInMode Developer]" icon="data"/>
       <value n="GiDWriteConditionsFlag" pn="Body output" v="WriteElementsOnly" values="WriteConditions,WriteElementsOnly,WriteConditionsOnly" dict="WriteConditions,Write conditions,WriteElementsOnly,Write elements only,WriteConditionsOnly,Write conditions only" icon="data" help="Write the conditions or only element to the GiD result file"/>
       <value n="GiDWriteMeshFlag" pn="Print deformed mesh" v="WriteDeformed" values="WriteDeformed,WriteUndeformed" dict="WriteDeformed,Write deformed,WriteUndeformed, Write undeformed" icon="data" help="Write the GiD deformed or undeformed mesh"/>
