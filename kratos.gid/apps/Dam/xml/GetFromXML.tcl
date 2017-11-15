@@ -386,4 +386,27 @@ proc Dam::xml::ProcGetElementsValues {domNode args} {
     return $values
 }
 
+proc Dam::xml::ProcNoorzaiState {domNode args} {
+    set SourceType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamSourceType]] v]
+    set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
+    set state hidden
+    if {$ActivateConstruction} {
+        if {$SourceType == "Adiabatic"} {set state normal}
+    }
+    return $state
+}
+
+proc Dam::xml::ProcAzenhaState {domNode args} {
+    set SourceType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamSourceType]] v]
+    set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
+    set state hidden
+    if {$ActivateConstruction} {
+        if {$SourceType != "Adiabatic"} {set state normal}
+    }
+    return $state
+}
+
+
 Dam::xml::Init
+
+
