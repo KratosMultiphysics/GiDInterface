@@ -353,6 +353,30 @@ proc Dam::write::ChangeFileNameforTableid { processList } {
 proc Dam::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::WriteJSON $projectParametersDict
+
+    set damSelfweight [write::getValue DamSelfweight ConsiderSelf]
+    if {$damSelfweight eq "Yes" } {
+        set projectParametersDictSelfWeight [getParametersSelfWeight]
+        write::WriteJSON $projectParametersDictSelfWeight
+    } 
+}
+
+proc Dam::write::getParametersDict { } {
+    
+    set projectParametersDictSelfWeight [dict create]
+
+    set solversettingsDict [dict create]
+    dict set solversettingsDict solver_type "dam_mechanical_solver"
+    set modelDict [dict create]
+    dict set modelDict input_type "mdpa"
+    dict set modelDict input_filename "selfweight"
+    dict set modelDict input_file_label 0
+    dict set solversettingsDict model_import_settings $modelDict
+    dict set solversettingsDict echo_level 1
+    dict set solversettingsDict buffer_size 2
+    
+    return $projectParametersDictSelfWeight
+
 }
 
 proc Dam::write::StremalinesUtility {} {
