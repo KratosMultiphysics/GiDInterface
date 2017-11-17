@@ -8,19 +8,15 @@ namespace eval Dam::write {
 
 proc Dam::write::Init { } {
     # Namespace variables inicialization
-    
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     set ConditionsDictGroupIterators [dict create]
     set NodalConditionsGroup [list ]
     
-    # key = file path
-    # value = id table
     variable TableDict
     catch {unset TableDict}
     set TableDict [dict create]
 }
-
 
 proc Dam::write::writeCustomFilesEvent { } {
     
@@ -45,13 +41,9 @@ proc Dam::write::writeCustomFilesEvent { } {
         write::RenameFileInModel "dam_main.py" "MainKratos.py"
     }
     
-    #~ write::CopyFileIntoModel "python/dam_main.py"
-    #~ write::RenameFileInModel "dam_main.py" "MainKratos.py"
-    
 }
 
 # MDPA Blocks
-
 proc Dam::write::writeModelPartEvent { } {
     write::initWriteData "DamParts" "DamMaterials"
     
@@ -61,7 +53,7 @@ proc Dam::write::writeModelPartEvent { } {
     
     UpdateMaterials
     write::writeMaterials
-    Dam::write:::writeTables
+    Dam::write::writeTables
     write::writeNodalCoordinates
     write::writeElementConnectivities
     
@@ -70,10 +62,31 @@ proc Dam::write::writeModelPartEvent { } {
         Dam::write::writeThermalElements
     }
     
-    writeConditions
-    writeMeshes
+    Dam::write::writeConditions
+    Dam::write::writeMeshes
+
+    # Creation of special mdpa for computing an extra problem just considering selfweight
+    set damSelfweight [write::getValue DamSelfweight ConsiderSelf]
+    if {$damSelfweight eq "Yes" } {
+   
+        write::OpenFile "[file tail selfweight].mdpa"
+        
+        write::initWriteData "DamParts" "DamMaterials"
+        write::writeModelPartData
+        write::WriteString "Begin Properties 0"
+        write::WriteString "End Properties"
+
+        UpdateMaterials
+        write::writeMaterials
+        write::writeNodalCoordinates
+        write::writeElementConnectivities
+
+        write::writePartMeshes
+        Dam::write::writeNodalConditionsSelfWeight "DamNodalConditions"
+
+        write::CloseFile      
+    }
     
-    #writeCustomBlock
 }
 
 proc Dam::write::UpdateMaterials { } {
@@ -120,6 +133,33 @@ proc Dam::write::writeMeshes { } {
     # A Condition y a meshes-> salvo lo que no tenga topologia
     writeLoads "DamLoads"
     writeLoads "DamThermalLoads"
+}
+
+proc Dam::write::writeNodalConditionsSelfWeight { keyword } {
+    variable TableDict
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $keyword]/condition/group"
+    set groups [$root selectNodes $xp1]
+    if {$groups eq ""} {
+        set xp1 "[spdAux::getRoute $keyword]/group"
+        set groups [$root selectNodes $xp1]
+    }
+    foreach group $groups {
+        set condid [[$group parent] @n]
+        if {$condid eq "DISPLACEMENT"} {
+            set groupid [$group @n]
+            W $groupid
+            set groupid [write::GetWriteGroupName $groupid]
+            set tableid [list ]
+            if {[dict exists $TableDict $condid $groupid]} {
+                set groupdict [dict get $TableDict $condid $groupid]
+                foreach valueid [dict keys $groupdict] {
+                    lappend tableid [dict get $groupdict $valueid tableid]
+                }
+            }
+            ::write::writeGroupMesh $condid $groupid "nodal" "" $tableid
+        }
+    }
 }
 
 proc Dam::write::writeNodalConditions { keyword } {
