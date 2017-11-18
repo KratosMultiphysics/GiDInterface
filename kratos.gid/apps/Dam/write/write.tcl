@@ -148,7 +148,6 @@ proc Dam::write::writeNodalConditionsSelfWeight { keyword } {
         set condid [[$group parent] @n]
         if {$condid eq "DISPLACEMENT"} {
             set groupid [$group @n]
-            W $groupid
             set groupid [write::GetWriteGroupName $groupid]
             set tableid [list ]
             if {[dict exists $TableDict $condid $groupid]} {
@@ -189,14 +188,12 @@ proc Dam::write::writeNodalConditions { keyword } {
 proc Dam::write::writeLoads { baseUN } {
     variable TableDict
     variable ConditionsDictGroupIterators
-    
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set condid [get_domnode_attribute [$group parent] n]
         set groupid [get_domnode_attribute $group n]
         set groupid [write::GetWriteGroupName $groupid]
-        #W "Writing mesh of Load $condid $groupid"
         set tableid [list ]
         if {[dict exists $TableDict $condid $groupid]} {
             set groupdict [dict get $TableDict $condid $groupid]
@@ -204,7 +201,6 @@ proc Dam::write::writeLoads { baseUN } {
                 lappend tableid [dict get $groupdict $valueid tableid]
             }
         }
-        #W "table $tableid"
         if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
             ::write::writeGroupMesh [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid] $tableid
         } else {
