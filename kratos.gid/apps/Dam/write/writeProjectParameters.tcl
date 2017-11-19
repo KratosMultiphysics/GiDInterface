@@ -528,11 +528,11 @@ proc Dam::write::predefinedParametersSelfWeight { } {
     dict set solverSelfParametersDict nonlocal_damage false
 
     set linearSolverSettingsDict [dict create]
-    dict set linearSolverSettingsDict solver_type "BiCGStab"
-    dict set linearSolverSettingsDict scaling false
+    dict set linearSolverSettingsDict solver_type "BICGSTABSolver"
     dict set linearSolverSettingsDict max_iteration 200
     dict set linearSolverSettingsDict tolerance 1e-7
     dict set linearSolverSettingsDict preconditioner_type None
+    dict set linearSolverSettingsDict scaling false
     dict set solverSelfParametersDict linear_solver_settings $linearSolverSettingsDict
 
     return $solverSelfParametersDict
