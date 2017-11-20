@@ -83,15 +83,15 @@ proc Pfem::xml::CustomTree { args } {
     
     #solver settings
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
-        $node setAttribute icon linear_solver
+        $node setAttribute icon select
     }
 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
-        $node setAttribute icon linear_solver
+        $node setAttribute icon select
     }   
 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
-        $node setAttribute icon linear_solver
+        $node setAttribute icon select
     }   
 
     
