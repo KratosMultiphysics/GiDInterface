@@ -87,8 +87,9 @@ proc Structural::write::getOldParametersDict { } {
 
     # Lists of processes
     set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]
+    lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
+    dict set projectParametersDict contact_process_list $contact_conditions_dict
 
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
@@ -126,16 +127,19 @@ proc Structural::write::getOldParametersDict { } {
 
 proc Structural::write::ProcessContacts { nodal_conditions_dict } {
     set process_list [list ]
+    set contact_process_list [list ]
     foreach elem $nodal_conditions_dict {
         if {[dict get $elem python_module] in {"alm_contact_process"}} {
             set model_part_name "Structure"
             dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
             dict set elem Parameters model_part_name $model_part_name
             dict set elem Parameters computing_model_part_name "computing_domain"
+            lappend contact_process_list $elem
+        } else {
+            lappend process_list $elem
         }
-        lappend process_list $elem
     }
-    return $process_list
+    return [list $process_list $contact_process_list]
 }
 
 proc Structural::write::writeParametersEvent { } {
