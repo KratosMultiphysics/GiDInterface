@@ -198,9 +198,19 @@ proc Structural::write::writeLocalAxes { } {
 }
 
 proc Structural::write::initLocalWriteConfiguration { } {
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'CONTACT'\]/group"]
-    if {$result_node ne ""} {
+    
+    if {[usesContact]} {
          SetAttribute main_script_file "KratosContactStructural.py"
+    }
+}
+
+proc Structural::write::usesContact { } {
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'CONTACT'\]/group"]
+    
+    if {$result_node ne ""} {
+        return 1
+    } {
+        return 0
     }
 }
 

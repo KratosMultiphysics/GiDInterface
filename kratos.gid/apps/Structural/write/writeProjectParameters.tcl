@@ -74,6 +74,12 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
 
+    
+    if {[usesContact]} {
+        set convergence_criterion [dict get $solverSettingsDict convergence_criterion]
+        dict set solverSettingsDict convergence_criterion "contact_$convergence_criterion"
+    }
+
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes

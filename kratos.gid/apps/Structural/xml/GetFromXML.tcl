@@ -29,6 +29,7 @@ proc ::Structural::xml::MultiAppEvent {args} {
 proc Structural::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden Results CutPlanes
     spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
+    spdAux::SetValueOnTreeItem v 1 GiDOptions EchoLevel
     
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
     if {$result_node ne "" } {$result_node delete}
