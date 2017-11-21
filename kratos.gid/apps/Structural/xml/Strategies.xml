@@ -34,7 +34,6 @@
             </scheme>
         </schemes>
     </StrategyItem>
-
     <StrategyItem n="static" pn="Static" SolutionType="Static" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
         <parameter_list>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>

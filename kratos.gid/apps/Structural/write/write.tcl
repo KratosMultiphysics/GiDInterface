@@ -74,6 +74,7 @@ proc Structural::write::ApplyConfiguration { } {
 # MDPA Blocks
 proc Structural::write::writeModelPartEvent { } {
     variable ConditionsDictGroupIterators
+    initLocalWriteConfiguration
     write::initWriteConfiguration [GetAttributes]
     
     # Headers
@@ -193,6 +194,23 @@ proc Structural::write::writeLocalAxes { } {
                 write::WriteString ""
             }
         }
+    }
+}
+
+proc Structural::write::initLocalWriteConfiguration { } {
+    
+    if {[usesContact]} {
+         SetAttribute main_script_file "KratosContactStructural.py"
+    }
+}
+
+proc Structural::write::usesContact { } {
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'CONTACT'\]/group"]
+    
+    if {$result_node ne ""} {
+        return 1
+    } {
+        return 0
     }
 }
 

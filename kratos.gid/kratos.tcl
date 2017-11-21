@@ -327,6 +327,7 @@ proc Kratos::CheckValidProjectName {modelname} {
     set filename [file tail $modelname]
     if {[string is double $filename]} {set fail 1}
     if {[write::isBoolean $filename]} {set fail 1}
+    if {$filename == "null"} {set fail 1}
     return $fail
     
 }
