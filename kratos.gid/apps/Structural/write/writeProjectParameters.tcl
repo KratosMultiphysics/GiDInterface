@@ -76,6 +76,9 @@ proc Structural::write::getOldParametersDict { } {
 
     
     if {[usesContact]} {
+        
+        dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionless"
+
         set convergence_criterion [dict get $solverSettingsDict convergence_criterion]
         dict set solverSettingsDict convergence_criterion "contact_$convergence_criterion"
     }
