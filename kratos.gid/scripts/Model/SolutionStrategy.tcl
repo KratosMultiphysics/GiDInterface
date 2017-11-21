@@ -189,6 +189,11 @@ proc Model::ParseScheme {st scn} {
         }
     }
     
+    
+    foreach att [$scn attributes] {
+        $sc setAttribute $att [$scn getAttribute $att]
+    }
+
     $st addScheme $sc
     return $st
 }
@@ -235,8 +240,11 @@ proc Model::GetSolutionStrategy { id } {
 proc Model::GetAvailableSchemes {solstrat} {
     #W "GAS $solstrat"
     set solst [Model::GetSolutionStrategy $solstrat]
-    
-    return [$solst getSchemes]
+    set cumplen [list ]
+    foreach sch [$solst getSchemes] {
+        if {[$sch cumple]} {lappend cumplen $sch}
+    }
+    return $cumplen
 }
 
 proc Model::GetAvailableSolvers {solstrat solverentryid} {

@@ -8,19 +8,15 @@ namespace eval Dam::write {
 
 proc Dam::write::Init { } {
     # Namespace variables inicialization
-    
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     set ConditionsDictGroupIterators [dict create]
     set NodalConditionsGroup [list ]
     
-    # key = file path
-    # value = id table
     variable TableDict
     catch {unset TableDict}
     set TableDict [dict create]
 }
-
 
 proc Dam::write::writeCustomFilesEvent { } {
     
@@ -45,13 +41,9 @@ proc Dam::write::writeCustomFilesEvent { } {
         write::RenameFileInModel "dam_main.py" "MainKratos.py"
     }
     
-    #~ write::CopyFileIntoModel "python/dam_main.py"
-    #~ write::RenameFileInModel "dam_main.py" "MainKratos.py"
-    
 }
 
 # MDPA Blocks
-
 proc Dam::write::writeModelPartEvent { } {
     write::initWriteData "DamParts" "DamMaterials"
     
@@ -59,9 +51,9 @@ proc Dam::write::writeModelPartEvent { } {
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     
-    UpdateMaterials
+    Dam::write::UpdateMaterials
     write::writeMaterials
-    Dam::write:::writeTables
+    Dam::write::writeTables
     write::writeNodalCoordinates
     write::writeElementConnectivities
     
@@ -70,10 +62,15 @@ proc Dam::write::writeModelPartEvent { } {
         Dam::write::writeThermalElements
     }
     
-    writeConditions
-    writeMeshes
-    
-    #writeCustomBlock
+    Dam::write::writeConditions
+    Dam::write::writeMeshes
+
+    # Creation of special mdpa for computing an extra problem just considering selfweight
+    set damSelfweight [write::getValue DamSelfweight ConsiderSelf]
+    if {$damSelfweight eq "Yes" } {
+   
+        Dam::write:writeExtraMdpaSelfWeight
+    }
 }
 
 proc Dam::write::UpdateMaterials { } {
@@ -122,6 +119,8 @@ proc Dam::write::writeMeshes { } {
     writeLoads "DamThermalLoads"
 }
 
+
+
 proc Dam::write::writeNodalConditions { keyword } {
     variable TableDict
     set root [customlib::GetBaseRoot]
@@ -149,14 +148,12 @@ proc Dam::write::writeNodalConditions { keyword } {
 proc Dam::write::writeLoads { baseUN } {
     variable TableDict
     variable ConditionsDictGroupIterators
-    
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set condid [get_domnode_attribute [$group parent] n]
         set groupid [get_domnode_attribute $group n]
         set groupid [write::GetWriteGroupName $groupid]
-        #W "Writing mesh of Load $condid $groupid"
         set tableid [list ]
         if {[dict exists $TableDict $condid $groupid]} {
             set groupdict [dict get $TableDict $condid $groupid]
@@ -164,7 +161,6 @@ proc Dam::write::writeLoads { baseUN } {
                 lappend tableid [dict get $groupdict $valueid tableid]
             }
         }
-        #W "table $tableid"
         if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
             ::write::writeGroupMesh [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid] $tableid
         } else {
@@ -397,5 +393,136 @@ proc Dam::write::getSubModelPartThermalNames { } {
     return $submodelThermalPartsNames
 }
 
+#-------------------------------------------------------------------------------
+
+# Processes for extra mdpa for selfweight calculations
+proc Dam::write:writeExtraMdpaSelfWeight { } {
+
+    write::OpenFile "[file tail selfweight].mdpa"
+        
+    write::initWriteData "DamParts" "DamMaterials"
+    write::writeModelPartData
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties"
+    Dam::write::UpdateMaterialsSelfweight
+    write::writeMaterials
+    write::writeNodalCoordinates
+    write::writeElementConnectivities
+    Dam::write::writePartMeshes
+    Dam::write::writeNodalConditionsSelfWeight "DamNodalConditions"
+    write::CloseFile      
+}
+
+proc Dam::write::writePartMeshes { } {
+    foreach group [write::getPartsGroupsId] {
+        Dam::write::writeGroupMesh Parts $group "Elements"
+    }
+}
+
+proc Dam::write::UpdateMaterialsSelfweight { } {
+    set matdict [write::getMatDict]
+    foreach {mat props} $matdict {
+        set constlaw [dict get $props ConstitutiveLaw]
+        # Modificar la ley constitutiva
+        set newconstlaw $constlaw
+        if {$constlaw eq "BilinearCohesive2DPlaneStress"} {set newconstlaw "BilinearCohesive2DLaw"}
+        if {$constlaw eq "BilinearCohesive2DPlaneStrain"} {
+            dict set matdict $mat THICKNESS  1.0000E+00
+            set newconstlaw "BilinearCohesive2DLaw"
+        }
+        if {([string first 3D $constlaw] != -1) && ([string first Bilinear $constlaw] == -1)} {
+            set newconstlaw "LinearElastic3DLaw"
+        }
+        if {[string first Bilinear $constlaw] == -1 } {
+            if {[string first Strain $constlaw] != -1} {
+                set newconstlaw "LinearElasticPlaneStrain2DLaw"
+            }
+            if {[string first Stress $constlaw] != -1} {
+                set newconstlaw "LinearElasticPlaneStress2DLaw"
+            }
+        }
+
+        dict set matdict $mat CONSTITUTIVE_LAW_NAME $newconstlaw
+    }
+    write::setMatDict $matdict
+}
+
+proc Dam::write::writeNodalConditionsSelfWeight { keyword } {
+    variable TableDict
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $keyword]/condition/group"
+    set groups [$root selectNodes $xp1]
+    if {$groups eq ""} {
+        set xp1 "[spdAux::getRoute $keyword]/group"
+        set groups [$root selectNodes $xp1]
+    }
+    foreach group $groups {
+        set condid [[$group parent] @n]
+        if {$condid eq "DISPLACEMENT"} {
+            set groupid [$group @n]
+            set groupid [write::GetWriteGroupName $groupid]
+            set tableid [list ]
+            if {[dict exists $TableDict $condid $groupid]} {
+                set groupdict [dict get $TableDict $condid $groupid]
+                foreach valueid [dict keys $groupdict] {
+                    lappend tableid [dict get $groupdict $valueid tableid]
+                }
+            }
+            Dam::write::writeGroupMesh $condid $groupid "nodal" "" $tableid
+        }
+    }
+}
+
+# what can be: nodal, Elements, Conditions or Elements&Conditions
+proc Dam::write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
+    variable meshes
+    set meshes [dict create]
+
+    set what [split $what "&"]
+    set gtn [write::GetConfigurationAttribute groups_type_name]
+    set group [write::GetWriteGroupName $group]
+    if {![dict exists $meshes [list $cid ${group}]]} {
+        set mid [expr [llength [dict keys $meshes]] +1]
+        if {$gtn ne "Mesh"} {
+            set good_name [write::transformGroupName $group]
+            set mid "${cid}_${good_name}"
+        }
+        dict set meshes [list $cid ${group}] $mid
+        set gdict [dict create]
+        set f "%10i\n"
+        set f [subst $f]
+        dict set gdict $group $f
+        write::WriteString "Begin $gtn $mid // Group $group // Subtree $cid"
+        if {$tableid_list ne ""} {
+            write::WriteString "    Begin SubModelPartTables"
+            foreach tableid $tableid_list {
+                write::WriteString "    $tableid"
+            }
+            write::WriteString "    End SubModelPartTables"
+        }
+        write::WriteString "    Begin ${gtn}Nodes"
+        GiD_WriteCalculationFile nodes -sorted $gdict
+        write::WriteString "    End ${gtn}Nodes"
+        write::WriteString "    Begin ${gtn}Elements"
+        if {"Elements" in $what} {
+            GiD_WriteCalculationFile elements -sorted $gdict
+        }
+        write::WriteString "    End ${gtn}Elements"
+        write::WriteString "    Begin ${gtn}Conditions"
+        if {"Conditions" in $what} {
+            #GiD_WriteCalculationFile elements -sorted $gdict
+            if {$iniend ne ""} {
+                #W $iniend
+                foreach {ini end} $iniend {
+                    for {set i $ini} {$i<=$end} {incr i} {
+                        write::WriteString [format %10d $i]
+                    }
+                }
+            }
+        }
+        write::WriteString "    End ${gtn}Conditions"
+        write::WriteString "End $gtn"
+    }
+}
 
 Dam::write::Init
