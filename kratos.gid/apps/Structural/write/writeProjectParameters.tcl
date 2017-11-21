@@ -108,9 +108,9 @@ proc Structural::write::getOldParametersDict { } {
         }
     }
 
-    set materialsDict [dict create]
-    dict set materialsDict materials_filename [GetAttribute materials_file]
-    dict set projectParametersDict material_import_settings $materialsDict
+    # set materialsDict [dict create]
+    # dict set materialsDict materials_filename [GetAttribute materials_file]
+    # dict set projectParametersDict material_import_settings $materialsDict
 
     return $projectParametersDict
 }
