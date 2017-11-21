@@ -277,10 +277,7 @@
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
     </NodalConditions>
-      <inputs>
-        <parameter n="LOCAL_AXIS_ROTATION" pn="Local axis rotation" v="0" units="rad" unit_magnitude="Angle" update_proc="ChangeOrientation" command_button="DrawMyLocalAxis"/>
-        <parameter n="SECTION_TYPE" pn="Section type" v="none" type="combo" values="none"/>
-      </inputs>
+      <inputs></inputs>
       <outputs>
         <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
         <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
@@ -302,8 +299,6 @@
       <NodalCondition n="ANGULAR_ACCELERATION"/>
     </NodalConditions>
       <inputs>
-        <parameter n="LOCAL_AXIS_ROTATION" pn="Local axis rotation" v="0" units="rad" unit_magnitude="Angle" update_proc="ChangeOrientation" command_button="DrawMyLocalAxis"/>
-        <parameter n="SECTION_TYPE" pn="Section type" v="none" type="combo" values="none"/>
       </inputs>
       <outputs>
         <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
