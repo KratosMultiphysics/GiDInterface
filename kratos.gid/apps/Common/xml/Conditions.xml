@@ -3,14 +3,14 @@
     
   <ConditionItem n="GENERIC_CONDITION" pn="GENERIC_CONDITION" ProductionReady="Developer">
     <TopologyFeatures>
-      <item GeometryType="Point"         nodes="1"  KratosName="Condition2D1N"/>
-      <item GeometryType="Line"          nodes="2"  KratosName="Condition2D2N"/>
-      <item GeometryType="Line"          nodes="3"  KratosName="Condition2D3N"/>
-      <item GeometryType="Triangle"      nodes="3"  KratosName="Condition2D3N"/>
-      <item GeometryType="Triangle"      nodes="6"  KratosName="Condition2D6N"/>
-      <item GeometryType="Quadrilateral" nodes="4"  KratosName="Condition2D4N"/>
-      <item GeometryType="Quadrilateral" nodes="8"  KratosName="Condition2D8N"/>
-      <item GeometryType="Quadrilateral" nodes="9"  KratosName="Condition2D9N"/>
+      <item GeometryType="Point"         nodes="1"  KratosName="PointCondition3D1N"/>
+      <item GeometryType="Line"          nodes="2"  KratosName="LineCondition2D2N"/>
+      <item GeometryType="Line"          nodes="3"  KratosName="LineCondition2D3N"/>
+      <item GeometryType="Triangle"      nodes="3"  KratosName="SurfaceCondition3D3N"/>
+      <item GeometryType="Triangle"      nodes="6"  KratosName="SurfaceCondition3D6N"/>
+      <item GeometryType="Quadrilateral" nodes="4"  KratosName="SurfaceCondition3D4N"/>
+      <item GeometryType="Quadrilateral" nodes="8"  KratosName="SurfaceCondition3D8N"/>
+      <item GeometryType="Quadrilateral" nodes="9"  KratosName="SurfaceCondition3D9N"/>
       <item GeometryType="Tetrahedra"    nodes="4"  KratosName="Condition3D4N"/>
       <item GeometryType="Tetrahedra"    nodes="10" KratosName="Condition3D10N"/>
       <item GeometryType="Hexahedra"     nodes="8"  KratosName="Condition3D8N"/>
