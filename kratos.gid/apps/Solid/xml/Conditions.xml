@@ -328,11 +328,11 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="LineSpring2D" pn="Ballast on lines" Interval="Total"
+  <ConditionItem n="LineBallast2D" pn="Ballast on lines" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
-		 units="Pa" unit_magnitude="P" VariableName="BALLAST_COEFFICIENT">
+		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Normal spring on lines"
+		 units="N/m^2" unit_magnitude="F/L^2" VariableName="BALLAST_COEFFICIENT">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineElasticCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="LineElasticCondition2D3N"/>
@@ -344,11 +344,11 @@
     </outputs>
   </ConditionItem>
   
-  <ConditionItem n="LineSpring2DAxisym" pn="Ballast on lines" Interval="Total"
+  <ConditionItem n="LineBallast2DAxisym" pn="Ballast on lines" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
-		 units="Pa" unit_magnitude="P" VariableName="BALLAST_COEFFICIENT">
+		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Normal spring on lines"
+		 units="N/m^2" unit_magnitude="F/L^2" VariableName="BALLAST_COEFFICIENT">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineElasticCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="AxisymLineElasticCondition2D3N"/>
@@ -360,11 +360,11 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="SurfaceSpring3D" pn="Ballast on surfaces" Interval="Total"
+  <ConditionItem n="SurfaceBallast3D" pn="Ballast on surfaces" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess" help="Normal Spring on surfaces, oriented pointing against the surface outer normal"
-		 units="Pa" unit_magnitude="P" VariableName="BALLAST_COEFFICIENT">
+		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess" help="Normal spring on surfaces"
+		 units="N/m^3" unit_magnitude="F/L^3" VariableName="BALLAST_COEFFICIENT">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceElasticCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceElasticCondition3D6N"/>
