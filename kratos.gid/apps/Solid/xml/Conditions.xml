@@ -313,7 +313,7 @@
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
 	ElementType="Surface"  ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Spring on surfaces, stiffness vector referred to global axes"
-	units="N/m^3" unit_magnitude="F/L^3" VariableName="SURFACE_LOAD">
+	units="N/m^3" unit_magnitude="F/L^3" VariableName="SURFACE_STIFFNESS">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceElasticCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceElasticCondition3D6N"/>
