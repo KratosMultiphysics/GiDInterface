@@ -5,7 +5,7 @@
   <ConditionItem n="YoungModulus3D" pn="Young Modulus Calibration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical" 
 	ImplementedInApplication="NumaApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Calibration"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Volume" ProcessName="ImposeNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
+	ElementType="Volume" ProcessName="ImposeInputTableNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
     help="Application of variable young modulus in the nodes">
     <TopologyFeatures>
     </TopologyFeatures>
@@ -20,7 +20,7 @@
  <ConditionItem n="YoungModulus2D" pn="Young Modulus Calibration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical" 
 	ImplementedInApplication="NumaApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Calibration"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Surface" ProcessName="ImposeNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
+	ElementType="Surface" ProcessName="ImposeInputTableNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
     help="Application of variable young modulus in the nodes">
     <TopologyFeatures>
     </TopologyFeatures>
