@@ -14,12 +14,12 @@ proc write::Init { } {
     variable mat_dict
     variable meshes
     variable current_configuration
-
+    
     set current_configuration [dict create]
     
     set mat_dict ""
     set meshes [dict create]
-
+    
     SetConfigurationAttribute dir ""
     SetConfigurationAttribute parts_un ""
     SetConfigurationAttribute materials_un ""
@@ -230,7 +230,7 @@ proc write::writeNodalCoordinates { } {
 
 proc write::processMaterials { } {
     variable mat_dict
-
+    
     set parts [GetConfigurationAttribute parts_un]
     set materials_un [GetConfigurationAttribute materials_un]
     set root [customlib::GetBaseRoot]
@@ -447,7 +447,7 @@ proc write::transformGroupName {groupid} {
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable meshes
-
+    
     set what [split $what "&"]
     set gtn [GetConfigurationAttribute groups_type_name]
     set group [GetWriteGroupName $group]
@@ -518,7 +518,7 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     }
     Model::ForgetElement GENERIC_ELEMENT
     Model::ForgetCondition GENERIC_CONDITIONS
-
+    
     foreach group $groups {
         set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
@@ -990,8 +990,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                     set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
                     set ValZ [expr False]
                     if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
-                    dict set paramDict $inputName [list $ValX $ValY $ValZ]
-                } {
+                } elseif {$vector_type eq "double"} {
                     if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
                         foreach i [list "X" "Y" "Z"] {
                             if {[expr [get_domnode_attribute [$group find n Enabled_$i] v] ] ne "Yes"} {
@@ -1012,19 +1011,35 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                                 }
                             }
                         }
-                    } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
-                        set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
-                        set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
-                        set ValZ "0"
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
                     } else {
-                        set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
-                        set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
-                        set ValZ [expr 0.0]
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
+                        foreach i [list "X" "Y" "Z"] {
+                            set printed 0
+                            if {[$in_obj getAttribute "function"] eq "1"} {
+                                if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
+                                    set funcinputName "${i}function_$inputName"
+                                    set value [get_domnode_attribute [$group find n $funcinputName] v]
+                                    set Val$i $value
+                                    set printed 1
+                                }
+                            }
+                            if {!$printed} {
+                                set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
+                                set Val$i $value
+                            }
+                        }
                     }
-                    dict set paramDict $inputName [list $ValX $ValY $ValZ]
+                } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
+                    set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
+                    set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
+                    set ValZ "0"
+                    if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
+                } else {
+                    set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
+                    set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
+                    set ValZ [expr 0.0]
+                    if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
                 }
+                dict set paramDict $inputName [list $ValX $ValY $ValZ]
             } elseif {$in_type eq "double" || $in_type eq "integer"} {
                 set printed 0
                 if {[$in_obj getAttribute "function"] eq "1"} {
@@ -1198,7 +1213,7 @@ proc write::WriteMPIbatFile {un} {
     set model_dir [GetConfigurationAttribute dir]
     set model_name [GetConfigurationAttribute model_name]
     set num_nodes [write::getValue $un MPINumberOfProcessors]
-
+    
     set fd [GiD_File fopen [file join $model_dir "MPILauncher.sh"]]
     GiD_File fprintf $fd %s "export LD_LIBRARY_PATH=\"$dir/exec/Kratos\":\"$dir/exec/Kratos/libs\""
     GiD_File fprintf $fd %s "export PYTHONPATH=\"$dir/exec/Kratos/python35.zip\":\"$dir/exec/Kratos\":\$PYTHONPATH"
@@ -1348,7 +1363,7 @@ proc write::getPropertiesList {parts_un} {
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
     #set root [customlib::GetBaseRoot]
-
+    
     set xp1 "[spdAux::getRoute $parts_un]/group"
     foreach gNode [$root selectNodes $xp1] {
         set group [get_domnode_attribute $gNode n]
@@ -1378,7 +1393,7 @@ proc write::getPropertiesList {parts_un} {
             
             lappend props $prop_dict
         }
-
+        
     }
     
     dict set props_dict properties $props
