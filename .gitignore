@@ -2,6 +2,6 @@
 *.lnk
 
 # Kratos execution folder
-kratos.gid/exec
 kratos.gid/exec/*
+!kratos.gid/exec/Kratos/README.md
 *.orig
