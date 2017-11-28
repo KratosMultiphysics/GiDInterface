@@ -26,7 +26,7 @@ fi
 
 # Prevents the PYTHONHOME error from happening and isolate possible python repacks present
 # in the system and interfeering with runkratos
-# export PYTHONHOME="$3/exec/Kratos"
+export PYTHONHOME="$3/exec/Kratos"
 export PYTHONPATH="$3/exec/Kratos/python35.zip":"$3/exec/Kratos":$PYTHONPATH
 
 # Run Python using the script MainKratos.py
