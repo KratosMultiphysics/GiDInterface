@@ -6,7 +6,7 @@
   <Process n="ApplyConstraintVectorDamTableProcess" pn="Impose vector value by components process" python_module="apply_constraint_vector_dam_table_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the selected components of a given vector variable">
     <inputs>
-		<parameter n="is_fixed" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
+		    <parameter n="is_fixed" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
         <parameter n="value" pn="Value" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Value_Table" pn="Value table filename" type="vector" vectorType="tablefile" v=""/>
     </inputs>
@@ -25,7 +25,7 @@
   <Process n="ImposeUniformTemperatureProcess" pn="Impose vector value by components process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-		<parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
         <parameter n="value" pn="Value" type="double" v="0.0"/>
         <parameter n="table" pn="Uniform Temperature table filename" type="tablefile" v=""/>
     </inputs>
@@ -135,13 +135,12 @@
   
   
 <!---  YOUNG VARIABLE PROCESS --> 
-  <Process n="ImposeNodalYoungModulusProcess" pn="Variable Young Modulus" python_module="impose_nodal_young_modulus_process"
+  <Process n="ImposeInputTableNodalYoungModulusProcess" pn="Variable Young Modulus" python_module="impose_input_table_nodal_young_modulus_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according an spatial formulation" > 
     <inputs>
-        <parameter n="Young_Modulus_1" pn="Young Modulus 1" type="double" v="0.0"/>
-        <parameter n="Young_Modulus_2" pn="Young Modulus 2" type="double" v="0.0"/>
-        <parameter n="Young_Modulus_3" pn="Young Modulus 3" type="double" v="0.0"/>
-        <parameter n="Young_Modulus_4" pn="Young Modulus 4" type="double" v="0.0"/>
+        <parameter n="MinValue" pn="Minimum Value Young Modulus" type="double" v="0.0"/>
+        <parameter n="MaxValue" pn="Maximum Value Young Modulus" type="double" v="0.0"/>
+        <parameter n="input_file_name" pn="Table filename" type="tablefile" v=""/>
     </inputs>
   </Process> 
 
