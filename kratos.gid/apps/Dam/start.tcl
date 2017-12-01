@@ -46,13 +46,15 @@ proc ::Dam::ExistsAcombo { } {
  
 proc ::Dam::LaunchParabolic { } {
 
-    exec GiDx64/13.1.7d/gid -p ACOMBO -t "after 2000 {InputParab}"
+    set scriptAtInvocation $::argv0
+    exec $scriptAtInvocation -p ACOMBO -t "after 2000 {InputParab}"
     GiD_Process Mescape Files InsertGeom 
 }
 
 proc ::Dam::LaunchElliptical { } {
 
-    exec GiDx64/13.1.7d/gid -p ACOMBO -t "after 2000 {InputElip}"
+    set scriptAtInvocation $::argv0
+    exec $scriptAtInvocation -p ACOMBO -t "after 2000 {InputElip}"
     GiD_Process Mescape Files InsertGeom 
 }
 
