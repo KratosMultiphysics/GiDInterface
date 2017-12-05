@@ -31,10 +31,19 @@ proc ::Dam::LoadMyFiles { } {
 
 proc ::Dam::CustomToolbarItems { } {
 
+    # Adding local image directory
+    variable dir
+    set img_dir [file join $dir images]
+
+    # Getting spatial dimension
+    set root [customlib::GetBaseRoot]
+    set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
+
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Dam::examples::ThermoMechaDam] [= "Example\nThemo-Mechanical Dam"]   
-    if {[ExistsAcombo]} {
-        Kratos::ToolbarAddItem "Parabolic" "example.png" [list -np- ::Dam::LaunchParabolic] [= "Computer Aided\n Parabolic"]
-        Kratos::ToolbarAddItem "Elliptical" "example.png" [list -np- ::Dam::LaunchElliptical] [= "Computer Aided\n Elliptical"]
+    if {([ExistsAcombo]) && ($nd == "3D")} {
+        Kratos::ToolbarAddItem "SpacerApp" "" "" ""
+        Kratos::ToolbarAddItem "Parabolic" [file join $img_dir "parabolic.png"] [list -np- ::Dam::LaunchParabolic] [= "Computer Aided\n Parabolic"]
+        Kratos::ToolbarAddItem "Elliptical" [file join $img_dir "elliptical.png"] [list -np- ::Dam::LaunchElliptical] [= "Computer Aided\n Elliptical"]
     }
 }
  
