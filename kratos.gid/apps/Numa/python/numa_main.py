@@ -60,6 +60,8 @@ end_time = end_time * time_unit_converter
 time = time * time_unit_converter
 tol = tol * time_unit_converter
 
+numa_convergence = ProjectParameters["problem_data"]["numa_convergence"].GetBool()
+
 ## Model part ------------------------------------------------------------------------------------------------
 
 # Defining the model part
@@ -68,6 +70,9 @@ main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DOMAIN_SIZE, domain_size
 main_model_part.ProcessInfo.SetValue(KratosMultiphysics.TIME, time)
 main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DELTA_TIME, delta_time)
 main_model_part.ProcessInfo.SetValue(KratosPoro.TIME_UNIT_CONVERTER, time_unit_converter)
+
+# This is used for checking if nodal is the first calculus
+main_model_part.ProcessInfo.SetValue(KratosMultiphysics.IS_RESTARTED, numa_convergence)
 
 # Construct the solver (main setting methods are located in the solver_module)
 solver_module = __import__(ProjectParameters["solver_settings"]["solver_type"].GetString())
