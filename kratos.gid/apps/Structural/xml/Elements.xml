@@ -262,7 +262,7 @@
 
   <!--structural elements-->
   <!--beam elements-->
-  <ElementItem n="LinearBeamElement" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam"  AnalysisType="linear,non_linear">
+  <ElementItem n="LinearBeamElement" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam"  AnalysisType="linear,non_linear">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="CrLinearBeamElement3D2N"/>
     </TopologyFeatures>
@@ -283,7 +283,7 @@
         <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
       </outputs>
   </ElementItem>
-    <ElementItem n="BeamElement" pn="Large displacements beam" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam"  AnalysisType="non_linear">
+    <ElementItem n="BeamElement" pn="Large displacements beam" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam"  AnalysisType="non_linear">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="CrBeamElement3D2N"/>
     </TopologyFeatures>
@@ -308,7 +308,7 @@
 
   <!--truss elements-->
   <ElementItem n="TrussElement3D" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -334,7 +334,7 @@
   </ElementItem>
 
   <ElementItem n="TrussElement2D" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -360,7 +360,7 @@
   </ElementItem>
 
   <ElementItem n="TrussLinearElement3D" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
                help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -386,7 +386,7 @@
   </ElementItem>
 
   <ElementItem n="TrussLinearElement2D" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
                help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
