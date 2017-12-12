@@ -14,6 +14,7 @@
 	<appLink n="PotentialFluid" public="0" pn="Potential fluid" active="0" appid="PotentialFluid" prefix="PTFL"/>
 	<appLink n="FSI" public="1" pn="FSI" active="0" appid="FSI" prefix="FSI"/>
 	<appLink n="Pfem" public="1" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
+	<appLink n="PfemFluid" public="1" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
 	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard"/>
 	<appLink n="Dam" public="1" pn="Dam" active="0" appid="Dam" prefix="Dam"/>
 	<appLink n="Numa" public="1" pn="Numa" active="0" appid="Numa" prefix="Numa"/>
