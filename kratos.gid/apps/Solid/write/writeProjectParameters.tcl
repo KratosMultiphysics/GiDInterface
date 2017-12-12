@@ -1,19 +1,15 @@
 # Project Parameters
 
 proc Solid::write::getParametersDict { } {
-    set model_part_name "Solid_Domain"
+    set model_name "Solid_Domain"
     set projectParametersDict [dict create]
 
     # Problem data
-    # Create section
-    set problemDataDict [dict create]
-
-    # Add items to section
+    set problemDataDict [dict create] 
+    
+    # Add items
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name $model_part_name
-    set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict dimension $nDim
 
     # Parallelization
     set paralleltype [write::getValue ParallelType]
@@ -25,51 +21,87 @@ proc Solid::write::getParametersDict { } {
         #set nthreads [write::getValue Parallelization MPINumberOfProcessors]
         #dict set problemDataDict NumberofProcessors $nthreads
     }
-    set solutiontype [write::getValue SLSoluType]
-    # Time Parameters
-    dict set problemDataDict time_step [write::getValue SLTimeParameters DeltaTime]
-    dict set problemDataDict start_time [write::getValue SLTimeParameters StartTime]
-    dict set problemDataDict end_time [write::getValue SLTimeParameters EndTime]
-    
+
     set echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict echo_level $echo_level
-    # Add section to document
+
+    # Add ProblemData to Parameters
     dict set projectParametersDict problem_data $problemDataDict
 
-    # Solution strategy
-    set solverSettingsDict [dict create]
+
+    # Model data
+    # Create section
+    set modelDataDict [dict create]
+
+    # Add items
+    dict set modelDataDict model_name $model_name
+    set nDim [expr [string range [write::getValue nDim] 0 0] ]
+    dict set modelDataDict dimension $nDim
+
+
+    dict set modelDataDict domain_parts_list [write::getSubModelPartNames "SLParts"]
+    dict set modelDataDict processes_parts_list [write::getSubModelPartNames "SLNodalConditions" "SLLoads"]
+    
+    # Add model import settings
+    set importDataDict [dict create]
+    dict set importDataDict input_type "mdpa"
+    dict set importDataDict input_filename $model_name
+    dict set importDataDict input_file_label 0
+    dict set modelDataDict import_settings $importDataDict
+
+    # Add Dofs
+    dict set modelDataDict dofs [list {*}[DofsInElements] ]
+    
+    # Add ModelData to Parameters
+    dict set projectParametersDict model_settings $modelDataDict
+    
+    # Solver settings
+    set solverDataDict [dict create]
+
     set currentStrategyId [write::getValue SLSolStrat]
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
-    dict set solverSettingsDict solver_type $strategy_write_name
-    #~ dict set solverSettingsDict dimension [expr $nDim]
-    dict set solverSettingsDict echo_level $echo_level
-    dict set solverSettingsDict solution_type [write::getValue SLSoluType]
+    dict set solverDataDict solver_type $strategy_write_name
 
+    # Solver parameters
+    set solverParametersDict [dict create]
+
+    # Time settings
+    set timeDataDict [dict create]
+    dict set timeDataDict time_step [write::getValue SLTimeParameters DeltaTime]
+    dict set timeDataDict start_time [write::getValue SLTimeParameters StartTime]
+    dict set timeDataDict end_time [write::getValue SLTimeParameters EndTime]
+
+    dict set solverParametersDict time_settings $timeDataDict
+
+    # Time integration settings
+    set integrationDataDict [dict create]
+
+    dict set integrationDataDict solution_type [write::getValue SLSoluType]
+
+    set solutiontype [write::getValue SLSoluType]
     if {$solutiontype eq "Static"} {
-	dict set solverSettingsDict scheme_type [write::getValue SLScheme]
+	dict set integrationDataDict integration_method [write::getValue SLScheme]
     } elseif {$solutiontype eq "Dynamic"} {
-        dict set solverSettingsDict time_integration_method [write::getValue SLSolStrat]
-        dict set solverSettingsDict scheme_type [write::getValue SLScheme]
+        dict set integrationDataDict time_integration [write::getValue SLSolStrat]
+        dict set integrationDataDict integration_method [write::getValue SLScheme]
     }
 
-    # model import settings
-    set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename $model_name
-    dict set modelDict input_file_label 0
-    dict set solverSettingsDict model_import_settings $modelDict
+    dict set solverParametersDict time_integration_settings $integrationDataDict
 
-    # Dofs
-    dict set solverSettingsDict dofs [list {*}[DofsInElements] ]
+    # Solving strategy settings
+    set strategyDataDict [dict create]
+    
+    # Solution strategy parameters and Solvers   
+    set strategyDataDict [dict merge $strategyDataDict [write::getSolutionStrategyParametersDict] ]
 
-    # Solution strategy parameters and Solvers
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Solid] ]
+    dict set solverParametersDict solving_strategy_settings $strategyDataDict
+   
+    # Linear solver settings
+    set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Solid] ]
+   
+    dict set solverDataDict Parameters $solverParametersDict
 
-    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "SLParts"]
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "SLNodalConditions" "SLLoads"]
-
-    dict set projectParametersDict solver_settings $solverSettingsDict
+    dict set projectParametersDict solver_settings $solverDataDict
 
     # Lists of processes
     set nodal_conditions_dict [Solid::write::getConditionsParametersDict SLNodalConditions "Nodal"] 
