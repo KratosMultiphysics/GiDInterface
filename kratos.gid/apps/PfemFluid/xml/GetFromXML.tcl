@@ -27,13 +27,13 @@ proc PfemFluid::xml::Init { } {
 }
 
 proc PfemFluid::xml::getUniqueName {name} {
-    return PFEM_$name
+    return PFEMFLUID_$name
 }
 
 proc PfemFluid::xml::MultiAppEvent {args} {
     if {$args eq "init"} {
         spdAux::parseRoutes
-        spdAux::ConvertAllUniqueNames SL PFEM_
+        spdAux::ConvertAllUniqueNames SL PFEMFLUID_
     }
 }
 
@@ -61,36 +61,36 @@ proc PfemFluid::xml::CustomTree { args } {
     }        
     
     #conditions
-    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
-    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
+    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEMFLUID_NodalConditions VELOCITY
+    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEMFLUID_NodalConditions PRESSURE
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition" ] { 
         $node setAttribute icon select
 	$node setAttribute groups_icon groupCreated
     }
 
     #loads
-    spdAux::SetValueOnTreeItem icon setLoad PFEM_Loads 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Loads]/condition" ] { 
+    spdAux::SetValueOnTreeItem icon setLoad PFEMFLUID_Loads 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] { 
         $node setAttribute icon select
 	$node setAttribute groups_icon groupCreated
     }
 
     #materials
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Materials]/blockdata" ] { 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ] { 
         $node setAttribute icon select
     }
     
     #solver settings
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }   
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }   
 
@@ -114,7 +114,7 @@ proc PfemFluid::xml::CustomTree { args } {
 }
 
 proc PfemFluid::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
-    set domain_type [write::getValue PFEM_DomainType]
+    set domain_type [write::getValue PFEMFLUID_DomainType]
     set fluid_exclusive_conditions [list "VELOCITY" "INLET" "PRESSURE"]
     set current_condition [$domNode @n]
     if {$domain_type eq "Fluids" && $current_condition ni $fluid_exclusive_conditions} {
@@ -204,7 +204,7 @@ proc PfemFluid::xml::FindMyBlocknode {domNode} {
 }
 
 proc PfemFluid::xml::ProcGetMeshingDomains {domNode args} {
-    set basepath [spdAux::getRoute "PFEM_meshing_domains"]
+    set basepath [spdAux::getRoute "PFEMFLUID_meshing_domains"]
     set values [list ]
     foreach meshing_domain [[$domNode selectNodes $basepath] childNodes] {
         lappend values [get_domnode_attribute $meshing_domain name]
@@ -216,7 +216,7 @@ proc PfemFluid::xml::ProcGetMeshingDomains {domNode args} {
 }
 
 proc PfemFluid::xml::ProcGetContactDomains {domNode args} {
-    set basepath [spdAux::getRoute "PFEM_contacts"]
+    set basepath [spdAux::getRoute "PFEMFLUID_contacts"]
     set values [list "No contact strategy"]
     foreach contact_domain [[$domNode selectNodes $basepath] childNodes] {
         lappend values [get_domnode_attribute $contact_domain name]
@@ -241,13 +241,13 @@ proc PfemFluid::xml::ProcCheckNodalConditionStateSolid {domNode args} {
     if {$elemsactive eq ""} {return "hidden"}
     set elemsactive [lsort -unique $elemsactive]
     set conditionId [$domNode @n]
-    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute PFEM_SolutionType]] v]
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute PFEMFLUID_SolutionType]] v]
     set params [list analysis_type $solutionType]
     if {[::Model::CheckElementsNodalCondition $conditionId $elemsactive $params]} {return "normal"} else {return "hidden"}
 }
 
 proc PfemFluid::xml::ProcSolutionTypeState {domNode args} {
-    set domain_type_un PFEM_DomainType
+    set domain_type_un PFEMFLUID_DomainType
     set domain_type_route [spdAux::getRoute $domain_type_un]
     set state normal
     if {$domain_type_route ne ""} {
@@ -267,7 +267,7 @@ proc PfemFluid::xml::ProcSolutionTypeState {domNode args} {
 }
 
 proc PfemFluid::xml::ProcGetBodyTypeValues {domNode args} {
-    set domain_type_un PFEM_DomainType
+    set domain_type_un PFEMFLUID_DomainType
     set domain_type_route [spdAux::getRoute $domain_type_un]
     set values "Fluid,Solid,Rigid"
     if {$domain_type_route ne ""} {
@@ -290,10 +290,10 @@ proc PfemFluid::xml::ProcGetBodyTypeValues {domNode args} {
 proc PfemFluid::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
     set names ""
     set pnames ""
-    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute PFEM_SolutionType]] v]
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute PFEMFLUID_SolutionType]] v]
     set Sols [::Model::GetSolutionStrategies [list "SolutionType" $solutionType] ]
     set ids [list ]
-    set domainType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute PFEM_DomainType]] v]
+    set domainType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute PFEMFLUID_DomainType]] v]
     set filter [list Solid Pfem]
     if {$domainType eq "Solids"} {set filter "Solid"}
     if {$domainType eq "Fluids"} {set filter "Pfem"}
@@ -319,14 +319,14 @@ proc PfemFluid::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
 proc PfemFluid::xml::ProcGetPartUN {domNode args} {
     customlib::UpdateDocument
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata/condition"
+    set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata/condition"
     set i 0
     foreach part_node [$root selectNodes $xp1] {
         if {$part_node eq $domNode} {
             break
         } {incr i}
     }
-    set un "PFEM_Part$i"
+    set un "PFEMFLUID_Part$i"
     spdAux::setRoute $un [$part_node toXPath]
     #$domNode setAttribute curr_un $un
     return $un
@@ -365,7 +365,7 @@ proc PfemFluid::xml::ProcActiveIfAnyPartState {domNode args} {
 proc PfemFluid::xml::ProcGetBodiesValues {domNode args} {
     customlib::UpdateDocument
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+    set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     set bodies [list ]
     foreach body_node [$root selectNodes $xp1] {
         lappend bodies [$body_node @name]
@@ -377,7 +377,7 @@ proc PfemFluid::xml::ProcGetBodiesValues {domNode args} {
 proc PfemFluid::xml::ProcGetRigidBodiesValues {domNode args} {
     customlib::UpdateDocument
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+    set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     set bodies [list ]
     foreach body_node [$root selectNodes $xp1] {
         foreach subnode [$body_node childNodes] {
@@ -395,8 +395,8 @@ proc PfemFluid::xml::ProcGetRigidBodiesValues {domNode args} {
 
 proc PfemFluid::xml::StartSortingWindow { } {
     set data_dict [dict create]
-    set conds [PfemFluid::xml::GetConditionsAndGroups PFEM_Loads]
-    set nodalconds [PfemFluid::xml::GetConditionsAndGroups PFEM_NodalConditions]
+    set conds [PfemFluid::xml::GetConditionsAndGroups PFEMFLUID_Loads]
+    set nodalconds [PfemFluid::xml::GetConditionsAndGroups PFEMFLUID_NodalConditions]
     if {[dict size $conds]} {dict set data_dict Loads $conds}
     if {[dict size $nodalconds]} {dict set data_dict Constraints $nodalconds}
     SorterWindow::SorterWindow $data_dict "PfemFluid::xml::GetDataFromSortingWindow"

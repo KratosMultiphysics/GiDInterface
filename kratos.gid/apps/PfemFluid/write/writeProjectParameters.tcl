@@ -24,7 +24,7 @@ proc PfemFluid::write::getParametersDict { } {
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
     
     ##### loads_process_list
-    dict set projectParametersDict loads_process_list [PfemFluid::write::getConditionsParametersDict PFEM_Loads]
+    dict set projectParametersDict loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
     
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
@@ -44,9 +44,9 @@ proc PfemFluid::write::GetPFEM_ProblemDataDict { } {
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set problemDataDict dimension $nDim
     
-    dict set problemDataDict time_step [write::getValue PFEM_TimeParameters DeltaTime]
-    dict set problemDataDict start_time [write::getValue PFEM_TimeParameters StartTime]
-    dict set problemDataDict end_time [write::getValue PFEM_TimeParameters EndTime]
+    dict set problemDataDict time_step [write::getValue PFEMFLUID_TimeParameters DeltaTime]
+    dict set problemDataDict start_time [write::getValue PFEMFLUID_TimeParameters StartTime]
+    dict set problemDataDict end_time [write::getValue PFEMFLUID_TimeParameters EndTime]
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
     set cx [write::getValue FLGravity Cx]
@@ -61,23 +61,23 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     variable bodies_list
     
     set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue PFEM_SolStrat]
+    set currentStrategyId [write::getValue PFEMFLUID_SolStrat]
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
     dict set solverSettingsDict solver_type $strategy_write_name
     
-    set problemtype [write::getValue PFEM_DomainType]
+    set problemtype [write::getValue PFEMFLUID_DomainType]
     
     if {$problemtype eq "Solids"} {
         
-        dict set solverSettingsDict solution_type [write::getValue PFEM_SolutionType]
+        dict set solverSettingsDict solution_type [write::getValue PFEMFLUID_SolutionType]
         
-        set solutiontype [write::getValue PFEM_SolutionType]
+        set solutiontype [write::getValue PFEMFLUID_SolutionType]
         
         if {$solutiontype eq "Static"} {
-            dict set solverSettingsDict analysis_type [write::getValue PFEM_LinearType]
+            dict set solverSettingsDict analysis_type [write::getValue PFEMFLUID_LinearType]
         } elseif {$solutiontype eq "Dynamic"} {
-            dict set solverSettingsDict time_integration_method [write::getValue PFEM_SolStrat]
-            dict set solverSettingsDict scheme_type [write::getValue PFEM_Scheme]
+            dict set solverSettingsDict time_integration_method [write::getValue PFEMFLUID_SolStrat]
+            dict set solverSettingsDict scheme_type [write::getValue PFEMFLUID_Scheme]
         }
     }
     
@@ -102,7 +102,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     
     dict set solverSettingsDict bodies_list $bodies_list
     dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
+    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
     
     return $solverSettingsDict
 }
@@ -114,7 +114,7 @@ proc PfemFluid::write::GetPFEM_OutputProcessList { } {
 }
 proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
     set resultList [list ]
-    set problemtype [write::getValue PFEM_DomainType]
+    set problemtype [write::getValue PFEMFLUID_DomainType]
     if {$problemtype ne "Solids"} {
         lappend resultList [GetPFEM_FluidRemeshDict]
     } else {
@@ -128,7 +128,7 @@ proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
 proc PfemFluid::write::GetPFEM_ContactDict { } {
     set contact_dict [dict create]
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+    set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     set contact_list [list ]
     foreach body_node [$root selectNodes $xp1] {
         set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
@@ -185,7 +185,7 @@ proc PfemFluid::write::GetPfem_ContactProcessDict {contact_name} {
 
 proc PfemFluid::write::GetBodiesWithContactList {contact_name} {
     set bodies_list [list ]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+    set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     foreach body_node [[customlib::GetBaseRoot] selectNodes $xp1] {
         set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
         if {$contact eq $contact_name} {lappend bodies_list [get_domnode_attribute $body_node name]}
@@ -197,7 +197,7 @@ proc PfemFluid::write::GetBodiesWithContactList {contact_name} {
 proc PfemFluid::write::GetContactProperty { contact_name property } {
     set ret ""
     set root [customlib::GetBaseRoot]
-    set ret [get_domnode_attribute [$root selectNodes "[spdAux::getRoute PFEM_contacts]/blockdata\[@name='$contact_name'\]/value\[@n='$property'\]"] v]
+    set ret [get_domnode_attribute [$root selectNodes "[spdAux::getRoute PFEMFLUID_contacts]/blockdata\[@name='$contact_name'\]/value\[@n='$property'\]"] v]
     if {$ret eq ""} {set ret null}
     return $ret
 }
@@ -319,7 +319,7 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
     dict set resultDict "kratos_module" "KratosMultiphysics.PfemApplication"
-    set problemtype [write::getValue PFEM_DomainType]
+    set problemtype [write::getValue PFEMFLUID_DomainType]
     
     dict set resultDict "python_module" "remesh_fluid_domains_process"
     dict set resultDict "process_name" "RemeshFluidDomainsProcess" 
@@ -433,7 +433,7 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
 proc PfemFluid::write::GetRemeshProperty { body_name property } {
     set ret ""
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+    set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     set remesh_name ""
     foreach body_node [$root selectNodes $xp1] {
         if {[$body_node @name] eq $body_name} {
@@ -456,7 +456,7 @@ proc PfemFluid::write::ProcessBodiesList { } {
     customlib::UpdateDocument
     set bodiesList [list ]
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+    set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     foreach body_node [$root selectNodes $xp1] {
         set body [dict create]
         set name [$body_node @name]
@@ -477,7 +477,7 @@ proc PfemFluid::write::ProcessBodiesList { } {
 proc PfemFluid::write::GetNodalDataDict { } {
     set root [customlib::GetBaseRoot]
     set NodalData [list ]
-    set parts [list "PFEM_Rigid2DParts" "PFEM_Rigid3DParts" "PFEM_Deformable2DParts" "PFEM_Deformable3DParts" "PFEM_Fluid2DParts" "PFEM_Fluid3DParts"]
+    set parts [list "PFEMFLUID_Rigid2DParts" "PFEMFLUID_Rigid3DParts" "PFEMFLUID_Deformable2DParts" "PFEMFLUID_Deformable3DParts" "PFEMFLUID_Fluid2DParts" "PFEMFLUID_Fluid3DParts"]
     
     foreach part $parts {
         set xp1 "[spdAux::getRoute $part]/group"
@@ -521,7 +521,7 @@ proc PfemFluid::write::ProcessRemeshDomainsDict { } {
     customlib::UpdateDocument
     set domains_dict [dict create ]
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_meshing_domains"]/blockdata"
+    set xp1 "[spdAux::getRoute "PFEMFLUID_meshing_domains"]/blockdata"
     foreach domain_node [$root selectNodes $xp1] {
         set name [$domain_node @name]
         foreach part_node [$domain_node selectNodes "./value"] {
