@@ -20,6 +20,7 @@ proc MPM::write::writeModelPartEvent { } {
     set filename "[file tail [GiD_Info project ModelName]]"
     
     write::processMaterials
+    #MPM::write::UpdateMaterials
 
     ## Grid MPDA ##
     # Headers
@@ -155,6 +156,24 @@ proc MPM::write::copyMainKratosPythonFile { } {
     write::CopyFileIntoModel [file join python $filename]
     write::RenameFileInModel $filename "MainKratos.py"
 }
+
+
+proc MPM::write::UpdateMaterials { } {
+    set matdict [write::getMatDict]
+    foreach {mat props} $matdict {
+        # Modificar la ley constitutiva
+        dict set matdict $mat THICKNESS  1.0000E+00
+        
+        set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group\[@n='$mat'\]/value\[@n='THICKNESS'\]"
+        set vNode [[customlib::GetBaseRoot] selectNodes $xp1] 
+        if {$vNode ne ""} {
+            dict set matdict $mat THICKNESS [write::getValueByNode $vNode]
+        }
+           
+    }
+    write::setMatDict $matdict
+}
+
 proc MPM::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
