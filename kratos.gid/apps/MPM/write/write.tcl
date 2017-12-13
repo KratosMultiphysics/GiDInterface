@@ -121,8 +121,9 @@ proc MPM::write::writeNodalDisplacement { } {
 
 
 proc MPM::write::writeCustomFilesEvent { } {
-    write::CopyFileIntoModel "python/KratosFluid.py"
-    write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
+    # write::CopyFileIntoModel "python/KratosFluid.py"
+    # write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
+    write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 }
 
 proc MPM::write::GetAttribute {att} {

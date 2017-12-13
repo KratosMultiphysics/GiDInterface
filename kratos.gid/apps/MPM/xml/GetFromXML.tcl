@@ -47,6 +47,10 @@ proc MPM::xml::getUniqueName {name} {
 }
 
 proc MPM::xml::CustomTree { args } {
+
+    spdAux::SetValueOnTreeItem v "time" Results OutputControlType
+    spdAux::SetValueOnTreeItem values "time" Results OutputControlType
+    spdAux::SetValueOnTreeItem v No NodalResults PARTITION_INDEX
 }
 
 
