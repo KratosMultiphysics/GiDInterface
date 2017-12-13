@@ -25,6 +25,13 @@ proc MPM::xml::Init { } {
     # Import our Materials
     Model::ForgetMaterials
     Model::getMaterials Materials.xml
+
+    # Import our Nodal conditions
+    Model::getProcesses Processes.xml
+    Model::ForgetNodalConditions
+    Model::getNodalConditions NodalConditions.xml
+
+    
 }
 
 
