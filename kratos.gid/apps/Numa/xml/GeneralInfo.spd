@@ -2,6 +2,7 @@
 <container n="GeneralInfo" pn="General Information" icon="information16" help="General information" state="normal" open_window="0">
 
     <value n="TypeofProblem" pn="Type of Problem" un="NumaTypeofProblem" v="Mechanical" values="Mechanical,Thermo-Mechanical" help="Type of problem" actualize_tree="1"/>
+    <value n="ConvergenceNuma" pn="Type of Young" un="NumaConvergenceNuma" v="Value" values="Value,Table" help="False: the initial value in the Young Calibration process is used" actualize_tree="1"/>
     <value n="SolStratCombo" pn="Strategy" un="NumaSolStrat" v="Newton-Raphson" state="disabled"/>
     <value n="MechanicalScheme" pn="Scheme" v="Newmark" un="NumaScheme" state="disabled"/>
     

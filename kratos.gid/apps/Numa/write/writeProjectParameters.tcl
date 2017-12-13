@@ -20,6 +20,14 @@ proc Numa::write::getParametersDict { } {
     dict set problemDataDict end_time [write::getValue NumaTimeParameters EndTime]
     dict set problemDataDict time_step [write::getValue NumaTimeParameters DeltaTime]
     dict set problemDataDict time_scale [write::getValue NumaTimeParameters TimeScale]
+
+    set numa_convergence [write::getValue NumaConvergenceNuma]
+    if {$numa_convergence eq "Value"} { 
+        dict set problemDataDict numa_convergence false
+    } else {
+        dict set problemDataDict numa_convergence true
+    }
+
     dict set problemDataDict streamlines_utility [Numa::write::StremalinesUtility]
 
     ### Add section to document
