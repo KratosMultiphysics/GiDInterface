@@ -2,8 +2,8 @@
 <ConstitutiveLaws>
 
   <!--Particle-->
-  <CLaw n="MohrCoulomb" pn="MohrCoulomb" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help=" " Dimension="3D" ProductionReady="ProductionReady">
+  <CLaw n="MohrCoulomb3D" pn="MohrCoulomb" class="HenckyMCPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help=" " Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -16,8 +16,8 @@
       
     </outputs>
   </CLaw>
-  <CLaw n="MohrCoulomb" pn="MohrCoulomb" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help=" " Dimension="2D" ProductionReady="ProductionReady">
+  <CLaw n="MohrCoulomb2D" pn="MohrCoulomb" class="HenckyMCPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help=" " Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />

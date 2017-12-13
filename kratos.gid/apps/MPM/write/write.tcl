@@ -109,21 +109,37 @@ proc MPM::write::writeNodalDisplacement { } {
     }
 }
 
-# <group n="Displacement Auto1//Total" ov="line" tree_state="close">
-#     <value n="Enabled_X" pn="X component" values="Yes,No" help="Enables the X Displacement" state="" v="Yes" tree_state="close"/>
-#     <value n="DisplacementX" wn="DISPLACEMENT _X" pn="X Displacement" help="Displacement" state="normal" v="0" tree_state="close"/>
-#     <value n="Enabled_Y" pn="Y component" values="Yes,No" help="Enables the Y Displacement" state="" v="Yes" tree_state="close"/>
-#     <value n="DisplacementY" wn="DISPLACEMENT _Y" pn="Y Displacement" help="Displacement" state="normal" v="0" tree_state="close"/>
-#     <value n="Enabled_Z" pn="Z component" values="Yes,No" help="Enables the Z Displacement" state="[CheckDimension 3D]" v="Yes"/>
-#     <value n="DisplacementZ" wn="DISPLACEMENT _Z" pn="Z Displacement" help="Displacement" state="[CheckDimension 3D]" v="0"/>
-#     <value n="Interval" pn="Time interval" values="[getIntervals]" help="Displacement" state="" v="Total" tree_state="close"/>
-# </group>
+proc MPM::write::writeMaterialsFile { } {
+    write::OpenFile "materials.py"
 
+    write::WriteString ""
+    write::WriteString "# Importing the Kratos Library"
+    write::WriteString "from KratosMultiphysics import *"
+    write::WriteString "from KratosMultiphysics.ParticleMechanicsApplication import *"
+    write::WriteString "from KratosMultiphysics.SolidMechanicsApplication import *"
+    write::WriteString "def AssignMaterial(Properties):"
+    
+    foreach material [dict values [write::getMatDict]] {
+        set mid [dict get $material MID]
+        set constitutive_law_name [dict get $material ConstitutiveLaw]
+        set constitutive_law [Model::getConstitutiveLaw $constitutive_law_name]
+        if {$constitutive_law ne ""} {
+            set constitutive_law_class [$constitutive_law getAttribute class]
+            write::WriteString "    prop_id = $mid;"
+            write::WriteString "    prop = Properties\[prop_id\]"
+            write::WriteString "    mat = ${constitutive_law_class}();"
+            write::WriteString "    prop.SetValue(CONSTITUTIVE_LAW, mat.Clone());"
+        }
+    }
+    write::WriteString ""
+    write::CloseFile
+}
 
 proc MPM::write::writeCustomFilesEvent { } {
     # write::CopyFileIntoModel "python/KratosFluid.py"
     # write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
     write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
+    writeMaterialsFile
 }
 
 proc MPM::write::GetAttribute {att} {
