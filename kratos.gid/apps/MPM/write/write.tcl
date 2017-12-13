@@ -136,12 +136,25 @@ proc MPM::write::writeMaterialsFile { } {
 }
 
 proc MPM::write::writeCustomFilesEvent { } {
-    # write::CopyFileIntoModel "python/KratosFluid.py"
-    # write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
     write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
     writeMaterialsFile
+    copyMainKratosPythonFile
 }
 
+proc MPM::write::copyMainKratosPythonFile { } {
+    set element "Triangular"
+    set dim "2"
+
+    if {$dim eq "2"} {
+        if {$element eq "Triangular"} {
+            set filename "KratosMainTriangles2D.py"
+        }
+    } else {
+
+    }
+    write::CopyFileIntoModel [file join python $filename]
+    write::RenameFileInModel $filename "MainKratos.py"
+}
 proc MPM::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
