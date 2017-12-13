@@ -138,8 +138,9 @@
   <Process n="ImposeInputTableNodalYoungModulusProcess" pn="Variable Young Modulus" python_module="impose_input_table_nodal_young_modulus_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according an spatial formulation" > 
     <inputs>
-        <parameter n="MinValue" pn="Minimum Value Young Modulus" type="double" v="0.0"/>
-        <parameter n="MaxValue" pn="Maximum Value Young Modulus" type="double" v="0.0"/>
+        <parameter n="initial_value" pn="Initial Young Modulus Value" type="double" v="0.0"/>
+        <parameter n="min_value" pn="Minimum Young Modulus Value" type="double" v="0.0"/>
+        <parameter n="max_value" pn="Maximum Young Modulus Value" type="double" v="0.0"/>
         <parameter n="input_file_name" pn="Table filename" type="tablefile" v=""/>
     </inputs>
   </Process> 
