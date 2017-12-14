@@ -44,10 +44,10 @@ proc Solid::write::getParametersDict { } {
     
     # Add model import settings
     set importDataDict [dict create]
-    dict set importDataDict input_type "mdpa"
-    dict set importDataDict input_filename $model_name
-    dict set importDataDict input_file_label 0
-    dict set modelDataDict import_settings $importDataDict
+    dict set importDataDict type "mdpa"
+    dict set importDataDict name $model_name
+    dict set importDataDict label 0
+    dict set modelDataDict input_file_settings $importDataDict
 
     # Add Dofs
     dict set modelDataDict dofs [list {*}[DofsInElements] ]
