@@ -13,7 +13,7 @@ proc Solid::write::getParametersDict { } {
 
     # Parallelization
     set paralleltype [write::getValue ParallelType]
-    dict set problemDataDict "parallel_type" $paralleltype
+    #dict set problemDataDict "parallel_type" $paralleltype
     if {$paralleltype eq "OpenMP"} {
         #set nthreads [write::getValue Parallelization OpenMPNumberOfThreads]
         #dict set problemDataDict NumberofThreads $nthreads
@@ -44,9 +44,9 @@ proc Solid::write::getParametersDict { } {
     
     # Add model import settings
     set importDataDict [dict create]
-    dict set importDataDict type "mdpa"
+    #dict set importDataDict type "mdpa"
     dict set importDataDict name $model_name
-    dict set importDataDict label 0
+    #dict set importDataDict label 0
     dict set modelDataDict input_file_settings $importDataDict
 
     # Add Dofs
@@ -118,7 +118,7 @@ proc Solid::write::getParametersDict { } {
     dict set restartDict RestartFrequency 0
     dict set restartDict LoadRestart false
     dict set restartDict Restart_Step 0
-    dict set projectParametersDict restart_options $restartDict
+    #dict set projectParametersDict restart_options $restartDict
         
     return $projectParametersDict
 }
