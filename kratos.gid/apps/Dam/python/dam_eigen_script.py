@@ -65,9 +65,9 @@ DamModel.AddModelPart(main_model_part)
 
 # Build sub_model_parts or submeshes (rearrange parts for the application of custom processes)
 ## Get the list of the submodel part in the object Model
-for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
-    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
+#for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
+#    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
+#    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
 
 # Print control
 if(echo_level > 1):
