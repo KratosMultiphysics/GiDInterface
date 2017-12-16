@@ -257,6 +257,17 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
                 W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
              }
         }
+        set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement Cylinder]
+        $fluidDisplacementNode setAttribute ov line
+        set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        foreach {prop val} $props {
+             set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
+             if {$propnode ne "" } {
+                  $propnode setAttribute v $val
+             } else {
+                W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
+             }
+        }
     }
 
     # Fluid domain time parameters
