@@ -283,7 +283,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     }
 
     # Fluid domain output parameters
-    set change_list [list OutputControlType step]
+    set change_list [list OutputControlType time OutputDeltaTime 0.01]
     set xpath [spdAux::getRoute FLResults]
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
@@ -358,7 +358,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     }
 
     # Structure domain output parameters
-    set change_list [list OutputControlType step]
+    set change_list [list OutputControlType time OutputDeltaTime 0.01]
     set xpath [spdAux::getRoute STResults]
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
