@@ -89,12 +89,12 @@ if(consider_selfweight == True):
 
     ## Kratos Selfweight Model ---------------------------------------------------------------------
     DamSelfWeightModel = KratosMultiphysics.Model()
-    DamSelfWeightModel.AddModelPart(self_weight_model_part)
+    #DamSelfWeightModel.AddModelPart(self_weight_model_part)
 
     ## Get the list of the submodel part in the object Model
-    #for i in range(SelfWeightProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
-    #    self_part_name = SelfWeightProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-    #    DamSelfWeightModel.AddModelPart(self_weight_model_part.GetSubModelPart(self_part_name))
+    for i in range(SelfWeightProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
+        self_part_name = SelfWeightProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
+        DamSelfWeightModel.AddModelPart(self_weight_model_part.GetSubModelPart(self_part_name))
 
 
     ## Initialize ----------------------------------------------------------------------------------
@@ -171,13 +171,13 @@ solver.AddDofs()
 
 # Creation of Kratos model
 DamModel = KratosMultiphysics.Model()
-DamModel.AddModelPart(main_model_part)
+#DamModel.AddModelPart(main_model_part)
 
 # Build sub_model_parts or submeshes (rearrange parts for the application of custom processes)
 ## Get the list of the submodel part in the object Model
-#for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
-#    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-#    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
+for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
+    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
+    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
 
 # Print model_part and properties
 if(echo_level > 1):
