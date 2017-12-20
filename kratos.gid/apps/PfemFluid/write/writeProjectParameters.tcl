@@ -19,8 +19,8 @@ proc PfemFluid::write::getParametersDict { } {
     dict set projectParametersDict problem_process_list $problemProcessList
     
     ##### constraints_process_list
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEM_NodalConditions "Nodal"]
-    set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEM_NodalConditions "Nodal"]
+    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
     
     ##### loads_process_list
