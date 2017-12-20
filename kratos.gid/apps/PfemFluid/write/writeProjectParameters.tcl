@@ -90,7 +90,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Pfem] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict PfemFluid] ]
     
     set bodies_parts_list [list ]
     foreach body $bodies_list {
