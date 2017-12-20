@@ -183,7 +183,7 @@
     </schemes>
 	
 </StrategyItem>
-<StrategyItem n="TwoStepVPStrategy" pn="Fractional Step (Fluid)" SolutionType="Dynamic"
+<StrategyItem n="TwoStepVPStrategy" pn="Two-Step Scheme" SolutionType="Dynamic"
 	      ImplementedInFile="pfem_fluid_solver.py"
 	      kratos_module="PfemFluidDynamicsApplication"
 	      python_module="pfem_fluid_solver"
