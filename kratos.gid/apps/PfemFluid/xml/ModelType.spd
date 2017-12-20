@@ -14,8 +14,8 @@
     <!--<value n="UseAutomaticDeltaTime" pn="Automatic Delta time" v="Fixed"  values="Fixed,Automatic" help="Select the Delta time option to be used"/>-->
   </container>
   <include n="Intervals" active="1" state="[HideIfUniqueName PFEMFLUID_Scheme Linear]" path="apps/Common/xml/Intervals.spd"/>     
-  <include n="Meshing Domains" active="1" path="apps/PfemFluid/xml/MeshingDomains.spd"/> 
-  <include n="Contact Strategies" active="1" path="apps/PfemFluid/xml/Contact.spd"/>
+  <include n="Meshing Domains" active="1" state="hidden" path="apps/PfemFluid/xml/MeshingDomains.spd"/> 
+  <include n="Contact Strategies" active="1" state="hidden" path="apps/PfemFluid/xml/Contact.spd"/>
   <container n="Gravity" pn="Gravity" un="FLGravity" icon="select" help="Body forces" actualize_tree="1" state="[HideIfUniqueName PFEMFLUID_DomainType Solids]" open_window="0">
     <value n="Cx" pn="X value" icon="data" v="0.0" help="X Vector"/>
     <value n="Cy" pn="Y value" icon="data" v="-9.81" help="Y Vector"/>
