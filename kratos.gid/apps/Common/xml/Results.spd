@@ -26,7 +26,7 @@
     </container>
     <container n="CutPlanes" pn="Cut planes" icon="cut" state="[checkStateByUniqueName nDim 3D]" open_window="0">
         <blockdata n='CutPlane' name='CutPlane' editable_name="unique" sequence='1' can_delete_last_item='1' icon="slice">
-            <value n="point" pn="Point" fieldtype="vector" dimensions="3" format="%.6g" v="0.0,0.0,0.0" pick_point="0"/>
+            <value n="point" pn="Point" fieldtype="vector" dimensions="3" format="%.6g" v="0.0,0.0,0.0" pick_point="1"/>
             <value n="normal" pn="Normal" fieldtype="vector" dimensions="3" format="%.6g" v="0.0,0.0,0.0" pick_point="0"/>
         </blockdata>
     </container>
