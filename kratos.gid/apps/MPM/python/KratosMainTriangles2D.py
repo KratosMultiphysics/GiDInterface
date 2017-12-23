@@ -341,14 +341,14 @@ if(load_restart):
 else:
 
     model_part1.ProcessInfo[TIME]                = 0
-    model_part1.ProcessInfo[TIME_STEPS]          = 0
+    model_part1.ProcessInfo[STEP]          = 0
     model_part1.ProcessInfo[PREVIOUS_DELTA_TIME] = time_step;
 
     conditions.Initialize(time_step);
 
 
 # initialize step operations
-starting_step  = model_part1.ProcessInfo[TIME_STEPS]
+starting_step  = model_part1.ProcessInfo[STEP]
 starting_time  = model_part1.ProcessInfo[TIME]
 #ending_step    = general_variables.nsteps
 ending_time    = general_variables.end_time
@@ -379,7 +379,7 @@ for step in range(0,buffer_size):
 
   model_part1.CloneTimeStep(current_time)
   model_part1.ProcessInfo[DELTA_TIME] = time_step
-  model_part1.ProcessInfo[TIME_STEPS] = step-buffer_size
+  model_part1.ProcessInfo[STEP] = step-buffer_size
 
 # writing a initial state results file
 current_id = 0
