@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="ModelType" pn="Modelling" icon="modelling" help="Model information" state="normal" tree_state="closed" open_window="0">
-  <value n="DomainType" pn="Physics type" icon="data" un="PFEMFLUID_DomainType" v="Fluids" values="Fluids,Solids,FSI" help="Type of problem to be solved" actualize_tree="1"/>
-  <container n="AnalysisType" pn="Analysis type" icon="select" un="PFEMFLUID_AnalysisType" help="Problem parameters" actualize_tree="1" state="normal" tree_state="open" open_window="0">
-    <value n="SolutionType" pn="Solution type" icon="data" un="PFEMFLUID_SolutionType" v="Dynamic" values="Static,Dynamic" help="Solution type" actualize_tree="1" state="[SolutionTypeState]"/>
-    <value n="SolStratCombo" pn="Solving strategy" icon="data" un="PFEMFLUID_SolStrat" v="" values="" dict="[GetSolutionStrategiesPFEM]" actualize_tree="1" state="[DisableIfUniqueName PFEMFLUID_SolutionType Static]"/>
-    <value n="Scheme" pn="Scheme" icon="data" un="PFEMFLUID_Scheme" v="" values="" dict="[GetSchemes]" state="normal"  actualize_tree="1"/>
-    <!-- <value n="LinearType" pn="Linear type" un="PFEMFLUID_LinearType" v="Linear" values="Linear,Non-Linear" help="Linear type" state="[checkStateByUniqueName PFEMFLUID_SolutionType Static]"/> -->
-  </container>    
+<container n="ModelType" pn="Physics" icon="modelling" help="Model information" state="normal" tree_state="closed" open_window="0">
+  <value n="DomainType" pn="Physics type" icon="data" un="PFEMFLUID_DomainType" v="Fluids" values="Fluids,Solids,FSI" help="Type of problem to be solved" actualize_tree="1"/>   
   <include n="Meshing Domains" active="1" state="hidden" path="apps/PfemFluid/xml/MeshingDomains.spd"/> 
   <include n="Contact Strategies" active="1" state="hidden" path="apps/PfemFluid/xml/Contact.spd"/>
 </container>
