@@ -133,6 +133,7 @@ proc Fluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
 # Tree assign
 proc Fluid::examples::TreeAssignationCylinderInFlow3D {args} {
     TreeAssignationCylinderInFlow2D
+    AddCuts
 }
 proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     set nd $::Model::SpatialDimension
@@ -226,4 +227,11 @@ proc Fluid::examples::ErasePreviousIntervals { } {
     foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
         if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
     }
+}
+
+proc Fluid::examples::AddCuts { } {
+    # Cuts
+    set results [spdAux::getRoute "Results"]
+    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
+    [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }
