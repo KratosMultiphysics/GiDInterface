@@ -3,7 +3,7 @@
 <Infoproblemtype version="1.0">
   <Program>
     <Name>Kratos</Name>
-    <Version>5.2.2</Version>
+    <Version>5.2.3</Version>
     <ExecutableVersion></ExecutableVersion>
     <MinimumGiDVersion>13.1.7d</MinimumGiDVersion>
     <CustomLibAutomatic>0</CustomLibAutomatic>
@@ -44,11 +44,15 @@ Kratos is OPEN SOURCE. The main code and program structure is available and aime
 Kratos is FREE because is devoted mainly to developers, researchers and students and, therefore, is the most fruitful way to share knowledge and built a robust numerical methods laboratory adapted to their users' needs. Free because you have the freedom to modify and distribute the software. The one thing you're not able to do with free software is take away other people's freedom. Please, read the license for more detailed information.
 
     </Description>
-    <NewsInVersion version="5.2.2" date="2017-20-01"> 
+    <NewsInVersion version="5.2.3" date="2017-12-27"> 
+      * What is new? 
+        * Bug fix
+    </NewsInVersion>
+    <NewsInVersion version="5.2.2" date="2017-12-20"> 
       * What is new? 
         * Removed Dam Application due to Copyright issues
     </NewsInVersion>
-    <NewsInVersion version="5.2.1" date="2017-20-01"> 
+    <NewsInVersion version="5.2.1" date="2017-12-01"> 
       * What is new? 
         * FSI: 
           - Bug correction in the update utilities
