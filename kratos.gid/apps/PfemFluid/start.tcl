@@ -13,7 +13,7 @@ proc ::PfemFluid::Init { } {
     set kratos_name PfemFluidDynamicsApplication
     
     set dir [apps::getMyDir "PfemFluid"]
-    set ::Model::ValidSpatialDimensions [list 2D 2Da 3D]
+    set ::Model::ValidSpatialDimensions [list 2D 3D]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
     set attributes [dict create]
