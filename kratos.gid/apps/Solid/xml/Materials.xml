@@ -5,6 +5,9 @@
         <parameter n="DENSITY" pn="Density" v="2550" help="Density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="3.0e10" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2" help="Poisson coefficient of the material"/>
+	<parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="19.1237"/>
+	<parameter n="STRENGTH_RATIO" pn="Strength Ratio" v="10.9375"/>
+	<parameter n="FRACTURE_ENERGY" pn="Fracture Energy" v="140"/>
     </inputs>
   </Material>
   <Material n="Steel" MaterialType="Solid" help="Steel elastic properties">

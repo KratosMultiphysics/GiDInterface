@@ -2,7 +2,7 @@
 <ProcessList>
 
   <Process n="AssignModulusAndDirectionToNodesProcess" pn="Impose vector value by direction process" python_module="assign_modulus_and_direction_to_nodes_process"
-	   kratos_module="KratosMultiphysics.SolidMechanicsApplication" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction"> 
+	   kratos_module="KratosMultiphysics.SolidMechanicsApplication" help="This process fixes all the components of a given vector variable"> 
     <inputs>
         <parameter n="modulus" pn="Modulus" type="double"  v="1.0" function="1" has_units="1"/>
         <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" />
@@ -27,7 +27,7 @@
 
   <Process n="ApplyRigidBodyRotationProcess2D" pn="Assign a rigid body rotation process in 2D" python_module="apply_rigid_body_rotation_process"
 	   kratos_module="KratosMultiphysics.SolidMechanicsApplication"
-	   help="This process applies and fixed a rotation movement where the rotation vector point to z axis" check="DirectorVectorNonZero direction">
+	   help="This process applies and fixed a rotation movement where the rotation vector point to z axis" >
     <inputs>
       <parameter n="modulus" pn="Modulus" type="double"  v="1.0" function="1" has_units="1"/>
       <parameter n="center" pn="Center" type="vector" v="0.0,0.0,0.0"  />
@@ -36,7 +36,7 @@
 
   <Process n="ApplyRigidBodyRotationProcess3D" pn="Assign a rigid body rotation process in 3D" python_module="apply_rigid_body_rotation_process"
 	   kratos_module="KratosMultiphysics.SolidMechanicsApplication"
-	   help="This process applies and fixed a rotation movement" check="DirectorVectorNonZero direction">
+	   help="This process applies and fixed a rotation movement" >
     <inputs>
       <parameter n="modulus" pn="Modulus" type="double"  v="1.0" function="1" has_units="1"/>
       <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0"  />
@@ -48,7 +48,7 @@
   Processes for conditions
 -->
   <Process n="AssignModulusAndDirectionToConditionsProcess" pn="Assign a vector value on a condition" python_module="assign_modulus_and_direction_to_conditions_process"
-	   kratos_module="KratosMultiphysics.SolidMechanicsApplication" help="This process sets a vector variable value over a condition" check="DirectorVectorNonZero direction"> 
+	   kratos_module="KratosMultiphysics.SolidMechanicsApplication" help="This process sets a vector variable value over a condition"> 
     <inputs>
       <parameter n="modulus" pn="Modulus" type="double"  v="1.0" function="1" has_units="1"/>
       <parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0"  />

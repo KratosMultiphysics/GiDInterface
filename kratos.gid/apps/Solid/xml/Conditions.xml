@@ -5,7 +5,7 @@
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 		 ElementType="Line,Surface,Volume" ProcessName="AssignModulusAndDirectionToNodesProcess" VariableName="VOLUME_ACCELERATION"
-		 help="Self weight application by means of the AssignModulusAndDirectionToNodesProcess" units="m/s^2" unit_magnitude="Acceleration">
+		 help="set gravity value and direction" units="m/s^2" unit_magnitude="Acceleration">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -23,7 +23,7 @@
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 		 ElementType="Line,Surface"  ProcessName="AssignModulusAndDirectionToNodesProcess" VariableName="VOLUME_ACCELERATION"
-		 help="Self weight application by means of the AssignModulusAndDirectionToNodesProcess" units="m/s^2" unit_magnitude="Acceleration">
+		 help="set gravity value and direction" units="m/s^2" unit_magnitude="Acceleration">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -41,7 +41,7 @@
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
 		 ElementType="Line,Surface"  ProcessName="AssignModulusAndDirectionToNodesProcess" VariableName="VOLUME_ACCELERATION"
-		 help="Self weight application by means of the AssignModulusAndDirectionToNodesProcess" units="m/s^2" unit_magnitude="Acceleration">
+		 help="set gravity value and direction" units="m/s^2" unit_magnitude="Acceleration">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -58,7 +58,7 @@
   <ConditionItem n="PointLoad2D" pn="Load on points" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Point load application by means of the AssignModulusAndDirectionToConditionsProcess"
+		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set load value and direction"
 		 units="N" unit_magnitude="F" VariableName="POINT_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointLoadCondition2D1N"/>
@@ -72,7 +72,7 @@
   
   <ConditionItem n="PointLoad2DAxisym" pn="Load on points" Interval="Total" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Point load application by means of the AssignModulusAndDirectionToConditionsProcess"
+		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set load value and direction"
 		 units="N" unit_magnitude="F" VariableName="POINT_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="AxisymPointLoadCondition2D1N"/>
@@ -87,7 +87,7 @@
   <ConditionItem n="PointLoad3D" pn="Load on points" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Load on points, load vector referred to global axes"
+		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set load value and direction"
 		 units="N" unit_magnitude="F" VariableName="POINT_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointLoadCondition3D1N"/>
@@ -102,7 +102,7 @@
   <ConditionItem n="LineLoad2D" pn="Load on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Load on lines, load vector referred to global axes"
+	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set load value and direction"
 	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
@@ -118,7 +118,7 @@
   <ConditionItem n="LineLoad2DAxisym" pn="Load on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Load on lines, load vector referred to global axes"
+	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set load value and direction"
 	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineLoadCondition2D2N"/>
@@ -134,7 +134,7 @@
   <ConditionItem n="LineLoad3D" pn="Load on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Load on lines, load vector referred to global axes"
+	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set load value and direction"
 	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition3D2N"/>
@@ -150,7 +150,7 @@
   <ConditionItem n="SurfaceLoad3D" pn="Load on surfaces" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Surface"  ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Load on surfaces, load vector referred to global axes"
+	ElementType="Surface"  ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set load value and direction"
 	units="N/m^2" unit_magnitude="F/L^2" VariableName="SURFACE_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
@@ -169,7 +169,7 @@
   <ConditionItem n="LinePressure2D" pn="Pressure on lines" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
+		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="set pressure value (direction: oposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
@@ -185,7 +185,7 @@
   <ConditionItem n="LinePressure2DAxisym" pn="Pressure on lines" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
+		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="set pressure value (direction: oposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineLoadCondition2D2N"/>
@@ -201,7 +201,7 @@
   <ConditionItem n="SurfacePressure3D" pn="Pressure on surfaces" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess" help="Normal Pressure on surfaces, oriented pointing against the surface outer normal"
+		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess" help="set pressure value (direction: oposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
@@ -220,7 +220,7 @@
   <ConditionItem n="PointSpring2D" pn="Spring on points" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Point stiffness application by means of the AssignModulusAndDirectionToConditionsProcess"
+		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set stiffness and direction"
 		 units="N/m" unit_magnitude="F/L" VariableName="POINT_STIFFNESS">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointElasticCondition2D1N"/>
@@ -234,7 +234,7 @@
   
   <ConditionItem n="PointSpring2DAxisym" pn="Spring on points" Interval="Total" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Point stiffness application by means of the AssignModulusAndDirectionToConditionsProcess"
+		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set stiffness and direction"
 		 units="N/m" unit_magnitude="F/L" VariableName="POINT_STIFFNESS">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="AxisymPointElasticCondition2D1N"/>
@@ -249,7 +249,7 @@
   <ConditionItem n="PointSpring3D" pn="Spring on points" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Spring on points, stiffness vector referred to global axes"
+		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set stiffness and direction"
 		 units="N/m" unit_magnitude="F/m" VariableName="POINT_STIFFNESS">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointElasticCondition3D1N"/>
@@ -264,7 +264,7 @@
   <ConditionItem n="LineSpring2D" pn="Spring on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Spring on lines, stiffness vector referred to global axes"
+	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set stiffness and direction"
 	units="N/m^2" unit_magnitude="F/L^2" VariableName="LINE_STIFFNESS">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineElasticCondition2D2N"/>
@@ -280,7 +280,7 @@
   <ConditionItem n="LineSpring2DAxisym" pn="Spring on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Spring on lines, stiffness vector referred to global axes"
+	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set stiffness and direction"
 	units="N/m^2" unit_magnitude="F/L^2" VariableName="LINE_STIFFNESS">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineElasticCondition2D2N"/>
@@ -296,7 +296,7 @@
   <ConditionItem n="LineSpring3D" pn="Spring on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Spring on lines, stiffness vector referred to global axes"
+	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set stiffness and direction"
 	units="N/m^2" unit_magnitude="F/L^2" VariableName="LINE_STIFFNESS">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineElasticCondition3D2N"/>
@@ -312,7 +312,7 @@
   <ConditionItem n="SurfaceSpring3D" pn="Spring on surfaces" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Surface"  ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Spring on surfaces, stiffness vector referred to global axes"
+	ElementType="Surface"  ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set stiffness and direction"
 	units="N/m^3" unit_magnitude="F/L^3" VariableName="SURFACE_STIFFNESS">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceElasticCondition3D3N"/>
@@ -327,11 +327,62 @@
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
   </ConditionItem>
+
+  <ConditionItem n="LineBallast2D" pn="Ballast on lines" Interval="Total"
+		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
+		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="set ballast value (direction: normal to the geometry) "
+		 units="N/m^2" unit_magnitude="F/L^2" VariableName="BALLAST_COEFFICIENT">
+    <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="LineElasticCondition2D2N"/>
+      <item  GeometryType="Line" nodes="3" KratosName="LineElasticCondition2D3N"/>
+    </TopologyFeatures>
+    <inputs>     
+    </inputs>
+    <outputs>
+      <parameter n="FORCE" pn="External Load" v="false"/>
+    </outputs>
+  </ConditionItem>
+  
+  <ConditionItem n="LineBallast2DAxisym" pn="Ballast on lines" Interval="Total"
+		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
+		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help= "set ballast value (direction: normal to the geometry) "
+		 units="N/m^2" unit_magnitude="F/L^2" VariableName="BALLAST_COEFFICIENT">
+    <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="AxisymLineElasticCondition2D2N"/>
+      <item  GeometryType="Line" nodes="3" KratosName="AxisymLineElasticCondition2D3N"/>
+    </TopologyFeatures>
+    <inputs>     
+    </inputs>
+    <outputs>
+      <parameter n="FORCE" pn="External Load" v="false"/>
+    </outputs>
+  </ConditionItem>
+
+  <ConditionItem n="SurfaceBallast3D" pn="Ballast on surfaces" Interval="Total"
+		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess" help="set ballast value (direction: normal to the geometry)"
+		 units="N/m^3" unit_magnitude="F/L^3" VariableName="BALLAST_COEFFICIENT">
+    <TopologyFeatures>
+      <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceElasticCondition3D3N"/>
+      <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceElasticCondition3D6N"/>
+      <item  GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceElasticCondition3D4N"/>
+      <item  GeometryType="Quadrilateral" nodes="8" KratosName="SurfaceElasticCondition3D8N"/>
+      <item  GeometryType="Quadrilateral" nodes="9" KratosName="SurfaceElasticCondition3D9N"/>
+    </TopologyFeatures>
+    <inputs> 
+    </inputs>
+    <outputs>
+      <parameter n="FORCE" pn="External Load" v="false"/>
+    </outputs>
+  </ConditionItem>
   
   <ConditionItem n="PointMoment2D" pn="Moment on points" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Point" ProcessName="AssignScalarToConditionsProcess" help="Point moment application, moment vector referred to plane axis"
+		 ElementType="Point" ProcessName="AssignScalarToConditionsProcess" help="set moment value"
 		 units="N*m" unit_magnitude="F*L" VariableName="PLANE_POINT_MOMENT">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointMomentCondition2D1N"/>
@@ -342,11 +393,11 @@
       <parameter n="MOMENT" pn="External Moment" v="false"/>
     </outputs>
   </ConditionItem>
-   
+  
   <ConditionItem n="PointMoment3D" pn="Moment on points" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Moment on points, moment vector referred to global axes"
+		 ElementType="Point" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set moment value and direction"
 		 units="N*m" unit_magnitude="F*L" VariableName="POINT_MOMENT">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointMomentCondition3D1N"/>
@@ -361,7 +412,7 @@
   <ConditionItem n="LineMoment2D" pn="Moment on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="Moment on lines, moment vector referred to plane axis"
+	ElementType="Line" ProcessName="AssignScalarToConditionsProcess" help="set moment value"
 	units="N" unit_magnitude="F" VariableName="PLANE_LINE_MOMENT">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineMomentCondition2D2N"/>
@@ -377,7 +428,7 @@
   <ConditionItem n="LineMoment3D" pn="Moment on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Moment on lines, moment vector referred to global axes"
+	ElementType="Line" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set moment value and direction"
 	units="N" unit_magnitude="F" VariableName="LINE_MOMENT">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineMomentCondition3D2N"/>
@@ -393,7 +444,7 @@
   <ConditionItem n="SurfaceMoment3D" pn="Moment on surfaces" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
-	ElementType="Surface"  ProcessName="AssignModulusAndDirectionToConditionsProcess" help="Moment on surfaces, moment vector referred to global axes"
+	ElementType="Surface"  ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set moment value and direction"
 	units="N/m" unit_magnitude="F/L" VariableName="SURFACE_MOMENT">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceMomentCondition3D3N"/>

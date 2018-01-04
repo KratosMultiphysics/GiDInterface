@@ -309,6 +309,12 @@ proc Kratos::ResetModel { } {
         if {[GiD_Groups exists $group]} {GiD_Groups delete $group}
     }
 }
+proc Kratos::IsModelEmpty { } {
+    if {[GiD_Groups list] != ""} {return false}
+    if {[GiD_Layers list] != "Layer0"} {return false}
+    if {[GiD_Geometry list point 1:end] != ""} {return false}
+    return true
+}
 
 proc Kratos::BeforeMeshGeneration {elementsize} {
     foreach group [GiD_Groups list] {
