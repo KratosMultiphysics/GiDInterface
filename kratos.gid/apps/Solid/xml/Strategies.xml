@@ -79,7 +79,6 @@
         <element_filters>
           <filter field="ElementType" value="Solid,Shell"/>
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
-	  <forceOut field="n" value="UpdatedLagrangianElement2D,UpdatedLagrangianElementAxisym,UpdatedLagrangianElement3D,UpdatedLagrangianElementUP2D,UpdatedLagrangianElementUPAxisym,UpdatedLagrangianElementUP3D"/>
         </element_filters>
       </scheme>
       <scheme n="RotationBossak" pn="Beams Bossak" help="Scheme for large rotations in beams" ProductionReady="Developer">
