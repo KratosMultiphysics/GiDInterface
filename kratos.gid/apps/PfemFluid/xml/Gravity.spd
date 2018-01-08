@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <container n="Gravity" pn="Gravity" un="FLGravity" icon="select" help="Body forces" actualize_tree="1" state="[HideIfUniqueName PFEMFLUID_DomainType Solids]" open_window="0">
+    <value n="Cx" pn="X value" icon="data" v="0.0" help="X Vector"/>
+    <value n="Cy" pn="Y value" icon="data" v="-9.81" help="Y Vector"/>
+    <value n="Cz" pn="Z value" icon="data" v="0.0" help="Z Vector" state="[CheckDimension 3D]"/>
+  </container>
