@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <container n="TimeSettings" pn="Time Settings" un="PFEMFLUID_TimeParameters" icon="timeParams" help="Problem parameters" state="normal" tree_state="closed" open_window="0">
+    <value n="StartTime" pn="Start time" icon="data" state="hidden" v="0.0" help=""/>
+    <value n="DeltaTime"  pn="Time Step (s)" icon="data" v="0.001" help=""/>
+    <value n="EndTime" pn="End time" icon="data" v="1.0" help=""/>
+    <!--<value n="UseAutomaticDeltaTime" pn="Automatic Delta time" v="Fixed"  values="Fixed,Automatic" help="Select the Delta time option to be used"/>-->
+    <include n="Intervals" icon="sheets" active="1"  state="normal" path="apps/Common/xml/Intervals.spd"/>   
+  </container>
+  
