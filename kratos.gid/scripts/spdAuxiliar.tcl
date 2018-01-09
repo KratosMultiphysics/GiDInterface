@@ -1978,7 +1978,7 @@ proc spdAux::ProcOkNewCondition {domNode args} {
         foreach ent [list points lines surfaces volumes nodes elements] {
             GiD_EntitiesGroups assign $new_group_id $ent [GiD_EntitiesGroups get $group_id $ent]
         }
-        #GiD_Groups edit state $new_group_id hidden
+        GiD_Groups edit state $new_group_id hidden
         $group_node setAttribute n $new_group_id
         AddIntervalGroup $group_id $new_group_id
         
@@ -2028,6 +2028,17 @@ proc spdAux::AddIntervalGroup { parent child } {
     dict lappend GroupsEdited $parent $child
     customlib::UpdateDocument
     gid_groups_conds::addF {container[@n='interval_groups']} interval_group [list parent ${parent} child ${child}]
+}
+
+proc spdAux::RenameIntervalGroup { oldname newname } {
+    WV oldname
+    WV newname
+    variable GroupsEdited
+    WV GroupsEdited
+
+    foreach group [dict get $GroupsEdited $oldname] {
+        WV group
+    }
 }
 
 
