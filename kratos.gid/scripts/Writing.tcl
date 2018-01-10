@@ -326,6 +326,8 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
 
 proc write::GetWriteGroupName { group_id } {
     # Interval trick
+    # If a group is child, and has been created due to the Interval issue
+    # it's entities are on the father, so we need to use it's fathers name
     foreach parent [dict keys $spdAux::GroupsEdited] {
         if {$group_id in [dict get $spdAux::GroupsEdited $parent]} {
             set group_id $parent
