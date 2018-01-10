@@ -2042,7 +2042,7 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
     foreach group $list_of_subgroups {
         set child [lrange [GidUtils::Split $group "//"] 1 end]
         set fullname [join [list $newname $child] "//"]
-        RemoveIntervalGroup $oldname $fullname
+        RemoveIntervalGroup $oldname $group
         AddIntervalGroup $newname $fullname
         gid_groups_conds::rename_group $group $fullname
     }
