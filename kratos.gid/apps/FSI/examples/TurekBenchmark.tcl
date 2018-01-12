@@ -104,19 +104,17 @@ proc FSI::examples::DrawTurekBenchmarkStructureGeometry {args} {
 }
 
 proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
+    # Structure and fluid mesh settings
     set str_flag_tail_divisions 5
     set str_flag_long_sides_divisions 100
-    set fluid_flag_tail_divisions 10
-    set fluid_flag_long_sides_divisions 200
-    set fluid_cylinder_divisions 200
-    set fluid_walls_element_size 0.015
-    set fluid_domain_element_size 0.015
-
-    set noslip_element_size 0.01
-    set fluid_element_size 0.02
+    set fluid_cylinder_element_size 0.0035
+    set fluid_flag_tail_element_size 0.0035
+    set fluid_flag_long_sides_element_size 0.0035
+    set fluid_walls_element_size 0.02
+    set fluid_domain_element_size 0.02
 
     # Transition factor settings
-    GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
+    GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.1 escape escape
 
     # Structure meshing settings
     GiD_Process Mescape Meshing ElemType Quadrilateral 2 escape 
@@ -124,10 +122,10 @@ proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
 
     # Fluid meshing settings
     GiD_Process Mescape Meshing ElemType Triangle 1 escape 
-    GiD_Process Mescape Meshing Structured Lines $fluid_cylinder_divisions 9 16 escape escape
-    GiD_Process Mescape Meshing Structured Lines $fluid_flag_tail_divisions 7 escape escape
-    GiD_Process Mescape Meshing Structured Lines $fluid_flag_long_sides_divisions 11 13 escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $fluid_flag_tail_element_size 7 escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $fluid_cylinder_element_size 9 16 escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $fluid_walls_element_size 1 2 3 4 escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $fluid_flag_long_sides_element_size 11 13 escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_domain_element_size 1 escape escape
 }
 
