@@ -103,6 +103,10 @@ proc GiD_Event_BeforeSaveGIDProject { modelname} {
     }
 }
 
+proc AfterRenameGroup { oldname newname } {
+    spdAux::RenameIntervalGroup $oldname $newname
+}
+
 ##########################################################
 #################### Kratos namespace ####################
 ##########################################################

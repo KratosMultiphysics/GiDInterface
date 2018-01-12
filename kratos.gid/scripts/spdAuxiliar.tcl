@@ -1978,7 +1978,7 @@ proc spdAux::ProcOkNewCondition {domNode args} {
         foreach ent [list points lines surfaces volumes nodes elements] {
             GiD_EntitiesGroups assign $new_group_id $ent [GiD_EntitiesGroups get $group_id $ent]
         }
-        #GiD_Groups edit state $new_group_id hidden
+        GiD_Groups edit state $new_group_id hidden
         $group_node setAttribute n $new_group_id
         AddIntervalGroup $group_id $new_group_id
         
@@ -2028,6 +2028,25 @@ proc spdAux::AddIntervalGroup { parent child } {
     dict lappend GroupsEdited $parent $child
     customlib::UpdateDocument
     gid_groups_conds::addF {container[@n='interval_groups']} interval_group [list parent ${parent} child ${child}]
+}
+proc spdAux::RemoveIntervalGroup { parent child } {
+    variable GroupsEdited
+    dict set GroupsEdited $parent [lsearch -inline -all -not -exact [dict get $GroupsEdited $parent] $child]
+    customlib::UpdateDocument
+    gid_groups_conds::delete "container\[@n='interval_groups'\]/interval_group\[@parent='$parent' and @child='$child'\]"
+}
+
+proc spdAux::RenameIntervalGroup { oldname newname } {
+    variable GroupsEdited
+    set list_of_subgroups [dict get $GroupsEdited $oldname]
+    foreach group $list_of_subgroups {
+        set child [lrange [GidUtils::Split $group "//"] 1 end]
+        set fullname [join [list $newname $child] "//"]
+        RemoveIntervalGroup $oldname $group
+        AddIntervalGroup $newname $fullname
+        gid_groups_conds::rename_group $group $fullname
+    }
+    set GroupsEdited [dict remove $GroupsEdited $oldname]
 }
 
 
