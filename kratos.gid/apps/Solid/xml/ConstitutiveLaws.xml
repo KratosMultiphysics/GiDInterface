@@ -138,7 +138,8 @@
 	help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
     </inputs>
     <outputs>
       
@@ -148,7 +149,8 @@
 	help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
     </inputs>
     <outputs>
       
@@ -158,7 +160,8 @@
 	help="NeoHookean HyperElastic Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
     </inputs>
     <outputs>
       
@@ -170,7 +173,8 @@
 	help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
     </inputs>
     <outputs>
       
@@ -180,7 +184,8 @@
 	help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
     </inputs>
     <outputs>
       
@@ -190,7 +195,8 @@
 	help="NeoHookean HyperElastic Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
     </inputs>
     <outputs>
       
@@ -202,7 +208,8 @@
 	help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
       <parameter n="YIELD_STRESS" pn="Yield Stress"/>
       <parameter n="KINEMATIC_HARDENING_MODULUS" pn="Kinematic Hardening Modulus"/>
       <parameter n="REFERENCE_HARDENING_MODULUS" pn="Reference Hardening Modulus"/>
@@ -218,7 +225,8 @@
 	help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
       <parameter n="YIELD_STRESS" pn="Yield Stress"/>
       <parameter n="KINEMATIC_HARDENING_MODULUS" pn="Kinematic Hardening Modulus"/>
       <parameter n="REFERENCE_HARDENING_MODULUS" pn="Reference Hardening Modulus"/>
@@ -234,7 +242,8 @@
 	help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
       <parameter n="YIELD_STRESS" pn="Yield Stress"/>
       <parameter n="KINEMATIC_HARDENING_MODULUS" pn="Kinematic Hardening Modulus"/>
       <parameter n="REFERENCE_HARDENING_MODULUS" pn="Reference Hardening Modulus"/>
@@ -251,7 +260,8 @@
 	help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
       <parameter n="YIELD_STRESS" pn="Yield Stress"/>
       <parameter n="KINEMATIC_HARDENING_MODULUS" pn="Kinematic Hardening Modulus"/>
       <parameter n="REFERENCE_HARDENING_MODULUS" pn="Reference Hardening Modulus"/>
@@ -267,7 +277,8 @@
 	help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
       <parameter n="YIELD_STRESS" pn="Yield Stress"/>
       <parameter n="KINEMATIC_HARDENING_MODULUS" pn="Kinematic Hardening Modulus"/>
       <parameter n="REFERENCE_HARDENING_MODULUS" pn="Reference Hardening Modulus"/>
@@ -283,7 +294,8 @@
 	help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Axisymmetric" Dimension="2Da" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10" />
+      <parameter n="C10" pn="C10" unit_magnitude="P" units="Pa" v="4.00969e10"/>
+      <parameter n="BULK_MODULUS" pn="BULK_MODULUS" unit_magnitude="P" units="Pa" v="164.206349206e9"/>
       <parameter n="YIELD_STRESS" pn="Yield Stress"/>
       <parameter n="KINEMATIC_HARDENING_MODULUS" pn="Kinematic Hardening Modulus"/>
       <parameter n="REFERENCE_HARDENING_MODULUS" pn="Reference Hardening Modulus"/>
