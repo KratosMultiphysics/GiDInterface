@@ -46,6 +46,13 @@ proc ::DEM::GetAttribute {name} {
     return $value
 }
 
+
+proc ::DEM::CustomToolbarItems { } {
+    variable dir
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
+    Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example\nSpheres drop"]   
+}
+
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"

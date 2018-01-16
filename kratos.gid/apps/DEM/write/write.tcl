@@ -1,5 +1,6 @@
 namespace eval DEM::write {
     variable writeAttributes
+    variable inletProperties
 }
 
 proc DEM::write::Init { } {    
@@ -14,6 +15,10 @@ proc DEM::write::Init { } {
     SetAttribute nodal_conditions_un DEMNodalConditions
     SetAttribute materials_file "DEMMaterials.json"
     SetAttribute main_script_file "KratosDEM.py"
+
+    
+    variable inletProperties
+    set inletProperties [dict create]
 }
 
 # Attributes block
