@@ -9,7 +9,7 @@
             <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" help="Particle sphericity"/>
             <parameter n="PARTICLE_COHESION" pn="Cohesion" v="0.0" unit_magnitude="P" units="Pa" type="double" help="Particle cohesion (JKR or DMT)"/>
             <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
-            <parameter n="ROLLING_FRICTION " pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
+            <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
             <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>
             <parameter n="DEM_CohesionLaw" pn="Cohesion Law" v="None" values="None,JKR,DMT" type="combo" help="JKR: larger, flexible spheres. DMT: smaller, rigid ones."/>
         </inputs>
@@ -23,7 +23,7 @@
             <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" help="Particle sphericity"/>
             <parameter n="PARTICLE_COHESION" pn="Cohesion" v="0.0" unit_magnitude="P" units="Pa" type="double" help="Particle cohesion (JKR or DMT)"/>
             <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
-            <parameter n="ROLLING_FRICTION " pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
+            <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
             <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>
             <parameter n="DEM_CohesionLaw" pn="Cohesion Law" v="None" values="None,JKR,DMT" type="combo" help="JKR: larger, flexible spheres. DMT: smaller, rigid ones."/>
         </inputs>
@@ -37,7 +37,7 @@
             <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" help="Particle sphericity"/>
             <parameter n="PARTICLE_COHESION" pn="Cohesion" v="0.0" unit_magnitude="P" units="Pa" type="double" help="Particle cohesion (JKR or DMT)"/>
             <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
-            <parameter n="ROLLING_FRICTION " pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
+            <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
             <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>
             <parameter n="K_NORMAL" pn="KNormal" v="1e5" type="double" help="KNormal"/>
             <parameter n="K_TANGENTIAL" pn="KTangential" v="5e4" type="double" help="KTangential"/>
@@ -53,7 +53,7 @@
             <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" help="Particle sphericity"/>
             <parameter n="PARTICLE_COHESION" pn="Cohesion" v="0.0" unit_magnitude="P" units="Pa" type="double" help="Particle cohesion (JKR or DMT)"/>
             <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
-            <parameter n="ROLLING_FRICTION " pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
+            <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
             <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>
             <parameter n="CONTACT_RADIUS" pn="Contact Radius" v="4e-3" type="double" help="Contact Radius"/>
             <parameter n="MaxStress" pn="Maximum Stress" v="2e8" type="double" help="Maximum Stress"/>

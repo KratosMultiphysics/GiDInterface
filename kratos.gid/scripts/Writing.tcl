@@ -231,7 +231,7 @@ proc write::writeNodalCoordinates { } {
     WriteString "\n"
 }
 
-proc write::processMaterials { } {
+proc write::processMaterials { {alt_path ""} } {
     variable mat_dict
     
     set parts [GetConfigurationAttribute parts_un]
@@ -239,6 +239,9 @@ proc write::processMaterials { } {
     set root [customlib::GetBaseRoot]
     
     set xp1 "[spdAux::getRoute $parts]/group"
+    if {$alt_path ne ""} {
+        set xp1 $alt_path
+    }
     set xp2 ".//value\[@n='Material']"
     
     set material_number [llength [dict keys $mat_dict] ]
@@ -270,9 +273,9 @@ proc write::processMaterials { } {
                     # All the introduced values are translated to 'm' and 'kg' with the help of this function
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
                     
-                    if {[string is double $value]} {
-                        set value [format "%13.5E" $value]
-                    }
+                    # if {[string is double $value]} {
+                    #     set value [format "%13.5E" $value]
+                    # }
                     dict set mat_dict $group $name $value
                 }
             }
