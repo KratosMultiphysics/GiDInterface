@@ -14,11 +14,8 @@ import os
 import KratosMultiphysics
 # Including Applications path
 import KratosMultiphysics.ExternalSolversApplication as KratosSolvers
-import KratosMultiphysics.TrilinosApplication as TrilinosApplication
-import KratosMultiphysics.ConvectionDiffusionApplication as KratosConvDiff
+#import KratosMultiphysics.TrilinosApplication as TrilinosApplication
 import KratosMultiphysics.SolidMechanicsApplication as KratosSolid
-import KratosMultiphysics.PoromechanicsApplication as KratosPoro
-import KratosMultiphysics.StructuralMechanicsApplication as KratosStructural
 import KratosMultiphysics.DamApplication as KratosDam
 
 # Parsing the parameters
@@ -68,9 +65,9 @@ DamModel.AddModelPart(main_model_part)
 
 # Build sub_model_parts or submeshes (rearrange parts for the application of custom processes)
 ## Get the list of the submodel part in the object Model
-for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
-    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
+#for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
+#    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
+#    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
 
 # Print control
 if(echo_level > 1):
@@ -146,10 +143,10 @@ for process in list_of_processes:
 ## Finalize --------------------------------------------------------------------------------------------------
 
 # Finalizing output files
-eigen_values = [ev for ev in main_model_part.ProcessInfo[KratosStructural.EIGENVALUE_VECTOR]]
+eigen_values = [ev for ev in main_model_part.ProcessInfo[KratosSolid.EIGENVALUE_VECTOR]]
 print ("The Eigenvalues are:")
 print (eigen_values)
-eigen_utility = KratosStructural.EigenvectorToSolutionStepVariableTransferUtility()
+eigen_utility = KratosSolid.EigenvectorToSolutionStepVariableTransferUtility()
 for step in range(len(eigen_values)):
     main_model_part.ProcessInfo[KratosMultiphysics.TIME] = float(step+1)
     eigen_utility.Transfer(main_model_part,step,0)
@@ -160,11 +157,6 @@ gid_output.ExecuteFinalize()
 for process in list_of_processes:
     process.ExecuteFinalize()
     
-# Writing an output file
-output_name = 'Eigenvalues.txt'
-with open(output_name, 'w') as output:
-    output.write ("The Eigenvalues are:")
-    output.write (str(eigen_values))
 
 # Time control
 print("Analysis Completed. Elapsed Time = %.3f" % (timer.perf_counter() - initial_time)," seconds.")

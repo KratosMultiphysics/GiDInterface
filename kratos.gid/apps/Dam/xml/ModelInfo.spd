@@ -116,6 +116,7 @@
                     <value n="print_feast_output" pn="Feast output" un="DamModalfeastOutput" v="true" values="true,false" help=""/>
                     <value n="perform_stochastic_estimate" pn="Stochastic Estimation" un="DamModalStochastic" v="false" values="true,false" help=""/>
                     <value n="solve_eigenvalue_problem" pn="Solve Eigenvalue Problem" un="DamModalSolve" v="true" values="true,false" help="" />
+                    <value n="compute_modal_contribution" pn="Compute Modal Contribution" un="DamModalContribution" v="false" values="true,false" help="" />
                     <value n="lambda_min" pn="Lambda Min" un="DamModalLambdaMin" type="double" v="0.0" help=""/>
                     <value n="lambda_max" pn="Lambda Max" un="DamModalLambdaMax" type="double" v="1e3" help=""/>
                     <value n="search_dimension" pn="Search Dimension" un="DamModalSearchDimension" type="interger" v="2" help=""/>

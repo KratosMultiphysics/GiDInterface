@@ -15,6 +15,10 @@ proc Solid::xml::Init { } {
      Model::getProcesses Processes.xml
      Model::getConditions Conditions.xml
      Model::getSolvers "../../Common/xml/Solvers.xml"
+
+     # Model::ForgetElement SmallDisplacementBbarElement2D    
+     # Model::ForgetElement SmallDisplacementBbarElement3D
+    
 }
 
 proc Solid::xml::getUniqueName {name} {
@@ -22,15 +26,43 @@ proc Solid::xml::getUniqueName {name} {
 }
 
 proc Solid::xml::CustomTree { args } {
-    # Hide Results Cut planes
-    spdAux::SetValueOnTreeItem state hidden Results CutPlanes
-    spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
+
+    #set icon data as default
+    foreach node [[customlib::GetBaseRoot] getElementsByTagName value ] { $node setAttribute icon data }
+
+    #intervals
+    spdAux::SetValueOnTreeItem icon timeIntervals Intervals
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
+        $node setAttribute icon select
+    }
+
+    #conditions
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLNodalConditions]/condition" ] { 
+        $node setAttribute icon select
+	$node setAttribute groups_icon groupCreated
+    }
+
+    #loads
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLLoads]/condition" ] { 
+        $node setAttribute icon select
+	$node setAttribute groups_icon groupCreated
+    }
     
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
-    if {$result_node ne "" } {$result_node delete}
+    #materials
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLMaterials]/blockdata" ] { 
+        $node setAttribute icon select
+    }
+    
+    #solver settings
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLStratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+        $node setAttribute icon linear_solver
+    }
+    
+    #units
+    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
+    
 }
 
-Solid::xml::Init
 
 proc Solid::xml::ProcGetSolutionStrategiesSolid { domNode args } {
      set names ""
@@ -73,9 +105,14 @@ proc Solid::xml::ProcCheckNodalConditionStateSolid {domNode args} {
 proc Solid::xml::ProcCheckGeometrySolid {domNode args} {
      set ret "surface"
      if {$::Model::SpatialDimension eq "3D"} {
-          set ret "surface,volume"
+	 set ret "line,surface,volume"
+     } elseif {$::Model::SpatialDimension eq "2D"} {
+	 set ret "line,surface"
+     } elseif {$::Model::SpatialDimension eq "1D"} {
+	 set ret "line"
      }
      return $ret
 }
 
- 
+
+Solid::xml::Init

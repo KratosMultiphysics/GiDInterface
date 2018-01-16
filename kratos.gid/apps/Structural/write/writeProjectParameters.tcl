@@ -45,15 +45,14 @@ proc Structural::write::getOldParametersDict { } {
     # Solution strategy
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue STSolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
-    dict set solverSettingsDict solver_type $strategy_write_name
+    set currentStrategyId [write::getValue STSolStrat]
+    # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
+    dict set solverSettingsDict solver_type $solutiontype
     #~ dict set solverSettingsDict domain_size [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
-    dict set solverSettingsDict solution_type [write::getValue STSoluType]
+    dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
 
-    if {$solutiontype eq "Static"} {
-        dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
-    } elseif {$solutiontype eq "Dynamic"} {
+    if {$solutiontype eq "Dynamic"} {
         dict set solverSettingsDict time_integration_method [write::getValue STSolStrat]
         dict set solverSettingsDict scheme_type [write::getValue STScheme]
     }
@@ -62,7 +61,6 @@ proc Structural::write::getOldParametersDict { } {
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
     dict set modelDict input_filename $model_name
-    dict set modelDict input_file_label 0
     dict set solverSettingsDict model_import_settings $modelDict
 
     set materialsDict [dict create]
@@ -76,12 +74,22 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
 
+    
+    if {[usesContact]} {
+        
+        dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionless"
+
+        set convergence_criterion [dict get $solverSettingsDict convergence_criterion]
+        dict set solverSettingsDict convergence_criterion "contact_$convergence_criterion"
+    }
+
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
     set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]
+    lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
+    dict set projectParametersDict contact_process_list $contact_conditions_dict
 
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
@@ -110,30 +118,33 @@ proc Structural::write::getOldParametersDict { } {
         }
     }
 
-    set materialsDict [dict create]
-    dict set materialsDict materials_filename [GetAttribute materials_file]
-    dict set projectParametersDict material_import_settings $materialsDict
+    # set materialsDict [dict create]
+    # dict set materialsDict materials_filename [GetAttribute materials_file]
+    # dict set projectParametersDict material_import_settings $materialsDict
 
     return $projectParametersDict
 }
 
 proc Structural::write::ProcessContacts { nodal_conditions_dict } {
     set process_list [list ]
+    set contact_process_list [list ]
     foreach elem $nodal_conditions_dict {
         if {[dict get $elem python_module] in {"alm_contact_process"}} {
             set model_part_name "Structure"
             dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
             dict set elem Parameters model_part_name $model_part_name
             dict set elem Parameters computing_model_part_name "computing_domain"
+            lappend contact_process_list $elem
+        } else {
+            lappend process_list $elem
         }
-        lappend process_list $elem
     }
-    return $process_list
+    return [list $process_list $contact_process_list]
 }
 
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
-    write::SetParallelismConfiguration
+    
 }
 
 

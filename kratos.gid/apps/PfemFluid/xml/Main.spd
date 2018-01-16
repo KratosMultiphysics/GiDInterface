@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?> 
+  <container n="PfemFluid" pn="PFEM Fluid Data" icon="pfemData" prefix="PFEMFLUID_" tree_state="open" open_window="0">
+    <include n="ModelType" active="1" path="apps/PfemFluid/xml/ModelType.spd"/>
+    <include n="Bodies" active="1" path="apps/PfemFluid/xml/Bodies.spd"/>
+    <include n="BoundaryConditions" active="1" path="apps/PfemFluid/xml/NodalConditions.spd"/>
+    <include n="Loads" active="1" path="apps/Solid/xml/Loads.spd" state="[getStateFromXPathValue {string(../container[@n='ModelType']/value[@n='DomainType']/@v)} Solids,Coupled]"/>
+    <include n="TimeSettings" active="1" icon="timeParams" path="apps/PfemFluid/xml/TimeSettings.spd"/>
+    <include n="Gravity" active="1" icon="gravityForce" path="apps/PfemFluid/xml/Gravity.spd"/>
+    <include n="SolutionStrategy" active="1" path="apps/PfemFluid/xml/SolutionStrategy.spd"/>                   
+    <include n="Parallelism" active="1"  icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/> 
+    <include n="Results" active="1" path="apps/PfemFluid/xml/Results.spd"/>
+    <include n="Restart" active="1" state='hidden' path="apps/Common/xml/Restart.spd"/>
+    <include n="materials" active="0" path="apps/PfemFluid/xml/Materials.spd"/> 
+  </container>

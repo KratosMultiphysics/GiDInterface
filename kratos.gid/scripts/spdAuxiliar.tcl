@@ -140,16 +140,18 @@ proc spdAux::deactiveApp { appid } {
 proc spdAux::activeApp { appid } {
     #W "Active $appid"
     variable initwind
-    
-    set root [customlib::GetBaseRoot]
-    [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v $appid
-    foreach elem [$root getElementsByTagName "appLink"] {
-        if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
-            $elem setAttribute "active" 1
-        } else {
-            $elem setAttribute "active" 0
+    catch {
+        set root [customlib::GetBaseRoot]
+        [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v $appid
+        foreach elem [$root getElementsByTagName "appLink"] {
+            if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
+                $elem setAttribute "active" 1
+            } else {
+                $elem setAttribute "active" 0
+            }
         }
     }
+    if {$::Kratos::must_quit} {return ""}
     set nd [$root selectNodes "value\[@n='nDim'\]"]
     if {[$nd getAttribute v] ne "wait"} {
         if {[$nd getAttribute v] ne "undefined"} {
@@ -211,7 +213,18 @@ proc spdAux::CreateWindow {} {
             if {$col >= 5} {set col 0; incr row; incr row}
         }
     }
-    
+
+    # More button
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+        set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
+        set img [gid_themes::GetImageModule $more_path]
+        ttk::button $w.information.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]
+        ttk::label $w.information.text_more -text "More..."
+        
+        grid $w.information.img_more -column $col -row $row
+        grid $w.information.text_more -column $col -row [expr $row +1]
+    }
+
     grid $w.top
     grid $w.top.title_text
     
@@ -313,9 +326,12 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
 
 proc spdAux::CustomTreeCommon { } {
     set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]
+    
     if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
     if {!$AppUsesIntervals} {
-        spdAux::SetValueOnTreeItem state hidden Intervals
+        if {[getRoute Intervals] ne ""} {
+            catch {spdAux::SetValueOnTreeItem state hidden Intervals}
+        }
     }
     
 }
@@ -566,7 +582,7 @@ proc spdAux::injectSolvers {basenode args} {
             set help [$se getHelp]
             set appid [GetAppIdFromNode [$basenode parent]]
             set un [apps::getAppUniqueName $appid "$stn$n"]
-            set container "<container help='$help' n='$n' pn='$pn' un='$un' state='\[SolverEntryState\]' solstratname='$stn' open_window='0'>"
+            set container "<container help='$help' n='$n' pn='$pn' un='$un' state='\[SolverEntryState\]' solstratname='$stn' open_window='0' icon='solver'>"
             set defsolver [lindex [$se getDefaultSolvers] 0]
             append container "<value n='Solver' pn='Solver' v='$defsolver' values='\[GetSolversValues\]' dict='\[GetSolvers\]' actualize='1' update_proc='UpdateTree'/>"
             #append container "<dependencies node='../value' actualize='1'/>"
@@ -761,9 +777,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
             set zstate "\[CheckDimension 3D\]"
             if {$state eq "hidden"} {set zstate hidden}
             append node "
-                <value n='${inName}X' pn='${pn} X' v='$vX' values='1,0' help='' state='$state'/>
-                <value n='${inName}Y' pn='${pn} X' v='$vY' values='1,0' help='' state='$state'/>
-                <value n='${inName}Z' pn='${pn} X' v='$vZ' values='1,0' help='' state='$zstate'/>"
+                <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state'/>
+                <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state'/>
+                <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate'/>"
         } else {
             foreach i [list "X" "Y" "Z"] {
                 set fname "function_$inName"
@@ -818,9 +834,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
                 set v "v$i"
                 if { $vector_type eq "file" || $vector_type eq "tablefile" } {
                     if {[set $v] eq ""} {set $v "- No file"}
-                    append node "<value n='${inName}$i' pn='${pn} $i' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
+                    append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
                 } else {
-                    append node "<value n='${inName}$i' pn='${pn} $i' v='[set $v]' $has_units help='$help'  $zstate />"
+                    append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate />"
                 }
             }
         }
@@ -846,7 +862,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
         if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
         append node "</value>"
     } elseif { $type eq "bool" } {
-        set values "1,0"
+        set values "true,false"
+        if {$v == 1} {set v true}
+        if {$v == 0} {set v false}
         append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
         if {[$param getActualize]} {
             append node "  actualize_tree='1'  "
@@ -907,6 +925,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
     set processeds [list ]
+    spdAux::injectLocalAxesButton $basenode
     foreach obj [concat [Model::GetElements] [Model::GetConstitutiveLaws]] {
         set inputs [$obj getInputs]
         foreach {inName in} $inputs {
@@ -944,11 +963,19 @@ proc spdAux::injectMaterials { basenode args } {
     }
     $basenode delete
 }
-proc spdAux::injectElementInputs { basenode args} {
-    spdAux::injectPartInputs $basenode [::Model::GetAllElemInputs] 
-}
-proc spdAux::injectConstitutiveLawInputs { basenode args} {
-    spdAux::injectPartInputs $basenode [::Model::GetAllCLInputs] 
+
+proc spdAux::injectLocalAxesButton { basenode } {
+    # set base [$basenode parent]
+    # set node "<value n='Local_axes' pn='Local axes' v='Automatic' values='Automatic' editable='0' local_axes='disabled' help='If the direction to define is not coincident with the global axes, it is possible to define a set of local axes and prescribe the displacements related to that local axes'>
+    # <dependencies node='.' att1='local_axes' v1='normal' value='1'/>
+    # <dependencies node='.' att1='local_axes' v1='disabled' not_value='1'/>
+    # </value>"
+    # $base appendXML $node
+    # W [$base asXML]
+    
+    
+    # GiD_Process MEscape Data Conditions AssignCond line_Local_axes change -Automatic- 1 escape escape 
+
 }
 
 proc spdAux::injectElementOutputs { basenode args} {
@@ -1425,7 +1452,7 @@ proc spdAux::ProcGetSolversValues { domNode args } {
     set names [list ]
     set pnames [list ]
     foreach slvr $solvers {
-        if {[$slvr getParallelism] eq $curr_parallel_system} {
+        if {$curr_parallel_system in [$slvr getParallelism] } {
             lappend names [$slvr getName]
         }
     }
@@ -1951,7 +1978,7 @@ proc spdAux::ProcOkNewCondition {domNode args} {
         foreach ent [list points lines surfaces volumes nodes elements] {
             GiD_EntitiesGroups assign $new_group_id $ent [GiD_EntitiesGroups get $group_id $ent]
         }
-        #GiD_Groups edit state $new_group_id hidden
+        GiD_Groups edit state $new_group_id hidden
         $group_node setAttribute n $new_group_id
         AddIntervalGroup $group_id $new_group_id
         
@@ -2002,6 +2029,25 @@ proc spdAux::AddIntervalGroup { parent child } {
     customlib::UpdateDocument
     gid_groups_conds::addF {container[@n='interval_groups']} interval_group [list parent ${parent} child ${child}]
 }
+proc spdAux::RemoveIntervalGroup { parent child } {
+    variable GroupsEdited
+    dict set GroupsEdited $parent [lsearch -inline -all -not -exact [dict get $GroupsEdited $parent] $child]
+    customlib::UpdateDocument
+    gid_groups_conds::delete "container\[@n='interval_groups'\]/interval_group\[@parent='$parent' and @child='$child'\]"
+}
+
+proc spdAux::RenameIntervalGroup { oldname newname } {
+    variable GroupsEdited
+    set list_of_subgroups [dict get $GroupsEdited $oldname]
+    foreach group $list_of_subgroups {
+        set child [lrange [GidUtils::Split $group "//"] 1 end]
+        set fullname [join [list $newname $child] "//"]
+        RemoveIntervalGroup $oldname $group
+        AddIntervalGroup $newname $fullname
+        gid_groups_conds::rename_group $group $fullname
+    }
+    set GroupsEdited [dict remove $GroupsEdited $oldname]
+}
 
 
 proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
@@ -2034,4 +2080,13 @@ proc spdAux::ProcGetParts {domNode args} {
     }
     if {[llength $parts]} { if {[$domNode @v] ni $parts} {$domNode setAttribute v [lindex $parts 0]}}
     return [join $parts ","]
+}
+
+proc spdAux::ProcUpdateParts {domNode args} {
+    # Algo comun?
+    # W "Common"
+
+    # Active app executexml
+    set nodeApp [GetAppIdFromNode $domNode]
+    apps::ExecuteOnAppXML $nodeApp UpdateParts $domNode
 }

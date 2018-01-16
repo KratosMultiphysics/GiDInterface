@@ -76,7 +76,7 @@ proc ::Fluid::write::getParametersDict { } {
 
     # Skin parts
     dict set solverSettingsDict skin_parts [getBoundaryConditionMeshId]
-    
+
     # No skin parts
     dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
     # Time stepping settings
@@ -137,7 +137,6 @@ proc Fluid::write::getDragProcessList {} {
         dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
         dict set pdict "process_name" "ComputeDragProcess"
         set params [dict create]
-        dict set params "mesh_id" 0
         dict set params "model_part_name" $submodelpart
         dict set params "write_drag_output_file" $write_output
         dict set params "print_drag_to_screen" $print_screen
@@ -160,15 +159,15 @@ proc Fluid::write::getGravityProcessDict {} {
     set cz [write::getValue FLGravity Cz]
     #W "Gravity $value on \[$cx , $cy , $cz\]"
     set pdict [dict create]
-    dict set pdict "python_module" "process_factory"
+    dict set pdict "python_module" "assign_vector_by_direction_process"
     dict set pdict "kratos_module" "KratosMultiphysics"
-    dict set pdict "process_name" "ApplyConstantVectorValueProcess"
+    dict set pdict "process_name" "AssignVectorByDirectionProcess"
     set params [dict create]
-    dict set params "mesh_id" 0
     set partgroup [write::getPartsMeshId]
     dict set params "model_part_name" [concat [lindex $partgroup 0]]
     dict set params "variable_name" "BODY_FORCE"
     dict set params "modulus" $value
+    dict set params "constrained" false
     dict set params "direction" [list $cx $cy $cz]
     dict set pdict "Parameters" $params
 

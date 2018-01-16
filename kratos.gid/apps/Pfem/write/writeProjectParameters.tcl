@@ -19,12 +19,12 @@ proc Pfem::write::getParametersDict { } {
     dict set projectParametersDict problem_process_list $problemProcessList
     
     ##### constraints_process_list
-    set group_constraints [write::getConditionsParametersDict PFEM_NodalConditions "Nodal"]
+    set group_constraints [Pfem::write::getConditionsParametersDict PFEM_NodalConditions "Nodal"]
     set body_constraints [Pfem::write::getBodyConditionsParametersDict PFEM_NodalConditions "Nodal"]
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
     
     ##### loads_process_list
-    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict PFEM_Loads]
+    dict set projectParametersDict loads_process_list [Pfem::write::getConditionsParametersDict PFEM_Loads]
     
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
@@ -32,13 +32,7 @@ proc Pfem::write::getParametersDict { } {
     
     ##### output_configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
-    
-    # Constraints data
-    set contraintsDict [dict create ]
-    dict set contraintsDict incremental_load false
-    dict set contraintsDict incremental_displacement false
-    dict set projectParametersDict constraints_data $contraintsDict
-    
+        
     return $projectParametersDict
 }
 proc Pfem::write::GetPFEM_ProblemDataDict { } {
@@ -48,7 +42,7 @@ proc Pfem::write::GetPFEM_ProblemDataDict { } {
     dict set problemDataDict model_part_name "Main Domain"
     set nDim $::Model::SpatialDimension
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict domain_size $nDim
+    dict set problemDataDict dimension $nDim
     
     dict set problemDataDict time_step [write::getValue PFEM_TimeParameters DeltaTime]
     dict set problemDataDict start_time [write::getValue PFEM_TimeParameters StartTime]
@@ -68,7 +62,7 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue PFEM_SolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
+    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
     dict set solverSettingsDict solver_type $strategy_write_name
     
     set problemtype [write::getValue PFEM_DomainType]
@@ -98,12 +92,16 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Pfem] ]
     
-    set listsubmodelparts [list ]
-    foreach part_un [Pfem::write::GetPartsUN] {
-        lappend listsubmodelparts {*}[write::getSubModelPartNames $part_un]
+    set bodies_parts_list [list ]
+    foreach body $bodies_list {
+        set body_parts [dict get $body parts_list]
+	foreach part $body_parts {
+	    lappend bodies_parts_list $part
+	}
     }
+    
     dict set solverSettingsDict bodies_list $bodies_list
-    dict set solverSettingsDict problem_domain_sub_model_part_list $listsubmodelparts
+    dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
     
     return $solverSettingsDict
@@ -147,7 +145,6 @@ proc Pfem::write::GetPFEM_ContactDict { } {
         dict set contact_dict "help"          "This process applies contact domain search by remeshing outer boundaries"
         dict set contact_dict "process_name"  "ContactDomainProcess"
         set params [dict create]
-        dict set params "mesh_id"               0
         dict set params "model_part_name"       "model_part_name"
         dict set params "meshing_control_type"  "step"
         dict set params "meshing_frequency"     1.0
@@ -209,7 +206,7 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.PfemBaseApplication"
+    dict set resultDict "kratos_module" "KratosMultiphysics.PfemApplication"
     dict set resultDict "python_module" "remesh_domains_process"
     dict set resultDict "process_name" "RemeshDomainsProcess"
     
@@ -223,7 +220,6 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
         set bodyDict [dict create ]
         set body_name [dict get $body body_name]
         dict set bodyDict "python_module" "meshing_domain"
-        dict set bodyDict "mesh_id" 0
         dict set bodyDict "model_part_name" $body_name
         dict set bodyDict "alpha_shape" 2.4
         dict set bodyDict "offset_factor" 0.0
@@ -322,7 +318,7 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.PfemBaseApplication"
+    dict set resultDict "kratos_module" "KratosMultiphysics.PfemApplication"
     set problemtype [write::getValue PFEM_DomainType]
     
     dict set resultDict "python_module" "remesh_fluid_domains_process"
@@ -337,7 +333,6 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     foreach body $bodies_list {
         set bodyDict [dict create ]
         set body_name [dict get $body body_name]
-        dict set bodyDict "mesh_id" 0
         dict set bodyDict "model_part_name" $body_name
         dict set bodyDict "python_module" "fluid_meshing_domain"
         set nDim $::Model::SpatialDimension
@@ -492,7 +487,7 @@ proc Pfem::write::GetNodalDataDict { } {
             set groupid [$group @n]
             set processDict [dict create]
             dict set processDict process_name "ApplyValuesToNodes"
-            dict set processDict kratos_module "KratosMultiphysics.PfemBaseApplication"
+            dict set processDict kratos_module "KratosMultiphysics.PfemApplication"
             
             set params [dict create]
             set xp2 "./value"
@@ -571,7 +566,6 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
-        dict set paramDict mesh_id 0
         dict set paramDict model_part_name $bodyId
         set vatiable_name [$condition getAttribute VariableName]
         dict set paramDict variable_name [lindex $vatiable_name 0]

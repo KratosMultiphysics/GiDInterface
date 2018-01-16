@@ -88,7 +88,8 @@ proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args 
     if {$run} {
         return ""
     } {
-        return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written." ]]
+        return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
+
     }
     
 }
@@ -102,15 +103,22 @@ proc GiD_Event_BeforeSaveGIDProject { modelname} {
     }
 }
 
+proc AfterRenameGroup { oldname newname } {
+    spdAux::RenameIntervalGroup $oldname $newname
+}
+
 ##########################################################
 #################### Kratos namespace ####################
 ##########################################################
 namespace eval Kratos {
   variable kratos_private
+  variable must_quit
 }
 
 proc Kratos::InitGIDProject { dir } {
     variable kratos_private
+    variable must_quit
+    set must_quit 0
     unset -nocomplain kratos_private
     set kratos_private(Path) $dir ;#to know where to find the files
     set kratos_private(DevMode) "release" ; #can be dev or release
@@ -176,6 +184,7 @@ proc Kratos::LoadGiDProject { filespd } {
     gid_groups_conds::close_all_windows
     if { ![file exists $filespd] } { return }
     set versionPT [gid_groups_conds::give_data_version]
+    set kratos_private(problemtype_version) $versionPT
     gid_groups_conds::open_spd_file $filespd
     set versionData [gid_groups_conds::give_data_version]
     if { [package vcompare $versionPT $versionData] == 1 } {
@@ -296,60 +305,6 @@ proc Kratos::upgrade_problemtype {} {
     GiD_Process escape escape escape escape Data Defaults TransfProblem $project
 }
 
-proc Kratos::LocalAxesMenu { menu } {    
-    #if { [$menu index end] ne "none" } { return }
-    $menu delete 0 end
-    set local_axes [GiD_Info localaxes]
-    foreach i [list Point Line Surface] name [list [_ Points] [_ Lines] [_ Surfaces]] {
-        $menu add cascade -label $name -menu $menu.m$i
-        destroy $menu.m$i
-        set m [menu $menu.m$i -tearoff 0]
-        if { [lsearch "Line Surface" $i] != -1 } {
-            $m add command -label [_ "Assign Automatic"] -command [list GiD_Process \
-                    escape escape escape escape Data Conditions AssignCond ${i}_Local_axes \
-                    change -Automatic-]
-            $m add command -label [_ "Assign Automatic alt"] -command [list GiD_Process \
-                    escape escape escape escape Data Conditions AssignCond ${i}_Local_axes \
-                    change -Automatic_alt-]
-            $m add separator
-        }
-        set idx 0
-        foreach j $local_axes {
-            $m add command -label [_ "Assign '%s'" $j] -command [list GiD_Process \
-                    escape escape escape escape Data Conditions AssignCond ${i}_Local_axes \
-                    change $j]
-            incr idx
-        }
-        if { $idx } { $m add separator }
-        $m add command -label [_ "Unassign"] -command [list GiD_Process \
-                escape escape escape escape Data Conditions AssignCond ${i}_Local_axes \
-                Unassign]
-        
-        $m add separator
-        $m add command -label [_ Draw] -command [list GiD_Process \
-                escape escape escape escape Data Conditions DrawCond -LocalAxes- \
-                ${i}_Local_axes -draw-]
-    }
-    set ns [list [_ "Define#C#menu"] --- [_ "Draw#C#menu"] [_ "Draw all#C#menu"] \
-            --- [_ "Delete#C#menu"] [_ "Delete all#C#menu"]]
-    set cs {
-        "Data LocalAxes DefineLocAxes"
-        {} "Data LocalAxes DrawLocAxes"
-        "Data LocalAxes DrawLocAxes -All-"
-        {} "Data LocalAxes DeleteLA"
-        "Data LocalAxes DeleteAllLA"
-    }
-    $menu add separator
-    foreach n $ns c $cs {
-        if { $n eq "---" } {
-            $menu add separator
-        } else {
-            $menu add command -label $n -command [concat "GiD_Process Mescape" $c]
-        }
-    }
-}
-
-
 proc Kratos::ResetModel { } {
     foreach layer [GiD_Info layers] {
         GiD_Process 'Layers Delete $layer Yes escape escape
@@ -357,6 +312,12 @@ proc Kratos::ResetModel { } {
     foreach group [GiD_Groups list] {
         if {[GiD_Groups exists $group]} {GiD_Groups delete $group}
     }
+}
+proc Kratos::IsModelEmpty { } {
+    if {[GiD_Groups list] != ""} {return false}
+    if {[GiD_Layers list] != "Layer0"} {return false}
+    if {[GiD_Geometry list point 1:end] != ""} {return false}
+    return true
 }
 
 proc Kratos::BeforeMeshGeneration {elementsize} {
@@ -376,6 +337,7 @@ proc Kratos::CheckValidProjectName {modelname} {
     set filename [file tail $modelname]
     if {[string is double $filename]} {set fail 1}
     if {[write::isBoolean $filename]} {set fail 1}
+    if {$filename == "null"} {set fail 1}
     return $fail
     
 }

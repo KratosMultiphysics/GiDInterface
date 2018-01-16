@@ -1,23 +1,19 @@
 # Project Parameters
 
 proc Solid::write::getParametersDict { } {
-    set model_part_name "Structure"
+    set model_name "Solid_Domain"
     set projectParametersDict [dict create]
 
     # Problem data
-    # Create section
-    set problemDataDict [dict create]
-
-    # Add items to section
+    set problemDataDict [dict create] 
+    
+    # Add items
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name $model_part_name
-    set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict domain_size $nDim
 
     # Parallelization
     set paralleltype [write::getValue ParallelType]
-    dict set problemDataDict "parallel_type" $paralleltype
+    #dict set problemDataDict "parallel_type" $paralleltype
     if {$paralleltype eq "OpenMP"} {
         #set nthreads [write::getValue Parallelization OpenMPNumberOfThreads]
         #dict set problemDataDict NumberofThreads $nthreads
@@ -25,64 +21,96 @@ proc Solid::write::getParametersDict { } {
         #set nthreads [write::getValue Parallelization MPINumberOfProcessors]
         #dict set problemDataDict NumberofProcessors $nthreads
     }
-    set solutiontype [write::getValue SLSoluType]
-    # Time Parameters
-    if {$solutiontype eq "Static"} {
-        dict set problemDataDict time_step "1.1"
-        dict set problemDataDict start_time "0.0"
-        dict set problemDataDict end_time "1.0"
 
-    } elseif {$solutiontype eq "Dynamic"} {
-        dict set problemDataDict time_step [write::getValue SLTimeParameters DeltaTime]
-        dict set problemDataDict start_time [write::getValue SLTimeParameters StartTime]
-        dict set problemDataDict end_time [write::getValue SLTimeParameters EndTime]
-    }
     set echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict echo_level $echo_level
-    # Add section to document
+
+    # Add ProblemData to Parameters
     dict set projectParametersDict problem_data $problemDataDict
 
-    # Solution strategy
-    set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue SLSolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
-    dict set solverSettingsDict solver_type $strategy_write_name
-    #~ dict set solverSettingsDict domain_size [expr $nDim]
-    dict set solverSettingsDict echo_level $echo_level
-    dict set solverSettingsDict solution_type [write::getValue SLSoluType]
 
+    # Model data
+    # Create section
+    set modelDataDict [dict create]
+
+    # Add items
+    dict set modelDataDict model_name $model_name
+    set nDim [expr [string range [write::getValue nDim] 0 0] ]
+    dict set modelDataDict dimension $nDim
+
+
+    dict set modelDataDict domain_parts_list [write::getSubModelPartNames "SLParts"]
+    dict set modelDataDict processes_parts_list [write::getSubModelPartNames "SLNodalConditions" "SLLoads"]
+    
+    # Add model import settings
+    set importDataDict [dict create]
+    #dict set importDataDict type "mdpa"
+    dict set importDataDict name $model_name
+    #dict set importDataDict label 0
+    dict set modelDataDict input_file_settings $importDataDict
+
+    # Add Dofs
+    dict set modelDataDict dofs [list {*}[DofsInElements] ]
+    
+    # Add ModelData to Parameters
+    dict set projectParametersDict model_settings $modelDataDict
+    
+    # Solver settings
+    set solverDataDict [dict create]
+
+    set currentStrategyId [write::getValue SLSolStrat]
+    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
+    dict set solverDataDict solver_type $strategy_write_name
+
+    # Solver parameters
+    set solverParametersDict [dict create]
+
+    # Time settings
+    set timeDataDict [dict create]
+    dict set timeDataDict time_step [write::getValue SLTimeParameters DeltaTime]
+    dict set timeDataDict start_time [write::getValue SLTimeParameters StartTime]
+    dict set timeDataDict end_time [write::getValue SLTimeParameters EndTime]
+
+    dict set solverParametersDict time_settings $timeDataDict
+
+    # Time integration settings
+    set integrationDataDict [dict create]
+
+    dict set integrationDataDict solution_type [write::getValue SLSoluType]
+
+    set solutiontype [write::getValue SLSoluType]
     if {$solutiontype eq "Static"} {
-        dict set solverSettingsDict analysis_type [write::getValue SLAnalysisType]
+	dict set integrationDataDict integration_method [write::getValue SLScheme]
     } elseif {$solutiontype eq "Dynamic"} {
-        dict set solverSettingsDict time_integration_method [write::getValue SLSolStrat]
-        dict set solverSettingsDict scheme_type [write::getValue SLScheme]
+        dict set integrationDataDict time_integration [write::getValue SLSolStrat]
+        dict set integrationDataDict integration_method [write::getValue SLScheme]
     }
 
-    # model import settings
-    set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename $model_name
-    dict set modelDict input_file_label 0
-    dict set solverSettingsDict model_import_settings $modelDict
+    dict set solverParametersDict time_integration_settings $integrationDataDict
 
-    # Solution strategy parameters and Solvers
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Solid] ]
+    # Solving strategy settings
+    set strategyDataDict [dict create]
+    
+    # Solution strategy parameters and Solvers   
+    set strategyDataDict [dict merge $strategyDataDict [write::getSolutionStrategyParametersDict] ]
 
-    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "SLParts"]
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "SLNodalConditions" "SLLoads"]
+    dict set solverParametersDict solving_strategy_settings $strategyDataDict
+   
+    # Linear solver settings
+    set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Solid] ]
+   
+    dict set solverDataDict Parameters $solverParametersDict
 
-    dict set projectParametersDict solver_settings $solverSettingsDict
+    dict set projectParametersDict solver_settings $solverDataDict
 
     # Lists of processes
-    set nodal_conditions_dict [write::getConditionsParametersDict SLNodalConditions "Nodal"]
-    set nodal_conditions_dict [ProcessContacts $nodal_conditions_dict]    
+    set nodal_conditions_dict [Solid::write::getConditionsParametersDict SLNodalConditions "Nodal"] 
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
 
-    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict SLLoads]
+    dict set projectParametersDict loads_process_list [Solid::write::getConditionsParametersDict SLLoads]
 
     # GiD output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    dict set projectParametersDict output_configuration [Solid::write::GetDefaultOutputDict]
 
     # restart options
     set restartDict [dict create ]
@@ -90,37 +118,24 @@ proc Solid::write::getParametersDict { } {
     dict set restartDict RestartFrequency 0
     dict set restartDict LoadRestart false
     dict set restartDict Restart_Step 0
-    dict set projectParametersDict restart_options $restartDict
-
-    # Constraints data
-    set contraintsDict [dict create ]
-    dict set contraintsDict incremental_load false
-    dict set contraintsDict incremental_displacement false
-    dict set projectParametersDict constraints_data $contraintsDict
-    
-    set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
-    foreach elem $check_list {
-        if {$elem in [Solid::write::GetUsedElements Name]} {
-            dict set projectParametersDict pressure_dofs true
-            break
-        }
-    }
-    
+    #dict set projectParametersDict restart_options $restartDict
+        
     return $projectParametersDict
 }
 
-proc Solid::write::ProcessContacts { nodal_conditions_dict } {
-    set process_list [list ]
-    foreach elem $nodal_conditions_dict {
-        if {[dict get $elem python_module] in {"alm_contact_process"}} {
-            set model_part_name "Structure"
-            dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
-            dict set elem Parameters model_part_name $model_part_name
-            dict set elem Parameters computing_model_part_name "computing_domain"
-        } 
-        lappend process_list $elem
+proc Solid::write::DofsInElements { } {
+    set dofs [list ]
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute SLParts]/group/value\[@n='Element'\]"
+    set elements [$root selectNodes $xp1]
+    foreach element_node $elements {
+        set elemid [$element_node @v]
+        set elem [Model::getElement $elemid]
+        foreach dof [split [$elem getAttribute "Dofs"] ","] {
+            if {$dof ni $dofs} {lappend dofs $dof}
+        }
     }
-    return $process_list
+    return {*}$dofs
 }
 
 proc Solid::write::writeParametersEvent { } {

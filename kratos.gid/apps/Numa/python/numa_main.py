@@ -60,6 +60,8 @@ end_time = end_time * time_unit_converter
 time = time * time_unit_converter
 tol = tol * time_unit_converter
 
+numa_convergence = ProjectParameters["problem_data"]["numa_convergence"].GetBool()
+
 ## Model part ------------------------------------------------------------------------------------------------
 
 # Defining the model part
@@ -68,6 +70,9 @@ main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DOMAIN_SIZE, domain_size
 main_model_part.ProcessInfo.SetValue(KratosMultiphysics.TIME, time)
 main_model_part.ProcessInfo.SetValue(KratosMultiphysics.DELTA_TIME, delta_time)
 main_model_part.ProcessInfo.SetValue(KratosPoro.TIME_UNIT_CONVERTER, time_unit_converter)
+
+# This is used for checking if nodal is the first calculus
+main_model_part.ProcessInfo.SetValue(KratosMultiphysics.IS_RESTARTED, numa_convergence)
 
 # Construct the solver (main setting methods are located in the solver_module)
 solver_module = __import__(ProjectParameters["solver_settings"]["solver_type"].GetString())
@@ -82,15 +87,15 @@ solver.ImportModelPart()
 # Add degrees of freedom
 solver.AddDofs()
 
-# Creation of Kratos model
+# Creation of Kratos model (submodels and submeshes)
 DamModel = KratosMultiphysics.Model()
 DamModel.AddModelPart(main_model_part)
 
 # Build sub_model_parts or submeshes (rearrange parts for the application of custom processes)
 ## Get the list of the submodel part in the object Model
-for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
-    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
+#for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
+#    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
+#    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
 
 # Print model_part and properties
 if(echo_level > 1):
@@ -105,6 +110,7 @@ if(echo_level > 1):
 import process_factory
 list_of_processes = process_factory.KratosProcessFactory(DamModel).ConstructListOfProcesses( ProjectParameters["constraints_process_list"] )
 list_of_processes += process_factory.KratosProcessFactory(DamModel).ConstructListOfProcesses( ProjectParameters["loads_process_list"] )
+list_of_processes += process_factory.KratosProcessFactory(DamModel).ConstructListOfProcesses( ProjectParameters["temperature_by_device_list"] )
 list_of_processes += process_factory.KratosProcessFactory(DamModel).ConstructListOfProcesses( ProjectParameters["output_device_list"] )
 
 # Print list of constructed processes

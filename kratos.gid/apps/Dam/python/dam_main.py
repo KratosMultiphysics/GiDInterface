@@ -13,7 +13,7 @@ import os
 # Import kratos core and applications
 import KratosMultiphysics
 import KratosMultiphysics.ExternalSolversApplication as KratosSolvers
-#~ import KratosMultiphysics.TrilinosApplication as TrilinosApplication
+#import KratosMultiphysics.TrilinosApplication as TrilinosApplication
 import KratosMultiphysics.ConvectionDiffusionApplication as KratosConvDiff
 import KratosMultiphysics.SolidMechanicsApplication  as KratosSolid
 import KratosMultiphysics.PoromechanicsApplication as KratosPoro
@@ -49,6 +49,8 @@ time_scale = ProjectParameters["problem_data"]["time_scale"].GetString()
 # Time Units Converter
 if(time_scale=="Months"):               # Factor to pass from months to seconds
     time_unit_converter = 2592000.0
+elif(time_scale=="Weeks"):               # Factor to pass from weeks to seconds
+    time_unit_converter = 604800.0
 elif(time_scale=="Days"):               # Factor to pass from days to seconds
     time_unit_converter = 86400.0
 elif(time_scale=="Hours"):              # Factor to pass from hours to seconds
@@ -88,9 +90,9 @@ DamModel.AddModelPart(main_model_part)
 
 # Build sub_model_parts or submeshes (rearrange parts for the application of custom processes)
 ## Get the list of the submodel part in the object Model
-for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
-    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
+#for i in range(ProjectParameters["solver_settings"]["processes_sub_model_part_list"].size()):
+#    part_name = ProjectParameters["solver_settings"]["processes_sub_model_part_list"][i].GetString()
+#    DamModel.AddModelPart(main_model_part.GetSubModelPart(part_name))
 
 # Print model_part and properties
 if(echo_level > 1):

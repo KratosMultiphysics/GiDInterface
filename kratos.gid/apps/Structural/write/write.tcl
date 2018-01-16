@@ -55,6 +55,8 @@ proc Structural::write::AddValidApps {appList} {
 proc Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
     
+    write::SetParallelismConfiguration
+    
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     write::RenameFileInModel $orig_name "MainKratos.py"
@@ -72,6 +74,7 @@ proc Structural::write::ApplyConfiguration { } {
 # MDPA Blocks
 proc Structural::write::writeModelPartEvent { } {
     variable ConditionsDictGroupIterators
+    initLocalWriteConfiguration
     write::initWriteConfiguration [GetAttributes]
     
     # Headers
@@ -87,6 +90,9 @@ proc Structural::write::writeModelPartEvent { } {
     
     # Element connectivities (Groups on STParts)
     write::writeElementConnectivities
+
+    # Local Axes
+    Structural::write::writeLocalAxes
 
     # Nodal conditions and conditions
     writeConditions
@@ -166,6 +172,46 @@ proc Structural::write::GetUsedElements { {get "Objects"} } {
         lappend lista $e
     }
     return $lista
+}
+
+proc Structural::write::writeLocalAxes { } {
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
+        set e [Model::getElement $elem_name]
+        if {[write::isBooleanTrue [$e getAttribute "RequiresLocalAxes"]]} { 
+            set group [$gNode @n]
+            if {[GiD_EntitiesGroups get $group elements -count -element_type linear]} {
+                write::WriteString "Begin ElementalData LOCAL_AXIS_2 // Element: $elem_name // Groups: $group"
+                foreach line [GiD_EntitiesGroups get $group elements -element_type linear] {
+                    set raw [lindex [lindex [GiD_Info conditions -localaxesmat line_Local_axes mesh $line] 0] 3]
+                    set y0 [lindex $raw 1]
+                    set y1 [lindex $raw 4]
+                    set y2 [lindex $raw 7]
+                    write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
+                }
+                write::WriteString "End ElementalData"
+                write::WriteString ""
+            }
+        }
+    }
+}
+
+proc Structural::write::initLocalWriteConfiguration { } {
+    
+    if {[usesContact]} {
+         SetAttribute main_script_file "KratosContactStructural.py"
+    }
+}
+
+proc Structural::write::usesContact { } {
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'CONTACT'\]/group"]
+    
+    if {$result_node ne ""} {
+        return 1
+    } {
+        return 0
+    }
 }
 
 Structural::write::Init

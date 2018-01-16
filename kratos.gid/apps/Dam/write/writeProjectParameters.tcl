@@ -31,6 +31,13 @@ proc Dam::write::getParametersDict { } {
         dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
         dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
         dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
+        set consider_self_weight [write::getValue DamSelfweight ConsiderSelf]
+        if {$consider_self_weight eq "Yes"} {
+            dict set problemDataDict consider_selfweight true
+            dict set problemDataDict selfweight_direction [write::getValue DamSelfweight GravityDirection]
+        } else {
+            dict set problemDataDict consider_selfweight false
+        }
         dict set problemDataDict streamlines_utility [Dam::write::StremalinesUtility]
         ### Add section to document
         dict set projectParametersDict problem_data $problemDataDict
@@ -84,6 +91,7 @@ proc Dam::write::getParametersDict { } {
         dict set eigensolversetDict print_feast_output [write::getValue DamModalfeastOutput]
         dict set eigensolversetDict perform_stochastic_estimate [write::getValue DamModalStochastic]
         dict set eigensolversetDict solve_eigenvalue_problem [write::getValue DamModalSolve]
+        dict set eigensolversetDict compute_modal_contribution [write::getValue DamModalContribution]
         dict set eigensolversetDict lambda_min [write::getValue DamModalLambdaMin]
         dict set eigensolversetDict lambda_max [write::getValue DamModalLambdaMax]
         dict set eigensolversetDict search_dimension [write::getValue DamModalSearchDimension]
@@ -93,10 +101,10 @@ proc Dam::write::getParametersDict { } {
         
         # Adding submodel and processes
         dict set solversettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
-        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
     } else {
-        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
         ## Default Values
         set MechanicalSolutionStrategyUN "DamSolStrat"
@@ -107,7 +115,7 @@ proc Dam::write::getParametersDict { } {
         if {$damTypeofProblem eq "Thermo-Mechanical" } {
             
             dict set solversettingsDict reference_temperature [write::getValue DamThermalReferenceTemperature]
-            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
             set thermalsettingDict [dict create]
             dict set thermalsettingDict echo_level [write::getValue DamThermalEcholevel]
@@ -122,7 +130,9 @@ proc Dam::write::getParametersDict { } {
             ## Adding linear solver for thermal part
             set thermalsettingDict  [dict merge $thermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratTherm "DamThermo-Mechanical-ThermData"] ]
             dict set thermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
-            
+            dict set thermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames "DamThermalLoads"]
+
+
             ## Adding thermal solver settings to solver settings
             dict set solversettingsDict thermal_solver_settings $thermalsettingDict
             
@@ -134,7 +144,7 @@ proc Dam::write::getParametersDict { } {
         if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
             
             dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
-            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads"]
+            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
             set UPthermalsettingDict [dict create]
             dict set UPthermalsettingDict echo_level [write::getValue DamThermalUPEcholevel]
@@ -149,7 +159,9 @@ proc Dam::write::getParametersDict { } {
             ## Adding linear solver for thermal part
             set UPthermalsettingDict [dict merge $UPthermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratThermUP "DamUP_Thermo-Mechanical-ThermData"] ]
             dict set UPthermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
-           
+            dict set UPthermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames "DamThermalLoads"]
+
+
             ## Adding UP thermal solver settings to solver settings
             dict set solversettingsDict thermal_solver_settings $UPthermalsettingDict
             
@@ -261,37 +273,51 @@ proc Dam::write::getParametersDict { } {
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
     
     set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
-    set load_process_list [write::getConditionsParametersDict DamLoads ]
+    set mechanical_load_process_list [write::getConditionsParametersDict DamLoads]
+    set thermal_load_process_list [write::getConditionsParametersDict DamThermalLoads]
+    set load_process_list [concat $mechanical_load_process_list $thermal_load_process_list]
     dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
     set loads [Dam::write::ChangeFileNameforTableid $load_process_list]
-    set construction_process [Dam::write::GetConstructionDomainProcessDict]
-    if {[llength $construction_process]} {
-        set loads [lappend loads [dict create {*}$construction_process]]
-        set li [dict get $projectParametersDict solver_settings processes_sub_model_part_list]
-        lappend li [dict get $construction_process Parameters model_part_name]
-        dict set projectParametersDict solver_settings processes_sub_model_part_list $li
-    }
     dict set projectParametersDict loads_process_list $loads
+    dict set projectParametersDict construction_process [Dam::write::GetConstructionDomainProcessDict]
+    
     return $projectParametersDict
 
 }
 
+# This process is the responsible of writing files
+proc Dam::write::writeParametersEvent { } {
+
+    set projectParametersDict [getParametersDict]
+    write::WriteJSON $projectParametersDict
+
+    set damSelfweight [write::getValue DamSelfweight ConsiderSelf]
+    if {$damSelfweight eq "Yes" } {
+
+        write::OpenFile "[file tail ProjectParametersSelfWeight].json"
+        set projectParametersDictSelfWeight [getParametersSelfWeight]
+        write::WriteString [write::tcl2json $projectParametersDictSelfWeight]       
+        write::CloseFile
+
+    } 
+}
+
+# This process returns a dict of domains according input parameters in the solvers
 proc Dam::write::DefinitionDomains { } {
-    
- ### Boundary conditions processes
+
+    ### Boundary conditions processes
     set domainsDict [dict create]
- 
     set body_part_list [list ]
     set joint_part_list [list ]
     set mat_dict [write::getMatDict]
     foreach part_name [dict keys $mat_dict] {
         if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
             lappend body_part_list [write::getMeshId Parts $part_name]
-            #~ W $body_part_list
         }
     }
     dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
     dict set domainsDict body_domain_sub_model_part_list $body_part_list
+    dict set domainsDict mechanical_loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
 
     set strategytype [write::getValue DamSolStrat]
     if {$strategytype eq "Arc-length"} {
@@ -305,10 +331,11 @@ proc Dam::write::DefinitionDomains { } {
     }
     
     return $domainsDict
-   
 }
 
+# This process assign a number for the different tables instead of names (this is for matching with .mdpa)
 proc Dam::write::ChangeFileNameforTableid { processList } {
+
     set returnList [list ]
     foreach nodalProcess $processList {
         set processName [dict get $nodalProcess process_name]
@@ -335,11 +362,7 @@ proc Dam::write::ChangeFileNameforTableid { processList } {
     return $returnList
 }
 
-proc Dam::write::writeParametersEvent { } {
-    set projectParametersDict [getParametersDict]
-    write::WriteJSON $projectParametersDict
-}
-
+# This process is used for checking if the user is interested on streamlines
 proc Dam::write::StremalinesUtility {} {
 
     set nodalList [write::GetResultsList NodalResults]
@@ -353,9 +376,9 @@ proc Dam::write::StremalinesUtility {} {
 
  # appid Dam solStratUN DamSolStrat problem_base_UN DamMechanicalData
 proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {problem_base_UN ""}} {
+
     #W "Params -> $appid $solStratUN $problem_base_UN"
     set solstratName [write::getValue $solStratUN]
-    #W "sol strat name $solstratName"
     set sol [::Model::GetSolutionStrategy $solstratName]
     set solverSettingsDict [dict create]
     foreach se [$sol getSolversEntries] {
@@ -404,22 +427,126 @@ proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {probl
     return $solverSettingsDict
 }
 
+# This process write the construction in process in case is selected
 proc Dam::write::GetConstructionDomainProcessDict { } {
+
     set construction_dict [dict create]
     set data_basenode [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamConstructionProcess"]]
     set activate [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Activate_construction'\]"] v]
     if {[write::isBooleanTrue $activate]} {
-        dict set construction_dict "python_module" "dam_construction_process"
-        dict set construction_dict "kratos_module" "KratosMultiphysics.DamApplication"
-        dict set construction_dict "process_name" "DamConstructionProcess"
-        set params_dict [dict create]
-            dict set params_dict mesh_id 0
-            dict set params_dict model_part_name [write::getMeshId Parts [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Construction_part'\]"] v]]
-            set params [list Gravity_Direction Reservoir_Bottom_Coordinate_in_Gravity_Direction Height_Dam Number_of_phases]
+        dict set construction_dict mesh_id 0
+            set params [list gravity_direction reservoir_bottom_coordinate_in_gravity_direction height_dam number_of_phases h_0 construction_input_file_name ambient_input_file_name soil_part source_type]
             foreach param $params {
-                dict set params_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
+                dict set construction_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
             }
-        dict set construction_dict Parameters $params_dict
+
+            set source_type [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='source_type'\]"] v]
+
+            if {$source_type eq "Adiabatic"} {
+                set data_basenode_noorzai [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamNoorzaiData"]]
+                set params [list density specific_heat alpha tmax]
+                foreach param $params {
+                    dict set construction_dict $param [write::getValueByNode [$data_basenode_noorzai selectNodes "./value\[@n='$param'\]"]]
+                }
+            }
+            if {$source_type eq "NonAdiabatic"} {
+                set data_basenode_azenha [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamAzenhaData"]]
+                set params [list activation_energy gas_constant constant_rate alpha_initial aging young_inf q_total A B C D]
+                foreach param $params {
+                    dict set construction_dict $param [write::getValueByNode [$data_basenode_azenha selectNodes "./value\[@n='$param'\]"]]
+                }
+            }
+
     }
     return $construction_dict
+}
+
+# This process writes a dictionary for creating new projectparameters exclusively for solving selfweight problem
+proc Dam::write::getParametersSelfWeight { } {
+    
+    set projectParametersDictSelfWeight [dict create]
+    set solversettingsDict [dict create]
+    dict set solversettingsDict solver_type "dam_mechanical_solver"
+    set modelDict [dict create]
+    dict set modelDict input_type "mdpa"
+    dict set modelDict input_filename "selfweight"
+    dict set modelDict input_file_label 0
+    dict set solversettingsDict model_import_settings $modelDict
+    dict set solversettingsDict echo_level 1
+    dict set solversettingsDict buffer_size 2
+
+    # We are only interested in Displacements
+    set nodal_part_names [write::getSubModelPartNames "DamNodalConditions"]
+    set nodal_names [list ]
+    foreach name $nodal_part_names {
+        if {[string first DISPLACEMENT $name] != -1} {
+            lappend nodal_names $name
+        } 
+    }
+    dict set solversettingsDict processes_sub_model_part_list $nodal_names
+
+    set mechanicalSolverSettingsDict [dict create]
+    # Adding predefined values for selfweight problem
+    set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::predefinedParametersSelfWeight] ]
+    # Adding domain definitions 
+    set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
+    # Combination in solversetting dict
+    dict set solversettingsDict mechanical_solver_settings $mechanicalSolverSettingsDict
+    # Adding solver_settings to global dict
+    dict set projectParametersDictSelfWeight solver_settings $solversettingsDict
+    
+    # Adding constrains dict
+    set nodal_process_list [write::getConditionsParametersDict DamNodalConditions "Nodal"]
+    set nodal_process_list_table_number [Dam::write::ChangeFileNameforTableid $nodal_process_list]
+    dict set projectParametersDictSelfWeight constraints_process_list [Dam::write::filteringConstraints $nodal_process_list_table_number]
+
+    return $projectParametersDictSelfWeight
+}
+
+# Predefined solver values for selfweight problem
+proc Dam::write::predefinedParametersSelfWeight { } {
+
+    set solverSelfParametersDict [dict create]
+    dict set solverSelfParametersDict solution_type "Quasi-Static"
+    dict set solverSelfParametersDict strategy_type "Newton-Raphson"
+    dict set solverSelfParametersDict scheme_type "Newmark"
+    dict set solverSelfParametersDict convergence_criterion "And_criterion"
+    dict set solverSelfParametersDict displacement_relative_tolerance 0.0001
+    dict set solverSelfParametersDict displacement_absolute_tolerance 1e-9
+    dict set solverSelfParametersDict residual_relative_tolerance 0.0001
+    dict set solverSelfParametersDict residual_absolute_tolerance 1e-9
+    dict set solverSelfParametersDict max_iteration 10
+    dict set solverSelfParametersDict echo_level 1
+    dict set solverSelfParametersDict buffer_size 2
+    dict set solverSelfParametersDict compute_reactions false
+    dict set solverSelfParametersDict reform_dofs_at_each_step false
+    dict set solverSelfParametersDict move_mesh_flag false
+    dict set solverSelfParametersDict block_builder false
+    dict set solverSelfParametersDict clear_storage false
+    dict set solverSelfParametersDict rayleigh_m 0.0
+    dict set solverSelfParametersDict rayleigh_k 0.0
+    dict set solverSelfParametersDict nonlocal_damage false
+
+    set linearSolverSettingsDict [dict create]
+    dict set linearSolverSettingsDict solver_type "BICGSTABSolver"
+    dict set linearSolverSettingsDict max_iteration 200
+    dict set linearSolverSettingsDict tolerance 1e-7
+    dict set linearSolverSettingsDict preconditioner_type None
+    dict set linearSolverSettingsDict scaling false
+    dict set solverSelfParametersDict linear_solver_settings $linearSolverSettingsDict
+
+    return $solverSelfParametersDict
+}
+
+# This process filters Nodal constraints for selfweight problem
+proc Dam::write::filteringConstraints { processList} {
+
+    set returnList [list ]
+    foreach nodalProcess $processList {
+        set processName [dict get $nodalProcess process_name]
+        if {[string first Constraint $processName] != -1} {
+            lappend returnList $nodalProcess
+        }
+    }
+    return $returnList
 }

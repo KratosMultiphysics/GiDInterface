@@ -11,6 +11,8 @@ proc ::FSI::Init { } {
     variable dir
     variable prefix
     variable kratos_name
+    variable attributes
+    
     set kratos_name FSIapplication
     
     #W "Sourced FSI"
@@ -20,9 +22,11 @@ proc ::FSI::Init { } {
     apps::LoadAppById "Fluid"
     apps::LoadAppById "Structural"
     
-    # Intervals only in developer mode
-    dict set attributes UseIntervals 0
-    #if {$::Kratos::kratos_private(DevMode) eq "dev"} {dict set attributes UseIntervals 1}
+    # Intervals 
+    dict set attributes UseIntervals 1
+    # dict set ::Fluid::attributes UseIntervals 0
+    # dict set ::Structural::attributes UseIntervals 0
+
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
     
@@ -42,6 +46,14 @@ proc ::FSI::LoadMyFiles { } {
 
 proc ::FSI::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::MokChannelFlexibleWall] [= "Example\nMOK - Channel with flexible wall"]   
+}
+
+
+proc ::FSI::GetAttribute {name} {
+    variable attributes
+    set value ""
+    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
+    return $value
 }
 
 ::FSI::Init

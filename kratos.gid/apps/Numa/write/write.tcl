@@ -77,7 +77,8 @@ proc Numa::write::writeConditions { } {
     set CalibrationGroups [write::writeConditions "NumaCalibration"]
     
     if {$CalibrationGroups ne ""} {
-        lappend ConditionsDictGroupIterators $CalibrationGroups
+        set ConditionsDictGroupIterators [concat $ConditionsDictGroupIterators $CalibrationGroups]
+
     }
 }
 

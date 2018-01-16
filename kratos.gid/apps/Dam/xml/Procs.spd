@@ -51,6 +51,15 @@
 	  return [Dam::xml::ProcCheckConditionState $domNode $args]
 	  ]]>
 	</proc>
-
+			<proc n='noorzaiState' args='args'>
+	  <![CDATA[
+	  return [Dam::xml::ProcNoorzaiState $domNode $args]
+	  ]]>
+	</proc>
+			<proc n='azenhaState' args='args'>
+	  <![CDATA[
+	  return [Dam::xml::ProcAzenhaState $domNode $args]
+	  ]]>
+	</proc>
 
 </container>
