@@ -25,6 +25,7 @@ proc DEM::xml::MultiAppEvent {args} {
 
 proc DEM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem values OpenMP ParallelType
+    spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
 }
 
 
