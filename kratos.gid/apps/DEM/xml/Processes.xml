@@ -34,7 +34,7 @@
       <parameter n="ELEMENT_TYPE" pn="Element type" type="combo" v="Sphere" values="Sphere,Cluster"/>
       <parameter n="VELOCITY_MODULUS" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity"/>
       <parameter n="DIRECTION_VECTOR" pn="Direction vector" type="vector" v="1.0,0.0,0.0" />
-      <parameter n="RANDOM_VELOCITY_DEVIATION" pn="Max. random velocity deviation" type="double" v="1.0" units="deg" unit_magnitude="Angle"/>
+      <parameter n="RANDOM_VELOCITY_DEVIATION" pn="Max. random velocity deviation" type="double" v="1.0" units="°" unit_magnitude="Angle"/>
       <parameter n="FLOW_MEASUREMENT" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
         <parameter n="NUMBER_OF_PARTICLES" pn="Particles per second" parent="Particles" type="double" v="1.0" />
         <parameter n="NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="1.0" unit_magnitude="M/T" units="kg/s" />
