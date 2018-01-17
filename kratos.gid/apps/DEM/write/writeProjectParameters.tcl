@@ -79,8 +79,9 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "PostAppliedForces" false
     dict set project_parameters_dict "PostGroupId" false
     dict set project_parameters_dict "PostExportId" false
+    dict set project_parameters_dict "IntegrationScheme" "Forward_Euler"
 
-    dict set project_parameters_dict "problem_name" : "test_inlet_1ball_2"
+    dict set project_parameters_dict "problem_name" [file tail [GiD_Info Project ModelName]]
 
     return $project_parameters_dict
 }
