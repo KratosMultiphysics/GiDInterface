@@ -172,6 +172,7 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     foreach {interval_name ini end function} $inlets {
         spdAux::CreateInterval $interval_name $ini $end
         GiD_Groups create "Inlet//$interval_name"
+        GiD_Groups edit state "Inlet//$interval_name" hidden
         spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
         set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//$interval_name"]
         $inletNode setAttribute ov $condtype
