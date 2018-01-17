@@ -22,10 +22,66 @@ proc DEM::write::GetInletGroups { } {
 }
 
 proc DEM::write::writeInletMeshes { } {
+    variable inletProperties
+    set printable [list PROBABILITY_DISTRIBUTION MAX_RAND_DEVIATION_ANGLE ELEMENT_TYPE STANDARD_DEVIATION INLET_NUMBER_OF_PARTICLES]
     foreach groupid [dict keys $inletProperties ] {
-        ::write::writeGroupMesh Inlet $groupid "nodal" "" "" [dict get $inletProperties $groupid]
+        set what nodal
+        set gtn [write::GetConfigurationAttribute groups_type_name]
+        if {![dict exists $::write::meshes [list Inlet ${groupid}]]} {
+            set mid [expr [llength [dict keys $::write::meshes]] +1]
+            if {$gtn ne "Mesh"} {
+                set good_name [write::transformGroupName $groupid]
+                set mid "Inlet_${good_name}"
+            }
+            dict set ::write::meshes [list Inlet ${groupid}] $mid
+            set gdict [dict create]
+            set f "%10i\n"
+            set f [subst $f]
+            set group_real_name [write::GetWriteGroupName $groupid]
+            dict set gdict $group_real_name $f
+            write::WriteString "Begin $gtn $mid // Group $groupid // Subtree Inlet"
+            write::WriteString "    Begin ${gtn}Data"
+            write::WriteString "        PROPERTIES_ID [dict get $inletProperties $groupid MID]"
+            write::WriteString "        RIGID_BODY_MOTION 0"
+            write::WriteString "        IDENTIFIER $mid"
+            write::WriteString "        INJECTOR_ELEMENT_TYPE SphericParticle3D"
+            write::WriteString "        CONTAINS_CLUSTERS 0"
+            set velocity [dict get $inletProperties $groupid VELOCITY_MODULUS]
+            set velocity_X [dict get $inletProperties $groupid DIRECTION_VECTORX]
+            set velocity_Y [dict get $inletProperties $groupid DIRECTION_VECTORY]
+            set velocity_Z [dict get $inletProperties $groupid DIRECTION_VECTORZ]
+            lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+            lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
+            write::WriteString "        VELOCITY \[3\] ($vx, $vy, $vz)"
+            write::WriteString "        IMPOSED_MASS_FLOW_OPTION 0"
+            write::WriteString "        MASS_FLOW 0.5"
+            set interval [dict get $inletProperties $groupid Interval]
+            lassign [write::getInterval $interval] ini end
+            write::WriteString "        INLET_START_TIME $ini"
+            if {$end in [list "End" "end"]} {set end [write::getValue DEMTimeParameters EndTime]}
+            write::WriteString "        INLET_STOP_TIME $end"
+            set diameter [dict get $inletProperties $groupid DIAMETER]
+            write::WriteString "        RADIUS [expr $diameter / 2]"
+            write::WriteString "        RANDOM_ORIENTATION 1"
+            write::WriteString "        ORIENTATION \[4\] (0.0, 0.0, 0.0, 1.0)]"
+            
+            foreach {prop value} [dict get $inletProperties $groupid] {
+                if {$prop in $printable} {
+                    write::WriteString "        $prop $value"
+                }
+            }
+            write::WriteString "    End ${gtn}Data"
+            write::WriteString "    Begin ${gtn}Nodes"
+            GiD_WriteCalculationFile nodes -sorted $gdict
+            write::WriteString "    End ${gtn}Nodes"
+            write::WriteString "End $gtn"
+        }
+
     }
 }
+
+
+
 proc DEM::write::writeMaterials { } {
     variable inletProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet'\]/group"
