@@ -32,7 +32,7 @@ proc Structural::write::getOldParametersDict { } {
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
 
-    } elseif {$solutiontype eq "Dynamic"} {
+    } else {
         dict set problemDataDict time_step [write::getValue STTimeParameters DeltaTime]
         dict set problemDataDict start_time [write::getValue STTimeParameters StartTime]
         dict set problemDataDict end_time [write::getValue STTimeParameters EndTime]
@@ -47,6 +47,8 @@ proc Structural::write::getOldParametersDict { } {
     set currentStrategyId [write::getValue STSolStrat]
     set currentStrategyId [write::getValue STSolStrat]
     # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
+    set solver_type_name $solutiontype
+    if {$solutiontype eq "Quasi-static"} {set solver_type_name "Static"}
     dict set solverSettingsDict solver_type $solutiontype
     #~ dict set solverSettingsDict domain_size [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
