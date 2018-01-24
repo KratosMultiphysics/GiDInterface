@@ -16,7 +16,7 @@
   </NodalConditionItem>
   
   <NodalConditionItem  n="PRESSURE" pn="Pressure" ProcessName="AssignScalarVariableProcess" VariableName="PRESSURE" ImplementedInApplication="StructuralMechanicsApplication"
-		       analysis_type="Dynamic"  unit_magnitude="P"  units="Pa" v="Yes" App="Structural" state="CheckNodalConditionStateSolid" Interval="Total">
+		       analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="P"  units="Pa" v="Yes" App="Structural" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   <NodalConditionItem  n="CONTACT" pn="Contact" ProcessName="ALMContactProcess" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
 		       analysis_type="Static,Quasi-static,Dynamic"  App="Structural" state="" Interval="False"  ov="[CheckGeometry 2]"  ProductionReady="Developer">
