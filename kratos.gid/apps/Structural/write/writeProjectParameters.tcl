@@ -49,7 +49,7 @@ proc Structural::write::getOldParametersDict { } {
     # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
     set solver_type_name $solutiontype
     if {$solutiontype eq "Quasi-static"} {set solver_type_name "Static"}
-    dict set solverSettingsDict solver_type $solutiontype
+    dict set solverSettingsDict solver_type $solver_type_name
     #~ dict set solverSettingsDict domain_size [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
     dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]

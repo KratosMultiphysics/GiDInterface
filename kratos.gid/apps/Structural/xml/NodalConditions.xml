@@ -28,9 +28,9 @@
     </outputs>
   </NodalConditionItem>
   <NodalConditionItem n="ANGULAR_VELOCITY" pn="Angular Velocity" ProcessName="AssignVectorVariableProcess" state="CheckNodalConditionStateSolid" Interval="Total"
-					  analysis_type="Quasi-static,Dynamic" unit_magnitude="Angle/T" units="rad/s" VariableName="ANGULAR_VELOCITY" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
+					  analysis_type="Dynamic" unit_magnitude="Angle/T" units="rad/s" VariableName="ANGULAR_VELOCITY" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
   </NodalConditionItem>
   <NodalConditionItem n="ANGULAR_ACCELERATION" pn="Angular Acceleration" ProcessName="AssignVectorVariableProcess" state="CheckNodalConditionStateSolid" Interval="Total"
-					  analysis_type="Quasi-static,Dynamic" unit_magnitude="Angle/T^2" units="rad/s^2"  VariableName="ANGULAR_ACCELERATION" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
+					  analysis_type="Dynamic" unit_magnitude="Angle/T^2" units="rad/s^2"  VariableName="ANGULAR_ACCELERATION" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
   </NodalConditionItem>
 </NodalConditionList>
