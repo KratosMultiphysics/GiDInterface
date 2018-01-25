@@ -18,16 +18,18 @@ fi
 # and maintains OLD_LD_LIBRARY_PATH with previous settings
 # therefore, we use the OLD_LD_LIBRARY_PATH and prepend the path to the kratos libs
 if [ "$OLD_LD_LIBRARY_PATH" != "" ]; then
-    export LD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$OLD_LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH="$3/kratos":"$3/kratos/libs":$OLD_LD_LIBRARY_PATH
 else
     # do not add the ':'
-    export LD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs"
+    export LD_LIBRARY_PATH="$3/kratos":"$3/kratos/libs"
 fi
 
-# Prevents the PYTHONHOME error from happening and isolate possible python repacks present
-# in the system and interfeering with runkratos
-# export PYTHONHOME="$3/exec/Kratos"
-export PYTHONPATH="$3/exec/Kratos/python34.zip":"$3/exec/Kratos":$PYTHONPATH
+#export PYTHONHOME="$3/kratos/Lib/python27"
+export PYTHONPATH="$3/kratos/Lib/python27":"$3/kratos"
 
-# Run Python using the script MainKratos.py
-"$3/exec/Kratos/runkratos" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
+# Set the number of threads for OpenMP
+export OMP_NUM_THREADS=$5
+
+# Run Python using the script KratosDEM.py
+python3 MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
+#"$3/kratos/runkratos" KratosDEM.py > "$2/$1.info" 2> "$2/$1.err"

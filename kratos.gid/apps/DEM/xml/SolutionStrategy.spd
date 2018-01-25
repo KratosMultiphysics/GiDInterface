@@ -5,16 +5,77 @@
 		<value n="EndTime" pn="End time" v="1.0" help=""/>
 		<value n="DeltaTime" pn="Delta time" v="0.1" help=""/>
 		<!--<value n="UseAutomaticDeltaTime" pn="Automatic Delta time" v="Fixed" values="Fixed,Automatic" help="Select the Delta time option to be used"/>-->
+		
+		<value n="DEM-ScreenInfoOutput" pn="Info screen output" v="4.0" unit="s" help="Information on the running process is shown on screen (in seconds)"/>
+                <value n="DEM-NeighbourSearchFrequency" pn="Search frequency" v="50" unit="Hz" help="Search for new particle or wall neighbours. If set to '10', a single search will be computed out every ten steps"/>
+		
 	</container>
 	<container n="Gravity" pn="Gravity" un="DEMGravity" help="Body forces" open_window="0" icon="gravity">
-		<value n="GravityValue" pn="Gravity value" v="9.81" help="Gravity value" unit_magnitude="Acceleration" units="m/s^2" />
+		<value n="GravityValue" pn="Gravity value" v="9.82" help="Gravity value" unit_magnitude="Acceleration" units="m/s^2" />
 		<value n="Cx" pn="Cx" v="0.0" help="X Vector"/>
 		<value n="Cy" pn="Cy" v="0.0" help="Y Vector"/>
 		<value n="Cz" pn="Cz" v="-1.0" help="Z Vector" />
 	</container>
+	
+	
+	
+	
+	<container n="DEM-Boundingbox" pn="Bounding box" un="DEM-Boundingbox" help="Any Discrete Element going outsne of the Bounding Box will be deleted">
+	
+        <value n="UseBoundingBox" pn="Bounding box" v="Yes" class="DEM-BBox" ivalues="Yes,No" icon="active.gif" values="Active,Not active" help="Any Discrete element going out of the bounding box will be deleted"/>
+        <value n="BoundingBoxType" pn="Bounding box type" DEM-BBox="Yes" class="DEM-BBoxType" v="Fixed" ivalues="Automatic,Fixed" values="Automatic,Fixed" help="If Automatic is chosen, the bounding box will be created using the existing entities at the beginning of the computation"/>
+        <value n="EnlargementFactor" pn="Enlargement factor" DEM-BBox="Yes" DEM-BBoxType="Automatic" v="1.1" help="Enlargement factor"/>
+        <value n="MaxX" pn="Max X" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max X"/>
+        <value n="MaxY" pn="Max Y" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max Y" sbi="PickCoordinates" sbp="Pick" sbxp="MaxX,MaxY,MaxZ"/>
+        <value n="MaxZ" pn="Max Z" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max Z"/>
+        <value n="MinX" pn="Min X" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="-10" help="Min X"/>
+        <value n="MinY" pn="Min Y" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="-10" help="Min Y" sbi="PickCoordinates" sbp="Pick" sbxp="MinX,MinY,MinZ"/>
+        <value n="MinZ" pn="Min Z" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="-10" help="Min Z"/>
+        <value n="StartTime" pn="Start Time" DEM-BBox="Yes" v="0.0" help="Time at which the bounding box gets active."/>
+        <value n="StopTime" pn="Stop Time" DEM-BBox="Yes" v="1000.0" help="Time at which the bounding box stops acting."/>
+        <value n="PrintBoundingBox" pn="Print Bounding Box" DEM-BBox="Yes" v="No" ivalues="Yes,No" values="Active,Not Active" help="If activated, the bounding box will be printed in the postprocess."/>
+        <value n="PeriodicDomainOption" pn="Periodic Domain" v="No" class="PeriodicDomain" ivalues="Yes,No" values="Yes,No" help="Consner a parallepipedic periodic domain defined by the bounding box for the DEM problem"/>
+        </container>
+	
+        <container n="DEM-AdvancedOptions" pn="Advanced options" class="Tab" icon="advanced_options.gif" help="More advanced options that modify the computation" open='0'>
+        <value n="DEM-CleanInitialIndentations" pn="Clean initial indentations" v="Yes" ivalues="Yes,No" values="Yes,No" help="If activated, initial indentations between spheres and between spheres and walls are eliminated to avon explosions (reducing the radius of the spheres accordigly)"/>
+        <value n="DEM-TangencyTolerance" pn="Tangency tolerance type" state="hidden" v="Absolute" class="DEM-TangTolerance" ivalues="Absolute,Coordination_Number,None" values="Absolute,Coordination Number,None" help="Choose if you want to set manually the maximum gap between particles at the beginning of the computation (Absolute) or if you prefer an automatic gap that tries to match a certain average Coordination Number"/>
+        <value n="DEM-TangencyToleranceValueAbsolute" pn="Tangency tolerance value (m)" state="hidden" v="0.0" DEM-TangTolerance="Absolute" help="Choose the maximum admissible gap between two particles to consner them cohesive at the beginning of the computation"/>
+        <value n="DEM-TangencyCoordinationNumber" pn="Coordination number" state="hidden" v="10" DEM-TangTolerance="Coordination_Number" help=""/>
+        <value n="DEM-ExportModelDataInformation" pn="Export model data information" state="hidden" v="No" ivalues="Yes,No" values="Active,Not Active" help="Export Model Data Information"/>
+        <value n="DEM-VirtualMassCoef" pn="Virtual mass coefficient" v="1.0" help="Virtual Mass"/>
+        <value n="DEM-CalculateRotations" pn="Calculate rotations" state="normal" v="Yes" ivalues="Yes,No" values="Yes,No" class="DEM-Rotation" help="If activated, torques and rotations will be calculated on the Discrete Elements. Will increase computation time slightly. "/>
+        <value n="DEM-RollingFriction" pn="Rolling friction" v="No" ivalues="Yes,No" class="DEM-Rolling" values="Active,Not Active" help="If activated, the Rolling Friction parameter set in the Materials Tree will be taken into account. Otherwise it will be ignored. Will increase computation time slightly"/>
+        <value n="DEM-GlobalDamping" pn="Global Damping" v="0.0" help="Choose the value for the damping. 0.0 means no damping at all, while 1.0 means full damping."/>
+        <value n="DEM-DontSearchUntilFail" state="hidden" pn="Don't search until failure" v="OFF" ivalues="ON,OFF" values="ON,OFF" help="Don't search until failure"/>
+        <value n="DEM-RemoveBallsInEmbedded" state="hidden" pn="Remove DEM elements insne embedded" v="Yes" ivalues="Yes,No" values="Yes,No" help="Removes DEM elements that are insne an embedded DEM-FEM wall"/>
+        </container>
+	
+	
+	
+	
+	
+		
 	<container n="StratParams" pn="Strategy parameters" un="DEMStratParams" icon="groupsTreeNew.gif" state="normal" open_window="0">
 		<dynamicnode command="spdAux::injectSolStratParams" args=""/>
 	</container>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
 	<dynamicnode command="spdAux::injectSolvers" args=""/>
+	
+	<ClassConfiguration>
+	<Class>nDim,axiSym,kinemType,strucType,soluType,analysType,solverType,Solid-ElementActivation,DEM-FEMSOLIDActivation,DEM-OTimestepType,</Class>
+        <Class>,convCriteria,DEM-BBox,DEM-BBoxType,DEM-deltatimetype,PSolutionType,timeIntMeth,</Class>
+        <Class>,application,DEM-TangTolerance,DEM-Rotation,DEM-Rolling,</Class>
+        <Class>,deltatimetype,DEM-IsPeriodicAngular,DEM-IsPeriodicLinear,DEM-VTrap,</Class>
+        <Class>,DEM-Wear,DEM-RandomOrientation,DEM-CohesiveWall,DEM-ShowGraphsVars,DEM-ComputeEnergy,</Class>
+        <Class>,DEM-InletElementType,DEM-RigidWall,DEM-AdvancedMeshingFeatures,</Class>
+        <Class>,DEM-VelocityBCMotionType,DEM-InletImposedMotion,DEM-FEMImposedMotion,</Class>
+        <Class>,DEM-FEMWallActivation,DEM-VelocityBCActivation,DEM-InletBCActivation,</Class>
+        <Class>,DEM-ElementActivation,DEM-FEMtoDEMAlgorithm,DEM-RBImposedMotion,</Class>
+        <Class>,DEM-GeneralActivation,DEM-FixVelocityX,DEM-FixVelocityY,</Class>
+        <Class>,DEM-FixVelocityZ,DEM-FixAngularVelocityX,DEM-FixAngularVelocityY,</Class>
+        <Class>,DEM-TestType,DEM-MeshType,DEM-MaterialModel,DEM-CompressionTest,DEM-MaterialTestLab,DEM-ShowBondElements,</Class>
+        <Class>,DEM-FixAngularVelocityZ,DEM-Cluster,DEM-AdvancedMeshingFeaturesAlgorithmType,DEM-Inlet_measurement_type</Class>
+        </ClassConfiguration>
+    
 </container>
