@@ -4,7 +4,7 @@ proc DEM::write::getParametersEvent { } {
     set project_parameters_dict [dict create]
 
     dict set project_parameters_dict "Dimension"                        [write::getValue nDim nDim]
-    dict set project_parameters_dict "PeriodicDomainOption"             [write::getValue nDim nDim]
+    dict set project_parameters_dict "PeriodicDomainOption"             false
     dict set project_parameters_dict "BoundingBoxOption"                [write::getValue nDim nDim]
     dict set project_parameters_dict "AutomaticBoundingBoxOption"       [write::getValue nDim nDim]
     dict set project_parameters_dict "BoundingBoxEnlargementFactor"     [write::getValue nDim nDim]
@@ -33,15 +33,15 @@ proc DEM::write::getParametersEvent { } {
         dict set project_parameters_dict "GravityY" $gy
         dict set project_parameters_dict "GravityZ" $gz
 
-    dict set project_parameters_dict "EnergyCalculationOption"          [write::getValue nDim nDim]
-    dict set project_parameters_dict "VelocityTrapOption"               [write::getValue nDim nDim]
-    dict set project_parameters_dict "RotationOption"                   [write::getValue nDim nDim]
-    dict set project_parameters_dict "CleanIndentationsOption"          [write::getValue nDim nDim]
-    dict set project_parameters_dict "RemoveBallsInEmbeddedOption"      [write::getValue nDim nDim]
+    dict set project_parameters_dict "EnergyCalculationOption"          false
+    dict set project_parameters_dict "VelocityTrapOption"               false
+    dict set project_parameters_dict "RotationOption"                   true
+    dict set project_parameters_dict "CleanIndentationsOption"          true
+    dict set project_parameters_dict "RemoveBallsInEmbeddedOption"      false
     dict set project_parameters_dict "DeltaOption"                      [write::getValue nDim nDim]
     dict set project_parameters_dict "SearchTolerance"                  [write::getValue nDim nDim]
     dict set project_parameters_dict "AmplifiedSearchRadiusExtension"   [write::getValue nDim nDim]
-    dict set project_parameters_dict "ModelDataInfo"                    [write::getValue nDim nDim]
+    dict set project_parameters_dict "ModelDataInfo"                    false
     dict set project_parameters_dict "VirtualMassCoefficient"           [write::getValue nDim nDim]
     dict set project_parameters_dict "RollingFrictionOption"            [write::getValue nDim nDim]
     dict set project_parameters_dict "ContactMeshOption"                [write::getValue nDim nDim]
@@ -49,38 +49,38 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "Multifile"                        [write::getValue nDim nDim]
     dict set project_parameters_dict "ElementType"                      [write::getValue nDim nDim]
     
-    dict set project_parameters_dict "AutomaticTimestep"                [write::getValue nDim nDim]
-    dict set project_parameters_dict "DeltaTimeSafetyFactor"            [write::getValue nDim nDim]
+    dict set project_parameters_dict "AutomaticTimestep"                false
+    dict set project_parameters_dict "DeltaTimeSafetyFactor"            1
     dict set project_parameters_dict "MaxTimeStep"                      [write::getValue DeltaTime DeltaTime]
     dict set project_parameters_dict "FinalTime"                        [write::getValue nDim nDim]
     dict set project_parameters_dict "ControlTime"                      [write::getValue EndTime EndTime]
     dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue nDim nDim]
     
     dict set project_parameters_dict "GraphExportFreq"                  [write::getValue nDim nDim]
-    dict set project_parameters_dict "VelTrapGraphExportFreq"           [write::getValue nDim nDim]
+    dict set project_parameters_dict "VelTrapGraphExportFreq"           false
     dict set project_parameters_dict "OutputTimeStep"                   [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostBoundingBox"                  [write::getValue nDim nDim]
+    dict set project_parameters_dict "PostBoundingBox"                  false
     dict set project_parameters_dict "PostDisplacement"                 [write::getValue nDim nDim]
     dict set project_parameters_dict "PostVelocity"                     [write::getValue nDim nDim]
     dict set project_parameters_dict "PostTotalForces"                  [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostRigidElementForces"           [write::getValue nDim nDim]
+    dict set project_parameters_dict "PostRigidElementForces"           false
     dict set project_parameters_dict "PostRadius"                       [write::getValue nDim nDim]
     dict set project_parameters_dict "PostAngularVelocity"              [write::getValue nDim nDim]
     dict set project_parameters_dict "PostParticleMoment"               [write::getValue nDim nDim]
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostElasticForces"                [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostContactForces"                [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostTangentialElasticForces"      [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostShearStress"                  [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostPressure"                     [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostNonDimensionalVolumeWear"     [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostNodalArea"                    [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostRHS"                          [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostDampForces"                   [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostAppliedForces"                [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostGroupId"                      [write::getValue nDim nDim]
-    dict set project_parameters_dict "PostExportId"                     [write::getValue nDim nDim]
+    dict set project_parameters_dict "PostRollingResistanceMoment"      false
+    dict set project_parameters_dict "PostElasticForces"                false
+    dict set project_parameters_dict "PostContactForces"                false
+    dict set project_parameters_dict "PostTangentialElasticForces"      false
+    dict set project_parameters_dict "PostShearStress"                  false
+    dict set project_parameters_dict "PostPressure"                     false
+    dict set project_parameters_dict "PostNonDimensionalVolumeWear"     false
+    dict set project_parameters_dict "PostNodalArea"                    false
+    dict set project_parameters_dict "PostRHS"                          false
+    dict set project_parameters_dict "PostDampForces"                   false
+    dict set project_parameters_dict "PostAppliedForces"                false
+    dict set project_parameters_dict "PostGroupId"                      false
+    dict set project_parameters_dict "PostExportId"                     false
     dict set project_parameters_dict "IntegrationScheme"                [write::getValue nDim nDim]
 
     dict set project_parameters_dict "problem_name" [file tail [GiD_Info Project ModelName]]

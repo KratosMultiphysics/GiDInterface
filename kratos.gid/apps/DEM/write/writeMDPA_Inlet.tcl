@@ -100,9 +100,9 @@ proc DEM::write::writeMaterials { } {
 
     foreach group [dict keys $inletProperties] {
         write::WriteString "Begin Properties [dict get $inletProperties $group MID] // Inlet group: [write::GetWriteGroupName $group]"
-        dict set inletProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME [dict get $inletProperties $group ConstitutiveLaw]
+        dict set inletProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
         dict set inletProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
-        dict set inletProperties $group PARTICLE_FRICTION 0.9999999999999999
+        dict set inletProperties $group PARTICLE_FRICTION 0.5
         foreach {prop val} [dict get $inletProperties $group] {
             if {$prop in $printable} {
                 write::WriteString "    $prop $val"

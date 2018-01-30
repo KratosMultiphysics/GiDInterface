@@ -73,12 +73,12 @@ proc DEM::write::writeModelPartEvent { } {
     write::CloseFile
 
     # MDPA Inlet
-    write::OpenFile "[file tail [GiD_Info project ModelName]]_Inlet.mdpa"
+    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_Inlet.mdpa"
     WriteMDPAInlet
     write::CloseFile
 
     # MDPA Walls
-    write::OpenFile "[file tail [GiD_Info project ModelName]]_Clusters.mdpa"
+    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_Clusters.mdpa"
     WriteMDPAClusters
     write::CloseFile
 }
