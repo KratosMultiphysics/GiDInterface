@@ -13,16 +13,16 @@
 		<value n="Cz" pn="Cz" v="-1.0" help="Z Vector" />
 	</container>
 	<container n="DEM-Boundingbox" pn="Bounding box" un="DEM-Boundingbox" help="Any Discrete Element going outsne of the Bounding Box will be deleted">
-                <value n="UseBoundingBox" pn="Bounding box" v="Yes" class="DEM-BBox" ivalues="Yes,No" icon="active.gif" values="Active,Not active" help="Any Discrete element going out of the bounding box will be deleted"/>
-                <value n="BoundingBoxType" pn="Bounding box type" DEM-BBox="Yes" class="DEM-BBoxType" v="Fixed" ivalues="Fixed" values="Fixed"/>               
-                <value n="MaxX" pn="Max X" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max X"/>
-                <value n="MaxY" pn="Max Y" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max Y" sbi="PickCoordinates" sbp="Pick" sbxp="MaxX,MaxY,MaxZ"/>
-                <value n="MaxZ" pn="Max Z" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max Z"/>
-                <value n="MinX" pn="Min X" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="-10" help="Min X"/>
-                <value n="MinY" pn="Min Y" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="-10" help="Min Y" sbi="PickCoordinates" sbp="Pick" sbxp="MinX,MinY,MinZ"/>
-                <value n="MinZ" pn="Min Z" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="-10" help="Min Z"/>
-                <value n="StartTime" pn="Start Time" DEM-BBox="Yes" v="0.0" help="Time at which the bounding box gets active."/>
-                <value n="StopTime" pn="Stop Time" DEM-BBox="Yes" v="1000.0" help="Time at which the bounding box stops acting."/>
+                <value n="UseBoundingBox" pn="Bounding box" v="Yes" ivalues="Yes,No" icon="active.gif" values="true,false" help="Any Discrete element going out of the bounding box will be deleted"/>
+                <value n="BoundingBoxType" pn="Bounding box type" v="Fixed" ivalues="Fixed" values="Fixed"/>               
+                <value n="MaxX" pn="Max X" v="10"  help="Max X"/>
+                <value n="MaxY" pn="Max Y" v="10"  help="Max Y"/>
+                <value n="MaxZ" pn="Max Z" v="10"  help="Max Z"/>
+                <value n="MinX" pn="Min X" v="-10" help="Min X"/>
+                <value n="MinY" pn="Min Y" v="-10" help="Min Y"/>
+                <value n="MinZ" pn="Min Z" v="-10" help="Min Z"/>
+                <value n="StartTime" pn="Start Time" v="0.0" help="Time at which the bounding box gets active."/>
+                <value n="StopTime" pn="Stop Time" v="1000.0" help="Time at which the bounding box stops acting."/>
         </container>	
 	<container n="StratParams" pn="Strategy parameters" un="DEMStratParams" icon="groupsTreeNew.gif" state="normal" open_window="0">
 		<dynamicnode command="spdAux::injectSolStratParams" args=""/>
