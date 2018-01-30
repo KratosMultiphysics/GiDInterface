@@ -267,9 +267,9 @@ proc write::processMaterials { } {
                     # All the introduced values are translated to 'm' and 'kg' with the help of this function
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
                     
-                    if {[string is double $value]} {
-                        set value [format "%13.5E" $value]
-                    }
+                    # if {[string is double $value]} {
+                    #     set value [format "%13.5E" $value]
+                    # }
                     dict set mat_dict $group $name $value
                 }
             }
