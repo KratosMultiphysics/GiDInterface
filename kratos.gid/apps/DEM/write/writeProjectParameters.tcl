@@ -6,8 +6,7 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "Dimension"                        [write::getValue nDim nDim]
     dict set project_parameters_dict "PeriodicDomainOption"             false
     dict set project_parameters_dict "BoundingBoxOption"                [write::getValue nDim nDim]
-    dict set project_parameters_dict "AutomaticBoundingBoxOption"       [write::getValue nDim nDim]
-    dict set project_parameters_dict "BoundingBoxEnlargementFactor"     [write::getValue nDim nDim]
+    dict set project_parameters_dict "AutomaticBoundingBoxOption"       false
     dict set project_parameters_dict "BoundingBoxStartTime"             [write::getValue nDim nDim]
     dict set project_parameters_dict "BoundingBoxStopTime"              [write::getValue nDim nDim]
     dict set project_parameters_dict "BoundingBoxMaxX"                  [write::getValue nDim nDim]

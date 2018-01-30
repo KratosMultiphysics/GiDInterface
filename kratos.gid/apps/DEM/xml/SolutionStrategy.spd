@@ -14,8 +14,7 @@
 	</container>
 	<container n="DEM-Boundingbox" pn="Bounding box" un="DEM-Boundingbox" help="Any Discrete Element going outsne of the Bounding Box will be deleted">
                 <value n="UseBoundingBox" pn="Bounding box" v="Yes" class="DEM-BBox" ivalues="Yes,No" icon="active.gif" values="Active,Not active" help="Any Discrete element going out of the bounding box will be deleted"/>
-                <value n="BoundingBoxType" pn="Bounding box type" DEM-BBox="Yes" class="DEM-BBoxType" v="Fixed" ivalues="Automatic,Fixed" values="Automatic,Fixed" help="If Automatic is chosen, the bounding box will be created using the existing entities at the beginning of the computation"/>
-                <value n="EnlargementFactor" pn="Enlargement factor" DEM-BBox="Yes" DEM-BBoxType="Automatic" v="1.1" help="Enlargement factor"/>
+                <value n="BoundingBoxType" pn="Bounding box type" DEM-BBox="Yes" class="DEM-BBoxType" v="Fixed" ivalues="Fixed" values="Fixed"/>               
                 <value n="MaxX" pn="Max X" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max X"/>
                 <value n="MaxY" pn="Max Y" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max Y" sbi="PickCoordinates" sbp="Pick" sbxp="MaxX,MaxY,MaxZ"/>
                 <value n="MaxZ" pn="Max Z" DEM-BBox="Yes" DEM-BBoxType="Fixed" v="10" help="Max Z"/>
