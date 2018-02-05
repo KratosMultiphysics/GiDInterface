@@ -883,6 +883,12 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
             append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
         } elseif { $type eq "integer" } {
             append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'/>"
+        } elseif { $type eq "components_vector" } {
+            set dimensions [$param getAttribute "dimensions"]
+            set pick_point [$param getAttribute "pick_point"]
+            if {$dimensions eq ""} {set dimensions 3}
+            if {![write::isBooleanTrue $pick_point]} {set pick_point 0}
+            append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' fieldtype='vector' dimensions='$dimensions' format='%.6g' pick_point='$pick_point'/>"
         } else {
             if {[$param getAttribute "function"] eq "1"} {
                 set fname "function_$inName"
