@@ -12,20 +12,20 @@
       <parameter n="RigidPlane" pn="Rigid Structure" type="bool" v="0" values="1, 0" help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus" />
       <parameter n="YoungModulus" pn="Young Modulus (Pa)" type="double" v="1e20" />
       <parameter n="PoissonRatio" pn="Poisson Ratio" type="double" v="0.25" />
-      <parameter n="PrescribeMotion" pn="Prescribe motion" type="bool" v="0">
-        <parameter n="LINEAR_VELOCITYX" pn="Vx" type="double" v="0.0" parent="1" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="LINEAR_VELOCITYY" pn="Vy" type="double" v="0.0" parent="1" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="LINEAR_VELOCITYZ" pn="Vz" type="double" v="0.0" parent="1" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="LINEAR_VELOCITY_PERIODIC" pn="Periodic linear velocity" type="bool" parent="1" v="0">
-          <parameter n="LINEAR_VELOCITY_PERIOD" pn="Period linear velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
-        <parameter n="ANGULAR_VELOCITYX" pn="ω x" type="double" v="0.0" function="0" parent="1" unit_magnitude="Angle/T" units="rad/s"/>
-        <parameter n="ANGULAR_VELOCITYY" pn="ω y" type="double" v="0.0" function="0" parent="1" unit_magnitude="Angle/T" units="rad/s"/>
-        <parameter n="ANGULAR_VELOCITYZ" pn="ω z" type="double" v="0.0" function="0" parent="1" unit_magnitude="Angle/T" units="rad/s"/>
-        <parameter n="ROTATION_CENTERX" pn="Center x" type="double" v="0.0" parent="1" />
-        <parameter n="ROTATION_CENTERY" pn="Center y" type="double" v="0.0" parent="1" />
-        <parameter n="ROTATION_CENTERZ" pn="Center z" type="double" v="0.0" parent="1" />
-        <parameter n="ANGULAR_VELOCITY_PERIODIC" pn="Periodic angular velocity" parent="1" type="bool" v="0">
-          <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+      <parameter n="PrescribeMotion" pn="Prescribe motion" type="bool" v="false">
+        <parameter n="LINEAR_VELOCITYX" pn="Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITYY" pn="Vy" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITYZ" pn="Vz" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITY_PERIODIC" pn="Periodic linear velocity" type="bool" parent="true" v="0">
+          <parameter n="LINEAR_VELOCITY_PERIOD" pn="Period linear velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+        <parameter n="ANGULAR_VELOCITYX" pn="ω x" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ANGULAR_VELOCITYY" pn="ω y" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ANGULAR_VELOCITYZ" pn="ω z" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ROTATION_CENTERX" pn="Center x" type="double" v="0.0" parent="true" />
+        <parameter n="ROTATION_CENTERY" pn="Center y" type="double" v="0.0" parent="true" />
+        <parameter n="ROTATION_CENTERZ" pn="Center z" type="double" v="0.0" parent="true" />
+        <parameter n="ANGULAR_VELOCITY_PERIODIC" pn="Periodic angular velocity" parent="true" type="bool" v="0">
+          <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
       </parameter>
     </inputs>
   </Process>
