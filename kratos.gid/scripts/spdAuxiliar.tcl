@@ -677,7 +677,9 @@ proc spdAux::injectNodalConditions { basenode args} {
 proc spdAux::injectConditions { basenode args} {
     set conditions [::Model::GetConditions {*}$args]
     spdAux::_injectCondsToTree $basenode $conditions
+    set parent [$basenode parent]
     $basenode delete
+    spdAux::processDynamicNodes $parent
 }
 
 proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
