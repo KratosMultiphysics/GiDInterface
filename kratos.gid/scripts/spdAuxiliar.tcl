@@ -770,135 +770,143 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
             set has_units "units='$param_units'  unit_magnitude='$param_unitm'"
         }
     }
-    if {$type eq "vector"} {
-        set vector_type [$param getAttribute "vectorType"]
-        lassign [split $v ","] vX vY vZ
-        if {$vector_type eq "bool"} {
-            set zstate "\[CheckDimension 3D\]"
-            if {$state eq "hidden"} {set zstate hidden}
-            append node "
-                <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state'/>
-                <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state'/>
-                <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate'/>"
-        } else {
-            foreach i [list "X" "Y" "Z"] {
-                set fname "function_$inName"
-                set nodev "../value\[@n='${inName}$i'\]"
-                set nodef "../value\[@n='$i$fname'\]"
-                set zstate ""
-                if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"}
-                if {[$param getAttribute "enabled"] in [list "1" "0"]} {
-                    set val [expr [$param getAttribute "enabled"] ? "Yes" : "No"]
-                    #if {$i eq "Z"} { set val "No" }
-                    append node "<value n='Enabled_$i' pn='$i component' v='$val' values='Yes,No'  help='Enables the $i ${inName}' $zstate >"
-                    append node "<dependencies value='No' node=\""
-                    append node $nodev
-                    append node "\" att1='state' v1='hidden'/>"
-                    append node "<dependencies value='Yes' node=\""
-                    append node $nodev
-                    append node "\" att1='state' v1='normal'/>"
-                    if {[$param getAttribute "function"] eq "1"} {
-                        set fname "${i}function_$inName"
-                        set nodef "../value\[@n='$fname'\]"
-                        set nodeb "../value\[@n='ByFunction$i'\]"
+    switch $type {
+        "vector" {
+            set vector_type [$param getAttribute "vectorType"]
+            lassign [split $v ","] vX vY vZ
+            if {$vector_type eq "bool"} {
+                set zstate "\[CheckDimension 3D\]"
+                if {$state eq "hidden"} {set zstate hidden}
+                append node "
+                    <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state'/>
+                    <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state'/>
+                    <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate'/>"
+            } else {
+                foreach i [list "X" "Y" "Z"] {
+                    set fname "function_$inName"
+                    set nodev "../value\[@n='${inName}$i'\]"
+                    set nodef "../value\[@n='$i$fname'\]"
+                    set zstate ""
+                    if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"}
+                    if {[$param getAttribute "enabled"] in [list "1" "0"]} {
+                        set val [expr [$param getAttribute "enabled"] ? "Yes" : "No"]
+                        #if {$i eq "Z"} { set val "No" }
+                        append node "<value n='Enabled_$i' pn='$i component' v='$val' values='Yes,No'  help='Enables the $i ${inName}' $zstate >"
                         append node "<dependencies value='No' node=\""
-                        append node $nodef
-                        append node "\" att1='state' v1='hidden'/>"
-                        append node "<dependencies value='No' node=\""
-                        append node $nodeb
+                        append node $nodev
                         append node "\" att1='state' v1='hidden'/>"
                         append node "<dependencies value='Yes' node=\""
-                        append node $nodeb
+                        append node $nodev
                         append node "\" att1='state' v1='normal'/>"
+                        if {[$param getAttribute "function"] eq "1"} {
+                            set fname "${i}function_$inName"
+                            set nodef "../value\[@n='$fname'\]"
+                            set nodeb "../value\[@n='ByFunction$i'\]"
+                            append node "<dependencies value='No' node=\""
+                            append node $nodef
+                            append node "\" att1='state' v1='hidden'/>"
+                            append node "<dependencies value='No' node=\""
+                            append node $nodeb
+                            append node "\" att1='state' v1='hidden'/>"
+                            append node "<dependencies value='Yes' node=\""
+                            append node $nodeb
+                            append node "\" att1='state' v1='normal'/>"
+                        }
+                        append node "</value>"
                     }
-                    append node "</value>"
-                }
-                if {[$param getAttribute "function"] eq "1"} {
-                    set fname "${i}function_$inName"
-                    append node "<value n='ByFunction$i' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1'  $zstate >
-                        <dependencies value='No' node=\""
-                    append node $nodev
-                    append node "\" att1='state' v1='normal'/>
-                        <dependencies value='Yes'  node=\""
-                    append node $nodev
-                    append node "\" att1='state' v1='hidden'/>
-                        <dependencies value='No' node=\""
-                    append node $nodef
-                    append node "\" att1='state' v1='hidden'/>
-                        <dependencies value='Yes'  node=\""
-                    append node $nodef
-                    append node "\" att1='state' v1='normal'/>
-                        </value>"
-                    append node "<value n='$fname' pn='$i function' v='' help='$help'  $zstate />"
-                }
-                set v "v$i"
-                if { $vector_type eq "file" || $vector_type eq "tablefile" } {
-                    if {[set $v] eq ""} {set $v "- No file"}
-                    append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
-                } else {
-                    append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate />"
+                    if {[$param getAttribute "function"] eq "1"} {
+                        set fname "${i}function_$inName"
+                        append node "<value n='ByFunction$i' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1'  $zstate >
+                            <dependencies value='No' node=\""
+                        append node $nodev
+                        append node "\" att1='state' v1='normal'/>
+                            <dependencies value='Yes'  node=\""
+                        append node $nodev
+                        append node "\" att1='state' v1='hidden'/>
+                            <dependencies value='No' node=\""
+                        append node $nodef
+                        append node "\" att1='state' v1='hidden'/>
+                            <dependencies value='Yes'  node=\""
+                        append node $nodef
+                        append node "\" att1='state' v1='normal'/>
+                            </value>"
+                        append node "<value n='$fname' pn='$i function' v='' help='$help'  $zstate />"
+                    }
+                    set v "v$i"
+                    if { $vector_type eq "file" || $vector_type eq "tablefile" } {
+                        if {[set $v] eq ""} {set $v "- No file"}
+                        append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
+                    } else {
+                        append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate />"
+                    }
                 }
             }
-        }
-        
-    } elseif { $type eq "combo" } {
-        set values [$param getValues]
-        set pvalues [$param getPValues]
-        set pv ""
-        for {set i 0} {$i < [llength $values]} {incr i} {
-            lappend pv [lindex $values $i]
-            lappend pv [lindex $pvalues $i] 
-        }
-        set values [join [$param getValues] ","]
-        set pvalues [join $pv ","]
-        append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
-        if {[llength $pv]} {
-            append node " dict='$pvalues' "
-        }
-        if {[$param getActualize]} {
-            append node "  actualize_tree='1'  "
-        }
-        append node " state='$state' help='$help'>"
-        if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
-        append node "</value>"
-    } elseif { $type eq "bool" } {
-        set values "true,false"
-        if {$v == 1} {set v true}
-        if {$v == 0} {set v false}
-        append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
-        if {[$param getActualize]} {
-            append node "  actualize_tree='1'  "
-        }
-        append node " state='$state'>"
-        if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
-        append node "</value>"
-    } elseif { $type eq "file" || $type eq "tablefile" } {
-        append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
-    } elseif { $type eq "integer" } {
-        append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'/>"
-    } else {
-        if {[$param getAttribute "function"] eq "1"} {
-            set fname "function_$inName"
-            set nodev "../value\[@n='$inName'\]"
-            set nodef "../value\[@n='$fname'\]"
-            append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'>
-                <dependencies value='No' node=\""
-            append node $nodev
-            append node "\" att1='state' v1='normal'/>
-                <dependencies value='Yes'  node=\""
-            append node $nodev
-            append node "\" att1='state' v1='hidden'/>
-                <dependencies value='No' node=\""
-            append node $nodef
-            append node "\" att1='state' v1='hidden'/>
-                <dependencies value='Yes'  node=\""
-            append node $nodef
-            append node "\" att1='state' v1='normal'/>
-                </value>"
             
-            append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'/>"
+        } 
+        "combo" {
+            set values [$param getValues]
+            set pvalues [$param getPValues]
+            set pv ""
+            for {set i 0} {$i < [llength $values]} {incr i} {
+                lappend pv [lindex $values $i]
+                lappend pv [lindex $pvalues $i] 
+            }
+            set values [join [$param getValues] ","]
+            set pvalues [join $pv ","]
+            append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
+            if {[llength $pv]} {
+                append node " dict='$pvalues' "
+            }
+            if {[$param getActualize]} {
+                append node "  actualize_tree='1'  "
+            }
+            append node " state='$state' help='$help'>"
+            if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
+            append node "</value>"
+        } 
+        "bool" {
+            set values "true,false"
+            if {$v == 1} {set v true}
+            if {$v == 0} {set v false}
+            append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
+            if {[$param getActualize]} {
+                append node "  actualize_tree='1'  "
+            }
+            append node " state='$state'>"
+            if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
+            append node "</value>"
+        } 
+        "file" -
+        "tablefile" {
+            append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
+        } 
+        "integer" {
+            append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'/>"
+        } 
+        default {
+            if {[$param getAttribute "function"] eq "1"} {
+                set fname "function_$inName"
+                set nodev "../value\[@n='$inName'\]"
+                set nodef "../value\[@n='$fname'\]"
+                append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'>
+                    <dependencies value='No' node=\""
+                append node $nodev
+                append node "\" att1='state' v1='normal'/>
+                    <dependencies value='Yes'  node=\""
+                append node $nodev
+                append node "\" att1='state' v1='hidden'/>
+                    <dependencies value='No' node=\""
+                append node $nodef
+                append node "\" att1='state' v1='hidden'/>
+                    <dependencies value='Yes'  node=\""
+                append node $nodef
+                append node "\" att1='state' v1='normal'/>
+                    </value>"
+                
+                append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'/>"
+            }
+            append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'  state='$state'/>"
         }
-        append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'  state='$state'/>"
     }
     return $node
 }
