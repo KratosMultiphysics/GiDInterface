@@ -1231,6 +1231,17 @@ proc spdAux::getFields {} {
     return $lista
 }
 
+proc spdAux::InsertConstitutiveLawForParameters {input arguments} {
+    return "<value n='ConstitutiveLaw' pn='Constitutive law' v='' actualize_tree='1' values='\[GetConstitutiveLaws\]' dict='\[GetAllConstitutiveLaws\]'  help='Select a constitutive law'>
+		<dependencies node='../value' actualize='1'/>
+	</value>
+	<value n='Material' pn='Material' editable='0' help='Choose a material from the database' update_proc='CambioMat' values_tree='\[give_materials_list\]' v='' actualize_tree='1' state='normal'>
+		<edit_command n='Update material data' pn='Update material data' icon='refresh' proc='edit_database_list'/>
+		<dependencies node='../value' actualize='1'/>
+	</value>
+    <dynamicnode command='spdAux::injectPartInputs' args=''/>
+    "
+}
 
 spdAux::Init
 
