@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="DEM-Results" pn="Results" un="Results" state="normal" open="1" open_window="0" icon="results" help="Adjust the level of detail, frequency and type of the results that must be printed on disk during the computation">
+    <value n="DEM-OTimeStepType" pn="Output Criterion" v="Storage_priority" values="Detail_priority,Storage_priority" dict="Detail_priority,Time interval,Storage_priority,Total number of files" icon="time3" help="Select a printing interval or the total amount of result files to print" update_proc="spdAux::RequestRefresh"/>
+    <value n="DEM-OTimeStepDetail" pn="Time interval (s)" v="1e-2" help="Set a printing interval for the GiD results" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Detail_priority]"/>
+    <value n="DEM-OTimeStepStorage" pn="Number of files" v="100" help="Select the total amount of GiD result files to print" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Storage_priority]"/>
+    <container n="DEM-PartElem" pn="Print in Post-Process" un="PostPrint" help="Results on DEM elements that can be colored or shown as vectors on GiD, among other options" open_window="0" icon="options">
+        <value n="DEM-Displacement" pn="Displacement" v="Yes" values="Yes,No" help="Displacement"/>
+        <value n="DEM-Radius" pn="Radius" v="Yes"  values="Yes,No" help="Radius" state="hidden"/>
+        <value n="DEM-PostVel" pn="Velocity" v="Yes" values="Yes,No" help="Velocity"/>
+        <value n="DEM-AngularVelocity" pn="Angular velocity" v="No" values="Yes,No" help="Angular velocity" state="hidden"/>
+        <value n="DEM-ElasForces" pn="Elastic Forces" v="No" values="Yes,No" help="Elastic Forces" state="hidden"/>
+        <value n="DEM-ContactForces" pn="Contact Forces" v="No" values="Yes,No" help="Contact Forces" state="hidden"/>
+        <value n="DEM-RigidElementForces" pn="Rigid Element Forces" v="No" values="Yes,No" help="Rigid Element Forces" state="hidden"/>
+        <value n="DEM-TangElasForces" pn="Tangential Elastic Forces" v="No" values="Yes,No" help="Tangential Elastic Forces" state="hidden"/>
+        <value n="DEM-TotalForces" pn="Total forces" v="No" values="Yes,No" help="Total Forces"/>
+        <value n="DEM-Stresses" pn="Stresses in DEM particles" v="No" values="Yes,No" help="Stresses in DEM particles" state="hidden"/>
+        <value n="DEM-Pressure" pn="Pressure" v="No" values="Yes,No" help="Pressure" state="hidden"/>
+        <value n="DEM-ShearStress" pn="Shear Stress" v="No" values="Yes,No" help="Shear Stress" state="hidden"/>
+        <value n="DEM-Wear" pn="Wear" v="No" values="Yes,No" help="It computes the volume of removed material due to wear" state="hidden"/>
+        <value n="DEM-NodalArea" pn="Nodal Area" v="No" values="No,Yes" help="Nodal Area" state="hidden"/>
+        <value n="DEM-Rhs" pn="Rhs" v="No" values="Yes,No" help="Rhs" state="hidden"/>
+        <value n="DEM-DampForces" pn="Damp forces" v="No" values="Yes,No" help="Damp forces" state="hidden"/>
+        <value n="DEM-AppliedForces" pn="Applied forces" v="No" values="Yes,No" help="Applied forces" state="hidden"/>
+        <value n="DEM-GroupId" pn="GroupId" v="No" values="Yes,No" help="GroupId" state="hidden"/>
+        <value n="DEM-ExportId" pn="Export Id" v="No" values="Yes,No" help="ExportId" state="hidden"/>
+        <value n="DEM-SkinSphere" pn="Skin sphere" v="No" values="Yes,No" help="Print the spheres that form the skin of the DEM groups" state="hidden"/>
+        <value n="DEM-ParticleMoment" pn="Particle moment" v="No" values="Yes,No" help="Particle moment" state="hidden"/>
+        <value n="DEM-EulerAngles" pn="Euler angles" v="No" values="Yes,No" help="Euler angles" state="hidden"/>
+        <value n="DEM-RollingResistanceMoment" pn="Rolling resistance moment" v="No" values="Yes,No" help="Rolling resistance moment" state="hidden"/>
+    </container>
+    <container n="GiDOptions" pn="Options" class="Tab" help="GiD postprocess additional options" open="0" state="hidden">
+        <value n="GiDPostMode" pn="Result format" state="hidden" v="Binary" values="Ascii,Binary" help="GiD result file format. Choose Binary or Ascii. Ascii takes more hard disk space, but is human readable"/>
+        <value n="GiDWriteMeshFlag" pn="Write deformed mesh" state="hidden" v="Yes" values="Yes,No" help="Write the GiD deformed or undeformed mesh"/>
+        <value n="GiDWriteConditionsFlag" pn="Write conditions" state="hidden" v="Yes" values="Yes,No" help="Write the conditions or only element to the GiD result file"/>
+        <value n="GiDWriteParticlesFlag" pn="Write particles" state="hidden" v="No" values="Yes,No" help="Write the particles or only element to the GiD result file"/>
+        <value n="GiDMultiFileFlag" pn="Result file" v="Multiples" values="Multiples,Single" dict="Multiples,Multiple files,Single,Single file" state="hidden" help="Write one GiD result file or multiple files"/>
+    </container>
+</container>
