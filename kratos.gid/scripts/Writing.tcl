@@ -399,7 +399,7 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
     set initial $iter
     for {set i 0} {$i <[llength $obj]} {incr iter; incr i} {
         set nids [lindex $obj $i]
-        WriteString "$iter 0 $nids"
+        WriteString "    $iter 0 $nids"
     }
     set final [expr $iter -1]
     WriteString "End Conditions"
@@ -495,6 +495,24 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
         WriteString "    End ${gtn}Conditions"
         WriteString "End $gtn"
     }
+}
+
+proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
+    WriteString "Begin SubModelPart $cid // Condition $cid"
+    WriteString "Begin SubModelPartNodes"
+    WriteString "End SubModelPartNodes"
+    WriteString "Begin SubModelPartElements"
+    WriteString "End SubModelPartElements"
+    WriteString "Begin SubModelPartConditions"
+    WriteString "End SubModelPartConditions"
+    
+    foreach group [dict keys $groups_dict] {
+        if {[dict exists $groups_dict $group what]} {set what [dict get $groups_dict $group what]} else {set what ""}
+        if {[dict exists $groups_dict $group iniend]} {set iniend [dict get $groups_dict $group iniend]} else {set iniend ""}
+        if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
+        write::writeGroupMesh $cid $group $what $iniend $tableid_list
+    }
+    WriteString "End SubModelPart"
 }
 
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
