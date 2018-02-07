@@ -8,12 +8,14 @@ namespace eval write {
     variable meshes
     variable MDPA_loop_control
     variable current_configuration
+    variable current_mdpa_indent_level
 }
 
 proc write::Init { } {
     variable mat_dict
     variable meshes
     variable current_configuration
+    variable current_mdpa_indent_level
     
     set current_configuration [dict create]
     
@@ -29,6 +31,8 @@ proc write::Init { } {
     
     variable MDPA_loop_control
     set MDPA_loop_control 0
+
+    set current_mdpa_indent_level 0
     
 }
 
@@ -166,37 +170,42 @@ proc write::writeAppMDPA {appid} {
 
 proc write::writeModelPartData { } {
     # Write the model part data
-    
-    WriteString "Begin ModelPartData"
-    WriteString "//  VARIABLE_NAME value"
-    WriteString "End ModelPartData"
+    set s [mdpaIndent]
+    WriteString "${s}Begin ModelPartData"
+    WriteString "${s}//  VARIABLE_NAME value"
+    WriteString "${s}End ModelPartData"
     WriteString ""
 }
 
 proc write::writeTables { } {
     # Write the model part data
-    
-    WriteString "Begin Table"
-    WriteString "Table content"
-    WriteString "End Tablee"
+    set s [mdpaIndent]
+    WriteString "${s}Begin Table"
+    WriteString "${s}Table content"
+    WriteString "${s}End Tablee"
     WriteString ""
 }
 
 proc write::writeMaterials { {appid ""}} {
     variable mat_dict
+    variable current_mdpa_indent_level
     
     set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
     # We print all the material data directly from the saved dictionary
     foreach material [dict keys $mat_dict] {
         set matapp [dict get $mat_dict $material APPID]
         if {$appid eq "" || $matapp in $appid} {
-            WriteString "Begin Properties [dict get $mat_dict $material MID]"
+            set s [mdpaIndent]
+            WriteString "${s}Begin Properties [dict get $mat_dict $material MID]"
+            incr current_mdpa_indent_level
+            set s [mdpaIndent]
             foreach prop [dict keys [dict get $mat_dict $material] ] {
                 if {$prop ni $exclusionList} {
-                    WriteString "    $prop [dict get $mat_dict $material $prop] "
+                    WriteString "${s}$prop [dict get $mat_dict $material $prop] "
                 }
             }
-            WriteString "End Properties"
+            incr current_mdpa_indent_level -1
+            WriteString "${s}End Properties"
             WriteString ""
         }
     }
@@ -204,12 +213,15 @@ proc write::writeMaterials { {appid ""}} {
 
 proc write::writeNodalCoordinatesOnGroups { groups } {
     set formats [dict create]
+    set s [mdpaIndent]
+    WriteString "${s}Begin Nodes"
+    incr ::write::current_mdpa_indent_level
     foreach group $groups {
-        dict set formats $group "%5d %14.5f %14.5f %14.5f\n"
+        dict set formats $group "${s}%5d %14.5f %14.5f %14.5f\n"
     }
-    WriteString "Begin Nodes"
     GiD_WriteCalculationFile nodes $formats
-    WriteString "End Nodes"
+    incr ::write::current_mdpa_indent_level -1
+    WriteString "${s}End Nodes"
     WriteString "\n"
 }
 proc write::writeNodalCoordinatesOnParts { } {
@@ -221,10 +233,12 @@ proc write::writeNodalCoordinates { } {
     # Begin Nodes
     # // id          X        Y        Z
     # End Nodes
-    
-    WriteString "Begin Nodes"
-    customlib::WriteCoordinates "%5d %14.10f %14.10f %14.10f\n"
-    WriteString "End Nodes"
+    set s [mdpaIndent]
+    WriteString "${s}Begin Nodes"
+    incr ::write::current_mdpa_indent_level
+    customlib::WriteCoordinates "${s}%5d %14.10f %14.10f %14.10f\n"
+    incr ::write::current_mdpa_indent_level -1
+    WriteString "${s}End Nodes"
     WriteString "\n"
 }
 
@@ -303,15 +317,18 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
     if {[$gNode hasAttribute ov]} {set ov [get_domnode_attribute $gNode ov] } {set ov [get_domnode_attribute [$gNode parent] ov] }
     lassign [getEtype $ov $group] etype nnodes
     if {$nnodes ne ""} {
-        set formats [GetFormatDict $group $mid $nnodes]
         if {$etype ne "none"} {
             set elem [::Model::getElement $kelemtype]
             set top [$elem getTopologyFeature $etype $nnodes]
             if {$top ne ""} {
                 set kratosElemName [$top getKratosName]
-                WriteString "Begin Elements $kratosElemName// GUI group identifier: $group"
+                set s [mdpaIndent]
+                WriteString "${s}Begin Elements $kratosElemName// GUI group identifier: $group"
+                incr ::write::current_mdpa_indent_level
+                set formats [GetFormatDict $group $mid $nnodes]
                 GiD_WriteCalculationFile connectivities $formats
-                WriteString "End Elements"
+                incr ::write::current_mdpa_indent_level -1
+                WriteString "${s}End Elements"
                 WriteString ""
             } else {
                 error [= "Element $kelemtype $etype ($nnodes nodes) not available for $ov entities on group $group"]
@@ -387,7 +404,12 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
 
 proc write::writeGroupCondition {groupid kname nnodes iter} {
     set obj [list ]
-    WriteString "Begin Conditions $kname// GUI group identifier: $groupid"
+
+    # Print header
+    set s [mdpaIndent]
+    WriteString "${s}Begin Conditions $kname// GUI group identifier: $groupid"
+
+    # Get the entities to print
     if {$nnodes == 1} {
         set formats [dict create $groupid "%10d \n"]
         set obj [GiD_EntitiesGroups get $groupid nodes]
@@ -396,14 +418,22 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
         set elems [GiD_WriteCalculationFile connectivities -return $formats]
         set obj [GetListsOfNodes $elems $nnodes 2]
     }
+
+    # Print the conditions and it's connectivities
     set initial $iter
+    incr ::write::current_mdpa_indent_level
+    set s1 [mdpaIndent]
     for {set i 0} {$i <[llength $obj]} {incr iter; incr i} {
         set nids [lindex $obj $i]
-        WriteString "    $iter 0 $nids"
+        WriteString "${s1}$iter 0 $nids"
     }
     set final [expr $iter -1]
-    WriteString "End Conditions"
+    incr ::write::current_mdpa_indent_level -1
+
+    # Print the footer
+    WriteString "${s}End Conditions"
     WriteString ""
+
     return [list $initial $final]
 }
 
@@ -454,57 +484,75 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
     set gtn [GetConfigurationAttribute groups_type_name]
     set group [GetWriteGroupName $group]
     if {![dict exists $meshes [list $cid ${group}]]} {
+        # Add the submodelpart to the catalog
         set mid [expr [llength [dict keys $meshes]] +1]
         if {$gtn ne "Mesh"} {
             set good_name [write::transformGroupName $group]
             set mid "${cid}_${good_name}"
         }
         dict set meshes [list $cid ${group}] $mid
+
+        # Prepare the print formats
+        incr ::write::current_mdpa_indent_level
+        set s1 [mdpaIndent]
+        incr ::write::current_mdpa_indent_level -1
+        incr ::write::current_mdpa_indent_level 2
+        set s2 [mdpaIndent]
         set gdict [dict create]
-        set f "%10i\n"
+        set f "${s2}%5i\n"
         set f [subst $f]
         dict set gdict $group $f
-        WriteString "Begin $gtn $mid // Group $group // Subtree $cid"
+        incr ::write::current_mdpa_indent_level -2
+
+        # Print header
+        set s [mdpaIndent]
+        WriteString "${s}Begin $gtn $mid // Group $group // Subtree $cid"
+        # Print tables
         if {$tableid_list ne ""} {
-            WriteString "    Begin SubModelPartTables"
+            set s1 [mdpaIndent]
+            WriteString "${s1}Begin SubModelPartTables"
             foreach tableid $tableid_list {
-                WriteString "    $tableid"
+                WriteString "${s2}$tableid"
             }
-            WriteString "    End SubModelPartTables"
+            WriteString "${s1}End SubModelPartTables"
         }
-        WriteString "    Begin ${gtn}Nodes"
+        WriteString "${s1}Begin ${gtn}Nodes"
         GiD_WriteCalculationFile nodes -sorted $gdict
-        WriteString "    End ${gtn}Nodes"
-        WriteString "    Begin ${gtn}Elements"
+        WriteString "${s1}End ${gtn}Nodes"
+        WriteString "${s1}Begin ${gtn}Elements"
         if {"Elements" in $what} {
             GiD_WriteCalculationFile elements -sorted $gdict
         }
-        WriteString "    End ${gtn}Elements"
-        WriteString "    Begin ${gtn}Conditions"
+        WriteString "${s1}End ${gtn}Elements"
+        WriteString "${s1}Begin ${gtn}Conditions"
         if {"Conditions" in $what} {
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
                 #W $iniend
                 foreach {ini end} $iniend {
                     for {set i $ini} {$i<=$end} {incr i} {
-                        WriteString [format %10d $i]
+                        WriteString "${s2}[format %5d $i]"
                     }
                 }
             }
         }
-        WriteString "    End ${gtn}Conditions"
-        WriteString "End $gtn"
+        WriteString "${s1}End ${gtn}Conditions"
+        WriteString "${s}End $gtn"
     }
 }
 
 proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
-    WriteString "Begin SubModelPart $cid // Condition $cid"
-    WriteString "Begin SubModelPartNodes"
-    WriteString "End SubModelPartNodes"
-    WriteString "Begin SubModelPartElements"
-    WriteString "End SubModelPartElements"
-    WriteString "Begin SubModelPartConditions"
-    WriteString "End SubModelPartConditions"
+    set s [mdpaIndent]
+    WriteString "${s}Begin SubModelPart $cid // Condition $cid"
+    
+    incr ::write::current_mdpa_indent_level
+    set s1 [mdpaIndent]
+    WriteString "${s1}Begin SubModelPartNodes"
+    WriteString "${s1}End SubModelPartNodes"
+    WriteString "${s1}Begin SubModelPartElements"
+    WriteString "${s1}End SubModelPartElements"
+    WriteString "${s1}Begin SubModelPartConditions"
+    WriteString "${s1}End SubModelPartConditions"
     
     foreach group [dict keys $groups_dict] {
         if {[dict exists $groups_dict $group what]} {set what [dict get $groups_dict $group what]} else {set what ""}
@@ -512,7 +560,9 @@ proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
         if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
         write::writeGroupMesh $cid $group $what $iniend $tableid_list
     }
-    WriteString "End SubModelPart"
+
+    incr ::write::current_mdpa_indent_level -1
+    WriteString "${s}End SubModelPart"
 }
 
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
@@ -568,8 +618,10 @@ proc write::writeNodalConditions { keyword } {
     }
 }
 
+# Warning! Indentation must be set before calling here!
 proc write::GetFormatDict { groupid mid num} {
-    set f "%10d [format "%10d" $mid] [string repeat "%10d " $num]\n"
+    set s [mdpaIndent]
+    set f "${s}%5d [format "%10d" $mid] [string repeat "%10d " $num]\n"
     return [dict create $groupid $f]
 }
 
@@ -1339,6 +1391,10 @@ proc write::getSpacing {number} {
     set r ""
     for {set i 0} {$i<$number} {incr i} {append r " "}
     return $r
+}
+proc write::mdpaIndent { {b 4} } {
+    variable current_mdpa_indent_level
+    string repeat [string repeat " " $b] $current_mdpa_indent_level
 }
 
 proc write::CopyFileIntoModel { filepath } {
