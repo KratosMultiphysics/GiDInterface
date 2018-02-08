@@ -1,8 +1,8 @@
 
 proc ::DEM::examples::SpheresDrop {args} {
     if {![Kratos::IsModelEmpty]} {
-        set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
-        set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
+	set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
+	set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
 
@@ -34,12 +34,12 @@ proc ::DEM::examples::AssignToTree { } {
     set DEMPartsNode [spdAux::AddConditionGroupOnXPath $DEMParts Body]
     set props [list PARTICLE_DENSITY 1.0]
     foreach {prop val} $props {
-        set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Parts $prop"
-        }
+	set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
+	if {$propnode ne "" } {
+	    $propnode setAttribute v $val
+	} else {
+	    W "Warning - Couldn't find property Parts $prop"
+	}
     }
 
     # DEM FEM Walls
@@ -47,14 +47,14 @@ proc ::DEM::examples::AssignToTree { } {
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
     set wallsNode [spdAux::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
-    set props [list PoissonRatio 0.26]
+    set props [list ]
     foreach {prop val} $props {
-         set propnode [$wallsNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
+	 set propnode [$wallsNode selectNodes "./value\[@n = '$prop'\]"]
+	 if {$propnode ne "" } {
+	      $propnode setAttribute v $val
+	 } else {
+	    W "Warning - Couldn't find property Outlet $prop"
+	}
     }
 
     # Inlet
@@ -62,20 +62,20 @@ proc ::DEM::examples::AssignToTree { } {
     set inlets [list Total 2]
     ErasePreviousIntervals
     foreach {interval_name modulus} $inlets {
-        GiD_Groups create "Inlet//$interval_name"
-        GiD_Groups edit state "Inlet//$interval_name" hidden
-        spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
-        set inletNode [spdAux::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
-        $inletNode setAttribute ov surface
-        set props [list VELOCITY_MODULUS $modulus Interval $interval_name]
-        foreach {prop val} $props {
-             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property Inlet $prop"
-            }
-        }
+	GiD_Groups create "Inlet//$interval_name"
+	GiD_Groups edit state "Inlet//$interval_name" hidden
+	spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
+	set inletNode [spdAux::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
+	$inletNode setAttribute ov surface
+	set props [list VELOCITY_MODULUS $modulus Interval $interval_name]
+	foreach {prop val} $props {
+	     set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
+	     if {$propnode ne "" } {
+		  $propnode setAttribute v $val
+	     } else {
+		W "Warning - Couldn't find property Inlet $prop"
+	    }
+	}
     }
     spdAux::RequestRefresh
 }
@@ -84,6 +84,6 @@ proc DEM::examples::ErasePreviousIntervals { } {
     set root [customlib::GetBaseRoot]
     set interval_base [spdAux::getRoute "Intervals"]
     foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+	if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
     }
 }
