@@ -4,35 +4,35 @@
     <value n="DEM-OTimeStepDetail" pn="Time interval (s)" v="1e-2" help="Set a printing interval for the GiD results" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Detail_priority]"/>
     <value n="DEM-OTimeStepStorage" pn="Number of files" v="100" help="Select the total amount of GiD result files to print" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Storage_priority]"/>
     <container n="DEM-PartElem" pn="Print in Post-Process" un="PostPrint" help="Results on DEM elements that can be colored or shown as vectors on GiD, among other options" open_window="0" icon="options">
-        <value n="DEM-Displacement" pn="Displacement" type="bool"  v="true" help="Displacement"/>
-        <value n="DEM-Radius" pn="Radius" type="bool"  v="true" help="Radius" state="hidden"/>
-        <value n="DEM-PostVel" pn="Velocity" type="bool"  v="true" help="Velocity"/>
-        <value n="DEM-AngularVelocity" pn="Angular velocity" type="bool" v="false" help="Angular velocity" state="hidden"/>
-        <value n="DEM-ElasForces" pn="Elastic Forces" type="bool" v="false" help="Elastic Forces" state="hidden"/>
-        <value n="DEM-ContactForces" pn="Contact Forces" type="bool" v="false" help="Contact Forces" state="hidden"/>
-        <value n="DEM-RigidElementForces" pn="Rigid Element Forces" type="bool" v="false" help="Rigid Element Forces" state="hidden"/>
-        <value n="DEM-TangElasForces" pn="Tangential Elastic Forces" type="bool" v="false" help="Tangential Elastic Forces" state="hidden"/>
-        <value n="DEM-TotalForces" pn="Total forces" type="bool" v="false" help="Total Forces"/>
-        <value n="DEM-Stresses" pn="Stresses in DEM particles" type="bool" v="false" help="Stresses in DEM particles" state="hidden"/>
-        <value n="DEM-Pressure" pn="Pressure" type="bool" v="false" help="Pressure" state="hidden"/>
-        <value n="DEM-ShearStress" pn="Shear Stress" type="bool" v="false" help="Shear Stress" state="hidden"/>
-        <value n="DEM-Wear" pn="Wear" type="bool" v="false" help="It computes the volume of removed material due to wear" state="hidden"/>
-        <value n="DEM-NodalArea" pn="Nodal Area" type="bool" v="false" help="Nodal Area" state="hidden"/>
-        <value n="DEM-Rhs" pn="Rhs" type="bool" v="false" help="Rhs" state="hidden"/>
-        <value n="DEM-DampForces" pn="Damp forces" type="bool" v="false" help="Damp forces" state="hidden"/>
-        <value n="DEM-AppliedForces" pn="Applied forces" type="bool" v="false" help="Applied forces" state="hidden"/>
-        <value n="DEM-GroupId" pn="GroupId" type="bool" v="false" help="GroupId" state="hidden"/>
-        <value n="DEM-ExportId" pn="Export Id" type="bool" v="false" help="ExportId" state="hidden"/>
-        <value n="DEM-SkinSphere" pn="Skin sphere" type="bool" v="false" help="Print the spheres that form the skin of the DEM groups" state="hidden"/>
-        <value n="DEM-ParticleMoment" pn="Particle moment" type="bool" v="false" help="Particle moment" state="hidden"/>
-        <value n="DEM-EulerAngles" pn="Euler angles" type="bool" v="false" help="Euler angles" state="hidden"/>
-        <value n="DEM-RollingResistanceMoment" pn="Rolling resistance moment" type="bool" v="false" help="Rolling resistance moment" state="hidden"/>
+        <value n="DEM-Displacement" pn="Displacement" type="bool" values="true,false" v="true" help="Displacement"/>
+        <value n="DEM-Radius" pn="Radius" type="bool" values="true,false" v="true" help="Radius" state="hidden"/>
+        <value n="DEM-PostVel" pn="Velocity" type="bool" values="true,false" v="true" help="Velocity"/>
+        <value n="DEM-AngularVelocity" pn="Angular velocity" type="bool" values="true,false" v="false" help="Angular velocity" state="hidden"/>
+        <value n="DEM-ElasForces" pn="Elastic Forces" type="bool" values="true,false" v="false" help="Elastic Forces" state="hidden"/>
+        <value n="DEM-ContactForces" pn="Contact Forces" type="bool" values="true,false" v="false" help="Contact Forces" state="hidden"/>
+        <value n="DEM-RigidElementForces" pn="Rigid Element Forces" type="bool" values="true,false" v="false" help="Rigid Element Forces" state="hidden"/>
+        <value n="DEM-TangElasForces" pn="Tangential Elastic Forces" type="bool" values="true,false" v="false" help="Tangential Elastic Forces" state="hidden"/>
+        <value n="DEM-TotalForces" pn="Total forces" type="bool" values="true,false" v="false" help="Total Forces"/>
+        <value n="DEM-Stresses" pn="Stresses in DEM particles" type="bool" values="true,false" v="false" help="Stresses in DEM particles" state="hidden"/>
+        <value n="DEM-Pressure" pn="Pressure" type="bool" values="true,false" v="false" help="Pressure" state="hidden"/>
+        <value n="DEM-ShearStress" pn="Shear Stress" type="bool" values="true,false" v="false" help="Shear Stress" state="hidden"/>
+        <value n="DEM-Wear" pn="Wear" type="bool" values="true,false" v="false" help="It computes the volume of removed material due to wear" state="hidden"/>
+        <value n="DEM-NodalArea" pn="Nodal Area" type="bool" values="true,false" v="false" help="Nodal Area" state="hidden"/>
+        <value n="DEM-Rhs" pn="Rhs" type="bool" values="true,false" v="false" help="Rhs" state="hidden"/>
+        <value n="DEM-DampForces" pn="Damp forces" type="bool" values="true,false" v="false" help="Damp forces" state="hidden"/>
+        <value n="DEM-AppliedForces" pn="Applied forces" type="bool" values="true,false" v="false" help="Applied forces" state="hidden"/>
+        <value n="DEM-GroupId" pn="GroupId" type="bool" values="true,false" v="false" help="GroupId" state="hidden"/>
+        <value n="DEM-ExportId" pn="Export Id" type="bool" values="true,false" v="false" help="ExportId" state="hidden"/>
+        <value n="DEM-SkinSphere" pn="Skin sphere" type="bool" values="true,false" v="false" help="Print the spheres that form the skin of the DEM groups" state="hidden"/>
+        <value n="DEM-ParticleMoment" pn="Particle moment" type="bool" values="true,false" v="false" help="Particle moment" state="hidden"/>
+        <value n="DEM-EulerAngles" pn="Euler angles" type="bool" values="true,false" v="false" help="Euler angles" state="hidden"/>
+        <value n="DEM-RollingResistanceMoment" pn="Rolling resistance moment" type="bool" values="true,false" v="false" help="Rolling resistance moment" state="hidden"/>
     </container>
     <container n="GiDOptions" pn="Options" class="Tab" help="GiD postprocess additional options" open="0" state="hidden">
         <value n="GiDPostMode" pn="Result format" state="hidden" v="Binary" values="Ascii,Binary" help="GiD result file format. Choose Binary or Ascii. Ascii takes more hard disk space, but is human readable"/>
-        <value n="GiDWriteMeshFlag" pn="Write deformed mesh" state="hidden" type="bool"  v="true" help="Write the GiD deformed or undeformed mesh"/>
-        <value n="GiDWriteConditionsFlag" pn="Write conditions" state="hidden" type="bool"  v="true" help="Write the conditions or only element to the GiD result file"/>
-        <value n="GiDWriteParticlesFlag" pn="Write particles" state="hidden" type="bool" v="false" help="Write the particles or only element to the GiD result file"/>
+        <value n="GiDWriteMeshFlag" pn="Write deformed mesh" state="hidden" type="bool" values="true,false" v="true" help="Write the GiD deformed or undeformed mesh"/>
+        <value n="GiDWriteConditionsFlag" pn="Write conditions" state="hidden" type="bool" values="true,false" v="true" help="Write the conditions or only element to the GiD result file"/>
+        <value n="GiDWriteParticlesFlag" pn="Write particles" state="hidden" type="bool" values="true,false" v="false" help="Write the particles or only element to the GiD result file"/>
         <value n="GiDMultiFileFlag" pn="Result file" v="Multiples" values="Multiples,Single" dict="Multiples,Multiple files,Single,Single file" state="hidden" help="Write one GiD result file or multiple files"/>
     </container>
 </container>
