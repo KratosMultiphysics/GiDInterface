@@ -16,7 +16,15 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "BoundingBoxMinX"                  [write::getValue DEM-Boundingbox MinX]
     dict set project_parameters_dict "BoundingBoxMinY"                  [write::getValue DEM-Boundingbox MinY]
     dict set project_parameters_dict "BoundingBoxMinZ"                  [write::getValue DEM-Boundingbox MinZ]
-    
+
+    # dem_inlet_option
+    set numinlets [llength [DEM::write::GetInletGroups]]
+    if {$numinlets == 0} {
+        set dem_inlet_option "false"
+    } else {
+        set dem_inlet_option "true"
+    }
+    dict set project_parameters_dict "dem_inlet_option"                 $dem_inlet_option
     # Gravity
         # Get data
         set gravity_value [write::getValue DEMGravity GravityValue]
@@ -28,26 +36,17 @@ proc DEM::write::getParametersEvent { } {
         # Get value by components
         lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
         # Add data to the parameters_dict
-        
     dict set project_parameters_dict "GravityX"                         $gx
     dict set project_parameters_dict "GravityY"                         $gy
     dict set project_parameters_dict "GravityZ"                         $gz
     
-    # dem_inlet_option
-    set numinlets [llength [DEM::write::GetInletGroups]]
-    if {$numinlets == 0} {
-        set dem_inlet_option "false"
-    } else {
-        set dem_inlet_option "true"
-    }
-    
     # Advanced option are disabled
-    dict set project_parameters_dict "dem_inlet_option"                 $dem_inlet_option
-    dict set project_parameters_dict "EnergyCalculationOption"          false
+    dict set project_parameters_dict "EnergyCalculationOption"          false           
     dict set project_parameters_dict "VelocityTrapOption"               false
     dict set project_parameters_dict "RotationOption"                   true
     dict set project_parameters_dict "CleanIndentationsOption"          true
     dict set project_parameters_dict "RemoveBallsInEmbeddedOption"      true
+    
     dict set project_parameters_dict "DeltaOption"                      "Absolute"
     dict set project_parameters_dict "SearchTolerance"                  0.0
     dict set project_parameters_dict "AmplifiedSearchRadiusExtension"   0.0
@@ -70,9 +69,8 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "ControlTime"                      [write::getValue DEMTimeParameters DEM-ScreenInfoOutput]
     dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue DEMTimeParameters DEM-NeighbourSearchFrequency]
     
-    dict set project_parameters_dict "GraphExportFreq"                  1
-    dict set project_parameters_dict "VelTrapGraphExportFreq"           1
-    
+    dict set project_parameters_dict "GraphExportFreq"                  1e-3
+    dict set project_parameters_dict "VelTrapGraphExportFreq"           1e-3
     # Output timestep
         set output_criterion [write::getValue Results DEM-OTimeStepType]
         if {$output_criterion eq "Detail_priority"} {
@@ -88,7 +86,6 @@ proc DEM::write::getParametersEvent { } {
             }
         }
     dict set project_parameters_dict "OutputTimeStep"                   $output_timestep
-    
     dict set project_parameters_dict "PostBoundingBox"                  [write::getValue DEM-Boundingbox PrintBoundingBox]
     dict set project_parameters_dict "PostDisplacement"                 [write::getValue Results DEM-Displacement]
     dict set project_parameters_dict "PostVelocity"                     [write::getValue Results DEM-PostVel]
