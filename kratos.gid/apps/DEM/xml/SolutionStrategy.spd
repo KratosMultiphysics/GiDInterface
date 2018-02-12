@@ -6,7 +6,7 @@
 		<value n="Cy" pn="Cy" v="0.0" help="Y Vector"/>
 		<value n="Cz" pn="Cz" v="-1.0" help="Z Vector" />
 	</container>
-	<container n="DEM-Boundingbox" pn="Bounding box" un="DEM-Boundingbox" help="Any Discrete Element going outsne of the Bounding Box will be deleted">
+	<container n="DEM-Boundingbox" pn="Bounding box" un="DEM-Boundingbox" help="Any Discrete Element going outsne of the Bounding Box will be deleted" icon="bbox">
         <value n="UseBoundingBox" pn="Bounding box" type="bool" values="true,false" v="false" icon="active.gif" help="Any Discrete element going out of the bounding box will be deleted" update_proc="spdAux::RequestRefresh"/>
         <value n="MaxX" pn="Max X" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Max X"/>
         <value n="MaxY" pn="Max Y" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Max Y"/>
