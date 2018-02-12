@@ -7,7 +7,24 @@
       <parameter n="SEVERITY_OF_WEAR" pn="Severity of Abrasion" type="double" v="0.001" help="Archards abrasion K parameter" />
       <parameter n="IMPACT_WEAR_SEVERITY" pn="Severity of Impact" type="double" v="0.001" help="Archards impact K parameter" />
       <parameter n="BRINELL_HARDNESS" pn="Brinell Hardness (HB)" type="double" v="200.0" help="Brinell hardness value" />
-      
+      <parameter n="ANGULAR_VELOCITY_PERIODIC" pn="Periodic angular velocity" type="bool" v="0">
+        <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+        <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
+        <parameter n="FIXED_MESH_OPTION" pn="Update velocity, not displacements" type="bool" v="false" parent="true" help="If activated, the wall will not move and will just have an imposed velocity field"/>
+        <parameter n="LINEAR_VELOCITY_X" pn="Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITY_Y" pn="Vy" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITY_Z" pn="Vz" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITY_PERIODIC_flag" pn="Periodic linear velocity" type="bool" parent="true" v="false">
+          <parameter n="VELOCITY_PERIOD" pn="Period linear velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+        <parameter n="ANGULAR_VELOCITY_X" pn="ω x" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ANGULAR_VELOCITY_Y" pn="ω y" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ANGULAR_VELOCITY_Z" pn="ω z" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ROTATION_CENTER_X" pn="Center x" type="double" v="0.0" parent="true" />
+        <parameter n="ROTATION_CENTER_Y" pn="Center y" type="double" v="0.0" parent="true" />
+        <parameter n="ROTATION_CENTER_Z" pn="Center z" type="double" v="0.0" parent="true" />
+        <parameter n="ANGULAR_VELOCITY_PERIODIC_flag" pn="Periodic angular velocity" parent="true" type="bool" v="false">
+          <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+      </parameter>
     </inputs>
   </Process>
   <Process n="DEMInletProcess" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
@@ -30,24 +47,6 @@
     <inputs>
       <parameter n="ANGULAR_VELOCITY" pn="ω" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>
       <parameter n="ROTATION_CENTER" pn="Center" type="vector" v="0.0,0.0,0.0" />
-      <parameter n="ANGULAR_VELOCITY_PERIODIC" pn="Periodic angular velocity" type="bool" v="0">
-        <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
-        <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
-        <parameter n="FIXED_MESH_OPTION" pn="Update velocity, not displacements" type="bool" v="false" parent="true" help="If activated, the wall will not move and will just have an imposed velocity field"/>
-        <parameter n="LINEAR_VELOCITY_X" pn="Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="LINEAR_VELOCITY_Y" pn="Vy" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="LINEAR_VELOCITY_Z" pn="Vz" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="LINEAR_VELOCITY_PERIODIC_flag" pn="Periodic linear velocity" type="bool" parent="true" v="false">
-          <parameter n="VELOCITY_PERIOD" pn="Period linear velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
-        <parameter n="ANGULAR_VELOCITY_X" pn="ω x" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
-        <parameter n="ANGULAR_VELOCITY_Y" pn="ω y" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
-        <parameter n="ANGULAR_VELOCITY_Z" pn="ω z" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
-        <parameter n="ROTATION_CENTER_X" pn="Center x" type="double" v="0.0" parent="true" />
-        <parameter n="ROTATION_CENTER_Y" pn="Center y" type="double" v="0.0" parent="true" />
-        <parameter n="ROTATION_CENTER_Z" pn="Center z" type="double" v="0.0" parent="true" />
-        <parameter n="ANGULAR_VELOCITY_PERIODIC_flag" pn="Periodic angular velocity" parent="true" type="bool" v="false">
-          <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
-      </parameter>
     </inputs>
   </Process>
   <Process n="Linear_Velocity_Process" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
