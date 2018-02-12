@@ -183,19 +183,40 @@ proc Fluid::write::writeConditionsMesh { } {
     
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+    set grouped_conditions [list ]
     #W "Conditions $xp1 [$root selectNodes $xp1]"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set groupid [write::GetWriteGroupName $groupid]
         set condid [[$group parent] @n]
-        set ini $FluidConditions($groupid,initial)
-        set end $FluidConditions($groupid,final)
-        #W "$groupid $ini $end"
-        if {$ini == -1} {
-            ::write::writeGroupMesh $condid $groupid "Nodes"
+        if {[[::Model::getCondition $condid] getGroupBy] eq "Condition"} {
+            # Grouped conditions will be written later
+            if {$condid ni $grouped_conditions} {
+                lappend grouped_conditions $condid
+            }
         } else {
-            ::write::writeGroupMesh $condid $groupid "Conditions" [list $ini $end]
+            set ini $FluidConditions($groupid,initial)
+            set end $FluidConditions($groupid,final)
+            #W "$groupid $ini $end"
+            if {$ini == -1} {
+                ::write::writeGroupMesh $condid $groupid "Nodes"
+            } else {
+                ::write::writeGroupMesh $condid $groupid "Conditions" [list $ini $end]
+            }
         }
+    }
+
+    foreach condid $grouped_conditions {
+        set xp "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='$condid'\]/group"
+        set groups_dict [dict create ]
+        foreach group [$root selectNodes $xp] {
+            set groupid [get_domnode_attribute $group n]
+            set ini $FluidConditions($groupid,initial)
+            set end $FluidConditions($groupid,final)
+            dict set groups_dict $groupid what "Conditions"
+            dict set groups_dict $groupid iniend [list $ini $end]
+        } 
+        write::writeConditionGroupedSubmodelParts $condid $groups_dict
     }
 }
 
