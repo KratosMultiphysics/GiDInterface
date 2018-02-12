@@ -63,7 +63,7 @@ proc DEM::write::writeInletMeshes { } {
             set diameter [dict get $inletProperties $groupid DIAMETER]
             write::WriteString "        RADIUS [expr $diameter / 2]"
             write::WriteString "        RANDOM_ORIENTATION 1"
-            write::WriteString "        ORIENTATION \[4\] (0.0, 0.0, 0.0, 1.0)]"
+            write::WriteString "        ORIENTATION \[4\] (0.0, 0.0, 0.0, 1.0)"
             
             foreach {prop value} [dict get $inletProperties $groupid] {
                 if {$prop in $printable} {

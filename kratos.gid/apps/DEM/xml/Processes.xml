@@ -7,9 +7,7 @@
       <parameter n="SEVERITY_OF_WEAR" pn="Severity of Abrasion" type="double" v="0.001" help="Archards abrasion K parameter" />
       <parameter n="IMPACT_WEAR_SEVERITY" pn="Severity of Impact" type="double" v="0.001" help="Archards impact K parameter" />
       <parameter n="BRINELL_HARDNESS" pn="Brinell Hardness (HB)" type="double" v="200.0" help="Brinell hardness value" />
-      <parameter n="ANGULAR_VELOCITY_PERIODIC" pn="Periodic angular velocity" type="bool" v="0">
-        <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
-        <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
+      <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
         <parameter n="FIXED_MESH_OPTION" pn="Update velocity, not displacements" type="bool" v="false" parent="true" help="If activated, the wall will not move and will just have an imposed velocity field"/>
         <parameter n="LINEAR_VELOCITY_X" pn="Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
         <parameter n="LINEAR_VELOCITY_Y" pn="Vy" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
@@ -35,8 +33,7 @@
       <parameter n="MAX_RAND_DEVIATION_ANGLE" pn="Max. random velocity deviation" type="double" v="1.0" units="°" unit_magnitude="Angle"/>
       <parameter n="FLOW_MEASUREMENT" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
         <parameter n="INLET_NUMBER_OF_PARTICLES" pn="Particles per second" parent="Particles" type="double" v="1.0" />
-        <parameter n="INLET_NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="1.0" unit_magnitude="M/T" units="kg/s" />
-      </parameter>
+        <parameter n="INLET_NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="1.0" unit_magnitude="M/T" units="kg/s" /></parameter>
       <parameter n="DIAMETER" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L"/>
       <parameter n="PROBABILITY_DISTRIBUTION" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" pvalues="Normal,Lognormal"/>
       <parameter n="STANDARD_DEVIATION" pn="Standard deviation" type="double" v="0.0" />
