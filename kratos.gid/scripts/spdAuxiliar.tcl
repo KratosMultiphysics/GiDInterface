@@ -2065,15 +2065,17 @@ proc spdAux::RemoveIntervalGroup { parent child } {
 
 proc spdAux::RenameIntervalGroup { oldname newname } {
     variable GroupsEdited
-    set list_of_subgroups [dict get $GroupsEdited $oldname]
-    foreach group $list_of_subgroups {
-        set child [lrange [GidUtils::Split $group "//"] 1 end]
-        set fullname [join [list $newname $child] "//"]
-        RemoveIntervalGroup $oldname $group
-        AddIntervalGroup $newname $fullname
-        gid_groups_conds::rename_group $group $fullname
+    if {[dict exists $GroupsEdited $oldname]} {
+        set list_of_subgroups [dict get $GroupsEdited $oldname]
+        foreach group $list_of_subgroups {
+            set child [lrange [GidUtils::Split $group "//"] 1 end]
+            set fullname [join [list $newname $child] "//"]
+            RemoveIntervalGroup $oldname $group
+            AddIntervalGroup $newname $fullname
+            gid_groups_conds::rename_group $group $fullname
+        }
+        set GroupsEdited [dict remove $GroupsEdited $oldname]
     }
-    set GroupsEdited [dict remove $GroupsEdited $oldname]
 }
 
 
