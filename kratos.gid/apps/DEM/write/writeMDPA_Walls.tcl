@@ -19,6 +19,7 @@ proc DEM::write::WriteMDPAWalls { } {
 }
 
 proc DEM::write::WriteWallProperties { } {
+    set exclusion_list [list "PrescribeMotion_flag"]
     set wall_properties [dict create ]
     set id 0
     set cnd [Model::getCondition "DEM-FEM-Wall"]
@@ -27,8 +28,10 @@ proc DEM::write::WriteWallProperties { } {
         incr i
         write::WriteString "Begin Properties $i"
         foreach {prop obj} [$cnd getAllInputs] {
-            set v [write::getValueByNode [$group selectNodes "./value\[@n='$prop'\]"]]
-            write::WriteString "  $prop $v"
+            if {$prop ni $exclusion_list} {
+                set v [write::getValueByNode [$group selectNodes "./value\[@n='$prop'\]"]]
+                write::WriteString "  $prop $v"
+            }
         }
         write::WriteString "End Properties"
         set groupid [$group @n]
@@ -98,7 +101,7 @@ proc DEM::write::GetConditionsGroups { } {
 proc DEM::write::writeConditionMeshes { } {
     set i 0
     foreach {cond group_list} [GetWallsGroupsListInConditions] {
-        if {$cond ne "DEM-FEM-Wall"} {
+        if {$cond eq "DEM-FEM-Wall"} {
             set cnd [Model::getCondition $cond]
             foreach group $group_list {
                 incr i
@@ -118,25 +121,38 @@ proc DEM::write::writeConditionMeshes { } {
                     # set v [write::getValueByNode [$group_node selectNodes "./value\[@n='$prop'\]"]]
                     # write::WriteString "$prop $v"
                 }
+
                 # Period
-                set periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='Periodic'\]"]]
+                set periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='LINEAR_VELOCITY_PERIODIC_flag'\]"]]
                 if {[write::isBooleanTrue $periodic]} {
-                    set period [write::getValueByNode [$group_node selectNodes "./value\[@n='PERIOD'\]"]]
+                    set period [write::getValueByNode [$group_node selectNodes "./value\[@n='VELOCITY_PERIOD'\]"]]
                                       
                 } {set period 0.0}
-                write::WriteString "    ${cond}_PERIOD $period"  
+                write::WriteString "    VELOCITY_PERIOD $period"  
+
+                # Angular Period
+                set angular_periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='ANGULAR_VELOCITY_PERIODIC_flag'\]"]]
+                if {[write::isBooleanTrue $angular_periodic]} {
+                    set angular_period [write::getValueByNode [$group_node selectNodes "./value\[@n='ANGULAR_VELOCITY_PERIOD'\]"]]
+                                      
+                } {set angular_period 0.0}
+                write::WriteString "    ANGULAR_VELOCITY_PERIOD $angular_period"  
 
                 # Interval
-                set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
-                lassign [write::getInterval $interval] ini end
-                if {![string is double $ini]} {
-                    set ini [write::getValue DEMTimeParameters StartTime]
-                }
-                write::WriteString "    ${cond}_START_TIME $ini" 
-                if {![string is double $end]} {
-                    set end [write::getValue DEMTimeParameters EndTime]
-                }
-                write::WriteString "    ${cond}_STOP_TIME $end" 
+                # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
+                # lassign [write::getInterval $interval] ini end
+                # if {![string is double $ini]} {
+                #     set ini [write::getValue DEMTimeParameters StartTime]
+                # }
+                # write::WriteString "    ${cond}_START_TIME $ini" 
+                # if {![string is double $end]} {
+                #     set end [write::getValue DEMTimeParameters EndTime]
+                # }
+                # write::WriteString "    ${cond}_STOP_TIME $end"  
+                write::WriteString "    VELOCITY_START_TIME 0.0"
+                write::WriteString "    VELOCITY_STOP_TIME 10100000"
+                write::WriteString "    ANGULAR_VELOCITY_START_TIME 0.0"
+                write::WriteString "    ANGULAR_VELOCITY_STOP_TIME 10100000.0"
 
                 # Hardcoded
                 write::WriteString "    FIXED_MESH_OPTION 0"
