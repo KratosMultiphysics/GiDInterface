@@ -394,9 +394,7 @@ proc Model::CheckElementOutputState {elemsactive paramName} {
 
 proc Model::CheckElementsNodalCondition {conditionId elemnames {restrictions "" }} {
     set ret 0
-    if {[llength $elemnames] < 1} {
-        #
-    } else {
+    if {[llength $elemnames] > 0} {
         foreach eid $elemnames {
             if {$eid ne ""} {
                 set elem [getElement $eid]
@@ -414,9 +412,9 @@ proc Model::CheckElementsNodalCondition {conditionId elemnames {restrictions "" 
             }
         }
     }
-    
     return $ret
 }
+
 proc Model::CheckNodalConditionOutputState {conditionId outputId {restrictions "" }} {
     set ret 0
     #W "Con $conditionId out $outputId"
