@@ -2,11 +2,15 @@
 <ProcessList>
   <Process n="DEM-FEM-Wall-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
     <inputs>
-      <parameter n="WALL_FRICTION" pn="Friction coefficient" type="double" v="0.1" help="Coulomb friction coefficient" />
-      <parameter n="COMPUTE_WEAR" pn="Compute Wear" type="double" v="0"/>
-      <parameter n="SEVERITY_OF_WEAR" pn="Severity of Abrasion" type="double" v="0.001" help="Archards abrasion K parameter" />
-      <parameter n="IMPACT_WEAR_SEVERITY" pn="Severity of Impact" type="double" v="0.001" help="Archards impact K parameter" />
-      <parameter n="BRINELL_HARDNESS" pn="Brinell Hardness (HB)" type="double" v="200.0" help="Brinell hardness value" />
+      <parameter n="WALL_FRICTION" pn="Friction coefficient" type="double" v="0.58" help="Coulomb friction coefficient" />
+      <parameter n="WALL_COHESION" pn="Wall cohesion" type="double" v="0.0" unit_magnitude="P" units="Pa" help="JKR or DMT energy surface"/>
+      <parameter n="COMPUTE_WEAR" pn="Compute wear" type="bool" v="false" help="If activated, wear will be computed on this wall. It can increase computation time">
+        <parameter n="SEVERITY_OF_WEAR" pn="Severity of abrasion" parent="true" type="double" v="0.001" help="Archards abrasion K parameter" />
+        <parameter n="IMPACT_WEAR_SEVERITY" pn="Severity of impact" parent="true" type="double" v="0.001" help="Archards impact K parameter" />
+        <parameter n="BRINELL_HARDNESS" pn="Brinell Hardness (HB)" parent="true" type="double" v="200.0" help="Brinell hardness value" /></parameter>
+      <parameter n="Rigid_structure" pn="Rigid structure" type="bool" v="false" help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus">
+        <parameter n="YOUNG_MODULUS" pn="Young modulus" type="double" v="1e20" parent="true" unit_magnitude="P" units="Pa"/>
+        <parameter n="POISSON_RATIO" pn="Poisson ratio" type="double" v="0.25" parent="true" /></parameter>
       <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
         <parameter n="FIXED_MESH_OPTION" pn="Update velocity, not displacements" type="bool" v="false" parent="true" help="If activated, the wall will not move and will just have an imposed velocity field"/>
         <parameter n="LINEAR_VELOCITY_X" pn="Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
