@@ -1027,12 +1027,14 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
         set groupId [::write::getMeshId $cid $groupName]
+        set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
+            set grouping_by [[::Model::getCondition $cid] getGroupBy]
         } {
             set condition [::Model::getNodalConditionbyId $cid]
         }
-        if {[[::Model::getCondition $cid] getGroupBy] eq "Condition"} {
+        if {$grouping_by eq "Condition"} {
             # Grouped conditions will be processed later
             if {$cid ni $grouped_conditions} {
                 lappend grouped_conditions $cid
