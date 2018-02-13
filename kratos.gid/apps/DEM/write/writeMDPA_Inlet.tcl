@@ -100,9 +100,6 @@ proc DEM::write::writeMaterialsInlet { } {
     # WV inletProperties
 
     set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO PARTICLE_FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
-    
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties\n"
 
     foreach group [dict keys $inletProperties] {
         write::WriteString "Begin Properties [dict get $inletProperties $group MID] // Inlet group: [write::GetWriteGroupName $group]"

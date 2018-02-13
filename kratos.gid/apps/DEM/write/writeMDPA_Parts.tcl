@@ -60,10 +60,7 @@ proc DEM::write::writeMaterialsParts { } {
     # WV inletProperties
 
     set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO PARTICLE_FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
-    
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties\n"
-
+ 
     foreach group [dict keys $partsProperties] {
         write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
         dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb

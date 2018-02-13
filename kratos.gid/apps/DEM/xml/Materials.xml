@@ -5,7 +5,7 @@
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500.0" type="double"  help="Density of the material (not bulk density)"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e5" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
-      <parameter n="PARTICLE_FRICTION" pn="Coefficient of friction" v="0.2" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
+      <parameter n="PARTICLE_FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
       <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>

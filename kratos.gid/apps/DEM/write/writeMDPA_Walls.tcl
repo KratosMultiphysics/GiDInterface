@@ -2,10 +2,7 @@ proc DEM::write::WriteMDPAWalls { } {
     # Headers
     write::writeModelPartData
     
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-    write::WriteString ""
-    
+    # Material
     set wall_properties [WriteWallProperties]
     
     # Nodal coordinates (only for Walls <inefficient> )
