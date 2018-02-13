@@ -1,5 +1,6 @@
 namespace eval DEM::write {
     variable writeAttributes
+    variable inletProperties
 }
 
 proc DEM::write::Init { } {    
@@ -14,6 +15,10 @@ proc DEM::write::Init { } {
     SetAttribute nodal_conditions_un DEMNodalConditions
     SetAttribute materials_file "DEMMaterials.json"
     SetAttribute main_script_file "KratosDEM.py"
+
+    
+    variable inletProperties
+    set inletProperties [dict create]
 }
 
 # Attributes block
@@ -57,21 +62,23 @@ proc DEM::write::writeModelPartEvent { } {
     write::initWriteConfiguration $writeAttributes
     
     # MDPA Parts
+    write::CloseFile
+    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM.mdpa"
     WriteMDPAParts
     write::CloseFile
 
     # MDPA Walls
-    write::OpenFile "[file tail [GiD_Info project ModelName]]_FEM_boundary.mdpa"
+    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_FEM_boundary.mdpa"
     WriteMDPAWalls
     write::CloseFile
 
     # MDPA Inlet
-    write::OpenFile "[file tail [GiD_Info project ModelName]]_Inlet.mdpa"
+    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_Inlet.mdpa"
     WriteMDPAInlet
     write::CloseFile
 
     # MDPA Walls
-    write::OpenFile "[file tail [GiD_Info project ModelName]]_Clusters.mdpa"
+    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_Clusters.mdpa"
     WriteMDPAClusters
     write::CloseFile
 }
@@ -81,6 +88,7 @@ proc DEM::write::writeCustomFilesEvent { } {
     write::CopyFileIntoModel [file join "python" $orig_name ]
     
     write::RenameFileInModel $orig_name "MainKratos.py"
+    write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
 }
 
 DEM::write::Init

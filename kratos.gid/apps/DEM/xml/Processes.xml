@@ -2,16 +2,59 @@
 <ProcessList>
   <Process n="DEM-FEM-Wall-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
     <inputs>
-      <parameter n="fixed_wall" pn="Update velocity, not displacements" type="bool" v="No" values="Yes,No" help="If activated, the wall will not move and will just have an imposed velocity field"/>
-      <parameter n="friction_coeff" pn="Friction angle (deg)" type="double" v="30.0" help="Coulomb friction coefficient" />
-      <parameter n="CohesiveWall" pn="Cohesive wall" type="bool" v="No" values="Yes,No" help="Specify if the wall presents a cohesive behaviour" />
-      <parameter n="DEM_Wear" pn="Compute Wear" type="bool" v="No" values="Yes,No" help="If activated, wear will be computed on this wall. It can increase computation time" />
-      <parameter n="K_Abrasion" pn="Severity of Abrasion" type="double" v="0.001" help="Archards abrasion K parameter" />
-      <parameter n="K_Impact" pn="Severity of Impact" type="double" v="0.001" help="Archards impact K parameter" />
-      <parameter n="H_Brinell" pn="Brinell Hardness (HB)" type="double" v="200.0" help="Brinell hardness value" />
-      <parameter n="RigidPlane" pn="Rigid Structure" type="bool" v="No" values="Yes,No" help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus" />
-      <parameter n="YoungModulus" pn="Young Modulus (Pa)" type="double" dv="1e20" />
-      <parameter n="PoissonRatio" pn="Poisson Ratio" type="double" dv="0.25" />
+      <parameter n="WALL_FRICTION" pn="Friction coefficient" type="double" v="0.58" help="Coulomb friction coefficient" />
+      <parameter n="WALL_COHESION" pn="Wall cohesion" type="double" v="0.0" unit_magnitude="P" units="Pa" help="JKR or DMT energy surface"/>
+      <parameter n="COMPUTE_WEAR" pn="Compute wear" type="bool" v="false" help="If activated, wear will be computed on this wall. It can increase computation time">
+        <parameter n="SEVERITY_OF_WEAR" pn="Severity of abrasion" parent="true" type="double" v="0.001" help="Archards abrasion K parameter" />
+        <parameter n="IMPACT_WEAR_SEVERITY" pn="Severity of impact" parent="true" type="double" v="0.001" help="Archards impact K parameter" />
+        <parameter n="BRINELL_HARDNESS" pn="Brinell Hardness (HB)" parent="true" type="double" v="200.0" help="Brinell hardness value" /></parameter>
+      <parameter n="Rigid_structure" pn="Rigid structure" type="bool" v="false" help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus">
+        <parameter n="YOUNG_MODULUS" pn="Young modulus" type="double" v="1e20" parent="true" unit_magnitude="P" units="Pa"/>
+        <parameter n="POISSON_RATIO" pn="Poisson ratio" type="double" v="0.25" parent="true" /></parameter>
+      <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
+        <parameter n="FIXED_MESH_OPTION" pn="Update velocity, not displacements" type="bool" v="false" parent="true" help="If activated, the wall will not move and will just have an imposed velocity field"/>
+        <parameter n="LINEAR_VELOCITY_X" pn="Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITY_Y" pn="Vy" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITY_Z" pn="Vz" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="LINEAR_VELOCITY_PERIODIC_flag" pn="Periodic linear velocity" type="bool" parent="true" v="false">
+          <parameter n="VELOCITY_PERIOD" pn="Period linear velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+        <parameter n="ANGULAR_VELOCITY_X" pn="ω x" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ANGULAR_VELOCITY_Y" pn="ω y" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ANGULAR_VELOCITY_Z" pn="ω z" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="ROTATION_CENTER_X" pn="Center x" type="double" v="0.0" parent="true" />
+        <parameter n="ROTATION_CENTER_Y" pn="Center y" type="double" v="0.0" parent="true" />
+        <parameter n="ROTATION_CENTER_Z" pn="Center z" type="double" v="0.0" parent="true" />
+        <parameter n="ANGULAR_VELOCITY_PERIODIC_flag" pn="Periodic angular velocity" parent="true" type="bool" v="false">
+          <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+      </parameter>
+    </inputs>
+  </Process>
+  <Process n="DEMInletProcess" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
+    <inputs>
+      <parameter n="ELEMENT_TYPE" pn="Element type" type="combo" v="SphericParticle3D" values="SphericParticle3D" pvalues="Sphere"/>
+      <parameter n="VELOCITY_MODULUS" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity"/>
+      <parameter n="DIRECTION_VECTOR" pn="Direction vector" type="vector" v="1.0,0.0,0.0" />
+      <parameter n="MAX_RAND_DEVIATION_ANGLE" pn="Max. random velocity deviation" type="double" v="1.0" units="°" unit_magnitude="Angle"/>
+      <parameter n="FLOW_MEASUREMENT" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
+        <parameter n="INLET_NUMBER_OF_PARTICLES" pn="Particles per second" parent="Particles" type="double" v="200.0" />
+        <parameter n="INLET_NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" /></parameter>
+      <parameter n="DIAMETER" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L"/>
+      <parameter n="PROBABILITY_DISTRIBUTION" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" pvalues="Normal,Lognormal"/>
+      <parameter n="STANDARD_DEVIATION" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L"/>
+      <parameter n="ConstitutiveLaw" special_command="spdAux::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>
+    </inputs>
+  </Process>
+  <Process n="Angular_Velocity_Process" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
+    <inputs>
+      <parameter n="ANGULAR_VELOCITY" pn="ω" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>
+      <parameter n="ROTATION_CENTER" pn="Center" type="vector" v="0.0,0.0,0.0" />
+    </inputs>
+  </Process>
+  <Process n="Linear_Velocity_Process" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
+    <inputs>
+      <parameter n="LINEAR_VELOCITY" pn="V" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>
+      <parameter n="LINEAR_VELOCITY_PERIODIC" pn="Periodic linear velocity" type="bool" v="0">
+        <parameter n="LINEAR_VELOCITY_PERIOD" pn="Period linear velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
     </inputs>
   </Process>
 </ProcessList>

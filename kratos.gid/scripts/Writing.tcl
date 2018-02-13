@@ -186,11 +186,13 @@ proc write::writeTables { } {
     WriteString ""
 }
 
-proc write::writeMaterials { {appid ""}} {
+proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
     variable mat_dict
     variable current_mdpa_indent_level
     
-    set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+    set exclusionList [list "MID" "APPID" "Material" "Element"]
+    if {$const_law_write_name eq ""} {lappend exclusionList "ConstitutiveLaw"}
+
     # We print all the material data directly from the saved dictionary
     foreach material [dict keys $mat_dict] {
         set matapp [dict get $mat_dict $material APPID]
@@ -201,7 +203,8 @@ proc write::writeMaterials { {appid ""}} {
             set s [mdpaIndent]
             foreach prop [dict keys [dict get $mat_dict $material] ] {
                 if {$prop ni $exclusionList} {
-                    WriteString "${s}$prop [dict get $mat_dict $material $prop] "
+                    set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
+                    WriteString "${s}$propname [dict get $mat_dict $material $prop] "
                 }
             }
             incr current_mdpa_indent_level -1
@@ -242,7 +245,7 @@ proc write::writeNodalCoordinates { } {
     WriteString "\n"
 }
 
-proc write::processMaterials { } {
+proc write::processMaterials { {alt_path ""} } {
     variable mat_dict
     
     set parts [GetConfigurationAttribute parts_un]
@@ -250,6 +253,9 @@ proc write::processMaterials { } {
     set root [customlib::GetBaseRoot]
     
     set xp1 "[spdAux::getRoute $parts]/group"
+    if {$alt_path ne ""} {
+        set xp1 $alt_path
+    }
     set xp2 ".//value\[@n='Material']"
     
     set material_number [llength [dict keys $mat_dict] ]

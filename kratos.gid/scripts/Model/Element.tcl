@@ -371,7 +371,10 @@ proc Model::CheckElemState {elid inputid} {
 
 proc Model::CheckElemParamState {node} {
     set id [$node getAttribute n]
-    set elem [get_domnode_attribute [[$node parent] selectNodes "./value\[@n='Element'\]"] v]
+    set elem ""
+    catch {
+        set elem [get_domnode_attribute [[$node parent] selectNodes "./value\[@n='Element'\]"] v]
+    }
     if {$elem eq ""} {return 0}
 
     return [CheckElemState $elem $id]
