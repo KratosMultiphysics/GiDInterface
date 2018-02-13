@@ -32,11 +32,11 @@
       <parameter n="DIRECTION_VECTOR" pn="Direction vector" type="vector" v="1.0,0.0,0.0" />
       <parameter n="MAX_RAND_DEVIATION_ANGLE" pn="Max. random velocity deviation" type="double" v="1.0" units="°" unit_magnitude="Angle"/>
       <parameter n="FLOW_MEASUREMENT" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
-        <parameter n="INLET_NUMBER_OF_PARTICLES" pn="Particles per second" parent="Particles" type="double" v="1.0" />
-        <parameter n="INLET_NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="1.0" unit_magnitude="M/T" units="kg/s" /></parameter>
+        <parameter n="INLET_NUMBER_OF_PARTICLES" pn="Particles per second" parent="Particles" type="double" v="200.0" />
+        <parameter n="INLET_NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" /></parameter>
       <parameter n="DIAMETER" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L"/>
       <parameter n="PROBABILITY_DISTRIBUTION" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" pvalues="Normal,Lognormal"/>
-      <parameter n="STANDARD_DEVIATION" pn="Standard deviation" type="double" v="0.0" />
+      <parameter n="STANDARD_DEVIATION" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L"/>
       <parameter n="ConstitutiveLaw" special_command="spdAux::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>
     </inputs>
   </Process>

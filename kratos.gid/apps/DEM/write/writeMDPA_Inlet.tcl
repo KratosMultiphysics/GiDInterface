@@ -23,7 +23,7 @@ proc DEM::write::GetInletGroups { } {
 
 proc DEM::write::writeInletMeshes { } {
     variable inletProperties
-    set printable [list PROBABILITY_DISTRIBUTION MAX_RAND_DEVIATION_ANGLE ELEMENT_TYPE STANDARD_DEVIATION INLET_NUMBER_OF_PARTICLES]
+    
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
         set gtn [write::GetConfigurationAttribute groups_type_name]
@@ -44,7 +44,8 @@ proc DEM::write::writeInletMeshes { } {
             write::WriteString "        PROPERTIES_ID [dict get $inletProperties $groupid MID]"
             write::WriteString "        RIGID_BODY_MOTION 0"
             write::WriteString "        IDENTIFIER $mid"
-            write::WriteString "        INJECTOR_ELEMENT_TYPE SphericParticle3D"
+            write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid ELEMENT_TYPE]"
+            write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid ELEMENT_TYPE]"
             write::WriteString "        CONTAINS_CLUSTERS 0"
             set velocity [dict get $inletProperties $groupid VELOCITY_MODULUS]
             set velocity_X [dict get $inletProperties $groupid DIRECTION_VECTORX]
@@ -53,8 +54,20 @@ proc DEM::write::writeInletMeshes { } {
             lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
             lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
             write::WriteString "        VELOCITY \[3\] ($vx, $vy, $vz)"
-            write::WriteString "        IMPOSED_MASS_FLOW_OPTION 0"
-            write::WriteString "        MASS_FLOW 0.5"
+            write::WriteString "        MAX_RAND_DEVIATION_ANGLE [dict get $inletProperties $groupid DIRECTION_VECTORX]"
+            set type_of_measurement [dict get $inletProperties $groupid FLOW_MEASUREMENT]
+            if {$type_of_measurement eq "Kilograms"} {
+                set number_of_particles 200.0
+                set mass_flow_option 1
+                set mass_flow [dict get $inletProperties $groupid INLET_NUMBER_OF_KILOGRAMS]
+            } else {
+                set number_of_particles [dict get $inletProperties $groupid INLET_NUMBER_OF_PARTICLES]
+                set mass_flow_option 0
+                set mass_flow 0.5
+            }   
+            write::WriteString "        INLET_NUMBER_OF_PARTICLES $number_of_particles"
+            write::WriteString "        IMPOSED_MASS_FLOW_OPTION $mass_flow_option"
+            write::WriteString "        MASS_FLOW $mass_flow"
             set interval [dict get $inletProperties $groupid Interval]
             lassign [write::getInterval $interval] ini end
             write::WriteString "        INLET_START_TIME $ini"
@@ -62,25 +75,19 @@ proc DEM::write::writeInletMeshes { } {
             write::WriteString "        INLET_STOP_TIME $end"
             set diameter [dict get $inletProperties $groupid DIAMETER]
             write::WriteString "        RADIUS [expr $diameter / 2]"
+            write::WriteString "        PROBABILITY_DISTRIBUTION [dict get $inletProperties $groupid PROBABILITY_DISTRIBUTION]"
+            write::WriteString "        STANDARD_DEVIATION [dict get $inletProperties $groupid STANDARD_DEVIATION]"
             write::WriteString "        RANDOM_ORIENTATION 1"
             write::WriteString "        ORIENTATION \[4\] (0.0, 0.0, 0.0, 1.0)"
             
-            foreach {prop value} [dict get $inletProperties $groupid] {
-                if {$prop in $printable} {
-                    write::WriteString "        $prop $value"
-                }
-            }
             write::WriteString "    End ${gtn}Data"
             write::WriteString "    Begin ${gtn}Nodes"
             GiD_WriteCalculationFile nodes -sorted $gdict
             write::WriteString "    End ${gtn}Nodes"
             write::WriteString "End $gtn"
         }
-
     }
 }
-
-
 
 proc DEM::write::writeMaterials { } {
     variable inletProperties
@@ -92,8 +99,7 @@ proc DEM::write::writeMaterials { } {
     set ::write::mat_dict $old_mat_dict
     # WV inletProperties
 
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO PARTICLE_FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
-    
+    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO PARTICLE_FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
     
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties\n"
@@ -102,7 +108,6 @@ proc DEM::write::writeMaterials { } {
         write::WriteString "Begin Properties [dict get $inletProperties $group MID] // Inlet group: [write::GetWriteGroupName $group]"
         dict set inletProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
         dict set inletProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
-        dict set inletProperties $group PARTICLE_FRICTION 0.5
         foreach {prop val} [dict get $inletProperties $group] {
             if {$prop in $printable} {
                 write::WriteString "    $prop $val"

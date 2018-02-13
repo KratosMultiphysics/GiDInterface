@@ -6,10 +6,12 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e5" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
       <parameter n="PARTICLE_FRICTION" pn="Coefficient of friction" v="0.2" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
+      <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
-    </inputs>
+      <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" type="double" help="Particle sphericity"/>
+	  </inputs>
   </Material>
 </Materials>
