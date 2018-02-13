@@ -199,7 +199,10 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
 
     # Fluid Inlet
-    set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet Inlet]
+    GiD_Groups create "Inlet//Total"
+    GiD_Groups edit state "Inlet//Total" hidden
+    spdAux::AddIntervalGroup Inlet "Inlet//Total"
+    set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//Total"]
     $inletNode setAttribute ov $condtype
     set props [list ByFunction Yes function_modulus {0.1214*(1-cos(0.1*pi*t))*y*(1-y) if t<10 else 0.2428*y*(1-y)} direction automatic_inwards_normal Interval Total]
     foreach {prop val} $props {

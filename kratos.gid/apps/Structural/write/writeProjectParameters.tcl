@@ -32,7 +32,7 @@ proc Structural::write::getOldParametersDict { } {
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
 
-    } elseif {$solutiontype eq "Dynamic"} {
+    } else {
         dict set problemDataDict time_step [write::getValue STTimeParameters DeltaTime]
         dict set problemDataDict start_time [write::getValue STTimeParameters StartTime]
         dict set problemDataDict end_time [write::getValue STTimeParameters EndTime]
@@ -47,7 +47,9 @@ proc Structural::write::getOldParametersDict { } {
     set currentStrategyId [write::getValue STSolStrat]
     set currentStrategyId [write::getValue STSolStrat]
     # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
-    dict set solverSettingsDict solver_type $solutiontype
+    set solver_type_name $solutiontype
+    if {$solutiontype eq "Quasi-static"} {set solver_type_name "Static"}
+    dict set solverSettingsDict solver_type $solver_type_name
     #~ dict set solverSettingsDict domain_size [expr $nDim]
     dict set solverSettingsDict echo_level $echo_level
     dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
@@ -96,19 +98,19 @@ proc Structural::write::getOldParametersDict { } {
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
-    # Restart options
-    set restartDict [dict create ]
-    dict set restartDict SaveRestart false
-    dict set restartDict RestartFrequency 0
-    dict set restartDict LoadRestart false
-    dict set restartDict Restart_Step 0
-    dict set projectParametersDict restart_options $restartDict
+    # # Restart options
+    # set restartDict [dict create ]
+    # dict set restartDict SaveRestart false
+    # dict set restartDict RestartFrequency 0
+    # dict set restartDict LoadRestart false
+    # dict set restartDict Restart_Step 0
+    # dict set projectParametersDict restart_options $restartDict
 
-    # Constraints data
-    set contraintsDict [dict create ]
-    dict set contraintsDict incremental_load false
-    dict set contraintsDict incremental_displacement false
-    dict set projectParametersDict constraints_data $contraintsDict
+    # # Constraints data
+    # set contraintsDict [dict create ]
+    # dict set contraintsDict incremental_load false
+    # dict set contraintsDict incremental_displacement false
+    # dict set projectParametersDict constraints_data $contraintsDict
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {

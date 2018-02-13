@@ -169,13 +169,14 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
     set inlets [list inlet1 0 1 "6*y*(1-y)*sin(pi*t*0.5)" inlet2 1 End "6*y*(1-y)"]
     ErasePreviousIntervals
-    foreach {inlet_name ini end function} $inlets {
-        spdAux::CreateInterval $inlet_name $ini $end
-        GiD_Groups create "Inlet//$inlet_name"
-        spdAux::AddIntervalGroup Inlet "Inlet//$inlet_name"
-        set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//$inlet_name"]
+    foreach {interval_name ini end function} $inlets {
+        spdAux::CreateInterval $interval_name $ini $end
+        GiD_Groups create "Inlet//$interval_name"
+        GiD_Groups edit state "Inlet//$interval_name" hidden
+        spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
+        set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//$interval_name"]
         $inletNode setAttribute ov $condtype
-        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $inlet_name]
+        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
         foreach {prop val} $props {
              set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {

@@ -418,6 +418,36 @@
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="MembraneElement3D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="MembraneElement3D4N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="StrainSize" value="3"/>
+      <filter field="HybridType" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT" />
+      <NodalCondition n="VELOCITY" />
+      <NodalCondition n="ACCELERATION" />
+    </NodalConditions>
+    <inputs>
+      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
+    </inputs>
+    <outputs>
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
+    </outputs>
+  </ElementItem>
+
+  <ElementItem n="PrestressedMembraneElement" pn="Prestress Membrane" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
+               help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane"  AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="PreStressMembraneElement3D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="PreStressMembraneElement3D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -441,143 +471,15 @@
   </ElementItem>
 
   <!--shell elements-->
-  <!--small displacements-->
-  <ElementItem n="TriShellThinElement" pn="Thin triangular shell" ImplementedInFile="shell_thin_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
-               help="This element implements a triangular element for thin shells in a small displacements approach" ElementType="Shell" RotationDofs="True"
-                AnalysisType="linear,non_linear">
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="ShellThinElement3D3N"/>
-    </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress"/>
-      <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT" />
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-    <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-    </inputs>
-    <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
-    </outputs>
-  </ElementItem>
-
-  <ElementItem n="QuadShellThickElement" pn="Thick quadrilateral shell" ImplementedInFile="shell_thick_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
-               help="This element implements a quadrilateral element for thick shells in a small displacements approach" ElementType="Shell" RotationDofs="True"
-                AnalysisType="linear,non_linear">
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThickElement3D4N"/>
-    </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress"/>
-      <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT" />
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-    <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-    </inputs>
-    <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
-    </outputs>
-  </ElementItem>
-
   <!--large displacements-->
-  <ElementItem n="TriShellThinCorotationalElement" pn="Thin corotational triangular shell" ImplementedInFile="shell_thin_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="ShellThinCorotationalElement" pn="Thin corotational shell" ImplementedInFile="shell_thin_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
-               help="This element implements a triangular corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
+               help="This element implements a corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
                 AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="ShellThinElementCorotational3D3N"/>
-    </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress"/>
-      <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT"/>
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION" />
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-    <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-    </inputs>
-    <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
-    </outputs>
-  </ElementItem>
-
-  <ElementItem n="QuadShellThinCorotationalElement" pn="Thin corotational quadrilateral shell" ImplementedInFile="shell_thin_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
-               help="This element implements a quadrilateral corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
-                AnalysisType="linear,non_linear">
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
       <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThinElementCorotational3D4N"/>
-    </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="PlaneStress"/>
-      <filter field="Dimension" value="3D"/>
-      <filter field="StrainSize" value="6"/>
-      <filter field="HybridType" value="D-R"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT"/>
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION" />
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-    <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-    </inputs>
-    <outputs>
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
-    </outputs>
-  </ElementItem>
-
-  <ElementItem n="TriShellThickCorotationalElement" pn="Thick corotational triangular shell" ImplementedInFile="shell_thick_element_3D3N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
-               help="This element implements a triangular corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
-                AnalysisType="linear,non_linear">
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="ShellThickElementCorotational3D3N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -603,12 +505,13 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="QuadShellThickCorotationalElement" pn="Thick corotational quadrilateral shell" ImplementedInFile="shell_thick_element_3D4N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="ShellThickCorotationalElement" pn="Thick corotational shell" ImplementedInFile="shell_thick_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
-               help="This element implements a quadrilateral corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
+               help="This element implements a corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
                 AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="ShellThickElementCorotational3D3N"/>
       <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThickElementCorotational3D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->

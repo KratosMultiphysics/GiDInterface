@@ -186,8 +186,16 @@ proc Fluid::write::getBoundaryConditionMeshId {} {
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "True"} {
-            set gname [::write::getMeshId $cid $groupName]
-            if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
+            if {[[::Model::getCondition $cid] getGroupBy] eq "Condition"} {
+                # Grouped conditions have its own submodelpart
+                if {$cid ni $listOfBCGroups} {
+                    lappend listOfBCGroups $cid
+                }
+            } else {
+                set gname [::write::getMeshId $cid $groupName]
+                if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
+            }
+            
         }
     }
 

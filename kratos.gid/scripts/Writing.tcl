@@ -8,12 +8,14 @@ namespace eval write {
     variable meshes
     variable MDPA_loop_control
     variable current_configuration
+    variable current_mdpa_indent_level
 }
 
 proc write::Init { } {
     variable mat_dict
     variable meshes
     variable current_configuration
+    variable current_mdpa_indent_level
     
     set current_configuration [dict create]
     
@@ -29,6 +31,8 @@ proc write::Init { } {
     
     variable MDPA_loop_control
     set MDPA_loop_control 0
+
+    set current_mdpa_indent_level 0
     
 }
 
@@ -166,24 +170,25 @@ proc write::writeAppMDPA {appid} {
 
 proc write::writeModelPartData { } {
     # Write the model part data
-    
-    WriteString "Begin ModelPartData"
-    WriteString "//  VARIABLE_NAME value"
-    WriteString "End ModelPartData"
+    set s [mdpaIndent]
+    WriteString "${s}Begin ModelPartData"
+    WriteString "${s}//  VARIABLE_NAME value"
+    WriteString "${s}End ModelPartData"
     WriteString ""
 }
 
 proc write::writeTables { } {
     # Write the model part data
-    
-    WriteString "Begin Table"
-    WriteString "Table content"
-    WriteString "End Tablee"
+    set s [mdpaIndent]
+    WriteString "${s}Begin Table"
+    WriteString "${s}Table content"
+    WriteString "${s}End Tablee"
     WriteString ""
 }
 
 proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
     variable mat_dict
+    variable current_mdpa_indent_level
     
     set exclusionList [list "MID" "APPID" "Material" "Element"]
     if {$const_law_write_name eq ""} {lappend exclusionList "ConstitutiveLaw"}
@@ -192,14 +197,18 @@ proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
     foreach material [dict keys $mat_dict] {
         set matapp [dict get $mat_dict $material APPID]
         if {$appid eq "" || $matapp in $appid} {
-            WriteString "Begin Properties [dict get $mat_dict $material MID]"
+            set s [mdpaIndent]
+            WriteString "${s}Begin Properties [dict get $mat_dict $material MID]"
+            incr current_mdpa_indent_level
+            set s [mdpaIndent]
             foreach prop [dict keys [dict get $mat_dict $material] ] {
                 if {$prop ni $exclusionList} {
                     set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
-                    WriteString "    $propname [dict get $mat_dict $material $prop] "
+                    WriteString "${s}$propname [dict get $mat_dict $material $prop] "
                 }
             }
-            WriteString "End Properties"
+            incr current_mdpa_indent_level -1
+            WriteString "${s}End Properties"
             WriteString ""
         }
     }
@@ -207,12 +216,15 @@ proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
 
 proc write::writeNodalCoordinatesOnGroups { groups } {
     set formats [dict create]
+    set s [mdpaIndent]
+    WriteString "${s}Begin Nodes"
+    incr ::write::current_mdpa_indent_level
     foreach group $groups {
-        dict set formats $group "%5d %14.5f %14.5f %14.5f\n"
+        dict set formats $group "${s}%5d %14.5f %14.5f %14.5f\n"
     }
-    WriteString "Begin Nodes"
     GiD_WriteCalculationFile nodes $formats
-    WriteString "End Nodes"
+    incr ::write::current_mdpa_indent_level -1
+    WriteString "${s}End Nodes"
     WriteString "\n"
 }
 proc write::writeNodalCoordinatesOnParts { } {
@@ -224,10 +236,12 @@ proc write::writeNodalCoordinates { } {
     # Begin Nodes
     # // id          X        Y        Z
     # End Nodes
-    
-    WriteString "Begin Nodes"
-    customlib::WriteCoordinates "%5d %14.10f %14.10f %14.10f\n"
-    WriteString "End Nodes"
+    set s [mdpaIndent]
+    WriteString "${s}Begin Nodes"
+    incr ::write::current_mdpa_indent_level
+    customlib::WriteCoordinates "${s}%5d %14.10f %14.10f %14.10f\n"
+    incr ::write::current_mdpa_indent_level -1
+    WriteString "${s}End Nodes"
     WriteString "\n"
 }
 
@@ -309,15 +323,18 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
     if {[$gNode hasAttribute ov]} {set ov [get_domnode_attribute $gNode ov] } {set ov [get_domnode_attribute [$gNode parent] ov] }
     lassign [getEtype $ov $group] etype nnodes
     if {$nnodes ne ""} {
-        set formats [GetFormatDict $group $mid $nnodes]
         if {$etype ne "none"} {
             set elem [::Model::getElement $kelemtype]
             set top [$elem getTopologyFeature $etype $nnodes]
             if {$top ne ""} {
                 set kratosElemName [$top getKratosName]
-                WriteString "Begin Elements $kratosElemName// GUI group identifier: $group"
+                set s [mdpaIndent]
+                WriteString "${s}Begin Elements $kratosElemName// GUI group identifier: $group"
+                incr ::write::current_mdpa_indent_level
+                set formats [GetFormatDict $group $mid $nnodes]
                 GiD_WriteCalculationFile connectivities $formats
-                WriteString "End Elements"
+                incr ::write::current_mdpa_indent_level -1
+                WriteString "${s}End Elements"
                 WriteString ""
             } else {
                 error [= "Element $kelemtype $etype ($nnodes nodes) not available for $ov entities on group $group"]
@@ -393,7 +410,12 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
 
 proc write::writeGroupCondition {groupid kname nnodes iter} {
     set obj [list ]
-    WriteString "Begin Conditions $kname// GUI group identifier: $groupid"
+
+    # Print header
+    set s [mdpaIndent]
+    WriteString "${s}Begin Conditions $kname// GUI group identifier: $groupid"
+
+    # Get the entities to print
     if {$nnodes == 1} {
         set formats [dict create $groupid "%10d \n"]
         set obj [GiD_EntitiesGroups get $groupid nodes]
@@ -402,14 +424,22 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
         set elems [GiD_WriteCalculationFile connectivities -return $formats]
         set obj [GetListsOfNodes $elems $nnodes 2]
     }
+
+    # Print the conditions and it's connectivities
     set initial $iter
+    incr ::write::current_mdpa_indent_level
+    set s1 [mdpaIndent]
     for {set i 0} {$i <[llength $obj]} {incr iter; incr i} {
         set nids [lindex $obj $i]
-        WriteString "$iter 0 $nids"
+        WriteString "${s1}$iter 0 $nids"
     }
     set final [expr $iter -1]
-    WriteString "End Conditions"
+    incr ::write::current_mdpa_indent_level -1
+
+    # Print the footer
+    WriteString "${s}End Conditions"
     WriteString ""
+
     return [list $initial $final]
 }
 
@@ -460,47 +490,85 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
     set gtn [GetConfigurationAttribute groups_type_name]
     set group [GetWriteGroupName $group]
     if {![dict exists $meshes [list $cid ${group}]]} {
+        # Add the submodelpart to the catalog
         set mid [expr [llength [dict keys $meshes]] +1]
         if {$gtn ne "Mesh"} {
             set good_name [write::transformGroupName $group]
             set mid "${cid}_${good_name}"
         }
         dict set meshes [list $cid ${group}] $mid
+
+        # Prepare the print formats
+        incr ::write::current_mdpa_indent_level
+        set s1 [mdpaIndent]
+        incr ::write::current_mdpa_indent_level -1
+        incr ::write::current_mdpa_indent_level 2
+        set s2 [mdpaIndent]
         set gdict [dict create]
-        set f "%10i\n"
+        set f "${s2}%5i\n"
         set f [subst $f]
         dict set gdict $group $f
-        WriteString "Begin $gtn $mid // Group $group // Subtree $cid"
+        incr ::write::current_mdpa_indent_level -2
+
+        # Print header
+        set s [mdpaIndent]
+        WriteString "${s}Begin $gtn $mid // Group $group // Subtree $cid"
+        # Print tables
         if {$tableid_list ne ""} {
-            WriteString "    Begin SubModelPartTables"
+            set s1 [mdpaIndent]
+            WriteString "${s1}Begin SubModelPartTables"
             foreach tableid $tableid_list {
-                WriteString "    $tableid"
+                WriteString "${s2}$tableid"
             }
-            WriteString "    End SubModelPartTables"
+            WriteString "${s1}End SubModelPartTables"
         }
-        WriteString "    Begin ${gtn}Nodes"
+        WriteString "${s1}Begin ${gtn}Nodes"
         GiD_WriteCalculationFile nodes -sorted $gdict
-        WriteString "    End ${gtn}Nodes"
-        WriteString "    Begin ${gtn}Elements"
+        WriteString "${s1}End ${gtn}Nodes"
+        WriteString "${s1}Begin ${gtn}Elements"
         if {"Elements" in $what} {
             GiD_WriteCalculationFile elements -sorted $gdict
         }
-        WriteString "    End ${gtn}Elements"
-        WriteString "    Begin ${gtn}Conditions"
+        WriteString "${s1}End ${gtn}Elements"
+        WriteString "${s1}Begin ${gtn}Conditions"
         if {"Conditions" in $what} {
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
                 #W $iniend
                 foreach {ini end} $iniend {
                     for {set i $ini} {$i<=$end} {incr i} {
-                        WriteString [format %10d $i]
+                        WriteString "${s2}[format %5d $i]"
                     }
                 }
             }
         }
-        WriteString "    End ${gtn}Conditions"
-        WriteString "End $gtn"
+        WriteString "${s1}End ${gtn}Conditions"
+        WriteString "${s}End $gtn"
     }
+}
+
+proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
+    set s [mdpaIndent]
+    WriteString "${s}Begin SubModelPart $cid // Condition $cid"
+    
+    incr ::write::current_mdpa_indent_level
+    set s1 [mdpaIndent]
+    WriteString "${s1}Begin SubModelPartNodes"
+    WriteString "${s1}End SubModelPartNodes"
+    WriteString "${s1}Begin SubModelPartElements"
+    WriteString "${s1}End SubModelPartElements"
+    WriteString "${s1}Begin SubModelPartConditions"
+    WriteString "${s1}End SubModelPartConditions"
+    
+    foreach group [dict keys $groups_dict] {
+        if {[dict exists $groups_dict $group what]} {set what [dict get $groups_dict $group what]} else {set what ""}
+        if {[dict exists $groups_dict $group iniend]} {set iniend [dict get $groups_dict $group iniend]} else {set iniend ""}
+        if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
+        write::writeGroupMesh $cid $group $what $iniend $tableid_list
+    }
+
+    incr ::write::current_mdpa_indent_level -1
+    WriteString "${s}End SubModelPart"
 }
 
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
@@ -556,8 +624,10 @@ proc write::writeNodalConditions { keyword } {
     }
 }
 
+# Warning! Indentation must be set before calling here!
 proc write::GetFormatDict { groupid mid num} {
-    set f "%10d [format "%10d" $mid] [string repeat "%10d " $num]\n"
+    set s [mdpaIndent]
+    set f "${s}%5d [format "%10d" $mid] [string repeat "%10d " $num]\n"
     return [dict create $groupid $f]
 }
 
@@ -949,8 +1019,8 @@ proc write::getSolversParametersDict { {appid ""} } {
 proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
     
     set root [customlib::GetBaseRoot]
-    
     set bcCondsDict [list ]
+    set grouped_conditions [list ]
     
     set xp1 "[spdAux::getRoute $un]/condition/group"
     set groups [$root selectNodes $xp1]
@@ -963,47 +1033,71 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
         set groupId [::write::getMeshId $cid $groupName]
-        set condId [[$group parent] @n]
+        set grouping_by ""
         if {$condition_type eq "Condition"} {
-            set condition [::Model::getCondition $condId]
+            set condition [::Model::getCondition $cid]
+            set grouping_by [[::Model::getCondition $cid] getGroupBy]
         } {
-            set condition [::Model::getNodalConditionbyId $condId]
+            set condition [::Model::getNodalConditionbyId $cid]
         }
-        set processName [$condition getProcessName]
-        set process [::Model::GetProcess $processName]
-        set processDict [dict create]
-        set paramDict [dict create]
-        dict set paramDict mesh_id 0
-        dict set paramDict model_part_name $groupId
-        
-        set process_attributes [$process getAttributes]
-        set process_parameters [$process getInputs]
-        
-        dict set process_attributes process_name [dict get $process_attributes n]
-        dict unset process_attributes n
-        dict unset process_attributes pn
-        
-        set processDict [dict merge $processDict $process_attributes]
-        if {[$condition hasAttribute VariableName]} {
-            set variable_name [$condition getAttribute VariableName]
-            # "lindex" is a rough solution. Look for a better one.
-            if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
-        }
-        foreach {inputName in_obj} $process_parameters {
-            set in_type [$in_obj getType]
-            if {$in_type eq "vector"} {
-                set vector_type [$in_obj getAttribute "vectorType"]
-                if {$vector_type eq "bool"} {
-                    set ValX [expr [get_domnode_attribute [$group find n ${inputName}X] v] ? True : False]
-                    set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
-                    set ValZ [expr False]
-                    if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
-                } elseif {$vector_type eq "double"} {
-                    if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
-                        foreach i [list "X" "Y" "Z"] {
-                            if {[expr [get_domnode_attribute [$group find n Enabled_$i] v] ] ne "Yes"} {
-                                set Val$i null
-                            } else {
+        if {$grouping_by eq "Condition"} {
+            # Grouped conditions will be processed later
+            if {$cid ni $grouped_conditions} {
+                lappend grouped_conditions $cid
+            }
+        } else {
+            set processName [$condition getProcessName]
+            set process [::Model::GetProcess $processName]
+            set processDict [dict create]
+            set paramDict [dict create]
+            dict set paramDict mesh_id 0
+            dict set paramDict model_part_name $groupId
+            
+            set process_attributes [$process getAttributes]
+            set process_parameters [$process getInputs]
+            
+            dict set process_attributes process_name [dict get $process_attributes n]
+            dict unset process_attributes n
+            dict unset process_attributes pn
+            
+            set processDict [dict merge $processDict $process_attributes]
+            if {[$condition hasAttribute VariableName]} {
+                set variable_name [$condition getAttribute VariableName]
+                # "lindex" is a rough solution. Look for a better one.
+                if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
+            }
+            foreach {inputName in_obj} $process_parameters {
+                set in_type [$in_obj getType]
+                if {$in_type eq "vector"} {
+                    set vector_type [$in_obj getAttribute "vectorType"]
+                    if {$vector_type eq "bool"} {
+                        set ValX [expr [get_domnode_attribute [$group find n ${inputName}X] v] ? True : False]
+                        set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
+                        set ValZ [expr False]
+                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
+                    } elseif {$vector_type eq "double"} {
+                        if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
+                            foreach i [list "X" "Y" "Z"] {
+                                if {[expr [get_domnode_attribute [$group find n Enabled_$i] v] ] ne "Yes"} {
+                                    set Val$i null
+                                } else {
+                                    set printed 0
+                                    if {[$in_obj getAttribute "function"] eq "1"} {
+                                        if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
+                                            set funcinputName "${i}function_$inputName"
+                                            set value [get_domnode_attribute [$group find n $funcinputName] v]
+                                            set Val$i $value
+                                            set printed 1
+                                        }
+                                    }
+                                    if {!$printed} {
+                                        set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
+                                        set Val$i $value
+                                    }
+                                }
+                            }
+                        } else {
+                            foreach i [list "X" "Y" "Z"] {
                                 set printed 0
                                 if {[$in_obj getAttribute "function"] eq "1"} {
                                     if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
@@ -1019,65 +1113,79 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                                 }
                             }
                         }
+                    } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
+                        set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
+                        set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
+                        set ValZ "0"
+                        if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
                     } else {
-                        foreach i [list "X" "Y" "Z"] {
-                            set printed 0
-                            if {[$in_obj getAttribute "function"] eq "1"} {
-                                if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                                    set funcinputName "${i}function_$inputName"
-                                    set value [get_domnode_attribute [$group find n $funcinputName] v]
-                                    set Val$i $value
-                                    set printed 1
-                                }
-                            }
-                            if {!$printed} {
-                                set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
-                                set Val$i $value
-                            }
+                        set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
+                        set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
+                        set ValZ [expr 0.0]
+                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
+                    }
+                    dict set paramDict $inputName [list $ValX $ValY $ValZ]
+                } elseif {$in_type eq "double" || $in_type eq "integer"} {
+                    set printed 0
+                    if {[$in_obj getAttribute "function"] eq "1"} {
+                        if {[get_domnode_attribute [$group find n "ByFunction"] v]  eq "Yes"} {
+                            set funcinputName "function_$inputName"
+                            set value [get_domnode_attribute [$group find n $funcinputName] v]
+                            dict set paramDict $inputName $value
+                            set printed 1
                         }
                     }
-                } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
-                    set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
-                    set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
-                    set ValZ "0"
-                    if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
-                } else {
-                    set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
-                    set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
-                    set ValZ [expr 0.0]
-                    if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
-                }
-                dict set paramDict $inputName [list $ValX $ValY $ValZ]
-            } elseif {$in_type eq "double" || $in_type eq "integer"} {
-                set printed 0
-                if {[$in_obj getAttribute "function"] eq "1"} {
-                    if {[get_domnode_attribute [$group find n "ByFunction"] v]  eq "Yes"} {
-                        set funcinputName "function_$inputName"
-                        set value [get_domnode_attribute [$group find n $funcinputName] v]
-                        dict set paramDict $inputName $value
-                        set printed 1
+                    if {!$printed} {
+                        set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
+                        #set value [get_domnode_attribute [$group find n $inputName] v]
+                        dict set paramDict $inputName [expr $value]
                     }
-                }
-                if {!$printed} {
-                    set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
-                    #set value [get_domnode_attribute [$group find n $inputName] v]
+                } elseif {$in_type eq "bool"} {
+                    set value [get_domnode_attribute [$group find n $inputName] v]
+                    set value [expr $value ? True : False]
                     dict set paramDict $inputName [expr $value]
-                }
-            } elseif {$in_type eq "bool"} {
-                set value [get_domnode_attribute [$group find n $inputName] v]
-                set value [expr $value ? True : False]
-                dict set paramDict $inputName [expr $value]
-            } elseif {$in_type eq "tablefile"} {
-                set value [get_domnode_attribute [$group find n $inputName] v]
-                dict set paramDict $inputName $value
-            } else {
-                if {[get_domnode_attribute [$group find n $inputName] state] ne "hidden" } {
+                } elseif {$in_type eq "tablefile"} {
                     set value [get_domnode_attribute [$group find n $inputName] v]
                     dict set paramDict $inputName $value
+                } else {
+                    if {[get_domnode_attribute [$group find n $inputName] state] ne "hidden" } {
+                        set value [get_domnode_attribute [$group find n $inputName] v]
+                        dict set paramDict $inputName $value
+                    }
                 }
             }
+            if {[$group find n Interval] ne ""} {dict set paramDict interval [write::getInterval  [get_domnode_attribute [$group find n Interval] v]] }
+            dict set processDict Parameters $paramDict
+            lappend bcCondsDict $processDict
         }
-        if {[$group find n Interval] ne ""} {dict set paramDict interval [write::getInterval  [get_domnode_attribute [$group find n Interval] v]] }
+    }
+
+    foreach cid $grouped_conditions {
+        if {$condition_type eq "Condition"} {
+            set condition [::Model::getCondition $cid]
+        } {
+            set condition [::Model::getNodalConditionbyId $cid]
+        }
+
+        set processName [$condition getProcessName]
+        set process [::Model::GetProcess $processName]
+        set processDict [dict create]
+        set paramDict [dict create]
+        dict set paramDict model_part_name $cid
+        
+        set process_attributes [$process getAttributes]
+        set process_parameters [$process getInputs]
+        
+        dict set process_attributes process_name [dict get $process_attributes n]
+        dict unset process_attributes n
+        dict unset process_attributes pn
+        
+        set processDict [dict merge $processDict $process_attributes]
+        if {[$condition hasAttribute VariableName]} {
+            set variable_name [$condition getAttribute VariableName]
+            # "lindex" is a rough solution. Look for a better one.
+            if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
+        }
         dict set processDict Parameters $paramDict
         lappend bcCondsDict $processDict
     }
@@ -1327,6 +1435,10 @@ proc write::getSpacing {number} {
     set r ""
     for {set i 0} {$i<$number} {incr i} {append r " "}
     return $r
+}
+proc write::mdpaIndent { {b 4} } {
+    variable current_mdpa_indent_level
+    string repeat [string repeat " " $b] $current_mdpa_indent_level
 }
 
 proc write::CopyFileIntoModel { filepath } {
