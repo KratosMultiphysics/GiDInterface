@@ -32,7 +32,7 @@ proc ::DEM::examples::AssignToTree { } {
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [spdAux::AddConditionGroupOnXPath $DEMParts Body]
-    set props [list PARTICLE_DENSITY 1.0]
+    set props [list PARTICLE_DENSITY 2500.0]
     foreach {prop val} $props {
 	set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
 	if {$propnode ne "" } {

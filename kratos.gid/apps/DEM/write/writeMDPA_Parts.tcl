@@ -2,9 +2,8 @@ proc DEM::write::WriteMDPAParts { } {
     # Headers
     write::writeModelPartData
 
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-    write::writeMaterials [GetAttribute validApps]
+    # Materials
+    writeMaterialsParts
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts
@@ -16,8 +15,8 @@ proc DEM::write::WriteMDPAParts { } {
     writeSphereRadius
 
     # SubmodelParts
-    write::writePartMeshes
-    writeVelocityMeshes
+    #write::writePartMeshes
+    #writeVelocityMeshes
 }
 
 proc DEM::write::writeSphereRadius { } {
@@ -47,5 +46,33 @@ proc DEM::write::GetNodalConditionsGroups { {include_cond 0} } {
 proc DEM::write::writeVelocityMeshes { } {
     foreach {cid groupid} [DEM::write::GetNodalConditionsGroups 1] {
         ::write::writeGroupMesh $cid $groupid "nodal"
+    }
+}
+
+proc DEM::write::writeMaterialsParts { } {
+    variable partsProperties
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Parts'\]/group"
+    set partsProperties $::write::mat_dict
+    #set ::write::mat_dict [dict create]
+    #write::processMaterials $xp1
+    #set partsProperties $::write::mat_dict
+    #set ::write::mat_dict $old_mat_dict
+    # WV inletProperties
+
+    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO PARTICLE_FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
+    
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties\n"
+
+    foreach group [dict keys $partsProperties] {
+        write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
+        dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
+        dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
+        foreach {prop val} [dict get $partsProperties $group] {
+            if {$prop in $printable} {
+                write::WriteString "    $prop $val"
+            }
+        }
+        write::WriteString "End Properties\n"
     }
 }

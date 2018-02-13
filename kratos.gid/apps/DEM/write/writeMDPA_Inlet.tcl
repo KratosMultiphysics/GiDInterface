@@ -2,7 +2,7 @@ proc DEM::write::WriteMDPAInlet { } {
     # Headers
     write::writeModelPartData
 
-    writeMaterials
+    writeMaterialsInlet
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnGroups [GetInletGroups]
@@ -89,7 +89,7 @@ proc DEM::write::writeInletMeshes { } {
     }
 }
 
-proc DEM::write::writeMaterials { } {
+proc DEM::write::writeMaterialsInlet { } {
     variable inletProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet'\]/group"
     set old_mat_dict $::write::mat_dict
