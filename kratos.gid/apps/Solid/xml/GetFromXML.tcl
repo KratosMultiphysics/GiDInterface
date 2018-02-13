@@ -65,25 +65,22 @@ proc Solid::xml::CustomTree { args } {
 
 
 proc Solid::xml::ProcGetSolutionStrategiesSolid { domNode args } {
-     set names ""
-     set pnames ""
-     set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLSoluType]] v]
-     set Sols [::Model::GetSolutionStrategies [list "SolutionType" $solutionType] ]
-     set ids [list ]
-     foreach ss $Sols {
-          lappend ids [$ss getName]
-          append names [$ss getName] ","
-          append pnames [$ss getName] "," [$ss getPublicName] ","
-     }
-     set names [string range $names 0 end-1]
-     set pnames [string range $pnames 0 end-1]
-     
-     $domNode setAttribute values $names
-     set dv [lindex $ids 0]
-     if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv}
-     if {[$domNode getAttribute v] ni $ids} {$domNode setAttribute v $dv}
-     #spdAux::RequestRefresh
-     return $pnames
+    set names [list ]
+    set pnames [list ]
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLSoluType]] v]
+    set Sols [::Model::GetSolutionStrategies [list "SolutionType" $solutionType] ]
+    set ids [list ]
+    foreach ss $Sols {
+        lappend names [$ss getName]
+        lappend pnames [$ss getName]
+        lappend pnames [$ss getPublicName] 
+    }    
+    $domNode setAttribute values [join $names ","]
+    set dv [lindex $names 0]
+    if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
+    if {[$domNode getAttribute v] ni $names} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
+    
+    return [join $pnames ","]
 }
 
 proc Solid::xml::ProcCheckNodalConditionStateSolid {domNode args} {
@@ -105,11 +102,11 @@ proc Solid::xml::ProcCheckNodalConditionStateSolid {domNode args} {
 proc Solid::xml::ProcCheckGeometrySolid {domNode args} {
      set ret "surface"
      if {$::Model::SpatialDimension eq "3D"} {
-	 set ret "line,surface,volume"
+	    set ret "line,surface,volume"
      } elseif {$::Model::SpatialDimension eq "2D"} {
-	 set ret "line,surface"
+	    set ret "line,surface"
      } elseif {$::Model::SpatialDimension eq "1D"} {
-	 set ret "line"
+	    set ret "line"
      }
      return $ret
 }

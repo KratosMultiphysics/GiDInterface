@@ -49,6 +49,19 @@ oo::class create Scheme {
         return $elementForceOut
     }
     
+    method cumple {args} {
+        set sol_strat [dict get $args "SolutionStrategy"]
+        set a [dict remove $args "SolutionStrategy"]
+        set c [next $a]
+        if {$c} {
+            set c 0
+            if [llength [Model::GetAvailableElements $sol_strat [my getName]]] {
+                set c 1
+            }
+        }
+        return $c
+    }
+    
 }
 # Clase Solution Strategey
 catch {SolStrat destroy}
@@ -105,6 +118,20 @@ oo::class create SolStrat {
     method getElementFilters { } {
         variable elementfilters
         return $elementfilters
+    }
+    method cumple {args} {
+        set c [next {*}$args]
+         
+        if {$c} {
+            set c 0
+            foreach sc [my getSchemes] {
+                if [llength [Model::GetAvailableElements [my getName] [$sc getName]]] {
+                    set c 1; break
+                }
+            }
+        }
+        
+        return $c
     }
     
 }
@@ -217,7 +244,7 @@ proc Model::ParseElementFilter {st ef {forced ""}} {
 # Getters
 proc Model::GetSolutionStrategies { args } {
     variable SolutionStrategies
-#W "MGAS $args"
+    
     if {$args eq "{}"} {return $SolutionStrategies}
     set cumplen [list ]
     foreach ss $SolutionStrategies {
@@ -242,7 +269,7 @@ proc Model::GetAvailableSchemes {solstrat} {
     set solst [Model::GetSolutionStrategy $solstrat]
     set cumplen [list ]
     foreach sch [$solst getSchemes] {
-        if {[$sch cumple]} {lappend cumplen $sch}
+        if {[$sch cumple "SolutionStrategy" [$solst getName]]} {lappend cumplen $sch}
     }
     return $cumplen
 }
