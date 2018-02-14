@@ -1,4 +1,7 @@
 proc DEM::write::WriteMDPAParts { } {
+    # Prepare properties
+    write::processMaterials
+
     # Headers
     write::writeModelPartData
 
@@ -15,8 +18,8 @@ proc DEM::write::WriteMDPAParts { } {
     writeSphereRadius
 
     # SubmodelParts
-    #write::writePartMeshes
-    #writeVelocityMeshes
+    write::writePartMeshes
+    writeVelocityMeshes
 }
 
 proc DEM::write::writeSphereRadius { } {
