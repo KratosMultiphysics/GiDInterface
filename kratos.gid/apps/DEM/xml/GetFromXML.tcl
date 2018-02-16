@@ -12,7 +12,6 @@ proc DEM::xml::Init { } {
     Model::getMaterials Materials.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
-    Model::getNodalConditions NodalConditions.xml
     Model::getConditions Conditions.xml
 }
 
@@ -26,6 +25,7 @@ proc DEM::xml::MultiAppEvent {args} {
 
 proc DEM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem values OpenMP ParallelType
+    spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
 }
 
 

@@ -85,7 +85,11 @@ oo::class create Condition {
             return [dict keys [dict get $defaults $itemName] ]
         }
     }
-    
+    method getAllInputs { } {
+        variable processName
+        set process_inputs [[Model::GetProcess $processName] getInputs]
+        return [dict merge $process_inputs [my getInputs]]
+    }
 }
 }
 proc Model::ForgetConditions { } {

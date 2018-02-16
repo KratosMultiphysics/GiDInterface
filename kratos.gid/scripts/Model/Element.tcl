@@ -371,7 +371,10 @@ proc Model::CheckElemState {elid inputid} {
 
 proc Model::CheckElemParamState {node} {
     set id [$node getAttribute n]
-    set elem [get_domnode_attribute [[$node parent] selectNodes "./value\[@n='Element'\]"] v]
+    set elem ""
+    catch {
+        set elem [get_domnode_attribute [[$node parent] selectNodes "./value\[@n='Element'\]"] v]
+    }
     if {$elem eq ""} {return 0}
 
     return [CheckElemState $elem $id]
@@ -394,9 +397,7 @@ proc Model::CheckElementOutputState {elemsactive paramName} {
 
 proc Model::CheckElementsNodalCondition {conditionId elemnames {restrictions "" }} {
     set ret 0
-    if {[llength $elemnames] < 1} {
-        #
-    } else {
+    if {[llength $elemnames] > 0} {
         foreach eid $elemnames {
             if {$eid ne ""} {
                 set elem [getElement $eid]
@@ -414,9 +415,9 @@ proc Model::CheckElementsNodalCondition {conditionId elemnames {restrictions "" 
             }
         }
     }
-    
     return $ret
 }
+
 proc Model::CheckNodalConditionOutputState {conditionId outputId {restrictions "" }} {
     set ret 0
     #W "Con $conditionId out $outputId"
