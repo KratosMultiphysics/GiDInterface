@@ -10,6 +10,7 @@ oo::class create Condition {
     variable processName
     variable TopologyFeatures
     variable defaults
+    variable groupby
     
     constructor {n} {
         next $n
@@ -21,6 +22,8 @@ oo::class create Condition {
         
         variable processName
         set processName ""
+        variable groupby
+        set groupby ""
     }
     
     method addTopologyFeature {top} {
@@ -56,6 +59,14 @@ oo::class create Condition {
         variable processName
         return $processName
     }
+    method setGroupBy {g} {
+        variable groupby
+        set groupby $g
+    }
+    method getGroupBy { } {
+        variable groupby
+        return $groupby
+    }
     method setDefault {itemName itemField itemValue} {
         variable defaults
         dict set defaults $itemName $itemField $itemValue
@@ -74,7 +85,11 @@ oo::class create Condition {
             return [dict keys [dict get $defaults $itemName] ]
         }
     }
-    
+    method getAllInputs { } {
+        variable processName
+        set process_inputs [[Model::GetProcess $processName] getInputs]
+        return [dict merge $process_inputs [my getInputs]]
+    }
 }
 }
 proc Model::ForgetConditions { } {
@@ -121,6 +136,7 @@ proc Model::ParseCondNode { node } {
     $cnd setPublicName [$node getAttribute pn]
     if {[$node hasAttribute help]} {$cnd setHelp [$node getAttribute help]}
     if {[$node hasAttribute ProcessName]} {$cnd setProcessName [$node getAttribute ProcessName]}
+    if {[$node hasAttribute GroupBy]} {$cnd setGroupBy [$node getAttribute GroupBy]}
     
     foreach att [$node attributes] {
         $cnd setAttribute $att [split [$node getAttribute $att] ","]

@@ -103,6 +103,10 @@ proc GiD_Event_BeforeSaveGIDProject { modelname} {
     }
 }
 
+proc AfterRenameGroup { oldname newname } {
+    spdAux::RenameIntervalGroup $oldname $newname
+}
+
 ##########################################################
 #################### Kratos namespace ####################
 ##########################################################
@@ -308,6 +312,12 @@ proc Kratos::ResetModel { } {
     foreach group [GiD_Groups list] {
         if {[GiD_Groups exists $group]} {GiD_Groups delete $group}
     }
+}
+proc Kratos::IsModelEmpty { } {
+    if {[GiD_Groups list] != ""} {return false}
+    if {[GiD_Layers list] != "Layer0"} {return false}
+    if {[GiD_Geometry list point 1:end] != ""} {return false}
+    return true
 }
 
 proc Kratos::BeforeMeshGeneration {elementsize} {

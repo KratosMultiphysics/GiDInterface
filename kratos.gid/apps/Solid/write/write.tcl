@@ -362,6 +362,8 @@ proc Solid::write::getConditionsParametersDict {un {condition_type "Condition"}}
         dict set process_attributes process_name [dict get $process_attributes n]
         dict unset process_attributes n
         dict unset process_attributes pn
+	dict unset process_attributes help
+	dict unset process_attributes process_name
         
         set processDict [dict merge $processDict $process_attributes]
         if {[$condition hasAttribute VariableName]} {
@@ -469,13 +471,13 @@ proc Solid::write::GetDefaultOutputDict { {appid ""} } {
     
     dict set resultDict node_output           [write::getValue $results_UN NodeOutput]
     
-    dict set resultDict plane_output [write::GetCutPlanesList $results_UN]
+    #dict set resultDict plane_output [write::GetCutPlanesList $results_UN]
     
     dict set resultDict nodal_results [write::GetResultsList $results_UN OnNodes]
     dict set resultDict gauss_point_results [write::GetResultsList $results_UN OnElement]
     
     dict set outputDict "result_file_configuration" $resultDict
-    dict set outputDict "point_data_configuration" [write::GetEmptyList]
+    #dict set outputDict "point_data_configuration" [write::GetEmptyList]
     return $outputDict
 }
 

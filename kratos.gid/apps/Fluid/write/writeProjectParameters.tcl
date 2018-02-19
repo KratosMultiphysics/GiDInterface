@@ -76,7 +76,7 @@ proc ::Fluid::write::getParametersDict { } {
 
     # Skin parts
     dict set solverSettingsDict skin_parts [getBoundaryConditionMeshId]
-    
+
     # No skin parts
     dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
     # Time stepping settings
@@ -137,7 +137,6 @@ proc Fluid::write::getDragProcessList {} {
         dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
         dict set pdict "process_name" "ComputeDragProcess"
         set params [dict create]
-        dict set params "mesh_id" 0
         dict set params "model_part_name" $submodelpart
         dict set params "write_drag_output_file" $write_output
         dict set params "print_drag_to_screen" $print_screen
@@ -165,11 +164,10 @@ proc Fluid::write::getGravityProcessDict {} {
     dict set pdict "process_name" "AssignVectorByDirectionProcess"
     set params [dict create]
     set partgroup [write::getPartsMeshId]
-    dict set params "mesh_id" 0
     dict set params "model_part_name" [concat [lindex $partgroup 0]]
     dict set params "variable_name" "BODY_FORCE"
     dict set params "modulus" $value
-    dict set params "constrained" false 
+    dict set params "constrained" false
     dict set params "direction" [list $cx $cy $cz]
     dict set pdict "Parameters" $params
 
@@ -188,8 +186,16 @@ proc Fluid::write::getBoundaryConditionMeshId {} {
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "True"} {
-            set gname [::write::getMeshId $cid $groupName]
-            if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
+            if {[[::Model::getCondition $cid] getGroupBy] eq "Condition"} {
+                # Grouped conditions have its own submodelpart
+                if {$cid ni $listOfBCGroups} {
+                    lappend listOfBCGroups $cid
+                }
+            } else {
+                set gname [::write::getMeshId $cid $groupName]
+                if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
+            }
+            
         }
     }
 

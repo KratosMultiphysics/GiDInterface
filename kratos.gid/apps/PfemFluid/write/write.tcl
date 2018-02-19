@@ -8,7 +8,7 @@ proc PfemFluid::write::Init { } {
     set remesh_domains [dict create ]
     variable bodies_list
     set bodies_list [list ]
-    Solid::write::AddValidApps "Pfem"
+    Solid::write::AddValidApps "PfemFluid"
 }
 
 proc PfemFluid::write::writeParametersEvent { } {
@@ -25,7 +25,7 @@ proc PfemFluid::write::writeModelPartEvent { } {
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
-    write::writeMaterials "Pfem"
+    write::writeMaterials "PfemFluid"
     
     write::writeNodalCoordinates
     foreach part_un $parts_un_list {

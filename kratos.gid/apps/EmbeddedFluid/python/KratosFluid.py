@@ -130,13 +130,14 @@ while(time <= end_time):
 
     delta_time = solver.ComputeDeltaTime()
     step += 1
-    time = time + delta_time
+    time += delta_time
     main_model_part.CloneTimeStep(time)
+    main_model_part.ProcessInfo[STEP] = step
 
     if (parallel_type == "OpenMP") or (mpi.rank == 0):
         print("")
-        print("STEP = ", step)
-        print("TIME = ", time)
+        print("STEP = ", main_model_part.ProcessInfo[STEP])
+        print("TIME = ", main_model_part.ProcessInfo[TIME])
 
     for process in list_of_processes:
         process.ExecuteInitializeSolutionStep()
@@ -144,8 +145,7 @@ while(time <= end_time):
     if (output_post == True):
         gid_output.ExecuteInitializeSolutionStep()
 
-    if(step >= 3):
-        solver.Solve()
+    solver.Solve()
 
     for process in list_of_processes:
         process.ExecuteFinalizeSolutionStep()

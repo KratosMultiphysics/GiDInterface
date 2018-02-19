@@ -1,5 +1,10 @@
 
 proc ::FSI::examples::MokChannelFlexibleWall {args} {
+    if {![Kratos::IsModelEmpty]} {
+        set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
+        set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
+		if { $retval == "cancel" } { return }
+    }
     DrawMokChannelFlexibleWallGeometry
     AssignMokChannelFlexibleWallMeshSizes$::Model::SpatialDimension
     TreeAssignationMokChannelFlexibleWall
@@ -179,7 +184,8 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     # Fluid Parts
     set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
     set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 956.0 VISCOSITY 1.51670E-04 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 956.0 VISCOSITY 1.51670E-04 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 956.0 DYNAMIC_VISCOSITY 1.51670E-04]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -194,7 +200,10 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
 
     # Fluid Inlet
-    set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet Inlet]
+    GiD_Groups create "Inlet//Total"
+    GiD_Groups edit state "Inlet//Total" hidden
+    spdAux::AddIntervalGroup Inlet "Inlet//Total"
+    set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//Total"]
     $inletNode setAttribute ov $condtype
     set props [list ByFunction Yes function_modulus {0.1214*(1-cos(0.1*pi*t))*y*(1-y) if t<10 else 0.2428*y*(1-y)} direction automatic_inwards_normal Interval Total]
     foreach {prop val} $props {
@@ -312,8 +321,8 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
-    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6]
-    lappend props YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45
+    # set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6 YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45]
+    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 1500.0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45]
     foreach {prop val} $props {
          set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {

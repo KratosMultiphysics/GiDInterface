@@ -6,6 +6,7 @@ from KratosMultiphysics.FSIApplication import *
 from KratosMultiphysics.FluidDynamicsApplication import *
 from KratosMultiphysics.ExternalSolversApplication import *
 from KratosMultiphysics.StructuralMechanicsApplication import *
+from KratosMultiphysics.ExternalSolversApplication import *
 
 ######################################################################################
 ######################################################################################

@@ -12,8 +12,8 @@
     <value n="DeltaTime"  pn="Time Step (s)" icon="data" v="0.001" help=""/>
     <value n="EndTime" pn="End time" icon="data" v="1.0" help=""/>
     <!--<value n="UseAutomaticDeltaTime" pn="Automatic Delta time" v="Fixed"  values="Fixed,Automatic" help="Select the Delta time option to be used"/>-->
+    <include n="Intervals" active="1" state="[HideIfUniqueName PFEM_Scheme Linear]" path="apps/Common/xml/Intervals.spd"/>
   </container>
-  <include n="Intervals" active="1" state="[HideIfUniqueName PFEM_Scheme Linear]" path="apps/Common/xml/Intervals.spd"/>     
   <include n="Meshing Domains" active="1" path="apps/Pfem/xml/MeshingDomains.spd"/> 
   <include n="Contact Strategies" active="1" path="apps/Pfem/xml/Contact.spd"/>
   <container n="Gravity" pn="Gravity" un="FLGravity" icon="select" help="Body forces" actualize_tree="1" state="[HideIfUniqueName PFEM_DomainType Solids]" open_window="0">

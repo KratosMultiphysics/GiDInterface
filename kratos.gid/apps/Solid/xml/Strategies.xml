@@ -21,9 +21,9 @@
 		 values ="Residual_criterion,Displacement_criterion,And_criterion,Or_criterion" 
 		 pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" 
 		 help="These are the available convergence criteria for the nonlinear iteration">      
-      <parameter n="displacement_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="Displacement_criterion,And_criterion,Or_criterion" 
+      <parameter n="variable_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="Displacement_criterion,And_criterion,Or_criterion" 
 		 help="Relative displacement tolerance employed in the nonlinear iteration"/>      
-      <parameter n="displacement_absolute_tolerance" pn="Displacement absolute tolerance" type="double" v="1e-9" parent="Displacement_criterion,And_criterion,Or_criterion" 
+      <parameter n="variable_absolute_tolerance" pn="Displacement absolute tolerance" type="double" v="1e-9" parent="Displacement_criterion,And_criterion,Or_criterion" 
 		 help="Absolute displacement tolerance employed in the nonlinear iteration"/>      
       <parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-4" parent="Residual_criterion,And_criterion,Or_criterion" 
 		 help="Relative residual tolerance employed in the nonlinear iteration"/>      
@@ -70,6 +70,26 @@
 	       <forceOut field="n" value="SmallDisplacementElement2D"/> -->
         </element_filters>
       </scheme>
+      <scheme n="Simo" pn="Simo" help="Scheme for Solids and Shells, dynamic problems with high frequency accelerations damping" ProductionReady="ProductionReady">
+        <parameter_list>
+	  <parameter n="bossak_factor" pn="Bossak factor" type="double" v="-0.3" help="Damping factor for the bossak scheme [-0.3,0]"/>
+	  <parameter n="lumped_mass_matrix" pn="Lumped mass matrix" type="bool" v="true" values="false,true" help="Compute lumped mass matrix"/>
+	  <parameter n="consistent_mass_matrix" pn="Consistent mass matrix" type="bool" v="false" values="false,true" help="Compute consistent mass matrix"/>
+	</parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Solid,Shell"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
+      <scheme n="RotationBossak" pn="Beams Bossak" help="Scheme for large rotations in beams" ProductionReady="Developer">
+        <parameter_list>
+	  <parameter n="bossak_factor" pn="Bossak factor" type="double" v="-0.3" help="Damping factor for the bossak scheme [-0.3,0]"/>
+	</parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Beam"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
       <scheme n="RotationNewmark" pn="Beams Newmark" help="Scheme for large rotations in beams" ProductionReady="Developer">
         <parameter_list>
 	</parameter_list>
@@ -80,6 +100,7 @@
       </scheme>
       <scheme n="RotationSimo" pn="Beams Simo" help="Scheme for large rotations in beams" ProductionReady="Developer">
         <parameter_list>
+	  <parameter n="bossak_factor" pn="Bossak factor" type="double" v="0.0" help="Damping factor for the bossak scheme [-0.3,0]"/>
 	</parameter_list>
         <element_filters>
           <filter field="ElementType" value="Beam"/>
@@ -173,9 +194,9 @@
 		 values ="Residual_criterion,Displacement_criterion,And_criterion,Or_criterion" 
 		 pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" 
 		 help="These are the available convergence criteria for the nonlinear iteration">      
-	<parameter n="displacement_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="Displacement_criterion,And_criterion,Or_criterion" 
+	<parameter n="variable_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="Displacement_criterion,And_criterion,Or_criterion" 
 		   help="Relative displacement tolerance employed in the nonlinear iteration"/>      
-	<parameter n="displacement_absolute_tolerance" pn="Displacement absolute tolerance" type="double" v="1e-9" parent="Displacement_criterion,And_criterion,Or_criterion" 
+	<parameter n="variable_absolute_tolerance" pn="Displacement absolute tolerance" type="double" v="1e-9" parent="Displacement_criterion,And_criterion,Or_criterion" 
 		   help="Absolute displacement tolerance employed in the nonlinear iteration"/>      
 	<parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-4" parent="Residual_criterion,And_criterion,Or_criterion" 
 		   help="Relative residual tolerance employed in the nonlinear iteration"/>      

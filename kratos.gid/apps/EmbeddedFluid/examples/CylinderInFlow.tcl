@@ -1,5 +1,10 @@
 
 proc ::EmbeddedFluid::examples::CylinderInFlow {args} {
+    if {![Kratos::IsModelEmpty]} {
+        set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
+        set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
+		if { $retval == "cancel" } { return }
+    }
     InitVariables
     DrawCylinderInFlowGeometry3D
     AssignGroupsCylinderInFlow3D
@@ -138,7 +143,8 @@ proc EmbeddedFluid::examples::TreeAssignationCylinderInFlow2D {args} {
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.003 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -154,13 +160,14 @@ proc EmbeddedFluid::examples::TreeAssignationCylinderInFlow2D {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
     set inlets [list inlet1 0 1 "6*y*(1-y)*sin(pi*t*0.5)" inlet2 1 End "6*y*(1-y)"]
     ErasePreviousIntervals
-    foreach {inlet_name ini end function} $inlets {
-        spdAux::CreateInterval $inlet_name $ini $end
-        GiD_Groups create "Inlet//$inlet_name"
-        spdAux::AddIntervalGroup Inlet "Inlet//$inlet_name"
-        set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//$inlet_name"]
+    foreach {interval_name ini end function} $inlets {
+        spdAux::CreateInterval $interval_name $ini $end
+        GiD_Groups create "Inlet//$interval_name"
+        GiD_Groups edit state "Inlet//$interval_name" hidden
+        spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
+        set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//$interval_name"]
         $inletNode setAttribute ov $condtype
-        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $inlet_name]
+        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
         foreach {prop val} $props {
              set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {

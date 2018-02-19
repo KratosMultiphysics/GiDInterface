@@ -1,5 +1,10 @@
 
 proc ::Structural::examples::TrussCantilever {args} {
+    if {![Kratos::IsModelEmpty]} {
+        set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
+        set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
+		if { $retval == "cancel" } { return }
+    }
     DrawTrussCantileverGeometry
     AssignTrussCantileverMeshSizes
     TreeAssignationTrussCantilever
@@ -86,6 +91,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     GiD_Groups clone XYZ Total
     GiD_Groups edit parent Total XYZ
     spdAux::AddIntervalGroup XYZ "XYZ//Total"
+    GiD_Groups edit state "XYZ//Total" hidden
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement "XYZ//Total"]
     $structDisplacementNode setAttribute ov point
@@ -103,6 +109,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     GiD_Groups clone XZ Total
     GiD_Groups edit parent Total XZ
     spdAux::AddIntervalGroup XZ "XZ//Total"
+    GiD_Groups edit state "XZ//Total" hidden
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement "XZ//Total"]
     $structDisplacementNode setAttribute ov point
@@ -120,6 +127,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     GiD_Groups clone Z Total
     GiD_Groups edit parent Total Z
     spdAux::AddIntervalGroup Z "Z//Total"
+    GiD_Groups edit state "Z//Total" hidden
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement "Z//Total"]
     $structDisplacementNode setAttribute ov point
@@ -138,6 +146,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     GiD_Groups clone Load Total
     GiD_Groups edit parent Total Load
     spdAux::AddIntervalGroup Load "Load//Total"
+    GiD_Groups edit state "Load//Total" hidden
     $structDisplacementNode setAttribute ov point
     set LoadNode [spdAux::AddConditionGroupOnXPath $structLoad "Load//Total"]
     set props [list ByFunction No modulus 10000 directionY -1 Interval Total]

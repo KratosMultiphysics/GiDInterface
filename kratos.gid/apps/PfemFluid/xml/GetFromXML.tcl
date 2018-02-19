@@ -55,7 +55,7 @@ proc PfemFluid::xml::CustomTree { args } {
 
     
     #intervals
-    spdAux::SetValueOnTreeItem icon timeIntervals Intervals
+    spdAux::SetValueOnTreeItem icon sheets Intervals
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
         $node setAttribute icon select
     }        
