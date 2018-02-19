@@ -1360,8 +1360,8 @@ proc spdAux::ProcGetSchemes {domNode args} {
     
     set ids [list ]
     if {[llength $schemes] == 0} {
-        if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v "None"}
-        return "None"
+        if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v "None";$domNode setAttribute values "None"}
+        return "None,None"
     }
     set names [list ]
     set pnames [list ]
