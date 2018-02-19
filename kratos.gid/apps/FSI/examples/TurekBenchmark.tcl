@@ -1,5 +1,10 @@
 
 proc ::FSI::examples::TurekBenchmark {args} {
+    if {![Kratos::IsModelEmpty]} {
+        set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
+        set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
+		if { $retval == "cancel" } { return }
+    }
     # Set up geometry and groups
     DrawTurekBenchmarkFluidGeometry
     DrawTurekBenchmarkStructureGeometry
@@ -159,7 +164,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     # Fluid Parts
     set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
     set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1000.0 VISCOSITY 1.0E-06 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1000.0 DYNAMIC_VISCOSITY 1.0E-06]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -315,8 +320,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
-    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 10000.0]
-    lappend props YIELD_STRESS 0 YOUNG_MODULUS 1.4e6 POISSON_RATIO 0.4
+    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 10000.0 YOUNG_MODULUS 1.4e6 POISSON_RATIO 0.4]
     foreach {prop val} $props {
          set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
