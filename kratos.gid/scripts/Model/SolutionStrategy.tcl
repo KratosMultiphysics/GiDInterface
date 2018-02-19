@@ -53,7 +53,7 @@ oo::class create Scheme {
         set sol_strat [dict get $args "SolutionStrategy"]
         set a [dict remove $args "SolutionStrategy"]
         set c [next $a]
-        if {$c && [write::isBooleanTrue [my getAttribute "NeedElements"]]} {
+        if {$c && ![write::isBooleanFalse [my getAttribute "NeedElements"]]} {
             set c 0
             if [llength [Model::GetAvailableElements $sol_strat [my getName]]] {
                 set c 1
@@ -122,7 +122,7 @@ oo::class create SolStrat {
     method cumple {args} {
         set c [next {*}$args]
          
-        if {$c && [write::isBooleanTrue [my getAttribute "NeedElements"]]} {
+        if {$c && ![write::isBooleanFalse [my getAttribute "NeedElements"]]} {
             set c 0
             foreach sc [my getSchemes] {
                 if [llength [Model::GetAvailableElements [my getName] [$sc getName]]] {
