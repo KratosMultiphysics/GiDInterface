@@ -122,7 +122,7 @@ oo::class create SolStrat {
     method cumple {args} {
         set c [next {*}$args]
          
-        if {$c} {
+        if {$c && [write::isBooleanTrue [my getAttribute "NeedElements"]]} {
             set c 0
             foreach sc [my getSchemes] {
                 if [llength [Model::GetAvailableElements [my getName] [$sc getName]]] {
