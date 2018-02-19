@@ -63,6 +63,8 @@ proc DEM::write::writeModelPartEvent { } {
     
     # MDPA Parts
     write::CloseFile
+    catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[file tail [GiD_Info project modelname] ].mdpa"]}
+
     write::OpenFile "[file tail [GiD_Info project ModelName]]DEM.mdpa"
     WriteMDPAParts
     write::CloseFile

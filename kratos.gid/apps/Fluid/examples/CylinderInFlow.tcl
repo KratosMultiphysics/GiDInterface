@@ -13,6 +13,7 @@ proc ::Fluid::examples::CylinderInFlow {args} {
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
+    GiD_Process 'Zoom Frame
 }
 
 
@@ -153,7 +154,8 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
