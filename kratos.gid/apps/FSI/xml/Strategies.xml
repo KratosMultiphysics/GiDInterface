@@ -16,7 +16,7 @@
 			</linearSolverItem>
 		</linearSolvers>
 		<schemes>
-			<scheme n="GenericDN" pn="Partitioned scheme" help="">
+			<scheme n="GenericDN" pn="Partitioned scheme" help=""  NeedElements="false">
 				<parameter_list></parameter_list>
 				<element_filters>
 					<filter field="ImplementedInApplication" value="FSIApplication"/>
