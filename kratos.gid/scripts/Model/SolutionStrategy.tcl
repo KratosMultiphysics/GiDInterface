@@ -53,7 +53,7 @@ oo::class create Scheme {
         set sol_strat [dict get $args "SolutionStrategy"]
         set a [dict remove $args "SolutionStrategy"]
         set c [next $a]
-        if {$c} {
+        if {$c && [write::isBooleanTrue [my getAttribute "NeedElements"]]} {
             set c 0
             if [llength [Model::GetAvailableElements $sol_strat [my getName]]] {
                 set c 1
