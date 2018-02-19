@@ -13,6 +13,7 @@ proc ::Fluid::examples::CylinderInFlow {args} {
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
+    GiD_Process 'Zoom Frame
 }
 
 
