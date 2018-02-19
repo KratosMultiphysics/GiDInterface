@@ -81,7 +81,7 @@
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
         </element_filters>
       </scheme>
-      <scheme n="RotationBossak" pn="Beams Bossak" help="Scheme for large rotations in beams" ProductionReady="Developer">
+      <scheme n="RotationBossak" pn="Beams Bossak" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
         <parameter_list>
 	  <parameter n="bossak_factor" pn="Bossak factor" type="double" v="-0.3" help="Damping factor for the bossak scheme [-0.3,0]"/>
 	</parameter_list>
@@ -90,7 +90,7 @@
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
         </element_filters>
       </scheme>
-      <scheme n="RotationNewmark" pn="Beams Newmark" help="Scheme for large rotations in beams" ProductionReady="Developer">
+      <scheme n="RotationNewmark" pn="Beams Newmark" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
         <parameter_list>
 	</parameter_list>
         <element_filters>
@@ -98,7 +98,7 @@
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
         </element_filters>
       </scheme>
-      <scheme n="RotationSimo" pn="Beams Simo" help="Scheme for large rotations in beams" ProductionReady="Developer">
+      <scheme n="RotationSimo" pn="Beams Simo" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
         <parameter_list>
 	  <parameter n="bossak_factor" pn="Bossak factor" type="double" v="0.0" help="Damping factor for the bossak scheme [-0.3,0]"/>
 	</parameter_list>
@@ -235,7 +235,7 @@
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
 	</element_filters>
       </scheme>
-      <scheme n="RotationStatic" pn="Beams" help="Scheme for large rotations in beams" ProductionReady="Developer">
+      <scheme n="RotationStatic" pn="Beams" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
         <parameter_list>
 	</parameter_list>
         <element_filters>
