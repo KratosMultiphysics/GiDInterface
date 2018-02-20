@@ -65,9 +65,7 @@ proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
 }
 
 proc AfterWriteCalcFileGIDProject { filename errorflag } {
-    FileSelector::CopyFilesIntoModel [file dirname $filename]
-    write::Init
-    set errcode [::write::writeEvent $filename]
+    set errcode [Kratos::WriteCalculationFilesEvent $filename]
     if {$errcode} {return "-cancel-"}
 }
 
@@ -195,6 +193,25 @@ proc Kratos::LoadGiDProject { filespd } {
     spdAux::LoadModelFiles
     spdAux::LoadIntervalGroups
 }
+
+proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
+    if {$filename eq ""} {
+        if {[GiD_Info Project Modelname] eq "UNNAMED"} {
+            error "Save your model first"
+        } {
+            set filename [file join [GiD_Info Project Modelname].gid [file tail [GiD_Info Project Modelname]].dat]
+        }
+    }
+    FileSelector::CopyFilesIntoModel [file dirname $filename]
+    write::Init
+    set errcode [::write::writeEvent $filename]
+    return $errcode
+}
+
+proc Kratos::RunNoWrite { } {
+    
+}
+
 
 proc Kratos::RestoreVariables { } {
     variable kratos_private
