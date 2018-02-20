@@ -75,14 +75,18 @@ proc FSI::examples::DrawTurekBenchmarkStructureGeometry {args} {
 
     # Set structure domain geometry
     if {$::Model::SpatialDimension eq "2D"} {
-    GiD_Process 'Layers New Layer0 escape 'Layers ChangeName Layer0 Structure escape 'Layers Off Fluid escape 'GetPointCoord Silent FNoJoin 0.2,0.2 escape Mescape \
-    Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 escape Mescape \
-    Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 13 NoJoin @0,0.02 @-0.4,0 escape escape Mescape \
-    Geometry Delete Surfaces 2 escape escape Mescape \
-    Geometry Create IntMultLines 17 18 escape 20 22 escape escape escape escape escape Mescape \
-    Geometry Delete Lines 21 28 escape Mescape \
-    Geometry Delete AllTypes points 12 14 16 lines 24 26 surfaces volumes dimensions escape escape escape escape escape escape Mescape \
-    Geometry Create NurbsSurface 19 23 25 27 escape escape escape escape
+        
+        GiD_Process 'Layers New Structure escape
+        GiD_Process 'Layers Off Fluid escape
+        GiD_Process 'Layers ToUse Structure escape
+
+        GiD_Process Mescape Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 escape Mescape 
+        GiD_Process Mescape Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 13 NoJoin @0,0.02 @-0.4,0 escape escape Mescape 
+        GiD_Process Mescape Geometry Delete Surfaces 2 escape escape Mescape 
+        GiD_Process Mescape Geometry Create IntMultLines 17 18 escape 20 22 escape escape escape escape escape Mescape 
+        GiD_Process Mescape Geometry Delete Lines 21 28 escape Mescape 
+        GiD_Process Mescape Geometry Delete AllTypes points 12 14 16 lines 24 26 surfaces volumes dimensions escape escape escape escape escape escape Mescape 
+        GiD_Process Mescape Geometry Create NurbsSurface 19 23 25 27 escape escape escape escape
     } else {
         # 3D version not implemented yet
     }
