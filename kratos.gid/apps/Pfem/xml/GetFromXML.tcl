@@ -61,8 +61,8 @@ proc Pfem::xml::CustomTree { args } {
     }        
     
     #conditions
-    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
-    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
+    #spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
+    #spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
         $node setAttribute icon select
@@ -83,15 +83,15 @@ proc Pfem::xml::CustomTree { args } {
     
     #solver settings
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
-        $node setAttribute icon select
+        $node setAttribute icon solvers
     }
 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
-        $node setAttribute icon select
+        $node setAttribute icon solvers
     }   
 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
-        $node setAttribute icon select
+        $node setAttribute icon solvers
     }   
 
     
@@ -245,6 +245,7 @@ proc Pfem::xml::ProcCheckNodalConditionStateSolid {domNode args} {
     set params [list analysis_type $solutionType]
     if {[::Model::CheckElementsNodalCondition $conditionId $elemsactive $params]} {return "normal"} else {return "hidden"}
 }
+
 
 proc Pfem::xml::ProcSolutionTypeState {domNode args} {
     set domain_type_un PFEM_DomainType

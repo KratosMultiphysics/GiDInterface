@@ -7,5 +7,5 @@
     <include n="SolutionStrategy" active="1" path="apps/Pfem/xml/SolutionStrategy.spd"/>                   
     <include n="Results" active="1" path="apps/Pfem/xml/Results.spd"/>
     <include n="Restart" active="1" path="apps/Common/xml/Restart.spd"/>
-    <include n="materials" active="0" path="apps/Pfem/xml/Materials.spd"/> 
-  </container>
+    <include n="Materials" active="1" path="apps/Pfem/xml/Materials.spd"/>
+</container>
