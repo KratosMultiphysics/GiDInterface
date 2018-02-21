@@ -51,13 +51,13 @@ proc Model::ParseMatNode { node } {
 
 proc Model::GetMaterials {args} { 
     variable Materials
-    W "Get materials $args"
+    # W "Get materials $args"
     set cumplen [list ]
     foreach mat $Materials {
-        W [$mat getName]
+        # W [$mat getName]
         if {[$mat cumple {*}$args]} { lappend cumplen $mat}
     }
-    W "Good materials $cumplen"
+    # W "Good materials $cumplen"
     return $cumplen
 }
 
