@@ -1225,7 +1225,8 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     set saveValue [write::getStringBinaryValue $un SaveRestart]
     
     dict set resultDict "process_name" "RestartProcess"
-    dict set params "model_part_name" "Main Domain"
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set params "model_part_name" $model_name
     dict set params "save_restart" $saveValue
     dict set params "restart_file_name" [file tail [GiD_Info Project ModelName]]
     set xp1 "[spdAux::getRoute $un]/container\[@n = '$name'\]/value"
