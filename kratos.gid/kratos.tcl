@@ -217,6 +217,11 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     FileSelector::CopyFilesIntoModel [file dirname $filename]
     write::Init
     set errcode [::write::writeEvent $filename]
+    if {$errcode} {
+        ::GidUtils::SetWarnLine "Error writing mdpa or json"
+    } else {
+        ::GidUtils::SetWarnLine "MDPA and JSON written OK"
+    }
     return $errcode
 }
 
