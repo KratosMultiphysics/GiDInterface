@@ -98,7 +98,7 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     set timeDataDict [dict create]
 
     dict set timeDataDict time_step [write::getValue PFEM_TimeParameters DeltaTime]
-    dict set timeDataDict start_time [write::getValue PFEM_TimeParameters StartTime]
+    #dict set timeDataDict start_time [write::getValue PFEM_TimeParameters StartTime]
     dict set timeDataDict end_time [write::getValue PFEM_TimeParameters EndTime]
 
     dict set solverParametersDict time_settings $timeDataDict
@@ -109,9 +109,9 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     set problemtype [write::getValue PFEM_DomainType]
 
     if {$problemtype eq "Solids"} {
-        
+
         dict set integrationDataDict solution_type [write::getValue PFEM_SolutionType]
-        
+	
         set solutiontype [write::getValue PFEM_SolutionType]
         
         if {$solutiontype eq "Static"} {
@@ -120,6 +120,9 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
             dict set integrationDataDict time_integration [write::getValue PFEM_SolStrat]
             dict set integrationDataDict integration_method [write::getValue PFEM_Scheme]
         }
+
+	set buffer 3
+	dict set integrationDataDict "buffer_size" [expr $buffer]	
     }
     
     dict set solverParametersDict time_integration_settings $integrationDataDict
@@ -188,12 +191,13 @@ proc Pfem::write::GetPFEM_ContactDict { } {
         dict set contact_dict "help"          "This process applies contact domain search by remeshing outer boundaries"
         dict set contact_dict "process_name"  "ContactDomainProcess"
         set params [dict create]
-        dict set params "model_part_name"       "model_part_name"
+	set model_name [file tail [GiD_Info Project ModelName]]   
+        dict set params "model_part_name"       $model_name
         dict set params "meshing_control_type"  "step"
         dict set params "meshing_frequency"     1.0
         dict set params "meshing_before_output" true
         dict set params "meshing_domains"       $contact_domains
-        dict set contact_dict "Parameters"    $params
+        dict set contact_dict "Parameters"      $params
     }
     return $contact_dict
 }
@@ -201,28 +205,35 @@ proc Pfem::write::GetPFEM_ContactDict { } {
 proc Pfem::write::GetPfem_ContactProcessDict {contact_name} {
     set cont_dict [dict create]
     dict set cont_dict "python_module" "contact_domain"
-    dict set cont_dict "model_part_name" "sub_model_part_name"
+    dict set cont_dict "model_part_name" "Contact"
     dict set cont_dict "alpha_shape" 1.4
     dict set cont_dict "offset_factor" 0.0
     set mesh_strat [dict create]
     dict set mesh_strat "python_module" "contact_meshing_strategy"
-    dict set mesh_strat "meshing_frequency" 0
     dict set mesh_strat "remesh" true
-    dict set mesh_strat "constrained" false
+    dict set mesh_strat "constrained" true
     set contact_parameters [dict create]
-    
-    dict set contact_parameters "contact_condition_type" "ContactDomainLM2DCondition"
+
+    set nDim $::Model::SpatialDimension
+    if {$nDim eq "3D"} {
+	dict set contact_parameters "contact_condition_type" "ContactDomainLMCondition3D4N"
+    } else {
+	dict set contact_parameters "contact_condition_type" "ContactDomainLMCondition2D3N"
+    } 
+
     dict set contact_parameters "friction_law_type" "FrictionLaw"
     dict set contact_parameters "kratos_module" "KratosMultiphysics.ContactMechanicsApplication"
     set properties_dict [dict create]
     foreach prop [list FRICTION_ACTIVE MU_STATIC MU_DYNAMIC PENALTY_PARAMETER TANGENTIAL_PENALTY_RATIO TAU_STAB] {
-        dict set properties_dict $prop [Pfem::write::GetContactProperty "Solid-Solid" $prop]
+	set prop_value [Pfem::write::GetContactProperty "Solid-Solid" $prop]
+	set prop_value [expr $prop_value]
+        dict set properties_dict $prop $prop_value
     }
     dict set contact_parameters "variables_of_properties" $properties_dict
     dict set mesh_strat "contact_parameters" $contact_parameters
     dict set cont_dict "elemental_variables_to_transfer" [list "CAUCHY_STRESS_VECTOR" "DEFORMATION_GRADIENT" ]
     dict set cont_dict "contact_bodies_list" [Pfem::write::GetSolidBodiesWithContact]
-    dict set cont_dict "meshing_domains" $mesh_strat
+    dict set cont_dict "meshing_strategy" $mesh_strat
     return $cont_dict
 }
 
@@ -236,11 +247,11 @@ proc Pfem::write::GetSolidBodiesWithContact { } {
     return $bodies_list
 }
 
-
 proc Pfem::write::GetContactProperty { contact_name property } {
     set ret ""
     set root [customlib::GetBaseRoot]
-    set ret [get_domnode_attribute [$root selectNodes "[spdAux::getRoute PFEM_contacts]/blockdata\[@name='$contact_name'\]/value\[@n='$property'\]"] v]
+    set ret [get_domnode_attribute [$root selectNodes "[spdAux::getRoute "PFEM_contacts"]/container\[@n='$contact_name'\]/value\[@n='$property'\]"] v]
+
     if {$ret eq ""} {set ret null}
     return $ret
 }

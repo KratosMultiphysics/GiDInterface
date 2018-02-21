@@ -21,7 +21,7 @@ proc Pfem::write::writeModelPartEvent { } {
     foreach part_un $parts_un_list {
         write::initWriteData $part_un "PFEM_Materials"
     }
-    
+      
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
@@ -92,12 +92,89 @@ proc Pfem::write::GetPartsUN { } {
 
 # Custom files (Copy python scripts, write materials file...)
 proc Pfem::write::writeCustomFilesEvent { } {
-    Solid::write::WriteMaterialsFile
+    Pfem::write::WriteMaterialsFile
     
     write::CopyFileIntoModel "python/RunMainPfem.py"
     write::RenameFileInModel "RunMainPfem.py" "MainKratos.py"
     
     #write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
+}
+
+proc Pfem::write::WriteMaterialsFile { } {
+    variable validApps
+    
+    set filename "Materials.json"
+
+    set parts_un_list [GetPartsUN]
+    foreach part_un $parts_un_list {
+        write::initWriteData $part_un "PFEM_Materials"
+    }
+    set mats_json [Pfem::write::getPropertiesList $parts_un_list]
+
+    write::OpenFile $filename
+    write::WriteJSON $mats_json
+    write::CloseFile
+}
+
+proc Pfem::write::getPropertiesList {parts_un_list} {
+    set mat_dict [write::getMatDict]
+    set props_dict [dict create]
+    set props [list ]
+    set sections [list ]
+
+    set python_module "assign_materials_process"
+    set process_name  "AssignMaterialsProcess"
+    set help  "This process creates a material and assigns its properties"
+    
+    #set doc $gid_groups_conds::doc
+    #set root [$doc documentElement]
+    set root [customlib::GetBaseRoot]
+
+    foreach parts_un $parts_un_list {
+	set xp1 "[spdAux::getRoute $parts_un]/group"
+	foreach gNode [$root selectNodes $xp1] {
+	    set group [get_domnode_attribute $gNode n]
+	    set sub_model_part [write::getMeshId Parts $group]
+	    if { [dict exists $mat_dict $group] } {
+		set law_id [dict get $mat_dict $group MID]
+		set law_name [dict get $mat_dict $group ConstitutiveLaw]		
+		set law_type [[Model::getConstitutiveLaw $law_name] getAttribute "Type"]	
+		set mat_name [dict get $mat_dict $group Material]
+		
+		set prop_dict [dict create]		
+		set kratos_module [[Model::getConstitutiveLaw $law_name] getAttribute "kratos_module"]
+		dict set prop_dict "python_module" $python_module
+		dict set prop_dict "kratos_module" $kratos_module
+		dict set prop_dict "help" $help
+		dict set prop_dict "process_name" $process_name 
+		
+		set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+		set variables_dict [dict create]
+		foreach prop [dict keys [dict get $mat_dict $group] ] {
+		    if {$prop ni $exclusionList} {
+			dict set variables_list $prop [write::getFormattedValue [dict get $mat_dict $group $prop]]
+		    }
+		}
+		set material_dict [dict create]
+		dict set material_dict "model_part_name" $sub_model_part
+		dict set material_dict "properties_id" $law_id
+		dict set material_dict "material_name" $mat_name
+		
+		set law_full_name [join [list "KratosMultiphysics" $kratos_module $law_name] "."]
+		dict set material_dict constitutive_law [dict create name $law_full_name]
+		dict set material_dict variables $variables_list
+		dict set material_dict tables dictnull
+		dict set prop_dict Parameters $material_dict
+		
+		lappend props $prop_dict
+	    }
+	    
+	}
+    }
+    
+    dict set props_dict material_models_list $props
+    
+    return $props_dict
 }
 
 
