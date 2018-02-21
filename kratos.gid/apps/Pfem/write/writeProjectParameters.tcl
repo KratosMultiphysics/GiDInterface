@@ -78,7 +78,7 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     }
     
     dict set modelDataDict bodies_list $bodies_list
-    dict set modelDataDict domains_parts_list $bodies_parts_list
+    dict set modelDataDict domain_parts_list $bodies_parts_list
     dict set modelDataDict processes_parts_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
     
     return $modelDataDict
@@ -254,7 +254,8 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
     dict set resultDict "process_name" "RemeshDomainsProcess"
     
     set paramsDict [dict create]
-    dict set paramsDict "model_part_name" "Main Domain"
+    set model_name [file tail [GiD_Info Project ModelName]]   
+    dict set paramsDict "model_part_name" $model_name
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
@@ -368,7 +369,8 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     dict set resultDict "process_name" "RemeshFluidDomainsProcess" 
     
     set paramsDict [dict create]
-    dict set paramsDict "model_part_name" "Main Domain"
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set paramsDict "model_part_name" $model_name
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
