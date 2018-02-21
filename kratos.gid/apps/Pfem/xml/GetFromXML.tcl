@@ -82,15 +82,15 @@ proc Pfem::xml::CustomTree { args } {
     }
     
     #solver settings
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Solution]/container\[@n = 'linear_solver_settings'\]" ] { 
         $node setAttribute icon solvers
     }
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Solution]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
         $node setAttribute icon solvers
     }   
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Solution]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
         $node setAttribute icon solvers
     }   
 
@@ -176,7 +176,7 @@ proc Pfem::xml::ProcGetElementsValues {domNode args} {
 proc Pfem::xml::GetElements {domNode args} {
     
     set nodeApp [spdAux::GetAppIdFromNode $domNode]
-    set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
+    set sol_stratUN [apps::getAppUniqueName $nodeApp Solution]
     set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
     
     get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict

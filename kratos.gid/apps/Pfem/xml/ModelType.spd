@@ -4,7 +4,7 @@
   <value n="DomainType" pn="Domain type" icon="data" un="PFEM_DomainType" v="Solids" values="Fluids,Solids" help="Type of problem to be solved" actualize_tree="1"/>
   <container n="AnalysisType" pn="Analysis" icon="select" un="PFEM_AnalysisType" help="Problem parameters" actualize_tree="1" state="normal" tree_state="open" open_window="0">
     <value n="SolutionType" pn="Solution type" icon="data" un="PFEM_SolutionType" v="Static" values="Static,Dynamic" help="Solution type" actualize_tree="1" state="[SolutionTypeState]"/>
-    <value n="SolStratCombo" pn="Time integration" icon="data" un="PFEM_SolStrat" v="" values="" dict="[GetSolutionStrategiesPFEM]" actualize_tree="1" state="[HideIfUniqueName PFEM_SolutionType Static]"/>
+    <value n="StrategyCombo" pn="Time integration" icon="data" un="PFEM_SolStrat" v="" values="" dict="[GetSolutionStrategiesPFEM]" actualize_tree="1" state="[HideIfUniqueName PFEM_SolutionType Static]"/>
     <value n="Scheme" pn="Scheme" icon="data" un="PFEM_Scheme" v="" values="" dict="[GetSchemes]" state="normal"  actualize_tree="1"/>
   </container>
   <container n="TimeParameters" pn="Time parameters" un="PFEM_TimeParameters" icon="timeParams" help="Problem parameters" state="[HideIfUniqueName PFEM_Scheme Linear]" tree_state="closed" open_window="0">
