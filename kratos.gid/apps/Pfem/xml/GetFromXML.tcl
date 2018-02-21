@@ -20,6 +20,7 @@ proc Pfem::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getNodalConditions "../../Solid/xml/NodalConditions.xml"
     Model::getNodalConditions NodalConditions.xml
+    Model::getMaterials Materials.xml
     Model::getConditions "../../Solid/xml/Conditions.xml"
     Model::getSolvers "../../Pfem/xml/Solvers.xml"
     
@@ -176,7 +177,7 @@ proc Pfem::xml::ProcGetElementsValues {domNode args} {
 proc Pfem::xml::GetElements {domNode args} {
     
     set nodeApp [spdAux::GetAppIdFromNode $domNode]
-    set sol_stratUN [apps::getAppUniqueName $nodeApp Solution]
+    set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
     set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
     
     get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
