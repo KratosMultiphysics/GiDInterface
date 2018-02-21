@@ -390,11 +390,11 @@
 
   <!--beam elements-->
   <ElementItem n="LinearBeamElement2D" pn="Beam small displacements" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True"
-               LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False"
+               LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
                RotationDofs="True" ElementType="Beam"  AnalysisType="linear,non_linear">
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="CrLinearBeamElement3D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="CrLinearBeamElement2D2N"/>
     </TopologyFeatures>
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Beam2D"/>
@@ -409,17 +409,17 @@
     </NodalConditions>
       <inputs></inputs>
       <outputs>
-        <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
-        <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+        <parameter n="FORCE" pn="Force" />
+        <parameter n="MOMENT" pn="Moment"/>
       </outputs>
   </ElementItem>
 
   <ElementItem n="BeamElement2D" pn="Beam large displacements" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True"
-               LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False"
+               LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
                RotationDofs="True" ElementType="Beam"  AnalysisType="non_linear">
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="CrBeamElement3D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="CrBeamElement2D2N"/>
     </TopologyFeatures>
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Beam2D"/>
@@ -435,8 +435,8 @@
       <inputs>
       </inputs>
       <outputs>
-        <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
-        <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+        <parameter n="FORCE" pn="Force" />
+        <parameter n="MOMENT" pn="Moment"/>
       </outputs>
   </ElementItem>
 
@@ -460,8 +460,8 @@
     </NodalConditions>
       <inputs></inputs>
       <outputs>
-        <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
-        <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+        <parameter n="FORCE" pn="Force" />
+        <parameter n="MOMENT" pn="Moment"/>
       </outputs>
   </ElementItem>
 
@@ -486,8 +486,8 @@
       <inputs>
       </inputs>
       <outputs>
-        <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
-        <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+        <parameter n="FORCE" pn="Force" />
+        <parameter n="MOMENT" pn="Moment"/>
       </outputs>
   </ElementItem>
 

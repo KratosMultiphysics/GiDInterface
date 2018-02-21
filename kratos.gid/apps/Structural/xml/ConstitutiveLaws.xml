@@ -85,7 +85,7 @@
     </CLaw>
 
     <!--constitutive laws for beams-->
-    <CLaw n="BeamConstitutiveLaw2D" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam2D" behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam2D" behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour for beams" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -97,7 +97,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="BeamConstitutiveLaw3D" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam3D" behaviour="Elastic"
+    <CLaw n="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam3D" behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
