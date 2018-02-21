@@ -5,7 +5,7 @@
       <dependencies value='Solid' node="../value[@n='MeshingStrategy']" att1='v' v1='No remesh' />
       <dependencies value='Rigid' node="../value[@n='MeshingStrategy']" att1='v' v1='No remesh' />
       <dependencies value='Fluid' node="../value[@n='MeshingStrategy']" att1='v' v1='Remesh and refine' />
-      <dependencies node="../value" actualize="1"/>
+      <dependencies node="../value[@n != 'BodyType']" actualize="1"/>
       <dependencies node="../condition/value" actualize="1"/>
     </value>
     <value n="ContactStrategy" pn="Contacting" icon="data" v="No" values="Yes,No" state="[getStateFromXPathValue {string(../value[@n='BodyType']/@v)} Solid]" />

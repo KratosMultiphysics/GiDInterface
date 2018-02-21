@@ -210,7 +210,7 @@ proc Pfem::xml::ProcGetMeshingDomains {domNode args} {
     foreach meshing_domain [[$domNode selectNodes $basepath] childNodes] {
         lappend values [get_domnode_attribute $meshing_domain name]
     }
-    if {[get_domnode_attribute $domNode v] eq ""} {
+    if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $values} {
         $domNode setAttribute v [lindex $values 0]
     }
     return [join $values ,]
@@ -271,22 +271,26 @@ proc Pfem::xml::ProcSolutionTypeState {domNode args} {
 proc Pfem::xml::ProcGetBodyTypeValues {domNode args} {
     set domain_type_un PFEM_DomainType
     set domain_type_route [spdAux::getRoute $domain_type_un]
-    set values "Fluid,Solid,Rigid"
+    set values [list Fluid Solid Rigid]
     if {$domain_type_route ne ""} {
         set domain_type_node [$domNode selectNodes $domain_type_route]
         set domain_type_value [get_domnode_attribute $domain_type_node v]
         
         if {$domain_type_value eq "Fluids"} {
-            set values "Fluid,Rigid"
+            set values [list Fluid Rigid]
         }
         if {$domain_type_value eq "Coupled"} {
-            set values "Solid,Fluid,Rigid"
+            set values [list Fluid Solid Rigid]
         }
         if {$domain_type_value eq "Solids"} {
-            set values "Solid,Rigid"
+            set values [list Solid Rigid]
         }
     }
-    return $values
+    if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $values} {
+        $domNode setAttribute v [lindex $values 0]
+    }
+    gid_groups_conds::check_node_dependencies $domNode
+    return [join $values ,]
 }
 
 proc Pfem::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
