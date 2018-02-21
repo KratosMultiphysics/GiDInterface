@@ -262,7 +262,7 @@
 
   <!--structural elements-->
   <!--beam elements-->
-  <ElementItem n="LinearBeamElement2D" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="LinearBeamElement2D" pn="Beam small displacements" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True"
                LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
                RotationDofs="True" ElementType="Beam"  AnalysisType="linear,non_linear">
@@ -287,7 +287,7 @@
       </outputs>
   </ElementItem>
 
-  <ElementItem n="BeamElement2D" pn="Large displacements beam" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="BeamElement2D" pn="Beam large displacements" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True"
                LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
                RotationDofs="True" ElementType="Beam"  AnalysisType="non_linear">
@@ -313,7 +313,7 @@
       </outputs>
   </ElementItem>
 
-  <ElementItem n="LinearBeamElement3D" pn="Small displacements beam" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="LinearBeamElement3D" pn="Beam small displacements" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True"
                LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
                RotationDofs="True" ElementType="Beam"  AnalysisType="linear,non_linear">
@@ -338,7 +338,7 @@
       </outputs>
   </ElementItem>
 
-  <ElementItem n="BeamElement3D" pn="Large displacements beam" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="BeamElement3D" pn="Beam large displacements" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True"
                LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
                RotationDofs="True" ElementType="Beam"  AnalysisType="non_linear">
@@ -365,7 +365,7 @@
   </ElementItem>
 
   <!--truss elements-->
-  <ElementItem n="TrussElement3D" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussElement3D" pn="Truss large displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -391,7 +391,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TrussElement2D" pn="Large displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussElement2D" pn="Truss large displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -417,7 +417,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TrussLinearElement3D" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussLinearElement3D" pn="Truss small displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
                help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -443,7 +443,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="TrussLinearElement2D" pn="Small displacements truss" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="TrussLinearElement2D" pn="Truss small displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
                help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -469,7 +469,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="CableElement2D" pn="Large displacements cable" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="CableElement2D" pn="Cable large displacements" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements cable" RotationDofs="False" ElementType="Cable"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -495,7 +495,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="CableElement3D" pn="Large displacements cable" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="CableElement3D" pn="Cable large displacements" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
                help="This element implements a large displacements cable" RotationDofs="False" ElementType="Cable"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -551,7 +551,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="PrestressedMembraneElement" pn="Prestress Membrane" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="PrestressedMembraneElement" pn="Membrane prestressed" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
                help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane"  AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -582,7 +582,7 @@
 
   <!--shell elements-->
   <!--large displacements-->
-  <ElementItem n="ShellThinCorotationalElement" pn="Thin corotational shell" ImplementedInFile="shell_thin_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="ShellThinCorotationalElement" pn="Shell thin corotational" ImplementedInFile="shell_thin_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
                help="This element implements a corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
                 AnalysisType="linear,non_linear">
@@ -615,7 +615,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="ShellThickCorotationalElement" pn="Thick corotational shell" ImplementedInFile="shell_thick_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+  <ElementItem n="ShellThickCorotationalElement" pn="Shell thick corotational" ImplementedInFile="shell_thick_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication"
                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
                help="This element implements a corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
                 AnalysisType="linear,non_linear">
