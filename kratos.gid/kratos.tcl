@@ -65,10 +65,14 @@ proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
 }
 
 proc AfterWriteCalcFileGIDProject { filename errorflag } {
-    FileSelector::CopyFilesIntoModel [file dirname $filename]
-    write::Init
-    set errcode [::write::writeEvent $filename]
-    if {$errcode} {return "-cancel-"}
+    if {$Kratos::must_write_calc_data} {
+        set errcode [Kratos::WriteCalculationFilesEvent $filename]
+        if {$errcode} {return "-cancel-"}
+    } else {
+        if {$Kratos::must_exist_calc_data} {
+
+        }
+    }
 }
 
 proc GiD_Event_BeforeMeshGeneration { elementsize } {
@@ -113,12 +117,18 @@ proc AfterRenameGroup { oldname newname } {
 namespace eval Kratos {
   variable kratos_private
   variable must_quit
+  variable must_write_calc_data
+  variable must_exist_calc_data
 }
 
 proc Kratos::InitGIDProject { dir } {
     variable kratos_private
     variable must_quit
+    variable must_write_calc_data
+    variable must_exist_calc_data
     set must_quit 0
+    set must_write_calc_data 1
+    set must_exist_calc_data 1
     unset -nocomplain kratos_private
     set kratos_private(Path) $dir ;#to know where to find the files
     set kratos_private(DevMode) "release" ; #can be dev or release
@@ -195,6 +205,34 @@ proc Kratos::LoadGiDProject { filespd } {
     spdAux::LoadModelFiles
     spdAux::LoadIntervalGroups
 }
+
+proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
+    if {$filename eq ""} {
+        if {[GiD_Info Project Modelname] eq "UNNAMED"} {
+            error "Save your model first"
+        } {
+            set filename [file join [GiD_Info Project Modelname].gid [file tail [GiD_Info Project Modelname]].dat]
+        }
+    }
+    FileSelector::CopyFilesIntoModel [file dirname $filename]
+    write::Init
+    set errcode [::write::writeEvent $filename]
+    if {$errcode} {
+        ::GidUtils::SetWarnLine "Error writing mdpa or json"
+    } else {
+        ::GidUtils::SetWarnLine "MDPA and JSON written OK"
+    }
+    return $errcode
+}
+
+proc Kratos::ForceRun { } {
+    # validated by escolano@cimne.upc.edu
+    variable must_write_calc_data
+    set must_write_calc_data 0
+    GiD_Process Utilities Calculate
+    set must_write_calc_data 1
+}
+
 
 proc Kratos::RestoreVariables { } {
     variable kratos_private
