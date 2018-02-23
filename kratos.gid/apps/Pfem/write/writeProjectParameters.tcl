@@ -3,7 +3,7 @@
 proc Pfem::write::getParametersDict { } {
     Pfem::write::CalculateMyVariables
     set projectParametersDict [dict create]
-    
+
     ##### Problem data #####
     # Create section
     set problemDataDict [GetPFEM_ProblemDataDict]
@@ -12,44 +12,47 @@ proc Pfem::write::getParametersDict { } {
     ##### model_data #####
     set modelDataDict [GetPFEM_ModelDataDict]
     dict set projectParametersDict model_settings $modelDataDict
-    
+
     ##### solver_settings #####
     set solverSettingsDict [GetPFEM_SolverSettingsDict]
     dict set projectParametersDict solver_settings $solverSettingsDict
-    
+
     ##### problem_process_list
     set problemProcessList [GetPFEM_ProblemProcessList]
     dict set projectParametersDict problem_process_list $problemProcessList
-    
+
     ##### constraints_process_list
     set group_constraints [Pfem::write::getConditionsParametersDict PFEM_NodalConditions "Nodal"]
     set body_constraints [Pfem::write::getBodyConditionsParametersDict PFEM_NodalConditions "Nodal"]
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
-    
+
     ##### loads_process_list
     dict set projectParametersDict loads_process_list [Pfem::write::getConditionsParametersDict PFEM_Loads]
-    
+
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
     dict set projectParametersDict output_process_list $output_process_list
-    
+
     ##### output_configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
-        
+    dict set projectParametersDict output_configuration [Pfem::write::GetDefaultOutputDict]
+
     return $projectParametersDict
 }
 proc Pfem::write::GetPFEM_ProblemDataDict { } {
     set problemDataDict [dict create]
     dict set problemDataDict problem_name [file tail [GiD_Info Project ModelName]]
-    
-    
+
+
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
     #dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
-    set cx [write::getValue FLGravity Cx]
-    set cy [write::getValue FLGravity Cy]
-    set cz [write::getValue FLGravity Cz]
-    dict set problemDataDict gravity_vector [list $cx $cy $cz]
-    
+    set problemtype [write::getValue PFEM_DomainType]
+    if {$problemtype ne "Solids"} {
+	set cx [write::getValue FLGravity Cx]
+	set cy [write::getValue FLGravity Cy]
+	set cz [write::getValue FLGravity Cz]
+	dict set problemDataDict gravity_vector [list $cx $cy $cz]
+    }
+
     return $problemDataDict
 }
 
@@ -57,18 +60,18 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     variable bodies_list
     set modelDataDict [dict create]
     dict set modelDataDict model_name [file tail [GiD_Info Project ModelName]]
-    
+
     set nDim $::Model::SpatialDimension
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set modelDataDict dimension $nDim
-    
+
     # model import settings
     set modelDict [dict create]
     #dict set modelDict type "mdpa"
     dict set modelDict name [file tail [GiD_Info Project ModelName]]
     #dict set modelDict label 0
     dict set modelDataDict input_file_settings $modelDict
-        
+
     set bodies_parts_list [list ]
     foreach body $bodies_list {
         set body_parts [dict get $body parts_list]
@@ -76,16 +79,16 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
 	    lappend bodies_parts_list $part
 	}
     }
-    
+
     dict set modelDataDict bodies_list $bodies_list
     dict set modelDataDict domain_parts_list $bodies_parts_list
     dict set modelDataDict processes_parts_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
-    
+
     return $modelDataDict
 }
 
 proc Pfem::write::GetPFEM_SolverSettingsDict { } {
-    
+
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue PFEM_SolStrat]
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
@@ -93,7 +96,7 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
     # Solver parameters
     set solverParametersDict [dict create]
-    
+
     # Time settings
     set timeDataDict [dict create]
 
@@ -111,9 +114,9 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     if {$problemtype eq "Solids"} {
 
         dict set integrationDataDict solution_type [write::getValue PFEM_SolutionType]
-	
+
         set solutiontype [write::getValue PFEM_SolutionType]
-        
+
         if {$solutiontype eq "Static"} {
             dict set integrationDataDict integration_method [write::getValue PFEM_Scheme]
         } elseif {$solutiontype eq "Dynamic"} {
@@ -122,9 +125,9 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
         }
 
 	set buffer 3
-	dict set integrationDataDict "buffer_size" [expr $buffer]	
+	dict set integrationDataDict "buffer_size" [expr $buffer]
     }
-    
+
     dict set solverParametersDict time_integration_settings $integrationDataDict
 
     # Solving strategy settings
@@ -132,7 +135,10 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
     # Solution strategy parameters and Solvers
     set strategyDataDict [dict merge $strategyDataDict [write::getSolutionStrategyParametersDict] ]
-    
+
+    set reform_dofs true
+    dict set strategyDataDict reform_dofs_at_each_step [expr $reform_dofs]
+
     dict set solverParametersDict solving_strategy_settings $strategyDataDict
 
     # Linear solver settings
@@ -140,7 +146,7 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
     dict set solverSettingsDict Parameters $solverParametersDict
 
-    
+
     return $solverSettingsDict
 }
 
@@ -191,10 +197,11 @@ proc Pfem::write::GetPFEM_ContactDict { } {
         dict set contact_dict "help"          "This process applies contact domain search by remeshing outer boundaries"
         dict set contact_dict "process_name"  "ContactDomainProcess"
         set params [dict create]
-	set model_name [file tail [GiD_Info Project ModelName]]   
+	set model_name [file tail [GiD_Info Project ModelName]]
         dict set params "model_part_name"       $model_name
         dict set params "meshing_control_type"  "step"
-        dict set params "meshing_frequency"     1.0
+	set frequency [Pfem::write::GetContactProperty "Solid-Solid" "Frequency"]
+        dict set params "meshing_frequency"     [expr $frequency]
         dict set params "meshing_before_output" true
         dict set params "meshing_domains"       $contact_domains
         dict set contact_dict "Parameters"      $params
@@ -205,30 +212,55 @@ proc Pfem::write::GetPFEM_ContactDict { } {
 proc Pfem::write::GetPfem_ContactProcessDict {contact_name} {
     set cont_dict [dict create]
     dict set cont_dict "python_module" "contact_domain"
-    dict set cont_dict "model_part_name" "Contact"
-    dict set cont_dict "alpha_shape" 1.4
-    dict set cont_dict "offset_factor" 0.0
     set mesh_strat [dict create]
     dict set mesh_strat "python_module" "contact_meshing_strategy"
-    dict set mesh_strat "remesh" true
-    dict set mesh_strat "constrained" true
     set contact_parameters [dict create]
 
+    set penalty_method [Pfem::write::GetContactProperty "Solid-Solid" "Penalty"]
     set nDim $::Model::SpatialDimension
     if {$nDim eq "3D"} {
-	dict set contact_parameters "contact_condition_type" "ContactDomainLMCondition3D4N"
+	if {$penalty_method eq "true"} {
+	    dict set contact_parameters "contact_condition_type" "ContactDomainPenaltyCondition3D4N"
+	} else {
+	    dict set contact_parameters "contact_condition_type" "ContactDomainLMCondition3D4N"
+	}
     } else {
-	dict set contact_parameters "contact_condition_type" "ContactDomainLMCondition2D3N"
-    } 
+	if {$penalty_method eq "true"} {
+	    dict set contact_parameters "contact_condition_type" "ContactDomainPenaltyCondition2D3N"
+	} else {
+	    dict set contact_parameters "contact_condition_type" "ContactDomainLMCondition2D3N"
+	}
+    }
 
     dict set contact_parameters "friction_law_type" "FrictionLaw"
     dict set contact_parameters "kratos_module" "KratosMultiphysics.ContactMechanicsApplication"
     set properties_dict [dict create]
-    foreach prop [list FRICTION_ACTIVE MU_STATIC MU_DYNAMIC PENALTY_PARAMETER TANGENTIAL_PENALTY_RATIO TAU_STAB] {
+
+    set prop_list [list ]
+    if {$penalty_method eq "true"} {
+	lappend prop_list "PENALTY_PARAMETER"
+    } else {
+	lappend prop_list "TAU_STAB"
+    }
+
+    set friction_active [Pfem::write::GetContactProperty "Solid-Solid" "FRICTION_ACTIVE"]
+    if {$friction_active eq "true"} {
+	lappend prop_list "FRICTION_ACTIVE"
+	lappend prop_list "MU_STATIC"
+	lappend prop_list "MU_DYNAMIC"
+	if {$penalty_method eq "true"} {
+	    lappend prop_list "TANGENTIAL_PENALTY_RATIO"
+	}
+    } else {
+	lappend prop_list "FRICTION_ACTIVE"
+    }
+
+    foreach prop $prop_list {
 	set prop_value [Pfem::write::GetContactProperty "Solid-Solid" $prop]
 	set prop_value [expr $prop_value]
         dict set properties_dict $prop $prop_value
     }
+
     dict set contact_parameters "variables_of_properties" $properties_dict
     dict set mesh_strat "contact_parameters" $contact_parameters
     dict set cont_dict "elemental_variables_to_transfer" [list "CAUCHY_STRESS_VECTOR" "DEFORMATION_GRADIENT" ]
@@ -263,9 +295,9 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
     dict set resultDict "kratos_module" "KratosMultiphysics.PfemApplication"
     dict set resultDict "python_module" "remesh_domains_process"
     dict set resultDict "process_name" "RemeshDomainsProcess"
-    
+
     set paramsDict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]   
+    set model_name [file tail [GiD_Info Project ModelName]]
     dict set paramsDict "model_part_name" $model_name
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
@@ -298,9 +330,9 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
         } else {
             dict set meshing_strategyDict "reference_element_type" "Element2D3N"
             dict set meshing_strategyDict "reference_condition_type" "CompositeCondition2D2N"
-        } 
+        }
         dict set bodyDict meshing_strategy $meshing_strategyDict
-        
+
         set spatial_bounding_boxDict [dict create ]
         set upX [expr 0.0]; set upY [expr 0.0]; set upZ [expr 0.0]
         dict set spatial_bounding_boxDict "upper_point" [list $upX $upY $upZ]
@@ -309,7 +341,7 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
         set vlX [expr 0.0]; set vlY [expr 0.0]; set vlZ [expr 0.0]
         dict set spatial_bounding_boxDict "velocity" [list $vlX $vlY $vlZ]
         dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
-        
+
         set refining_parametersDict [dict create ]
         dict set refining_parametersDict "critical_size" 0.0
         dict set refining_parametersDict "threshold_variable" "PLASTIC_STRAIN"
@@ -318,35 +350,35 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
         dict set refining_parametersDict "reference_error" 0.0
         dict set refining_parametersDict "add_nodes" true
         dict set refining_parametersDict "insert_nodes" false
-        
+
         set remove_nodesDict [dict create]
         dict set remove_nodesDict "apply_removal" false
         dict set remove_nodesDict "on_distance" false
         dict set remove_nodesDict "on_threshold" false
         dict set remove_nodesDict "on_error" false
         dict set refining_parametersDict remove_nodes $remove_nodesDict
-        
+
         set remove_boundaryDict [dict create]
         dict set remove_boundaryDict "apply_removal" false
         dict set remove_boundaryDict "on_distance" false
         dict set remove_boundaryDict "on_threshold" false
         dict set remove_boundaryDict "on_error" false
         dict set refining_parametersDict remove_boundary $remove_boundaryDict
-        
+
         set refine_elementsDict [dict create]
         dict set refine_elementsDict "apply_refinement" false
         dict set refine_elementsDict "on_distance" false
         dict set refine_elementsDict "on_threshold" false
         dict set refine_elementsDict "on_error" false
         dict set refining_parametersDict refine_elements $refine_elementsDict
-        
+
         set refine_boundaryDict [dict create]
         dict set refine_boundaryDict "apply_refinement" false
         dict set refine_boundaryDict "on_distance" false
         dict set refine_boundaryDict "on_threshold" false
         dict set refine_boundaryDict "on_error" false
         dict set refining_parametersDict refine_boundary $refine_boundaryDict
-        
+
         set refining_boxDict [dict create]
         dict set refining_boxDict "refine_in_box_only" false
         set upX [expr 0.0]; set upY [expr 0.0]; set upZ [expr 0.0]
@@ -356,9 +388,9 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
         set vlX [expr 0.0]; set vlY [expr 0.0]; set vlZ [expr 0.0]
         dict set refining_boxDict "velocity" [list $vlX $vlY $vlZ]
         dict set refining_parametersDict refining_box $refining_boxDict
-        
+
         dict set bodyDict refining_parameters $refining_parametersDict
-        
+
         dict set bodyDict "elemental_variables_to_transfer" [list "CAUCHY_STRESS_VECTOR" "DEFORMATION_GRADIENT"]
         lappend meshing_domains_list $bodyDict
     }
@@ -375,10 +407,10 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     dict set resultDict "help" "This process applies meshing to the problem domains"
     dict set resultDict "kratos_module" "KratosMultiphysics.PfemApplication"
     set problemtype [write::getValue PFEM_DomainType]
-    
+
     dict set resultDict "python_module" "remesh_fluid_domains_process"
-    dict set resultDict "process_name" "RemeshFluidDomainsProcess" 
-    
+    dict set resultDict "process_name" "RemeshFluidDomainsProcess"
+
     set paramsDict [dict create]
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set paramsDict "model_part_name" $model_name
@@ -417,9 +449,9 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
         } else {
             dict set meshing_strategyDict "reference_element_type" "TwoStepUpdatedLagrangianVPFluidElement2D"
             dict set meshing_strategyDict "reference_condition_type" "CompositeCondition2D2N"
-        } 
+        }
         dict set bodyDict meshing_strategy $meshing_strategyDict
-        
+
         set spatial_bounding_boxDict [dict create ]
         set upX [expr 0.0]; set upY [expr 0.0]; set upZ [expr 0.0]
         dict set spatial_bounding_boxDict "upper_point" [list $upX $upY $upZ]
@@ -428,7 +460,7 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
         set vlX [expr 0.0]; set vlY [expr 0.0]; set vlZ [expr 0.0]
         dict set spatial_bounding_boxDict "velocity" [list $vlX $vlY $vlZ]
         dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
-        
+
         set refining_parametersDict [dict create ]
         dict set refining_parametersDict "critical_size" 0.0
         dict set refining_parametersDict "threshold_variable" "PLASTIC_STRAIN"
@@ -437,35 +469,35 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
         dict set refining_parametersDict "reference_error" 0.0
         dict set refining_parametersDict "add_nodes" false
         dict set refining_parametersDict "insert_nodes" true
-        
+
         set remove_nodesDict [dict create]
         dict set remove_nodesDict "apply_removal" true
         dict set remove_nodesDict "on_distance" true
         dict set remove_nodesDict "on_threshold" false
         dict set remove_nodesDict "on_error" false
         dict set refining_parametersDict remove_nodes $remove_nodesDict
-        
+
         set remove_boundaryDict [dict create]
         dict set remove_boundaryDict "apply_removal" false
         dict set remove_boundaryDict "on_distance" false
         dict set remove_boundaryDict "on_threshold" false
         dict set remove_boundaryDict "on_error" false
         dict set refining_parametersDict remove_boundary $remove_boundaryDict
-        
+
         set refine_elementsDict [dict create]
         dict set refine_elementsDict "apply_refinement" true
         dict set refine_elementsDict "on_distance" true
         dict set refine_elementsDict "on_threshold" false
         dict set refine_elementsDict "on_error" false
         dict set refining_parametersDict refine_elements $refine_elementsDict
-        
+
         set refine_boundaryDict [dict create]
         dict set refine_boundaryDict "apply_refinement" false
         dict set refine_boundaryDict "on_distance" false
         dict set refine_boundaryDict "on_threshold" false
         dict set refine_boundaryDict "on_error" false
         dict set refining_parametersDict refine_boundary $refine_boundaryDict
-        
+
         set refining_boxDict [dict create]
         dict set refining_boxDict "refine_in_box_only" false
         set upX [expr 0.0]; set upY [expr 0.0]; set upZ [expr 0.0]
@@ -475,9 +507,9 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
         set vlX [expr 0.0]; set vlY [expr 0.0]; set vlZ [expr 0.0]
         dict set refining_boxDict "velocity" [list $vlX $vlY $vlZ]
         dict set refining_parametersDict refining_box $refining_boxDict
-        
+
         dict set bodyDict refining_parameters $refining_parametersDict
-        
+
         dict set bodyDict "elemental_variables_to_transfer" [list "CAUCHY_STRESS_VECTOR" "DEFORMATION_GRADIENT"]
         lappend meshing_domains_list $bodyDict
     }
@@ -534,7 +566,7 @@ proc Pfem::write::GetNodalDataDict { } {
     set root [customlib::GetBaseRoot]
     set NodalData [list ]
     set parts [list "PFEM_Rigid2DParts" "PFEM_Rigid3DParts" "PFEM_Deformable2DParts" "PFEM_Deformable3DParts" "PFEM_Fluid2DParts" "PFEM_Fluid3DParts"]
-    
+
     foreach part $parts {
         set xp1 "[spdAux::getRoute $part]/group"
         set groups [$root selectNodes $xp1]
@@ -544,7 +576,7 @@ proc Pfem::write::GetNodalDataDict { } {
             set processDict [dict create]
             dict set processDict process_name "ApplyValuesToNodes"
             dict set processDict kratos_module "KratosMultiphysics.PfemApplication"
-            
+
             set params [dict create]
             set xp2 "./value"
             set atts [$group selectNodes $xp2]
@@ -569,7 +601,7 @@ proc Pfem::write::GetNodalDataDict { } {
             lappend NodalData $processDict
         }
     }
-    
+
     return $NodalData
 }
 
@@ -596,20 +628,20 @@ proc Pfem::write::CalculateMyVariables { } {
 
 
 
-proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition"}} {    
+proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition"}} {
     set root [customlib::GetBaseRoot]
     return [list ]
     set bcCondsDict [list ]
-    
+
     set xp1 "[spdAux::getRoute $un]/container/blockdata"
     set blocks [$root selectNodes $xp1]
-    
+
     foreach block $blocks {
         set groupName [$block @name]
         set cid [[$block parent] @n]
         get_domnode_attribute [$block find n Body] values
         set bodyId [get_domnode_attribute [$block find n Body] v]
-        
+
         if {$condition_type eq "Condition"} {
             error [= "Body conditions (not nodal) Not implemented yet."]
             #set condition [::Model::getCondition $cid]
@@ -618,23 +650,23 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
         }
         set processName [$condition getProcessName]
         #set processName [[$block parent] @processname]
-        
+
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
         dict set paramDict model_part_name $bodyId
         set vatiable_name [$condition getAttribute VariableName]
         dict set paramDict variable_name [lindex $vatiable_name 0]
-        
+
         set process_attributes [$process getAttributes]
         set process_parameters [$process getInputs]
-        
+
         dict set process_attributes process_name [dict get $process_attributes n]
         dict unset process_attributes n
         dict unset process_attributes pn
-        
+
         set processDict [dict merge $processDict $process_attributes]
-        
+
         foreach {inputName in_obj} $process_parameters {
             set in_type [$in_obj getType]
             if {$in_type eq "vector"} {
@@ -658,21 +690,21 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
                                         set Val$i $value
                                         set printed 1
                                     }
-                                } 
+                                }
                                 if {!$printed} {
                                     set value [expr [get_domnode_attribute [$block find n ${inputName}$i] v] ]
                                     set Val$i $value
                                 }
                             }
-                        } 
+                        }
                     } else {
                         set ValX [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}X]] ]
-                        set ValY [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Y]] ] 
+                        set ValY [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Y]] ]
                         set ValZ [expr 0.0]
                         if {[$block find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$block find n ${inputName}Z]]]}
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
-                } 
+                }
             } elseif {$in_type eq "double" || $in_type eq "integer"} {
                 set printed 0
                 if {[$in_obj getAttribute "function"] eq "1"} {
@@ -682,21 +714,21 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
                         dict set paramDict $inputName $value
                         set printed 1
                     }
-                } 
+                }
                 if {!$printed} {
-                    set value [gid_groups_conds::convert_value_to_default [$block find n $inputName]] 
+                    set value [gid_groups_conds::convert_value_to_default [$block find n $inputName]]
                     dict set paramDict $inputName [expr $value]
                 }
             } elseif {$in_type eq "bool"} {
-                set value [get_domnode_attribute [$block find n $inputName] v] 
+                set value [get_domnode_attribute [$block find n $inputName] v]
                 set value [expr $value ? True : False]
                 dict set paramDict $inputName [expr $value]
             } elseif {$in_type eq "tablefile"} {
-                set value [get_domnode_attribute [$block find n $inputName] v] 
+                set value [get_domnode_attribute [$block find n $inputName] v]
                 dict set paramDict $inputName $value
             } else {
                 if {[get_domnode_attribute [$block find n $inputName] state] ne "hidden" } {
-                    set value [get_domnode_attribute [$block find n $inputName] v] 
+                    set value [get_domnode_attribute [$block find n $inputName] v]
                     dict set paramDict $inputName $value
                 }
             }

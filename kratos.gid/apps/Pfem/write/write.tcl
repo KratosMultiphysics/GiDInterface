@@ -300,4 +300,43 @@ proc Pfem::write::getConditionsParametersDict {un {condition_type "Condition"}} 
     return $bcCondsDict
 }
 
+proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
+    set outputDict [dict create]
+    set resultDict [dict create]
+    
+    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
+    set GiDPostDict [dict create]
+    dict set GiDPostDict GiDPostMode                [write::getValue $results_UN GiDPostMode]
+    dict set GiDPostDict WriteDeformedMeshFlag      [write::getValue $results_UN GiDWriteMeshFlag]
+    dict set GiDPostDict WriteConditionsFlag        [write::getValue $results_UN GiDWriteConditionsFlag]
+    dict set GiDPostDict MultiFileFlag              [write::getValue $results_UN GiDMultiFileFlag]
+    dict set resultDict gidpost_flags $GiDPostDict
+    
+    dict set resultDict file_label                 [write::getValue $results_UN FileLabel]
+    set outputCT [write::getValue $results_UN OutputControlType]
+    dict set resultDict output_control_type $outputCT
+    if {$outputCT eq "time"} {set frequency [write::getValue $results_UN OutputDeltaTime]} {set frequency [write::getValue $results_UN OutputDeltaStep]}
+    dict set resultDict output_frequency $frequency
+    
+    dict set resultDict node_output           [write::getValue $results_UN NodeOutput]
+    
+    #dict set resultDict plane_output [write::GetCutPlanesList $results_UN]
+
+    set nodal_results [write::GetResultsList $results_UN OnNodes]
+    
+    set problemtype [write::getValue PFEM_DomainType]
+    if {$problemtype ne "Fluids"} {
+        lappend nodal_results "CONTACT_FORCE"	
+        lappend nodal_results "NORMAL"
+    }
+    
+    dict set resultDict nodal_results $nodal_results
+    dict set resultDict gauss_point_results [write::GetResultsList $results_UN OnElement]
+    
+    dict set outputDict "result_file_configuration" $resultDict
+    #dict set outputDict "point_data_configuration" [write::GetEmptyList]
+    return $outputDict
+}
+
+
 Pfem::write::Init
