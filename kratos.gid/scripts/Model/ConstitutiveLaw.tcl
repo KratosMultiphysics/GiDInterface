@@ -14,7 +14,8 @@ oo::class create CLaw {
 
     constructor {n} {
         next $n
-
+        variable kratos_name
+        set kratos_name ""
     }
     
     method cumple {args} {
