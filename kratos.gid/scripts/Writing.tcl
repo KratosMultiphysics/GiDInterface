@@ -202,12 +202,15 @@ proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
             incr current_mdpa_indent_level
             set s [mdpaIndent]
             foreach prop [dict keys [dict get $mat_dict $material] ] {
-                if {${prop} eq "ConstitutiveLaw"} {
-                    set propname $const_law_write_name 
-                    set value [[Model::getConstitutiveLaw [dict get $mat_dict $material $prop]] getKratosName]
-                } else {
-                    set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
-                    set value [dict get $mat_dict $material $prop]
+                if {$prop ni $exclusionList} {
+                    if {${prop} eq "ConstitutiveLaw"} {
+                        set propname $const_law_write_name 
+                        set value [[Model::getConstitutiveLaw [dict get $mat_dict $material $prop]] getKratosName]
+                    } else {
+                        set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
+                        set value [dict get $mat_dict $material $prop]
+                    }
+                    WriteString "${s}$propname  "
                 }
             }
             incr current_mdpa_indent_level -1
