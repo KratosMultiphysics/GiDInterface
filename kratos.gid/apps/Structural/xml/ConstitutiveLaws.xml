@@ -48,7 +48,7 @@
     </CLaw>
 
     <!--constitutive laws for shells and membranes-->
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
 	  help="Linear elastic behaviour in 3D for shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
@@ -60,7 +60,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane stress" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -85,7 +85,7 @@
     </CLaw>
 
     <!--constitutive laws for beams-->
-    <CLaw n="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam2D" behaviour="Elastic"
+    <CLaw n="BeamConstitutiveLaw2D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam2D" behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
@@ -98,7 +98,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam3D" behaviour="Elastic"
+    <CLaw n="BeamConstitutiveLaw3D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam3D" behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
