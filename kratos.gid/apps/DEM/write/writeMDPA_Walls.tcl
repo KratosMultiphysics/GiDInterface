@@ -16,12 +16,13 @@ proc DEM::write::WriteMDPAWalls { } {
 }
 
 proc DEM::write::WriteWallProperties { } {
+    variable last_property_id
     
     #set print_list [list "WALL_FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
     set wall_properties [dict create ]
-    set id 0
     set cnd [Model::getCondition "DEM-FEM-Wall"]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+    set i $last_property_id
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
         incr i
         write::WriteString "Begin Properties $i"
