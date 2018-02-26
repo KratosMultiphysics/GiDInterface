@@ -7,8 +7,11 @@ proc Pfem::write::getParametersDict { } {
     ##### Problem data #####
     # Create section
     set problemDataDict [GetPFEM_ProblemDataDict]
-    # Add section to document
     dict set projectParametersDict problem_data $problemDataDict
+
+    ##### model_data #####
+    set modelDataDict [GetPFEM_ModelDataDict]
+    dict set projectParametersDict model_settings $modelDataDict
     
     ##### solver_settings #####
     set solverSettingsDict [GetPFEM_SolverSettingsDict]
@@ -39,16 +42,9 @@ proc Pfem::write::GetPFEM_ProblemDataDict { } {
     set problemDataDict [dict create]
     dict set problemDataDict problem_name [file tail [GiD_Info Project ModelName]]
     
-    dict set problemDataDict model_part_name "Main Domain"
-    set nDim $::Model::SpatialDimension
-    set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict dimension $nDim
     
-    dict set problemDataDict time_step [write::getValue PFEM_TimeParameters DeltaTime]
-    dict set problemDataDict start_time [write::getValue PFEM_TimeParameters StartTime]
-    dict set problemDataDict end_time [write::getValue PFEM_TimeParameters EndTime]
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
-    dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
+    #dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
     set cx [write::getValue FLGravity Cx]
     set cy [write::getValue FLGravity Cy]
     set cz [write::getValue FLGravity Cz]
@@ -57,41 +53,22 @@ proc Pfem::write::GetPFEM_ProblemDataDict { } {
     return $problemDataDict
 }
 
-proc Pfem::write::GetPFEM_SolverSettingsDict { } {
+proc Pfem::write::GetPFEM_ModelDataDict { } {
     variable bodies_list
+    set modelDataDict [dict create]
+    dict set modelDataDict model_name [file tail [GiD_Info Project ModelName]]
     
-    set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue PFEM_SolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
-    dict set solverSettingsDict solver_type $strategy_write_name
-    
-    set problemtype [write::getValue PFEM_DomainType]
-    
-    if {$problemtype eq "Solids"} {
-        
-        dict set solverSettingsDict solution_type [write::getValue PFEM_SolutionType]
-        
-        set solutiontype [write::getValue PFEM_SolutionType]
-        
-        if {$solutiontype eq "Static"} {
-            dict set solverSettingsDict analysis_type [write::getValue PFEM_LinearType]
-        } elseif {$solutiontype eq "Dynamic"} {
-            dict set solverSettingsDict time_integration_method [write::getValue PFEM_SolStrat]
-            dict set solverSettingsDict scheme_type [write::getValue PFEM_Scheme]
-        }
-    }
+    set nDim $::Model::SpatialDimension
+    set nDim [expr [string range [write::getValue nDim] 0 0] ]
+    dict set modelDataDict dimension $nDim
     
     # model import settings
     set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename [file tail [GiD_Info Project ModelName]]
-    dict set modelDict input_file_label 0
-    dict set solverSettingsDict model_import_settings $modelDict
-    
-    # Solution strategy parameters and Solvers
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Pfem] ]
-    
+    #dict set modelDict type "mdpa"
+    dict set modelDict name [file tail [GiD_Info Project ModelName]]
+    #dict set modelDict label 0
+    dict set modelDataDict input_file_settings $modelDict
+        
     set bodies_parts_list [list ]
     foreach body $bodies_list {
         set body_parts [dict get $body parts_list]
@@ -100,9 +77,66 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 	}
     }
     
-    dict set solverSettingsDict bodies_list $bodies_list
-    dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
+    dict set modelDataDict bodies_list $bodies_list
+    dict set modelDataDict domain_parts_list $bodies_parts_list
+    dict set modelDataDict processes_parts_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
+    
+    return $modelDataDict
+}
+
+proc Pfem::write::GetPFEM_SolverSettingsDict { } {
+    
+    set solverSettingsDict [dict create]
+    set currentStrategyId [write::getValue PFEM_SolStrat]
+    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
+    dict set solverSettingsDict solver_type $strategy_write_name
+
+    # Solver parameters
+    set solverParametersDict [dict create]
+    
+    # Time settings
+    set timeDataDict [dict create]
+
+    dict set timeDataDict time_step [write::getValue PFEM_TimeParameters DeltaTime]
+    dict set timeDataDict start_time [write::getValue PFEM_TimeParameters StartTime]
+    dict set timeDataDict end_time [write::getValue PFEM_TimeParameters EndTime]
+
+    dict set solverParametersDict time_settings $timeDataDict
+
+    # Time integration settings
+    set integrationDataDict [dict create]
+
+    set problemtype [write::getValue PFEM_DomainType]
+
+    if {$problemtype eq "Solids"} {
+        
+        dict set integrationDataDict solution_type [write::getValue PFEM_SolutionType]
+        
+        set solutiontype [write::getValue PFEM_SolutionType]
+        
+        if {$solutiontype eq "Static"} {
+            dict set integrationDataDict integration_method [write::getValue PFEM_Scheme]
+        } elseif {$solutiontype eq "Dynamic"} {
+            dict set integrationDataDict time_integration [write::getValue PFEM_SolStrat]
+            dict set integrationDataDict integration_method [write::getValue PFEM_Scheme]
+        }
+    }
+    
+    dict set solverParametersDict time_integration_settings $integrationDataDict
+
+    # Solving strategy settings
+    set strategyDataDict [dict create]
+
+    # Solution strategy parameters and Solvers
+    set strategyDataDict [dict merge $strategyDataDict [write::getSolutionStrategyParametersDict] ]
+    
+    dict set solverParametersDict solving_strategy_settings $strategyDataDict
+
+    # Linear solver settings
+    set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Pfem] ]
+
+    dict set solverSettingsDict Parameters $solverParametersDict
+
     
     return $solverSettingsDict
 }
@@ -118,7 +152,16 @@ proc Pfem::write::GetPFEM_ProblemProcessList { } {
     if {$problemtype ne "Solids"} {
         lappend resultList [GetPFEM_FluidRemeshDict]
     } else {
-        lappend resultList [GetPFEM_RemeshDict]
+	set root [customlib::GetBaseRoot]
+	set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+	set remesh_list [list ]
+	foreach body_node [$root selectNodes $xp1] {
+        set remesh [get_domnode_attribute [$body_node selectNodes ".//value\[@n='MeshingStrategy'\]"] v]
+	    if {$remesh ne "No remesh" && $remesh ne ""} {lappend remesh_list $remesh}
+	}
+	if {[llength $remesh_list]} {
+	    lappend resultList [GetPFEM_RemeshDict]
+	}
     }
     set contactDict [GetPFEM_ContactDict]
     if {[dict size $contactDict]} {lappend resultList $contactDict}
@@ -132,7 +175,7 @@ proc Pfem::write::GetPFEM_ContactDict { } {
     set contact_list [list ]
     foreach body_node [$root selectNodes $xp1] {
         set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
-        if {$contact ne "No contact strategy" && $contact ne "" && $contact ni $contact_list} {lappend contact_list $contact}
+        if {$contact ne "No" && $contact ne "" && $contact ni $contact_list} {lappend contact_list $contact}
     }
     #W $contact_list
     set contact_domains [list ]
@@ -173,22 +216,22 @@ proc Pfem::write::GetPfem_ContactProcessDict {contact_name} {
     dict set contact_parameters "kratos_module" "KratosMultiphysics.ContactMechanicsApplication"
     set properties_dict [dict create]
     foreach prop [list FRICTION_ACTIVE MU_STATIC MU_DYNAMIC PENALTY_PARAMETER TANGENTIAL_PENALTY_RATIO TAU_STAB] {
-        dict set properties_dict $prop [Pfem::write::GetContactProperty ${contact_name} $prop]
+        dict set properties_dict $prop [Pfem::write::GetContactProperty "Solid-Solid" $prop]
     }
     dict set contact_parameters "variables_of_properties" $properties_dict
     dict set mesh_strat "contact_parameters" $contact_parameters
     dict set cont_dict "elemental_variables_to_transfer" [list "CAUCHY_STRESS_VECTOR" "DEFORMATION_GRADIENT" ]
-    dict set cont_dict "contact_bodies_list" [Pfem::write::GetBodiesWithContactList $contact_name]
+    dict set cont_dict "contact_bodies_list" [Pfem::write::GetSolidBodiesWithContact]
     dict set cont_dict "meshing_domains" $mesh_strat
     return $cont_dict
 }
 
-proc Pfem::write::GetBodiesWithContactList {contact_name} {
+proc Pfem::write::GetSolidBodiesWithContact { } {
     set bodies_list [list ]
     set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
     foreach body_node [[customlib::GetBaseRoot] selectNodes $xp1] {
         set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
-        if {$contact eq $contact_name} {lappend bodies_list [get_domnode_attribute $body_node name]}
+        if {$contact eq "Yes"} {lappend bodies_list [get_domnode_attribute $body_node name]}
     }
     return $bodies_list
 }
@@ -211,7 +254,8 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
     dict set resultDict "process_name" "RemeshDomainsProcess"
     
     set paramsDict [dict create]
-    dict set paramsDict "model_part_name" "Main Domain"
+    set model_name [file tail [GiD_Info Project ModelName]]   
+    dict set paramsDict "model_part_name" $model_name
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
@@ -325,7 +369,8 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     dict set resultDict "process_name" "RemeshFluidDomainsProcess" 
     
     set paramsDict [dict create]
-    dict set paramsDict "model_part_name" "Main Domain"
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set paramsDict "model_part_name" $model_name
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
