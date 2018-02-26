@@ -1494,7 +1494,8 @@ proc write::getPropertiesList {parts_un} {
             set prop_dict [dict create]
             dict set prop_dict "model_part_name" $sub_model_part
             dict set prop_dict "properties_id" $mid
-            set constitutive_law [dict get $mat_dict $group ConstitutiveLaw]
+            set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]
+            set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
             set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
             set variables_dict [dict create]
             foreach prop [dict keys [dict get $mat_dict $group] ] {
@@ -1503,9 +1504,14 @@ proc write::getPropertiesList {parts_un} {
                 }
             }
             set material_dict [dict create]
-            set const_law_application [[Model::getConstitutiveLaw $constitutive_law] getAttribute "ImplementedInApplication"]
+            set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
             # WV const_law_application
-            if {$const_law_application eq "KratosMultiphysics"} {set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law] "."]} {set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law] "."]}
+            set constitutive_law_name [$constitutive_law getKratosName]
+            if {$const_law_application eq "KratosMultiphysics"} {
+                set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
+            } {
+                set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
+            }
             
             dict set material_dict constitutive_law [dict create name $const_law_fullname]
             dict set material_dict Variables $variables_list
