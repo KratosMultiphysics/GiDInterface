@@ -32,7 +32,7 @@ proc DEM::write::getParametersEvent { } {
         set gravity_Y [write::getValue DEMGravity Cy]
         set gravity_Z [write::getValue DEMGravity Cz]
         # Normalize director vector
-        lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Z gravity_Y
+        lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
         # Get value by components
         lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
         # Add data to the parameters_dict

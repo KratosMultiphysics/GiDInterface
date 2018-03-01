@@ -20,6 +20,7 @@ proc Pfem::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getNodalConditions "../../Solid/xml/NodalConditions.xml"
     Model::getNodalConditions NodalConditions.xml
+    Model::getMaterials Materials.xml
     Model::getConditions "../../Solid/xml/Conditions.xml"
     Model::getSolvers "../../Pfem/xml/Solvers.xml"
     
@@ -61,8 +62,8 @@ proc Pfem::xml::CustomTree { args } {
     }        
     
     #conditions
-    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
-    spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
+    #spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions VELOCITY
+    #spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEM_NodalConditions PRESSURE
 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
         $node setAttribute icon select
@@ -82,16 +83,16 @@ proc Pfem::xml::CustomTree { args } {
     }
     
     #solver settings
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
-        $node setAttribute icon select
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Solution]/container\[@n = 'linear_solver_settings'\]" ] { 
+        $node setAttribute icon solvers
     }
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
-        $node setAttribute icon select
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Solution]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
+        $node setAttribute icon solvers
     }   
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
-        $node setAttribute icon select
+    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Solution]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
+        $node setAttribute icon solvers
     }   
 
     
@@ -209,7 +210,7 @@ proc Pfem::xml::ProcGetMeshingDomains {domNode args} {
     foreach meshing_domain [[$domNode selectNodes $basepath] childNodes] {
         lappend values [get_domnode_attribute $meshing_domain name]
     }
-    if {[get_domnode_attribute $domNode v] eq ""} {
+    if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $values} {
         $domNode setAttribute v [lindex $values 0]
     }
     return [join $values ,]
@@ -246,6 +247,7 @@ proc Pfem::xml::ProcCheckNodalConditionStateSolid {domNode args} {
     if {[::Model::CheckElementsNodalCondition $conditionId $elemsactive $params]} {return "normal"} else {return "hidden"}
 }
 
+
 proc Pfem::xml::ProcSolutionTypeState {domNode args} {
     set domain_type_un PFEM_DomainType
     set domain_type_route [spdAux::getRoute $domain_type_un]
@@ -269,22 +271,26 @@ proc Pfem::xml::ProcSolutionTypeState {domNode args} {
 proc Pfem::xml::ProcGetBodyTypeValues {domNode args} {
     set domain_type_un PFEM_DomainType
     set domain_type_route [spdAux::getRoute $domain_type_un]
-    set values "Fluid,Solid,Rigid"
+    set values [list Fluid Solid Rigid]
     if {$domain_type_route ne ""} {
         set domain_type_node [$domNode selectNodes $domain_type_route]
         set domain_type_value [get_domnode_attribute $domain_type_node v]
         
         if {$domain_type_value eq "Fluids"} {
-            set values "Fluid,Rigid"
+            set values [list Fluid Rigid]
         }
         if {$domain_type_value eq "Coupled"} {
-            set values "Solid,Fluid,Rigid"
+            set values [list Fluid Solid Rigid]
         }
         if {$domain_type_value eq "Solids"} {
-            set values "Solid,Rigid"
+            set values [list Solid Rigid]
         }
     }
-    return $values
+    if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $values} {
+        $domNode setAttribute v [lindex $values 0]
+    }
+    gid_groups_conds::check_node_dependencies $domNode
+    return [join $values ,]
 }
 
 proc Pfem::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
