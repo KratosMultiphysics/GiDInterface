@@ -84,6 +84,8 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     dict set modelDataDict domain_parts_list $bodies_parts_list
     dict set modelDataDict processes_parts_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
 
+    dict set modelDataDict dofs [list {*}[DofsInElements] ]
+    
     return $modelDataDict
 }
 
@@ -738,4 +740,22 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
         lappend bcCondsDict $processDict
     }
     return $bcCondsDict
+}
+
+proc Pfem::write::DofsInElements { } {
+    set dofs [list ]
+    set root [customlib::GetBaseRoot]
+    set parts_un_list [GetPartsUN]
+    foreach parts_un $parts_un_list {
+	set xp1 "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"
+	set elements [$root selectNodes $xp1]
+	foreach element_node $elements {
+	    set elemid [$element_node @v]
+	    set elem [Model::getElement $elemid]
+	    foreach dof [split [$elem getAttribute "Dofs"] ","] {
+		if {$dof ni $dofs} {lappend dofs $dof}
+	    }
+	}
+    }
+    return {*}$dofs
 }
