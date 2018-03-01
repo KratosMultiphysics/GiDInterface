@@ -48,7 +48,7 @@
     </CLaw>
 
     <!--constitutive laws for shells and membranes-->
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
 	  help="Linear elastic behaviour in 3D for shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
@@ -60,7 +60,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane stress" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -78,23 +78,37 @@
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
-            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2" />
-            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.TRUSS_PRESTRESS_PK2" pn="Prestress" type="double" v="0.0" unit_magnitude="P" units="Pa" />
-            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.TRUSS_IS_CABLE" pn="Is cable" type="bool" v="false" />
+            <parameter n="CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2" />
+            <parameter n="TRUSS_PRESTRESS_PK2" pn="Prestress" type="double" v="0.0" unit_magnitude="P" units="Pa" />
         </inputs>
         <outputs></outputs>
     </CLaw>
 
     <!--constitutive laws for beams-->
-    <CLaw n="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam" behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="BeamConstitutiveLaw2D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam2D" behaviour="Elastic"
+          StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
+          Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2" />
-            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.TORSIONAL_INERTIA" pn="Torsional inertia" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
-            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.I22" pn="Inertia 22" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
-            <parameter n="KratosMultiphysics.StructuralMechanicsApplication.I33" pn="Inertia 33" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
+            <parameter n="CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2" />
+            <parameter n="I33" pn="Inertia 33" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="BeamConstitutiveLaw3D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam3D" behaviour="Elastic"
+          StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
+          Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+            <parameter n="CROSS_AREA" pn="Cross area" v="1.0" unit_magnitude="Area" units="m^2" />
+            <parameter n="TORSIONAL_INERTIA" pn="Torsional inertia" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
+            <parameter n="I22" pn="Inertia 22" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
+            <parameter n="I33" pn="Inertia 33" type="double" v="1.0" unit_magnitude="L^4" units="m^4" />
         </inputs>
         <outputs></outputs>
     </CLaw>
