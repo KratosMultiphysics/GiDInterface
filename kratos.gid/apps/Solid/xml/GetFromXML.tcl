@@ -57,6 +57,12 @@ proc Solid::xml::CustomTree { args } {
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLStratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
         $node setAttribute icon linear_solver
     }
+
+    #results
+    foreach result [list RIGID_BODY_ROTATION_2D RIGID_BODY_ANGULAR_VELOCITY_2D RIGID_BODY_ANGULAR_ACCELERATION_2D RIGID_BODY_ROTATION_3D RIGID_BODY_ANGULAR_VELOCITY_3D RIGID_BODY_ANGULAR_ACCELERATION_3D] {
+        set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = '$result'\]"]
+	if { $result_node ne "" } {$result_node delete}
+    }
     
     #units
     [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
