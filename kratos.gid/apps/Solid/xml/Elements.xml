@@ -416,7 +416,9 @@
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>
+    </inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
@@ -451,7 +453,9 @@
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>      
+    </inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
@@ -485,7 +489,9 @@
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>
+    </inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
