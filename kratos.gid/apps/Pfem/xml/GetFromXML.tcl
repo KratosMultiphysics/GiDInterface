@@ -100,13 +100,18 @@ proc Pfem::xml::CustomTree { args } {
     [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
 
     #results
-    spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
-    spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
-    spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
-    
-    set inlet_result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
-    if {$inlet_result_node ne "" } {$inlet_result_node delete}
-
+    set problemtype [write::getValue PFEM_DomainType]
+    if {$problemtype eq "Fluids"} {
+	spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
+	spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
+	spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
+    }
+        
+    foreach result [list INLET RIGID_BODY_ROTATION_2D RIGID_BODY_ANGULAR_VELOCITY_2D RIGID_BODY_ANGULAR_ACCELERATION_2D RIGID_BODY_ROTATION_3D RIGID_BODY_ANGULAR_VELOCITY_3D RIGID_BODY_ANGULAR_ACCELERATION_3D] {
+        set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = '$result'\]"]
+	if { $result_node ne "" } {$result_node delete}
+    }
+        
     #restart
     spdAux::SetValueOnTreeItem icon doRestart Restart     
     spdAux::SetValueOnTreeItem icon select Restart RestartOptions
