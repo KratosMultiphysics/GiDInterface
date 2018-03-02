@@ -55,7 +55,7 @@ proc Solid::xml::CustomTree { args } {
     
     #solver settings
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLStratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
-        $node setAttribute icon linear_solver
+        $node setAttribute icon solvers
     }
 
     #results
