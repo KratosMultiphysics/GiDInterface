@@ -19,6 +19,11 @@
       <parameter n="POISSON_RATIO" pn="Poisson ratio" v="0.29" help="Poisson coefficient of the material"/>
       <parameter n="C10" pn="C10" v="4.00969e10" unit_magnitude="P" units="Pa"/>
       <parameter n="BULK_MODULUS" pn="Bulk modulus" v="164.206349206e9" unit_magnitude="P" units="Pa"/>
+	<parameter n="YIELD_STRESS" pn="Yield Stress" v="450.0e6" unit_magnitude="P" units="Pa"/>
+	<parameter n="KINEMATIC_HARDENING_MODULUS" pn="Kinematic Hardening Modulus" v="129.24e6" unit_magnitude="P" units="Pa"/>
+	<parameter n="REFERENCE_HARDENING_MODULUS" pn="Reference Hardening Modulus" v="450.0e6" unit_magnitude="P" units="Pa"/>
+	<parameter n="INFINITY_HARDENING_MODULUS" pn="Infinity Hardening Modulus" v="715.0e6" unit_magnitude="P" units="Pa"/>
+	<parameter n="HARDENING_EXPONENT" pn="Hardening Exponent" v="16.93"/>
     </inputs>
   </Material>
   <Material n="Aluminium" MaterialType="Solid" help="Aluminium elastic properties">
