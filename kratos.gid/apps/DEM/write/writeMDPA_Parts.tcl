@@ -1,7 +1,8 @@
 proc DEM::write::WriteMDPAParts { } {
+    variable last_property_id
     # Prepare properties
-    write::processMaterials
-
+    write::processMaterials "" $last_property_id
+    set last_property_id [expr $last_property_id + [dict size $::write::mat_dict]]
     # Headers
     write::writeModelPartData
 

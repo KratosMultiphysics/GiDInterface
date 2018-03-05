@@ -15,13 +15,12 @@ proc DEM::write::WriteMDPAWalls { } {
     writeConditionMeshes
 }
 
-proc DEM::write::WriteWallProperties { } {
-    
+proc DEM::write::WriteWallProperties { } {    
     #set print_list [list "WALL_FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
     set wall_properties [dict create ]
-    set id 0
     set cnd [Model::getCondition "DEM-FEM-Wall"]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+    set i $DEM::write::last_property_id
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
         incr i
         write::WriteString "Begin Properties $i"
@@ -63,6 +62,7 @@ proc DEM::write::WriteWallProperties { } {
         write::WriteString "End Properties"
         set groupid [$group @n]
         dict set wall_properties $groupid $i
+        incr DEM::write::last_property_id
     }
     write::WriteString ""
     return $wall_properties
@@ -210,7 +210,7 @@ proc DEM::write::writeConditionMeshes { } {
                 write::WriteString "    RIGID_BODY_MASS 0.0"
                 write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] (0.0,0.0,0.0)"
                 write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,0.0)"
-                write::WriteString "    IDENTIFIER $group"
+                write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
                 write::WriteString "    TOP 0"
                 write::WriteString "    BOTTOM 0"
                 write::WriteString "    FORCE_INTEGRATION_GROUP 0"

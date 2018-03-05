@@ -9,8 +9,8 @@ from KratosMultiphysics.ExternalSolversApplication import *
 ######################################################################################
 
 ## Parse the ProjectParameters
-parameter_file = open("ProjectParameters.json",'r')
-project_parameters = Parameters( parameter_file.read())
+with open("ProjectParameters.json",'r') as parameter_file:
+    project_parameters = Parameters( parameter_file.read())
 
 ## Get echo level and parallel type
 echo_level = project_parameters["problem_data"]["echo_level"].GetInt()
@@ -121,9 +121,8 @@ for process in list_of_processes:
 
 ## Writing the full ProjectParameters file before solving
 if ((parallel_type == "OpenMP") or (mpi.rank == 0)) and (echo_level > 1):
-    f = open("ProjectParametersOutput.json", 'w')
-    f.write(project_parameters.PrettyPrintJsonString())
-    f.close()
+    with open("ProjectParametersOutput.json", 'w') as f:
+        f.write(project_parameters.PrettyPrintJsonString())
 
 while(time <= end_time):
 
