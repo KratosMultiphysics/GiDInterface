@@ -1,6 +1,7 @@
 namespace eval DEM::write {
     variable writeAttributes
     variable inletProperties
+    variable last_property_id
 }
 
 proc DEM::write::Init { } {    
@@ -19,6 +20,9 @@ proc DEM::write::Init { } {
     
     variable inletProperties
     set inletProperties [dict create]
+    
+    variable last_property_id
+    set last_property_id 0
 }
 
 # Attributes block
@@ -58,6 +62,9 @@ proc DEM::write::ApplyConfiguration { } {
 
 # MDPA Blocks
 proc DEM::write::writeModelPartEvent { } {
+    variable last_property_id
+    set last_property_id 0
+    
     variable writeAttributes
     write::initWriteConfiguration $writeAttributes
     
@@ -69,14 +76,14 @@ proc DEM::write::writeModelPartEvent { } {
     WriteMDPAParts
     write::CloseFile
 
-    # MDPA Walls
-    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_FEM_boundary.mdpa"
-    WriteMDPAWalls
-    write::CloseFile
-
     # MDPA Inlet
     write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_Inlet.mdpa"
     WriteMDPAInlet
+    write::CloseFile
+
+    # MDPA Walls
+    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_FEM_boundary.mdpa"
+    WriteMDPAWalls
     write::CloseFile
 
     # MDPA Walls

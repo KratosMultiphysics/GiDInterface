@@ -210,10 +210,11 @@ proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
                         set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
                         set value [dict get $mat_dict $material $prop]
                     }
-                    WriteString "${s}$propname  "
+                    WriteString "${s}$propname $value"
                 }
             }
             incr current_mdpa_indent_level -1
+            set s [mdpaIndent]
             WriteString "${s}End Properties"
             WriteString ""
         }
@@ -251,7 +252,7 @@ proc write::writeNodalCoordinates { } {
     WriteString "\n"
 }
 
-proc write::processMaterials { {alt_path ""} } {
+proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     variable mat_dict
     
     set parts [GetConfigurationAttribute parts_un]
@@ -264,7 +265,7 @@ proc write::processMaterials { {alt_path ""} } {
     }
     set xp2 ".//value\[@n='Material']"
     
-    set material_number [llength [dict keys $mat_dict] ]
+    set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : $last_assigned_id }]
     
     foreach gNode [$root selectNodes $xp1] {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
