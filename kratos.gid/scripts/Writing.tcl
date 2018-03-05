@@ -252,7 +252,7 @@ proc write::writeNodalCoordinates { } {
     WriteString "\n"
 }
 
-proc write::processMaterials { {alt_path ""} } {
+proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     variable mat_dict
     
     set parts [GetConfigurationAttribute parts_un]
@@ -265,7 +265,7 @@ proc write::processMaterials { {alt_path ""} } {
     }
     set xp2 ".//value\[@n='Material']"
     
-    set material_number [llength [dict keys $mat_dict] ]
+    set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : $last_assigned_id }]
     
     foreach gNode [$root selectNodes $xp1] {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
