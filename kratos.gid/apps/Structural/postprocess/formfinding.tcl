@@ -1,5 +1,11 @@
+
+namespace eval ::Structural::Formfinding {
+    # Variable declaration
+    
+}
+
 # copy problem folder to restore the formfinding problem
-proc CopyFormfinding {} {
+proc Structural::Formfinding::CopyFormfinding {} {
     #delete formfinding folder if it exists
     set script_file [file normalize [info script]]
     set script_folder [file dirname $script_file]
@@ -10,7 +16,7 @@ proc CopyFormfinding {} {
     #copy formfinding to temp folder
     set script_parent_folder [file dirname $script_folder]
     set temp_directory [file join $script_parent_folder temp]
-    file copy  $script_folder $temp_directory
+    file copy $script_folder $temp_directory
     
     # copy temp folder to current directory
     file copy $temp_directory $new_folder
@@ -21,7 +27,7 @@ proc CopyFormfinding {} {
 }
 
 # update nodal coordinates
-proc ModifyNodes {} {
+proc Structural::Formfinding::ModifyNodes {} {
     set node_list [GiD_Result get {Displacement Kratos 1.1}]
     set counter 0
     foreach node $node_list {
@@ -46,6 +52,9 @@ proc ModifyNodes {} {
         }
     } 
 }
-CopyFormfinding
-ModifyNodes
+
+proc Structural::Formfinding::UpdateGeometry { } {
+    CopyFormfinding
+    ModifyNodes
+}
 
