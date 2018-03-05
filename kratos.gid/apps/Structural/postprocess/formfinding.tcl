@@ -7,9 +7,9 @@ namespace eval ::Structural::Formfinding {
 # copy problem folder to restore the formfinding problem
 proc Structural::Formfinding::CopyFormfinding {} {
     #delete formfinding folder if it exists
-    set script_file [file normalize [info script]]
-    set script_folder [file dirname $script_file]
-    set folder_name [file tail $script_folder]
+    # set script_file [file nativename [GiD_Info project modelname].gid]
+    set script_folder [GiD_Info project modelname].gid
+    set folder_name [file tail [GiD_Info project modelname]].gid
     set new_folder [file join $script_folder $folder_name]
     file delete -force $new_folder
 
@@ -23,7 +23,8 @@ proc Structural::Formfinding::CopyFormfinding {} {
     
     # delete temp directory
     file delete -force $temp_directory
-    set current_directory [file normalize [info script]]
+    # set current_directory [file normalize [info script]]
+    GidUtils::SetWarnLine "Security copy created inside the model folder"
 }
 
 # update nodal coordinates
@@ -51,6 +52,7 @@ proc Structural::Formfinding::ModifyNodes {} {
             GiD_Mesh edit node $node_id $new_value
         }
     } 
+    GidUtils::SetWarnLine "Preprocess mesh is now updated"
 }
 
 proc Structural::Formfinding::UpdateGeometry { } {
