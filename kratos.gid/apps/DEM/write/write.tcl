@@ -62,6 +62,9 @@ proc DEM::write::ApplyConfiguration { } {
 
 # MDPA Blocks
 proc DEM::write::writeModelPartEvent { } {
+    variable last_property_id
+    set last_property_id 0
+    
     variable writeAttributes
     write::initWriteConfiguration $writeAttributes
     
