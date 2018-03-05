@@ -21,9 +21,8 @@ proc DEM::write::Init { } {
     variable inletProperties
     set inletProperties [dict create]
     
-    # Initialized as -1, so next assigned gets id 0
     variable last_property_id
-    set last_property_id -1
+    set last_property_id 0
 }
 
 # Attributes block

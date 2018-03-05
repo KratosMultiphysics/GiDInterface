@@ -264,7 +264,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     }
     set xp2 ".//value\[@n='Material']"
     
-    set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : [expr $last_assigned_id +1] }]
+    set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : $last_assigned_id }]
     
     foreach gNode [$root selectNodes $xp1] {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]

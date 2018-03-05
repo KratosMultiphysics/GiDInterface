@@ -90,12 +90,11 @@ proc DEM::write::writeInletMeshes { } {
 }
 
 proc DEM::write::writeMaterialsInlet { } {
-    variable inletProperties
     variable last_property_id
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet'\]/group"
     set old_mat_dict $::write::mat_dict
     set ::write::mat_dict [dict create]
-    write::processMaterials $xp1 $last_property_id
+    write::processMaterials $xp1 $DEM::write::last_property_id
     set DEM::write::last_property_id [expr $last_property_id + [dict size $::write::mat_dict]]
     
     set inletProperties $::write::mat_dict
