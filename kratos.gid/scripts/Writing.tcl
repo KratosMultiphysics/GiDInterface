@@ -210,10 +210,11 @@ proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
                         set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
                         set value [dict get $mat_dict $material $prop]
                     }
-                    WriteString "${s}$propname  "
+                    WriteString "${s}$propname $value"
                 }
             }
             incr current_mdpa_indent_level -1
+            set s [mdpaIndent]
             WriteString "${s}End Properties"
             WriteString ""
         }
