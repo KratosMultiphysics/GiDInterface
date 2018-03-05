@@ -210,7 +210,7 @@ proc DEM::write::writeConditionMeshes { } {
                 write::WriteString "    RIGID_BODY_MASS 0.0"
                 write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] (0.0,0.0,0.0)"
                 write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,0.0)"
-                write::WriteString "    IDENTIFIER $group"
+                write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
                 write::WriteString "    TOP 0"
                 write::WriteString "    BOTTOM 0"
                 write::WriteString "    FORCE_INTEGRATION_GROUP 0"
