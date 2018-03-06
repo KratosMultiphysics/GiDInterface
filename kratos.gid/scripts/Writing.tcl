@@ -288,6 +288,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
             set us [join [list $s1 $s2]]
             
             foreach valueNode $us {
+                write::forceUpdateNode $valueNode
                 set name [$valueNode getAttribute n]
                 set state [get_domnode_attribute $valueNode state]
                 if {$state ne "hidden"} {
@@ -1365,6 +1366,7 @@ proc write::forceUpdateNode {node} {
     catch {get_domnode_attribute $node dict}
     catch {get_domnode_attribute $node values}
     catch {get_domnode_attribute $node value}
+    catch {get_domnode_attribute $node state}
 }
 proc write::getValueByNode { node } {
     if {[get_domnode_attribute $node v] eq ""} {
