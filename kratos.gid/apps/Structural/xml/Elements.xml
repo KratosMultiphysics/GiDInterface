@@ -406,6 +406,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
       <inputs></inputs>
       <outputs>
@@ -431,6 +432,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
       <inputs>
       </inputs>
@@ -457,6 +459,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
       <inputs></inputs>
       <outputs>
@@ -482,6 +485,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
       <inputs>
       </inputs>
@@ -509,6 +513,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -535,6 +540,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -561,6 +567,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -587,6 +594,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -614,6 +622,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -640,6 +649,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="HINGE_STATIC_CONDENSATION"/>
     </NodalConditions>
     <inputs>
      </inputs>
