@@ -115,12 +115,20 @@ proc Structural::write::writeConditions { } {
 proc Structural::write::writeMeshes { } {
     
     write::writePartMeshes
+
+    writeStaticCondensation
+    Model::ForgetNodalCondition STATIC_CONDENSATION
     
     # Solo Malla , no en conditions
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
     
     # A Condition y a meshes-> salvo lo que no tenga topologia
     writeLoads
+}
+
+proc Structural::write::writeStaticCondensation { } {
+    set hinge_cnd [Model::getNodalConditionbyId STATIC_CONDENSATION]
+    
 }
 
 proc Structural::write::writeLoads { } {

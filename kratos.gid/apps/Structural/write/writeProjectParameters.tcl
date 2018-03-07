@@ -131,7 +131,7 @@ proc Structural::write::ProcessContacts { nodal_conditions_dict } {
     set process_list [list ]
     set contact_process_list [list ]
     foreach elem $nodal_conditions_dict {
-        if {[dict get $elem python_module] in {"alm_contact_process"}} {
+        if {[dict exists $elem python_module] && [dict get $elem python_module] in {"alm_contact_process"}} {
             set model_part_name "Structure"
             dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
             dict set elem Parameters model_part_name $model_part_name
