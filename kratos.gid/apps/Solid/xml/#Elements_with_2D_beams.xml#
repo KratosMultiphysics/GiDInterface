@@ -496,105 +496,6 @@
   </ElementItem>
   <!--structural elements-->
   <!--beam elements-->
-  <ElementItem n="SmallDisplacementBeamElement2D" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
-	       help="This element implements a small displacement beam" ElementType="Beam" Dofs="ROTATION" SolutionType="Static">
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="SmallDisplacementBeamElement2D2N"/>
-      <item GeometryType="Line" nodes="3" KratosName="SmallDisplacementBeamElement2D3N"/>
-    </TopologyFeatures>
-    
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="1D_UR"/>
-      <filter field="Dimension" value="2D"/>
-    </ConstitutiveLaw_FilterFeatures>
-    
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT" />
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-
-    <inputs>
-    </inputs>
-    <outputs>
-      <parameter n="MOMENT" pn="Moment" v="true" />
-      <parameter n="FORCE"  pn="Force" v="true" />
-    </outputs>
-  </ElementItem>
-  <ElementItem n="SmallDisplacementBeamElement3D" pn="Beam (small displacements)" ImplementedInFile="small_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="False"
-	       help="This element implements a small displacement beam" ElementType="Beam" Dofs="ROTATION" SolutionType="Static">
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="SmallDisplacementBeamElement3D2N"/>
-      <item GeometryType="Line" nodes="3" KratosName="SmallDisplacementBeamElement3D3N"/>
-    </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="1D_UR"/>
-      <filter field="Dimension" value="3D"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT" />
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-    <inputs>
-    </inputs>
-    <outputs>
-      <parameter n="MOMENT" pn="Moment" v="true" />
-      <parameter n="FORCE"  pn="Force" v="true" />
-    </outputs>
-  </ElementItem>
-  <ElementItem n="LargeDisplacementBeamElement2D" pn="Beam (large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a small displacement beam" ElementType="Beam" Dofs="ROTATION" >
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamElement2D2N"/>
-      <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamElement2D3N"/>
-    </TopologyFeatures>
-    
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="1D_UR"/>
-      <filter field="Dimension" value="2D"/>
-    </ConstitutiveLaw_FilterFeatures>
-    
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT" />
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-
-    <inputs>
-    </inputs>
-    <outputs>
-      <parameter n="MOMENT" pn="Moment" v="true" />
-      <parameter n="FORCE"  pn="Force" v="true" />
-    </outputs>
-  </ElementItem>
   <ElementItem n="LargeDisplacementBeamElement3D" pn="Beam (large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
@@ -629,108 +530,6 @@
       <parameter n="FORCE"  pn="Force" v="true" />
     </outputs>
   </ElementItem>
-  <ElementItem n="LargeDisplacementBeamEMCElement2D" pn="Beam (EMC large displacements)" ImplementedInFile="large_displacement_beam_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a large displacement beam" ElementType="Beam" Dofs="ROTATION" >
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamEMCElement2D2N"/>
-      <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamEMCElement2D3N"/>
-    </TopologyFeatures>
-    
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="1D_UR"/>
-      <filter field="Dimension" value="2D"/>
-    </ConstitutiveLaw_FilterFeatures>
-    
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT" />
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-
-    <inputs>
-    </inputs>
-    <outputs>
-      <parameter n="MOMENT" pn="Moment" v="true" />
-      <parameter n="FORCE"  pn="Force" v="true" />
-    </outputs>
-  </ElementItem>
-  <ElementItem n="LargeDisplacementBeamEMCElement3D" pn="Beam (EMC large displacements)" ImplementedInFile="large_displacement_beam_emc_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a large displacement beam" ElementType="Beam" Dofs="ROTATION" >
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamEMCElement3D2N"/>
-      <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamEMCElement3D3N"/>
-    </TopologyFeatures>
-    
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="1D_UR"/>
-      <filter field="Dimension" value="3D"/>
-    </ConstitutiveLaw_FilterFeatures>
-    
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT" />
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-
-    <inputs>
-    </inputs>
-    <outputs>
-      <parameter n="MOMENT" pn="Moment" v="true" />
-      <parameter n="FORCE"  pn="Force" v="true" />
-    </outputs>
-  </ElementItem>
-  <ElementItem n="LargeDisplacementBeamSEMCElement3D" pn="Beam (SEMC large displacements)" ImplementedInFile="large_displacement_beam_semc_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LargeDeformation="True"
-	       help="This element implements a large displacement beam" ElementType="Beam" Dofs="ROTATION" SolutionType="Static">
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamSEMCElement3D2N"/>
-      <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamSEMCElement3D3N"/>
-    </TopologyFeatures>
-    
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="1D_UR"/>
-      <filter field="Dimension" value="3D"/>
-    </ConstitutiveLaw_FilterFeatures>
-    
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT" />
-      <NodalCondition n="ROTATION"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="ANGULAR_VELOCITY"/>
-      <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
-
-    <inputs>
-    </inputs>
-    <outputs>
-      <parameter n="MOMENT" pn="Moment" v="true" />
-      <parameter n="FORCE"  pn="Force" v="true" />
-    </outputs>
-  </ElementItem>  
   <!--shell elements-->
   <!--small displacements-->
   <ElementItem n="ShellThinElement" pn="Shell (thin triangular)" ImplementedInFile="shell_thin_element_3D3N.cpp"
@@ -884,4 +683,8 @@
       <parameter n="SHELL_FORCE_GLOBAL" pn="Force" v="false" state="hidden" />
     </outputs>
   </ElementItem>
+
+
+
+  
 </ElementList>
