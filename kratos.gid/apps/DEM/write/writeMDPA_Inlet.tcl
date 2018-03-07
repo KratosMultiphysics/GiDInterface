@@ -90,6 +90,7 @@ proc DEM::write::writeInletMeshes { } {
 }
 
 proc DEM::write::writeMaterialsInlet { } {
+    variable inletProperties
     variable last_property_id
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet'\]/group"
     set old_mat_dict $::write::mat_dict
