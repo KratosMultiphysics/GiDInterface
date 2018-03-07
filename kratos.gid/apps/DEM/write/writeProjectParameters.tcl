@@ -114,5 +114,6 @@ proc DEM::write::getParametersEvent { } {
     return $project_parameters_dict
 }
 proc DEM::write::writeParametersEvent { } {
+    write::SetParallelismConfiguration
     write::WriteJSON [getParametersEvent]
 }
