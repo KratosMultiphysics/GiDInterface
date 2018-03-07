@@ -3,10 +3,10 @@
   <Material n="Concrete" MaterialType="Solid" help="Concrete elastic properties">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="2550" help="Density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="3.0e10" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
-        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2" help="Poisson coefficient of the material"/>
+        <parameter n="YOUNG_MODULUS" pn="Young modulus" v="3.0e10" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
+        <parameter n="POISSON_RATIO" pn="Poisson ratio" v="0.2" help="Poisson coefficient of the material"/>
 	<parameter n="C10" pn="C10" v="6.25e9" unit_magnitude="P" units="Pa"/>
-	<parameter n="BULK_MODULUS" pn="BULK_MODULUS" v="16.666666666e9" unit_magnitude="P" units="Pa"/>
+	<parameter n="BULK_MODULUS" pn="Bulk modulus" v="16.666666666e9" unit_magnitude="P" units="Pa"/>
 	<parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="19.1237"/>
 	<parameter n="STRENGTH_RATIO" pn="Strength Ratio" v="10.9375"/>
 	<parameter n="FRACTURE_ENERGY" pn="Fracture Energy" v="140"/>
@@ -15,8 +15,8 @@
   <Material n="Steel" MaterialType="Solid" help="Steel elastic properties">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="7850" help="Density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="206.9e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
-        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29" help="Poisson coefficient of the material"/>
+        <parameter n="YOUNG_MODULUS" pn="Young modulus" v="206.9e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
+        <parameter n="POISSON_RATIO" pn="Poisson ratio" v="0.29" help="Poisson coefficient of the material"/>
 	<parameter n="C10" pn="C10" v="4.00969e10" unit_magnitude="P" units="Pa"/>
 	<parameter n="BULK_MODULUS" pn="Bulk modulus" v="164.206349206e9" unit_magnitude="P" units="Pa"/>
 	<parameter n="YIELD_STRESS" pn="Yield Stress" v="450.0e6" unit_magnitude="P" units="Pa"/>
@@ -29,10 +29,10 @@
   <Material n="Aluminium" MaterialType="Solid" help="Aluminium elastic properties">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="2650" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="69e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
-        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.22" help="Poisson coefficient of the material"/>
+        <parameter n="YOUNG_MODULUS" pn="Young modulus" v="69e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
+        <parameter n="POISSON_RATIO" pn="Poisson ratio" v="0.22" help="Poisson coefficient of the material"/>
 	<parameter n="C10" pn="C10" v="1.4139344e10" unit_magnitude="P" units="Pa"/>
-	<parameter n="BULK_MODULUS" pn="BULK_MODULUS" v="41.071428571e9" unit_magnitude="P" units="Pa"/>
+	<parameter n="BULK_MODULUS" pn="Bulk modulus" v="41.071428571e9" unit_magnitude="P" units="Pa"/>
     </inputs>
   </Material>
 </Materials>
