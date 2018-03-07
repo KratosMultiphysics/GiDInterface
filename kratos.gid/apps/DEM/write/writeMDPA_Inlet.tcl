@@ -54,7 +54,7 @@ proc DEM::write::writeInletMeshes { } {
             lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
             lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
             write::WriteString "        VELOCITY \[3\] ($vx, $vy, $vz)"
-            write::WriteString "        MAX_RAND_DEVIATION_ANGLE [dict get $inletProperties $groupid DIRECTION_VECTORX]"
+            write::WriteString "        MAX_RAND_DEVIATION_ANGLE [dict get $inletProperties $groupid MAX_RAND_DEVIATION_ANGLE]"
             set type_of_measurement [dict get $inletProperties $groupid FLOW_MEASUREMENT]
             if {$type_of_measurement eq "Kilograms"} {
                 set number_of_particles 200.0
@@ -90,6 +90,7 @@ proc DEM::write::writeInletMeshes { } {
 }
 
 proc DEM::write::writeMaterialsInlet { } {
+    variable inletProperties
     variable last_property_id
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet'\]/group"
     set old_mat_dict $::write::mat_dict
