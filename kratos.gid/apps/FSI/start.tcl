@@ -46,6 +46,10 @@ proc ::FSI::LoadMyFiles { } {
 
 proc ::FSI::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::MokChannelFlexibleWall] [= "Example\nMOK - Channel with flexible wall"]   
+    # TODO: REMOVE THIS IF STATEMENT ONCE THE 3D MOK BENCHMARK IS IMPLEMENTED
+    if {$::Model::SpatialDimension eq "2D"} {
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::TurekBenchmark] [= "Example\nTurek benchmark - FSI2"] 
+    }
 }
 
 
