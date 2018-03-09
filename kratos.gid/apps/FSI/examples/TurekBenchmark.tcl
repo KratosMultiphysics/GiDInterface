@@ -1,22 +1,25 @@
 
 proc ::FSI::examples::TurekBenchmark {args} {
-    if {![Kratos::IsModelEmpty]} {
-        set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
-        set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
-		if { $retval == "cancel" } { return }
+    # At this moment we do only support 2D for this test
+    if {$::Model::SpatialDimension eq "2D"} {
+        if {![Kratos::IsModelEmpty]} {
+            set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
+            set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
+            if { $retval == "cancel" } { return }
+        }
+        # Set up geometry and groups
+        DrawTurekBenchmarkFluidGeometry
+        DrawTurekBenchmarkStructureGeometry
+        # Generated geometry frame zoom
+        GiD_Process 'Layers On Fluid escape
+        GiD_Process 'Layers On Structure escape
+        GiD_Process 'Zoom Frame
+        GiD_Process 'Render Flat escape
+        # Assign mesh sizes
+        AssignTurekBenchmarkMeshSizes$::Model::SpatialDimension
+        # Assign tree values
+        TreeAssignationTurekBenchmark
     }
-    # Set up geometry and groups
-    DrawTurekBenchmarkFluidGeometry
-    DrawTurekBenchmarkStructureGeometry
-    # Generated geometry frame zoom
-    GiD_Process 'Layers On Fluid escape
-    GiD_Process 'Layers On Structure escape
-    GiD_Process 'Zoom Frame
-    GiD_Process 'Render Flat escape
-    # Assign mesh sizes
-    AssignTurekBenchmarkMeshSizes$::Model::SpatialDimension
-    # Assign tree values
-    TreeAssignationTurekBenchmark
 }
 
 proc FSI::examples::DrawTurekBenchmarkFluidGeometry {args} {
