@@ -9,9 +9,13 @@ namespace eval Model {
 catch {CLaw destroy}
 oo::class create CLaw {
     superclass Entity
+    
+    variable kratos_name
 
     constructor {n} {
         next $n
+        variable kratos_name
+        set kratos_name ""
     }
     
     method cumple {args} {
@@ -26,6 +30,15 @@ oo::class create CLaw {
         }
         
         return $c
+    }
+
+    method setKratosName {kn} {
+        variable kratos_name
+        set kratos_name $kn
+    }
+    method getKratosName { } {
+        variable kratos_name
+        if {$kratos_name eq ""} {return [my getName]} {return $kratos_name}
     }
 }
 
@@ -47,7 +60,7 @@ proc Model::ParseClawNode { node } {
     $cl setPublicName [$node getAttribute pn]
     $cl setHelp [$node getAttribute help]
     
-    if {[$node hasAttribute v]} {$el setDv [$node getAttribute v]}
+    if {[$node hasAttribute KratosName]} {$cl setKratosName [$node getAttribute KratosName]}
     
     foreach attr [$node attributes] {
         $cl addAttribute $attr [$node getAttribute $attr]

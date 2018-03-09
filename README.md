@@ -1,4 +1,7 @@
 # GiDInterface
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/07a116949d2a437eb99b1423a18ecdb6)](https://app.codacy.com/app/jginternational/GiDInterface?utm_source=github.com&utm_medium=referral&utm_content=KratosMultiphysics/GiDInterface&utm_campaign=badger)
+
 The interface of Kratos with [GiD](http://www.gidhome.com)
 
 ## First steps
