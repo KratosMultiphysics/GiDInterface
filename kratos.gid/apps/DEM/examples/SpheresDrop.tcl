@@ -67,7 +67,7 @@ proc ::DEM::examples::AssignToTree { } {
 	spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
 	set inletNode [spdAux::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
 	$inletNode setAttribute ov surface
-	set props [list VELOCITY_MODULUS $modulus Interval $interval_name]
+	set props [list VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTORX 0.0 DIRECTION_VECTORZ -1.0]
 	foreach {prop val} $props {
 	     set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
 	     if {$propnode ne "" } {
