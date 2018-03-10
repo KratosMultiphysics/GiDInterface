@@ -123,7 +123,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
     
     CloseFile
     if {$needsOpen} {OpenFile $filename}
-    if {$::kratos_debug} {
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
         eval $wevent
     } else {
         if {[catch {eval $wevent} fid] } {
