@@ -3,14 +3,10 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-set ::kratos_debug 1 ;# could be 0,1,-1
-
 ##########################################################
 #################### GiD Tcl events ######################
 ##########################################################
 proc InitGIDProject { dir } {
-    if {$::kratos_debug} {font configure SmallFont -size 16}
-    #uplevel #0 [list Kratos::InitGIDProject $dir]
     Kratos::InitGIDProject $dir
 }
 

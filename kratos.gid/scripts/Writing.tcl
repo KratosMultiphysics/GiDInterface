@@ -151,7 +151,7 @@ proc write::writeAppMDPA {appid} {
     CloseFile
     OpenFile $filename
     
-    if {$::kratos_debug} {
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
         eval $wevent
     } else {
         if { [catch {eval $wevent} fid] } {
