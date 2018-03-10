@@ -38,10 +38,10 @@ proc ::FSI::Init { } {
 proc ::FSI::LoadMyFiles { } {
     variable dir
     
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
+    uplevel #0 [list source [file join $FSI::dir examples examples.tcl]]
 }
 
 proc ::FSI::CustomToolbarItems { } {
@@ -52,6 +52,9 @@ proc ::FSI::CustomToolbarItems { } {
     }
 }
 
+proc ::FSI::CustomMenus { } {
+    FSI::examples::UpdateMenus
+}
 
 proc ::FSI::GetAttribute {name} {
     variable attributes
