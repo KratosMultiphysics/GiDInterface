@@ -63,6 +63,10 @@ proc ::EmbeddedFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::EmbeddedFluid::examples::CylinderInFlow] [= "Example\nEmbedded cylinder test"]
 }
 
+proc ::EmbeddedFluid::CustomMenus { } {
+    EmbeddedFluid::examples::UpdateMenus
+}
+
 proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
     variable oldVolumeMesher
     
