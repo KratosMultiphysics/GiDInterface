@@ -27,13 +27,13 @@ proc DEM::write::writeInletMeshes { } {
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
         set gtn [write::GetConfigurationAttribute groups_type_name]
-        if {![dict exists $::write::meshes [list Inlet ${groupid}]]} {
-            set mid [expr [llength [dict keys $::write::meshes]] +1]
+        if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
+            set mid [expr [llength [dict keys $::write::submodelparts]] +1]
             if {$gtn ne "Mesh"} {
                 set good_name [write::transformGroupName $groupid]
                 set mid "Inlet_${good_name}"
             }
-            dict set ::write::meshes [list Inlet ${groupid}] $mid
+            dict set ::write::submodelparts [list Inlet ${groupid}] $mid
             set gdict [dict create]
             set f "%10i\n"
             set f [subst $f]

@@ -5,7 +5,7 @@
 
 namespace eval write {
     variable mat_dict
-    variable meshes
+    variable submodelparts
     variable MDPA_loop_control
     variable current_configuration
     variable current_mdpa_indent_level
@@ -13,14 +13,14 @@ namespace eval write {
 
 proc write::Init { } {
     variable mat_dict
-    variable meshes
+    variable submodelparts
     variable current_configuration
     variable current_mdpa_indent_level
     
     set current_configuration [dict create]
     
     set mat_dict ""
-    set meshes [dict create]
+    set submodelparts [dict create]
     
     SetConfigurationAttribute dir ""
     SetConfigurationAttribute parts_un ""
@@ -470,11 +470,11 @@ proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
 }
 
 proc write::getMeshId {cid group} {
-    variable meshes
+    variable submodelparts
     
     set find [list $cid ${group}]
-    if {[dict exists $meshes $find]} {
-        return [dict get $meshes [list $cid ${group}]]
+    if {[dict exists $submodelparts $find]} {
+        return [dict get $submodelparts [list $cid ${group}]]
     } {
         return 0
     }
@@ -492,19 +492,19 @@ proc write::transformGroupName {groupid} {
 
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
-    variable meshes
+    variable submodelparts
     
     set what [split $what "&"]
     set gtn [GetConfigurationAttribute groups_type_name]
     set group [GetWriteGroupName $group]
-    if {![dict exists $meshes [list $cid ${group}]]} {
+    if {![dict exists $submodelparts [list $cid ${group}]]} {
         # Add the submodelpart to the catalog
-        set mid [expr [llength [dict keys $meshes]] +1]
+        set mid [expr [llength [dict keys $submodelparts]] +1]
         if {$gtn ne "Mesh"} {
             set good_name [write::transformGroupName $group]
             set mid "${cid}_${good_name}"
         }
-        dict set meshes [list $cid ${group}] $mid
+        dict set submodelparts [list $cid ${group}] $mid
 
         # Prepare the print formats
         incr ::write::current_mdpa_indent_level
