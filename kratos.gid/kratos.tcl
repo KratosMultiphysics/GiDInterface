@@ -141,7 +141,7 @@ proc Kratos::InitGIDProject { dir } {
     }
     #source [file join $dir scripts Menus.tcl]
     # JG Sources will be in a different proc
-    foreach filename {Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl} {
+    foreach filename {Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
 
