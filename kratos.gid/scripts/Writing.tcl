@@ -25,7 +25,6 @@ proc write::Init { } {
     SetConfigurationAttribute dir ""
     SetConfigurationAttribute parts_un ""
     SetConfigurationAttribute materials_un ""
-    SetConfigurationAttribute groups_type_name "SubModelPart"
     SetConfigurationAttribute time_monitor 0
     SetConfigurationAttribute model_name ""
     
@@ -74,10 +73,6 @@ proc write::SetConfigurationAttributes {configuration} {
 proc write::AddConfigurationAttribute {att val} {
     variable current_configuration
     dict append current_configuration $att $val]
-}
-
-proc write::setGroupsTypeName {name} {
-    SetConfigurationAttribute groups_type_name $name
 }
 
 # Write Events
@@ -495,15 +490,11 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
     variable submodelparts
     
     set what [split $what "&"]
-    set gtn [GetConfigurationAttribute groups_type_name]
     set group [GetWriteGroupName $group]
     if {![dict exists $submodelparts [list $cid ${group}]]} {
         # Add the submodelpart to the catalog
-        set mid [expr [llength [dict keys $submodelparts]] +1]
-        if {$gtn ne "Mesh"} {
-            set good_name [write::transformGroupName $group]
-            set mid "${cid}_${good_name}"
-        }
+        set good_name [write::transformGroupName $group]
+        set mid "${cid}_${good_name}"
         dict set submodelparts [list $cid ${group}] $mid
 
         # Prepare the print formats
@@ -520,7 +511,7 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
 
         # Print header
         set s [mdpaIndent]
-        WriteString "${s}Begin $gtn $mid // Group $group // Subtree $cid"
+        WriteString "${s}Begin SubModelPart $mid // Group $group // Subtree $cid"
         # Print tables
         if {$tableid_list ne ""} {
             set s1 [mdpaIndent]
@@ -530,15 +521,15 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
             }
             WriteString "${s1}End SubModelPartTables"
         }
-        WriteString "${s1}Begin ${gtn}Nodes"
+        WriteString "${s1}Begin SubModelPartNodes"
         GiD_WriteCalculationFile nodes -sorted $gdict
-        WriteString "${s1}End ${gtn}Nodes"
-        WriteString "${s1}Begin ${gtn}Elements"
+        WriteString "${s1}End SubModelPartNodes"
+        WriteString "${s1}Begin SubModelPartElements"
         if {"Elements" in $what} {
             GiD_WriteCalculationFile elements -sorted $gdict
         }
-        WriteString "${s1}End ${gtn}Elements"
-        WriteString "${s1}Begin ${gtn}Conditions"
+        WriteString "${s1}End SubModelPartElements"
+        WriteString "${s1}Begin SubModelPartConditions"
         if {"Conditions" in $what} {
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
@@ -550,8 +541,8 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
                 }
             }
         }
-        WriteString "${s1}End ${gtn}Conditions"
-        WriteString "${s}End $gtn"
+        WriteString "${s1}End SubModelPartConditions"
+        WriteString "${s}End SubModelPart"
     }
 }
 
@@ -1058,7 +1049,6 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set paramDict [dict create]
-            dict set paramDict mesh_id 0
             dict set paramDict model_part_name $groupId
             
             set process_attributes [$process getAttributes]

@@ -26,21 +26,18 @@ proc DEM::write::writeInletMeshes { } {
     
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
-        set gtn [write::GetConfigurationAttribute groups_type_name]
         if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
             set mid [expr [llength [dict keys $::write::submodelparts]] +1]
-            if {$gtn ne "Mesh"} {
-                set good_name [write::transformGroupName $groupid]
-                set mid "Inlet_${good_name}"
-            }
+            set good_name [write::transformGroupName $groupid]
+            set mid "Inlet_${good_name}"
             dict set ::write::submodelparts [list Inlet ${groupid}] $mid
             set gdict [dict create]
             set f "%10i\n"
             set f [subst $f]
             set group_real_name [write::GetWriteGroupName $groupid]
             dict set gdict $group_real_name $f
-            write::WriteString "Begin $gtn $mid // Group $groupid // Subtree Inlet"
-            write::WriteString "    Begin ${gtn}Data"
+            write::WriteString "Begin SubModelPart $mid // Group $groupid // Subtree Inlet"
+            write::WriteString "    Begin SubModelPartData"
             write::WriteString "        PROPERTIES_ID [dict get $inletProperties $groupid MID]"
             write::WriteString "        RIGID_BODY_MOTION 0"
             write::WriteString "        IDENTIFIER $mid"
@@ -80,11 +77,11 @@ proc DEM::write::writeInletMeshes { } {
             write::WriteString "        RANDOM_ORIENTATION 1"
             write::WriteString "        ORIENTATION \[4\] (0.0, 0.0, 0.0, 1.0)"
             
-            write::WriteString "    End ${gtn}Data"
-            write::WriteString "    Begin ${gtn}Nodes"
+            write::WriteString "    End SubModelPartData"
+            write::WriteString "    Begin SubModelPartNodes"
             GiD_WriteCalculationFile nodes -sorted $gdict
-            write::WriteString "    End ${gtn}Nodes"
-            write::WriteString "End $gtn"
+            write::WriteString "    End SubModelPartNodes"
+            write::WriteString "End SubModelPart"
         }
     }
 }
