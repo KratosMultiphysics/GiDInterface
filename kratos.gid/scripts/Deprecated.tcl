@@ -10,7 +10,7 @@
 # Estimated deletion version: 5.3.0
 proc write::getMeshId {cid group} {
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
-        W "Deprecated method write::getMeshId\nUse write::getSubModelPartId"
+        W "Deprecated method write::getMeshId\nUse write::getSubModelPartId\n"
     }
     write::getSubModelPartId $cid $group
 }
@@ -19,7 +19,7 @@ proc write::getMeshId {cid group} {
 # Estimated deletion version: 5.3.0
 proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
-        W "Deprecated method write::writeGroupMesh\nUse write::writeGroupSubModelPart"
+        W "Deprecated method write::writeGroupMesh\nUse write::writeGroupSubModelPart\n"
     }
     write::writeGroupSubModelPart $cid $group $what $iniend $tableid_list
 }
@@ -28,7 +28,7 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
 # Estimated deletion version: 5.3.0
 proc write::writePartMeshes { } {
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
-        W "Deprecated method write::writePartMeshes\nUse write::writePartSubModelPart"
+        W "Deprecated method write::writePartMeshes\nUse write::writePartSubModelPart\n"
     }
     write::writePartSubModelPart
 }
@@ -37,7 +37,7 @@ proc write::writePartMeshes { } {
 # Estimated deletion version: 5.3.0
 proc write::GetMeshFromCondition { base_UN condition_id } {
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
-        W "Deprecated method write::GetMeshFromCondition\nUse write::GetSubModelPartFromCondition"
+        W "Deprecated method write::GetMeshFromCondition\nUse write::GetSubModelPartFromCondition\n"
     }
     write::GetSubModelPartFromCondition $base_UN $condition_id
 }
@@ -46,7 +46,7 @@ proc write::GetMeshFromCondition { base_UN condition_id } {
 # Estimated deletion version: 5.3.0
 proc write::getPartsMeshId {} {
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
-        W "Deprecated method write::getPartsMeshId\nUse write::getPartsSubModelPartId"
+        W "Deprecated method write::getPartsMeshId\nUse write::getPartsSubModelPartId\n"
     }
     write::getPartsSubModelPartId
 }
