@@ -32,6 +32,7 @@ proc ::Fluid::Init { } {
 proc ::Fluid::LoadMyFiles { } {
     variable dir
 
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
@@ -120,8 +121,11 @@ proc ::Fluid::ChangeAppTo {appid} {
 
 proc ::Fluid::CustomToolbarItems { } {
     variable dir
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Fluid::examples::CylinderInFlow] [= "Example\nCylinder in air flow"]   
+}
+
+proc ::Fluid::CustomMenus { } {
+    Fluid::examples::UpdateMenus
 }
 
 ::Fluid::Init
