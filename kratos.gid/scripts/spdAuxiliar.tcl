@@ -322,6 +322,7 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
         spdAux::OpenTree
     }
     ::Kratos::CreatePreprocessModelTBar
+    ::Kratos::UpdateMenus
 }
 
 proc spdAux::CustomTreeCommon { } {

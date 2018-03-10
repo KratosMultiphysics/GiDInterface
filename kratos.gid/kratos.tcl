@@ -26,7 +26,7 @@ proc EndGIDProject {} {
 }
 
 proc ChangedLanguage { newlan } {
-    Kratos::ChangeMenus
+    Kratos::UpdateMenus
 }
 
 proc InitGIDPostProcess {} {
@@ -165,7 +165,7 @@ proc Kratos::InitGIDProject { dir } {
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
     Kratos::LoadEnvironment
-    Kratos::ChangeMenus
+    Kratos::UpdateMenus
     gid_groups_conds::SetProgramName $kratos_private(Name)
     gid_groups_conds::SetLibDir [file join $dir exec]
     set spdfile [file join $dir kratos_default.spd]
@@ -263,7 +263,7 @@ proc Kratos::LoadWizardFiles { } {
     set ::Kratos::kratos_private(UseWizard) 1
     set dir $::Kratos::kratos_private(Path)
     uplevel #0 [list source [file join $dir scripts Wizard.tcl]]
-    Kratos::ChangeMenus
+    Kratos::UpdateMenus
 }
 
 proc Kratos::SwitchMode {} {
@@ -275,7 +275,7 @@ proc Kratos::SwitchMode {} {
     }
     Kratos::RegisterEnvironment
     #W "Registrado $kratos_private(DevMode)"
-    Kratos::ChangeMenus
+    Kratos::UpdateMenus
     spdAux::RequestRefresh
 }
 
