@@ -3,14 +3,10 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-set ::kratos_debug 1 ;# could be 0,1,-1
-
 ##########################################################
 #################### GiD Tcl events ######################
 ##########################################################
 proc InitGIDProject { dir } {
-    if {$::kratos_debug} {font configure SmallFont -size 16}
-    #uplevel #0 [list Kratos::InitGIDProject $dir]
     Kratos::InitGIDProject $dir
 }
 
@@ -145,7 +141,7 @@ proc Kratos::InitGIDProject { dir } {
     }
     #source [file join $dir scripts Menus.tcl]
     # JG Sources will be in a different proc
-    foreach filename {Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl} {
+    foreach filename {Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
 
@@ -233,7 +229,6 @@ proc Kratos::ForceRun { } {
     set must_write_calc_data 1
 }
 
-
 proc Kratos::RestoreVariables { } {
     variable kratos_private
     
@@ -242,6 +237,7 @@ proc Kratos::RestoreVariables { } {
     }
     set kratos_private(RestoreVars) [list ]
 }
+
 proc Kratos::AddRestoreVar {varName} {
     variable kratos_private
     if {[info exists $varName]} {
@@ -300,6 +296,7 @@ proc Kratos::RegisterEnvironment { } {
     if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W [="Problems saving user prefecences"]; W $data}
     close $fp
 }
+
 proc Kratos::LoadEnvironment { } {
     variable kratos_private
     #set kratos_private(DevMode) [gid_groups_conds::get_preference DevMode releasedefault]
@@ -351,6 +348,7 @@ proc Kratos::ResetModel { } {
         if {[GiD_Groups exists $group]} {GiD_Groups delete $group}
     }
 }
+
 proc Kratos::IsModelEmpty { } {
     if {[GiD_Groups list] != ""} {return false}
     if {[GiD_Layers list] != "Layer0"} {return false}
@@ -367,9 +365,11 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
     return $ret
 }
+
 proc Kratos::AfterMeshGeneration {fail} {
         apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
 }
+
 proc Kratos::CheckValidProjectName {modelname} {
     set fail 0
     set filename [file tail $modelname]
