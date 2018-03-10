@@ -40,7 +40,7 @@ proc Pfem::write::writeMeshes { } {
     
     foreach part_un [GetPartsUN] {
         write::initWriteData $part_un "PFEM_Materials"
-        write::writePartMeshes
+        write::writePartSubModelPart
     }
     # Solo Malla , no en conditions
     writeNodalConditions "PFEM_NodalConditions"
@@ -64,7 +64,7 @@ proc Pfem::write::writeNodalConditions { keyword } {
         # Aqui hay que gestionar la escritura de los bodies
         # Una opcion es crear un megagrupo temporal con esa informacion, mandar a pintar, y luego borrar el grupo.
         # Otra opcion es no escribir el submodelpart. Ya tienen las parts y el project parameters tiene el conformado de los bodies
-        ::write::writeGroupMesh $cid $groupid "nodal"
+        ::write::writeGroupSubModelPart $cid $groupid "nodal"
     }
 }
 
@@ -134,7 +134,7 @@ proc Pfem::write::getPropertiesList {parts_un_list} {
 	set xp1 "[spdAux::getRoute $parts_un]/group"
 	foreach gNode [$root selectNodes $xp1] {
 	    set group [get_domnode_attribute $gNode n]
-	    set sub_model_part [write::getMeshId Parts $group]
+	    set sub_model_part [write::getSubModelPartId Parts $group]
 	    if { [dict exists $mat_dict $group] } {
 		set law_id [dict get $mat_dict $group MID]
 		set law_name [dict get $mat_dict $group ConstitutiveLaw]		
@@ -194,7 +194,7 @@ proc Pfem::write::getConditionsParametersDict {un {condition_type "Condition"}} 
         set groupName [$group @n]
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
-        set groupId [::write::getMeshId $cid $groupName]
+        set groupId [::write::getSubModelPartId $cid $groupName]
         set condId [[$group parent] @n]
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $condId]
