@@ -32,7 +32,7 @@ proc ::DEM::examples::AssignToTree { } {
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [spdAux::AddConditionGroupOnXPath $DEMParts Body]
-    set props [list PARTICLE_DENSITY 2500.0]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6]
     foreach {prop val} $props {
         set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -67,7 +67,7 @@ proc ::DEM::examples::AssignToTree { } {
         spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
         set inletNode [spdAux::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
         $inletNode setAttribute ov surface
-        set props [list DIAMETER 0.1 PARTICLE_MATERIAL 2 VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTORX 0.0 DIRECTION_VECTORZ -1.0]
+        set props [list DIAMETER 0.1 PARTICLE_MATERIAL 2 YOUNG_MODULUS 1.0e6 VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTORX 0.0 DIRECTION_VECTORZ -1.0]
         foreach {prop val} $props {
             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
             if {$propnode ne "" } {
