@@ -16,6 +16,7 @@ proc ::DEM::examples::SpheresDrop {args} {
 }
 
 proc ::DEM::examples::DrawGeometry { } {
+    Kratos::ResetModel
     GiD_Process Mescape Geometry Create Object Rectangle -5 -5 0 5 5 0 escape 
     GiD_Process Mescape Geometry Create Object Rectangle -2 -2 5 2 2 5 escape 
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape 
@@ -83,6 +84,18 @@ proc ::DEM::examples::AssignToTree { } {
     # Time parameters
     set change_list [list EndTime 20 DeltaTime 1e-5 DEM-NeighbourSearchFrequency 20]
     set xpath [spdAux::getRoute DEMTimeParameters]
+    foreach {name value} $change_list {
+        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check SpheresDrop script"
+        }
+    }
+    
+    # Bounding box
+    set change_list [list UseBoundingBox true MinZ -1.0]
+    set xpath [spdAux::getRoute DEM-Boundingbox]
     foreach {name value} $change_list {
         set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
