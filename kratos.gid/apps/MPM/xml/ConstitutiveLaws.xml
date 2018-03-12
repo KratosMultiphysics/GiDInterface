@@ -33,7 +33,7 @@
 
   <!--hyper elastic laws-->
   <CLaw n="LargeStrain3DLaw.SaintVenantKirchhoffModel" pn="SaintVenantKirchhoff" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="SaintVenantKirchhoff HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
+	help="SaintVenantKirchhoff HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" class="SaintVenantKirchhoffModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -44,7 +44,7 @@
     </outputs>
   </CLaw>
   <CLaw n="LargeStrainPlaneStrain2DLaw.SaintVenantKirchhoffModel" pn="SaintVenantKirchhoff" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="SaintVenantKirchhoff HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
+	help="SaintVenantKirchhoff HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" class="SaintVenantKirchhoffModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -55,7 +55,7 @@
     </outputs>
   </CLaw>
   <CLaw n="LargeStrain3DLaw.NeoHookeanModel" pn="NeoHookean" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
+	help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" class="NeoHookeanModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -67,7 +67,7 @@
     </outputs>
   </CLaw>
   <CLaw n="LargeStrainPlaneStrain2DLaw.NeoHookeanModel" pn="NeoHookean" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
+	help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" class="NeoHookeanModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -81,7 +81,7 @@
   
   <!--hyper elastic plastic laws-->
   <CLaw n="LargeStrain3DLaw.VonMisesNeoHookeanPlasticityModel" pn="J2 Plasticity (l-d)" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady">
+	help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" class="VonMisesNeoHookeanPlasticityModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -99,7 +99,7 @@
     </outputs>
   </CLaw>
   <CLaw n="LargeStrainPlaneStrain2DLaw.VonMisesNeoHookeanPlasticityModel" pn="J2 Plasticity (l-d)" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady">
+	help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady"  class="VonMisesNeoHookeanPlasticityModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -120,7 +120,7 @@
   
   <!--damage laws-->
   <CLaw n="SmallStrain3DLaw.SimoJuExponentialDamageModel" pn="Damage Simo-Ju" Type="3D" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
-	help="Isotropic Damage Simo-Ju Behaviour in 3D" Dimension="3D" ProductionReady="Developer">
+	help="Isotropic Damage Simo-Ju Behaviour in 3D" Dimension="3D" ProductionReady="Developer" class="SimoJuExponentialDamageModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -134,7 +134,7 @@
     </outputs>
   </CLaw>
   <CLaw n="SmallStrainPlaneStrain2DLaw.SimoJuExponentialDamageModel" pn="Damage Simo-Ju (Plane Strain)" Type="PlaneStrain" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
-	help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="Developer">
+	help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="Developer" class="SimoJuExponentialDamageModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -148,7 +148,7 @@
     </outputs>
   </CLaw>
   <CLaw n="SmallStrainPlaneStress2DLaw.SimoJuExponentialDamageModel" pn="Damage Simo-Ju (Plane Stress)" Type="PlaneStress" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
-	help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="Developer">
+	help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="Developer" class="SimoJuExponentialDamageModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
