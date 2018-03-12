@@ -8,6 +8,7 @@ proc ::DEM::examples::SpheresDrop {args} {
     
     DrawGeometry
     AssignToTree
+    AssignMeshSize
     
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +18,7 @@ proc ::DEM::examples::SpheresDrop {args} {
 proc ::DEM::examples::DrawGeometry { } {
     GiD_Process Mescape Geometry Create Object Rectangle -5 -5 0 5 5 0 escape 
     GiD_Process Mescape Geometry Create Object Rectangle -2 -2 5 2 2 5 escape 
-    GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape 
+    GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape 
     
     GiD_Groups create "Floor"
     GiD_Groups create "Inlet"
@@ -93,6 +94,13 @@ proc ::DEM::examples::AssignToTree { } {
 
     spdAux::RequestRefresh
 }
+
+proc DEM::examples::AssignMeshSize { } {
+    GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
+    GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape
+}
+
 
 proc DEM::examples::ErasePreviousIntervals { } {
     set root [customlib::GetBaseRoot]
