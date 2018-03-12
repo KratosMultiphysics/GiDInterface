@@ -68,7 +68,7 @@ proc EmbeddedFluid::write::getDistanceModificationDict { } {
       dict set distance_modif_dict "kratos_module" KratosMultiphysics.FluidDynamicsApplication
       dict set distance_modif_dict "process_name" ApplyDistanceModificationProcess
             set parameters_dict [dict create ]
-            dict set parameters_dict "model_part_name" [lindex [write::getPartsMeshId] 0]
+            dict set parameters_dict "model_part_name" [lindex [write::getPartsSubModelPartId] 0]
             dict set parameters_dict "check_at_each_time_step" [write::getValue EMBFLDistanceSettings correct_distance_at_each_step]
       dict set distance_modif_dict "Parameters" $parameters_dict
       return $distance_modif_dict
@@ -80,7 +80,7 @@ proc EmbeddedFluid::write::getEmbeddedDragProcessDict {} {
     dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
     dict set pdict "process_name" "ComputeEmbeddedDragProcess"
         set params [dict create]
-        dict set params "model_part_name" [lindex [write::getPartsMeshId] 0]
+        dict set params "model_part_name" [lindex [write::getPartsSubModelPartId] 0]
         dict set params "write_drag_output_file" [write::getValue EMBFLEmbeddedDrag write_drag_output_file]
         dict set params "print_drag_to_screen" [write::getValue EMBFLEmbeddedDrag print_drag_to_screen]
         dict set params "interval" [write::getInterval [write::getValue EMBFLEmbeddedDrag Interval] ]

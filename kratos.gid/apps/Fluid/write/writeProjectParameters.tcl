@@ -72,7 +72,7 @@ proc ::Fluid::write::getParametersDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]
 
     # Parts
-    dict set solverSettingsDict volume_model_part_name {*}[write::getPartsMeshId]
+    dict set solverSettingsDict volume_model_part_name {*}[write::getPartsSubModelPartId]
 
     # Skin parts
     dict set solverSettingsDict skin_parts [getBoundaryConditionMeshId]
@@ -126,7 +126,7 @@ proc Fluid::write::getDragProcessList {} {
         set groupName [$group @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        set submodelpart [::write::getMeshId $cid $groupName]
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
 
         set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write_drag_output_file'\]"]]]
         set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print_drag_to_screen'\]"]]]
@@ -163,7 +163,7 @@ proc Fluid::write::getGravityProcessDict {} {
     dict set pdict "kratos_module" "KratosMultiphysics"
     dict set pdict "process_name" "AssignVectorByDirectionProcess"
     set params [dict create]
-    set partgroup [write::getPartsMeshId]
+    set partgroup [write::getPartsSubModelPartId]
     dict set params "model_part_name" [concat [lindex $partgroup 0]]
     dict set params "variable_name" "BODY_FORCE"
     dict set params "modulus" $value
@@ -192,7 +192,7 @@ proc Fluid::write::getBoundaryConditionMeshId {} {
                     lappend listOfBCGroups $cid
                 }
             } else {
-                set gname [::write::getMeshId $cid $groupName]
+                set gname [::write::getSubModelPartId $cid $groupName]
                 if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
             }
             
@@ -214,7 +214,7 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
         set groupName [$dragGroup @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$dragGroup parent] @n]
-        set submodelpart [::write::getMeshId $cid $groupName]
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
         if {$submodelpart ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $submodelpart}
     }
 
@@ -227,7 +227,7 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "False"} {
-            set gname [::write::getMeshId $cid $groupName]
+            set gname [::write::getSubModelPartId $cid $groupName]
             if {$gname ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $gname}
         }
     }

@@ -554,7 +554,7 @@ proc Pfem::write::ProcessBodiesList { } {
         set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
         set parts [list ]
         foreach part_node [$body_node selectNodes "./condition/group"] {
-            lappend parts [write::getMeshId "Parts" [$part_node @n]]
+            lappend parts [write::getSubModelPartId "Parts" [$part_node @n]]
         }
         dict set body "body_type" $body_type
         dict set body "body_name" $name
@@ -598,7 +598,7 @@ proc Pfem::write::GetNodalDataDict { } {
                     }
                 }
             }
-            dict set params "model_part_name" [::write::getMeshId $partid $groupid]
+            dict set params "model_part_name" [::write::getSubModelPartId $partid $groupid]
             dict set processDict "Parameters" $params
             lappend NodalData $processDict
         }

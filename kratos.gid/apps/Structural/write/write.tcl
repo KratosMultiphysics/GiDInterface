@@ -114,7 +114,7 @@ proc Structural::write::writeConditions { } {
 
 proc Structural::write::writeMeshes { } {
     
-    write::writePartMeshes
+    write::writePartSubModelPart
     
     # Solo Malla , no en conditions
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
@@ -132,9 +132,9 @@ proc Structural::write::writeLoads { } {
         set groupid [write::GetWriteGroupName $groupid]
         #W "Writing mesh of Load $groupid"
         if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
-            ::write::writeGroupMesh [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
+            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
         } else {
-            ::write::writeGroupMesh [[$group parent] @n] $groupid "nodal"
+            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
         }
     }
 }
