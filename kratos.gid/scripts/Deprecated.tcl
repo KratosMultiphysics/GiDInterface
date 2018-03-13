@@ -50,3 +50,21 @@ proc write::getPartsMeshId {} {
     }
     write::getPartsSubModelPartId
 }
+
+# Deprecation date: 13/03/2018
+# Estimated deletion version: 5.3.0
+proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+        W "Deprecated method spdAux::AddConditionGroupOnXPath\nUse customlib::AddConditionGroupOnXPath\n"
+    }
+    return [customlib::AddConditionGroupOnXPath $xpath $groupid]
+}
+
+# Deprecation date: 13/03/2018
+# Estimated deletion version: 5.3.0
+proc spdAux::AddConditionGroupOnNode {basenode groupid} {
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+        W "Deprecated method spdAux::AddConditionGroupOnNode\nUse customlib::AddConditionGroupOnNode\n"
+    }
+    return [customlib::AddConditionGroupOnNode $basenode $groupid]
+}

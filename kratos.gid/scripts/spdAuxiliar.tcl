@@ -2086,25 +2086,6 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
     }
 }
 
-
-proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
-    
-    set root [customlib::GetBaseRoot]
-    set node [$root selectNodes $xpath]
-    return [AddConditionGroupOnNode $node $groupid]
-}
-proc spdAux::AddConditionGroupOnNode {basenode groupid} {
-    set prev [$basenode selectNodes "./group\[@n='$groupid'\]"]
-    if {$prev ne ""} {return $prev}
-    set newNode [gid_groups_conds::addF [$basenode toXPath] group [list n $groupid]]
-    foreach val [$basenode childNodes] {
-        if {[$val nodeName] eq "value"} {
-            set newChild [$val cloneNode -deep]
-            $newNode appendChild $newChild
-        }
-    }
-    return $newNode
-}
 proc spdAux::ProcGetParts {domNode args} {
     set parts ""
     set nodeApp [GetAppIdFromNode $domNode]
