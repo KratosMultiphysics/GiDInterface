@@ -16,6 +16,7 @@ proc Structural::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
+    Model::getSolvers Solvers.xml
 }
 
 proc Structural::xml::getUniqueName {name} {
