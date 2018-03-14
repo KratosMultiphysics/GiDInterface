@@ -96,9 +96,6 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -309,9 +306,6 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -413,9 +407,6 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>
       <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>      
