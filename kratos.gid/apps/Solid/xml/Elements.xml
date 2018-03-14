@@ -461,8 +461,8 @@
 
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamElement3D2N"/>
+      <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamElement3D3N"/>
     </TopologyFeatures>
-    <!-- <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamElement3D3N"/> -->
     
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="1D_UR"/>
