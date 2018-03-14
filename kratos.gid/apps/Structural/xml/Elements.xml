@@ -113,6 +113,73 @@
     </outputs>
   </ElementItem>
 
+  <!--Bbar elements-->
+  <ElementItem n="SmallDisplacementBbarElement2D" pn="Solid small displacements Bbar" ImplementedInFile="small_displacement_bbar.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
+               help="This element it implements a small displacement Bbar solid element"  AnalysisType="linear,non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementBbarElement2D4N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStrain"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="Behaviour" value="Plasticity"/>
+      <filter field="StrainSize" value="4"/>
+      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+
+  <ElementItem n="SmallDisplacementBbarElement3D" pn="Solid small displacements Bbar" ImplementedInFile="small_displacement_bbar.cpp" ImplementedInApplication="StructuralMechanicsApplication"
+               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
+               help="This element it implements a small displacement Bbar solid element"  AnalysisType="linear,non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="SmallDisplacementBbarElement3D8N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="3D"/>
+      <filter field="Dimension" value="3D"/>
+      <filter field="Behaviour" value="Plasticity"/>
+      <filter field="StrainSize" value="6"/>
+      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+
   <!--large displacements-->
   <!--total lagrangian-->
   <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
