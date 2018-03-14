@@ -18,6 +18,12 @@
                 </filterFeatures>
                 <defaults></defaults>
             </linearSolverItem>
+            <linearSolverItem n="eigensolver_settings" pn="Eigen Solver" help="Only for Eigensolver">
+                <filterFeatures>
+                    <filter field="SolverType" value="eigen_eigensystem"/>
+                </filterFeatures>
+                <defaults></defaults>
+            </linearSolverItem>
         </linearSolvers>
         <schemes>
             <scheme n="newmark" pn="Newmark" help="Newmark scheme for dynamic problems." ProductionReady="ProductionReady">
