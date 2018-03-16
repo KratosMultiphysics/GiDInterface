@@ -53,10 +53,10 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-            <parameter n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" units="Pa" v="278.0e9"/>
-            <parameter n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" unit_magnitude="P" units="Pa" v="1.0"/>
-            <parameter n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" unit_magnitude="P" units="Pa" v="1.0"/>
-            <parameter n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" unit_magnitude="P" units="Pa" v="1.0"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" units="Pa" v="5.5e6"/>
+            <parameter n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" v="1.0"/>
+            <parameter n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" v="0.12924"/>
+            <parameter n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" v="0.0"/>
             <parameter n="HARDENING_EXPONENT" pn="Hardening exponent" v="1.0"/>
         </inputs>
         <outputs></outputs>
@@ -67,10 +67,10 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-            <parameter n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" units="Pa" v="278.0e9"/>
-            <parameter n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" unit_magnitude="P" units="Pa" v="1.0"/>
-            <parameter n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" unit_magnitude="P" units="Pa" v="1.0"/>
-            <parameter n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" unit_magnitude="P" units="Pa" v="1.0"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" units="Pa" v="5.5e6"/>
+            <parameter n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" v="1.0"/>
+            <parameter n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" v="0.12924"/>
+            <parameter n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" v="0.0"/>
             <parameter n="HARDENING_EXPONENT" pn="Hardening exponent" v="1.0"/>
         </inputs>
         <outputs></outputs>
