@@ -158,7 +158,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="3D"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="Behaviour" value="Plasticity"/>
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
