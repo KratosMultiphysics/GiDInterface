@@ -89,6 +89,9 @@ proc Model::ParseSolverEntry {st sen} {
     
     set se [::Model::SolverEntry new $n]
     $se setPublicName $pn
+    foreach attr [$sen attributes] {
+        $se setAttribute $attr [$sen getAttribute $attr]
+    }
     foreach f [$sen getElementsByTagName filter] {
         $se addAttribute [$f @field] [$f @value]    
     }
@@ -103,7 +106,6 @@ proc Model::ParseSolverEntry {st sen} {
     
     return $st
 }
-
 
 proc Model::GetAllSolversParams {} {
     variable Solvers

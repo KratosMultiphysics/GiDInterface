@@ -12,13 +12,13 @@
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
         </parameter_list>
         <linearSolvers>
-            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" help="Default solver Super LU">
+            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" help="Default solver Super LU" filter="STSoluType {Static Quasi-static Dynamic}">
                 <filterFeatures>
                     <filter field="SolverType" value="Standard"/>
                 </filterFeatures>
                 <defaults></defaults>
             </linearSolverItem>
-            <linearSolverItem n="eigensolver_settings" pn="Eigen Solver" help="Only for Eigensolver">
+            <linearSolverItem n="eigensolver_settings" pn="Eigen Solver" help="Only for Eigensolver" filter="STSoluType eigen_eigensystem">
                 <filterFeatures>
                     <filter field="SolverType" value="eigen_eigensystem"/>
                 </filterFeatures>
@@ -52,7 +52,7 @@
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
         </parameter_list>
         <linearSolvers>
-            <linearSolverItem n="linear_solver_settings" pn="Linear Solver">
+            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" filter="STSoluType {Static Quasi-static Dynamic}">
                 <filterFeatures>
                     <filter field="SolverType" value="Standard"/>
                 </filterFeatures>

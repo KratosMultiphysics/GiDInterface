@@ -44,7 +44,6 @@ proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     return $ret
 }
 
-
 proc Structural::xml::ProcGetSolutionStrategiesSolid { domNode args } {
     set names ""
     set pnames ""

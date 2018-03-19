@@ -475,7 +475,24 @@ proc spdAux::CheckSolverEntryState {domNode} {
     get_domnode_attribute $nodo dict
     set currentSolStrat [get_domnode_attribute $nodo v]
     set mySolStrat [get_domnode_attribute $domNode solstratname]
-    return [expr [string compare $currentSolStrat $mySolStrat] == 0]
+    set ret [expr [string compare $currentSolStrat $mySolStrat] == 0]
+    if {$ret} {
+        set st [::Model::GetSolutionStrategy $mySolStrat] 
+        foreach se [$st getSolversEntries] {
+            if {[get_domnode_attribute $domNode n] == [$se getName]} {
+                set filter [$se getAttribute filter]
+                foreach {k v} $filter {
+                    set real [get_domnode_attribute [$domNode selectNodes [getRoute $k]] v]
+                    if {$real ni $v} {
+                        set ret false
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    return $ret
 }
 
 proc spdAux::chk_loads_function_time { domNode load_name } {
