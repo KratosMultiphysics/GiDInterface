@@ -282,7 +282,7 @@ proc Model::GetAvailableSolvers {solstrat solverentryid} {
     set solst [Model::GetSolutionStrategy $solstrat]
     foreach sentry [$solst getSolversEntries] {
         if {[$sentry getName] eq $solverentryid} {
-            set filters [$sentry getAttributes]
+            set filters [$sentry getSolverFilters]
             foreach solver $Solvers {
                 if {[$solver cumple $filters]} {lappend goodSolvers $solver}
             }
