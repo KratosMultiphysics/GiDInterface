@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Solvers>
 
-    <solver n="eigen_eigensystem" pn="Eigen" SolverType="eigen_eigensystem" Parallelism="OpenMP">
+    <solver n="eigen_value" pn="Eigen" SolverType="eigen_value" Parallelism="OpenMP">
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="1000" help=""/>
             <parameter n="tolerance" pn="Tolerance" type="integer" v="1e-6" help=""/>

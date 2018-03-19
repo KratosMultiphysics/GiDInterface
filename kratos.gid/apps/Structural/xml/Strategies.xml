@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
-    <StrategyItem n="implicit" pn="Implicit" SolutionType="Dynamic,eigen_eigensystem" ImplementedInFile="structural_mechanics_implicit_dynamic_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_implicit_dynamic_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="">
+    <StrategyItem n="implicit" pn="Implicit" SolutionType="Dynamic,eigen_value" ImplementedInFile="structural_mechanics_implicit_dynamic_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_implicit_dynamic_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="">
         <parameter_list>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
             <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,And_criterion,or_criterion"
@@ -18,9 +18,9 @@
                 </filterFeatures>
                 <defaults></defaults>
             </linearSolverItem>
-            <linearSolverItem n="eigensolver_settings" pn="Eigen Solver" help="Only for Eigensolver" filter="STSoluType eigen_eigensystem">
+            <linearSolverItem n="eigensolver_settings" pn="Eigen Solver" help="Only for Eigensolver" filter="STSoluType eigen_value">
                 <filterFeatures>
-                    <filter field="SolverType" value="eigen_eigensystem"/>
+                    <filter field="SolverType" value="eigen_value"/>
                 </filterFeatures>
                 <defaults></defaults>
             </linearSolverItem>
