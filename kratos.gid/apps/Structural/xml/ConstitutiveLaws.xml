@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--linear elastic laws-->
-    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="3D" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
 	  help="Linear elastic behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -12,7 +12,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -23,7 +23,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -35,7 +35,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Axisymmetric" behaviour="Elastic" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Axisymmetric" Behaviour="Elastic" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D axisymmetric" Dimension="2Da" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -47,8 +47,37 @@
         </outputs>
     </CLaw>
 
+    <!--plasticity constitutive laws-->
+    <CLaw n="LinearJ2PlasticityPlaneStrain2DLaw" pn="Linear J2 Plasticity" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Plasticity" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 2D (Plane Strain)" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" units="Pa" v="5.5e6"/>
+            <parameter n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" v="1.0"/>
+            <parameter n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" v="0.12924"/>
+            <parameter n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" v="0.0"/>
+            <parameter n="HARDENING_EXPONENT" pn="Hardening exponent" v="1.0"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="LinearJ2Plasticity3DLaw" pn="Linear J2 Plasticity" ProductionReady="ProductionReady" Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" units="Pa" v="5.5e6"/>
+            <parameter n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" v="1.0"/>
+            <parameter n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" v="0.12924"/>
+            <parameter n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" v="0.0"/>
+            <parameter n="HARDENING_EXPONENT" pn="Hardening exponent" v="1.0"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
     <!--constitutive laws for shells and membranes-->
-    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
 	  help="Linear elastic behaviour in 3D for shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
@@ -60,7 +89,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStress_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane stress" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -74,7 +103,7 @@
     </CLaw>
 
     <!--constitutive laws for trusses-->
-    <CLaw n="TrussConstitutiveLaw" pn="Linear elastic truss" ProductionReady="ProductionReady" Type="Truss" behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for trusses" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="TrussConstitutiveLaw" pn="Linear elastic truss" ProductionReady="ProductionReady" Type="Truss" Behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for trusses" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -85,7 +114,7 @@
     </CLaw>
 
     <!--constitutive laws for beams-->
-    <CLaw n="BeamConstitutiveLaw2D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam2D" behaviour="Elastic"
+    <CLaw n="BeamConstitutiveLaw2D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam2D" Behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
@@ -98,7 +127,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="BeamConstitutiveLaw3D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam3D" behaviour="Elastic"
+    <CLaw n="BeamConstitutiveLaw3D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam3D" Behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
