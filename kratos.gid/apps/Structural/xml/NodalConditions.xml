@@ -8,11 +8,11 @@
   </NodalConditionItem>
   
   <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignVectorVariableProcess" VariableName="VELOCITY" ImplementedInApplication="StructuralMechanicsApplication"
-		      analysis_type="Dynamic,eigen_value" unit_magnitude="Velocity" units="m/s" App="Structural" state="CheckNodalConditionStateSolid" Interval="Total">
+		      analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="Structural" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   
   <NodalConditionItem  n="ACCELERATION" pn="Acceleration" ProcessName="AssignVectorVariableProcess" VariableName="ACCELERATION" ImplementedInApplication="StructuralMechanicsApplication"
-		       analysis_type="Dynamic,eigen_value" unit_magnitude="Acceleration" units="m/s^2" App="Structural" state="CheckNodalConditionStateSolid" Interval="Total">
+		       analysis_type="Dynamic" unit_magnitude="Acceleration" units="m/s^2" App="Structural" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   
   <NodalConditionItem  n="PRESSURE" pn="Pressure" ProcessName="AssignScalarVariableProcess" VariableName="PRESSURE" ImplementedInApplication="StructuralMechanicsApplication"
@@ -28,9 +28,9 @@
     </outputs>
   </NodalConditionItem>
   <NodalConditionItem n="ANGULAR_VELOCITY" pn="Angular Velocity" ProcessName="AssignVectorVariableProcess" state="CheckNodalConditionStateSolid" Interval="Total"
-					  analysis_type="Dynamic,eigen_value" unit_magnitude="Angle/T" units="rad/s" VariableName="ANGULAR_VELOCITY" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
+					  analysis_type="Dynamic" unit_magnitude="Angle/T" units="rad/s" VariableName="ANGULAR_VELOCITY" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
   </NodalConditionItem>
   <NodalConditionItem n="ANGULAR_ACCELERATION" pn="Angular Acceleration" ProcessName="AssignVectorVariableProcess" state="CheckNodalConditionStateSolid" Interval="Total"
-					  analysis_type="Dynamic,eigen_value" unit_magnitude="Angle/T^2" units="rad/s^2"  VariableName="ANGULAR_ACCELERATION" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
+					  analysis_type="Dynamic" unit_magnitude="Angle/T^2" units="rad/s^2"  VariableName="ANGULAR_ACCELERATION" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
   </NodalConditionItem>
 </NodalConditionList>
