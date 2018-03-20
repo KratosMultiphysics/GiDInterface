@@ -349,6 +349,7 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION" />
+      <NodalCondition n="CONTACT"/>
       <NodalCondition n="VELOCITY" />
       <NodalCondition n="ACCELERATION" />
       <NodalCondition n="ANGULAR_VELOCITY"/>
@@ -382,6 +383,7 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION" />
+      <NodalCondition n="CONTACT"/>
       <NodalCondition n="VELOCITY" />
       <NodalCondition n="ACCELERATION" />
       <NodalCondition n="ANGULAR_VELOCITY"/>
