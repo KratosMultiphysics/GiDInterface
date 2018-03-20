@@ -942,8 +942,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
     set schemeName [write::getValue $schemeUN]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
-    
-    
+
+    set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
         dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
     }
