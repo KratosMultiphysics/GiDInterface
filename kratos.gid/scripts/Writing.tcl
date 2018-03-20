@@ -626,9 +626,11 @@ proc write::writeNodalConditions { keyword } {
     }
     foreach group $groups {
         set cid [[$group parent] @n]
-        set groupid [$group @n]
-        set groupid [GetWriteGroupName $groupid]
-        ::write::writeGroupMesh $cid $groupid "nodal"
+        if {[Model::getNodalConditionbyId $cid] ne ""} {
+            set groupid [$group @n]
+            set groupid [GetWriteGroupName $groupid]
+            ::write::writeGroupMesh $cid $groupid "nodal"
+        }
     }
 }
 
