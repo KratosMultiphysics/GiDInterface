@@ -1044,9 +1044,11 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
-            set grouping_by [[::Model::getCondition $cid] getGroupBy]
+            if {$condition eq ""} {continue}
+            set grouping_by [$condition getGroupBy]
         } {
             set condition [::Model::getNodalConditionbyId $cid]
+            if {$condition eq ""} {continue}
         }
         if {$grouping_by eq "Condition"} {
             # Grouped conditions will be processed later
