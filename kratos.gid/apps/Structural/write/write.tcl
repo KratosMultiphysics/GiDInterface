@@ -94,6 +94,9 @@ proc Structural::write::writeModelPartEvent { } {
     # Local Axes
     Structural::write::writeLocalAxes
 
+    # Hinges special section
+    Structural::write::writeHinges
+
     # Nodal conditions and conditions
     writeConditions
 
@@ -103,9 +106,7 @@ proc Structural::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
-
 }
-
 
 proc Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
@@ -116,19 +117,25 @@ proc Structural::write::writeMeshes { } {
     
     write::writePartMeshes
 
-    writeStaticCondensation
-    Model::ForgetNodalCondition STATIC_CONDENSATION
+    # There are some Conditions and nodalConditions that dont generate a submodelpart
+    # Add them to this list
+    set special_nodal_conditions_dont_generate_submodelpart_names [list CONDENSED_DOF_LIST]
+    set special_nodal_conditions [list ]
+    foreach cnd_name $special_nodal_conditions_dont_generate_submodelpart_names {
+        lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
+        Model::ForgetNodalCondition $cnd_name
+    }
     
     # Solo Malla , no en conditions
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
     
     # A Condition y a meshes-> salvo lo que no tenga topologia
     writeLoads
-}
 
-proc Structural::write::writeStaticCondensation { } {
-    set hinge_cnd [Model::getNodalConditionbyId STATIC_CONDENSATION]
-    
+    # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
+    foreach cnd $special_nodal_conditions {
+        lappend ::Model::NodalConditions $cnd
+    }
 }
 
 proc Structural::write::writeLoads { } {
@@ -201,6 +208,56 @@ proc Structural::write::writeLocalAxes { } {
                 write::WriteString "End ElementalData"
                 write::WriteString ""
             }
+        }
+    }
+}
+
+# This is the kind of code I hate
+proc Structural::write::writeHinges { } {
+    set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set group [$gNode @n]
+        if {[GiD_EntitiesGroups get $group lines -count] == 1} {
+            set first_list [list ]
+            set last_list [list ]
+            if {$::Model::SpatialDimension eq "3D"} {
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementZ']"] v]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentX']"] v]]} {lappend first_list 3}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentY']"] v]]} {lappend first_list 4}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 5}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 6}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 7}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementZ']"] v]]} {lappend last_list 8}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentX']"] v]]} {lappend last_list 9}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentY']"] v]]} {lappend last_list 10}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 11}
+            } else {
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 3}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 4}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 5}
+            }
+
+            write::WriteString "Begin ElementalData CONDENSED_DOF_LIST // Group: $group"
+            set linear_elements [GiD_EntitiesGroups get $group elements -element_type linear]
+            set first [objarray minimum $linear_elements]
+            set end [objarray maximum $linear_elements]
+            if {[llength $first_list] > 0} {
+                set value [join $first_list ,]
+                write::WriteString [format "%5d \[%d\] (%s)" $first [llength $first_list] $value]
+            }
+            if {[llength $last_list] > 0} {
+                set value [join $last_list ,]
+                write::WriteString [format "%5d \[%d\] (%s)" $end [llength $last_list] $value]
+            }
+            write::WriteString "End ElementalData"
+            write::WriteString ""
+        } else {
+            error "Hinges must have only 1 line per group"
         }
     }
 }
