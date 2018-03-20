@@ -44,7 +44,7 @@ proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     return $ret
 }
 
-proc Structural::xml::ProcGetSolutionStrategiesSolid { domNode args } {
+proc Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
     set names ""
     set pnames ""
     set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]

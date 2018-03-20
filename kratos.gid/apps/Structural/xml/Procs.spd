@@ -3,7 +3,7 @@
 
     <proc n='GetSolutionStrategiesStructural' args='args'>
 	  <![CDATA[
-	  return [Structural::xml::ProcGetSolutionStrategiesSolid $domNode $args]
+	  return [Structural::xml::ProcGetSolutionStrategiesStructural $domNode $args]
 	  ]]>
 	</proc>
 		  			
