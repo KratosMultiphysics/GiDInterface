@@ -19,6 +19,7 @@ proc Structural::write::Init { } {
     SetAttribute materials_un STMaterials
     SetAttribute conditions_un STLoads
     SetAttribute nodal_conditions_un STNodalConditions
+    SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
 }
@@ -119,7 +120,7 @@ proc Structural::write::writeMeshes { } {
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart
     # Add them to this list
-    set special_nodal_conditions_dont_generate_submodelpart_names [list CONDENSED_DOF_LIST]
+    set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
     set special_nodal_conditions [list ]
     foreach cnd_name $special_nodal_conditions_dont_generate_submodelpart_names {
         lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
@@ -214,10 +215,25 @@ proc Structural::write::writeLocalAxes { } {
 
 # This is the kind of code I hate
 proc Structural::write::writeHinges { } {
+
+    # Preprocess old_conditions. Each mesh linear element remembers the origin line in geometry
+    set match_dict [dict create]
+    foreach line [GiD_Info conditions relation_line_geo_mesh mesh] {
+        lassign $line E eid - geom_line
+        dict lappend match_dict $geom_line $eid
+    }
+
+    # Process groups assigned to Hinges
     set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set group [$gNode @n]
-        if {[GiD_EntitiesGroups get $group lines -count] == 1} {
+        
+        # If the group has any line
+        if {[GiD_EntitiesGroups get $group lines -count] > 0} {
+            # Print the header once per group
+            write::WriteString "Begin ElementalData CONDENSED_DOF_LIST // Group: $group"
+            
+            # Get the tree data for this group
             set first_list [list ]
             set last_list [list ]
             if {$::Model::SpatialDimension eq "3D"} {
@@ -242,22 +258,23 @@ proc Structural::write::writeHinges { } {
                 if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 5}
             }
 
-            write::WriteString "Begin ElementalData CONDENSED_DOF_LIST // Group: $group"
-            set linear_elements [GiD_EntitiesGroups get $group elements -element_type linear]
-            set first [objarray minimum $linear_elements]
-            set end [objarray maximum $linear_elements]
-            if {[llength $first_list] > 0} {
-                set value [join $first_list ,]
-                write::WriteString [format "%5d \[%d\] (%s)" $first [llength $first_list] $value]
-            }
-            if {[llength $last_list] > 0} {
-                set value [join $last_list ,]
-                write::WriteString [format "%5d \[%d\] (%s)" $end [llength $last_list] $value]
-            }
+            # Write Left and Rigth end of each geometrical bar
+            foreach geom_line [GiD_EntitiesGroups get $group lines] {
+                set linear_elements [dict get $match_dict $geom_line]
+                set first [::tcl::mathfunc::min {*}$linear_elements]
+                set end [::tcl::mathfunc::max {*}$linear_elements]
+                if {[llength $first_list] > 0} {
+                    set value [join $first_list ,]
+                    write::WriteString [format "%5d \[%d\] (%s)" $first [llength $first_list] $value]
+                }
+                if {[llength $last_list] > 0} {
+                    set value [join $last_list ,]
+                    write::WriteString [format "%5d \[%d\] (%s)" $end [llength $last_list] $value]
+                }
+            } 
+            # Write the tail
             write::WriteString "End ElementalData"
             write::WriteString ""
-        } else {
-            error "Hinges must have only 1 line per group"
         }
     }
 }

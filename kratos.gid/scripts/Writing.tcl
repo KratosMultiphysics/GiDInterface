@@ -984,8 +984,10 @@ proc write::getSubModelPartNames { args } {
         set groupName [$group @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        set gname [::write::getMeshId $cid $groupName]
-        if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
+        if {[Model::getNodalConditionbyId $cid] ne ""} {
+            set gname [::write::getMeshId $cid $groupName]
+            if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
+        }
     }
     
     return $listOfProcessedGroups
