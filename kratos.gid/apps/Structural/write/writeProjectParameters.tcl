@@ -140,6 +140,7 @@ proc Structural::write::getOldParametersDict { } {
 
     if {$solutiontype eq "eigen_value"} {
         dict unset projectParametersDict output_configuration
+        dict unset projectParametersDict solver_settings analysis_type
     }
 
     # set materialsDict [dict create]
