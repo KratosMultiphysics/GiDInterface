@@ -322,6 +322,7 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
         spdAux::OpenTree
     }
     ::Kratos::CreatePreprocessModelTBar
+    ::Kratos::UpdateMenus
 }
 
 proc spdAux::CustomTreeCommon { } {
@@ -1589,24 +1590,30 @@ proc spdAux::CheckPartParamValue {node material_name} {
         }
         # si no está en el material, miramos en el elemento
         if {!$found} {
-            set element_name [get_domnode_attribute [[$node parent] selectNodes "./value\[@n='Element'\]"] v]
-            #set claw_name [.gid.central.boundaryconds.gg.data.f0.e1 get]
-            set element [Model::getElement $element_name]
-            if {$element ne ""} {
-                set val [$element getInputDv $id]
-                if {$val ne ""} {set found 1}
+            set element_node [[$node parent] selectNodes "./value\[@n='Element'\]"]
+            if {$element_node ne ""} {
+                set element_name [get_domnode_attribute $element_node v]
+                #set claw_name [.gid.central.boundaryconds.gg.data.f0.e1 get]
+                set element [Model::getElement $element_name]
+                if {$element ne ""} {
+                    set val [$element getInputDv $id]
+                    if {$val ne ""} {set found 1}
+                }
+                #if {$found} {W "element $element_name value $val"}
             }
-            #if {$found} {W "element $element_name value $val"}
         }
         # Si no está en el elemento, miramos en la ley constitutiva
         if {!$found} {
-            set claw_name [get_domnode_attribute [[$node parent] selectNodes "./value\[@n='ConstitutiveLaw'\]"] v]
-            set claw [Model::getConstitutiveLaw $claw_name]
-            if {$claw ne ""} {
-                set val [$claw getInputDv $id]
-                if {$val ne ""} {set found 1}
+            set claw_node [[$node parent] selectNodes "./value\[@n='ConstitutiveLaw'\]"]
+            if {$claw_node ne ""} {
+                set claw_name [get_domnode_attribute $claw_node v]
+                set claw [Model::getConstitutiveLaw $claw_name]
+                if {$claw ne ""} {
+                    set val [$claw getInputDv $id]
+                    if {$val ne ""} {set found 1}
+                }
+                #if {$found} {W "claw $claw_name value $val"}
             }
-            #if {$found} {W "claw $claw_name value $val"}
         }
         #if {!$found} {W "Not found $val"}
         if {$val eq ""} {set val 0.0} {return $val}
@@ -1981,11 +1988,12 @@ proc spdAux::ProcCambioMat {domNode args} {
     foreach node $nodes {
         if {[$node @n] ni $exclusion} {
             #W "[$node @n] [CheckPartParamValue $node $matname]"
-            $node setAttribute v [CheckPartParamValue $node $matname]
+            $node setAttribute v [spdAux::CheckPartParamValue $node $matname]
         }
     }
     RequestRefresh
 }
+
 proc spdAux::ProcOkNewCondition {domNode args} {
     set cnd_id [$domNode @n]
     set condition [Model::getCondition $cnd_id]
@@ -2078,25 +2086,6 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
     }
 }
 
-
-proc spdAux::AddConditionGroupOnXPath {xpath groupid} {
-    
-    set root [customlib::GetBaseRoot]
-    set node [$root selectNodes $xpath]
-    return [AddConditionGroupOnNode $node $groupid]
-}
-proc spdAux::AddConditionGroupOnNode {basenode groupid} {
-    set prev [$basenode selectNodes "./group\[@n='$groupid'\]"]
-    if {$prev ne ""} {return $prev}
-    set newNode [gid_groups_conds::addF [$basenode toXPath] group [list n $groupid]]
-    foreach val [$basenode childNodes] {
-        if {[$val nodeName] eq "value"} {
-            set newChild [$val cloneNode -deep]
-            $newNode appendChild $newChild
-        }
-    }
-    return $newNode
-}
 proc spdAux::ProcGetParts {domNode args} {
     set parts ""
     set nodeApp [GetAppIdFromNode $domNode]

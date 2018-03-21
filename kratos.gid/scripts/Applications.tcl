@@ -150,7 +150,10 @@ proc apps::ExecuteOnApp {appid func args} {
 }
 proc apps::ExecuteOnCurrentApp {func args} {
     variable activeApp
-    set response [ExecuteOnApp [$activeApp getName] $func {*}$args]
+    set response ""
+    if {$activeApp ne ""} {
+        set response [ExecuteOnApp [$activeApp getName] $func {*}$args]
+    }
     return $response
 }
 proc apps::LoadAppById {appid} {
