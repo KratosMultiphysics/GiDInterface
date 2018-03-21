@@ -99,6 +99,28 @@
     </outputs>
   </ConditionItem>
   
+  <ConditionItem n="Load3D" pn="Load" Interval="Total"
+		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" 
+		 ElementType="Point,Line,Surface" ProcessName="AssignModulusAndDirectionToConditionsProcess" help="set load value and direction"
+		 units="N" unit_magnitude="F" VariableName="POINT_LOAD">
+    <TopologyFeatures>
+      <item  GeometryType="Point" nodes="1" KratosName="PointLoadCondition3D1N"/>
+      <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition3D2N"/>
+      <item  GeometryType="Line" nodes="3" KratosName="LineLoadCondition3D3N"/>
+      <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
+      <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
+      <item  GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceLoadCondition3D4N"/>
+      <item  GeometryType="Quadrilateral" nodes="8" KratosName="SurfaceLoadCondition3D8N"/>
+      <item  GeometryType="Quadrilateral" nodes="9" KratosName="SurfaceLoadCondition3D9N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="FORCE" pn="External Load" v="false"/>
+    </outputs>
+  </ConditionItem>
+  
   <ConditionItem n="LineLoad2D" pn="Load on lines" Interval="Total"
 	kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
