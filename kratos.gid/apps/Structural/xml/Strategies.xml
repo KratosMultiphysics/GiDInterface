@@ -58,12 +58,12 @@
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
                 </element_filters>
             </scheme>
-            <scheme n="stability" pn="Stability" help="" ProductionReady="Developer">
+            <!-- <scheme n="stability" pn="Stability" help="" ProductionReady="Developer">
                 <parameter_list></parameter_list>
                 <element_filters>
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
                 </element_filters>
-            </scheme>
+            </scheme> -->
         </schemes>
     </StrategyItem>
     <StrategyItem n="static" pn="Static" SolutionType="Static" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
