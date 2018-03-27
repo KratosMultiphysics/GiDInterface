@@ -169,7 +169,7 @@ proc spdAux::CreateWindow {} {
     
     set root [customlib::GetBaseRoot]
     
-    set activeapp_node [$::gid_groups_conds::doc selectNodes "hiddenfield\[@n='activeapp'\]"]
+    set activeapp_node [$::gid_groups_conds::doc selectNodes "//hiddenfield\[@n='activeapp'\]"]
     if {$activeapp_node ne ""} {
             set activeapp [get_domnode_attribute $activeapp_node v]
         } else {
