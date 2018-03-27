@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<NodalConditionList>
-  <NodalConditionItem n="INLET" pn="Inlet" ProcessName="AssignInletProcess" VariableName="VELOCITY" Interval="Total"
-		      unit_magnitude="Velocity" units="m/s" App="Pfem" kratos_module="PFEMapplication" ov="[CheckGeometry 2]">
-  </NodalConditionItem>
-</NodalConditionList>
