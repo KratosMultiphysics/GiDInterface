@@ -99,10 +99,10 @@ proc Structural::write::writeModelPartEvent { } {
     Structural::write::writeHinges
 
     # Nodal conditions and conditions
-    writeConditions
+    Structural::write::writeConditions
 
     # SubmodelParts
-    writeMeshes
+    Structural::write::writeMeshes
 
     # Custom SubmodelParts
     set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
