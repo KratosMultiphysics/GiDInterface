@@ -85,6 +85,17 @@ proc Structural::write::getOldParametersDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
+    # Submodelpart lists
+
+    # There are some Conditions and nodalConditions that dont generate a submodelpart
+    # Add them to this list
+    set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
+    set special_nodal_conditions [list ]
+    foreach cnd_name $special_nodal_conditions_dont_generate_submodelpart_names {
+        lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
+        Model::ForgetNodalCondition $cnd_name
+    }
+
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
 
@@ -104,14 +115,17 @@ proc Structural::write::getOldParametersDict { } {
     lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
     dict set projectParametersDict contact_process_list $contact_conditions_dict
-
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+
+    # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
+    foreach cnd $special_nodal_conditions {
+        lappend ::Model::NodalConditions $cnd
+    }
 
     dict set projectParametersDict list_other_processes [list ]
     if {$solutiontype eq "eigen_value"} {
         dict lappend projectParametersDict list_other_processes $eigen_process_dict
     }
-
 
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
@@ -154,7 +168,7 @@ proc Structural::write::ProcessContacts { nodal_conditions_dict } {
     set process_list [list ]
     set contact_process_list [list ]
     foreach elem $nodal_conditions_dict {
-        if {[dict get $elem python_module] in {"alm_contact_process"}} {
+        if {[dict exists $elem python_module] && [dict get $elem python_module] in {"alm_contact_process"}} {
             set model_part_name "Structure"
             dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
             dict set elem Parameters model_part_name $model_part_name

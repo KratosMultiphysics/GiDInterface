@@ -77,7 +77,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov line
     set constLawNameStruc "TrussConstitutiveLaw"
-    set props [list Element TrussElement$nd ConstitutiveLaw $constLawNameStruc "CROSS_AREA" 0.01 DENSITY 1500.0]
+    set props [list Element TrussElement$nd ConstitutiveLaw $constLawNameStruc CROSS_AREA 0.01 DENSITY 1500.0]
     foreach {prop val} $props {
          set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {

@@ -6,7 +6,7 @@
       <parameter n="REACTION" pn="Reaction" v="Yes"/>
     </outputs>
   </NodalConditionItem>
-  
+
   <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignVectorVariableProcess" VariableName="VELOCITY" ImplementedInApplication="StructuralMechanicsApplication"
 		      analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="Structural" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
@@ -27,10 +27,7 @@
       <parameter n="TORQUE" pn="Torque" v="Yes"/>
     </outputs>
   </NodalConditionItem>
-  <NodalConditionItem n="ANGULAR_VELOCITY" pn="Angular Velocity" ProcessName="AssignVectorVariableProcess" state="CheckNodalConditionStateSolid" Interval="Total"
-					  analysis_type="Dynamic" unit_magnitude="Angle/T" units="rad/s" VariableName="ANGULAR_VELOCITY" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
-  </NodalConditionItem>
-  <NodalConditionItem n="ANGULAR_ACCELERATION" pn="Angular Acceleration" ProcessName="AssignVectorVariableProcess" state="CheckNodalConditionStateSolid" Interval="Total"
-					  analysis_type="Dynamic" unit_magnitude="Angle/T^2" units="rad/s^2"  VariableName="ANGULAR_ACCELERATION" App="Structural" ImplementedInApplication="StructuralMechanicsApplication">
-  </NodalConditionItem>
+  <NodalConditionItem n="ANGULAR_VELOCITY" pn="Angular Velocity" ProcessName="AssignVectorVariableProcess" state="CheckNodalConditionStateSolid" Interval="Total" analysis_type="Dynamic" unit_magnitude="Angle/T" units="rad/s" VariableName="ANGULAR_VELOCITY" App="Structural" ImplementedInApplication="StructuralMechanicsApplication"></NodalConditionItem>
+  <NodalConditionItem n="ANGULAR_ACCELERATION" pn="Angular Acceleration" ProcessName="AssignVectorVariableProcess" state="CheckNodalConditionStateSolid" Interval="Total" analysis_type="Dynamic" unit_magnitude="Angle/T^2" units="rad/s^2" VariableName="ANGULAR_ACCELERATION" App="Structural" ImplementedInApplication="StructuralMechanicsApplication"></NodalConditionItem>
+  <NodalConditionItem n="CONDENSED_DOF_LIST" pn="Hinge" ov="line" ProcessName="HingesStaticCondensationProcess" state="CheckNodalConditionStateSolid" Interval="False" analysis_type="Static,Quasi-static,Dynamic" VariableName="CONDENSED_DOF_LIST" App="Structural" ImplementedInApplication="StructuralMechanicsApplication"></NodalConditionItem>
 </NodalConditionList>

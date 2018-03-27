@@ -474,6 +474,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
       <inputs></inputs>
       <outputs>
@@ -499,6 +500,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
       <inputs>
       </inputs>
@@ -525,6 +527,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
       <inputs></inputs>
       <outputs>
@@ -550,6 +553,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
       <inputs>
       </inputs>
@@ -577,6 +581,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -603,6 +608,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -629,6 +635,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -655,6 +662,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -682,6 +690,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -708,6 +717,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
      </inputs>

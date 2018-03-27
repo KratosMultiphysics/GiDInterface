@@ -14,6 +14,15 @@
       <parameter n="integration_order" pn="Integration order" type="double" v="2" />
     </inputs>
   </Process>
+  <!-- Processes for contact mechanics -->
+  <Process n="HingesStaticCondensationProcess" pn="Define dofs" > 
+    <inputs>
+      <parameter n="FirstDisplacement" pn="First node displacement" type="vector" vectorType="bool" v="0,0,0" />
+      <parameter n="FirstMoment" pn="First node moment" type="vector" vectorType="bool" v="0,0,0" />
+      <parameter n="SecondDisplacement" pn="Second node displacement" type="vector" vectorType="bool" v="0,0,0" />
+      <parameter n="SecondMoment" pn="Second node moment" type="vector" vectorType="bool" v="0,0,0" />
+    </inputs>
+  </Process>
 
  </ProcessList>
 
