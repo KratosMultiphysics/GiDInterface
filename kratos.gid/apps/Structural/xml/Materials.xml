@@ -5,6 +5,11 @@
         <parameter n="DENSITY" pn="Density" v="7850" help="Density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="206.9e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29" help="Poisson coefficient of the material"/>
+        <parameter n="YIELD_STRESS" pn="Yield stress" unit_magnitude="P" units="Pa" v="5.5e6"/>
+        <parameter n="REFERENCE_HARDENING_MODULUS" pn="Kinematic hardening modulus" v="1.0"/>
+        <parameter n="ISOTROPIC_HARDENING_MODULUS" pn="Isotropic hardening modulus" v="0.12924"/>
+        <parameter n="INFINITY_HARDENING_MODULUS" pn="Saturation hardening modulus" v="0.0"/>
+        <parameter n="HARDENING_EXPONENT" pn="Hardening exponent" v="1.0"/>
     </inputs>
   </Material>
   <Material n="Aluminium" MaterialType="Structural" help="This element implements a Fractional Step Element">
