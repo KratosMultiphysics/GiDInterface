@@ -4,6 +4,7 @@ from KratosMultiphysics import *
 from KratosMultiphysics.ALEApplication import *
 from KratosMultiphysics.FSIApplication import *
 from KratosMultiphysics.FluidDynamicsApplication import *
+from KratosMultiphysics.ExternalSolversApplication import *
 from KratosMultiphysics.StructuralMechanicsApplication import *
 from KratosMultiphysics.ExternalSolversApplication import *
 
@@ -23,7 +24,9 @@ parallel_type = ProjectParameters["coupling_solver_settings"]["problem_data"]["p
 
 ## Import KratosMPI if needed
 if (parallel_type == "MPI"):
-    import KratosMultiphysics.mpi as KratosMPI
+    from KratosMultiphysics.mpi import *
+    from KratosMultiphysics.MetisApplication import *
+    from KratosMultiphysics.TrilinosApplication import *
 
 ## Fluid-Structure model parts definition
 structure_main_model_part = ModelPart(ProjectParameters["structure_solver_settings"]["problem_data"]["model_part_name"].GetString())
@@ -150,7 +153,7 @@ for process in list_of_processes:
     process.ExecuteBeforeSolutionLoop()
 
 ## Writing the full ProjectParameters file before solving
-if ((parallel_type == "OpenMP") or (KratosMPI.mpi.rank == 0)) and (verbosity > 0):
+if ((parallel_type == "OpenMP") or (mpi.rank == 0)) and (verbosity > 0):
     f = open("ProjectParametersOutput.json", 'w')
     f.write(ProjectParameters.PrettyPrintJsonString())
     f.close()
@@ -166,7 +169,7 @@ while(time <= end_time):
     structure_main_model_part.CloneTimeStep(time)
     fluid_main_model_part.CloneTimeStep(time)
 
-    if (parallel_type == "OpenMP") or (KratosMPI.mpi.rank == 0):
+    if (parallel_type == "OpenMP") or (mpi.rank == 0):
         print("STEP = ", step)
         print("TIME = ", time)
 
@@ -176,12 +179,12 @@ while(time <= end_time):
     gid_output_structure.ExecuteInitializeSolutionStep()
     gid_output_fluid.ExecuteInitializeSolutionStep()
 
-    if (parallel_type == "OpenMP") or (KratosMPI.mpi.rank == 0):
+    if (parallel_type == "OpenMP") or (mpi.rank == 0):
         print("Time step ",step," resolution starts...")
 
     solver.Solve()
 
-    if (parallel_type == "OpenMP") or (KratosMPI.mpi.rank == 0):
+    if (parallel_type == "OpenMP") or (mpi.rank == 0):
         print("Time step ",step," solved.")
 
     for process in list_of_processes:

@@ -5,7 +5,7 @@
 
 namespace eval write {
     variable mat_dict
-    variable meshes
+    variable submodelparts
     variable MDPA_loop_control
     variable current_configuration
     variable current_mdpa_indent_level
@@ -13,19 +13,18 @@ namespace eval write {
 
 proc write::Init { } {
     variable mat_dict
-    variable meshes
+    variable submodelparts
     variable current_configuration
     variable current_mdpa_indent_level
     
     set current_configuration [dict create]
     
     set mat_dict ""
-    set meshes [dict create]
+    set submodelparts [dict create]
     
     SetConfigurationAttribute dir ""
     SetConfigurationAttribute parts_un ""
     SetConfigurationAttribute materials_un ""
-    SetConfigurationAttribute groups_type_name "SubModelPart"
     SetConfigurationAttribute time_monitor 0
     SetConfigurationAttribute model_name ""
     
@@ -76,10 +75,6 @@ proc write::AddConfigurationAttribute {att val} {
     dict append current_configuration $att $val]
 }
 
-proc write::setGroupsTypeName {name} {
-    SetConfigurationAttribute groups_type_name $name
-}
-
 # Write Events
 proc write::writeEvent { filename } {
     set time_monitor [GetConfigurationAttribute time_monitor]
@@ -128,7 +123,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
     
     CloseFile
     if {$needsOpen} {OpenFile $filename}
-    if {$::kratos_debug} {
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
         eval $wevent
     } else {
         if {[catch {eval $wevent} fid] } {
@@ -156,7 +151,7 @@ proc write::writeAppMDPA {appid} {
     CloseFile
     OpenFile $filename
     
-    if {$::kratos_debug} {
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
         eval $wevent
     } else {
         if { [catch {eval $wevent} fid] } {
@@ -469,12 +464,12 @@ proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
     return $obj
 }
 
-proc write::getMeshId {cid group} {
-    variable meshes
+proc write::getSubModelPartId {cid group} {
+    variable submodelparts
     
     set find [list $cid ${group}]
-    if {[dict exists $meshes $find]} {
-        return [dict get $meshes [list $cid ${group}]]
+    if {[dict exists $submodelparts $find]} {
+        return [dict get $submodelparts [list $cid ${group}]]
     } {
         return 0
     }
@@ -491,20 +486,16 @@ proc write::transformGroupName {groupid} {
 }
 
 # what can be: nodal, Elements, Conditions or Elements&Conditions
-proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
-    variable meshes
+proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
+    variable submodelparts
     
     set what [split $what "&"]
-    set gtn [GetConfigurationAttribute groups_type_name]
     set group [GetWriteGroupName $group]
-    if {![dict exists $meshes [list $cid ${group}]]} {
+    if {![dict exists $submodelparts [list $cid ${group}]]} {
         # Add the submodelpart to the catalog
-        set mid [expr [llength [dict keys $meshes]] +1]
-        if {$gtn ne "Mesh"} {
-            set good_name [write::transformGroupName $group]
-            set mid "${cid}_${good_name}"
-        }
-        dict set meshes [list $cid ${group}] $mid
+        set good_name [write::transformGroupName $group]
+        set mid "${cid}_${good_name}"
+        dict set submodelparts [list $cid ${group}] $mid
 
         # Prepare the print formats
         incr ::write::current_mdpa_indent_level
@@ -520,7 +511,7 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
 
         # Print header
         set s [mdpaIndent]
-        WriteString "${s}Begin $gtn $mid // Group $group // Subtree $cid"
+        WriteString "${s}Begin SubModelPart $mid // Group $group // Subtree $cid"
         # Print tables
         if {$tableid_list ne ""} {
             set s1 [mdpaIndent]
@@ -530,15 +521,15 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
             }
             WriteString "${s1}End SubModelPartTables"
         }
-        WriteString "${s1}Begin ${gtn}Nodes"
+        WriteString "${s1}Begin SubModelPartNodes"
         GiD_WriteCalculationFile nodes -sorted $gdict
-        WriteString "${s1}End ${gtn}Nodes"
-        WriteString "${s1}Begin ${gtn}Elements"
+        WriteString "${s1}End SubModelPartNodes"
+        WriteString "${s1}Begin SubModelPartElements"
         if {"Elements" in $what} {
             GiD_WriteCalculationFile elements -sorted $gdict
         }
-        WriteString "${s1}End ${gtn}Elements"
-        WriteString "${s1}Begin ${gtn}Conditions"
+        WriteString "${s1}End SubModelPartElements"
+        WriteString "${s1}Begin SubModelPartConditions"
         if {"Conditions" in $what} {
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
@@ -550,8 +541,8 @@ proc write::writeGroupMesh { cid group {what "Elements"} {iniend ""} {tableid_li
                 }
             }
         }
-        WriteString "${s1}End ${gtn}Conditions"
-        WriteString "${s}End $gtn"
+        WriteString "${s1}End SubModelPartConditions"
+        WriteString "${s}End SubModelPart"
     }
 }
 
@@ -572,7 +563,7 @@ proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
         if {[dict exists $groups_dict $group what]} {set what [dict get $groups_dict $group what]} else {set what ""}
         if {[dict exists $groups_dict $group iniend]} {set iniend [dict get $groups_dict $group iniend]} else {set iniend ""}
         if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
-        write::writeGroupMesh $cid $group $what $iniend $tableid_list
+        write::writeGroupSubModelPart $cid $group $what $iniend $tableid_list
     }
 
     incr ::write::current_mdpa_indent_level -1
@@ -610,7 +601,7 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
         set iters ""
         if {$needElems} {append what "&Elements"}
         if {$needConds} {append what "&Conditions"; set iters [dict get $conditions_dict [$group @n]]}
-        ::write::writeGroupMesh "GENERIC" [$group @n] $what $iters
+        ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what $iters
     }
     return $conditions_dict
 }
@@ -629,7 +620,7 @@ proc write::writeNodalConditions { keyword } {
         if {[Model::getNodalConditionbyId $cid] ne ""} {
             set groupid [$group @n]
             set groupid [GetWriteGroupName $groupid]
-            ::write::writeGroupMesh $cid $groupid "nodal"
+            ::write::writeGroupSubModelPart $cid $groupid "nodal"
         }
     }
 }
@@ -729,7 +720,6 @@ proc write::isquadratic {} {
     return [GiD_Set Model(QuadraticType)]
 }
 
-# GiD_Mesh get element $elem_id face $face_id
 proc write::GetNodesFromElementFace {elem_id face_id} {
     set inf [GiD_Mesh get element $elem_id]
     set elem_type [lindex $inf 1]
@@ -754,7 +744,6 @@ proc write::GetNodesFromElementFace {elem_id face_id} {
     return $nodes
 }
 
-
 proc write::getPartsGroupsId {} {
     set root [customlib::GetBaseRoot]
     
@@ -768,20 +757,21 @@ proc write::getPartsGroupsId {} {
     }
     return $listOfGroups
 }
-proc write::getPartsMeshId {} {
+
+proc write::getPartsSubModelPartId {} {
     set root [customlib::GetBaseRoot]
     
     set listOfGroups [list ]
     
     foreach group [getPartsGroupsId] {
-        lappend listOfGroups [getMeshId Parts $group]
+        lappend listOfGroups [write::getSubModelPartId Parts $group]
     }
     return $listOfGroups
 }
 
-proc write::writePartMeshes { } {
+proc write::writePartSubModelPart { } {
     foreach group [getPartsGroupsId] {
-        writeGroupMesh Parts $group "Elements"
+        writeGroupSubModelPart Parts $group "Elements"
     }
 }
 
@@ -954,8 +944,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
     set schemeName [write::getValue $schemeUN]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
-    
-    
+
+    set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
         dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
     }
@@ -985,7 +975,7 @@ proc write::getSubModelPartNames { args } {
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
         if {[Model::getNodalConditionbyId $cid] ne ""} {
-            set gname [::write::getMeshId $cid $groupName]
+            set gname [::write::getSubModelPartId $cid $groupName]
             if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
         }
     }
@@ -1044,7 +1034,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set groupName [$group @n]
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
-        set groupId [::write::getMeshId $cid $groupName]
+        set groupId [::write::getSubModelPartId $cid $groupName]
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
@@ -1064,7 +1054,6 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set paramDict [dict create]
-            dict set paramDict mesh_id 0
             dict set paramDict model_part_name $groupId
             
             set process_attributes [$process getAttributes]
@@ -1257,21 +1246,21 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     return $resultDict
 }
 
-proc write::GetMeshFromCondition { base_UN condition_id } {
+proc write::GetSubModelPartFromCondition { base_UN condition_id } {
     
     set root [customlib::GetBaseRoot]
     
     set xp1 "[spdAux::getRoute $base_UN]/condition\[@n='$condition_id'\]/group"
     set groups [$root selectNodes $xp1]
     
-    set mesh_list [list ]
+    set submodelpart_list [list ]
     foreach gNode $groups {
         set group [$gNode @n]
         set group [write::GetWriteGroupName $group]
-        set meshid [getMeshId $condition_id $group]
-        lappend mesh_list $meshid
+        set submodelpart_id [write::getSubModelPartId $condition_id $group]
+        lappend submodelpart_list $submodelpart_id
     }
-    return $mesh_list
+    return $submodelpart_list
 }
 
 proc write::getAllMaterialParametersDict {matname} {
@@ -1503,7 +1492,7 @@ proc write::getPropertiesList {parts_un} {
     set xp1 "[spdAux::getRoute $parts_un]/group"
     foreach gNode [$root selectNodes $xp1] {
         set group [get_domnode_attribute $gNode n]
-        set sub_model_part [write::getMeshId Parts $group]
+        set sub_model_part [write::getSubModelPartId Parts $group]
         if { [dict exists $mat_dict $group] } {
             set mid [dict get $mat_dict $group MID]
             set prop_dict [dict create]

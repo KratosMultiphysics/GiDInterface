@@ -28,7 +28,6 @@ proc Kratos::ToolbarRefresh {} {
     Kratos::CreatePreprocessModelTBar
 }
 
-
 proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
     global KBitmapsNames KBitmapsCommands KBitmapsHelp
     variable kratos_private
@@ -92,6 +91,12 @@ proc Kratos::EndCreatePreprocessTBar {} {
         unset kratos_private(MenuItems)
     }
     update
+}
+
+
+proc Kratos::UpdateMenus { } {
+    Kratos::ChangeMenus
+    apps::ExecuteOnCurrentApp CustomMenus
 }
 
 proc Kratos::ChangeMenus { } {

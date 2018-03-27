@@ -172,7 +172,7 @@ proc Fluid::write::writeDrags { } {
 }
 
 proc Fluid::write::writeMeshes { } {
-    write::writePartMeshes
+    write::writePartSubModelPart
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
     writeConditionsMesh
     #writeSkinMesh
@@ -199,9 +199,9 @@ proc Fluid::write::writeConditionsMesh { } {
             set end $FluidConditions($groupid,final)
             #W "$groupid $ini $end"
             if {$ini == -1} {
-                ::write::writeGroupMesh $condid $groupid "Nodes"
+                ::write::writeGroupSubModelPart $condid $groupid "Nodes"
             } else {
-                ::write::writeGroupMesh $condid $groupid "Conditions" [list $ini $end]
+                ::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
             }
         }
     }
@@ -243,7 +243,7 @@ proc Fluid::write::writeSkinMesh { } {
     foreach group $listgroups {
         GiD_EntitiesGroups assign $skinconfgroup nodes [GiD_EntitiesGroups get $group nodes]
     }
-    ::write::writeGroupMesh EXTRA $skinconfgroup "Conditions" $listiniend
+    ::write::writeGroupSubModelPart EXTRA $skinconfgroup "Conditions" $listiniend
 }
 
 proc Fluid::write::CheckClosedVolume {} {

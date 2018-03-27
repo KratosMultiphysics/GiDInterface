@@ -18,12 +18,12 @@
       <!--<parameter n="component_wise" pn="Component wise" type="bool" v="false" values="false,true" help=""/> -->
       <!--<parameter n="move_mesh_flag" pn="Move mesh" type="bool" v="true" values="false,true" help=""/> -->
       <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="Residual_criterion" 
-		 values ="Residual_criterion,Displacement_criterion,And_criterion,Or_criterion" 
-		 pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" 
+		 values ="Residual_criterion,Variable_criterion,And_criterion,Or_criterion" 
+		 pvalues ="Residual criterion,Variable criterion,And criterion,Or criterion" 
 		 help="These are the available convergence criteria for the nonlinear iteration">      
-      <parameter n="variable_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="Displacement_criterion,And_criterion,Or_criterion" 
+      <parameter n="variable_relative_tolerance" pn="Variable relative tolerance" type="double" v="1e-4" parent="Variable_criterion,And_criterion,Or_criterion" 
 		 help="Relative displacement tolerance employed in the nonlinear iteration"/>      
-      <parameter n="variable_absolute_tolerance" pn="Displacement absolute tolerance" type="double" v="1e-9" parent="Displacement_criterion,And_criterion,Or_criterion" 
+      <parameter n="variable_absolute_tolerance" pn="Variable absolute tolerance" type="double" v="1e-9" parent="Variable_criterion,And_criterion,Or_criterion" 
 		 help="Absolute displacement tolerance employed in the nonlinear iteration"/>      
       <parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-4" parent="Residual_criterion,And_criterion,Or_criterion" 
 		 help="Relative residual tolerance employed in the nonlinear iteration"/>      
@@ -191,12 +191,12 @@
       <!--<parameter n="component_wise" pn="Component wise" type="bool" v="false" values="false,true" help=""/> -->
       <!--<parameter n="move_mesh_flag" pn="Move mesh" type="bool" v="true" values="false,true" help=""/> -->
       <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="Residual_criterion" 
-		 values ="Residual_criterion,Displacement_criterion,And_criterion,Or_criterion" 
-		 pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" 
+		 values ="Residual_criterion,Variable_criterion,And_criterion,Or_criterion" 
+		 pvalues ="Residual criterion,Variable criterion,And criterion,Or criterion" 
 		 help="These are the available convergence criteria for the nonlinear iteration">      
-	<parameter n="variable_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="Displacement_criterion,And_criterion,Or_criterion" 
+	<parameter n="variable_relative_tolerance" pn="Variable relative tolerance" type="double" v="1e-4" parent="Variable_criterion,And_criterion,Or_criterion" 
 		   help="Relative displacement tolerance employed in the nonlinear iteration"/>      
-	<parameter n="variable_absolute_tolerance" pn="Displacement absolute tolerance" type="double" v="1e-9" parent="Displacement_criterion,And_criterion,Or_criterion" 
+	<parameter n="variable_absolute_tolerance" pn="Variable absolute tolerance" type="double" v="1e-9" parent="Variable_criterion,And_criterion,Or_criterion" 
 		   help="Absolute displacement tolerance employed in the nonlinear iteration"/>      
 	<parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-4" parent="Residual_criterion,And_criterion,Or_criterion" 
 		   help="Relative residual tolerance employed in the nonlinear iteration"/>      

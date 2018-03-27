@@ -74,7 +74,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
 
     # Structural Parts
     set structParts {container[@n='Structural']/condition[@n='Parts']}
-    set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
+    set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov line
     set constLawNameStruc "TrussConstitutiveLaw"
     set props [list Element TrussElement$nd ConstitutiveLaw $constLawNameStruc CROSS_AREA 0.01 DENSITY 1500.0]
@@ -93,7 +93,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     spdAux::AddIntervalGroup XYZ "XYZ//Total"
     GiD_Groups edit state "XYZ//Total" hidden
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
-    set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement "XYZ//Total"]
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "XYZ//Total"]
     $structDisplacementNode setAttribute ov point
     set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
@@ -111,7 +111,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     spdAux::AddIntervalGroup XZ "XZ//Total"
     GiD_Groups edit state "XZ//Total" hidden
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
-    set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement "XZ//Total"]
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "XZ//Total"]
     $structDisplacementNode setAttribute ov point
     set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY No ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
@@ -129,7 +129,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     spdAux::AddIntervalGroup Z "Z//Total"
     GiD_Groups edit state "Z//Total" hidden
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
-    set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement "Z//Total"]
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Z//Total"]
     $structDisplacementNode setAttribute ov point
     set props [list constrainedX No ByFunctionX No valueX 0.0 constrainedY No ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
@@ -148,7 +148,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     spdAux::AddIntervalGroup Load "Load//Total"
     GiD_Groups edit state "Load//Total" hidden
     $structDisplacementNode setAttribute ov point
-    set LoadNode [spdAux::AddConditionGroupOnXPath $structLoad "Load//Total"]
+    set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "Load//Total"]
     set props [list ByFunction No modulus 10000 directionY -1 Interval Total]
     foreach {prop val} $props {
          set propnode [$LoadNode selectNodes "./value\[@n = '$prop'\]"]

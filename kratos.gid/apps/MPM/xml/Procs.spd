@@ -12,4 +12,18 @@
 		]]>
 	</proc>
 
+	
+	<proc n='GetElements' args='args'>
+		<![CDATA[
+		return [Structural::xml::ProcGetElementsStructural $domNode $args]              
+		]]>
+	</proc>
+
+	<proc n='GetSolutionStrategiesStructural' args='args'>
+	  <![CDATA[
+	  return [Structural::xml::ProcGetSolutionStrategiesSolid $domNode $args]
+	  ]]>
+	</proc>
+		  		
+
 </container>

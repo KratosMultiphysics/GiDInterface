@@ -19,7 +19,7 @@ proc DEM::write::WriteMDPAParts { } {
     writeSphereRadius
 
     # SubmodelParts
-    write::writePartMeshes
+    write::writePartSubModelPart
     writeVelocityMeshes
 }
 
@@ -49,7 +49,7 @@ proc DEM::write::GetNodalConditionsGroups { {include_cond 0} } {
 
 proc DEM::write::writeVelocityMeshes { } {
     foreach {cid groupid} [DEM::write::GetNodalConditionsGroups 1] {
-        ::write::writeGroupMesh $cid $groupid "nodal"
+        ::write::writeGroupSubModelPart $cid $groupid "nodal"
     }
 }
 

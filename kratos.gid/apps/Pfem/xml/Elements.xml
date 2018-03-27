@@ -74,7 +74,7 @@
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
     </NodalConditions>
@@ -103,7 +103,7 @@
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
     </NodalConditions>
@@ -130,7 +130,7 @@
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>       
     </NodalConditions>
@@ -159,7 +159,7 @@
     <NodalConditions> 
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
     </NodalConditions>
@@ -191,7 +191,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>             
     </NodalConditions>
@@ -218,7 +218,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>                   
     </NodalConditions>
@@ -245,7 +245,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
     </NodalConditions>
@@ -272,7 +272,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
+      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
     </NodalConditions>
@@ -345,9 +345,6 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -501,7 +498,9 @@
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>
+    </inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
@@ -532,11 +531,10 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>
+    </inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
@@ -569,40 +567,9 @@
       <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
       <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
     </NodalConditions>
-    <inputs></inputs>
-    <outputs>
-      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
-      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
-      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
-      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
-      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
-    </outputs>
-  </ElementItem>
-  <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
-	       ElementType="Solid" Dofs="PRESSURE" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangianUPElement3D4N"/>
-    </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="3D_UP"/>
-      <filter field="Dimension" value="3D"/>
-      <filter field="LargeDeformation" value="True"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="DISPLACEMENT"/>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
-    </NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>
+    </inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />

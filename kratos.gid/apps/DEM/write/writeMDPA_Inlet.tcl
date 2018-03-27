@@ -26,21 +26,18 @@ proc DEM::write::writeInletMeshes { } {
     
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
-        set gtn [write::GetConfigurationAttribute groups_type_name]
-        if {![dict exists $::write::meshes [list Inlet ${groupid}]]} {
-            set mid [expr [llength [dict keys $::write::meshes]] +1]
-            if {$gtn ne "Mesh"} {
-                set good_name [write::transformGroupName $groupid]
-                set mid "Inlet_${good_name}"
-            }
-            dict set ::write::meshes [list Inlet ${groupid}] $mid
+        if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
+            set mid [expr [llength [dict keys $::write::submodelparts]] +1]
+            set good_name [write::transformGroupName $groupid]
+            set mid "Inlet_${good_name}"
+            dict set ::write::submodelparts [list Inlet ${groupid}] $mid
             set gdict [dict create]
             set f "%10i\n"
             set f [subst $f]
             set group_real_name [write::GetWriteGroupName $groupid]
             dict set gdict $group_real_name $f
-            write::WriteString "Begin $gtn $mid // Group $groupid // Subtree Inlet"
-            write::WriteString "    Begin ${gtn}Data"
+            write::WriteString "Begin SubModelPart $mid // Group $groupid // Subtree Inlet"
+            write::WriteString "    Begin SubModelPartData"
             write::WriteString "        PROPERTIES_ID [dict get $inletProperties $groupid MID]"
             write::WriteString "        RIGID_BODY_MOTION 0"
             write::WriteString "        IDENTIFIER $mid"
@@ -54,7 +51,7 @@ proc DEM::write::writeInletMeshes { } {
             lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
             lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
             write::WriteString "        VELOCITY \[3\] ($vx, $vy, $vz)"
-            write::WriteString "        MAX_RAND_DEVIATION_ANGLE [dict get $inletProperties $groupid DIRECTION_VECTORX]"
+            write::WriteString "        MAX_RAND_DEVIATION_ANGLE [dict get $inletProperties $groupid MAX_RAND_DEVIATION_ANGLE]"
             set type_of_measurement [dict get $inletProperties $groupid FLOW_MEASUREMENT]
             if {$type_of_measurement eq "Kilograms"} {
                 set number_of_particles 200.0
@@ -80,16 +77,17 @@ proc DEM::write::writeInletMeshes { } {
             write::WriteString "        RANDOM_ORIENTATION 1"
             write::WriteString "        ORIENTATION \[4\] (0.0, 0.0, 0.0, 1.0)"
             
-            write::WriteString "    End ${gtn}Data"
-            write::WriteString "    Begin ${gtn}Nodes"
+            write::WriteString "    End SubModelPartData"
+            write::WriteString "    Begin SubModelPartNodes"
             GiD_WriteCalculationFile nodes -sorted $gdict
-            write::WriteString "    End ${gtn}Nodes"
-            write::WriteString "End $gtn"
+            write::WriteString "    End SubModelPartNodes"
+            write::WriteString "End SubModelPart"
         }
     }
 }
 
 proc DEM::write::writeMaterialsInlet { } {
+    variable inletProperties
     variable last_property_id
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet'\]/group"
     set old_mat_dict $::write::mat_dict

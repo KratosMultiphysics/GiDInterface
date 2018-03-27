@@ -74,7 +74,7 @@ proc Solid::write::writeConditions { } {
 
 proc Solid::write::writeMeshes { } {
     
-    write::writePartMeshes
+    write::writePartSubModelPart
     
     # Solo Malla , no en conditions
     write::writeNodalConditions "SLNodalConditions"
@@ -92,9 +92,9 @@ proc Solid::write::writeLoads { } {
         set groupid [write::GetWriteGroupName $groupid]
         #W "Writing mesh of Load $groupid"
         if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
-            ::write::writeGroupMesh [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
+            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
         } else {
-            ::write::writeGroupMesh [[$group parent] @n] $groupid "nodal"
+            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
         }
     }
 }
@@ -118,8 +118,6 @@ proc Solid::write::getLastConditionId { } {
     return $top
 }
 
-
-# Custom files
 # Custom files
 proc Solid::write::WriteMaterialsFile { } {
     variable validApps
@@ -261,11 +259,12 @@ proc Solid::write::getPropertiesList {parts_un} {
     set xp1 "[spdAux::getRoute $parts_un]/group"
     foreach gNode [$root selectNodes $xp1] {
         set group [get_domnode_attribute $gNode n]
-        set sub_model_part [write::getMeshId Parts $group]
+        set sub_model_part [write::getSubModelPartId Parts $group]
         if { [dict exists $mat_dict $group] } {
             set law_id [dict get $mat_dict $group MID]
 	    set law_name [dict get $mat_dict $group ConstitutiveLaw]
 	    set law_type [[Model::getConstitutiveLaw $law_name] getAttribute "Type"]
+	    set mat_name [dict get $mat_dict $group Material]
 	    
 	    if {$law_type eq "1D_UR"} {
 		set python_module "assign_sections_process"
@@ -291,7 +290,8 @@ proc Solid::write::getPropertiesList {parts_un} {
 	    set material_dict [dict create]
 	    dict set material_dict "model_part_name" $sub_model_part
             dict set material_dict "properties_id" $law_id
-
+	    dict set material_dict "material_name" $mat_name
+	    
 	    if {$law_type eq "1D_UR"} {
 		set public_name [[Model::getConstitutiveLaw $law_name] getAttribute "pn"]
 		dict set material_dict "section_type" $public_name
@@ -343,7 +343,7 @@ proc Solid::write::getConditionsParametersDict {un {condition_type "Condition"}}
         set groupName [$group @n]
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
-        set groupId [::write::getMeshId $cid $groupName]
+        set groupId [::write::getSubModelPartId $cid $groupName]
         set condId [[$group parent] @n]
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $condId]

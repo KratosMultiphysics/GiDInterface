@@ -12,11 +12,14 @@ proc MPM::xml::Init { } {
     # Import our elements
     Model::ForgetElements
     Model::getElements Elements.xml
-    foreach strategy [Model::GetSolutionStrategies] {
+    
+    foreach strategy $::Model::SolutionStrategies {
+        $strategy setAttribute NeedElements false
         foreach scheme [$strategy getSchemes] {
             $scheme addElementFilter ImplementedInApplication ParticleMechanicsApplication
         }
     }
+    #W [::Model::GetSchemes]
 
     # Import our Constitutive Laws
     Model::ForgetConstitutiveLaws

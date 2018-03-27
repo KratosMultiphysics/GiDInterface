@@ -37,6 +37,7 @@ proc ::DEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Clusters.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
 
 proc ::DEM::GetAttribute {name} {
@@ -49,8 +50,11 @@ proc ::DEM::GetAttribute {name} {
 
 proc ::DEM::CustomToolbarItems { } {
     variable dir
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
     Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example\nSpheres drop"]   
+}
+
+proc ::DEM::CustomMenus { } {
+    DEM::examples::UpdateMenus
 }
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {

@@ -116,8 +116,6 @@ proc Structural::write::writeConditions { } {
 
 proc Structural::write::writeMeshes { } {
     
-    write::writePartMeshes
-
     # There are some Conditions and nodalConditions that dont generate a submodelpart
     # Add them to this list
     set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
@@ -126,6 +124,7 @@ proc Structural::write::writeMeshes { } {
         lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
         Model::ForgetNodalCondition $cnd_name
     }
+    write::writePartSubModelPart
     
     # Solo Malla , no en conditions
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
@@ -148,9 +147,9 @@ proc Structural::write::writeLoads { } {
         set groupid [write::GetWriteGroupName $groupid]
         #W "Writing mesh of Load $groupid"
         if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
-            ::write::writeGroupMesh [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
+            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
         } else {
-            ::write::writeGroupMesh [[$group parent] @n] $groupid "nodal"
+            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
         }
     }
 }
