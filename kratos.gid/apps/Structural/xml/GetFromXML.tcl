@@ -16,6 +16,7 @@ proc Structural::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
+    Model::getSolvers Solvers.xml
 }
 
 proc Structural::xml::getUniqueName {name} {
@@ -43,8 +44,7 @@ proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     return $ret
 }
 
-
-proc Structural::xml::ProcGetSolutionStrategiesSolid { domNode args } {
+proc Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
     set names ""
     set pnames ""
     set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]

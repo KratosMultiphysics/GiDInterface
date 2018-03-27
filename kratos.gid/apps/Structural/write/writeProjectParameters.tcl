@@ -37,6 +37,18 @@ proc Structural::write::getOldParametersDict { } {
         dict set problemDataDict start_time [write::getValue STTimeParameters StartTime]
         dict set problemDataDict end_time [write::getValue STTimeParameters EndTime]
     }
+    if {$solutiontype eq "eigen_value"} {
+        set eigen_process_dict [dict create]
+        dict set eigen_process_dict python_module postprocess_eigenvalues_process
+        dict set eigen_process_dict kratos_module KratosMultiphysics.StructuralMechanicsApplication
+        dict set eigen_process_dict help "This process postprocces the eigen values for GiD"
+        dict set eigen_process_dict process_name "PostProcessEigenvaluesProcess"
+        set params [dict create]
+        dict set params "result_file_name" $model_name
+        dict set params "animation_steps" 20
+        dict set params "label_type" "frequency"
+        dict set eigen_process_dict "Parameters" $params
+    }
     set echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict echo_level $echo_level
     # Add section to document
@@ -95,6 +107,12 @@ proc Structural::write::getOldParametersDict { } {
 
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
+    dict set projectParametersDict list_other_processes [list ]
+    if {$solutiontype eq "eigen_value"} {
+        dict lappend projectParametersDict list_other_processes $eigen_process_dict
+    }
+
+
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
@@ -118,6 +136,11 @@ proc Structural::write::getOldParametersDict { } {
             dict set projectParametersDict pressure_dofs true
             break
         }
+    }
+
+    if {$solutiontype eq "eigen_value"} {
+        dict unset projectParametersDict output_configuration
+        dict unset projectParametersDict solver_settings analysis_type
     }
 
     # set materialsDict [dict create]
