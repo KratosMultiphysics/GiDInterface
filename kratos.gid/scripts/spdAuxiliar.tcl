@@ -27,7 +27,7 @@ proc spdAux::Init { } {
     variable TreeVisibility
     variable ProjectIsNew
     variable GroupsEdited
-
+    
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
     set initwind ""
@@ -36,7 +36,7 @@ proc spdAux::Init { } {
     set TreeVisibility 0
     set ProjectIsNew 0
     set GroupsEdited [dict create]
-
+    
 }
 
 proc spdAux::RequestRefresh {} {
@@ -122,7 +122,7 @@ proc spdAux::reactiveApp { } {
     set root [customlib::GetBaseRoot]
     set ::Model::SpatialDimension [[$root selectNodes "value\[@n='nDim'\]"] getAttribute v ]
     set appname [[$root selectNodes "hiddenfield\[@n='activeapp'\]"] @v ]
-
+    
     apps::setActiveApp $appname
 }
 
@@ -169,9 +169,13 @@ proc spdAux::CreateWindow {} {
     
     set root [customlib::GetBaseRoot]
     
-    set activeapp [ [$root selectNodes "hiddenfield\[@n='activeapp'\]"] getAttribute v]
-    
-    if {[winfo exist $initwind]} {destroy $initwind}
+    set activeapp_node [$::gid_groups_conds::doc selectNodes "hiddenfield\[@n='activeapp'\]"]
+    if {$activeapp_node ne ""} {
+            set activeapp [get_domnode_attribute $activeapp_node v]
+        } else {
+            return ""   
+        }
+        if {[winfo exist $initwind]} {destroy $initwind}
         
     if { $activeapp ne "" } {
         apps::setActiveApp $activeapp
@@ -181,7 +185,6 @@ proc spdAux::CreateWindow {} {
     set w .gid.win_example
     toplevel $w
     wm withdraw $w
-    
     
     set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
     set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
@@ -213,7 +216,7 @@ proc spdAux::CreateWindow {} {
             if {$col >= 5} {set col 0; incr row; incr row}
         }
     }
-
+    
     # More button
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
         set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
@@ -224,7 +227,7 @@ proc spdAux::CreateWindow {} {
         grid $w.information.img_more -column $col -row $row
         grid $w.information.text_more -column $col -row [expr $row +1]
     }
-
+    
     grid $w.top
     grid $w.top.title_text
     
@@ -301,7 +304,7 @@ proc spdAux::SetSpatialDimmension {ndim} {
 proc spdAux::SwitchDimAndCreateWindow { ndim } {
     variable TreeVisibility
     variable ProjectIsNew
-
+    
     SetSpatialDimmension $ndim
     spdAux::DestroyWindow
     
@@ -314,7 +317,7 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
         spdAux::CustomTreeCommon
         apps::ExecuteOnCurrentXML CustomTree ""
     }
-
+    
     if {$TreeVisibility} {
         customlib::UpdateDocument
         spdAux::PreChargeTree
@@ -491,7 +494,7 @@ proc spdAux::CheckSolverEntryState {domNode} {
             }
         }
     }
-
+    
     return $ret
 }
 
@@ -725,7 +728,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
         set units [$cnd getAttribute "units"]
         set um [$cnd getAttribute "unit_magnitude"]
         set processName [$cnd getProcessName]
-
+        
         set process [::Model::GetProcess $processName]
         if {$process eq ""} {error [= "Condition %s can't find its process: %s" $n $processName]}
         set check [$process getAttribute "check"]
@@ -756,7 +759,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
 
 proc spdAux::GetParameterValueString { param {forcedParams ""}} {
     set node ""
-
+    
     set inName [$param getName]
     set pn [$param getPublicName]
     set type [$param getType]
@@ -778,13 +781,13 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
         # if {$cnd_state ne ""} {set state $cnd_state}
         # if {$state eq ""} {set state "normal"}
         set state {[ConditionParameterState]}
-
+        
         # Set forced values -> Caution when debugging
         foreach {key value} $forcedParams {
             set $key $value
         }
         if {$cnd_v ne ""} {set v $cnd_v}
-
+        
         set has_units [$param getAttribute "has_units"]
         if {$has_units ne ""} { 
             set has_units "units='$units'  unit_magnitude='$um'"
@@ -948,11 +951,11 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
     foreach {name value} $dep_list {
         set nodev "../value\[@n='$name'\]"
         append ret " <dependencies value='$value' node=\""
-                    append ret $nodev
-                    append ret "\"  att1='state' v1='normal'/>"
+        append ret $nodev
+        append ret "\"  att1='state' v1='normal'/>"
         append ret " <dependencies condition=\"@v!='$value'\" node=\""
-                    append ret $nodev
-                    append ret "\"  att1='state' v1='hidden'/>"
+        append ret $nodev
+        append ret "\"  att1='state' v1='hidden'/>"
     }
     return $ret
 }
@@ -1009,7 +1012,7 @@ proc spdAux::injectLocalAxesButton { basenode } {
     
     
     # GiD_Process MEscape Data Conditions AssignCond line_Local_axes change -Automatic- 1 escape escape 
-
+    
 }
 
 proc spdAux::injectElementOutputs { basenode args} {
@@ -1019,7 +1022,7 @@ proc spdAux::injectElementOutputs { basenode args} {
 proc spdAux::injectElementOutputs_do { basenode args} {
     set base [$basenode parent]
     set args {*}$args
-
+    
     set outputs [::Model::GetAllElemOutputs $args]
     foreach in [dict keys $outputs] {
         set pn [[dict get $outputs $in] getPublicName]
@@ -1044,7 +1047,7 @@ proc spdAux::injectNodalConditionsOutputs { basenode args} {
 proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
     set base [$basenode parent]
     set args {*}$args
-
+    
     if {$args eq ""} {
         set nodal_conditions [::Model::getAllNodalConditions]
     } {
@@ -1055,7 +1058,7 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
         set pn [$nc getPublicName]
         set v [$nc getAttribute v]
         if {$v eq ""} {set v "Yes"}
-
+        
         set state [$nc getAttribute state]
         if {$state eq ""} {set state "CheckNodalConditionState"}
         set node "<value n='$n' pn='$pn' v='$v' values='Yes,No' state='\[$state $n\]'/>"
@@ -1201,7 +1204,7 @@ proc spdAux::SchemeParamState {outnode} {
 
 proc spdAux::getIntervals { {un "Intervals"} } {
     set root [customlib::GetBaseRoot]
-
+    
     set xp1 "[spdAux::getRoute $un]/blockdata\[@n='Interval'\]"
     set lista [list ]
     foreach node [$root selectNodes $xp1] {
@@ -1219,7 +1222,7 @@ proc spdAux::CreateInterval {name ini end {un "Intervals"}} {
     set interval_string "<blockdata n='Interval' pn='Interval' name='$name' sequence='1' editable_name='unique' sequence_type='non_void_disabled' help='Interval'>
         <value n='IniTime' pn='Start time' v='$ini' help='When do the interval starts?'/>
         <value n='EndTime' pn='End time' v='$end' help='When do the interval ends?'/>
-    </blockdata>"
+        </blockdata>"
     [$root selectNodes $interval_path] appendXML $interval_string
 }
 
@@ -1251,14 +1254,14 @@ proc spdAux::getFields {} {
 
 proc spdAux::InsertConstitutiveLawForParameters {input arguments} {
     return "<value n='ConstitutiveLaw' pn='Constitutive law' v='' actualize_tree='1' values='\[GetConstitutiveLaws\]' dict='\[GetAllConstitutiveLaws\]'  help='Select a constitutive law'>
-		<dependencies node='../value' actualize='1'/>
-	</value>
-	<value n='Material' pn='Material' editable='0' help='Choose a material from the database' update_proc='CambioMat' values_tree='\[give_materials_list\]' v='' actualize_tree='1' state='normal'>
-		<edit_command n='Update material data' pn='Update material data' icon='refresh' proc='edit_database_list'/>
-		<dependencies node='../value' actualize='1'/>
-	</value>
-    <dynamicnode command='spdAux::injectPartInputs' args=''/>
-    "
+        <dependencies node='../value' actualize='1'/>
+        </value>
+        <value n='Material' pn='Material' editable='0' help='Choose a material from the database' update_proc='CambioMat' values_tree='\[give_materials_list\]' v='' actualize_tree='1' state='normal'>
+        <edit_command n='Update material data' pn='Update material data' icon='refresh' proc='edit_database_list'/>
+        <dependencies node='../value' actualize='1'/>
+        </value>
+        <dynamicnode command='spdAux::injectPartInputs' args=''/>
+        "
 }
 
 spdAux::Init
@@ -1371,7 +1374,7 @@ proc spdAux::ProcGetSchemes {domNode args} {
         #W "entra"
         get_domnode_attribute [$domNode selectNodes $sol_stat_path] dict
         get_domnode_attribute [$domNode selectNodes $sol_stat_path] values
-    #}
+        #}
     set solStratName [::write::getValue $sol_stratUN]
     #W "Unique name: $sol_stratUN - Nombre $solStratName"
     set schemes [::Model::GetAvailableSchemes $solStratName]
@@ -2044,7 +2047,7 @@ proc spdAux::ProcConditionParameterState {domNode args} {
     set cond_node [$domNode parent]
     if {[$cond_node nodeName] eq "group"} {set cond_node [$cond_node parent]}
     set cond_name [get_domnode_attribute $cond_node n]
-
+    
     set cond [Model::getCondition $cond_name]
     if {$cond eq ""} {
         set cond [Model::getNodalConditionbyId $cond_name]
@@ -2056,14 +2059,14 @@ proc spdAux::ProcConditionParameterState {domNode args} {
     set process [Model::GetProcess $process_name]
     set param [$process getInputPn $param_name]
     if {$param eq ""} {return normal}
-
+    
     set depN [$param getDepN]
     if {$depN ne ""} {
         set depV [$param getDepV]
         set realV [get_domnode_attribute [$domNode selectNodes "../value\[@n='$depN'\]"] v]
         if {$depV ne $realV} {return hidden}
     }
-
+    
     return normal
 }
 
@@ -2120,7 +2123,7 @@ proc spdAux::ProcGetParts {domNode args} {
 proc spdAux::ProcUpdateParts {domNode args} {
     # Algo comun?
     # W "Common"
-
+    
     # Active app executexml
     set nodeApp [GetAppIdFromNode $domNode]
     apps::ExecuteOnAppXML $nodeApp UpdateParts $domNode
