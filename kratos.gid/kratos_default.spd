@@ -11,13 +11,8 @@
 	<appLink n="Structural" public="1" pn="Structural" active="0" appid="Structural" prefix="ST"/>
 	<appLink n="Fluid" public="1" pn="Fluid" active="0" appid="Fluid" prefix="FL"/>
 	<appLink n="EmbeddedFluid" public="0" pn="Embedded fluid" active="0" appid="EmbeddedFluid" prefix="EMBFL"/>
-	<appLink n="PotentialFluid" public="0" pn="Potential fluid" active="0" appid="PotentialFluid" prefix="PTFL"/>
 	<appLink n="FSI" public="1" pn="FSI" active="0" appid="FSI" prefix="FSI"/>
-	<appLink n="Pfem" public="1" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
-	<appLink n="PfemFluid" public="1" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
-	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard"/>
 	<appLink n="DEM" public="1" pn="DEM" active="0" appid="DEM" prefix="DEM"/>
-	<appLink n="MPM" public="1" pn="MPM" active="0" appid="MPM" prefix="MPM"/>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">
 		<value n='units_mesh' pn='Mesh units' unit_mesh_definition="1"/>
 		<value n='units_system' pn='Units system' units_system_definition="1">

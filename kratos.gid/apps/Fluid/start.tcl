@@ -80,7 +80,7 @@ proc ::Fluid::FluidAppSelectorWindow { } {
 
         ttk::frame $w.information  -relief ridge
         set i 0
-        set apps [list Fluid EmbeddedFluid PotentialFluid]
+        set apps [list Fluid EmbeddedFluid]
         foreach app $apps {
             set img [::apps::getImgFrom $app]
             set app_publicname [[::apps::getAppById $app] getPublicName]
@@ -104,11 +104,6 @@ proc ::Fluid::ChangeAppTo {appid} {
             ::spdAux::CreateDimensionWindow
         }
         "EmbeddedFluid" {
-            spdAux::deactiveApp Fluid
-            apps::setActiveApp $appid
-        }
-        "PotentialFluid" {
-            [[customlib::GetBaseRoot] selectNodes "value\[@n='nDim'\]"] setAttribute v undefined
             spdAux::deactiveApp Fluid
             apps::setActiveApp $appid
         }

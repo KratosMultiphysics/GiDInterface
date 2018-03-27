@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<container n="SolStrat" pn="Solver Settings" un="PFEMFLUID_StratSection" icon="settings" help="Solution Strategy" open_window="0">
-  <container n="StratParams" pn="Non-linear solver settings" un="PFEMFLUID_StratParams" icon="select"  state="normal" open_window="0">
-    <dynamicnode command="spdAux::injectSolStratParams" args=""/>
-  </container>
-  <dynamicnode command="spdAux::injectSolvers" args=""/>
-</container>
