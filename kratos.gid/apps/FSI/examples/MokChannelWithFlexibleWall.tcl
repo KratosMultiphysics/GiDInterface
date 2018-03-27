@@ -183,7 +183,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Fluid Parts
     set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
-    set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
+    set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 956.0 VISCOSITY 1.51670E-04 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 956.0 DYNAMIC_VISCOSITY 1.51670E-04]
     foreach {prop val} $props {
@@ -203,7 +203,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     GiD_Groups create "Inlet//Total"
     GiD_Groups edit state "Inlet//Total" hidden
     spdAux::AddIntervalGroup Inlet "Inlet//Total"
-    set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet "Inlet//Total"]
+    set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet "Inlet//Total"]
     $inletNode setAttribute ov $condtype
     set props [list ByFunction Yes function_modulus {0.1214*(1-cos(0.1*pi*t))*y*(1-y) if t<10 else 0.2428*y*(1-y)} direction automatic_inwards_normal Interval Total]
     foreach {prop val} $props {
@@ -217,7 +217,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-    set outletNode [spdAux::AddConditionGroupOnXPath $fluidOutlet Outlet]
+    set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
     set props [list value 0.0]
     foreach {prop val} $props {
@@ -230,14 +230,14 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     }
 
     # Fluid Conditions
-    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" NoSlip] setAttribute ov $condtype
-    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Slip] setAttribute ov $condtype
-    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='FluidNoSlipInterface$nd'\]" FluidInterface] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" NoSlip] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Slip] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='FluidNoSlipInterface$nd'\]" FluidInterface] setAttribute ov $condtype
 
     # Displacement 3D
     if {$nd eq "3D"} {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC3D'\]"
-        set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_full]
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_full]
         $fluidDisplacementNode setAttribute ov surface
         set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -248,7 +248,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
                 W "Warning - Couldn't find property FluidFixedDisplacement_full $prop"
              }
         }
-        set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_lat]
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_lat]
         $fluidDisplacementNode setAttribute ov surface
         set props [list constrainedX 0 constrainedY 0 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -261,7 +261,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
         }
     } {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
-        set fluidDisplacementNode [spdAux::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshBC]
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshBC]
         $fluidDisplacementNode setAttribute ov line
         set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -318,7 +318,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Structural Parts
     set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
-    set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
+    set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
     # set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6 YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45]
@@ -334,7 +334,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Structural Displacement
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
-    set structDisplacementNode [spdAux::AddConditionGroupOnXPath $structDisplacement FixedDisplacement]
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement FixedDisplacement]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
     set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
@@ -347,7 +347,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     }
 
     # Structural Interface
-    spdAux::AddConditionGroupOnXPath "container\[@n='FSI'\]/container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='StructureInterface$nd'\]" StructureInterface
+    customlib::AddConditionGroupOnXPath "container\[@n='FSI'\]/container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='StructureInterface$nd'\]" StructureInterface
 
     # Structure domain time parameters
     set change_list [list EndTime 25.0 DeltaTime 0.1]
