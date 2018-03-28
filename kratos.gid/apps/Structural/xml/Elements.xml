@@ -450,6 +450,13 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
+      <parameter n="PRESTRESS_VECTOR" pn="Membrane prestress" type="inline_vector" v="0,0,0"/>
+      <parameter n="PROJECTION_TYPE_COMBO" pn="Projection type" type="combo" v="rotational" values="rotational,planar,file" >
+        <parameter n="PRESTRESS_AXIS_GLOBAL" pn="Projection direction" type="inline_vector" v="0,0,0" parent="rotational"/>
+        <parameter n="PRESTRESS_AXIS_1_GLOBAL" pn="Projection direction 1" type="inline_vector" v="0,0,0" parent="planar"/>
+        <parameter n="PRESTRESS_AXIS_2_GLOBAL" pn="Projection direction 2" type="inline_vector" v="0,0,0" parent="planar"/>
+        <parameter n="PROJECTION_TYPE_FILEPATH" pn="Projection file" type="tablefile" parent="file" v="- No file"/>
+      </parameter>
     </inputs>
     <outputs>
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />

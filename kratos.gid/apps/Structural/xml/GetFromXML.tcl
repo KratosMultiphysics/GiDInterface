@@ -34,6 +34,13 @@ proc Structural::xml::CustomTree { args } {
     
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
     if {$result_node ne "" } {$result_node delete}
+
+    if {[[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Results]/value\[@n='print_prestress'\]"] eq ""} {
+        gid_groups_conds::addF [spdAux::getRoute Results] value [list n print_prestress pn "Print prestress" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
+    }
+    if {[[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Results]/value\[@n='print_mdpa'\]"] eq ""} {
+        gid_groups_conds::addF [spdAux::getRoute Results] value [list n print_mdpa pn "Print modelpart" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
+    }
 }
 
 proc Structural::xml::ProcCheckGeometryStructural {domNode args} {

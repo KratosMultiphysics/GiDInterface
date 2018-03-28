@@ -1379,10 +1379,18 @@ proc write::getValue { name { it "" } {what noforce} } {
     return [getValueByNode $node]
 }
 
+# anything containing the comma character is a list
 proc write::getFormattedValue {value} {
     set v ""
-    catch {set v [expr $value]}
-    if {$v eq "" } {set v $value}
+    if {[string first , $value] != -1} {
+        set v [list ]
+        foreach part [split $value ,] {
+            lappend v [getFormattedValue $part]
+        }
+    } else {
+        catch {set v [expr $value]}
+        if {$v eq "" } {set v $value}
+    }
     return $v
 }
 
