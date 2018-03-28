@@ -27,8 +27,8 @@
         <inputs>
             <parameter n="constrained" pn="Imposed" type="bool" v="1" />
             <parameter n="value" pn="Value" type="double" function="1" v="0.0" has_units="1"/>
-			<parameter n="hydrostatic_outlet" pn="Add hydrostatic contribution" type="bool" v="0" help="If true, adds the hydrostatic pressure component to the outlet pressure.">
-				<parameter parent="1" n="h_top" pn="Top height" type="double" v="0.0" unit_magnitude="L" units="m" help="Fluid height above the outlet. If equals 0.0 triangular distribution is considered."/>
+			<parameter n="hydrostatic_outlet" pn="Add hydrostatic contribution" type="bool" v="false" help="If true, adds the hydrostatic pressure component to the outlet pressure.">
+				<parameter parent="true" n="h_top" pn="Top height" type="double" v="0.0" unit_magnitude="L" units="m" help="Fluid height above the outlet. If equals 0.0 triangular distribution is considered."/>
 			</parameter>
         </inputs>
     </Process>
