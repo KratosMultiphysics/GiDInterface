@@ -745,7 +745,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             foreach key [$cnd getDefaults $inName] {
                 lappend forcedParams $key [$cnd getDefault $inName $key]
             }
-            append node [GetParameterValueString $in $forcedParams]
+            append node [GetParameterValueString $in $forcedParams $cnd]
         }
         set CondUsesIntervals [$cnd getAttribute "Interval"]
         if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
@@ -757,7 +757,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
     
 }
 
-proc spdAux::GetParameterValueString { param {forcedParams ""}} {
+proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
     set node ""
     
     set inName [$param getName]
@@ -766,7 +766,6 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
     set v [$param getDv]
     set help [$param getHelp]
     set cnd_v ""
-    set base ""
     set units ""
     set um ""
     set n ""
@@ -974,7 +973,7 @@ proc spdAux::injectPartInputs { basenode {inputs ""} } {
                 lappend processeds $inName
                 set forcedParams [list state {[PartParamState]} ]
                 if {[$in getActualize]} { lappend forcedParams base $obj }
-                set node [GetParameterValueString $in $forcedParams]
+                set node [GetParameterValueString $in $forcedParams $obj]
                 
                 $base appendXML $node
                 set orig [$base lastChild]
@@ -996,7 +995,7 @@ proc spdAux::injectMaterials { basenode args } {
         set inputs [$mat getInputs]
         set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='material16' help='Material definition'>"
         foreach {inName in} $inputs {
-            set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]]]
+            set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]] $mat]
             append matnode $node
         }
         append matnode "</blockdata> \n"
