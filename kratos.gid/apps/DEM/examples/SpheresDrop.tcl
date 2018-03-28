@@ -33,7 +33,7 @@ proc ::DEM::examples::DrawGeometry { } {
 proc ::DEM::examples::AssignToTree { } {
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
-    set DEMPartsNode [spdAux::AddConditionGroupOnXPath $DEMParts Body]
+    set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Body]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6]
     foreach {prop val} $props {
         set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
@@ -47,7 +47,7 @@ proc ::DEM::examples::AssignToTree { } {
     # DEM FEM Walls
     set DEMConditions [spdAux::getRoute "DEMConditions"]
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
-    set wallsNode [spdAux::AddConditionGroupOnXPath $walls Floor]
+    set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
     set props [list ]
     foreach {prop val} $props {
@@ -67,7 +67,7 @@ proc ::DEM::examples::AssignToTree { } {
         GiD_Groups create "Inlet//$interval_name"
         GiD_Groups edit state "Inlet//$interval_name" hidden
         spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
-        set inletNode [spdAux::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
+        set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
         $inletNode setAttribute ov surface
         set props [list DIAMETER 0.1 PARTICLE_MATERIAL 2 YOUNG_MODULUS 1.0e6 VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTORX 0.0 DIRECTION_VECTORZ -1.0]
         foreach {prop val} $props {

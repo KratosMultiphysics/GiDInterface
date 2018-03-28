@@ -26,16 +26,35 @@ oo::class create SolverEntry {
     superclass Entity
     variable listofdefaults
     variable defaultvalues
+    variable solver_filters
     
     constructor {n} {
         variable listofdefaults
         variable defaultvalues
+        variable solver_filters
         next $n
         set listofdefaults [list ]
         set defaultvalues [dict create]
+        set solver_filters [dict create]
     }
     method addDefaultSolver {solname} {variable listofdefaults; lappend listofdefaults $solname}
     method getDefaultSolvers {} {variable listofdefaults; return $listofdefaults}
+
+    method setSolverFilters {att val} {variable solver_filters; dict set solver_filters $att $val}
+    method hasSolverFilters {att} {
+        variable solver_filters
+        return [dict exists $solver_filters $att]
+    }
+    method getSolverFilters {att} {
+        variable solver_filters
+        set v ""
+        if {[dict exists $solver_filters $att]} {
+            set v [dict get $solver_filters $att]
+        }
+        return $v
+    }
+    method addSolverFilters {key values} {variable solver_filters; dict set solver_filters $key $values}
+    method getSolverFilters {} {variable solver_filters; return $solver_filters}
 }
 }
 
@@ -89,8 +108,11 @@ proc Model::ParseSolverEntry {st sen} {
     
     set se [::Model::SolverEntry new $n]
     $se setPublicName $pn
+    foreach attr [$sen attributes] {
+        $se setAttribute $attr [$sen getAttribute $attr]
+    }
     foreach f [$sen getElementsByTagName filter] {
-        $se addAttribute [$f @field] [$f @value]    
+        $se addSolverFilters [$f @field] [$f @value]    
     }
     set defnodes [$sen selectNodes "./defaults/solver"]
     if {$defnodes ne ""} {
@@ -103,7 +125,6 @@ proc Model::ParseSolverEntry {st sen} {
     
     return $st
 }
-
 
 proc Model::GetAllSolversParams {} {
     variable Solvers

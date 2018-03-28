@@ -617,9 +617,11 @@ proc write::writeNodalConditions { keyword } {
     }
     foreach group $groups {
         set cid [[$group parent] @n]
-        set groupid [$group @n]
-        set groupid [GetWriteGroupName $groupid]
-        ::write::writeGroupSubModelPart $cid $groupid "nodal"
+        if {[Model::getNodalConditionbyId $cid] ne ""} {
+            set groupid [$group @n]
+            set groupid [GetWriteGroupName $groupid]
+            ::write::writeGroupSubModelPart $cid $groupid "nodal"
+        }
     }
 }
 
@@ -942,8 +944,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
     set schemeName [write::getValue $schemeUN]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
-    
-    
+
+    set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
         dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
     }
@@ -972,8 +974,10 @@ proc write::getSubModelPartNames { args } {
         set groupName [$group @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        set gname [::write::getSubModelPartId $cid $groupName]
-        if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
+        if {[Model::getNodalConditionbyId $cid] ne ""} {
+            set gname [::write::getSubModelPartId $cid $groupName]
+            if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
+        }
     }
     
     return $listOfProcessedGroups
@@ -1034,9 +1038,11 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
-            set grouping_by [[::Model::getCondition $cid] getGroupBy]
+            if {$condition eq ""} {continue}
+            set grouping_by [$condition getGroupBy]
         } {
             set condition [::Model::getNodalConditionbyId $cid]
+            if {$condition eq ""} {continue}
         }
         if {$grouping_by eq "Condition"} {
             # Grouped conditions will be processed later
@@ -1373,10 +1379,18 @@ proc write::getValue { name { it "" } {what noforce} } {
     return [getValueByNode $node]
 }
 
+# anything containing the comma character is a list
 proc write::getFormattedValue {value} {
     set v ""
-    catch {set v [expr $value]}
-    if {$v eq "" } {set v $value}
+    if {[string first , $value] != -1} {
+        set v [list ]
+        foreach part [split $value ,] {
+            lappend v [getFormattedValue $part]
+        }
+    } else {
+        catch {set v [expr $value]}
+        if {$v eq "" } {set v $value}
+    }
     return $v
 }
 

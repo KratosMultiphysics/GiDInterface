@@ -38,7 +38,7 @@ proc EndGIDPostProcess {} {
     }
     ::Kratos::CreatePreprocessModelTBar
 }
- 
+
 # Load GiD project files (initialise XML Tdom structure)
 proc LoadGIDProject { filespd } {
     Kratos::LoadGiDProject $filespd
@@ -54,6 +54,12 @@ proc SaveGIDProject { filespd } {
 proc BeforeTransformProblemType { file oldproblemtype newproblemtype } {
     return "-cancel-"
 }
+proc GiD_Private_Event_AfterTransformProblemType { filename old_problemtype new_problemtype } {
+    
+}
+proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
+    
+}
 
 proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
     set spd_file [file join $filename.gid [file tail $filename].spd]
@@ -66,7 +72,7 @@ proc AfterWriteCalcFileGIDProject { filename errorflag } {
         if {$errcode} {return "-cancel-"}
     } else {
         if {$Kratos::must_exist_calc_data} {
-
+            
         }
     }
 }
@@ -89,7 +95,7 @@ proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args 
         return ""
     } {
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
-
+        
     }
     
 }
@@ -111,10 +117,10 @@ proc AfterRenameGroup { oldname newname } {
 #################### Kratos namespace ####################
 ##########################################################
 namespace eval Kratos {
-  variable kratos_private
-  variable must_quit
-  variable must_write_calc_data
-  variable must_exist_calc_data
+    variable kratos_private
+    variable must_quit
+    variable must_write_calc_data
+    variable must_exist_calc_data
 }
 
 proc Kratos::InitGIDProject { dir } {
@@ -134,7 +140,7 @@ proc Kratos::InitGIDProject { dir } {
     if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
         WarnWin [_ "Error: %s Interface requires GiD %s or later." $kratos_private(Name) $kratos_private(MinimumGiDVersion)]
     }
-     
+    
     #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
     if { [lsearch -exact $::auto_path [file join $dir scripts]] == -1 } {
         lappend ::auto_path [file join $dir scripts]
@@ -144,7 +150,7 @@ proc Kratos::InitGIDProject { dir } {
     foreach filename {Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
-
+    
     # JG Sources will be in a different proc
     foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
         uplevel 1 [list source [file join $dir scripts Model $filename]]
@@ -293,7 +299,7 @@ proc Kratos::RegisterEnvironment { } {
     dict set preferences DevMode $kratos_private(DevMode)
     #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
     set fp [open [Kratos::GetPreferencesFilePath] w]
-    if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W [="Problems saving user prefecences"]; W $data}
+    if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
     close $fp
 }
 
@@ -367,7 +373,7 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
 }
 
 proc Kratos::AfterMeshGeneration {fail} {
-        apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
+    apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
 }
 
 proc Kratos::CheckValidProjectName {modelname} {

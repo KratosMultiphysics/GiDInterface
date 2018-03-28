@@ -349,6 +349,7 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION" />
+      <NodalCondition n="CONTACT"/>
       <NodalCondition n="VELOCITY" />
       <NodalCondition n="ACCELERATION" />
       <NodalCondition n="ANGULAR_VELOCITY"/>
@@ -382,6 +383,7 @@
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION" />
+      <NodalCondition n="CONTACT"/>
       <NodalCondition n="VELOCITY" />
       <NodalCondition n="ACCELERATION" />
       <NodalCondition n="ANGULAR_VELOCITY"/>
@@ -448,6 +450,13 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
+      <parameter n="PRESTRESS_VECTOR" pn="Membrane prestress" type="inline_vector" v="0,0,0"/>
+      <parameter n="PROJECTION_TYPE_COMBO" pn="Projection type" type="combo" v="rotational" values="rotational,planar,file" >
+        <parameter n="PRESTRESS_AXIS_GLOBAL" pn="Projection direction" type="inline_vector" v="0,0,0" parent="rotational"/>
+        <parameter n="PRESTRESS_AXIS_1_GLOBAL" pn="Projection direction 1" type="inline_vector" v="0,0,0" parent="planar"/>
+        <parameter n="PRESTRESS_AXIS_2_GLOBAL" pn="Projection direction 2" type="inline_vector" v="0,0,0" parent="planar"/>
+        <parameter n="PROJECTION_TYPE_FILEPATH" pn="Projection file" type="tablefile" parent="file" v="- No file"/>
+      </parameter>
     </inputs>
     <outputs>
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
@@ -472,6 +481,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
       <inputs></inputs>
       <outputs>
@@ -497,6 +507,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
       <inputs>
       </inputs>
@@ -523,6 +534,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
       <inputs></inputs>
       <outputs>
@@ -548,6 +560,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
       <inputs>
       </inputs>
@@ -575,6 +588,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -601,6 +615,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -627,6 +642,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -653,6 +669,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -680,6 +697,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
      </inputs>
@@ -706,6 +724,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
     <inputs>
      </inputs>

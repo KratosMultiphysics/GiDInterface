@@ -183,10 +183,11 @@ proc Model::ParseElemNode { node } {
     }
     set inputs_node [$node getElementsByTagName inputs]
     if {$inputs_node ne "" && [$inputs_node hasChildNodes]} {
-        foreach in [$inputs_node childNodes]  {
+        foreach in [$inputs_node getElementsByTagName parameter]  {
             set el [ParseInputParamNode $el $in]
         }
     }
+    
     set outputs_node [$node getElementsByTagName outputs]
     if {$outputs_node ne "" && [$outputs_node hasChildNodes]} {
         foreach out [$outputs_node childNodes] {
@@ -377,7 +378,17 @@ proc Model::CheckElemParamState {node} {
     }
     if {$elem eq ""} {return 0}
 
-    return [CheckElemState $elem $id]
+    set ret [CheckElemState $elem $id]
+    if {$ret} {
+        set param [dict get [[getElement $elem] getInputs] $id]
+        set depN [$param getDepN]
+        if {$depN ne ""} {
+            set depV [$param getDepV]
+            set realV [get_domnode_attribute [$node selectNodes "../value\[@n='$depN'\]"] v]
+            if {$depV ne $realV} {set ret 0}
+        }
+    }
+    return $ret
 }
 
 proc Model::CheckElementOutputState {elemsactive paramName} {

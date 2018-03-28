@@ -51,4 +51,8 @@ proc ::Structural::GetAttribute {name} {
     return $value
 }
 
+proc ::Structural::BeforeMeshGeneration { size } { 
+    GiD_AssignData condition relation_line_geo_mesh Lines {0} all
+}
+
 ::Structural::Init

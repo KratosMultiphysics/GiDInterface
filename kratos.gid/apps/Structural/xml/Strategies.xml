@@ -12,9 +12,15 @@
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
         </parameter_list>
         <linearSolvers>
-            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" help="Default solver Super LU">
+            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" help="Default solver Super LU" filter="STSoluType {Static Quasi-static Dynamic formfinding}">
                 <filterFeatures>
                     <filter field="SolverType" value="Standard"/>
+                </filterFeatures>
+                <defaults></defaults>
+            </linearSolverItem>
+            <linearSolverItem n="eigensolver_settings" pn="Eigen Solver" help="Only for Eigensolver" filter="STSoluType eigen_value">
+                <filterFeatures>
+                    <filter field="SolverType" value="eigen_value"/>
                 </filterFeatures>
                 <defaults></defaults>
             </linearSolverItem>
@@ -34,7 +40,33 @@
             </scheme>
         </schemes>
     </StrategyItem>
-    <StrategyItem n="static" pn="Static" SolutionType="Static" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
+    <StrategyItem n="Eigen" pn="Eigen" SolutionType="eigen_value" ImplementedInFile="structural_mechanics_eigensolver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_eigensolver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="">
+        <parameter_list>
+        </parameter_list>
+        <linearSolvers>
+            <linearSolverItem n="eigensolver_settings" pn="Eigen Solver" help="Only for Eigensolver" filter="STSoluType eigen_value">
+                <filterFeatures>
+                    <filter field="SolverType" value="eigen_value"/>
+                </filterFeatures>
+                <defaults></defaults>
+            </linearSolverItem>
+        </linearSolvers>
+        <schemes>
+            <scheme n="dynamic" pn="Dynamic" help="Modal Analysis" ProductionReady="ProductionReady">
+                <parameter_list></parameter_list>
+                <element_filters>
+                    <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
+                </element_filters>
+            </scheme>
+            <!-- <scheme n="stability" pn="Stability" help="" ProductionReady="Developer">
+                <parameter_list></parameter_list>
+                <element_filters>
+                    <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
+                </element_filters>
+            </scheme> -->
+        </schemes>
+    </StrategyItem>
+    <StrategyItem n="static" pn="Static" SolutionType="Static formfinding" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
         <parameter_list>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
             <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,and_criterion,or_criterion"
@@ -46,7 +78,7 @@
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
         </parameter_list>
         <linearSolvers>
-            <linearSolverItem n="linear_solver_settings" pn="Linear Solver">
+            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" filter="STSoluType {Static Quasi-static Dynamic formfinding}">
                 <filterFeatures>
                     <filter field="SolverType" value="Standard"/>
                 </filterFeatures>
