@@ -171,11 +171,11 @@ proc spdAux::CreateWindow {} {
     
     set activeapp_node [$::gid_groups_conds::doc selectNodes "//hiddenfield\[@n='activeapp'\]"]
     if {$activeapp_node ne ""} {
-            set activeapp [get_domnode_attribute $activeapp_node v]
-        } else {
-            return ""   
-        }
-        if {[winfo exist $initwind]} {destroy $initwind}
+        set activeapp [get_domnode_attribute $activeapp_node v]
+    } else {
+        return ""   
+    }
+    if {[winfo exist $initwind]} {destroy $initwind}
         
     if { $activeapp ne "" } {
         apps::setActiveApp $activeapp
@@ -799,6 +799,10 @@ proc spdAux::GetParameterValueString { param {forcedParams ""}} {
             }
         }
         switch $type {
+            "inline_vector" {
+
+                append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector'  help='$help'  state='$state' />"
+            }
             "vector" {
                 set vector_type [$param getAttribute "vectorType"]
                 lassign [split $v ","] vX vY vZ
