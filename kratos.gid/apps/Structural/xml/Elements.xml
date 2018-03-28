@@ -450,12 +450,12 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-      <parameter n="MEMBRANE_PRESTRESS" pn="Membrane prestress" type="inline_vector" v="0,0,0"/>
+      <parameter n="PRESTRESS_VECTOR" pn="Membrane prestress" type="inline_vector" v="0,0,0"/>
       <parameter n="PROJECTION_TYPE_COMBO" pn="Projection type" type="combo" v="rotational" values="rotational,planar,file" >
-        <parameter n="PROJECTION_TYPE" pn="Projection" type="inline_vector" parent="rotational"/>
-        <parameter n="PROJECTION_TYPE_1" pn="Projection X" type="inline_vector" parent="planar"/>
-        <parameter n="PROJECTION_TYPE_2" pn="Projection Y" type="inline_vector" parent="planar"/>
-        <parameter n="PROJECTION_TYPE_file" pn="Projection" type="tablefile" parent="file"/>
+        <parameter n="PRESTRESS_AXIS_GLOBAL" pn="Projection direction" type="inline_vector" v="0,0,0" parent="rotational"/>
+        <parameter n="PRESTRESS_AXIS_1_GLOBAL" pn="Projection direction 1" type="inline_vector" v="0,0,0" parent="planar"/>
+        <parameter n="PRESTRESS_AXIS_2_GLOBAL" pn="Projection direction 2" type="inline_vector" v="0,0,0" parent="planar"/>
+        <parameter n="PROJECTION_TYPE_FILEPATH" pn="Projection file" type="tablefile" parent="file" v="- No file"/>
       </parameter>
     </inputs>
     <outputs>
