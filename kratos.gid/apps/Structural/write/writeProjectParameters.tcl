@@ -49,6 +49,19 @@ proc Structural::write::getOldParametersDict { } {
         dict set params "label_type" "frequency"
         dict set eigen_process_dict "Parameters" $params
     }
+    if {$solutiontype eq "formfinding"} {
+        set formfinding_process_dict [dict create]
+        dict set formfinding_process_dict python_module formfinding_IO_process
+        dict set formfinding_process_dict kratos_module KratosMultiphysics.StructuralMechanicsApplication
+        dict set formfinding_process_dict help "This process is for input and output of prestress data"
+        dict set formfinding_process_dict process_name "FormfindingIOProcess"
+        set params [dict create]
+        dict set params "model_part_name" $model_part_name
+        dict set params "print_mdpa" [write::getValue Results print_prestress]
+        dict set params "print_prestress" [write::getValue Results print_mdpa]
+        dict set params "read_prestress" [Structural::write::UsingFileInPrestressedMembrane]
+        dict set formfinding_process_dict "Parameters" $params
+    }
     set echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict echo_level $echo_level
     # Add section to document
@@ -125,6 +138,9 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict list_other_processes [list ]
     if {$solutiontype eq "eigen_value"} {
         dict lappend projectParametersDict list_other_processes $eigen_process_dict
+    }    
+    if {$solutiontype eq "formfinding"} {
+        dict lappend projectParametersDict list_other_processes $formfinding_process_dict
     }
 
     # GiD output configuration
@@ -212,4 +228,19 @@ proc Structural::write::UsingRotationDofElements { } {
     }
 
     return $bool
+}
+proc Structural::write::UsingFileInPrestressedMembrane { } {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
+    set elements [$root selectNodes $xp1]
+    set found false
+    foreach element_node $elements {
+        set elemid [$element_node @v]
+        if {$elemid eq "PrestressedMembraneElement"} {
+            set selector [write::getValueByNode [$element_node selectNodes "../value\[@n = 'PROJECTION_TYPE_COMBO'\]"]]
+            if {$selector eq "file"} {set found true; break}
+        }
+    }
+
+    return $found
 }
