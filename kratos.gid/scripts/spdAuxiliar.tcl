@@ -2124,8 +2124,18 @@ proc spdAux::ProcGetParts {domNode args} {
 }
 
 proc spdAux::ProcUpdateParts {domNode args} {
-    # Algo comun?
-    # W "Common"
+    set current [lindex [$domNode selectNodes "./group"] end]
+    # If a parameter type is file and the option selected is select file -> open it
+    set file_params [$current selectNodes "./value\[@type = 'tablefile' and @v = '- Add new file'\]"]
+    
+    if {[llength $file_params] > 1} {
+        W "Remember to load the files in:"
+        foreach file $file_params {
+            W "    [get_domnode_attribute $file pn]"
+        }
+    } elseif {[llength $file_params] == 1} {
+        spdAux::AddFile $file_params
+    }
     
     # Active app executexml
     set nodeApp [GetAppIdFromNode $domNode]
