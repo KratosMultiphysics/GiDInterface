@@ -113,8 +113,6 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     dict set modelDataDict bodies_list $bodies_list
     dict set modelDataDict domain_parts_list $bodies_parts_list
     dict set modelDataDict processes_parts_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
-
-    dict set modelDataDict dofs [list {*}[DofsInElements] ]
     
     return $modelDataDict
 }
@@ -176,6 +174,9 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     # Linear solver settings
     set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Pfem] ]
 
+    # Add Dofs
+    dict set solverParametersDict dofs [list {*}[DofsInElements] ]
+    
     dict set solverSettingsDict Parameters $solverParametersDict
 
 
