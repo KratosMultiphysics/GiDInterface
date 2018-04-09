@@ -205,15 +205,21 @@ proc Structural::write::writeParametersEvent { } {
 
 # Project Parameters
 proc Structural::write::getParametersEvent { } {
+    # Get the base dictionary for the project parameters
     set project_parameters_dict [getOldParametersDict]
+
+    # If using any element with the attribute RotationDofs set to true
     dict set project_parameters_dict solver_settings rotation_dofs [UsingRotationDofElements]
+
+    # Merging the old solver_settings with the common one for this app
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
     dict set project_parameters_dict solver_settings $solverSettingsDict
+
     return $project_parameters_dict
 }
 proc Structural::write::writeParametersEvent { } {
-    write::WriteJSON [getParametersEvent]
+    write::WriteJSON [::Structural::write::getParametersEvent]
 }
 
 proc Structural::write::UsingRotationDofElements { } {

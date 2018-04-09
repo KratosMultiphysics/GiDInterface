@@ -30,7 +30,7 @@ proc write::Init { } {
     
     variable MDPA_loop_control
     set MDPA_loop_control 0
-
+    
     set current_mdpa_indent_level 0
     
 }
@@ -187,7 +187,7 @@ proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
     
     set exclusionList [list "MID" "APPID" "Material" "Element"]
     if {$const_law_write_name eq ""} {lappend exclusionList "ConstitutiveLaw"}
-
+    
     # We print all the material data directly from the saved dictionary
     foreach material [dict keys $mat_dict] {
         set matapp [dict get $mat_dict $material APPID]
@@ -291,8 +291,8 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
                     
                     # if {[string is double $value]} {
-                    #     set value [format "%13.5E" $value]
-                    # }
+                        #     set value [format "%13.5E" $value]
+                        # }
                     dict set mat_dict $group $name $value
                 }
             }
@@ -413,11 +413,11 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
 
 proc write::writeGroupCondition {groupid kname nnodes iter} {
     set obj [list ]
-
+    
     # Print header
     set s [mdpaIndent]
     WriteString "${s}Begin Conditions $kname// GUI group identifier: $groupid"
-
+    
     # Get the entities to print
     if {$nnodes == 1} {
         set formats [dict create $groupid "%10d \n"]
@@ -427,7 +427,7 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
         set elems [GiD_WriteCalculationFile connectivities -return $formats]
         set obj [GetListsOfNodes $elems $nnodes 2]
     }
-
+    
     # Print the conditions and it's connectivities
     set initial $iter
     incr ::write::current_mdpa_indent_level
@@ -438,11 +438,11 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
     }
     set final [expr $iter -1]
     incr ::write::current_mdpa_indent_level -1
-
+    
     # Print the footer
     WriteString "${s}End Conditions"
     WriteString ""
-
+    
     return [list $initial $final]
 }
 
@@ -496,7 +496,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         set good_name [write::transformGroupName $group]
         set mid "${cid}_${good_name}"
         dict set submodelparts [list $cid ${group}] $mid
-
+        
         # Prepare the print formats
         incr ::write::current_mdpa_indent_level
         set s1 [mdpaIndent]
@@ -508,7 +508,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
-
+        
         # Print header
         set s [mdpaIndent]
         WriteString "${s}Begin SubModelPart $mid // Group $group // Subtree $cid"
@@ -565,7 +565,7 @@ proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
         if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
         write::writeGroupSubModelPart $cid $group $what $iniend $tableid_list
     }
-
+    
     incr ::write::current_mdpa_indent_level -1
     WriteString "${s}End SubModelPart"
 }
@@ -944,7 +944,7 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
     set schemeName [write::getValue $schemeUN]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
-
+    
     set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
         dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
@@ -1164,14 +1164,14 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
             lappend bcCondsDict $processDict
         }
     }
-
+    
     foreach cid $grouped_conditions {
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
         } {
             set condition [::Model::getNodalConditionbyId $cid]
         }
-
+        
         set processName [$condition getProcessName]
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
@@ -1376,9 +1376,13 @@ proc write::getValue { name { it "" } {what noforce} } {
     
     set xp [spdAux::getRoute $name]
     set node [$root selectNodes $xp]
-    if {$it ne ""} {set node [$node find n $it]}
-    if {$what eq "force"} {write::forceUpdateNode $node}
-    return [getValueByNode $node]
+    if {$node ne ""} {
+        if {$it ne ""} {set node [$node find n $it]}
+        if {$what eq "force"} {write::forceUpdateNode $node}
+        return [getValueByNode $node]
+    } {
+        return ""
+    }
 }
 
 # anything containing the comma character is a list
