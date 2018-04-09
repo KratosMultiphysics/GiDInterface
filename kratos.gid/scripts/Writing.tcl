@@ -995,9 +995,11 @@ proc write::getSolversParametersDict { {appid ""} } {
     foreach se [$sol getSolversEntries] {
         set solverEntryDict [dict create]
         set un [apps::getAppUniqueName $appid "$solstratName[$se getName]"]
-        if {[spdAux::getRoute $un] ne ""} {
+        set solver_entry_node [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute $un]]
+        set solver_entry_state [get_domnode_attribute $solver_entry_node state]
+        if {[spdAux::getRoute $un] ne "" && $solver_entry_state ne "hidden"} {
             set solverName [write::getValue $un Solver]
-            if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI" "Automatic"]} {
+            if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI" "Automatic" ""]} {
                 dict set solverEntryDict solver_type $solverName
                 set solver [::Model::GetSolver $solverName]
                 foreach {n in} [$solver getInputs] {
