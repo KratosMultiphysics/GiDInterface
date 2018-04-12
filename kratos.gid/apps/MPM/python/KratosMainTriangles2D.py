@@ -398,11 +398,17 @@ result_file.write("GiD Post Results File 1.0\n")
 #for element in model_part2.Elements:
     #node.SetSolutionStepValue(VOLUME_ACCELERATION_Y,0, -9.81) 
     #element.SetValue(MP_VOLUME_ACCELERATION,(0,-9.81,0))
-      
+
+#assign gravitational acceleration (after pybind)
+grav_acceleration = Vector(3)
+grav_acceleration[0] = 0.0
+grav_acceleration[1] = -9.81
+grav_acceleration[2] = 0.0
+
 for element in model_part3.Elements:
     
     #if(element.Properties[DENSITY] < 2000):
-    element.SetValue(MP_VOLUME_ACCELERATION,(0,-9.81,0)) 
+    element.SetValue(MP_VOLUME_ACCELERATION,grav_acceleration) 
         
     #if(element.Id <= 7169 and element.Id >= 6481):
     #if(element.Properties[DENSITY] == 7870):
@@ -450,9 +456,9 @@ while(current_time < ending_time):
 
   #for elem in model_part3.Elements:
       #gauss_coord = elem.GetValue(GAUSS_COORD)
-      #if(gauss_coord[0] < -0.055 or gauss_coord[0] > 0.055 ):
-          #print('gauss_coord y', gauss_coord[1])
-          #print('el id', elem.Id)
+      ##These are specific coordinates for the current problem case.
+      #if(gauss_coord[0] < 0.00 or gauss_coord[0] > 1.00 or gauss_coord[1] < 0.00 or gauss_coord[1] > 0.50 or gauss_coord[2] < -1.00 or gauss_coord[2] > 0.00 ): 
+          #print('element id = ', elem.Id, 'is out of the possible range. Set it to erase.')
           #elem.Set(TO_ERASE, True)
 
   #ParticleEraseProcess(model_part3).Execute()
