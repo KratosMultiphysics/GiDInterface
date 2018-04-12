@@ -400,10 +400,7 @@ result_file.write("GiD Post Results File 1.0\n")
     #element.SetValue(MP_VOLUME_ACCELERATION,(0,-9.81,0))
 
 #assign gravitational acceleration (after pybind)
-grav_acceleration = Vector(3)
-grav_acceleration[0] = 0.0
-grav_acceleration[1] = -9.81
-grav_acceleration[2] = 0.0
+grav_acceleration = Vector([0.0,-9.81,0.0])
 
 for element in model_part3.Elements:
     
