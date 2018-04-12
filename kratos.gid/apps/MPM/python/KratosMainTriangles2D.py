@@ -120,7 +120,7 @@ main_step_solver = solver_constructor.CreateSolver(model_part1, model_part2, mod
 
 # set the restart of the problem
 restart_step = general_variables.Restart_Step
-problem_restart = restart_utils.RestartUtility(model_part1, problem_path, problem_name)
+#problem_restart = restart_utils.RestartUtility(model_part1, problem_path, problem_name)
 
 # set the results file list of the problem (managed by the problem_restart and gid_print)
 print_lists = general_variables.PrintLists
