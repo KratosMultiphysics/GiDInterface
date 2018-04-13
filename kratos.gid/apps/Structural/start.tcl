@@ -42,6 +42,10 @@ proc ::Structural::CustomToolbarItems { } {
 
 proc ::Structural::CustomMenus { } {
     Structural::examples::UpdateMenus
+
+    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "Formfinding - Update geometry" ] end POST [list ::Structural::Formfinding::UpdateGeometry] "" "" insert =
+    GiDMenu::UpdateMenus
 }
 
 proc ::Structural::GetAttribute {name} {
