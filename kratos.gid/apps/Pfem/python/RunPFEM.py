@@ -4,7 +4,7 @@ import KratosMultiphysics.PfemApplication
 import KratosMultiphysics.PfemFluidDynamicsApplication     
 import KratosMultiphysics.SolidMechanicsApplication
 
-import MainFluidPFEM
+import MainSolid
 
-MainFluidPFEM.Solution().Run()
+MainSolid.Solution().Run()
 
