@@ -19,6 +19,7 @@ proc Structural::write::Init { } {
     SetAttribute materials_un STMaterials
     SetAttribute conditions_un STLoads
     SetAttribute nodal_conditions_un STNodalConditions
+    SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
 }
@@ -94,18 +95,19 @@ proc Structural::write::writeModelPartEvent { } {
     # Local Axes
     Structural::write::writeLocalAxes
 
+    # Hinges special section
+    Structural::write::writeHinges
+
     # Nodal conditions and conditions
-    writeConditions
+    Structural::write::writeConditions
 
     # SubmodelParts
-    writeMeshes
+    Structural::write::writeMeshes
 
     # Custom SubmodelParts
     set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
-
 }
-
 
 proc Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
@@ -114,6 +116,14 @@ proc Structural::write::writeConditions { } {
 
 proc Structural::write::writeMeshes { } {
     
+    # There are some Conditions and nodalConditions that dont generate a submodelpart
+    # Add them to this list
+    set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
+    set special_nodal_conditions [list ]
+    foreach cnd_name $special_nodal_conditions_dont_generate_submodelpart_names {
+        lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
+        Model::ForgetNodalCondition $cnd_name
+    }
     write::writePartSubModelPart
     
     # Solo Malla , no en conditions
@@ -121,6 +131,11 @@ proc Structural::write::writeMeshes { } {
     
     # A Condition y a meshes-> salvo lo que no tenga topologia
     writeLoads
+
+    # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
+    foreach cnd $special_nodal_conditions {
+        lappend ::Model::NodalConditions $cnd
+    }
 }
 
 proc Structural::write::writeLoads { } {
@@ -193,6 +208,72 @@ proc Structural::write::writeLocalAxes { } {
                 write::WriteString "End ElementalData"
                 write::WriteString ""
             }
+        }
+    }
+}
+
+# This is the kind of code I hate
+proc Structural::write::writeHinges { } {
+
+    # Preprocess old_conditions. Each mesh linear element remembers the origin line in geometry
+    set match_dict [dict create]
+    foreach line [GiD_Info conditions relation_line_geo_mesh mesh] {
+        lassign $line E eid - geom_line
+        dict lappend match_dict $geom_line $eid
+    }
+
+    # Process groups assigned to Hinges
+    set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set group [$gNode @n]
+        
+        # If the group has any line
+        if {[GiD_EntitiesGroups get $group lines -count] > 0} {
+            # Print the header once per group
+            write::WriteString "Begin ElementalData CONDENSED_DOF_LIST // Group: $group"
+            
+            # Get the tree data for this group
+            set first_list [list ]
+            set last_list [list ]
+            if {$::Model::SpatialDimension eq "3D"} {
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementZ']"] v]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentX']"] v]]} {lappend first_list 3}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentY']"] v]]} {lappend first_list 4}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 5}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 6}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 7}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementZ']"] v]]} {lappend last_list 8}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentX']"] v]]} {lappend last_list 9}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentY']"] v]]} {lappend last_list 10}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 11}
+            } else {
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 3}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 4}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 5}
+            }
+
+            # Write Left and Rigth end of each geometrical bar
+            foreach geom_line [GiD_EntitiesGroups get $group lines] {
+                set linear_elements [dict get $match_dict $geom_line]
+                set first [::tcl::mathfunc::min {*}$linear_elements]
+                set end [::tcl::mathfunc::max {*}$linear_elements]
+                if {[llength $first_list] > 0} {
+                    set value [join $first_list ,]
+                    write::WriteString [format "%5d \[%d\] (%s)" $first [llength $first_list] $value]
+                }
+                if {[llength $last_list] > 0} {
+                    set value [join $last_list ,]
+                    write::WriteString [format "%5d \[%d\] (%s)" $end [llength $last_list] $value]
+                }
+            } 
+            # Write the tail
+            write::WriteString "End ElementalData"
+            write::WriteString ""
         }
     }
 }

@@ -125,7 +125,7 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
     set condtype line
     if {$nd eq "3D"} { set condtype surface }
     set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
-    set fluidNode [spdAux::AddConditionGroupOnXPath $fluidParts Fluid]
+    set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     set props [list Element FractionalStep$nd ConstitutiveLaw Newtonian DENSITY 956.0 VISCOSITY 0.145 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
@@ -141,7 +141,7 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
     
     # Fluid Inlet
-    set inletNode [spdAux::AddConditionGroupOnXPath $fluidInlet Inlet]
+    set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet Inlet]
     $inletNode setAttribute ov $condtype
     set props [list ByFunction No modulus 0.6067 direction automatic_inwards_normal Interval Total]
     foreach {prop val} $props {
@@ -155,7 +155,7 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-    set outletNode [spdAux::AddConditionGroupOnXPath $fluidOutlet Outlet]
+    set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
     set props [list value 0.0]
     foreach {prop val} $props {
@@ -168,10 +168,10 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
     }
     # Fluid Conditions
     if {$nd eq "3D"} {
-        [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" NoSlip] setAttribute ov $condtype
+        [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" NoSlip] setAttribute ov $condtype
     }
-    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Slip] setAttribute ov $condtype
-    [spdAux::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='FluidNoSlipInterface$nd'\]" FluidInterface] setAttribute ov $condtype  
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Slip] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='FluidNoSlipInterface$nd'\]" FluidInterface] setAttribute ov $condtype  
     
     # Displacement 3D
     if {$nd eq "3D"} {
@@ -193,7 +193,7 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
     
     # Structural Parts
     set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
-    set structPartsNode [spdAux::AddConditionGroupOnXPath $structParts Structure]
+    set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStrain2DLaw"}]
     set props [list Element SmallDisplacementElement$nd ConstitutiveLaw $constLawNameStruc SECTION_TYPE 0 THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6]

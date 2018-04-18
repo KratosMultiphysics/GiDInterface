@@ -183,10 +183,9 @@
     </schemes>
 	
 </StrategyItem>
-<StrategyItem n="TwoStepVPStrategy" pn="Fractional Step (Fluid)" SolutionType="Dynamic"
-	      ImplementedInFile="pfem_fluid_solver.py"
+<StrategyItem n="SegregatedVPStrategy" pn="Segregated Step (Fluid)" SolutionType="Dynamic"
 	      kratos_module="PfemFluidDynamicsApplication"
-	      python_module="pfem_fluid_solver"
+	      python_module="segregated_implicit_solver"
 	      MinimumKratosVersion="9000" App="Pfem"
 	      ProductionReady="No"
 	      help="">
@@ -196,7 +195,6 @@
     <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="7" help=""/>  
     <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-5" help=""/>  
     <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-5" help=""/>  
-    <parameter n="echo_level" pn="Echo level" type="int" v="1" help=""/>  
   </parameter_list>
   
   <linearSolvers>
@@ -244,7 +242,7 @@
       <element_filters>
 	<filter field="kratos_module" value="PfemFluidDynamicsApplication,ContactMechanicsApplication"/>
       </element_filters>
-      </scheme> -->
+      </scheme>
   </schemes>
   
 </StrategyItem>

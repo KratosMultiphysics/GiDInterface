@@ -16,6 +16,7 @@ proc Structural::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
+    Model::getSolvers Solvers.xml
 }
 
 proc Structural::xml::getUniqueName {name} {
@@ -33,6 +34,13 @@ proc Structural::xml::CustomTree { args } {
     
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
     if {$result_node ne "" } {$result_node delete}
+
+    if {[[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Results]/value\[@n='print_prestress'\]"] eq ""} {
+        gid_groups_conds::addF [spdAux::getRoute Results] value [list n print_prestress pn "Print prestress" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
+    }
+    if {[[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Results]/value\[@n='print_mdpa'\]"] eq ""} {
+        gid_groups_conds::addF [spdAux::getRoute Results] value [list n print_mdpa pn "Print modelpart" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
+    }
 }
 
 proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
@@ -43,8 +51,7 @@ proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     return $ret
 }
 
-
-proc Structural::xml::ProcGetSolutionStrategiesSolid { domNode args } {
+proc Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
     set names ""
     set pnames ""
     set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]

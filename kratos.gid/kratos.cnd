@@ -29,4 +29,11 @@ CANREPEAT: yes
 QUESTION: pair_name
 VALUE: -
 END CONDITION
+CONDITION: relation_line_geo_mesh
+CONDTYPE: over lines
+CONDMESHTYPE: over body elements
+CANREPEAT: no
+QUESTION: id#FUNC#(NumEntity)
+VALUE: 0
+END CONDITION
 

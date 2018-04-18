@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Solvers>
+
+    <solver n="eigen_eigensystem" pn="Eigen" SolverType="eigen_value" Parallelism="OpenMP">
+        <inputs>
+            <parameter n="max_iteration" pn="Max iterations" type="integer" v="1000" help=""/>
+            <parameter n="tolerance" pn="Tolerance" type="integer" v="1e-6" help=""/>
+			<parameter n="number_of_eigenvalues" pn="Number of eigenvalues" type="integer"  v="5" help=""/>
+			<parameter n="echo_level" pn="Echo level" type="combo" v="1" values="0,1,2,3" help=""/>
+        </inputs>
+    </solver>
+
+</Solvers>

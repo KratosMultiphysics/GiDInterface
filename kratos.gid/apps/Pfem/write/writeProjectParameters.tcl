@@ -27,8 +27,37 @@ proc Pfem::write::getParametersDict { } {
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set projectParametersDict loads_process_list [Pfem::write::getConditionsParametersDict PFEM_Loads]
+    set loads_list [Pfem::write::getConditionsParametersDict PFEM_Loads]
 
+    set problemtype [write::getValue PFEM_DomainType]
+    if {$problemtype ne "Solids"} {
+
+	set cx [write::getValue FLGravity Cx]
+	set cy [write::getValue FLGravity Cy]
+	set cz [write::getValue FLGravity Cz]
+       
+	set fluid_bodies_list [Pfem::write::GetFluidBodies]
+
+	foreach body $fluid_bodies_list {
+
+	    set processDict [dict create]
+	    set parametersDict [dict create]
+	        
+	    dict set parametersDict "model_part_name" $body	    
+	    dict set parametersDict "variable_name" "VOLUME_ACCELERATION"
+	    dict set parametersDict "value" [list $cx $cy $cz]
+	    dict set parametersDict "constrained" false
+
+	    dict set processDict python_module "assign_vector_components_to_nodes_process"
+	    dict set processDict kratos_module "KratosMultiphysics.SolidMechanicsApplication"
+	    dict set processDict Parameters $parametersDict
+	    
+	    lappend loads_list $processDict
+	}
+    }
+
+    dict set projectParametersDict loads_process_list $loads_list
+    
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
     dict set projectParametersDict output_process_list $output_process_list
@@ -42,16 +71,17 @@ proc Pfem::write::GetPFEM_ProblemDataDict { } {
     set problemDataDict [dict create]
     dict set problemDataDict problem_name [file tail [GiD_Info Project ModelName]]
 
-
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
+    
     #dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
-    set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Solids"} {
-	set cx [write::getValue FLGravity Cx]
-	set cy [write::getValue FLGravity Cy]
-	set cz [write::getValue FLGravity Cz]
-	dict set problemDataDict gravity_vector [list $cx $cy $cz]
-    }
+    
+    #set problemtype [write::getValue PFEM_DomainType]
+    #if {$problemtype ne "Solids"} {
+    #	set cx [write::getValue FLGravity Cx]
+    #	set cy [write::getValue FLGravity Cy]
+    #	set cz [write::getValue FLGravity Cz]
+    #	dict set problemDataDict gravity_vector [list $cx $cy $cz]
+    #}
 
     return $problemDataDict
 }
@@ -83,8 +113,6 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     dict set modelDataDict bodies_list $bodies_list
     dict set modelDataDict domain_parts_list $bodies_parts_list
     dict set modelDataDict processes_parts_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
-
-    dict set modelDataDict dofs [list {*}[DofsInElements] ]
     
     return $modelDataDict
 }
@@ -128,9 +156,9 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
 	set buffer 3
 	dict set integrationDataDict "buffer_size" [expr $buffer]
-    }
 
-    dict set solverParametersDict time_integration_settings $integrationDataDict
+	dict set solverParametersDict time_integration_settings $integrationDataDict
+    }
 
     # Solving strategy settings
     set strategyDataDict [dict create]
@@ -146,6 +174,9 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     # Linear solver settings
     set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Pfem] ]
 
+    # Add Dofs
+    dict set solverParametersDict dofs [list {*}[DofsInElements] ]
+    
     dict set solverSettingsDict Parameters $solverParametersDict
 
 
@@ -269,6 +300,20 @@ proc Pfem::write::GetPfem_ContactProcessDict {contact_name} {
     dict set cont_dict "contact_bodies_list" [Pfem::write::GetSolidBodiesWithContact]
     dict set cont_dict "meshing_strategy" $mesh_strat
     return $cont_dict
+}
+
+proc Pfem::write::GetFluidBodies { } {
+    set bodies_list [list ]
+    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+    foreach body_node [[customlib::GetBaseRoot] selectNodes $xp1] {
+
+        set body_type_path ".//value\[@n='BodyType'\]"
+        set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
+
+	if {$body_type eq "Fluid"} {lappend bodies_list [get_domnode_attribute $body_node name]}
+    }
+
+    return $bodies_list
 }
 
 proc Pfem::write::GetSolidBodiesWithContact { } {
