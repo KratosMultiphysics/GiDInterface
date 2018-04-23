@@ -95,7 +95,7 @@ proc Solid::write::getParametersDict { } {
    
     # Linear solver settings
     set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Solid] ]
-
+   
     # Add Dofs
     dict set solverParametersDict dofs [list {*}[DofsInElements] ]
 
