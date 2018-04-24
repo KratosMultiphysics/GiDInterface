@@ -2,9 +2,7 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="SmallDisplacementElement2D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" AnalysisType="linear,non_linear"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
-               help="This element it implements a small displacement solid element">
+  <ElementItem n="SmallDisplacementElement2D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" AnalysisType="linear,non_linear" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a small displacement solid element">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementElement2D3N"/>
@@ -28,6 +26,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
     <inputs></inputs>
@@ -39,10 +38,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid small displacements" ImplementedInFile="axisym_small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
-               help="This element it implements an axisymetric small displacement solid element"  AnalysisType="linear,non_linear">
+  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid small displacements" ImplementedInFile="axisym_small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements an axisymetric small displacement solid element" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="AxisymSmallDisplacementElement2D3N"/>
@@ -64,6 +60,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -74,10 +71,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="SmallDisplacementElement3D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
-               help="This element it implements a small displacement solid element"  AnalysisType="linear,non_linear">
+  <ElementItem n="SmallDisplacementElement3D" pn="Solid small displacements" ImplementedInFile="small_displacement.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a small displacement solid element" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="SmallDisplacementElement3D4N"/>
@@ -102,6 +96,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -112,11 +107,8 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
   <!--Bbar elements-->
-  <ElementItem n="SmallDisplacementBbarElement2D" pn="Solid small displacements Bbar" ImplementedInFile="small_displacement_bbar.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
-               help="This element it implements a small displacement Bbar solid element"  AnalysisType="linear,non_linear">
+  <ElementItem n="SmallDisplacementBbarElement2D" pn="Solid small displacements Bbar" ImplementedInFile="small_displacement_bbar.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a small displacement Bbar solid element" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementBbarElement2D4N"/>
@@ -136,6 +128,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -146,10 +139,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="SmallDisplacementBbarElement3D" pn="Solid small displacements Bbar" ImplementedInFile="small_displacement_bbar.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
-               help="This element it implements a small displacement Bbar solid element"  AnalysisType="linear,non_linear">
+  <ElementItem n="SmallDisplacementBbarElement3D" pn="Solid small displacements Bbar" ImplementedInFile="small_displacement_bbar.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a small displacement Bbar solid element" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Hexahedra" nodes="8" KratosName="SmallDisplacementBbarElement3D8N"/>
@@ -168,6 +158,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -178,12 +169,9 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
   <!--large displacements-->
   <!--total lagrangian-->
-  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid"
-               help="This element it implements a Total Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="TotalLagrangianElement2D3N"/>
@@ -205,6 +193,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -215,10 +204,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="TotalLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
-               help="This element it implements a Total Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="TotalLagrangianElement3D" pn="Solid total lagrangian" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="TotalLagrangianElement3D4N"/>
@@ -242,6 +228,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -252,11 +239,8 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid"
-               help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianElement2D3N"/>
@@ -278,6 +262,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -288,10 +273,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid"
-               help="This element it implements a Updated Lagrangian approach to large deformation kinematics"  AnalysisType="non_linear">
+  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangianElement3D4N"/>
@@ -315,6 +297,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -325,14 +308,10 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-
   <!--structural elements-->
   <!--shell elements-->
   <!--large displacements-->
-  <ElementItem n="ShellThinCorotationalElement" pn="Shell thin corotational" ImplementedInFile="shell_thin_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
-               help="This element implements a corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
-                AnalysisType="non_linear">
+  <ElementItem n="ShellThinCorotationalElement" pn="Shell thin corotational" ImplementedInFile="shell_thin_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" help="This element implements a corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="ShellThinElementCorotational3D3N"/>
@@ -350,6 +329,7 @@
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION" />
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
       <NodalCondition n="VELOCITY" />
       <NodalCondition n="ACCELERATION" />
       <NodalCondition n="ANGULAR_VELOCITY"/>
@@ -362,11 +342,7 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
     </outputs>
   </ElementItem>
-
-  <ElementItem n="ShellThickCorotationalElement" pn="Shell thick corotational" ImplementedInFile="shell_thick_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
-               help="This element implements a corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True"
-                AnalysisType="non_linear">
+  <ElementItem n="ShellThickCorotationalElement" pn="Shell thick corotational" ImplementedInFile="shell_thick_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" help="This element implements a corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="ShellThickElementCorotational3D3N"/>
@@ -384,6 +360,7 @@
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION" />
       <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
       <NodalCondition n="VELOCITY" />
       <NodalCondition n="ACCELERATION" />
       <NodalCondition n="ANGULAR_VELOCITY"/>
@@ -396,11 +373,8 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
     </outputs>
   </ElementItem>
-
   <!--membrane elements-->
-  <ElementItem n="MembraneElement" pn="Membrane" ImplementedInFile="membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
-               help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane"  AnalysisType="non_linear">
+  <ElementItem n="MembraneElement" pn="Membrane" ImplementedInFile="membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="MembraneElement3D3N"/>
@@ -426,10 +400,7 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
     </outputs>
   </ElementItem>
-
-  <ElementItem n="PrestressedMembraneElement" pn="Membrane prestressed" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
-               help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane"  AnalysisType="non_linear">
+  <ElementItem n="PrestressedMembraneElement" pn="Membrane prestressed" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="PreStressMembraneElement3D3N"/>
@@ -451,23 +422,18 @@
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
       <parameter n="PRESTRESS_VECTOR" pn="Membrane prestress" type="inline_vector" v="0,0,0"/>
-      <parameter n="PROJECTION_TYPE_COMBO" pn="Projection type" type="combo" v="rotational" values="rotational,planar,file" >
+      <parameter n="PROJECTION_TYPE_COMBO" pn="Projection type" type="combo" v="rotational" values="rotational,planar,file">
         <parameter n="PRESTRESS_AXIS_GLOBAL" pn="Projection direction" type="inline_vector" v="0,0,0" parent="rotational"/>
         <parameter n="PRESTRESS_AXIS_1_GLOBAL" pn="Projection direction 1" type="inline_vector" v="0,0,0" parent="planar"/>
         <parameter n="PRESTRESS_AXIS_2_GLOBAL" pn="Projection direction 2" type="inline_vector" v="0,0,0" parent="planar"/>
-        <parameter n="PROJECTION_TYPE_FILEPATH" pn="Projection file" type="tablefile" parent="file" v="- No file"/>
-      </parameter>
+        <parameter n="PROJECTION_TYPE_FILEPATH" pn="Projection file" type="tablefile" parent="file" v="- No file"/></parameter>
     </inputs>
     <outputs>
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
     </outputs>
   </ElementItem>
-
   <!--beam elements-->
-  <ElementItem n="LinearBeamElement2D" pn="Beam small displacements" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False"
-               LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
-               RotationDofs="True" ElementType="Beam"  AnalysisType="linear,non_linear">
+  <ElementItem n="LinearBeamElement2D" pn="Beam small displacements" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam" AnalysisType="linear,non_linear">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="CrLinearBeamElement2D2N"/>
     </TopologyFeatures>
@@ -483,17 +449,13 @@
       <NodalCondition n="ANGULAR_ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-      <inputs></inputs>
-      <outputs>
-        <parameter n="FORCE" pn="Force" />
-        <parameter n="MOMENT" pn="Moment"/>
-      </outputs>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="FORCE" pn="Force" />
+      <parameter n="MOMENT" pn="Moment"/>
+    </outputs>
   </ElementItem>
-
-  <ElementItem n="BeamElement2D" pn="Beam large displacements" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False"
-               LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
-               RotationDofs="True" ElementType="Beam"  AnalysisType="non_linear">
+  <ElementItem n="BeamElement2D" pn="Beam large displacements" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam" AnalysisType="non_linear">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="CrBeamElement2D2N"/>
     </TopologyFeatures>
@@ -509,18 +471,13 @@
       <NodalCondition n="ANGULAR_ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-      <inputs>
-      </inputs>
-      <outputs>
-        <parameter n="FORCE" pn="Force" />
-        <parameter n="MOMENT" pn="Moment"/>
-      </outputs>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="FORCE" pn="Force" />
+      <parameter n="MOMENT" pn="Moment"/>
+    </outputs>
   </ElementItem>
-
-  <ElementItem n="LinearBeamElement3D" pn="Beam small displacements" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True"
-               LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
-               RotationDofs="True" ElementType="Beam"  AnalysisType="linear,non_linear">
+  <ElementItem n="LinearBeamElement3D" pn="Beam small displacements" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam" AnalysisType="linear,non_linear">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="CrLinearBeamElement3D2N"/>
     </TopologyFeatures>
@@ -536,17 +493,13 @@
       <NodalCondition n="ANGULAR_ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-      <inputs></inputs>
-      <outputs>
-        <parameter n="FORCE" pn="Force" />
-        <parameter n="MOMENT" pn="Moment"/>
-      </outputs>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="FORCE" pn="Force" />
+      <parameter n="MOMENT" pn="Moment"/>
+    </outputs>
   </ElementItem>
-
-  <ElementItem n="BeamElement3D" pn="Beam large displacements" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True"
-               LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model"
-               RotationDofs="True" ElementType="Beam"  AnalysisType="non_linear">
+  <ElementItem n="BeamElement3D" pn="Beam large displacements" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam" AnalysisType="non_linear">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="CrBeamElement3D2N"/>
     </TopologyFeatures>
@@ -562,18 +515,14 @@
       <NodalCondition n="ANGULAR_ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-      <inputs>
-      </inputs>
-      <outputs>
-        <parameter n="FORCE" pn="Force" />
-        <parameter n="MOMENT" pn="Moment"/>
-      </outputs>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="FORCE" pn="Force" />
+      <parameter n="MOMENT" pn="Moment"/>
+    </outputs>
   </ElementItem>
-
   <!--truss elements-->
-  <ElementItem n="TrussLinearElement2D" pn="Truss small displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
-               help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="linear,non_linear">
+  <ElementItem n="TrussLinearElement2D" pn="Truss small displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="TrussLinearElement3D2N"/>
@@ -590,17 +539,13 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-    <inputs>
-    </inputs>
+    <inputs></inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="TrussElement2D" pn="Truss large displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
-               help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="non_linear">
+  <ElementItem n="TrussElement2D" pn="Truss large displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="TrussElement3D2N"/>
@@ -617,17 +562,13 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-    <inputs>
-    </inputs>
+    <inputs></inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="TrussLinearElement3D" pn="Truss small displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
-               help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="linear,non_linear">
+  <ElementItem n="TrussLinearElement3D" pn="Truss small displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="TrussLinearElement3D2N"/>
@@ -644,17 +585,13 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-    <inputs>
-     </inputs>
+    <inputs></inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="TrussElement3D" pn="Truss large displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
-               help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss"  AnalysisType="non_linear">
+  <ElementItem n="TrussElement3D" pn="Truss large displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="TrussElement3D2N"/>
@@ -671,18 +608,14 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-    <inputs>
-     </inputs>
+    <inputs></inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
     </outputs>
   </ElementItem>
-
   <!--cable elements-->
-  <ElementItem n="CableElement2D" pn="Cable large displacements" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
-               help="This element implements a large displacements cable" RotationDofs="False" ElementType="Cable"  AnalysisType="non_linear">
+  <ElementItem n="CableElement2D" pn="Cable large displacements" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements cable" RotationDofs="False" ElementType="Cable" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="CableElement3D2N"/>
@@ -699,17 +632,13 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-    <inputs>
-     </inputs>
+    <inputs></inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
     </outputs>
   </ElementItem>
-
-  <ElementItem n="CableElement3D" pn="Cable large displacements" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication"
-               MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True"
-               help="This element implements a large displacements cable" RotationDofs="False" ElementType="Cable"  AnalysisType="non_linear">
+  <ElementItem n="CableElement3D" pn="Cable large displacements" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements cable" RotationDofs="False" ElementType="Cable" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="CableElement3D2N"/>
@@ -726,8 +655,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
     </NodalConditions>
-    <inputs>
-     </inputs>
+    <inputs></inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
