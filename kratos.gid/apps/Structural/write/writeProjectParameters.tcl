@@ -181,7 +181,7 @@ proc Structural::write::getOldParametersDict { } {
     return $projectParametersDict
 }
 
-proc Structural::write::ProcessContacts {  } {
+proc Structural::write::GetContactConditionsDict { } {
     set root [customlib::GetBaseRoot]
     
     # Prepare the xpaths
@@ -194,20 +194,24 @@ proc Structural::write::ProcessContacts {  } {
     
     if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
     
-    set contact_process_list [list ]
-    foreach elem $nodal_conditions_dict {
-        if {[dict exists $elem python_module] && [dict get $elem python_module] in {"alm_contact_process"}} {
-            set model_part_name "Structure"
-            dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
-            dict set elem Parameters model_part_name $model_part_name
-            dict set elem Parameters computing_model_part_name "computing_domain"
-            lappend contact_process_list $elem
-        } else {
-            lappend process_list $elem
-        }
+    set contact_process_dict [dict create ]
+    dict set contact_process_dict python_module alm_contact_process
+    dict set contact_process_dict kratos_module "KratosMultiphysics.ContactStructuralMechanicsApplication"
+    dict set contact_process_dict process_name ALMContactProcess
+
+    set contact_parameters_dict [dict create]
+    dict set contact_parameters_dict contact_model_part [::write::getSubModelPartId CONTACT "_HIDDEN_CONTACT_GROUP_"]
+    dict set contact_parameters_dict model_part_name Structure
+    if {$slave_group ne ""} {
+        dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
     }
-    return [list $process_list $contact_process_list]
+    dict set contact_parameters_dict contact_type [write::getValueByNode [$master_group selectNodes "./value\[@n='contact_type'\]"]]
+    
+    dict set contact_process_dict Parameters $contact_parameters_dict
+    
+    return [list $contact_process_dict]
 }
+
 
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
