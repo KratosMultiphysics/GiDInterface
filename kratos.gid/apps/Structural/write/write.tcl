@@ -172,11 +172,14 @@ proc Structural::write::writeContacts { } {
 
     # Create the joint group
     set joint_contact_group "_HIDDEN_CONTACT_GROUP_"
+    if {[GiD_Groups exists $joint_contact_group]} {GiD_Groups delete $joint_contact_group}
     spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw $slave_groupid_raw]
 
     # Print the submodelpart
     ::write::writeGroupSubModelPart CONTACT $joint_contact_group "nodal"
+    ::write::writeGroupSubModelPart CONTACT $slave_groupid_raw "nodal"
 
+    GiD_Groups delete $joint_contact_group
 }
 
 proc Structural::write::writeCustomBlock { } {

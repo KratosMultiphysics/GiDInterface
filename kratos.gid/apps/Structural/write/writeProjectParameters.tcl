@@ -125,7 +125,8 @@ proc Structural::write::getOldParametersDict { } {
 
     # Lists of processes
     set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
+    #lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
+    set contact_conditions_dict [GetContactConditionsDict]
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
     dict set projectParametersDict contact_process_list $contact_conditions_dict
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
@@ -180,8 +181,19 @@ proc Structural::write::getOldParametersDict { } {
     return $projectParametersDict
 }
 
-proc Structural::write::ProcessContacts { nodal_conditions_dict } {
-    set process_list [list ]
+proc Structural::write::ProcessContacts {  } {
+    set root [customlib::GetBaseRoot]
+    
+    # Prepare the xpaths
+    set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
+    set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
+
+    # Get the groups
+    set master_group [$root selectNodes $xp_master]
+    set slave_group [$root selectNodes $xp_slave]
+    
+    if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
+    
     set contact_process_list [list ]
     foreach elem $nodal_conditions_dict {
         if {[dict exists $elem python_module] && [dict get $elem python_module] in {"alm_contact_process"}} {
