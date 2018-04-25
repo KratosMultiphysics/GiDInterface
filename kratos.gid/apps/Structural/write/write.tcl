@@ -167,17 +167,24 @@ proc Structural::write::writeContacts { } {
     if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
     set master_groupid_raw [$master_group @n]
     set master_groupid [write::GetWriteGroupName $master_groupid_raw]
-    set slave_groupid_raw [$slave_group @n]
-    set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
-
+    if {$slave_group ne ""} {
+        set slave_groupid_raw [$slave_group @n]
+        set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
+    }
     # Create the joint group
     set joint_contact_group "_HIDDEN_CONTACT_GROUP_"
     if {[GiD_Groups exists $joint_contact_group]} {GiD_Groups delete $joint_contact_group}
-    spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw $slave_groupid_raw]
+    if {$slave_group ne ""} {
+        spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw $slave_groupid_raw]
+    } {
+        spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw]
+    }
 
     # Print the submodelpart
     ::write::writeGroupSubModelPart CONTACT $joint_contact_group "nodal"
-    ::write::writeGroupSubModelPart CONTACT $slave_groupid_raw "nodal"
+    if {$slave_group ne ""} {
+        ::write::writeGroupSubModelPart CONTACT $slave_groupid_raw "nodal"
+    }
 
     GiD_Groups delete $joint_contact_group
 }
