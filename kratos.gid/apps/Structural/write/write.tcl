@@ -177,16 +177,6 @@ proc Structural::write::writeContacts { } {
     # Print the submodelpart
     ::write::writeGroupSubModelPart CONTACT $joint_contact_group "nodal"
 
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
-        #W "Writing mesh of Load $groupid"
-        if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
-            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
-        } else {
-            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
-        }
-    }
 }
 
 proc Structural::write::writeCustomBlock { } {
