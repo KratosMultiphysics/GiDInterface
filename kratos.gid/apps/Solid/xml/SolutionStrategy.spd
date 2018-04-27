@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="SolStrat" pn="Solution" un="SLStratSection" help="Solution Strategy" open_window="0">
+<container n="SolStrat" pn="Solution" un="SLStratSection" help="Solution configuration" open_window="0">
   <container n="StratParams" pn="Solving parameters" icon="select" un="SLStratParams" state="normal" open_window="0">
     <dynamicnode command="spdAux::injectSolStratParams" args=""/>
   </container>
