@@ -81,6 +81,28 @@
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
         </element_filters>
       </scheme>
+      <scheme n="BackwardEuler" pn="Backward Euler" help="Scheme for Solids and Shells, dynamic problems" ProductionReady="Developer">
+        <parameter_list>
+	  <parameter n="time_integration_order" pn="Time order" type="combo" values="1,2,3,4,5,6" v="2" help="Time integration order" state="hidden"/>
+	  <parameter n="lumped_mass_matrix" pn="Lumped mass matrix" type="bool" v="true" values="false,true" help="Compute lumped mass matrix"/>
+	  <parameter n="consistent_mass_matrix" pn="Consistent mass matrix" type="bool" v="false" values="false,true" help="Compute consistent mass matrix"/>
+	</parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Solid,Shell"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
+      <scheme n="BDF" pn="BDF" help="Scheme for Solids and Shells, dynamic problems" ProductionReady="Developer">
+        <parameter_list>
+	  <parameter n="time_integration_order" pn="Time order" type="combo" values="1,2,3,4,5,6" v="1" help="Time integration order"/>
+	  <parameter n="lumped_mass_matrix" pn="Lumped mass matrix" type="bool" v="true" values="false,true" help="Compute lumped mass matrix"/>
+	  <parameter n="consistent_mass_matrix" pn="Consistent mass matrix" type="bool" v="false" values="false,true" help="Compute consistent mass matrix"/>
+	</parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Solid,Shell"/>
+	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
       <scheme n="RotationBossak" pn="Beams Bossak" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
         <parameter_list>
 	  <parameter n="bossak_factor" pn="Bossak factor" type="double" v="-0.3" help="Damping factor for the bossak scheme [-0.3,0]"/>

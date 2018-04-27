@@ -83,19 +83,26 @@ proc Solid::write::getParametersDict { } {
         dict set integrationDataDict integration_method [write::getValue SLScheme]
     }
 
-    dict set solverParametersDict time_integration_settings $integrationDataDict
-
     # Solving strategy settings
     set strategyDataDict [dict create]
     
     # Solution strategy parameters and Solvers   
     set strategyDataDict [dict merge $strategyDataDict [write::getSolutionStrategyParametersDict] ]
 
+    # Get integration order as term for the integration settings
+    set exist_time_integration [dict exists $strategyDataDict time_integration_order]
+    if {$exist_time_integration eq 1} {
+	dict set integrationDataDict time_integration_order [dict get $strategyDataDict time_integration_order]
+	dict unset strategyDataDict time_integration_order
+    }
+    
+    dict set solverParametersDict time_integration_settings $integrationDataDict
+    
     dict set solverParametersDict solving_strategy_settings $strategyDataDict
    
     # Linear solver settings
     set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Solid] ]
-
+   
     # Add Dofs
     dict set solverParametersDict dofs [list {*}[DofsInElements] ]
 
