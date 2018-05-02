@@ -76,10 +76,11 @@ proc Solid::write::getParametersDict { } {
     dict set integrationDataDict solution_type [write::getValue SLSoluType]
 
     set solutiontype [write::getValue SLSoluType]
-    if {$solutiontype eq "Static"} {
-	dict set integrationDataDict integration_method [write::getValue SLScheme]
-    } elseif {$solutiontype eq "Dynamic"} {
-        dict set integrationDataDict time_integration [write::getValue SLSolStrat]
+    if {$solutiontype ne "Dynamic"} {
+	dict set integrationDataDict integration_method "Static"
+	dict set integrationDataDict analysis_type [write::getValue SLAnalysisType]
+    } else {
+	dict set integrationDataDict time_integration [write::getValue SLSolStrat]
         dict set integrationDataDict integration_method [write::getValue SLScheme]
     }
 
@@ -97,9 +98,12 @@ proc Solid::write::getParametersDict { } {
     }
     
     dict set solverParametersDict time_integration_settings $integrationDataDict
+
+    set strategy_data_size [dict size $strategyDataDict]
+    if { $strategy_data_size ne 0 } {
+	dict set solverParametersDict solving_strategy_settings $strategyDataDict
+    }
     
-    dict set solverParametersDict solving_strategy_settings $strategyDataDict
-   
     # Linear solver settings
     set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Solid] ]
    
