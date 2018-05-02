@@ -995,23 +995,26 @@ proc write::getSolversParametersDict { {appid ""} } {
     foreach se [$sol getSolversEntries] {
         set solverEntryDict [dict create]
         set un [apps::getAppUniqueName $appid "$solstratName[$se getName]"]
-        set solver_entry_node [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute $un]]
-        set solver_entry_state [get_domnode_attribute $solver_entry_node state]
-        if {[spdAux::getRoute $un] ne "" && $solver_entry_state ne "hidden"} {
-            set solverName [write::getValue $un Solver]
-            if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI" "Automatic" ""]} {
-                dict set solverEntryDict solver_type $solverName
-                set solver [::Model::GetSolver $solverName]
-                foreach {n in} [$solver getInputs] {
-                    # JG temporal, para la precarga de combos
-                    if {[$in getType] ni [list "bool" "integer" "double"]} {
-                        set v [write::getValue $un $n check]
-                        dict set solverEntryDict $n $v
-                    } {
-                        dict set solverEntryDict $n [write::getValue $un $n]
+        set route [spdAux::getRoute $un]
+        if {$route ne "" } {
+            set solver_entry_node [[customlib::GetBaseRoot] selectNodes $route]
+            set solver_entry_state [get_domnode_attribute $solver_entry_node state]
+            if {$solver_entry_state ne "hidden"} {
+                set solverName [write::getValue $un Solver]
+                if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI" "Automatic" ""]} {
+                    dict set solverEntryDict solver_type $solverName
+                    set solver [::Model::GetSolver $solverName]
+                    foreach {n in} [$solver getInputs] {
+                        # JG temporal, para la precarga de combos
+                        if {[$in getType] ni [list "bool" "integer" "double"]} {
+                            set v [write::getValue $un $n check]
+                            dict set solverEntryDict $n $v
+                        } {
+                            dict set solverEntryDict $n [write::getValue $un $n]
+                        }
                     }
+                    dict set solverSettingsDict [$se getName] $solverEntryDict
                 }
-                dict set solverSettingsDict [$se getName] $solverEntryDict
             }
         }
         unset solverEntryDict
