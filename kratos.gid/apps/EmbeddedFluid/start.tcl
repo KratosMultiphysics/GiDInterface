@@ -3,7 +3,7 @@ namespace eval ::EmbeddedFluid {
     variable dir
     variable prefix
     variable attributes
-    variable oldVolumeMesher
+    variable oldMeshType
     variable kratos_name
 }
 
@@ -68,15 +68,14 @@ proc ::EmbeddedFluid::CustomMenus { } {
 }
 
 proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
-    variable oldVolumeMesher
+    variable oldMeshType
     
     set project_path [GiD_Info project modelname]
     if {$project_path ne "UNNAMED"} {
         catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[file tail [GiD_Info project modelname] ].post.res"]}
-        GiD_Process Escape Escape Utilities Variables EmbeddedMesh Activated 1 escape escape
         # Set Octree
-        set oldVolumeMesher [GiD_Set VolumeMesher]
-        ::GiD_Set VolumeMesher 3
+        set oldMeshType [GiD_Set MeshType]
+        ::GiD_Set MeshType 3
     } else {
         after 500 {WarnWin "You need to save the project before meshing"}
         return "-cancel-"
@@ -84,9 +83,8 @@ proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
 }
 
 proc ::EmbeddedFluid::AfterMeshGeneration {fail} {
-    variable oldVolumeMesher
-    GiD_Process Escape Escape Utilities Variables EmbeddedMesh Activated 0 escape escape
-    GiD_Set VolumeMesher $oldVolumeMesher
+    variable oldMeshType
+    GiD_Set MeshType $oldMeshType
 }
 
 ::EmbeddedFluid::Init
