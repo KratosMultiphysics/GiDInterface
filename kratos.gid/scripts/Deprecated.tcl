@@ -71,9 +71,9 @@ proc spdAux::AddConditionGroupOnNode {basenode groupid} {
 
 # Deprecation date: 24/04/2018
 # Estimated deletion version: 6.0.0
-proc spdAux::MergeGroups {basenode groupid} {
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
-        #W "Deprecated method spdAux::MergeGroups\nUse GidUtils::MergeGroups\n"
-    }
-    return [GidUtils::MergeGroups $basenode $groupid]
-}
+# proc spdAux::MergeGroups {basenode groupid} {
+#     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+#         #W "Deprecated method spdAux::MergeGroups\nUse GidUtils::MergeGroups\n"
+#     }
+#     return [GidUtils::MergeGroups $basenode $groupid]
+# }
