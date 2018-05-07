@@ -27,10 +27,10 @@ proc EmbeddedFluid::xml::Init { } {
 
 
 proc EmbeddedFluid::xml::MultiAppEvent {args} {
-   if {$args eq "init"} {
-     spdAux::parseRoutes
-     spdAux::ConvertAllUniqueNames FL ${::EmbeddedFluid::prefix}
-   }
+    if {$args eq "init"} {
+        spdAux::parseRoutes
+        spdAux::ConvertAllUniqueNames FL ${::EmbeddedFluid::prefix}
+    }
 }
 
 proc EmbeddedFluid::xml::getUniqueName {name} {

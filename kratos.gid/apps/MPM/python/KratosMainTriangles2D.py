@@ -362,6 +362,23 @@ restart_print = operation_utils.TimeOperationUtility()
 restart_time_frequency = general_variables.RestartFrequency
 restart_print.InitializeTime(starting_time, ending_time, time_step, restart_time_frequency)
 
+# Compute Normal
+normal_calculator = NormalCalculationUtils()
+normal_calculator.CalculateOnSimplex(model_part1, domain_size)
+
+# Assigning IS_STRUCTURE to slip nodes
+for condition in model_part1.Conditions:
+    if condition.GetValue(IS_STRUCTURE) == 1.0:
+        for node in condition.GetNodes():
+            node.SetSolutionStepValue(IS_STRUCTURE, 1.0)
+            # node.SetSolutionStepValue(IS_STRUCTURE,0,1.0) # This is not used by Kratos, added here to view it in the results.
+        condition.SetValue(IS_STRUCTURE, 0.0)
+
+# Check the Normal Vector Value
+# for node in model_part1.Nodes:
+#     if (node.GetSolutionStepValue(IS_STRUCTURE) == 1.0):	 
+#         print(node.Id, node.GetSolutionStepValue(NORMAL)) 
+
 
 # --TIME INTEGRATION--#######################
 #
@@ -542,9 +559,7 @@ while(current_time < ending_time):
       for node in model_part1.Nodes:
 	      result_fixmesh.write("{} {}\n".format(node.Id , 0))
       result_fixmesh.write("End Values\n")  
-      
-
-      
+          
       result_file.write("Result \"")
       result_file.write("MPMEquivalentPlaticStrain")
       result_file.write('" "Kratos" {} Scalar OnNodes\n'.format(current_time))
@@ -583,7 +598,7 @@ while(current_time < ending_time):
       for node in model_part1.Nodes:
 	      result_fixmesh.write("{} {} {} {}\n".format(node.Id , 0, 0,0))
       result_fixmesh.write("End Values\n")
-      
+
       #result_file.write("Result \"")
       #result_file.write("MPMAcceleration")
       #result_file.write('" "Kratos" {} Vector OnNodes\n'.format(current_time))
@@ -603,7 +618,15 @@ while(current_time < ending_time):
 	      #result_fixmesh.write("{} {} {} {}\n".format(node.Id , 0, 0,0))
       #result_fixmesh.write("End Values\n")
       
-      
+      result_fixmesh.write("Result \"")
+      result_fixmesh.write("BoundaryNormal")
+      result_fixmesh.write('" "Kratos" {} Vector OnNodes\n'.format(current_time))
+      result_fixmesh.write("Values\n")
+      for node in model_part1.Nodes:
+          if (node.GetSolutionStepValue(IS_STRUCTURE) == 1.0):	 
+              normal = node.GetSolutionStepValue(NORMAL)
+              result_fixmesh.write("{} {} {} {}\n".format(node.Id , normal[0], normal[1], normal[2])) 
+      result_fixmesh.write("End Values\n")
       
       
       
