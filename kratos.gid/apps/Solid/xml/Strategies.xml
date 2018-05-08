@@ -85,7 +85,7 @@
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
         </element_filters>
       </scheme>
-      <scheme n="BDF" pn="BDF" help="Scheme for Solids and Shells, dynamic problems" ProductionReady="Developer">
+      <scheme n="Bdf" pn="BDF" help="Scheme for Solids and Shells, dynamic problems" ProductionReady="Developer">
         <parameter_list>
 	  <parameter n="time_integration_order" pn="Time order" type="combo" values="1,2,3,4,5,6" v="1" help="Time integration order"/>
 	  <parameter n="lumped_mass_matrix" pn="Lumped mass matrix" type="bool" v="true" values="false,true" help="Compute lumped mass matrix"/>
