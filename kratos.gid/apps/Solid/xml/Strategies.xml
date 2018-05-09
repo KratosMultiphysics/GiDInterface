@@ -169,11 +169,7 @@
 	<element_filters>
 	  <filter field="ElementType" value="Solid"/>
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
-	  <forceOut field="n" value="UpdatedLagrangianVElement2D"/>
-	  <forceOut field="n" value="UpdatedLagrangianVElement3D"/>
-	  <forceOut field="n" value="UpdatedLagrangianElementUP2D"/>
-	  <forceOut field="n" value="UpdatedLagrangianElementUPAxisym"/>
-	  <forceOut field="n" value="UpdatedLagrangianElementUP3D"/>
+	  <forceOut field="n" value="UpdatedLagrangianVElement2D,UpdatedLagrangianVElement3D,UpdatedLagrangianElementUP2D,UpdatedLagrangianElementUPAxisym,UpdatedLagrangianElementUP3D"/>
 	</element_filters>
       </scheme>
     </schemes>
@@ -222,8 +218,7 @@
         <parameter_list></parameter_list>
         <element_filters>
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
-	  <forceOut field="n" value="UpdatedLagrangianVElement2D"/>
-	  <forceOut field="n" value="UpdatedLagrangianVElement3D"/>
+	  <forceOut field="n" value="UpdatedLagrangianVElement2D,UpdatedLagrangianVElement3D"/>
         </element_filters>
       </scheme>
     </schemes>
@@ -272,8 +267,7 @@
         <parameter_list></parameter_list>
         <element_filters>
 	  <filter field="kratos_module" value="SolidMechanicsApplication"/>
-	  <forceOut field="n" value="UpdatedLagrangianVElement2D"/>
-	  <forceOut field="n" value="UpdatedLagrangianVElement3D"/>
+	  <forceOut field="n" value="UpdatedLagrangianVElement2D,UpdatedLagrangianVElement3D"/>
         </element_filters>
       </scheme>
     </schemes>
