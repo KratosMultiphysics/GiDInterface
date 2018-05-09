@@ -126,7 +126,7 @@
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess"
-		 help="Set pressure value (considered direction: oposite to the geometry normal)"
+		 help="Set pressure value (considered direction: opposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
@@ -143,7 +143,7 @@
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess"
-		 help="Set pressure value (considered direction: oposite to the geometry normal)"
+		 help="Set pressure value (considered direction: opposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineLoadCondition2D2N"/>
@@ -160,7 +160,7 @@
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess"
-		 help="Set pressure value (considered direction: oposite to the geometry normal)"
+		 help="Set pressure value (considered direction: opposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
