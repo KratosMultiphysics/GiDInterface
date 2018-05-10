@@ -114,8 +114,8 @@ proc Structural::write::getOldParametersDict { } {
 
     
     if {[usesContact]} {
-        
-        dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionless"
+        # Mirar type y ver si es Frictionless o Frictional
+        dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionlessComponents"
 
         set convergence_criterion [dict get $solverSettingsDict convergence_criterion]
         dict set solverSettingsDict convergence_criterion "contact_$convergence_criterion"
@@ -205,7 +205,7 @@ proc Structural::write::GetContactConditionsDict { } {
     if {$slave_group ne ""} {
         dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
     }
-    dict set contact_parameters_dict contact_type [write::getValueByNode [$master_group selectNodes "./value\[@n='contact_type'\]"]]
+    dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
     
     dict set contact_process_dict Parameters $contact_parameters_dict
     
