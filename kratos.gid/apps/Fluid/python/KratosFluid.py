@@ -10,8 +10,8 @@ import time
 
 class FluidDynamicsAnalysisWithFlush(FluidDynamicsAnalysis):
 
-    def __init__(self,project_parameters,flush_frequency=10.0):
-        super(FluidDynamicsAnalysisWithFlush,self).__init__(project_parameters)
+    def __init__(self,model,project_parameters,flush_frequency=10.0):
+        super(FluidDynamicsAnalysisWithFlush,self).__init__(model,project_parameters)
         self.flush_frequency = flush_frequency
         self.last_flush = time.time()
 
@@ -29,5 +29,6 @@ if __name__ == "__main__":
     with open("ProjectParameters.json",'r') as parameter_file:
         parameters = KratosMultiphysics.Parameters(parameter_file.read())
 
-    simulation = FluidDynamicsAnalysisWithFlush(parameters)
+    model = KratosMultiphysics.Model()
+    simulation = FluidDynamicsAnalysisWithFlush(model,parameters)
     simulation.Run()
