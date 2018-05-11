@@ -775,6 +775,25 @@ proc write::writePartSubModelPart { } {
     }
 }
 
+proc write::writeLinearLocalAxesGroup {group} {
+    set elements [GiD_EntitiesGroups get $group elements -element_type linear]
+    set num_elements [objarray length $elements]
+    if {$num_elements} {
+        write::WriteString "Begin ElementalData LOCAL_AXIS_2 // Groups: $group"
+        for {set i 0} {$i < $num_elements} {incr i} {
+            set line [objarray get $elements $i]
+            set raw [lindex [lindex [GiD_Info conditions -localaxesmat line_Local_axes mesh $line] 0] 3]
+            set y0 [lindex $raw 1]
+            set y1 [lindex $raw 4]
+            set y2 [lindex $raw 7]
+            write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
+        }
+        write::WriteString "End ElementalData"
+        write::WriteString ""
+    }
+    return $num_elements
+}
+
 proc write::dict2json {dictVal} {
     # XXX: Currently this API isn't symmetrical, as to create proper
     # XXX: JSON text requires type knowledge of the input data
