@@ -28,7 +28,14 @@ proc Solid::write::getParametersDict { } {
     # Add ProblemData to Parameters
     dict set projectParametersDict problem_data $problemDataDict
 
+    # Time settings
+    set timeDataDict [dict create]
+    dict set timeDataDict time_step [write::getValue SLTimeParameters DeltaTime]
+    dict set timeDataDict start_time [write::getValue SLTimeParameters StartTime]
+    dict set timeDataDict end_time [write::getValue SLTimeParameters EndTime]
 
+    dict set projectParametersDict time_settings $timeDataDict
+    
     # Model data
     # Create section
     set modelDataDict [dict create]
@@ -38,10 +45,9 @@ proc Solid::write::getParametersDict { } {
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set modelDataDict dimension $nDim
 
-
     dict set modelDataDict domain_parts_list [write::getSubModelPartNames "SLParts"]
     dict set modelDataDict processes_parts_list [write::getSubModelPartNames "SLNodalConditions" "SLLoads"]
-    
+   
     # Add model import settings
     set importDataDict [dict create]
     #dict set importDataDict type "mdpa"
@@ -61,14 +67,6 @@ proc Solid::write::getParametersDict { } {
 
     # Solver parameters
     set solverParametersDict [dict create]
-
-    # Time settings
-    set timeDataDict [dict create]
-    dict set timeDataDict time_step [write::getValue SLTimeParameters DeltaTime]
-    dict set timeDataDict start_time [write::getValue SLTimeParameters StartTime]
-    dict set timeDataDict end_time [write::getValue SLTimeParameters EndTime]
-
-    dict set solverParametersDict time_settings $timeDataDict
 
     # Time integration settings
     set integrationDataDict [dict create]
@@ -99,6 +97,30 @@ proc Solid::write::getParametersDict { } {
     
     dict set solverParametersDict time_integration_settings $integrationDataDict
 
+    # Get convergence criterion settings
+    set convergenceDataDict [dict create]
+    set exist_convergence_criterion [dict exists $strategyDataDict convergence_criterion]
+    if {$exist_convergence_criterion eq 1} {
+	dict set convergenceDataDict convergence_criterion [dict get $strategyDataDict convergence_criterion]
+	dict unset strategyDataDict convergence_criterion
+	set exist_variable_tolerances [dict exists $strategyDataDict variable_relative_tolerance]
+	if {$exist_variable_tolerances eq 1} {
+	    dict set convergenceDataDict variable_relative_tolerance [dict get $strategyDataDict variable_relative_tolerance]
+	    dict set convergenceDataDict variable_absolute_tolerance [dict get $strategyDataDict variable_absolute_tolerance]
+	    dict unset strategyDataDict variable_relative_tolerance
+	    dict unset strategyDataDict variable_absolute_tolerance
+	}
+	set exist_residual_tolerances [dict exists $strategyDataDict residual_relative_tolerance]
+	if {$exist_residual_tolerances eq 1} {
+	    dict set convergenceDataDict residual_relative_tolerance [dict get $strategyDataDict residual_relative_tolerance]
+	    dict set convergenceDataDict residual_absolute_tolerance [dict get $strategyDataDict residual_absolute_tolerance]
+	    dict unset strategyDataDict residual_relative_tolerance
+	    dict unset strategyDataDict residual_absolute_tolerance	    
+	}
+    }
+    
+    dict set solverParametersDict convergence_criterion_settings $convergenceDataDict
+    
     set strategy_data_size [dict size $strategyDataDict]
     if { $strategy_data_size ne 0 } {
 	dict set solverParametersDict solving_strategy_settings $strategyDataDict

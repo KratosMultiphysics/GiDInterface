@@ -27,9 +27,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
+      <NodalCondition n="AXIAL_TURN_2D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_2D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_2D"/>
     </NodalConditions>
     <!--<parameter n="THICKNESS" pn="Thickness" v="0.1" unit_magnitude="L" units="m" />-->
     <inputs></inputs>
@@ -62,9 +62,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
+      <NodalCondition n="AXIAL_TURN_2D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_2D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -129,9 +129,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+      <NodalCondition n="AXIAL_TURN_3D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_3D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_3D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -165,9 +165,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+      <NodalCondition n="AXIAL_TURN_3D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_3D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_3D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -201,9 +201,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
+      <NodalCondition n="AXIAL_TURN_2D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_2D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -237,9 +237,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+      <NodalCondition n="AXIAL_TURN_3D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_3D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_3D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -272,9 +272,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
+      <NodalCondition n="AXIAL_TURN_2D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_2D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -339,9 +339,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+      <NodalCondition n="AXIAL_TURN_3D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_3D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_3D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -374,9 +374,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
+      <NodalCondition n="AXIAL_TURN_2D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_2D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -410,9 +410,9 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+      <NodalCondition n="AXIAL_TURN_3D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_3D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_3D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -422,14 +422,14 @@
       <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
-  </ElementItem>  
+  </ElementItem>
   <!--hybrid elements-->
   <!--hybrid updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" Dofs="DISPLACEMENT,PRESSURE"
 	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
-		   ElementType="Solid">
+	       ElementType="Solid">
 
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianUPElement2D3N"/>
@@ -444,9 +444,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
+      <NodalCondition n="AXIAL_TURN_2D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_2D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_2D"/>
     </NodalConditions>
     <inputs>
       <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>
@@ -480,7 +480,7 @@
       <NodalCondition n="PRESSURE"/>
     </NodalConditions>
     <inputs>
-      <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>      
+      <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>
     </inputs>
     <outputs>
       <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
@@ -508,9 +508,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
+      <NodalCondition n="AXIAL_TURN_3D"/>
+      <NodalCondition n="AXIAL_VELOCITY_TURN_3D"/>
+      <NodalCondition n="AXIAL_ACCELERATION_TURN_3D"/>
     </NodalConditions>
     <inputs>
       <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>
@@ -534,12 +534,12 @@
       <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamElement3D2N"/>
       <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamElement3D3N"/>
     </TopologyFeatures>
-    
+
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="1D_UR"/>
       <filter field="Dimension" value="3D"/>
     </ConstitutiveLaw_FilterFeatures>
-    
+
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION"/>
@@ -565,12 +565,12 @@
       <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamEMCElement3D2N"/>
       <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamEMCElement3D3N"/>
     </TopologyFeatures>
-    
+
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="1D_UR"/>
       <filter field="Dimension" value="3D"/>
     </ConstitutiveLaw_FilterFeatures>
-    
+
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION"/>
@@ -592,7 +592,7 @@
   <ElementItem n="ShellThinElement" pn="Shell (thin triangular)" ImplementedInFile="shell_thin_element_3D3N.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
-	       help="This element implements a triangular element for thin shells in a small displacements approach" 
+	       help="This element implements a triangular element for thin shells in a small displacements approach"
 	       ElementType="Shell" Dofs="DISPLACEMENT,ROTATION" >
 
     <TopologyFeatures>
@@ -618,7 +618,7 @@
       <parameter n="SHELL_FORCE_GLOBAL" pn="Force" v="true"/>
     </outputs>
   </ElementItem>
-  
+
   <ElementItem n="ShellThickElement" pn="Shell (thick quadrilateral)" ImplementedInFile="shell_thick_element_3D4N.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="False"
@@ -683,7 +683,7 @@
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True"
 	       help="This element implements a quadrilateral corotational element for thick shells in a large displacements approach"
 	       ElementType="Shell" Dofs="DISPLACEMENT,ROTATION">
-    
+
     <TopologyFeatures>
       <item GeometryType="Quadrilateral" nodes="4" KratosName="ShellThickElementCorotational3D4N"/>
     </TopologyFeatures>
@@ -746,7 +746,7 @@
       <filter field="Type" value="1D_UR"/>
       <filter field="Dimension" value="2D"/>
     </ConstitutiveLaw_FilterFeatures>
-    
+
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION"/>
@@ -773,12 +773,12 @@
       <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamElement2D2N"/>
       <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamElement2D3N"/>
     </TopologyFeatures>
-    
+
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="1D_UR"/>
       <filter field="Dimension" value="2D"/>
     </ConstitutiveLaw_FilterFeatures>
-    
+
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION"/>
@@ -805,12 +805,12 @@
       <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamEMCElement2D2N"/>
       <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamEMCElement2D3N"/>
     </TopologyFeatures>
-    
+
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="1D_UR"/>
       <filter field="Dimension" value="2D"/>
     </ConstitutiveLaw_FilterFeatures>
-    
+
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION"/>
@@ -868,12 +868,12 @@
       <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamEMCElement3D2N"/>
       <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamEMCElement3D3N"/>
     </TopologyFeatures>
-    
+
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="1D_UR"/>
       <filter field="Dimension" value="3D"/>
     </ConstitutiveLaw_FilterFeatures>
-    
+
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION"/>
@@ -913,7 +913,7 @@
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
-    </NodalConditions>
+   </NodalConditions>
     <inputs>
     </inputs>
     <outputs>
@@ -931,12 +931,12 @@
       <item GeometryType="Line" nodes="2" KratosName="LargeDisplacementBeamSEMCElement3D2N"/>
       <item GeometryType="Line" nodes="3" KratosName="LargeDisplacementBeamSEMCElement3D3N"/>
     </TopologyFeatures>
-    
+
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="1D_UR"/>
       <filter field="Dimension" value="3D"/>
     </ConstitutiveLaw_FilterFeatures>
-    
+
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT" />
       <NodalCondition n="ROTATION"/>

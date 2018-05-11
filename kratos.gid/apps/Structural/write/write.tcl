@@ -196,18 +196,7 @@ proc Structural::write::writeLocalAxes { } {
         set e [Model::getElement $elem_name]
         if {[write::isBooleanTrue [$e getAttribute "RequiresLocalAxes"]]} { 
             set group [$gNode @n]
-            if {[GiD_EntitiesGroups get $group elements -count -element_type linear]} {
-                write::WriteString "Begin ElementalData LOCAL_AXIS_2 // Element: $elem_name // Groups: $group"
-                foreach line [GiD_EntitiesGroups get $group elements -element_type linear] {
-                    set raw [lindex [lindex [GiD_Info conditions -localaxesmat line_Local_axes mesh $line] 0] 3]
-                    set y0 [lindex $raw 1]
-                    set y1 [lindex $raw 4]
-                    set y2 [lindex $raw 7]
-                    write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
-                }
-                write::WriteString "End ElementalData"
-                write::WriteString ""
-            }
+            write::writeLinearLocalAxesGroup $group
         }
     }
 }
