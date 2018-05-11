@@ -59,7 +59,7 @@ proc Solid::xml::CustomTree { args } {
     }
 
     #results
-    foreach result [list RIGID_BODY_ROTATION_2D RIGID_BODY_ANGULAR_VELOCITY_2D RIGID_BODY_ANGULAR_ACCELERATION_2D RIGID_BODY_ROTATION_3D RIGID_BODY_ANGULAR_VELOCITY_3D RIGID_BODY_ANGULAR_ACCELERATION_3D] {
+    foreach result [list SPRING_2D BALLAST_2D AXIAL_TURN_2D AXIAL_VELOCITY_TURN_2D AXIAL_ACCELERATION_TURN_2D SPRING_3D BALLAST_3D AXIAL_TURN_3D AXIAL_VELOCITY_TURN_3D AXIAL_ACCELERATION_TURN_3D] {
         set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = '$result'\]"]
 	if { $result_node ne "" } {$result_node delete}
     }
