@@ -30,6 +30,7 @@ proc ::Solid::Init { } {
 proc ::Solid::LoadMyFiles { } {
     variable dir
     
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
@@ -56,8 +57,12 @@ proc ::Solid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
+    # Add examples
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Solid::examples::DynamicRod] [= "Example\nDynamic rod pendulus"]   
+}
 
-    
+proc ::Solid::CustomMenus { } {
+    Solid::examples::UpdateMenus
 }
 
 ::Solid::Init
