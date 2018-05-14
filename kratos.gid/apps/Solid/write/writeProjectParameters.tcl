@@ -137,10 +137,10 @@ proc Solid::write::getParametersDict { } {
     dict set projectParametersDict solver_settings $solverDataDict
 
     # Lists of processes
-    set nodal_conditions_dict [Solid::write::getConditionsParametersDict SLNodalConditions "Nodal"] 
+    set nodal_conditions_dict [write::getConditionsParametersDict SLNodalConditions "Nodal"] 
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
 
-    dict set projectParametersDict loads_process_list [Solid::write::getConditionsParametersDict SLLoads]
+    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict SLLoads]
 
     # GiD output configuration
     dict set projectParametersDict output_configuration [Solid::write::GetDefaultOutputDict]
