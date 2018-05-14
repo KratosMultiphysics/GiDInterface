@@ -40,7 +40,7 @@ proc EmbeddedFluid::write::writeDistances { } {
         set data [GiD_Info Mesh EmbeddedDistances] 
         lassign $data nodes_list distances_list
         set length [objarray length $nodes_list]
-        if {$length eq "0"} {W "Avisar al usuario"}
+        if {$length eq "0"} {W "Warning: No distances detected! Check Preferences > Mesh type > Embedded"}
         write::WriteString "Begin NodalData DISTANCE"
         incr write::current_mdpa_indent_level
         set s [write::mdpaIndent]

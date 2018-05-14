@@ -367,6 +367,9 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
     }
+    # GiD_Set ForceMesh(Points) 1
+    # GiD_Set ForceMesh(Lines) 1
+    # GiD_Set ForceMesh(Surfaces) 1
     set ret ""
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
     return $ret
