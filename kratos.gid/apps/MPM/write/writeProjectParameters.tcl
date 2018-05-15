@@ -69,7 +69,7 @@ proc ::MPM::write::getParametersDict { } {
     lassign [write::getValue MPMGravity direction] dx dy dz
     dict set gravity_parameters_dict direction [list [expr $dx] [expr $dy] [expr $dz]]
     dict set gravity_dict Parameters $gravity_parameters_dict
-    dict set project_parameters_dict gravity $gravity_dict
+    dict set project_parameters_dict gravity [list $gravity_dict]
 
     # Output configuration
     set body_output_configuration_dict [dict get $project_parameters_dict output_configuration]
