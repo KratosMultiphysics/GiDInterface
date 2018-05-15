@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+    
+  <ConditionItem n="Slip2D" pn="Slip" Interval="False"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
+	ElementType="Line" ProcessName="ApplyMPMSlipBoundaryProcess" help="">
+    <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+  
+  <ConditionItem n="Slip3D" pn="Slip" Interval="False"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" 
+	ElementType="Surface"  ProcessName="ApplyMPMSlipBoundaryProcess" help="">
+    <TopologyFeatures>
+      <item  GeometryType="Triangle"      nodes="3" KratosName="Condition3D3N"/>
+      <item  GeometryType="Quadrilateral" nodes="4" KratosName="Condition3D4N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+</ConditionList>
