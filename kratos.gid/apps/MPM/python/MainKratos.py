@@ -69,7 +69,7 @@ grid_output_post  = ProjectParameters.Has("grid_output_configuration")
 if (grid_output_post == True):
     if (parallel_type == "OpenMP"):
         from gid_output_process import GiDOutputProcess
-        grid_output_file_name = ProjectParameters["problem_data"]["problem_name"].GetString() + "_GridTrial"
+        grid_output_file_name = ProjectParameters["problem_data"]["problem_name"].GetString() + "_Grid"
         grid_gid_output = GiDOutputProcess(grid_model_part, grid_output_file_name,
                                     ProjectParameters["grid_output_configuration"])
     grid_gid_output.ExecuteInitialize()
@@ -78,7 +78,7 @@ mp_output_post  = ProjectParameters.Has("body_output_configuration")
 if (mp_output_post == True):
     if (parallel_type == "OpenMP"):
         from mpm_gid_output_process import ParticleMPMGiDOutputProcess
-        mp_output_file_name = ProjectParameters["problem_data"]["problem_name"].GetString() + "_BodyTrial"
+        mp_output_file_name = ProjectParameters["problem_data"]["problem_name"].GetString() + "_Body"
         mp_gid_output = ParticleMPMGiDOutputProcess(material_model_part, mp_output_file_name,
                                     ProjectParameters["body_output_configuration"])
     mp_gid_output.ExecuteInitialize()
