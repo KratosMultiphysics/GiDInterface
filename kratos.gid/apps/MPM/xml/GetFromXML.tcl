@@ -13,17 +13,32 @@ proc MPM::xml::Init { } {
     Model::ForgetElements
     Model::getElements Elements.xml
     
+    # Modify the schemes so more elements are filtered
     foreach strategy $::Model::SolutionStrategies {
         $strategy setAttribute NeedElements false
         foreach scheme [$strategy getSchemes] {
             $scheme addElementFilter ImplementedInApplication ParticleMechanicsApplication
         }
     }
-    #W [::Model::GetSchemes]
+
+    # Add some parameters
+    set implicit_solution_strategy [Model::GetSolutionStrategy implicit]
+    # Geometry type
+    set geometry_input [::Model::Parameter new "geometry_element" "Geometry element" "combo" "Triangle" "" "" "help" "Triangle,Quadrilateral" "Triangle,Quadrilateral"]
+    $implicit_solution_strategy addInputDone $geometry_input
+    # Number of particles per element for triangles
+    set input [::Model::Parameter new "particle_per_element_triangle" "Particles per element" "combo" "3" "" "" "help" "1,3,6,16" "1,3,6,16"]
+    $implicit_solution_strategy addInputDone $input
+    $implicit_solution_strategy addInputDependency "particle_per_element_triangle" "geometry_element" "Triangle"
+    # Quadrilateral
+    set input [::Model::Parameter new "particle_per_element_quadrilateral" "Particles per element" "combo" "4" "" "" "help" "1,4,9,16" "1,4,9,16"]
+    $implicit_solution_strategy addInputDone $input
+    $implicit_solution_strategy addInputDependency "particle_per_element_quadrilateral" "geometry_element" "Quadrilateral"
 
     # Import our Constitutive Laws
     Model::ForgetConstitutiveLaws
     Model::getConstitutiveLaws ConstitutiveLaws.xml
+
 
     # Import our Materials
     Model::ForgetMaterials
@@ -34,6 +49,11 @@ proc MPM::xml::Init { } {
     Model::ForgetNodalConditions
     Model::getNodalConditions NodalConditions.xml
 
+    # Import our conditions
+    Model::ForgetCondition SelfWeight3D
+    Model::ForgetCondition SelfWeight2D
+    Model::ForgetCondition SelfWeight2Da
+    Model::getConditions Conditions.xml
     
 }
 
