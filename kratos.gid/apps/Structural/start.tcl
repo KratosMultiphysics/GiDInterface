@@ -36,9 +36,12 @@ proc ::Structural::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir postprocess formfinding.tcl]]
 }
 
-
 proc ::Structural::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::TrussCantilever] [= "Example\nTruss cantilever"]   
+}
+
+proc ::Structural::CustomMenus { } {
+    Structural::examples::UpdateMenus
 }
 
 proc ::Structural::GetAttribute {name} {

@@ -38,16 +38,23 @@ proc ::FSI::Init { } {
 proc ::FSI::LoadMyFiles { } {
     variable dir
     
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
+    uplevel #0 [list source [file join $FSI::dir examples examples.tcl]]
 }
 
 proc ::FSI::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::MokChannelFlexibleWall] [= "Example\nMOK - Channel with flexible wall"]   
+    # TODO: REMOVE THIS IF STATEMENT ONCE THE 3D MOK BENCHMARK IS IMPLEMENTED
+    if {$::Model::SpatialDimension eq "2D"} {
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::TurekBenchmark] [= "Example\nTurek benchmark - FSI2"] 
+    }
 }
 
+proc ::FSI::CustomMenus { } {
+    FSI::examples::UpdateMenus
+}
 
 proc ::FSI::GetAttribute {name} {
     variable attributes

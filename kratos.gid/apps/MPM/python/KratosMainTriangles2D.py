@@ -445,6 +445,9 @@ while(current_time < ending_time):
             
               #node.SetSolutionStepValue(DISPLACEMENT, 1,(0.0,0.0,0.0))
 
+#Comment out the following section to activate particle erase feature
+################################################################
+
   #for elem in model_part3.Elements:
       #gauss_coord = elem.GetValue(GAUSS_COORD)
       #if(gauss_coord[0] < -0.055 or gauss_coord[0] > 0.055 ):
@@ -453,6 +456,8 @@ while(current_time < ending_time):
           #elem.Set(TO_ERASE, True)
 
   #ParticleEraseProcess(model_part3).Execute()
+
+################################################################
 
   main_step_solver.Solve()
   
@@ -489,7 +494,7 @@ while(current_time < ending_time):
           #previous_coord = mpm.GetValue(GAUSS_COORD,1)
           coord = mpm.GetValue(GAUSS_COORD)
           displacement = mpm.GetValue(MP_DISPLACEMENT)
-          result_file.write("{} {} {} {}\n".format(mpm.Id, displacement[0], displacement[1], 0.0))            
+          result_file.write("{} {} {} {}\n".format(mpm.Id, displacement[0], displacement[1], displacement[2]))            
       result_file.write("End Values\n")
       #result_file.flush()
      

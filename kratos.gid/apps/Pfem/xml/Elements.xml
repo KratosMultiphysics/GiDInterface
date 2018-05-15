@@ -15,7 +15,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
+	  <filter field="Type" value="Fluid3D,FluidPlaneStrain"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
@@ -41,7 +41,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
+	  <filter field="Type" value="Fluid3D,FluidPlaneStrain"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
@@ -68,7 +68,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
+	  <filter field="Type" value="Fluid3D,FluidPlaneStrain"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
@@ -97,7 +97,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
+	  <filter field="Type" value="Fluid3D,FluidPlaneStrain"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
@@ -124,7 +124,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
+	  <filter field="Type" value="3D_V,PlaneStrain_V"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
@@ -153,7 +153,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
+	  <filter field="Type" value="3D_V,PlaneStrain_V"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
@@ -345,9 +345,6 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -534,9 +531,6 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="RIGID_BODY_ROTATION_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-      <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
     </NodalConditions>
     <inputs>
       <parameter n="STABILIZATION_FACTOR" pn="Stabilization" v="1.0" help="0.1 to 10"/>

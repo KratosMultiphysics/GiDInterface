@@ -4,6 +4,9 @@ from KratosMultiphysics import *
 from KratosMultiphysics.FluidDynamicsApplication import *
 from KratosMultiphysics.ExternalSolversApplication import *
 
+import sys
+import time as system_time
+
 ######################################################################################
 ######################################################################################
 ######################################################################################
@@ -124,6 +127,12 @@ if ((parallel_type == "OpenMP") or (mpi.rank == 0)) and (echo_level > 1):
     with open("ProjectParametersOutput.json", 'w') as f:
         f.write(project_parameters.PrettyPrintJsonString())
 
+# force a flush to get some output in windows
+# Note: we don't do flushes in MPI, they are only good for causing bottlenecks in disk access.
+if parallel_type == "OpenMP":
+    sys.stdout.flush()
+    last_flush = system_time.time()
+
 while(time <= end_time):
 
     delta_time = solver.ComputeDeltaTime()
@@ -136,6 +145,12 @@ while(time <= end_time):
         print("")
         print("STEP = ", main_model_part.ProcessInfo[STEP])
         print("TIME = ", main_model_part.ProcessInfo[TIME])
+
+    if parallel_type == "OpenMP":
+        now = system_time.time()
+        if now - last_flush > 10.0: # if we didn't flush for the last 10 seconds
+            sys.stdout.flush()
+            last_flush = now
 
     for process in list_of_processes:
         process.ExecuteInitializeSolutionStep()
