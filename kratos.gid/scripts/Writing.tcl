@@ -123,7 +123,8 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
     
     CloseFile
     if {$needsOpen} {OpenFile $filename}
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    # if {$::Kratos::kratos_private(DevMode) eq "dev"} 
+    if {1} {
         eval $wevent
     } else {
         if {[catch {eval $wevent} fid] } {
@@ -1536,29 +1537,31 @@ proc write::getPropertiesList {parts_un} {
             dict set prop_dict "properties_id" $mid
             set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
-            set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
-            set variables_dict [dict create]
-            foreach prop [dict keys [dict get $mat_dict $group] ] {
-                if {$prop ni $exclusionList} {
-                    dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
+            if {$constitutive_law ne ""} {
+                set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+                set variables_dict [dict create]
+                foreach prop [dict keys [dict get $mat_dict $group] ] {
+                    if {$prop ni $exclusionList} {
+                        dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
+                    }
                 }
+                set material_dict [dict create]
+                set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
+                # WV const_law_application
+                set constitutive_law_name [$constitutive_law getKratosName]
+                if {$const_law_application eq "KratosMultiphysics"} {
+                    set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
+                } {
+                    set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
+                }
+                
+                dict set material_dict constitutive_law [dict create name $const_law_fullname]
+                dict set material_dict Variables $variables_list
+                dict set material_dict Tables dictnull
+                dict set prop_dict Material $material_dict
+                
+                lappend props $prop_dict
             }
-            set material_dict [dict create]
-            set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
-            # WV const_law_application
-            set constitutive_law_name [$constitutive_law getKratosName]
-            if {$const_law_application eq "KratosMultiphysics"} {
-                set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
-            } {
-                set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
-            }
-            
-            dict set material_dict constitutive_law [dict create name $const_law_fullname]
-            dict set material_dict Variables $variables_list
-            dict set material_dict Tables dictnull
-            dict set prop_dict Material $material_dict
-            
-            lappend props $prop_dict
         }
         
     }
