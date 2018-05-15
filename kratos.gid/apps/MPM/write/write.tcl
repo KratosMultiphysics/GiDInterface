@@ -10,8 +10,8 @@ proc MPM::write::Init { } {
     # SetAttribute materials_un EMBFLMaterials
     # SetAttribute writeCoordinatesByGroups 0
     # SetAttribute validApps [list "MPM"]
-    # SetAttribute main_script_file "KratosFluid.py"
-    # SetAttribute materials_file "FluidMaterials.json"
+    SetAttribute main_script_file "MainKratos.py"
+    SetAttribute materials_file "ParticleMaterials.json"
 }
 
 # Events
@@ -110,51 +110,16 @@ proc MPM::write::writeNodalDisplacement { } {
     }
 }
 
-proc MPM::write::writeMaterialsFile { } {
-    write::OpenFile "materials.py"
-
-    write::WriteString ""
-    write::WriteString "# Importing the Kratos Library"
-    write::WriteString "from KratosMultiphysics import *"
-    write::WriteString "from KratosMultiphysics.ParticleMechanicsApplication import *"
-    write::WriteString "from KratosMultiphysics.SolidMechanicsApplication import *"
-    write::WriteString "def AssignMaterial(Properties):"
-    
-    foreach material [dict values [write::getMatDict]] {
-        set mid [dict get $material MID]
-        set constitutive_law_name [dict get $material ConstitutiveLaw]
-        set constitutive_law [Model::getConstitutiveLaw $constitutive_law_name]
-        if {$constitutive_law ne ""} {
-            set constitutive_law_class [$constitutive_law getAttribute class]
-            write::WriteString "    prop_id = $mid;"
-            write::WriteString "    prop = Properties\[prop_id\]"
-            write::WriteString "    mat = ${constitutive_law_class}();"
-            write::WriteString "    prop.SetValue(CONSTITUTIVE_LAW, mat.Clone());"
-        }
-    }
-    write::WriteString ""
-    write::CloseFile
-}
-
 proc MPM::write::writeCustomFilesEvent { } {
-    write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
-    writeMaterialsFile
-    copyMainKratosPythonFile
-}
+    # write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 
-proc MPM::write::copyMainKratosPythonFile { } {
-    set element "Triangular"
-    set dim "2"
-
-    if {$dim eq "2"} {
-        if {$element eq "Triangular"} {
-            set filename "KratosMainTriangles2D.py"
-        }
-    } else {
-
-    }
-    write::CopyFileIntoModel [file join python $filename]
-    write::RenameFileInModel $filename "MainKratos.py"
+    # Materials file
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+    
+    # Main python script
+    set orig_name [GetAttribute main_script_file]
+    write::CopyFileIntoModel [file join "python" $orig_name ]
+    write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 
