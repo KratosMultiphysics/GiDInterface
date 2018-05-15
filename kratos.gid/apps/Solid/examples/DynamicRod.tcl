@@ -6,8 +6,7 @@ proc ::Solid::examples::DynamicRod {args} {
 		if { $retval == "cancel" } { return }
     }
     DrawDynamicRodGeometry$::Model::SpatialDimension
-    #AssignDynamicRodMeshSizes$::Model::SpatialDimension
-    #TreeAssignationDynamicRod$::Model::SpatialDimension
+    TreeAssignationDynamicRod$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -25,34 +24,45 @@ proc Solid::examples::DrawDynamicRodGeometry3D {args} {
 }
 proc Solid::examples::DrawDynamicRodGeometry2D {args} {
     Kratos::ResetModel
-    #GiD_Process Mescape Files InsertGeom DynamicRod3D.gid
 }
 
 # Mesh sizes
 
 
 # Tree assign
-proc Solid::examples::TreeAssignationDynamicRod3D {args} {
-    TreeAssignationDynamicRod2D
-    AddCuts
-}
 proc Solid::examples::TreeAssignationDynamicRod2D {args} {
+    # to build
+}
+proc Solid::examples::TreeAssignationDynamicRod3D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
     set condtype line
     if {$nd eq "3D"} { set condtype surface }
 
-    # Monolithic solution strategy set
-    spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
+    # Dynamic solution strategy set
+    spdAux::SetValueOnTreeItem v "Dynamic" SLSoluType
 
+    # Time parameters
+    set time_parameters [list EndTime 10 DeltaTime 0.1]
+    set time_params_path [spdAux::getRoute SLTimeParameters]
+    foreach {name value} $time_parameters {
+        set node [$root selectNodes "$time_params_path/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check  example script"
+        }
+	
+    }
+    
     # Solid Parts
-    set solidParts [spdAux::getRoute "FLParts"]
-    set solidNode [customlib::AddConditionGroupOnXPath $solidParts Solid]
-    # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
+    set solidParts [spdAux::getRoute "SLParts"]
+    set solidPartsNode [customlib::AddConditionGroupOnXPath $solidParts Solid]
+    $solidPartsNode setAttribute ov volume
+    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw LargeStrain3DLaw.SaintVenantKirchhoffModel]
     foreach {prop val} $props {
-        set propnode [$solidNode selectNodes "./value\[@n = '$prop'\]"]
+        set propnode [$solidPartsNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
             $propnode setAttribute v $val
         } else {
@@ -62,64 +72,49 @@ proc Solid::examples::TreeAssignationDynamicRod2D {args} {
 
     set solidConditions [spdAux::getRoute "FLBC"]
 
-    # Solid Inlet
-    set solidInlet "$solidConditions/condition\[@n='AutomaticInlet$nd'\]"
-    set inlets [list inlet1 0 1 "6*y*(1-y)*sin(pi*t*0.5)" inlet2 1 End "6*y*(1-y)"]
-    ErasePreviousIntervals
-    foreach {interval_name ini end function} $inlets {
-        spdAux::CreateInterval $interval_name $ini $end
-        GiD_Groups create "Inlet//$interval_name"
-        GiD_Groups edit state "Inlet//$interval_name" hidden
-        spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
-        set inletNode [customlib::AddConditionGroupOnXPath $solidInlet "Inlet//$interval_name"]
-        $inletNode setAttribute ov $condtype
-        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
-        foreach {prop val} $props {
-             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property Inlet $prop"
-            }
-        }
-    }
-
-    # Solid Outlet
-    set solidOutlet "$solidConditions/condition\[@n='Outlet$nd'\]"
-    set outletNode [customlib::AddConditionGroupOnXPath $solidOutlet Outlet]
-    $outletNode setAttribute ov $condtype
-    set props [list value 0.0]
+    # Solid Constraint
+    GiD_Groups clone Constraint Total
+    GiD_Groups edit parent Total Constraint
+    spdAux::AddIntervalGroup Constraint "Constraint//Total"
+    GiD_Groups edit state "Constraint//Total" hidden
+    set solidConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
+    set solidConstraintNode [customlib::AddConditionGroupOnXPath $solidConstraint "Constraint//Total"]
+    $solidConstraintNode setAttribute ov line
+    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
+         set propnode [$solidConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
               $propnode setAttribute v $val
          } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
+            W "Warning - Couldn't find property Solid $prop"
+         }
+    }
+    
+    # Solid Loads
+    GiD_Groups clone SelfWeight Total
+    GiD_Groups edit parent Total SelfWeight 
+    spdAux::AddIntervalGroup SelfWeight "SelfWeight//Total"
+    GiD_Groups edit state "SelfWeight//Total" hidden
+    set solidLoad "container\[@n='Solid'\]/container\[@n='Loads'\]/condition\[@n='SelfWeight$nd'\]"
+    set solidLoadNode [customlib::AddConditionGroupOnXPath $solidLoad "SelfWeight//Total"]
+    $solidLoadNode setAttribute ov volume
+    set props [list ByFunction No modulus 9.81 direction 0.0,-1.0,0.0 Interval Total]
+    foreach {prop val} $props {
+         set propnode [$solidLoadNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Solid $prop"
+         }
     }
 
-    # Solid Conditions
-    [customlib::AddConditionGroupOnXPath "$solidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$solidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
-
-    # Time parameters
-    set time_parameters [list EndTime 45 DeltaTime 0.1]
-    set time_params_path [spdAux::getRoute "FLTimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
-    # Output
-    set time_parameters [list OutputControlType step OutputDeltaStep 1]
-    set time_params_path [spdAux::getRoute "Results"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
     # Parallelism
     set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
     set time_params_path [spdAux::getRoute "Parallelization"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
+    
 
     spdAux::RequestRefresh
 }

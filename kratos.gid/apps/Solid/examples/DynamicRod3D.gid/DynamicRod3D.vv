@@ -1,0 +1,33 @@
+BeginZE /home/cpuigbo/GiDInterface/kratos.gid/apps/Solid/examples/DynamicRod3D.gid/DynamicRod3D.vv
+   x -0.0695682764053344727 0.322068274021148682
+   y 0.147866189479827881 -0.147866189479827881
+   z -0.138173505663871765 0.188173487782478333
+   e 0.147866189479827881
+   v -0.16696243928067464 0.200225947420064221 0.0827838053615818081
+   r 0.961862752901390117
+   m 0.906112849712371826 -0.226113736629486084 0.357536196708679199 0 0.0923928916454315186 0.930540800094604492 0.354340821504592896 0 -0.412823319435119629 -0.288038969039916992 0.864066243171691895 0 0 0 0 1
+   c 0.110942699015140533 5.20333429676611559e-08 -0.0249999891966581345
+   pd 0
+   pno 0
+   pfo 0
+   pf 4
+   pv 0
+   NowUse 0
+   DrawingType 1
+   LightVector 90 90 150 0
+   OGLShadow(UseShadows) 0
+   OGLShadow(RenderMode) RenderNice
+   OGLShadow(ShadowBias) -0.002
+   OGLShadow(AmbientShadows) 1
+   OGLShadow(UseFBO) 1
+   OGLShadow(FBOSize) 2048
+   OGLShadow(DimmedLightFactor) 0.02
+   OGLStereo(UseStereo) 0
+   OGLStereo(RelativeEyeDistance) 1
+   OGLStereo(FlipEyes) 0
+   OGLStereo(StereoMode) AnaglyphColors
+   OGLStereo(EyeDistance) 0.075
+   OGLStereo(LeftEyeDistance) 1 0 0 1
+   OGLStereo(RightEyeDistance) 0 1 1 1
+EndZE /home/cpuigbo/GiDInterface/kratos.gid/apps/Solid/examples/DynamicRod3D.gid/DynamicRod3D.vv
+
