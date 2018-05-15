@@ -95,7 +95,7 @@ proc Structural::write::writeModelPartEvent { } {
     # Hinges special section
     Structural::write::writeHinges
 
-    # Nodal conditions and conditions
+    # Write Conditions section
     Structural::write::writeConditions
 
     # SubmodelParts
