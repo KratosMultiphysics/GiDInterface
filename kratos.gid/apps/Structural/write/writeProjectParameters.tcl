@@ -105,8 +105,11 @@ proc Structural::write::getOldParametersDict { } {
     set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
     set special_nodal_conditions [list ]
     foreach cnd_name $special_nodal_conditions_dont_generate_submodelpart_names {
-        lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
-        Model::ForgetNodalCondition $cnd_name
+        set cnd [Model::getNodalConditionbyId $cnd_name]
+        if {$cnd ne ""} {
+            lappend special_nodal_conditions $cnd
+            Model::ForgetNodalCondition $cnd_name
+        }
     }
 
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
@@ -204,9 +207,9 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_parameters_dict model_part_name Structure
     if {$slave_group ne ""} {
         dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
-    }
-    dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
     
+        dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
+    }
     dict set contact_process_dict Parameters $contact_parameters_dict
     
     return [list $contact_process_dict]
