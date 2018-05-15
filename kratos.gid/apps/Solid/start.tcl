@@ -58,7 +58,9 @@ proc ::Solid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
     # Add examples
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Solid::examples::DynamicRod] [= "Example\nDynamic rod pendulus"]   
+    if { $::Model::SpatialDimension ne "2Da" } {
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "rod_example.png"] [list -np- ::Solid::examples::DynamicRod] [= "Example\nDynamic rod pendulus"]
+    }
 }
 
 proc ::Solid::CustomMenus { } {
