@@ -1,11 +1,15 @@
 namespace eval MPM::write {
     variable writeAttributes
+    variable ConditionsDictGroupIterators
 }
 
 proc MPM::write::Init { } {
     # Namespace variables inicialization
+    variable ConditionsDictGroupIterators
+    set ConditionsDictGroupIterators [dict create]
     SetAttribute parts_un MPMParts
     SetAttribute nodal_conditions_un MPMNodalConditions
+    SetAttribute conditions_un MPMLoads
     # SetAttribute conditions_un FLBC
     # SetAttribute materials_un EMBFLMaterials
     # SetAttribute writeCoordinatesByGroups 0
@@ -19,9 +23,6 @@ proc MPM::write::writeModelPartEvent { } {
     write::initWriteConfiguration [GetAttributes]
     set filename "[file tail [GiD_Info project ModelName]]"
     
-    write::processMaterials
-    #MPM::write::UpdateMaterials
-
     ## Grid MPDA ##
     # Headers
     write::writeModelPartData
@@ -29,14 +30,20 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
     
     # Materials
-    write::writeMaterials
+    # write::writeMaterials
 
     # Nodal coordinates 
     write::writeNodalCoordinates
 
+    # Grid element connectivities
     writeGridConnectivities
     
-    writeNodalDisplacement
+    # Write conditions
+    writeConditions
+
+    # Write Submodelparts
+    writeSubmodelparts grid
+
     write::CloseFile
     write::RenameFileInModel "$filename.mdpa" "${filename}_Grid.mdpa"
 
@@ -93,19 +100,49 @@ proc MPM::write::writeGridConnectivities { } {
     }
 }
 
-proc MPM::write::writeNodalDisplacement { } {
-    set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='DISPLACEMENT'\]/group"
+proc MPM::write::writeConditions { } {
+
+    variable ConditionsDictGroupIterators
+    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+}
+proc MPM::write::writeSubmodelparts { type } {
+
+    set grid_elements [list GRID2D GRID3D]
+
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set body_groups [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set groupid [GiD_Groups get parent [$gNode @n] ]
-        foreach dim [list X Y Z] {
-            set enabled [write::getValueByNode [$gNode selectNodes ".//value\[@n='Enabled_$dim'\]"]]
-            if {[write::isBooleanTrue $enabled]} {
-                set disp [write::getValueByNode [$gNode selectNodes ".//value\[@n='Displacement$dim'\]"]]
-                write::WriteString "Begin NodalData DISPLACEMENT_$dim"
-                GiD_WriteCalculationFile nodes [dict create $groupid  "%5d 1 $disp \n"]
-                write::WriteString "End NodalData"
-                write::WriteString ""
+        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
+        if {$type eq "grid"} {
+            if {$elem in $grid_elements} {
+                write::writeGroupSubModelPart Parts [get_domnode_attribute $gNode n] "Elements"
             }
+        } else {
+            if {$elem ni $grid_elements} {
+                write::writeGroupSubModelPart Parts [get_domnode_attribute $gNode n] "Elements"
+            }
+        }
+    }
+    
+    # Write the boundary conditions submodelpart
+    write::writeNodalConditions [GetAttribute nodal_conditions_un]
+    
+    # A Condition y a meshes-> salvo lo que no tenga topologia
+    writeLoads
+
+}
+proc MPM::write::writeLoads { } {
+    variable ConditionsDictGroupIterators
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        set groupid [write::GetWriteGroupName $groupid]
+        #W "Writing mesh of Load $groupid"
+        if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
+            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
+        } else {
+            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
         }
     }
 }
