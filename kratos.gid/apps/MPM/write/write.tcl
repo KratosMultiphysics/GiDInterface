@@ -21,6 +21,9 @@ proc MPM::write::Init { } {
 # Events
 proc MPM::write::writeModelPartEvent { } {
     write::initWriteConfiguration [GetAttributes]
+
+    MPM::write::UpdateMaterials
+    
     set filename "[file tail [GiD_Info project ModelName]]"
     
     ## Grid MPDA ##
@@ -28,9 +31,6 @@ proc MPM::write::writeModelPartEvent { } {
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
-    
-    # Materials
-    # write::writeMaterials
 
     # Nodal coordinates 
     write::writeNodalCoordinates
@@ -55,16 +55,12 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
 
-    # Materials
-    #write::writeMaterials
-
     # Nodal coordinates
     writeBodyNodalCoordinates
 
     # Body element connectivities
     writeBodyElementConnectivities
 
-    
     # Write Submodelparts
     writeSubmodelparts particles
 

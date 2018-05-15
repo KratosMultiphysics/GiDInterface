@@ -2,8 +2,8 @@
 <ProcessList>
  
   <!-- Processes for particle mechanics -->
-  <Process n="MPMDisplacementProcess" pn="MPMDisplacementProcess" python_module="MPMDisplacementProcess"
-	   kratos_module="KratosMultiphysics.ParticleMechanicsApplication" help="" > 
+  <Process n="MPMDisplacementProcess" pn="MPMDisplacementProcess" python_module="assign_vector_variable_process"
+	   kratos_module="KratosMultiphysics" help="" > 
     <inputs>
       <parameter n="Displacement" pn="Displacement" enabled="1" function="0" type="vector" vectorType="double" v="0,0,0"/>
     </inputs>
