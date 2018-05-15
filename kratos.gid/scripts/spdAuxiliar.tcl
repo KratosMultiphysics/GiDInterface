@@ -2073,6 +2073,16 @@ proc spdAux::ProcConditionParameterState {domNode args} {
     return normal
 }
 
+proc spdAux::MergeGroups {result_group_name group_list} {
+    GiD_Groups create $result_group_name
+
+    foreach group $group_list {
+        foreach entity [list points lines surfaces volumes nodes elements faces] {
+            GiD_EntitiesGroups assign $result_group_name $entity [GiD_EntitiesGroups get $group $entity]
+        }
+    }
+}
+
 proc spdAux::LoadIntervalGroups { } {
     customlib::UpdateDocument
     variable GroupsEdited
