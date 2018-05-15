@@ -2,7 +2,7 @@
 <ConstitutiveLaws>
 
   <!--Particle-->
-  <CLaw n="MohrCoulomb3D" pn="MohrCoulomb" class="HenckyMCPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+  <CLaw n="HenckyMCPlastic3DLaw" pn="Mohr Coulomb" class="HenckyMCPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
 	help=" " Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -16,7 +16,7 @@
       
     </outputs>
   </CLaw>
-  <CLaw n="MohrCoulomb2D" pn="MohrCoulomb" class="HenckyMCPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+  <CLaw n="HenckyMCPlasticPlaneStrain2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
 	help=" " Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -33,7 +33,7 @@
 
   <!--hyper elastic laws-->
   <CLaw n="LargeStrain3DLaw.SaintVenantKirchhoffModel" pn="SaintVenantKirchhoff" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="SaintVenantKirchhoff HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" class="SaintVenantKirchhoffModel">
+	help="SaintVenantKirchhoff HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="Developer" class="SaintVenantKirchhoffModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -44,7 +44,7 @@
     </outputs>
   </CLaw>
   <CLaw n="LargeStrainPlaneStrain2DLaw.SaintVenantKirchhoffModel" pn="SaintVenantKirchhoff" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="SaintVenantKirchhoff HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" class="SaintVenantKirchhoffModel">
+	help="SaintVenantKirchhoff HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="Developer" class="SaintVenantKirchhoffModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -55,7 +55,7 @@
     </outputs>
   </CLaw>
   <CLaw n="LargeStrain3DLaw.NeoHookeanModel" pn="NeoHookean" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" class="NeoHookeanModel">
+	help="NeoHookean HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="Developer" class="NeoHookeanModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -67,7 +67,7 @@
     </outputs>
   </CLaw>
   <CLaw n="LargeStrainPlaneStrain2DLaw.NeoHookeanModel" pn="NeoHookean" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" class="NeoHookeanModel">
+	help="NeoHookean HyperElastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="Developer" class="NeoHookeanModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -81,7 +81,7 @@
   
   <!--hyper elastic plastic laws-->
   <CLaw n="LargeStrain3DLaw.VonMisesNeoHookeanPlasticityModel" pn="J2 Plasticity (l-d)" Type="3D" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" class="VonMisesNeoHookeanPlasticityModel">
+	help="NeoHookean HyperElastic Plastic J2 Behaviour in 3D" Dimension="3D" ProductionReady="Developer" class="VonMisesNeoHookeanPlasticityModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -99,7 +99,7 @@
     </outputs>
   </CLaw>
   <CLaw n="LargeStrainPlaneStrain2DLaw.VonMisesNeoHookeanPlasticityModel" pn="J2 Plasticity (l-d)" Type="PlaneStrain" LargeDeformation="True" kratos_module="ConstitutiveModelsApplication"
-	help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady"  class="VonMisesNeoHookeanPlasticityModel">
+	help="NeoHookean HyperElastic Plastic J2 Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="Developer"  class="VonMisesNeoHookeanPlasticityModel">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -160,6 +160,27 @@
     </inputs>
     <outputs>
       <parameter n="DAMAGE_VARIABLE" pn="Damage Variable"/>
+    </outputs>
+  </CLaw>
+  
+  <CLaw n="HyperElasticViscoplastic3DLaw" pn="Hyper elastic viscoplastic" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help="" Dimension="3D" ProductionReady="ProductionReady" >
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/> 
+    </inputs>
+    <outputs>
+    </outputs>
+  </CLaw>
+  <CLaw n="HyperElasticViscoplasticPlaneStrain2DLaw" pn="Hyper elastic viscoplastic" Type="PlaneStrain" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help="" Dimension="2D" ProductionReady="ProductionReady" >
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/> 
+    </inputs>
+    <outputs>
     </outputs>
   </CLaw>
   
