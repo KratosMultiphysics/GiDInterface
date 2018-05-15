@@ -56,13 +56,17 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
 
     # Materials
-    write::writeMaterials
+    #write::writeMaterials
 
     # Nodal coordinates
     writeBodyNodalCoordinates
 
     # Body element connectivities
     writeBodyElementConnectivities
+
+    
+    # Write Submodelparts
+    writeSubmodelparts particles
 
     write::CloseFile
 }
@@ -124,12 +128,13 @@ proc MPM::write::writeSubmodelparts { type } {
         }
     }
     
-    # Write the boundary conditions submodelpart
-    write::writeNodalConditions [GetAttribute nodal_conditions_un]
-    
-    # A Condition y a meshes-> salvo lo que no tenga topologia
-    writeLoads
-
+    if {$type eq "grid"} {
+        # Write the boundary conditions submodelpart
+        write::writeNodalConditions [GetAttribute nodal_conditions_un]
+        
+        # A Condition y a meshes-> salvo lo que no tenga topologia
+        writeLoads
+    }
 }
 proc MPM::write::writeLoads { } {
     variable ConditionsDictGroupIterators
