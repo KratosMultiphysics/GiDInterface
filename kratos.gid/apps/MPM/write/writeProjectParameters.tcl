@@ -19,6 +19,10 @@ proc ::MPM::write::getParametersDict { } {
     dict append model_import_settings_dict input_filename _Body
     dict set project_parameters_dict solver_settings model_import_settings $model_import_settings_dict
 
+    # materials file
+    dict set project_parameters_dict solver_settings material_import_settings [GetAttribute materials_file]
+    
+
     # Geometry in elements
     set geometry_element [dict get $project_parameters_dict solver_settings geometry_element]
     if {$geometry_element eq "Triangle"} {
