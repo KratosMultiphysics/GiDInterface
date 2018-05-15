@@ -40,6 +40,43 @@ proc ::MPM::write::getParametersDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict MPM] ]
     dict set project_parameters_dict solver_settings $solverSettingsDict
 
+    # Move slip to constraints
+    set slip_process_list [list ]
+    set new_load_process_list [list ]
+    set load_process_list [dict get $project_parameters_dict loads_process_list]
+    foreach load $load_process_list {
+        if {[dict get $load python_module] eq "apply_mpm_slip_boundary_process"} {
+            lappend slip_process_list $load
+        } else {
+            lappend new_load_process_list $load
+        }
+    }
+    dict set project_parameters_dict loads_process_list $new_load_process_list
+    dict set project_parameters_dict list_other_processes $slip_process_list
+
+    # Gravity
+    set gravity_dict [dict create ]
+    dict set gravity_dict python_module assign_gravity_to_particle_process
+    dict set gravity_dict kratos_module "KratosMultiphysics.ParticleMechanicsApplication"
+    dict set gravity_dict process_name AssignGravityToParticleProcess
+    set gravity_parameters_dict [dict create ]
+    dict set gravity_parameters_dict model_part_name MPM_Material
+    dict set gravity_parameters_dict variable_name MP_VOLUME_ACCELERATION
+    dict set gravity_parameters_dict modulus [write::getValue MPMGravity modulus]
+    lassign [write::getValue MPMGravity direction] dx dy dz
+    dict set gravity_parameters_dict direction [list [expr $dx] [expr $dy] [expr $dz]]
+    dict set gravity_dict Parameters $gravity_parameters_dict
+    dict set project_parameters_dict gravity $gravity_dict
+
+    # Output configuration
+    set body_output_configuration_dict [dict get $project_parameters_dict output_configuration]
+    set grid_output_configuration_dict [dict get $project_parameters_dict output_configuration]
+    dict unset body_output_configuration_dict result_file_configuration nodal_results
+    dict unset grid_output_configuration_dict result_file_configuration gauss_point_results
+    dict set project_parameters_dict body_output_configuration $body_output_configuration_dict
+    dict set project_parameters_dict grid_output_configuration $grid_output_configuration_dict
+    dict unset project_parameters_dict output_configuration
+
     return $project_parameters_dict
 }
 proc ::MPM::write::writeParametersEvent { } {
