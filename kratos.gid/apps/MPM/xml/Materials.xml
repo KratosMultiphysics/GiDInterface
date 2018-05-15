@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Materials>
+  <Material n="None" MaterialType="Structural" help=""><inputs></inputs></Material>
   <Material n="Sand" MaterialType="Structural" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="2300" help="Density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
