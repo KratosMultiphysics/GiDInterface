@@ -21,10 +21,10 @@
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
       <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
-      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="true" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="true" />
-      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="true" />
-      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="true" />
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" />
+      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
+      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangian3D" pn="Updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
@@ -46,10 +46,10 @@
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
       <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
-      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="true" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="true" />
-      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="true" />
-      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="true" />
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" />
+      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
+      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
   <ElementItem n="GRID3D" pn="Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
