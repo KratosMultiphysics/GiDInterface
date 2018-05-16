@@ -155,38 +155,43 @@ proc Structural::write::writeLoads { } {
 
 proc Structural::write::writeContacts { } {
     variable ConditionsDictGroupIterators
-    set root [customlib::GetBaseRoot]
+    if {[Structural::write::usesContact]} {
+        set root [customlib::GetBaseRoot]
 
-    # Prepare the xpaths
-    set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
-    set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
+        # Prepare the xpaths
+        set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
+        set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
 
-    # Get the groups
-    set master_group [$root selectNodes $xp_master]
-    set slave_group [$root selectNodes $xp_slave]
-    if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
-    set master_groupid_raw [$master_group @n]
-    set master_groupid [write::GetWriteGroupName $master_groupid_raw]
-    if {$slave_group ne ""} {
-        set slave_groupid_raw [$slave_group @n]
-        set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
+        # Get the groups
+        set master_group [$root selectNodes $xp_master]
+        set slave_group [$root selectNodes $xp_slave]
+        if {$master_group ne ""} {
+            if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
+            set master_groupid_raw [$master_group @n]
+            set master_groupid [write::GetWriteGroupName $master_groupid_raw]
+        }
+        if {$slave_group ne ""} {
+            set slave_groupid_raw [$slave_group @n]
+            set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
+        }
+        # Create the joint group
+        set joint_contact_group "_HIDDEN_CONTACT_GROUP_"
+        if {[GiD_Groups exists $joint_contact_group]} {GiD_Groups delete $joint_contact_group}
+
+        if {$slave_group ne ""} {
+            spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw $slave_groupid_raw]
+        } {
+            spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw]
+        }
+
+        # Print the submodelpart
+        ::write::writeGroupSubModelPart CONTACT $joint_contact_group "nodal"
+        if {$slave_group ne ""} {
+            ::write::writeGroupSubModelPart CONTACT $slave_groupid_raw "nodal"
+        }
+
+        GiD_Groups delete $joint_contact_group
     }
-    # Create the joint group
-    set joint_contact_group "_HIDDEN_CONTACT_GROUP_"
-    if {[GiD_Groups exists $joint_contact_group]} {GiD_Groups delete $joint_contact_group}
-    if {$slave_group ne ""} {
-        spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw $slave_groupid_raw]
-    } {
-        spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw]
-    }
-
-    # Print the submodelpart
-    ::write::writeGroupSubModelPart CONTACT $joint_contact_group "nodal"
-    if {$slave_group ne ""} {
-        ::write::writeGroupSubModelPart CONTACT $slave_groupid_raw "nodal"
-    }
-
-    GiD_Groups delete $joint_contact_group
 }
 
 proc Structural::write::writeCustomBlock { } {

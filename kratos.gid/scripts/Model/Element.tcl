@@ -53,7 +53,7 @@ oo::class create Element {
         variable ElementNodalCondition
         set nclist [list ]
         foreach nc [::Model::getAllNodalConditions] {
-            if {[$nc getName] in $ElementNodalCondition} {
+            if {$nc ne "" && [$nc getName] in $ElementNodalCondition} {
                 lappend nclist $nc
             }
         }
@@ -63,7 +63,7 @@ oo::class create Element {
         variable ElementNodalCondition
         set v ""
         foreach nc [::Model::getAllNodalConditions] {
-            if {[$nc getName] in $ElementNodalCondition} {
+            if {$nc ne "" && [$nc getName] in $ElementNodalCondition} {
                 return $nc
             }
         }
@@ -354,7 +354,7 @@ proc Model::GetNodalConditions {args} {
 proc Model::getNodalConditionbyId {ncid} {
     set ret ""
     foreach nc [getAllNodalConditions] {
-        if {[$nc getName] eq $ncid} {set ret $nc; break}
+        if {$nc ne "" && [$nc getName] eq $ncid} {set ret $nc; break}
     }
     return $ret
 }
