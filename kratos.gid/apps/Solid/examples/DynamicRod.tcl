@@ -46,7 +46,7 @@ proc Solid::examples::TreeAssignationDynamicRod3D {args} {
     spdAux::SetValueOnTreeItem v "Dynamic" SLSoluType
 
     # Time parameters
-    set time_parameters [list EndTime 10 DeltaTime 0.1]
+    set time_parameters [list EndTime 1.06 DeltaTime 0.01]
     set time_params_path [spdAux::getRoute SLTimeParameters]
     foreach {name value} $time_parameters {
         set node [$root selectNodes "$time_params_path/value\[@n = '$name'\]"]
@@ -131,7 +131,7 @@ proc Solid::examples::TreeAssignationDynamicRod2D {args} {
     spdAux::SetValueOnTreeItem v "Dynamic" SLSoluType
 
     # Time parameters
-    set time_parameters [list EndTime 10 DeltaTime 0.1]
+    set time_parameters [list EndTime 1.06 DeltaTime 0.01]
     set time_params_path [spdAux::getRoute SLTimeParameters]
     foreach {name value} $time_parameters {
         set node [$root selectNodes "$time_params_path/value\[@n = '$name'\]"]
