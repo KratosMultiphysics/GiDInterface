@@ -13,7 +13,7 @@
     </inputs>
     <DefaultValues>
 	  <value n="modulus" pn="Gravity" v="9.81" help="Gravity acceleration value"/>
-	  <value n="direction" pn="Direction" type="inline_vector" v="0.0,-1.0,0.0" help="The resultant unit vector is considered"/>
+	  <value n="direction" pn="Direction" v="0.0,-1.0,0.0" help="The resultant unit vector is considered"/>
     </DefaultValues>
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
@@ -32,7 +32,7 @@
     </inputs>
     <DefaultValues>
 	  <value n="modulus" pn="Gravity" v="9.81" help="Gravity acceleration value"/>
-	  <value n="direction" pn="Direction" type="inline_vector" v="0.0,-1.0,0.0" help="The resultant unit vector is considered"/>
+	  <value n="direction" pn="Direction" v="0.0,-1.0,0.0" help="The resultant unit vector is considered"/>
     </DefaultValues>
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
@@ -51,7 +51,7 @@
     </inputs>
     <DefaultValues>
 	  <value n="modulus" pn="Gravity" v="9.81" help="Gravity acceleration value"/>
-	  <value n="direction" pn="Direction" type="inline_vector" v="0.0,-1.0,0.0" help="The resultant unit vector is considered"/>
+	  <value n="direction" pn="Direction"  v="0.0,-1.0,0.0" help="The resultant unit vector is considered"/>
     </DefaultValues>
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
