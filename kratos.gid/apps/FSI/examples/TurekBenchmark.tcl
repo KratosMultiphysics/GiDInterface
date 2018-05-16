@@ -171,7 +171,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     # Fluid Parts
     set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1000.0 DYNAMIC_VISCOSITY 1.0E-06]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1000.0 DYNAMIC_VISCOSITY 1.0]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
