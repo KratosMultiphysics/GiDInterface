@@ -135,27 +135,7 @@ for step in range(0,grid_model_part.GetBufferSize()):
   grid_model_part.ProcessInfo[DELTA_TIME] = delta_time
   grid_model_part.ProcessInfo[STEP] = step - grid_model_part.GetBufferSize()
 
-## TODO: to be removed somewhere - process.ExecuteBeforeSolutionLoop()
-########################################################################
-# ## 1. Compute normal vector for the inclined slip boundary nodes
-# normal_calculator = NormalCalculationUtils()
-# normal_calculator.CalculateOnSimplex(grid_model_part.GetSubModelPart("SLIP_Boundary"), domain_size)
-
-# # Assigning IS_STRUCTURE to slip nodes
-# for node in grid_model_part.GetSubModelPart("SLIP_Boundary").Nodes:
-#     node.SetSolutionStepValue(IS_STRUCTURE, 1.0)
-
-# ## 2. Assign volume acceleration (gravity) to the material points
-# if ProjectParameters.Has("gravity"):
-#     gravity_modulus = ProjectParameters["gravity"]["Parameters"]["modulus"].GetDouble()
-#     gravity_direction = ProjectParameters["gravity"]["Parameters"]["direction"].GetVector()
-#     gravity_acceleration = gravity_modulus * gravity_direction
-
-#     for element in material_model_part.Elements:
-#         element.SetValue(MP_VOLUME_ACCELERATION,gravity_acceleration) 
-########################################################################
-
-
+## Start the time loop
 while(current_time < end_time):
 
     ## Start Timer
