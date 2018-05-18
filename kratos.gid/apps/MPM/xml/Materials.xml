@@ -36,6 +36,13 @@
 	<parameter n="BULK_MODULUS" pn="Bulk modulus" v="41.071428571e9" unit_magnitude="P" units="Pa"/>
     </inputs>
   </Material>
+  <Material n="Rubber" MaterialType="Structural" help="Rubber material properties">
+    <inputs>
+        <parameter n="DENSITY" pn="Density" v="1100" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
+        <parameter n="YOUNG_MODULUS" pn="Young modulus" v="1e7" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
+        <parameter n="POISSON_RATIO" pn="Poisson ratio" v="0.5" help="Poisson coefficient of the material"/>
+    </inputs>
+  </Material>
   <Material n="Sand" MaterialType="Structural" help="Sand material properties">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="2300" help="Density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
