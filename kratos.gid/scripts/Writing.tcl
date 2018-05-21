@@ -1086,6 +1086,8 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
             dict set process_attributes process_name [dict get $process_attributes n]
             dict unset process_attributes n
             dict unset process_attributes pn
+            dict unset process_attributes help
+            dict unset process_attributes process_name
             
             set processDict [dict merge $processDict $process_attributes]
             if {[$condition hasAttribute VariableName]} {
@@ -1152,6 +1154,11 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                         if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
+                } elseif {$in_type eq "inline_vector"} {
+                    set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
+                    lassign [split $value ","] ValX ValY ValZ
+                    if {$ValZ eq ""} {set ValZ 0.0}
+                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]]
                 } elseif {$in_type eq "double" || $in_type eq "integer"} {
                     set printed 0
                     if {[$in_obj getAttribute "function"] eq "1"} {
