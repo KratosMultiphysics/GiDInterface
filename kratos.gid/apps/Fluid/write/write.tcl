@@ -168,7 +168,9 @@ proc Fluid::write::writeBoundaryConditions { } {
 }
 
 proc Fluid::write::writeDrags { } {
+    lappend ::Model::NodalConditions [::Model::NodalCondition new Drag]
     write::writeNodalConditions [GetAttribute drag_un]
+    Model::ForgetNodalCondition Drag
 }
 
 proc Fluid::write::writeMeshes { } {
