@@ -606,13 +606,13 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     return $conditions_dict
 }
 
-proc write::writeNodalConditions { keyword } {
+proc write::writeNodalConditions { un } {
     
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $keyword]/condition/group"
+    set xp1 "[spdAux::getRoute $un]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
-        set xp1 "[spdAux::getRoute $keyword]/group"
+        set xp1 "[spdAux::getRoute $un]/group"
         set groups [$root selectNodes $xp1]
     }
     foreach group $groups {
