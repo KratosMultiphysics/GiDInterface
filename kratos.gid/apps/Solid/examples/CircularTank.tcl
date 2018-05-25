@@ -42,14 +42,26 @@ proc Solid::examples::TreeAssignationCircularTank3D {args} {
     set condtype line
     if {$nd eq "3D"} { set condtype surface }
 
-    # Dynamic solution strategy set
+    # Static solution strategy set
     spdAux::SetValueOnTreeItem v "Static" SLSoluType
+    
+    # Time parameters
+    set time_parameters [list EndTime 1.0 DeltaTime 1.0]
+    set time_params_path [spdAux::getRoute SLTimeParameters]
+    foreach {name value} $time_parameters {
+        set node [$root selectNodes "$time_params_path/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check  example script"
+        }	
+    }
     
     # Solid Parts
     set solidParts [spdAux::getRoute "SLParts"]
     set solidPartsNode [customlib::AddConditionGroupOnXPath $solidParts Solid]
     $solidPartsNode setAttribute ov volume
-    set props [list Element SmallDisplacementElement$nd ConstitutiveLaw SmallStrainAxisymmetric2DLaw.LinearElasticModel]
+    set props [list Element SmallDisplacementElement$nd ConstitutiveLaw SmallStrain3DLaw.LinearElasticModel]
     foreach {prop val} $props {
         set propnode [$solidPartsNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -59,7 +71,7 @@ proc Solid::examples::TreeAssignationCircularTank3D {args} {
         }
     }
 
-    set solidConditions [spdAux::getRoute "FLBC"]
+    set solidConditions [spdAux::getRoute "SLNodalConditions"]
 
     # Solid Constraint
     GiD_Groups clone ConstraintX Total
@@ -164,9 +176,21 @@ proc Solid::examples::TreeAssignationCircularTank2Da {args} {
     set condtype line
     if {$nd eq "3D"} { set condtype surface }
 
-    # Dynamic solution strategy set
+    # Static solution strategy set
     spdAux::SetValueOnTreeItem v "Static" SLSoluType
     
+    # Time parameters
+    set time_parameters [list EndTime 1.0 DeltaTime 1.0]
+    set time_params_path [spdAux::getRoute SLTimeParameters]
+    foreach {name value} $time_parameters {
+        set node [$root selectNodes "$time_params_path/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check  example script"
+        }
+	
+    }
     # Solid Parts
     set solidParts [spdAux::getRoute "SLParts"]
     set solidPartsNode [customlib::AddConditionGroupOnXPath $solidParts Solid]
@@ -181,7 +205,7 @@ proc Solid::examples::TreeAssignationCircularTank2Da {args} {
         }
     }
 
-    set solidConditions [spdAux::getRoute "FLBC"]
+    set solidConditions [spdAux::getRoute "SLNodalConditions"]
 
     # Solid Constraint
     GiD_Groups clone Constraint Total
