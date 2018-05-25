@@ -58,13 +58,21 @@ proc ::Solid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
     # Add examples
-    if { $::Model::SpatialDimension ne "2Da" } {
+    if { $::Model::SpatialDimension eq "2Da" } {
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "tank_example.png"] [list -np- ::Solid::examples::CircularTank] [= "Example\nCircular water tank"]
+    }
+    if { $::Model::SpatialDimension eq "2D" } {
 	Kratos::ToolbarAddItem "Example" [file join $img_dir "rod_example.png"] [list -np- ::Solid::examples::DynamicRod] [= "Example\nDynamic rod pendulus"]
     }
+    if { $::Model::SpatialDimension eq "3D" } {
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "tank_example.png"] [list -np- ::Solid::examples::CircularTank] [= "Example\nCircular water tank"]
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "rod_example.png"] [list -np- ::Solid::examples::DynamicRod] [= "Example\nDynamic rod pendulus"]
+    }
+    
 }
 
 proc ::Solid::CustomMenus { } {
-    Solid::examples::UpdateMenus
+    Solid::examples::UpdateMenus$::Model::SpatialDimension
 }
 
 ::Solid::Init
