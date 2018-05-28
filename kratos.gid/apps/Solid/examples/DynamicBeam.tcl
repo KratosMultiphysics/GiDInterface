@@ -43,7 +43,7 @@ proc Solid::examples::TreeAssignationDynamicBeam3D {args} {
     spdAux::SetValueOnTreeItem v "SimoStep" SLScheme
 
     # Time parameters
-    set time_parameters [list EndTime 2.0 DeltaTime 0.05]
+    set time_parameters [list EndTime 5.0 DeltaTime 0.05]
     set time_params_path [spdAux::getRoute SLTimeParameters]
     foreach {name value} $time_parameters {
         set node [$root selectNodes "$time_params_path/value\[@n = '$name'\]"]
@@ -93,29 +93,12 @@ proc Solid::examples::TreeAssignationDynamicBeam3D {args} {
     GiD_Groups edit parent Total AngularConstraint
     spdAux::AddIntervalGroup AngularConstraint "AngularConstraint//Total"
     GiD_Groups edit state "AngularConstraint//Total" hidden
-    set solidAngularConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='ROTATION']}
+    set solidAngularConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='ANGULAR_VELOCITY']}
     set solidAngularConstraintNode [customlib::AddConditionGroupOnXPath $solidAngularConstraint "AngularConstraint//Total"]
     $solidAngularConstraintNode setAttribute ov point
-    set props [list Enabled_X No ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list Enabled_X Yes ByFunctionX No valueX 2.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
          set propnode [$solidAngularConstraintNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Solid $prop"
-         }
-    }
-    
-    GiD_Groups clone Imposement Total
-    GiD_Groups edit parent Total Imposement
-    spdAux::AddIntervalGroup Imposement "Imposement//Total"
-    GiD_Groups edit state "Imposement//Total" hidden
-    set solidImposement {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='ANGULAR_VELOCITY']}
-    set solidImposementNode [customlib::AddConditionGroupOnXPath $solidImposement "Imposement//Total"]
-    $solidImposementNode setAttribute ov point
-    set props [list Enabled_X Yes ByFunctionX No valueX 2.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z No ByFunctionZ Yes valueZ 0.0]
-    foreach {prop val} $props {
-         set propnode [$solidImposementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
               $propnode setAttribute v $val
          } else {
