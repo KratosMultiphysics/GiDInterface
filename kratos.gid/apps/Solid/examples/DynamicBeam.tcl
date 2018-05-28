@@ -58,7 +58,7 @@ proc Solid::examples::TreeAssignationDynamicBeam3D {args} {
     set solidParts [spdAux::getRoute "SLParts"]
     set solidPartsNode [customlib::AddConditionGroupOnXPath $solidParts Solid]
     $solidPartsNode setAttribute ov line
-    set props [list Element LargeDisplacementBeamElement3D$nd ConstitutiveLaw CircularSection3D DIAMETER 0.05 YOUNG_MODULUS 206.9e8]
+    set props [list Element LargeDisplacementBeamElement3D ConstitutiveLaw CircularSection3D DIAMETER 0.05 YOUNG_MODULUS 206.9e8]
     foreach {prop val} $props {
         set propnode [$solidPartsNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
