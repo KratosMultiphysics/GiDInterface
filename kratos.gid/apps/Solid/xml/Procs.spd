@@ -15,4 +15,9 @@
       return [Solid::xml::ProcCheckGeometrySolid $domNode $args]              
       ]]>
     </proc>
+    <proc n='checkStratParamsState' args='args'>
+      <![CDATA[                
+      return [Solid::xml::ProcCheckStratParamsState $domNode $args]              
+      ]]>
+    </proc>
 </container>
