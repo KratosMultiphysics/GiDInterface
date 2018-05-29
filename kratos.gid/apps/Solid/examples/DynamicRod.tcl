@@ -72,7 +72,7 @@ proc Solid::examples::TreeAssignationDynamicRod3D {args} {
         }
     }
 
-    set solidConditions [spdAux::getRoute "FLBC"]
+    set solidConditions [spdAux::getRoute "SLNodalConditions"]
 
     # Solid Constraint
     GiD_Groups clone Constraint Total
@@ -139,8 +139,7 @@ proc Solid::examples::TreeAssignationDynamicRod2D {args} {
             $node setAttribute v $value
         } else {
             W "Couldn't find $name - Check  example script"
-        }
-	
+        }	
     }
     
     # Solid Parts
@@ -157,7 +156,7 @@ proc Solid::examples::TreeAssignationDynamicRod2D {args} {
         }
     }
 
-    set solidConditions [spdAux::getRoute "FLBC"]
+    set solidConditions [spdAux::getRoute "SLNodalConditions"]
 
     # Solid Constraint
     GiD_Groups clone Constraint Total

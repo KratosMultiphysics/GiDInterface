@@ -102,7 +102,7 @@
   </ConditionItem>
 
 
-  <ConditionItem n="Load2DAxisym" pn="Force" Interval="Total"
+  <ConditionItem n="Load2Da" pn="Force" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point,Line" ProcessName="AssignModulusAndDirectionToConditionsProcess"
@@ -139,7 +139,7 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="Pressure2DAxisym" pn="Pressure" Interval="Total"
+  <ConditionItem n="Pressure2Da" pn="Pressure" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess"
@@ -220,7 +220,7 @@
   </ConditionItem>
 
 
-  <ConditionItem n="Spring2DAxisym" pn="Spring on points" Interval="Total" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+  <ConditionItem n="Spring2Da" pn="Spring" Interval="Total" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point,Line" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set stiffness value giving a Value (for unit length or unit surface) and a Direction (with no value)"
@@ -255,7 +255,7 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="Ballast2DAxisym" pn="Ballast" Interval="Total"
+  <ConditionItem n="Ballast2Da" pn="Ballast" Interval="Total"
 		 kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess"

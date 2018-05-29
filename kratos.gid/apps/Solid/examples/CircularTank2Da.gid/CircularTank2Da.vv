@@ -1,12 +1,12 @@
-BeginZE /home/jmaria/Tests/DynamicRod3D.gid/DynamicRod3D.vv
-   x -0.0906996056437492371 0.33330225944519043
-   y 0.143511354923248291 -0.152221024036407471
-   z -0.418598592281341553 0.468598544597625732
-   e 0.147866189479827881
-   v -0.155974417924880981 0.326733916997909546 0.115599974989891052
-   r 0.924961388111114502
-   m 0.759763181209564209 -0.315775305032730103 0.568371236324310303 0 0.111926771700382233 0.924617230892181396 0.364081501960754395 0 -0.640493810176849365 -0.21299976110458374 0.737833857536315918 0 0 0 0 1
-   c 0.110273361206054688 6.73620590418977372e-08 -0.0249999910593032837
+BeginZE /home/cpuigbo/Desktop/CircularTank2Da.gid/CircularTank2Da.vv
+   x -2.27358531951904297 7.77358531951904297
+   y 4.63604164123535156 -2.13604164123535156
+   z -4.54599666595458984 4.54599666595458984
+   e 3.38604164123535156
+   v 0 0 0
+   r 1
+   m 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1
+   c 3.74545454978942871 0.654545426368713379 0
    pd 0
    pno 0
    pfo 0
@@ -19,7 +19,7 @@ BeginZE /home/jmaria/Tests/DynamicRod3D.gid/DynamicRod3D.vv
    OGLShadow(RenderMode) RenderNice
    OGLShadow(ShadowBias) -0.002
    OGLShadow(AmbientShadows) 1
-   OGLShadow(UseFBO) 1
+   OGLShadow(UseFBO) 0
    OGLShadow(FBOSize) 2048
    OGLShadow(DimmedLightFactor) 0.02
    OGLStereo(UseStereo) 0
@@ -29,7 +29,7 @@ BeginZE /home/jmaria/Tests/DynamicRod3D.gid/DynamicRod3D.vv
    OGLStereo(EyeDistance) 0.075
    OGLStereo(LeftEyeDistance) 1 0 0 1
    OGLStereo(RightEyeDistance) 0 1 1 1
-EndZE /home/jmaria/Tests/DynamicRod3D.gid/DynamicRod3D.vv
+EndZE /home/cpuigbo/Desktop/CircularTank2Da.gid/CircularTank2Da.vv
 
 BeginMirror
    Mirror 0 Angle 0.0 AngleFake -15.0 SizeFactor 2.0 HeightOffset 0.25 Color #d9e5f24d Backlight Off EdgeStyle No Type Scene DrawMode Mirror

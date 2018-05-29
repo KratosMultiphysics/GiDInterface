@@ -75,7 +75,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="SmallDisplacementElementAxisym" pn="Solid (small displacements)" ImplementedInFile="axisym_small_displacement_element.cpp"
+  <ElementItem n="SmallDisplacementElement2Da" pn="Solid (small displacements)" ImplementedInFile="axisym_small_displacement_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" Dofs="DISPLACEMENT"
 	       ElementType="Solid" help="This is an element for linear infinitessimal theory in 2D axisymmetric">
@@ -285,7 +285,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElementAxisym" pn="Solid (updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_element.cpp"
+  <ElementItem n="UpdatedLagrangianElement2Da" pn="Solid (updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" Dofs="DISPLACEMENT"
 	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
@@ -459,7 +459,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
+  <ElementItem n="UpdatedLagrangianElementUP2Da" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" Dofs="DISPLACEMENT,PRESSURE"
 	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
