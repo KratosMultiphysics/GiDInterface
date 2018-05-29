@@ -50,9 +50,7 @@ proc MPM::xml::Init { } {
     Model::getNodalConditions NodalConditions.xml
 
     # Import our conditions
-    Model::ForgetCondition SelfWeight3D
-    Model::ForgetCondition SelfWeight2D
-    Model::ForgetCondition SelfWeight2Da
+    Model::ForgetConditions
     Model::getConditions Conditions.xml
     
 }
