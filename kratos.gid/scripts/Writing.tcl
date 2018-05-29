@@ -1086,8 +1086,8 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
             dict set process_attributes process_name [dict get $process_attributes n]
             dict unset process_attributes n
             dict unset process_attributes pn
-            dict unset process_attributes help
-            dict unset process_attributes process_name
+            if {[dict exists $process_attributes help]} {dict unset process_attributes help}
+            if {[dict exists $process_attributes process_name]} {dict unset process_attributes process_name}
             
             set processDict [dict merge $processDict $process_attributes]
             if {[$condition hasAttribute VariableName]} {
