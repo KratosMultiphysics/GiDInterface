@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="StageInfo" pn="Analysis" help="Select the type of analysis" state="normal" open_window="0">
-    <value n="SolutionType" pn="Solution type" icon="data" un="SLSoluType" v="Static" values="Static,Quasi-static,Dynamic" dict="Static,Static,Quasi-static,Quasi-static,Dynamic,Dynamic" help="Solution type" actualize_tree="1"/>
+    <value n="SolutionType" pn="Solution type" icon="data" un="SLSoluType" v="Static" values="Static,Quasi-static,Dynamic" dict="Static,Static,Quasi-static,Quasi-static,Dynamic,Dynamic" help="Solution type" actualize_tree="1" />
     <value n="SolStratCombo" pn="Time integration" icon="data" un="SLSolStrat" v="" values="" dict="[GetSolutionStrategiesSolid App Solid]" actualize_tree="1" state="[checkStateByUniqueName SLSoluType Dynamic]"/>
     <value n="Scheme" pn="Scheme" icon="data" un="SLScheme" v="" values="" dict="[GetSchemes]" state="[checkStateByUniqueName SLSoluType Dynamic]" actualize_tree="1"/>
     <value n="AnalysisType" pn="Analysis type" un="SLAnalysisType" v="Linear" values="Linear,Non-linear" dict="Linear,Linear,Non-linear,Non-linear" help="Analysis type" state="[HideIfUniqueName SLSoluType Dynamic]" actualize_tree="0"/>

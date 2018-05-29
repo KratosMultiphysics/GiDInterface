@@ -27,46 +27,53 @@ proc Solid::xml::getUniqueName {name} {
 
 proc Solid::xml::CustomTree { args } {
 
+    set root [customlib::GetBaseRoot]
+
     #set icon data as default
-    foreach node [[customlib::GetBaseRoot] getElementsByTagName value ] { $node setAttribute icon data }
+    foreach node [$root getElementsByTagName value ] { $node setAttribute icon data }
 
     #intervals
     spdAux::SetValueOnTreeItem icon timeIntervals Intervals
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
+    foreach node [$root selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
         $node setAttribute icon select
     }
 
     #conditions
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLNodalConditions]/condition" ] { 
+    foreach node [$root selectNodes "[spdAux::getRoute SLNodalConditions]/condition" ] { 
         $node setAttribute icon select
 	$node setAttribute groups_icon groupCreated
     }
 
     #loads
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLLoads]/condition" ] { 
+    foreach node [$root selectNodes "[spdAux::getRoute SLLoads]/condition" ] { 
         $node setAttribute icon select
 	$node setAttribute groups_icon groupCreated
     }
     
     #materials
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLMaterials]/blockdata" ] { 
+    foreach node [$root selectNodes "[spdAux::getRoute SLMaterials]/blockdata" ] { 
         $node setAttribute icon select
     }
     
     #solver settings
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute SLStratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+    foreach node [$root selectNodes "[spdAux::getRoute SLStratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
         $node setAttribute icon solvers
     }
 
     #results
     foreach result [list SPRING_2D BALLAST_2D AXIAL_TURN_2D AXIAL_VELOCITY_TURN_2D AXIAL_ACCELERATION_TURN_2D SPRING_3D BALLAST_3D AXIAL_TURN_3D AXIAL_VELOCITY_TURN_3D AXIAL_ACCELERATION_TURN_3D] {
-        set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = '$result'\]"]
+        set result_node [$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n = '$result'\]"]
 	if { $result_node ne "" } {$result_node delete}
     }
     
     #units
-    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
-    
+    [$root selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
+
+    # Initial state for Strategy Parameters
+    # set solutionType [get_domnode_attribute [$root selectNodes [spdAux::getRoute SLSoluType]] v]
+    # if {$solutionType ne "Dynamic"} {
+    #     [$root selectNodes [spdAux::getRoute SLStratParams]] setAttribute state hidden
+    # }
 }
 
 
@@ -115,6 +122,23 @@ proc Solid::xml::ProcCheckGeometrySolid {domNode args} {
 	    set ret "line"
      }
      return $ret
+}
+
+proc Solid::xml::ProcCheckStratParamsState {domNode args} {
+    set ret "normal"
+    
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLSoluType]] v]
+    set analysisType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLAnalysisType]] v]
+    
+    if {$solutionType ne "Dynamic"} {
+        # If Static or Quasi-static
+        if {$analysisType eq "Linear"} {
+            # If linear -> hide
+            set ret "hidden"
+        }
+    }
+    
+    return $ret
 }
 
 
