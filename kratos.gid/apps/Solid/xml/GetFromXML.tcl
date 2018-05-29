@@ -70,10 +70,10 @@ proc Solid::xml::CustomTree { args } {
     [$root selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
 
     # Initial state for Strategy Parameters
-    set solutionType [get_domnode_attribute [$root selectNodes [spdAux::getRoute SLSoluType]] v]
-    if {$solutionType ne "Dynamic"} {
-        [$root selectNodes [spdAux::getRoute SLStratParams]] setAttribute state hidden
-    }
+    # set solutionType [get_domnode_attribute [$root selectNodes [spdAux::getRoute SLSoluType]] v]
+    # if {$solutionType ne "Dynamic"} {
+    #     [$root selectNodes [spdAux::getRoute SLStratParams]] setAttribute state hidden
+    # }
 }
 
 
@@ -122,6 +122,23 @@ proc Solid::xml::ProcCheckGeometrySolid {domNode args} {
 	    set ret "line"
      }
      return $ret
+}
+
+proc Solid::xml::ProcCheckStratParamsState {domNode args} {
+    set ret "normal"
+    
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLSoluType]] v]
+    set analysisType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute SLAnalysisType]] v]
+    
+    if {$solutionType ne "Dynamic"} {
+        # If Static or Quasi-static
+        if {$analysisType eq "Linear"} {
+            # If linear -> hide
+            set ret "hidden"
+        }
+    }
+    
+    return $ret
 }
 
 
