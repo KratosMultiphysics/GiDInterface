@@ -220,7 +220,7 @@
   </ConditionItem>
 
 
-  <ConditionItem n="Spring2Da" pn="Spring on points" Interval="Total" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+  <ConditionItem n="Spring2Da" pn="Spring" Interval="Total" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point,Line" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set stiffness value giving a Value (for unit length or unit surface) and a Direction (with no value)"
