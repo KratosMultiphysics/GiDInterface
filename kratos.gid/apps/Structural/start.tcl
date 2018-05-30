@@ -56,7 +56,9 @@ proc ::Structural::GetAttribute {name} {
 }
 
 proc ::Structural::BeforeMeshGeneration { size } { 
-    GiD_AssignData condition relation_line_geo_mesh Lines {0} all
+    foreach group [GiD_Groups list] {
+        GiD_AssignData condition relation_line_geo_mesh Lines {0} [GiD_EntitiesGroups get $group lines]
+    }
 }
 
 ::Structural::Init
