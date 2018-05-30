@@ -168,7 +168,7 @@
   <ConditionItem n="LinePressure2D" pn="Pressure on lines" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line" ProcessName="AssignScalarVariableToConditionProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
+		 ElementType="Line" ProcessName="AssignLinearPressureProcess" FormerProcessName="AssignScalarVariableToConditionProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
@@ -184,7 +184,7 @@
   <ConditionItem n="LinePressure2DAxisym" pn="Pressure on lines" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" 
-		 ElementType="Line" ProcessName="AssignScalarVariableToConditionProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
+		 ElementType="Line" ProcessName="AssignLinearPressureProcess" FormerProcessName="AssignScalarVariableToConditionProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineLoadCondition2D2N"/>
