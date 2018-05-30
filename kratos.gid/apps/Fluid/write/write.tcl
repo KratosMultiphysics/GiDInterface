@@ -70,7 +70,6 @@ proc Fluid::write::writeModelPartEvent { } {
     writeProperties
 
     # Materials
-    W "writing materials [GetAttribute validApps]"
     write::writeMaterials [GetAttribute validApps]
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
