@@ -32,6 +32,8 @@ proc Structural::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem v 1 GiDOptions EchoLevel
     
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONDENSED_DOF_LIST'\]"]
+    if {$result_node ne "" } {$result_node delete}
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
     if {$result_node ne "" } {$result_node delete}
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT_SLAVE'\]"]
