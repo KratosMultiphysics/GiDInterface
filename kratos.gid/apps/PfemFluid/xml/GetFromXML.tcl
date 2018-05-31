@@ -102,6 +102,7 @@ proc PfemFluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
     spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
     spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
+    spdAux::SetValueOnTreeItem v No NodalResults VELOCITY_REACTION
     
     set inlet_result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
     if {$inlet_result_node ne "" } {$inlet_result_node delete}
