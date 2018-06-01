@@ -75,7 +75,7 @@ proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
         catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[file tail [GiD_Info project modelname] ].post.res"]}
         # Set Octree
         set oldMeshType [GiD_Set MeshType]
-        ::GiD_Set MeshType 3
+        ::GiD_Set MeshType 2
     } else {
         after 500 {WarnWin "You need to save the project before meshing"}
         return "-cancel-"
