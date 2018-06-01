@@ -43,17 +43,6 @@ grid_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, domain_size)
 import particle_mpm_solver as ParticleMPM
 solver = ParticleMPM.CreateSolver(grid_model_part, initial_material_model_part, material_model_part, ProjectParameters["solver_settings"])
 
-## TODO: to be removed
-## Definite Conditions start
-########################################################################
-import conditions_python_utility as condition_utils
-incr_disp = "False"
-incr_load = "False"
-rotation_dofs = False
-conditions = condition_utils.ConditionsUtility(grid_model_part, domain_size, incr_disp, incr_load, rotation_dofs)
-conditions = condition_utils.ConditionsUtility(initial_material_model_part, domain_size, incr_disp, incr_load, rotation_dofs)
-########################################################################
-
 ## Add variables to the model part
 solver.AddVariables()
 
@@ -204,10 +193,6 @@ while(current_time < end_time):
     ## Stop Timer
     end_solve_time = time()
     print("[Solving time: ", end_solve_time - start_solve_time, " s]")
-    
-    ## Set incremental load
-    #TODO: to be removed somewhere 
-    conditions.SetIncrementalLoad(current_step, delta_time)
 
 print("Analysis Finalized")
 
