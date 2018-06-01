@@ -14,8 +14,9 @@ proc Solid::xml::Init { } {
      Model::getProcesses DeprecatedProcesses.xml
      Model::getProcesses Processes.xml
      Model::getConditions Conditions.xml
-     Model::getSolvers "../../Common/xml/Solvers.xml"
-
+     #Model::getSolvers "../../Common/xml/Solvers.xml"
+     Model::getSolvers Solvers.xml
+    
      # Model::ForgetElement SmallDisplacementBbarElement2D    
      # Model::ForgetElement SmallDisplacementBbarElement3D
     
