@@ -14,12 +14,13 @@ proc Solid::xml::Init { } {
      Model::getProcesses DeprecatedProcesses.xml
      Model::getProcesses Processes.xml
      Model::getConditions Conditions.xml
-     #Model::getSolvers "../../Common/xml/Solvers.xml"
-     Model::getSolvers Solvers.xml
+     Model::getSolvers "../../Common/xml/Solvers.xml"
     
      # Model::ForgetElement SmallDisplacementBbarElement2D    
      # Model::ForgetElement SmallDisplacementBbarElement3D
-    
+
+     # This solver is not working in kratos June 01 2018
+     Model::ForgetSolver GMRESSolver
 }
 
 proc Solid::xml::getUniqueName {name} {
@@ -60,6 +61,11 @@ proc Solid::xml::CustomTree { args } {
     foreach node [$root selectNodes "[spdAux::getRoute SLStratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
         $node setAttribute icon solvers
     }
+
+    #linear solver parameters
+    spdAux::SetValueOnTreeItem v 2000 SLImplicitlinear_solver_settings max_iteration
+    spdAux::SetValueOnTreeItem v 1e-6 SLImplicitlinear_solver_settings tolerance
+    spdAux::SetValueOnTreeItem v cg SLImplicitlinear_solver_settings krylov_type
 
     #results
     foreach result [list SPRING_2D BALLAST_2D AXIAL_TURN_2D AXIAL_VELOCITY_TURN_2D AXIAL_ACCELERATION_TURN_2D SPRING_3D BALLAST_3D AXIAL_TURN_3D AXIAL_VELOCITY_TURN_3D AXIAL_ACCELERATION_TURN_3D] {
