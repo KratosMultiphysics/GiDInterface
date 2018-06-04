@@ -64,6 +64,17 @@ proc Model::ForgetSolvers { } {
     set Solvers [list ]
 }
 
+proc Model::ForgetSolver { elem_id } {
+    variable Solvers
+    set Solvers2 [list ]
+    foreach elem $Solvers {
+        if {[$elem getName] ne $elem_id} {
+            lappend Solvers2 $elem
+        }
+    }
+    set Solvers $Solvers2
+}
+
 proc Model::GetSolver { id } {
     variable Solvers
     
