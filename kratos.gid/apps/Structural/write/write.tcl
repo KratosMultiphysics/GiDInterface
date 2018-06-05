@@ -19,7 +19,7 @@ proc Structural::write::Init { } {
     SetAttribute materials_un STMaterials
     SetAttribute conditions_un STLoads
     SetAttribute nodal_conditions_un STNodalConditions
-    SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONTACT CONTACT_SLAVE]
+    SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
 }
@@ -252,7 +252,11 @@ proc Structural::write::writeHinges { } {
     }
 
     # Process groups assigned to Hinges
-    set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
+    if {$::Model::SpatialDimension eq "3D"} {
+        set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
+    } else {
+        set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST_2D'\]/group"
+    }
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set group [$gNode @n]
         
