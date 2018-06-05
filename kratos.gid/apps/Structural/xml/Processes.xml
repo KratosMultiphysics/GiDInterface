@@ -22,6 +22,14 @@
       <parameter n="SecondMoment" pn="Second node moment" type="vector" vectorType="bool" v="0,0,0" />
     </inputs>
   </Process>
+    <Process n="HingesStaticCondensation2DProcess" pn="Define dofs">
+    <inputs>
+      <parameter n="FirstDisplacement" pn="First node displacement" type="vector" vectorType="bool" v="0,0" />
+      <parameter n="FirstMomentZ" pn="Z First node moment" type="bool" v="0" />
+      <parameter n="SecondDisplacement" pn="Second node displacement" type="vector" vectorType="bool" v="0,0" />
+      <parameter n="SecondMomentZ" pn="Z Second node moment" type="bool" v="0" />
+    </inputs>
+  </Process>
 
   	<Process n="AssignLinearPressureProcess" pn="Apply a scalar value over a condition" python_module="assign_scalar_variable_to_conditions_process" 
 			 kratos_module="KratosMultiphysics" help="This process sets a scalar variable value over a condition">
