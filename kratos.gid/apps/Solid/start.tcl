@@ -62,6 +62,7 @@ proc ::Solid::CustomToolbarItems { } {
 	Kratos::ToolbarAddItem "Example" [file join $img_dir "tank_example.png"] [list -np- ::Solid::examples::CircularTank] [= "Example\nCircular water tank"]
     }
     if { $::Model::SpatialDimension eq "2D" } {
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "notched_example.png"] [list -np- ::Solid::examples::NotchedBeam] [= "Example\nNotched beam damage"]	
 	Kratos::ToolbarAddItem "Example" [file join $img_dir "rod_example.png"] [list -np- ::Solid::examples::DynamicRod] [= "Example\nDynamic rod pendulus"]
     }
     if { $::Model::SpatialDimension eq "3D" } {

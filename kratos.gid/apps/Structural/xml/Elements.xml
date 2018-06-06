@@ -422,6 +422,7 @@
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -444,6 +445,7 @@
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -466,6 +468,7 @@
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -488,6 +491,7 @@
       <NodalCondition n="ANGULAR_VELOCITY"/>
       <NodalCondition n="ANGULAR_ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -512,6 +516,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -535,6 +540,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -558,6 +564,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -581,6 +588,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -605,6 +613,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>
@@ -628,6 +637,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
     </NodalConditions>
     <inputs></inputs>
     <outputs>

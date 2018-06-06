@@ -27,16 +27,13 @@ if (parallel_type == "MPI"):
     from KratosMultiphysics.MetisApplication import *
     from KratosMultiphysics.TrilinosApplication import *
 
-## Fluid-Structure model parts definition
-structure_main_model_part = ModelPart(ProjectParameters["structure_solver_settings"]["problem_data"]["model_part_name"].GetString())
-structure_main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["structure_solver_settings"]["problem_data"]["domain_size"].GetInt())
-
+## Fluid model part definition
 fluid_main_model_part = ModelPart(ProjectParameters["fluid_solver_settings"]["problem_data"]["model_part_name"].GetString())
 fluid_main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["fluid_solver_settings"]["problem_data"]["domain_size"].GetInt())
 
 ## Solver construction
 solver_module = __import__(ProjectParameters["coupling_solver_settings"]["solver_settings"]["solver_type"].GetString())
-solver = solver_module.CreateSolver(structure_main_model_part, fluid_main_model_part, ProjectParameters)
+solver = solver_module.CreateSolver(fluid_main_model_part, ProjectParameters)
 
 solver.AddVariables()
 
@@ -72,8 +69,6 @@ gid_output_fluid.ExecuteInitialize()
 ## Creation of Kratos models
 FluidModel = Model()
 FluidModel.AddModelPart(fluid_main_model_part)
-SolidModel = Model()
-SolidModel.AddModelPart(structure_main_model_part)
 
 ## Get the list of the skin submodel parts in the object Model
 for i in range(ProjectParameters["fluid_solver_settings"]["solver_settings"]["skin_parts"].size()):
@@ -95,24 +90,6 @@ for i in range(ProjectParameters["fluid_solver_settings"]["gravity"].size()):
     gravity_part_name = ProjectParameters["fluid_solver_settings"]["gravity"][i]["Parameters"]["model_part_name"].GetString()
     FluidModel.AddModelPart(fluid_main_model_part.GetSubModelPart(gravity_part_name))
 
-## Get the list of the submodel part in the object Model (STRUCTURE)
-for i in range(ProjectParameters["structure_solver_settings"]["solver_settings"]["processes_sub_model_part_list"].size()):
-    part_name = ProjectParameters["structure_solver_settings"]["solver_settings"]["processes_sub_model_part_list"][i].GetString()
-    SolidModel.AddModelPart(structure_main_model_part.GetSubModelPart(part_name))
-
-# Print model_parts and properties
-if(verbosity_fluid > 1):
-    print("")
-    print(fluid_main_model_part)
-    for properties in fluid_main_model_part.Properties:
-        print(properties)
-
-if(verbosity_structure > 1):
-    print("")
-    print(structure_main_model_part)
-    for properties in structure_main_model_part.Properties:
-        print(properties)
-
 ## Processes construction
 import process_factory
 # "list_of_processes" contains all the processes already constructed (boundary conditions, initial conditions and gravity)
@@ -125,6 +102,7 @@ list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructL
 list_of_processes += process_factory.KratosProcessFactory(FluidModel).ConstructListOfProcesses( ProjectParameters["fluid_solver_settings"]["auxiliar_process_list"] )
 
 # SOLID DOMAIN PROCESSES
+SolidModel = solver.structure_model
 list_of_processes += process_factory.KratosProcessFactory(SolidModel).ConstructListOfProcesses( ProjectParameters["structure_solver_settings"]["constraints_process_list"] )
 list_of_processes += process_factory.KratosProcessFactory(SolidModel).ConstructListOfProcesses( ProjectParameters["structure_solver_settings"]["loads_process_list"] )
 
@@ -159,13 +137,15 @@ if ((parallel_type == "OpenMP") or (mpi.rank == 0)) and (verbosity > 0):
 
 while(time <= end_time):
 
+    # Structure advance in time
+    solver.structure_solver.AdvanceInTime(time)
+
+    # Fluid and coupling time advance
     Dt = solver.ComputeDeltaTime()
     time = time + Dt
     step = step + 1
 
     solver.SetTimeStep(step)
-
-    structure_main_model_part.CloneTimeStep(time)
     fluid_main_model_part.CloneTimeStep(time)
 
     if (parallel_type == "OpenMP") or (mpi.rank == 0):
@@ -192,7 +172,6 @@ while(time <= end_time):
     gid_output_structure.ExecuteFinalizeSolutionStep()
     gid_output_fluid.ExecuteFinalizeSolutionStep()
 
-    #TODO: decide if it shall be done only when output is processed or not
     for process in list_of_processes:
         process.ExecuteBeforeOutputStep()
 
