@@ -1,17 +1,19 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Wizard version="1.0.1" wizardid="StenosisWizard" AppId="StenosisWizard">
+<Wizard version="1.0.1" wizardid="StenosisWizard" title="Stenosis analysis" icon="logo.png">
   <Steps>
-    <Step id="Geometry">
+    <Step id="Geometry" title="Geometry definition" subtitle="Create the parametric artheria">
       <Data>
-        <Item n="State" v="0"/>
-        <Item n="Active" v="1"/>
-        <Item n="Visited" v="1"/>
-		<Item n="ImageGeom" v="Geometry.png" type="image"/>
-		<Item n="Length" pn="Length" v="80" type="double" mxp=""/>
-		<Item n="Radius" pn="Radius" v="9.53" type="double" mxp=""/>
-		<Item n="Z" pn="Z0" v="30" type="double" mxp=""/>
-		<Item n="Delta" pn="delta" v="5" type="double" mxp=""/>
-		<Item n="Precision" pn="Divisions" v="50" type="double" mxp=""/>
+        <Frame n="Image" position="right">
+          <Item n="ImageGeom" v="geometry.png" type="image"/>
+        </Frame>
+        <Frame  n="Data" position="left">
+          <Item n="Length" pn="Length" v="80" type="double" />
+          <Item n="Radius" pn="Radius" v="9.53" type="double" />
+          <Item n="Z" pn="Z0" v="30" type="double" />
+          <Item n="Delta" pn="delta" v="5" type="double" />
+          <Item n="Precision" pn="Divisions" v="50" type="double" />
+          <Item n="DrawButton" pn="Create geometry" type="button" v="::StenosisWizard::Wizard::DrawGeometry" />
+        </Frame>
       </Data>
     </Step>
     <Step id="Material">

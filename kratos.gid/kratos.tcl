@@ -256,15 +256,14 @@ proc Kratos::DestroyWindows {} {
     gid_groups_conds::close_all_windows
     spdAux::DestroyWindow
     if {$::Kratos::kratos_private(UseWizard)} {
-        Wizard::DestroyWindow
+        smart_wizard::DestroyWindow
     }
     ::Kratos::EndCreatePreprocessTBar
 }
 
 proc Kratos::LoadWizardFiles { } {
     set ::Kratos::kratos_private(UseWizard) 1
-    set dir $::Kratos::kratos_private(Path)
-    uplevel #0 [list source [file join $dir scripts Wizard.tcl]]
+    package require gid_smart_wizard
     Kratos::UpdateMenus
 }
 
