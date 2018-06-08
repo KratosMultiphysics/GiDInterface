@@ -27,13 +27,12 @@ if (parallel_type == "MPI"):
     from KratosMultiphysics.MetisApplication import *
     from KratosMultiphysics.TrilinosApplication import *
 
-## Fluid model part definition
-fluid_main_model_part = ModelPart(ProjectParameters["fluid_solver_settings"]["problem_data"]["model_part_name"].GetString())
-fluid_main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["fluid_solver_settings"]["problem_data"]["domain_size"].GetInt())
+## Creation of Kratos models
+FluidModel = Model()
 
 ## Solver construction
 solver_module = __import__(ProjectParameters["coupling_solver_settings"]["solver_settings"]["solver_type"].GetString())
-solver = solver_module.CreateSolver(fluid_main_model_part, ProjectParameters)
+solver = solver_module.CreateSolver(FluidModel, ProjectParameters)
 
 solver.AddVariables()
 
@@ -42,6 +41,9 @@ solver.ImportModelPart()
 
 ## Add AddDofs
 solver.AddDofs()
+
+## Fluid model part definition
+fluid_main_model_part = FluidModel.GetModelPart(ProjectParameters["fluid_solver_settings"]["problem_data"]["model_part_name"].GetString())
 
 ## Initialize GiD  I/O
 if (parallel_type == "OpenMP"):
@@ -65,10 +67,6 @@ elif (parallel_type == "MPI"):
 
 gid_output_structure.ExecuteInitialize()
 gid_output_fluid.ExecuteInitialize()
-
-## Creation of Kratos models
-FluidModel = Model()
-FluidModel.AddModelPart(fluid_main_model_part)
 
 ## Get the list of the skin submodel parts in the object Model
 for i in range(ProjectParameters["fluid_solver_settings"]["solver_settings"]["skin_parts"].size()):
