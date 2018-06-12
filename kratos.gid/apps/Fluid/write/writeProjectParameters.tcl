@@ -6,7 +6,7 @@ proc ::Fluid::write::getParametersDict { } {
     set problemDataDict [dict create]
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name "MainModelPart"
+    dict set problemDataDict model_part_name "FluidModelPart"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set problemDataDict domain_size $nDim
 
