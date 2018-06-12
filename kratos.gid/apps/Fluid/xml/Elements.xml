@@ -59,6 +59,7 @@
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
     </TopologyFeatures>
 	    <!-- here we add the block of features which we require from the constitutive law-->
 
@@ -87,6 +88,7 @@
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="Element3D8N"/>
     </TopologyFeatures>
 
     <ConstitutiveLaw_FilterFeatures>

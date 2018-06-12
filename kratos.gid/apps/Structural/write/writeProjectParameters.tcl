@@ -105,8 +105,11 @@ proc Structural::write::getOldParametersDict { } {
     set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
     set special_nodal_conditions [list ]
     foreach cnd_name $special_nodal_conditions_dont_generate_submodelpart_names {
-        lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
-        Model::ForgetNodalCondition $cnd_name
+        set cnd [Model::getNodalConditionbyId $cnd_name]
+        if {$cnd ne ""} {
+            lappend special_nodal_conditions $cnd
+            Model::ForgetNodalCondition $cnd_name
+        }
     }
 
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
@@ -114,8 +117,8 @@ proc Structural::write::getOldParametersDict { } {
 
     
     if {[usesContact]} {
-        
-        dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionless"
+        # Mirar type y ver si es Frictionless o Frictional
+        dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionlessComponents"
 
         set convergence_criterion [dict get $solverSettingsDict convergence_criterion]
         dict set solverSettingsDict convergence_criterion "contact_$convergence_criterion"
@@ -125,9 +128,12 @@ proc Structural::write::getOldParametersDict { } {
 
     # Lists of processes
     set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
+    #lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
     dict set projectParametersDict constraints_process_list $nodal_conditions_dict
-    dict set projectParametersDict contact_process_list $contact_conditions_dict
+    if {[usesContact]} {
+        set contact_conditions_dict [GetContactConditionsDict]
+        dict set projectParametersDict contact_process_list $contact_conditions_dict
+    }
     dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
     # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
@@ -180,22 +186,37 @@ proc Structural::write::getOldParametersDict { } {
     return $projectParametersDict
 }
 
-proc Structural::write::ProcessContacts { nodal_conditions_dict } {
-    set process_list [list ]
-    set contact_process_list [list ]
-    foreach elem $nodal_conditions_dict {
-        if {[dict exists $elem python_module] && [dict get $elem python_module] in {"alm_contact_process"}} {
-            set model_part_name "Structure"
-            dict set elem Parameters contact_model_part [dict get $elem Parameters model_part_name]
-            dict set elem Parameters model_part_name $model_part_name
-            dict set elem Parameters computing_model_part_name "computing_domain"
-            lappend contact_process_list $elem
-        } else {
-            lappend process_list $elem
-        }
+proc Structural::write::GetContactConditionsDict { } {
+    set root [customlib::GetBaseRoot]
+    
+    # Prepare the xpaths
+    set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
+    set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
+
+    # Get the groups
+    set master_group [$root selectNodes $xp_master]
+    set slave_group [$root selectNodes $xp_slave]
+    
+    if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
+    
+    set contact_process_dict [dict create ]
+    dict set contact_process_dict python_module alm_contact_process
+    dict set contact_process_dict kratos_module "KratosMultiphysics.ContactStructuralMechanicsApplication"
+    dict set contact_process_dict process_name ALMContactProcess
+
+    set contact_parameters_dict [dict create]
+    dict set contact_parameters_dict contact_model_part [::write::getSubModelPartId CONTACT "_HIDDEN_CONTACT_GROUP_"]
+    dict set contact_parameters_dict model_part_name Structure
+    if {$slave_group ne ""} {
+        dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
+    
+        dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
     }
-    return [list $process_list $contact_process_list]
+    dict set contact_process_dict Parameters $contact_parameters_dict
+    
+    return [list $contact_process_dict]
 }
+
 
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
@@ -205,15 +226,21 @@ proc Structural::write::writeParametersEvent { } {
 
 # Project Parameters
 proc Structural::write::getParametersEvent { } {
+    # Get the base dictionary for the project parameters
     set project_parameters_dict [getOldParametersDict]
+
+    # If using any element with the attribute RotationDofs set to true
     dict set project_parameters_dict solver_settings rotation_dofs [UsingRotationDofElements]
+
+    # Merging the old solver_settings with the common one for this app
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
     dict set project_parameters_dict solver_settings $solverSettingsDict
+
     return $project_parameters_dict
 }
 proc Structural::write::writeParametersEvent { } {
-    write::WriteJSON [getParametersEvent]
+    write::WriteJSON [::Structural::write::getParametersEvent]
 }
 
 proc Structural::write::UsingRotationDofElements { } {

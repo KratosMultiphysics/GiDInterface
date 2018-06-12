@@ -19,7 +19,7 @@ proc Structural::write::Init { } {
     SetAttribute materials_un STMaterials
     SetAttribute conditions_un STLoads
     SetAttribute nodal_conditions_un STNodalConditions
-    SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST]
+    SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
 }
@@ -83,9 +83,6 @@ proc Structural::write::writeModelPartEvent { } {
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
 
-    # Materials
-    # write::writeMaterials [GetAttribute validApps 
-
     # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
     
@@ -98,7 +95,7 @@ proc Structural::write::writeModelPartEvent { } {
     # Hinges special section
     Structural::write::writeHinges
 
-    # Nodal conditions and conditions
+    # Write Conditions section
     Structural::write::writeConditions
 
     # SubmodelParts
@@ -136,6 +133,8 @@ proc Structural::write::writeMeshes { } {
     foreach cnd $special_nodal_conditions {
         lappend ::Model::NodalConditions $cnd
     }
+
+    writeContacts
 }
 
 proc Structural::write::writeLoads { } {
@@ -151,6 +150,47 @@ proc Structural::write::writeLoads { } {
         } else {
             ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
         }
+    }
+}
+
+proc Structural::write::writeContacts { } {
+    variable ConditionsDictGroupIterators
+    if {[Structural::write::usesContact]} {
+        set root [customlib::GetBaseRoot]
+
+        # Prepare the xpaths
+        set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
+        set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
+
+        # Get the groups
+        set master_group [$root selectNodes $xp_master]
+        set slave_group [$root selectNodes $xp_slave]
+        if {$master_group ne ""} {
+            if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
+            set master_groupid_raw [$master_group @n]
+            set master_groupid [write::GetWriteGroupName $master_groupid_raw]
+        }
+        if {$slave_group ne ""} {
+            set slave_groupid_raw [$slave_group @n]
+            set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
+        }
+        # Create the joint group
+        set joint_contact_group "_HIDDEN_CONTACT_GROUP_"
+        if {[GiD_Groups exists $joint_contact_group]} {GiD_Groups delete $joint_contact_group}
+
+        if {$slave_group ne ""} {
+            spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw $slave_groupid_raw]
+        } {
+            spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw]
+        }
+
+        # Print the submodelpart
+        ::write::writeGroupSubModelPart CONTACT $joint_contact_group "nodal"
+        if {$slave_group ne ""} {
+            ::write::writeGroupSubModelPart CONTACT $slave_groupid_raw "nodal"
+        }
+
+        GiD_Groups delete $joint_contact_group
     }
 }
 
@@ -196,18 +236,7 @@ proc Structural::write::writeLocalAxes { } {
         set e [Model::getElement $elem_name]
         if {[write::isBooleanTrue [$e getAttribute "RequiresLocalAxes"]]} { 
             set group [$gNode @n]
-            if {[GiD_EntitiesGroups get $group elements -count -element_type linear]} {
-                write::WriteString "Begin ElementalData LOCAL_AXIS_2 // Element: $elem_name // Groups: $group"
-                foreach line [GiD_EntitiesGroups get $group elements -element_type linear] {
-                    set raw [lindex [lindex [GiD_Info conditions -localaxesmat line_Local_axes mesh $line] 0] 3]
-                    set y0 [lindex $raw 1]
-                    set y1 [lindex $raw 4]
-                    set y2 [lindex $raw 7]
-                    write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
-                }
-                write::WriteString "End ElementalData"
-                write::WriteString ""
-            }
+            write::writeLinearLocalAxesGroup $group
         }
     }
 }
@@ -223,7 +252,11 @@ proc Structural::write::writeHinges { } {
     }
 
     # Process groups assigned to Hinges
-    set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
+    if {$::Model::SpatialDimension eq "3D"} {
+        set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
+    } else {
+        set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST_2D'\]/group"
+    }
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set group [$gNode @n]
         

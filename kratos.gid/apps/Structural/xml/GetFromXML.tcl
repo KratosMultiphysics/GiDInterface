@@ -32,7 +32,13 @@ proc Structural::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem v 1 GiDOptions EchoLevel
     
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONDENSED_DOF_LIST_2D'\]"]
+    if {$result_node ne "" } {$result_node delete}
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONDENSED_DOF_LIST'\]"]
+    if {$result_node ne "" } {$result_node delete}
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
+    if {$result_node ne "" } {$result_node delete}
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT_SLAVE'\]"]
     if {$result_node ne "" } {$result_node delete}
 
     if {[[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Results]/value\[@n='print_prestress'\]"] eq ""} {
@@ -78,6 +84,11 @@ proc Structural::xml::ProcCheckNodalConditionStateSolid {domNode args} {
     set parts_un STParts
     if {[spdAux::getRoute $parts_un] ne ""} {
         set conditionId [$domNode @n]
+        set condition [Model::getNodalConditionbyId $conditionId]
+        set cnd_dim [$condition getAttribute WorkingSpaceDimension]
+        if {$cnd_dim ne ""} {
+            if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
+        }
         set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
         set elemnames [list ]
         foreach elem $elems { lappend elemnames [$elem @v]}

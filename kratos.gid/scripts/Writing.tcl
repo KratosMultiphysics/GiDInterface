@@ -30,7 +30,7 @@ proc write::Init { } {
     
     variable MDPA_loop_control
     set MDPA_loop_control 0
-
+    
     set current_mdpa_indent_level 0
     
 }
@@ -187,7 +187,7 @@ proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
     
     set exclusionList [list "MID" "APPID" "Material" "Element"]
     if {$const_law_write_name eq ""} {lappend exclusionList "ConstitutiveLaw"}
-
+    
     # We print all the material data directly from the saved dictionary
     foreach material [dict keys $mat_dict] {
         set matapp [dict get $mat_dict $material APPID]
@@ -291,8 +291,8 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
                     
                     # if {[string is double $value]} {
-                    #     set value [format "%13.5E" $value]
-                    # }
+                        #     set value [format "%13.5E" $value]
+                        # }
                     dict set mat_dict $group $name $value
                 }
             }
@@ -413,11 +413,11 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
 
 proc write::writeGroupCondition {groupid kname nnodes iter} {
     set obj [list ]
-
+    
     # Print header
     set s [mdpaIndent]
     WriteString "${s}Begin Conditions $kname// GUI group identifier: $groupid"
-
+    
     # Get the entities to print
     if {$nnodes == 1} {
         set formats [dict create $groupid "%10d \n"]
@@ -427,7 +427,7 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
         set elems [GiD_WriteCalculationFile connectivities -return $formats]
         set obj [GetListsOfNodes $elems $nnodes 2]
     }
-
+    
     # Print the conditions and it's connectivities
     set initial $iter
     incr ::write::current_mdpa_indent_level
@@ -438,11 +438,11 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
     }
     set final [expr $iter -1]
     incr ::write::current_mdpa_indent_level -1
-
+    
     # Print the footer
     WriteString "${s}End Conditions"
     WriteString ""
-
+    
     return [list $initial $final]
 }
 
@@ -496,7 +496,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         set good_name [write::transformGroupName $group]
         set mid "${cid}_${good_name}"
         dict set submodelparts [list $cid ${group}] $mid
-
+        
         # Prepare the print formats
         incr ::write::current_mdpa_indent_level
         set s1 [mdpaIndent]
@@ -508,7 +508,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
-
+        
         # Print header
         set s [mdpaIndent]
         WriteString "${s}Begin SubModelPart $mid // Group $group // Subtree $cid"
@@ -565,7 +565,7 @@ proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
         if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
         write::writeGroupSubModelPart $cid $group $what $iniend $tableid_list
     }
-
+    
     incr ::write::current_mdpa_indent_level -1
     WriteString "${s}End SubModelPart"
 }
@@ -606,13 +606,13 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     return $conditions_dict
 }
 
-proc write::writeNodalConditions { keyword } {
+proc write::writeNodalConditions { un } {
     
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $keyword]/condition/group"
+    set xp1 "[spdAux::getRoute $un]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
-        set xp1 "[spdAux::getRoute $keyword]/group"
+        set xp1 "[spdAux::getRoute $un]/group"
         set groups [$root selectNodes $xp1]
     }
     foreach group $groups {
@@ -773,6 +773,25 @@ proc write::writePartSubModelPart { } {
     foreach group [getPartsGroupsId] {
         writeGroupSubModelPart Parts $group "Elements"
     }
+}
+
+proc write::writeLinearLocalAxesGroup {group} {
+    set elements [GiD_EntitiesGroups get $group elements -element_type linear]
+    set num_elements [objarray length $elements]
+    if {$num_elements} {
+        write::WriteString "Begin ElementalData LOCAL_AXIS_2 // Groups: $group"
+        for {set i 0} {$i < $num_elements} {incr i} {
+            set line [objarray get $elements $i]
+            set raw [lindex [lindex [GiD_Info conditions -localaxesmat line_Local_axes mesh $line] 0] 3]
+            set y0 [lindex $raw 1]
+            set y1 [lindex $raw 4]
+            set y2 [lindex $raw 7]
+            write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
+        }
+        write::WriteString "End ElementalData"
+        write::WriteString ""
+    }
+    return $num_elements
 }
 
 proc write::dict2json {dictVal} {
@@ -944,7 +963,7 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
     set schemeName [write::getValue $schemeUN]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
-
+    
     set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
         dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
@@ -974,7 +993,7 @@ proc write::getSubModelPartNames { args } {
         set groupName [$group @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        if {[Model::getNodalConditionbyId $cid] ne ""} {
+        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || $cid eq "Parts"} {
             set gname [::write::getSubModelPartId $cid $groupName]
             if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
         }
@@ -995,21 +1014,26 @@ proc write::getSolversParametersDict { {appid ""} } {
     foreach se [$sol getSolversEntries] {
         set solverEntryDict [dict create]
         set un [apps::getAppUniqueName $appid "$solstratName[$se getName]"]
-        if {[spdAux::getRoute $un] ne ""} {
-            set solverName [write::getValue $un Solver]
-            if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI" "Automatic"]} {
-                dict set solverEntryDict solver_type $solverName
-                set solver [::Model::GetSolver $solverName]
-                foreach {n in} [$solver getInputs] {
-                    # JG temporal, para la precarga de combos
-                    if {[$in getType] ni [list "bool" "integer" "double"]} {
-                        set v [write::getValue $un $n check]
-                        dict set solverEntryDict $n $v
-                    } {
-                        dict set solverEntryDict $n [write::getValue $un $n]
+        set route [spdAux::getRoute $un]
+        if {$route ne "" } {
+            set solver_entry_node [[customlib::GetBaseRoot] selectNodes $route]
+            set solver_entry_state [get_domnode_attribute $solver_entry_node state]
+            if {$solver_entry_state ne "hidden"} {
+                set solverName [write::getValue $un Solver]
+                if {$solverName ni [list "Default" "AutomaticOpenMP" "AutomaticMPI" "Automatic" ""]} {
+                    dict set solverEntryDict solver_type $solverName
+                    set solver [::Model::GetSolver $solverName]
+                    foreach {n in} [$solver getInputs] {
+                        # JG temporal, para la precarga de combos
+                        if {[$in getType] ni [list "bool" "integer" "double"]} {
+                            set v [write::getValue $un $n check]
+                            dict set solverEntryDict $n $v
+                        } {
+                            dict set solverEntryDict $n [write::getValue $un $n]
+                        }
                     }
+                    dict set solverSettingsDict [$se getName] $solverEntryDict
                 }
-                dict set solverSettingsDict [$se getName] $solverEntryDict
             }
         }
         unset solverEntryDict
@@ -1062,6 +1086,8 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
             dict set process_attributes process_name [dict get $process_attributes n]
             dict unset process_attributes n
             dict unset process_attributes pn
+            if {[dict exists $process_attributes help]} {dict unset process_attributes help}
+            if {[dict exists $process_attributes process_name]} {dict unset process_attributes process_name}
             
             set processDict [dict merge $processDict $process_attributes]
             if {[$condition hasAttribute VariableName]} {
@@ -1128,6 +1154,11 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                         if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
+                } elseif {$in_type eq "inline_vector"} {
+                    set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
+                    lassign [split $value ","] ValX ValY ValZ
+                    if {$ValZ eq ""} {set ValZ 0.0}
+                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]]
                 } elseif {$in_type eq "double" || $in_type eq "integer"} {
                     set printed 0
                     if {[$in_obj getAttribute "function"] eq "1"} {
@@ -1162,14 +1193,14 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
             lappend bcCondsDict $processDict
         }
     }
-
+    
     foreach cid $grouped_conditions {
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
         } {
             set condition [::Model::getNodalConditionbyId $cid]
         }
-
+        
         set processName [$condition getProcessName]
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
@@ -1374,9 +1405,13 @@ proc write::getValue { name { it "" } {what noforce} } {
     
     set xp [spdAux::getRoute $name]
     set node [$root selectNodes $xp]
-    if {$it ne ""} {set node [$node find n $it]}
-    if {$what eq "force"} {write::forceUpdateNode $node}
-    return [getValueByNode $node]
+    if {$node ne ""} {
+        if {$it ne ""} {set node [$node find n $it]}
+        if {$what eq "force"} {write::forceUpdateNode $node}
+        return [getValueByNode $node]
+    } {
+        return ""
+    }
 }
 
 # anything containing the comma character is a list
@@ -1508,29 +1543,31 @@ proc write::getPropertiesList {parts_un} {
             dict set prop_dict "properties_id" $mid
             set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
-            set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
-            set variables_dict [dict create]
-            foreach prop [dict keys [dict get $mat_dict $group] ] {
-                if {$prop ni $exclusionList} {
-                    dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
+            if {$constitutive_law ne ""} {
+                set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+                set variables_dict [dict create]
+                foreach prop [dict keys [dict get $mat_dict $group] ] {
+                    if {$prop ni $exclusionList} {
+                        dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
+                    }
                 }
+                set material_dict [dict create]
+                set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
+                # WV const_law_application
+                set constitutive_law_name [$constitutive_law getKratosName]
+                if {$const_law_application eq "KratosMultiphysics"} {
+                    set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
+                } {
+                    set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
+                }
+                
+                dict set material_dict constitutive_law [dict create name $const_law_fullname]
+                dict set material_dict Variables $variables_list
+                dict set material_dict Tables dictnull
+                dict set prop_dict Material $material_dict
+                
+                lappend props $prop_dict
             }
-            set material_dict [dict create]
-            set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
-            # WV const_law_application
-            set constitutive_law_name [$constitutive_law getKratosName]
-            if {$const_law_application eq "KratosMultiphysics"} {
-                set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
-            } {
-                set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
-            }
-            
-            dict set material_dict constitutive_law [dict create name $const_law_fullname]
-            dict set material_dict Variables $variables_list
-            dict set material_dict Tables dictnull
-            dict set prop_dict Material $material_dict
-            
-            lappend props $prop_dict
         }
         
     }

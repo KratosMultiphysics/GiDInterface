@@ -1,0 +1,37 @@
+BeginZE /home/cpuigbo/GiDInterface/kratos.gid/apps/Solid/examples/EccentricColumn3D.gid/EccentricColumn3D.vv
+   x -3.94726991653442383 5.74480867385864258
+   y 6.39163064956665039 -1.58742785453796387
+   z -2.95716428756713867 3.97514200210571289
+   e 2.76385402679443359
+   v -0.0793274012290671182 0.899682501223218134 0.174501511325530018
+   r 0.392208881101695939
+   m -0.679758787155151367 -0.279621034860610962 0.678041458129882812 0 -0.00585686462000012398 0.926512777805328369 0.37621772289276123 0 -0.733412444591522217 0.251766085624694824 -0.631442904472351074 0 0 0 0 1
+   c 0.508988738059997559 1.8859550952911377 -0.508988738059997559
+   pd 0
+   pno 0
+   pfo 0
+   pf 4
+   pv 0
+   NowUse 0
+   DrawingType 1
+   LightVector 90 90 150 0
+   OGLShadow(UseShadows) 0
+   OGLShadow(RenderMode) RenderNice
+   OGLShadow(ShadowBias) -0.002
+   OGLShadow(AmbientShadows) 1
+   OGLShadow(UseFBO) 0
+   OGLShadow(FBOSize) 2048
+   OGLShadow(DimmedLightFactor) 0.02
+   OGLStereo(UseStereo) 0
+   OGLStereo(RelativeEyeDistance) 1
+   OGLStereo(FlipEyes) 0
+   OGLStereo(StereoMode) AnaglyphColors
+   OGLStereo(EyeDistance) 0.075
+   OGLStereo(LeftEyeDistance) 1 0 0 1
+   OGLStereo(RightEyeDistance) 0 1 1 1
+EndZE /home/cpuigbo/GiDInterface/kratos.gid/apps/Solid/examples/EccentricColumn3D.gid/EccentricColumn3D.vv
+
+BeginMirror
+   Mirror 0 Angle 0.0 AngleFake -15.0 SizeFactor 2.0 HeightOffset 0.25 Color #d9e5f24d Backlight Off EdgeStyle No Type Scene DrawMode Mirror
+EndMirror
+

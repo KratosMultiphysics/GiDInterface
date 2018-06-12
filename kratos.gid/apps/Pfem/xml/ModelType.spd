@@ -7,7 +7,7 @@
     <value n="StrategyCombo" pn="Time integration" icon="data" un="PFEM_SolStrat" v="" values="" dict="[GetSolutionStrategiesPFEM]" actualize_tree="1" state="[HideIfUniqueName PFEM_SolutionType Static]"/>
     <value n="Scheme" pn="Scheme" icon="data" un="PFEM_Scheme" v="" values="" dict="[GetSchemes]" state="normal"  actualize_tree="1"/>
   </container>
-  <container n="TimeParameters" pn="Time parameters" un="PFEM_TimeParameters" icon="timeParams" help="Problem parameters" state="[HideIfUniqueName PFEM_Scheme Linear]" tree_state="closed" open_window="0">
+  <container n="TimeParameters" pn="Time parameters" un="PFEM_TimeParameters" icon="timeParameters" help="Problem parameters" state="[HideIfUniqueName PFEM_Scheme Linear]" tree_state="closed" open_window="0">
     <value n="StartTime" pn="Start time" icon="data" state="hidden" v="0.0" help=""/>
     <value n="DeltaTime"  pn="Time Step (s)" icon="data" v="0.001" help=""/>
     <value n="EndTime" pn="End time" icon="data" v="1.0" help=""/>

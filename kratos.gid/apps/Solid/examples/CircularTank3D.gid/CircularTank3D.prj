@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gid version="13.5">
+  <pre>
+    <layer_to_use name="Layer0"/>
+    <groups>
+      <group id="1" name="Solid" color="#999999ff"/>
+      <group id="2" name="ConstraintX" color="#0000ffff"/>
+      <group id="3" name="ConstraintZ" color="#ff00ffff"/>
+      <group id="4" name="SelfWeight" color="#00ffffff"/>
+      <group id="5" name="Ballast" color="#a60021ff"/>
+      <group id="6" name="Pressure" color="#00ff00ff"/>
+    </groups>
+    <entities_groups>
+      <entities_group name="surfaces">
+        <vector name="entity_ids" length="7" type="integer">1:3 6:8 12</vector>
+        <vector name="entity_num_groups" length="7" type="ushort">1x7</vector>
+        <vector name="entity_groups" length="7" type="ushort">3 6 6 5x3 2</vector>
+      </entities_group>
+      <entities_group name="volumes">
+        <vector name="entity_ids" length="1" type="integer">1</vector>
+        <vector name="entity_num_groups" length="1" type="ushort">2</vector>
+        <vector name="entity_groups" length="2" type="ushort">1 4</vector>
+      </entities_group>
+    </entities_groups>
+  </pre>
+</gid>

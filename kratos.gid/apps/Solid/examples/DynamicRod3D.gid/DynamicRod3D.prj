@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gid version="13.5">
+  <pre>
+    <layer_to_use name="Layer0"/>
+    <groups>
+      <group id="1" name="-AKGSkinMesh3D" color="#ff00ffff" state="hidden"/>
+      <group id="2" name="Constraint" color="#0000ffff"/>
+      <group id="3" name="SelfWeight" color="#ff00ffff"/>
+      <group id="4" name="Solid" color="#00ffffff"/>
+    </groups>
+    <entities_groups>
+      <entities_group name="lines">
+        <vector name="entity_ids" length="1" type="integer">116</vector>
+        <vector name="entity_num_groups" length="1" type="ushort">1</vector>
+        <vector name="entity_groups" length="1" type="ushort">2</vector>
+      </entities_group>
+      <entities_group name="surfaces">
+        <vector name="entity_ids" length="20" type="integer">8:19 31:33 40 53:56</vector>
+        <vector name="entity_num_groups" length="20" type="ushort">1x20</vector>
+        <vector name="entity_groups" length="20" type="ushort">1x20</vector>
+      </entities_group>
+      <entities_group name="volumes">
+        <vector name="entity_ids" length="1" type="integer">1</vector>
+        <vector name="entity_num_groups" length="1" type="ushort">2</vector>
+        <vector name="entity_groups" length="2" type="ushort">3 4</vector>
+      </entities_group>
+    </entities_groups>
+  </pre>
+</gid>

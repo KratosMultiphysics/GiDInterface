@@ -799,8 +799,8 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
         }
         switch $type {
             "inline_vector" {
-
-                append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector'  help='$help'  state='$state' />"
+                set ndim [string index $::Model::SpatialDimension 0]
+                append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' dimensions='$ndim'  help='$help'  state='$state' />"
             }
             "vector" {
                 set vector_type [$param getAttribute "vectorType"]
@@ -2071,6 +2071,16 @@ proc spdAux::ProcConditionParameterState {domNode args} {
     }
     
     return normal
+}
+
+proc spdAux::MergeGroups {result_group_name group_list} {
+    GiD_Groups create $result_group_name
+
+    foreach group $group_list {
+        foreach entity [list points lines surfaces volumes nodes elements faces] {
+            GiD_EntitiesGroups assign $result_group_name $entity [GiD_EntitiesGroups get $group $entity]
+        }
+    }
 }
 
 proc spdAux::LoadIntervalGroups { } {
