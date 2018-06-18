@@ -93,9 +93,13 @@ proc write::writeEvent { filename } {
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
     
+    #### Validate ####
+    set errcode [writeValidateInApp $appid]
+
     #### MDPA Write ####
-    set errcode [writeAppMDPA $appid]
-    
+    if {$errcode eq 0} {
+        set errcode [writeAppMDPA $appid]
+    }
     #### Project Parameters Write ####
     set wevent [$activeapp getWriteParametersEvent]
     set filename "ProjectParameters.json"
@@ -114,6 +118,23 @@ proc write::writeEvent { filename } {
         set endtime [clock seconds]
         set ttime [expr {$endtime-$inittime}]
         W "Total time: [Duration $ttime]"
+    }
+    return $errcode
+}
+
+proc write::writeValidateInApp {appid} {
+    set activeapp [::apps::getAppById $appid]
+    set wevent ::[$activeapp getValidateWriteEvent]
+    set errcode 0
+    if {[info procs $wevent] eq $wevent} {
+        set err [eval $wevent]
+        set errcode [lindex $err 0]
+        set errmess [lindex $err 1]
+        if {$errcode} {
+            foreach line $errmess {
+                W $line
+            }
+        }
     }
     return $errcode
 }
