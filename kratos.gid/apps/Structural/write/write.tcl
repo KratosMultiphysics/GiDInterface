@@ -333,6 +333,7 @@ proc Structural::write::writeValidateEvent { } {
     set problem 0
     set problem_message [list ]
     
+    # Truss mesh validation
     set validation [validateTrussMesh]
     incr problem [lindex $validation 0]
     lappend problem_message {*}[lindex $validation 1]
@@ -341,19 +342,20 @@ proc Structural::write::writeValidateEvent { } {
 }
 
 proc Structural::write::validateTrussMesh { } {
+    # Elements to be checked
     set truss_element_names [list "TrussLinearElement2D" "TrussElement2D" "TrussLinearElement3D" "TrussElement3D"]
-    set truss_elements [list ]
     set error 0
     set error_message ""
     
-    set group_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n = 'Element' and @v = 'TrussElement3D'\]"]
-
+    # Used elements
+    set truss_elements [list ]
     foreach elem [GetUsedElements "Name"] {
         if {$elem in $truss_element_names} {
             lappend truss_elements $elem
         }
     }
     
+    # Check groups assigned to each element
     foreach element_name $truss_elements {
         set group_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n = 'Element' and @v = '$element_name'\]/.."]
         
@@ -361,6 +363,7 @@ proc Structural::write::validateTrussMesh { } {
             set group_name [$group_node @n]
             set num_lines [GiD_EntitiesGroups get $group_name lines -count]
             set num_elements [GiD_EntitiesGroups get $group_name elements -count -element_type {linear}]
+            # All lines must have only 1 linear element, so num_lines should be equal to num_elements
             if {$num_elements != $num_lines} {
                 set error 1
                 lappend error_message "Error in Truss element, group: $group_name. You must mesh each line with only 1 linear element."
