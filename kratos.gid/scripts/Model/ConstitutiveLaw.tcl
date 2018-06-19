@@ -11,11 +11,16 @@ oo::class create CLaw {
     superclass Entity
     
     variable kratos_name
+    variable output_mode
 
     constructor {n} {
         next $n
         variable kratos_name
         set kratos_name ""
+
+        # Can be "Parameter"|"Material"
+        variable output_mode
+        set output_mode "Parameters"
     }
     
     method cumple {args} {
@@ -39,6 +44,14 @@ oo::class create CLaw {
     method getKratosName { } {
         variable kratos_name
         if {$kratos_name eq ""} {return [my getName]} {return $kratos_name}
+    }
+    method setOutputMode {om} {
+        variable output_mode
+        set output_mode $om
+    }
+    method getOutputMode { } {
+        variable output_mode
+        return $output_mode
     }
 }
 
