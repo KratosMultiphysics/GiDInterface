@@ -188,6 +188,7 @@ oo::class create App {
     variable writeModelPartEvent
     variable writeParametersEvent
     variable writeCustomEvent
+    variable writeValidateEvent
     variable prefix
     variable release
     
@@ -198,6 +199,7 @@ oo::class create App {
         variable writeModelPartEvent
         variable writeParametersEvent
         variable writeCustomEvent
+        variable writeValidateEvent
         variable prefix
         variable public
         
@@ -213,6 +215,9 @@ oo::class create App {
         set writeCustomEvent $n
         append writeCustomEvent "::write"
         append writeCustomEvent "::writeCustomFilesEvent"
+        set writeValidateEvent $n
+        append writeValidateEvent "::write"
+        append writeValidateEvent "::writeValidateEvent"
         set prefix ""
         set public 0
     }
@@ -246,6 +251,8 @@ oo::class create App {
     method getWriteParametersEvent { } {variable writeParametersEvent; return $writeParametersEvent}
     
     method getWriteCustomEvent { } {variable writeCustomEvent; return $writeCustomEvent}
+
+    method getValidateWriteEvent { } {variable writeValidateEvent; return $writeValidateEvent}
     
     method executexml { func args } {
         variable name

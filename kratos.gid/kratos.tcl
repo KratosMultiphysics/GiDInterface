@@ -7,7 +7,27 @@
 #################### GiD Tcl events ######################
 ##########################################################
 proc InitGIDProject { dir } {
+    # W "InitGIDProject"
     Kratos::InitGIDProject $dir
+}
+proc GiD_Event_AfterNewGIDProject {} {
+    # W "GiD_Event_AfterNewGIDProject"
+}
+
+# Load GiD project files (initialise XML Tdom structure)
+proc GiD_Event_AfterReadGIDProject { filename } {
+    # W "GiD_Event_AfterReadGIDProject"
+    set name [file tail $filename]
+    set spd_file [file join ${filename}.gid ${name}.spd]
+    Kratos::AfterReadGIDProject $spd_file
+}
+
+proc BeforeTransformProblemType {file oldproblemtype newproblemtype} {
+    # W "BeforeTransformProblemType"
+}
+
+proc AfterTransformProblemType {file oldproblemtype newproblemtype messages} {
+    # W "AfterTransformProblemType"
 }
 
 proc EndGIDProject {} {
@@ -39,31 +59,12 @@ proc EndGIDPostProcess {} {
     ::Kratos::CreatePreprocessModelTBar
 }
 
-# Load GiD project files (initialise XML Tdom structure)
-proc LoadGIDProject { filespd } {
-    Kratos::LoadGiDProject $filespd
-}
 
 # Save GiD project files (save XML Tdom structure to spd file)
 proc SaveGIDProject { filespd } {
     gid_groups_conds::save_spd_file $filespd
     Kratos::RegisterEnvironment
     FileSelector::CopyFilesIntoModel [file dirname $filespd]
-}
-
-proc BeforeTransformProblemType { file oldproblemtype newproblemtype } {
-    return "-cancel-"
-}
-proc GiD_Private_Event_AfterTransformProblemType { filename old_problemtype new_problemtype } {
-    
-}
-proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
-    
-}
-
-proc AfterTransformProblemType { filename oldproblemtype newproblemtype } {
-    set spd_file [file join $filename.gid [file tail $filename].spd]
-    return [gid_groups_conds::transform_problemtype $spd_file]
 }
 
 proc AfterWriteCalcFileGIDProject { filename errorflag } {
@@ -185,8 +186,13 @@ proc Kratos::InitGIDProject { dir } {
     after 500 [list spdAux::CreateWindow]
 }
 
-proc Kratos::LoadGiDProject { filespd } {
+# Event triggered when opening a GiD model with kratos
+proc Kratos::AfterReadGIDProject { filespd } {
     variable kratos_private
+
+    # Dont open the init window. Saved models have already app and dimension
+    set spdAux::must_open_init_window 0
+
     set filedir [file dirname $filespd]
     if {[file nativename $kratos_private(Path)] eq [file nativename $filedir]} {
         set spdAux::ProjectIsNew 0
@@ -194,18 +200,34 @@ proc Kratos::LoadGiDProject { filespd } {
         set spdAux::ProjectIsNew 1
     }
     gid_groups_conds::close_all_windows
-    if { ![file exists $filespd] } { return }
-    set versionPT [gid_groups_conds::give_data_version]
-    set kratos_private(problemtype_version) $versionPT
-    gid_groups_conds::open_spd_file $filespd
-    set versionData [gid_groups_conds::give_data_version]
-    if { [package vcompare $versionPT $versionData] == 1 } {
-        after idle Kratos::upgrade_problemtype
-    }
-    #spdAux::reactiveApp
     update
+    if { ![file exists $filespd] } { return }
     spdAux::LoadModelFiles
     spdAux::LoadIntervalGroups
+    
+    # Need transform? Get PT version
+    set versionPT [gid_groups_conds::give_data_version]
+    set kratos_private(problemtype_version) $versionPT
+    # Open manually the spd file to get the version and the basic information
+    set doc_new [gid_groups_conds::open_XML_file_gzip $filespd]
+    set root [$doc_new documentElement]
+    set versionData [$root @version]
+    if { [package vcompare $versionPT $versionData] == 1 } {
+        set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
+        if {$activeapp_node ne ""} {
+            set activeapp [get_domnode_attribute $activeapp_node v]
+        } else {
+            W "Unable to get the active application"
+            return ""   
+        }
+        set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
+        after idle Kratos::upgrade_problemtype $filespd $nd $activeapp
+    } else {
+        gid_groups_conds::open_spd_file $filespd
+        customlib::UpdateDocument
+        spdAux::reactiveApp
+        spdAux::OpenTree
+    }
 }
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
@@ -335,14 +357,22 @@ proc Kratos::GiveKratosDefaultsFile {} {
     }
 }
 
-proc Kratos::upgrade_problemtype {} {
+proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     set w [dialogwin_snit .gid._ask -title [_ "Action"] -entrytext \
             [_ "The model needs to be upgraded. Do you want to upgrade to new version?"]]
     set action [$w createwindow]
     destroy $w
     if { $action < 1 } { return }
-    set project [lindex [GiD_Info Project] 0]
-    GiD_Process escape escape escape escape Data Defaults TransfProblem $project
+    
+    customlib::UpdateDocument
+    spdAux::SetSpatialDimmension $dim
+    apps::setActiveApp $app_id
+
+    spdAux::processIncludes
+    spdAux::parseRoutes
+
+    gid_groups_conds::transform_problemtype $spd_file
+    #GiD_Process escape escape escape escape Data Defaults TransfProblem $project
 }
 
 proc Kratos::ResetModel { } {

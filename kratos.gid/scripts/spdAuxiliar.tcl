@@ -16,6 +16,8 @@ namespace eval spdAux {
     
     variable ProjectIsNew
     variable GroupsEdited
+
+    variable must_open_init_window
 }
 
 proc spdAux::Init { } {
@@ -27,6 +29,7 @@ proc spdAux::Init { } {
     variable TreeVisibility
     variable ProjectIsNew
     variable GroupsEdited
+    variable must_open_init_window
     
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
@@ -36,6 +39,7 @@ proc spdAux::Init { } {
     set TreeVisibility 0
     set ProjectIsNew 0
     set GroupsEdited [dict create]
+    set must_open_init_window 1
     
 }
 
@@ -166,7 +170,9 @@ proc spdAux::activeApp { appid } {
 
 proc spdAux::CreateWindow {} {
     variable initwind
+    variable must_open_init_window
     
+    if {$must_open_init_window == 0} {return ""}
     set root [customlib::GetBaseRoot]
     
     set activeapp_node [$::gid_groups_conds::doc selectNodes "//hiddenfield\[@n='activeapp'\]"]
@@ -993,7 +999,7 @@ proc spdAux::injectMaterials { basenode args } {
         set matname [$mat getName]
         set mathelp [$mat getAttribute help]
         set inputs [$mat getInputs]
-        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='material16' help='Material definition'>"
+        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='material16' help='Material definition'  morebutton='0'>"
         foreach {inName in} $inputs {
             set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]] $mat]
             append matnode $node
