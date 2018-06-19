@@ -47,7 +47,6 @@ proc ::StenosisWizard::StartWizardWindow { } {
     smart_wizard::SetWizardNamespace "::StenosisWizard::Wizard"
     smart_wizard::SetWizardWindowName ".gid.activewizard"
     smart_wizard::SetWizardImageDirectory [file join $dir images]
-    W [file join $dir wizard Wizard_default.wiz]
     smart_wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]
     smart_wizard::ImportWizardData
 
