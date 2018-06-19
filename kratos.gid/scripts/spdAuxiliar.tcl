@@ -16,6 +16,8 @@ namespace eval spdAux {
     
     variable ProjectIsNew
     variable GroupsEdited
+
+    variable must_open_init_window
 }
 
 proc spdAux::Init { } {
@@ -27,6 +29,7 @@ proc spdAux::Init { } {
     variable TreeVisibility
     variable ProjectIsNew
     variable GroupsEdited
+    variable must_open_init_window
     
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
@@ -36,6 +39,7 @@ proc spdAux::Init { } {
     set TreeVisibility 0
     set ProjectIsNew 0
     set GroupsEdited [dict create]
+    set must_open_init_window 1
     
 }
 
@@ -166,7 +170,9 @@ proc spdAux::activeApp { appid } {
 
 proc spdAux::CreateWindow {} {
     variable initwind
+    variable must_open_init_window
     
+    if {$must_open_init_window == 0} {return ""}
     set root [customlib::GetBaseRoot]
     
     set activeapp_node [$::gid_groups_conds::doc selectNodes "//hiddenfield\[@n='activeapp'\]"]
