@@ -12,6 +12,7 @@ oo::class create CLaw {
     
     variable kratos_name
     variable output_mode
+    variable MaterialFilters
 
     constructor {n} {
         next $n
@@ -21,6 +22,9 @@ oo::class create CLaw {
         # Can be "Parameter"|"Material"
         variable output_mode
         set output_mode "Parameters"
+
+        variable MaterialFilters
+        set MaterialFilters [dict create]
     }
     
     method cumple {args} {
@@ -53,6 +57,27 @@ oo::class create CLaw {
         variable output_mode
         return $output_mode
     }
+    method addMaterialFilter {key value} {variable MaterialFilters; dict set MaterialFilters $key $value}
+    method getMaterialFilterValue {key} {
+        variable constLawFilters;
+        
+        set v ""
+        if {[dict exists $MaterialFilters $key]} {
+            set v [dict get $MaterialFilters $key]
+        }
+        return $v
+    }
+    method getMaterialFilters {} {
+        variable MaterialFilters
+        
+        set v [list ]
+        if {[info exists MaterialFilters]} {
+            foreach k [dict keys $MaterialFilters] {
+                lappend v $k [dict get $MaterialFilters $k] 
+            }
+        }
+        return $v
+    }
 }
 
 }
@@ -84,6 +109,11 @@ proc Model::ParseClawNode { node } {
     }
     foreach out [[$node getElementsByTagName outputs] getElementsByTagName parameter] {
         $cl addOutput [$out getAttribute n] [$out getAttribute pn]
+    }
+    if {[$node getElementsByTagName Material_FilterFeatures] != ""} {
+        foreach mft [[$node getElementsByTagName Material_FilterFeatures] getElementsByTagName filter] {
+            $cl addMaterialFilter [$mft getAttribute field] [$mft getAttribute value]
+        }
     }
     return $cl
 }
