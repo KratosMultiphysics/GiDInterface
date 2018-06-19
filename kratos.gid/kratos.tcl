@@ -192,7 +192,7 @@ proc Kratos::AfterReadGIDProject { filespd } {
 
     # Dont open the init window. Saved models have already app and dimension
     set spdAux::must_open_init_window 0
-    
+
     set filedir [file dirname $filespd]
     if {[file nativename $kratos_private(Path)] eq [file nativename $filedir]} {
         set spdAux::ProjectIsNew 0
@@ -208,25 +208,25 @@ proc Kratos::AfterReadGIDProject { filespd } {
     # Need transform? Get PT version
     set versionPT [gid_groups_conds::give_data_version]
     set kratos_private(problemtype_version) $versionPT
-    #set new_doc $::gid_groups_conds::doc
-    #gid_groups_conds::open_spd_file $filespd
-    #set versionData [gid_groups_conds::give_data_version]
-    #set ::gid_groups_conds::doc $new_doc
-
     # Open manually the spd file to get the version and the basic information
     set doc_new [gid_groups_conds::open_XML_file_gzip $filespd]
     set root [$doc_new documentElement]
     set versionData [$root @version]
-    set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
-    if {$activeapp_node ne ""} {
-        set activeapp [get_domnode_attribute $activeapp_node v]
-    } else {
-        W "Unable to get the active application"
-        return ""   
-    }
-    set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
     if { [package vcompare $versionPT $versionData] == 1 } {
+        set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
+        if {$activeapp_node ne ""} {
+            set activeapp [get_domnode_attribute $activeapp_node v]
+        } else {
+            W "Unable to get the active application"
+            return ""   
+        }
+        set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
         after idle Kratos::upgrade_problemtype $filespd $nd $activeapp
+    } else {
+        gid_groups_conds::open_spd_file $filespd
+        customlib::UpdateDocument
+        spdAux::reactiveApp
+        spdAux::OpenTree
     }
 }
 
