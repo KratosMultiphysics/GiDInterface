@@ -1263,7 +1263,7 @@ proc spdAux::getFields {} {
 
 proc spdAux::InsertConstitutiveLawForParameters {input arguments} {
     return "<value n='ConstitutiveLaw' pn='Constitutive law' v='' actualize_tree='1' values='\[GetConstitutiveLaws\]' dict='\[GetAllConstitutiveLaws\]'  help='Select a constitutive law'>
-        <dependencies node='../value' actualize='1'/>
+        <dependencies node='../value\[@n != ConstitutiveLaw and @n != Element\]' actualize='1'/>
         </value>
         <value n='Material' pn='Material' editable='0' help='Choose a material from the database' update_proc='CambioMat' values_tree='\[give_materials_list\]' v='' actualize_tree='1' state='normal'>
         <edit_command n='Update material data' pn='Update material data' icon='refresh' proc='edit_database_list'/>
@@ -1878,13 +1878,14 @@ proc spdAux::ProcGive_materials_list {domNode args} {
     parse_args $optional $compulsory $args      
     set restList ""    
     
-    proc database_append_list { parentNode database_name level container_name icon_name types_icon_name } {
+    proc database_append_list { parentNode database_name level container_name icon_name types_icon_name filters} {
         set l ""       
         # We guess the keywords of the levels of the database        
         set level_names [give_levels_name $parentNode $database_name]
         set primary_level [lindex $level_names 0]
         set secondary_level [lindex $level_names 1]
-        
+        set materials [Model::GetMaterialsNames $filters]
+        WV materials
         if {$secondary_level eq "" && $container_name ne "" && $level == "0"} {
             error [_ "The has_container flag is not available for the database %s (the different types of materials \
                     should be distributed in several containers)" $database_name]     
@@ -1895,7 +1896,7 @@ proc spdAux::ProcGive_materials_list {domNode args} {
             if { $name eq "" } { set name [$domNode @name] }
             if { [$domNode @n] eq "$secondary_level" } {
                 set ret [database_append_list $domNode  $database_name \
-                        [expr {$level+1}] $container_name $icon_name $types_icon_name]
+                        [expr {$level+1}] $container_name $icon_name $types_icon_name $filters]
                 if { [llength $ret] } {
                     lappend l [list $level $name $name $types_icon_name 0]
                     eval lappend l $ret
@@ -1907,6 +1908,7 @@ proc spdAux::ProcGive_materials_list {domNode args} {
                     if { [$domNode selectNodes $xp] eq "" } { set good 0 }
                 }
                 if { $good } {
+                    
                     lappend l [list $level $name $name $icon_name 1]
                 }
             }
@@ -1948,13 +1950,19 @@ proc spdAux::ProcGive_materials_list {domNode args} {
     set mats_un [apps::getAppUniqueName $appid Materials]
     set xp3 [spdAux::getRoute $mats_un]
     set parentNode [$domNode selectNodes $xp3]
+    set const_law_name [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] v]
+    set filters [list ]
+    if {$const_law_name != ""} {
+        set const_law [Model::getConstitutiveLaw $const_law_name]
+        set filters [$const_law getMaterialFilters]
+    }
+
     #W [$parentNode asXML]
     if {$parentNode eq ""} {
         error [_ "Database %s not found in the spd file" $database]  
     }
     
-    eval lappend resList [database_append_list $parentNode \
-            $database 0 $has_container $icon $types_icon]
+    eval lappend resList [database_append_list $parentNode $database 0 $has_container $icon $types_icon $filters]
     return [join $resList ","]
 }
 
@@ -1962,6 +1970,7 @@ proc spdAux::ProcEdit_database_list {domNode args} {
     set root [customlib::GetBaseRoot]
     set matname ""
     set xnode "[$domNode @n]:"
+    # TODO: REMOVE THIS CHAPUZA
     set baseframe ".gid.central.boundaryconds.gg.data.f0"
     set things [winfo children $baseframe]
     foreach thing $things {
