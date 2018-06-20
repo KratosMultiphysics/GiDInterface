@@ -41,7 +41,7 @@
       <parameter n="DIAMETER" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L"/>
       <parameter n="PROBABILITY_DISTRIBUTION" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" pvalues="Normal,Lognormal"/>
       <parameter n="STANDARD_DEVIATION" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L"/>
-      <parameter n="ConstitutiveLaw" special_command="spdAux::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>
+      <parameter n="ConstitutiveLaw" special_command="DEM::xml::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>
     </inputs>
   </Process>
   <Process n="Angular_Velocity_Process" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
