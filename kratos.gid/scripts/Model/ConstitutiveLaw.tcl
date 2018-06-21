@@ -97,6 +97,7 @@ proc Model::ParseClawNode { node } {
     set cl [::Model::CLaw new $name]
     $cl setPublicName [$node getAttribute pn]
     $cl setHelp [$node getAttribute help]
+    if {[$node hasAttribute OutputMode]} {$cl setOutputMode [$node getAttribute OutputMode]}
     
     if {[$node hasAttribute KratosName]} {$cl setKratosName [$node getAttribute KratosName]}
     
