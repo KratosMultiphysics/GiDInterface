@@ -299,7 +299,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
             
-            
+            set claws [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] values]
             set claw [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] v]
             set const_law [Model::getConstitutiveLaw $claw]
             set output_type [$const_law getOutputMode]
