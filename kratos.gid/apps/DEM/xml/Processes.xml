@@ -33,7 +33,7 @@
     <inputs>
       <parameter n="ELEMENT_TYPE" pn="Element type" type="combo" v="SphericParticle3D" values="SphericParticle3D" pvalues="Sphere"/>
       <parameter n="VELOCITY_MODULUS" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity"/>
-      <parameter n="DIRECTION_VECTOR" pn="Direction vector" type="vector" v="1.0,0.0,0.0" />
+      <parameter n="DIRECTION_VECTOR" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" />
       <parameter n="MAX_RAND_DEVIATION_ANGLE" pn="Max. random velocity deviation" type="double" v="1.0" units="°" unit_magnitude="Angle"/>
       <parameter n="FLOW_MEASUREMENT" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
         <parameter n="INLET_NUMBER_OF_PARTICLES" pn="Particles per second" parent="Particles" type="double" v="200.0" />

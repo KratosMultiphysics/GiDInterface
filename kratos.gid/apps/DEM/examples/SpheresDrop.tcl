@@ -29,9 +29,9 @@ proc ::DEM::examples::DrawGeometry { } {
     GiD_Layers create "Inlet"
     GiD_Layers create "Body"
     
-    GiD_EntitiesGroups assign "Floor"  surfaces 1
-    GiD_EntitiesGroups assign "Inlet"  surfaces 2
-    GiD_EntitiesGroups assign "Body"  volumes 1
+    GiD_EntitiesGroups assign "Floor" surfaces 1
+    GiD_EntitiesGroups assign "Inlet" surfaces 2
+    GiD_EntitiesGroups assign "Body" volumes 1
     GiD_EntitiesLayers assign "Floor" -also_lower_entities surfaces 1
     GiD_EntitiesLayers assign "Inlet" -also_lower_entities surfaces 2
     GiD_EntitiesLayers assign "Body" -also_lower_entities volumes 1
@@ -89,7 +89,7 @@ proc ::DEM::examples::AssignToTree { } {
         spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
         set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
         $inletNode setAttribute ov surface
-        set props [list Material "DEM-DefaultMaterial" DIAMETER 0.1 VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTORX 0.0 DIRECTION_VECTORZ -1.0]
+        set props [list Material "DEM-DefaultMaterial" DIAMETER 0.1 VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTOR "0.0,0.0,-1.0"]
         foreach {prop val} $props {
             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
             if {$propnode ne "" } {
