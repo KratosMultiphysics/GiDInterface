@@ -286,24 +286,31 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     foreach gNode [$root selectNodes $xp1] {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
         set group [$gNode getAttribute n]
-        #set valueNode [$gNode selectNodes $xp2]
-        #set material_name [get_domnode_attribute $valueNode v]
+        set valueNode [$gNode selectNodes $xp2]
+        set real_material_name [get_domnode_attribute $valueNode v]
         set material_name "material $material_number"
         if { ![dict exists $mat_dict $group] } {
             incr material_number
             set mid $material_number
             
-            set xp3 [spdAux::getRoute $materials_un]
-            append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $material_name]
+            set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
+            set matNode [$root selectNodes $xp3]      
             
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
             
-            set s1 [$gNode selectNodes ".//value"]
-            set s2 [$root selectNodes $xp3]
-            set us [join [list $s1 $s2]]
             
-            foreach valueNode $us {
+            set claw [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] v]
+            set const_law [Model::getConstitutiveLaw $claw]
+            set output_type [$const_law getOutputMode]
+            
+            if {$output_type eq "Parameters"} {
+                set s1 [$gNode selectNodes ".//value"]
+            } else {
+                set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+            }
+            
+            foreach valueNode $s1 {
                 write::forceUpdateNode $valueNode
                 set name [$valueNode getAttribute n]
                 set state [get_domnode_attribute $valueNode state]
@@ -314,6 +321,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     # if {[string is double $value]} {
                         #     set value [format "%13.5E" $value]
                         # }
+                    
                     dict set mat_dict $group $name $value
                 }
             }
