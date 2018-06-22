@@ -724,15 +724,31 @@ proc spdAux::getFields {} {
     
     return $lista
 }
+proc spdAux::InsertMaterialsSimple {domNode args} {
+     return "<value n='Material' pn='Material' editable='0' help='Choose a material from the database' values='\[get_materials_list_simple\]' v='DEM-DefaultMaterial' state='normal' />"
+}
 
-proc spdAux::InsertConstitutiveLawForParameters {input arguments} {
-    return "<value n='ConstitutiveLaw' pn='Constitutive law' v='' actualize_tree='1' values='\[GetConstitutiveLaws\]' dict='\[GetAllConstitutiveLaws\]'  help='Select a constitutive law'>
-        <dependencies node='../value' actualize='1'/>
-        </value>
-        <value n='Material' pn='Material' editable='0' help='Choose a material from the database' update_proc='CambioMat' values_tree='\[give_materials_list\]' v='' actualize_tree='1' state='normal'>
-        <edit_command n='Update material data' pn='Update material data' icon='refresh' proc='edit_database_list'/>
-        <dependencies node='../value' actualize='1'/>
-        </value>
-        <dynamicnode command='spdAux::injectPartInputs' args=''/>
-        "
+proc spdAux::ProcGet_materials_list_simple {domNode args} {
+    set appid [spdAux::GetAppIdFromNode $domNode]
+    set mats_un [apps::getAppUniqueName $appid Materials]
+    set xp3 [spdAux::getRoute $mats_un]
+    set parentNode [$domNode selectNodes $xp3]
+    set const_law_name [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] v]
+    set filters [list ]
+    if {$const_law_name != ""} {
+        set const_law [Model::getConstitutiveLaw $const_law_name]
+        set filters [$const_law getMaterialFilters]
+    }
+    set materials [Model::GetMaterialsNames $filters]
+
+    set res_raw_list [list ]
+    foreach part [$parentNode selectNodes "./blockdata\[@n = 'material'\]"] {
+        set name [$part @name]
+        if {$name in $materials} {
+            lappend res_raw_list $name
+        }
+    }
+    set v [get_domnode_attribute $domNode v]
+    if {$v ni $res_raw_list} {$domNode setAttribute v $v}
+    return [join $res_raw_list ","]
 }

@@ -10,13 +10,13 @@ oo::class create Element {
     
     variable TopologyFeatures
     variable ElementNodalCondition
-    variable ConstLawFilters
+    variable constLawFilters
     
     constructor {n} {
         next $n
         variable TopologyFeatures
         variable ElementNodalCondition
-        variable ConstLawFilters
+        variable constLawFilters
         
         set TopologyFeatures [list ]
         set ElementNodalCondition [list ]
