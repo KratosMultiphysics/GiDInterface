@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
-	<StrategyItem n="DirichletNeumann" pn="Dirichlet-Neumann" ImplementedInFile="partitioned_fsi_dirichlet_neumann_solver.py" ImplementedInApplication="FSIApplication" ImplementedInPythonFile="partitioned_fsi_dirichlet_neumann_solver" MinimumKratosVersion="8500" App="FSI" ProductionReady="ProductionReady" help="" NeedElements="false">
+	<StrategyItem n="Partitioned" pn="Partitioned" ImplementedInFile="partitioned_fsi_base_solver.py" 
+				  ImplementedInApplication="FSIApplication" ImplementedInPythonFile="partitioned_fsi_base_solver" 
+				  MinimumKratosVersion="8500" App="FSI" ProductionReady="ProductionReady" help="" NeedElements="false">
 		<!-- list of options to be filled -->
 		<parameter_list>
 			<parameter n="nl_tol" pn="Non-linear tolerance" type="double" v="1e-7" help="Interface residual tolerance."/>
@@ -16,7 +18,7 @@
 			</linearSolverItem>
 		</linearSolvers>
 		<schemes>
-			<scheme n="GenericDN" pn="Partitioned scheme" help=""  NeedElements="false">
+			<scheme n="DirichletNeumann" pn="Dirichlet-Neumann" help="" NeedElements="false">
 				<parameter_list></parameter_list>
 				<element_filters>
 					<filter field="ImplementedInApplication" value="FSIApplication"/>
