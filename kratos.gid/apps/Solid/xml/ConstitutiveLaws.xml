@@ -407,7 +407,7 @@
     </outputs>
   </CLaw>
   <CLaw n="SmallStrainPlaneStress2DLaw.SimoJuExponentialDamageModel" pn="Damage Simo-Ju (Plane Stress)" Type="PlaneStress" LargeDeformation="False" kratos_module="ConstitutiveModelsApplication"
-	help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="Developer">
+	help="Isotropic Damage Simo-Ju Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
