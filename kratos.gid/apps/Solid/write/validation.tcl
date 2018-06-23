@@ -52,11 +52,11 @@ proc Solid::write::validateNodalConditionsMesh {} {
     # Foreach group assigned
     foreach gNode [$root selectNodes $xp1] {
         # Get group name
-        set group_name [$gNode @n]
+        set group_name [write::GetWriteGroupName [$gNode @n]]
         # Get the assigned nodal condition
-        set nodal_condition [write::GetWriteGroupName [[$gNode parent] @n]]
+        set nodal_condition [[$gNode parent] @n]
         # Get the nodal condition available topologies
-        set topologies [Solid::write::GetTopologies [Model::getNodalConditionbyId $nodal_condition]]
+        set topologies [list [::Model::Topology new "Point" 1 ""]]
         # Validate if the group has any of the valid topologies assigned
         set has_any [Solid::write::ValidateGroupEmpty $group_name $topologies]
         if {$has_any == 0} {
@@ -81,13 +81,15 @@ proc Solid::write::validateLoadsMesh {} {
     # Foreach group assigned
     foreach gNode [$root selectNodes $xp1] {
         # Get group name
-        set group_name [$gNode @n]
+        set group_name [write::GetWriteGroupName [$gNode @n]]
         # Get the assigned nodal condition
-        set condition [write::GetWriteGroupName [[$gNode parent] @n]]
+        set condition [[$gNode parent] @n]
+        # Get the entity selected condition
+        if {[$gNode hasAttribute ov]} {set ov [$gNode getAttribute ov]} {set ov [[$gNode parent ] getAttribute ov]}
         # Get the nodal condition available topologies
-        set topologies [Solid::write::GetTopologies [Model::getNodalConditionbyId $condition] ]
+        set topologies [Solid::write::GetTopologies [Model::getCondition $condition] ]
         # Validate if the group has any of the valid topologies assigned
-        set has_any [Solid::write::ValidateGroupEmpty $group_name $topologies]
+        set has_any [Solid::write::ValidateGroupEmpty $group_name $topologies $ov]
         if {$has_any == 0} {
             # Get the topologies to show the message
             set valid_topologies [list ]
@@ -105,15 +107,24 @@ proc Solid::write::GetTopologies { entity } {
     if {$entity eq ""} {return [list ]}
     return [$entity getTopologyFeatures]
 }
-proc Solid::write::ValidateGroupEmpty { group_name topologies } {
+proc Solid::write::ValidateGroupEmpty { group_name topologies {ov ""} } {
     set any 0
     set isquadratic [write::isquadratic]
     foreach topology $topologies {
         set geo [$topology getGeometry]
-        if {[GiD_EntitiesGroups get $group_name elements -count -element_type $geo] > 0} {
-            # TODO: check number of nodes if quadratic
-            set any 1
-            break
+        if {$ov ne "" && [string tolower $geo] ne $ov} {continue}
+        if {$geo == "Point"} {
+            if {[GiD_EntitiesGroups get $group_name nodes -count] > 0} {
+                # TODO: check number of nodes if quadratic
+                set any 1
+                break
+            }
+        } else {
+            if {[GiD_EntitiesGroups get $group_name elements -count -element_type $geo] > 0} {
+                # TODO: check number of nodes if quadratic
+                set any 1
+                break
+            }
         }
     }
     return $any
