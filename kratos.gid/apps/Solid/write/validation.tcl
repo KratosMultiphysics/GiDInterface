@@ -7,10 +7,10 @@ proc Solid::write::writeValidateEvent { } {
     lappend problem_message {*}[Solid::write::validatePartsMesh]
 
     # Entities assigned to parts validation
-    lappend problem_message {*} [Solid::write::validateNodalConditionsMesh]
+    lappend problem_message {*}[Solid::write::validateNodalConditionsMesh]
 
     # Entities assigned to parts validation
-    lappend problem_message {*} [Solid::write::validateLoadsMesh]
+    lappend problem_message {*}[Solid::write::validateLoadsMesh]
 
     return [list [llength $problem_message] $problem_message]
 }
@@ -54,7 +54,7 @@ proc Solid::write::validateNodalConditionsMesh {} {
         # Get group name
         set group_name [$gNode @n]
         # Get the assigned nodal condition
-        set nodal_condition [[$gNode parent] @n]
+        set nodal_condition [write::GetWriteGroupName [[$gNode parent] @n]]
         # Get the nodal condition available topologies
         set topologies [Solid::write::GetTopologies [Model::getNodalConditionbyId $nodal_condition]]
         # Validate if the group has any of the valid topologies assigned
@@ -83,7 +83,7 @@ proc Solid::write::validateLoadsMesh {} {
         # Get group name
         set group_name [$gNode @n]
         # Get the assigned nodal condition
-        set condition [[$gNode parent] @n]
+        set condition [write::GetWriteGroupName [[$gNode parent] @n]]
         # Get the nodal condition available topologies
         set topologies [Solid::write::GetTopologies [Model::getNodalConditionbyId $condition] ]
         # Validate if the group has any of the valid topologies assigned
