@@ -91,6 +91,7 @@ proc Solid::write::validateLoadsMesh {} {
         if {[$gNode hasAttribute ov]} {set ov [$gNode getAttribute ov]} {set ov [[$gNode parent ] getAttribute ov]}
         # Get the nodal condition available topologies
         set topologies [Solid::write::GetTopologies [Model::getCondition $condition] ]
+        if {$topologies eq ""} {set topologies [list [::Model::Topology new "Point" 1 ""]]; set ov ""}
         # Validate if the group has any of the valid topologies assigned
         set has_any [Solid::write::ValidateGroupNotEmpty $group_name $topologies $ov]
         if {$has_any == 0} {
@@ -113,10 +114,12 @@ proc Solid::write::GetTopologies { entity } {
 proc Solid::write::ValidateGroupNotEmpty { group_name topologies {ov ""} } {
     set any 0
     set isquadratic [write::isquadratic]
+    # W "$group_name ov: $ov topo: [llength $topologies] $topologies"
     foreach topology $topologies {
         set geo [$topology getGeometry]
         if {$ov ne "" && [string tolower $geo] ne $ov} {continue}
         if {$geo == "Point"} {
+            # W "Checking $group_name nodes: [GiD_EntitiesGroups get $group_name nodes -count]"
             if {[GiD_EntitiesGroups get $group_name nodes -count] > 0} {
                 # TODO: check number of nodes if quadratic
                 set any 1
