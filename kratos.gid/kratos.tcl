@@ -223,6 +223,8 @@ proc Kratos::AfterReadGIDProject { filespd } {
             return ""   
         }
         set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
+        spdAux::LoadIntervalGroups $root
+        spdAux::LoadModelFiles $root
         after idle Kratos::upgrade_problemtype $filespd $nd $activeapp
     } else {
         gid_groups_conds::open_spd_file $filespd
@@ -372,11 +374,12 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     spdAux::SetSpatialDimmension $dim
     apps::setActiveApp $app_id
 
-    spdAux::processIncludes
-    spdAux::parseRoutes
-
     gid_groups_conds::transform_problemtype $spd_file
     #GiD_Process escape escape escape escape Data Defaults TransfProblem $project
+
+    
+    spdAux::LoadModelFiles
+    spdAux::LoadIntervalGroups
 }
 
 proc Kratos::ResetModel { } {

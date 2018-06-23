@@ -535,29 +535,6 @@ proc spdAux::ProcShowInMode { domNode args } {
     }
 }
 
-
-proc spdAux::LoadModelFiles { } {
-    customlib::UpdateDocument
-    foreach elem [[customlib::GetBaseRoot] getElementsByTagName "file"] {
-        FileSelector::AddFile [$elem @n]
-    }
-}
-proc spdAux::SaveModelFile { fileid } {
-    customlib::UpdateDocument
-    FileSelector::AddFile $fileid
-    gid_groups_conds::addF {container[@n='files']} file [list n ${fileid}]
-}
-
-proc spdAux::AddFile { domNode } {
-    FileSelector::InitWindow "spdAux::UpdateFileField" $domNode
-}
-proc spdAux::UpdateFileField { fileid domNode} {
-    if {$fileid ne ""} {
-        $domNode setAttribute v $fileid
-        spdAux::SaveModelFile $fileid
-        RequestRefresh 
-    }
-}
 proc spdAux::ProcGetFilesValues { } {
     lappend listilla "- No file"
     lappend listilla {*}[FileSelector::GetAllFiles]

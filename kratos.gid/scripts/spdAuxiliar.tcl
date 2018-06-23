@@ -331,11 +331,15 @@ proc spdAux::MergeGroups {result_group_name group_list} {
     }
 }
 
-proc spdAux::LoadIntervalGroups { } {
+proc spdAux::LoadIntervalGroups { {root ""} } {
     customlib::UpdateDocument
     variable GroupsEdited
     
-    foreach elem [[customlib::GetBaseRoot] getElementsByTagName "interval_group"] {
+    if {$root eq "" } {
+        set root [customlib::GetBaseRoot]
+    }
+
+    foreach elem [$root getElementsByTagName "interval_group"] {
         dict lappend GroupsEdited [$elem @parent] [$elem @child]
     }
 }
@@ -366,5 +370,35 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
         set GroupsEdited [dict remove $GroupsEdited $oldname]
     }
 }
+
+
+proc spdAux::LoadModelFiles { {root "" }} {
+    if {$root eq ""} {
+        set root [customlib::GetBaseRoot]
+        customlib::UpdateDocument
+    }
+    foreach elem [$root getElementsByTagName "file"] {
+        FileSelector::AddFile [$elem @n]
+    }
+}
+
+proc spdAux::SaveModelFile { fileid } {
+    customlib::UpdateDocument
+    FileSelector::AddFile $fileid
+    gid_groups_conds::addF {container[@n='files']} file [list n ${fileid}]
+}
+
+proc spdAux::AddFile { domNode } {
+    FileSelector::InitWindow "spdAux::UpdateFileField" $domNode
+}
+
+proc spdAux::UpdateFileField { fileid domNode} {
+    if {$fileid ne ""} {
+        $domNode setAttribute v $fileid
+        spdAux::SaveModelFile $fileid
+        RequestRefresh 
+    }
+}
+
 
 spdAux::Init
