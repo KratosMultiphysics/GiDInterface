@@ -12,6 +12,8 @@ proc Solid::write::writeValidateEvent { } {
     # Entities assigned to parts validation
     lappend problem_message {*}[Solid::write::validateLoadsMesh]
 
+    # Add more tests here
+
     return [list [llength $problem_message] $problem_message]
 }
 
@@ -30,7 +32,7 @@ proc Solid::write::validatePartsMesh {} {
         # Get the element available topologies
         set topologies [Solid::write::GetTopologies [::Model::getElement $element]]
         # Validate if the group has any of the valid topologies assigned
-        set has_any [Solid::write::ValidateGroupEmpty $group_name $topologies]
+        set has_any [Solid::write::ValidateGroupNotEmpty $group_name $topologies]
         if {$has_any == 0} {
             # Get the topologies to show the message
             set valid_topologies [list ]
@@ -59,7 +61,7 @@ proc Solid::write::validateNodalConditionsMesh {} {
         set topologies [list [::Model::Topology new "Point" 1 ""]]
         # TODO: validate ov
         # Validate if the group has any of the valid topologies assigned
-        set has_any [Solid::write::ValidateGroupEmpty $group_name $topologies]
+        set has_any [Solid::write::ValidateGroupNotEmpty $group_name $topologies]
         if {$has_any == 0} {
             # Get the topologies to show the message
             set valid_topologies [list ]
@@ -90,7 +92,7 @@ proc Solid::write::validateLoadsMesh {} {
         # Get the nodal condition available topologies
         set topologies [Solid::write::GetTopologies [Model::getCondition $condition] ]
         # Validate if the group has any of the valid topologies assigned
-        set has_any [Solid::write::ValidateGroupEmpty $group_name $topologies $ov]
+        set has_any [Solid::write::ValidateGroupNotEmpty $group_name $topologies $ov]
         if {$has_any == 0} {
             # Get the topologies to show the message
             set valid_topologies [list ]
@@ -108,7 +110,7 @@ proc Solid::write::GetTopologies { entity } {
     if {$entity eq ""} {return [list ]}
     return [$entity getTopologyFeatures]
 }
-proc Solid::write::ValidateGroupEmpty { group_name topologies {ov ""} } {
+proc Solid::write::ValidateGroupNotEmpty { group_name topologies {ov ""} } {
     set any 0
     set isquadratic [write::isquadratic]
     foreach topology $topologies {
