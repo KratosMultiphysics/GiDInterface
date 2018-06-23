@@ -321,4 +321,84 @@ proc spdAux::ConvertAllUniqueNames {oldPrefix newPrefix} {
 }
 
 
+proc spdAux::MergeGroups {result_group_name group_list} {
+    GiD_Groups create $result_group_name
+
+    foreach group $group_list {
+        foreach entity [list points lines surfaces volumes nodes elements faces] {
+            GiD_EntitiesGroups assign $result_group_name $entity [GiD_EntitiesGroups get $group $entity]
+        }
+    }
+}
+
+proc spdAux::LoadIntervalGroups { {root ""} } {
+    customlib::UpdateDocument
+    variable GroupsEdited
+    
+    if {$root eq "" } {
+        set root [customlib::GetBaseRoot]
+    }
+
+    foreach elem [$root getElementsByTagName "interval_group"] {
+        dict lappend GroupsEdited [$elem @parent] [$elem @child]
+    }
+}
+proc spdAux::AddIntervalGroup { parent child } {
+    variable GroupsEdited
+    dict lappend GroupsEdited $parent $child
+    customlib::UpdateDocument
+    gid_groups_conds::addF {container[@n='interval_groups']} interval_group [list parent ${parent} child ${child}]
+}
+proc spdAux::RemoveIntervalGroup { parent child } {
+    variable GroupsEdited
+    dict set GroupsEdited $parent [lsearch -inline -all -not -exact [dict get $GroupsEdited $parent] $child]
+    customlib::UpdateDocument
+    gid_groups_conds::delete "container\[@n='interval_groups'\]/interval_group\[@parent='$parent' and @child='$child'\]"
+}
+
+proc spdAux::RenameIntervalGroup { oldname newname } {
+    variable GroupsEdited
+    if {[dict exists $GroupsEdited $oldname]} {
+        set list_of_subgroups [dict get $GroupsEdited $oldname]
+        foreach group $list_of_subgroups {
+            set child [lrange [GidUtils::Split $group "//"] 1 end]
+            set fullname [join [list $newname $child] "//"]
+            RemoveIntervalGroup $oldname $group
+            AddIntervalGroup $newname $fullname
+            gid_groups_conds::rename_group $group $fullname
+        }
+        set GroupsEdited [dict remove $GroupsEdited $oldname]
+    }
+}
+
+
+proc spdAux::LoadModelFiles { {root "" }} {
+    if {$root eq ""} {
+        set root [customlib::GetBaseRoot]
+        customlib::UpdateDocument
+    }
+    foreach elem [$root getElementsByTagName "file"] {
+        FileSelector::AddFile [$elem @n]
+    }
+}
+
+proc spdAux::SaveModelFile { fileid } {
+    customlib::UpdateDocument
+    FileSelector::AddFile $fileid
+    gid_groups_conds::addF {container[@n='files']} file [list n ${fileid}]
+}
+
+proc spdAux::AddFile { domNode } {
+    FileSelector::InitWindow "spdAux::UpdateFileField" $domNode
+}
+
+proc spdAux::UpdateFileField { fileid domNode} {
+    if {$fileid ne ""} {
+        $domNode setAttribute v $fileid
+        spdAux::SaveModelFile $fileid
+        RequestRefresh 
+    }
+}
+
+
 spdAux::Init
