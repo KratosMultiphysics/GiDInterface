@@ -364,6 +364,7 @@ proc Kratos::GiveKratosDefaultsFile {} {
 }
 
 proc Kratos::upgrade_problemtype {spd_file dim app_id} {
+    if {[GiDVersionCmp 14.1.1d] < 0} { W "The minimum GiD version for a transform is '14.1.1d'\n Click Ok to try it anyway" }
     set w [dialogwin_snit .gid._ask -title [_ "Action"] -entrytext \
             [_ "The model needs to be upgraded. Do you want to upgrade to new version?"]]
     set action [$w createwindow]
