@@ -206,8 +206,6 @@ proc Kratos::AfterReadGIDProject { filespd } {
     gid_groups_conds::close_all_windows
     update
     if { ![file exists $filespd] } { return }
-    spdAux::LoadModelFiles
-    spdAux::LoadIntervalGroups
     
     # Need transform? Get PT version
     set versionPT [gid_groups_conds::give_data_version]
@@ -225,10 +223,14 @@ proc Kratos::AfterReadGIDProject { filespd } {
             return ""   
         }
         set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
+        spdAux::LoadIntervalGroups $root
+        spdAux::LoadModelFiles $root
         after idle Kratos::upgrade_problemtype $filespd $nd $activeapp
     } else {
         gid_groups_conds::open_spd_file $filespd
         customlib::UpdateDocument
+        spdAux::LoadModelFiles
+        spdAux::LoadIntervalGroups
         spdAux::reactiveApp
         spdAux::OpenTree
     }
@@ -362,6 +364,7 @@ proc Kratos::GiveKratosDefaultsFile {} {
 }
 
 proc Kratos::upgrade_problemtype {spd_file dim app_id} {
+    if {[GiDVersionCmp 14.1.1d] < 0} { W "The minimum GiD version for a transform is '14.1.1d'\n Click Ok to try it anyway" }
     set w [dialogwin_snit .gid._ask -title [_ "Action"] -entrytext \
             [_ "The model needs to be upgraded. Do you want to upgrade to new version?"]]
     set action [$w createwindow]
@@ -372,11 +375,12 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     spdAux::SetSpatialDimmension $dim
     apps::setActiveApp $app_id
 
-    spdAux::processIncludes
-    spdAux::parseRoutes
-
     gid_groups_conds::transform_problemtype $spd_file
     #GiD_Process escape escape escape escape Data Defaults TransfProblem $project
+
+    
+    spdAux::LoadModelFiles
+    spdAux::LoadIntervalGroups
 }
 
 proc Kratos::ResetModel { } {
