@@ -57,6 +57,7 @@ proc Solid::write::validateNodalConditionsMesh {} {
         set nodal_condition [[$gNode parent] @n]
         # Get the nodal condition available topologies
         set topologies [list [::Model::Topology new "Point" 1 ""]]
+        # TODO: validate ov
         # Validate if the group has any of the valid topologies assigned
         set has_any [Solid::write::ValidateGroupEmpty $group_name $topologies]
         if {$has_any == 0} {
