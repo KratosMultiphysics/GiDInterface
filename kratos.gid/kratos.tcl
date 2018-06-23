@@ -206,8 +206,6 @@ proc Kratos::AfterReadGIDProject { filespd } {
     gid_groups_conds::close_all_windows
     update
     if { ![file exists $filespd] } { return }
-    spdAux::LoadModelFiles
-    spdAux::LoadIntervalGroups
     
     # Need transform? Get PT version
     set versionPT [gid_groups_conds::give_data_version]
@@ -229,6 +227,8 @@ proc Kratos::AfterReadGIDProject { filespd } {
     } else {
         gid_groups_conds::open_spd_file $filespd
         customlib::UpdateDocument
+        spdAux::LoadModelFiles
+        spdAux::LoadIntervalGroups
         spdAux::reactiveApp
         spdAux::OpenTree
     }
