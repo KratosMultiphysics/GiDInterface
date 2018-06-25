@@ -58,7 +58,8 @@ proc ::Examples::StartWindow { } {
         #set title_frame [ttk::frame $examples_window.information_$group_id]
         #grid [ttk::labelframe $examples_window.title_text$group_id -text $group_name]
         
-        set buttons_frame [ttk::labelframe $examples_window.title_text$group_id -text $group_name]
+        set parent [ttk::labelframe $examples_window.title_text$group_id -text $group_name]
+        set buttons_frame [ttk::frame $parent.buttonframe]
         set examples [$group getElementsByTagName "Example"]
         set col 0
         set row 0
@@ -79,7 +80,9 @@ proc ::Examples::StartWindow { } {
             if {$col >= 7} {set col 0; incr row; incr row}
         }
         #grid $title_frame
+        grid $parent -sticky ew 
         grid $buttons_frame
+        grid columnconfigure $parent 0 -weight 1
     }
 }
 

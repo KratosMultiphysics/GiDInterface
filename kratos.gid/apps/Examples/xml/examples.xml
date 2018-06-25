@@ -15,4 +15,13 @@
         <Example id="CylinderInFlow3D" app="Fluid" logo="CylinderInFlow3D.png" name="Cylinder in flow 3D" dim="3D" cmd="::Fluid::examples::CylinderInFlow"/>
         <Example id="EmbeddedCylinderInFlow3D" app="EmbeddedFluid" logo="EmbeddedCylinderInFlow3D.png" name="Cylinder in flow 3D\nEmbedded" dim="3D" cmd="::EmbeddedFluid::examples::CylinderInFlow"/>
     </Group>
+    <Group id="Structural" name="Structural examples">
+        <Example id="TrussCantilever2D" app="Structural" logo="TrussCantilever2D.png" name="Truss cantilever 2D" dim="2D" cmd="::Structural::examples::TrussCantilever"/>
+        <Example id="TrussCantilever3D" app="Structural" logo="TrussCantilever3D.png" name="Truss cantilever 3D" dim="3D" cmd="::Structural::examples::TrussCantilever"/>
+    </Group>
+    <Group id="FSI" name="Fluid structure interaction examples">
+        <Example id="MokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall"/>
+        <Example id="MokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall"/>
+        <Example id="TurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark"/>
+    </Group>
 </Examples>
