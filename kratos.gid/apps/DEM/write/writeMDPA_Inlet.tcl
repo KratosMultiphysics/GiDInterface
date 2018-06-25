@@ -45,9 +45,7 @@ proc DEM::write::writeInletMeshes { } {
             write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid ELEMENT_TYPE]"
             write::WriteString "        CONTAINS_CLUSTERS 0"
             set velocity [dict get $inletProperties $groupid VELOCITY_MODULUS]
-            set velocity_X [dict get $inletProperties $groupid DIRECTION_VECTORX]
-            set velocity_Y [dict get $inletProperties $groupid DIRECTION_VECTORY]
-            set velocity_Z [dict get $inletProperties $groupid DIRECTION_VECTORZ]
+            lassign [split [dict get $inletProperties $groupid DIRECTION_VECTOR] ","] velocity_X velocity_Y velocity_Z
             lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
             lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
             write::WriteString "        VELOCITY \[3\] ($vx, $vy, $vz)"

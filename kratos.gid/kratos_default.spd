@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- -*- coding: utf-8; mode: SGML -*- -->
-<Kratos_data version='6.0.0'>
+<Kratos_data version='6.0.2'>
 	<style show_menubutton_about='0' show_menubutton_search='1'></style>
 	<groups/>
 	<units></units>
@@ -144,6 +144,11 @@
 			<![CDATA[
 	  return [spdAux::ProcgetStateFromXPathValue $domNode $args]
 	  ]]>
+		</proc>
+		<proc n='get_materials_list_simple' args='args'>
+			<![CDATA[
+	return [spdAux::ProcGet_materials_list_simple $domNode {*}$args]
+		]]>
 		</proc>
 		<proc n='give_materials_list' args='args'>
 			<![CDATA[
