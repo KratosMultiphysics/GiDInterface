@@ -55,10 +55,10 @@ proc ::Examples::StartWindow { } {
     foreach group $groups {
         set group_id [$group @id]
         set group_name [$group @name]
-        set title_frame [ttk::frame $examples_window.information_$group_id]
-        grid [ttk::label $title_frame.title_text$group_id -text $group_name]
+        #set title_frame [ttk::frame $examples_window.information_$group_id]
+        #grid [ttk::labelframe $examples_window.title_text$group_id -text $group_name]
         
-        set buttons_frame [ttk::frame $examples_window.buttons_$group_id -relief ridge ]
+        set buttons_frame [ttk::labelframe $examples_window.title_text$group_id -text $group_name]
         set examples [$group getElementsByTagName "Example"]
         set col 0
         set row 0
@@ -78,7 +78,7 @@ proc ::Examples::StartWindow { } {
             incr col
             if {$col >= 7} {set col 0; incr row; incr row}
         }
-        grid $title_frame
+        #grid $title_frame
         grid $buttons_frame
     }
 }
