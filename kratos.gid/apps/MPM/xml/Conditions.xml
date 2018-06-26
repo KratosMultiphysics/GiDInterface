@@ -53,6 +53,7 @@
 	units="N/m^2" unit_magnitude="F/L^2" VariableName="SURFACE_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Triangle" nodes="3" KratosName="MPMSurfaceLoadCondition3D3N"/>
+      <item  GeometryType="Quadrilateral" nodes="4" KratosName="MPMSurfaceLoadCondition3D4N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
@@ -81,6 +82,7 @@
 	ElementType="Surface"  ProcessName="ApplyMPMSlipBoundaryProcess" help="">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="Condition3D3N"/>
+      <item  GeometryType="Quadrilateral"      nodes="4" KratosName="Condition3D4N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
