@@ -303,7 +303,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
             set claw [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] v]
             set const_law [Model::getConstitutiveLaw $claw]
             if {$const_law ne ""} {
-            set output_type [$const_law getOutputMode]
+                set output_type [$const_law getOutputMode]
             
                 if {$output_type eq "Parameters"} {
                     set s1 [$gNode selectNodes ".//value"]
