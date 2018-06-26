@@ -50,6 +50,11 @@ oo::class create Condition {
         if {[llength $TopologyFeatures]} {set ret 1}
         return $ret
     }
+
+    method getTopologyFeatures {} {
+        variable TopologyFeatures
+        return $TopologyFeatures
+    }
     
     method setProcessName {pn} {
         variable processName
