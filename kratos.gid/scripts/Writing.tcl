@@ -302,12 +302,16 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
             set claws [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] values]
             set claw [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] v]
             set const_law [Model::getConstitutiveLaw $claw]
-            set output_type [$const_law getOutputMode]
+            if {$const_law ne ""} {
+                set output_type [$const_law getOutputMode]
             
-            if {$output_type eq "Parameters"} {
-                set s1 [$gNode selectNodes ".//value"]
+                if {$output_type eq "Parameters"} {
+                    set s1 [$gNode selectNodes ".//value"]
+                } else {
+                    set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                }
             } else {
-                set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                set s1 [$gNode selectNodes ".//value"]
             }
             
             foreach valueNode $s1 {

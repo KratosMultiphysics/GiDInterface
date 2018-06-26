@@ -84,6 +84,11 @@ oo::class create Element {
         }
         return $ret
     }
+    method getTopologyFeatures {} {
+        variable TopologyFeatures
+        return $TopologyFeatures
+    }
+
     method cumple {args} {
         set c [next {*}$args]
          

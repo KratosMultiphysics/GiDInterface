@@ -33,6 +33,7 @@ proc ::Solid::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
+    uplevel #0 [list source [file join $dir write validation.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
 }
 

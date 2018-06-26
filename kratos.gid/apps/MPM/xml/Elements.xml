@@ -31,6 +31,7 @@
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangian3D4N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="UpdatedLagrangian3D8N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures></ConstitutiveLaw_FilterFeatures>
@@ -54,6 +55,7 @@
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="Element3D8N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
