@@ -19,6 +19,7 @@ proc ::FSI::Init { } {
     set dir [apps::getMyDir "FSI"]
     set prefix FSI
     
+    
     apps::LoadAppById "Structural"
     apps::LoadAppById "Fluid"
     

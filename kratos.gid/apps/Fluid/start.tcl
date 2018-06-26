@@ -26,7 +26,7 @@ proc ::Fluid::Init { } {
     dict set attributes UseIntervals 1
 
     LoadMyFiles
-    ::spdAux::CreateDimensionWindow
+    #::spdAux::CreateDimensionWindow
 }
 
 proc ::Fluid::LoadMyFiles { } {
