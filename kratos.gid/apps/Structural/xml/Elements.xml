@@ -311,7 +311,7 @@
   <!--structural elements-->
   <!--shell elements-->
   <!--large displacements-->
-  <ElementItem n="ShellThinCorotationalElement" pn="Shell thin corotational" ImplementedInFile="shell_thin_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" help="This element implements a corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True" AnalysisType="non_linear">
+  <ElementItem n="ShellThinCorotationalElement" pn="Shell thin corotational" ImplementedInFile="shell_thin_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" help="This element implements a corotational element for thin shells in a large displacements approach" ElementType="Shell" RotationDofs="True" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="ShellThinElementCorotational3D3N"/>
@@ -342,7 +342,7 @@
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
     </outputs>
   </ElementItem>
-  <ElementItem n="ShellThickCorotationalElement" pn="Shell thick corotational" ImplementedInFile="shell_thick_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" help="This element implements a corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True" AnalysisType="non_linear">
+  <ElementItem n="ShellThickCorotationalElement" pn="Shell thick corotational" ImplementedInFile="shell_thick_element_3DxN.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="True" LargeDeformation="True" help="This element implements a corotational element for thick shells in a large displacements approach" ElementType="Shell" RotationDofs="True" AnalysisType="linear,non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="ShellThickElementCorotational3D3N"/>
