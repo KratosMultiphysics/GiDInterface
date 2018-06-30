@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="SolutionStrat" pn="Solution" un="CNVDFFSolutionParameters" icon="solution" help="Solution Strategy" open_window="0">
+
+	<!-- Parallelism -->
+	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
+
+	<!-- Linear solvers -->
+	<dynamicnode command="spdAux::injectSolvers" args=""/>
+
+	<!-- Strategy parameters -->
+	<container n="StratParams" pn="Strategy parameters" un="CNVDFFStratParams" icon="groupsTreeNew.gif" state="normal" open_window="0">
+		<dynamicnode command="spdAux::injectSolStratParams" args=""/>
+	</container>
+
+	<!-- Body (volume) term addition -->
+	<container n="BodyForce" pn="Body force" un="CNVDFFBodyForce" help="Body forces" open_window="0" icon="BodyForce">
+		<value n="BodyForceValue" pn="Body force value" v="0.0" help="Body force value" unit_magnitude="Acceleration" units="m/s^2" />
+	</container>
+
+	<!-- Time paremeters (transient strategy) -->
+	<container n="TimeParameters" pn="Time parameters" un="CNVDFFTimeParameters" help="Time parameters" open_window="0" 
+			   state="[checkStateByUniqueName CNVDFFSolStrat Transient]" icon="time4">
+		<value n="StartTime" pn="Start time" v="0.0" help=""/>
+		<value n="EndTime" pn="End time" v="1.0" help=""/>
+		<value n="DeltaTime" pn="Delta time" v="0.01" help="User-defined time step"/>
+	</container>
+
+</container>

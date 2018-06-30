@@ -1,0 +1,42 @@
+namespace eval ConvectionDiffusion::xml {
+    # Namespace variables declaration
+    variable dir
+}
+
+proc ConvectionDiffusion::xml::Init { } {
+    # Namespace variables inicialization
+    variable dir
+    Model::InitVariables dir $ConvectionDiffusion::dir
+    
+    Model::getSolutionStrategies Strategies.xml
+    Model::getElements Elements.xml
+    Model::getMaterials Materials.xml
+    Model::getNodalConditions NodalConditions.xml
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
+    Model::getProcesses "../../Common/xml/Processes.xml"
+    Model::getProcesses Processes.xml
+    Model::getConditions Conditions.xml
+    Model::getSolvers "../../Common/xml/Solvers.xml"
+}
+
+proc ConvectionDiffusion::xml::getUniqueName {name} {
+    return ${::ConvectionDiffusion::prefix}${name}
+}
+
+proc ConvectionDiffusion::xml::CustomTree { args } {
+    set root [customlib::GetBaseRoot]
+
+    # Output control in output settings
+    spdAux::SetValueOnTreeItem v time Results FileLabel
+    spdAux::SetValueOnTreeItem v time Results OutputControlType
+    
+    customlib::ProcessIncludes $::Kratos::kratos_private(Path)
+    spdAux::parseRoutes
+
+    # Nodal reactions in output settings
+    if {[$root selectNodes "[spdAux::getRoute Results]/container\[@n='OnNodes'\]"] ne ""} {
+        gid_groups_conds::addF "[spdAux::getRoute Results]/container\[@n='OnNodes'\]" value [list n REACTION_FLUX pn "Reaction flux" v No values "Yes,No"]
+    }
+}
+
+ConvectionDiffusion::xml::Init

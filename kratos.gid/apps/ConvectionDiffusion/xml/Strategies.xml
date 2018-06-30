@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StrategyList>
+
+	<!-- Stationary strategy -->
+	<StrategyItem 
+		n="Stationary" 
+		pn="Stationary"
+		ImplementedInFile="convection_diffusion_stationary_solver.py"
+		ImplementedInApplication="ConvectionDiffusionApplication"
+		ImplementedInPythonFile="ConvectionDiffusionStationarySolver"
+		MinimumKratosVersion="8500" 
+		App="ConvectionDiffusion"
+		ProductionReady="ProductionReady"
+		help="Stationary strategy for convection-diffusion problems.">
+
+		<!-- list of options to be filled -->
+		<parameter_list>
+            <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" state="[checkStateByUniqueName AnalysisType non_linear]" help="Switch on/off line search"/>
+			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
+			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
+            <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
+            <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,And_criterion,or_criterion"
+                       pvalues ="Residual criterion,Temperature criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
+				<parameter n="solution_relative_tolerance" pn="Temperature relative tolerance" type="double" v="1e-5" parent="displacement_criterion,and_criterion,or_criterion" help="Relative temperature tolerance employed in the nonlinear iteration"/>
+				<parameter n="solution_absolute_tolerance" pn="Temperature absolute tolerance" type="double" v="1e-7" parent="displacement_criterion,and_criterion,or_criterion" help="Absolute temperature tolerance employed in the nonlinear iteration"/>
+				<parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-5" parent="residual_criterion,and_criterion,or_criterion" help="Relative residual tolerance employed in the nonlinear iteration"/>
+				<parameter n="residual_absolute_tolerance" pn="Residual absolute tolerance" type="double" v="1e-7" parent="residual_criterion,and_criterion,or_criterion" help="Absolute residual tolerance employed in the nonlinear iteration"/></parameter>
+        </parameter_list>
+
+		<!-- linear solver settings -->
+		<linearSolvers>
+			<linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+				<filterFeatures>
+					<filter field="SolverType" value="Standard"/>
+				</filterFeatures>
+				<defaults>
+				</defaults>
+			</linearSolverItem>
+		</linearSolvers>
+
+		<!-- scheme settings -->
+		<schemes>
+			<scheme n="stationary" pn="Generic stationary scheme" help="">
+				<parameter_list>
+				</parameter_list>
+				<element_filters>
+				</element_filters>
+			</scheme>
+		</schemes>
+	</StrategyItem>
+
+	<!-- Transient strategy -->
+	<StrategyItem 
+		n="Transient" 
+		pn="Transient"
+		ImplementedInFile="convection_diffusion_transient_solver.py"
+		ImplementedInApplication="ConvectionDiffusionApplication"
+		ImplementedInPythonFile="ConvectionDiffusionTransientSolver"
+		MinimumKratosVersion="8500" 
+		App="ConvectionDiffusion"
+		ProductionReady="ProductionReady"
+		help="Transient strategy for convection-diffusion solvers.">
+
+		<!-- list of options to be filled -->
+		<parameter_list>
+            <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
+			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
+			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
+            <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
+            <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,And_criterion,or_criterion"
+                       pvalues ="Residual criterion,Temperature criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
+				<parameter n="solution_relative_tolerance" pn="Temperature relative tolerance" type="double" v="1e-5" parent="displacement_criterion,and_criterion,or_criterion" help="Relative temperature tolerance employed in the nonlinear iteration"/>
+				<parameter n="solution_absolute_tolerance" pn="Temperature absolute tolerance" type="double" v="1e-7" parent="displacement_criterion,and_criterion,or_criterion" help="Absolute temperature tolerance employed in the nonlinear iteration"/>
+				<parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-5" parent="residual_criterion,and_criterion,or_criterion" help="Relative residual tolerance employed in the nonlinear iteration"/>
+				<parameter n="residual_absolute_tolerance" pn="Residual absolute tolerance" type="double" v="1e-7" parent="residual_criterion,and_criterion,or_criterion" help="Absolute residual tolerance employed in the nonlinear iteration"/></parameter>
+        </parameter_list>
+
+		<!-- linear solver settings -->
+		<linearSolvers>
+			<linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+				<filterFeatures>
+					<filter field="SolverType" value="Standard"/>
+				</filterFeatures>
+				<defaults>
+				</defaults>
+			</linearSolverItem>
+		</linearSolvers>
+
+		<!-- scheme settings -->
+		<schemes>
+			<scheme n="crank_nicolson" pn="Crank-Nicolson scheme" help="">
+				<parameter_list>
+				</parameter_list>
+				<element_filters>
+				</element_filters>
+			</scheme>
+		</schemes>
+	</StrategyItem>
+
+</StrategyList>
