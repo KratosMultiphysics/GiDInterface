@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--linear elastic laws-->
-	<CLaw n="Linear" pn="Linear" ProductionReady="ProductionReady" help="Newtonian fluid" App="ConvectionDiffusion" ImplementedInApplication="ConvectionDiffusionApplication">
+	<CLaw n="Linear" pn="Linear" ProductionReady="ProductionReady" help="Constant properties constitutive law for thermal problems" App="ConvectionDiffusion" ImplementedInApplication="ConvectionDiffusionApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
-            <parameter n="CONDUCTIVITY" pn="Thermal conductivity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1e-3"/>
-            <parameter n="SPECIFIC_HEAT" pn="Specific heat" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1e-3"/>
+            <parameter n="CONDUCTIVITY" pn="Thermal conductivity" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1e-3"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" unit_magnitude="Power/(L*Temp)" units="W/(m*K)" v="1e-3"/>
         </inputs>
         <outputs>
         </outputs>

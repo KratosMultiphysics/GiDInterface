@@ -7,8 +7,8 @@
         ProcessName="AssignScalarVariableProcess" 
         VariableName="TEMPERATURE" 
         Interval="False"
-        unit_magnitude="Temperature" 
-        units="C" 
+        unit_magnitude="Temp" 
+        units="K" 
         App="ConvectionDiffusion" 
         ImplementedInApplication="ConvectionDiffusionApplication">
 
