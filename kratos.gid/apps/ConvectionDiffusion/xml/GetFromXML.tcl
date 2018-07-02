@@ -37,6 +37,9 @@ proc ConvectionDiffusion::xml::CustomTree { args } {
     if {[$root selectNodes "[spdAux::getRoute Results]/container\[@n='OnNodes'\]"] ne ""} {
         gid_groups_conds::addF "[spdAux::getRoute Results]/container\[@n='OnNodes'\]" value [list n REACTION_FLUX pn "Reaction flux" v No values "Yes,No"]
     }
+
+    # Make line_search appear only with non-linear strategy
+    [$root selectNodes "[spdAux::getRoute CNVDFFStratParams]/value\[@n='line_search'\]"] setAttribute state "\[checkStateByUniqueName CNVDFFAnalysisType non_linear\]"
 }
 
 ConvectionDiffusion::xml::Init

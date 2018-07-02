@@ -4,7 +4,7 @@
                    MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" 
                    VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Line" ProcessName="AssignScalarVariableProcess" help="" units="W/m^2" unit_magnitude="Power/L^2">
         <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="FluxCondition"/>
+            <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
@@ -18,8 +18,8 @@
                    MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" 
                    VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Surface" ProcessName="AssignScalarVariableProcess" help="" units="W/m^2" unit_magnitude="Power/L^2">
         <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="FluxCondition"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="FluxCondition"/>
+            <item GeometryType="Triangle" nodes="3" KratosName="Condition3D3N"/>
+            <item GeometryType="Quadrilateral" nodes="4" KratosName="Condition3D4N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>

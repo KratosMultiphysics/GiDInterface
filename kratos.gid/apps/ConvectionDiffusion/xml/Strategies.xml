@@ -2,8 +2,8 @@
 <StrategyList>
 
 	<!-- Stationary strategy -->
-	<StrategyItem 
-		n="Stationary" 
+	<StrategyItem
+		n="stationary" 
 		pn="Stationary"
 		ImplementedInFile="convection_diffusion_stationary_solver.py"
 		ImplementedInApplication="ConvectionDiffusionApplication"
@@ -15,7 +15,7 @@
 
 		<!-- list of options to be filled -->
 		<parameter_list>
-            <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" state="[checkStateByUniqueName AnalysisType non_linear]" help="Switch on/off line search"/>
+            <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" state="[checkStateByUniqueName CNVDFFAnalysisType non_linear]" help="Switch on/off line search"/>
 			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
 			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
@@ -40,7 +40,7 @@
 
 		<!-- scheme settings -->
 		<schemes>
-			<scheme n="stationary" pn="Generic stationary scheme" help="">
+			<scheme n="stationary_scheme" pn="Generic stationary scheme" help="">
 				<parameter_list>
 				</parameter_list>
 				<element_filters>
@@ -51,7 +51,7 @@
 
 	<!-- Transient strategy -->
 	<StrategyItem 
-		n="Transient" 
+		n="transient" 
 		pn="Transient"
 		ImplementedInFile="convection_diffusion_transient_solver.py"
 		ImplementedInApplication="ConvectionDiffusionApplication"
@@ -63,7 +63,7 @@
 
 		<!-- list of options to be filled -->
 		<parameter_list>
-            <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
+            <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" state="[checkStateByUniqueName CNVDFFAnalysisType non_linear]" help="Switch on/off line search"/>
 			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
 			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
