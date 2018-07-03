@@ -14,6 +14,8 @@ if [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
 fi
 
+
+
 # gid redefines LD_LIBRARY_PATH to its own libs directory
 # and maintains OLD_LD_LIBRARY_PATH with previous settings
 # therefore, we use the OLD_LD_LIBRARY_PATH and prepend the path to the kratos libs
@@ -28,6 +30,19 @@ fi
 # in the system and interfeering with runkratos
 # export PYTHONHOME="$3/exec/Kratos"
 export PYTHONPATH="$3/exec/Kratos/python34.zip":"$3/exec/Kratos":$PYTHONPATH
+
+
+# if mac
+KERNEL=`uname -s`
+if [ $KERNEL = "Darwin" ]; then
+    KERNEL_NAME="macosx"
+    export DYLD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$DYLD_LIBRARY_PATH
+    export DYLD_FALLBACK_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$DYLD_FALLBACK_LIBRARY_PATH
+    export PYTHONPATH="$3/exec/Kratos/Lib":"$3/exec/Kratos/Lib/lib-dynload/":$PYTHONPATH
+    export PYTHONHOME="$3/exec/Kratos"
+else
+    KERNEL_NAME="linux"
+fi
 
 # Run Python using the script MainKratos.py
 "$3/exec/Kratos/runkratos" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
