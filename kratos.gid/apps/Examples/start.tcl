@@ -50,7 +50,12 @@ proc ::Examples::StartWindow { } {
     
     InitWindow $examples_window [_ "Kratos Multiphysics - Examples"] Kratos "" "" 1
     set initwind $examples_window
-    
+
+    set c_to_scroll [CreateScrolledCanvas $initwind.center]
+    set fcenter [tk::frame $c_to_scroll.fcenter]
+    AddToScrolledCanvas $initwind.center $fcenter
+    grid $initwind.center -sticky nsew
+
     set groups [$root getElementsByTagName "Group"]
     foreach group $groups {
         set group_id [$group @id]
@@ -58,7 +63,7 @@ proc ::Examples::StartWindow { } {
         #set title_frame [ttk::frame $examples_window.information_$group_id]
         #grid [ttk::labelframe $examples_window.title_text$group_id -text $group_name]
         
-        set parent [ttk::labelframe $examples_window.title_text$group_id -text $group_name]
+        set parent [ttk::labelframe $fcenter.title_text$group_id -text $group_name]
         set buttons_frame [ttk::frame $parent.buttonframe]
         set examples [$group getElementsByTagName "Example"]
         set col 0
@@ -84,6 +89,11 @@ proc ::Examples::StartWindow { } {
         grid $buttons_frame
         grid columnconfigure $parent 0 -weight 1
     }
+    
+    grid columnconfigure $initwind 0 -weight 1
+    grid rowconfigure $initwind 0 -weight 1
+    wm minsize $initwind 900 500
+    #wm maxsize $initwind 500 500
 }
 
 proc ::Examples::getImgFrom {group_name example_logo} {
