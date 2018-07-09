@@ -8,7 +8,7 @@
     </container>
 
 	<!-- Body (volume) term addition -->
-	<container n="BodyForce" pn="Body force" un="CNVDFFBodyForce" help="Body forces" open_window="0" icon="BodyForce">
+	<container n="BodyForce" pn="Body force" un="CNVDFFBodyForce" help="Body forces" open_window="0" icon="therm">
 		<value n="BodyForceValue" pn="Volume heat source" v="0.0" help="Volumetric heat added per unit volume" unit_magnitude="Power/L^3" units="W/m^3"/>
 	</container>
 

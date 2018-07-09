@@ -8,15 +8,13 @@ proc Buoyancy::xml::Init { } {
     variable dir
     Model::InitVariables dir $Buoyancy::dir
 
-    # Model::ForgetSolutionStrategies
-    # Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
-    # Model::getSolutionStrategies "../../Structural/xml/Strategies.xml"
-    # Model::getSolutionStrategies Strategies.xml
-    # Model::getConditions Conditions.xml
+    Model::ForgetConstitutiveLaws
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
 
-    # Model::ForgetSolvers
+    Model::ForgetMaterials
+    Model::getMaterials Materials.xml
+
     Model::getSolvers "../../Common/xml/Solvers.xml"
-    # Model::getSolvers Coupling_solvers.xml
 }
 
 proc Buoyancy::xml::getUniqueName {name} {
@@ -38,9 +36,6 @@ proc Buoyancy::xml::CustomTree { args } {
     # Modify the tree: field newValue UniqueName OptionalChild
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
     spdAux::SetValueOnTreeItem v "Yes" FLStratParams compute_reactions
-
-    # Disable MPI parallelism until it is fully tested
-    #spdAux::SetValueOnTreeItem values "OpenMP" ParallelType
 }
 
 # Overwriting some procs

@@ -19,7 +19,7 @@
         <include n="BoundaryConditions" active="1" path="apps/ConvectionDiffusion/xml/BoundaryConditions.spd"/>
         <include n="SolutionStrategy" active="1" path="apps/Buoyancy/xml/SolutionStrategyConvectionDiffusion.spd"/>
         <include n="Results" active="1" path="apps/Common/xml/Results.spd" un="CNVDFFResults"/>
-        <include n="Materials" active="1" path="apps/ConvectionDiffusion/xml/Materials.spd"/>
+        <include n="Materials" active="0" path="apps/ConvectionDiffusion/xml/Materials.spd"/>
     </container>
 
     <container n="Buoyancy" pn="Coupling" icon="app" prefix="Buoyancy_" tree_state="open" open_window="0">
