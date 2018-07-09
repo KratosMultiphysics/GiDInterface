@@ -18,6 +18,7 @@ namespace eval spdAux {
     variable GroupsEdited
 
     variable must_open_init_window
+    variable must_open_dim_window
 }
 
 proc spdAux::Init { } {
@@ -30,6 +31,7 @@ proc spdAux::Init { } {
     variable ProjectIsNew
     variable GroupsEdited
     variable must_open_init_window
+    variable must_open_dim_window
     
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
@@ -40,6 +42,7 @@ proc spdAux::Init { } {
     set ProjectIsNew 0
     set GroupsEdited [dict create]
     set must_open_init_window 1
+    set must_open_dim_window 1
     
 }
 
