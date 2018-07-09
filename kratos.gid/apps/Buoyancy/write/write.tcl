@@ -53,9 +53,8 @@ proc Buoyancy::write::writeCustomFilesEvent { } {
 }
 
 proc Buoyancy::write::Validate {} {
-    set err ""    
-    set root [customlib::GetBaseRoot]
-
+    set err ""
+    lappend err "Not implemented"
     return $err
 }
 
