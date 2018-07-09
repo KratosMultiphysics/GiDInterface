@@ -412,7 +412,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     }
 
     set change_list [list Solver MVQN_recursive buffer_size 7]
-    set xpath [spdAux::getRoute FSIDirichletNeumanncoupling_strategy]
+    set xpath [spdAux::getRoute FSIPartitionedcoupling_strategy]
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
