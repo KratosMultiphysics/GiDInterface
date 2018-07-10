@@ -287,14 +287,10 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
         set group [$gNode getAttribute n]
         set valueNode [$gNode selectNodes $xp2]
-        set real_material_name [get_domnode_attribute $valueNode v]
         set material_name "material $material_number"
         if { ![dict exists $mat_dict $group] } {
             incr material_number
             set mid $material_number
-            
-            set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
-            set matNode [$root selectNodes $xp3]      
             
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
@@ -308,6 +304,9 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 if {$output_type eq "Parameters"} {
                     set s1 [$gNode selectNodes ".//value"]
                 } else {
+                    set real_material_name [get_domnode_attribute $valueNode v]
+                    set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
+                    set matNode [$root selectNodes $xp3]  
                     set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
                 }
             } else {
