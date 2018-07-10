@@ -60,8 +60,6 @@ proc Buoyancy::write::writeModelPartEvent { } {
     
     # Custom SubmodelParts
     #write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
-
-    
 }
 proc Buoyancy::write::writeCustomFilesEvent { } {
     # Materials
@@ -107,10 +105,8 @@ proc Buoyancy::write::writeConditions {  } {
         lassign [dict get $dict_group_intervals $groupid] ini fin
         set BuoyancyConditions($groupid,initial) $ini
         set BuoyancyConditions($groupid,final) $fin
-        
     }
 }
-
 
 proc Buoyancy::write::writeSubModelParts { } {
     variable BuoyancyConditions
@@ -127,7 +123,6 @@ proc Buoyancy::write::writeSubModelParts { } {
 
         set ini $BuoyancyConditions($groupid,initial)
         set end $BuoyancyConditions($groupid,final)
-        W "$condid $groupid $ini $end"
         if {$ini == -1} {
             ::write::writeGroupSubModelPart $condid $groupid "Nodes"
         } else {
