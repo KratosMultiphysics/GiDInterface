@@ -2,27 +2,16 @@ namespace eval Buoyancy::write {
     variable writeAttributes
 }
 
-proc Buoyancy::write::Init { } {
+proc Buoyancy::write::Init { } {    
+    Fluid::write::Init
 }
 
 proc Buoyancy::write::GetAttribute {att} {
-    variable writeAttributes
-    return [dict get $writeAttributes $att]
+    return [Fluid::write::GetAttribute $att]
 }
 
 proc Buoyancy::write::GetAttributes {} {
-    variable writeAttributes
-    return $writeAttributes
-}
-
-proc Buoyancy::write::SetAttribute {att val} {
-    variable writeAttributes
-    dict set writeAttributes $att $val
-}
-
-proc Buoyancy::write::AddAttribute {att val} {
-    variable writeAttributes
-    dict lappend writeAttributes $att $val
+    return [Fluid::write::GetAttributes]
 }
 
 proc Buoyancy::write::AddAttributes {configuration} {
@@ -40,6 +29,31 @@ proc Buoyancy::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
 
+    # Init data
+    write::initWriteConfiguration [Fluid::write::GetAttributes]
+
+    # Headers
+    write::writeModelPartData
+    Fluid::write::writeProperties
+
+    # Materials
+    write::writeMaterials [Fluid::write::GetAttribute validApps]
+
+    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
+    if {[Fluid::write::GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+
+    # Element connectivities (Groups on FLParts)
+    write::writeElementConnectivities
+    
+    # Nodal conditions and conditions
+    Fluid::write::writeConditions
+    
+    # SubmodelParts
+    Fluid::write::writeMeshes
+    
+    # Custom SubmodelParts
+    write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
+
     
 }
 proc Buoyancy::write::writeCustomFilesEvent { } {
@@ -54,7 +68,7 @@ proc Buoyancy::write::writeCustomFilesEvent { } {
 
 proc Buoyancy::write::Validate {} {
     set err ""
-    lappend err "Not implemented"
+    
     return $err
 }
 
