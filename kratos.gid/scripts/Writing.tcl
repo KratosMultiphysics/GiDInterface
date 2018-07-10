@@ -318,7 +318,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 write::forceUpdateNode $valueNode
                 set name [$valueNode getAttribute n]
                 set state [get_domnode_attribute $valueNode state]
-                if {$state ne "hidden"} {
+                if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
                     # All the introduced values are translated to 'm' and 'kg' with the help of this function
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
                     

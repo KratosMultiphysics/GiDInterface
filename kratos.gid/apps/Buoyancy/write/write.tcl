@@ -1,9 +1,13 @@
 namespace eval Buoyancy::write {
+    variable BuoyancyConditions
     variable writeAttributes
 }
 
 proc Buoyancy::write::Init { } {    
     Fluid::write::Init
+    variable BuoyancyConditions
+    set BuoyancyConditions(temp) 0
+    unset BuoyancyConditions(temp)
 }
 
 proc Buoyancy::write::GetAttribute {att} {
@@ -47,12 +51,15 @@ proc Buoyancy::write::writeModelPartEvent { } {
     
     # Nodal conditions and conditions
     Fluid::write::writeConditions
+
+    Buoyancy::write::writeConditions
     
     # SubmodelParts
     Fluid::write::writeMeshes
+    Buoyancy::write::writeSubModelParts
     
     # Custom SubmodelParts
-    write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
+    #write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
 
     
 }
@@ -61,7 +68,7 @@ proc Buoyancy::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
 
     # Main python script
-    set orig_name [GetAttribute main_script_file]
+    set orig_name [Fluid::write::GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
@@ -82,6 +89,50 @@ proc Buoyancy::write::UpdateUniqueNames { appid } {
     foreach un $unList {
          set current_un [apps::getAppUniqueName $appid $un]
          spdAux::setRoute $un [spdAux::getRoute $current_un]
+    }
+}
+
+proc Buoyancy::write::writeConditions {  } {
+    variable BuoyancyConditions
+    set BCUN "CNVDFFBC"
+
+    # Write the conditions
+    set dict_group_intervals [write::writeConditions $BCUN [Fluid::write::getLastConditionId]]
+
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [get_domnode_attribute $group n]
+        set groupid [write::GetWriteGroupName $groupid]
+        lassign [dict get $dict_group_intervals $groupid] ini fin
+        set BuoyancyConditions($groupid,initial) $ini
+        set BuoyancyConditions($groupid,final) $fin
+        
+    }
+}
+
+
+proc Buoyancy::write::writeSubModelParts { } {
+    variable BuoyancyConditions
+    set BCUN "CNVDFFBC"
+    
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
+    set grouped_conditions [list ]
+    #W "Conditions $xp1 [$root selectNodes $xp1]"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        set groupid [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+
+        set ini $BuoyancyConditions($groupid,initial)
+        set end $BuoyancyConditions($groupid,final)
+        W "$condid $groupid $ini $end"
+        if {$ini == -1} {
+            ::write::writeGroupSubModelPart $condid $groupid "Nodes"
+        } else {
+            ::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
+        }
     }
 }
 
