@@ -42,6 +42,10 @@ proc ::Structural::CustomToolbarItems { } {
 
 proc ::Structural::CustomMenus { } {
     Structural::examples::UpdateMenus
+
+    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "Formfinding - Update geometry" ] end POST [list ::Structural::Formfinding::UpdateGeometry] "" "" insert =
+    GiDMenu::UpdateMenus
 }
 
 proc ::Structural::GetAttribute {name} {
@@ -49,6 +53,12 @@ proc ::Structural::GetAttribute {name} {
     set value ""
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
+}
+
+proc ::Structural::BeforeMeshGeneration { size } { 
+    foreach group [GiD_Groups list] {
+        GiD_AssignData condition relation_line_geo_mesh Lines {0} [GiD_EntitiesGroups get $group lines]
+    }
 }
 
 ::Structural::Init

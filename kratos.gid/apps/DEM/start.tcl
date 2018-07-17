@@ -16,7 +16,6 @@ proc ::DEM::Init { } {
     
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
-    
     dict set attributes UseIntervals 1
     
     set kratos_name DEMApplication
@@ -46,7 +45,6 @@ proc ::DEM::GetAttribute {name} {
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
 }
-
 
 proc ::DEM::CustomToolbarItems { } {
     variable dir

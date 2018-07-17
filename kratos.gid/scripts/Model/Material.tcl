@@ -60,6 +60,13 @@ proc Model::GetMaterials {args} {
     # W "Good materials $cumplen"
     return $cumplen
 }
+proc Model::GetMaterialsNames {args} { 
+    set materials [list ]
+    foreach mat [GetMaterials {*}$args] {
+        lappend materials [$mat getName]
+    }
+    return $materials
+}
 
 proc Model::getMaterial {mid} { 
     variable Materials

@@ -100,9 +100,9 @@ proc Kratos::UpdateMenus { } {
 }
 
 proc Kratos::ChangeMenus { } {
-    set found [GiDMenu::_FindIndex "Kratos" PRE]
-    if {$found > 0} {GiDMenu::Delete "Kratos" PRE}
-    GiDMenu::Create "Kratos" PRE
+    set found [GiDMenu::_FindIndex "Kratos" PREPOST]
+    if {$found > 0} {GiDMenu::Delete "Kratos" PREPOST}
+    GiDMenu::Create "Kratos" PREPOST
     variable kratos_private
     set tomode "developer mode"
     set fromode "release mode"
@@ -122,7 +122,7 @@ proc Kratos::ChangeMenus { } {
         GiDMenu::InsertOption "Kratos" [list "Wizard window" ] [incr pos] PRE [list Wizard::CreateWindow] "" "" replace =
     }
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "About Kratos" ] [incr pos] PRE [list Kratos::About] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "About Kratos" ] [incr pos] PREPOST [list Kratos::About] "" "" replace =
     GidChangeDataLabel "Data units" ""
     GidChangeDataLabel "Interval" ""
     GidChangeDataLabel "Conditions" ""

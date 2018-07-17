@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="Gravity" pn="Gravity" un="MPMGravity" help="" icon="gravity" open_window="1">
+	
+	<value n="modulus" pn="Modulus" v="9.81" unit="m/s^2" unit_magnitude="Acceleration" help=""/>
+	<value n="direction" pn="Direction" v="0.0,-1.0,0.0" fieldtype="vector" help=""/>
+		
+</container>

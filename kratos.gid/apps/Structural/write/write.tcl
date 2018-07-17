@@ -19,6 +19,7 @@ proc Structural::write::Init { } {
     SetAttribute materials_un STMaterials
     SetAttribute conditions_un STLoads
     SetAttribute nodal_conditions_un STNodalConditions
+    SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
 }
@@ -82,9 +83,6 @@ proc Structural::write::writeModelPartEvent { } {
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
 
-    # Materials
-    # write::writeMaterials [GetAttribute validApps 
-
     # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
     
@@ -94,18 +92,19 @@ proc Structural::write::writeModelPartEvent { } {
     # Local Axes
     Structural::write::writeLocalAxes
 
-    # Nodal conditions and conditions
-    writeConditions
+    # Hinges special section
+    Structural::write::writeHinges
+
+    # Write Conditions section
+    Structural::write::writeConditions
 
     # SubmodelParts
-    writeMeshes
+    Structural::write::writeMeshes
 
     # Custom SubmodelParts
     set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
-
 }
-
 
 proc Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
@@ -114,6 +113,14 @@ proc Structural::write::writeConditions { } {
 
 proc Structural::write::writeMeshes { } {
     
+    # There are some Conditions and nodalConditions that dont generate a submodelpart
+    # Add them to this list
+    set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
+    set special_nodal_conditions [list ]
+    foreach cnd_name $special_nodal_conditions_dont_generate_submodelpart_names {
+        lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
+        Model::ForgetNodalCondition $cnd_name
+    }
     write::writePartSubModelPart
     
     # Solo Malla , no en conditions
@@ -121,6 +128,13 @@ proc Structural::write::writeMeshes { } {
     
     # A Condition y a meshes-> salvo lo que no tenga topologia
     writeLoads
+
+    # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
+    foreach cnd $special_nodal_conditions {
+        lappend ::Model::NodalConditions $cnd
+    }
+
+    writeContacts
 }
 
 proc Structural::write::writeLoads { } {
@@ -136,6 +150,47 @@ proc Structural::write::writeLoads { } {
         } else {
             ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
         }
+    }
+}
+
+proc Structural::write::writeContacts { } {
+    variable ConditionsDictGroupIterators
+    if {[Structural::write::usesContact]} {
+        set root [customlib::GetBaseRoot]
+
+        # Prepare the xpaths
+        set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
+        set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
+
+        # Get the groups
+        set master_group [$root selectNodes $xp_master]
+        set slave_group [$root selectNodes $xp_slave]
+        if {$master_group ne ""} {
+            if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
+            set master_groupid_raw [$master_group @n]
+            set master_groupid [write::GetWriteGroupName $master_groupid_raw]
+        }
+        if {$slave_group ne ""} {
+            set slave_groupid_raw [$slave_group @n]
+            set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
+        }
+        # Create the joint group
+        set joint_contact_group "_HIDDEN_CONTACT_GROUP_"
+        if {[GiD_Groups exists $joint_contact_group]} {GiD_Groups delete $joint_contact_group}
+
+        if {$slave_group ne ""} {
+            spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw $slave_groupid_raw]
+        } {
+            spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw]
+        }
+
+        # Print the submodelpart
+        ::write::writeGroupSubModelPart CONTACT $joint_contact_group "nodal"
+        if {$slave_group ne ""} {
+            ::write::writeGroupSubModelPart CONTACT $slave_groupid_raw "nodal"
+        }
+
+        GiD_Groups delete $joint_contact_group
     }
 }
 
@@ -181,18 +236,77 @@ proc Structural::write::writeLocalAxes { } {
         set e [Model::getElement $elem_name]
         if {[write::isBooleanTrue [$e getAttribute "RequiresLocalAxes"]]} { 
             set group [$gNode @n]
-            if {[GiD_EntitiesGroups get $group elements -count -element_type linear]} {
-                write::WriteString "Begin ElementalData LOCAL_AXIS_2 // Element: $elem_name // Groups: $group"
-                foreach line [GiD_EntitiesGroups get $group elements -element_type linear] {
-                    set raw [lindex [lindex [GiD_Info conditions -localaxesmat line_Local_axes mesh $line] 0] 3]
-                    set y0 [lindex $raw 1]
-                    set y1 [lindex $raw 4]
-                    set y2 [lindex $raw 7]
-                    write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
-                }
-                write::WriteString "End ElementalData"
-                write::WriteString ""
+            write::writeLinearLocalAxesGroup $group
+        }
+    }
+}
+
+# This is the kind of code I hate
+proc Structural::write::writeHinges { } {
+
+    # Preprocess old_conditions. Each mesh linear element remembers the origin line in geometry
+    set match_dict [dict create]
+    foreach line [GiD_Info conditions relation_line_geo_mesh mesh] {
+        lassign $line E eid - geom_line
+        dict lappend match_dict $geom_line $eid
+    }
+
+    # Process groups assigned to Hinges
+    if {$::Model::SpatialDimension eq "3D"} {
+        set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
+    } else {
+        set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST_2D'\]/group"
+    }
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set group [$gNode @n]
+        
+        # If the group has any line
+        if {[GiD_EntitiesGroups get $group lines -count] > 0} {
+            # Print the header once per group
+            write::WriteString "Begin ElementalData CONDENSED_DOF_LIST // Group: $group"
+            
+            # Get the tree data for this group
+            set first_list [list ]
+            set last_list [list ]
+            if {$::Model::SpatialDimension eq "3D"} {
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementZ']"] v]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentX']"] v]]} {lappend first_list 3}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentY']"] v]]} {lappend first_list 4}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 5}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 6}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 7}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementZ']"] v]]} {lappend last_list 8}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentX']"] v]]} {lappend last_list 9}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentY']"] v]]} {lappend last_list 10}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 11}
+            } else {
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 3}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 4}
+                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 5}
             }
+
+            # Write Left and Rigth end of each geometrical bar
+            foreach geom_line [GiD_EntitiesGroups get $group lines] {
+                set linear_elements [dict get $match_dict $geom_line]
+                set first [::tcl::mathfunc::min {*}$linear_elements]
+                set end [::tcl::mathfunc::max {*}$linear_elements]
+                if {[llength $first_list] > 0} {
+                    set value [join $first_list ,]
+                    write::WriteString [format "%5d \[%d\] (%s)" $first [llength $first_list] $value]
+                }
+                if {[llength $last_list] > 0} {
+                    set value [join $last_list ,]
+                    write::WriteString [format "%5d \[%d\] (%s)" $end [llength $last_list] $value]
+                }
+            } 
+            # Write the tail
+            write::WriteString "End ElementalData"
+            write::WriteString ""
         }
     }
 }
@@ -213,5 +327,52 @@ proc Structural::write::usesContact { } {
         return 0
     }
 }
+
+# return 0 means ok; return [list 1 "Error message to be displayed"]
+proc Structural::write::writeValidateEvent { } {
+    set problem 0
+    set problem_message [list ]
+    
+    # Truss mesh validation
+    set validation [validateTrussMesh]
+    incr problem [lindex $validation 0]
+    lappend problem_message {*}[lindex $validation 1]
+
+    return [list $problem $problem_message]
+}
+
+proc Structural::write::validateTrussMesh { } {
+    # Elements to be checked
+    set truss_element_names [list "TrussLinearElement2D" "TrussElement2D" "TrussLinearElement3D" "TrussElement3D"]
+    set error 0
+    set error_message ""
+    
+    # Used elements
+    set truss_elements [list ]
+    foreach elem [GetUsedElements "Name"] {
+        if {$elem in $truss_element_names} {
+            lappend truss_elements $elem
+        }
+    }
+    
+    # Check groups assigned to each element
+    foreach element_name $truss_elements {
+        set group_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n = 'Element' and @v = '$element_name'\]/.."]
+        
+        foreach group_node $group_nodes {
+            set group_name [$group_node @n]
+            set num_lines [GiD_EntitiesGroups get $group_name lines -count]
+            set num_elements [GiD_EntitiesGroups get $group_name elements -count -element_type {linear}]
+            # All lines must have only 1 linear element, so num_lines should be equal to num_elements
+            if {$num_elements != $num_lines} {
+                set error 1
+                lappend error_message "Error in Truss element, group: $group_name. You must mesh each line with only 1 linear element."
+            }
+        }
+    }
+    
+    return [list $error $error_message]
+}
+
 
 Structural::write::Init

@@ -17,6 +17,7 @@ proc ::DEM::examples::SpheresDrop {args} {
 
 proc ::DEM::examples::DrawGeometry { } {
     Kratos::ResetModel
+
     GiD_Process Mescape Geometry Create Object Rectangle -5 -5 0 5 5 0 escape 
     GiD_Process Mescape Geometry Create Object Rectangle -2 -2 5 2 2 5 escape 
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape 
@@ -24,17 +25,36 @@ proc ::DEM::examples::DrawGeometry { } {
     GiD_Groups create "Floor"
     GiD_Groups create "Inlet"
     GiD_Groups create "Body"
+    GiD_Layers create "Floor"
+    GiD_Layers create "Inlet"
+    GiD_Layers create "Body"
     
     GiD_EntitiesGroups assign "Floor" surfaces 1
     GiD_EntitiesGroups assign "Inlet" surfaces 2
     GiD_EntitiesGroups assign "Body" volumes 1
+    GiD_EntitiesLayers assign "Floor" -also_lower_entities surfaces 1
+    GiD_EntitiesLayers assign "Inlet" -also_lower_entities surfaces 2
+    GiD_EntitiesLayers assign "Body" -also_lower_entities volumes 1
 }
 
 proc ::DEM::examples::AssignToTree { } {
+    # Material
+    set DEMmaterials [spdAux::getRoute "DEMMaterials"]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
+    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
+    foreach {prop val} $props {
+        set propnode [$material_node selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property Material $prop"
+        }
+    }
+
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
-    set DEMPartsNode [spdAux::AddConditionGroupOnXPath $DEMParts Body]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6]
+    set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Body]
+    set props [list Material "DEM-DefaultMaterial"]
     foreach {prop val} $props {
         set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -47,7 +67,7 @@ proc ::DEM::examples::AssignToTree { } {
     # DEM FEM Walls
     set DEMConditions [spdAux::getRoute "DEMConditions"]
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
-    set wallsNode [spdAux::AddConditionGroupOnXPath $walls Floor]
+    set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
     set props [list ]
     foreach {prop val} $props {
@@ -67,9 +87,9 @@ proc ::DEM::examples::AssignToTree { } {
         GiD_Groups create "Inlet//$interval_name"
         GiD_Groups edit state "Inlet//$interval_name" hidden
         spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
-        set inletNode [spdAux::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
+        set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
         $inletNode setAttribute ov surface
-        set props [list DIAMETER 0.1 PARTICLE_MATERIAL 2 YOUNG_MODULUS 1.0e6 VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTORX 0.0 DIRECTION_VECTORZ -1.0]
+        set props [list Material "DEM-DefaultMaterial" DIAMETER 0.1 VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTOR "0.0,0.0,-1.0"]
         foreach {prop val} $props {
             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
             if {$propnode ne "" } {

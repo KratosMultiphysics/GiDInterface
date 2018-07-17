@@ -30,8 +30,10 @@ proc ::Solid::Init { } {
 proc ::Solid::LoadMyFiles { } {
     variable dir
     
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
+    uplevel #0 [list source [file join $dir write validation.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
 }
 
@@ -55,9 +57,27 @@ proc ::Solid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Run" [file join $img_dir "runSimulation.png"] {Utilities Calculate} [= "Run the simulation"]
     Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
-    Kratos::ToolbarAddItem "SpacerApp" "" "" ""
-
+    Kratos::ToolbarAddItem "Spacer" "" "" ""
+    # Add examples
+    if { $::Model::SpatialDimension eq "2Da" } {
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "tank_example.png"] [list -np- ::Solid::examples::CircularTank] [= "Example\nCircular water tank"]
+    }
+    if { $::Model::SpatialDimension eq "2D" } {
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "notched_example.png"] [list -np- ::Solid::examples::NotchedBeam] [= "Example\nNotched beam damage"]	
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "rod_example.png"] [list -np- ::Solid::examples::DynamicRod] [= "Example\nDynamic rod pendulus"]
+    }
+    if { $::Model::SpatialDimension eq "3D" } {
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "beam_example.png"] [list -np- ::Solid::examples::DynamicBeam] [= "Example\nDynamic beam rotating"]
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "tank_example.png"] [list -np- ::Solid::examples::CircularTank] [= "Example\nCircular water tank"]
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "column_example.png"] [list -np- ::Solid::examples::EccentricColumn] [= "Example\nEccentric column"]
+	Kratos::ToolbarAddItem "Example" [file join $img_dir "rod_example.png"] [list -np- ::Solid::examples::DynamicRod] [= "Example\nDynamic rod pendulus"]
+    }
+    Kratos::ToolbarAddItem "Spacer" "" "" ""
     
+}
+
+proc ::Solid::CustomMenus { } {
+    Solid::examples::UpdateMenus$::Model::SpatialDimension
 }
 
 ::Solid::Init

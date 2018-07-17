@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials>
+
+    <Material n="Steel" MaterialType="ConvectionDiffusion" help="Steel physical properties">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" v="7850" unit_magnitude="Density" units="kg/m^3"/>
+            <parameter n="CONDUCTIVITY" pn="Thermal conductivity" v="50.0" unit_magnitude="Power/(L*Temp)" units="W/(m*K)"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" v="460.0" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)"/>
+        </inputs>
+    </Material>
+
+    <Material n="Air" MaterialType="ConvectionDiffusion" help="Air physical properties">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" v="1.225" unit_magnitude="Density" units="kg/m^3"/>
+            <parameter n="CONDUCTIVITY" pn="Thermal conductivity" v="0.024" unit_magnitude="Power/(L*Temp)" units="W/(m*K)"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" v="1012.0" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)"/>
+        </inputs>
+    </Material>
+
+    <Material n="Water" MaterialType="ConvectionDiffusion" help="Water physical properties">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" v="1000" unit_magnitude="Density" units="kg/m^3"/>
+            <parameter n="CONDUCTIVITY" pn="Thermal conductivity" v="0.58" unit_magnitude="Power/(L*Temp)" units="W/(m*K)"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" v="4181.3" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)"/>
+        </inputs>
+    </Material>
+
+</Materials>

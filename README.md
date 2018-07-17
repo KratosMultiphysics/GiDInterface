@@ -19,7 +19,7 @@ The interface of Kratos with [GiD](http://www.gidhome.com)
 * kratos top menu / Developer mode (recommended)
 
 ## Warnings
-* This repository is in Beta version. This means that everything can change, and there is no "transform from older versions" yet.
+* This repository is in Beta version. This means that everything can change.
 
 ## Want to develop?
 * Ask for access -> contact fjgarate@cimne.upc.edu

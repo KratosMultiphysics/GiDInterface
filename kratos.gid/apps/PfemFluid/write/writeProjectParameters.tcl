@@ -109,7 +109,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
 
 proc PfemFluid::write::GetPFEM_OutputProcessList { } {
     set resultList [list]
-    lappend resultList [write::GetRestartProcess Restart]
+    # lappend resultList [write::GetRestartProcess Restart]
     return $resultList
 }
 proc PfemFluid::write::GetPFEM_ProblemProcessList { } {

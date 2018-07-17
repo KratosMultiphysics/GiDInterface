@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gid version="13.5">
+  <pre>
+    <layer_to_use name="Layer0"/>
+    <groups>
+      <group id="1" name="Solid" color="#3f5513ff"/>
+      <group id="2" name="SelfWeight" color="#0000ffff"/>
+      <group id="3" name="Constraint" color="#ff00ffff"/>
+      <group id="4" name="AngularConstraint" color="#00ffffff"/>
+    </groups>
+    <entities_groups>
+      <entities_group name="points">
+        <vector name="entity_ids" length="1" type="integer">1</vector>
+        <vector name="entity_num_groups" length="1" type="ushort">3</vector>
+        <vector name="entity_groups" length="3" type="ushort">3 1 4</vector>
+      </entities_group>
+      <entities_group name="lines">
+        <vector name="entity_ids" length="2" type="integer">1 2</vector>
+        <vector name="entity_num_groups" length="2" type="ushort">2 2</vector>
+        <vector name="entity_groups" length="4" type="ushort">1 2 1 2</vector>
+      </entities_group>
+    </entities_groups>
+  </pre>
+</gid>

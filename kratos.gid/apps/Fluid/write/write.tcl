@@ -20,6 +20,7 @@ proc Fluid::write::Init { } {
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_script_file "KratosFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
+    SetAttribute properties_location "mdpa"
 }
 
 proc Fluid::write::GetAttribute {att} {
@@ -39,7 +40,7 @@ proc Fluid::write::SetAttribute {att val} {
 
 proc Fluid::write::AddAttribute {att val} {
     variable writeAttributes
-    dict append writeAttributes $att $val]
+    dict lappend writeAttributes $att $val
 }
 
 proc Fluid::write::AddAttributes {configuration} {
@@ -87,8 +88,8 @@ proc Fluid::write::writeModelPartEvent { } {
     write::writeBasicSubmodelParts [getLastConditionId]
 }
 proc Fluid::write::writeCustomFilesEvent { } {
-    # Materials file
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+    # Materials file TODO -> Python script must read from here
+    #write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
 
     # Main python script
     set orig_name [GetAttribute main_script_file]
@@ -168,7 +169,9 @@ proc Fluid::write::writeBoundaryConditions { } {
 }
 
 proc Fluid::write::writeDrags { } {
+    lappend ::Model::NodalConditions [::Model::NodalCondition new Drag]
     write::writeNodalConditions [GetAttribute drag_un]
+    Model::ForgetNodalCondition Drag
 }
 
 proc Fluid::write::writeMeshes { } {

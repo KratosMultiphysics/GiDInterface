@@ -28,9 +28,9 @@ proc ::StenosisWizard::LoadMyFiles { } {
     variable dir
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
-    ::Wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]
+    smart_wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]
     uplevel #0 [list source [file join $dir wizard Wizard_Steps.tcl]]
-    Wizard::ImportWizardData
+    smart_wizard::ImportWizardData
     
     
     # Init the Wizard Window
@@ -39,9 +39,18 @@ proc ::StenosisWizard::LoadMyFiles { } {
 
 
 proc ::StenosisWizard::StartWizardWindow { } {
+    variable dir
     gid_groups_conds::close_all_windows
-    Wizard::CreateWindow
     
+    smart_wizard::Init
+    uplevel #0 [list source [file join $dir wizard Wizard_Steps.tcl]]
+    smart_wizard::SetWizardNamespace "::StenosisWizard::Wizard"
+    smart_wizard::SetWizardWindowName ".gid.activewizard"
+    smart_wizard::SetWizardImageDirectory [file join $dir images]
+    smart_wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]
+    smart_wizard::ImportWizardData
+
+    smart_wizard::CreateWindow
 }
 proc ::StenosisWizard::CustomToolbarItems { } {
     return "-1"    

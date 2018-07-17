@@ -6,7 +6,7 @@ proc ::Fluid::write::getParametersDict { } {
     set problemDataDict [dict create]
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name "MainModelPart"
+    dict set problemDataDict model_part_name "FluidModelPart"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set problemDataDict domain_size $nDim
 
@@ -133,9 +133,9 @@ proc Fluid::write::getDragProcessList {} {
         set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
 
         set pdict [dict create]
-        dict set pdict "python_module" "compute_drag_process"
+        dict set pdict "python_module" "compute_body_fitted_drag_process"
         dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
-        dict set pdict "process_name" "ComputeDragProcess"
+        dict set pdict "process_name" "ComputeBodyFittedDragProcess"
         set params [dict create]
         dict set params "model_part_name" $submodelpart
         dict set params "write_drag_output_file" $write_output

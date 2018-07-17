@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="StageInfo" pn="Analysis Type" help="Analysis information" icon="analysis" state="normal" open_window="0">
+    <value n="AnalysisType" pn="Analysis type" un="CNVDFFAnalysisType" v="non_linear" values="linear,non_linear" dict="linear,Linear,non_linear,Non-linear" help="Analysis type"/>
+    <value n="SolStrat" pn="Solution Strategy" un="CNVDFFSolStrat" v="" values="" dict="[GetSolutionStrategies App ConvectionDiffusion]" actualize_tree="1"/>
+    <value n="Scheme" pn="Scheme" un="CNVDFFScheme" v="" values="" dict="[GetSchemes]" actualize_tree="1" state="disabled"/>
+</container>
+    

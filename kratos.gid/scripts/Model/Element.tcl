@@ -10,13 +10,13 @@ oo::class create Element {
     
     variable TopologyFeatures
     variable ElementNodalCondition
-    variable ConstLawFilters
+    variable constLawFilters
     
     constructor {n} {
         next $n
         variable TopologyFeatures
         variable ElementNodalCondition
-        variable ConstLawFilters
+        variable constLawFilters
         
         set TopologyFeatures [list ]
         set ElementNodalCondition [list ]
@@ -53,7 +53,7 @@ oo::class create Element {
         variable ElementNodalCondition
         set nclist [list ]
         foreach nc [::Model::getAllNodalConditions] {
-            if {[$nc getName] in $ElementNodalCondition} {
+            if {$nc ne "" && [$nc getName] in $ElementNodalCondition} {
                 lappend nclist $nc
             }
         }
@@ -63,7 +63,7 @@ oo::class create Element {
         variable ElementNodalCondition
         set v ""
         foreach nc [::Model::getAllNodalConditions] {
-            if {[$nc getName] in $ElementNodalCondition} {
+            if {$nc ne "" && [$nc getName] in $ElementNodalCondition} {
                 return $nc
             }
         }
@@ -84,6 +84,11 @@ oo::class create Element {
         }
         return $ret
     }
+    method getTopologyFeatures {} {
+        variable TopologyFeatures
+        return $TopologyFeatures
+    }
+
     method cumple {args} {
         set c [next {*}$args]
          
@@ -183,10 +188,11 @@ proc Model::ParseElemNode { node } {
     }
     set inputs_node [$node getElementsByTagName inputs]
     if {$inputs_node ne "" && [$inputs_node hasChildNodes]} {
-        foreach in [$inputs_node childNodes]  {
+        foreach in [$inputs_node getElementsByTagName parameter]  {
             set el [ParseInputParamNode $el $in]
         }
     }
+    
     set outputs_node [$node getElementsByTagName outputs]
     if {$outputs_node ne "" && [$outputs_node hasChildNodes]} {
         foreach out [$outputs_node childNodes] {
@@ -353,7 +359,7 @@ proc Model::GetNodalConditions {args} {
 proc Model::getNodalConditionbyId {ncid} {
     set ret ""
     foreach nc [getAllNodalConditions] {
-        if {[$nc getName] eq $ncid} {set ret $nc; break}
+        if {$nc ne "" && [$nc getName] eq $ncid} {set ret $nc; break}
     }
     return $ret
 }
@@ -377,7 +383,17 @@ proc Model::CheckElemParamState {node} {
     }
     if {$elem eq ""} {return 0}
 
-    return [CheckElemState $elem $id]
+    set ret [CheckElemState $elem $id]
+    if {$ret} {
+        set param [dict get [[getElement $elem] getInputs] $id]
+        set depN [$param getDepN]
+        if {$depN ne ""} {
+            set depV [$param getDepV]
+            set realV [get_domnode_attribute [$node selectNodes "../value\[@n='$depN'\]"] v]
+            if {$depV ne $realV} {set ret 0}
+        }
+    }
+    return $ret
 }
 
 proc Model::CheckElementOutputState {elemsactive paramName} {

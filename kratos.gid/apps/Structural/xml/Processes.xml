@@ -1,19 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProcessList>
- 
   <!-- Processes for contact mechanics -->
-  <Process n="ALMContactProcess" pn="Consider contact between surfaces" python_module="alm_contact_process"
-	   kratos_module="KratosMultiphysics.ContactStructuralMechanicsApplication" help="This process computes the contact between different surfaces" > 
+  <Process n="ALMContactProcess" pn="Consider contact between surfaces" python_module="alm_contact_process" kratos_module="KratosMultiphysics.ContactStructuralMechanicsApplication" help="This process computes the contact between different surfaces">
     <inputs>
-      <parameter n="search_factor" pn="Search factor" type="double" v="1.5"/>
-      <parameter n="contact_type" pn="Contact type" type="combo" v="Frictionless" values="Frictionless"/>
-      <parameter n="active_check_factor" pn="Active check factor" type="double" v="0.01" />
-      <parameter n="max_number_results" pn="Max number of results" type="double" v="1000" />
-      <parameter n="normal_variation" pn="Normal variation" type="bool" v="false" />
-      <parameter n="type_search" pn="Type of search" type="combo" v="InRadius" values="InRadius" />
-      <parameter n="integration_order" pn="Integration order" type="double" v="2" />
+      <!-- <parameter n="search_factor" pn="Search factor" type="double" v="1.5"/> -->
+      
+      <!-- <parameter n="active_check_factor" pn="Active check factor" type="double" v="0.01" /><parameter n="max_number_results" pn="Max number of results" type="double" v="1000" /><parameter n="normal_variation" pn="Normal variation" type="bool" v="false" /><parameter n="type_search" pn="Type of search" type="combo" v="InRadius" values="InRadius" /><parameter n="integration_order" pn="Integration order" type="double" v="2" /> -->
+    </inputs>
+  </Process>
+  <Process n="ALMContactSlaveProcess" pn="Consider contact between surfaces" python_module="alm_contact_process" kratos_module="KratosMultiphysics.ContactStructuralMechanicsApplication" help="This process computes the contact between different surfaces">
+    <inputs>
+    <parameter n="contact_type" pn="Contact type" type="combo" v="FrictionlessComponents" values="FrictionlessComponents,Frictional" pvalues="Frictionless,Frictional"/>
+    </inputs>
+  </Process>
+  <!-- Processes for contact mechanics -->
+  <Process n="HingesStaticCondensationProcess" pn="Define dofs">
+    <inputs>
+      <parameter n="FirstDisplacement" pn="First node displacement" type="vector" vectorType="bool" v="0,0,0" />
+      <parameter n="FirstMoment" pn="First node moment" type="vector" vectorType="bool" v="0,0,0" />
+      <parameter n="SecondDisplacement" pn="Second node displacement" type="vector" vectorType="bool" v="0,0,0" />
+      <parameter n="SecondMoment" pn="Second node moment" type="vector" vectorType="bool" v="0,0,0" />
+    </inputs>
+  </Process>
+    <Process n="HingesStaticCondensation2DProcess" pn="Define dofs">
+    <inputs>
+      <parameter n="FirstDisplacement" pn="First node displacement" type="vector" vectorType="bool" v="0,0" />
+      <parameter n="FirstMomentZ" pn="Z First node moment" type="bool" v="0" />
+      <parameter n="SecondDisplacement" pn="Second node displacement" type="vector" vectorType="bool" v="0,0" />
+      <parameter n="SecondMomentZ" pn="Z Second node moment" type="bool" v="0" />
     </inputs>
   </Process>
 
- </ProcessList>
+  	<Process n="AssignLinearPressureProcess" pn="Apply a scalar value over a condition" python_module="assign_scalar_variable_to_conditions_process" 
+			 kratos_module="KratosMultiphysics" help="This process sets a scalar variable value over a condition">
+		<inputs>
+			<parameter n="value" pn="Value" type="double" v="0.0" function="0" has_units="1"/>
+		</inputs>
+	</Process>
+</ProcessList>
 
