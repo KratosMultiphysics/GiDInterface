@@ -592,7 +592,7 @@ proc spdAux::ProcGive_materials_list {domNode args} {
         }
         
         foreach domNode [$parentNode childNodes] {
-            set name [$domNode @pn ""]
+            set name [$domNode @name ""]
             if { $name eq "" } { set name [$domNode @name] }
             if { [$domNode @n] eq "$secondary_level" } {
                 if {$name in $materials} {
@@ -601,15 +601,15 @@ proc spdAux::ProcGive_materials_list {domNode args} {
                         lappend l [list $level $name $name $types_icon_name 0]
                         eval lappend l $ret
                     }
-                } elseif {[$domNode @n] eq "$primary_level"} {
-                    set good 1
-                    if { $container_name ne "" } {
-                        set xp [format_xpath {container[@n=%s]} $container_name]
-                        if { [$domNode selectNodes $xp] eq "" } { set good 0 }
-                    }
-                    if { $good } {
-                        lappend l [list $level $name $name $icon_name 1]
-                    }
+                }
+            } elseif {[$domNode @n] eq "$primary_level"} {
+                set good 1
+                if { $container_name ne "" } {
+                    set xp [format_xpath {container[@n=%s]} $container_name]
+                    if { [$domNode selectNodes $xp] eq "" } { set good 0 }
+                }
+                if { $good } {
+                    lappend l [list $level $name $name $icon_name 1]
                 }
             }
         }

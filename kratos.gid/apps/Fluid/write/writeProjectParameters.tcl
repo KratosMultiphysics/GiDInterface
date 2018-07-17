@@ -133,9 +133,9 @@ proc Fluid::write::getDragProcessList {} {
         set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
 
         set pdict [dict create]
-        dict set pdict "python_module" "compute_drag_process"
+        dict set pdict "python_module" "compute_body_fitted_drag_process"
         dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
-        dict set pdict "process_name" "ComputeDragProcess"
+        dict set pdict "process_name" "ComputeBodyFittedDragProcess"
         set params [dict create]
         dict set params "model_part_name" $submodelpart
         dict set params "write_drag_output_file" $write_output

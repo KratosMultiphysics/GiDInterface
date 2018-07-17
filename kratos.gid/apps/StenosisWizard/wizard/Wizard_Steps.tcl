@@ -24,6 +24,7 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
     if {$err ne 0} {
         return ""
     }
+    # Get the parameters
     set length [ smart_wizard::GetProperty Geometry Length,value]
     set radius [ smart_wizard::GetProperty Geometry Radius,value]
     set start [expr [ smart_wizard::GetProperty Geometry Z,value] *-1.0]

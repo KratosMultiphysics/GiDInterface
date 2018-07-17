@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementList>
+  
+    <!-- 2D convection-diffusion element -->
+    <ElementItem n="EulerianConvDiff2D" pn="Convection-diffusion 2D" ImplementedInFile="eulerian_conv_diff.cpp" ImplementedInApplication="ConvectionDiffusionApplication" 
+                 MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" 
+                 RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="TEMPERATURE" ElementType="ConvectionDiffusion" help="This element implements a convection-diffusion formulation.">
+
+        <!--here we could add a list of all of the possible geometries-->
+        <TopologyFeatures>
+            <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+            <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
+        </TopologyFeatures>
+
+        <!-- here we add the block of features which we require from the constitutive law-->
+        <ConstitutiveLaw_FilterFeatures>
+            <filter field="App" value="ConvectionDiffusion"/>
+        </ConstitutiveLaw_FilterFeatures>
+
+        <!--define list of NodalConditions-->
+        <NodalConditions>
+            <NodalCondition n="TEMPERATURE"/>
+        </NodalConditions>
+        <inputs>
+        </inputs>
+        <outputs>
+        </outputs>
+    </ElementItem>
+
+    <!-- 3D convection-diffusion element -->
+    <ElementItem n="EulerianConvDiff3D" pn="Convection-diffusion 3D" ImplementedInFile="eulerian_conv_diff.cpp" ImplementedInApplication="ConvectionDiffusionApplication" 
+                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" 
+                RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="TEMPERATURE" ElementType="ConvectionDiffusion" help="This element implements a convection-diffusion formulation.">
+
+        <!--here we could add a list of all of the possible geometries-->
+        <TopologyFeatures>
+            <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
+            <item GeometryType="Hexahedra" nodes="8" KratosName="Element3D8N"/>
+        </TopologyFeatures>
+
+        <!-- here we add the block of features which we require from the constitutive law-->
+        <ConstitutiveLaw_FilterFeatures>
+            <filter field="App" value="ConvectionDiffusion"/>
+        </ConstitutiveLaw_FilterFeatures>
+
+        <!--define list of NodalConditions-->
+        <NodalConditions>
+            <NodalCondition n="TEMPERATURE"/>
+        </NodalConditions>
+        <inputs>
+        </inputs>
+        <outputs>
+        </outputs>
+    </ElementItem>
+
+</ElementList>

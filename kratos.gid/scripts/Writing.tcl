@@ -287,14 +287,10 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
         set group [$gNode getAttribute n]
         set valueNode [$gNode selectNodes $xp2]
-        set real_material_name [get_domnode_attribute $valueNode v]
         set material_name "material $material_number"
         if { ![dict exists $mat_dict $group] } {
             incr material_number
             set mid $material_number
-            
-            set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
-            set matNode [$root selectNodes $xp3]      
             
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
@@ -308,6 +304,9 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 if {$output_type eq "Parameters"} {
                     set s1 [$gNode selectNodes ".//value"]
                 } else {
+                    set real_material_name [get_domnode_attribute $valueNode v]
+                    set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
+                    set matNode [$root selectNodes $xp3]  
                     set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
                 }
             } else {
@@ -1549,14 +1548,14 @@ proc write::WriteAssignedValues {condNode} {
     return $ret
 }
 
-proc write::writePropertiesJsonFile {{parts_un ""} {filename "materials.json"}} {
+proc write::writePropertiesJsonFile {{parts_un ""} {filename "materials.json"} {write_claw_name "True"}} {
     if {$parts_un eq ""} {set parts_un [GetConfigurationAttribute parts_un]}
-    set mats_json [getPropertiesList $parts_un]
+    set mats_json [getPropertiesList $parts_un $write_claw_name]
     write::OpenFile $filename
     write::WriteJSON $mats_json
     write::CloseFile
 }
-proc write::getPropertiesList {parts_un} {
+proc write::getPropertiesList {parts_un {write_claw_name "True"}} {
     variable mat_dict
     set props_dict [dict create]
     set props [list ]
@@ -1585,18 +1584,20 @@ proc write::getPropertiesList {parts_un} {
                     }
                 }
                 set material_dict [dict create]
-                set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
-                # WV const_law_application
-                set constitutive_law_name [$constitutive_law getKratosName]
-                if {$const_law_application eq "KratosMultiphysics"} {
-                    set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
-                } {
-                    set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
+
+                if {$write_claw_name eq "True"} {
+                    set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
+                    set constitutive_law_name [$constitutive_law getKratosName]
+                    if {$const_law_application eq "KratosMultiphysics"} {
+                        set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
+                    } {
+                        set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
+                    }
+                    dict set material_dict constitutive_law [dict create name $const_law_fullname]
                 }
-                
-                dict set material_dict constitutive_law [dict create name $const_law_fullname]
                 dict set material_dict Variables $variables_list
                 dict set material_dict Tables dictnull
+
                 dict set prop_dict Material $material_dict
                 
                 lappend props $prop_dict
