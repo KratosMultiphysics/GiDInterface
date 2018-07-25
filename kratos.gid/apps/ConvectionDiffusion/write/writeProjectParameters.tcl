@@ -17,11 +17,9 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
 
     # Time Parameters
     if {[write::getValue CNVDFFSolStrat] eq "transient"} {
-        dict set problemDataDict time_step [write::getValue CNVDFFTimeParameters DeltaTime]
         dict set problemDataDict start_time [write::getValue CNVDFFTimeParameters StartTime]
         dict set problemDataDict end_time [write::getValue CNVDFFTimeParameters EndTime]
     } else {
-        dict set problemDataDict time_step 1.0
         dict set problemDataDict start_time 0.0
         dict set problemDataDict end_time 0.99
     }
@@ -66,6 +64,15 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     # Parts
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
+
+    # Time stepping settings
+    set timeSteppingDict [dict create]
+    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
+        dict set timeSteppingDict "time_step" [write::getValue CNVDFFTimeParameters DeltaTime]
+    } else {
+        dict set timeSteppingDict time_step 1.0
+    }
+    dict set solverSettingsDict time_stepping $timeSteppingDict
 
     dict set projectParametersDict solver_settings $solverSettingsDict
 
