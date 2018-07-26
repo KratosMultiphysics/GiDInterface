@@ -1221,7 +1221,6 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                 }
             }
             if {[$group find n Interval] ne ""} {dict set paramDict interval [write::getInterval  [get_domnode_attribute [$group find n Interval] v]] }
-	    if {[$group find n CompoundAssignment] ne ""} {dict set paramDict compound_assignment [get_domnode_attribute [$group find n CompoundAssignment] v] }
 	    dict set processDict Parameters $paramDict
             lappend bcCondsDict $processDict
         }
