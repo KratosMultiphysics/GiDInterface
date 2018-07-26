@@ -209,10 +209,6 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
         set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
-	set CondUsesCompoundAssignment [$cnd getAttribute "CompoundAssignment"]
-        if {$CondUsesCompoundAssignment eq "Yes"} {
-	    append node "<value n='CompoundAssignment' pn='Operation' v='direct' values='direct,addition,subtraction,multiplication,division' dict='direct,Assign,addition,Add,subtraction,Subtract,multiplication,Multiply,division,Divide' help='$help'/>"
-	}
         set inputs [concat [$process getInputs] [$cnd getInputs] ]
         foreach {inName in} $inputs {
             set forcedParams [list cnd_v [$cnd getDefault $inName v] n $n units $units um $um base $process]
