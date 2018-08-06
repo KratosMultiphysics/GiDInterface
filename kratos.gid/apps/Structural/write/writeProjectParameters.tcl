@@ -11,9 +11,6 @@ proc Structural::write::getOldParametersDict { } {
     # Add items to section
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name $model_part_name
-    set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict domain_size $nDim
 
     # Parallelization
     set paralleltype [write::getValue ParallelType]
@@ -75,7 +72,9 @@ proc Structural::write::getOldParametersDict { } {
     set solver_type_name $solutiontype
     if {$solutiontype eq "Quasi-static"} {set solver_type_name "Static"}
     dict set solverSettingsDict solver_type $solver_type_name
-    #~ dict set solverSettingsDict domain_size [expr $nDim]
+    dict set problemDataDict model_part_name $model_part_name
+    set nDim [expr [string range [write::getValue nDim] 0 0] ]
+    dict set problemDataDict domain_size $nDim
     dict set solverSettingsDict echo_level $echo_level
     dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
 
@@ -115,7 +114,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
 
-    
+
     if {[usesContact]} {
         # Mirar type y ver si es Frictionless o Frictional
         dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionlessComponents"
@@ -144,27 +143,13 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict list_other_processes [list ]
     if {$solutiontype eq "eigen_value"} {
         dict lappend projectParametersDict list_other_processes $eigen_process_dict
-    }    
+    }
     if {$solutiontype eq "formfinding"} {
         dict lappend projectParametersDict list_other_processes $formfinding_process_dict
     }
 
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
-
-    # # Restart options
-    # set restartDict [dict create ]
-    # dict set restartDict SaveRestart false
-    # dict set restartDict RestartFrequency 0
-    # dict set restartDict LoadRestart false
-    # dict set restartDict Restart_Step 0
-    # dict set projectParametersDict restart_options $restartDict
-
-    # # Constraints data
-    # set contraintsDict [dict create ]
-    # dict set contraintsDict incremental_load false
-    # dict set contraintsDict incremental_displacement false
-    # dict set projectParametersDict constraints_data $contraintsDict
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
@@ -188,7 +173,7 @@ proc Structural::write::getOldParametersDict { } {
 
 proc Structural::write::GetContactConditionsDict { } {
     set root [customlib::GetBaseRoot]
-    
+
     # Prepare the xpaths
     set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
     set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
@@ -196,9 +181,9 @@ proc Structural::write::GetContactConditionsDict { } {
     # Get the groups
     set master_group [$root selectNodes $xp_master]
     set slave_group [$root selectNodes $xp_slave]
-    
+
     if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
-    
+
     set contact_process_dict [dict create ]
     dict set contact_process_dict python_module alm_contact_process
     dict set contact_process_dict kratos_module "KratosMultiphysics.ContactStructuralMechanicsApplication"
@@ -209,18 +194,18 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_parameters_dict model_part_name Structure
     if {$slave_group ne ""} {
         dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
-    
+
         dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
     }
     dict set contact_process_dict Parameters $contact_parameters_dict
-    
+
     return [list $contact_process_dict]
 }
 
 
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
-    
+
 }
 
 
