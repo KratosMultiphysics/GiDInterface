@@ -131,27 +131,31 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
+    set processesDict [dict create]
+
     set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
     #lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
-    dict set projectParametersDict constraints_process_list $nodal_conditions_dict
+    dict set processesDict constraints_process_list $nodal_conditions_dict
     if {[usesContact]} {
         set contact_conditions_dict [GetContactConditionsDict]
-        dict set projectParametersDict contact_process_list $contact_conditions_dict
+        dict set processesDict contact_process_list $contact_conditions_dict
     }
-    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    dict set processesDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
     # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
     foreach cnd $special_nodal_conditions {
         lappend ::Model::NodalConditions $cnd
     }
 
-    dict set projectParametersDict list_other_processes [list ]
+    dict set processesDict list_other_processes [list ]
     if {$solutiontype eq "eigen_value"} {
-        dict lappend projectParametersDict list_other_processes $eigen_process_dict
+        dict lappend processesDict list_other_processes $eigen_process_dict
     }
     if {$solutiontype eq "formfinding"} {
-        dict lappend projectParametersDict list_other_processes $formfinding_process_dict
+        dict lappend processesDict list_other_processes $formfinding_process_dict
     }
+
+    dict set projectParametersDict processes $processesDict
 
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
@@ -168,10 +172,6 @@ proc Structural::write::getOldParametersDict { } {
         dict unset projectParametersDict output_configuration
         dict unset projectParametersDict solver_settings analysis_type
     }
-
-    # set materialsDict [dict create]
-    # dict set materialsDict materials_filename [GetAttribute materials_file]
-    # dict set projectParametersDict material_import_settings $materialsDict
 
     return $projectParametersDict
 }
