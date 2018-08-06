@@ -24,7 +24,7 @@ proc Structural::write::getOldParametersDict { } {
     }
     set solutiontype [write::getValue STSoluType]
     # Time Parameters
-    if {$solutiontype eq "Static"} {
+    if {$solutiontype eq "Static" || $solutiontype eq "eigen_value"} {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
