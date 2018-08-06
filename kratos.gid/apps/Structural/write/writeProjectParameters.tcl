@@ -25,12 +25,12 @@ proc Structural::write::getOldParametersDict { } {
     set solutiontype [write::getValue STSoluType]
     # Time Parameters
     if {$solutiontype eq "Static"} {
-        dict set problemDataDict time_step "1.1"
+        set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
 
     } else {
-        dict set problemDataDict time_step [write::getValue STTimeParameters DeltaTime]
+        set time_step [write::getValue STTimeParameters DeltaTime]
         dict set problemDataDict start_time [write::getValue STTimeParameters StartTime]
         dict set problemDataDict end_time [write::getValue STTimeParameters EndTime]
     }
@@ -72,9 +72,9 @@ proc Structural::write::getOldParametersDict { } {
     set solver_type_name $solutiontype
     if {$solutiontype eq "Quasi-static"} {set solver_type_name "Static"}
     dict set solverSettingsDict solver_type $solver_type_name
-    dict set problemDataDict model_part_name $model_part_name
+    dict set solverSettingsDict model_part_name $model_part_name
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict domain_size $nDim
+    dict set solverSettingsDict domain_size $nDim
     dict set solverSettingsDict echo_level $echo_level
     dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
 
@@ -92,6 +92,11 @@ proc Structural::write::getOldParametersDict { } {
     set materialsDict [dict create]
     dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
+
+    # Time stepping settings
+    set timeSteppingDict [dict create]
+    dict set timeSteppingDict "time_step" $time_step
+    dict set solverSettingsDict time_stepping $timeSteppingDict
 
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
