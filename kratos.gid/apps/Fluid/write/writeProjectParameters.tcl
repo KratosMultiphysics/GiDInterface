@@ -42,14 +42,6 @@ proc ::Fluid::write::getParametersDict { } {
     # output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
-    # restart options
-    set restartDict [dict create]
-    dict set restartDict SaveRestart False
-    dict set restartDict RestartFrequency 0
-    dict set restartDict LoadRestart False
-    dict set restartDict Restart_Step 0
-    dict set projectParametersDict restart_options $restartDict
-
     # Solver settings
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue FLSolStrat]
@@ -195,7 +187,7 @@ proc Fluid::write::getBoundaryConditionMeshId {} {
                 set gname [::write::getSubModelPartId $cid $groupName]
                 if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
             }
-            
+
         }
     }
 
