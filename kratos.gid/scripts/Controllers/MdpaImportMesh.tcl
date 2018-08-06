@@ -1,5 +1,5 @@
 proc Kratos::ReadPreW { } {
-    set filename [Browser-ramR file read .gid [_ "Read UNV file"] {} {{{Model part} {.mdpa }}} ]
+    set filename [Browser-ramR file read .gid [_ "Kratos - Read Mdpa file"] {} {{{Model part} {.mdpa }}} ]
     if {$filename == ""} {
         return
     }
@@ -212,3 +212,6 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
     }
     return $element_type
 }
+
+#register the proc to be automatically called when dropping a file
+GiD_RegisterExtensionProc ".mdpa" PRE Kratos::ReadPreSingleFile
