@@ -6,9 +6,6 @@ proc ::Fluid::write::getParametersDict { } {
     set problemDataDict [dict create]
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name "FluidModelPart"
-    set nDim [expr [string range [write::getValue nDim] 0 0]]
-    dict set problemDataDict domain_size $nDim
 
     # Parallelization
     set paralleltype [write::getValue ParallelType]
@@ -44,6 +41,9 @@ proc ::Fluid::write::getParametersDict { } {
 
     # Solver settings
     set solverSettingsDict [dict create]
+    dict set solverSettingsDict model_part_name "FluidModelPart"
+    set nDim [expr [string range [write::getValue nDim] 0 0]]
+    dict set solverSettingsDict domain_size $nDim
     set currentStrategyId [write::getValue FLSolStrat]
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
     dict set solverSettingsDict solver_type $strategy_write_name
