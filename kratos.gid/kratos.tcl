@@ -152,7 +152,7 @@ proc Kratos::InitGIDProject { dir } {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
     # JG Sources will be in a different proc
-    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl} {
+    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
         uplevel 1 [list source [file join $dir scripts Controllers $filename]]
     }
     
