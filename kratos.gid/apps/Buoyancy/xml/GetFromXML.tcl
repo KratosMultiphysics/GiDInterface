@@ -15,6 +15,16 @@ proc Buoyancy::xml::Init { } {
     Model::getMaterials Materials.xml
 
     Model::getSolvers "../../Common/xml/Solvers.xml"
+    
+    [Model::getCondition "Outlet2D"] setAttribute ElementType "Point,Line"
+    set topObj [::Model::Topology new "Point" 1 "Condition2D1N"]
+    [Model::getCondition "Outlet2D"] addTopologyFeature $topObj
+
+    [Model::getCondition "Outlet3D"] setAttribute ElementType "Point,Line,Surface"
+    set topObj [::Model::Topology new "Point" 1 "Condition3D1N"]
+    [Model::getCondition "Outlet3D"] addTopologyFeature $topObj
+    set topObj [::Model::Topology new "Line" 2 "Condition3D2N"]
+    [Model::getCondition "Outlet3D"] addTopologyFeature $topObj
 }
 
 proc Buoyancy::xml::getUniqueName {name} {

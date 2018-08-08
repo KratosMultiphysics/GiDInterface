@@ -39,42 +39,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set projectParametersDict restart_options $restartDict
 
     # Solver settings
-    set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue CNVDFFSolStrat]
-    set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]
-    dict set solverSettingsDict solver_type $currentStrategyId
-    dict set solverSettingsDict analysis_type $currentAnalysisTypeId
-    dict set solverSettingsDict model_part_name "ThermalModelPart"
-    set nDim [expr [string range [write::getValue nDim] 0 0]]
-    dict set solverSettingsDict domain_size $nDim
-
-    # Model import settings
-    set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename $model_name
-    dict set solverSettingsDict model_import_settings $modelDict
-
-    set materialsDict [dict create]
-    dict set materialsDict materials_filename [GetAttribute materials_file]
-    dict set solverSettingsDict material_import_settings $materialsDict
-
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict ConvectionDiffusion] ]
-
-    # Parts
-    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
-
-    # Time stepping settings
-    set timeSteppingDict [dict create]
-    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
-        dict set timeSteppingDict "time_step" [write::getValue CNVDFFTimeParameters DeltaTime]
-    } else {
-        dict set timeSteppingDict time_step 1.0
-    }
-    dict set solverSettingsDict time_stepping $timeSteppingDict
-
-    dict set projectParametersDict solver_settings $solverSettingsDict
+    dict set projectParametersDict solver_settings [ConventionDiffusion::write::getSolversParametersDict]
 
     # Boundary conditions processes
     dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
@@ -109,4 +74,44 @@ proc ConvectionDiffusion::write::getBodyForceProcessDict {} {
     dict set pdict "Parameters" $params
 
     return $pdict
+}
+
+proc ConvectionDiffusion::write::getSolversParametersDict {} {
+    set solverSettingsDict [dict create]
+    set currentStrategyId [write::getValue CNVDFFSolStrat]
+    set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]
+    dict set solverSettingsDict solver_type $currentStrategyId
+    dict set solverSettingsDict analysis_type $currentAnalysisTypeId
+    dict set solverSettingsDict model_part_name "ThermalModelPart"
+    set nDim [expr [string range [write::getValue nDim] 0 0]]
+    dict set solverSettingsDict domain_size $nDim
+
+    # Model import settings
+    set modelDict [dict create]
+    dict set modelDict input_type "mdpa"
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set modelDict input_filename $model_name
+    dict set solverSettingsDict model_import_settings $modelDict
+
+    set materialsDict [dict create]
+    dict set materialsDict materials_filename [GetAttribute materials_file]
+    dict set solverSettingsDict material_import_settings $materialsDict
+
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict ConvectionDiffusion] ]
+
+    # Parts
+    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
+    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
+
+    # Time stepping settings
+    set timeSteppingDict [dict create]
+    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
+        dict set timeSteppingDict "time_step" [write::getValue CNVDFFTimeParameters DeltaTime]
+    } else {
+        dict set timeSteppingDict time_step 1.0
+    }
+    dict set solverSettingsDict time_stepping $timeSteppingDict
+
+    return $solverSettingsDict
 }
