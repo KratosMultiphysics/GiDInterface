@@ -17,7 +17,7 @@
         "time_integration_method"            : "Implicit",
         "scheme_type"                        : "Newmark",
         "model_import_settings"              : {
-            "input_type"       : "mdpa",  
+            "input_type"       : "mdpa",
             "input_filename"   : "Particle Domain",
             "input_file_label" : "0"
         },
@@ -47,7 +47,7 @@
     },
     "problem_process_list" : [{
         "python_module"   : "remesh_domains_process",
-        "kratos_module"   : "KratosMultiphysics.PfemApplication",
+        "kratos_module"   : "KratosMultiphysics.DelaunayMeshingApplication",
         "help"            : "This process applies meshing to the problem domains",
         "process_name"    : "RemeshDomainsProcess",
         "Parameters"      : {
@@ -111,14 +111,14 @@
 			    "on_distance": false,
 			    "on_threshold": false,
 			    "on_error": false
-			},              
+			},
 			"refining_box":{
 			    "refine_in_box_only": false,
 			    "upper_point": [0.0, 0.0, 0.0],
 			    "lower_point": [0.0, 0.0, 0.0],
 			    "velocity": [0.0, 0.0, 0.0]
 			}
-		    },            
+		    },
 		    "elemental_variables_to_transfer":[ "CAUCHY_STRESS_VECTOR", "DEFORMATION_GRADIENT" ]
 		}
 	    ]
@@ -174,7 +174,7 @@
                         }
                     }
                 }
-    
+
             ]
         }
     },{
@@ -321,9 +321,9 @@
             "nodal_results"       : ["DISPLACEMENT","REACTION","VELOCITY","ACCELERATION"],
             "gauss_point_results" : ["GREEN_LAGRANGE_STRAIN_TENSOR","CAUCHY_STRESS_TENSOR","VON_MISES_STRESS"],
 	    "additional_list_files": []
-			    
+
         },
         "point_data_configuration"  : []
     }
-    
+
 }

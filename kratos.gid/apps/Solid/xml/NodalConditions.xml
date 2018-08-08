@@ -80,5 +80,5 @@
   <NodalConditionItem n="SPRING_3D" pn="Spring" ProcessName="AssignModulusAndDirectionToConditionsProcess" state="CheckNodalConditionStateSolid" Interval="Total"
 		      analysis_type="Static,Quasi-static,Dynamic" unit_magnitude="F/L^3" units="N/m^3"  VariableName="ELASTIC_LOAD" App="Solid" kratos_module="SolidMechanicsApplication">
   </NodalConditionItem> -->
-  
+
 </NodalConditionList>

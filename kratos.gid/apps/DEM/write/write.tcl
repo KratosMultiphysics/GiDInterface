@@ -17,7 +17,6 @@ proc DEM::write::Init { } {
     SetAttribute materials_file "DEMMaterials.json"
     SetAttribute main_script_file "KratosDEM.py"
 
-    
     variable inletProperties
     set inletProperties [dict create]
     

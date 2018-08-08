@@ -62,7 +62,7 @@ proc spdAux::CreateWindow {} {
     } else {
         return ""   
     }
-    if {[winfo exist $initwind]} {destroy $initwind}
+    spdAux::DestroyInitWindow
         
     if { $activeapp ne "" } {
         apps::setActiveApp $activeapp
@@ -121,10 +121,18 @@ proc spdAux::CreateWindow {} {
     grid $w.information
 }
 
+proc spdAux::DestroyInitWindow { } {
+    variable initwind
+    if {[winfo exist $initwind]} {destroy $initwind}
+}
+
 proc spdAux::CreateDimensionWindow { } {
     #package require anigif 1.3
     variable initwind
-    
+    variable must_open_dim_window
+
+    if {$must_open_dim_window == 0} {return ""}
+
     set root [customlib::GetBaseRoot]
     
     set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]

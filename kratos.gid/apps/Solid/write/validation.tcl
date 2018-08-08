@@ -10,7 +10,7 @@ proc Solid::write::writeValidateEvent { } {
     lappend problem_message {*}[Solid::write::validateNodalConditionsMesh]
 
     # Entities assigned to parts validation
-    lappend problem_message {*}[Solid::write::validateLoadsMesh]
+    #lappend problem_message {*}[Solid::write::validateLoadsMesh]
 
     # Add more tests here
 
