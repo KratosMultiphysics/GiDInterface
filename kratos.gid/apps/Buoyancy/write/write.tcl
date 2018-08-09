@@ -66,9 +66,9 @@ proc Buoyancy::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
 
     # Main python script
-    set orig_name [Fluid::write::GetAttribute main_script_file]
+    set orig_name "MainKratos.py"
     write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "MainKratos.py"
+    #write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 proc Buoyancy::write::Validate {} {

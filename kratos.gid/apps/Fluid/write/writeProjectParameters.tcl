@@ -214,7 +214,7 @@ proc Fluid::write::getSolverSettingsDict { } {
         dict set solverSettingsDict material_import_settings $materialsDict
     }
 
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict FLSolStrat FLScheme FLStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]
 
     # Parts

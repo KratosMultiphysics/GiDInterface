@@ -39,7 +39,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set projectParametersDict restart_options $restartDict
 
     # Solver settings
-    dict set projectParametersDict solver_settings [ConventionDiffusion::write::getSolversParametersDict]
+    dict set projectParametersDict solver_settings [ConventionDiffusion::write::getSolverSettingsDict]
 
     # Boundary conditions processes
     dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
@@ -76,7 +76,7 @@ proc ConvectionDiffusion::write::getBodyForceProcessDict {} {
     return $pdict
 }
 
-proc ConvectionDiffusion::write::getSolversParametersDict {} {
+proc ConvectionDiffusion::write::getSolverSettingsDict {} {
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue CNVDFFSolStrat]
     set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]
@@ -97,7 +97,7 @@ proc ConvectionDiffusion::write::getSolversParametersDict {} {
     dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
 
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict CNVDFFSolStrat CNVDFFScheme CNVDFFStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict ConvectionDiffusion] ]
 
     # Parts

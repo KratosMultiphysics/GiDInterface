@@ -6,7 +6,8 @@ proc ::Buoyancy::write::getParametersDict { } {
     dict set projectParametersDict problem_data [::Buoyancy::write::GetProblemData_Dict]
 
     # output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    # Too many outputs
+    #dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
     # restart options 
     dict set projectParametersDict restart_options [Buoyancy::write::GetRestart_Dict]
@@ -41,9 +42,15 @@ proc Buoyancy::write::GetProblemData_Dict { } {
     set paralleltype [write::getValue ParallelType]
     dict set problemDataDict "parallel_type" $paralleltype
 
+    # echo level
+    dict set problemDataDict echo_level 0
+
     # Time Parameters
-    dict set problemDataDict start_time [write::getValue FLTimeParameters StartTime]
-    dict set problemDataDict end_time [write::getValue FLTimeParameters EndTime]
+    dict set problemDataDict start_time [write::getValue TimeParameters StartTime]
+    dict set problemDataDict end_time [write::getValue TimeParameters EndTime]
+    # dict set problemDataDict time_step [write::getValue TimeParameters DeltaTime]
+
+    # dict set problemDataDict model_part_name "ThermalModelPart"
 }
 
 proc Buoyancy::write::GetRestart_Dict { } {
@@ -64,8 +71,14 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set settings domain_size $nDim
 
+    # echo level
+    dict set settings echo_level 0
+
     # Fluid things
     dict set settings fluid_solver_settings [Fluid::write::getSolverSettingsDict]
+   
+    set nDim [expr [string range [write::getValue nDim] 0 0]]
+    dict set settings fluid_solver_settings domain_size $nDim
 
     # Thermal things
     dict set settings thermal_solver_settings [ConvectionDiffusion::write::getSolverSettingsDict]
