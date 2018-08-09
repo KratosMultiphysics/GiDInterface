@@ -6,9 +6,6 @@ proc ::Fluid::write::getParametersDict { } {
     set problemDataDict [dict create]
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name "FluidModelPart"
-    set nDim [expr [string range [write::getValue nDim] 0 0]]
-    dict set problemDataDict domain_size $nDim
 
     # Parallelization
     set paralleltype [write::getValue ParallelType]
@@ -42,16 +39,11 @@ proc ::Fluid::write::getParametersDict { } {
     # output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
-    # restart options
-    set restartDict [dict create]
-    dict set restartDict SaveRestart False
-    dict set restartDict RestartFrequency 0
-    dict set restartDict LoadRestart False
-    dict set restartDict Restart_Step 0
-    dict set projectParametersDict restart_options $restartDict
-
     # Solver settings
     set solverSettingsDict [dict create]
+    dict set solverSettingsDict model_part_name "FluidModelPart"
+    set nDim [expr [string range [write::getValue nDim] 0 0]]
+    dict set solverSettingsDict domain_size $nDim
     set currentStrategyId [write::getValue FLSolStrat]
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
     dict set solverSettingsDict solver_type $strategy_write_name
@@ -94,10 +86,13 @@ proc ::Fluid::write::getParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Boundary conditions processes
-    dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    dict set projectParametersDict boundary_conditions_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    dict set projectParametersDict gravity [list [getGravityProcessDict] ]
-    dict set projectParametersDict auxiliar_process_list [getAuxiliarProcessList]
+    set processesDict [dict create]
+    dict set processesDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    dict set processesDict boundary_conditions_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    dict set processesDict gravity [list [getGravityProcessDict] ]
+    dict set processesDict auxiliar_process_list [getAuxiliarProcessList]
+
+    dict set projectParametersDict processes $processesDict
 
     return $projectParametersDict
 }
@@ -195,7 +190,7 @@ proc Fluid::write::getBoundaryConditionMeshId {} {
                 set gname [::write::getSubModelPartId $cid $groupName]
                 if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
             }
-            
+
         }
     }
 
