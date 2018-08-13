@@ -67,14 +67,14 @@ proc Pfem::xml::CustomTree { args } {
 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] { 
         $node setAttribute icon select
-	$node setAttribute groups_icon groupCreated
+	    $node setAttribute groups_icon groupCreated
     }
 
     #loads
     spdAux::SetValueOnTreeItem icon setLoad PFEM_Loads 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Loads]/condition" ] { 
         $node setAttribute icon select
-	$node setAttribute groups_icon groupCreated
+	    $node setAttribute groups_icon groupCreated
     }
 
     #materials
@@ -327,21 +327,6 @@ proc Pfem::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
     return [join $pnames ","]
 }
 
-proc Pfem::xml::ProcGetPartUN {domNode args} {
-    customlib::UpdateDocument
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata/condition"
-    set i 0
-    foreach part_node [$root selectNodes $xp1] {
-        if {$part_node eq $domNode} {
-            break
-        } {incr i}
-    }
-    set un "PFEM_Part$i"
-    spdAux::setRoute $un [$part_node toXPath]
-    #$domNode setAttribute curr_un $un
-    return $un
-}
 
 proc Pfem::xml::ProcPartsOverWhat {domNode args} {
     set names [list ]
@@ -366,7 +351,7 @@ proc Pfem::xml::ProcPartsOverWhat {domNode args} {
 
 proc Pfem::xml::ProcActiveIfAnyPartState {domNode args} {
     set parts ""
-    set parts_un [Pfem::xml::ProcGetPartUN $domNode $args]
+    set parts_un "PFEM_Parts"
     catch {
         set parts [$domNode selectNodes "[spdAux::getRoute $parts_un]/group"]
     }
