@@ -27,6 +27,7 @@ proc ::Pfem::Init { } {
 proc ::Pfem::LoadMyFiles { } {
     variable dir
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
+    uplevel #0 [list source [file join $dir xml BodiesWindowController.tcl]]
     uplevel #0 [list source [file join $dir .. Solid write write.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
@@ -54,11 +55,8 @@ proc ::Pfem::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
+    Kratos::ToolbarAddItem "Bodies" [file join $img_dir "body.png"] [list -np- Pfem::xml::StartBodiesWindow] [= "Bodies window"]
 
-    # Solo para JG
-    if {[GiD_Info problemtypepath] eq "E:/PROYECTOS/Kratos/interfaces/GiD/kratos.gid"} {
-        Kratos::ToolbarAddItem "Conditions" "list.png" [list -np- Pfem::xml::StartSortingWindow] [= "Sort the conditions"]
-    }
 }
 
 ::Pfem::Init
