@@ -55,7 +55,7 @@ proc ::Pfem::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
-    Kratos::ToolbarAddItem "Bodies" [file join $img_dir "body.png"] [list -np- Pfem::xml::StartBodiesWindow] [= "Bodies window"]
+    Kratos::ToolbarAddItem "Bodies" [file join $img_dir "body.png"] [list -np- Pfem::xml::BodiesWindow::Start] [= "Bodies window"]
 
 }
 

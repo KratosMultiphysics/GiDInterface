@@ -557,4 +557,21 @@ proc Pfem::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
     }
 }
 
+
+proc Pfem::xml::GetBodiesInformation { } {
+    set bodies [list ]
+    set body [dict create]
+    dict set body name "Body 1"
+    dict set body type "Fluids"
+    dict set body mesh "No remesh"
+    dict set body cont "No"
+    dict set body parts [list "Part Auto 1" "Part Auto 2"]
+    lappend bodies $body
+    return $bodies
+}
+
+proc Pfem::xml::SaveBodiesInformation {data} {
+
+}
+
 Pfem::xml::Init
