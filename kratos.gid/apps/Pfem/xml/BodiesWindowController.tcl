@@ -62,15 +62,48 @@ proc Pfem::xml::StartBodiesWindow { } {
                             grid $but_add $but_del $but_dra -sticky sew
                         grid $bodybotframe -sticky swe
 
-                grid $bodyframe -sticky nswe
+                grid $bodyframe -sticky nswe -row 0 -column 0
 
             # 3 - Right panel - Parts  frame
                 set partframe [ttk::frame $topframe.partframe]
-                grid $partframe -sticky nswe
+                
+                # 4 - Top labelframe - List of bodies container
+                    set listpartslabel [ttk::labelframe $partframe.lflist -text "Parts"]
+                    
+                    # 5 - List of bodies
+                        set listparts [listbox $listpartslabel.list]
+                        grid $listparts -sticky nswe
+                        grid $listpartslabel -sticky nswe
+                    # 5 - Body description
+                        set descriptionframe [ttk::frame $listpartslabel.description]
+                        # 6 - Part selector combo
+                            set type_values [list Group1 Group2]
+                            set typelabel [ttk::label $descriptionframe.typelabel -text "Type"]
+                            set typecombo [ttk::combobox $descriptionframe.typecombo -values $type_values]
+                            grid $typelabel $typecombo -sticky nswe
+                            
+                        # 6 - Bottom frame - ok / cancel buttons
+                            set botframe [ttk::frame $descriptionframe.botframe]
+                            ttk::button $botframe.cancel -text Cancel -command [list destroy $w] -style BottomFrame.TButton
+                            ttk::button $botframe.ok -text Ok -command [list destroy $w] -style BottomFrame.TButton
+                            grid $botframe.ok $botframe.cancel -sticky sew
+                            grid $botframe -sticky swe -columnspan 2
+                        
+                        grid $descriptionframe -sticky swe
+                    # 5 - Bottom frame - Add, delete, draw buttons
+                        set bodybotframe [ttk::frame $listpartslabel.bodybotframe]
+                            set but_add [ttk::button $bodybotframe.add -text +Add -command [list destroy $w] -style BottomFrame.TButton]
+                            set but_del [ttk::button $bodybotframe.del -text -Del -command [list destroy $w] -style BottomFrame.TButton]
+                            set but_dra [ttk::button $bodybotframe.drw -text Draw -command [list destroy $w] -style BottomFrame.TButton]
+                            grid $but_add $but_del $but_dra -sticky sew
+                        grid $bodybotframe -sticky swe
+                grid $partframe -sticky nswe -row 0 -column 1
 
             grid $topframe -sticky nswe
 
     # 1 - Fill with data
         set list_of_bodies [list Body1 Body2 Body3]
         $listbodies insert 0 {*}$list_of_bodies
+        set list_of_parts [list Group1 Group2]
+        $listparts insert 0 {*}$list_of_parts
 }
