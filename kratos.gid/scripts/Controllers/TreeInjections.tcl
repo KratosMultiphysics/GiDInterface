@@ -500,7 +500,6 @@ proc spdAux::injectElementOutputs_do { basenode args} {
     foreach in [dict keys $outputs] {
         set pn [[dict get $outputs $in] getPublicName]
         set v [GetBooleanForTree [[dict get $outputs $in] getDv]]
-W $pn
         set node "<value n='$in' pn='$pn' state='\[ElementOutputState\]' v='$v' values='Yes,No' />"
 
         $base appendXML $node
