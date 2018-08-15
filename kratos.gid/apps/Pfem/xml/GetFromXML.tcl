@@ -558,15 +558,34 @@ proc Pfem::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
 }
 
 
+proc Pfem::xml::GetPartsGroups { } {
+    set parts [list ]
+    set parts_path [spdAux::getRoute "PFEM_Parts"]
+    # set xp1 "$parts_path/group/value\[@n='Element'\]"
+    set xp1 "$parts_path/group"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        lappend parts [get_domnode_attribute $gNode n]
+    }
+    return $parts
+}
+
 proc Pfem::xml::GetBodiesInformation { } {
     set bodies [list ]
-    set body [dict create]
-    dict set body name "Body 1"
-    dict set body type "Fluids"
-    dict set body mesh "No remesh"
-    dict set body cont "No"
-    dict set body parts [list "Part Auto 1" "Part Auto 2"]
-    lappend bodies $body
+    set bodies_path [spdAux::getRoute "PFEM_Bodies"]
+    foreach body_node [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata"] {
+        set body [dict create]
+        dict set body name [get_domnode_attribute $body_node name]
+        dict set body type [get_domnode_attribute [$body_node selectNodes "./value\[@n='BodyType'\]"] v]
+        dict set body mesh [get_domnode_attribute [$body_node selectNodes "./value\[@n='MeshingStrategy'\]"] v]
+        dict set body cont [get_domnode_attribute [$body_node selectNodes "./value\[@n='ContactStrategy'\]"] v]
+        set parts [list ]
+        foreach gNode [$body_node selectNodes "./container\[@n='Groups'\]/blockdata\[@n='Group'\]"] {
+            lappend parts [$gNode @name]
+        }
+        dict set body parts $parts
+        lappend bodies $body
+    }
+    
     return $bodies
 }
 

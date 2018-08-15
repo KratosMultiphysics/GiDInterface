@@ -89,7 +89,7 @@ proc Pfem::xml::BodiesWindow::Start { } {
                         set bodybotframe [ttk::frame $listbodieslabel.bodybotframe]
                             set but_add [ttk::button $bodybotframe.add -text +Add -command [list destroy $window] -style BottomFrame.TButton]
                             set but_del [ttk::button $bodybotframe.del -text -Del -command [list destroy $window] -style BottomFrame.TButton]
-                            set but_dra [ttk::button $bodybotframe.drw -text Draw -command [list destroy $window] -style BottomFrame.TButton]
+                            set but_dra [ttk::button $bodybotframe.drw -text Draw -command [list Pfem::xml::BodiesWindow::DrawBody] -style BottomFrame.TButton]
                             grid $but_add $but_del $but_dra -sticky sew
                         grid $bodybotframe -sticky swe
 
@@ -108,7 +108,7 @@ proc Pfem::xml::BodiesWindow::Start { } {
                     # 5 - Body description
                         set part_description_frame [ttk::frame $listpartslabel.description]
                         # 6 - Part selector combo
-                            set part_values [list Group1 Group2]
+                            set part_values [Pfem::xml::GetPartsGroups]
                             set partlabel [ttk::label $part_description_frame.partlabel -text "Part name"]
                             set partcombo [ttk::combobox $part_description_frame.partcombo -textvariable Pfem::xml::BodiesWindow::part_combo -values $part_values -state readonly]
                             grid $partlabel $partcombo -sticky nswe
@@ -124,7 +124,7 @@ proc Pfem::xml::BodiesWindow::Start { } {
                         set bodybotframe [ttk::frame $listpartslabel.bodybotframe]
                             set but_add [ttk::button $bodybotframe.add -text +Add -command [list destroy $window] -style BottomFrame.TButton]
                             set but_del [ttk::button $bodybotframe.del -text -Del -command [list destroy $window] -style BottomFrame.TButton]
-                            set but_dra [ttk::button $bodybotframe.drw -text Draw -command [list destroy $window] -style BottomFrame.TButton]
+                            set but_dra [ttk::button $bodybotframe.drw -text Draw -command [list Pfem::xml::BodiesWindow::DrawPart] -style BottomFrame.TButton]
                             grid $but_add $but_del $but_dra -sticky sew
                         grid $bodybotframe -sticky swe
                 
@@ -203,6 +203,26 @@ proc Pfem::xml::BodiesWindow::PartSelected { w } {
         # Show description frame
         grid $part_description_frame -sticky swe
     }
+}
+
+proc Pfem::xml::BodiesWindow::DrawBody { } {
+    variable current_body
+
+    set names [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] parts]
+    GiD_Groups end_draw
+    GiD_Groups draw $names
+    after 5000 {GiD_Groups end_draw; GiD_Process 'Redraw }
+    GiD_Process 'Redraw 
+}
+proc Pfem::xml::BodiesWindow::DrawPart { } {
+    variable current_part
+    variable current_body
+
+    set name [lindex [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] parts] $current_part]
+    GiD_Groups end_draw
+    GiD_Groups draw [list $name]
+    after 5000 {GiD_Groups end_draw; GiD_Process 'Redraw }
+    GiD_Process 'Redraw 
 }
 
 Pfem::xml::BodiesWindow::Init
