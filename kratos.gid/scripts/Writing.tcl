@@ -521,6 +521,7 @@ proc write::transformGroupName {groupid} {
 proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable submodelparts
 
+    set mid ""
     set what [split $what "&"]
     set group [GetWriteGroupName $group]
     if {![dict exists $submodelparts [list $cid ${group}]]} {
@@ -576,6 +577,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         WriteString "${s1}End SubModelPartConditions"
         WriteString "${s}End SubModelPart"
     }
+    return $mid
 }
 
 proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {

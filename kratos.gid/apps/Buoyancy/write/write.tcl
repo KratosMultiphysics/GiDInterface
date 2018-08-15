@@ -57,6 +57,9 @@ proc Buoyancy::write::writeModelPartEvent { } {
     # SubmodelParts
     Fluid::write::writeMeshes
     Buoyancy::write::writeSubModelParts
+
+    # Boussinesq nodes
+    Buoyancy::write::writeBoussinesqSubModelPart
     
     # Custom SubmodelParts
     #write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
@@ -129,6 +132,14 @@ proc Buoyancy::write::writeSubModelParts { } {
             ::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
         }
     }
+}
+
+proc Buoyancy::write::writeBoussinesqSubModelPart { } {
+    set groupid "_Boussinesq_hidden_"
+    GiD_Groups create $groupid
+    GiD_EntitiesGroups assign $groupid nodes [GiD_Mesh list node]
+    ::write::writeGroupSubModelPart Boussinesq $groupid "Nodes"
+    GiD_Groups delete $groupid
 }
 
 Buoyancy::write::Init
