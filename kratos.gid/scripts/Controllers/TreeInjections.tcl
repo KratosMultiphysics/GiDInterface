@@ -500,7 +500,7 @@ proc spdAux::injectElementOutputs_do { basenode args} {
     foreach in [dict keys $outputs] {
         set pn [[dict get $outputs $in] getPublicName]
         set v [GetBooleanForTree [[dict get $outputs $in] getDv]]
-
+W $pn
         set node "<value n='$in' pn='$pn' state='\[ElementOutputState\]' v='$v' values='Yes,No' />"
 
         $base appendXML $node
@@ -610,20 +610,38 @@ proc spdAux::CheckConstLawOutputState {outnode} {
     return [::Model::CheckConstLawOutputState $constlawactive $paramName]
 }
 
-proc spdAux::CheckElementOutputState {outnode} {
-
+proc spdAux::CheckElementOutputState {outnode {parts_uns ""}} {
     set root [customlib::GetBaseRoot]
 
-    set nodeApp [GetAppIdFromNode $outnode]
-    set parts_un [apps::getAppUniqueName $nodeApp Parts]
-    set parts_path [getRoute $parts_un]
-    set xp1 "$parts_path/group/value\[@n='Element'\]"
+    if {$parts_uns eq ""} {
+        set nodeApp [GetAppIdFromNode $outnode]
+        lappend parts_uns [apps::getAppUniqueName $nodeApp Parts]
+    }
     set elemsactive [list ]
-    foreach gNode [$root selectNodes $xp1] {
-        lappend elemsactive [get_domnode_attribute $gNode v]
+    foreach parts_un $parts_uns {
+        set parts_path [getRoute $parts_un]
+        set xp1 "$parts_path/group/value\[@n='Element'\]"
+        foreach gNode [$root selectNodes $xp1] {
+            lappend elemsactive [get_domnode_attribute $gNode v]
+        }
     }
     set paramName [$outnode @n]
     return [::Model::CheckElementOutputState $elemsactive $paramName]
+}
+
+proc spdAux::CheckAnyPartState {domNode {parts_uns ""}} {
+    set parts [list ]
+    if {$parts_uns eq ""} {
+        set nodeApp [GetAppIdFromNode $domNode]
+        lappend parts_uns [apps::getAppUniqueName $nodeApp Parts]
+    }
+    foreach parts_un $parts_uns {
+        set parts_path [spdAux::getRoute $parts_un]
+        if {$parts_path ne ""} {
+            lappend parts {*}[$domNode selectNodes "$parts_path/group"]
+        }
+    }
+    if {[llength $parts] > 0} {return true} {return false}
 }
 
 proc spdAux::SolStratParamState {outnode} {

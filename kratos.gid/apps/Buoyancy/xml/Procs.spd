@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="procs" pn="procs" includeContainer="No">
 	<proc n='Fixity' args='args'>
-	  <![CDATA[
+		<![CDATA[
 		return "normal"
 	  ]]>
 	</proc>
-		<proc n='MaxGroups' args='args'>
-	  <![CDATA[
+	<proc n='MaxGroups' args='args'>
+		<![CDATA[
 		set childs [$domNode getElementsByTagName group]
 		if {[llength $childs] > 1} {
 			foreach group [lrange $childs 1 end] {$group delete}
@@ -16,7 +16,7 @@
 	  ]]>
 	</proc>
 	<proc n='CheckIdOnMyParent' args='args'>
-	  <![CDATA[
+		<![CDATA[
 		set r "hidden"
 		set parent [$domNode parent]
 		set wantedname [lindex $args 0]
@@ -35,10 +35,10 @@
 		return $r
 	  ]]>
 	</proc>
-	
-	
-		 	<proc n='GetSolutionStrategiesSolid' args='args'>
-	  <![CDATA[
+
+
+	<proc n='GetSolutionStrategiesSolid' args='args'>
+		<![CDATA[
 	  
 		set names ""
 		set pnames ""
@@ -59,9 +59,9 @@
 	  
 	  ]]>
 	</proc>
-			
-    <proc n='GetSolutionStrategiesStructural' args='args'>
-	  <![CDATA[
+
+	<proc n='GetSolutionStrategiesStructural' args='args'>
+		<![CDATA[
 	  
 		set names ""
 		set pnames ""
@@ -89,9 +89,9 @@
 	  
 	  ]]>
 	</proc>
-		  			
-		  <proc n='CheckNodalConditionStateSolid' args='args'>
-	  <![CDATA[
+
+	<proc n='CheckNodalConditionStateSolid' args='args'>
+		<![CDATA[
 	  # Overwritten the base function to add Solution Type restrictions
 		set parts_un STParts
 	    if {[spdAux::getRoute $parts_un] ne ""} {
@@ -106,28 +106,42 @@
 			if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
 		} {return "normal"}
 	  ]]>
-	</proc>		
-	  
-	          <proc n='CheckGeometryStructural' args='args'>
-          <![CDATA[                
+	</proc>
+
+	<proc n='CheckGeometryStructural' args='args'>
+		<![CDATA[                
                 if {$::Model::SpatialDimension eq "3D"} {return surface,volume} {return surface}                
           ]]>
-        </proc>
-			  
+	</proc>
+
 	<proc n='GetSolutionStrategiesSolid' args='args'>
-	  <![CDATA[
+		<![CDATA[
 	  return [Structural::xml::ProcGetSolutionStrategiesSolid $domNode $args]
 	  ]]>
 	</proc>
-    <proc n='CheckNodalConditionStateSolid' args='args'>
-	  <![CDATA[
+	<proc n='CheckNodalConditionStateSolid' args='args'>
+		<![CDATA[
 	  return [Structural::xml::ProcCheckNodalConditionStateSolid $domNode $args]
 	  ]]>
-	</proc>		
-    <proc n='CheckGeometrySolid' args='args'>
-      <![CDATA[                
+	</proc>
+	<proc n='CheckGeometrySolid' args='args'>
+		<![CDATA[                
       return [Structural::xml::ProcCheckGeometrySolid $domNode $args]              
       ]]>
-    </proc>
+	</proc>
 
+	<proc n="ElementOutputState" args='args'>
+		<![CDATA[  
+				set resp [::spdAux::CheckElementOutputState $domNode {FLParts CNVDFFParts}]
+				if {$resp} {return "normal"} else {return "hidden"}
+		}
+	]]>
+	</proc>
+	<proc n="ActiveIfAnyPartState" args='args'>
+		<![CDATA[  
+				set resp [::spdAux::CheckAnyPartState $domNode {FLParts CNVDFFParts}]
+				if {$resp} {return "normal"} else {return "hidden"}
+		}
+	]]>
+	</proc>
 </container>

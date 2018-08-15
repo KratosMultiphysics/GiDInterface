@@ -25,6 +25,9 @@ proc Buoyancy::xml::Init { } {
     [Model::getCondition "Outlet3D"] addTopologyFeature $topObj
     set topObj [::Model::Topology new "Line" 2 "Condition3D2N"]
     [Model::getCondition "Outlet3D"] addTopologyFeature $topObj
+
+    # Hide Fluid gravity -> Boussinesq
+    #spdAux::SetValueOnTreeItem state hidden FLGravity
 }
 
 proc Buoyancy::xml::getUniqueName {name} {
@@ -49,24 +52,24 @@ proc Buoyancy::xml::CustomTree { args } {
 }
 
 # Overwriting some procs
-proc spdAux::injectNodalConditionsOutputs {basenode args} {
-    set base [$basenode parent]
-    set args {*}$args
-    if {$args eq ""} {
-        set app [apps::getAppById [spdAux::GetAppIdFromNode $base]]
-        set args [list ImplementedInApplication [join [$app getKratosApplicationName] ","]]
-    }
-    return [spdAux::injectNodalConditionsOutputs_do $basenode $args]
-}
+# proc spdAux::injectNodalConditionsOutputs {basenode args} {
+#     set base [$basenode parent]
+#     set args {*}$args
+#     if {$args eq ""} {
+#         set app [apps::getAppById [spdAux::GetAppIdFromNode $base]]
+#         set args [list ImplementedInApplication [join [$app getKratosApplicationName] ","]]
+#     }
+#     return [spdAux::injectNodalConditionsOutputs_do $basenode $args]
+# }
 
-proc spdAux::injectElementOutputs {basenode args} {
-    set base [$basenode parent]
-    set args {*}$args
-    if {$args eq ""} {
-        set app [apps::getAppById [spdAux::GetAppIdFromNode $base]]
-        set args [list ImplementedInApplication [join [$app getKratosApplicationName] ","]]
-    }
-    return [spdAux::injectElementOutputs_do $basenode $args]
-}
+# proc spdAux::injectElementOutputs {basenode args} {
+#     set base [$basenode parent]
+#     set args {*}$args
+#     if {$args eq ""} {
+#         set app [apps::getAppById [spdAux::GetAppIdFromNode $base]]
+#         set args [list ImplementedInApplication [join [$app getKratosApplicationName] ","]]
+#     }
+#     return [spdAux::injectElementOutputs_do $basenode $args]
+# }
 
 Buoyancy::xml::Init
