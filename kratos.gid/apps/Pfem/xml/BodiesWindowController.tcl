@@ -87,7 +87,7 @@ proc Pfem::xml::BodiesWindow::Start { } {
                         
                     # 5 - Bottom frame - Add, delete, draw buttons
                         set bodybotframe [ttk::frame $listbodieslabel.bodybotframe]
-                            set but_add [ttk::button $bodybotframe.add -text +Add -command [list destroy $window] -style BottomFrame.TButton]
+                            set but_add [ttk::button $bodybotframe.add -text +Add -command [list Pfem::xml::BodiesWindow::AddBody] -style BottomFrame.TButton]
                             set but_del [ttk::button $bodybotframe.del -text -Del -command [list destroy $window] -style BottomFrame.TButton]
                             set but_dra [ttk::button $bodybotframe.drw -text Draw -command [list Pfem::xml::BodiesWindow::DrawBody] -style BottomFrame.TButton]
                             grid $but_add $but_del $but_dra -sticky sew
@@ -203,6 +203,12 @@ proc Pfem::xml::BodiesWindow::PartSelected { w } {
         # Show description frame
         grid $part_description_frame -sticky swe
     }
+}
+
+proc Pfem::xml::BodiesWindow::AddBody { } {
+    Pfem::xml::AddNewBodyRaw
+    spdAux::RequestRefresh
+    Pfem::xml::BodiesWindow::InitialState
 }
 
 proc Pfem::xml::BodiesWindow::DrawBody { } {

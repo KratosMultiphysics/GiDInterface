@@ -590,7 +590,30 @@ proc Pfem::xml::GetBodiesInformation { } {
 }
 
 proc Pfem::xml::SaveBodiesInformation {data} {
+    W "Unimplemented method Pfem::xml::SaveBodiesInformation"
+}
 
+proc Pfem::xml::AddNewBodyRaw { } {
+    set bodies_path [spdAux::getRoute "PFEM_Bodies"]
+
+    set bodies_name_list [list ]
+    foreach body [Pfem::xml::GetBodiesInformation] {
+        lappend bodies_name_list [dict get $body name]
+    }
+    set i 0
+    while {"Body$i" in $bodies_name_list} {incr i}
+    set body_name "Body$i"
+
+    set str "<blockdata n='Body' name='$body_name' icon='select' editable='false' sequence='1' editable_name='unique' open_window='0' state='disabled'>"
+    append str "<value n='BodyType' pn='Body type' icon='data' v='' values='\[GetBodyTypeValues\]' state='disabled'/>"
+    append str "<value n='ContactStrategy' pn='Contacting' icon='data' v='No' values='Yes,No' state='\[getStateFromXPathValue {string(../value\[@n=BodyType\]/@v)} Solid\]'/>"
+    append str "<value n='MeshingStrategy' pn='Meshing' icon='data' v='' values='\[GetMeshingDomains\]' state='\[getStateFromXPathValue {string(../value\[@n=BodyType\]/@v)} Fluid,Solid\]'/>"
+    append str "<container n='Groups' pn='Groups' state='disabled' icon='parts'>"
+    # append str "<blockdata n='Group' name='Auto Group 2' state='disabled' icon='groupCreated' />"
+    append str "</container>"
+    append str "</blockdata>"
+    
+    [[customlib::GetBaseRoot] selectNodes $bodies_path] appendXML $str
 }
 
 Pfem::xml::Init
