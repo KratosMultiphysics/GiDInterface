@@ -6,8 +6,7 @@ proc ::Buoyancy::write::getParametersDict { } {
     dict set projectParametersDict problem_data [::Buoyancy::write::GetProblemData_Dict]
 
     # output configuration
-    # Too many outputs
-    #dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
     # restart options 
     dict set projectParametersDict restart_options [Buoyancy::write::GetRestart_Dict]
