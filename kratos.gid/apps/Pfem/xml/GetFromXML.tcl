@@ -614,6 +614,14 @@ proc Pfem::xml::AddNewBodyRaw { } {
     append str "</blockdata>"
     
     [[customlib::GetBaseRoot] selectNodes $bodies_path] appendXML $str
+
+    return $body_name
+}
+
+proc Pfem::xml::DeleteBody {body_name} {
+    
+    set bodies_path [spdAux::getRoute "PFEM_Bodies"]
+    [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]"] delete
 }
 
 Pfem::xml::Init
