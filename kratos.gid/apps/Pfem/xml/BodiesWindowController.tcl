@@ -2,10 +2,14 @@ namespace eval ::Pfem::xml::BodiesWindow {
     variable window
     variable list_of_bodies
     variable description_frame
+
     variable name_entry
     variable type_combo
     variable mesh_combo
     variable cont_combo
+    
+    variable current_body
+    variable current_part
     
     variable list_of_parts
     variable part_frame
@@ -127,6 +131,7 @@ proc Pfem::xml::BodiesWindow::Start { } {
             grid $topframe -sticky nswe
 
     bind $bodies_list <<ListboxSelect>> [list Pfem::xml::BodiesWindow::BodySelected %W] 
+    bind $parts_list <<ListboxSelect>> [list Pfem::xml::BodiesWindow::PartSelected %W] 
 
     Pfem::xml::BodiesWindow::InitialState
 }
@@ -156,8 +161,12 @@ proc Pfem::xml::BodiesWindow::BodySelected { w } {
     variable part_frame
     variable list_of_parts
 
+    variable current_body
+    variable current_part
+
     set selected [$w curselection]
     if {$selected ne ""} {
+        set current_body $selected
         # Get data from tree
         set data [lindex [Pfem::xml::GetBodiesInformation] $selected]
 
@@ -175,6 +184,24 @@ proc Pfem::xml::BodiesWindow::BodySelected { w } {
 
         # Show parts panel
         grid $part_frame -sticky nswe -row 0 -column 1
+    }
+}
+proc Pfem::xml::BodiesWindow::PartSelected { w } {
+    variable part_description_frame
+    variable current_body
+    variable current_part
+
+    set selected [$w curselection]
+    if {$selected ne ""} {
+        set current_part $selected
+        # Get data from tree
+        set data [lindex [Pfem::xml::GetBodiesInformation] $current_body]
+
+        # Fill data in description frame
+        set Pfem::xml::BodiesWindow::part_combo [lindex [dict get $data parts] $selected]
+
+        # Show description frame
+        grid $part_description_frame -sticky swe
     }
 }
 
