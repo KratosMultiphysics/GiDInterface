@@ -26,8 +26,6 @@ proc Buoyancy::xml::Init { } {
     set topObj [::Model::Topology new "Line" 2 "Condition3D2N"]
     [Model::getCondition "Outlet3D"] addTopologyFeature $topObj
 
-    # Hide Fluid gravity -> Boussinesq
-    #spdAux::SetValueOnTreeItem state hidden FLGravity
 }
 
 proc Buoyancy::xml::getUniqueName {name} {
@@ -49,6 +47,9 @@ proc Buoyancy::xml::CustomTree { args } {
     # Modify the tree: field newValue UniqueName OptionalChild
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
     spdAux::SetValueOnTreeItem v "Yes" FLStratParams compute_reactions
+    
+    # Hide Fluid gravity -> Boussinesq
+    spdAux::SetValueOnTreeItem state hidden FLGravity
 }
 
 # Overwriting some procs
