@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="Boussinesq" pn="Boussinesq settings"  un="Buoyancy_Boussinesq" >
+	<value n="gravity" pn="Gravity" v="0.0,-9.81,0.0" fieldtype='vector' dimensions='3'  />
+	<value n="ambient_temperature" pn="Ambient temperature" v="293.15" units="K" unit_magnitude="T" />
+</container>
