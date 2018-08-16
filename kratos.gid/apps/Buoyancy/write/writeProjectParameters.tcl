@@ -15,7 +15,7 @@ proc ::Buoyancy::write::getParametersDict { } {
     dict set projectParametersDict solver_settings [Buoyancy::write::GetSolverSettings_Dict]
 
     # processes
-    dict set projectParametersDict processes [dict create]
+    dict set projectParametersDict processes [Buoyancy::write::GetProcesses_Dict]
 
     return $projectParametersDict
 }
@@ -83,4 +83,13 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
     dict set settings thermal_solver_settings [ConvectionDiffusion::write::getSolverSettingsDict]
 
     return $settings
+}
+
+proc Buoyancy::write::GetProcesses_Dict { } {
+    set constraints_process_list [list ]
+    lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute conditions_un] ]
+    lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute nodal_conditions_un] "Nodal"]
+    lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute nodal_conditions_un] "Nodal"]
+    lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute conditions_un]]
+    return [dict create "constraints_process_list" $constraints_process_list]
 }
