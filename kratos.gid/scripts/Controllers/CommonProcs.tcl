@@ -451,14 +451,8 @@ proc spdAux::ProcElementOutputState { domNode args } {
 
 proc spdAux::ProcActiveIfAnyPartState { domNode args } {
 
-    set parts ""
-    set nodeApp [GetAppIdFromNode $domNode]
-    set parts_un [apps::getAppUniqueName $nodeApp Parts]
-    set parts_path [spdAux::getRoute $parts_un]
-    if {$parts_path ne ""} {
-        set parts [$domNode selectNodes "$parts_path/group"]
-    }
-    if {$parts ne ""} {return "normal"} else {return "hidden"}
+    set resp [::spdAux::CheckAnyPartState $domNode]
+    if {$resp} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcActiveIfRestartAvailable { domNode args } {
 
