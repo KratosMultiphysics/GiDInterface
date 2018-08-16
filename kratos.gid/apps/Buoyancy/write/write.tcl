@@ -56,6 +56,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
     
     # SubmodelParts
     Fluid::write::writeMeshes
+    write::writeNodalConditions [ConvectionDiffusion::write::GetAttribute nodal_conditions_un]
     Buoyancy::write::writeSubModelParts
 
     # Boussinesq nodes
