@@ -91,5 +91,20 @@ proc Buoyancy::write::GetProcesses_Dict { } {
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute nodal_conditions_un] "Nodal"]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute nodal_conditions_un] "Nodal"]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute conditions_un]]
+    lappend constraints_process_list [GetBoussinesqProcess]
     return [dict create "constraints_process_list" $constraints_process_list]
+}
+
+proc Buoyancy::write::GetBoussinesqProcess { } {
+    set process [dict create]
+    dict set process python_module apply_boussinesq_force_process
+    dict set process kratos_module KratosMultiphysics.FluidDynamicsApplication
+    dict set process process_name ApplyBoussinesqForceProcess
+    set params [dict create]
+    dict set params model_part_name "_Boussinesq_hidden_"
+    dict set params gravity [write::getValue Buoyancy_Boussinesq gravity]
+    dict set params ambient_temperature [write::getValue Buoyancy_Boussinesq ambient_temperature]
+    dict set process Parameters $params
+
+    return $process
 }
