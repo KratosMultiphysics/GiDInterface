@@ -33,15 +33,14 @@ proc Buoyancy::xml::getUniqueName {name} {
 }
 
 proc Buoyancy::xml::CustomTree { args } {
-    Buoyancy::write::UpdateUniqueNames Fluid
+    spdAux::parseRoutes
+
     apps::setActiveAppSoft Fluid
     Fluid::xml::CustomTree
 
-    Buoyancy::write::UpdateUniqueNames ConvectionDiffusion
     apps::setActiveAppSoft ConvectionDiffusion
     ConvectionDiffusion::xml::CustomTree
 
-    Buoyancy::write::UpdateUniqueNames Buoyancy
     apps::setActiveAppSoft Buoyancy
 
     # Modify the tree: field newValue UniqueName OptionalChild

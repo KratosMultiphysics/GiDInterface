@@ -86,15 +86,6 @@ proc Buoyancy::write::WriteMaterialsFile { } {
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] "False"
 }
 
-
-proc Buoyancy::write::UpdateUniqueNames { appid } {
-    set unList [list "Results"]
-    foreach un $unList {
-         set current_un [apps::getAppUniqueName $appid $un]
-         spdAux::setRoute $un [spdAux::getRoute $current_un]
-    }
-}
-
 proc Buoyancy::write::writeConditions {  } {
     variable BuoyancyConditions
     set BCUN "CNVDFFBC"
