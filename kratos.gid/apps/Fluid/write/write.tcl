@@ -8,6 +8,7 @@ namespace eval Fluid::write {
 proc Fluid::write::Init { } {
     # Namespace variables inicialization
     variable FluidConditions
+    catch {array unset FluidConditions}
     set FluidConditions(temp) 0
     unset FluidConditions(temp)
 
@@ -117,9 +118,10 @@ proc Fluid::write::Validate {} {
 proc Fluid::write::getLastConditionId { } { 
     variable FluidConditions
     set top 1
-    # Kratos::PrintArray FluidConditions
+     Kratos::PrintArray FluidConditions
     if {[array size FluidConditions]} {
         foreach name [array names FluidConditions] {
+            W "$name $top $FluidConditions($name)"
             set top [expr max($top,$FluidConditions($name))]
         }
     }
