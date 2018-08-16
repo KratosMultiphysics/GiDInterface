@@ -40,50 +40,7 @@ proc ::Fluid::write::getParametersDict { } {
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
     # Solver settings
-    set solverSettingsDict [dict create]
-    dict set solverSettingsDict model_part_name "FluidModelPart"
-    set nDim [expr [string range [write::getValue nDim] 0 0]]
-    dict set solverSettingsDict domain_size $nDim
-    set currentStrategyId [write::getValue FLSolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
-    dict set solverSettingsDict solver_type $strategy_write_name
-
-    # model import settings
-    set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename $model_name
-    dict set solverSettingsDict model_import_settings $modelDict
-
-    if {0} {
-        set materialsDict [dict create]
-        dict set materialsDict materials_filename [GetAttribute materials_file]
-        dict set solverSettingsDict material_import_settings $materialsDict
-    }
-
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]
-
-    # Parts
-    dict set solverSettingsDict volume_model_part_name {*}[write::getPartsSubModelPartId]
-
-    # Skin parts
-    dict set solverSettingsDict skin_parts [getBoundaryConditionMeshId]
-
-    # No skin parts
-    dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
-    # Time stepping settings
-    set timeSteppingDict [dict create]
-    dict set timeSteppingDict automatic_time_step $automaticDeltaTime
-    if {$automaticDeltaTime eq "Yes"} {
-        dict set timeSteppingDict "CFL_number" [write::getValue FLTimeParameters CFLNumber]
-        dict set timeSteppingDict "minimum_delta_time" [write::getValue FLTimeParameters MinimumDeltaTime]
-        dict set timeSteppingDict "maximum_delta_time" [write::getValue FLTimeParameters MaximumDeltaTime]
-    } else {
-        dict set timeSteppingDict "time_step" [write::getValue FLTimeParameters DeltaTime]
-    }
-    dict set solverSettingsDict time_stepping $timeSteppingDict
-
-    dict set projectParametersDict solver_settings $solverSettingsDict
+    dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
 
     # Boundary conditions processes
     set processesDict [dict create]
@@ -228,4 +185,54 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     }
 
     return $listOfNoSkinGroups
+}
+
+proc Fluid::write::getSolverSettingsDict { } {
+    set solverSettingsDict [dict create]
+    dict set solverSettingsDict model_part_name "FluidModelPart"
+    set nDim [expr [string range [write::getValue nDim] 0 0]]
+    dict set solverSettingsDict domain_size $nDim
+    set currentStrategyId [write::getValue FLSolStrat]
+    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
+    dict set solverSettingsDict solver_type $strategy_write_name
+
+    # model import settings
+    set modelDict [dict create]
+    dict set modelDict input_type "mdpa"
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set modelDict input_filename $model_name
+    dict set solverSettingsDict model_import_settings $modelDict
+
+    if {0} {
+        set materialsDict [dict create]
+        dict set materialsDict materials_filename [GetAttribute materials_file]
+        dict set solverSettingsDict material_import_settings $materialsDict
+    }
+
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict FLSolStrat FLScheme FLStratParams] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]
+
+    # Parts
+    dict set solverSettingsDict volume_model_part_name {*}[write::getPartsSubModelPartId]
+
+    # Skin parts
+    dict set solverSettingsDict skin_parts [getBoundaryConditionMeshId]
+
+    # No skin parts
+    dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
+
+    # Time stepping settings
+    set timeSteppingDict [dict create]
+    set automaticDeltaTime [write::getValue FLTimeParameters AutomaticDeltaTime]
+    dict set timeSteppingDict automatic_time_step $automaticDeltaTime
+    if {$automaticDeltaTime eq "Yes"} {
+        dict set timeSteppingDict "CFL_number" [write::getValue FLTimeParameters CFLNumber]
+        dict set timeSteppingDict "minimum_delta_time" [write::getValue FLTimeParameters MinimumDeltaTime]
+        dict set timeSteppingDict "maximum_delta_time" [write::getValue FLTimeParameters MaximumDeltaTime]
+    } else {
+        dict set timeSteppingDict "time_step" [write::getValue FLTimeParameters DeltaTime]
+    }
+    dict set solverSettingsDict time_stepping $timeSteppingDict
+
+    return $solverSettingsDict
 }

@@ -14,6 +14,7 @@
 	<appLink n="Fluid" public="0" pn="Fluid" active="0" appid="Fluid" prefix="FL"/>
 	<appLink n="EmbeddedFluid" public="0" pn="Embedded fluid" active="0" appid="EmbeddedFluid" prefix="EMBFL"/>
 	<appLink n="PotentialFluid" public="0" pn="Potential fluid" active="0" appid="PotentialFluid" prefix="PTFL"/>
+	<appLink n="Buoyancy" public="0" pn="Buoyancy" active="0" appid="Buoyancy" prefix="Buoyancy_"/>
 	<appLink n="FSI" public="1" pn="FSI" active="0" appid="FSI" prefix="FSI"/>
 	<appLink n="Pfem" public="1" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
 	<appLink n="PfemFluid" public="1" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
