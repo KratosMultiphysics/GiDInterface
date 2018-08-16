@@ -1588,14 +1588,8 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"}} {
                 set material_dict [dict create]
 
                 if {$write_claw_name eq "True"} {
-                    set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
                     set constitutive_law_name [$constitutive_law getKratosName]
-                    if {$const_law_application eq "KratosMultiphysics"} {
-                        set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
-                    } {
-                        set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
-                    }
-                    dict set material_dict constitutive_law [dict create name $const_law_fullname]
+                    dict set material_dict constitutive_law [dict create name $constitutive_law_name]
                 }
                 dict set material_dict Variables $variables_list
                 dict set material_dict Tables dictnull
