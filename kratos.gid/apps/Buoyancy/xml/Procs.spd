@@ -96,6 +96,8 @@
 		set parts_un STParts
 	    if {[spdAux::getRoute $parts_un] ne ""} {
 			set conditionId [$domNode @n]
+			W $conditionId
+			if {$conditionId eq "TEMPERATURE"} {return "normal"}
 			set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
 			set elemnames [list ]
 			foreach elem $elems { lappend elemnames [$elem @v]}
@@ -119,9 +121,10 @@
 	  return [Structural::xml::ProcGetSolutionStrategiesSolid $domNode $args]
 	  ]]>
 	</proc>
-	<proc n='CheckNodalConditionStateSolid' args='args'>
+	<proc n='CheckNodalConditionState' args='args'>
 		<![CDATA[
-	  return [Structural::xml::ProcCheckNodalConditionStateSolid $domNode $args]
+		if { [$domNode @n] eq "TEMPERATURE"} {return "normal"}
+	  return [spdAux::ProcCheckNodalConditionState $domNode $args]
 	  ]]>
 	</proc>
 	<proc n='CheckGeometrySolid' args='args'>
