@@ -82,6 +82,7 @@ proc Buoyancy::write::Validate {} {
 }
 
 proc Buoyancy::write::WriteMaterialsFile { } {
+    ConvectionDiffusion::write::WriteMaterialsFile
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] "False"
 }
 

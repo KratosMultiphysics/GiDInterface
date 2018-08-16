@@ -82,6 +82,8 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
     # Thermal things
     dict set settings thermal_solver_settings [ConvectionDiffusion::write::getSolverSettingsDict]
 
+    dict set settings thermal_solver_settings problem_domain_sub_model_part_list [list [dict get $settings fluid_solver_settings volume_model_part_name]]
+
     return $settings
 }
 
