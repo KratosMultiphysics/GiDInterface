@@ -17,7 +17,7 @@ proc Buoyancy::xml::Init { } {
     Model::getSolvers "../../Common/xml/Solvers.xml"
     
     [Model::getCondition "Outlet2D"] setAttribute ElementType "Point,Line"
-    set topObj [::Model::Topology new "Point" 1 "Condition2D1N"]
+    set topObj [::Model::Topology new "Point" 1 "PointCondition2D1N"]
     [Model::getCondition "Outlet2D"] addTopologyFeature $topObj
 
     [Model::getCondition "Outlet3D"] setAttribute ElementType "Point,Line,Surface"
