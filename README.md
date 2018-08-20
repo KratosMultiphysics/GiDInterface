@@ -2,7 +2,9 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/07a116949d2a437eb99b1423a18ecdb6)](https://app.codacy.com/app/jginternational/GiDInterface?utm_source=github.com&utm_medium=referral&utm_content=KratosMultiphysics/GiDInterface&utm_campaign=badger)
 
-The interface of Kratos with [GiD](http://www.gidhome.com). If you need the latest release, launch your GiD, navigate to Data > Problemtype > Internet retrieve and download Kratos there. If you need the developer version, you are on the right place
+The interface of Kratos with [GiD](http://www.gidhome.com). 
+
+If you need the latest release, launch your GiD, navigate to Data > Problemtype > Internet retrieve and download Kratos there. If you need the developer version, you are on the right place
 
 ## First steps
 * Install GiD -> [Developer version](http://www.gidhome.com/download/developer-versions)
