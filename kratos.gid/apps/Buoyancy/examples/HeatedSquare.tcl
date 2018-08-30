@@ -59,9 +59,21 @@ proc Buoyancy::examples::AssignGroups2D {args} {
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
 
-    GiD_Groups create No_Slip_Walls
-    GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Walls lines {1 2 3 4}
+    GiD_Groups create Left_Wall
+    GiD_Groups edit color Left_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Left_Wall lines 1
+
+    GiD_Groups create Top_Wall
+    GiD_Groups edit color Top_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Top_Wall lines 2
+
+    GiD_Groups create Right_Wall
+    GiD_Groups edit color Right_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Right_Wall lines 3
+
+    GiD_Groups create Bottom_Wall
+    GiD_Groups edit color Bottom_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Bottom_Wall lines 4
 
 }
 proc Buoyancy::examples::AssignGroups3D {args} {
@@ -97,7 +109,8 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     set root [customlib::GetBaseRoot]
 
     set condtype line
-    if {$nd eq "3D"} { set condtype surface }
+    set fluidtype surface
+    if {$nd eq "3D"} { set condtype surface; set fluidtype volume }
 
     # Monolithic solution strategy set
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
@@ -132,7 +145,52 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     # }
 
     # Fluid Conditions
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Left_Wall] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Top_Wall] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Right_Wall] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Bottom_Wall] setAttribute ov $condtype
+
+    # Thermal Nodal Conditions
+    set thermalNodalConditions [spdAux::getRoute "CNVDFFNodalConditions"]
+    set thermalnodcond "$thermalNodalConditions/condition\[@n='TEMPERATURE'\]"
+    set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond Fluid]
+    $thermalnodNode setAttribute ov $fluidtype
+    set props [list value 303.15]
+    foreach {prop val} $props {
+         set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Temperature $prop"
+        }
+    }
+
+    # Thermal Conditions
+    set thermalConditions [spdAux::getRoute "CNVDFFBC"]
+    set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
+    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Left_Wall]
+    $thermalNode setAttribute ov $condtype
+    set props [list value 303.15]
+    foreach {prop val} $props {
+         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property ImposedTemperature $prop"
+        }
+    }
+
+    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Right_Wall]
+    $thermalNode setAttribute ov $condtype
+    set props [list value 293.15]
+    foreach {prop val} $props {
+         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property ImposedTemperature $prop"
+        }
+    }
 
     # Time parameters
     set time_parameters [list EndTime 100 DeltaTime 0.5]
