@@ -1,16 +1,11 @@
 namespace eval Fluid::write {
     # Namespace variables declaration
-    variable FluidConditions
     variable writeCoordinatesByGroups
     variable writeAttributes
 }
 
 proc Fluid::write::Init { } {
     # Namespace variables inicialization
-    variable FluidConditions
-    catch {array unset FluidConditions}
-    set FluidConditions(temp) 0
-    unset FluidConditions(temp)
 
     SetAttribute parts_un FLParts
     SetAttribute nodal_conditions_un FLNodalConditions
@@ -86,7 +81,7 @@ proc Fluid::write::writeModelPartEvent { } {
     writeMeshes
     
     # Custom SubmodelParts
-    write::writeBasicSubmodelParts [getLastConditionId]
+    #write::writeBasicSubmodelParts
 }
 proc Fluid::write::writeCustomFilesEvent { } {
     # Materials file TODO -> Python script must read from here
@@ -115,19 +110,6 @@ proc Fluid::write::Validate {} {
     return $err
 }
 
-proc Fluid::write::getLastConditionId { } { 
-    variable FluidConditions
-    set top 1
-    # Kratos::PrintArray FluidConditions
-    if {[array size FluidConditions]} {
-        foreach name [array names FluidConditions] {
-            # W "$name $top $FluidConditions($name)"
-            set top [expr max($top,$FluidConditions($name))]
-        }
-    }
-    return $top
-}
-
 # MDPA Blocks
 proc Fluid::write::writeProperties { } {
     # Begin Properties
@@ -142,32 +124,11 @@ proc Fluid::write::writeConditions { } {
 }
 
 proc Fluid::write::writeBoundaryConditions { } {
-    variable FluidConditions
     set BCUN [GetAttribute conditions_un]
 
     # Write the conditions
-    set dict_group_intervals [write::writeConditions $BCUN]
+    write::writeConditionsNatural $BCUN
 
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
-    set iter 1
-    foreach group [$root selectNodes $xp1] {
-        set condid [[$group parent] @n]
-        set groupid [get_domnode_attribute $group n]
-        set groupid [write::GetWriteGroupName $groupid]
-        set cond [::Model::getCondition $condid]
-        if {[$cond getAttribute SkinConditions]} {
-            lassign [dict get $dict_group_intervals $groupid] ini fin
-            set FluidConditions($groupid,initial) $ini
-            set FluidConditions($groupid,final) $fin
-            set FluidConditions($groupid,SkinCondition) 1
-            #W "ARRAY [array get FluidConditions]"
-        } else {
-            set FluidConditions($groupid,initial) -1
-            set FluidConditions($groupid,final) -1
-            set FluidConditions($groupid,SkinCondition) 0
-        }
-    }
 }
 
 proc Fluid::write::writeDrags { } {
@@ -184,7 +145,6 @@ proc Fluid::write::writeMeshes { } {
 }
 
 proc Fluid::write::writeConditionsMesh { } {
-    variable FluidConditions
     
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
@@ -194,19 +154,18 @@ proc Fluid::write::writeConditionsMesh { } {
         set groupid [$group @n]
         set groupid [write::GetWriteGroupName $groupid]
         set condid [[$group parent] @n]
-        if {[[::Model::getCondition $condid] getGroupBy] eq "Condition"} {
+        set cond [::Model::getCondition $condid]
+        if {[$cond getGroupBy] eq "Condition"} {
             # Grouped conditions will be written later
             if {$condid ni $grouped_conditions} {
                 lappend grouped_conditions $condid
             }
         } else {
-            set ini $FluidConditions($groupid,initial)
-            set end $FluidConditions($groupid,final)
             #W "$groupid $ini $end"
-            if {$ini == -1} {
+            if {![$cond hasTopologyFeatures]} {
                 ::write::writeGroupSubModelPart $condid $groupid "Nodes"
             } else {
-                ::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
+                ::write::writeGroupSubModelPartNatural $condid $groupid "Conditions"
             }
         }
     }
@@ -216,70 +175,67 @@ proc Fluid::write::writeConditionsMesh { } {
         set groups_dict [dict create ]
         foreach group [$root selectNodes $xp] {
             set groupid [get_domnode_attribute $group n]
-            set ini $FluidConditions($groupid,initial)
-            set end $FluidConditions($groupid,final)
             dict set groups_dict $groupid what "Conditions"
-            dict set groups_dict $groupid iniend [list $ini $end]
         } 
         write::writeConditionGroupedSubmodelParts $condid $groups_dict
     }
 }
 
-proc Fluid::write::writeSkinMesh { } {
-    variable FluidConditions
+# proc Fluid::write::writeSkinMesh { } {
+#     variable FluidConditions
     
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-    #W "Conditions $xp1 [$root selectNodes $xp1]"
-    set listiniend [list ]
-    set listgroups [list ]
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
-        set ini $FluidConditions($groupid,initial)
-        set end $FluidConditions($groupid,final)
-        lappend listiniend $ini $end
-        lappend listgroups $groupid
-    }
-    set skinconfgroup "SKINCONDITIONS"
-    if {[GiD_Groups exist $skinconfgroup]} {GiD_Groups delete $skinconfgroup}
-    GiD_Groups create $skinconfgroup
-    GiD_Groups edit state $skinconfgroup hidden
-    foreach group $listgroups {
-        GiD_EntitiesGroups assign $skinconfgroup nodes [GiD_EntitiesGroups get $group nodes]
-    }
-    ::write::writeGroupSubModelPart EXTRA $skinconfgroup "Conditions" $listiniend
-}
+#     set root [customlib::GetBaseRoot]
+#     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+#     #W "Conditions $xp1 [$root selectNodes $xp1]"
+#     set listiniend [list ]
+#     set listgroups [list ]
+#     foreach group [$root selectNodes $xp1] {
+#         set groupid [$group @n]
+#         set groupid [write::GetWriteGroupName $groupid]
+#         set ini $FluidConditions($groupid,initial)
+#         set end $FluidConditions($groupid,final)
+#         lappend listiniend $ini $end
+#         lappend listgroups $groupid
+#     }
+#     set skinconfgroup "SKINCONDITIONS"
+#     if {[GiD_Groups exist $skinconfgroup]} {GiD_Groups delete $skinconfgroup}
+#     GiD_Groups create $skinconfgroup
+#     GiD_Groups edit state $skinconfgroup hidden
+#     foreach group $listgroups {
+#         GiD_EntitiesGroups assign $skinconfgroup nodes [GiD_EntitiesGroups get $group nodes]
+#     }
+#     ::write::writeGroupSubModelPart EXTRA $skinconfgroup "Conditions" $listiniend
+#  }
 
-proc Fluid::write::CheckClosedVolume {} {
-    variable BCUN
-    set isclosed 1
+# proc Fluid::write::CheckClosedVolume {} {
+#     variable BCUN
+#     set isclosed 1
 
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+#     set root [customlib::GetBaseRoot]
+#     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
 
-    set listgroups [list ]
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set conditionName [[$group parent] @n]
-        set cond [::Model::getCondition $conditionName]
-        if {[$cond getAttribute "SkinConditions"] eq "True"} {
-            set surfaces [GiD_EntitiesGroups get $groupid surfaces]
-            foreach surf $surfaces {
-                set linesraw [GiD_Geometry get surface $surf]
-                set nlines [lindex $linesraw 2]
-                set linespairs [lrange $linesraw 9 [expr 8 + $nlines]]
-                foreach pair $linespairs {
-                    set lid [lindex $pair 0]
-                    incr usedsurfaceslines($lid)
-                }
-            }
-        }
-    }
-    foreach lid [array names usedsurfaceslines] {
-        if {$usedsurfaceslines($lid) ne "2"} {set isclosed 0;}
-    }
-    return $isclosed
-}
+#     set listgroups [list ]
+#     foreach group [$root selectNodes $xp1] {
+#         set groupid [$group @n]
+#         set conditionName [[$group parent] @n]
+#         set cond [::Model::getCondition $conditionName]
+#         if {[$cond getAttribute "SkinConditions"] eq "True"} {
+#             set surfaces [GiD_EntitiesGroups get $groupid surfaces]
+#             foreach surf $surfaces {
+#                 set linesraw [GiD_Geometry get surface $surf]
+#                 set nlines [lindex $linesraw 2]
+#                 set linespairs [lrange $linesraw 9 [expr 8 + $nlines]]
+#                 foreach pair $linespairs {
+#                     set lid [lindex $pair 0]
+#                     incr usedsurfaceslines($lid)
+#                 }
+#             }
+#         }
+#     }
+#     foreach lid [array names usedsurfaceslines] {
+#         if {$usedsurfaceslines($lid) ne "2"} {set isclosed 0;}
+#     }
+#     return $isclosed
+# }
 
 Fluid::write::Init
