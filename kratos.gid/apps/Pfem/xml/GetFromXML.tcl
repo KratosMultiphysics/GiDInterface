@@ -661,8 +661,8 @@ proc Pfem::xml::UpdateBody {body_name_old body_name body_type body_mesh body_con
     [$node selectNodes "./value\[@n = 'ContactStrategy'\]"] setAttribute v $body_cont
 }
 
-# TODO: Event After rename group for bodies associetion
+# TODO: Event After rename group for bodies associetion. Wait Event register system
 
-# TODO: Event After delete group for bodies associetion
+# TODO: Event After delete group for bodies associetion. Wait Event register system
 
 Pfem::xml::Init

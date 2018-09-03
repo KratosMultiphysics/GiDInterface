@@ -105,9 +105,9 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     set bodies_parts_list [list ]
     foreach body $bodies_list {
         set body_parts [dict get $body parts_list]
-	foreach part $body_parts {
-	    lappend bodies_parts_list $part
-	}
+        foreach part $body_parts {
+            lappend bodies_parts_list $part
+        }
     }
 
     dict set modelDataDict bodies_list $bodies_list
@@ -304,13 +304,14 @@ proc Pfem::write::GetPfem_ContactProcessDict {contact_name} {
 
 proc Pfem::write::GetFluidBodies { } {
     set bodies_list [list ]
+    # Locate the node pointing to the bodies
     set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
     foreach body_node [[customlib::GetBaseRoot] selectNodes $xp1] {
-
+        # If the body is Fluid
         set body_type_path ".//value\[@n='BodyType'\]"
         set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
-
-	if {$body_type eq "Fluid"} {lappend bodies_list [get_domnode_attribute $body_node name]}
+        # Append to the return list
+	    if {$body_type eq "Fluid"} {lappend bodies_list [get_domnode_attribute $body_node name]}
     }
 
     return $bodies_list
@@ -598,7 +599,7 @@ proc Pfem::write::ProcessBodiesList { } {
         set body_type_path ".//value\[@n='BodyType'\]"
         set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
         set parts [list ]
-        foreach part_node [$body_node selectNodes "./condition/group"] {
+        foreach part_node [$body_node selectNodes "./container\[@n = 'Groups'\]/blockdata\[@n='Group'\]"] {
             lappend parts [write::getSubModelPartId "Parts" [$part_node @n]]
         }
         dict set body "body_type" $body_type
