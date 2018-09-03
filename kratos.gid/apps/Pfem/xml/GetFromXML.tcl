@@ -632,7 +632,7 @@ proc Pfem::xml::DeleteBody {body_name} {
 proc Pfem::xml::AddPartToBody {body_name part_name} {
     variable body_UN
     set bodies_path [spdAux::getRoute $body_UN]
-    # Check if part exists in parts availables for body
+    # TODO: Check if part exists in parts availables for body
     foreach body [Pfem::xml::GetBodiesInformation] {
         if {[dict get $body name] eq $body_name} {
             if {$part_name ni [dict get $body parts]} {
@@ -660,5 +660,9 @@ proc Pfem::xml::UpdateBody {body_name_old body_name body_type body_mesh body_con
     [$node selectNodes "./value\[@n = 'MeshingStrategy'\]"] setAttribute v $body_mesh
     [$node selectNodes "./value\[@n = 'ContactStrategy'\]"] setAttribute v $body_cont
 }
+
+# TODO: Event After rename group for bodies associetion
+
+# TODO: Event After delete group for bodies associetion
 
 Pfem::xml::Init
