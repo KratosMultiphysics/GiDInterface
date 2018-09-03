@@ -630,10 +630,9 @@ proc Pfem::xml::DeleteBody {body_name} {
 }
 
 proc Pfem::xml::AddPartToBody {body_name part_name} {
-
     variable body_UN
     set bodies_path [spdAux::getRoute $body_UN]
-    # TODO: check if part exists in parts availables for body
+    # Check if part exists in parts availables for body
     foreach body [Pfem::xml::GetBodiesInformation] {
         if {[dict get $body name] eq $body_name} {
             if {$part_name ni [dict get $body parts]} {
@@ -643,6 +642,7 @@ proc Pfem::xml::AddPartToBody {body_name part_name} {
         }
     }
 }
+
 proc Pfem::xml::DeletePartInBody {body_name part_name} {
     variable body_UN
     set bodies_path [spdAux::getRoute $body_UN]
