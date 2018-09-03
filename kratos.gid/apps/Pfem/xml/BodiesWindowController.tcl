@@ -253,19 +253,24 @@ proc Pfem::xml::BodiesWindow::DrawBody { } {
     variable current_body
 
     set names [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] parts]
-    GiD_Groups end_draw
+    Pfem::xml::BodiesWindow::TryEndDraw
     GiD_Groups draw $names
-    after 5000 {GiD_Groups end_draw; GiD_Process 'Redraw }
     GiD_Process 'Redraw 
+    after 5000 { Pfem::xml::BodiesWindow::TryEndDraw }
 }
 proc Pfem::xml::BodiesWindow::DrawPart { } {
     variable current_part
     variable current_body
 
     set name [lindex [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] parts] $current_part]
-    GiD_Groups end_draw
+    Pfem::xml::BodiesWindow::TryEndDraw
     GiD_Groups draw [list $name]
-    after 5000 {GiD_Groups end_draw; GiD_Process 'Redraw }
+    GiD_Process 'Redraw 
+    after 5000 { Pfem::xml::BodiesWindow::TryEndDraw }
+}
+
+proc Pfem::xml::BodiesWindow::TryEndDraw { } {
+    catch {GiD_Groups end_draw}
     GiD_Process 'Redraw 
 }
 
