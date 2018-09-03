@@ -134,13 +134,12 @@ proc Pfem::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
 
 proc Pfem::xml::CheckElementOutputState { domNode args } {
     set elemsactive [list ]
-    foreach parts_un [Pfem::write::GetPartsUN] {
-        set parts_path [spdAux::getRoute $parts_un]
-        set xp1 "$parts_path/group/value\[@n='Element'\]"
-        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-            lappend elemsactive [get_domnode_attribute $gNode v]
-        }
+    set parts_path [spdAux::getRoute [Pfem::write::GetAttribute parts_un]]
+    set xp1 "$parts_path/group/value\[@n='Element'\]"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        lappend elemsactive [get_domnode_attribute $gNode v]
     }
+    
     set paramName [$domNode @n]
     return [::Model::CheckElementOutputState $elemsactive $paramName]
 }
@@ -240,12 +239,10 @@ proc Pfem::xml::ProcGetContactDomains {domNode args} {
 proc Pfem::xml::ProcCheckNodalConditionStateSolid {domNode args} {
     # Overwritten the base function to add Solution Type restrictions
     set elemsactive [list ]
-    foreach parts_un [Pfem::write::GetPartsUN] {
-        set parts_path [spdAux::getRoute $parts_un]
-        set xp1 "$parts_path/group/value\[@n='Element'\]"
-        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-            lappend elemsactive [get_domnode_attribute $gNode v]
-        }
+    set parts_path [spdAux::getRoute [Pfem::write::GetAttribute parts_un]]
+    set xp1 "$parts_path/group/value\[@n='Element'\]"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        lappend elemsactive [get_domnode_attribute $gNode v]
     }
     if {$elemsactive eq ""} {return "hidden"}
     set elemsactive [lsort -unique $elemsactive]

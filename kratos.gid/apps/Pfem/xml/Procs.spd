@@ -21,7 +21,7 @@
   <proc n='ElementOutputState' args='args'>
     <![CDATA[
 	     # Overwritten the base function due to Parts splitted
-	     set resp [ ::Pfem::xml::::CheckElementOutputState $domNode]
+	     set resp [ ::Pfem::xml::CheckElementOutputState $domNode]
 	     if {$resp} {return "normal"} else {return "hidden"}
     ]]>
   </proc>

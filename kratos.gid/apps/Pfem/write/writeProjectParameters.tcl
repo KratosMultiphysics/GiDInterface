@@ -600,7 +600,7 @@ proc Pfem::write::ProcessBodiesList { } {
         set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
         set parts [list ]
         foreach part_node [$body_node selectNodes "./container\[@n = 'Groups'\]/blockdata\[@n='Group'\]"] {
-            lappend parts [write::getSubModelPartId "Parts" [$part_node @n]]
+            lappend parts [write::getSubModelPartId "Parts" [$part_node @name]]
         }
         dict set body "body_type" $body_type
         dict set body "body_name" $name
@@ -791,9 +791,7 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
 proc Pfem::write::DofsInElements { } {
     set dofs [list ]
     set root [customlib::GetBaseRoot]
-    set parts_un_list [GetPartsUN]
-    foreach parts_un $parts_un_list {
-	set xp1 "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"
+	set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
 	set elements [$root selectNodes $xp1]
 	foreach element_node $elements {
 	    set elemid [$element_node @v]
@@ -802,6 +800,5 @@ proc Pfem::write::DofsInElements { } {
 		if {$dof ni $dofs} {lappend dofs $dof}
 	    }
 	}
-    }
     return {*}$dofs
 }
