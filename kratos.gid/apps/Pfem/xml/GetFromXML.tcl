@@ -1,14 +1,17 @@
 namespace eval Pfem::xml {
     variable dir
     variable bodyNodalCondition
+    variable body_UN
 }
 
 proc Pfem::xml::Init { } {
-    variable dir
     variable bodyNodalCondition
-    
     set bodyNodalCondition [list ]
+
+    variable body_UN
+    set body_UN "PFEM_Bodies"
     
+    variable dir
     Model::InitVariables dir $Pfem::dir
     
     Model::getSolutionStrategies Strategies.xml
@@ -570,8 +573,9 @@ proc Pfem::xml::GetPartsGroups { } {
 }
 
 proc Pfem::xml::GetBodiesInformation { } {
+    variable body_UN
     set bodies [list ]
-    set bodies_path [spdAux::getRoute "PFEM_Bodies"]
+    set bodies_path [spdAux::getRoute $body_UN]
     foreach body_node [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata"] {
         set body [dict create]
         dict set body name [get_domnode_attribute $body_node name]
@@ -594,7 +598,8 @@ proc Pfem::xml::SaveBodiesInformation {data} {
 }
 
 proc Pfem::xml::AddNewBodyRaw { } {
-    set bodies_path [spdAux::getRoute "PFEM_Bodies"]
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
 
     set bodies_name_list [list ]
     foreach body [Pfem::xml::GetBodiesInformation] {
@@ -619,9 +624,24 @@ proc Pfem::xml::AddNewBodyRaw { } {
 }
 
 proc Pfem::xml::DeleteBody {body_name} {
-    
-    set bodies_path [spdAux::getRoute "PFEM_Bodies"]
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
     [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]"] delete
+}
+
+proc Pfem::xml::AddPartToBody {body_name part_name} {
+
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
+    # TODO: check if part exists in parts availables for body
+    #if {[dict get [Pfem::xml::GetBodiesInformation]}
+    set str "<blockdata n='Group' name='${part_name}' state='disabled' icon='groupCreated' />"
+    [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]/container\[@n = 'Groups'\]"] appendXML $str
+}
+proc Pfem::xml::DeletePartInBody {body_name part_name} {
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
+    [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]/container\[@n = 'Groups'\]/blockdata\[@name = '$part_name'\]"] delete
 }
 
 Pfem::xml::Init

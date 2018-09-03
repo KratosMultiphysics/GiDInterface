@@ -80,7 +80,7 @@ proc Pfem::xml::BodiesWindow::Start { } {
                             
                         # 6 - Bottom frame - ok / cancel buttons
                             set botframe [ttk::frame $description_frame.botframe]
-                            ttk::button $botframe.cancel -text Cancel -command [list Pfem::xml::BodiesWindow::InitialState] -style BottomFrame.TButton
+                            ttk::button $botframe.cancel -text Close -command [list Pfem::xml::BodiesWindow::InitialState] -style BottomFrame.TButton
                             ttk::button $botframe.ok -text Ok -command [list destroy $window] -style BottomFrame.TButton
                             grid $botframe.ok $botframe.cancel -sticky sew
                             grid $botframe -sticky swe -columnspan 2
@@ -108,29 +108,30 @@ proc Pfem::xml::BodiesWindow::Start { } {
                     # 5 - Body description
                         set part_description_frame [ttk::frame $listpartslabel.description]
                         # 6 - Part selector combo
+                            # TODO : get available only - no repeat - just the type
                             set part_values [Pfem::xml::GetPartsGroups]
-                            set partlabel [ttk::label $part_description_frame.partlabel -text "Part name"]
+                            set part_label [ttk::label $part_description_frame.partlabel -text "Part name"]
                             set partcombo [ttk::combobox $part_description_frame.partcombo -textvariable Pfem::xml::BodiesWindow::part_combo -values $part_values -state readonly]
-                            grid $partlabel $partcombo -sticky nswe
+                            grid $part_label $partcombo -sticky nswe
                             
                         # 6 - Bottom frame - ok / cancel buttons
                             set botframe [ttk::frame $part_description_frame.botframe]
-                            ttk::button $botframe.cancel -text Cancel -command [list Pfem::xml::BodiesWindow::InitialState] -style BottomFrame.TButton
-                            ttk::button $botframe.ok -text Ok -command [list destroy $window] -style BottomFrame.TButton
+                            ttk::button $botframe.cancel -text Close -command [list Pfem::xml::BodiesWindow::InitialState] -style BottomFrame.TButton
+                            ttk::button $botframe.ok -text Ok -command [list Pfem::xml::BodiesWindow::AcceptPartAdd] -style BottomFrame.TButton
                             grid $botframe.ok $botframe.cancel -sticky sew
                             grid $botframe -sticky swe -columnspan 2
                         
                     # 5 - Bottom frame - Add, delete, draw buttons
                         set bodybotframe [ttk::frame $listpartslabel.bodybotframe]
-                            set but_add [ttk::button $bodybotframe.add -text +Add -command [list destroy $window] -style BottomFrame.TButton]
-                            set but_del [ttk::button $bodybotframe.del -text -Del -command [list destroy $window] -style BottomFrame.TButton]
+                            set but_add [ttk::button $bodybotframe.add -text +Add -command [list Pfem::xml::BodiesWindow::AddPart] -style BottomFrame.TButton]
+                            set but_del [ttk::button $bodybotframe.del -text -Del -command [list Pfem::xml::BodiesWindow::DelPart] -style BottomFrame.TButton]
                             set but_dra [ttk::button $bodybotframe.drw -text Draw -command [list Pfem::xml::BodiesWindow::DrawPart] -style BottomFrame.TButton]
                             grid $but_add $but_del $but_dra -sticky sew
                         grid $bodybotframe -sticky swe
                 
             grid $topframe -sticky nswe
 
-    bind $bodies_list <<ListboxSelect>> [list Pfem::xml::BodiesWindow::BodySelected %W] 
+    bind $bodies_list <<ListboxSelect>> [list Pfem::xml::BodiesWindow::BodySelection %W] 
     bind $parts_list <<ListboxSelect>> [list Pfem::xml::BodiesWindow::PartSelected %W] 
 
     Pfem::xml::BodiesWindow::InitialState
@@ -149,9 +150,17 @@ proc Pfem::xml::BodiesWindow::InitialState { } {
         grid forget $part_frame
         variable description_frame
         grid forget $description_frame
+        variable part_description_frame
+        grid forget $part_description_frame
 }
 
-proc Pfem::xml::BodiesWindow::BodySelected { w } {
+proc Pfem::xml::BodiesWindow::BodySelection { w } {
+    set selected [$w curselection]
+    if {$selected ne ""} {
+        Pfem::xml::BodiesWindow::BodySelected $selected
+    }
+}
+proc Pfem::xml::BodiesWindow::BodySelected { body_id } {
     variable description_frame
     variable name_entry
     variable type_combo
@@ -164,27 +173,25 @@ proc Pfem::xml::BodiesWindow::BodySelected { w } {
     variable current_body
     variable current_part
 
-    set selected [$w curselection]
-    if {$selected ne ""} {
-        set current_body $selected
-        # Get data from tree
-        set data [lindex [Pfem::xml::GetBodiesInformation] $selected]
+    set current_body $body_id
+    # Get data from tree
+    set data [lindex [Pfem::xml::GetBodiesInformation] $body_id]
 
-        # Fill data in description frame
-        set name_entry [dict get $data name]
-        set type_combo [dict get $data type]
-        set mesh_combo [dict get $data mesh]
-        set cont_combo [dict get $data cont]
+    # Fill data in description frame
+    set name_entry [dict get $data name]
+    set type_combo [dict get $data type]
+    set mesh_combo [dict get $data mesh]
+    set cont_combo [dict get $data cont]
 
-        # Show description frame
-        grid $description_frame -sticky swe
-        
-        # Fill data in Parts panel
-        set list_of_parts [dict get $data parts]
+    # Show description frame
+    grid $description_frame -sticky swe
+    
+    # Fill data in Parts panel
+    set list_of_parts [dict get $data parts]
 
-        # Show parts panel
-        grid $part_frame -sticky nswe -row 0 -column 1
-    }
+    # Show parts panel
+    grid $part_frame -sticky nswe -row 0 -column 1
+    
 }
 proc Pfem::xml::BodiesWindow::PartSelected { w } {
     variable part_description_frame
@@ -194,14 +201,6 @@ proc Pfem::xml::BodiesWindow::PartSelected { w } {
     set selected [$w curselection]
     if {$selected ne ""} {
         set current_part $selected
-        # Get data from tree
-        set data [lindex [Pfem::xml::GetBodiesInformation] $current_body]
-
-        # Fill data in description frame
-        set Pfem::xml::BodiesWindow::part_combo [lindex [dict get $data parts] $selected]
-
-        # Show description frame
-        grid $part_description_frame -sticky swe
     }
 }
 
@@ -210,11 +209,44 @@ proc Pfem::xml::BodiesWindow::AddBody { } {
     spdAux::RequestRefresh
     Pfem::xml::BodiesWindow::InitialState
 }
+proc Pfem::xml::BodiesWindow::AddPart { } {
+    # Show the adding part frame
+    variable part_description_frame
+    grid $part_description_frame -sticky swe
+}
+
+proc Pfem::xml::BodiesWindow::AcceptPartAdd { } {
+    variable current_body
+    set body_name [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] name]
+    set part_name $Pfem::xml::BodiesWindow::part_combo
+    if {$part_name in [GiD_Groups list]} {
+        Pfem::xml::AddPartToBody $body_name $part_name
+        spdAux::RequestRefresh
+        Pfem::xml::BodiesWindow::InitialState
+        Pfem::xml::BodiesWindow::BodySelected $current_body
+    }
+}
+
 proc Pfem::xml::BodiesWindow::DelBody { } {
     variable current_body
-    Pfem::xml::DeleteBody [lindex [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] parts] $current_body]
+    
+    if {$current_body ne ""} {
+        Pfem::xml::DeleteBody [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] name] 
+    }
     spdAux::RequestRefresh
     Pfem::xml::BodiesWindow::InitialState
+}
+proc Pfem::xml::BodiesWindow::DelPart { } {
+    variable current_body
+    variable current_part
+    if {$current_body ne "" && $current_part ne ""} {
+        set body_name [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] name]
+        set part_name [lindex [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] parts] $current_part]
+        Pfem::xml::DeletePartInBody $body_name $part_name
+    }
+    spdAux::RequestRefresh
+    Pfem::xml::BodiesWindow::InitialState
+    Pfem::xml::BodiesWindow::BodySelected $current_body
 }
 
 proc Pfem::xml::BodiesWindow::DrawBody { } {
