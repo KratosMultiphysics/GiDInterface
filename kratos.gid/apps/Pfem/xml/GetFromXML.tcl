@@ -644,4 +644,16 @@ proc Pfem::xml::DeletePartInBody {body_name part_name} {
     [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]/container\[@n = 'Groups'\]/blockdata\[@name = '$part_name'\]"] delete
 }
 
+proc Pfem::xml::UpdateBody {body_name_old body_name body_type body_mesh body_cont} {
+    
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
+    # TODO: check if $body_name_old exists in parent
+    set node [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name_old'\]"]
+    $node setAttribute name $body_name
+    [$node selectNodes "./value\[@n = 'BodyType'\]"] setAttribute v $body_type
+    [$node selectNodes "./value\[@n = 'MeshingStrategy'\]"] setAttribute v $body_mesh
+    [$node selectNodes "./value\[@n = 'ContactStrategy'\]"] setAttribute v $body_cont
+}
+
 Pfem::xml::Init

@@ -81,7 +81,7 @@ proc Pfem::xml::BodiesWindow::Start { } {
                         # 6 - Bottom frame - ok / cancel buttons
                             set botframe [ttk::frame $description_frame.botframe]
                             ttk::button $botframe.cancel -text Close -command [list Pfem::xml::BodiesWindow::InitialState] -style BottomFrame.TButton
-                            ttk::button $botframe.ok -text Ok -command [list destroy $window] -style BottomFrame.TButton
+                            ttk::button $botframe.ok -text Ok -command [list Pfem::xml::BodiesWindow::SaveBody] -style BottomFrame.TButton
                             grid $botframe.ok $botframe.cancel -sticky sew
                             grid $botframe -sticky swe -columnspan 2
                         
@@ -98,17 +98,17 @@ proc Pfem::xml::BodiesWindow::Start { } {
             # 3 - Right panel - Parts  frame
                 set part_frame [ttk::frame $topframe.partframe]
                 
-                # 4 - Top labelframe - List of bodies container
+                # 4 - Top labelframe - List of parts container
                     set listpartslabel [ttk::labelframe $part_frame.lflist -text "Parts"]
                     
-                    # 5 - List of bodies
+                    # 5 - List of parts
                         set parts_list [listbox $listpartslabel.list -listvariable Pfem::xml::BodiesWindow::list_of_parts]
                         grid $parts_list -sticky nswe
                         grid $listpartslabel -sticky nswe
-                    # 5 - Body description
+                    # 5 - Part description
                         set part_description_frame [ttk::frame $listpartslabel.description]
                         # 6 - Part selector combo
-                            # TODO : get available only - no repeat - just the type
+                            # TODO: get available only - no repeat - just the type
                             set part_values [Pfem::xml::GetPartsGroups]
                             set part_label [ttk::label $part_description_frame.partlabel -text "Part name"]
                             set partcombo [ttk::combobox $part_description_frame.partcombo -textvariable Pfem::xml::BodiesWindow::part_combo -values $part_values -state readonly]
@@ -152,6 +152,21 @@ proc Pfem::xml::BodiesWindow::InitialState { } {
         grid forget $description_frame
         variable part_description_frame
         grid forget $part_description_frame
+}
+
+proc Pfem::xml::BodiesWindow::SaveBody { } {
+    variable current_body
+    set body_name_old [dict get [lindex [Pfem::xml::GetBodiesInformation] $current_body] name]
+    
+    set body_name $::Pfem::xml::BodiesWindow::name_entry
+    set body_type $::Pfem::xml::BodiesWindow::type_combo
+    set body_mesh $::Pfem::xml::BodiesWindow::mesh_combo
+    set body_cont $::Pfem::xml::BodiesWindow::cont_combo
+
+    Pfem::xml::UpdateBody $body_name_old $body_name $body_type $body_mesh $body_cont
+    spdAux::RequestRefresh
+    Pfem::xml::BodiesWindow::InitialState
+    Pfem::xml::BodiesWindow::BodySelected $current_body
 }
 
 proc Pfem::xml::BodiesWindow::BodySelection { w } {
