@@ -634,9 +634,14 @@ proc Pfem::xml::AddPartToBody {body_name part_name} {
     variable body_UN
     set bodies_path [spdAux::getRoute $body_UN]
     # TODO: check if part exists in parts availables for body
-    #if {[dict get [Pfem::xml::GetBodiesInformation]}
-    set str "<blockdata n='Group' name='${part_name}' state='disabled' icon='groupCreated' />"
-    [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]/container\[@n = 'Groups'\]"] appendXML $str
+    foreach body [Pfem::xml::GetBodiesInformation] {
+        if {[dict get $body name] eq $body_name} {
+            if {$part_name ni [dict get $body parts]} {
+                set str "<blockdata n='Group' name='${part_name}' state='disabled' icon='groupCreated' />"
+                [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]/container\[@n = 'Groups'\]"] appendXML $str
+            }
+        }
+    }
 }
 proc Pfem::xml::DeletePartInBody {body_name part_name} {
     variable body_UN
