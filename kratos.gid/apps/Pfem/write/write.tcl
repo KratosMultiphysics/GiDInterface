@@ -1,6 +1,7 @@
 namespace eval Pfem::write {
     variable remesh_domains_dict
     variable bodies_list
+    variable writeAttributes
 }
 
 proc Pfem::write::Init { } {
@@ -9,6 +10,15 @@ proc Pfem::write::Init { } {
     variable bodies_list
     set bodies_list [list ]
     Solid::write::AddValidApps "Pfem"
+    
+    SetAttribute parts_un PFEM_Parts
+    SetAttribute nodal_conditions_un PFEM_NodalConditions
+    SetAttribute conditions_un PFEM_Loads
+    SetAttribute materials_un PFEM_Materials
+    SetAttribute writeCoordinatesByGroups 0
+    SetAttribute validApps [list "Pfem"]
+    SetAttribute materials_file "Materials.json"
+    SetAttribute properties_location "json"
 }
 
 proc Pfem::write::writeParametersEvent { } {
@@ -17,33 +27,35 @@ proc Pfem::write::writeParametersEvent { } {
 
 # Model Part Blocks
 proc Pfem::write::writeModelPartEvent { } {
-    set parts_un_list [GetPartsUN]
-    foreach part_un $parts_un_list {
-        write::initWriteData $part_un "PFEM_Materials"
-    }
-
+    # Init data
+    SetAttribute main_script_file [Pfem::write::GetMainScriptFilename]
+    write::initWriteConfiguration [GetAttributes]
+    
+    # Headers
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     write::writeMaterials "Pfem"
 
-    write::writeNodalCoordinates
-    foreach part_un $parts_un_list {
-        write::initWriteData $part_un "PFEM_Materials"
-        write::writeElementConnectivities
-    }
+    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
+    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+
+    # Element connectivities (Groups on FLParts)
+    write::writeElementConnectivities
+    
+    # Nodal conditions and conditions
     Solid::write::writeConditions
-    Pfem::write::writeMeshes
+    
+    # SubmodelParts
+    Pfem::write::writeSubmodelParts
 }
 
-proc Pfem::write::writeMeshes { } {
-
-    foreach part_un [GetPartsUN] {
-        write::initWriteData $part_un "PFEM_Materials"
-        write::writePartSubModelPart
-    }
+proc Pfem::write::writeSubmodelParts { } {
+    # Submodelparts for Parts
+    write::writePartSubModelPart
+    
     # Solo Malla , no en conditions
-    writeNodalConditions "PFEM_NodalConditions"
+    writeNodalConditions [GetAttribute nodal_conditions_un]
 
     # A Condition y a meshes-> salvo lo que no tenga topologia
     Solid::write::writeLoads
@@ -61,61 +73,33 @@ proc Pfem::write::writeNodalConditions { keyword } {
         set cid [[$group parent] @n]
         set groupid [$group @name]
         set groupid [write::GetWriteGroupName $groupid]
-        # Aqui hay que gestionar la escritura de los bodies
+        # TODO: Aqui hay que gestionar la escritura de los bodies
         # Una opcion es crear un megagrupo temporal con esa informacion, mandar a pintar, y luego borrar el grupo.
         # Otra opcion es no escribir el submodelpart. Ya tienen las parts y el project parameters tiene el conformado de los bodies
         ::write::writeGroupSubModelPart $cid $groupid "nodal"
     }
 }
 
-proc Pfem::write::GetPartsUN { } {
-    customlib::UpdateDocument
-    set lista [list ]
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata/condition"
-    set i 0
-    foreach part_node [$root selectNodes $xp1] {
-        if {![$part_node hasAttribute "un"]} {
-            set un "PFEM_Part$i"
-            while {[spdAux::getRoute $un] ne ""} {
-                incr i
-                set un "PFEM_Part$i"
-            }
-            $part_node setAttribute un $un
-            spdAux::setRoute $un [$part_node toXPath]
-        }
-        lappend lista [get_domnode_attribute $part_node un]
-    }
-    customlib::UpdateDocument
-    return $lista
-}
-
 # Custom files (Copy python scripts, write materials file...)
 proc Pfem::write::writeCustomFilesEvent { } {
     Pfem::write::WriteMaterialsFile
 
-    write::CopyFileIntoModel "python/RunPfem.py"
-    write::RenameFileInModel "RunPfem.py" "MainKratos.py"
-
+    set orig_name [GetAttribute main_script_file]
+    write::CopyFileIntoModel [file join "python" $orig_name]
+    write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 proc Pfem::write::WriteMaterialsFile { } {
     variable validApps
 
-    set filename "Materials.json"
+    set mats_json [Pfem::write::getPropertiesList [GetAttribute parts_un]]
 
-    set parts_un_list [GetPartsUN]
-    foreach part_un $parts_un_list {
-        write::initWriteData $part_un "PFEM_Materials"
-    }
-    set mats_json [Pfem::write::getPropertiesList $parts_un_list]
-
-    write::OpenFile $filename
+    write::OpenFile [GetAttribute materials_file]
     write::WriteJSON $mats_json
     write::CloseFile
 }
 
-proc Pfem::write::getPropertiesList {parts_un_list} {
+proc Pfem::write::getPropertiesList {parts_un} {
     set mat_dict [write::getMatDict]
     set props_dict [dict create]
     set props [list ]
@@ -129,7 +113,6 @@ proc Pfem::write::getPropertiesList {parts_un_list} {
     #set root [$doc documentElement]
     set root [customlib::GetBaseRoot]
 
-    foreach parts_un $parts_un_list {
 	set xp1 "[spdAux::getRoute $parts_un]/group"
 	foreach gNode [$root selectNodes $xp1] {
 	    set group [get_domnode_attribute $gNode n]
@@ -172,7 +155,7 @@ proc Pfem::write::getPropertiesList {parts_un_list} {
 	    }
 
 	}
-    }
+    
 
     dict set props_dict material_models_list $props
 
@@ -349,5 +332,43 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
     return $outputDict
 }
 
+proc Pfem::write::GetMainScriptFilename { } {
+    set problemtype [write::getValue PFEM_DomainType]
+    if {$problemtype ne "Fluids"} {
+        return "RunMainPfem.py"
+    } else {
+        return "RunPFEM.py"
+    }
+}
+
+# Functions to use the write attribute system
+proc Pfem::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
+
+proc Pfem::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc Pfem::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
+}
+
+proc Pfem::write::AddAttribute {att val} {
+    variable writeAttributes
+    dict lappend writeAttributes $att $val
+}
+
+proc Pfem::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
+}
+
+proc Pfem::write::AddValidApps {appid} {
+    AddAttribute validApps $appid
+}
 
 Pfem::write::Init

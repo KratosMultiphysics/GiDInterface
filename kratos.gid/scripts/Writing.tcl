@@ -317,7 +317,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 write::forceUpdateNode $valueNode
                 set name [$valueNode getAttribute n]
                 set state [get_domnode_attribute $valueNode state]
-                if {$state ne "hidden"} {
+                if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
                     # All the introduced values are translated to 'm' and 'kg' with the help of this function
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
 
@@ -521,6 +521,7 @@ proc write::transformGroupName {groupid} {
 proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable submodelparts
 
+    set mid ""
     set what [split $what "&"]
     set group [GetWriteGroupName $group]
     if {![dict exists $submodelparts [list $cid ${group}]]} {
@@ -576,6 +577,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         WriteString "${s1}End SubModelPartConditions"
         WriteString "${s}End SubModelPart"
     }
+    return $mid
 }
 
 proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
@@ -1586,14 +1588,8 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"}} {
                 set material_dict [dict create]
 
                 if {$write_claw_name eq "True"} {
-                    set const_law_application [$constitutive_law getAttribute "ImplementedInApplication"]
                     set constitutive_law_name [$constitutive_law getKratosName]
-                    if {$const_law_application eq "KratosMultiphysics"} {
-                        set const_law_fullname [join [list "KratosMultiphysics" $constitutive_law_name] "."]
-                    } {
-                        set const_law_fullname [join [list "KratosMultiphysics" $const_law_application $constitutive_law_name] "."]
-                    }
-                    dict set material_dict constitutive_law [dict create name $const_law_fullname]
+                    dict set material_dict constitutive_law [dict create name $constitutive_law_name]
                 }
                 dict set material_dict Variables $variables_list
                 dict set material_dict Tables dictnull

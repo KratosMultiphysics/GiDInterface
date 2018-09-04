@@ -1,14 +1,17 @@
 namespace eval Pfem::xml {
     variable dir
     variable bodyNodalCondition
+    variable body_UN
 }
 
 proc Pfem::xml::Init { } {
-    variable dir
     variable bodyNodalCondition
-
     set bodyNodalCondition [list ]
 
+    variable body_UN
+    set body_UN "PFEM_Bodies"
+    
+    variable dir
     Model::InitVariables dir $Pfem::dir
 
     Model::getSolutionStrategies Strategies.xml
@@ -67,14 +70,14 @@ proc Pfem::xml::CustomTree { args } {
 
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_NodalConditions]/condition" ] {
         $node setAttribute icon select
-	$node setAttribute groups_icon groupCreated
+	    $node setAttribute groups_icon groupCreated
     }
 
     #loads
     spdAux::SetValueOnTreeItem icon setLoad PFEM_Loads
     foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEM_Loads]/condition" ] {
         $node setAttribute icon select
-	$node setAttribute groups_icon groupCreated
+	    $node setAttribute groups_icon groupCreated
     }
 
     #materials
@@ -132,13 +135,12 @@ proc Pfem::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
 
 proc Pfem::xml::CheckElementOutputState { domNode args } {
     set elemsactive [list ]
-    foreach parts_un [Pfem::write::GetPartsUN] {
-        set parts_path [spdAux::getRoute $parts_un]
-        set xp1 "$parts_path/group/value\[@n='Element'\]"
-        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-            lappend elemsactive [get_domnode_attribute $gNode v]
-        }
+    set parts_path [spdAux::getRoute [Pfem::write::GetAttribute parts_un]]
+    set xp1 "$parts_path/group/value\[@n='Element'\]"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        lappend elemsactive [get_domnode_attribute $gNode v]
     }
+    
     set paramName [$domNode @n]
     return [::Model::CheckElementOutputState $elemsactive $paramName]
 }
@@ -238,12 +240,10 @@ proc Pfem::xml::ProcGetContactDomains {domNode args} {
 proc Pfem::xml::ProcCheckNodalConditionStateSolid {domNode args} {
     # Overwritten the base function to add Solution Type restrictions
     set elemsactive [list ]
-    foreach parts_un [Pfem::write::GetPartsUN] {
-        set parts_path [spdAux::getRoute $parts_un]
-        set xp1 "$parts_path/group/value\[@n='Element'\]"
-        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-            lappend elemsactive [get_domnode_attribute $gNode v]
-        }
+    set parts_path [spdAux::getRoute [Pfem::write::GetAttribute parts_un]]
+    set xp1 "$parts_path/group/value\[@n='Element'\]"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        lappend elemsactive [get_domnode_attribute $gNode v]
     }
     if {$elemsactive eq ""} {return "hidden"}
     set elemsactive [lsort -unique $elemsactive]
@@ -328,21 +328,6 @@ proc Pfem::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
     return [join $pnames ","]
 }
 
-proc Pfem::xml::ProcGetPartUN {domNode args} {
-    customlib::UpdateDocument
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata/condition"
-    set i 0
-    foreach part_node [$root selectNodes $xp1] {
-        if {$part_node eq $domNode} {
-            break
-        } {incr i}
-    }
-    set un "PFEM_Part$i"
-    spdAux::setRoute $un [$part_node toXPath]
-    #$domNode setAttribute curr_un $un
-    return $un
-}
 
 proc Pfem::xml::ProcPartsOverWhat {domNode args} {
     set names [list ]
@@ -367,7 +352,7 @@ proc Pfem::xml::ProcPartsOverWhat {domNode args} {
 
 proc Pfem::xml::ProcActiveIfAnyPartState {domNode args} {
     set parts ""
-    set parts_un [Pfem::xml::ProcGetPartUN $domNode $args]
+    set parts_un "PFEM_Parts"
     catch {
         set parts [$domNode selectNodes "[spdAux::getRoute $parts_un]/group"]
     }
@@ -572,5 +557,110 @@ proc Pfem::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
         gid_groups_conds::addF $block_path value [list n Body pn Body v - values {[GetRigidBodiesValues]} help $help]
     }
 }
+
+
+proc Pfem::xml::GetPartsGroups { } {
+    set parts [list ]
+    set parts_path [spdAux::getRoute "PFEM_Parts"]
+    # set xp1 "$parts_path/group/value\[@n='Element'\]"
+    set xp1 "$parts_path/group"
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        lappend parts [get_domnode_attribute $gNode n]
+    }
+    return $parts
+}
+
+proc Pfem::xml::GetBodiesInformation { } {
+    variable body_UN
+    set bodies [list ]
+    set bodies_path [spdAux::getRoute $body_UN]
+    foreach body_node [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata"] {
+        set body [dict create]
+        dict set body name [get_domnode_attribute $body_node name]
+        dict set body type [get_domnode_attribute [$body_node selectNodes "./value\[@n='BodyType'\]"] v]
+        dict set body mesh [get_domnode_attribute [$body_node selectNodes "./value\[@n='MeshingStrategy'\]"] v]
+        dict set body cont [get_domnode_attribute [$body_node selectNodes "./value\[@n='ContactStrategy'\]"] v]
+        set parts [list ]
+        foreach gNode [$body_node selectNodes "./container\[@n='Groups'\]/blockdata\[@n='Group'\]"] {
+            lappend parts [$gNode @name]
+        }
+        dict set body parts $parts
+        lappend bodies $body
+    }
+    
+    return $bodies
+}
+
+proc Pfem::xml::SaveBodiesInformation {data} {
+    W "Unimplemented method Pfem::xml::SaveBodiesInformation"
+}
+
+proc Pfem::xml::AddNewBodyRaw { } {
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
+
+    set bodies_name_list [list ]
+    foreach body [Pfem::xml::GetBodiesInformation] {
+        lappend bodies_name_list [dict get $body name]
+    }
+    set i 0
+    while {"Body$i" in $bodies_name_list} {incr i}
+    set body_name "Body$i"
+
+    set str "<blockdata n='Body' name='$body_name' icon='select' editable='false' sequence='1' editable_name='unique' open_window='0' state='disabled'>"
+    append str "<value n='BodyType' pn='Body type' icon='data' v='' values='\[GetBodyTypeValues\]' state='disabled'/>"
+    append str "<value n='ContactStrategy' pn='Contacting' icon='data' v='No' values='Yes,No' state='\[getStateFromXPathValue {string(../value\[@n=BodyType\]/@v)} Solid\]'/>"
+    append str "<value n='MeshingStrategy' pn='Meshing' icon='data' v='' values='\[GetMeshingDomains\]' state='\[getStateFromXPathValue {string(../value\[@n=BodyType\]/@v)} Fluid,Solid\]'/>"
+    append str "<container n='Groups' pn='Groups' state='disabled' icon='parts'>"
+    # append str "<blockdata n='Group' name='Auto Group 2' state='disabled' icon='groupCreated' />"
+    append str "</container>"
+    append str "</blockdata>"
+    
+    [[customlib::GetBaseRoot] selectNodes $bodies_path] appendXML $str
+
+    return $body_name
+}
+
+proc Pfem::xml::DeleteBody {body_name} {
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
+    [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]"] delete
+}
+
+proc Pfem::xml::AddPartToBody {body_name part_name} {
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
+    # TODO: Check if part exists in parts availables for body
+    foreach body [Pfem::xml::GetBodiesInformation] {
+        if {[dict get $body name] eq $body_name} {
+            if {$part_name ni [dict get $body parts]} {
+                set str "<blockdata n='Group' name='${part_name}' state='disabled' icon='groupCreated' />"
+                [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]/container\[@n = 'Groups'\]"] appendXML $str
+            }
+        }
+    }
+}
+
+proc Pfem::xml::DeletePartInBody {body_name part_name} {
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
+    [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name'\]/container\[@n = 'Groups'\]/blockdata\[@name = '$part_name'\]"] delete
+}
+
+proc Pfem::xml::UpdateBody {body_name_old body_name body_type body_mesh body_cont} {
+    
+    variable body_UN
+    set bodies_path [spdAux::getRoute $body_UN]
+    # TODO: check if $body_name_old exists in parent
+    set node [[customlib::GetBaseRoot] selectNodes "$bodies_path/blockdata\[@name = '$body_name_old'\]"]
+    $node setAttribute name $body_name
+    [$node selectNodes "./value\[@n = 'BodyType'\]"] setAttribute v $body_type
+    [$node selectNodes "./value\[@n = 'MeshingStrategy'\]"] setAttribute v $body_mesh
+    [$node selectNodes "./value\[@n = 'ContactStrategy'\]"] setAttribute v $body_cont
+}
+
+# TODO: Event After rename group for bodies associetion. Wait Event register system
+
+# TODO: Event After delete group for bodies associetion. Wait Event register system
 
 Pfem::xml::Init

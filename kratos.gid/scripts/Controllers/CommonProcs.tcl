@@ -145,10 +145,13 @@ proc spdAux::ProcGetConstitutiveLaws { domNode args } {
     set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
     set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
     #W "Const Laws que han pasado la criba: $Claws"
-    if {[llength $Claws] == 0} { return None }
-    set names [list ]
-    foreach cl $Claws {
-        lappend names [$cl getName]
+    if {[llength $Claws] == 0} { 
+        set names [list "None"]
+    } {
+        set names [list ]
+        foreach cl $Claws {
+            lappend names [$cl getName]
+        }
     }
     set values [join $names ","]
     if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
@@ -451,14 +454,8 @@ proc spdAux::ProcElementOutputState { domNode args } {
 
 proc spdAux::ProcActiveIfAnyPartState { domNode args } {
 
-    set parts ""
-    set nodeApp [GetAppIdFromNode $domNode]
-    set parts_un [apps::getAppUniqueName $nodeApp Parts]
-    set parts_path [spdAux::getRoute $parts_un]
-    if {$parts_path ne ""} {
-        set parts [$domNode selectNodes "$parts_path/group"]
-    }
-    if {$parts ne ""} {return "normal"} else {return "hidden"}
+    set resp [::spdAux::CheckAnyPartState $domNode]
+    if {$resp} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcActiveIfRestartAvailable { domNode args } {
 

@@ -174,6 +174,44 @@
     </outputs>
   </CLaw>
 
+  <!-- Mohr Coulomb Strain Softening -->
+  <CLaw n="HenckyMCStrainSofteningPlastic3DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help=" " Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+      <parameter n="COHESION" pn="Cohesion (Peak)" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="COHESION_RESIDUAL" pn="Cohesion (Residual)" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle (Peak)" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE_RESIDUAL" pn="Internal friction angle (Residual)" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Peak Internal dilatancy angle (Peak)" v="0" unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE_RESIDUAL" pn="Internal dilatancy angle (Residual)" v="0" unit_magnitude="Angle" units="°"/>
+      <parameter n="SHAPE_FUNCTION_BETA" pn="Exponential Softening Beta Coefficient" v="1.0"/>
+    </inputs>
+    <outputs>
+      
+    </outputs>
+  </CLaw>
+  <CLaw n="HenckyMCStrainSofteningPlasticPlaneStrain2DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help=" " Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+      <parameter n="COHESION" pn="Cohesion (Peak)" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="COHESION_RESIDUAL" pn="Cohesion (Residual)" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle (Peak)" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE_RESIDUAL" pn="Internal friction angle (Residual)" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Peak Internal dilatancy angle (Peak)" v="0" unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE_RESIDUAL" pn="Internal dilatancy angle (Residual)" v="0" unit_magnitude="Angle" units="°"/>
+      <parameter n="SHAPE_FUNCTION_BETA" pn="Exponential Softening Beta Coefficient" v="1.0"/>
+    </inputs>
+    <outputs>
+      
+    </outputs>
+  </CLaw>
+
   <!-- Hyper elastic viscoplastic -->    
   <CLaw n="HyperElasticViscoplastic3DLaw" pn="Hyper elastic viscoplastic" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
 	help="" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">

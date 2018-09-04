@@ -51,7 +51,7 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
     
     for {set i [expr $start + $delta_z]} {$i < [expr $end - $delta_z]} {set i [expr $i + $delta_z]} {
         set y $radius
-        set y [expr double($radius)-((double($delta)/2.0)*(1.0+cos(3.14*$i/double($end))))]
+        set y [expr double($radius)-((double($delta)/2.0)*(1.0+cos($MathUtils::PI*$i/double($end))))]
         #W "$i $y"
         lappend points [list $i $y 0]
     }
@@ -65,7 +65,7 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
     set line [GiD_Geometry create line append nurbsline $layer 1 2 -interpolate [llength $points] {*}$points -tangents {1 0 0} {1 0 0}]
     
     # Time to Revolute!
-    GiD_Process Mescape Utilities Id $line escape escape Mescape Utilities Copy Lines DoExtrude Surfaces MaintainLayers MCopy 2 Rotation FNoJoin -$length,0.0,2.0 FNoJoin $length,0.0,2.0 180 1 escape
+    GiD_Process Mescape Utilities Id $line escape escape Mescape Utilities Copy Lines DoExtrude Surfaces MaintainLayers MCopy 2 Rotation FNoJoin -$length,0.0,0.0 FNoJoin $length,0.0,0.0 180 1 escape
     
     # Closing tapas!
     GiD_Process Mescape Geometry Create NurbsSurface 3 5 escape 6 4 escape escape 
