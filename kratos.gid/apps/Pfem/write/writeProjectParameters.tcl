@@ -123,6 +123,7 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     return $modelDataDict
 }
 
+# TODO: New solver settings segregated
 proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
     set solverSettingsDict [dict create]
@@ -452,8 +453,6 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
     dict set resultDict Parameters $paramsDict
     return $resultDict
 }
-
-
 
 proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     variable bodies_list
