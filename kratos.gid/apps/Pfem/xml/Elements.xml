@@ -3,7 +3,7 @@
 
   <!--fluid elements-->
   <!--updated lagrangian-->
-  <ElementItem n="TwoStepUpdatedLagrangianVPFluidElement2D" pn="Fluid Updated Lagrangian" ImplementedInFile="none.cpp"
+  <ElementItem n="UpdatedLagrangianSegregatedVPElement2D" pn="Fluid Updated Lagrangian" ImplementedInFile="none.cpp"
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
@@ -11,7 +11,7 @@
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="TwoStepUpdatedLagrangianVPFluidElement2D"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianSegregatedVPElement2D3N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -29,7 +29,7 @@
   </ElementItem>
 
 
-   <ElementItem n="TwoStepUpdatedLagrangianVPFluidElement3D" pn="Fluid Updated Lagrangian" ImplementedInFile="none.cpp"
+   <ElementItem n="UpdatedLagrangianSegregatedVPElement3D" pn="Fluid Updated Lagrangian" ImplementedInFile="none.cpp"
 	       kratos_module="PfemFluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="To be written by..."
@@ -37,7 +37,7 @@
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Tetrahedra" nodes="4" KratosName="TwoStepUpdatedLagrangianVPFluidElement3D"/>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangianSegregatedVPElement3D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
