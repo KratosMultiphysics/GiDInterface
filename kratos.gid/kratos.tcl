@@ -3,120 +3,6 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-##########################################################
-#################### GiD Tcl events ######################
-##########################################################
-proc InitGIDProject { dir } {
-    # W "InitGIDProject"
-    Kratos::InitGIDProject $dir
-}
-proc GiD_Event_AfterNewGIDProject {} {
-    # W "GiD_Event_AfterNewGIDProject"
-}
-
-# Load GiD project files (initialise XML Tdom structure)
-proc GiD_Event_AfterReadGIDProject { filename } {
-    # W "GiD_Event_AfterReadGIDProject"
-    set name [file tail $filename]
-    set spd_file [file join ${filename}.gid ${name}.spd]
-    Kratos::AfterReadGIDProject $spd_file
-}
-
-proc BeforeTransformProblemType {file oldproblemtype newproblemtype} {
-    # W "BeforeTransformProblemType"
-}
-
-proc AfterTransformProblemType {file oldproblemtype newproblemtype messages} {
-    # W "AfterTransformProblemType"
-}
-
-proc EndGIDProject {} {
-    Kratos::RestoreVariables
-    Kratos::DestroyWindows
-    spdAux::EndRefreshTree
-    Kratos::RegisterEnvironment
-    Model::DestroyEverything
-    Kratos::EndCreatePreprocessTBar
-    gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
-    unset -nocomplain ::Kratos::kratos_private
-}
-
-proc ChangedLanguage { newlan } {
-    Kratos::UpdateMenus
-}
-
-proc InitGIDPostProcess {} {
-    gid_groups_conds::close_all_windows
-    gid_groups_conds::open_post check_default
-}
-
-proc EndGIDPostProcess {} {
-    gid_groups_conds::close_all_windows
-    if {$::spdAux::TreeVisibility} {
-        gid_groups_conds::open_conditions check_default
-        gid_groups_conds::open_conditions menu
-    }
-    ::Kratos::CreatePreprocessModelTBar
-}
-
-
-# Save GiD project files (save XML Tdom structure to spd file)
-proc SaveGIDProject { filespd } {
-    gid_groups_conds::save_spd_file $filespd
-    Kratos::RegisterEnvironment
-    FileSelector::CopyFilesIntoModel [file dirname $filespd]
-}
-
-proc AfterWriteCalcFileGIDProject { filename errorflag } {
-    if {$Kratos::must_write_calc_data} {
-        set errcode [Kratos::WriteCalculationFilesEvent $filename]
-        if {$errcode} {return "-cancel-"}
-    } else {
-        if {$Kratos::must_exist_calc_data} {
-            
-        }
-    }
-}
-
-proc GiD_Event_BeforeMeshGeneration { elementsize } {
-    return [Kratos::BeforeMeshGeneration $elementsize]
-}
-proc AfterMeshGeneration { fail } {
-    Kratos::AfterMeshGeneration $fail
-}
-
-proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {
-    set run 1
-    
-    catch {
-        set paralleltype [write::getValue ParallelType]
-        if {$paralleltype eq "MPI"} {set run 0}
-    }
-    if {$run} {
-        return ""
-    } {
-        return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
-        
-    }
-    
-}
-
-proc GiD_Event_BeforeSaveGIDProject { modelname} {
-    set fail [::Kratos::CheckValidProjectName $modelname]
-    
-    if {$fail} {
-        W [= "Wrong project name. Avoid boolean and numeric names."]
-        return "-cancel-"
-    }
-}
-
-proc AfterRenameGroup { oldname newname } {
-    spdAux::RenameIntervalGroup $oldname $newname
-}
-
-##########################################################
-#################### Kratos namespace ####################
-##########################################################
 namespace eval Kratos {
     variable kratos_private
     variable must_quit
@@ -124,7 +10,42 @@ namespace eval Kratos {
     variable must_exist_calc_data
 }
 
-proc Kratos::InitGIDProject { dir } {
+proc Kratos::Start { } {
+    Kratos::RegisterGiDEvents
+}
+
+proc Kratos::RegisterGiDEvents { } {
+    # Init / Load
+    GiD_RegisterEvent GiD_Event_InitProblemtype Kratos::Event_InitProblemtype PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_LoadModelSPD Kratos::Event_LoadModelSPD PROBLEMTYPE Kratos
+    
+    # Groups / Layers
+    GiD_RegisterEvent GiD_Event_AfterRenameGroup Kratos::Event_AfterRenameGroup PROBLEMTYPE Kratos
+    
+    # Mesh
+    GiD_RegisterEvent GiD_Event_BeforeMeshGeneration  Kratos::Event_BeforeMeshGeneration  PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_AfterMeshGeneration Kratos::Event_AfterMeshGeneration PROBLEMTYPE Kratos
+    
+    # Write - Calculation
+    GiD_RegisterEvent GiD_Event_AfterWriteCalculationFile  Kratos::Event_AfterWriteCalculationFile  PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_BeforeRunCalculation  Kratos::Event_BeforeRunCalculation  PROBLEMTYPE Kratos
+    
+    # Postprocess
+    GiD_RegisterEvent GiD_Event_InitGIDPostProcess Kratos::Event_InitGIDPostProcess PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_EndGIDPostProcess Kratos::Event_EndGIDPostProcess PROBLEMTYPE Kratos
+    
+    # Save
+    GiD_RegisterEvent GiD_Event_BeforeSaveGIDProject Kratos::Event_BeforeSaveGIDProject PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_AfterSaveGIDProject Kratos::Event_AfterSaveGIDProject PROBLEMTYPE Kratos
+    
+    # Extra
+    GiD_RegisterEvent GiD_Event_ChangedLanguage  Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
+    
+    # End
+    GiD_RegisterEvent GiD_Event_EndProblemtype Kratos::Event_EndProblemtype PROBLEMTYPE Kratos
+}
+
+proc Kratos::Event_InitProblemtype { dir } {
     variable kratos_private
     variable must_quit
     variable must_write_calc_data
@@ -190,8 +111,7 @@ proc Kratos::InitGIDProject { dir } {
     after 500 [list spdAux::CreateWindow]
 }
 
-# Event triggered when opening a GiD model with kratos
-proc Kratos::AfterReadGIDProject { filespd } {
+proc Kratos::Event_LoadModelSPD { filespd } {
     variable kratos_private
 
     # Dont open the init window. Saved models have already app and dimension
@@ -234,6 +154,18 @@ proc Kratos::AfterReadGIDProject { filespd } {
         spdAux::reactiveApp
         spdAux::OpenTree
     }
+}
+
+proc Kratos::Event_EndProblemtype { } {
+    Kratos::RestoreVariables
+    Kratos::DestroyWindows
+    spdAux::EndRefreshTree
+    Kratos::RegisterEnvironment
+    Model::DestroyEverything
+    Kratos::EndCreatePreprocessTBar
+    gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
+    GiD_UnRegisterEvents PROBLEMTYPE Kratos
+    unset -nocomplain ::Kratos::kratos_private
 }
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
@@ -399,7 +331,7 @@ proc Kratos::IsModelEmpty { } {
     return true
 }
 
-proc Kratos::BeforeMeshGeneration {elementsize} {
+proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     foreach group [GiD_Groups list] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
@@ -412,8 +344,68 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
     return $ret
 }
 
-proc Kratos::AfterMeshGeneration {fail} {
+proc Kratos::Event_AfterMeshGeneration {fail} {
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
+}
+
+proc Kratos::Event_AfterRenameGroup { oldname newname } {
+    spdAux::RenameIntervalGroup $oldname $newname
+}
+
+proc Kratos::Event_InitGIDPostProcess {} {
+    gid_groups_conds::close_all_windows
+    gid_groups_conds::open_post check_default
+}
+
+proc Kratos::Event_EndGIDPostProcess {} {
+    gid_groups_conds::close_all_windows
+    if {$::spdAux::TreeVisibility} {
+        gid_groups_conds::open_conditions check_default
+        gid_groups_conds::open_conditions menu
+    }
+    ::Kratos::CreatePreprocessModelTBar
+}
+
+proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {
+    set run 1
+    
+    catch {
+        set paralleltype [write::getValue ParallelType]
+        if {$paralleltype eq "MPI"} {set run 0}
+    }
+    if {$run} {
+        return ""
+    } {
+        return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
+        
+    }
+    
+}
+
+proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
+    if {$Kratos::must_write_calc_data} {
+        set errcode [Kratos::WriteCalculationFilesEvent $filename]
+        if {$errcode} {return "-cancel-"}
+    } else {
+        if {$Kratos::must_exist_calc_data} {
+            
+        }
+    }
+}
+
+proc Kratos::Event_BeforeSaveGIDProject { modelname} {
+    set fail [::Kratos::CheckValidProjectName $modelname]
+    
+    if {$fail} {
+        W [= "Wrong project name. Avoid boolean and numeric names."]
+        return "-cancel-"
+    }
+}
+
+proc Kratos::Event_AfterSaveGIDProject { filespd } {
+    gid_groups_conds::save_spd_file $filespd
+    Kratos::RegisterEnvironment
+    FileSelector::CopyFilesIntoModel [file dirname $filespd]
 }
 
 proc Kratos::CheckValidProjectName {modelname} {
@@ -424,6 +416,10 @@ proc Kratos::CheckValidProjectName {modelname} {
     if {$filename == "null"} {set fail 1}
     return $fail
     
+}
+
+proc Kratos::Event_ChangedLanguage  { newlan } {
+    Kratos::UpdateMenus
 }
 
 proc Kratos::PrintArray {a {pattern *}} {
@@ -446,3 +442,5 @@ proc Kratos::PrintArray {a {pattern *}} {
         W "[format "%-*s = %s" $maxl $nameString $array($name)]"
     }
 }
+
+Kratos::Start
