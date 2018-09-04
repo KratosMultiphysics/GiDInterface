@@ -13,6 +13,12 @@ proc Pfem::write::getParametersDict { } {
     set modelDataDict [GetPFEM_ModelDataDict]
     dict set projectParametersDict model_settings $modelDataDict
 
+    ##### Time settings #####
+    set timeDataDict [dict create]
+    dict set timeDataDict time_step [write::getValue PFEM_TimeParameters DeltaTime]
+    dict set timeDataDict end_time [write::getValue PFEM_TimeParameters EndTime]
+    dict set projectParametersDict time_settings $timeDataDict
+
     ##### solver_settings #####
     set solverSettingsDict [GetPFEM_SolverSettingsDict]
     dict set projectParametersDict solver_settings $solverSettingsDict
@@ -105,9 +111,9 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     set bodies_parts_list [list ]
     foreach body $bodies_list {
         set body_parts [dict get $body parts_list]
-	foreach part $body_parts {
-	    lappend bodies_parts_list $part
-	}
+        foreach part $body_parts {
+            lappend bodies_parts_list $part
+        }
     }
 
     dict set modelDataDict bodies_list $bodies_list
@@ -117,6 +123,7 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     return $modelDataDict
 }
 
+# TODO: New solver settings segregated
 proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
     set solverSettingsDict [dict create]
@@ -304,13 +311,14 @@ proc Pfem::write::GetPfem_ContactProcessDict {contact_name} {
 
 proc Pfem::write::GetFluidBodies { } {
     set bodies_list [list ]
+    # Locate the node pointing to the bodies
     set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
     foreach body_node [[customlib::GetBaseRoot] selectNodes $xp1] {
-
+        # If the body is Fluid
         set body_type_path ".//value\[@n='BodyType'\]"
         set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
-
-	if {$body_type eq "Fluid"} {lappend bodies_list [get_domnode_attribute $body_node name]}
+        # Append to the return list
+	    if {$body_type eq "Fluid"} {lappend bodies_list [get_domnode_attribute $body_node name]}
     }
 
     return $bodies_list
@@ -446,8 +454,6 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
     return $resultDict
 }
 
-
-
 proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
@@ -469,7 +475,7 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
         set bodyDict [dict create ]
         set body_name [dict get $body body_name]
         dict set bodyDict "model_part_name" $body_name
-        dict set bodyDict "python_module" "fluid_meshing_domain"
+        dict set bodyDict "python_module" "meshing_domain"
         set nDim $::Model::SpatialDimension
         if {$nDim eq "3D"} {
             dict set bodyDict "alpha_shape" 1.3
@@ -480,7 +486,7 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
         set remesh [write::getStringBinaryFromValue [Pfem::write::GetRemeshProperty $body_name "Remesh"]]
         set refine [write::getStringBinaryFromValue [Pfem::write::GetRemeshProperty $body_name "Refine"]]
         set meshing_strategyDict [dict create ]
-        dict set meshing_strategyDict "python_module" "fluid_meshing_strategy"
+        dict set meshing_strategyDict "python_module" "meshing_strategy"
         dict set meshing_strategyDict "meshing_frequency" 0
         dict set meshing_strategyDict "remesh" $remesh
         dict set meshing_strategyDict "refine" $refine
@@ -491,10 +497,10 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
         dict set meshing_strategyDict "variables_smoothing" false
         dict set meshing_strategyDict "elemental_variables_to_smooth" [list "DETERMINANT_F" ]
         if {$nDim eq "3D"} {
-            dict set meshing_strategyDict "reference_element_type" "TwoStepUpdatedLagrangianVPFluidElement3D"
+            dict set meshing_strategyDict "reference_element_type" "UpdatedLagrangianSegregatedVPElement3D"
             dict set meshing_strategyDict "reference_condition_type" "CompositeCondition3D3N"
         } else {
-            dict set meshing_strategyDict "reference_element_type" "TwoStepUpdatedLagrangianVPFluidElement2D"
+            dict set meshing_strategyDict "reference_element_type" "UpdatedLagrangianSegregatedVPElement2D"
             dict set meshing_strategyDict "reference_condition_type" "CompositeCondition2D2N"
         }
         dict set bodyDict meshing_strategy $meshing_strategyDict
@@ -598,8 +604,8 @@ proc Pfem::write::ProcessBodiesList { } {
         set body_type_path ".//value\[@n='BodyType'\]"
         set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
         set parts [list ]
-        foreach part_node [$body_node selectNodes "./condition/group"] {
-            lappend parts [write::getSubModelPartId "Parts" [$part_node @n]]
+        foreach part_node [$body_node selectNodes "./container\[@n = 'Groups'\]/blockdata\[@n='Group'\]"] {
+            lappend parts [write::getSubModelPartId "Parts" [$part_node @name]]
         }
         dict set body "body_type" $body_type
         dict set body "body_name" $name
@@ -790,9 +796,7 @@ proc Pfem::write::getBodyConditionsParametersDict {un {condition_type "Condition
 proc Pfem::write::DofsInElements { } {
     set dofs [list ]
     set root [customlib::GetBaseRoot]
-    set parts_un_list [GetPartsUN]
-    foreach parts_un $parts_un_list {
-	set xp1 "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"
+	set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
 	set elements [$root selectNodes $xp1]
 	foreach element_node $elements {
 	    set elemid [$element_node @v]
@@ -801,6 +805,5 @@ proc Pfem::write::DofsInElements { } {
 		if {$dof ni $dofs} {lappend dofs $dof}
 	    }
 	}
-    }
     return {*}$dofs
 }
