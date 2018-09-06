@@ -212,6 +212,42 @@
     </outputs>
   </CLaw>
 
+  <!-- Borja Modified Cam Clay -->
+  <CLaw n="HenckyBorjaCamClayPlastic3DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help=" " Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="IS_IN_SITU" pn="In-situ case" type="bool" v="False"/>
+      <parameter n="INITIAL_MEAN_VOLUMETRIC_STRESS" pn="Initial Mean Volumetric Stress" unit_magnitude="P" units="Pa" v="-90.e3" />
+      <parameter n="OVER_CONSOLIDATION_RATIO" pn="Over Consolidation Ratio (OCR)" v="1.0"/>
+      <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
+      <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
+      <parameter n="CRITICAL_STATE_LINE" pn="Slope of Critical State Line (CSL)" v="1.05"/>
+      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="-5.4e6" />
+      <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
+    </inputs>
+    <outputs>
+      
+    </outputs>
+  </CLaw>
+  <CLaw n="HenckyBorjaCamClayPlasticPlaneStrain2DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help=" " Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="IS_IN_SITU" pn="In-situ case" type="bool" v="False"/>
+      <parameter n="INITIAL_MEAN_VOLUMETRIC_STRESS" pn="Initial Mean Volumetric Stress" unit_magnitude="P" units="Pa" v="-90.e3" />
+      <parameter n="OVER_CONSOLIDATION_RATIO" pn="Over Consolidation Ratio (OCR)" v="1.0"/>
+      <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
+      <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
+      <parameter n="CRITICAL_STATE_LINE" pn="Slope of Critical State Line (CSL)" v="1.05"/>
+      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="-5.4e6" />
+      <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
+    </inputs>
+    <outputs>
+      
+    </outputs>
+  </CLaw>
+
   <!-- Hyper elastic viscoplastic -->    
   <CLaw n="HyperElasticViscoplastic3DLaw" pn="Hyper elastic viscoplastic" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
 	help="" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
