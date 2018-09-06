@@ -223,7 +223,7 @@
       <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
       <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
       <parameter n="CRITICAL_STATE_LINE" pn="Slope of Critical State Line (CSL)" v="1.05"/>
-      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="-5.4e6" />
+      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="5.4e6" />
       <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
     </inputs>
     <outputs>
@@ -240,7 +240,7 @@
       <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
       <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
       <parameter n="CRITICAL_STATE_LINE" pn="Slope of Critical State Line (CSL)" v="1.05"/>
-      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="-5.4e6" />
+      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="5.4e6" />
       <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
     </inputs>
     <outputs>
