@@ -217,8 +217,7 @@
 	help=" " Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="IS_IN_SITU" pn="In-situ case" type="bool" v="False"/>
-      <parameter n="INITIAL_MEAN_VOLUMETRIC_STRESS" pn="Initial Mean Volumetric Stress" unit_magnitude="P" units="Pa" v="-90.e3" />
+      <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />
       <parameter n="OVER_CONSOLIDATION_RATIO" pn="Over Consolidation Ratio (OCR)" v="1.0"/>
       <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
       <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
@@ -234,8 +233,7 @@
 	help=" " Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="IS_IN_SITU" pn="In-situ case" type="bool" v="False"/>
-      <parameter n="INITIAL_MEAN_VOLUMETRIC_STRESS" pn="Initial Mean Volumetric Stress" unit_magnitude="P" units="Pa" v="-90.e3" />
+      <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />
       <parameter n="OVER_CONSOLIDATION_RATIO" pn="Over Consolidation Ratio (OCR)" v="1.0"/>
       <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
       <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
