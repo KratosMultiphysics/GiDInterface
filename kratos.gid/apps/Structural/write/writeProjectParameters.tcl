@@ -115,7 +115,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
 
-    
+
     if {[usesContact]} {
         # Mirar type y ver si es Frictionless o Frictional
         dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionlessComponents"
@@ -144,13 +144,27 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict list_other_processes [list ]
     if {$solutiontype eq "eigen_value"} {
         dict lappend projectParametersDict list_other_processes $eigen_process_dict
-    }    
+    }
     if {$solutiontype eq "formfinding"} {
         dict lappend projectParametersDict list_other_processes $formfinding_process_dict
     }
 
     # GiD output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    set outputProcessParams [dict create]
+    dict set outputProcessParams model_part_name "Structure.computing_domain"
+    dict set outputProcessParams output_name $model_name
+    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
+    set outputConfigDict [dict create]
+    dict set outputConfigDict python_module gid_output_process
+    dict set outputConfigDict kratos_module KratosMultiphysics
+    dict set outputConfigDict process_name GiDOutputProcess
+    dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    dict set outputConfigDict Parameters $outputProcessParams
+    set output_process_list [list ]
+    lappend output_process_list $outputConfigDict
+    set outputProcessesDict [dict create]
+    dict set outputProcessesDict gid_output $output_process_list
+    dict set projectParametersDict output_processes $outputProcessesDict
 
     # # Restart options
     # set restartDict [dict create ]
@@ -188,7 +202,7 @@ proc Structural::write::getOldParametersDict { } {
 
 proc Structural::write::GetContactConditionsDict { } {
     set root [customlib::GetBaseRoot]
-    
+
     # Prepare the xpaths
     set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
     set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
@@ -196,9 +210,9 @@ proc Structural::write::GetContactConditionsDict { } {
     # Get the groups
     set master_group [$root selectNodes $xp_master]
     set slave_group [$root selectNodes $xp_slave]
-    
+
     if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
-    
+
     set contact_process_dict [dict create ]
     dict set contact_process_dict python_module alm_contact_process
     dict set contact_process_dict kratos_module "KratosMultiphysics.ContactStructuralMechanicsApplication"
@@ -209,18 +223,18 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_parameters_dict model_part_name Structure
     if {$slave_group ne ""} {
         dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
-    
+
         dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
     }
     dict set contact_process_dict Parameters $contact_parameters_dict
-    
+
     return [list $contact_process_dict]
 }
 
 
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
-    
+
 }
 
 
