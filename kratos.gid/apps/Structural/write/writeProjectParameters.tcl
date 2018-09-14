@@ -158,7 +158,21 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict processes $processesDict
 
     # GiD output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    set outputProcessParams [dict create]
+    dict set outputProcessParams model_part_name "Structure.computing_domain"
+    dict set outputProcessParams output_name $model_name
+    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
+    set outputConfigDict [dict create]
+    dict set outputConfigDict python_module gid_output_process
+    dict set outputConfigDict kratos_module KratosMultiphysics
+    dict set outputConfigDict process_name GiDOutputProcess
+    dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    dict set outputConfigDict Parameters $outputProcessParams
+    set output_process_list [list ]
+    lappend output_process_list $outputConfigDict
+    set outputProcessesDict [dict create]
+    dict set outputProcessesDict gid_output $output_process_list
+    dict set projectParametersDict output_processes $outputProcessesDict
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
