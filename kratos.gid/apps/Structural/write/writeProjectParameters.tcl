@@ -11,9 +11,6 @@ proc Structural::write::getOldParametersDict { } {
     # Add items to section
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name $model_part_name
-    set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict domain_size $nDim
 
     # Parallelization
     set paralleltype [write::getValue ParallelType]
@@ -27,13 +24,13 @@ proc Structural::write::getOldParametersDict { } {
     }
     set solutiontype [write::getValue STSoluType]
     # Time Parameters
-    if {$solutiontype eq "Static"} {
-        dict set problemDataDict time_step "1.1"
+    if {$solutiontype eq "Static" || $solutiontype eq "eigen_value"} {
+        set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
 
     } else {
-        dict set problemDataDict time_step [write::getValue STTimeParameters DeltaTime]
+        set time_step [write::getValue STTimeParameters DeltaTime]
         dict set problemDataDict start_time [write::getValue STTimeParameters StartTime]
         dict set problemDataDict end_time [write::getValue STTimeParameters EndTime]
     }
@@ -75,7 +72,9 @@ proc Structural::write::getOldParametersDict { } {
     set solver_type_name $solutiontype
     if {$solutiontype eq "Quasi-static"} {set solver_type_name "Static"}
     dict set solverSettingsDict solver_type $solver_type_name
-    #~ dict set solverSettingsDict domain_size [expr $nDim]
+    dict set solverSettingsDict model_part_name $model_part_name
+    set nDim [expr [string range [write::getValue nDim] 0 0] ]
+    dict set solverSettingsDict domain_size $nDim
     dict set solverSettingsDict echo_level $echo_level
     dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
 
@@ -93,6 +92,11 @@ proc Structural::write::getOldParametersDict { } {
     set materialsDict [dict create]
     dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
+
+    # Time stepping settings
+    set timeSteppingDict [dict create]
+    dict set timeSteppingDict "time_step" $time_step
+    dict set solverSettingsDict time_stepping $timeSteppingDict
 
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
@@ -115,7 +119,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
 
-    
+
     if {[usesContact]} {
         # Mirar type y ver si es Frictionless o Frictional
         dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionlessComponents"
@@ -127,44 +131,34 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     # Lists of processes
+    set processesDict [dict create]
+
     set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
     #lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
-    dict set projectParametersDict constraints_process_list $nodal_conditions_dict
+    dict set processesDict constraints_process_list $nodal_conditions_dict
     if {[usesContact]} {
         set contact_conditions_dict [GetContactConditionsDict]
-        dict set projectParametersDict contact_process_list $contact_conditions_dict
+        dict set processesDict contact_process_list $contact_conditions_dict
     }
-    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    dict set processesDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
     # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
     foreach cnd $special_nodal_conditions {
         lappend ::Model::NodalConditions $cnd
     }
 
-    dict set projectParametersDict list_other_processes [list ]
+    dict set processesDict list_other_processes [list ]
     if {$solutiontype eq "eigen_value"} {
-        dict lappend projectParametersDict list_other_processes $eigen_process_dict
-    }    
-    if {$solutiontype eq "formfinding"} {
-        dict lappend projectParametersDict list_other_processes $formfinding_process_dict
+        dict lappend processesDict list_other_processes $eigen_process_dict
     }
+    if {$solutiontype eq "formfinding"} {
+        dict lappend processesDict list_other_processes $formfinding_process_dict
+    }
+
+    dict set projectParametersDict processes $processesDict
 
     # GiD output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
-
-    # # Restart options
-    # set restartDict [dict create ]
-    # dict set restartDict SaveRestart false
-    # dict set restartDict RestartFrequency 0
-    # dict set restartDict LoadRestart false
-    # dict set restartDict Restart_Step 0
-    # dict set projectParametersDict restart_options $restartDict
-
-    # # Constraints data
-    # set contraintsDict [dict create ]
-    # dict set contraintsDict incremental_load false
-    # dict set contraintsDict incremental_displacement false
-    # dict set projectParametersDict constraints_data $contraintsDict
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
@@ -179,16 +173,12 @@ proc Structural::write::getOldParametersDict { } {
         dict unset projectParametersDict solver_settings analysis_type
     }
 
-    # set materialsDict [dict create]
-    # dict set materialsDict materials_filename [GetAttribute materials_file]
-    # dict set projectParametersDict material_import_settings $materialsDict
-
     return $projectParametersDict
 }
 
 proc Structural::write::GetContactConditionsDict { } {
     set root [customlib::GetBaseRoot]
-    
+
     # Prepare the xpaths
     set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
     set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
@@ -196,9 +186,9 @@ proc Structural::write::GetContactConditionsDict { } {
     # Get the groups
     set master_group [$root selectNodes $xp_master]
     set slave_group [$root selectNodes $xp_slave]
-    
+
     if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
-    
+
     set contact_process_dict [dict create ]
     dict set contact_process_dict python_module alm_contact_process
     dict set contact_process_dict kratos_module "KratosMultiphysics.ContactStructuralMechanicsApplication"
@@ -209,18 +199,18 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_parameters_dict model_part_name Structure
     if {$slave_group ne ""} {
         dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
-    
+
         dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
     }
     dict set contact_process_dict Parameters $contact_parameters_dict
-    
+
     return [list $contact_process_dict]
 }
 
 
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
-    
+
 }
 
 
