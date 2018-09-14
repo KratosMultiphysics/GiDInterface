@@ -7,7 +7,7 @@
 	      python_module="pfem_fluid_solver"
 	      MinimumKratosVersion="9000" App="Pfem"
 	      ProductionReady="No"
-	      help="">
+	      help="Standard FEM integration">
   
   <!-- list of options to be filled -->
   <parameter_list>
@@ -63,13 +63,13 @@
   
 </StrategyItem>
 
-<StrategyItem n="NodalTwoStepVPStrategy" pn="Two-Step Nodal Integration Scheme" SolutionType="Dynamic"
+<StrategyItem n="NodalTwoStepVPStrategy" help="This strategy must be used together with nodally integrated elements" pn="Two-Step Nodal Integration Scheme" 
+	      SolutionType="Dynamic"
 	      ImplementedInFile="pfem_fluid_nodal_integration_solver.py"
 	      kratos_module="PfemFluidDynamicsApplication"
 	      python_module="pfem_fluid_nodal_integration_solver"
 	      MinimumKratosVersion="9000" App="Pfem"
-	      ProductionReady="No"
-	      help="This strategy must be used together with nodally integrated elements">
+	      ProductionReady="No">
   
   <!-- list of options to be filled -->
   <parameter_list>
