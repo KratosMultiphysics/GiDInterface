@@ -43,10 +43,17 @@ proc ::Fluid::write::getParametersDict { } {
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
 
     set outputConfigDict [dict create]
-    dict set outputConfigDict python_module gid_output_process
-    dict set outputConfigDict kratos_module KratosMultiphysics
-    dict set outputConfigDict process_name GiDOutputProcess
-    dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    if {$paralleltype eq "OpenMP"} {
+        dict set outputConfigDict python_module gid_output_process
+        dict set outputConfigDict kratos_module KratosMultiphysics
+        dict set outputConfigDict process_name GiDOutputProcess
+        dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    } else {
+        dict set outputConfigDict python_module gid_output_process_mpi
+        dict set outputConfigDict kratos_module TrilinosApplication
+        dict set outputConfigDict process_name GiDOutputProcessMPI
+        dict set outputConfigDict help "This process writes postprocessing files in MPI for GiD"
+    }
 
     dict set outputConfigDict Parameters $outputProcessParams
 
