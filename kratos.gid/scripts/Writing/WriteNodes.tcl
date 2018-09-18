@@ -12,9 +12,11 @@ proc write::writeNodalCoordinatesOnGroups { groups } {
     WriteString "${s}End Nodes"
     WriteString "\n"
 }
+
 proc write::writeNodalCoordinatesOnParts { } {
     writeNodalCoordinatesOnGroups [getPartsGroupsId]
 }
+
 proc write::writeNodalCoordinates { } {
     # Write the nodal coordinates block
     # Nodes block format

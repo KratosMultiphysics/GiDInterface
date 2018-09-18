@@ -712,7 +712,6 @@ proc write::getSubModelPartNames { args } {
     return $listOfProcessedGroups
 }
 
-
 proc write::getSolversParametersDict { {appid ""} } {
     if {$appid eq ""} {
         set appid [apps::getActiveAppId]
@@ -750,7 +749,6 @@ proc write::getSolversParametersDict { {appid ""} } {
     }
     return $solverSettingsDict
 }
-
 
 proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
 
@@ -981,7 +979,6 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     if {$output_control eq "time"} {dict set params "output_frequency" [getValue $un RestartDeltaTime]} {dict set params "output_frequency" [getValue $un RestartDeltaStep]}
     set jsonoutput [write::getStringBinaryValue $un json_output]
     dict set params "json_output" $jsonoutput
-
 
     dict set resultDict "Parameters" $params
     return $resultDict

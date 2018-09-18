@@ -82,7 +82,6 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
     return [list $initial $final]
 }
 
-
 proc write::writeNodalConditions { un } {
 
     set root [customlib::GetBaseRoot]
@@ -101,7 +100,6 @@ proc write::writeNodalConditions { un } {
         }
     }
 }
-
 
 proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
     set s [mdpaIndent]
