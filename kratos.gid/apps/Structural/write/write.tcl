@@ -2,6 +2,7 @@ namespace eval Structural::write {
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable writeAttributes
+    variable ContactsDict
 }
 
 proc Structural::write::Init { } {
@@ -10,6 +11,9 @@ proc Structural::write::Init { } {
     set ConditionsDictGroupIterators [dict create]
     set NodalConditionsGroup [list ]
     
+    variable ContactsDict
+    set ContactsDict [dict create]
+
     variable writeAttributes
     set writeAttributes [dict create]
     SetAttribute validApps [list "Structural"]
@@ -22,54 +26,6 @@ proc Structural::write::Init { } {
     SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
-}
-
-proc Structural::write::GetAttribute {att} {
-    variable writeAttributes
-    return [dict get $writeAttributes $att]
-}
-
-proc Structural::write::GetAttributes {} {
-    variable writeAttributes
-    return $writeAttributes
-}
-
-proc Structural::write::SetAttribute {att val} {
-    variable writeAttributes
-    dict set writeAttributes $att $val
-}
-
-proc Structural::write::AddAttribute {att val} {
-    variable writeAttributes
-    dict append writeAttributes $att $val]
-}
-
-proc Structural::write::AddAttributes {configuration} {
-    variable writeAttributes
-    set writeAttributes [dict merge $writeAttributes $configuration]
-}
-
-proc Structural::write::AddValidApps {appList} {
-    AddAttribute validApps $appList
-}
-
-proc Structural::write::writeCustomFilesEvent { } {
-    WriteMaterialsFile
-    
-    write::SetParallelismConfiguration
-    
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "MainKratos.py"
-}
-
-proc Structural::write::SetCoordinatesByGroups {value} {
-    SetAttribute writeCoordinatesByGroups $value
-}
-
-proc Structural::write::ApplyConfiguration { } {
-    variable writeAttributes
-    write::SetConfigurationAttributes $writeAttributes
 }
 
 # MDPA Blocks
@@ -153,48 +109,44 @@ proc Structural::write::writeLoads { } {
     }
 }
 
-# TODO: Contacto de Vicente: Añadir clave "pair" para emparejar 
-# -> Sin limitaciones
-# -> Check que no haya huerfanos
-# -> Añadir la key a lo del nombre hidden
 proc Structural::write::writeContacts { } {
     variable ConditionsDictGroupIterators
+    variable ContactsDict
+
+    set ContactsDict [dict create]
     if {[Structural::write::usesContact]} {
         set root [customlib::GetBaseRoot]
 
         # Prepare the xpaths
-        set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
         set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
-
-        # Get the groups
-        set master_group [$root selectNodes $xp_master]
-        set slave_group [$root selectNodes $xp_slave]
-        if {$master_group ne ""} {
-            if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
-            set master_groupid_raw [$master_group @n]
-            set master_groupid [write::GetWriteGroupName $master_groupid_raw]
-        }
-        if {$slave_group ne ""} {
-            set slave_groupid_raw [$slave_group @n]
-            set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
-        }
-        # Create the joint group
-        set joint_contact_group "_HIDDEN_CONTACT_GROUP_"
-        if {[GiD_Groups exists $joint_contact_group]} {GiD_Groups delete $joint_contact_group}
-
-        if {$slave_group ne ""} {
-            spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw $slave_groupid_raw]
-        } {
-            spdAux::MergeGroups $joint_contact_group [list $master_groupid_raw]
+        foreach slave_group [$root selectNodes $xp_slave] {
+            if {$slave_group ne ""} {
+                set slave_groupid_raw [$slave_group @n]
+                set slave_group_pair_id [get_domnode_attribute [$slave_group selectNodes "./value\[@n='pair'\]"] v]
+                set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
+                set prev [list ]
+                if {[dict exists $ContactsDict Slaves $slave_group_pair_id]} {set prev [dict get $ContactsDict Slaves $slave_group_pair_id]}
+                set good_name [::write::writeGroupSubModelPart CONTACT $slave_groupid "nodal"]
+                dict set ContactsDict Slaves $slave_group_pair_id [lappend prev $good_name]
+            }
         }
 
-        # Print the submodelpart
-        ::write::writeGroupSubModelPart CONTACT $joint_contact_group "nodal"
-        if {$slave_group ne ""} {
-            ::write::writeGroupSubModelPart CONTACT $slave_groupid_raw "nodal"
+        set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
+        foreach master_group [$root selectNodes $xp_master] {
+            if {$master_group ne ""} {
+                set master_groupid_raw [$master_group @n]
+                set master_groupid [write::GetWriteGroupName $master_groupid_raw]
+                set master_group_pair_id [get_domnode_attribute [$master_group selectNodes "./value\[@n='pair'\]"] v]
+                set prev [list ]
+                if {[dict exists $ContactsDict Masters $master_group_pair_id]} {
+                    set prev [dict get $ContactsDict Masters $master_group_pair_id]
+                }
+                set good_name [::write::writeGroupSubModelPart CONTACT $master_groupid "nodal"]
+                set name [lappend prev $good_name]
+                dict set ContactsDict Masters $master_group_pair_id $name
+                
+            }
         }
-
-        GiD_Groups delete $joint_contact_group
     }
 }
 
@@ -378,5 +330,53 @@ proc Structural::write::validateTrussMesh { } {
     return [list $error $error_message]
 }
 
+
+proc Structural::write::writeCustomFilesEvent { } {
+    WriteMaterialsFile
+    
+    write::SetParallelismConfiguration
+    
+    set orig_name [GetAttribute main_script_file]
+    write::CopyFileIntoModel [file join "python" $orig_name ]
+    write::RenameFileInModel $orig_name "MainKratos.py"
+}
+
+proc Structural::write::SetCoordinatesByGroups {value} {
+    SetAttribute writeCoordinatesByGroups $value
+}
+
+proc Structural::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
+
+proc Structural::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc Structural::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
+}
+
+proc Structural::write::AddAttribute {att val} {
+    variable writeAttributes
+    dict append writeAttributes $att $val]
+}
+
+proc Structural::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
+}
+
+proc Structural::write::AddValidApps {appList} {
+    AddAttribute validApps $appList
+}
+
+proc Structural::write::ApplyConfiguration { } {
+    variable writeAttributes
+    write::SetConfigurationAttributes $writeAttributes
+}
 
 Structural::write::Init

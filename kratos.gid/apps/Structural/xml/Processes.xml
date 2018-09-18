@@ -11,7 +11,6 @@
   <Process n="ALMContactSlaveProcess" pn="Consider contact between surfaces" python_module="alm_contact_process" kratos_module="KratosMultiphysics.ContactStructuralMechanicsApplication" help="This process computes the contact between different surfaces">
     <inputs>
       <parameter n="pair" pn="Pair key" type="combo" v="0" values="0,1,2,3,4,5,6,7,8,9" />
-      <parameter n="contact_type" pn="Contact type" type="combo" v="FrictionlessComponents" values="FrictionlessComponents,Frictional" pvalues="Frictionless,Frictional"/>
     </inputs>
   </Process>
   <!-- Processes for contact mechanics -->
