@@ -205,11 +205,12 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_process_dict process_name ALMContactProcess
 
     set contact_parameters_dict [dict create]
+    # TODO: Lo de el pair id aqui
     dict set contact_parameters_dict contact_model_part [::write::getSubModelPartId CONTACT "_HIDDEN_CONTACT_GROUP_"]
     dict set contact_parameters_dict model_part_name Structure
     if {$slave_group ne ""} {
+        #TODO: Lo del pair tambien aqui
         dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
-    
         dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
     }
     dict set contact_process_dict Parameters $contact_parameters_dict

@@ -153,6 +153,10 @@ proc Structural::write::writeLoads { } {
     }
 }
 
+# TODO: Contacto de Vicente: Añadir clave "pair" para emparejar 
+# -> Sin limitaciones
+# -> Check que no haya huerfanos
+# -> Añadir la key a lo del nombre hidden
 proc Structural::write::writeContacts { } {
     variable ConditionsDictGroupIterators
     if {[Structural::write::usesContact]} {
