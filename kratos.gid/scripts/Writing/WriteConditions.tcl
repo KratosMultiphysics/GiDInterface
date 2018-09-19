@@ -35,7 +35,7 @@ proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
 #             lassign [write::getEtype $ov $groupid] etype nnodes
 #             set kname [$cond getTopologyKratosName $etype $nnodes]
 #             if {$kname ne ""} {
-#                 lassign [write::writeGroupConditionNatural $groupid $kname $nnodes $iter] initial final
+#                 lassign [write::writeGroupConditionByGiDId $groupid $kname $nnodes $iter] initial final
 #                 dict set dictGroupsIterators $groupid [list $initial $final]
 #             } else {
 #                 # If kname eq "" => no topology feature match, condition written as nodal

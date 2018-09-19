@@ -98,7 +98,7 @@ proc Fluid::write::writeBoundaryConditions { } {
     set BCUN [GetAttribute conditions_un]
 
     # Write the conditions
-    write::writeConditionsNatural $BCUN
+    write::writeConditionsByGiDId $BCUN
 
 }
 
@@ -136,7 +136,7 @@ proc Fluid::write::writeConditionsMesh { } {
             if {![$cond hasTopologyFeatures]} {
                 ::write::writeGroupSubModelPart $condid $groupid "Nodes"
             } else {
-                ::write::writeGroupSubModelPartNatural $condid $groupid "Conditions"
+                ::write::writeGroupSubModelPartByGiDId $condid $groupid "Conditions"
             }
         }
     }

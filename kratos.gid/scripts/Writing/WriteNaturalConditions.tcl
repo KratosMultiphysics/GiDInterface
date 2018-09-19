@@ -1,5 +1,5 @@
 
-proc write::writeConditionsNatural { baseUN  {cond_id ""}} {
+proc write::writeConditionsByGiDId { baseUN  {cond_id ""}} {
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
@@ -12,13 +12,13 @@ proc write::writeConditionsNatural { baseUN  {cond_id ""}} {
         if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
-        writeGroupNodeConditionNatural $groupNode $condid
+        writeGroupNodeConditionByGiDId $groupNode $condid
         
     }
 }
 
 
-proc write::writeGroupNodeConditionNatural {groupNode condid} {
+proc write::writeGroupNodeConditionByGiDId {groupNode condid} {
     set groupid [get_domnode_attribute $groupNode n]
     set groupid [GetWriteGroupName $groupid]
     if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
@@ -27,7 +27,7 @@ proc write::writeGroupNodeConditionNatural {groupNode condid} {
         lassign [write::getEtype $ov $groupid] etype nnodes
         set kname [$cond getTopologyKratosName $etype $nnodes]
         if {$kname ne ""} {
-            write::writeGroupConditionNatural $groupid $kname $nnodes
+            write::writeGroupConditionByGiDId $groupid $kname $nnodes
         } else {
             # If kname eq "" => no topology feature match, condition written as nodal
             if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
@@ -38,7 +38,7 @@ proc write::writeGroupNodeConditionNatural {groupNode condid} {
 }
 
 
-proc write::writeGroupConditionNatural {groupid kname nnodes} {
+proc write::writeGroupConditionByGiDId {groupid kname nnodes} {
     set obj [list ]
 
     # Print header
@@ -62,7 +62,7 @@ proc write::writeGroupConditionNatural {groupid kname nnodes} {
 
 
 # what can be: nodal, Elements, Conditions or Elements&Conditions
-proc write::writeGroupSubModelPartNatural { cid group {what "Elements"} {tableid_list ""} } {
+proc write::writeGroupSubModelPartByGiDId { cid group {what "Elements"} {tableid_list ""} } {
     variable submodelparts
 
     set mid ""
