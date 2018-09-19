@@ -3,6 +3,7 @@ namespace eval Fluid::write {
     variable FluidConditions
     variable writeCoordinatesByGroups
     variable writeAttributes
+    variable FluidConditionMap
 }
 
 proc Fluid::write::Init { } {
@@ -11,6 +12,9 @@ proc Fluid::write::Init { } {
     catch {array unset FluidConditions}
     set FluidConditions(temp) 0
     unset FluidConditions(temp)
+
+    variable FluidConditionMap
+    set FluidConditionMap [objarray new intarray [GiD_Info Mesh MaxNumElements] 0]
 
     SetAttribute parts_un FLParts
     SetAttribute nodal_conditions_un FLNodalConditions
@@ -22,39 +26,6 @@ proc Fluid::write::Init { } {
     SetAttribute main_script_file "KratosFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location "mdpa"
-}
-
-proc Fluid::write::GetAttribute {att} {
-    variable writeAttributes
-    return [dict get $writeAttributes $att]
-}
-
-proc Fluid::write::GetAttributes {} {
-    variable writeAttributes
-    return $writeAttributes
-}
-
-proc Fluid::write::SetAttribute {att val} {
-    variable writeAttributes
-    dict set writeAttributes $att $val
-}
-
-proc Fluid::write::AddAttribute {att val} {
-    variable writeAttributes
-    dict lappend writeAttributes $att $val
-}
-
-proc Fluid::write::AddAttributes {configuration} {
-    variable writeAttributes
-    set writeAttributes [dict merge $writeAttributes $configuration]
-}
-
-proc Fluid::write::AddValidApps {appid} {
-    AddAttribute validApps $appid
-}
-
-proc Fluid::write::SetCoordinatesByGroups {value} {
-    SetAttribute writeCoordinatesByGroups $value
 }
 
 # Events
@@ -280,6 +251,41 @@ proc Fluid::write::CheckClosedVolume {} {
         if {$usedsurfaceslines($lid) ne "2"} {set isclosed 0;}
     }
     return $isclosed
+}
+
+
+
+proc Fluid::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
+
+proc Fluid::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc Fluid::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
+}
+
+proc Fluid::write::AddAttribute {att val} {
+    variable writeAttributes
+    dict lappend writeAttributes $att $val
+}
+
+proc Fluid::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
+}
+
+proc Fluid::write::AddValidApps {appid} {
+    AddAttribute validApps $appid
+}
+
+proc Fluid::write::SetCoordinatesByGroups {value} {
+    SetAttribute writeCoordinatesByGroups $value
 }
 
 Fluid::write::Init
