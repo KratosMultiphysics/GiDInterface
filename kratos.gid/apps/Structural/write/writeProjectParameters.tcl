@@ -198,6 +198,7 @@ proc Structural::write::getOldParametersDict { } {
 }
 
 proc Structural::write::GetContactConditionsDict { } {
+    variable ContactsDict
     set root [customlib::GetBaseRoot]
 
     # Prepare the xpaths
@@ -216,13 +217,24 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_process_dict process_name ALMContactProcess
 
     set contact_parameters_dict [dict create]
-    dict set contact_parameters_dict contact_model_part [::write::getSubModelPartId CONTACT "_HIDDEN_CONTACT_GROUP_"]
     dict set contact_parameters_dict model_part_name Structure
-    if {$slave_group ne ""} {
-        dict set contact_parameters_dict assume_master_slave [::write::getSubModelPartId CONTACT [$slave_group @n]]
 
-        dict set contact_parameters_dict contact_type [write::getValueByNode [$slave_group selectNodes "./value\[@n='contact_type'\]"]]
+    set print_contact [dict create]
+    foreach pair [dict keys [dict get $ContactsDict Masters]] {
+        set merge [list ]
+        if {[dict exists $ContactsDict Slaves $pair]} {
+            set merge [dict get $ContactsDict Slaves $pair]
+        }
+        lappend merge {*}[dict get $ContactsDict Masters $pair]
+        dict set print_contact $pair $merge
     }
+    dict set contact_parameters_dict contact_model_part $print_contact
+
+    set val [dict get $ContactsDict Slaves]
+    dict set contact_parameters_dict assume_master_slave $val
+
+    dict set contact_parameters_dict contact_type [write::getValue STContactParams contact_type]
+    
     dict set contact_process_dict Parameters $contact_parameters_dict
 
     return [list $contact_process_dict]
