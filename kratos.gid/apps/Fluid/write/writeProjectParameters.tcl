@@ -37,7 +37,33 @@ proc ::Fluid::write::getParametersDict { } {
     dict set projectParametersDict problem_data $problemDataDict
 
     # output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    set outputProcessParams [dict create]
+    dict set outputProcessParams model_part_name "FluidModelPart.fluid_computational_model_part"
+    dict set outputProcessParams output_name $model_name
+    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
+
+    set outputConfigDict [dict create]
+    if {$paralleltype eq "OpenMP"} {
+        dict set outputConfigDict python_module gid_output_process
+        dict set outputConfigDict kratos_module KratosMultiphysics
+        dict set outputConfigDict process_name GiDOutputProcess
+        dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    } else {
+        dict set outputConfigDict python_module gid_output_process_mpi
+        dict set outputConfigDict kratos_module TrilinosApplication
+        dict set outputConfigDict process_name GiDOutputProcessMPI
+        dict set outputConfigDict help "This process writes postprocessing files in MPI for GiD"
+    }
+
+    dict set outputConfigDict Parameters $outputProcessParams
+
+    set output_process_list [list ]
+    lappend output_process_list $outputConfigDict
+
+    set outputProcessesDict [dict create]
+    dict set outputProcessesDict gid_output $output_process_list
+
+    dict set projectParametersDict output_processes $outputProcessesDict
 
     # Solver settings
     dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
