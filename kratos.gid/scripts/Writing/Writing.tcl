@@ -1,3 +1,4 @@
+
 ##################################################################################
 #   This file is common for all Kratos Applications.
 #   Do not change anything here unless it's strictly necessary.
@@ -1230,6 +1231,7 @@ proc write::writePropertiesJsonFile {{parts_un ""} {filename "materials.json"} {
     write::WriteJSON $mats_json
     write::CloseFile
 }
+
 proc write::getPropertiesList {parts_un {write_claw_name "True"}} {
     variable mat_dict
     set props_dict [dict create]
