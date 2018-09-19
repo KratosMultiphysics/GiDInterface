@@ -196,20 +196,22 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_process_dict process_name ALMContactProcess
 
     set contact_parameters_dict [dict create]
-    set val [dict get $ContactsDict Masters]
-    dict set contact_parameters_dict contact_model_part $val
     dict set contact_parameters_dict model_part_name Structure
-    
-    set print_slaves [dict create]
-    foreach pair [dict keys [dict get $ContactsDict Slaves]] {
+
+    set print_contact [dict create]
+    foreach pair [dict keys [dict get $ContactsDict Masters]] {
         set merge [list ]
-        if {[dict exists $ContactsDict Masters $pair]} {
-            set merge [dict get $ContactsDict Masters $pair]
+        if {[dict exists $ContactsDict Slaves $pair]} {
+            set merge [dict get $ContactsDict Slaves $pair]
         }
-        lappend merge {*}[dict get $ContactsDict Slaves $pair]
-        dict set print_slaves $pair $merge
+        lappend merge {*}[dict get $ContactsDict Masters $pair]
+        dict set print_contact $pair $merge
     }
-    dict set contact_parameters_dict assume_master_slave $print_slaves
+    dict set contact_parameters_dict contact_model_part $print_contact
+
+    set val [dict get $ContactsDict Slaves]
+    dict set contact_parameters_dict assume_master_slave $val
+
     dict set contact_parameters_dict contact_type [write::getValue STContactParams contact_type]
     
     dict set contact_process_dict Parameters $contact_parameters_dict
