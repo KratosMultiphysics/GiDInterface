@@ -1,3 +1,4 @@
+
 ##################################################################################
 #   This file is common for all Kratos Applications.
 #   Do not change anything here unless it's strictly necessary.
@@ -32,7 +33,6 @@ proc write::Init { } {
     set MDPA_loop_control 0
 
     set current_mdpa_indent_level 0
-
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -42,6 +42,7 @@ proc write::initWriteConfiguration {configuration} {
 
     processMaterials
 }
+
 proc write::initWriteData {parts mats} {
     set configutation [dict create]
     dict set configuration parts_un $parts
@@ -184,204 +185,6 @@ proc write::writeAppMDPA {appid} {
     return $errcode
 }
 
-proc write::writeModelPartData { } {
-    # Write the model part data
-    set s [mdpaIndent]
-    WriteString "${s}Begin ModelPartData"
-    WriteString "${s}//  VARIABLE_NAME value"
-    WriteString "${s}End ModelPartData"
-    WriteString ""
-}
-
-proc write::writeTables { } {
-    # Write the model part data
-    set s [mdpaIndent]
-    WriteString "${s}Begin Table"
-    WriteString "${s}Table content"
-    WriteString "${s}End Tablee"
-    WriteString ""
-}
-
-proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
-    variable mat_dict
-    variable current_mdpa_indent_level
-
-    set exclusionList [list "MID" "APPID" "Material" "Element"]
-    if {$const_law_write_name eq ""} {lappend exclusionList "ConstitutiveLaw"}
-
-    # We print all the material data directly from the saved dictionary
-    foreach material [dict keys $mat_dict] {
-        set matapp [dict get $mat_dict $material APPID]
-        if {$appid eq "" || $matapp in $appid} {
-            set s [mdpaIndent]
-            WriteString "${s}Begin Properties [dict get $mat_dict $material MID]"
-            incr current_mdpa_indent_level
-            set s [mdpaIndent]
-            foreach prop [dict keys [dict get $mat_dict $material] ] {
-                if {$prop ni $exclusionList} {
-                    if {${prop} eq "ConstitutiveLaw"} {
-                        set propname $const_law_write_name
-                        set value [[Model::getConstitutiveLaw [dict get $mat_dict $material $prop]] getKratosName]
-                    } else {
-                        set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
-                        set value [dict get $mat_dict $material $prop]
-                    }
-                    WriteString "${s}$propname $value"
-                }
-            }
-            incr current_mdpa_indent_level -1
-            set s [mdpaIndent]
-            WriteString "${s}End Properties"
-            WriteString ""
-        }
-    }
-}
-
-proc write::writeNodalCoordinatesOnGroups { groups } {
-    set formats [dict create]
-    set s [mdpaIndent]
-    WriteString "${s}Begin Nodes"
-    incr ::write::current_mdpa_indent_level
-    foreach group $groups {
-        dict set formats $group "${s}%5d %14.5f %14.5f %14.5f\n"
-    }
-    GiD_WriteCalculationFile nodes $formats
-    incr ::write::current_mdpa_indent_level -1
-    WriteString "${s}End Nodes"
-    WriteString "\n"
-}
-proc write::writeNodalCoordinatesOnParts { } {
-    writeNodalCoordinatesOnGroups [getPartsGroupsId]
-}
-proc write::writeNodalCoordinates { } {
-    # Write the nodal coordinates block
-    # Nodes block format
-    # Begin Nodes
-    # // id          X        Y        Z
-    # End Nodes
-    set s [mdpaIndent]
-    WriteString "${s}Begin Nodes"
-    incr ::write::current_mdpa_indent_level
-    customlib::WriteCoordinates "${s}%5d %14.10f %14.10f %14.10f\n"
-    incr ::write::current_mdpa_indent_level -1
-    WriteString "${s}End Nodes"
-    WriteString "\n"
-}
-
-proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
-    variable mat_dict
-
-    set parts [GetConfigurationAttribute parts_un]
-    set materials_un [GetConfigurationAttribute materials_un]
-    set root [customlib::GetBaseRoot]
-
-    set xp1 "[spdAux::getRoute $parts]/group"
-    if {$alt_path ne ""} {
-        set xp1 $alt_path
-    }
-    set xp2 ".//value\[@n='Material']"
-
-    set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : $last_assigned_id }]
-
-    foreach gNode [$root selectNodes $xp1] {
-        set nodeApp [spdAux::GetAppIdFromNode $gNode]
-        set group [$gNode getAttribute n]
-        set valueNode [$gNode selectNodes $xp2]
-        set material_name "material $material_number"
-        if { ![dict exists $mat_dict $group] } {
-            incr material_number
-            set mid $material_number
-
-            dict set mat_dict $group MID $material_number
-            dict set mat_dict $group APPID $nodeApp
-
-            set claws [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] values]
-            set claw [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] v]
-            set const_law [Model::getConstitutiveLaw $claw]
-            if {$const_law ne ""} {
-                set output_type [$const_law getOutputMode]
-
-                if {$output_type eq "Parameters"} {
-                    set s1 [$gNode selectNodes ".//value"]
-                } else {
-                    set real_material_name [get_domnode_attribute $valueNode v]
-                    set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
-                    set matNode [$root selectNodes $xp3]
-                    set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
-                }
-            } else {
-                set s1 [$gNode selectNodes ".//value"]
-            }
-
-            foreach valueNode $s1 {
-                write::forceUpdateNode $valueNode
-                set name [$valueNode getAttribute n]
-                set state [get_domnode_attribute $valueNode state]
-                if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
-                    # All the introduced values are translated to 'm' and 'kg' with the help of this function
-                    set value [gid_groups_conds::convert_value_to_default $valueNode]
-
-                    # if {[string is double $value]} {
-                        #     set value [format "%13.5E" $value]
-                        # }
-
-                    dict set mat_dict $group $name $value
-                }
-            }
-        }
-    }
-}
-
-proc write::writeElementConnectivities { } {
-    set parts [GetConfigurationAttribute parts_un]
-    set root [customlib::GetBaseRoot]
-
-    set xp1 "[spdAux::getRoute $parts]/group"
-    foreach gNode [$root selectNodes $xp1] {
-        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
-        write::writeGroupElementConnectivities $gNode $elem
-    }
-}
-
-# gNode must be a tree group, have a value n = Element
-proc write::writeGroupElementConnectivities { gNode kelemtype} {
-    variable mat_dict
-    set formats ""
-    set write_properties_in mdpa
-    if {[GetConfigurationAttribute properties_location] ne ""} {set write_properties_in [GetConfigurationAttribute properties_location]}
-    set group [get_domnode_attribute $gNode n]
-    if { [dict exists $mat_dict $group] && $write_properties_in eq "mdpa"} {
-        set mid [dict get $mat_dict $group MID]
-    } else {
-        set mid 0
-    }
-    if {[$gNode hasAttribute ov]} {set ov [get_domnode_attribute $gNode ov] } {set ov [get_domnode_attribute [$gNode parent] ov] }
-    lassign [getEtype $ov $group] etype nnodes
-    if {$nnodes ne ""} {
-        if {$etype ne "none"} {
-            set elem [::Model::getElement $kelemtype]
-            set top [$elem getTopologyFeature $etype $nnodes]
-            if {$top ne ""} {
-                set kratosElemName [$top getKratosName]
-                set s [mdpaIndent]
-                WriteString "${s}Begin Elements $kratosElemName// GUI group identifier: $group"
-                incr ::write::current_mdpa_indent_level
-                set formats [GetFormatDict $group $mid $nnodes]
-                GiD_WriteCalculationFile connectivities $formats
-                incr ::write::current_mdpa_indent_level -1
-                WriteString "${s}End Elements"
-                WriteString ""
-            } else {
-                error [= "Element $kelemtype $etype ($nnodes nodes) not available for $ov entities on group $group"]
-            }
-        } else {
-            error [= "You have not assigned a proper entity to group $group"]
-        }
-    } else {
-        error [= "You have not assigned a proper entity to group $group"]
-    }
-}
-
 proc write::GetWriteGroupName { group_id } {
     # Interval trick
     # If a group is child, and has been created due to the Interval issue
@@ -393,146 +196,6 @@ proc write::GetWriteGroupName { group_id } {
         }
     }
     return $group_id
-}
-
-proc write::writeConditionsNatural { baseUN  {cond_id ""}} {
-    set root [customlib::GetBaseRoot]
-
-    set xp1 "[spdAux::getRoute $baseUN]/condition/group"
-    set groupNodes [$root selectNodes $xp1]
-    if {[llength $groupNodes] < 1} {
-        set xp1 "[spdAux::getRoute $baseUN]/group"
-        set groupNodes [$root selectNodes $xp1]
-    }
-    foreach groupNode $groupNodes {
-        if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
-        set groupid [get_domnode_attribute $groupNode n]
-        set groupid [GetWriteGroupName $groupid]
-        writeGroupNodeConditionNatural $groupNode $condid
-        
-    }
-}
-proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
-    set dictGroupsIterators [dict create]
-
-    set root [customlib::GetBaseRoot]
-
-    set xp1 "[spdAux::getRoute $baseUN]/condition/group"
-    set groupNodes [$root selectNodes $xp1]
-    if {[llength $groupNodes] < 1} {
-        set xp1 "[spdAux::getRoute $baseUN]/group"
-        set groupNodes [$root selectNodes $xp1]
-    }
-    foreach groupNode $groupNodes {
-        if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
-        set groupid [get_domnode_attribute $groupNode n]
-        set groupid [GetWriteGroupName $groupid]
-        set dictGroupsIterators [writeGroupNodeCondition $dictGroupsIterators $groupNode $condid [incr iter]]
-        if { [dict exists $dictGroupsIterators $groupid] } {
-            set iter [lindex [dict get $dictGroupsIterators $groupid] 1]
-        } else {
-            incr iter -1
-        }
-    }
-    return $dictGroupsIterators
-}
-
-proc write::writeGroupNodeConditionNatural {groupNode condid} {
-    set groupid [get_domnode_attribute $groupNode n]
-    set groupid [GetWriteGroupName $groupid]
-    if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
-    set cond [::Model::getCondition $condid]
-    if {$cond ne ""} {
-        lassign [write::getEtype $ov $groupid] etype nnodes
-        set kname [$cond getTopologyKratosName $etype $nnodes]
-        if {$kname ne ""} {
-            write::writeGroupConditionNatural $groupid $kname $nnodes
-        } else {
-            # If kname eq "" => no topology feature match, condition written as nodal
-            if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
-        }
-    } else {
-        error "Could not find conditon named $condid"
-    }
-}
-proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
-    set groupid [get_domnode_attribute $groupNode n]
-    set groupid [GetWriteGroupName $groupid]
-    if {![dict exists $dictGroupsIterators $groupid]} {
-        if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
-        set cond [::Model::getCondition $condid]
-        if {$cond ne ""} {
-            lassign [write::getEtype $ov $groupid] etype nnodes
-            set kname [$cond getTopologyKratosName $etype $nnodes]
-            if {$kname ne ""} {
-                lassign [write::writeGroupConditionNatural $groupid $kname $nnodes $iter] initial final
-                dict set dictGroupsIterators $groupid [list $initial $final]
-            } else {
-                # If kname eq "" => no topology feature match, condition written as nodal
-                if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
-            }
-        } else {
-            error "Could not find conditon named $condid"
-        }
-    }
-    return $dictGroupsIterators
-}
-
-proc write::writeGroupConditionNatural {groupid kname nnodes} {
-    set obj [list ]
-
-    # Print header
-    set s [mdpaIndent]
-    WriteString "${s}Begin Conditions $kname// GUI group identifier: $groupid"
-
-    # Get the entities to print
-    if {$nnodes == 1} {
-        set formats [dict create $groupid "${s}%10d \n"]
-        GiD_WriteCalculationFile nodes $formats
-    } else {
-        set formats [write::GetFormatDict $groupid 0 $nnodes]
-        GiD_WriteCalculationFile connectivities $formats
-    }
-
-    # Print the footer
-    WriteString "${s}End Conditions"
-    WriteString ""
-
-}
-
-proc write::writeGroupCondition {groupid kname nnodes iter} {
-    set obj [list ]
-
-    # Print header
-    set s [mdpaIndent]
-    WriteString "${s}Begin Conditions $kname// GUI group identifier: $groupid"
-
-    # Get the entities to print
-    if {$nnodes == 1} {
-        set formats [dict create $groupid "%10d \n"]
-        set obj [GiD_EntitiesGroups get $groupid nodes]
-    } else {
-        set formats [write::GetFormatDict $groupid 0 $nnodes]
-        set elems [GiD_WriteCalculationFile connectivities -return $formats]
-        set obj [GetListsOfNodes $elems $nnodes 2]
-    }
-
-    # Print the conditions and it's connectivities
-    set initial $iter
-    incr ::write::current_mdpa_indent_level
-    set s1 [mdpaIndent]
-    for {set i 0} {$i <[llength $obj]} {incr iter; incr i} {
-        set nids [lindex $obj $i]
-        WriteString "${s1}$iter 0 $nids"
-    }
-    set final [expr $iter -1]
-    incr ::write::current_mdpa_indent_level -1
-
-    # Print the footer
-    WriteString "${s}End Conditions"
-    WriteString ""
-
-    return [list $initial $final]
 }
 
 proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
@@ -574,60 +237,6 @@ proc write::transformGroupName {groupid} {
     return [join $new_parts /]
 }
 
-# what can be: nodal, Elements, Conditions or Elements&Conditions
-proc write::writeGroupSubModelPartNatural { cid group {what "Elements"} {tableid_list ""} } {
-    variable submodelparts
-
-    set mid ""
-    set what [split $what "&"]
-    set group [GetWriteGroupName $group]
-    if {![dict exists $submodelparts [list $cid ${group}]]} {
-        # Add the submodelpart to the catalog
-        set good_name [write::transformGroupName $group]
-        set mid "${cid}_${good_name}"
-        dict set submodelparts [list $cid ${group}] $mid
-
-        # Prepare the print formats
-        incr ::write::current_mdpa_indent_level
-        set s1 [mdpaIndent]
-        incr ::write::current_mdpa_indent_level -1
-        incr ::write::current_mdpa_indent_level 2
-        set s2 [mdpaIndent]
-        set gdict [dict create]
-        set f "${s2}%5i\n"
-        set f [subst $f]
-        dict set gdict $group $f
-        incr ::write::current_mdpa_indent_level -2
-
-        # Print header
-        set s [mdpaIndent]
-        WriteString "${s}Begin SubModelPart $mid // Group $group // Subtree $cid"
-        # Print tables
-        if {$tableid_list ne ""} {
-            set s1 [mdpaIndent]
-            WriteString "${s1}Begin SubModelPartTables"
-            foreach tableid $tableid_list {
-                WriteString "${s2}$tableid"
-            }
-            WriteString "${s1}End SubModelPartTables"
-        }
-        WriteString "${s1}Begin SubModelPartNodes"
-        GiD_WriteCalculationFile nodes -sorted $gdict
-        WriteString "${s1}End SubModelPartNodes"
-        WriteString "${s1}Begin SubModelPartElements"
-        if {"Elements" in $what} {
-            GiD_WriteCalculationFile elements -sorted $gdict
-        }
-        WriteString "${s1}End SubModelPartElements"
-        WriteString "${s1}Begin SubModelPartConditions"
-        if {"Conditions" in $what} {
-            GiD_WriteCalculationFile elements -sorted $gdict
-        }
-        WriteString "${s1}End SubModelPartConditions"
-        WriteString "${s}End SubModelPart"
-    }
-    return $mid
-}
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable submodelparts
@@ -691,30 +300,6 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
     return $mid
 }
 
-proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
-    set s [mdpaIndent]
-    WriteString "${s}Begin SubModelPart $cid // Condition $cid"
-
-    incr ::write::current_mdpa_indent_level
-    set s1 [mdpaIndent]
-    WriteString "${s1}Begin SubModelPartNodes"
-    WriteString "${s1}End SubModelPartNodes"
-    WriteString "${s1}Begin SubModelPartElements"
-    WriteString "${s1}End SubModelPartElements"
-    WriteString "${s1}Begin SubModelPartConditions"
-    WriteString "${s1}End SubModelPartConditions"
-
-    foreach group [dict keys $groups_dict] {
-        if {[dict exists $groups_dict $group what]} {set what [dict get $groups_dict $group what]} else {set what ""}
-        if {[dict exists $groups_dict $group iniend]} {set iniend [dict get $groups_dict $group iniend]} else {set iniend ""}
-        if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
-        write::writeGroupSubModelPart $cid $group $what $iniend $tableid_list
-    }
-
-    incr ::write::current_mdpa_indent_level -1
-    WriteString "${s}End SubModelPart"
-}
-
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $un]/group"
@@ -749,25 +334,6 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
         ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what $iters
     }
     return $conditions_dict
-}
-
-proc write::writeNodalConditions { un } {
-
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $un]/condition/group"
-    set groups [$root selectNodes $xp1]
-    if {$groups eq ""} {
-        set xp1 "[spdAux::getRoute $un]/group"
-        set groups [$root selectNodes $xp1]
-    }
-    foreach group $groups {
-        set cid [[$group parent] @n]
-        if {[Model::getNodalConditionbyId $cid] ne ""} {
-            set groupid [$group @n]
-            set groupid [GetWriteGroupName $groupid]
-            ::write::writeGroupSubModelPart $cid $groupid "nodal"
-        }
-    }
 }
 
 # Warning! Indentation must be set before calling here!
@@ -1147,7 +713,6 @@ proc write::getSubModelPartNames { args } {
     return $listOfProcessedGroups
 }
 
-
 proc write::getSolversParametersDict { {appid ""} } {
     if {$appid eq ""} {
         set appid [apps::getActiveAppId]
@@ -1185,7 +750,6 @@ proc write::getSolversParametersDict { {appid ""} } {
     }
     return $solverSettingsDict
 }
-
 
 proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
 
@@ -1416,7 +980,6 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     if {$output_control eq "time"} {dict set params "output_frequency" [getValue $un RestartDeltaTime]} {dict set params "output_frequency" [getValue $un RestartDeltaStep]}
     set jsonoutput [write::getStringBinaryValue $un json_output]
     dict set params "json_output" $jsonoutput
-
 
     dict set resultDict "Parameters" $params
     return $resultDict
