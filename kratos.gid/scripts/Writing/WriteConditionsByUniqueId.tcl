@@ -39,7 +39,7 @@ proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMa
 }
 
 
-proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMapVariableName} {
+proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap} {
     set obj [list ]
 
     # Print header
@@ -64,12 +64,12 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
         set cndid 0
         if {$nnodes != 1} {
             set eid [lindex $elems $i]
-            set cndid [objarray get $ConditionMapVariableName $eid]
+            set cndid [objarray get $ConditionMap $eid]
         }
         if {$cndid == 0} {
             set cndid [incr iter]
             if {$nnodes != 1} {
-                objarray set $ConditionMapVariableName $eid $cndid
+                objarray set $ConditionMap $eid $cndid
             }
         }
         WriteString "${s1}$cndid 0 $nids"
