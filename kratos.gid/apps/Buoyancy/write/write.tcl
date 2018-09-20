@@ -12,6 +12,8 @@ proc Buoyancy::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
 
+    Fluid::write::Init
+
     # Init data
     write::initWriteConfiguration [Fluid::write::GetAttributes]
 
