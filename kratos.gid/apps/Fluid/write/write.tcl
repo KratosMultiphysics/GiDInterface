@@ -8,9 +8,6 @@ namespace eval Fluid::write {
 proc Fluid::write::Init { } {
     # Namespace variables inicialization
 
-    variable FluidConditionMap
-    set FluidConditionMap [objarray new intarray [GiD_Info Mesh MaxNumElements] 0]
-
     SetAttribute parts_un FLParts
     SetAttribute nodal_conditions_un FLNodalConditions
     SetAttribute conditions_un FLBC
@@ -28,6 +25,9 @@ proc Fluid::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
+    
+    variable FluidConditionMap
+    set FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
 
     # Init data
     write::initWriteConfiguration [GetAttributes]
@@ -95,11 +95,38 @@ proc Fluid::write::writeConditions { } {
 }
 
 proc Fluid::write::writeBoundaryConditions { } {
+    variable FluidConditionMap
     set BCUN [GetAttribute conditions_un]
 
-    # Write the conditions
-    write::writeConditionsByGiDId $BCUN
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
+    set grouped_conditions [list ]
+    #W "Conditions $xp1 [$root selectNodes $xp1]"
+    set groups [list ]
+    foreach group [$root selectNodes $xp1] {
+        set group_id [$group @n]
+        if {[[Model::getCondition [[$group parent] @n]] getAttribute "Interval"] ne "False"} {
+            set group_id [GiD_Groups get parent $group_id]
+        }
+        lappend groups $group_id
+    }
+    set skin_group_name "_HIDDEN__SKIN_"
+    GidUtils::MergeGroups $skin_group_name $groups
 
+    # Write the conditions
+    #W $Fluid::write::FluidConditionMap
+    if {$::Model::SpatialDimension eq "3D"} {
+        set kname WallCondition2D3N
+        set nnodes 3
+    } {
+        set kname WallCondition2D2N
+        set nnodes 2
+    }
+    
+    write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $Fluid::write::FluidConditionMap
+    #write::writeConditionsByUniqueId $BCUN $Fluid::write::FluidConditionMap
+    # W $Fluid::write::FluidConditionMap
+    GiD_Groups delete $skin_group_name
 }
 
 proc Fluid::write::writeDrags { } {
@@ -136,7 +163,7 @@ proc Fluid::write::writeConditionsMesh { } {
             if {![$cond hasTopologyFeatures]} {
                 ::write::writeGroupSubModelPart $condid $groupid "Nodes"
             } else {
-                ::write::writeGroupSubModelPartByGiDId $condid $groupid "Conditions"
+                ::write::writeGroupSubModelPartByUniqueId $condid $groupid $Fluid::write::FluidConditionMap "Conditions"
             }
         }
     }
