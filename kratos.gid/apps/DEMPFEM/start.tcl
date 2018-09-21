@@ -32,15 +32,15 @@ proc ::DEMPFEM::Init { } {
     
     set ::Model::ValidSpatialDimensions [list 3D]
     LoadMyFiles
-    ::spdAux::CreateDimensionWindow
+    # ::spdAux::CreateDimensionWindow
 }
 
 proc ::DEMPFEM::LoadMyFiles { } {
     variable dir
     
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
-    # uplevel #0 [list source [file join $dir write write.tcl]]
-    # uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
+    uplevel #0 [list source [file join $dir write write.tcl]]
+    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
 }
 
 proc ::DEMPFEM::GetAttribute {name} {

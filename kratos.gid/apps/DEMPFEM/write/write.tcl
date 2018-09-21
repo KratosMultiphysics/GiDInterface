@@ -1,138 +1,45 @@
-namespace eval Buoyancy::write {
-    variable BuoyancyConditions
+namespace eval ::DEMPFEM::write {
     variable writeAttributes
 }
 
-proc Buoyancy::write::Init { } {    
-    Fluid::write::Init
-    variable BuoyancyConditions
-    set BuoyancyConditions(temp) 0
-    unset BuoyancyConditions(temp)
+proc ::DEMPFEM::write::Init { } {    
+    
 }
 
-proc Buoyancy::write::GetAttribute {att} {
-    return [Fluid::write::GetAttribute $att]
+# Events
+proc DEMPFEM::write::writeModelPartEvent { } {
+
+    PfemFluid::write::Init
+    PfemFluid::write::writeModelPartEvent
+
+    DEM::write::Init
+    set DEM::write::delete_previous_mdpa 0
+    DEM::write::writeModelPartEvent
+    
+}
+proc DEMPFEM::write::writeCustomFilesEvent { } {
+    
 }
 
-proc Buoyancy::write::GetAttributes {} {
-    return [Fluid::write::GetAttributes]
+proc DEMPFEM::write::WriteMaterialsFile { } {
+    
 }
 
-proc Buoyancy::write::AddAttributes {configuration} {
+proc DEMPFEM::write::GetAttribute {att} {
+    return [DEMPFEM::write::GetAttribute $att]
+}
+
+proc DEMPFEM::write::GetAttributes {} {
+    return [DEMPFEM::write::GetAttributes]
+}
+
+proc DEMPFEM::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc Buoyancy::write::AddValidApps {appid} {
+proc DEMPFEM::write::AddValidApps {appid} {
     AddAttribute validApps $appid
 }
 
-# Events
-proc Buoyancy::write::writeModelPartEvent { } {
-    # Validation
-    set err [Validate]
-    if {$err ne ""} {error $err}
-
-    # Init data
-    write::initWriteConfiguration [Fluid::write::GetAttributes]
-
-    # Headers
-    write::writeModelPartData
-    Fluid::write::writeProperties
-
-    # Materials
-    write::writeMaterials [Fluid::write::GetAttribute validApps]
-
-    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[Fluid::write::GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
-
-    # Element connectivities (Groups on FLParts)
-    write::writeElementConnectivities
-    
-    # Nodal conditions and conditions
-    Fluid::write::writeConditions
-
-    Buoyancy::write::writeConditions
-    
-    # SubmodelParts
-    Fluid::write::writeMeshes
-    write::writeNodalConditions [ConvectionDiffusion::write::GetAttribute nodal_conditions_un]
-    Buoyancy::write::writeSubModelParts
-
-    # Boussinesq nodes
-    Buoyancy::write::writeBoussinesqSubModelPart
-    
-    # Custom SubmodelParts
-    #write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
-}
-proc Buoyancy::write::writeCustomFilesEvent { } {
-    # Materials
-    WriteMaterialsFile
-
-    # Main python script
-    set orig_name "MainKratos.py"
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    #write::RenameFileInModel $orig_name "MainKratos.py"
-}
-
-proc Buoyancy::write::Validate {} {
-    set err ""
-    
-    return $err
-}
-
-proc Buoyancy::write::WriteMaterialsFile { } {
-    ConvectionDiffusion::write::WriteMaterialsFile
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] "False"
-}
-
-proc Buoyancy::write::writeConditions {  } {
-    variable BuoyancyConditions
-    set BCUN "CNVDFFBC"
-
-    # Write the conditions
-    set dict_group_intervals [write::writeConditions $BCUN [Fluid::write::getLastConditionId]]
-
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [get_domnode_attribute $group n]
-        set groupid [write::GetWriteGroupName $groupid]
-        lassign [dict get $dict_group_intervals $groupid] ini fin
-        set BuoyancyConditions($groupid,initial) $ini
-        set BuoyancyConditions($groupid,final) $fin
-    }
-}
-
-proc Buoyancy::write::writeSubModelParts { } {
-    variable BuoyancyConditions
-    set BCUN "CNVDFFBC"
-    
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $BCUN]/condition/group"
-    set grouped_conditions [list ]
-    #W "Conditions $xp1 [$root selectNodes $xp1]"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
-        set condid [[$group parent] @n]
-
-        set ini $BuoyancyConditions($groupid,initial)
-        set end $BuoyancyConditions($groupid,final)
-        if {$ini == -1} {
-            ::write::writeGroupSubModelPart $condid $groupid "Nodes"
-        } else {
-            ::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
-        }
-    }
-}
-
-proc Buoyancy::write::writeBoussinesqSubModelPart { } {
-    set groupid "_Boussinesq_hidden_"
-    GiD_Groups create $groupid
-    GiD_EntitiesGroups assign $groupid nodes [GiD_Mesh list node]
-    ::write::writeGroupSubModelPart Boussinesq $groupid "Nodes"
-    GiD_Groups delete $groupid
-}
-
-Buoyancy::write::Init
+DEMPFEM::write::Init

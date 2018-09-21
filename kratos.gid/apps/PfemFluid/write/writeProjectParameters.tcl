@@ -1,4 +1,8 @@
 
+proc PfemFluid::write::writeParametersEvent { } {
+    write::WriteJSON [getParametersDict]
+}
+
 # Project Parameters
 proc PfemFluid::write::getParametersDict { } {
     PfemFluid::write::CalculateMyVariables
