@@ -71,6 +71,10 @@ oo::class create Element {
         return $v
     }
     
+    method resetTopologies { } {
+        variable TopologyFeatures
+        set TopologyFeatures [list ]
+    }
     method addTopologyFeature {top} {
         variable TopologyFeatures
         lappend TopologyFeatures $top

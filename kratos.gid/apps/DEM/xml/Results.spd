@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="DEM-Results" pn="Results" un="Results" state="normal" open="1" open_window="0" icon="results" help="Adjust the level of detail, frequency and type of the results that must be printed on disk during the computation">
+<container n="DEM-Results" pn="Results" un="DEMResults" state="normal" open="1" open_window="0" icon="results" help="Adjust the level of detail, frequency and type of the results that must be printed on disk during the computation">
     <value n="DEM-OTimeStepType" pn="Output Criterion" v="Detail_priority" values="Detail_priority,Storage_priority" dict="Detail_priority,Time interval,Storage_priority,Total number of files" icon="time3" help="Select a printing interval or the total amount of result files to print" update_proc="spdAux::RequestRefresh"/>
     <value n="DEM-OTimeStepDetail" pn="Time interval (s)" v="1e-2" help="Set a printing interval for the GiD results" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Detail_priority]"/>
     <value n="DEM-OTimeStepStorage" pn="Number of files" v="100" help="Select the total amount of GiD result files to print" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Storage_priority]"/>
@@ -28,7 +28,7 @@
         <value n="DEM-EulerAngles" pn="Euler angles" type="bool" values="true,false" v="false" help="Euler angles" state="hidden"/>
         <value n="DEM-RollingResistanceMoment" pn="Rolling resistance moment" type="bool" values="true,false" v="false" help="Rolling resistance moment" state="hidden"/>
     </container>
-    <container n="GiDOptions" pn="Options" class="Tab" help="GiD postprocess additional options" open="0" state="hidden">
+    <container n="GiDOptions" pn="Options" help="GiD postprocess additional options" open="0" state="hidden">
         <value n="GiDPostMode" pn="Result format" state="hidden" v="Binary" values="Ascii,Binary" help="GiD result file format. Choose Binary or Ascii. Ascii takes more hard disk space, but is human readable"/>
         <value n="GiDWriteMeshFlag" pn="Write deformed mesh" state="hidden" type="bool" values="true,false" v="true" help="Write the GiD deformed or undeformed mesh"/>
         <value n="GiDWriteConditionsFlag" pn="Write conditions" state="hidden" type="bool" values="true,false" v="true" help="Write the conditions or only element to the GiD result file"/>

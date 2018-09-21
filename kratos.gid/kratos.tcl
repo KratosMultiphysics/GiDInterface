@@ -246,6 +246,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     }
     FileSelector::CopyFilesIntoModel [file dirname $filename]
     write::Init
+    spdAux::ForceTreePreload
     set errcode [::write::writeEvent $filename]
     if {$errcode} {
         ::GidUtils::SetWarnLine "Error writing mdpa or json"

@@ -11,9 +11,6 @@ proc PfemFluid::write::Init { } {
     Solid::write::AddValidApps "PfemFluid"
 }
 
-proc PfemFluid::write::writeParametersEvent { } {
-    write::WriteJSON [getParametersDict]
-}
 
 # Model Part Blocks
 proc PfemFluid::write::writeModelPartEvent { } {
