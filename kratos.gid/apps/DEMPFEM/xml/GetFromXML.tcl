@@ -17,6 +17,8 @@ proc DEMPFEM::xml::getUniqueName {name} {
 }
 
 proc DEMPFEM::xml::CustomTree { args } {
+    DEM::xml::CustomTree
+    PfemFluid::xml::CustomTree
     spdAux::SetValueOnTreeItem values Fluid PFEMFLUID_DomainType
 }
 

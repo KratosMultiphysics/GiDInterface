@@ -37,7 +37,6 @@ proc PfemFluid::xml::MultiAppEvent {args} {
 }
 
 proc PfemFluid::xml::CustomTree { args } {
-    
     #HOW TO USE THIS FUNCTION:
     #spdAux::SetValueOnTreeItem arg1 arg2 arg3 (arg4)
     #arg1: attribute_to_modify 
@@ -69,10 +68,12 @@ proc PfemFluid::xml::CustomTree { args } {
     }
 
     #loads
-    spdAux::SetValueOnTreeItem icon setLoad PFEMFLUID_Loads 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] { 
-        $node setAttribute icon select
-	$node setAttribute groups_icon groupCreated
+    if {[spdAux::getRoute PFEMFLUID_Loads] ne ""} {
+        spdAux::SetValueOnTreeItem icon setLoad PFEMFLUID_Loads 
+        foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] { 
+            $node setAttribute icon select
+            $node setAttribute groups_icon groupCreated
+        }
     }
 
     #materials
