@@ -8,8 +8,8 @@ proc ::DEMPFEM::examples::InnerSphere {args} {
     DrawSquareGeometry3D
     AssignGroups3D
     TreeAssignation3D
-
-
+    MeshAssignation3D
+    
     spdAux::RequestRefresh
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -92,6 +92,12 @@ proc DEMPFEM::examples::TreeAssignation3D {args} {
     set demPart [customlib::AddConditionGroupOnXPath $part_xpath Walls]
     
     [$new_body selectNodes "./condition\[@n = 'Parts'\]/group"] setAttribute ov surface
+}
+
+proc DEMPFEM::examples::MeshAssignation3D {} {
+    set list_vols [GiD_EntitiesGroups get Dem volumes]
+    GiD_Process Mescape Meshing ElemType Sphere Volumes {*}$list_vols escape 
+
 }
 
 proc DEMPFEM::examples::ErasePreviousIntervals { } {

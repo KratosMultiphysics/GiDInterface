@@ -134,6 +134,16 @@ proc spdAux::CustomTreeCommon { } {
     
 }
 
+
+proc spdAux::ForceTreePreload { } {
+    foreach node [[customlib::GetBaseRoot] getElementsByTagName value] { 
+        if {[$node hasAttribute "values"] } {
+            get_domnode_attribute $node values
+        }
+    }
+}
+
+# No workea
 proc spdAux::ForceExtremeLoad { } {
     
     set root [customlib::GetBaseRoot]
