@@ -8,24 +8,8 @@ proc DEMPFEM::xml::Init { } {
     variable dir
     Model::InitVariables dir $DEMPFEM::dir
 
-    # Model::ForgetConstitutiveLaws
-    # Model::getConstitutiveLaws ConstitutiveLaws.xml
-
-    # Model::ForgetMaterials
-    # Model::getMaterials Materials.xml
-
-    # Model::getSolvers "../../Common/xml/Solvers.xml"
-    
-    # [Model::getCondition "Outlet2D"] setAttribute ElementType "Point,Line"
-    # set topObj [::Model::Topology new "Point" 1 "PointCondition2D1N"]
-    # [Model::getCondition "Outlet2D"] addTopologyFeature $topObj
-
-    # [Model::getCondition "Outlet3D"] setAttribute ElementType "Point,Line,Surface"
-    # set topObj [::Model::Topology new "Point" 1 "Condition3D1N"]
-    # [Model::getCondition "Outlet3D"] addTopologyFeature $topObj
-    # set topObj [::Model::Topology new "Line" 2 "Condition3D2N"]
-    # [Model::getCondition "Outlet3D"] addTopologyFeature $topObj
-
+    Model::ForgetElement SphericPartDEMElement3D
+    Model::getElements Elements.xml
 }
 
 proc DEMPFEM::xml::getUniqueName {name} {
