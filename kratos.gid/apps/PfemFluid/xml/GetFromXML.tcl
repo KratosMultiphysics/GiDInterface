@@ -45,7 +45,7 @@ proc PfemFluid::xml::CustomTree { args } {
     #arg4 (optional): name_of_the_child_we_want_to_modify  ('name'is defined by the attribute n=)
 
     set app_root [customlib::GetBaseRoot]
-    foreach node [$app_root getElementsByTagName container ] { if {[$node hasAttribute prefix] && [$node getAttribute prefix] eq "PFEMFLUID_"} {set app_root [$node parent]; break } }
+    foreach node [$app_root getElementsByTagName container ] { if {[$node hasAttribute prefix] && [$node getAttribute prefix] eq "PFEMFLUID_"} {set app_root $node; break } }
 
     #set icon data as default
     foreach node [$app_root getElementsByTagName value ] { $node setAttribute icon data }
@@ -57,7 +57,7 @@ proc PfemFluid::xml::CustomTree { args } {
     
     #intervals
     spdAux::SetValueOnTreeItem icon sheets Intervals
-    foreach node [$app_root selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
         $node setAttribute icon select
     }        
     
@@ -65,7 +65,7 @@ proc PfemFluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEMFLUID_NodalConditions VELOCITY
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEMFLUID_NodalConditions PRESSURE
 
-    foreach node [$app_root selectNodes "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition" ] { 
         $node setAttribute icon select
 	    $node setAttribute groups_icon groupCreated
     }
@@ -73,33 +73,33 @@ proc PfemFluid::xml::CustomTree { args } {
     #loads
     if {[spdAux::getRoute PFEMFLUID_Loads] ne ""} {
         spdAux::SetValueOnTreeItem icon setLoad PFEMFLUID_Loads 
-        foreach node [$app_root selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] { 
+        foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] { 
             $node setAttribute icon select
             $node setAttribute groups_icon groupCreated
         }
     }
 
     #materials
-    foreach node [$app_root selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ] { 
         $node setAttribute icon select
     }
     
     #solver settings
-    foreach node [$app_root selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }
 
-    foreach node [$app_root selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }   
 
-    foreach node [$app_root selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }   
 
     
     #units
-    [$app_root selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
+    [[$app_root parent] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
 
     #results
     spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
@@ -108,7 +108,7 @@ proc PfemFluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v No NodalResults VELOCITY_REACTION
     spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT_REACTION
     
-    set inlet_result_node [$app_root selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
+    set inlet_result_node [[$app_root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
     if {$inlet_result_node ne "" } {$inlet_result_node delete}
 
     #restart
