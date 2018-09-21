@@ -20,6 +20,7 @@ proc ::DEMPFEM::Init { } {
     set dir [apps::getMyDir "DEMPFEM"]
     set prefix DEMPFEM_
     
+    set ::spdAux::TreeVisibility 0
     
     apps::LoadAppById "DEM"
     apps::LoadAppById "PfemFluid"
