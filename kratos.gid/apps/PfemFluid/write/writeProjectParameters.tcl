@@ -93,7 +93,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     dict set solverSettingsDict model_import_settings $modelDict
 
     # Solution strategy parameters and Solvers
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict PFEMFLUID_SolStrat PFEMFLUID_Scheme PFEMFLUID_StratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict PfemFluid] ]
 
     set bodies_parts_list [list ]

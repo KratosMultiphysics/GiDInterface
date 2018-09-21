@@ -25,7 +25,7 @@
     <include n="materials" active="1" path="apps/DEM/xml/Materials.spd"/>
   </container>
 
-  <container n="DEMPFEM" pn="Coupling" icon="app" prefix="DEMPFEM_" tree_state="open" open_window="0">
+  <container n="DEMPFEM" pn="Coupling" icon="app" prefix="DEMPFEM_" un="DEMPFEM_CouplingParameters" tree_state="open" open_window="0">
     <value n="PizzaType" pn="Type of pizza" type="combo" values="HAWAIANA,MARGARITA,BARBACOA" dict="HAWAIANA,Hawaiana,MARGARITA,Margarita,BARBACOA,Barbacoa" v="BARBACOA" help="Pizzas available in menu."/>
   </container>
 
