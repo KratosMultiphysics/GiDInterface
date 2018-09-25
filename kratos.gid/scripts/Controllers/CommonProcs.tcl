@@ -207,20 +207,25 @@ proc spdAux::ProcGetSolverParameterDict { domNode args } {
 proc spdAux::ProcGetSolverParameterValues { domNode args } {
 
     set solver_node [[$domNode parent] selectNodes "./value\[@n='Solver'\]"]
-    #get_domnode_attribute $solver_node values
-    set solver [Model::GetSolver [get_domnode_attribute $solver_node v]]
-    set param_name [get_domnode_attribute $domNode n]
-    set param [$solver getInputPn $param_name]
-    set values [$param getValues]
-    set v [get_domnode_attribute $domNode v]
-    if {$v eq "" || $v ni $values} {
-        set v [$param getDv]
-        if {$v eq "" || $v ni $values} {
-            set v [lindex $values 0]
+    get_domnode_attribute $solver_node values
+    set solver_name [get_domnode_attribute $solver_node v]
+    if {$solver_name ne "Automatic"} {
+        set solver [Model::GetSolver $solver_name]
+        set param_name [get_domnode_attribute $domNode n]
+        set param [$solver getInputPn $param_name]
+        if {$param ne ""} {
+            set values [$param getValues]
+            set v [get_domnode_attribute $domNode v]
+            if {$v eq "" || $v ni $values} {
+                set v [$param getDv]
+                if {$v eq "" || $v ni $values} {
+                    set v [lindex $values 0]
+                }
+                $domNode setAttribute v $v
+            }
+            if {$param ne ""} {return [join $values ","]}
         }
-        $domNode setAttribute v $v
     }
-    if {$param ne ""} {return [join $values ","]}
     return ""
 }
 proc spdAux::ProcGetSolversValues { domNode args } {

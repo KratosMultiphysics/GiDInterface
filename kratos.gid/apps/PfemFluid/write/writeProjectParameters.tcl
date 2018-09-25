@@ -1,4 +1,8 @@
 
+proc PfemFluid::write::writeParametersEvent { } {
+    write::WriteJSON [getParametersDict]
+}
+
 # Project Parameters
 proc PfemFluid::write::getParametersDict { } {
     PfemFluid::write::CalculateMyVariables
@@ -49,9 +53,9 @@ proc PfemFluid::write::GetPFEM_ProblemDataDict { } {
     dict set problemDataDict end_time [write::getValue PFEMFLUID_TimeParameters EndTime]
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
-    set cx [write::getValue FLGravity Cx]
-    set cy [write::getValue FLGravity Cy]
-    set cz [write::getValue FLGravity Cz]
+    set cx [write::getValue PFEMFLUID_Gravity Cx]
+    set cy [write::getValue PFEMFLUID_Gravity Cy]
+    set cz [write::getValue PFEMFLUID_Gravity Cz]
     dict set problemDataDict gravity_vector [list $cx $cy $cz]
 
     return $problemDataDict
@@ -89,7 +93,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     dict set solverSettingsDict model_import_settings $modelDict
 
     # Solution strategy parameters and Solvers
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict PFEMFLUID_SolStrat PFEMFLUID_Scheme PFEMFLUID_StratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict PfemFluid] ]
 
     set bodies_parts_list [list ]

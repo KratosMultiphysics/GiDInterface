@@ -146,21 +146,21 @@ proc Kratos::InitGIDProject { dir } {
     if { [lsearch -exact $::auto_path [file join $dir scripts]] == -1 } {
         lappend ::auto_path [file join $dir scripts]
     }
-    #source [file join $dir scripts Menus.tcl]
-    # JG Sources will be in a different proc
-    foreach filename {Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
+    foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl WriteElements.tcl WriteConditions.tcl} {
+        uplevel 1 [list source [file join $dir scripts Writing $filename]]
+    }
+    foreach filename {Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
-    # JG Sources will be in a different proc
+    foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl} {
+        uplevel 1 [list source [file join $dir scripts Writing $filename]]
+    }
     foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
         uplevel 1 [list source [file join $dir scripts Controllers $filename]]
     }
-    
-    # JG Sources will be in a different proc
     foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
         uplevel 1 [list source [file join $dir scripts Model $filename]]
     }
-    # JG Sources will be in a different proc
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel 1 [list source [file join $dir libs $filename]]
     }
@@ -246,6 +246,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     }
     FileSelector::CopyFilesIntoModel [file dirname $filename]
     write::Init
+    spdAux::ForceTreePreload
     set errcode [::write::writeEvent $filename]
     if {$errcode} {
         ::GidUtils::SetWarnLine "Error writing mdpa or json"

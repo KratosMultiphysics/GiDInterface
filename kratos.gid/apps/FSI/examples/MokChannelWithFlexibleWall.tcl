@@ -260,8 +260,11 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
              }
         }
     } {
+        GiD_Groups create "FluidALEMeshBC//Total"
+        GiD_Groups edit state "FluidALEMeshBC//Total" hidden
+        spdAux::AddIntervalGroup Inlet "FluidALEMeshBC//Total"
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
-        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshBC]
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement "FluidALEMeshBC//Total"]
         $fluidDisplacementNode setAttribute ov line
         set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
