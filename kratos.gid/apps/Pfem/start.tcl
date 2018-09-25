@@ -11,7 +11,7 @@ proc ::Pfem::Init { } {
     variable attributes
     variable kratos_name
     set kratos_name PfemFluidDynamicsApplication
-    
+
     set dir [apps::getMyDir "Pfem"]
     set ::Model::ValidSpatialDimensions [list 2D 2Da 3D]
     # Allow to open the tree
@@ -49,12 +49,12 @@ proc ::Pfem::CustomToolbarItems { } {
         set img_dir [file join $img_dir Black]
     }
     Kratos::ToolbarAddItem "Model" [file join $img_dir "modelProperties.png"] [list -np- gid_groups_conds::open_conditions menu] [= "Define the model properties"]
+    Kratos::ToolbarAddItem "Bodies" [file join $img_dir "body.png"] [list -np- Pfem::xml::BodiesWindow::Start] [= "Bodies window"]
     Kratos::ToolbarAddItem "Spacer" "" "" ""
     Kratos::ToolbarAddItem "Run" [file join $img_dir "runSimulation.png"] {Utilities Calculate} [= "Run the simulation"]
     Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
-    Kratos::ToolbarAddItem "Bodies" [file join $img_dir "body.png"] [list -np- Pfem::xml::BodiesWindow::Start] [= "Bodies window"]
 
 }
 

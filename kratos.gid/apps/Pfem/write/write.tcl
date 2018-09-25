@@ -121,12 +121,12 @@ proc Pfem::write::getPropertiesList {parts_un} {
 		set law_id [dict get $mat_dict $group MID]
 		set law_name [dict get $mat_dict $group ConstitutiveLaw]
 		if { $law_name ne "None" } {
-		    
+
 		    set law_type [[Model::getConstitutiveLaw $law_name] getAttribute "Type"]
 		    set mat_name [dict get $mat_dict $group Material]
-		    set prop_dict [dict create]		    
+		    set prop_dict [dict create]
 		    set kratos_module [[Model::getConstitutiveLaw $law_name] getAttribute "kratos_module"]
-		    
+
 		    dict set prop_dict "python_module" $python_module
 		    dict set prop_dict "kratos_module" $kratos_module
 		    dict set prop_dict "help" $help
