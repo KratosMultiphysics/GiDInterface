@@ -23,7 +23,6 @@ proc DEMPFEM::write::writeCustomFilesEvent { } {
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     
-    write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
 }
 
 proc DEMPFEM::write::WriteMaterialsFile { } {
