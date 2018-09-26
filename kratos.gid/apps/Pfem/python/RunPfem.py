@@ -3,8 +3,8 @@ import KratosMultiphysics.ExternalSolversApplication
 import KratosMultiphysics.SolidMechanicsApplication
 import KratosMultiphysics.ConstitutiveModelsApplication
 import KratosMultiphysics.DelaunayMeshingApplication
-import KratosMultiphysics.ContactMechanicsApplication
+#import KratosMultiphysics.ContactMechanicsApplication
 import KratosMultiphysics.PfemApplication
 import MainPfem
 
-MainPfem.Solution().Run()
+MainPfem.PfemSolution().Run()

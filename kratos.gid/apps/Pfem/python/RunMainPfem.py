@@ -6,4 +6,4 @@ import KratosMultiphysics.DelaunayMeshingApplication
 import KratosMultiphysics.PfemApplication
 import MainPfem
 
-MainPfem.Solution().Run()
+MainPfem.PfemSolution().Run()

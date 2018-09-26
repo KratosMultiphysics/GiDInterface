@@ -136,12 +136,10 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
     # Time settings
     set timeDataDict [dict create]
-
     dict set timeDataDict time_step [write::getValue PFEM_TimeParameters DeltaTime]
     #dict set timeDataDict start_time [write::getValue PFEM_TimeParameters StartTime]
     dict set timeDataDict end_time [write::getValue PFEM_TimeParameters EndTime]
-
-    dict set solverParametersDict time_settings $timeDataDict
+    #   dict set solverParametersDict time_settings $timeDataDict
 
     # Time integration settings
     set integrationDataDict [dict create]
