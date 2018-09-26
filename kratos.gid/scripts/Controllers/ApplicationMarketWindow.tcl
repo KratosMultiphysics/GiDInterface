@@ -107,7 +107,7 @@ proc spdAux::CreateWindow {} {
     # More button
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
         set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
-        set img [gid_themes::GetImageModule $more_path]
+        set img [gid_themes::GetImage $more_path Kratos]
         ttk::button $w.information.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]
         ttk::label $w.information.text_more -text "More..."
         
@@ -172,7 +172,7 @@ proc spdAux::CreateDimensionWindow { } {
         foreach dim $::Model::ValidSpatialDimensions {
             set imagepath [getImagePathDim $dim]
             if {![file exists $imagepath]} {set imagepath [file nativename [file join $dir images "$dim.png"]]}
-            set img [gid_themes::GetImageModule $imagepath ""]
+            set img [gid_themes::GetImage $imagepath "Kratos"]
             set but [ttk::button $w.information.img$dim -image $img -command [list spdAux::SwitchDimAndCreateWindow $dim] ]
             
             grid $w.information.img$dim -column $i -row 0
