@@ -267,7 +267,7 @@ proc Pfem::xml::ProcSolutionTypeState {domNode args} {
             $domNode setAttribute v Dynamic
             set state disabled
         } {
-            $domNode setAttribute values "Dynamic,Static"
+            $domNode setAttribute values "Static,Quasi-static,Dynamic"
             set state normal
         }
     }
