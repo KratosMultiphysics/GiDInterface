@@ -8,9 +8,7 @@ namespace eval Fluid::write {
 proc Fluid::write::Init { } {
     # Namespace variables inicialization
 
-    variable FluidConditionMap
-    set FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
-
+    InitConditionsMap
     SetAttribute parts_un FLParts
     SetAttribute nodal_conditions_un FLNodalConditions
     SetAttribute conditions_un FLBC
@@ -29,9 +27,8 @@ proc Fluid::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
     
-    variable FluidConditionMap
-    set FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
-    
+    InitConditionsMap
+
     # Init data
     write::initWriteConfiguration [GetAttributes]
 
@@ -240,6 +237,21 @@ proc Fluid::write::writeConditionsMesh { } {
 # }
 
 
+
+proc Fluid::write::InitConditionsMap { {map "" } } {
+    
+    variable FluidConditionMap
+    if {$map eq ""} {
+        set FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
+    } {
+        set FluidConditionMap $map
+    }
+}
+proc Fluid::write::FreeConditionsMap { } {
+    
+    variable FluidConditionMap
+    unset FluidConditionMap
+}
 
 proc Fluid::write::GetAttribute {att} {
     variable writeAttributes

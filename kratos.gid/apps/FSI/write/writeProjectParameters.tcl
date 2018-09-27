@@ -45,12 +45,19 @@ proc FSI::write::getParametersDict { } {
    apps::setActiveAppSoft Fluid
    write::SetConfigurationAttribute parts_un FLParts
    
+   # Get the fluid parameters dict
    set FluidParametersDict [Fluid::write::getParametersDict]
+
+   # Change the input_filename
    set current [dict get $FluidParametersDict solver_settings model_import_settings input_filename]
    dict set FluidParametersDict solver_settings model_import_settings input_filename "${current}_Fluid"
-   set nodalresults [dict get $FluidParametersDict output_configuration result_file_configuration nodal_results]
+
+   # Add the MESH_DISPLACEMENT to the gid_output process
+   set gid_output [lindex [dict get $FluidParametersDict output_processes gid_output] 0]
+   set nodalresults [dict get $gid_output Parameters postprocess_parameters result_file_configuration nodal_results]
    lappend nodalresults "MESH_DISPLACEMENT"
-   dict set FluidParametersDict output_configuration result_file_configuration nodal_results $nodalresults
+   dict set gid_output Parameters postprocess_parameters result_file_configuration nodal_results $nodalresults
+   dict set FluidParametersDict output_processes gid_output [list $gid_output]
    UpdateUniqueNames FSI
    apps::setActiveAppSoft FSI
 
