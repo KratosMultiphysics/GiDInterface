@@ -3,7 +3,7 @@
 proc DEM::write::getParametersEvent { } {
     set project_parameters_dict [dict create]
 
-    dict set project_parameters_dict "Dimension"                        3
+    dict set project_parameters_dict "Dimension" [expr 3]
     dict set project_parameters_dict "PeriodicDomainOption"             false
     dict set project_parameters_dict "BoundingBoxOption"                [write::getValue DEM-Boundingbox UseBoundingBox]
     dict set project_parameters_dict "AutomaticBoundingBoxOption"       false

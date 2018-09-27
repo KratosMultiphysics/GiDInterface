@@ -45,6 +45,10 @@ proc ::DEMPFEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
 
+proc ::DEMPFEM::BeforeMeshGeneration {elementsize} {
+    ::DEM::BeforeMeshGeneration $elementsize
+}
+
 proc ::DEMPFEM::GetAttribute {name} {
     variable attributes
     set value ""

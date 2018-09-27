@@ -56,6 +56,7 @@ proc Fluid::write::writeModelPartEvent { } {
     
     # Custom SubmodelParts
     #write::writeBasicSubmodelParts
+    unset Fluid::write::FluidConditionMap
 }
 proc Fluid::write::writeCustomFilesEvent { } {
     # Materials file TODO -> Python script must read from here
