@@ -137,9 +137,21 @@ oo::class create SolStrat {
 }
 }
 
+# Forget
 proc Model::ForgetSolutionStrategies { } {
     variable SolutionStrategies
     set SolutionStrategies [list ]
+}
+
+proc Model::ForgetSolutionStrategy { id } {
+    variable SolutionStrategies
+    set SolutionStrategies2 [list ]
+    foreach ss $SolutionStrategies {
+        if {[$ss getName] ne $id} {
+            lappend SolutionStrategies2 $ss
+        }
+    }
+    set SolutionStrategies $SolutionStrategies2
 }
 
 # Parsing
