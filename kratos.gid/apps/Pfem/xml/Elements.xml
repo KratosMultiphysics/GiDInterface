@@ -3,7 +3,7 @@
 
   <!--fluid elements-->
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagragianSegregatedFluidElement2D" pn="Fluid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_fluid_element.cpp"
+  <ElementItem n="UpdatedLagrangianSegregatedFluidElement2D" pn="Fluid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_fluid_element.cpp"
 	       kratos_module="PfemApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="Updated Lagrangian Velocity Pressure Fluid Element"
@@ -11,7 +11,7 @@
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagragianSegregatedFluidElement2D3N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianSegregatedFluidElement2D3N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -31,7 +31,7 @@
   </ElementItem>
 
 
-   <ElementItem n="UpdatedLagragianSegregatedFluidElement3D" pn="Fluid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_fluid_element.cpp"
+   <ElementItem n="UpdatedLagrangianSegregatedFluidElement3D" pn="Fluid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_fluid_element.cpp"
 	       kratos_module="PfemApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="Updated Lagrangian Velocity Pressure Fluid Element"
@@ -39,7 +39,7 @@
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagragianSegregatedFluidElement3D4N"/>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangianSegregatedFluidElement3D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -65,7 +65,7 @@
 	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
 	       help="Updated Lagrangian Velocity Pressure Solid Element"
-	       ElementType="Solid" Dofs="VELOCITY,PRESSURE">
+	       ElementType="Solid" Dofs="VELOCITY,PRESSURE" SolverConfiguration="Segregated">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>

@@ -100,7 +100,7 @@ proc apps::getAllApplicationsID {} {
 }
 
 proc apps::getImgFrom { appName {img "logo" } } {
-    return [gid_themes::GetImageModule [getImgPathFrom $appName $img] ""]
+    return [gid_themes::GetImage [getImgPathFrom $appName $img] "Kratos"]
 }
 proc apps::getImgPathFrom { appName {img "logo" } } {
     variable appList
