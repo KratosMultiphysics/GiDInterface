@@ -146,7 +146,10 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
     CloseFile
     if {$needsOpen} {OpenFile $filename}
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
-        eval $wevent
+        if {[catch {eval $wevent} errmsg options] } {
+            W $::errorInfo
+            set errcode 1
+        }
     } else {
         if {[catch {eval $wevent} fid] } {
             W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
