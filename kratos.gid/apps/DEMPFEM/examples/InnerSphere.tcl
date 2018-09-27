@@ -87,6 +87,7 @@ proc DEMPFEM::examples::TreeAssignation3D {args} {
     [$new_body selectNodes "./condition\[@n = 'Parts'\]/group"] delete
     $new_body setAttribute name RigidBody
     [$new_body selectNodes "./value\[@n = 'BodyType'\]"] setAttribute v Rigid
+    [$new_body selectNodes "./value\[@n = 'MeshingStrategy'\]"] setAttribute v "No remesh"
     [$first_body parent] insertBefore $new_body $first_body
     set part_xpath [[$new_body selectNodes "./condition\[@n = 'Parts'\]"] toXPath]
     set demPart [customlib::AddConditionGroupOnXPath $part_xpath Walls]
