@@ -8,9 +8,7 @@ namespace eval Fluid::write {
 proc Fluid::write::Init { } {
     # Namespace variables inicialization
 
-    variable FluidConditionMap
-    set FluidConditionMap [objarray new intarray [GiD_Info Mesh MaxNumElements] 0]
-
+    InitConditionsMap
     SetAttribute parts_un FLParts
     SetAttribute nodal_conditions_un FLNodalConditions
     SetAttribute conditions_un FLBC
@@ -21,6 +19,7 @@ proc Fluid::write::Init { } {
     SetAttribute main_script_file "KratosFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location "mdpa"
+    FreeConditionsMap
 }
 
 # Events
