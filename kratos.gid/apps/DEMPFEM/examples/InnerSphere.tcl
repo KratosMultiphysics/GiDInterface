@@ -47,6 +47,10 @@ proc DEMPFEM::examples::AssignGroups3D {args} {
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid volumes 1
 
+    GiD_Groups create FixedVelocity
+    GiD_Groups edit color FixedVelocity "#26d1a8ff"
+    GiD_EntitiesGroups assign FixedVelocity surfaces [list 1 2 9 10]
+
     GiD_Groups create Walls
     GiD_Groups edit color Walls "#3b3b3bff"
     GiD_EntitiesGroups assign Walls surfaces [list 1 2 9 10]
@@ -93,6 +97,27 @@ proc DEMPFEM::examples::TreeAssignation3D {args} {
     set demPart [customlib::AddConditionGroupOnXPath $part_xpath Walls]
     
     [$new_body selectNodes "./condition\[@n = 'Parts'\]/group"] setAttribute ov surface
+
+    # Fix velocity
+    set pfem_velocity "[spdAux::getRoute "PFEMFLUID_NodalConditions"]/condition\[@n='VELOCITY'\]"
+    GiD_Groups create "FixedVelocity//Total"
+    GiD_Groups edit state "FixedVelocity//Total" hidden
+    spdAux::AddIntervalGroup FixedVelocity "FixedVelocity//Total"
+    set vel_node [customlib::AddConditionGroupOnXPath $pfem_velocity "FixedVelocity//Total"]
+    $vel_node setAttribute ov $condtype
+    set props [list Enabled_X Yes ByFunctionX No Xfunction_value "" valueX 0.0 Enabled_Y Yes ByFunctionY No Yfunction_value "" valueY 0.0 Enabled_Z Yes ByFunctionZ No Zfunction_value "" valueZ 0.0 Interval Total]
+    foreach {prop val} $props {
+            set propnode [$vel_node selectNodes "./value\[@n = '$prop'\]"]
+            if {$propnode ne "" } {
+                $propnode setAttribute v $val
+            } else {
+            W "Warning - Couldn't find property Velocity $prop"
+        }
+    }
+
+    
+    set grav_path [spdAux::getRoute "PFEMFLUID_Gravity"]
+        [$root selectNodes "$grav_path/value\[@n = 'Cz'\]"] setAttribute v -9.81
 }
 
 proc DEMPFEM::examples::MeshAssignation3D {} {
