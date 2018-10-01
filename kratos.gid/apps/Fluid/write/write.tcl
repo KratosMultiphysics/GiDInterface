@@ -117,7 +117,7 @@ proc Fluid::write::writeBoundaryConditions { } {
 
     # Write the conditions
     if {$::Model::SpatialDimension eq "3D"} {
-        set kname WallCondition2D3N
+        set kname WallCondition3D3N
         set nnodes 3
     } {
         set kname WallCondition2D2N
