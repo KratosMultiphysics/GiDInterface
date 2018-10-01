@@ -10,13 +10,13 @@ proc ::EmbeddedFluid::write::getParametersDict { } {
       dict set param_dict problem_data $new_problem_data
       # Set the meshing adaptivity process list
       if {$mesh_adaptivity eq "Yes"} {
-          dict lappend param_dict processes mesh_adaptivity_process_list [list [getMeshAdaptivityProcessDict]]
+          dict set param_dict processes mesh_adaptivity_process_list [list [getMeshAdaptivityProcessDict]]
       } else {
-          dict lappend param_dict processes mesh_adaptivity_process_list [list]
+          dict set param_dict processes mesh_adaptivity_process_list [list]
       }
 
       ## Set the auxiliar embedded fluid application processes dictionary list
-      dict lappend param_dict processes auxiliar_process_list [getAuxiliarProcessList]
+      dict set param_dict processes auxiliar_process_list [getAuxiliarProcessList]
 
       ## Set the solver settings dictionary
       set solverSettingsDict [dict get $param_dict solver_settings]
