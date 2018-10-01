@@ -26,7 +26,7 @@
   </container>
 
   <container n="DEMPFEM" pn="Coupling" icon="app" prefix="DEMPFEM_" un="DEMPFEM_CouplingParameters" tree_state="open" open_window="0">
-    <value n="PizzaType" pn="Type of pizza" type="combo" values="HAWAIANA,MARGARITA,BARBACOA" dict="HAWAIANA,Hawaiana,MARGARITA,Margarita,BARBACOA,Barbacoa" v="BARBACOA" help="Pizzas available in menu."/>
+    <value n="DragType" pn="Drag Force type" type="combo" values="None,Stokes,AllReynolds,Ganser,Ishii" dict="None,None,Stokes,Stokes,AllReynolds,AllReynolds,Ganser,Ganser,Ishii,Ishii" v="BARBACOA" help="Choose the model for the Drag Force type."/>
   </container>
 
 </container>
