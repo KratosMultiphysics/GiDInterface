@@ -136,3 +136,18 @@ proc DEMPFEM::write::writeParametersEvent { } {
     PfemFluid::write::writeParametersEvent
 
 }
+
+proc PfemFluid::write::GetTimeSettings { } {
+    set result [dict create]
+    dict set result time_step [write::getValue PFEMFLUID_TimeParameters PFEMDeltaTime]
+    dict set result start_time 0.0
+    dict set result end_time [write::getValue PFEMFLUID_TimeParameters EndTime]
+    return $result
+}
+
+proc DEM::write::GetTimeSettings { } {
+    set result [dict create]
+    dict set result DeltaTime [write::getValue DEMTimeParameters DEMDeltaTime]
+    dict set result EndTime [write::getValue DEMTimeParameters EndTime]
+    return $result
+}

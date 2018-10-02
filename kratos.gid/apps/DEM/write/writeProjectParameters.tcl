@@ -62,9 +62,10 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "RotationalIntegrationScheme"      "Direct_Integration"
     dict set project_parameters_dict "AutomaticTimestep"                false
     dict set project_parameters_dict "DeltaTimeSafetyFactor"            1.0
-        set MaxTimeStep  [write::getValue DEMTimeParameters DeltaTime]
+    set time_things [DEM::write::GetTimeSettings]
+        set MaxTimeStep [dict get $time_things DeltaTime]
     dict set project_parameters_dict "MaxTimeStep"                      $MaxTimeStep
-        set TTime  [write::getValue DEMTimeParameters EndTime]
+        set TTime [dict get $time_things EndTime]
     dict set project_parameters_dict "FinalTime"                        $TTime
     dict set project_parameters_dict "ControlTime"                      [write::getValue DEMTimeParameters DEM-ScreenInfoOutput]
     dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue DEMTimeParameters DEM-NeighbourSearchFrequency]
@@ -113,6 +114,14 @@ proc DEM::write::getParametersEvent { } {
 
     return $project_parameters_dict
 }
+
+proc DEM::write::GetTimeSettings { } {
+    set result [dict create]
+    dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
+    dict set result EndTime [write::getValue DEMTimeParameters EndTime]
+    return $result
+}
+
 proc DEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
     write::WriteJSON [getParametersEvent]
