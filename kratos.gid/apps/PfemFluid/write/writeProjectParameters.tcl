@@ -54,10 +54,7 @@ proc PfemFluid::write::GetPFEM_ProblemDataDict { } {
     dict set problemDataDict end_time [dict get $time_params end_time]
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
-    set cx [write::getValue PFEMFLUID_Gravity Cx]
-    set cy [write::getValue PFEMFLUID_Gravity Cy]
-    set cz [write::getValue PFEMFLUID_Gravity Cz]
-    dict set problemDataDict gravity_vector [list $cx $cy $cz]
+    dict set problemDataDict gravity_vector [PfemFluid::write::GetGravity]
 
     return $problemDataDict
 }
@@ -663,4 +660,11 @@ proc PfemFluid::write::getBodyConditionsParametersDict {un {condition_type "Cond
         lappend bcCondsDict $processDict
     }
     return $bcCondsDict
+}
+
+proc PfemFluid::write::GetGravity { } {
+    set cx [write::getValue PFEMFLUID_Gravity Cx]
+    set cy [write::getValue PFEMFLUID_Gravity Cy]
+    set cz [write::getValue PFEMFLUID_Gravity Cz]
+    return [list $cx $cy $cz]
 }

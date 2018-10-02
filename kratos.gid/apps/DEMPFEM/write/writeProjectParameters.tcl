@@ -134,7 +134,6 @@ proc DEMPFEM::write::writeParametersEvent { } {
     # PFEM
     write::OpenFile ProjectParameters.json
     PfemFluid::write::writeParametersEvent
-
 }
 
 proc PfemFluid::write::GetTimeSettings { } {
@@ -150,4 +149,22 @@ proc DEM::write::GetTimeSettings { } {
     dict set result DeltaTime [write::getValue DEMTimeParameters DEMDeltaTime]
     dict set result EndTime [write::getValue DEMTimeParameters EndTime]
     return $result
+}
+
+
+proc DEM::write::GetGravity { } {
+    set gravity_value [write::getValue DEMGravity GravityValue]
+    set gravity_X [write::getValue DEMGravity Cx]
+    set gravity_Y [write::getValue DEMGravity Cy]
+    set gravity_Z [write::getValue DEMGravity Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+    
+    return [list $gx $gy $gz]
+}
+
+proc PfemFluid::write::GetGravity { } {
+    return [DEM::write::GetGravity]
 }

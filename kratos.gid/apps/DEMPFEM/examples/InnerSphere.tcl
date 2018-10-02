@@ -115,9 +115,6 @@ proc DEMPFEM::examples::TreeAssignation3D {args} {
         }
     }
 
-    
-    set grav_path [spdAux::getRoute "PFEMFLUID_Gravity"]
-        [$root selectNodes "$grav_path/value\[@n = 'Cz'\]"] setAttribute v -9.81
 }
 
 proc DEMPFEM::examples::MeshAssignation3D {} {
