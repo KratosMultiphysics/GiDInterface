@@ -1,32 +1,20 @@
 # Project Parameters
 proc ::ConvectionDiffusion::write::getParametersDict { } {
+    
     set projectParametersDict [dict create]
 
-    # First section -> Problem data
-    set problemDataDict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set problemDataDict problem_name $model_name
-
-    # Parallelization
-    set paralleltype [write::getValue ParallelType]
-    dict set problemDataDict "parallel_type" $paralleltype
-
-    # Write the echo level in the problem data section
-    set echo_level [write::getValue Results EchoLevel]
-    dict set problemDataDict echo_level $echo_level
-
-    # Time Parameters
-    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
-        dict set problemDataDict start_time [write::getValue CNVDFFTimeParameters StartTime]
-        dict set problemDataDict end_time [write::getValue CNVDFFTimeParameters EndTime]
-    } else {
-        dict set problemDataDict start_time 0.0
-        dict set problemDataDict end_time 0.99
-    }
-
     # Set the problem data section
-    dict set projectParametersDict problem_data $problemDataDict
+    dict set projectParametersDict problem_data [ConvectionDiffusion::write::GetProblemDataDict]
 
+    # Solver settings
+    dict set projectParametersDict solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
+
+    # Boundary conditions processes
+    dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    dict set projectParametersDict constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    # dict set projectParametersDict fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    dict set projectParametersDict list_other_processes [list [getBodyForceProcessDict] ]
+    
     # Output configuration
     dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
 
@@ -38,16 +26,43 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set restartDict Restart_Step 0
     dict set projectParametersDict restart_options $restartDict
 
-    # Solver settings
-    dict set projectParametersDict solver_settings [ConventionDiffusion::write::getSolverSettingsDict]
-
-    # Boundary conditions processes
-    dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    dict set projectParametersDict constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    # dict set projectParametersDict fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    dict set projectParametersDict list_other_processes [list [getBodyForceProcessDict] ]
 
     return $projectParametersDict
+}
+
+proc ConvectionDiffusion::write::GetProblemDataDict { } {
+
+    # First section -> Problem data
+    set problem_data_dict [dict create]
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set problem_data_dict problem_name $model_name
+
+    # Parallelization
+    set paralleltype [write::getValue ParallelType]
+    dict set problem_data_dict parallel_type $paralleltype
+
+    # Time step
+    set timeSteppingDict [dict create]
+    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
+        dict set problem_data_dict time_step [write::getValue CNVDFFTimeParameters DeltaTime]
+    } else {
+        dict set problem_data_dict time_step 1.0
+    }
+
+    # Time Parameters
+    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
+        dict set problem_data_dict start_time [write::getValue CNVDFFTimeParameters StartTime]
+        dict set problem_data_dict end_time [write::getValue CNVDFFTimeParameters EndTime]
+    } else {
+        dict set problem_data_dict start_time 0.0
+        dict set problem_data_dict end_time 0.99
+    }
+
+    # Write the echo level in the problem data section
+    set echo_level [write::getValue Results EchoLevel]
+    dict set problem_data_dict echo_level $echo_level
+
+    return $problem_data_dict
 }
 
 proc ConvectionDiffusion::write::writeParametersEvent { } {
@@ -76,7 +91,7 @@ proc ConvectionDiffusion::write::getBodyForceProcessDict {} {
     return $pdict
 }
 
-proc ConvectionDiffusion::write::getSolverSettingsDict {} {
+proc ConvectionDiffusion::write::GetSolverSettingsDict {} {
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue CNVDFFSolStrat]
     set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]
