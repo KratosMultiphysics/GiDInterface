@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<container n="TimeParameters" pn="Time parameters" un="DEMTimeParameters,PFEMFLUID_TimeParameters" help="Problem parameters" icon="time4" open_window="0">
+<container n="TimeParameters" pn="Time parameters" un="DEMTimeParameters,PFEMFLUID_TimeParameters" help="Problem parameters" icon="time4" open_window="1">
 	<value n="StartTime" pn="Start time" v="0.0" help=""/>
 	<value n="EndTime" pn="End time" v="1.0" help=""/>
 	<value n="DEMDeltaTime" pn="Delta time - DEM" v="1e-6" help=""/>

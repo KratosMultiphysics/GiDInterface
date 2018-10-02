@@ -13,11 +13,11 @@
         <dynamicnode command="spdAux::injectElementOutputs" args=""/>
         <dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>
     </container>
-    <container n="OnNodes" pn="On nodes" un="NodalResults" icon="point3d" help="Activate the results you want to see in the nodes" open_window="0">
+    <container n="OnNodes" pn="On nodes" un="NodalResults" icon="point3d" help="Activate the results you want to see in the nodes" open_window="1">
         <value n="PARTITION_INDEX" pn="Partition index" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName ParallelType MPI]"/>
         <dynamicnode command="spdAux::injectNodalConditionsOutputs" args=""/>
     </container>
-    <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess options" open_window="0" icon="options">
+    <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess options" open_window="1" icon="options">
         <value n="GiDPostMode" pn="Result format" v="GiD_PostBinary" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped" help="GiD result file format" />
         <value n="GiDWriteMeshFlag" pn="Write deformed mesh" v="WriteDeformed" values="WriteDeformed,WriteUndeformed" dict="WriteDeformed,Write deformed,WriteUndeformed, Write undeformed" help="Write the GiD deformed or undeformed mesh"/>
         <value n="GiDWriteConditionsFlag" pn="Write conditions" v="WriteConditions" values="WriteConditions,WriteElementsOnly,WriteConditionsOnly" dict="WriteConditions,Write conditions,WriteElementsOnly,Write elements only,WriteConditionsOnly,Write conditions only" help="Write the conditions or only element to the GiD result file"/>

@@ -3,7 +3,7 @@
     <value n="DEM-OTimeStepType" pn="Output Criterion" v="Detail_priority" values="Detail_priority,Storage_priority" dict="Detail_priority,Time interval,Storage_priority,Total number of files" icon="time3" help="Select a printing interval or the total amount of result files to print" update_proc="spdAux::RequestRefresh"/>
     <value n="DEM-OTimeStepDetail" pn="Time interval (s)" v="1e-2" help="Set a printing interval for the GiD results" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Detail_priority]"/>
     <value n="DEM-OTimeStepStorage" pn="Number of files" v="100" help="Select the total amount of GiD result files to print" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Storage_priority]"/>
-    <container n="DEM-PartElem" pn="Print in Post-Process" un="PostPrint" help="Results on DEM elements that can be colored or shown as vectors on GiD, among other options" open_window="0" icon="options">
+    <container n="DEM-PartElem" pn="Print in Post-Process" un="PostPrint" help="Results on DEM elements that can be colored or shown as vectors on GiD, among other options" open_window="1" icon="options">
         <value n="DEM-Displacement" pn="Displacement" type="bool" values="true,false" v="true" help="Displacement"/>
         <value n="DEM-Radius" pn="Radius" type="bool" values="true,false" v="true" help="Radius" state="hidden"/>
         <value n="DEM-PostVel" pn="Velocity" type="bool" values="true,false" v="true" help="Velocity"/>
