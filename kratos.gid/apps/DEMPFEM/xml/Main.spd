@@ -9,7 +9,6 @@
     <include n="TimeSettings" active="1" icon="timeParams" path="apps/PfemFluid/xml/TimeSettings.spd"/>
     <include n="Gravity" active="1" icon="gravityForce" path="apps/PfemFluid/xml/Gravity.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/PfemFluid/xml/SolutionStrategy.spd"/>
-    <include n="Parallelism" active="1" icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/>
     <include n="Results" active="1" path="apps/PfemFluid/xml/Results.spd"/>
     <include n="Restart" active="1" state='hidden' path="apps/Common/xml/Restart.spd"/>
     <include n="materials" active="0" path="apps/PfemFluid/xml/Materials.spd"/>
@@ -27,6 +26,7 @@
 
   <container n="DEMPFEM" pn="Coupling" icon="app" prefix="DEMPFEM_" un="DEMPFEM_CouplingParameters" tree_state="open" open_window="0">
     <value n="DragType" pn="Drag Force type" type="combo" values="None,Stokes,AllReynolds,Ganser,Ishii" dict="None,None,Stokes,Stokes,AllReynolds,AllReynolds,Ganser,Ganser,Ishii,Ishii" v="BARBACOA" help="Choose the model for the Drag Force type."/>
+    <include n="Parallelism" active="1" icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/>
   </container>
 
 </container>
