@@ -9,12 +9,14 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     # Solver settings
     dict set projectParametersDict solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
 
+    set processes [dict create]
     # Boundary conditions processes
-    dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    dict set projectParametersDict constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    # dict set projectParametersDict fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    dict set projectParametersDict list_other_processes [list [getBodyForceProcessDict] ]
+    dict set processes initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    # dict set processes fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    dict set processes list_other_processes [list [getBodyForceProcessDict] ]
     
+    dict set projectParametersDict processes $processes
     # Output configuration
     dict set projectParametersDict output_processes [GetOutputProcessList]
 
