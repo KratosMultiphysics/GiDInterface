@@ -451,3 +451,52 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     dict set resultDict "Parameters" $params
     return $resultDict
 }
+
+
+proc write::getAllMaterialParametersDict {matname} {
+    set root [customlib::GetBaseRoot]
+    set md [dict create]
+
+    set xp3 [spdAux::getRoute [GetConfigurationAttribute materials_un]]
+    append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $matname]
+
+    set props [$root selectNodes $xp3]
+    foreach prop $props {
+        dict set md [$prop @n] [get_domnode_attribute $prop v]
+    }
+    return $md
+}
+
+proc write::getIntervalsDict { { un "Intervals" } {appid "" } } {
+    set root [customlib::GetBaseRoot]
+
+    set intervalsDict [dict create]
+    set xp3 "[spdAux::getRoute $un]/blockdata\[@n='Interval'\]"
+    if {$xp3 ne ""} {
+        set intervals [$root selectNodes $xp3]
+        foreach intNode $intervals {
+            set name [get_domnode_attribute $intNode name]
+            set xpini "value\[@n='IniTime'\]"
+            set xpend "value\[@n='EndTime'\]"
+            set ininode [$intNode selectNodes $xpini]
+            set endnode [$intNode selectNodes $xpend]
+            set ini ""
+            set end ""
+            catch {set ini [expr [get_domnode_attribute $ininode v]]}
+            catch {set end [expr [get_domnode_attribute $endnode v]]}
+            if {$ini eq ""} {set ini [get_domnode_attribute $ininode v]}
+            if {$end eq ""} {set end [get_domnode_attribute $endnode v]}
+            dict set intervalsDict $name [list $ini $end]
+        }
+    }
+    return $intervalsDict
+}
+proc write::getInterval { interval {un "Intervals"} {appid "" }  } {
+    set ini 0.0
+    set end 0.0
+    set intervals [write::getIntervalsDict $un]
+    foreach int [dict keys $intervals] {
+        if {$int eq $interval} {lassign [dict get $intervals $int] ini end}
+    }
+    return [list $ini $end]
+}
