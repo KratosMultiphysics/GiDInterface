@@ -254,7 +254,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set paramDict [dict create]
-            dict set paramDict model_part_name $groupId
+            dict set paramDict model_part_name [write::GetModelPartNameWithParent $groupId]
 
             set process_attributes [$process getAttributes]
             set process_parameters [$process getInputs]
@@ -381,7 +381,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
-        dict set paramDict model_part_name $cid
+        dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
 
         set process_attributes [$process getAttributes]
         set process_parameters [$process getInputs]
@@ -436,7 +436,7 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
 
     dict set resultDict "process_name" "RestartProcess"
     set model_name [file tail [GiD_Info Project ModelName]]
-    dict set params "model_part_name" $model_name
+    dict set params "model_part_name" [write::GetModelPartNameWithParent $model_name]
     dict set params "save_restart" $saveValue
     dict set params "restart_file_name" [file tail [GiD_Info Project ModelName]]
     set xp1 "[spdAux::getRoute $un]/container\[@n = '$name'\]/value"
@@ -499,4 +499,17 @@ proc write::getInterval { interval {un "Intervals"} {appid "" }  } {
         if {$int eq $interval} {lassign [dict get $intervals $int] ini end}
     }
     return [list $ini $end]
+}
+
+proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
+    set parent ""
+    if {$forced_parent ne ""} {
+        set par [write::GetConfigurationAttribute model_part_name]
+        if {$par ne ""} {
+            set parent [string append $par "."]
+        }
+    } else {
+        set parent [string append $forced_parent "."]
+    }
+    set result [string append $parent $child_name]
 }

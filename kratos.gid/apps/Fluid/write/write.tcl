@@ -19,6 +19,7 @@ proc Fluid::write::Init { } {
     SetAttribute main_script_file "KratosFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location "mdpa"
+    SetAttribute model_part_name "FluidModelPart"
 }
 
 # Events
