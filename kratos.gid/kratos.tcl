@@ -149,13 +149,13 @@ proc Kratos::InitGIDProject { dir } {
     # foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl WriteElements.tcl WriteConditions.tcl} {
     #     uplevel 1 [list source [file join $dir scripts Writing $filename]]
     # }
-    foreach filename {Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
-        uplevel 1 [list source [file join $dir scripts $filename]]
-    }
     foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
      WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
      WriteProjectParameters.tcl WriteSubModelPart.tcl} {
         uplevel 1 [list source [file join $dir scripts Writing $filename]]
+    }
+    foreach filename {Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
+        uplevel 1 [list source [file join $dir scripts $filename]]
     }
     foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
         uplevel 1 [list source [file join $dir scripts Controllers $filename]]

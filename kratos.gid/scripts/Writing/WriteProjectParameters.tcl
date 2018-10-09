@@ -365,7 +365,7 @@ proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
                 }
             }
             if {[$group find n Interval] ne ""} {dict set paramDict interval [write::getInterval  [get_domnode_attribute [$group find n Interval] v]] }
-	    dict set processDict Parameters $paramDict
+            dict set processDict Parameters $paramDict
             lappend bcCondsDict $processDict
         }
     }
@@ -503,13 +503,14 @@ proc write::getInterval { interval {un "Intervals"} {appid "" }  } {
 
 proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
     set parent ""
-    if {$forced_parent ne ""} {
+    if {$forced_parent eq ""} {
         set par [write::GetConfigurationAttribute model_part_name]
         if {$par ne ""} {
-            set parent [string append $par "."]
+            append parent $par "."
         }
     } else {
-        set parent [string append $forced_parent "."]
+         append parent $forced_parent "."
     }
-    set result [string append $parent $child_name]
+    append result $parent $child_name
+    return $result
 }
