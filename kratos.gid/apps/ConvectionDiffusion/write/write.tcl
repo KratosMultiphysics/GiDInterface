@@ -22,39 +22,6 @@ proc ConvectionDiffusion::write::Init { } {
     SetAttribute properties_location "mdpa"
 }
 
-proc ConvectionDiffusion::write::GetAttribute {att} {
-    variable writeAttributes
-    return [dict get $writeAttributes $att]
-}
-
-proc ConvectionDiffusion::write::GetAttributes {} {
-    variable writeAttributes
-    return $writeAttributes
-}
-
-proc ConvectionDiffusion::write::SetAttribute {att val} {
-    variable writeAttributes
-    dict set writeAttributes $att $val
-}
-
-proc ConvectionDiffusion::write::AddAttribute {att val} {
-    variable writeAttributes
-    dict lappend writeAttributes $att $val
-}
-
-proc ConvectionDiffusion::write::AddAttributes {configuration} {
-    variable writeAttributes
-    set writeAttributes [dict merge $writeAttributes $configuration]
-}
-
-proc ConvectionDiffusion::write::AddValidApps {appid} {
-    AddAttribute validApps $appid
-}
-
-proc ConvectionDiffusion::write::SetCoordinatesByGroups {value} {
-    SetAttribute writeCoordinatesByGroups $value
-}
-
 # Events
 proc ConvectionDiffusion::write::writeModelPartEvent { } {
     # Validation
@@ -206,6 +173,39 @@ proc ConvectionDiffusion::write::writeConditionsMesh { } {
         } 
         write::writeConditionGroupedSubmodelParts $condid $groups_dict
     }
+}
+
+proc ConvectionDiffusion::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
+
+proc ConvectionDiffusion::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc ConvectionDiffusion::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
+}
+
+proc ConvectionDiffusion::write::AddAttribute {att val} {
+    variable writeAttributes
+    dict lappend writeAttributes $att $val
+}
+
+proc ConvectionDiffusion::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
+}
+
+proc ConvectionDiffusion::write::AddValidApps {appid} {
+    AddAttribute validApps $appid
+}
+
+proc ConvectionDiffusion::write::SetCoordinatesByGroups {value} {
+    SetAttribute writeCoordinatesByGroups $value
 }
 
 ConvectionDiffusion::write::Init

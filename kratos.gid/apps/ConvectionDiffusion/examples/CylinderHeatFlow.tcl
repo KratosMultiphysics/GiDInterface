@@ -119,7 +119,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
     # Fluid Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Body]
-    set props [list Element EulerianConvDiff$nd Material Steel DENSITY 7850 CONDUCTIVITY 50.0 SPECIFIC_HEAT 460.0]
+    set props [list Element EulerianConvDiff$nd Material Gold DENSITY 19300.0 CONDUCTIVITY 310 SPECIFIC_HEAT 125.6]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -134,7 +134,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
     set thermalnodcond "$thermalNodalConditions/condition\[@n='TEMPERATURE'\]"
     GiD_Groups create "Body//Initial"
     GiD_Groups edit state "Body//Initial" hidden
-    spdAux::AddIntervalGroup Inlet "Body//Initial"
+    spdAux::AddIntervalGroup Body "Body//Initial"
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Body//Initial"]
     $thermalnodNode setAttribute ov $body_type
     set props [list value 100]
