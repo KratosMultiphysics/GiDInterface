@@ -1,7 +1,7 @@
 # Project Parameters
 
 proc Structural::write::getOldParametersDict { } {
-    set model_part_name "Structure"
+    set model_part_name [GetAttribute model_part_name]
     set projectParametersDict [dict create]
 
     # Problem data
@@ -159,7 +159,7 @@ proc Structural::write::getOldParametersDict { } {
 
     # GiD output configuration
     set outputProcessParams [dict create]
-    dict set outputProcessParams model_part_name "Structure.computing_domain"
+    dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent "computing_domain"]
     dict set outputProcessParams output_name $model_name
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
     set outputConfigDict [dict create]
@@ -217,7 +217,8 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_process_dict process_name ALMContactProcess
 
     set contact_parameters_dict [dict create]
-    dict set contact_parameters_dict model_part_name Structure
+    set model_part_name [GetAttribute model_part_name]
+    dict set contact_parameters_dict model_part_name $model_part_name
 
     set print_contact [dict create]
     foreach pair [dict keys [dict get $ContactsDict Masters]] {

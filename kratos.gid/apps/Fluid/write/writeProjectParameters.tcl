@@ -38,7 +38,7 @@ proc ::Fluid::write::getParametersDict { } {
 
     # output configuration
     set outputProcessParams [dict create]
-    dict set outputProcessParams model_part_name "FluidModelPart.fluid_computational_model_part"
+    dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent "fluid_computational_model_part"]
     dict set outputProcessParams output_name $model_name
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
 
@@ -115,7 +115,7 @@ proc Fluid::write::getDragProcessList {} {
         dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
         dict set pdict "process_name" "ComputeBodyFittedDragProcess"
         set params [dict create]
-        dict set params "model_part_name" $submodelpart
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
         dict set params "write_drag_output_file" $write_output
         dict set params "print_drag_to_screen" $print_screen
         dict set params "interval" [write::getInterval $interval_name]
@@ -142,7 +142,7 @@ proc Fluid::write::getGravityProcessDict {} {
     dict set pdict "process_name" "AssignVectorByDirectionProcess"
     set params [dict create]
     set partgroup [write::getPartsSubModelPartId]
-    dict set params "model_part_name" [concat [lindex $partgroup 0]]
+    dict set params "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]] 
     dict set params "variable_name" "BODY_FORCE"
     dict set params "modulus" $value
     dict set params "constrained" false
@@ -215,7 +215,7 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
 
 proc Fluid::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
-    dict set solverSettingsDict model_part_name "FluidModelPart"
+    dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
     set currentStrategyId [write::getValue FLSolStrat]
