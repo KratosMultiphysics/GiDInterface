@@ -158,28 +158,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict processes $processesDict
 
     # GiD output configuration
-    set outputProcessParams [dict create]
-    dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent "computing_domain"]
-    dict set outputProcessParams output_name $model_name
-    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
-    set outputConfigDict [dict create]
-    if {$paralleltype eq "OpenMP"} {
-        dict set outputConfigDict python_module gid_output_process
-        dict set outputConfigDict kratos_module KratosMultiphysics
-        dict set outputConfigDict process_name GiDOutputProcess
-        dict set outputConfigDict help "This process writes postprocessing files for GiD"
-    } else {
-        dict set outputConfigDict python_module gid_output_process_mpi
-        dict set outputConfigDict kratos_module TrilinosApplication
-        dict set outputConfigDict process_name GiDOutputProcessMPI
-        dict set outputConfigDict help "This process writes postprocessing files in MPI for GiD"
-    }
-    dict set outputConfigDict Parameters $outputProcessParams
-    set output_process_list [list ]
-    lappend output_process_list $outputConfigDict
-    set outputProcessesDict [dict create]
-    dict set outputProcessesDict gid_output $output_process_list
-    dict set projectParametersDict output_processes $outputProcessesDict
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
@@ -190,7 +169,7 @@ proc Structural::write::getOldParametersDict { } {
     }
 
     if {$solutiontype eq "eigen_value"} {
-        dict unset projectParametersDict output_configuration
+        dict unset projectParametersDict output_processes
         dict unset projectParametersDict solver_settings analysis_type
     }
 

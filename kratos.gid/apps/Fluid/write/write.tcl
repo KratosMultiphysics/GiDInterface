@@ -20,6 +20,7 @@ proc Fluid::write::Init { } {
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location "mdpa"
     SetAttribute model_part_name "FluidModelPart"
+    SetAttribute output_model_part_name "fluid_computational_model_part"
 }
 
 # Events

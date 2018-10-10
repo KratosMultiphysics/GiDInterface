@@ -27,6 +27,7 @@ proc Structural::write::Init { } {
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
     SetAttribute model_part_name "Structure"
+    SetAttribute output_model_part_name "computing_domain"
 }
 
 # MDPA Blocks

@@ -558,7 +558,6 @@ proc write::mdpaIndent { {b 4} } {
 
 proc write::CopyFileIntoModel { filepath } {
     set dir [GetConfigurationAttribute dir]
-
     set activeapp [::apps::getActiveApp]
     set inidir [apps::getMyDir [$activeapp getName]]
     set totalpath [file join $inidir $filepath]
