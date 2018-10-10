@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<container n="DEMPFEM" pn="DEM + PFEM" icon="modelling" prefix="DEMPFEM_" tree_state="open" open_window="0">
+<container n="DEMPFEM" pn="DEM + PFEM" icon="groupCreated" prefix="DEMPFEM_" tree_state="open" open_window="0">
 
   <container n="PfemFluid" pn="PFEM Fluid Data" icon="pfemData" prefix="PFEMFLUID_" tree_state="open" open_window="0">
     <include n="ModelType" active="1" path="apps/PfemFluid/xml/ModelType.spd"/>
@@ -21,7 +21,7 @@
     <include n="materials" active="1" icon="sheets" path="apps/DEM/xml/Materials.spd"/>
   </container>
 
-  <container n="DEMPFEM" pn="Coupling" icon="groupCreated" prefix="DEMPFEM_" un="DEMPFEM_CouplingParameters" tree_state="open" open_window="0">
+  <container n="DEMPFEM" pn="Coupling" icon="doRestart" prefix="DEMPFEM_" un="DEMPFEM_CouplingParameters" tree_state="open" open_window="0">
     <value n="DragType" icon="select" pn="Drag Force type" type="combo" values="None,Stokes,AllReynolds,Ganser,Ishii" dict="None,None,Stokes,Stokes,AllReynolds,AllReynolds,Ganser,Ganser,Ishii,Ishii" v="BARBACOA" help="Choose the model for the Drag Force type."/>
     <include n="Parallelism" active="1" icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/>
     <include n="TimeParameters" active="1" icon="timeParams" state="normal" path="apps/DEMPFEM/xml/TimeParameters.spd"/>
