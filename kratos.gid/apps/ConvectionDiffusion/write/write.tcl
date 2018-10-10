@@ -20,6 +20,7 @@ proc ConvectionDiffusion::write::Init { } {
     SetAttribute main_script_file "KratosConvectionDiffusion.py"
     SetAttribute materials_file "ConvectionDiffusionMaterials.json"
     SetAttribute properties_location "mdpa"
+    SetAttribute model_part_name ThermalModelPart
 }
 
 # Events

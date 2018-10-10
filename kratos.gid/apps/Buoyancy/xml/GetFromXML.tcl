@@ -8,6 +8,8 @@ proc Buoyancy::xml::Init { } {
     variable dir
     Model::InitVariables dir $Buoyancy::dir
 
+    Model::ForgetSolutionStrategy stationary
+
     Model::ForgetConstitutiveLaws
     Model::getConstitutiveLaws ConstitutiveLaws.xml
 
@@ -49,6 +51,7 @@ proc Buoyancy::xml::CustomTree { args } {
     
     # Hide Fluid gravity -> Boussinesq
     spdAux::SetValueOnTreeItem state hidden FLGravity
+
 }
 
 # Overwriting some procs

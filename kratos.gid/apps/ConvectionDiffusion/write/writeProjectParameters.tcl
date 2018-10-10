@@ -99,7 +99,7 @@ proc ConvectionDiffusion::write::GetSolverSettingsDict {} {
     set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]
     dict set solverSettingsDict solver_type $currentStrategyId
     dict set solverSettingsDict analysis_type $currentAnalysisTypeId
-    dict set solverSettingsDict model_part_name "ThermalModelPart"
+    dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
 
