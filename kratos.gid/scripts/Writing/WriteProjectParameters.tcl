@@ -218,7 +218,7 @@ proc write::getSolversParametersDict { {appid ""} } {
     return $solverSettingsDict
 }
 
-proc ::write::getConditionsParametersDict {un {condition_type "Condition"}} {
+proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
 
     set root [customlib::GetBaseRoot]
     set bcCondsDict [list ]
