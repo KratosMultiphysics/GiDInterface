@@ -27,14 +27,8 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "dem_inlet_option"                 $dem_inlet_option
     # Gravity
         # Get data
-        set gravity_value [write::getValue DEMGravity GravityValue]
-        set gravity_X [write::getValue DEMGravity Cx]
-        set gravity_Y [write::getValue DEMGravity Cy]
-        set gravity_Z [write::getValue DEMGravity Cz]
-        # Normalize director vector
-        lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
-        # Get value by components
-        lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+        lassign [DEM::write::GetGravity] gx gy gz
+
         # Add data to the parameters_dict
     dict set project_parameters_dict "GravityX"                         $gx
     dict set project_parameters_dict "GravityY"                         $gy
@@ -62,9 +56,10 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "RotationalIntegrationScheme"      "Direct_Integration"
     dict set project_parameters_dict "AutomaticTimestep"                false
     dict set project_parameters_dict "DeltaTimeSafetyFactor"            1.0
-        set MaxTimeStep  [write::getValue DEMTimeParameters DeltaTime]
+    set time_things [DEM::write::GetTimeSettings]
+        set MaxTimeStep [dict get $time_things DeltaTime]
     dict set project_parameters_dict "MaxTimeStep"                      $MaxTimeStep
-        set TTime  [write::getValue DEMTimeParameters EndTime]
+        set TTime [dict get $time_things EndTime]
     dict set project_parameters_dict "FinalTime"                        $TTime
     dict set project_parameters_dict "ControlTime"                      [write::getValue DEMTimeParameters DEM-ScreenInfoOutput]
     dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue DEMTimeParameters DEM-NeighbourSearchFrequency]
@@ -113,6 +108,27 @@ proc DEM::write::getParametersEvent { } {
 
     return $project_parameters_dict
 }
+
+proc DEM::write::GetTimeSettings { } {
+    set result [dict create]
+    dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
+    dict set result EndTime [write::getValue DEMTimeParameters EndTime]
+    return $result
+}
+
+proc DEM::write::GetGravity { } {
+    set gravity_value [write::getValue DEMGravity GravityValue]
+    set gravity_X [write::getValue DEMGravity Cx]
+    set gravity_Y [write::getValue DEMGravity Cy]
+    set gravity_Z [write::getValue DEMGravity Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+    
+    return [list $gx $gy $gz]
+}
+
 proc DEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
     write::WriteJSON [getParametersEvent]

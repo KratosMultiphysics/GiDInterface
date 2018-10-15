@@ -19,7 +19,8 @@ proc EmbeddedFluid::write::writeModelPartEvent { } {
     # Fluid::write::AddValidApps "EmbeddedFluid"
     set err [Fluid::write::Validate]
     if {$err ne ""} {error $err}
-    set Fluid::write::FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
+
+    Fluid::write::InitConditionsMap
     write::initWriteConfiguration [GetAttributes]
     write::writeModelPartData
     Fluid::write::writeProperties
@@ -29,7 +30,7 @@ proc EmbeddedFluid::write::writeModelPartEvent { } {
     Fluid::write::writeConditions
     Fluid::write::writeMeshes
     writeDistances
-    unset Fluid::write::FluidConditionMap
+    Fluid::write::FreeConditionsMap
 }
 proc EmbeddedFluid::write::writeCustomFilesEvent { } {
     write::CopyFileIntoModel "python/KratosFluid.py"

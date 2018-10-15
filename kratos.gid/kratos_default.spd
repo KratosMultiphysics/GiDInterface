@@ -20,7 +20,8 @@
 	<appLink n="Pfem" public="0" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
 	<appLink n="PfemFluid" public="0" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
 	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard"/>
-	<appLink n="DEM" public="1" pn="DEM" active="0" appid="DEM" prefix="DEM"/>
+	<appLink n="DEMLauncher" public="1" pn="DEM" active="0" appid="DEMLauncher" prefix="DEMLauncher"/>
+	<appLink n="DEM" public="0" pn="DEM" active="0" appid="DEM" prefix="DEM"/>
 	<appLink n="MPM" public="1" pn="MPM" active="0" appid="MPM" prefix="MPM"/>
 	<appLink n="DEMPFEM" public="0" pn="DEM+PFEM" active="0" appid="DEMPFEM" prefix="DEMPFEM"/>
 	<appLink n="Examples" public="1" pn="Examples" active="0" appid="Examples" prefix="EXA_"/>

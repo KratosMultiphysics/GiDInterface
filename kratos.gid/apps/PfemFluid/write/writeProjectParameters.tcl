@@ -48,17 +48,23 @@ proc PfemFluid::write::GetPFEM_ProblemDataDict { } {
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set problemDataDict dimension $nDim
 
-    dict set problemDataDict time_step [write::getValue PFEMFLUID_TimeParameters DeltaTime]
-    dict set problemDataDict start_time [write::getValue PFEMFLUID_TimeParameters StartTime]
-    dict set problemDataDict end_time [write::getValue PFEMFLUID_TimeParameters EndTime]
+    set time_params [PfemFluid::write::GetTimeSettings]
+    dict set problemDataDict time_step [dict get $time_params time_step]
+    dict set problemDataDict start_time [dict get $time_params start_time]
+    dict set problemDataDict end_time [dict get $time_params end_time]
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
     dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
-    set cx [write::getValue PFEMFLUID_Gravity Cx]
-    set cy [write::getValue PFEMFLUID_Gravity Cy]
-    set cz [write::getValue PFEMFLUID_Gravity Cz]
-    dict set problemDataDict gravity_vector [list $cx $cy $cz]
+    dict set problemDataDict gravity_vector [PfemFluid::write::GetGravity]
 
     return $problemDataDict
+}
+
+proc PfemFluid::write::GetTimeSettings { } {
+    set result [dict create]
+    dict set result time_step [write::getValue PFEMFLUID_TimeParameters DeltaTime]
+    dict set result start_time [write::getValue PFEMFLUID_TimeParameters StartTime]
+    dict set result end_time [write::getValue PFEMFLUID_TimeParameters EndTime]
+    return $result
 }
 
 proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
@@ -654,4 +660,11 @@ proc PfemFluid::write::getBodyConditionsParametersDict {un {condition_type "Cond
         lappend bcCondsDict $processDict
     }
     return $bcCondsDict
+}
+
+proc PfemFluid::write::GetGravity { } {
+    set cx [write::getValue PFEMFLUID_Gravity Cx]
+    set cy [write::getValue PFEMFLUID_Gravity Cy]
+    set cz [write::getValue PFEMFLUID_Gravity Cz]
+    return [list $cx $cy $cz]
 }

@@ -8,9 +8,7 @@ namespace eval Fluid::write {
 proc Fluid::write::Init { } {
     # Namespace variables inicialization
 
-    variable FluidConditionMap
-    set FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
-
+    InitConditionsMap
     SetAttribute parts_un FLParts
     SetAttribute nodal_conditions_un FLNodalConditions
     SetAttribute conditions_un FLBC
@@ -21,6 +19,8 @@ proc Fluid::write::Init { } {
     SetAttribute main_script_file "KratosFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location "mdpa"
+    SetAttribute model_part_name "FluidModelPart"
+    SetAttribute output_model_part_name "fluid_computational_model_part"
 }
 
 # Events
@@ -29,9 +29,8 @@ proc Fluid::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
     
-    variable FluidConditionMap
-    set FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
-    
+    InitConditionsMap
+
     # Init data
     write::initWriteConfiguration [GetAttributes]
 
@@ -120,7 +119,7 @@ proc Fluid::write::writeBoundaryConditions { } {
 
     # Write the conditions
     if {$::Model::SpatialDimension eq "3D"} {
-        set kname WallCondition2D3N
+        set kname WallCondition3D3N
         set nnodes 3
     } {
         set kname WallCondition2D2N
@@ -240,6 +239,21 @@ proc Fluid::write::writeConditionsMesh { } {
 # }
 
 
+
+proc Fluid::write::InitConditionsMap { {map "" } } {
+    
+    variable FluidConditionMap
+    if {$map eq ""} {
+        set FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
+    } {
+        set FluidConditionMap $map
+    }
+}
+proc Fluid::write::FreeConditionsMap { } {
+    
+    variable FluidConditionMap
+    unset FluidConditionMap
+}
 
 proc Fluid::write::GetAttribute {att} {
     variable writeAttributes

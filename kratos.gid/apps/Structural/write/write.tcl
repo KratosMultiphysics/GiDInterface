@@ -26,6 +26,8 @@ proc Structural::write::Init { } {
     SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
+    SetAttribute model_part_name "Structure"
+    SetAttribute output_model_part_name "computing_domain"
 }
 
 # MDPA Blocks

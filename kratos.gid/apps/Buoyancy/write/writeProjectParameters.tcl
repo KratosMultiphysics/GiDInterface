@@ -6,7 +6,7 @@ proc ::Buoyancy::write::getParametersDict { } {
     dict set projectParametersDict problem_data [::Buoyancy::write::GetProblemData_Dict]
 
     # output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
 
     # restart options 
     dict set projectParametersDict restart_options [Buoyancy::write::GetRestart_Dict]
@@ -74,13 +74,15 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
     dict set settings echo_level 0
 
     # Fluid things
+    write::SetConfigurationAttributes [Fluid::write::GetAttributes]
     dict set settings fluid_solver_settings [Fluid::write::getSolverSettingsDict]
    
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set settings fluid_solver_settings domain_size $nDim
 
     # Thermal things
-    dict set settings thermal_solver_settings [ConvectionDiffusion::write::getSolverSettingsDict]
+    write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
+    dict set settings thermal_solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
 
     dict set settings thermal_solver_settings problem_domain_sub_model_part_list [list [dict get $settings fluid_solver_settings volume_model_part_name]]
 
@@ -89,8 +91,10 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
 
 proc Buoyancy::write::GetProcesses_Dict { } {
     set constraints_process_list [list ]
+    write::SetConfigurationAttributes [Fluid::write::GetAttributes]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute conditions_un] ]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute nodal_conditions_un] "Nodal"]
+    write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute nodal_conditions_un] "Nodal"]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute conditions_un]]
     lappend constraints_process_list [GetBoussinesqProcess]
@@ -103,7 +107,10 @@ proc Buoyancy::write::GetBoussinesqProcess { } {
     dict set process kratos_module KratosMultiphysics.FluidDynamicsApplication
     dict set process process_name ApplyBoussinesqForceProcess
     set params [dict create]
-    dict set params model_part_name "_Boussinesq_hidden_"
+    
+    set groupid "_Boussinesq_hidden_"
+    set groupId [::write::getSubModelPartId Boussinesq $groupid]
+    dict set params model_part_name [write::GetModelPartNameWithParent $groupId]
     dict set params gravity [write::getValue Buoyancy_Boussinesq gravity]
     dict set params ambient_temperature [write::getValue Buoyancy_Boussinesq ambient_temperature]
     dict set process Parameters $params

@@ -1,14 +1,13 @@
 
-proc :: ConvectionDiffusion::examples::CylinderHeatFlow {args} {
+proc ::ConvectionDiffusion::examples::CylinderHeatFlow {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawCylinderHeatFlowGeometry$::Model::SpatialDimension
-    AssignGroupsCylinderHeatFlow$::Model::SpatialDimension
-    AssignCylinderHeatFlowMeshSizes$::Model::SpatialDimension
-    TreeAssignationCylinderHeatFlow$::Model::SpatialDimension
+    DrawSquareGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -18,20 +17,22 @@ proc :: ConvectionDiffusion::examples::CylinderHeatFlow {args} {
 
 
 # Draw Geometry
-proc  ConvectionDiffusion::examples::DrawCylinderHeatFlowGeometry3D {args} {
-    DrawCylinderHeatFlowGeometry2D
-    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
-    GiD_Layers edit opaque Fluid 0
+proc ConvectionDiffusion::examples::DrawSquareGeometry3D {args} {
+    # DrawSquareGeometry2D
+    # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
+    # GiD_Layers edit opaque Fluid 0
 
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape 
 }
-proc  ConvectionDiffusion::examples::DrawCylinderHeatFlowGeometry2D {args} {
+
+proc ConvectionDiffusion::examples::DrawSquareGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
 
     # Geometry creation
     ## Points ##
-    set coordinates [list 0 1 0 5 1 0 5 0 0 0 0 0]
+    set coordinates [list 0 0 0 0 1 0 1 1 0 1 0 0]
     set fluidPoints [list ]
     foreach {x y z} $coordinates {
         lappend fluidPoints [GiD_Geometry create point append Fluid $x $y $z]
@@ -49,113 +50,77 @@ proc  ConvectionDiffusion::examples::DrawCylinderHeatFlowGeometry2D {args} {
     ## Surface ##
     GiD_Process Mescape Geometry Create NurbsSurface {*}$fluidLines escape escape
 
-    # Body #
-    GiD_Layers create Body
-    GiD_Layers edit to_use Body
-    set circle_center_x 1.25
-    set circle_center_y 0.5
-    set circle_center_z 0.0
-    set center_radius 0.1
-    GiD_Process Mescape Geometry Create Object CirclePNR $circle_center_x $circle_center_y $circle_center_z 0.0 0.0 1.0 $center_radius escape
-    GiD_Geometry delete surface 2
-
-    # Create the hole
-    GiD_Layers edit to_use Fluid
-    GiD_Process MEscape Geometry Edit HoleNurb 1 5 escape escape
-
 }
 
 
 # Group assign
-proc  ConvectionDiffusion::examples::AssignGroupsCylinderHeatFlow2D {args} {
+proc ConvectionDiffusion::examples::AssignGroups2D {args} {
     # Create the groups
-    GiD_Groups create Fluid
-    GiD_Groups edit color Fluid "#26d1a8ff"
-    GiD_EntitiesGroups assign Fluid surfaces 1
+    GiD_Groups create Body
+    GiD_Groups edit color Body "#26d1a8ff"
+    GiD_EntitiesGroups assign Body surfaces 1
 
-    GiD_Groups create Inlet
-    GiD_Groups edit color Inlet "#e0210fff"
-    GiD_EntitiesGroups assign Inlet lines 4
+    GiD_Groups create Left_Wall
+    GiD_Groups edit color Left_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Left_Wall lines 1
 
-    GiD_Groups create Outlet
-    GiD_Groups edit color Outlet "#42eb71ff"
-    GiD_EntitiesGroups assign Outlet lines 2
+    GiD_Groups create Top_Wall
+    GiD_Groups edit color Top_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Top_Wall lines 2
 
-    GiD_Groups create No_Slip_Walls
-    GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Walls lines {1 3}
+    GiD_Groups create Right_Wall
+    GiD_Groups edit color Right_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Right_Wall lines 3
 
-    GiD_Groups create No_Slip_Cylinder
-    GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Cylinder lines 5
+    GiD_Groups create Bottom_Wall
+    GiD_Groups edit color Bottom_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Bottom_Wall lines 4
+
 }
-proc  ConvectionDiffusion::examples::AssignGroupsCylinderHeatFlow3D {args} {
+proc ConvectionDiffusion::examples::AssignGroups3D {args} {
     # Create the groups
-    GiD_Groups create Fluid
-    GiD_Groups edit color Fluid "#26d1a8ff"
-    GiD_EntitiesGroups assign Fluid volumes 1
+    # GiD_Groups create Fluid
+    # GiD_Groups edit color Fluid "#26d1a8ff"
+    # GiD_EntitiesGroups assign Fluid volumes 1
 
-    GiD_Groups create Inlet
-    GiD_Groups edit color Inlet "#e0210fff"
-    GiD_EntitiesGroups assign Inlet surfaces 5
+    # GiD_Groups create Inlet
+    # GiD_Groups edit color Inlet "#e0210fff"
+    # GiD_EntitiesGroups assign Inlet surfaces 5
 
-    GiD_Groups create Outlet
-    GiD_Groups edit color Outlet "#42eb71ff"
-    GiD_EntitiesGroups assign Outlet surfaces 3
+    # GiD_Groups create Outlet
+    # GiD_Groups edit color Outlet "#42eb71ff"
+    # GiD_EntitiesGroups assign Outlet surfaces 3
 
-    GiD_Groups create No_Slip_Walls
-    GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Walls surfaces {1 2 4 7}
+    # GiD_Groups create No_Slip_Walls
+    # GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
+    # GiD_EntitiesGroups assign No_Slip_Walls surfaces {1 2 4 7}
 
-    GiD_Groups create No_Slip_Cylinder
-    GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Cylinder surfaces 6
+    # GiD_Groups create No_Slip_Cylinder
+    # GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
+    # GiD_EntitiesGroups assign No_Slip_Cylinder surfaces 6
 }
-
-
-# Mesh sizes
-proc  ConvectionDiffusion::examples::AssignCylinderHeatFlowMeshSizes3D {args} {
-    set cylinder_mesh_size 0.005
-    set walls_mesh_size 0.05
-    set fluid_mesh_size 0.05
-    GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
-    GiD_Process Mescape Meshing AssignSizes Surfaces $cylinder_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cylinder surfaces] escape escape
-    GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get Inlet surfaces] escape escape
-    GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get Outlet surfaces] escape escape
-    GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Walls surfaces] escape escape
-    GiD_Process Mescape Meshing AssignSizes Volumes $fluid_mesh_size [GiD_EntitiesGroups get Fluid volumes] escape escape
-    Kratos::BeforeMeshGeneration $fluid_mesh_size
-}
-proc  ConvectionDiffusion::examples::AssignCylinderHeatFlowMeshSizes2D {args} {
-    set cylinder_mesh_size 0.005
-    set fluid_mesh_size 0.05
-    GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines $cylinder_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cylinder lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    Kratos::BeforeMeshGeneration $fluid_mesh_size
-}
-
 
 # Tree assign
-proc  ConvectionDiffusion::examples::TreeAssignationCylinderHeatFlow3D {args} {
-    TreeAssignationCylinderHeatFlow2D
-    AddCuts
+proc ConvectionDiffusion::examples::TreeAssignation3D {args} {
+    # TreeAssignationCylinderInFlow2D
+    # AddCuts
 }
-proc  ConvectionDiffusion::examples::TreeAssignationCylinderHeatFlow2D {args} {
+proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
-    set condtype line
-    if {$nd eq "3D"} { set condtype surface }
+    set cond_type line
+    set body_type surface
+    if {$nd eq "3D"} { set cond_type surface; set body_type volume }
 
     # Monolithic solution strategy set
-    spdAux::SetValueOnTreeItem v "Monolithic" CNVDFFSolStrat
+    spdAux::SetValueOnTreeItem v "transient" CNVDFFSolStrat
+    spdAux::SetValueOnTreeItem v "SuperLUSolver" CNVDFFtransientlinear_solver_settings Solver
 
     # Fluid Parts
-    set fluidParts [spdAux::getRoute "CNVDFFParts"]
-    set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
+    set parts [spdAux::getRoute "CNVDFFParts"]
+    set fluidNode [customlib::AddConditionGroupOnXPath $parts Body]
+    set props [list Element EulerianConvDiff$nd Material Gold DENSITY 19300.0 CONDUCTIVITY 310 SPECIFIC_HEAT 125.6]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -165,50 +130,53 @@ proc  ConvectionDiffusion::examples::TreeAssignationCylinderHeatFlow2D {args} {
         }
     }
 
-    set fluidConditions [spdAux::getRoute "CNVDFFBC"]
-
-    # Fluid Inlet
-    set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
-    set inlets [list inlet1 0 1 "6*y*(1-y)*sin(pi*t*0.5)" inlet2 1 End "6*y*(1-y)"]
-    ErasePreviousIntervals
-    foreach {interval_name ini end function} $inlets {
-        spdAux::CreateInterval $interval_name $ini $end
-        GiD_Groups create "Inlet//$interval_name"
-        GiD_Groups edit state "Inlet//$interval_name" hidden
-        spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
-        set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet "Inlet//$interval_name"]
-        $inletNode setAttribute ov $condtype
-        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
-        foreach {prop val} $props {
-             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property Inlet $prop"
-            }
-        }
-    }
-
-    # Fluid Outlet
-    set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-    set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
-    $outletNode setAttribute ov $condtype
-    set props [list value 0.0]
+    # Thermal Nodal Conditions
+    set thermalNodalConditions [spdAux::getRoute "CNVDFFNodalConditions"]
+    set thermalnodcond "$thermalNodalConditions/condition\[@n='TEMPERATURE'\]"
+    GiD_Groups create "Body//Initial"
+    GiD_Groups edit state "Body//Initial" hidden
+    spdAux::AddIntervalGroup Body "Body//Initial"
+    set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Body//Initial"]
+    $thermalnodNode setAttribute ov $body_type
+    set props [list value 100]
     foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
+         set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
               $propnode setAttribute v $val
          } else {
-            W "Warning - Couldn't find property Outlet $prop"
+            W "Warning - Couldn't find property Temperature $prop"
         }
     }
 
-    # Fluid Conditions
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
+    # Thermal Conditions
+    set thermalConditions [spdAux::getRoute "CNVDFFBC"]
+    set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
+    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Left_Wall]
+    $thermalNode setAttribute ov $cond_type
+    set props [list value 303.15]
+    foreach {prop val} $props {
+         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property ImposedTemperature $prop"
+        }
+    }
+
+    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Right_Wall]
+    $thermalNode setAttribute ov $cond_type
+    set props [list value 293.15]
+    foreach {prop val} $props {
+         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property ImposedTemperature $prop"
+        }
+    }
 
     # Time parameters
-    set time_parameters [list EndTime 45 DeltaTime 0.1]
+    set time_parameters [list EndTime 100 DeltaTime 0.5]
     set time_params_path [spdAux::getRoute "CNVDFFTimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
@@ -229,17 +197,10 @@ proc  ConvectionDiffusion::examples::TreeAssignationCylinderHeatFlow2D {args} {
     spdAux::RequestRefresh
 }
 
-proc  ConvectionDiffusion::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
-}
 
-proc  ConvectionDiffusion::examples::AddCuts { } {
-    # Cuts
-    set results [spdAux::getRoute "Results"]
-    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
-    [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
-}
+# proc ConvectionDiffusion::examples::AddCuts { } {
+#     # Cuts
+#     set results [spdAux::getRoute "Results"]
+#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
+#     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
+# }

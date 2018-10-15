@@ -3,8 +3,8 @@
     <!--linear elastic laws-->
 	<CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Fluid" ImplementedInApplication="FluidDynamicsApplication">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
-            <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1e-3" help="Set the dynamic viscosity."/>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
+            <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/>
         </inputs>
         <outputs>
         </outputs>

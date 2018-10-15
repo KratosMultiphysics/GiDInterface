@@ -18,7 +18,7 @@ proc EmbeddedFluid::xml::Init { } {
     Model::getElements "../../Fluid/xml/Elements.xml"
     Model::getMaterials Materials.xml
     Model::getNodalConditions "../../Fluid/xml/NodalConditions.xml"
-    Model::getConstitutiveLaws ConstitutiveLaws.xml
+    Model::getConstitutiveLaws "../../Fluid/xml/ConstitutiveLaws.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses "../../Fluid/xml/Processes.xml"
     Model::getConditions "../../Fluid/xml/Conditions.xml"

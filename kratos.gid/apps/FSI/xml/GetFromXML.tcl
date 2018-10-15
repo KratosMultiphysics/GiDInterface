@@ -11,11 +11,13 @@ proc FSI::xml::Init { } {
     Model::ForgetSolutionStrategies
     Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
     Model::getSolutionStrategies "../../Structural/xml/Strategies.xml"
+    #Model::ForgetSolutionStrategy Eigen
     Model::getSolutionStrategies Strategies.xml
     Model::getConditions Conditions.xml
 
     Model::ForgetSolvers
     Model::getSolvers "../../Common/xml/Solvers.xml"
+    Model::getSolvers "../../Structural/xml/Solvers.xml"
     Model::getSolvers Coupling_solvers.xml
 }
 
@@ -45,6 +47,10 @@ proc FSI::xml::CustomTree { args } {
     # Modify the tree: field newValue UniqueName OptionalChild
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
     spdAux::SetValueOnTreeItem v "Yes" FLStratParams compute_reactions
+
+    # Remove Eigen
+    #spdAux::SetValueOnTreeItem values "Static,Quasi-static,Dynamic,formfinding" STSoluType
+
 
     # Disable MPI parallelism until it is fully tested
     #spdAux::SetValueOnTreeItem values "OpenMP" ParallelType

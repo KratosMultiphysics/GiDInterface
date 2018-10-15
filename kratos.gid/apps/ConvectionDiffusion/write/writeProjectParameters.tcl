@@ -1,34 +1,24 @@
 # Project Parameters
 proc ::ConvectionDiffusion::write::getParametersDict { } {
+    
     set projectParametersDict [dict create]
 
-    # First section -> Problem data
-    set problemDataDict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set problemDataDict problem_name $model_name
-
-    # Parallelization
-    set paralleltype [write::getValue ParallelType]
-    dict set problemDataDict "parallel_type" $paralleltype
-
-    # Write the echo level in the problem data section
-    set echo_level [write::getValue Results EchoLevel]
-    dict set problemDataDict echo_level $echo_level
-
-    # Time Parameters
-    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
-        dict set problemDataDict start_time [write::getValue CNVDFFTimeParameters StartTime]
-        dict set problemDataDict end_time [write::getValue CNVDFFTimeParameters EndTime]
-    } else {
-        dict set problemDataDict start_time 0.0
-        dict set problemDataDict end_time 0.99
-    }
-
     # Set the problem data section
-    dict set projectParametersDict problem_data $problemDataDict
+    dict set projectParametersDict problem_data [ConvectionDiffusion::write::GetProblemDataDict]
 
+    # Solver settings
+    dict set projectParametersDict solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
+
+    set processes [dict create]
+    # Boundary conditions processes
+    dict set processes initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    # dict set processes fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    dict set processes list_other_processes [list [getBodyForceProcessDict] ]
+    
+    dict set projectParametersDict processes $processes
     # Output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    dict set projectParametersDict output_processes [GetOutputProcessList]
 
     # Restart options
     set restartDict [dict create]
@@ -38,16 +28,43 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set restartDict Restart_Step 0
     dict set projectParametersDict restart_options $restartDict
 
-    # Solver settings
-    dict set projectParametersDict solver_settings [ConventionDiffusion::write::getSolverSettingsDict]
-
-    # Boundary conditions processes
-    dict set projectParametersDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    dict set projectParametersDict constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    # dict set projectParametersDict fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    dict set projectParametersDict list_other_processes [list [getBodyForceProcessDict] ]
 
     return $projectParametersDict
+}
+
+proc ConvectionDiffusion::write::GetProblemDataDict { } {
+
+    # First section -> Problem data
+    set problem_data_dict [dict create]
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set problem_data_dict problem_name $model_name
+
+    # Parallelization
+    set paralleltype [write::getValue ParallelType]
+    dict set problem_data_dict parallel_type $paralleltype
+
+    # Time step
+    set timeSteppingDict [dict create]
+    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
+        dict set problem_data_dict time_step [write::getValue CNVDFFTimeParameters DeltaTime]
+    } else {
+        dict set problem_data_dict time_step 1.0
+    }
+
+    # Time Parameters
+    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
+        dict set problem_data_dict start_time [write::getValue CNVDFFTimeParameters StartTime]
+        dict set problem_data_dict end_time [write::getValue CNVDFFTimeParameters EndTime]
+    } else {
+        dict set problem_data_dict start_time 0.0
+        dict set problem_data_dict end_time 0.99
+    }
+
+    # Write the echo level in the problem data section
+    set echo_level [write::getValue Results EchoLevel]
+    dict set problem_data_dict echo_level $echo_level
+
+    return $problem_data_dict
 }
 
 proc ConvectionDiffusion::write::writeParametersEvent { } {
@@ -76,13 +93,13 @@ proc ConvectionDiffusion::write::getBodyForceProcessDict {} {
     return $pdict
 }
 
-proc ConvectionDiffusion::write::getSolverSettingsDict {} {
+proc ConvectionDiffusion::write::GetSolverSettingsDict {} {
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue CNVDFFSolStrat]
     set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]
     dict set solverSettingsDict solver_type $currentStrategyId
     dict set solverSettingsDict analysis_type $currentAnalysisTypeId
-    dict set solverSettingsDict model_part_name "ThermalModelPart"
+    dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
 
@@ -114,4 +131,23 @@ proc ConvectionDiffusion::write::getSolverSettingsDict {} {
     dict set solverSettingsDict time_stepping $timeSteppingDict
 
     return $solverSettingsDict
+}
+
+proc ConvectionDiffusion::write::GetOutputProcessList { } {
+    set result [dict create ]
+    
+    set gid_output [list ]
+    set res_dict [dict create]
+    dict set res_dict python_module gid_output_process
+    dict set res_dict kratos_module KratosMultiphysics
+    dict set res_dict process_name GiDOutputProcess
+    dict set res_dict Parameters postprocess_parameters [write::GetDefaultOutputDict]
+    
+    set partgroup [write::getPartsSubModelPartId]
+    dict set res_dict Parameters "model_part_name" [concat [lindex $partgroup 0]]
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set res_dict Parameters output_name $model_name
+    lappend gid_output $res_dict
+    dict set result gid_output $gid_output
+    return $result
 }

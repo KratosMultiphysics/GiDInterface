@@ -37,33 +37,7 @@ proc ::Fluid::write::getParametersDict { } {
     dict set projectParametersDict problem_data $problemDataDict
 
     # output configuration
-    set outputProcessParams [dict create]
-    dict set outputProcessParams model_part_name "FluidModelPart.fluid_computational_model_part"
-    dict set outputProcessParams output_name $model_name
-    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
-
-    set outputConfigDict [dict create]
-    if {$paralleltype eq "OpenMP"} {
-        dict set outputConfigDict python_module gid_output_process
-        dict set outputConfigDict kratos_module KratosMultiphysics
-        dict set outputConfigDict process_name GiDOutputProcess
-        dict set outputConfigDict help "This process writes postprocessing files for GiD"
-    } else {
-        dict set outputConfigDict python_module gid_output_process_mpi
-        dict set outputConfigDict kratos_module TrilinosApplication
-        dict set outputConfigDict process_name GiDOutputProcessMPI
-        dict set outputConfigDict help "This process writes postprocessing files in MPI for GiD"
-    }
-
-    dict set outputConfigDict Parameters $outputProcessParams
-
-    set output_process_list [list ]
-    lappend output_process_list $outputConfigDict
-
-    set outputProcessesDict [dict create]
-    dict set outputProcessesDict gid_output $output_process_list
-
-    dict set projectParametersDict output_processes $outputProcessesDict
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
 
     # Solver settings
     dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
@@ -115,7 +89,7 @@ proc Fluid::write::getDragProcessList {} {
         dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
         dict set pdict "process_name" "ComputeBodyFittedDragProcess"
         set params [dict create]
-        dict set params "model_part_name" $submodelpart
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
         dict set params "write_drag_output_file" $write_output
         dict set params "print_drag_to_screen" $print_screen
         dict set params "interval" [write::getInterval $interval_name]
@@ -142,7 +116,7 @@ proc Fluid::write::getGravityProcessDict {} {
     dict set pdict "process_name" "AssignVectorByDirectionProcess"
     set params [dict create]
     set partgroup [write::getPartsSubModelPartId]
-    dict set params "model_part_name" [concat [lindex $partgroup 0]]
+    dict set params "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]] 
     dict set params "variable_name" "BODY_FORCE"
     dict set params "modulus" $value
     dict set params "constrained" false
@@ -215,7 +189,7 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
 
 proc Fluid::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
-    dict set solverSettingsDict model_part_name "FluidModelPart"
+    dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
     set currentStrategyId [write::getValue FLSolStrat]
