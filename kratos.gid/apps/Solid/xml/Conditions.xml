@@ -80,6 +80,7 @@
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
+    <symbol proc='Solid::symbols::draw_Load3D' orientation='global'/>
   </ConditionItem>
 
 
