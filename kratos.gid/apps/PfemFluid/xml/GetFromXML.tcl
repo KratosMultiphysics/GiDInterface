@@ -118,8 +118,8 @@ proc PfemFluid::xml::CustomTree { args } {
     # 3D gravity
     if {$Model::SpatialDimension eq "3D"} {
         catch {
-            spdAux::SetValueOnTreeItem v 0.0 PFEMFLUID_Gravity Cy  
-            spdAux::SetValueOnTreeItem v 9.81 PFEMFLUID_Gravity Cz  
+            spdAux::SetValueOnTreeItem v -9.81 PFEMFLUID_Gravity Cy  
+            spdAux::SetValueOnTreeItem v 0.0 PFEMFLUID_Gravity Cz  
         }
     }
     
