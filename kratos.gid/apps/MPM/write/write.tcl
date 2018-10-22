@@ -158,7 +158,7 @@ proc MPM::write::writeCustomFilesEvent { } {
     # Main python script
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "KratosParticle.py"
+    write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 
