@@ -5,6 +5,10 @@ proc ::MPM::write::getParametersDict { } {
     # Quasi-static must be written as Quasi-static...
     set solutiontype [write::getValue STSoluType]
     dict set project_parameters_dict solver_settings solver_type $solutiontype
+    if {$solutiontype eq "Quasi-static"} {
+        dict set solverSettingsDict time_integration_method [write::getValue STSolStrat]
+        dict set solverSettingsDict scheme_type [write::getValue STScheme]
+    }
 
     # Change the model part name
     dict set project_parameters_dict solver_settings model_part_name MPM_Material
