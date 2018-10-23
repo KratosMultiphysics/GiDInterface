@@ -33,36 +33,7 @@ proc Pfem::write::getParametersDict { } {
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    set loads_list [Pfem::write::getConditionsParametersDict PFEM_Loads]
-
-    set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Solids"} {
-
-	set cx [write::getValue FLGravity Cx]
-	set cy [write::getValue FLGravity Cy]
-	set cz [write::getValue FLGravity Cz]
-       
-	set fluid_bodies_list [Pfem::write::GetFluidBodies]
-
-	foreach body $fluid_bodies_list {
-
-	    set processDict [dict create]
-	    set parametersDict [dict create]
-	        
-	    dict set parametersDict "model_part_name" $body	    
-	    dict set parametersDict "variable_name" "VOLUME_ACCELERATION"
-	    dict set parametersDict "value" [list $cx $cy $cz]
-	    dict set parametersDict "constrained" false
-
-	    dict set processDict python_module "assign_vector_components_to_nodes_process"
-	    dict set processDict kratos_module "KratosMultiphysics.SolidMechanicsApplication"
-	    dict set processDict Parameters $parametersDict
-	    
-	    lappend loads_list $processDict
-	}
-    }
-
-    dict set projectParametersDict loads_process_list $loads_list
+    dict set projectParametersDict loads_process_list [Pfem::write::GetConditionsParametersDictWithGravity]
     
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
@@ -72,6 +43,37 @@ proc Pfem::write::getParametersDict { } {
     dict set projectParametersDict output_configuration [Pfem::write::GetDefaultOutputDict]
 
     return $projectParametersDict
+}
+
+proc Pfem::write::GetConditionsParametersDictWithGravity { } {
+    set loads_list [Pfem::write::getConditionsParametersDict PFEM_Loads]
+    set problemtype [write::getValue PFEM_DomainType]
+    if {$problemtype ne "Solids"} {
+
+        set cx [write::getValue FLGravity Cx]
+        set cy [write::getValue FLGravity Cy]
+        set cz [write::getValue FLGravity Cz]
+        
+        set fluid_bodies_list [Pfem::write::GetFluidBodies]
+
+        foreach body $fluid_bodies_list {
+
+            set processDict [dict create]
+            set parametersDict [dict create]
+                
+            dict set parametersDict "model_part_name" $body	    
+            dict set parametersDict "variable_name" "VOLUME_ACCELERATION"
+            dict set parametersDict "value" [list $cx $cy $cz]
+            dict set parametersDict "constrained" false
+
+            dict set processDict python_module "assign_vector_components_to_nodes_process"
+            dict set processDict kratos_module "KratosMultiphysics.SolidMechanicsApplication"
+            dict set processDict Parameters $parametersDict
+            
+            lappend loads_list $processDict
+        }
+    }
+    return $loads_list
 }
 proc Pfem::write::GetPFEM_ProblemDataDict { } {
     set problemDataDict [dict create]
