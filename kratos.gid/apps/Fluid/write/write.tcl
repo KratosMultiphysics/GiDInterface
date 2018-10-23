@@ -8,7 +8,6 @@ namespace eval Fluid::write {
 proc Fluid::write::Init { } {
     # Namespace variables inicialization
 
-    InitConditionsMap
     SetAttribute parts_un FLParts
     SetAttribute nodal_conditions_un FLNodalConditions
     SetAttribute conditions_un FLBC
