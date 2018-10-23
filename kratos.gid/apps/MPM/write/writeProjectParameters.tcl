@@ -8,12 +8,12 @@ proc ::MPM::write::getParametersDict { } {
 
     # Change the model part name
     dict set project_parameters_dict solver_settings model_part_name MPM_Material
-        
+
     # create grid_import_settings
     set grid_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
     dict append grid_import_settings_dict input_filename _Grid
     dict set project_parameters_dict solver_settings grid_model_import_settings $grid_import_settings_dict
-    
+
     # add _Body to model_import_settings
     set model_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
     dict append model_import_settings_dict input_filename _Body
@@ -21,7 +21,7 @@ proc ::MPM::write::getParametersDict { } {
 
     # materials file
     dict set project_parameters_dict solver_settings material_import_settings materials_filename [GetAttribute materials_file]
-    
+
     # Geometry in elements
     set geometry_element [dict get $project_parameters_dict solver_settings geometry_element]
     if {$geometry_element eq "Triangle"} {
@@ -37,6 +37,9 @@ proc ::MPM::write::getParametersDict { } {
 
     # Pressure dofs
     dict set project_parameters_dict solver_settings pressure_dofs false
+
+    # Rotation dofs
+    dict unset project_parameters_dict solver_settings rotation_dofs
 
     # Add the solver information
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
@@ -74,8 +77,13 @@ proc ::MPM::write::getParametersDict { } {
     # Output configuration
     set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
     set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
+    dict set body_output_configuration_dict python_module mpm_gid_output_process
+    dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
+    dict set body_output_configuration_dict process_name ParticleMPMGiDOutputProcess
     dict set body_output_configuration_dict Parameters model_part_name MPM_Material
-    dict set grid_output_configuration_dict Parameters model_part_name MPM_Material
+    dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
+    dict set body_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings model_import_settings input_filename]
+    dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
     dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
     dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
     dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
