@@ -10,7 +10,7 @@ proc Pfem::write::Init { } {
     variable bodies_list
     set bodies_list [list ]
     Solid::write::AddValidApps "Pfem"
-    
+
     SetAttribute parts_un PFEM_Parts
     SetAttribute nodal_conditions_un PFEM_NodalConditions
     SetAttribute conditions_un PFEM_Loads
@@ -30,7 +30,7 @@ proc Pfem::write::writeModelPartEvent { } {
     # Init data
     SetAttribute main_script_file [Pfem::write::GetMainScriptFilename]
     write::initWriteConfiguration [GetAttributes]
-    
+
     # Headers
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
@@ -42,10 +42,10 @@ proc Pfem::write::writeModelPartEvent { } {
 
     # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
-    
+
     # Nodal conditions and conditions
     Solid::write::writeConditions
-    
+
     # SubmodelParts
     Pfem::write::writeSubmodelParts
 }
@@ -53,7 +53,7 @@ proc Pfem::write::writeModelPartEvent { } {
 proc Pfem::write::writeSubmodelParts { } {
     # Submodelparts for Parts
     write::writePartSubModelPart
-    
+
     # Solo Malla , no en conditions
     writeNodalConditions [GetAttribute nodal_conditions_un]
 
@@ -155,7 +155,7 @@ proc Pfem::write::getPropertiesList {parts_un} {
 	    }
 
 	}
-    
+
 
     dict set props_dict material_models_list $props
 
@@ -337,7 +337,7 @@ proc Pfem::write::GetMainScriptFilename { } {
     if {$problemtype ne "Fluids"} {
         return "RunMainPfem.py"
     } else {
-        return "RunPFEM.py"
+        return "RunPfem.py"
     }
 }
 
