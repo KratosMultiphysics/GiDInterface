@@ -34,7 +34,7 @@ proc FSI::write::getParametersDict { } {
    # Structural section
    UpdateUniqueNames Structural
    apps::setActiveAppSoft Structural
-   Structural::write::ApplyConfiguration
+   write::initWriteConfiguration [Structural::write::GetAttributes]
 
    set StructuralParametersDict [Structural::write::getParametersEvent]
    set current [dict get $StructuralParametersDict solver_settings model_import_settings input_filename]
@@ -43,7 +43,7 @@ proc FSI::write::getParametersDict { } {
    # Fluid section
    UpdateUniqueNames Fluid
    apps::setActiveAppSoft Fluid
-   write::SetConfigurationAttribute parts_un FLParts
+   write::initWriteConfiguration [Fluid::write::GetAttributes]
    
    # Get the fluid parameters dict
    set FluidParametersDict [Fluid::write::getParametersDict]
