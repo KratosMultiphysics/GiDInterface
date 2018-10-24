@@ -15,7 +15,7 @@ proc MPM::write::Init { } {
     # SetAttribute materials_un EMBFLMaterials
     # SetAttribute writeCoordinatesByGroups 0
     # SetAttribute validApps [list "MPM"]
-    SetAttribute main_script_file "MainKratos.py"
+    SetAttribute main_script_file "KratosParticle.py"
     SetAttribute materials_file "ParticleMaterials.json"
 }
 
