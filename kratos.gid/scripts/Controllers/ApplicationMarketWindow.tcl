@@ -1,9 +1,12 @@
 
 proc spdAux::reactiveApp { } {
     #W "Reactive"
-    variable initwind
-    destroy $initwind
-    
+    variable initwind    
+    if { ![GidUtils::IsTkDisabled] } {
+        if { [winfo exists $initwind] } {
+            destroy $initwind
+        }
+    }
     set root [customlib::GetBaseRoot]
     set ::Model::SpatialDimension [[$root selectNodes "value\[@n='nDim'\]"] getAttribute v ]
     set appname [[$root selectNodes "hiddenfield\[@n='activeapp'\]"] @v ]
@@ -52,6 +55,10 @@ proc spdAux::activeApp { appid } {
 proc spdAux::CreateWindow {} {
     variable initwind
     variable must_open_init_window
+    
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
     
     if {$must_open_init_window == 0} {return ""}
     set root [customlib::GetBaseRoot]

@@ -164,8 +164,13 @@ proc spdAux::getImagePathDim { dim } {
     return $imagepath
 }
 proc spdAux::DestroyWindow {} {
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
     variable initwind
-    if {[winfo exists $initwind]} {destroy $initwind}
+    if {[winfo exists $initwind]} {
+        destroy $initwind    
+    }
 }
 
 # Routes

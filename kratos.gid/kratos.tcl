@@ -165,11 +165,7 @@ proc Kratos::InitGIDProject { dir } {
     }
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel 1 [list source [file join $dir libs $filename]]
-    }
-    foreach {dirname filename} {SorterWindow SorterWindow.tcl wcb wcb.tcl} {
-        uplevel 1 [list source [file join $dir libs $dirname $filename]]
-    }
-    
+    }    
     set kratos_private(UseWizard) 0
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
@@ -194,8 +190,7 @@ proc Kratos::InitGIDProject { dir } {
 
 # Event triggered when opening a GiD model with kratos
 proc Kratos::AfterReadGIDProject { filespd } {
-    variable kratos_private
-
+    variable kratos_private 
     # Dont open the init window. Saved models have already app and dimension
     set spdAux::must_open_init_window 0
 
@@ -208,7 +203,7 @@ proc Kratos::AfterReadGIDProject { filespd } {
     gid_groups_conds::close_all_windows
     update
     if { ![file exists $filespd] } { return }
-    
+
     # Need transform? Get PT version
     set versionPT [gid_groups_conds::give_data_version]
     set kratos_private(problemtype_version) $versionPT
