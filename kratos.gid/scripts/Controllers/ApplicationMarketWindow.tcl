@@ -52,6 +52,19 @@ proc spdAux::activeApp { appid } {
     }
 }
 
+proc spdAux::SetActiveAppFromDOM { } {
+    set activeapp_dom ""
+    set root [customlib::GetBaseRoot]
+    set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
+    if {$activeapp_node ne ""} {
+        set activeapp_dom [get_domnode_attribute $activeapp_node v]
+        if { $activeapp_dom != "" } {
+            apps::setActiveApp $activeapp_dom
+        }
+    }
+    return $activeapp_dom
+}
+
 proc spdAux::CreateWindow {} {
     variable initwind
     variable must_open_init_window
@@ -61,21 +74,9 @@ proc spdAux::CreateWindow {} {
     }
     
     if {$must_open_init_window == 0} {return ""}
-    set root [customlib::GetBaseRoot]
     
-    set activeapp_node [$::gid_groups_conds::doc selectNodes "//hiddenfield\[@n='activeapp'\]"]
-    if {$activeapp_node ne ""} {
-        set activeapp [get_domnode_attribute $activeapp_node v]
-    } else {
-        return ""   
-    }
     spdAux::DestroyInitWindow
-        
-    if { $activeapp ne "" } {
-        apps::setActiveApp $activeapp
-        return ""
-    }
-    
+                
     set w .gid.win_example
     toplevel $w
     wm withdraw $w

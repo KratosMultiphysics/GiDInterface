@@ -7,7 +7,7 @@
 #################### GiD Tcl events ######################
 ##########################################################
 proc InitGIDProject { dir } {
-    # W "InitGIDProject"
+    #W "InitGIDProject"
     Kratos::InitGIDProject $dir
 }
 proc GiD_Event_AfterNewGIDProject {} {
@@ -16,7 +16,7 @@ proc GiD_Event_AfterNewGIDProject {} {
 
 # Load GiD project files (initialise XML Tdom structure)
 proc GiD_Event_AfterReadGIDProject { filename } {
-    # W "GiD_Event_AfterReadGIDProject"
+    #W "GiD_Event_AfterReadGIDProject"
     set name [file tail $filename]
     set spd_file [file join ${filename}.gid ${name}.spd]
     Kratos::AfterReadGIDProject $spd_file
@@ -185,7 +185,13 @@ proc Kratos::InitGIDProject { dir } {
     update
     spdAux::LoadModelFiles
     gid_groups_conds::close_all_windows
-    after 500 [list spdAux::CreateWindow]
+    #kike: the problem here is that the model.spd with the information of the application 
+    #was not loaded because is invoked by a posterior event. I don't know really why is working apparently well !!
+    set activeapp_dom [spdAux::SetActiveAppFromDOM]
+    if { $activeapp_dom == "" } {
+        #open a window to allow the user select the app
+        after 500 [list spdAux::CreateWindow]
+    }
 }
 
 # Event triggered when opening a GiD model with kratos
