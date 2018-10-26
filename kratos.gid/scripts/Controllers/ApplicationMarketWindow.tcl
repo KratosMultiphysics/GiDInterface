@@ -1,9 +1,12 @@
 
 proc spdAux::reactiveApp { } {
     #W "Reactive"
-    variable initwind
-    destroy $initwind
-    
+    variable initwind    
+    if { ![GidUtils::IsTkDisabled] } {
+        if { [winfo exists $initwind] } {
+            destroy $initwind
+        }
+    }
     set root [customlib::GetBaseRoot]
     set ::Model::SpatialDimension [[$root selectNodes "value\[@n='nDim'\]"] getAttribute v ]
     set appname [[$root selectNodes "hiddenfield\[@n='activeapp'\]"] @v ]
@@ -49,26 +52,31 @@ proc spdAux::activeApp { appid } {
     }
 }
 
+proc spdAux::SetActiveAppFromDOM { } {
+    set activeapp_dom ""
+    set root [customlib::GetBaseRoot]
+    set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
+    if {$activeapp_node ne ""} {
+        set activeapp_dom [get_domnode_attribute $activeapp_node v]
+        if { $activeapp_dom != "" } {
+            apps::setActiveApp $activeapp_dom
+        }
+    }
+    return $activeapp_dom
+}
+
 proc spdAux::CreateWindow {} {
     variable initwind
     variable must_open_init_window
     
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
+    
     if {$must_open_init_window == 0} {return ""}
-    set root [customlib::GetBaseRoot]
     
-    set activeapp_node [$::gid_groups_conds::doc selectNodes "//hiddenfield\[@n='activeapp'\]"]
-    if {$activeapp_node ne ""} {
-        set activeapp [get_domnode_attribute $activeapp_node v]
-    } else {
-        return ""   
-    }
     spdAux::DestroyInitWindow
-        
-    if { $activeapp ne "" } {
-        apps::setActiveApp $activeapp
-        return ""
-    }
-    
+                
     set w .gid.win_example
     toplevel $w
     wm withdraw $w
