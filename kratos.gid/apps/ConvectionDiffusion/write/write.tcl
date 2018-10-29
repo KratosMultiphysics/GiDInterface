@@ -19,7 +19,7 @@ proc ConvectionDiffusion::write::Init { } {
     SetAttribute validApps [list "ConvectionDiffusion"]
     SetAttribute main_script_file "KratosConvectionDiffusion.py"
     SetAttribute materials_file "ConvectionDiffusionMaterials.json"
-    SetAttribute properties_location "mdpa"
+    SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
 }
 
@@ -36,8 +36,8 @@ proc ConvectionDiffusion::write::writeModelPartEvent { } {
     write::writeModelPartData
     writeProperties
 
-    # Materials
-    write::writeMaterials [GetAttribute validApps]
+    # Materials (write materials in *.mdpa)
+    #write::writeMaterials [GetAttribute validApps]
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
