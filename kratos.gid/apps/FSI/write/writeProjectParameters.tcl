@@ -4,12 +4,14 @@ proc FSI::write::getParametersDict { } {
 
    # FSI section
    set FSIParametersDict [dict create]
+
    # Problem data
-   set problemDataDict [dict create]
-   set paralleltype [write::getValue ParallelType]
-   dict set problemDataDict parallel_type $paralleltype
-   dict set FSIParametersDict problem_data $problemDataDict
+   set problem_data_dict [GetProblemDataDict]
+   dict set FSIParametersDict problem_data $problem_data_dict
+
    # Solver settings
+   set solver_settings_dict [GetSolverSettingsDict]
+   dict set FSIParametersDict solver_settings $solver_settings_dict
    set solverSettingsDict [dict create]
    set currentStrategyId [write::getValue FSISolStrat]
    set currentCouplingSchemeId [write::getValue FSIScheme]
@@ -73,6 +75,28 @@ proc FSI::write::writeParametersEvent { } {
    write::SetParallelismConfiguration
    write::WriteJSON $projectParametersDict
 }
+
+proc FSI::write::GetProblemDataDict { } {
+    # Initialize dict
+    set problem_data_dict [dict create]
+
+    # TODO: Problem name
+
+    # Parallelism data
+    set paralleltype [write::getValue ParallelType]
+    dict set problem_data_dict parallel_type $paralleltype
+
+    # TODO: Echo level
+    # TODO: Start time
+    # TODO: End time
+
+    return $problem_data_dict
+}
+proc FSI::write::GetSolverSettingsDict { } {
+    
+}
+
+
 
 proc FSI::write::UpdateUniqueNames { appid } {
     set unList [list "Results"]
