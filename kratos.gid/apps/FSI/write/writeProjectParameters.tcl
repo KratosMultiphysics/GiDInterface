@@ -46,6 +46,7 @@ proc FSI::write::GetProcessesDict { } {
     dict set processes_dict fluid_initial_conditions_process_list [dict get $FSI::write::fluid_project_parameters processes initial_conditions_process_list]
     dict set processes_dict fluid_boundary_conditions_process_list [dict get $FSI::write::fluid_project_parameters processes boundary_conditions_process_list]
     dict set processes_dict fluid_gravity [dict get $FSI::write::fluid_project_parameters processes gravity]
+    dict set processes_dict fluid_auxiliar_process_list [dict get $FSI::write::fluid_project_parameters processes auxiliar_process_list]
     
     # Structure
     dict set processes_dict structure_constraints_process_list [dict get $FSI::write::structure_project_parameters processes constraints_process_list]
