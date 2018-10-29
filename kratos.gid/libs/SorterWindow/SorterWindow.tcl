@@ -1,3 +1,5 @@
+package provide SorterWindow 1.0
+
 namespace eval SorterWindow {
     variable winpath
     variable plot

@@ -7,7 +7,7 @@
 #################### GiD Tcl events ######################
 ##########################################################
 proc InitGIDProject { dir } {
-    # W "InitGIDProject"
+    #W "InitGIDProject"
     Kratos::InitGIDProject $dir
 }
 proc GiD_Event_AfterNewGIDProject {} {
@@ -16,7 +16,7 @@ proc GiD_Event_AfterNewGIDProject {} {
 
 # Load GiD project files (initialise XML Tdom structure)
 proc GiD_Event_AfterReadGIDProject { filename } {
-    # W "GiD_Event_AfterReadGIDProject"
+    #W "GiD_Event_AfterReadGIDProject"
     set name [file tail $filename]
     set spd_file [file join ${filename}.gid ${name}.spd]
     Kratos::AfterReadGIDProject $spd_file
@@ -165,11 +165,7 @@ proc Kratos::InitGIDProject { dir } {
     }
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel 1 [list source [file join $dir libs $filename]]
-    }
-    foreach {dirname filename} {SorterWindow SorterWindow.tcl wcb wcb.tcl} {
-        uplevel 1 [list source [file join $dir libs $dirname $filename]]
-    }
-    
+    }    
     set kratos_private(UseWizard) 0
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
@@ -189,13 +185,18 @@ proc Kratos::InitGIDProject { dir } {
     update
     spdAux::LoadModelFiles
     gid_groups_conds::close_all_windows
-    after 500 [list spdAux::CreateWindow]
+    #kike: the problem here is that the model.spd with the information of the application 
+    #was not loaded because is invoked by a posterior event. I don't know really why is working apparently well !!
+    set activeapp_dom [spdAux::SetActiveAppFromDOM]
+    if { $activeapp_dom == "" } {
+        #open a window to allow the user select the app
+        after 500 [list spdAux::CreateWindow]
+    }
 }
 
 # Event triggered when opening a GiD model with kratos
 proc Kratos::AfterReadGIDProject { filespd } {
-    variable kratos_private
-
+    variable kratos_private 
     # Dont open the init window. Saved models have already app and dimension
     set spdAux::must_open_init_window 0
 
@@ -208,7 +209,7 @@ proc Kratos::AfterReadGIDProject { filespd } {
     gid_groups_conds::close_all_windows
     update
     if { ![file exists $filespd] } { return }
-    
+
     # Need transform? Get PT version
     set versionPT [gid_groups_conds::give_data_version]
     set kratos_private(problemtype_version) $versionPT

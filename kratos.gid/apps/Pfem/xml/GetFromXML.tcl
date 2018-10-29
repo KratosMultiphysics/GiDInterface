@@ -391,6 +391,7 @@ proc Pfem::xml::ProcGetRigidBodiesValues {domNode args} {
 }
 
 proc Pfem::xml::StartSortingWindow { } {
+    package require SorterWindow
     set data_dict [dict create]
     set conds [Pfem::xml::GetConditionsAndGroups PFEM_Loads]
     set nodalconds [Pfem::xml::GetConditionsAndGroups PFEM_NodalConditions]
