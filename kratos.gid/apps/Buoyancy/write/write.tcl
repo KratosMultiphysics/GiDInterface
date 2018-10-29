@@ -13,6 +13,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
     if {$err ne ""} {error $err}
 
     Fluid::write::Init
+    Fluid::write::InitConditionsMap
 
     # Init data
     write::initWriteConfiguration [Fluid::write::GetAttributes]
