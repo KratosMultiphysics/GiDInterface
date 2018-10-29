@@ -524,7 +524,6 @@ proc write::GetDefaultProblemDataDict { } {
     # Parallelization
     set paralleltype [write::getValue ParallelType]
     dict set problem_data_dict "parallel_type" $paralleltype
-    if {$paralleltype eq "OpenMP"} {
 
     # Write the echo level in the problem data section
     set echo_level [write::getValue Results EchoLevel]
