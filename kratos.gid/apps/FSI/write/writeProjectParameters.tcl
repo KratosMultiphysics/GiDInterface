@@ -31,22 +31,19 @@ proc FSI::write::writeParametersEvent { } {
 }
 
 proc FSI::write::GetProblemDataDict { } {
-    # Initialize dict
-    set problem_data_dict [dict create]
-
-    # TODO: Problem name
-
-    # Parallelism data
-    set paralleltype [write::getValue ParallelType]
-    dict set problem_data_dict parallel_type $paralleltype
-
-    # TODO: Echo level
-    # TODO: Start time
-    # TODO: End time
-
+    # Copy the section from the Fluid, who owns the time parameters of the model
+    set problem_data_dict [dict get $FSI::write::fluid_project_parameters problem_data]
     return $problem_data_dict
 }
 proc FSI::write::GetSolverSettingsDict { } {
+    
+}
+
+proc FSI::write::GetProcessesDict { } {
+    
+}
+
+proc FSI::write::GetOutputProcessesDict { } {
     
 }
 
