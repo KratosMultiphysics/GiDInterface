@@ -50,6 +50,8 @@ proc FSI::write::GetProcessesDict { } {
     # Structure
     dict set processes_dict structure_constraints_process_list [dict get $FSI::write::structure_project_parameters processes constraints_process_list]
     dict set processes_dict structure_loads_process_list [dict get $FSI::write::structure_project_parameters processes loads_process_list]
+
+    return $processes_dict
 }
 
 proc FSI::write::GetOutputProcessesDict { } {
