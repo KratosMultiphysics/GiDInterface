@@ -1,9 +1,9 @@
 # Project Parameters
 proc FSI::write::getParametersDict { } {
-   set projectParametersDict [dict create]
+    # Init the Fluid and Structural dicts
+    InitExternalProjectParameters
 
-   # FSI section
-   set FSIParametersDict [dict create]
+   set projectParametersDict [dict create]
 
    # Problem data
    set problem_data_dict [GetProblemDataDict]
@@ -12,60 +12,14 @@ proc FSI::write::getParametersDict { } {
    # Solver settings
    set solver_settings_dict [GetSolverSettingsDict]
    dict set FSIParametersDict solver_settings $solver_settings_dict
-   set solverSettingsDict [dict create]
-   set currentStrategyId [write::getValue FSISolStrat]
-   set currentCouplingSchemeId [write::getValue FSIScheme]
-   dict set solverSettingsDict solver_type $currentStrategyId
-   dict set solverSettingsDict coupling_scheme $currentCouplingSchemeId
-   set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
-   set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict FSI] ]
-
-   dict set solverSettingsDict mesh_solver [write::getValue FSIALEParams MeshSolver]
-
-   set solidInterfacesList [write::GetSubModelPartFromCondition STLoads StructureInterface2D]
-   lappend solidInterfacesList {*}[write::GetSubModelPartFromCondition STLoads StructureInterface3D]
-   dict set solverSettingsDict structure_interfaces_list $solidInterfacesList
-
-   set fluid_interface_UniqueName FluidNoSlipInterface$::Model::SpatialDimension
-   set fluidInterfacesList [write::GetSubModelPartFromCondition FLBC $fluid_interface_UniqueName]
-   dict set solverSettingsDict fluid_interfaces_list $fluidInterfacesList
-
-   dict set FSIParametersDict solver_settings $solverSettingsDict
-   dict set FSIParametersDict mapper_settings [GetMappingSettingsList]
-
-   # Structural section
-   UpdateUniqueNames Structural
-   apps::setActiveAppSoft Structural
-   write::initWriteConfiguration [Structural::write::GetAttributes]
-
-   set StructuralParametersDict [Structural::write::getParametersEvent]
-   set current [dict get $StructuralParametersDict solver_settings model_import_settings input_filename]
-   dict set StructuralParametersDict solver_settings model_import_settings input_filename "${current}_Structural"
-
-   # Fluid section
-   UpdateUniqueNames Fluid
-   apps::setActiveAppSoft Fluid
-   write::initWriteConfiguration [Fluid::write::GetAttributes]
    
-   # Get the fluid parameters dict
-   set FluidParametersDict [Fluid::write::getParametersDict]
+   # Processes settings
+   set processes_dict [GetProcessesDict]
+   dict set FSIParametersDict processes $processes_dict
 
-   # Change the input_filename
-   set current [dict get $FluidParametersDict solver_settings model_import_settings input_filename]
-   dict set FluidParametersDict solver_settings model_import_settings input_filename "${current}_Fluid"
-
-   # Add the MESH_DISPLACEMENT to the gid_output process
-   set gid_output [lindex [dict get $FluidParametersDict output_processes gid_output] 0]
-   set nodalresults [dict get $gid_output Parameters postprocess_parameters result_file_configuration nodal_results]
-   lappend nodalresults "MESH_DISPLACEMENT"
-   dict set gid_output Parameters postprocess_parameters result_file_configuration nodal_results $nodalresults
-   dict set FluidParametersDict output_processes gid_output [list $gid_output]
-   UpdateUniqueNames FSI
-   apps::setActiveAppSoft FSI
-
-   dict set projectParametersDict structure_solver_settings $StructuralParametersDict
-   dict set projectParametersDict fluid_solver_settings $FluidParametersDict
-   dict set projectParametersDict coupling_solver_settings $FSIParametersDict
+   # Output processes settings
+   set processes_dict [GetOutputProcessesDict]
+   dict set FSIParametersDict processes $output_processes
 
    return $projectParametersDict
 }
@@ -129,3 +83,17 @@ proc FSI::write::GetMappingSettingsList { } {
 #     "fluid_interface_submodelpart_name" : "FluidNoSlipInterface2D_FluidInterface",
 #     "structure_interface_submodelpart_name" : "StructureInterface2D_StructureInterface"
 # }
+
+proc FSI::write::InitExternalProjectParameters { } {
+    # Fluid section
+    UpdateUniqueNames Fluid
+    apps::setActiveAppSoft Fluid
+    write::initWriteConfiguration [Fluid::write::GetAttributes]
+    set FSI::write::fluid_project_parameters [Fluid::write::getParametersDict]
+
+    # Structure section
+    UpdateUniqueNames Structure
+    apps::setActiveAppSoft Structure
+    write::initWriteConfiguration [Structure::write::GetAttributes]
+    set FSI::write::structure_project_parameters [Structure::write::getParametersDict]
+}
