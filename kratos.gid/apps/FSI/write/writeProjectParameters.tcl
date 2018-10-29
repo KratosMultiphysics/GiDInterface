@@ -56,7 +56,17 @@ proc FSI::write::GetProcessesDict { } {
 }
 
 proc FSI::write::GetOutputProcessesDict { } {
+    set output_processes_dict [dict create]
+    set gid_output_list [list ]
+
+    # Structure
+    lappend gid_output_list [lindex [dict get $FSI::write::structure_project_parameters output_processes gid_output] 0]
     
+    # Fluid
+    lappend gid_output_list [lindex [dict get $FSI::write::fluid_project_parameters output_processes gid_output] 0]
+    
+    dict set output_processes_dict gid_output $gid_output_list
+    return $output_processes
 }
 
 
