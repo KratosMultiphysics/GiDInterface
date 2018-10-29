@@ -13,6 +13,7 @@ proc Fluid::write::Init { } {
     SetAttribute conditions_un FLBC
     SetAttribute materials_un FLMaterials
     SetAttribute drag_un FLDrags
+    SetAttribute time_parameters_un FLTimeParameters
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_script_file "KratosFluid.py"

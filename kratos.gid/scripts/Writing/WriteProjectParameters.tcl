@@ -515,6 +515,28 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
     return $result
 }
 
+proc write::GetDefaultProblemDataDict { } {
+    # Problem name
+    set problem_data_dict [dict create]
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set problem_data_dict problem_name $model_name
+
+    # Parallelization
+    set paralleltype [write::getValue ParallelType]
+    dict set problem_data_dict "parallel_type" $paralleltype
+    if {$paralleltype eq "OpenMP"} {
+
+    # Write the echo level in the problem data section
+    set echo_level [write::getValue Results EchoLevel]
+    dict set problem_data_dict echo_level $echo_level
+
+    # Time Parameters
+    dict set problem_data_dict start_time [write::getValue [GetConfigurationAttribute time_parameters_un] StartTime]
+    dict set problem_data_dict end_time [write::getValue FLTimeParameters EndTime]
+
+    return $problem_data_dict
+}
+
 proc write::GetDefaultOutputProcessDict { } {
     # prepare params
     set model_name [file tail [GiD_Info Project ModelName]]
