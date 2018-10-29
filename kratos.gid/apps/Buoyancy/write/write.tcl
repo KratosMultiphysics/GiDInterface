@@ -22,7 +22,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
     write::writeModelPartData
     Fluid::write::writeProperties
 
-    # Materials
+    # Materials (write materials in *.mdpa)
     write::writeMaterials [Fluid::write::GetAttribute validApps]
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
