@@ -216,7 +216,7 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     }
     # Output
     set time_parameters [list OutputControlType step OutputDeltaStep 1]
-    set time_params_path [spdAux::getRoute "Results"]
+    set time_params_path [spdAux::getRoute "FLResults"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
@@ -240,7 +240,7 @@ proc Fluid::examples::ErasePreviousIntervals { } {
 
 proc Fluid::examples::AddCuts { } {
     # Cuts
-    set results [spdAux::getRoute "Results"]
+    set results [spdAux::getRoute "FLResults"]
     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }

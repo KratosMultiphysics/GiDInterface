@@ -3,25 +3,25 @@ proc FSI::write::getParametersDict { } {
     # Init the Fluid and Structural dicts
     InitExternalProjectParameters
 
-   set projectParametersDict [dict create]
+    set projectParametersDict [dict create]
 
-   # Problem data
-   set problem_data_dict [GetProblemDataDict]
-   dict set FSIParametersDict problem_data $problem_data_dict
+    # Problem data
+    set problem_data_dict [GetProblemDataDict]
+    dict set projectParametersDict problem_data $problem_data_dict
 
-   # Solver settings
-   set solver_settings_dict [GetSolverSettingsDict]
-   dict set FSIParametersDict solver_settings $solver_settings_dict
-   
-   # Processes settings
-   set processes_dict [GetProcessesDict]
-   dict set FSIParametersDict processes $processes_dict
+    # Solver settings
+    set solver_settings_dict [GetSolverSettingsDict]
+    dict set projectParametersDict solver_settings $solver_settings_dict
+    
+    # Processes settings
+    set processes_dict [GetProcessesDict]
+    dict set projectParametersDict processes $processes_dict
 
-   # Output processes settings
-   set processes_dict [GetOutputProcessesDict]
-   dict set FSIParametersDict processes $output_processes
+    # Output processes settings
+    set output_processes [GetOutputProcessesDict]
+    dict set projectParametersDict output_processes $output_processes
 
-   return $projectParametersDict
+    return $projectParametersDict
 }
 
 proc FSI::write::writeParametersEvent { } {
@@ -66,10 +66,8 @@ proc FSI::write::GetOutputProcessesDict { } {
     lappend gid_output_list [lindex [dict get $FSI::write::fluid_project_parameters output_processes gid_output] 0]
     
     dict set output_processes_dict gid_output $gid_output_list
-    return $output_processes
+    return $output_processes_dict
 }
-
-
 
 proc FSI::write::UpdateUniqueNames { appid } {
     set unList [list "Results"]
@@ -116,4 +114,7 @@ proc FSI::write::InitExternalProjectParameters { } {
     Structural::write::SetAttribute time_parameters_un FLTimeParameters
     write::initWriteConfiguration [Structural::write::GetAttributes]
     set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
+
+    
+    apps::setActiveAppSoft FSI
 }

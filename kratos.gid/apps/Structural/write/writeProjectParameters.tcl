@@ -14,7 +14,9 @@ proc Structural::write::getOldParametersDict { } {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
-    } 
+    } {
+        set time_step [write::getValue STTimeParameters DeltaTime]
+    }
     # Add section to document
     dict set projectParametersDict problem_data $problemDataDict
 
@@ -47,7 +49,6 @@ proc Structural::write::getOldParametersDict { } {
     # TODO: Use default
     # Solution strategy
     set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue STSolStrat]
     set currentStrategyId [write::getValue STSolStrat]
     # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
     set solver_type_name $solutiontype

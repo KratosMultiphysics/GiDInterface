@@ -83,9 +83,8 @@ proc write::WriteJSON {processDict} {
 proc write::GetDefaultOutputDict { {appid ""} } {
     set outputDict [dict create]
     set resultDict [dict create]
-    W $appid
+    
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
-    W $results_UN
     set GiDPostDict [dict create]
     dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
     dict set GiDPostDict WriteDeformedMeshFlag      [getValue $results_UN GiDWriteMeshFlag]
@@ -519,7 +518,7 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
 proc write::GetDefaultProblemDataDict { {appid ""} } {
     
     if {$appid eq ""} {set results_UN Results } {set results_UN [GetConfigurationAttribute results_un]}
-
+WV results_UN
     # Problem name
     set problem_data_dict [dict create]
     set model_name [file tail [GiD_Info Project ModelName]]

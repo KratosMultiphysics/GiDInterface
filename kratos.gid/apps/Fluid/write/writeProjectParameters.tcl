@@ -3,10 +3,10 @@ proc ::Fluid::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
     # Problem data
-    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict]
+    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
 
     # output configuration
-    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
 
     # Solver settings
     dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
