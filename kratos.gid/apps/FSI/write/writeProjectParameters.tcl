@@ -35,8 +35,77 @@ proc FSI::write::GetProblemDataDict { } {
     set problem_data_dict [dict get $FSI::write::fluid_project_parameters problem_data]
     return $problem_data_dict
 }
+
 proc FSI::write::GetSolverSettingsDict { } {
-    
+    set solver_settings_dict [dict create]
+    set currentStrategyId [write::getValue FSISolStrat]
+    set currentCouplingSchemeId [write::getValue FSIScheme]
+
+    dict set solver_settings_dict solver_type $currentStrategyId
+    dict set solver_settings_dict coupling_scheme $currentCouplingSchemeId
+    # TODO: place an echo level in coupling
+    dict set solver_settings_dict echo_level 1
+
+    dict set solver_settings_dict structure_solver_settings [dict get $FSI::write::structure_project_parameters solver_settings]
+    dict set solver_settings_dict fluid_solver_settings [dict get $FSI::write::fluid_project_parameters solver_settings]
+
+    # TODO: place an echo level in meshing
+    set mesh_settings_dict [dict create ]
+    dict set mesh_settings_dict echo_level 0
+    dict set mesh_settings_dict domain_size [string index $::Model::SpatialDimension 0]
+    dict set mesh_settings_dict model_part_name [Fluid::write::GetAttribute model_part_name]
+    dict set mesh_settings_dict solver_type [write::getValue FSIALEParams MeshSolver]
+    dict set solver_settings_dict mesh_solver_settings $mesh_settings_dict
+
+    # coupling settings
+    # structure interface
+    set structure_interfaces_list [write::GetSubModelPartFromCondition STLoads StructureInterface2D]
+    lappend structure_interfaces_list {*}[write::GetSubModelPartFromCondition STLoads StructureInterface3D]
+    dict set solver_settings_dict coupling_settings structure_interfaces_list $structure_interfaces_list
+
+    # Fluid interface
+    set fluid_interface_uniquename FluidNoSlipInterface$::Model::SpatialDimension
+    set fluid_interfaces_list [write::GetSubModelPartFromCondition FLBC $fluid_interface_uniquename]
+    dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
+
+    # Mapper settings
+    dict set solver_settings_dict coupling_settings [write::getSolutionStrategyParametersDict] 
+    dict set solver_settings_dict coupling_settings mapper_settings [GetMappingSettingsList]
+
+    dict set solver_settings_dict coupling_settings coupling_strategy_settings [dict get [write::getSolversParametersDict FSI] coupling_strategy]
+
+
+    return $solver_settings_dict
+    dict set FSIParametersDict solver_settings $solver_settings_dict
+
+    # Structural section
+    UpdateUniqueNames Structural
+    apps::setActiveAppSoft Structural
+    write::initWriteConfiguration [Structural::write::GetAttributes]
+
+    set StructuralParametersDict [Structural::write::getParametersEvent]
+    set current [dict get $StructuralParametersDict solver_settings model_import_settings input_filename]
+    dict set StructuralParametersDict solver_settings model_import_settings input_filename "${current}_Structural"
+
+    # Fluid section
+    UpdateUniqueNames Fluid
+    apps::setActiveAppSoft Fluid
+    write::initWriteConfiguration [Fluid::write::GetAttributes]
+
+    # Get the fluid parameters dict
+    set FluidParametersDict [Fluid::write::getParametersDict]
+
+    # Change the input_filename
+    set current [dict get $FluidParametersDict solver_settings model_import_settings input_filename]
+    dict set FluidParametersDict solver_settings model_import_settings input_filename "${current}_Fluid"
+
+    # Add the MESH_DISPLACEMENT to the gid_output process
+    set gid_output [lindex [dict get $FluidParametersDict output_processes gid_output] 0]
+    set nodalresults [dict get $gid_output Parameters postprocess_parameters result_file_configuration nodal_results]
+    lappend nodalresults "MESH_DISPLACEMENT"
+    dict set gid_output Parameters postprocess_parameters result_file_configuration nodal_results $nodalresults
+ 
+
 }
 
 proc FSI::write::GetProcessesDict { } {
@@ -94,12 +163,6 @@ proc FSI::write::GetMappingSettingsList { } {
 
     return $mappingsList
 }
-
-# {
-#     "mapper_face" : "Unique" (otherwise "Positive" or "Negative")
-#     "fluid_interface_submodelpart_name" : "FluidNoSlipInterface2D_FluidInterface",
-#     "structure_interface_submodelpart_name" : "StructureInterface2D_StructureInterface"
-# }
 
 proc FSI::write::InitExternalProjectParameters { } {
     # Fluid section
