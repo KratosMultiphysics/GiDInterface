@@ -518,7 +518,7 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
 proc write::GetDefaultProblemDataDict { {appid ""} } {
     
     if {$appid eq ""} {set results_UN Results } {set results_UN [GetConfigurationAttribute results_un]}
-WV results_UN
+
     # Problem name
     set problem_data_dict [dict create]
     set model_name [file tail [GiD_Info Project ModelName]]
@@ -529,7 +529,6 @@ WV results_UN
     dict set problem_data_dict "parallel_type" $paralleltype
 
     # Write the echo level in the problem data section
-    W $results_UN 
     set echo_level [write::getValue $results_UN EchoLevel]
     dict set problem_data_dict echo_level $echo_level
 
