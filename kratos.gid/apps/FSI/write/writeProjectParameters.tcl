@@ -58,6 +58,14 @@ proc FSI::write::GetSolverSettingsDict { } {
     dict set solver_settings_dict mesh_solver_settings $mesh_settings_dict
 
     # coupling settings
+
+    # Mapper settings
+    dict set solver_settings_dict coupling_settings [write::getSolutionStrategyParametersDict] 
+    dict set solver_settings_dict coupling_settings mapper_settings [GetMappingSettingsList]
+
+    dict set solver_settings_dict coupling_settings coupling_strategy_settings [dict get [write::getSolversParametersDict FSI] coupling_strategy]
+
+    
     # structure interface
     set structure_interfaces_list [write::GetSubModelPartFromCondition STLoads StructureInterface2D]
     lappend structure_interfaces_list {*}[write::GetSubModelPartFromCondition STLoads StructureInterface3D]
@@ -67,14 +75,7 @@ proc FSI::write::GetSolverSettingsDict { } {
     set fluid_interface_uniquename FluidNoSlipInterface$::Model::SpatialDimension
     set fluid_interfaces_list [write::GetSubModelPartFromCondition FLBC $fluid_interface_uniquename]
     dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
-
-    # Mapper settings
-    dict set solver_settings_dict coupling_settings [write::getSolutionStrategyParametersDict] 
-    dict set solver_settings_dict coupling_settings mapper_settings [GetMappingSettingsList]
-
-    dict set solver_settings_dict coupling_settings coupling_strategy_settings [dict get [write::getSolversParametersDict FSI] coupling_strategy]
-
-
+    
     return $solver_settings_dict
     dict set FSIParametersDict solver_settings $solver_settings_dict
 
@@ -141,8 +142,8 @@ proc FSI::write::GetOutputProcessesDict { } {
 proc FSI::write::UpdateUniqueNames { appid } {
     set unList [list "Results"]
     foreach un $unList {
-         set current_un [apps::getAppUniqueName $appid $un]
-         spdAux::setRoute $un [spdAux::getRoute $current_un]
+	 set current_un [apps::getAppUniqueName $appid $un]
+	 spdAux::setRoute $un [spdAux::getRoute $current_un]
     }
 }
 
@@ -153,12 +154,12 @@ proc FSI::write::GetMappingSettingsList { } {
     set structural_interface_name StructureInterface$::Model::SpatialDimension
     set structuralInterface [lindex [write::GetSubModelPartFromCondition STLoads $structural_interface_name] 0]
     foreach fluid_interface [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute FLBC]/condition\[@n = '$fluid_interface_name'\]/group" ] {
-        set map [dict create]
-        set mapper_face [write::getValueByNode [$fluid_interface selectNodes ".//value\[@n='mapper_face']"] ]
-        dict set map mapper_face $mapper_face
-        dict set map fluid_interface_submodelpart_name [write::getSubModelPartId $fluid_interface_name [get_domnode_attribute $fluid_interface n]]
-        dict set map structure_interface_submodelpart_name $structuralInterface
-        lappend mappingsList $map
+	set map [dict create]
+	set mapper_face [write::getValueByNode [$fluid_interface selectNodes ".//value\[@n='mapper_face']"] ]
+	dict set map mapper_face $mapper_face
+	dict set map fluid_interface_submodelpart_name [write::getSubModelPartId $fluid_interface_name [get_domnode_attribute $fluid_interface n]]
+	dict set map structure_interface_submodelpart_name $structuralInterface
+	lappend mappingsList $map
     }
 
     return $mappingsList
