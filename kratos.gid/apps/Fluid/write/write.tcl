@@ -114,7 +114,7 @@ proc Fluid::write::writeBoundaryConditions { } {
     }
     set skin_group_name "_HIDDEN__SKIN_"
     if {[GiD_Groups exists $skin_group_name]} {GiD_Groups delete $skin_group_name}
-    GidUtils::MergeGroups $skin_group_name $groups
+    spdAux::MergeGroups $skin_group_name $groups
 
     # Write the conditions
     if {$::Model::SpatialDimension eq "3D"} {
