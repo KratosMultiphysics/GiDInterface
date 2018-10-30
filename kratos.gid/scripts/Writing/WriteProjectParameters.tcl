@@ -515,7 +515,10 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
     return $result
 }
 
-proc write::GetDefaultProblemDataDict { } {
+proc write::GetDefaultProblemDataDict { {appid ""} } {
+    
+    if {$appid eq ""} {set results_UN Results } {set results_UN [GetConfigurationAttribute results_un]}
+
     # Problem name
     set problem_data_dict [dict create]
     set model_name [file tail [GiD_Info Project ModelName]]
@@ -526,12 +529,12 @@ proc write::GetDefaultProblemDataDict { } {
     dict set problem_data_dict "parallel_type" $paralleltype
 
     # Write the echo level in the problem data section
-    set echo_level [write::getValue Results EchoLevel]
+    set echo_level [write::getValue $results_UN EchoLevel]
     dict set problem_data_dict echo_level $echo_level
 
     # Time Parameters
     dict set problem_data_dict start_time [write::getValue [GetConfigurationAttribute time_parameters_un] StartTime]
-    dict set problem_data_dict end_time [write::getValue FLTimeParameters EndTime]
+    dict set problem_data_dict end_time [write::getValue [GetConfigurationAttribute time_parameters_un] EndTime]
 
     return $problem_data_dict
 }

@@ -113,6 +113,7 @@ proc FSI::write::InitExternalProjectParameters { } {
     # Structure section
     UpdateUniqueNames Structure
     apps::setActiveAppSoft Structure
-    write::initWriteConfiguration [Structure::write::GetAttributes]
-    set FSI::write::structure_project_parameters [Structure::write::getParametersDict]
+    Structural::write::SetAttribute time_parameters_un FLTimeParameters
+    write::initWriteConfiguration [Structural::write::GetAttributes]
+    set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
 }
