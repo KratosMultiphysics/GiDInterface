@@ -139,7 +139,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict processes $processesDict
 
     # GiD output configuration
-    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Structural::app_id]
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {

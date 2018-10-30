@@ -83,8 +83,9 @@ proc write::WriteJSON {processDict} {
 proc write::GetDefaultOutputDict { {appid ""} } {
     set outputDict [dict create]
     set resultDict [dict create]
-
+    W $appid
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
+    W $results_UN
     set GiDPostDict [dict create]
     dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
     dict set GiDPostDict WriteDeformedMeshFlag      [getValue $results_UN GiDWriteMeshFlag]
@@ -529,6 +530,7 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
     dict set problem_data_dict "parallel_type" $paralleltype
 
     # Write the echo level in the problem data section
+    W $results_UN 
     set echo_level [write::getValue $results_UN EchoLevel]
     dict set problem_data_dict echo_level $echo_level
 
@@ -539,7 +541,7 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
     return $problem_data_dict
 }
 
-proc write::GetDefaultOutputProcessDict { } {
+proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # prepare params
     set model_name [file tail [GiD_Info Project ModelName]]
     set paralleltype [write::getValue ParallelType]
@@ -547,7 +549,7 @@ proc write::GetDefaultOutputProcessDict { } {
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]] 
     dict set outputProcessParams output_name $model_name
-    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
+    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict $appid]
 
     set outputConfigDict [dict create]
     if {$paralleltype eq "OpenMP"} {
