@@ -6,34 +6,20 @@ proc Structural::write::getOldParametersDict { } {
 
     # Problem data
     # Create section
-    set problemDataDict [dict create]
+    set problemDataDict [write::GetDefaultProblemDataDict $Structural::app_id]
 
-    # Add items to section
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set problemDataDict problem_name $model_name
-
-    # Parallelization
-    set paralleltype [write::getValue ParallelType]
-    dict set problemDataDict "parallel_type" $paralleltype
-    if {$paralleltype eq "OpenMP"} {
-        #set nthreads [write::getValue Parallelization OpenMPNumberOfThreads]
-        #dict set problemDataDict NumberofThreads $nthreads
-    } else {
-        #set nthreads [write::getValue Parallelization MPINumberOfProcessors]
-        #dict set problemDataDict NumberofProcessors $nthreads
-    }
     set solutiontype [write::getValue STSoluType]
     # Time Parameters
     if {$solutiontype eq "Static" || $solutiontype eq "eigen_value"} {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
-
-    } else {
+    } {
         set time_step [write::getValue STTimeParameters DeltaTime]
-        dict set problemDataDict start_time [write::getValue STTimeParameters StartTime]
-        dict set problemDataDict end_time [write::getValue STTimeParameters EndTime]
     }
+    # Add section to document
+    dict set projectParametersDict problem_data $problemDataDict
+
     if {$solutiontype eq "eigen_value"} {
         set eigen_process_dict [dict create]
         dict set eigen_process_dict python_module postprocess_eigenvalues_process
@@ -41,7 +27,7 @@ proc Structural::write::getOldParametersDict { } {
         dict set eigen_process_dict help "This process postprocces the eigen values for GiD"
         dict set eigen_process_dict process_name "PostProcessEigenvaluesProcess"
         set params [dict create]
-        dict set params "result_file_name" $model_name
+        dict set params "result_file_name" [file tail [GiD_Info Project ModelName]]
         dict set params "animation_steps" 20
         dict set params "label_type" "frequency"
         dict set eigen_process_dict "Parameters" $params
@@ -54,19 +40,15 @@ proc Structural::write::getOldParametersDict { } {
         dict set formfinding_process_dict process_name "FormfindingIOProcess"
         set params [dict create]
         dict set params "model_part_name" $model_part_name
-        dict set params "print_mdpa" [write::getValue Results print_prestress]
-        dict set params "print_prestress" [write::getValue Results print_mdpa]
+        dict set params "print_mdpa" [write::getValue STResults print_prestress]
+        dict set params "print_prestress" [write::getValue STResults print_mdpa]
         dict set params "read_prestress" [Structural::write::UsingFileInPrestressedMembrane]
         dict set formfinding_process_dict "Parameters" $params
     }
-    set echo_level [write::getValue Results EchoLevel]
-    dict set problemDataDict echo_level $echo_level
-    # Add section to document
-    dict set projectParametersDict problem_data $problemDataDict
 
+    # TODO: Use default
     # Solution strategy
     set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue STSolStrat]
     set currentStrategyId [write::getValue STSolStrat]
     # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
     set solver_type_name $solutiontype
@@ -75,7 +57,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict model_part_name $model_part_name
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set solverSettingsDict domain_size $nDim
-    dict set solverSettingsDict echo_level $echo_level
+    dict set solverSettingsDict echo_level [write::getValue STResults EchoLevel]
     dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
 
     if {$solutiontype eq "Dynamic"} {
@@ -86,7 +68,7 @@ proc Structural::write::getOldParametersDict { } {
     # Model import settings
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename $model_name
+    dict set modelDict input_filename [file tail [GiD_Info Project ModelName]]
     dict set solverSettingsDict model_import_settings $modelDict
 
     set materialsDict [dict create]
@@ -158,7 +140,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict processes $processesDict
 
     # GiD output configuration
-    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Structural::app_id]
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
@@ -228,7 +210,7 @@ proc Structural::write::writeParametersEvent { } {
 
 
 # Project Parameters
-proc Structural::write::getParametersEvent { } {
+proc Structural::write::getParametersDict { } {
     # Get the base dictionary for the project parameters
     set project_parameters_dict [getOldParametersDict]
 
@@ -243,7 +225,7 @@ proc Structural::write::getParametersEvent { } {
     return $project_parameters_dict
 }
 proc Structural::write::writeParametersEvent { } {
-    write::WriteJSON [::Structural::write::getParametersEvent]
+    write::WriteJSON [::Structural::write::getParametersDict]
 }
 
 proc Structural::write::UsingRotationDofElements { } {

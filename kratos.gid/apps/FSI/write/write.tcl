@@ -1,9 +1,13 @@
 namespace eval FSI::write {
-
+    variable fluid_project_parameters
+    variable structure_project_parameters
 }
 
 proc FSI::write::Init { } {
-
+    variable fluid_project_parameters
+    variable structure_project_parameters
+    set fluid_project_parameters [dict create ]
+    set structure_project_parameters [dict create ]
 }
 
 # Events
