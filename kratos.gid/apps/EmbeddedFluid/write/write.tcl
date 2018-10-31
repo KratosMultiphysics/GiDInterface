@@ -9,6 +9,7 @@ proc EmbeddedFluid::write::Init { } {
     SetAttribute conditions_un FLBC
     SetAttribute materials_un EMBFLMaterials
     SetAttribute results_un FLResults
+    SetAttribute time_parameters_un FLTimeParameters
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid" "EmbeddedFluid"]
     SetAttribute main_script_file "KratosFluid.py"
