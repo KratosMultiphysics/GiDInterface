@@ -7,6 +7,7 @@
 		 ElementType="Line,Surface,Volume" ProcessName="AssignModulusAndDirectionToNodesProcess" VariableName="VOLUME_ACCELERATION"
 		 help="Set gravity value giving a Modulus (for unit length or unit surface) and a Direction (with no value)"
 		 units="m/s^2" unit_magnitude="Acceleration">
+     <symbol proc='Solid::symbols::draw_selfweight' orientation='global'/>
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -44,7 +45,7 @@
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Line,Surface"  ProcessName="AssignModulusAndDirectionToNodesProcess" VariableName="VOLUME_ACCELERATION"
 		 help="Set gravity value giving a Value (for unit length or unit surface) and a Direction (with with no value)"
-		 units="m/s^2" unit_magnitude="Acceleration">
+		 units="m/s^2" unit_magnitude="Acceleration">     
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -55,7 +56,7 @@
     </DefaultValues>
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
-    </outputs>
+    </outputs>    
   </ConditionItem>
 
 
@@ -65,6 +66,7 @@
 		 ElementType="Point,Line,Surface" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set load value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N" unit_magnitude="F" VariableName="FORCE_LOAD">
+     <symbol proc='Solid::symbols::draw_load' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointLoadCondition3D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition3D2N"/>
@@ -79,8 +81,7 @@
     </inputs>
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
-    </outputs>
-    <symbol proc='Solid::symbols::draw_Load3D' orientation='global'/>
+    </outputs>    
   </ConditionItem>
 
 
@@ -162,7 +163,9 @@
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess"
 		 help="Set pressure value (considered direction: opposite to the geometry normal)"
-		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
+		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">     
+     <!-- <symbol proc='Solid::symbols::draw_surface_pressure' orientation='local'/> -->
+     <symbol proc="Solid::symbols::draw_loads_surface_pressure" orientation="loads"/>     
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>

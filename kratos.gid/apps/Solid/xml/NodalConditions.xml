@@ -2,6 +2,7 @@
 <NodalConditionList>
   <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorComponentsToNodesProcess" VariableName="DISPLACEMENT" kratos_module="SolidMechanicsApplication"
 		      analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
+    <symbol proc='gid_groups_conds::draw_symbol_image conditions/displacement.png' orientation='global'/>
     <outputs>
       <parameter n="DISPLACEMENT_REACTION" pn="Force Reaction" v="No"/>
     </outputs>
