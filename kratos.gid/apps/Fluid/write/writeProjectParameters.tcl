@@ -2,42 +2,11 @@
 proc ::Fluid::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
-    # First section -> Problem data
-    set problemDataDict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set problemDataDict problem_name $model_name
-
-    # Parallelization
-    set paralleltype [write::getValue ParallelType]
-    dict set problemDataDict "parallel_type" $paralleltype
-    if {$paralleltype eq "OpenMP"} {
-        #set nthreads [write::getValue Parallelization OpenMPNumberOfThreads]
-        #dict set problemDataDict NumberofThreads $nthreads
-    } else {
-        #set nthreads [write::getValue Parallelization MPINumberOfProcessors]
-        #dict set problemDataDict NumberofProcessors $nthreads
-    }
-
-    # Write the echo level in the problem data section
-    set echo_level [write::getValue Results EchoLevel]
-    dict set problemDataDict echo_level $echo_level
-
-    # Time Parameters
-    dict set problemDataDict start_time [write::getValue FLTimeParameters StartTime]
-    dict set problemDataDict end_time [write::getValue FLTimeParameters EndTime]
-    set automaticDeltaTime [write::getValue FLTimeParameters AutomaticDeltaTime]
-    #if {$automaticDeltaTime eq "Yes"} {
-    #    dict set problemDataDict "CFL_number" [write::getValue FLTimeParameters CFLNumber]
-    #} else {
-    #    dict set problemDataDict "time_step" [write::getValue FLTimeParameters DeltaTime]
-    #}
-
-    #dict set problemDataDict divergence_step [expr [write::getValue FLTimeParameters DivergenceCleareanceStep]]
-
-    dict set projectParametersDict problem_data $problemDataDict
+    # Problem data
+    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
 
     # output configuration
-    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
 
     # Solver settings
     dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]

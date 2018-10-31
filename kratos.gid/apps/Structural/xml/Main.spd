@@ -7,7 +7,7 @@
     <include n="Loads" active="1" path="apps/Structural/xml/Loads.spd"/>
     <include n="Processes" active="0" path="apps/Structural/xml/Processes.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/Structural/xml/SolutionStrategy.spd"/>
-    <include n="Results" active="1" path="apps/Common/xml/Results.spd"/>
+    <include n="Results" active="1" path="apps/Common/xml/Results.spd" un="STResults"/>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
     <include n="materials" active="1" path="apps/Structural/xml/Materials.spd"/>
   </container>

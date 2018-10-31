@@ -4,6 +4,7 @@ namespace eval ::Fluid {
     variable prefix
     variable attributes
     variable kratos_name
+    variable app_id
 }
 
 proc ::Fluid::Init { } {
@@ -12,6 +13,9 @@ proc ::Fluid::Init { } {
     variable prefix
     variable attributes
     variable kratos_name
+    variable app_id
+    
+    set app_id Fluid
 
     set kratos_name "FluidDynamicsApplication"
     set dir [apps::getMyDir "Fluid"]
