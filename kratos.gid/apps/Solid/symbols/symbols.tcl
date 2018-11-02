@@ -28,8 +28,8 @@ proc Solid::symbols::draw_selfweight { valuesList } {
     }    
     set modulus $data(modulus)
     if { $modulus == 0 } {
-        #really it is like is not applied
-        return ""
+        #the value could be set by other function field, intead as modulus, consider like positive modulus
+        set modulus 1.0
     }
     set direction [split $data(direction) ,]
     set opposite_direction [math::linearalgebra::scale_vect -1.0 $direction]
@@ -51,8 +51,8 @@ proc Solid::symbols::draw_load { valuesList } {
     }
     set modulus $data(modulus)
     if { $modulus == 0 } {
-        #really it is like is not applied
-        return ""
+        #the value could be set by other function field, intead as modulus, consider like positive modulus
+        set modulus 1.0
     }
     set direction [split $data(direction) ,]
     set force [MathUtils::ScalarByVectorProd $modulus $direction]
@@ -79,8 +79,8 @@ proc Solid::symbols::draw_arrow { valuesList } {
     }    
     set modulus $data(modulus)
     if { $modulus == 0 } {
-        #really it is like is not applied
-        return ""
+        #the value could be set by other function field, intead as modulus, consider like positive modulus
+        set modulus 1.0
     }
     set direction [split $data(direction) ,]
     set force [math::linearalgebra::scale_vect $modulus $direction]
@@ -109,8 +109,8 @@ proc Solid::symbols::draw_surface_pressure { valuesList } {
     } elseif { $modulus < 0 } {
         set load_local_direction [list 0 0 1] ;#considered positive pointing oposite to local normal
     } else {
-        #really it is like is not applied
-        return ""
+        #the value could be set by other function field, intead as modulus, consider like positive modulus
+        set load_local_direction [list 0 0 -1]
     }    
     set x_axis $load_local_direction
     lassign [MathUtils::CalculateLocalAxisFromXAxis $x_axis] y_axis z_axis
@@ -140,8 +140,8 @@ proc Solid::symbols::draw_loads_surface_pressure { valuesList } {
     } elseif { $modulus < 0 } {
         set load_local_direction [list 0 0 1] ;#considered positive pointing oposite to local normal
     } else {
-        #really it is like is not applied
-        return ""
+        #the value could be set by other function field, intead as modulus, consider like positive modulus
+        set load_local_direction [list 0 0 -1]
     }    
     set dictionary [dict create load_type local load_vector $load_local_direction]    
     return $dictionary
@@ -155,8 +155,8 @@ proc Solid::symbols::draw_moment { valuesList } {
     }
     set modulus $data(modulus)
     if { $modulus == 0 } {
-        #really it is like is not applied
-        return ""
+        #the value could be set by other function field, intead as modulus, consider like positive modulus
+        set modulus 1.0
     }
     set direction [split $data(direction) ,]
     set force [MathUtils::ScalarByVectorProd $modulus $direction]
@@ -183,8 +183,8 @@ proc Solid::symbols::draw_spring { valuesList } {
     }    
     set modulus $data(modulus)
     if { $modulus == 0 } {
-        #really it is like is not applied
-        return ""
+        #the value could be set by other function field, intead as modulus, consider like positive modulus
+        set modulus 1.0
     }
     set direction [split $data(direction) ,]
     set momentum [math::linearalgebra::scale_vect $modulus $direction]
@@ -215,8 +215,8 @@ proc Solid::symbols::draw_surface_ballast { valuesList } {
     } elseif { $modulus < 0 } {
         set load_local_direction [list 0 0 -1]
     } else {
-        #really it is like is not applied
-        return ""
+        #the value could be set by other function field, intead as modulus, consider like positive modulus
+        set load_local_direction [list 0 0 1]
     }    
     set x_axis $load_local_direction
     lassign [MathUtils::CalculateLocalAxisFromXAxis $x_axis] y_axis z_axis
