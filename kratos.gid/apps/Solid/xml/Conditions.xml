@@ -27,6 +27,7 @@
 		 ElementType="Surface"  ProcessName="AssignModulusAndDirectionToNodesProcess" VariableName="VOLUME_ACCELERATION"
 		 help="Set gravity value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="m/s^2" unit_magnitude="Acceleration">
+     <symbol proc='Solid::symbols::draw_selfweight' orientation='global'/>
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -45,7 +46,8 @@
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Line,Surface"  ProcessName="AssignModulusAndDirectionToNodesProcess" VariableName="VOLUME_ACCELERATION"
 		 help="Set gravity value giving a Value (for unit length or unit surface) and a Direction (with with no value)"
-		 units="m/s^2" unit_magnitude="Acceleration">     
+		 units="m/s^2" unit_magnitude="Acceleration">
+     <symbol proc='Solid::symbols::draw_selfweight' orientation='global'/>
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -66,7 +68,8 @@
 		 ElementType="Point,Line,Surface" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set load value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N" unit_magnitude="F" VariableName="FORCE_LOAD">
-     <symbol proc='Solid::symbols::draw_load' orientation='global'/>
+    <!-- <symbol proc='Solid::symbols::draw_load' orientation='global'/> -->
+    <symbol proc='Solid::symbols::draw_arrow' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointLoadCondition3D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition3D2N"/>
@@ -91,6 +94,7 @@
 		 ElementType="Point,Line" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set load value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N" unit_magnitude="F" VariableName="FORCE_LOAD">
+    <symbol proc='Solid::symbols::draw_arrow' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointLoadCondition2D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
@@ -110,6 +114,7 @@
 		 ElementType="Point,Line" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set load value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N" unit_magnitude="F" VariableName="FORCE_LOAD">
+    <symbol proc='Solid::symbols::draw_load' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="AxisymPointLoadCondition2D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineLoadCondition2D2N"/>
@@ -130,6 +135,7 @@
 		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess"
 		 help="Set pressure value (considered direction: opposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
+    <symbol proc="Solid::symbols::draw_loads_surface_pressure" orientation="loads"/>
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="LineLoadCondition2D3N"/>
@@ -147,6 +153,7 @@
 		 ElementType="Line" ProcessName="AssignScalarToConditionsProcess"
 		 help="Set pressure value (considered direction: opposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">
+    <symbol proc="Solid::symbols::draw_loads_surface_pressure" orientation="loads"/>
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="AxisymLineLoadCondition2D2N"/>
       <item  GeometryType="Line" nodes="3" KratosName="AxisymLineLoadCondition2D3N"/>
@@ -164,8 +171,8 @@
 		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess"
 		 help="Set pressure value (considered direction: opposite to the geometry normal)"
 		 units="Pa" unit_magnitude="P" VariableName="POSITIVE_FACE_PRESSURE">     
-     <!-- <symbol proc='Solid::symbols::draw_surface_pressure' orientation='local'/> -->
-     <symbol proc="Solid::symbols::draw_loads_surface_pressure" orientation="loads"/>     
+     <!-- <symbol proc='Solid::symbols::draw_surface_pressure' orientation='local'/> -->  
+     <symbol proc="Solid::symbols::draw_loads_surface_pressure" orientation="loads"/>  
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceLoadCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceLoadCondition3D6N"/>
@@ -187,6 +194,7 @@
 	ElementType="Point,Line,Surface" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 	help="Set stiffness value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 	units="N/m^3" unit_magnitude="F/L^3" VariableName="ELASTIC_LOAD">
+    <symbol proc='Solid::symbols::draw_spring' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointElasticCondition3D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="LineElasticCondition3D2N"/>
@@ -211,6 +219,7 @@
 		 ElementType="Point,Line" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set stiffness value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N/m^3" unit_magnitude="F/L^3" VariableName="ELASTIC_LOAD">
+    <symbol proc='Solid::symbols::draw_spring' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointElasticCondition2D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="LineElasticCondition2D2N"/>
@@ -282,6 +291,7 @@
 		 ElementType="Surface" ProcessName="AssignScalarToConditionsProcess"
 		 help="Set ballast value (considered direction: normal to the geometry)"
 		 units="N/m^3" unit_magnitude="F/L^3" VariableName="BALLAST_COEFFICIENT">
+     <symbol proc='Solid::symbols::draw_surface_ballast' orientation='local'/>
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceElasticCondition3D3N"/>
       <item  GeometryType="Triangle"      nodes="6" KratosName="SurfaceElasticCondition3D6N"/>
@@ -302,6 +312,7 @@
 		 ElementType="Point,Line,Surface" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set moment load giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N*m" unit_magnitude="F*L" VariableName="MOMENT_LOAD">
+    <symbol proc='Solid::symbols::draw_moment' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointMomentCondition3D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="LineMomentCondition3D2N"/>
@@ -326,6 +337,7 @@
 		 ElementType="Point,Line,Surface" ProcessName="AssignTorqueToConditionsProcess"
 		 help="Set load couple value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N*m" unit_magnitude="F*L" VariableName="FORCE_LOAD">
+    <symbol proc='gid_groups_conds::draw_symbol_text couple' orientation='global'/>     
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointLoadCondition3D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="LineLoadCondition3D2N"/>
@@ -350,6 +362,7 @@
 		 ElementType="Point,Line" ProcessName="AssignScalarToConditionsProcess"
 		 help="Set moment load value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N*m" unit_magnitude="F*L" VariableName="PLANE_MOMENT_LOAD">
+    <symbol proc='Solid::symbols::draw_moment' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointMomentCondition2D1N"/>
       <item  GeometryType="Line" nodes="2" KratosName="LineMomentCondition2D2N"/>

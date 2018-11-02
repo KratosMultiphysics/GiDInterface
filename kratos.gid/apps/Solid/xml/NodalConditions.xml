@@ -10,6 +10,7 @@
 
   <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignVectorComponentsToNodesProcess" VariableName="VELOCITY" kratos_module="SolidMechanicsApplication"
 		      analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
+    <symbol proc='gid_groups_conds::draw_symbol_text velocity' orientation='global'/> 
     <outputs>
       <parameter n="VELOCITY_REACTION" pn="Velocity Reaction" v="No"/>
     </outputs>
@@ -55,6 +56,7 @@
 
   <NodalConditionItem  n="AXIAL_TURN_3D" pn="Axial turn" ProcessName="AssignRigidBodyRotationToNodesProcess3D" VariableName="DISPLACEMENT" kratos_module="SolidMechanicsApplication" v="No"
 		       analysis_type="Static,Quasi-static,Dynamic" unit_magnitude="Angle" units="rad" App="Solid" state="CheckNodalConditionStateSolid" Interval="Total">
+           <symbol proc='gid_groups_conds::draw_symbol_text {axial turn}' orientation='global'/> 
   </NodalConditionItem>
 
   <NodalConditionItem  n="AXIAL_VELOCITY_TURN_3D" pn="Axial turn velocity" ProcessName="AssignRigidBodyRotationToNodesProcess3D" VariableName="VELOCITY" kratos_module="SolidMechanicsApplication" v="No"
