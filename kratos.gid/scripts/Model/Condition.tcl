@@ -11,7 +11,8 @@ oo::class create Condition {
     variable TopologyFeatures
     variable defaults
     variable groupby
-    
+    variable symbol
+        
     constructor {n} {
         next $n
         variable TopologyFeatures
@@ -24,6 +25,7 @@ oo::class create Condition {
         set processName ""
         variable groupby
         set groupby ""
+        set symbol [list]
     }
     
     method addTopologyFeature {top} {
@@ -71,6 +73,15 @@ oo::class create Condition {
     method getGroupBy { } {
         variable groupby
         return $groupby
+    }
+
+    method setSymbol {data} {
+        variable symbol
+        set symbol $data
+    }
+    method getSymbol { } {
+        variable symbol
+        return $symbol
     }
     method setDefault {itemName itemField itemValue} {
         variable defaults
@@ -147,6 +158,15 @@ proc Model::ParseCondNode { node } {
         $cnd setAttribute $att [split [$node getAttribute $att] ","]
         #W "$att : [$el getAttribute $att]"
     }
+    set symbol_node [$node getElementsByTagName symbol]
+    if { [llength $symbol_node]==1 } {
+        set data [list]
+        foreach attribute [$symbol_node attributes] {
+            lappend data $attribute [$symbol_node getAttribute $attribute]            
+        }
+        $cnd setSymbol $data
+    }
+    
     set topology_base [$node getElementsByTagName TopologyFeatures]
     if {[llength $topology_base] eq 1} {
         foreach top [$topology_base getElementsByTagName item]  {

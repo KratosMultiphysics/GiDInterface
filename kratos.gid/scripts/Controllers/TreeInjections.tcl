@@ -209,6 +209,15 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
         set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
+        set symbol_data [$cnd getSymbol]
+        if { [llength $symbol_data] } {
+            set txt "<symbol"
+            foreach {attribute value} $symbol_data {
+                append txt " $attribute='$value'"
+            }
+            append txt "/>"
+            append node $txt
+        }
         set inputs [concat [$process getInputs] [$cnd getInputs] ]
         foreach {inName in} $inputs {
             set forcedParams [list cnd_v [$cnd getDefault $inName v] n $n units $units um $um base $process]
@@ -754,9 +763,9 @@ proc spdAux::ProcGet_materials_list_simple {domNode args} {
     set filters [list ]
     if {$const_law_name != ""} {
         set const_law [Model::getConstitutiveLaw $const_law_name]
-	if {$const_law != ""} {
-	    set filters [$const_law getMaterialFilters]
-	}
+        if {$const_law != ""} {
+            set filters [$const_law getMaterialFilters]
+        }
     }
     set materials [Model::GetMaterialsNames $filters]
 
