@@ -178,7 +178,7 @@ proc Fluid::write::writeConditionsMesh { } {
             set groupid [get_domnode_attribute $group n]
             dict set groups_dict $groupid what "Conditions"
         } 
-        write::writeConditionGroupedSubmodelParts $condid $groups_dict
+        write::writeConditionGroupedSubmodelPartsByUniqueId $condid $groups_dict $Fluid::write::FluidConditionMap
     }
 }
 
