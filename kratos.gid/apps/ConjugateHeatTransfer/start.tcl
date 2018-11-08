@@ -21,7 +21,7 @@ proc ::ConjugateHeatTransfer::Init { } {
     
     
     apps::LoadAppById "Buoyancy"
-    apps::LoadAppById "ConvectionDiffusion"
+    #apps::LoadAppById "ConvectionDiffusion"
     
     # Intervals 
     dict set attributes UseIntervals 1

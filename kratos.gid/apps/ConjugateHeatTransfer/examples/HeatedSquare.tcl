@@ -28,27 +28,45 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry3D {args} {
 proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
+    GiD_Layers create HeatSource
     GiD_Layers edit to_use Fluid
 
     # Geometry creation
     ## Points ##
     set coordinates [list 0 0 0 0 1 0 1 1 0 1 0 0]
-    set fluidPoints [list ]
+    set fluid_points [list ]
     foreach {x y z} $coordinates {
-        lappend fluidPoints [GiD_Geometry create point append Fluid $x $y $z]
+        lappend fluid_points [GiD_Geometry create point append Fluid $x $y $z]
+    }
+    
+    set coordinates [list 1 1 0 2 1 0 2 0 0 1 0 0]
+    set convection_points [list ]
+    foreach {x y z} $coordinates {
+        lappend convection_points [GiD_Geometry create point append HeatSource $x $y $z]
     }
 
     ## Lines ##
-    set fluidLines [list ]
-    set initial [lindex $fluidPoints 0]
-    foreach point [lrange $fluidPoints 1 end] {
-        lappend fluidLines [GiD_Geometry create line append stline Fluid $initial $point]
+    set fluid_lines [list ]
+    set initial [lindex $fluid_points 0]
+    foreach point [lrange $fluid_points 1 end] {
+        lappend fluid_lines [GiD_Geometry create line append stline Fluid $initial $point]
         set initial $point
     }
-    lappend fluidLines [GiD_Geometry create line append stline Fluid $initial [lindex $fluidPoints 0]]
+    lappend fluid_lines [GiD_Geometry create line append stline Fluid $initial [lindex $fluid_points 0]]
+
+    set convection_lines [list ]
+    set initial [lindex $convection_points 0]
+    foreach point [lrange $convection_points 1 end] {
+        lappend convection_lines [GiD_Geometry create line append stline HeatSource $initial $point]
+        set initial $point
+    }
+    lappend convection_lines [GiD_Geometry create line append stline HeatSource $initial [lindex $convection_points 0]]
 
     ## Surface ##
-    GiD_Process Mescape Geometry Create NurbsSurface {*}$fluidLines escape escape
+    GiD_Layers edit to_use Fluid
+    GiD_Process Mescape Geometry Create NurbsSurface {*}$fluid_lines escape escape
+    GiD_Layers edit to_use HeatSource
+    GiD_Process Mescape Geometry Create NurbsSurface {*}$convection_lines escape escape
 
 }
 

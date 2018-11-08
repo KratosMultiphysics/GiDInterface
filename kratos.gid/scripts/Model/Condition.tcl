@@ -122,6 +122,15 @@ proc Model::ForgetCondition { cnd_id } {
     }
     set Conditions $Conditions2
 }
+proc Model::DeleteRepeatedConditions { } {
+    variable Conditions
+    set Conditions2 [dict create ]
+    foreach cnd $Conditions {
+        set cnd_id [$cnd getName] 
+        dict set Conditions2 $cnd
+    }
+    set Conditions $Conditions2
+}
 proc Model::GetConditions {args} { 
     variable Conditions
     if {$args eq ""} {

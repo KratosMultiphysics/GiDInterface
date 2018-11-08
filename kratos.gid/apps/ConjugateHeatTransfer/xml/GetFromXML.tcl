@@ -8,14 +8,10 @@ proc ConjugateHeatTransfer::xml::Init { } {
     variable dir
     Model::InitVariables dir $ConjugateHeatTransfer::dir
 
-    #Model::ForgetSolutionStrategies
-    #Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
-    #Model::getSolutionStrategies "../../Structural/xml/Strategies.xml"
-    #Model::ForgetSolutionStrategy Eigen
-    #Model::getSolutionStrategies Strategies.xml
-    #Model::getConditions Conditions.xml
 
-    #Model::getSolvers Coupling_solvers.xml
+    Model::getMaterials "../../ConvectionDiffusion/xml/Materials.xml"
+    
+    Model::getConstitutiveLaws "../../ConvectionDiffusion/xml/ConstitutiveLaws.xml" 
 }
 
 proc ConjugateHeatTransfer::xml::getUniqueName {name} {
