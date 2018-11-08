@@ -48,7 +48,7 @@ proc ::ConvectionDiffusion::GetAttribute {name} {
 
 proc ::ConvectionDiffusion::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConvectionDiffusion::examples::CylinderHeatFlow] [= "Example\nCylinder heat flow"]   
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConvectionDiffusion::examples::HeatedSquare] [= "Example\nSquare heat flow"]   
 }
 
 proc ::ConvectionDiffusion::CustomMenus { } {

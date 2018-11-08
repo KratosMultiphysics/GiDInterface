@@ -42,7 +42,12 @@ proc ::ConjugateHeatTransfer::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     #uplevel #0 [list source [file join $dir write write.tcl]]
     #uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    #uplevel #0 [list source [file join $ConjugateHeatTransfer::dir examples examples.tcl]]
+    uplevel #0 [list source [file join $ConjugateHeatTransfer::dir examples examples.tcl]]
+}
+
+proc ::ConjugateHeatTransfer::CustomToolbarItems { } {
+    variable dir
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConjugateHeatTransfer::examples::HeatedSquare] [= "Example\nSquare heat flow"]   
 }
 
 proc ::ConjugateHeatTransfer::GetAttribute {name} {
