@@ -179,6 +179,24 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     $no_slip_cond setAttribute ov $cond_type
     set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Bottom_Wall]
     $no_slip_cond setAttribute ov $cond_type
+
+    # Fluid thermic initial condition
+    set thermic_fluid_BC_xpath [spdAux::getRoute "Buoyancy_CNVDFFNodalConditions"]
+    set thermic_fluid_temperature "$thermic_fluid_BC_xpath/condition\[@n='TEMPERATURE'\]"
+    GiD_Groups create "Fluid//Initial"
+    GiD_Groups edit state "Fluid//Initial" hidden
+    spdAux::AddIntervalGroup Fluid "Fluid//Initial"
+    set thermic_fluid_temperature_node [customlib::AddConditionGroupOnXPath $thermic_fluid_temperature "Fluid//Initial"]
+    $thermic_fluid_temperature_node setAttribute ov $body_type
+    set props [list value 100]
+    foreach {prop val} $props {
+         set propnode [$thermic_fluid_temperature_node selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Fluid Temperature $prop"
+        }
+    }
     
     # Thermal Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
