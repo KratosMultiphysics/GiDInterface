@@ -83,7 +83,7 @@ proc write::WriteJSON {processDict} {
 proc write::GetDefaultOutputDict { {appid ""} } {
     set outputDict [dict create]
     set resultDict [dict create]
-
+    
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
     set GiDPostDict [dict create]
     dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
@@ -515,7 +515,31 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
     return $result
 }
 
-proc write::GetDefaultOutputProcessDict { } {
+proc write::GetDefaultProblemDataDict { {appid ""} } {
+    
+    if {$appid eq ""} {set results_UN Results } {set results_UN [GetConfigurationAttribute results_un]}
+
+    # Problem name
+    set problem_data_dict [dict create]
+    set model_name [file tail [GiD_Info Project ModelName]]
+    dict set problem_data_dict problem_name $model_name
+
+    # Parallelization
+    set paralleltype [write::getValue ParallelType]
+    dict set problem_data_dict "parallel_type" $paralleltype
+
+    # Write the echo level in the problem data section
+    set echo_level [write::getValue $results_UN EchoLevel]
+    dict set problem_data_dict echo_level $echo_level
+
+    # Time Parameters
+    dict set problem_data_dict start_time [write::getValue [GetConfigurationAttribute time_parameters_un] StartTime]
+    dict set problem_data_dict end_time [write::getValue [GetConfigurationAttribute time_parameters_un] EndTime]
+
+    return $problem_data_dict
+}
+
+proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # prepare params
     set model_name [file tail [GiD_Info Project ModelName]]
     set paralleltype [write::getValue ParallelType]
@@ -523,7 +547,7 @@ proc write::GetDefaultOutputProcessDict { } {
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]] 
     dict set outputProcessParams output_name $model_name
-    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict]
+    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict $appid]
 
     set outputConfigDict [dict create]
     if {$paralleltype eq "OpenMP"} {

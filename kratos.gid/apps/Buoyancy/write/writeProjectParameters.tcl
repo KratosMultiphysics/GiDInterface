@@ -81,6 +81,7 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
     dict set settings fluid_solver_settings domain_size $nDim
 
     # Thermal things
+    ConvectionDiffusion::write::SetAttribute materials_file "BuoyancyMaterials.json"
     write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
     dict set settings thermal_solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
 

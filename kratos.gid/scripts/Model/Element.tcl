@@ -109,7 +109,7 @@ catch {NodalCondition destroy}
 oo::class create NodalCondition {
     superclass Condition
     variable reaction
-    variable ov
+    variable ov    
     
     constructor {n} {
         next $n
@@ -239,6 +239,14 @@ proc Model::ParseNodalConditionsNode { node } {
     foreach att [$node attributes] {
         $el setAttribute $att [split [$node getAttribute $att] ","]
         #W "$att : [$el getAttribute $att]"
+    }
+    set symbol_node [$node getElementsByTagName symbol]
+    if { [llength $symbol_node]==1 } {
+        set data [list]
+        foreach attribute [$symbol_node attributes] {
+            lappend data $attribute [$symbol_node getAttribute $attribute]            
+        }
+        $el setSymbol $data
     }
     set inputNodes [$node getElementsByTagName inputs]
     if {$inputNodes ne ""} {

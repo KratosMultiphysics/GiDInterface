@@ -84,6 +84,30 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
 }
 
 
+proc write::writeConditionGroupedSubmodelPartsByUniqueId {cid groups_dict conditions_map} {
+    set s [mdpaIndent]
+    WriteString "${s}Begin SubModelPart $cid // Condition $cid"
+
+    incr ::write::current_mdpa_indent_level
+    set s1 [mdpaIndent]
+    WriteString "${s1}Begin SubModelPartNodes"
+    WriteString "${s1}End SubModelPartNodes"
+    WriteString "${s1}Begin SubModelPartElements"
+    WriteString "${s1}End SubModelPartElements"
+    WriteString "${s1}Begin SubModelPartConditions"
+    WriteString "${s1}End SubModelPartConditions"
+
+    foreach group [dict keys $groups_dict] {
+        if {[dict exists $groups_dict $group what]} {set what [dict get $groups_dict $group what]} else {set what ""}
+        if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
+        write::writeGroupSubModelPartByUniqueId $cid $group $conditions_map $what $tableid_list
+    }
+
+    incr ::write::current_mdpa_indent_level -1
+    WriteString "${s}End SubModelPart"
+}
+
+
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "Elements"} {tableid_list ""} } {
     variable submodelparts

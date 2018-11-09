@@ -75,6 +75,10 @@ proc Buoyancy::examples::AssignGroups2D {args} {
     GiD_Groups edit color Bottom_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Bottom_Wall lines 4
 
+    GiD_Groups create Pressure
+    GiD_Groups edit color Pressure "#42eb71ff"
+    GiD_EntitiesGroups assign Pressure point 1
+
 }
 proc Buoyancy::examples::AssignGroups3D {args} {
     # Create the groups
@@ -131,18 +135,18 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     set fluidConditions [spdAux::getRoute "FLBC"]
 
     # Fluid Outlet
-    # set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-    # set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
-    # $outletNode setAttribute ov $condtype
-    # set props [list value 0.0]
-    # foreach {prop val} $props {
-    #      set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-    #      if {$propnode ne "" } {
-    #           $propnode setAttribute v $val
-    #      } else {
-    #         W "Warning - Couldn't find property Outlet $prop"
-    #     }
-    # }
+    set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
+    set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Pressure]
+    $outletNode setAttribute ov $condtype
+    set props [list value 0.0]
+    foreach {prop val} $props {
+         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Outlet $prop"
+        }
+    }
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Left_Wall] setAttribute ov $condtype

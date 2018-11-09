@@ -20,6 +20,8 @@ proc Structural::write::Init { } {
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute properties_location json 
     SetAttribute parts_un STParts
+    SetAttribute time_parameters_un STTimeParameters
+    SetAttribute results_un STResults
     SetAttribute materials_un STMaterials
     SetAttribute conditions_un STLoads
     SetAttribute nodal_conditions_un STNodalConditions
