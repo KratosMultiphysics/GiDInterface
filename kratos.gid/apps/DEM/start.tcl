@@ -58,13 +58,13 @@ proc ::DEM::CustomMenus { } {
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute DEMParts]/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        foreach volume [GiD_EntitiesGroups get $groupid volumes] {
-            GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
-        }
-    }
+    # set xp1 "[spdAux::getRoute DEMParts]/group"
+    # foreach group [$root selectNodes $xp1] {
+    #     set groupid [$group @n]
+    #     foreach volume [GiD_EntitiesGroups get $groupid volumes] {
+    #         GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
+    #     }
+    # }
 }
 
 proc ::DEM::AfterMeshGeneration { fail } {
@@ -76,9 +76,9 @@ proc ::DEM::AfterMeshGeneration { fail } {
       W "DEM::write::Elements_Substitution. $msg"
     }
 
-    if {!$without_window} {
-	GidUtils::EnableGraphics
-    }
+    # if {!$without_window} {
+	# GidUtils::EnableGraphics
+    # }
 }
 
 
