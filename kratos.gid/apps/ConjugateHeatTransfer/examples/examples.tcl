@@ -9,8 +9,7 @@ proc ConjugateHeatTransfer::examples::Init { } {
 
 proc ConjugateHeatTransfer::examples::UpdateMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Cylinder in air flow" ] 8 PRE [list ::ConjugateHeatTransfer::examples::HeatedSquare] "" "" insertafter =
-    #GiDMenu::InsertOption "Kratos" [list "Horizontal flexible bar" ] 8 PRE [list ::FSI::examples::HorizontalFlexibleBar] "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "Heated square" ] 8 PRE [list ::ConjugateHeatTransfer::examples::HeatedSquare] "" "" insertafter =
     GiDMenu::UpdateMenus
 }
 

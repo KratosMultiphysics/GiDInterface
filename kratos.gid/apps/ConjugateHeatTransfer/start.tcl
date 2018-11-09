@@ -1,5 +1,6 @@
 namespace eval ::ConjugateHeatTransfer {
     # Variable declaration
+    variable id
     variable dir
     variable prefix
     variable attributes
@@ -8,46 +9,45 @@ namespace eval ::ConjugateHeatTransfer {
 
 proc ::ConjugateHeatTransfer::Init { } {
     # Variable initialization
+    variable id
     variable dir
     variable prefix
     variable kratos_name
     variable attributes
     
-    set kratos_name ConjugateHeatTransferApplication
+    set kratos_name ConvectionDiffusionApplication
     
-    #W "Sourced ConjugateHeatTransfer"
+    set id ConjugateHeatTransfer
     set dir [apps::getMyDir "ConjugateHeatTransfer"]
     set prefix ConjugateHeatTransfer
     
-    
     apps::LoadAppById "Buoyancy"
-    #apps::LoadAppById "ConvectionDiffusion"
     
     # Intervals 
     dict set attributes UseIntervals 1
-    # dict set ::Fluid::attributes UseIntervals 0
-    # dict set ::Structural::attributes UseIntervals 0
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
     
     set ::Model::ValidSpatialDimensions [list 2D 3D]
     LoadMyFiles
-    #::spdAux::CreateDimensionWindow
 }
 
 proc ::ConjugateHeatTransfer::LoadMyFiles { } {
+    variable id
     variable dir
     
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     #uplevel #0 [list source [file join $dir write write.tcl]]
     #uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $ConjugateHeatTransfer::dir examples examples.tcl]]
+    if {[apps::getActiveAppId] eq $id} {
+        uplevel #0 [list source [file join $dir examples examples.tcl]]
+    }
 }
 
 proc ::ConjugateHeatTransfer::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConjugateHeatTransfer::examples::HeatedSquare] [= "Example\nSquare heat flow"]   
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConjugateHeatTransfer::examples::HeatedSquare] [= "Example\nSquare external heat"]   
 }
 
 proc ::ConjugateHeatTransfer::GetAttribute {name} {
@@ -55,6 +55,9 @@ proc ::ConjugateHeatTransfer::GetAttribute {name} {
     set value ""
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
+}
+proc ::ConjugateHeatTransfer::CustomMenus { } {
+    ConjugateHeatTransfer::examples::UpdateMenus
 }
 
 ::ConjugateHeatTransfer::Init

@@ -6,7 +6,7 @@ proc ::ConjugateHeatTransfer::examples::HeatedSquare {args} {
 		if { $retval == "cancel" } { return }
     }
     DrawSquareGeometry$::Model::SpatialDimension
-    #AssignGroups$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
     #TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
@@ -73,26 +73,47 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
 
 # Group assign
 proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
-    # Create the groups
-    GiD_Groups create Body
-    GiD_Groups edit color Body "#26d1a8ff"
-    GiD_EntitiesGroups assign Body surfaces 1
+    # Create the groups for the fluid
+    GiD_Groups create Fluid
+    GiD_Groups edit color Fluid "#26d1a8ff"
+    GiD_EntitiesGroups assign Fluid surfaces 1
 
-    GiD_Groups create Left_Wall
-    GiD_Groups edit color Left_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Left_Wall lines 1
+    GiD_Groups create Fluid_Left_Wall
+    GiD_Groups edit color Fluid_Left_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Fluid_Left_Wall lines 1
 
-    GiD_Groups create Top_Wall
-    GiD_Groups edit color Top_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Top_Wall lines 2
+    GiD_Groups create Fluid_Top_Wall
+    GiD_Groups edit color Fluid_Top_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Fluid_Top_Wall lines 2
 
-    GiD_Groups create Right_Wall
-    GiD_Groups edit color Right_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Right_Wall lines 3
+    GiD_Groups create Fluid_Right_Wall
+    GiD_Groups edit color Fluid_Right_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Fluid_Right_Wall lines 3
 
-    GiD_Groups create Bottom_Wall
-    GiD_Groups edit color Bottom_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Bottom_Wall lines 4
+    GiD_Groups create Fluid_Bottom_Wall
+    GiD_Groups edit color Fluid_Bottom_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Fluid_Bottom_Wall lines 4
+
+    # Create the groups for the heating structure
+    GiD_Groups create Heating
+    GiD_Groups edit color Heating "#d12f1f"
+    GiD_EntitiesGroups assign Heating surfaces 2
+
+    GiD_Groups create Heating_Left_Wall
+    GiD_Groups edit color Heating_Left_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Heating_Left_Wall lines 5
+
+    GiD_Groups create Heating_Top_Wall
+    GiD_Groups edit color Heating_Top_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Heating_Top_Wall lines 6
+
+    GiD_Groups create Heating_Right_Wall
+    GiD_Groups edit color Heating_Right_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Heating_Right_Wall lines 7
+
+    GiD_Groups create Heating_Bottom_Wall
+    GiD_Groups edit color Heating_Bottom_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Heating_Bottom_Wall lines 8
 
 }
 proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
