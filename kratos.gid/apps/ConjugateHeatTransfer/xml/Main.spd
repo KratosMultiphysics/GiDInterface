@@ -23,10 +23,7 @@
         </container>
 
         <container n="Buoyancy" pn="Coupling" icon="app" prefix="Buoyancy_" tree_state="open" open_window="0">
-            <include n="SolutionStrategy" active="1" path="apps/Buoyancy/xml/SolutionStrategy.spd"/>
             <include n="Boussinesq" active="1" path="apps/Buoyancy/xml/Boussinesq.spd"/>
-            <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
-            <include n="Results" active="1" un="Results,FLResults" path="apps/Common/xml/Results.spd" />
         </container>
 
     </container>
@@ -37,16 +34,17 @@
         <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
         <include n="InitialConditions" active="1" path="apps/ConvectionDiffusion/xml/InitialConditions.spd"/>
         <include n="BoundaryConditions" active="1" path="apps/ConvectionDiffusion/xml/BoundaryConditions.spd"/>
-        <include n="SolutionStrategy" active="1" path="apps/ConvectionDiffusion/xml/SolutionStrategy.spd"/>
+        <include n="SolutionStrategy" active="1" path="apps/Buoyancy/xml/SolutionStrategyConvectionDiffusion.spd"/>
         <include n="Results" active="1" path="apps/Common/xml/Results.spd"/>
         <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
         <include n="Materials" active="1" path="apps/ConvectionDiffusion/xml/Materials.spd"/>
     </container>
 
     <container n="CHT" pn="Coupling" icon="app" prefix="CHT" tree_state="open" open_window="0">
-        <!-- <include n="AnalysisType" active="1" path="apps/FSI/xml/AnalysisType.spd"/>
-        <include n="SolutionStrategy" active="1" path="apps/FSI/xml/SolutionStrategy.spd"/> -->
+        <!-- <include n="AnalysisType" active="1" path="apps/FSI/xml/AnalysisType.spd"/> -->
+        <include n="SolutionStrategy" active="1" path="apps/ConjugateHeatTransfer/xml/SolutionStrategy.spd"/>
         <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
+        <include n="Results" active="1" un="Results,FLResults,CNVDFFResults" path="apps/Common/xml/Results.spd" />
     </container>
 
 </container>
