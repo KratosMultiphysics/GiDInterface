@@ -8,6 +8,7 @@ proc ConjugateHeatTransfer::xml::Init { } {
     variable dir
     Model::InitVariables dir $ConjugateHeatTransfer::dir
 
+    Model::getConditions Conditions.xml
 
     Model::getMaterials "../../ConvectionDiffusion/xml/Materials.xml"
     
