@@ -5,31 +5,32 @@ proc DEM::write::Elements_Substitution {} {
     set fail 0
     package require math::statistics
     set seed [expr srand(0)]
-    set gelemlist [::wkcf::GetDEMActiveElements]
+    #set gelemlist [::wkcf::GetDEMActiveElements]
+    set gelemlist [list "SphericPartDEMElement3D"]
     set final_list_of_isolated_nodes [list]
     foreach celemid $gelemlist {
-	set cgroupidlist [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
-	set cohesive_groups_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Cohesivegroup}]
+	#set cgroupidlist [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
+	#set cohesive_groups_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Cohesivegroup}]
 
-	if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
-	    GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
-	}
+	# if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
+	#     GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
+	# }
 
-	foreach cgroupid $cgroupidlist { ; #Loop on each of the groups, be it a point, a line, a triangle, etc
-	    set list_of_elements_to_add_to_skin_sphere_group [list]
+	#foreach cgroupid $cgroupidlist { ; #Loop on each of the groups, be it a point, a line, a triangle, etc
+	    #set list_of_elements_to_add_to_skin_sphere_group [list]
 	    array set my_prop [join [::xmlutils::setXmlContainerPairs "DEM//c.DEM-Elements//c.DEM-Element//c.$cgroupid//c.Properties" {} dv]]
 	    set use_advanced_meshing_features $my_prop(AdvancedMeshingFeatures)
-	    if {([lsearch $cohesive_groups_list $cgroupid] == -1) && ($KPriv(what_dempack_package) eq "C-DEMPack") && ($use_advanced_meshing_features eq "No")} { ; #Non-cohesive, already meshed with cuban mesher
-		set cgroupid_elements [GiD_EntitiesGroups get $cgroupid elements]
+	    # if {([lsearch $cohesive_groups_list $cgroupid] == -1) && ($KPriv(what_dempack_package) eq "C-DEMPack") && ($use_advanced_meshing_features eq "No")} { ; #Non-cohesive, already meshed with cuban mesher
+		# set cgroupid_elements [GiD_EntitiesGroups get $cgroupid elements]
 
-		foreach cgroupid_element $cgroupid_elements {
-		    if {[lsearch [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements] $cgroupid_element] == -1} {
-		        lappend list_of_elements_to_add_to_skin_sphere_group $cgroupid_element
-		    }
-		}
-		GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
-		continue
-	    }
+		# foreach cgroupid_element $cgroupid_elements {
+		#     if {[lsearch [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements] $cgroupid_element] == -1} {
+		#         lappend list_of_elements_to_add_to_skin_sphere_group $cgroupid_element
+		#     }
+		# }
+		# GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
+		# continue
+	    # }
 
 	    if {$use_advanced_meshing_features eq "Yes"} {
 		if {$my_prop(AdvancedMeshingFeaturesAlgorithmType) eq "FEMtoDEM"} {
@@ -60,25 +61,25 @@ proc DEM::write::Elements_Substitution {} {
 
 		            if {$ndime == "3D"} {
 		                set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius] ; # We create a new sphere element starting from the previous node and obtain its id
-		                lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
-		                if {($is_external_element($element_id)==1) && ([lsearch $cohesive_groups_list $cgroupid] != -1)} {
-		                    GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $new_element_id
-		                }
+		                # lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
+		                # if {($is_external_element($element_id)==1) && ([lsearch $cohesive_groups_list $cgroupid] != -1)} {
+		                #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $new_element_id
+		                # }
 		            } else {
 		                set new_element_id [GiD_Mesh create element append circle 1 $node_id $final_elem_radius 0 0 1] ; # We assume the 2D problem is contained in the XY plane
-		                lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
-		                if {($is_external_element($element_id)==1) && ([lsearch $cohesive_groups_list $cgroupid] != -1)} {
-		                    GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $new_element_id
-		                }
+		                # lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
+		                # if {($is_external_element($element_id)==1) && ([lsearch $cohesive_groups_list $cgroupid] != -1)} {
+		                #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $new_element_id
+		                # }
 		            }
 		            foreach container_group [GiD_EntitiesGroups entity_groups elements $element_id] { ; # We get the list of groups to which the element with id $element_id belongs
 		                GiD_EntitiesGroups assign $container_group elements $new_element_id ; # We assign the element with id $new_element_id to each of the groups in the loop
 		            }
 		        }
 
-		        if {[lsearch $cohesive_groups_list $cgroupid] == -1} {
-		            GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
-		        }
+		        # if {[lsearch $cohesive_groups_list $cgroupid] == -1} {
+		        #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
+		        # }
 
 		        GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type hexahedra]
 		        GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type tetrahedra]
@@ -233,7 +234,7 @@ proc DEM::write::Elements_Substitution {} {
 	    lappend final_list_of_isolated_nodes {*}[lindex [GiD_EntitiesGroups get $cgroupid all_mesh] 0]
 
 	    DEM::write::Delete_Unnecessary_Elements_From_Mesh $cgroupid
-	}
+	#}   # foreach cgroupid $cgroupidlist
     }
 
     DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes $final_list_of_isolated_nodes
@@ -241,6 +242,58 @@ proc DEM::write::Elements_Substitution {} {
     DEM::write::Destroy_Skin_Sphere_Group $KPriv(what_dempack_package) ; # Getting rid of the SKIN_SPHERE_DO_NOT_DELETE group when in discontinuum or swimming
 
     return $fail
+}
+
+
+
+proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
+
+    set mesh_elements [GiD_EntitiesGroups get $cgroupid all_mesh]
+    set real_mesh_elements [lindex $mesh_elements 1]
+    set list_of_faces [list]
+    foreach mesh_element_id $real_mesh_elements {
+	set line($mesh_element_id) [GiD_Mesh get element $mesh_element_id]
+	set partial_list_of_faces [lrange [GiD_Mesh get element $mesh_element_id] 3 end]
+	lappend list_of_faces {*}$partial_list_of_faces
+    }
+    set unrepeated_list [lsort -integer -unique $list_of_faces]
+    if {$ndime == "3D"} {
+	set elements_in_common 6 ; #TODO: Check this constant
+    } else {
+	set elements_in_common 3 ; #TODO: Check this constant
+    }
+
+    foreach list_elem $unrepeated_list {
+	set result($list_elem) [lsearch -all $list_of_faces $list_elem]
+	set length($list_elem) [llength $result($list_elem)]
+	if {$length($list_elem)>$elements_in_common} {
+	    set todelete($list_elem) 1
+	} else {
+	    set todelete($list_elem) 0
+	}
+    }
+    foreach list_elem $unrepeated_list {
+	if {$todelete($list_elem)==1} {
+	    set list_of_faces [lsearch -all -inline -not -exact $list_of_faces $list_elem]
+	}
+    }
+    set unrepeated_list_exterior_nodes [lsort -integer -unique $list_of_faces]
+
+    foreach element_id $element_ids { ; # Here we loop on each of the elements by id
+	if {$ndime == "3D"} {
+	    set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ; # We get the nodes of the element
+	} else {
+	    set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end]
+	}
+	set is_external_element($element_id) 0
+	foreach element_node $element_nodes {
+	    if {[lsearch $unrepeated_list_exterior_nodes $element_node] != -1} {
+		set is_external_element($element_id) 1
+		break
+	    }
+	}
+    }
+    return [array get is_external_element]
 }
 
 proc DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
@@ -308,7 +361,7 @@ proc DEM::write::Destroy_Skin_Sphere_Group {what_dempack_package} {
     }
 }
 
-proc ::wkcf::GetNodeHigherentities {node_id} {
+proc DEM::write::GetNodeHigherentities {node_id} {
     set node_data [GiD_Info list_entities nodes $node_id]
     if {![regexp {HigherEntity: ([0-9]+)} $node_data dummy higherentity]} {
 	set higherentity 9999; #the node does not exist, return > 0 to not delete it

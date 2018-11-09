@@ -68,12 +68,11 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
 }
 
 proc ::DEM::AfterMeshGeneration { fail } {
-    # After Mesh Generation
-    set without_window [GidUtils::AreWindowsDisabled];
-    if {!$without_window} {
-	GidUtils::DisableGraphics
-    }
-    if {[catch DEM::write::Elements_Substitution} msg]} {
+    # set without_window [GidUtils::AreWindowsDisabled];
+    # if {!$without_window} {
+	# GidUtils::DisableGraphics
+    # }
+    if {[catch {DEM::write::Elements_Substitution} msg]} {
       W "DEM::write::Elements_Substitution. $msg"
     }
 
@@ -81,5 +80,7 @@ proc ::DEM::AfterMeshGeneration { fail } {
 	GidUtils::EnableGraphics
     }
 }
+
+
 
 ::DEM::Init
