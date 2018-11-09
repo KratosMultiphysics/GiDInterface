@@ -7,7 +7,7 @@ proc ::ConjugateHeatTransfer::examples::HeatedSquare {args} {
     }
     DrawSquareGeometry$::Model::SpatialDimension
     AssignGroups$::Model::SpatialDimension
-    #TreeAssignation$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -99,22 +99,21 @@ proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
     GiD_Groups edit color Heating "#d12f1f"
     GiD_EntitiesGroups assign Heating surfaces 2
 
-    GiD_Groups create Heating_Left_Wall
-    GiD_Groups edit color Heating_Left_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Heating_Left_Wall lines 5
-
     GiD_Groups create Heating_Top_Wall
     GiD_Groups edit color Heating_Top_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Heating_Top_Wall lines 6
+    GiD_EntitiesGroups assign Heating_Top_Wall lines 5
 
     GiD_Groups create Heating_Right_Wall
-    GiD_Groups edit color Heating_Right_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Heating_Right_Wall lines 7
+    GiD_Groups edit color Heating_Right_Wall "#c508cf"
+    GiD_EntitiesGroups assign Heating_Right_Wall lines 6
 
     GiD_Groups create Heating_Bottom_Wall
     GiD_Groups edit color Heating_Bottom_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Heating_Bottom_Wall lines 8
+    GiD_EntitiesGroups assign Heating_Bottom_Wall lines 7
 
+    GiD_Groups create Heating_Left_Wall
+    GiD_Groups edit color Heating_Left_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Heating_Left_Wall lines 8
 }
 proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
     # Create the groups
@@ -158,7 +157,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
 
     # Fluid Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
-    set fluidNode [customlib::AddConditionGroupOnXPath $parts Body]
+    set fluidNode [customlib::AddConditionGroupOnXPath $parts Heating]
     set props [list Element EulerianConvDiff$nd Material Gold DENSITY 19300.0 CONDUCTIVITY 310 SPECIFIC_HEAT 125.6]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
@@ -172,10 +171,10 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     # Thermal Nodal Conditions
     set thermalNodalConditions [spdAux::getRoute "CNVDFFNodalConditions"]
     set thermalnodcond "$thermalNodalConditions/condition\[@n='TEMPERATURE'\]"
-    GiD_Groups create "Body//Initial"
-    GiD_Groups edit state "Body//Initial" hidden
-    spdAux::AddIntervalGroup Body "Body//Initial"
-    set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Body//Initial"]
+    GiD_Groups create "Heating//Initial"
+    GiD_Groups edit state "Heating//Initial" hidden
+    spdAux::AddIntervalGroup Heating "Heating//Initial"
+    set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Heating//Initial"]
     $thermalnodNode setAttribute ov $body_type
     set props [list value 100]
     foreach {prop val} $props {
@@ -190,19 +189,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     # Thermal Conditions
     set thermalConditions [spdAux::getRoute "CNVDFFBC"]
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
-    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Left_Wall]
-    $thermalNode setAttribute ov $cond_type
-    set props [list value 303.15]
-    foreach {prop val} $props {
-         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property ImposedTemperature $prop"
-        }
-    }
-
-    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Right_Wall]
+    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Heating_Right_Wall]
     $thermalNode setAttribute ov $cond_type
     set props [list value 293.15]
     foreach {prop val} $props {
@@ -216,7 +203,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
 
     # Time parameters
     set time_parameters [list EndTime 100 DeltaTime 0.5]
-    set time_params_path [spdAux::getRoute "CNVDFFTimeParameters"]
+    set time_params_path [spdAux::getRoute "TimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
