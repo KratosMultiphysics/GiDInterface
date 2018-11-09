@@ -151,11 +151,36 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     set body_type surface
     if {$nd eq "3D"} { set cond_type surface; set body_type volume }
 
-    # Monolithic solution strategy set
+    # Solution strategy set only transient
     spdAux::SetValueOnTreeItem v "transient" CNVDFFSolStrat
     spdAux::SetValueOnTreeItem v "SuperLUSolver" CNVDFFtransientlinear_solver_settings Solver
 
     # Fluid Parts
+    set parts [spdAux::getRoute "FLParts"]
+    set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
+    set props [list Element Monolithic$nd Material Water ConstitutiveLaw Newtonian]
+    foreach {prop val} $props {
+        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property Fluid $prop"
+        }
+    }
+
+    # Fluid conditions
+    set fluid_conditions [spdAux::getRoute "FLBC"]
+    set fluid_noslip "$fluid_conditions/condition\[@n='NoSlip$nd'\]"
+    set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Left_Wall]
+    $no_slip_cond setAttribute ov $cond_type
+    set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Top_Wall]
+    $no_slip_cond setAttribute ov $cond_type
+    set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Right_Wall]
+    $no_slip_cond setAttribute ov $cond_type
+    set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Bottom_Wall]
+    $no_slip_cond setAttribute ov $cond_type
+    
+    # Thermal Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Heating]
     set props [list Element EulerianConvDiff$nd Material Gold DENSITY 19300.0 CONDUCTIVITY 310 SPECIFIC_HEAT 125.6]
@@ -164,7 +189,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
         if {$propnode ne "" } {
             $propnode setAttribute v $val
         } else {
-            W "Warning - Couldn't find property Fluid $prop"
+            W "Warning - Couldn't find property Heating $prop"
         }
     }
 
@@ -207,12 +232,14 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
+
     # Output
     set time_parameters [list OutputControlType step OutputDeltaStep 1]
     set time_params_path [spdAux::getRoute "Results"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
+    
     # Parallelism
     set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
     set time_params_path [spdAux::getRoute "Parallelization"]
