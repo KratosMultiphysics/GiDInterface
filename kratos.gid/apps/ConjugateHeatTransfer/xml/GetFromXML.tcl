@@ -25,20 +25,17 @@ proc ::ConjugateHeatTransfer::xml::MultiAppEvent {args} {
    }
 }
 
-
 proc ConjugateHeatTransfer::xml::CustomTree { args } {
     # Calling to the Buoyancy custom tree event
     apps::setActiveAppSoft Buoyancy
     Buoyancy::xml::CustomTree
 
     apps::setActiveAppSoft ConjugateHeatTransfer
-
     
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'ConvectionDiffusionInterface2D'\]"]
     if {$result_node ne "" } {$result_node delete}
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'ConvectionDiffusionInterface3D'\]"]
     if {$result_node ne "" } {$result_node delete}
-
 }
 
 ConjugateHeatTransfer::xml::Init

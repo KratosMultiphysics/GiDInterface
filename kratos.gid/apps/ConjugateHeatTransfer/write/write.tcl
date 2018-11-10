@@ -3,7 +3,6 @@ namespace eval ConjugateHeatTransfer::write {
     variable ConjugateHeatTransferConditions
     variable writeCoordinatesByGroups
     variable writeAttributes
-
     variable fluid_domain_solver_settings
     variable solid_domain_solver_settings
 }

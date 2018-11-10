@@ -10,6 +10,8 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     # Solver settings
     dict set projectParametersDict solver_settings [ConjugateHeatTransfer::write::GetSolverSettingsDict]
 
+    # Restart options
+    dict set projectParametersDict restart_options [write::GetDefaultRestartDict]
 
     return $projectParametersDict
     set processes [dict create]
@@ -23,10 +25,6 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     # Output configuration
     dict set projectParametersDict output_processes [GetOutputProcessList]
 
-    # Restart options
-    dict set projectParametersDict restart_options [write::GetDefaultRestartDict]
-
-
     return $projectParametersDict
 }
 
@@ -36,35 +34,15 @@ proc ConjugateHeatTransfer::write::writeParametersEvent { } {
     write::WriteJSON $projectParametersDict
 }
 
-# Body force SubModelParts and Process collection
-proc ConjugateHeatTransfer::write::getBodyForceProcessDict {} {
-    set root [customlib::GetBaseRoot]
-
-    set value [write::getValue CNVDFFBodyForce BodyForceValue]
-    set pdict [dict create]
-    dict set pdict "python_module" "assign_scalar_variable_process"
-    dict set pdict "kratos_module" "KratosMultiphysics"
-    dict set pdict "process_name" "AssignScalarVariableProcess"
-    set params [dict create]
-    set partgroup [write::getPartsSubModelPartId]
-    dict set params "model_part_name" [concat [lindex $partgroup 0]]
-    dict set params "variable_name" "HEAT_FLUX"
-    dict set params "value" $value
-    dict set params "constrained" false
-    dict set pdict "Parameters" $params
-
-    return $pdict
-}
-
 proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set solver_settings_dict [dict create]
     dict set solver_settings_dict solver_type "conjugate_heat_transfer"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solver_settings_dict domain_size $nDim
     
-
     dict set solver_settings_dict fluid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings]
     dict set solver_settings_dict solid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
+    
     return $solver_settings_dict
 }
 
@@ -86,7 +64,6 @@ proc ConjugateHeatTransfer::write::GetOutputProcessList { } {
     dict set result gid_output $gid_output
     return $result
 }
-
 
 proc ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     # Buoyancy section
