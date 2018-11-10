@@ -7,7 +7,8 @@
 	<!-- Fill this fields to automatically active an App without the init window -->
 	<hiddenfield n="activeapp" active="0" v="" state="disabled"/>
 	<value n="nDim" pn="Dimension" un="nDim" v="undefined" state="disabled" values="undefined,2D,2Da,3D" dict="undefined,Undefined,2D,2D,2Da,2D axisymmetric,3D,3D"/>
-	<appLink n="ConvectionDiffusion" public="1" pn="Convection-diffusion" active="0" appid="ConvectionDiffusion" prefix="CNVDFF"/>
+	<appLink n="ThermicLauncher" public="1" pn="Thermic" active="0" appid="ThermicLauncher" prefix="ThermicLauncher"/>
+	<appLink n="ConvectionDiffusion" public="0" pn="Convection-diffusion" active="0" appid="ConvectionDiffusion" prefix="CNVDFF"/>
 	<appLink n="Solid" public="1" pn="Solid" active="0" appid="Solid" prefix="SL"/>
 	<appLink n="Structural" public="1" pn="Structural" active="0" appid="Structural" prefix="ST"/>
 	<appLink n="FluidLauncher" public="1" pn="Fluid" active="0" appid="FluidLauncher" prefix="FLL"/>
