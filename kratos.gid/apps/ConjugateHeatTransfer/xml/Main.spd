@@ -18,7 +18,7 @@
             <include n="Parts" active="1" state="hidden" path="apps/ConvectionDiffusion/xml/Parts.spd"/>
             <include n="InitialConditions" un="Buoyancy_CNVDFFNodalConditions" active="1" path="apps/ConvectionDiffusion/xml/InitialConditions.spd"/>
             <include n="BoundaryConditions" un="Buoyancy_CNVDFFBC" active="1" path="apps/ConvectionDiffusion/xml/BoundaryConditions.spd"/>
-            <include n="SolutionStrategy"  un="Buoyancy_CNVDFFStratSection" active="1" path="apps/Buoyancy/xml/SolutionStrategyConvectionDiffusion.spd"/>
+            <include n="SolutionStrategy" un="Buoyancy_CNVDFFStratSection" active="1" path="apps/Buoyancy/xml/SolutionStrategyConvectionDiffusion.spd"/>
         </container>
 
         <container n="Buoyancy" pn="Coupling" icon="app" prefix="Buoyancy_" tree_state="open" open_window="0">

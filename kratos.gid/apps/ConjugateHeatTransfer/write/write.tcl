@@ -19,7 +19,6 @@ proc ConjugateHeatTransfer::write::Init { } {
     SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
 
-    
     variable fluid_domain_solver_settings
     variable solid_domain_solver_settings
     set fluid_domain_solver_settings [dict create]
@@ -35,10 +34,6 @@ proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
     set filename "[file tail [GiD_Info project ModelName]]"
 
     # Buoyancy mdpa
-    Buoyancy::write::Init
-    Fluid::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
-    Fluid::write::SetAttribute thermal_initial_cnd_un Buoyancy_CNVDFFNodalConditions
-    Fluid::write::SetCoordinatesByGroups 1
     write::writeAppMDPA Buoyancy
     write::RenameFileInModel "$filename.mdpa" "${filename}_Buoyancy.mdpa"
     
@@ -66,6 +61,13 @@ proc ConjugateHeatTransfer::write::Validate {} {
     return $err
 }
 
+
+proc ConjugateHeatTransfer::write::PrepareBuoyancy { } {
+    Buoyancy::write::Init
+    Fluid::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
+    Fluid::write::SetAttribute thermal_initial_cnd_un Buoyancy_CNVDFFNodalConditions
+    Fluid::write::SetCoordinatesByGroups 1
+}
 
 proc ConjugateHeatTransfer::write::WriteMaterialsFile { } {
     ConvectionDiffusion::write::WriteMaterialsFile

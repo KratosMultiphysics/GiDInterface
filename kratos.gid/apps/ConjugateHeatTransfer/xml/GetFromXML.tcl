@@ -34,10 +34,10 @@ proc ConjugateHeatTransfer::xml::CustomTree { args } {
     apps::setActiveAppSoft ConjugateHeatTransfer
 
     
-    # It seems that we do not need to call the custom tree for the Convection diffusion because
-    # Buoyancy calls it, and it only modifies something in the result section, wich is moved into coupling.
-
-    # Time intervals only in coupling 
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'ConvectionDiffusionInterface2D'\]"]
+    if {$result_node ne "" } {$result_node delete}
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'ConvectionDiffusionInterface3D'\]"]
+    if {$result_node ne "" } {$result_node delete}
 
 }
 

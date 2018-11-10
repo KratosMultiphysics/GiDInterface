@@ -179,6 +179,10 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     $no_slip_cond setAttribute ov $cond_type
     set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Bottom_Wall]
     $no_slip_cond setAttribute ov $cond_type
+    
+    set fluid_interface_path "$fluid_conditions/condition\[@n='FluidNoSlipInterface$nd'\]"
+    set fluid_interface [customlib::AddConditionGroupOnXPath $fluid_interface_path Fluid_Right_Wall]
+    $fluid_interface setAttribute ov $cond_type
 
     # Fluid thermic initial condition
     set thermic_fluid_BC_xpath [spdAux::getRoute "Buoyancy_CNVDFFNodalConditions"]
@@ -243,6 +247,10 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
             W "Warning - Couldn't find property ImposedTemperature $prop"
         }
     }
+    
+    set thermalcond "$thermalConditions/condition\[@n='ConvectionDiffusionInterface$nd'\]"
+    set thermal_interface [customlib::AddConditionGroupOnXPath $thermalcond Heating_Left_Wall]
+    $thermal_interface setAttribute ov $cond_type
 
     # Time parameters
     set time_parameters [list EndTime 100 DeltaTime 0.5]
