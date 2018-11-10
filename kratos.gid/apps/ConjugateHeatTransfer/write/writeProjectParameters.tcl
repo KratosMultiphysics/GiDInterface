@@ -57,15 +57,15 @@ proc ConjugateHeatTransfer::write::getBodyForceProcessDict {} {
 }
 
 proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
-    set solverSettingsDict [dict create]
-    dict set solverSettingsDict solver_type "conjugate_heat_transfer"
+    set solver_settings_dict [dict create]
+    dict set solver_settings_dict solver_type "conjugate_heat_transfer"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
-    dict set solverSettingsDict domain_size $nDim
+    dict set solver_settings_dict domain_size $nDim
     
 
     dict set solver_settings_dict fluid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings]
     dict set solver_settings_dict solid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
-    return $solverSettingsDict
+    return $solver_settings_dict
 }
 
 proc ConjugateHeatTransfer::write::GetOutputProcessList { } {
@@ -97,8 +97,7 @@ proc ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     # Heating section
     apps::setActiveAppSoft ConvectionDiffusion
     write::initWriteConfiguration [ConvectionDiffusion::write::GetAttributes]
-    set FSI::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
+    set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
 
-    
     apps::setActiveAppSoft ConjugateHeatTransfer
 }
