@@ -570,3 +570,13 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     set outputProcessesDict [dict create]
     dict set outputProcessesDict gid_output $output_process_list
 }
+
+proc write::GetDefaultRestartDict { } {
+
+    set restartDict [dict create]
+    dict set restartDict SaveRestart False
+    dict set restartDict RestartFrequency 0
+    dict set restartDict LoadRestart False
+    dict set restartDict Restart_Step 0
+    return $restartDict
+}

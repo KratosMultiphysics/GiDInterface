@@ -3,10 +3,10 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     
     set projectParametersDict [dict create]
 
-    return $projectParametersDict
     # Set the problem data section
-    dict set projectParametersDict problem_data [ConjugateHeatTransfer::write::GetProblemDataDict]
+    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict]
 
+    return $projectParametersDict
     # Solver settings
     dict set projectParametersDict solver_settings [ConjugateHeatTransfer::write::GetSolverSettingsDict]
 
@@ -22,50 +22,10 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     dict set projectParametersDict output_processes [GetOutputProcessList]
 
     # Restart options
-    set restartDict [dict create]
-    dict set restartDict SaveRestart False
-    dict set restartDict RestartFrequency 0
-    dict set restartDict LoadRestart False
-    dict set restartDict Restart_Step 0
-    dict set projectParametersDict restart_options $restartDict
+    dict set projectParametersDict restart_options [write::GetDefaultRestartDict]
 
 
     return $projectParametersDict
-}
-
-proc ConjugateHeatTransfer::write::GetProblemDataDict { } {
-
-    # First section -> Problem data
-    set problem_data_dict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set problem_data_dict problem_name $model_name
-
-    # Parallelization
-    set paralleltype [write::getValue ParallelType]
-    dict set problem_data_dict parallel_type $paralleltype
-
-    # Time step
-    set timeSteppingDict [dict create]
-    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
-        dict set problem_data_dict time_step [write::getValue CNVDFFTimeParameters DeltaTime]
-    } else {
-        dict set problem_data_dict time_step 1.0
-    }
-
-    # Time Parameters
-    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
-        dict set problem_data_dict start_time [write::getValue CNVDFFTimeParameters StartTime]
-        dict set problem_data_dict end_time [write::getValue CNVDFFTimeParameters EndTime]
-    } else {
-        dict set problem_data_dict start_time 0.0
-        dict set problem_data_dict end_time 0.99
-    }
-
-    # Write the echo level in the problem data section
-    set echo_level [write::getValue Results EchoLevel]
-    dict set problem_data_dict echo_level $echo_level
-
-    return $problem_data_dict
 }
 
 proc ConjugateHeatTransfer::write::writeParametersEvent { } {
