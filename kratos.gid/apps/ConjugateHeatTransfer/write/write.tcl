@@ -39,6 +39,7 @@ proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
     write::writeAppMDPA ConvectionDiffusion
     write::RenameFileInModel "$filename.mdpa" "${filename}_ConvectionDiffusion.mdpa"
 }
+
 proc ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
     # Materials
     WriteMaterialsFile
@@ -58,7 +59,7 @@ proc ConjugateHeatTransfer::write::Validate {} {
 
 
 proc ConjugateHeatTransfer::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] "False"
+    ConvectionDiffusion::write::WriteMaterialsFile
 }
 
 

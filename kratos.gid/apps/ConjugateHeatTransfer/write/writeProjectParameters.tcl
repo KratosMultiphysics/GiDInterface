@@ -3,6 +3,7 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     
     set projectParametersDict [dict create]
 
+    return $projectParametersDict
     # Set the problem data section
     dict set projectParametersDict problem_data [ConjugateHeatTransfer::write::GetProblemDataDict]
 
