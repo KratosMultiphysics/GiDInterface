@@ -4,6 +4,8 @@ namespace eval Buoyancy::write {
 
 proc Buoyancy::write::Init { } {    
     Fluid::write::Init
+    Fluid::write::SetAttribute thermal_bc_un "CNVDFFBC"
+    Fluid::write::SetAttribute thermal_initial_cnd_un [ConvectionDiffusion::write::GetAttribute nodal_conditions_un]
 }
 
 # Events
@@ -36,7 +38,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
     
     # SubmodelParts
     Fluid::write::writeMeshes
-    write::writeNodalConditions [ConvectionDiffusion::write::GetAttribute nodal_conditions_un]
+    write::writeNodalConditions [GetAttribute thermal_initial_cnd_un]
     Buoyancy::write::writeSubModelParts
 
     # Boussinesq nodes
@@ -65,7 +67,7 @@ proc Buoyancy::write::WriteMaterialsFile { } {
 }
 
 proc Buoyancy::write::writeSubModelParts { } {
-    set BCUN "CNVDFFBC"
+    set BCUN [GetAttribute thermal_bc_un]
     
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
@@ -91,7 +93,6 @@ proc Buoyancy::write::writeBoussinesqSubModelPart { } {
     ::write::writeGroupSubModelPart Boussinesq $groupid "Nodes"
     GiD_Groups delete $groupid
 }
-
 
 proc Buoyancy::write::GetAttribute {att} {
     return [Fluid::write::GetAttribute $att]

@@ -11,12 +11,6 @@ proc ConjugateHeatTransfer::write::Init { } {
     set ConjugateHeatTransferConditions(temp) 0
     unset ConjugateHeatTransferConditions(temp)
 
-    SetAttribute parts_un CNVDFFParts
-    SetAttribute nodal_conditions_un CNVDFFNodalConditions
-    SetAttribute conditions_un CNVDFFBC
-    SetAttribute materials_un FLMaterials
-    SetAttribute writeCoordinatesByGroups 0
-    SetAttribute validApps [list "ConjugateHeatTransfer"]
     SetAttribute main_script_file "KratosConjugateHeatTransfer.py"
     SetAttribute materials_file "ConjugateHeatTransferMaterials.json"
     SetAttribute properties_location json
@@ -31,11 +25,10 @@ proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
     
     set filename "[file tail [GiD_Info project ModelName]]"
 
-    # Init data
-    write::initWriteConfiguration [GetAttributes]
-
     # Buoyancy mdpa
     Buoyancy::write::Init
+    Fluid::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
+    Fluid::write::SetAttribute thermal_initial_cnd_un Buoyancy_CNVDFFNodalConditions
     Fluid::write::SetCoordinatesByGroups 1
     write::writeAppMDPA Buoyancy
     write::RenameFileInModel "$filename.mdpa" "${filename}_Buoyancy.mdpa"
