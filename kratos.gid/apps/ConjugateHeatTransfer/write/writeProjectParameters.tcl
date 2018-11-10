@@ -1,15 +1,17 @@
 # Project Parameters
 proc ::ConjugateHeatTransfer::write::getParametersDict { } {
+    InitExternalProjectParameters
     
     set projectParametersDict [dict create]
 
     # Set the problem data section
     dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict]
 
-    return $projectParametersDict
     # Solver settings
     dict set projectParametersDict solver_settings [ConjugateHeatTransfer::write::GetSolverSettingsDict]
 
+
+    return $projectParametersDict
     set processes [dict create]
     # Boundary conditions processes
     dict set processes initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
@@ -56,41 +58,13 @@ proc ConjugateHeatTransfer::write::getBodyForceProcessDict {} {
 
 proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue CNVDFFSolStrat]
-    set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]
-    dict set solverSettingsDict solver_type $currentStrategyId
-    dict set solverSettingsDict analysis_type $currentAnalysisTypeId
-    dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
+    dict set solverSettingsDict solver_type "conjugate_heat_transfer"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
+    
 
-    # Model import settings
-    set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set modelDict input_filename $model_name
-    dict set solverSettingsDict model_import_settings $modelDict
-
-    set materialsDict [dict create]
-    dict set materialsDict materials_filename [GetAttribute materials_file]
-    dict set solverSettingsDict material_import_settings $materialsDict
-
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict CNVDFFSolStrat CNVDFFScheme CNVDFFStratParams] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict ConjugateHeatTransfer] ]
-
-    # Parts
-    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
-
-    # Time stepping settings
-    set timeSteppingDict [dict create]
-    if {[write::getValue CNVDFFSolStrat] eq "transient"} {
-        dict set timeSteppingDict "time_step" [write::getValue CNVDFFTimeParameters DeltaTime]
-    } else {
-        dict set timeSteppingDict time_step 1.0
-    }
-    dict set solverSettingsDict time_stepping $timeSteppingDict
-
+    dict set solver_settings_dict fluid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings]
+    dict set solver_settings_dict solid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
     return $solverSettingsDict
 }
 
@@ -111,4 +85,20 @@ proc ConjugateHeatTransfer::write::GetOutputProcessList { } {
     lappend gid_output $res_dict
     dict set result gid_output $gid_output
     return $result
+}
+
+
+proc ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
+    # Buoyancy section
+    apps::setActiveAppSoft Buoyancy
+    write::initWriteConfiguration [Buoyancy::write::GetAttributes]
+    set ConjugateHeatTransfer::write::fluid_domain_solver_settings [Buoyancy::write::getParametersDict]
+
+    # Heating section
+    apps::setActiveAppSoft ConvectionDiffusion
+    write::initWriteConfiguration [ConvectionDiffusion::write::GetAttributes]
+    set FSI::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
+
+    
+    apps::setActiveAppSoft ConjugateHeatTransfer
 }

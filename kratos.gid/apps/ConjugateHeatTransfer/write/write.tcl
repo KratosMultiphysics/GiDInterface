@@ -3,6 +3,9 @@ namespace eval ConjugateHeatTransfer::write {
     variable ConjugateHeatTransferConditions
     variable writeCoordinatesByGroups
     variable writeAttributes
+
+    variable fluid_domain_solver_settings
+    variable solid_domain_solver_settings
 }
 
 proc ConjugateHeatTransfer::write::Init { } {
@@ -15,6 +18,12 @@ proc ConjugateHeatTransfer::write::Init { } {
     SetAttribute materials_file "ConjugateHeatTransferMaterials.json"
     SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
+
+    
+    variable fluid_domain_solver_settings
+    variable solid_domain_solver_settings
+    set fluid_domain_solver_settings [dict create]
+    set solid_domain_solver_settings [dict create]
 }
 
 # Events
