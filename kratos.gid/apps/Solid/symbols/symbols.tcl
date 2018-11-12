@@ -32,6 +32,9 @@ proc Solid::symbols::draw_selfweight { valuesList } {
         set modulus 1.0
     }
     set direction [split $data(direction) ,]
+    if { [llength $direction] == 2 } {
+        lappend direction 0.0
+    }
     set opposite_direction [math::linearalgebra::scale_vect -1.0 $direction]
     if { [info procs gid_draw_opengl::create_opengl_list_from_file_mesh_oriented_z_direction] != "" } {
         set list_id [gid_draw_opengl::create_opengl_list_from_file_mesh_oriented_z_direction $full_filename $color_lines $color_surfaces $opposite_direction]
@@ -55,6 +58,9 @@ proc Solid::symbols::draw_load { valuesList } {
         set modulus 1.0
     }
     set direction [split $data(direction) ,]
+    if { [llength $direction] == 2 } {
+        lappend direction 0.0
+    }
     set force [MathUtils::ScalarByVectorProd $modulus $direction]
     set x_axis [math::linearalgebra::unitLengthVector $force]
     lassign [MathUtils::CalculateLocalAxisFromXAxis $x_axis] y_axis z_axis    
@@ -83,6 +89,9 @@ proc Solid::symbols::draw_arrow { valuesList } {
         set modulus 1.0
     }
     set direction [split $data(direction) ,]
+    if { [llength $direction] == 2 } {
+        lappend direction 0.0
+    }    
     set force [math::linearalgebra::scale_vect $modulus $direction]
     set x_axis [math::linearalgebra::unitLengthVector $force]
     lassign [MathUtils::CalculateLocalAxisFromXAxis $x_axis] y_axis z_axis    
@@ -159,6 +168,9 @@ proc Solid::symbols::draw_moment { valuesList } {
         set modulus 1.0
     }
     set direction [split $data(direction) ,]
+    if { [llength $direction] == 2 } {
+        lappend direction 0.0
+    }    
     set force [MathUtils::ScalarByVectorProd $modulus $direction]
     set x_axis [math::linearalgebra::unitLengthVector $force]
     lassign [MathUtils::CalculateLocalAxisFromXAxis $x_axis] y_axis z_axis    
@@ -187,6 +199,9 @@ proc Solid::symbols::draw_spring { valuesList } {
         set modulus 1.0
     }
     set direction [split $data(direction) ,]
+    if { [llength $direction] == 2 } {
+        lappend direction 0.0
+    }    
     set momentum [math::linearalgebra::scale_vect $modulus $direction]
     set x_axis [math::linearalgebra::unitLengthVector $momentum]
     lassign [MathUtils::CalculateLocalAxisFromXAxis $x_axis] y_axis z_axis    
