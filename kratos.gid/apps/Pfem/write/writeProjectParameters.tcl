@@ -48,7 +48,7 @@ proc Pfem::write::getParametersDict { } {
 proc Pfem::write::GetConditionsParametersDictWithGravity { } {
     set loads_list [Pfem::write::getConditionsParametersDict PFEM_Loads]
     set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Solids"} {
+    if {$problemtype ne "Solid"} {
 
         set cx [write::getValue FLGravity Cx]
         set cy [write::getValue FLGravity Cy]
@@ -84,7 +84,7 @@ proc Pfem::write::GetPFEM_ProblemDataDict { } {
     #dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
     
     #set problemtype [write::getValue PFEM_DomainType]
-    #if {$problemtype ne "Solids"} {
+    #if {$problemtype ne "Solid"} {
     #	set cx [write::getValue FLGravity Cx]
     #	set cy [write::getValue FLGravity Cy]
     #	set cz [write::getValue FLGravity Cz]
@@ -148,7 +148,7 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
     set problemtype [write::getValue PFEM_DomainType]
 
-    if {$problemtype eq "Solids"} {
+    if {$problemtype eq "Solid"} {
 
         dict set integrationDataDict solution_type [write::getValue PFEM_SolutionType]
 
@@ -198,7 +198,7 @@ proc Pfem::write::GetPFEM_OutputProcessList { } {
 proc Pfem::write::GetPFEM_ProblemProcessList { } {
     set resultList [list ]
     set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Solids"} {
+    if {$problemtype ne "Solid"} {
         lappend resultList [GetPFEM_FluidRemeshDict]
     } else {
 	set root [customlib::GetBaseRoot]

@@ -310,7 +310,7 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
     set nodal_results [write::GetResultsList $results_UN OnNodes]
 
     set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Fluids"} {
+    if {$problemtype ne "Fluid"} {
 	set root [customlib::GetBaseRoot]
 	set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
 	set contact_active False
@@ -334,7 +334,7 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
 
 proc Pfem::write::GetMainScriptFilename { } {
     set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Fluids"} {
+    if {$problemtype ne "Fluid"} {
         return "RunMainPfem.py"
     } else {
         return "RunPfem.py"

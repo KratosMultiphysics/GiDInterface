@@ -3,17 +3,13 @@
 
   <!--fluid elements-->
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianSegregatedFluidElement2D" pn="Fluid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_fluid_element.cpp"
-	       kratos_module="PfemApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="Updated Lagrangian Velocity Pressure Fluid Element"
-	       ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
+  <ElementItem n="UpdatedLagrangianSegregatedFluidElement2D" pn="Fluid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_fluid_element.cpp" kratos_module="PfemApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True" help="Updated Lagrangian Velocity Pressure Fluid Element" ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianSegregatedFluidElement2D3N"/>
     </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
+    <!--here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="FluidPlaneStrain"/>
       <filter field="Dimension" value="2D"/>
@@ -31,11 +27,7 @@
   </ElementItem>
 
 
-   <ElementItem n="UpdatedLagrangianSegregatedFluidElement3D" pn="Fluid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_fluid_element.cpp"
-	       kratos_module="PfemApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="Updated Lagrangian Velocity Pressure Fluid Element"
-	       ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
+  <ElementItem n="UpdatedLagrangianSegregatedFluidElement3D" pn="Fluid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_fluid_element.cpp" kratos_module="PfemApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True" help="Updated Lagrangian Velocity Pressure Fluid Element" ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -61,11 +53,7 @@
 
   <!--solid elements in velocities-->
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianSegregatedVPElement2D" pn="Solid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_V_P_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="Updated Lagrangian Velocity Pressure Solid Element"
-	       ElementType="Solid" Dofs="VELOCITY,PRESSURE" SolverConfiguration="Segregated">
+  <ElementItem n="UpdatedLagrangianSegregatedVPElement2D" pn="Solid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_V_P_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True" help="Updated Lagrangian Velocity Pressure Solid Element" ElementType="Solid" Dofs="VELOCITY,PRESSURE" SolverConfiguration="Segregated">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -91,11 +79,7 @@
   </ElementItem>
 
 
-   <ElementItem n="UpdatedLagrangianSegregatedVPElement3D" pn="Solid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_V_P_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="Updated Lagrangian Velocity Pressure Solid Element"
-	       ElementType="Solid" Dofs="VELOCITY,PRESSURE">
+  <ElementItem n="UpdatedLagrangianSegregatedVPElement3D" pn="Solid (V/P updated lagrangian)" ImplementedInFile="updated_lagrangian_segregated_V_P_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True" help="Updated Lagrangian Velocity Pressure Solid Element" ElementType="Solid" Dofs="VELOCITY,PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -122,11 +106,7 @@
 
   <!--rigid elements-->
   <!--updated lagrangian-->
-  <ElementItem n="SurfaceRigidLagrangianElement2D2N" pn="Rigid Wall" ImplementedInFile="none.cpp"
-	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="To be written by..."
-	       ElementType="Rigid">
+  <ElementItem n="SurfaceRigidLagrangianElement2D2N" pn="Rigid Wall" ImplementedInFile="none.cpp" kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False,True" help="To be written by..." ElementType="Rigid">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="Element2D2N"/>
@@ -149,18 +129,14 @@
     <outputs>
     </outputs>
   </ElementItem>
-  <ElementItem n="RigidLagrangianElement2D3N" pn="Rigid Body" ImplementedInFile="none.cpp"
-	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="To be written by..."
-	       ElementType="Rigid" Dofs="ROTATION">
+  <ElementItem n="RigidLagrangianElement2D3N" pn="Rigid Body" ImplementedInFile="none.cpp" kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True" help="To be written by..." ElementType="Rigid" Dofs="ROTATION">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-	  <filter field="n" value="None"/>
+      <filter field="n" value="None"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -176,11 +152,7 @@
     <outputs>
     </outputs>
   </ElementItem>
-  <ElementItem n="SurfaceRigidLagrangianElement3D3N" pn="Rigid Wall" ImplementedInFile="none.cpp"
-	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="To be written by..."
-	       ElementType="Rigid">
+  <ElementItem n="SurfaceRigidLagrangianElement3D3N" pn="Rigid Wall" ImplementedInFile="none.cpp" kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False,True" help="To be written by..." ElementType="Rigid">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="Element3D3N"/>
@@ -203,11 +175,7 @@
     <outputs>
     </outputs>
   </ElementItem>
-  <ElementItem n="RigidLagrangianElement3D4N" pn="Rigid Body" ImplementedInFile="none.cpp"
-	       kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True"
-	       help="To be written by..."
-	       ElementType="Rigid" Dofs="ROTATION" >
+  <ElementItem n="RigidLagrangianElement3D4N" pn="Rigid Body" ImplementedInFile="none.cpp" kratos_module="ContactMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False,True" help="To be written by..." ElementType="Rigid" Dofs="ROTATION">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
@@ -233,10 +201,7 @@
 
   <!--solid elements in displacements-->
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid (updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid (updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -270,10 +235,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElementAxisym" pn="Solid (updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="UpdatedLagrangianElementAxisym" pn="Solid (updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -304,10 +266,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid (updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="UpdatedLagrangianElement3D" pn="Solid (updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -343,10 +302,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="TotalUpdatedLagrangianElement2D" pn="Solid (total lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="TotalUpdatedLagrangianElement2D" pn="Solid (total lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -380,10 +336,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="TotalUpdatedLagrangianElement3D" pn="Solid (total lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
-	       ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
+  <ElementItem n="TotalUpdatedLagrangianElement3D" pn="Solid (total lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -421,11 +374,7 @@
   </ElementItem>
   <!--hybrid elements-->
   <!--hybrid updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_U_P_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
-	       help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
-	       ElementType="Solid" Dofs="PRESSURE">
+  <ElementItem n="UpdatedLagrangianElementUP2D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_U_P_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics" ElementType="Solid" Dofs="PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -458,11 +407,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True"
-	       help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics"
-	       ElementType="Solid" Dofs="PRESSURE">
+  <ElementItem n="UpdatedLagrangianElementUPAxisym" pn="Solid (U-P updated lagrangian)" ImplementedInFile="axisym_updated_lagrangian_U_P_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" help="This element  implements a Hybrid Displacement-Pressure Updated Lagrangian U-P approach to large deformation kinematics" ElementType="Solid" Dofs="PRESSURE">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -492,10 +437,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp"
-	       kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True"
-	       ElementType="Solid" Dofs="PRESSURE" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
+  <ElementItem n="UpdatedLagrangianElementUP3D" pn="Solid (U-P updated lagrangian)" ImplementedInFile="updated_lagrangian_element.cpp" kratos_module="SolidMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" Dofs="PRESSURE" help="This element it implements a Updated Lagrangian U-P approach to large deformation kinematics">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>

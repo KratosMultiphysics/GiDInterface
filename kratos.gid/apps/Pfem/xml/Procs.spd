@@ -30,6 +30,11 @@
 	     return [Pfem::xml::ProcGetElementsDict $domNode $args]
     ]]>
   </proc>
+  <proc n='GetElements' args='args'>
+    <![CDATA[
+	     return [Pfem::xml::ProcGetElements $domNode $args]
+    ]]>
+  </proc>
   <proc n='GetElementsValues' args='args'>
     <![CDATA[
 	     return [Pfem::xml::ProcGetElementsValues $domNode $args]
@@ -40,6 +45,16 @@
 	     return [Pfem::xml::ProcSolutionTypeState $domNode $args]
     ]]>
   </proc>
+  <proc n='EquationTypeState' args='args'>
+    <![CDATA[
+	     return [Pfem::xml::ProcEquationTypeState $domNode $args]
+    ]]>
+  </proc>
+  <proc n='StrategyTypeState' args='args'>
+    <![CDATA[
+	     return [Pfem::xml::ProcStrategyTypeState $domNode $args]
+    ]]>
+  </proc>  
   <proc n='GetBodyTypeValues' args='args'>
     <![CDATA[
 	     return [Pfem::xml::ProcGetBodyTypeValues $domNode $args]
