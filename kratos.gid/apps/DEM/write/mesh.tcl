@@ -1,5 +1,47 @@
 # utility for advanced meshing features in DEM
 proc DEM::write::Elements_Substitution {} {
+
+	set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute DEMParts]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+		set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[n='AdvancedMeshingFeatures'\]"]]
+		if {$advanced_meshing_features} {
+			set FEMtoDEM [write::getValueByNode [$group selectNodes "./value\[n='FEMtoDEM'\]"]]
+			set Diameter [write::getValueByNode [$group selectNodes "./value\[n='Diameter'\]"]]
+			set ProbabilityDistribution [write::getValueByNode [$group selectNodes "./value\[n='ProbabilityDistribution'\]"]]
+			set StandardDeviation [write::getValueByNode [$group selectNodes "./value\[n='StandardDeviation'\]"]]
+
+		} else {
+			# TODO: ESTO AL BEFORE MESH
+			# foreach volume [GiD_EntitiesGroups get $groupid volumes] {
+			# 	GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape 
+			# }
+		}
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     global KPriv
     variable ndime
     set fail 0
