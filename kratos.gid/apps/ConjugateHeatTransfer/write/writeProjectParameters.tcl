@@ -16,6 +16,9 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     # Restart options
     dict set projectParametersDict restart_options [write::GetDefaultRestartDict]
 
+    # processes
+    dict set projectParametersDict processes [ConjugateHeatTransfer::write::GetProcessList]
+
     return $projectParametersDict
     
 }
@@ -38,6 +41,17 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     return $solver_settings_dict
 }
 
+proc ConjugateHeatTransfer::write::GetProcessList { } {
+    set output_process [dict create ]
+    
+    lappend fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0]
+    dict set output_process fluid_output_processes $fluid_output
+
+    lappend solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0]
+    dict set output_process solid_output_processes $solid_output
+    
+    return $output_process
+}
 proc ConjugateHeatTransfer::write::GetOutputProcessList { } {
     set output_process [dict create ]
     
