@@ -10,22 +10,14 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     # Solver settings
     dict set projectParametersDict solver_settings [ConjugateHeatTransfer::write::GetSolverSettingsDict]
 
+    # output processes
+    dict set projectParametersDict output_processes [ConjugateHeatTransfer::write::GetOutputProcessList]
+
     # Restart options
     dict set projectParametersDict restart_options [write::GetDefaultRestartDict]
 
     return $projectParametersDict
-    set processes [dict create]
-    # Boundary conditions processes
-    dict set processes initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    # dict set processes fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    dict set processes list_other_processes [list [getBodyForceProcessDict] ]
     
-    dict set projectParametersDict processes $processes
-    # Output configuration
-    dict set projectParametersDict output_processes [GetOutputProcessList]
-
-    return $projectParametersDict
 }
 
 proc ConjugateHeatTransfer::write::writeParametersEvent { } {
@@ -47,22 +39,15 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
 }
 
 proc ConjugateHeatTransfer::write::GetOutputProcessList { } {
-    set result [dict create ]
+    set output_process [dict create ]
     
-    set gid_output [list ]
-    set res_dict [dict create]
-    dict set res_dict python_module gid_output_process
-    dict set res_dict kratos_module KratosMultiphysics
-    dict set res_dict process_name GiDOutputProcess
-    dict set res_dict Parameters postprocess_parameters [write::GetDefaultOutputDict]
+    lappend fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0]
+    dict set output_process fluid_output_processes $fluid_output
+
+    lappend solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0]
+    dict set output_process solid_output_processes $solid_output
     
-    set partgroup [write::getPartsSubModelPartId]
-    dict set res_dict Parameters "model_part_name" [concat [lindex $partgroup 0]]
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set res_dict Parameters output_name $model_name
-    lappend gid_output $res_dict
-    dict set result gid_output $gid_output
-    return $result
+    return $output_process
 }
 
 proc ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
