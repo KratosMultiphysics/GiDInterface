@@ -128,8 +128,14 @@ proc Pfem::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
     set domain_type [write::getValue PFEM_DomainType]
     set fluid_exclusive_conditions [list "VELOCITY" "INLET" "PRESSURE"]
     set current_condition [$domNode @n]
-    if {$domain_type eq "Fluid" && $current_condition ni $fluid_exclusive_conditions} {
-        return hidden
+    if {$domain_type eq "Fluid"} {
+        if {$current_condition ni $fluid_exclusive_conditions} {              
+            return hidden
+        }
+    } elseif {$domain_type eq "Solid"} {        
+        if {$current_condition eq "INLET"} {
+            return hidden
+        }        
     }
     return normal
 }

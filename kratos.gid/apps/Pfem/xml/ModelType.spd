@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="ModelType" pn="Physics" icon="modelling" help="Model information" state="normal" tree_state="closed" open_window="0">
-  <value n="DomainType" pn="Domain type" icon="data" un="PFEM_DomainType" v="Solid" values="Fluid,Solid,Coupled" help="Type of problem to be solved" actualize_tree="1"/>
+  <value n="DomainType" pn="Domain type" icon="data" un="PFEM_DomainType" v="Coupled" values="Fluid,Solid,Coupled" help="Type of problem to be solved" actualize_tree="1"/>
   <container n="Analysis" pn="Analysis" icon="select" un="PFEM_Analysis" help="Problem parameters" actualize_tree="1" state="normal" tree_state="open" open_window="0">
     <value n="SolutionType" pn="Problem type" icon="data" un="PFEM_SolutionType" v="Static" values="Static,Quasi-static,Dynamic" help="Solution type" actualize_tree="1" state="[SolutionTypeState]"/>
     <value n="EquationType" pn="Solution type" icon="data" un="PFEM_EquationType" v="Monolithic" values="Monolithic,Segregated" help="Equation type" actualize_tree="1" state="[EquationTypeState]"/>

@@ -173,11 +173,17 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
     set solutiontype [write::getValue PFEM_SolutionType]
         
     if {$solutiontype ne "Dynamic"} {
-        dict set integrationDataDict integration_method "Implicit"
+        dict set integrationDataDict integration_method "Static"
         dict set integrationDataDict analysis_type [write::getValue PFEM_AnalysisType]
     } else {
-        dict set integrationDataDict time_integration "Implicit"
-        dict set integrationDataDict integration_method [write::getValue PFEM_Scheme]
+        if {$dofs eq "PRESSURE"} {
+            dict set integrationDataDict integration_method "Bdf"
+            dict set integrationDataDict time_integration_order 1
+            dict set integrationDataDict analysis_type "Non-linear"
+        } else {   
+            dict set integrationDataDict time_integration "Implicit"
+            dict set integrationDataDict integration_method [write::getValue PFEM_Scheme]
+        }
     }
 
     # Solving strategy settings
