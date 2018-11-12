@@ -9,12 +9,14 @@
 	</value>
 	<!-- <value n="Material" pn="Material" editable='0' help="Choose a material from the database" update_proc="CambioMat" values_tree='[give_materials_list]' v="DEM-DefaultMaterial" state="normal"/> -->
 	<value n="Material" pn="Material" editable='0' help="Choose a material from the database" values='[get_materials_list_simple]' v="DEM-DefaultMaterial" />
-	<value n="AdvancedMeshingFeatures" pn="Use Advanced Meshing Features (FEMtoDEM or 2Dto3D)" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options"/>
-	<value n="AdvancedMeshingFeaturesAlgorithmType" pn="Advanced Meshing Features Algorithm Type" values="FEMtoDEM,2Dto3D" help="FEMtoDEM: use this algorithm to convert an original FEM mesh (composed of hexaedra, tetraedra, cuadrilaterals, triangles, lines or points) into spheres located at the nodes, at the centroids of the elements or at both. 2D to 3D: use this algorithm if you want to convert a surface meshed with circles into a mesh of spheres"/>
-	<value n="FEMtoDEM" pn="FEM to DEM criterion type" values="AttheNodes,AttheCentroid,AtBothNodesAndCentroids" help=""/>
-	<value n="Diameter" pn="Diameter (m)" v="1.0" help="Average diameter of the spheres"/>
-	<value n="ProbabilityDistribution" pn="Probability Distribution" values="NormalDistribution,LogDistribution"  help="Normal and logarithmic distributions are allowed when using FEMtoDEM"/>
-	<value n="StandardDeviation" pn="Standard Deviation" v="0.1" help="Standard deviation for the distribution"/>
+	<value n="AdvancedMeshingFeatures" pn="Use Advanced Meshing Features (FEMtoDEM or 2Dto3D)" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
+		<dependencies node="../value" actualize="1"/>
+	</value>
+	<value n="AdvancedMeshingFeaturesAlgorithmType" pn="Advanced Meshing Features Algorithm Type" values="FEMtoDEM,2Dto3D" help="FEMtoDEM: use this algorithm to convert an original FEM mesh (composed of hexaedra, tetraedra, cuadrilaterals, triangles, lines or points) into spheres located at the nodes, at the centroids of the elements or at both. 2D to 3D: use this algorithm if you want to convert a surface meshed with circles into a mesh of spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="FEMtoDEM" pn="FEM to DEM criterion type" values="AttheNodes,AttheCentroid,AtBothNodesAndCentroids" help="" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="Diameter" pn="Diameter (m)" v="1.0" help="Average diameter of the spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="ProbabilityDistribution" pn="Probability Distribution" values="NormalDistribution,LogDistribution"  help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="StandardDeviation" pn="Standard Deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 
 
 
