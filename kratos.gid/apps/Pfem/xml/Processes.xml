@@ -2,7 +2,7 @@
 
 <ProcessList>
     <Process n="AssignInletProcess" pn="Inlet" python_module="assign_inlet_process"
-             kratos_module="KratosMultiphysics.PfemFluidDynamicsApplication">
+             kratos_module="KratosMultiphysics.PfemApplication">
       <inputs>
 	<parameter n="value" pn="Value" type="vector" vectorType="double" function="1" v="0.0,0.0,0.0" has_units="1"/>
       </inputs>

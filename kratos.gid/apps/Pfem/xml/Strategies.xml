@@ -91,7 +91,7 @@
     </schemes>
 
   </StrategyItem>
-  <StrategyItem n="Static" pn="Static" SolutionType="Static" EquationType="Monolithic" kratos_module="SolidMechanicsApplication" python_module="solid_mechanics_static_solver" MinimumKratosVersion="8500" App="Solid" ProductionReady="ProductionReady" help="Default solver Super LU">
+  <StrategyItem n="Static" pn="Implicit" SolutionType="Static" EquationType="Monolithic" kratos_module="SolidMechanicsApplication" python_module="solid_mechanics_static_solver" MinimumKratosVersion="8500" App="Solid" ProductionReady="ProductionReady" help="Default solver Super LU">
 
     <!-- list of options to be filled -->
     <parameter_list>
@@ -129,7 +129,7 @@
     </schemes>
 
   </StrategyItem>
-  <StrategyItem n="Quasi-static" pn="Quasi-static" SolutionType="Quasi-static" EquationType="Monolithic" kratos_module="SolidMechanicsApplication" python_module="solid_mechanics_static_solver" MinimumKratosVersion="8500" App="Solid" ProductionReady="ProductionReady" help="Default solver Super LU">
+  <StrategyItem n="Quasi-static" pn="Implicit" SolutionType="Quasi-static" EquationType="Monolithic" kratos_module="SolidMechanicsApplication" python_module="solid_mechanics_static_solver" MinimumKratosVersion="8500" App="Solid" ProductionReady="ProductionReady" help="Default solver Super LU">
 
     <!-- list of options to be filled -->
     <parameter_list>
@@ -183,17 +183,7 @@
     </parameter_list>
 
     <linearSolvers>
-      <linearSolverItem n="velocity_linear_solver_settings" pn="Velocity linear solver">
-        <filterFeatures>
-          <filter field="SolverType" value="Standard"/>
-        </filterFeatures>
-        <defaults>
-          <solver n="Automatic">
-          </solver>
-        </defaults>
-      </linearSolverItem>
-
-      <linearSolverItem n="pressure_linear_solver_settings" pn="Pressure linear solver">
+      <linearSolverItem n="linear_solver_settings" pn="Linear Solver" help="Default solver Super LU">
         <filterFeatures>
           <filter field="SolverType" value="Standard"/>
         </filterFeatures>
