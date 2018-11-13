@@ -62,11 +62,12 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
-	# 	if {[write::isBooleanTrue $advanced_meshing_features]} {
-    #         foreach volume [GiD_EntitiesGroups get $groupid volumes] {
-    #         GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
-    #         }
-    #     }
+		if {[write::isBooleanTrue $advanced_meshing_features]} {
+        } else {
+            foreach volume [GiD_EntitiesGroups get $groupid volumes] {
+            GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
+            }
+        }
     }
 }
 

@@ -5,6 +5,7 @@ proc DEM::write::Elements_Substitution {} {
     set xp1 "[spdAux::getRoute DEMParts]/group"
     package require math::statistics
     set seed [expr srand(0)]
+    set fail 0
     set final_list_of_isolated_nodes [list]
 
     foreach group [$root selectNodes $xp1] {
@@ -115,9 +116,9 @@ proc DEM::write::Elements_Substitution {} {
                         }
                     }
 
-                    if {[lsearch $cohesive_groups_list $groupid] == -1} {
-                        GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
-                    }
+                    # if {[lsearch $cohesive_groups_list $groupid] == -1} {
+                    #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
+                    # }
 
                 } elseif {$FEMtoDEM == "AtBothNodesAndCentroids"} {
                     set nodes_to_delete [list]
@@ -171,9 +172,9 @@ proc DEM::write::Elements_Substitution {} {
                         }
                     }
 
-                    if {[lsearch $cohesive_groups_list $groupid] == -1} {
-                        GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
-                    }
+                    # if {[lsearch $cohesive_groups_list $groupid] == -1} {
+                    #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
+                    # }
 
                 }
             } else {
@@ -201,9 +202,9 @@ proc DEM::write::Elements_Substitution {} {
                     }
                 }
 
-                if {[lsearch $cohesive_groups_list $groupid] == -1} {
-                    GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
-                }
+                # if {[lsearch $cohesive_groups_list $groupid] == -1} {
+                #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
+                # }
             }
 
         }
@@ -212,7 +213,7 @@ proc DEM::write::Elements_Substitution {} {
 	    DEM::write::Delete_Unnecessary_Elements_From_Mesh $groupid
 	}
 
-    DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes $final_list_of_isolated_nodes
+    # DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes $final_list_of_isolated_nodes
     # DEM::write::Destroy_Skin_Sphere_Group $KPriv(what_dempack_package)
     # Getting rid of the SKIN_SPHERE_DO_NOT_DELETE group when in discontinuum or swimming
 
