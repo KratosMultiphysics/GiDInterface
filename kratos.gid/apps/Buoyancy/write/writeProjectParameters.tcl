@@ -96,6 +96,7 @@ proc Buoyancy::write::GetProcesses_Dict { } {
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute conditions_un] ]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute nodal_conditions_un] "Nodal"]
     write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
+    write::SetConfigurationAttribute model_part_name [Fluid::write::GetAttribute model_part_name]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute nodal_conditions_un] "Nodal"]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute conditions_un]]
     lappend constraints_process_list [GetBoussinesqProcess]

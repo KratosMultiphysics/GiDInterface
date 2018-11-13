@@ -65,9 +65,11 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
 }
 
 proc ConjugateHeatTransfer::write::GetProcessList { } {
-    # TODO: Hacerlo bien, cada cosa en su sublista
     set processes [dict create ]
     
+    dict set processes fluid_processes [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings processes]
+    dict set processes solid_processes [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes]
+
     return $processes
 }
 proc ConjugateHeatTransfer::write::GetOutputProcessList { } {
