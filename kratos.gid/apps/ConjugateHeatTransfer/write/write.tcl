@@ -18,6 +18,9 @@ proc ConjugateHeatTransfer::write::Init { } {
     SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
 
+    SetAttribute fluid_mdpa_suffix Fluid
+    SetAttribute solid_mdpa_suffix Solid
+
     variable fluid_domain_solver_settings
     variable solid_domain_solver_settings
     set fluid_domain_solver_settings [dict create]
@@ -34,13 +37,13 @@ proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
 
     # Buoyancy mdpa
     write::writeAppMDPA Buoyancy
-    write::RenameFileInModel "$filename.mdpa" "${filename}_Buoyancy.mdpa"
+    write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute fluid_mdpa_suffix].mdpa"
     
     # Convection diffusion mdpa
     ConvectionDiffusion::write::Init
     ConvectionDiffusion::write::SetCoordinatesByGroups 1
     write::writeAppMDPA ConvectionDiffusion
-    write::RenameFileInModel "$filename.mdpa" "${filename}_ConvectionDiffusion.mdpa"
+    write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute solid_mdpa_suffix].mdpa"
 }
 
 proc ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
