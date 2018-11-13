@@ -61,6 +61,7 @@ proc DEM::write::Elements_Substitution {} {
 
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type hexahedra]
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type tetrahedra]
+                    GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type triangle]
                     set nodes_to_delete [lsort -integer -unique $nodes_to_delete]
                     # reorder the list and remove repeated nodes
                     foreach node_id $nodes_to_delete {
@@ -154,6 +155,7 @@ proc DEM::write::Elements_Substitution {} {
 
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type hexahedra]
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type tetrahedra]
+                    GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type triangle]
 
                     foreach node_id [GiD_EntitiesGroups get $groupid nodes] {
                         if {$probldistr == "NormalDistribution"} {
@@ -213,7 +215,7 @@ proc DEM::write::Elements_Substitution {} {
 	    DEM::write::Delete_Unnecessary_Elements_From_Mesh $groupid
 	}
 
-    # DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes $final_list_of_isolated_nodes
+    DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes $final_list_of_isolated_nodes
     # DEM::write::Destroy_Skin_Sphere_Group $KPriv(what_dempack_package)
     # Getting rid of the SKIN_SPHERE_DO_NOT_DELETE group when in discontinuum or swimming
 
@@ -281,17 +283,17 @@ proc DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
 
 proc DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes {final_list_of_isolated_nodes} {
 
-    GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE nodes
-    #GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
-    GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
-    GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type linear]
-    GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
-    GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
+    # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE nodes
+    # # GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
+    # GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
+    # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type linear]
+    # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
+    # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
 
     foreach node_id [lsort -integer -unique $final_list_of_isolated_nodes] {
-	if {![wkcf::GetNodeHigherentities $node_id]} {
-	    GiD_Mesh delete node $node_id
-	}
+        if {![DEM::write::GetNodeHigherentities $node_id]} {
+            GiD_Mesh delete node $node_id
+        }
     }
 }
 
@@ -307,7 +309,7 @@ proc DEM::write::NormalDistribution {mean standard_deviation min_rad max_rad} {
 		return $distribution
 	    }
 	}
-	error "wkcf::NormalDistribution failed after $max_iterations iterations. mean=$mean std_dev=$standard_deviation min_rad=$min_rad max_rad=$max_rad"
+	error "NormalDistribution failed after $max_iterations iterations. mean=$mean std_dev=$standard_deviation min_rad=$min_rad max_rad=$max_rad"
     }
     return $mean
 }
@@ -340,4 +342,17 @@ proc DEM::write::GetNodeHigherentities {node_id} {
 	set higherentity 9999; #the node does not exist, return > 0 to not delete it
     }
     return $higherentity
+}
+
+
+proc DEM::write::GetElementCenter {element_id} {
+    set element_data [GiD_Mesh get element $element_id]
+    set num_nodes [lindex $element_data 2]
+    set node_ids [lrange $element_data 3 2+$num_nodes]
+    set sum {0 0 0}
+    foreach node_id $node_ids {
+	set coordinates [lrange [GiD_Mesh get node $node_id] 1 end]
+	set sum [MathUtils::VectorSum $coordinates $sum]
+    }
+    return [MathUtils::ScalarByVectorProd [expr {1.0/$num_nodes}] $sum]
 }
