@@ -54,9 +54,9 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set solid_interfaces_list [write::GetSubModelPartFromCondition CNVDFFBC ConvectionDiffusionInterface$::Model::SpatialDimension]
 
     set coupling_settings [dict create]
-    dict set coupling_settings max_iteration 10
-    dict set coupling_settings relaxation_factor 0.7
-    dict set coupling_settings temperature_relative_tolerance 1e-5
+    dict set coupling_settings max_iteration [write::getValue CHTGeneralParameters max_iteration]
+    dict set coupling_settings relaxation_factor  [write::getValue CHTGeneralParameters relaxation_factor]
+    dict set coupling_settings temperature_relative_tolerance  [write::getValue CHTGeneralParameters temperature_relative_tolerance]
     dict set coupling_settings fluid_interfaces_list $fluid_interfaces_list
     dict set coupling_settings solid_interfaces_list $solid_interfaces_list
     dict set solver_settings_dict coupling_settings $coupling_settings
@@ -66,7 +66,8 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
 
 proc ConjugateHeatTransfer::write::GetProcessList { } {
     set processes [dict create ]
-    
+
+    #write::SetConfigurationAttribute model_part_name [Fluid::write::GetAttribute model_part_name]
     dict set processes fluid_processes [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings processes]
     dict set processes solid_processes [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes]
 

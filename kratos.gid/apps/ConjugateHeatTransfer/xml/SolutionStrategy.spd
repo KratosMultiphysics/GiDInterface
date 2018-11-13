@@ -12,4 +12,11 @@
         <value n="MinimumDeltaTime" pn="Minimum delta time" v="0.0001" help="Minimum delta time allowed" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
         <value n="MaximumDeltaTime" pn="Maximum delta time" v="0.01" help="Maximum delta time allowed" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
     </container>
+
+    <container n="Parameters" pn="Parameters" un="CHTGeneralParameters" >
+        <value n="max_iteration" pn="Max num of iterations" v="10" />
+        <value n="relaxation_factor" pn="Relaxation factor" v="0.7" />
+        <value n="temperature_relative_tolerance" pn="Temperature relative tolerance" v="1e-5" />
+    </container>
+
 </container>
