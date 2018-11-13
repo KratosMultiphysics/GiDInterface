@@ -58,14 +58,24 @@ proc ::DEM::CustomMenus { } {
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
-    # set xp1 "[spdAux::getRoute DEMParts]/group"
-    # foreach group [$root selectNodes $xp1] {
-    #     set groupid [$group @n]
-    #     foreach volume [GiD_EntitiesGroups get $groupid volumes] {
+    set xp1 "[spdAux::getRoute DEMParts]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[n='AdvancedMeshingFeatures'\]"]]
+	# 	if {$advanced_meshing_features} {
+    #   if {$advanced_meshing_features eq "Yes"}
+    #         foreach volume [GiD_EntitiesGroups get $groupid volumes] {
     #         GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
+    #         }
     #     }
-    # }
+    }
 }
+
+
+
+
+
+
 
 proc ::DEM::AfterMeshGeneration { fail } {
     # set without_window [GidUtils::AreWindowsDisabled];
