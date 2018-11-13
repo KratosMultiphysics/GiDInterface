@@ -9,13 +9,14 @@ proc DEM::write::Elements_Substitution {} {
 
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-		set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[n='AdvancedMeshingFeatures'\]"]]
-		if {$advanced_meshing_features} {
-            set AdvancedMeshingFeaturesAlgorithmType [write::getValueByNode [$group selectNodes "./value\[n='AdvancedMeshingFeaturesAlgorithmType'\]"]]
-			set FEMtoDEM [write::getValueByNode [$group selectNodes "./value\[n='FEMtoDEM'\]"]]
-			set Diameter [write::getValueByNode [$group selectNodes "./value\[n='Diameter'\]"]]
-			set ProbabilityDistribution [write::getValueByNode [$group selectNodes "./value\[n='ProbabilityDistribution'\]"]]
-			set StandardDeviation [write::getValueByNode [$group selectNodes "./value\[n='StandardDeviation'\]"]]
+		set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
+		if {[write::isBooleanTrue $advanced_meshing_features]} {
+
+            set AdvancedMeshingFeaturesAlgorithmType [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeaturesAlgorithmType'\]"]]
+			set FEMtoDEM [write::getValueByNode [$group selectNodes "./value\[@n='FEMtoDEM'\]"]]
+			set Diameter [write::getValueByNode [$group selectNodes "./value\[@n='Diameter'\]"]]
+			set ProbabilityDistribution [write::getValueByNode [$group selectNodes "./value\[@n='ProbabilityDistribution'\]"]]
+			set StandardDeviation [write::getValueByNode [$group selectNodes "./value\[@n='StandardDeviation'\]"]]
 
             if {$AdvancedMeshingFeaturesAlgorithmType eq "FEMtoDEM"} {
                 set element_radius [expr {0.5*$Diameter}]
@@ -25,8 +26,8 @@ proc DEM::write::Elements_Substitution {} {
                 set max_radius [expr {1.5*$element_radius}]
                 if {$FEMtoDEM == "AttheCentroid"} {
                     set nodes_to_delete [list]
-                    set element_ids [GiD_EntitiesGroups get $cgroupid elements] ;               # get ids of all elements in cgroupid
-                    array set is_external_element [DEM::write::Compute_External_Elements $ndime $cgroupid $element_ids]
+                    set element_ids [GiD_EntitiesGroups get $groupid elements] ;               # get ids of all elements in cgroupid
+                    array set is_external_element [DEM::write::Compute_External_Elements 3 $groupid $element_ids]
 
                     foreach element_id $element_ids { ;                                         # loop on each of the elements by id
                         set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ;   # get the nodes of the element
@@ -42,7 +43,7 @@ proc DEM::write::Elements_Substitution {} {
                         # create a new sphere element starting from the previous node and obtain its id
 
                         # lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
-                        # if {($is_external_element($element_id)==1) && ([lsearch $cohesive_groups_list $cgroupid] != -1)} {
+                        # if {($is_external_element($element_id)==1) && ([lsearch $cohesive_groups_list $groupid] != -1)} {
                         #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $new_element_id
                         # }
 
@@ -53,12 +54,12 @@ proc DEM::write::Elements_Substitution {} {
                         }
                     }
 
-                    # if {[lsearch $cohesive_groups_list $cgroupid] == -1} {
+                    # if {[lsearch $cohesive_groups_list $groupid] == -1} {
                     #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                     # }
 
-                    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type hexahedra]
-                    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type tetrahedra]
+                    GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type hexahedra]
+                    GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type tetrahedra]
                     set nodes_to_delete [lsort -integer -unique $nodes_to_delete]
                     # reorder the list and remove repeated nodes
                     foreach node_id $nodes_to_delete {
@@ -69,7 +70,7 @@ proc DEM::write::Elements_Substitution {} {
                             # delete the nodes of the element as long as it does not have higher entities
                         }
                     }
-                    set point_node_ids [GiD_EntitiesGroups get $cgroupid nodes]
+                    set point_node_ids [GiD_EntitiesGroups get $groupid nodes]
                     # This list exists only for groups made up of isolated points
                     foreach node_id $point_node_ids {
                         if {![DEM::write::GetNodeHigherentities $node_id]} {
@@ -88,7 +89,7 @@ proc DEM::write::Elements_Substitution {} {
                             }
                         }
                     }
-                    set extra_nodes [GiD_EntitiesGroups get $cgroupid nodes]
+                    set extra_nodes [GiD_EntitiesGroups get $groupid nodes]
                     foreach node_id $extra_nodes {
                         if {![DEM::write::GetNodeHigherentities $node_id]} {
                             GiD_Mesh delete node $node_id
@@ -97,8 +98,8 @@ proc DEM::write::Elements_Substitution {} {
                 } elseif {$FEMtoDEM == "AttheNodes"} {
                     # We first delete the elements (lines, triangles, quadrilaterals, tetraedra or hexahedra) of this group,
                     # but not their nodes, which will be used for creating the new sheres
-                    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements]
-                    foreach node_id [GiD_EntitiesGroups get $cgroupid nodes] {
+                    GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements]
+                    foreach node_id [GiD_EntitiesGroups get $groupid nodes] {
                         if {$probldistr == "NormalDistribution"} {
                             set final_elem_radius [DEM::write::NormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
                         } else {
@@ -114,14 +115,14 @@ proc DEM::write::Elements_Substitution {} {
                         }
                     }
 
-                    if {[lsearch $cohesive_groups_list $cgroupid] == -1} {
+                    if {[lsearch $cohesive_groups_list $groupid] == -1} {
                         GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                     }
 
                 } elseif {$FEMtoDEM == "AtBothNodesAndCentroids"} {
                     set nodes_to_delete [list]
-                    set element_ids [GiD_EntitiesGroups get $cgroupid elements]
-                    # get the ids of all the elements in cgroupid
+                    set element_ids [GiD_EntitiesGroups get $groupid elements]
+                    # get the ids of all the elements in groupid
 
                     foreach element_id $element_ids {
                     # loop on each of the elements by id
@@ -150,10 +151,10 @@ proc DEM::write::Elements_Substitution {} {
                         }
                     }
 
-                    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type hexahedra]
-                    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type tetrahedra]
+                    GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type hexahedra]
+                    GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type tetrahedra]
 
-                    foreach node_id [GiD_EntitiesGroups get $cgroupid nodes] {
+                    foreach node_id [GiD_EntitiesGroups get $groupid nodes] {
                         if {$probldistr == "NormalDistribution"} {
                             set final_elem_radius [DEM::write::NormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
                         } else {
@@ -170,7 +171,7 @@ proc DEM::write::Elements_Substitution {} {
                         }
                     }
 
-                    if {[lsearch $cohesive_groups_list $cgroupid] == -1} {
+                    if {[lsearch $cohesive_groups_list $groupid] == -1} {
                         GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                     }
 
@@ -181,15 +182,15 @@ proc DEM::write::Elements_Substitution {} {
                 foreach element_id $element_ids element_node [lindex $element_nodes 0] element_radius $element_radii {
                     set element_info($element_id) [list $element_node $element_radius]
                 }
-                set element_list [GiD_EntitiesGroups get $cgroupid elements]
+                set element_list [GiD_EntitiesGroups get $groupid elements]
                 foreach element_id $element_list {
                     lassign $element_info($element_id) element_node element_radius
-                    lappend group_nodes($cgroupid) $element_node
-                    lappend group_radius($cgroupid) $element_radius
+                    lappend group_nodes($groupid) $element_node
+                    lappend group_radius($groupid) $element_radius
                 }
 
-                GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements]
-                foreach node_id $group_nodes($cgroupid) radius $group_radius($cgroupid) {
+                GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements]
+                foreach node_id $group_nodes($groupid) radius $group_radius($groupid) {
                     set final_elem_radius $radius
                     set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
                     # create a new sphere element starting from the previous node and obtain its id
@@ -200,15 +201,15 @@ proc DEM::write::Elements_Substitution {} {
                     }
                 }
 
-                if {[lsearch $cohesive_groups_list $cgroupid] == -1} {
+                if {[lsearch $cohesive_groups_list $groupid] == -1} {
                     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                 }
             }
 
         }
 
-        lappend final_list_of_isolated_nodes {*}[lindex [GiD_EntitiesGroups get $cgroupid all_mesh] 0]
-	    DEM::write::Delete_Unnecessary_Elements_From_Mesh $cgroupid
+        lappend final_list_of_isolated_nodes {*}[lindex [GiD_EntitiesGroups get $groupid all_mesh] 0]
+	    DEM::write::Delete_Unnecessary_Elements_From_Mesh $groupid
 	}
 
     DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes $final_list_of_isolated_nodes
@@ -235,11 +236,7 @@ proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
 	lappend list_of_faces {*}$partial_list_of_faces
     }
     set unrepeated_list [lsort -integer -unique $list_of_faces]
-    if {$ndime == "3D"} {
 	set elements_in_common 6 ; #TODO: Check this constant
-    } else {
-	set elements_in_common 3 ; #TODO: Check this constant
-    }
 
     foreach list_elem $unrepeated_list {
 	set result($list_elem) [lsearch -all $list_of_faces $list_elem]
@@ -258,11 +255,8 @@ proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
     set unrepeated_list_exterior_nodes [lsort -integer -unique $list_of_faces]
 
     foreach element_id $element_ids { ; # Here we loop on each of the elements by id
-	if {$ndime == "3D"} {
-	    set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ; # We get the nodes of the element
-	} else {
-	    set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end]
-	}
+	set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ; # We get the nodes of the element
+
 	set is_external_element($element_id) 0
 	foreach element_node $element_nodes {
 	    if {[lsearch $unrepeated_list_exterior_nodes $element_node] != -1} {

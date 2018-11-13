@@ -61,9 +61,8 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
     set xp1 "[spdAux::getRoute DEMParts]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[n='AdvancedMeshingFeatures'\]"]]
-	# 	if {$advanced_meshing_features} {
-    #   if {$advanced_meshing_features eq "Yes"}
+        set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
+	# 	if {[write::isBooleanTrue $advanced_meshing_features]} {
     #         foreach volume [GiD_EntitiesGroups get $groupid volumes] {
     #         GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
     #         }
@@ -71,19 +70,13 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
     }
 }
 
-
-
-
-
-
-
 proc ::DEM::AfterMeshGeneration { fail } {
     # set without_window [GidUtils::AreWindowsDisabled];
     # if {!$without_window} {
 	# GidUtils::DisableGraphics
     # }
-    if {[catch {DEM::write::Elements_Substitution} msg]} {
-      W "DEM::write::Elements_Substitution. $msg"
+    if {[catch {::DEM::write::Elements_Substitution} msg]} {
+      W "::DEM::write::Elements_Substitution!. $msg"
     }
 
     # if {!$without_window} {
