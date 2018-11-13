@@ -34,23 +34,23 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     dict set solver_settings_dict solver_type "conjugate_heat_transfer"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solver_settings_dict domain_size $nDim
-    
+
+    # TODO: Solid Thermic > Modelpart name -> mdpa solid    
+    # TODO: Buoyancy Fluid > Modelpart name -> mdpa fluid    
+    # TODO: Buoyancy Thermic > "input_type": "use_input_model_part" 
     dict set solver_settings_dict fluid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings]
     dict set solver_settings_dict solid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
-    
+
+    # TODO: coupling_settings
+
     return $solver_settings_dict
 }
 
 proc ConjugateHeatTransfer::write::GetProcessList { } {
-    set output_process [dict create ]
+    # TODO: Hacerlo bien, cada cosa en su sublista
+    set processes [dict create ]
     
-    lappend fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0]
-    dict set output_process fluid_output_processes $fluid_output
-
-    lappend solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0]
-    dict set output_process solid_output_processes $solid_output
-    
-    return $output_process
+    return $processes
 }
 proc ConjugateHeatTransfer::write::GetOutputProcessList { } {
     set output_process [dict create ]
