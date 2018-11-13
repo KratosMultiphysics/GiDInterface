@@ -133,7 +133,7 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
     set strategy_write_name [[::Model::GetSolutionStrategy $strategyId] getAttribute "python_module"] 
     
     if {$equationType eq "Monolithic"} {
-        return [GetPFEM_MonolithicSolverSettingsDict strategy_write_name [DofsInElements]]
+        return [GetPFEM_MonolithicSolverSettingsDict $strategy_write_name [DofsInElements]]
     } else {
 
         # Solver type  
