@@ -27,7 +27,7 @@ proc Structural::write::getOldParametersDict { } {
         dict set eigen_process_dict help "This process postprocces the eigen values for GiD"
         dict set eigen_process_dict process_name "PostProcessEigenvaluesProcess"
         set params [dict create]
-        dict set params "result_file_name" [file tail [GiD_Info Project ModelName]]
+        dict set params "result_file_name" [Kratos::GetModelName]
         dict set params "animation_steps" 20
         dict set params "label_type" "frequency"
         dict set eigen_process_dict "Parameters" $params
@@ -68,7 +68,7 @@ proc Structural::write::getOldParametersDict { } {
     # Model import settings
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename [file tail [GiD_Info Project ModelName]]
+    dict set modelDict input_filename [Kratos::GetModelName]
     dict set solverSettingsDict model_import_settings $modelDict
 
     set materialsDict [dict create]

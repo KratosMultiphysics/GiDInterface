@@ -36,7 +36,7 @@ proc ConvectionDiffusion::write::GetProblemDataDict { } {
 
     # First section -> Problem data
     set problem_data_dict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set problem_data_dict problem_name $model_name
 
     # Parallelization
@@ -106,7 +106,7 @@ proc ConvectionDiffusion::write::GetSolverSettingsDict {} {
     # Model import settings
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set modelDict input_filename $model_name
     dict set solverSettingsDict model_import_settings $modelDict
 
@@ -145,7 +145,7 @@ proc ConvectionDiffusion::write::GetOutputProcessList { } {
     
     set partgroup [write::getPartsSubModelPartId]
     dict set res_dict Parameters "model_part_name" [concat [lindex $partgroup 0]]
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set res_dict Parameters output_name $model_name
     lappend gid_output $res_dict
     dict set result gid_output $gid_output

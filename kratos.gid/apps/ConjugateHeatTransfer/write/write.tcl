@@ -30,7 +30,7 @@ proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
     
-    set filename "[file tail [GiD_Info project ModelName]]"
+    set filename [Kratos::GetModelName]
 
     # Buoyancy mdpa
     write::writeAppMDPA Buoyancy

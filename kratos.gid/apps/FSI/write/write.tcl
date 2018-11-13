@@ -12,7 +12,7 @@ proc FSI::write::Init { } {
 
 # Events
 proc FSI::write::writeModelPartEvent { } {
-    set filename "[file tail [GiD_Info project ModelName]]"
+    set filename [Kratos::GetModelName]
     
     Fluid::write::Init
     Fluid::write::InitConditionsMap
