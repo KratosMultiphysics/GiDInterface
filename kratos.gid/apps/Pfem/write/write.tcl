@@ -249,6 +249,11 @@ proc Pfem::write::getConditionsParametersDict {un {condition_type "Condition"}} 
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 }
+            } elseif {$in_type eq "inline_vector"} {
+                    set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
+                    lassign [split $value ","] ValX ValY ValZ
+                    if {$ValZ eq ""} {set ValZ 0.0}
+                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]] 
             } elseif {$in_type eq "double" || $in_type eq "integer"} {
                 set printed 0
                 if {[$in_obj getAttribute "function"] eq "1"} {
