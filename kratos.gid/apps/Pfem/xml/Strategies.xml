@@ -188,7 +188,7 @@
           <filter field="SolverType" value="Standard"/>
         </filterFeatures>
         <defaults>
-          <solver n="Automatic">
+          <solver n="BICGSTABSolver">
           </solver>
         </defaults>
       </linearSolverItem>
