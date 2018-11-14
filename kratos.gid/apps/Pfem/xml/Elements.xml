@@ -39,7 +39,6 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Fluid3D"/>
       <filter field="Dimension" value="3D"/>
-      <filter field="LargeDeformation" value="False"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
