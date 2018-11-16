@@ -315,20 +315,28 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
     set nodal_results [write::GetResultsList $results_UN OnNodes]
 
     set problemtype [write::getValue PFEM_DomainType]
+    set contact_active False
     if {$problemtype ne "Fluid"} {
         set root [customlib::GetBaseRoot]
         set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
-        set contact_active False
         foreach body_node [$root selectNodes $xp1] {
             set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
             if {$contact eq "Yes"} { set contact_active True }
         }
         if {$contact_active eq True} {
-            lappend nodal_results "CONTACT_FORCE"            
+            lappend nodal_results "CONTACT_FORCE"         
+            lappend nodal_results "NORMAL"
         }
     }
-
-    lappend nodal_results "NORMAL" 
+    
+    if {$problemtype ne "Solid"} {
+        if {$contact_active ne True} {
+            lappend nodal_results "NORMAL" 
+        }
+        set nodal_flags_results [list]  
+        lappend nodal_flags_results "FREE_SURFACE" "INLET"
+        dict set resultDict nodal_flags_results $nodal_flags_results
+    }
 
     dict set resultDict nodal_results $nodal_results
     dict set resultDict gauss_point_results [write::GetResultsList $results_UN OnElement]
