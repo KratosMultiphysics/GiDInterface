@@ -1,44 +1,65 @@
 # Project Parameters
 proc ::EmbeddedFluid::write::getParametersDict { } {
-      set param_dict [Fluid::write::getParametersDict]
+    set param_dict [Fluid::write::getParametersDict]
 
-      ## Set the meshing adaptivity settings
-      set mesh_adaptivity [write::getValue EMBFLAdaptivitySettings mesh_adaptivity]
-      # Meshing adaptivity switch on/off in problem data dict
-      set new_problem_data [dict get $param_dict problem_data]
-      dict set new_problem_data "mesh_adaptivity" $mesh_adaptivity
-      dict set param_dict problem_data $new_problem_data
-      # Set the meshing adaptivity process list
-      if {$mesh_adaptivity eq "Yes"} {
-          dict set param_dict processes mesh_adaptivity_process_list [list [getMeshAdaptivityProcessDict]]
-      } else {
-          dict set param_dict processes mesh_adaptivity_process_list [list]
-      }
+    ## Set the meshing adaptivity settings
+    set mesh_adaptivity [write::getValue EMBFLAdaptivitySettings mesh_adaptivity]
+    # Meshing adaptivity switch on/off in problem data dict
+    set new_problem_data [dict get $param_dict problem_data]
+    dict set new_problem_data "mesh_adaptivity" $mesh_adaptivity
+    dict set param_dict problem_data $new_problem_data
+    # Set the meshing adaptivity process list
+    if {$mesh_adaptivity eq "Yes"} {
+        dict set param_dict processes mesh_adaptivity_process_list [list [getMeshAdaptivityProcessDict]]
+    } else {
+        dict set param_dict processes mesh_adaptivity_process_list [list]
+    }
 
-      ## Set the auxiliar embedded fluid application processes dictionary list
-      dict set param_dict processes auxiliar_process_list [getAuxiliarProcessList]
+    ## Set the auxiliar embedded fluid application processes dictionary list
+    dict set param_dict processes auxiliar_process_list [getAuxiliarProcessList]
 
-      ## Set the solver settings dictionary
-      set solverSettingsDict [dict get $param_dict solver_settings]
-      # If drag has to be computed, ensure that "compute_reactions" is set to true
-      set compute_embedded_drag [write::getValue EMBFLEmbeddedDrag compute_embedded_drag]
-      if {$compute_embedded_drag eq "Yes"} {
-          dict set solverSettingsDict "compute_reactions" true
-      }
-      set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict EmbeddedFluid] ]
+    ## Set the solver settings dictionary
+    set solverSettingsDict [dict get $param_dict solver_settings]
+    # If drag has to be computed, ensure that "compute_reactions" is set to true
+    set compute_embedded_drag [write::getValue EMBFLEmbeddedDrag compute_embedded_drag]
+    if {$compute_embedded_drag eq "Yes"} {
+        dict set solverSettingsDict "compute_reactions" true
+    }
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict EmbeddedFluid] ]
 
-      ## Set the distance reading settings dictionary
-      set dist_settings_dict [dict create]
-      set dist_mode [write::getValue EMBFLDistanceSettings ReadingMode]
-      dict set dist_settings_dict import_mode $dist_mode
-      if {$dist_mode ne "from_mdpa"} {
-            set dist_file [write::getValue EMBFLDistanceSettings distance_file_name]
-            dict set dist_settings_dict distance_file_name $dist_file
-      }
-      dict set solverSettingsDict distance_reading_settings $dist_settings_dict
+    # Set the embedded monolithic formulation settings
+    set currentStrategyId [write::getValue FLSolStrat]
+    if {$currentStrategyId eq "Monolithic"} {
+        set formulationSettingsDict [dict get $solverSettingsDict formulation]
+        # Set element type
+        dict set formulationSettingsDict element_type "embedded_navier_stokes"
+        # Set the is_slip flag and remove it from the original dictionary
+        dict set formulationSettingsDict is_slip [dict get $solverSettingsDict is_slip]
+        dict unset solverSettingsDict is_slip
+        # Set the penalty_coefficient and remove it from the original dictionary
+        dict set formulationSettingsDict penalty_coefficient [dict get $solverSettingsDict penalty_coefficient]
+        dict unset solverSettingsDict penalty_coefficient
+        # If exists, set the slip_length and remove it from the original dictionary
+        if {[dict exists $solverSettingsDict slip_length]} {
+            dict set formulationSettingsDict slip_length [dict get $solverSettingsDict slip_length]
+            dict unset solverSettingsDict slip_length
+        }
+        # Include the formulation settings in the solver settings dict
+        dict set solverSettingsDict formulation $formulationSettingsDict
+    }
 
-      dict set param_dict solver_settings $solverSettingsDict
-      return $param_dict
+    ## Set the distance reading settings dictionary
+    set dist_settings_dict [dict create]
+    set dist_mode [write::getValue EMBFLDistanceSettings ReadingMode]
+    dict set dist_settings_dict import_mode $dist_mode
+    if {$dist_mode ne "from_mdpa"} {
+        set dist_file [write::getValue EMBFLDistanceSettings distance_file_name]
+        dict set dist_settings_dict distance_file_name $dist_file
+    }
+    dict set solverSettingsDict distance_reading_settings $dist_settings_dict
+
+    dict set param_dict solver_settings $solverSettingsDict
+    return $param_dict
 }
 
 proc EmbeddedFluid::write::writeParametersEvent { } {
