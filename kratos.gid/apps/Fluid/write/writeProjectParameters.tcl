@@ -203,5 +203,23 @@ proc Fluid::write::getSolverSettingsDict { } {
     }
     dict set solverSettingsDict time_stepping $timeSteppingDict
 
+    # For monolithic schemes, set the formulation settings
+    if {$currentStrategyId eq "Monolithic"} {
+        set formulationSettingsDict [dict create]
+        # Set element type
+        dict set formulationSettingsDict element_type "vms"
+        # Set OSS and remove oss_switch from the original dictionary
+        # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
+        if {[dict exists $solverSettingsDict oss_switch]} {
+            dict set formulationSettingsDict use_orthogonal_subscales [write::getStringBinaryFromValue [dict get $solverSettingsDict oss_switch]]
+            dict unset solverSettingsDict oss_switch
+        }
+        # Set dynamic tau and remove dynamic_tau from the original dictionary
+        dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
+        dict unset solverSettingsDict dynamic_tau
+        # Include the formulation settings in the solver settings dict
+        dict set solverSettingsDict formulation $formulationSettingsDict
+    }
+
     return $solverSettingsDict
 }
