@@ -92,10 +92,18 @@ proc ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     # Buoyancy section
     apps::setActiveAppSoft Buoyancy
     write::initWriteConfiguration [Buoyancy::write::GetAttributes]
+    ConvectionDiffusion::write::SetAttribute nodal_conditions_un Buoyancy_CNVDFFNodalConditions
+    ConvectionDiffusion::write::SetAttribute conditions_un Buoyancy_CNVDFFBC
+    ConvectionDiffusion::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
+    ConvectionDiffusion::write::SetAttribute model_part_name FluidThermalModelPart
     set ConjugateHeatTransfer::write::fluid_domain_solver_settings [Buoyancy::write::getParametersDict]
 
     # Heating section
     apps::setActiveAppSoft ConvectionDiffusion
+    ConvectionDiffusion::write::SetAttribute nodal_conditions_un CNVDFFNodalConditions
+    ConvectionDiffusion::write::SetAttribute conditions_un CNVDFFBC
+    ConvectionDiffusion::write::SetAttribute model_part_name ThermalModelPart
+    ConvectionDiffusion::write::SetAttribute thermal_bc_un CNVDFFBC
     write::initWriteConfiguration [ConvectionDiffusion::write::GetAttributes]
     set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
 
