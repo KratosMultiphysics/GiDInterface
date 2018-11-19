@@ -34,15 +34,18 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     dict set solver_settings_dict solver_type "conjugate_heat_transfer"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solver_settings_dict domain_size $nDim
+    dict set solver_settings_dict echo_level 0
     
     set filename [Kratos::GetModelName]
 
     # Prepare the solver strategies
-    # Buoyancy Fluid > Modelpart name -> mdpa fluid   
+    # Buoyancy Fluid > model_import_settings -> mdpa fluid   
     dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings fluid_solver_settings model_import_settings input_filename "${filename}_[GetAttribute fluid_mdpa_suffix]"
-    # Buoyancy Thermic > Modelpart name -> none
+    # Buoyancy Thermic > model_import_settings -> none
     dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_import_settings input_filename "use_input_model_part"
     dict unset ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_import_settings input_type
+    # Buoyancy Thermic > model_part_name
+    dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_part_name FluidThermicModelPart
     # Solid Thermic > Modelpart name -> mdpa solid
     dict set ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings model_import_settings input_filename "${filename}_[GetAttribute solid_mdpa_suffix]"
 
