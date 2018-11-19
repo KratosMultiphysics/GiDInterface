@@ -348,11 +348,7 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
 
 proc Pfem::write::GetMainScriptFilename { } {
     set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Fluid"} {
-        return "RunMainPfem.py"
-    } else {
-        return "RunPfem.py"
-    }
+    return "RunPfem.py"
 }
 
 # Functions to use the write attribute system
