@@ -36,7 +36,7 @@ proc ::DEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Clusters.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $dir write mesh.tcl]]
+    uplevel #0 [list source [file join $dir write write_utils.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
 
@@ -56,7 +56,7 @@ proc ::DEM::CustomMenus { } {
     DEM::examples::UpdateMenus
 }
 
-proc ::DEM::BeforeMeshGeneration {elementsize} {
+proc ::DEM::BeforeMeshGeneration_working {elementsize} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
     foreach group [$root selectNodes $xp1] {
@@ -69,6 +69,26 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
         }
     }
 }
+
+proc ::DEM::BeforeMeshGeneration {elementsize} {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute DEMParts]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
+		if {![write::isBooleanTrue $advanced_meshing_features]} {
+            foreach volume [GiD_EntitiesGroups get $groupid volumes] {
+            GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
+            }
+        }
+    }
+    # wkcf::Preprocess   what is this???
+    # if {[catch {DEM::write::BeforeMeshGeneration $elementsize} err]} {
+	# WarnWinText $err
+    # }
+
+}
+
 
 proc ::DEM::AfterMeshGeneration { fail } {
     # set without_window [GidUtils::AreWindowsDisabled];

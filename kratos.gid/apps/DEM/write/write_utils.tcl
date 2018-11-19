@@ -223,11 +223,6 @@ proc DEM::write::Elements_Substitution {} {
 }
 
 
-
-
-
-
-
 proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
 
     set mesh_elements [GiD_EntitiesGroups get $cgroupid all_mesh]
@@ -356,3 +351,375 @@ proc DEM::write::GetElementCenter {element_id} {
     }
     return [MathUtils::ScalarByVectorProd [expr {1.0/$num_nodes}] $sum]
 }
+
+
+
+
+
+
+# kipt::BeforeMeshGeneration
+proc DEM::write::BeforeMeshGeneration {elementsize} {
+
+	# Align the normal
+	DEM::write::AlignSurfNormals Outwards
+
+	# Reset Automatic Conditions from previous executions
+	set entitytype "surface"
+
+	# Automatic Kratos Group for Boundary Condition
+	set groupid "-AKGSkinMesh3D"
+	DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
+
+	# Find boundaries
+	set bsurfacelist [DEM::write::FindBoundariesOfNonSphericElements $entitytype]
+	set allsurfacelist [DEM::write::FindAllSurfacesOfNonSphericElements $entitytype]
+	DEM::write::AssignGeometricalEntitiesToSkinSphere3D
+
+	# Get the surface type list
+	lassign [DEM::write::GetSurfaceTypeList $bsurfacelist] tetrasurf hexasurf
+
+	# Triangle
+	if {[llength $tetrasurf]} {
+	    # Assign the triangle element type
+	    GiD_Process Mescape Meshing ElemType Triangle $tetrasurf escape
+	    # Automatically meshing all the boundary surfaces
+	    GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}$tetrasurf escape
+	}
+
+	# Quadrilateral
+	if {[llength $hexasurf]} {
+	    # Assign the quadrilateral element type
+	    GiD_Process Mescape Meshing ElemType Quadrilateral $hexasurf escape
+	    # Automatically meshing all the boundary surfaces
+	    GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}$hexasurf escape
+	}
+	DEM::write::AssignConditionToGroupGID $entitytype $bsurfacelist $groupid
+
+	# Special case of DEM
+	DEM::write::AssignSpecialBoundaries $allsurfacelist
+	DEM::write::ForceTheMeshingOfDEMFEMWallGroups
+	DEM::write::ForceTheMeshingOfDEMInletGroups
+
+}
+
+
+
+
+
+proc DEM::write::AlignSurfNormals {direction} {
+    # ABSTRACT: Makes all of boundary surfaces' normals point inwards or outwards
+    # Arguments
+    # direction => Direction option ["Inwards"|"Outwards"]
+    # Note: This procedure in the same used in the fluid_only problem type
+
+    switch $direction {
+	Inwards {
+	    set wrong_way "DIFF1ST"
+	}
+	Outwards {
+	    set wrong_way "SAME1ST"
+	}
+	default {puts "Unknown Direction, surface normals not aligned"}
+    }
+    set volumelist [GiD_Geometry list volume 1:]
+    set surfacelist [list]
+
+    # For each volume, we look for face surfaces with oriented in the wrong direction
+    foreach volume $volumelist {
+        set volumeinfo [GiD_Info list_entities volumes $volume]
+        set numpos [lsearch $volumeinfo "NumSurfaces:"]
+        set numsurf [lindex $volumeinfo [expr {$numpos +1 }]]
+        for {set i 0} {$i < $numsurf} {incr i} {
+            set orient [lindex $volumeinfo [expr {$numpos+5+4*$i}]]
+            if {[string compare $orient $wrong_way]==0} {
+                # If the normal is pointing in the wrong direction,
+                # Check if it's a contour surface
+                set surfnum [lindex $volumeinfo [expr {$numpos+3+4*$i}]]
+                set surfinfo [GiD_Info list_entities surfaces $surfnum]
+                set higherentities [lindex $surfinfo 4]
+                if {$higherentities==1} {
+                lappend surfacelist $surfnum
+                }
+            }
+        }
+    }
+
+    if {[llength $surfacelist]} {
+	# If its in the contour, switch its normal
+	eval GiD_Process Mescape Utilities SwapNormals Surfaces Select $surfacelist
+    }
+}
+
+
+proc DEM::write::CleanAutomaticConditionGroupGiD {args {fieldvalue ""}} {
+    if {![GiD_Groups exists $fieldvalue]} {
+	GiD_Groups create $fieldvalue
+    }
+    GiD_Groups edit state $fieldvalue hidden
+    # msg [GiD_Groups get state $fieldvalue]
+    # msg "$fieldvalue [GiD_EntitiesGroups get $fieldvalue elements]"
+    foreach entity $args {
+	GiD_EntitiesGroups unassign $fieldvalue $entity
+    }
+    GidUtils::UpdateWindow GROUPS
+}
+
+
+proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
+    # ABSTRACT: Return a list containing all boundaries entities
+    # Arguments
+    # entity => Entity to be processed
+    #  * entity=line for models made of surfaces
+    #  * entity=surface for models made of volumes
+    # Note: This procedure in the same used in the fluid_only problem type
+
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute DEMParts]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        lappend groups_to_spherize_list $groupid
+    }
+
+    # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
+    foreach volume_id [GiD_Geometry list volume 1:end] {
+        set volume_info [GiD_Info list_entities volume $volume_id]
+        set is_spheric [regexp {Elemtype=9} $volume_info]
+
+        foreach group_that_includes_this_volume [GiD_EntitiesGroups entity_groups volumes $volume_id] {
+        #next we search $group_that_includes_this_volume among $groups_to_spherize_list:
+            if {[lsearch $groups_to_spherize_list $group_that_includes_this_volume] >= 0} {
+            set is_spheric 1
+            }
+        }
+
+        if {$is_spheric==0} {
+            foreach item [lrange [GiD_Geometry get volume $volume_id] 2 end] {
+            set surface_id [lindex $item 0]
+            incr surfaces_higher_entities_list($surface_id)
+            }
+        }
+    }
+
+    set boundarylist [list]
+    foreach surface_id [lsort -integer [array names surfaces_higher_entities_list]] {
+        if {$surfaces_higher_entities_list($surface_id) == 1} {
+            lappend boundarylist $surface_id
+        }
+    }
+    return $boundarylist
+}
+
+proc DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
+    # ABSTRACT: Return a list containing all boundaries entities
+    # Arguments
+    # entity => surface
+
+	set surf_high_entities [list]
+	set surf_no_high_entities [list]
+	set boundarylist [list]
+
+	# Boundary surfaces of all the volumes in the domain
+    foreach volume_id [GiD_Geometry list volume 1:end] {
+		set volume_info [GiD_Info list_entities volume $volume_id]
+		set is_spheric [regexp {Elemtype=9} $volume_info]
+
+		# Sphere volumes are excluded
+		if {$is_spheric==0} {
+		    foreach item [lrange [GiD_Geometry get volume $volume_id] 2 end] {
+		        lappend surf_high_entities [lindex $item 0]
+		    }
+		}
+    }
+
+	# Surfaces with no higher entities (not belonging to a volume)
+	set layers [GiD_Info layers]
+	foreach layer $layers {
+		lappend surf_no_high_entities [GiD_Info layers -entities surfaces -higherentity 0 $layer]
+	}
+	set boundarylist [concat {*}$surf_high_entities {*}$surf_no_high_entities]
+    return $boundarylist
+}
+
+
+proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
+
+    set list_of_points [GiD_Geometry list point 1:end]
+    set list_of_lines [GiD_Geometry list line 1:end]
+    set list_of_surfaces [GiD_Geometry list surface 1:end]
+    if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
+	GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
+    }
+
+    set points_to_add_to_skin_spheres [list]
+    set lines_to_add_to_skin_spheres [list]
+    set surfaces_to_add_to_skin_spheres [list]
+    set bound_sphere_surface_list [DEM::write::FindBoundariesOfSphericElements surface]
+
+    foreach point_id $list_of_points line_id $list_of_lines surface_id $list_of_surfaces {
+        set point_info [GiD_Info list_entities point $point_id]
+        set line_info [GiD_Info list_entities line $line_id]
+        set surface_info [GiD_Info list_entities surface $surface_id]
+        set point_has_no_higher_entities [regexp {HigherEntity: 0} $point_info]
+        set line_has_no_higher_entities [regexp {HigherEntity: 0} $line_info]
+        set surface_has_no_higher_entities [regexp {HigherEntity: 0} $surface_info]
+        if {$point_has_no_higher_entities == 1} {
+            lappend points_to_add_to_skin_spheres $point_id
+        }
+        if {$line_has_no_higher_entities == 1} {
+            lappend lines_to_add_to_skin_spheres $line_id
+        }
+        if {$surface_has_no_higher_entities == 1} {
+            lappend surfaces_to_add_to_skin_spheres $surface_id
+        }
+    }
+
+    set total_skin_surface_sphere_list [concat $surfaces_to_add_to_skin_spheres $bound_sphere_surface_list]
+    set total_skin_sphere_list [list $points_to_add_to_skin_spheres $lines_to_add_to_skin_spheres $total_skin_surface_sphere_list {}]
+    GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE all_geometry $total_skin_sphere_list
+}
+
+proc DEM::write::GetSurfaceTypeList {surfacelist} {
+
+    set tetrasurf [list]
+    set hexasurf [list]
+    foreach surfid $surfacelist {
+        # Check for higher entity
+        set cprop [GiD_Info list_entities -More surfaces $surfid]
+        set isve 0
+        regexp -nocase {higherentity: ([0-9]+)} $cprop none ivhe
+        if {$ivhe} {
+            set he [regexp -nocase {Higher entities volumes: (.)*} $cprop vol]
+            if {$he && $vol !=""} {
+                set voltype ""
+                set vlist [lindex [lrange $vol 3 end-2] 0]
+                set cvprop [GiD_Info list_entities volumes $vlist]
+                regexp -nocase {Elemtype=([0-9]*)} $cvprop none voltype
+                if {($voltype == 4) || ($voltype == 0) || ($voltype=="")} {
+                lappend tetrasurf $surfid
+                } elseif {$voltype == 5} {
+                lappend hexasurf $surfid
+                } else {
+                lappend tetrasurf $surfid
+                }
+            }
+        }
+    }
+    return [list $tetrasurf $hexasurf]
+}
+
+
+proc DEM::write::AssignConditionToGroupGID {entity elist groupid} {
+    # Need New GiD_group adaptation
+    if {![GiD_Groups exists $groupid]} {
+	GiD_Groups create $groupid
+    }
+    GiD_Groups edit state $groupid hidden
+    GiD_EntitiesGroups assign $groupid $entity $elist
+    GidUtils::UpdateWindow GROUPS
+}
+
+
+proc DEM::write::AssignSpecialBoundaries {entitylist} {
+    #set DEMApplication "No"
+    #catch {set DEMApplication [::xmlutils::setXml {GeneralApplicationData//c.ApplicationTypes//i.DEM} dv]}
+    #if {$DEMApplication eq "Yes"} {
+
+    # Automatic Kratos Group for all DEM boundary lines
+    set groupid "-AKGDEMSkinMesh3D"
+    set entitytype "line"
+    DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
+
+    # Get all end line list from the boundary surfaces
+    set endlinelist [list]
+    foreach surfid $entitylist {
+        set surfprop [GiD_Geometry get surface $surfid]
+        set surfacetype [lindex $surfprop 0]
+        set nline [lindex $surfprop 2]
+        set lineprop [list]
+        if {$surfacetype eq "nurbssurface"} {
+            set lineprop [lrange $surfprop 9 [expr {9+$nline-1}]]
+        } else {
+            set lineprop [lrange $surfprop 3 [expr {3+$nline-1}]]
+        }
+        foreach lprop $lineprop {
+            lassign $lprop lineid orientation
+            lappend endlinelist $lineid
+        }
+    }
+    set endlinelist [lsort -integer -unique $endlinelist]
+
+    # Assign the boundary condition
+    DEM::write::AssignConditionToGroupGID $entitytype $endlinelist $groupid
+
+    #}
+}
+
+proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
+
+    set root [customlib::GetBaseRoot]
+    #set xp1 "[spdAux::getRoute DEMConditions]/group"DEM-FEM-Wall
+    set xp1 "[spdAux::getRoute DEMConditions]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+    }
+
+    # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-FEM-Wall"] {
+	# 	GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+    # }
+}
+
+proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
+    set root [customlib::GetBaseRoot]
+    #set xp1 "[spdAux::getRoute DEMConditions]/group" Inlet
+    set xp1 "[spdAux::getRoute DEMConditions]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+    }
+
+    # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-Inlet"] {
+	# 	GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+    # }
+}
+
+
+
+proc DEM::write::FindBoundariesOfSphericElements {entity} {
+
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute DEMParts]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        lappend groups_to_spherize_list $groupid
+    }
+
+    # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
+    foreach volume_id [GiD_Geometry list volume 1:end] {
+        set volume_info [GiD_Info list_entities volume $volume_id]
+        set is_spheric [regexp {Elemtype=9} $volume_info]
+
+        foreach group_that_includes_this_volume [GiD_EntitiesGroups entity_groups volumes $volume_id] {
+        #next we search $group_that_includes_this_volume among $groups_to_spherize_list:
+            if {[lsearch $groups_to_spherize_list $group_that_includes_this_volume] >= 0} {
+            set is_spheric 1
+            }
+        }
+
+        if {$is_spheric==1} {
+            foreach item [lrange [GiD_Geometry get volume $volume_id] 2 end] {
+            set surface_id [lindex $item 0]
+            incr surfaces_higher_entities_list($surface_id)
+            }
+        }
+    }
+
+    set boundarylist [list]
+    foreach surface_id [lsort -integer [array names surfaces_higher_entities_list]] {
+        if {$surfaces_higher_entities_list($surface_id) == 1} {
+            lappend boundarylist $surface_id
+        }
+    }
+    return $boundarylist
+}
+

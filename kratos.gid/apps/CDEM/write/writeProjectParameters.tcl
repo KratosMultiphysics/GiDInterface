@@ -1,21 +1,20 @@
-
 # Project Parameters
-proc DEM::write::getParametersEvent { } {
+proc CDEM::write::getParametersEvent { } {
     set project_parameters_dict [dict create]
 
     dict set project_parameters_dict "Dimension" [expr 3]
-    dict set project_parameters_dict "PeriodicDomainOption" [write::getValue Boundingbox PeriodicDomain]
-    dict set project_parameters_dict "BoundingBoxOption"    [write::getValue Boundingbox UseBB]
-    dict set project_parameters_dict "AutomaticBB"          [write::getValue Boundingbox AutomaticBB]
-    dict set project_parameters_dict "BBFactor"             [write::getValue Boundingbox BBFactor]
-    dict set project_parameters_dict "BoundingBoxStartTime" [write::getValue Boundingbox StartTime]
-    dict set project_parameters_dict "BoundingBoxStopTime"  [write::getValue Boundingbox StopTime]
-    dict set project_parameters_dict "BoundingBoxMaxX"      [write::getValue Boundingbox MaxX]
-    dict set project_parameters_dict "BoundingBoxMaxY"      [write::getValue Boundingbox MaxY]
-    dict set project_parameters_dict "BoundingBoxMaxZ"      [write::getValue Boundingbox MaxZ]
-    dict set project_parameters_dict "BoundingBoxMinX"      [write::getValue Boundingbox MinX]
-    dict set project_parameters_dict "BoundingBoxMinY"      [write::getValue Boundingbox MinY]
-    dict set project_parameters_dict "BoundingBoxMinZ"      [write::getValue Boundingbox MinZ]
+    dict set project_parameters_dict "PeriodicDomainOption"             false
+    dict set project_parameters_dict "BoundingBoxOption"                [write::getValue Boundingbox UseBB]
+    dict set project_parameters_dict "AutomaticBB"       false
+    dict set project_parameters_dict "BBFactor"     1.0
+    dict set project_parameters_dict "BoundingBoxStartTime"             [write::getValue Boundingbox StartTime]
+    dict set project_parameters_dict "BoundingBoxStopTime"              [write::getValue Boundingbox StopTime]
+    dict set project_parameters_dict "BoundingBoxMaxX"                  [write::getValue Boundingbox MaxX]
+    dict set project_parameters_dict "BoundingBoxMaxY"                  [write::getValue Boundingbox MaxY]
+    dict set project_parameters_dict "BoundingBoxMaxZ"                  [write::getValue Boundingbox MaxZ]
+    dict set project_parameters_dict "BoundingBoxMinX"                  [write::getValue Boundingbox MinX]
+    dict set project_parameters_dict "BoundingBoxMinY"                  [write::getValue Boundingbox MinY]
+    dict set project_parameters_dict "BoundingBoxMinZ"                  [write::getValue Boundingbox MinZ]
 
     # dem_inlet_option
     set numinlets [llength [DEM::write::GetInletGroups]]
@@ -27,7 +26,7 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "dem_inlet_option"                 $dem_inlet_option
     # Gravity
         # Get data
-        lassign [DEM::write::GetGravity] gx gy gz
+        lassign [CDEM::write::GetGravity] gx gy gz
 
         # Add data to the parameters_dict
     dict set project_parameters_dict "GravityX"                         $gx
@@ -35,20 +34,18 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "GravityZ"                         $gz
 
     # Advanced option are disabled
-    dict set project_parameters_dict "EnergyCalculationOption"           false
-    dict set project_parameters_dict "VelocityTrapOption"                false
-    dict set project_parameters_dict "RotationOption"                    [write::getValue AdvOptions CalculateRotations]
-    dict set project_parameters_dict "CleanIndentationsOption"           [write::getValue AdvOptions CleanIndentations]
-    dict set project_parameters_dict "RemoveBallsInitiallyTouchingWalls" [write::getValue AdvOptions RemoveParticlesInWalls]
-    dict set project_parameters_dict "RemoveBallsInEmbeddedOption"       true
+    dict set project_parameters_dict "EnergyCalculationOption"          false
+    dict set project_parameters_dict "VelocityTrapOption"               false
+    dict set project_parameters_dict "RotationOption"                   true
+    dict set project_parameters_dict "CleanIndentationsOption"          true
+    dict set project_parameters_dict "RemoveBallsInEmbeddedOption"      true
 
     dict set project_parameters_dict "DeltaOption"                      "Absolute"
     dict set project_parameters_dict "SearchTolerance"                  0.0
     dict set project_parameters_dict "AmplifiedSearchRadiusExtension"   0.0
     dict set project_parameters_dict "ModelDataInfo"                    false
-    dict set project_parameters_dict "VirtualMassCoefficient"           [write::getValue AdvOptions VirtualMassCoef]
-    dict set project_parameters_dict "RollingFrictionOption"            [write::getValue AdvOptions RollingFriction]
-    dict set project_parameters_dict "GlobalDamping"                    [write::getValue AdvOptions GlobalDamping]
+    dict set project_parameters_dict "VirtualMassCoefficient"           1.0
+    dict set project_parameters_dict "RollingFrictionOption"            false
     dict set project_parameters_dict "ContactMeshOption"                false
     dict set project_parameters_dict "OutputFileType"                   "Binary"
     dict set project_parameters_dict "Multifile"                        "multiple_files"
@@ -58,7 +55,7 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "RotationalIntegrationScheme"      "Direct_Integration"
     dict set project_parameters_dict "AutomaticTimestep"                false
     dict set project_parameters_dict "DeltaTimeSafetyFactor"            1.0
-    set time_things [DEM::write::GetTimeSettings]
+    set time_things [CDEM::write::GetTimeSettings]
         set MaxTimeStep [dict get $time_things DeltaTime]
     dict set project_parameters_dict "MaxTimeStep"                      $MaxTimeStep
         set TTime [dict get $time_things EndTime]
@@ -111,14 +108,15 @@ proc DEM::write::getParametersEvent { } {
     return $project_parameters_dict
 }
 
-proc DEM::write::GetTimeSettings { } {
+proc CDEM::write::GetTimeSettings { } {
     set result [dict create]
     dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
     dict set result EndTime [write::getValue DEMTimeParameters EndTime]
     return $result
 }
 
-proc DEM::write::GetGravity { } {
+
+proc CDEM::write::GetGravity { } {
     set gravity_value [write::getValue DEMGravity GravityValue]
     set gravity_X [write::getValue DEMGravity Cx]
     set gravity_Y [write::getValue DEMGravity Cy]
@@ -131,7 +129,7 @@ proc DEM::write::GetGravity { } {
     return [list $gx $gy $gz]
 }
 
-proc DEM::write::writeParametersEvent { } {
+proc CDEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
     write::WriteJSON [getParametersEvent]
 }
