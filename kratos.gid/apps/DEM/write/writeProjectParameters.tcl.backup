@@ -1,5 +1,6 @@
+
 # Project Parameters
-proc ::CDEM::write::getParametersEvent { } {
+proc DEM::write::getParametersEvent { } {
     set project_parameters_dict [dict create]
 
     dict set project_parameters_dict "Dimension" [expr 3]
@@ -34,9 +35,12 @@ proc ::CDEM::write::getParametersEvent { } {
     dict set project_parameters_dict "GravityZ"                         $gz
 
     # Advanced option are disabled
+    dict set project_parameters_dict "EnergyCalculationOption"           false
+    dict set project_parameters_dict "VelocityTrapOption"                false
     dict set project_parameters_dict "RotationOption"                    [write::getValue AdvOptions CalculateRotations]
     dict set project_parameters_dict "CleanIndentationsOption"           [write::getValue AdvOptions CleanIndentations]
     dict set project_parameters_dict "RemoveBallsInitiallyTouchingWalls" [write::getValue AdvOptions RemoveParticlesInWalls]
+    dict set project_parameters_dict "RemoveBallsInEmbeddedOption"       true
 
     dict set project_parameters_dict "DeltaOption"                      "Absolute"
     dict set project_parameters_dict "SearchTolerance"                  0.0
@@ -54,10 +58,10 @@ proc ::CDEM::write::getParametersEvent { } {
     dict set project_parameters_dict "RotationalIntegrationScheme"      "Direct_Integration"
     dict set project_parameters_dict "AutomaticTimestep"                false
     dict set project_parameters_dict "DeltaTimeSafetyFactor"            1.0
-    set time_things [DEM::write::GetTimeSettings]
-        set MaxTimeStep [dict get $time_things DeltaTime]
+    set time_params [DEM::write::GetTimeSettings]
+        set MaxTimeStep [dict get $time_params DeltaTime]
     dict set project_parameters_dict "MaxTimeStep"                      $MaxTimeStep
-        set TTime [dict get $time_things EndTime]
+        set TTime [dict get $time_params EndTime]
     dict set project_parameters_dict "FinalTime"                        $TTime
     dict set project_parameters_dict "ControlTime"                      [write::getValue DEMTimeParameters ScreenInfoOutput]
     dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue DEMTimeParameters NeighbourSearchFrequency]
@@ -107,8 +111,27 @@ proc ::CDEM::write::getParametersEvent { } {
     return $project_parameters_dict
 }
 
+proc DEM::write::GetTimeSettings { } {
+    set result [dict create]
+    dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
+    dict set result EndTime [write::getValue DEMTimeParameters EndTime]
+    return $result
+}
 
-proc CDEM::write::writeParametersEvent { } {
+proc DEM::write::GetGravity { } {
+    set gravity_value [write::getValue DEMGravity GravityValue]
+    set gravity_X [write::getValue DEMGravity Cx]
+    set gravity_Y [write::getValue DEMGravity Cy]
+    set gravity_Z [write::getValue DEMGravity Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+
+    return [list $gx $gy $gz]
+}
+
+proc DEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
     write::WriteJSON [getParametersEvent]
 }

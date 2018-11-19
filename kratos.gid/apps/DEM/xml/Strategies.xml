@@ -9,6 +9,34 @@
                 <parameter_list></parameter_list>
                 <element_filters></element_filters>
             </scheme>
+            <scheme n="Forward_Euler" pn="Forward Euler">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Taylor_Scheme" pn="Taylor">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Newmark_Beta_Method" pn="Newmark Beta">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Velocity_Verlet" pn="Velocity Verlet">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Direct_Integration" pn="Direct Integration">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Runge_Kutta" pn="Runge-Kutta">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Quaternion_Integration" pn="Quaternion based">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
         </schemes>
     </StrategyItem>
 </StrategyList>

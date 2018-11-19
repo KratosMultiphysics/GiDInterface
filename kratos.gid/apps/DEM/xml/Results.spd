@@ -28,11 +28,16 @@
         <value n="DEM-EulerAngles" pn="Euler angles" type="bool" values="true,false" v="false" help="Euler angles" state="hidden"/>
         <value n="DEM-RollingResistanceMoment" pn="Rolling resistance moment" type="bool" values="true,false" v="false" help="Rolling resistance moment" state="hidden"/>
     </container>
-    <container n="GiDOptions" pn="Options" help="GiD postprocess additional options" open="0" state="hidden">
-        <value n="GiDPostMode" pn="Result format" state="hidden" v="Binary" values="Ascii,Binary" help="GiD result file format. Choose Binary or Ascii. Ascii takes more hard disk space, but is human readable"/>
-        <value n="GiDWriteMeshFlag" pn="Write deformed mesh" state="hidden" type="bool" values="true,false" v="true" help="Write the GiD deformed or undeformed mesh"/>
-        <value n="GiDWriteConditionsFlag" pn="Write conditions" state="hidden" type="bool" values="true,false" v="true" help="Write the conditions or only element to the GiD result file"/>
-        <value n="GiDWriteParticlesFlag" pn="Write particles" state="hidden" type="bool" values="true,false" v="false" help="Write the particles or only element to the GiD result file"/>
+    <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess additional options" open="1" open_window="0">
+        <value n="GiDPostMode" pn="Result format" v="Binary" values="Ascii,Binary" help="GiD result file format. Choose Binary or Ascii. Ascii takes more hard disk space, but is human readable"/>
+        <value n="GiDWriteMeshFlag" pn="Write deformed mesh" type="bool" values="true,false" v="true" help="Write the GiD deformed or undeformed mesh"/>
+        <value n="GiDWriteConditionsFlag" pn="Write conditions" type="bool" values="true,false" v="true" help="Write the conditions or only element to the GiD result file"/>
+        <value n="GiDWriteParticlesFlag" pn="Write particles" type="bool" values="true,false" v="false" help="Write the particles or only element to the GiD result file"/>
         <value n="GiDMultiFileFlag" pn="Result file" v="Multiples" values="Multiples,Single" dict="Multiples,Multiple files,Single,Single file" state="hidden" help="Write one GiD result file or multiple files"/>
+    </container>
+
+    <container n="BondElem" pn="On bond elements" un="BondElem" help="Results on bond elements" open_window="1" icon="options">
+        <value n="ContactMeshOption"  type="bool"   values="true,false" v="false" pn="Contact mesh" help="Calculate and show the bonds between particles"/>
+        <value n="LocalContactForce"  type="bool"   values="true,false" v="false" pn="Local contact force" state="[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} true]" help="Displays the local contact forces between particles"/>
     </container>
 </container>

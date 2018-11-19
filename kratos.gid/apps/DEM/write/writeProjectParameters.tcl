@@ -24,58 +24,47 @@ proc DEM::write::getParametersEvent { } {
     } else {
         set dem_inlet_option "true"
     }
-    dict set project_parameters_dict "dem_inlet_option"                 $dem_inlet_option
-    # Gravity
-        # Get data
-        lassign [DEM::write::GetGravity] gx gy gz
+    dict set project_parameters_dict "dem_inlet_option"                     $dem_inlet_option
 
-        # Add data to the parameters_dict
-    dict set project_parameters_dict "GravityX"                         $gx
-    dict set project_parameters_dict "GravityY"                         $gy
-    dict set project_parameters_dict "GravityZ"                         $gz
+    # Gravity
+    lassign [DEM::write::GetGravity] gx gy gz
+    # Add data to the parameters_dict
+    dict set project_parameters_dict "GravityX"                             $gx
+    dict set project_parameters_dict "GravityY"                             $gy
+    dict set project_parameters_dict "GravityZ"                             $gz
 
     # Advanced option are disabled
-    dict set project_parameters_dict "EnergyCalculationOption"           false
-    dict set project_parameters_dict "VelocityTrapOption"                false
-    dict set project_parameters_dict "RotationOption"                    [write::getValue AdvOptions CalculateRotations]
-    dict set project_parameters_dict "CleanIndentationsOption"           [write::getValue AdvOptions CleanIndentations]
-    dict set project_parameters_dict "RemoveBallsInitiallyTouchingWalls" [write::getValue AdvOptions RemoveParticlesInWalls]
-    dict set project_parameters_dict "RemoveBallsInEmbeddedOption"       true
+    dict set project_parameters_dict "RotationOption"                       [write::getValue AdvOptions CalculateRotations]
+    dict set project_parameters_dict "CleanIndentationsOption"              [write::getValue AdvOptions CleanIndentations]
+    dict set project_parameters_dict "RemoveBallsInitiallyTouchingWalls"    [write::getValue AdvOptions RemoveParticlesInWalls]
+    dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
+    dict set project_parameters_dict "RollingFrictionOption"                [write::getValue AdvOptions RollingFriction]
+    dict set project_parameters_dict "GlobalDamping"                        [write::getValue AdvOptions GlobalDamping]
+    dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
+    dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
+    dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
+    dict set project_parameters_dict "ElementType"                          "SphericPartDEMElement3D"
 
-    dict set project_parameters_dict "DeltaOption"                      "Absolute"
-    dict set project_parameters_dict "SearchTolerance"                  0.0
-    dict set project_parameters_dict "AmplifiedSearchRadiusExtension"   0.0
-    dict set project_parameters_dict "ModelDataInfo"                    false
-    dict set project_parameters_dict "VirtualMassCoefficient"           [write::getValue AdvOptions VirtualMassCoef]
-    dict set project_parameters_dict "RollingFrictionOption"            [write::getValue AdvOptions RollingFriction]
-    dict set project_parameters_dict "GlobalDamping"                    [write::getValue AdvOptions GlobalDamping]
-    dict set project_parameters_dict "ContactMeshOption"                false
-    dict set project_parameters_dict "OutputFileType"                   "Binary"
-    dict set project_parameters_dict "Multifile"                        "multiple_files"
-    dict set project_parameters_dict "ElementType"                      "SphericPartDEMElement3D"
+    dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue TraDEMScheme Scheme]
+    dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue RotDEMScheme Scheme]
+    set time_params [DEM::write::GetTimeSettings]
+        set MaxTimeStep [dict get $time_params DeltaTime]
+    dict set project_parameters_dict "MaxTimeStep"                          $MaxTimeStep
+        set FinalTime [dict get $time_params EndTime]
+    dict set project_parameters_dict "FinalTime"                            $FinalTime
+    dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
+    dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
+    dict set project_parameters_dict "GraphExportFreq"                      1e-3
+    dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 
-    dict set project_parameters_dict "TranslationalIntegrationScheme"   "Symplectic_Euler"
-    dict set project_parameters_dict "RotationalIntegrationScheme"      "Direct_Integration"
-    dict set project_parameters_dict "AutomaticTimestep"                false
-    dict set project_parameters_dict "DeltaTimeSafetyFactor"            1.0
-    set time_things [DEM::write::GetTimeSettings]
-        set MaxTimeStep [dict get $time_things DeltaTime]
-    dict set project_parameters_dict "MaxTimeStep"                      $MaxTimeStep
-        set TTime [dict get $time_things EndTime]
-    dict set project_parameters_dict "FinalTime"                        $TTime
-    dict set project_parameters_dict "ControlTime"                      [write::getValue DEMTimeParameters ScreenInfoOutput]
-    dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue DEMTimeParameters NeighbourSearchFrequency]
-
-    dict set project_parameters_dict "GraphExportFreq"                  1e-3
-    dict set project_parameters_dict "VelTrapGraphExportFreq"           1e-3
     # Output timestep
         set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
         if {$output_criterion eq "Detail_priority"} {
             set output_timestep [write::getValue DEMResults DEM-OTimeStepDetail]
         } elseif {$output_criterion eq "Storage_priority"} {
             set amount [write::getValue DEMResults DEM-OTimeStepStorage]
-            set OTimeStepStorage [expr (double($TTime)/$amount)]
-            set maxamount [expr ($TTime/$MaxTimeStep)]
+            set OTimeStepStorage [expr (double($FinalTime)/$amount)]
+            set maxamount [expr ($FinalTime/$MaxTimeStep)]
             if {$amount < $maxamount} {
                 set output_timestep $OTimeStepStorage
             } else {
@@ -83,28 +72,29 @@ proc DEM::write::getParametersEvent { } {
             }
         }
     dict set project_parameters_dict "OutputTimeStep"                   $output_timestep
-    dict set project_parameters_dict "PostBB"                  [write::getValue Boundingbox PrintBoundingBox]
-    dict set project_parameters_dict "PostDisplacement"                 [write::getValue DEMResults DEM-Displacement]
-    dict set project_parameters_dict "PostVelocity"                     [write::getValue DEMResults DEM-PostVel]
-    dict set project_parameters_dict "PostTotalForces"                  [write::getValue DEMResults DEM-TotalForces]
-    dict set project_parameters_dict "PostRigidElementForces"           [write::getValue DEMResults DEM-RigidElementForces]
-    dict set project_parameters_dict "PostRadius"                       [write::getValue DEMResults DEM-Radius]
-    dict set project_parameters_dict "PostAngularVelocity"              [write::getValue DEMResults DEM-AngularVelocity]
-    dict set project_parameters_dict "PostParticleMoment"               [write::getValue DEMResults DEM-ParticleMoment]
-    dict set project_parameters_dict "PostEulerAngles"                  [write::getValue DEMResults DEM-EulerAngles]
-    dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue DEMResults DEM-RollingResistanceMoment]
-    dict set project_parameters_dict "PostElasticForces"                [write::getValue DEMResults DEM-ElasForces]
-    dict set project_parameters_dict "PostContactForces"                [write::getValue DEMResults DEM-ContactForces]
-    dict set project_parameters_dict "PostTangentialElasticForces"      [write::getValue DEMResults DEM-TangElasForces]
-    dict set project_parameters_dict "PostShearStress"                  [write::getValue DEMResults DEM-ShearStress]
-    dict set project_parameters_dict "PostPressure"                     [write::getValue DEMResults DEM-Pressure]
-    dict set project_parameters_dict "PostNonDimensionalVolumeWear"     [write::getValue DEMResults DEM-Wear]
-    dict set project_parameters_dict "PostNodalArea"                    [write::getValue DEMResults DEM-NodalArea]
-    dict set project_parameters_dict "PostRHS"                          [write::getValue DEMResults DEM-Rhs]
-    dict set project_parameters_dict "PostDampForces"                   [write::getValue DEMResults DEM-DampForces]
-    dict set project_parameters_dict "PostAppliedForces"                [write::getValue DEMResults DEM-AppliedForces]
-    dict set project_parameters_dict "PostGroupId"                      [write::getValue DEMResults DEM-GroupId]
-    dict set project_parameters_dict "PostExportId"                     [write::getValue DEMResults DEM-ExportId]
+    dict set project_parameters_dict "PostBB"                           [write::getValue Boundingbox PrintBoundingBox]
+    dict set project_parameters_dict "PostLocalContactForce"            [write::getValue BondElem LocalContactForce]
+    dict set project_parameters_dict "PostDisplacement"                 [write::getValue PostPrint DEM-Displacement]
+    dict set project_parameters_dict "PostVelocity"                     [write::getValue PostPrint DEM-PostVel]
+    dict set project_parameters_dict "PostTotalForces"                  [write::getValue PostPrint DEM-TotalForces]
+    dict set project_parameters_dict "PostRigidElementForces"           [write::getValue PostPrint DEM-RigidElementForces]
+    dict set project_parameters_dict "PostRadius"                       [write::getValue PostPrint DEM-Radius]
+    dict set project_parameters_dict "PostAngularVelocity"              [write::getValue PostPrint DEM-AngularVelocity]
+    dict set project_parameters_dict "PostParticleMoment"               [write::getValue PostPrint DEM-ParticleMoment]
+    dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint DEM-EulerAngles]
+    dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue PostPrint DEM-RollingResistanceMoment]
+    dict set project_parameters_dict "PostElasticForces"                [write::getValue PostPrint DEM-ElasForces]
+    dict set project_parameters_dict "PostContactForces"                [write::getValue PostPrint DEM-ContactForces]
+    dict set project_parameters_dict "PostTangentialElasticForces"      [write::getValue PostPrint DEM-TangElasForces]
+    dict set project_parameters_dict "PostShearStress"                  [write::getValue PostPrint DEM-ShearStress]
+    dict set project_parameters_dict "PostPressure"                     [write::getValue PostPrint DEM-Pressure]
+    dict set project_parameters_dict "PostNonDimensionalVolumeWear"     [write::getValue PostPrint DEM-Wear]
+    dict set project_parameters_dict "PostNodalArea"                    [write::getValue PostPrint DEM-NodalArea]
+    dict set project_parameters_dict "PostRHS"                          [write::getValue PostPrint DEM-Rhs]
+    dict set project_parameters_dict "PostDampForces"                   [write::getValue PostPrint DEM-DampForces]
+    dict set project_parameters_dict "PostAppliedForces"                [write::getValue PostPrint DEM-AppliedForces]
+    dict set project_parameters_dict "PostGroupId"                      [write::getValue PostPrint DEM-GroupId]
+    dict set project_parameters_dict "PostExportId"                     [write::getValue PostPrint DEM-ExportId]
 
     dict set project_parameters_dict "problem_name" [file tail [GiD_Info Project ModelName]]
 
