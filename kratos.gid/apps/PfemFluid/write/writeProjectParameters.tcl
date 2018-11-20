@@ -41,7 +41,7 @@ proc PfemFluid::write::getParametersDict { } {
 }
 proc PfemFluid::write::GetPFEM_ProblemDataDict { } {
     set problemDataDict [dict create]
-    dict set problemDataDict problem_name [file tail [GiD_Info Project ModelName]]
+    dict set problemDataDict problem_name [Kratos::GetModelName]
 
     dict set problemDataDict model_part_name "Main Domain"
     set nDim $::Model::SpatialDimension
@@ -94,7 +94,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     # model import settings
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename [file tail [GiD_Info Project ModelName]]
+    dict set modelDict input_filename [Kratos::GetModelName]
     dict set modelDict input_file_label 0
     dict set solverSettingsDict model_import_settings $modelDict
 

@@ -104,7 +104,7 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "PostGroupId"                      [write::getValue DEMResults DEM-GroupId]
     dict set project_parameters_dict "PostExportId"                     [write::getValue DEMResults DEM-ExportId]
     
-    dict set project_parameters_dict "problem_name" [file tail [GiD_Info Project ModelName]]
+    dict set project_parameters_dict "problem_name" [Kratos::GetModelName]
 
     return $project_parameters_dict
 }

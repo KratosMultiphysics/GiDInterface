@@ -72,7 +72,7 @@ proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
     
     set project_path [GiD_Info project modelname]
     if {$project_path ne "UNNAMED"} {
-        catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[file tail [GiD_Info project modelname] ].post.res"]}
+        catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[Kratos::GetModelName].post.res"]}
         # Set Octree
         set oldMeshType [GiD_Set MeshType]
         ::GiD_Set MeshType 2
