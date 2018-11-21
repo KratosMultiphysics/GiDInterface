@@ -12,7 +12,7 @@ proc MPM::xml::Init { } {
     # Import our elements
     Model::ForgetElements
     Model::getElements Elements.xml
-    
+
     # Modify the schemes so more elements are filtered
     foreach strategy $::Model::SolutionStrategies {
         $strategy setAttribute NeedElements false
@@ -27,7 +27,7 @@ proc MPM::xml::Init { } {
     set geometry_input [::Model::Parameter new "geometry_element" "Geometry element" "combo" "Triangle" "" "" "help" "Triangle,Quadrilateral" "Triangle,Quadrilateral"]
     $implicit_solution_strategy addInputDone $geometry_input
     # Number of particles per element for triangles
-    set input [::Model::Parameter new "particle_per_element_triangle" "Particles per element" "combo" "3" "" "" "help" "1,3,6,16" "1,3,6,16"]
+    set input [::Model::Parameter new "particle_per_element_triangle" "Particles per element" "combo" "3" "" "" "help" "1,3,6,12" "1,3,6,12"]
     $implicit_solution_strategy addInputDone $input
     $implicit_solution_strategy addInputDependency "particle_per_element_triangle" "geometry_element" "Triangle"
     # Quadrilateral
@@ -52,7 +52,7 @@ proc MPM::xml::Init { } {
     # Import our conditions
     Model::ForgetConditions
     Model::getConditions Conditions.xml
-    
+
 }
 
 

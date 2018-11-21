@@ -435,10 +435,10 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     set saveValue [write::getStringBinaryValue $un SaveRestart]
 
     dict set resultDict "process_name" "RestartProcess"
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set params "model_part_name" [write::GetModelPartNameWithParent $model_name]
     dict set params "save_restart" $saveValue
-    dict set params "restart_file_name" [file tail [GiD_Info Project ModelName]]
+    dict set params "restart_file_name" $model_name
     set xp1 "[spdAux::getRoute $un]/container\[@n = '$name'\]/value"
     set file_label [getValue $un RestartFileLabel]
     dict set params "restart_file_label" $file_label
@@ -521,7 +521,7 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
 
     # Problem name
     set problem_data_dict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set problem_data_dict problem_name $model_name
 
     # Parallelization
@@ -541,7 +541,7 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
 
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # prepare params
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     set paralleltype [write::getValue ParallelType]
 
     set outputProcessParams [dict create]
@@ -569,4 +569,14 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
 
     set outputProcessesDict [dict create]
     dict set outputProcessesDict gid_output $output_process_list
+}
+
+proc write::GetDefaultRestartDict { } {
+
+    set restartDict [dict create]
+    dict set restartDict SaveRestart False
+    dict set restartDict RestartFrequency 0
+    dict set restartDict LoadRestart False
+    dict set restartDict Restart_Step 0
+    return $restartDict
 }

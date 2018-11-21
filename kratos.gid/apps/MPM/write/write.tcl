@@ -25,7 +25,7 @@ proc MPM::write::writeModelPartEvent { } {
 
     MPM::write::UpdateMaterials
     
-    set filename "[file tail [GiD_Info project ModelName]]"
+    set filename [Kratos::GetModelName]
     
     ## Grid MPDA ##
     # Headers

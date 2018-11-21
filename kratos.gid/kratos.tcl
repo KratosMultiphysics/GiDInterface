@@ -244,7 +244,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         if {[GiD_Info Project Modelname] eq "UNNAMED"} {
             error "Save your model first"
         } {
-            set filename [file join [GiD_Info Project Modelname].gid [file tail [GiD_Info Project Modelname]].dat]
+            set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName].dat]
         }
     }
     FileSelector::CopyFilesIntoModel [file dirname $filename]
@@ -348,6 +348,10 @@ proc Kratos::LoadEnvironment { } {
     foreach {k v} [write::json2dict $data] {
         set kratos_private($k) $v
     }
+}
+
+proc Kratos::GetModelName { } {
+    return [file tail [GiD_Info project ModelName]]
 }
 
 proc Kratos::load_gid_groups_conds {} {  

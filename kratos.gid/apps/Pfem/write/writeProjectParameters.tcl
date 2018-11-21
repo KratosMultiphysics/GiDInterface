@@ -77,7 +77,7 @@ proc Pfem::write::GetConditionsParametersDictWithGravity { } {
 }
 proc Pfem::write::GetPFEM_ProblemDataDict { } {
     set problemDataDict [dict create]
-    dict set problemDataDict problem_name [file tail [GiD_Info Project ModelName]]
+    dict set problemDataDict problem_name [Kratos::GetModelName]
 
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
     
@@ -97,7 +97,7 @@ proc Pfem::write::GetPFEM_ProblemDataDict { } {
 proc Pfem::write::GetPFEM_ModelDataDict { } {
     variable bodies_list
     set modelDataDict [dict create]
-    dict set modelDataDict model_name [file tail [GiD_Info Project ModelName]]
+    dict set modelDataDict model_name [Kratos::GetModelName]
 
     set nDim $::Model::SpatialDimension
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
@@ -106,7 +106,7 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     # model import settings
     set modelDict [dict create]
     #dict set modelDict type "mdpa"
-    dict set modelDict name [file tail [GiD_Info Project ModelName]]
+    dict set modelDict name [Kratos::GetModelName]
     #dict set modelDict label 0
     dict set modelDataDict input_file_settings $modelDict
 
@@ -293,7 +293,7 @@ proc Pfem::write::GetPFEM_ContactDict { } {
         dict set contact_dict "help"          "This process applies contact domain search by remeshing outer boundaries"
         dict set contact_dict "process_name"  "ContactDomainProcess"
         set params [dict create]
-	set model_name [file tail [GiD_Info Project ModelName]]
+	    set model_name [Kratos::GetModelName]
         dict set params "model_part_name"       $model_name
         dict set params "meshing_control_type"  "step"
 	set frequency [Pfem::write::GetContactProperty "Solid-Solid" "Frequency"]
@@ -408,7 +408,7 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
     dict set resultDict "process_name" "RemeshDomainsProcess"
 
     set paramsDict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set paramsDict "model_part_name" $model_name
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
@@ -523,7 +523,7 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
     dict set resultDict "process_name" "RemeshFluidDomainsProcess"
 
     set paramsDict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set paramsDict "model_part_name" $model_name
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
