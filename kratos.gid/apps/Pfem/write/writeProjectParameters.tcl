@@ -237,8 +237,8 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
     set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Pfem] ]
 
     # Add Dofs
-    # dict set solverParametersDict dofs [list {*}[DofsInElements] ]
-    dict set solverParametersDict dofs [list {*}$dofs ]
+    # here [list {*}$dofs] forces the to be a list of items for correct writting json file (DARK TRICK)
+    dict set solverParametersDict dofs [list {*}$dofs]
     
     dict set solverSettingsDict Parameters $solverParametersDict
 
@@ -862,8 +862,12 @@ proc Pfem::write::DofsInElements { } {
 	    set elemid [$element_node @v]
 	    set elem [Model::getElement $elemid]
 	    foreach dof [split [$elem getAttribute "Dofs"] ","] {
-		if {$dof ni $dofs} {lappend dofs $dof}
-	    }
+            foreach item $dof {
+                if {$item ni $dofs} {
+                  lappend dofs $item
+                }
+            }
+	    }   
 	}
-    return {*}$dofs
+    return $dofs
 }
