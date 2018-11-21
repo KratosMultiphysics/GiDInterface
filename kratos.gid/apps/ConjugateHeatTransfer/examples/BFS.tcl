@@ -209,7 +209,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     spdAux::AddIntervalGroup Fluid "Fluid//Initial"
     set thermic_fluid_temperature_node [customlib::AddConditionGroupOnXPath $thermic_fluid_temperature "Fluid//Initial"]
     $thermic_fluid_temperature_node setAttribute ov $body_type
-    set props [list ByFunction Yes value 100]
+    set props [list ByFunction Yes function_value "-32*(y**2)+48*y-16"]
     foreach {prop val} $props {
          set propnode [$thermic_fluid_temperature_node selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
