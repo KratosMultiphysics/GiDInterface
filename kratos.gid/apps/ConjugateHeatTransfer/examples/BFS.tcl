@@ -178,8 +178,27 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Bottom_Wall]
     $no_slip_cond setAttribute ov $cond_type
     
+    set fluid_inlet "$fluid_conditions/condition\[@n='AutomaticInlet$nd'\]"
+    set inlets [list Total 1 End "-32*(y**2)+48*y-16"]
+    foreach {interval_name ini end function} $inlets {
+        GiD_Groups create "Fluid_Left_Wall//$interval_name"
+        GiD_Groups edit state "Fluid_Left_Wall//$interval_name" hidden
+        spdAux::AddIntervalGroup Inlet "Fluid_Left_Wall//$interval_name"
+        set inlet_node [customlib::AddConditionGroupOnXPath $fluid_inlet "Fluid_Left_Wall//$interval_name"]
+        $inlet_node setAttribute ov $cond_type
+        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
+        foreach {prop val} $props {
+             set propnode [$inlet_node selectNodes "./value\[@n = '$prop'\]"]
+             if {$propnode ne "" } {
+                  $propnode setAttribute v $val
+             } else {
+                W "Warning - Couldn't find property Inlet $prop"
+            }
+        }
+    }
+    
     set fluid_interface_path "$fluid_conditions/condition\[@n='FluidNoSlipInterface$nd'\]"
-    set fluid_interface [customlib::AddConditionGroupOnXPath $fluid_interface_path Fluid_Right_Wall]
+    set fluid_interface [customlib::AddConditionGroupOnXPath $fluid_interface_path Fluid_Bottom_Wall]
     $fluid_interface setAttribute ov $cond_type
 
     # Fluid thermic initial condition
@@ -190,7 +209,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     spdAux::AddIntervalGroup Fluid "Fluid//Initial"
     set thermic_fluid_temperature_node [customlib::AddConditionGroupOnXPath $thermic_fluid_temperature "Fluid//Initial"]
     $thermic_fluid_temperature_node setAttribute ov $body_type
-    set props [list value 100]
+    set props [list ByFunction Yes value 100]
     foreach {prop val} $props {
          set propnode [$thermic_fluid_temperature_node selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -234,7 +253,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     # Thermal Conditions
     set thermalConditions [spdAux::getRoute "CNVDFFBC"]
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
-    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Heating_Right_Wall]
+    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Heating_Bottom_Wall]
     $thermalNode setAttribute ov $cond_type
     set props [list value 293.15]
     foreach {prop val} $props {
@@ -247,7 +266,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     }
     
     set thermalcond "$thermalConditions/condition\[@n='ConvectionDiffusionInterface$nd'\]"
-    set thermal_interface [customlib::AddConditionGroupOnXPath $thermalcond Heating_Left_Wall]
+    set thermal_interface [customlib::AddConditionGroupOnXPath $thermalcond Heating_Top_Wall]
     $thermal_interface setAttribute ov $cond_type
 
     # Time parameters
