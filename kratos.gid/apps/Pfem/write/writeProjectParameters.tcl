@@ -198,6 +198,14 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
         dict set integrationDataDict time_integration_order [dict get $strategyDataDict time_integration_order]
         dict unset strategyDataDict time_integration_order
     }   
+
+    # Buffer size for contact
+    set contact_list [Pfem::write::GetPFEM_ContactList]
+    set buffer_size 2
+    if {[llength $contact_list]} {
+        set buffer_size 3
+    }
+    dict set integrationDataDict buffer_size  [expr $buffer_size]
     
     dict set solverParametersDict time_integration_settings $integrationDataDict
 
@@ -273,8 +281,7 @@ proc Pfem::write::GetPFEM_ProblemProcessList { } {
     return $resultList
 }
 
-proc Pfem::write::GetPFEM_ContactDict { } {
-    set contact_dict [dict create]
+proc Pfem::write::GetPFEM_ContactList { } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
     set contact_list [list ]
@@ -282,10 +289,16 @@ proc Pfem::write::GetPFEM_ContactDict { } {
         set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
         if {$contact ne "No" && $contact ne "" && $contact ni $contact_list} {lappend contact_list $contact}
     }
+    return $contact_list
+}
+
+proc Pfem::write::GetPFEM_ContactDict { } {
+
+    set contact_list [Pfem::write::GetPFEM_ContactList]
     #W $contact_list
     set contact_domains [list ]
     foreach contact $contact_list {
-        lappend contact_domains [Pfem::write::GetPfem_ContactProcessDict $contact]
+        lappend contact_domains [Pfem::write::GetPFEM_ContactProcessDict $contact]
     }
     if {[llength $contact_list]} {
         dict set contact_dict "python_module" "contact_domain_process"
@@ -305,7 +318,7 @@ proc Pfem::write::GetPFEM_ContactDict { } {
     return $contact_dict
 }
 
-proc Pfem::write::GetPfem_ContactProcessDict {contact_name} {
+proc Pfem::write::GetPFEM_ContactProcessDict {contact_name} {
     set cont_dict [dict create]
     dict set cont_dict "python_module" "contact_domain"
     set mesh_strat [dict create]
