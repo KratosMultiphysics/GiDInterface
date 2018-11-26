@@ -44,6 +44,48 @@
       <parameter n="ConstitutiveLaw" special_command="DEM::xml::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>
     </inputs>
   </Process>
+
+<Process n="DEM-VelocityBC-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
+    <inputs>
+      <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
+        <parameter n="DEM-VelocityBCMotion" pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable,FixedDOFs" pvalues="None,Linear/Periodic,From a table,Fixed DOFs">
+          <parameter n="LINEAR_VELOCITY_X" pn="Vx" type="double" v="0.0" parent="LinearPeriodic" unit_magnitude="Velocity" units="m/s"/>
+          <parameter n="LINEAR_VELOCITY_Y" pn="Vy" type="double" v="0.0" parent="LinearPeriodic" unit_magnitude="Velocity" units="m/s"/>
+          <parameter n="LINEAR_VELOCITY_Z" pn="Vz" type="double" v="0.0" parent="LinearPeriodic" unit_magnitude="Velocity" units="m/s"/>
+          <parameter n="LINEAR_VELOCITY_PERIODIC_flag" pn="Periodic linear velocity" type="bool" parent="LinearPeriodic" v="false">
+          <parameter n="VELOCITY_PERIOD" pn="Period linear velocity" parent="LinearPeriodic" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+          <parameter n="ANGULAR_VELOCITY_X" pn="ω x" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
+          <parameter n="ANGULAR_VELOCITY_Y" pn="ω y" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
+          <parameter n="ANGULAR_VELOCITY_Z" pn="ω z" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
+          <parameter n="ROTATION_CENTER_X" pn="Center x" type="double" v="0.0" parent="LinearPeriodic" />
+          <parameter n="ROTATION_CENTER_Y" pn="Center y" type="double" v="0.0" parent="LinearPeriodic" />
+          <parameter n="ROTATION_CENTER_Z" pn="Center z" type="double" v="0.0" parent="LinearPeriodic" />
+          <parameter n="ANGULAR_VELOCITY_PERIODIC_flag" pn="Periodic angular velocity" parent="LinearPeriodic" type="bool" v="false">
+          <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="LinearPeriodic" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+
+          <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" v="velocities.dat"/></parameter>
+          <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z"/></parameter>
+
+
+        </parameter>
+      </parameter>
+    </inputs>
+  </Process>
+
+  <Process n="DEM-VelocityIC-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
+    <inputs>
+      <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
+        <parameter n="INITIAL_VELOCITY_X_VALUE" pn="Initial Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="INITIAL_VELOCITY_Y_VALUE" pn="Initial Vy" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="INITIAL_VELOCITY_Z_VALUE" pn="Initial Vz" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <parameter n="INITIAL_ANGULAR_VELOCITY_X_VALUE" pn="Initial ω x" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="INITIAL_ANGULAR_VELOCITY_Y_VALUE" pn="Initial ω y" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+        <parameter n="INITIAL_ANGULAR_VELOCITY_Z_VALUE" pn="Initial ω z" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+      </parameter>
+    </inputs>
+  </Process>
+
+
   <Process n="Angular_Velocity_Process" pn="" python_module="" kratos_module="KratosMultiphysics" help="">
     <inputs>
       <parameter n="ANGULAR_VELOCITY" pn="ω" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>

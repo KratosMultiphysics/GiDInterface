@@ -15,6 +15,20 @@
       <!--<parameter n="FORCE" pn="External Load" v="false"/>-->
     </outputs>
   </ConditionItem>
+
+  <ConditionItem n="DEM-VelocityBC" pn="DEM-VelocityBC" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface, Volume" ProcessName="DEM-VelocityBC-Process" help="" VariableName="Prescribe motion on spheres">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+    <ConditionItem n="DEM-VelocityIC" pn="DEM-VelocityIC" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface, Volume" ProcessName="DEM-VelocityIC-Process" help="" VariableName="Prescribe initial motion on spheres">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+
   <!-- <ConditionItem n="VELOCITY" pn="Velocity" ProcessName="Linear_Velocity_Process" VariableName="VELOCITY" ImplementedInApplication="DEMApplication" analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="DEM" Interval="Total">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>

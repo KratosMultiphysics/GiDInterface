@@ -5,12 +5,12 @@ namespace eval DEM::write {
     variable delete_previous_mdpa
 }
 
-proc DEM::write::Init { } {    
+proc DEM::write::Init { } {
     variable writeAttributes
     set writeAttributes [dict create]
     SetAttribute validApps [list "DEM"]
     SetAttribute writeCoordinatesByGroups 1
-    SetAttribute properties_location mdpa 
+    SetAttribute properties_location mdpa
     SetAttribute parts_un DEMParts
     SetAttribute materials_un DEMMaterials
     SetAttribute conditions_un DEMConditions
@@ -20,10 +20,10 @@ proc DEM::write::Init { } {
 
     variable inletProperties
     set inletProperties [dict create]
-    
+
     variable last_property_id
     set last_property_id 0
-    
+
     variable delete_previous_mdpa
     set delete_previous_mdpa 1
 }
@@ -32,13 +32,13 @@ proc DEM::write::Init { } {
 proc DEM::write::writeModelPartEvent { } {
     variable last_property_id
     set last_property_id 0
-    
+
     variable writeAttributes
     write::initWriteConfiguration $writeAttributes
-    
+
     # MDPA Parts
     write::CloseFile
-    
+
     variable delete_previous_mdpa
     if {$delete_previous_mdpa} {
         catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[file tail [GiD_Info project modelname] ].mdpa"]}
@@ -58,7 +58,7 @@ proc DEM::write::writeModelPartEvent { } {
     WriteMDPAWalls
     write::CloseFile
 
-    # MDPA Walls
+    # MDPA Clusters
     write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_Clusters.mdpa"
     WriteMDPAClusters
     write::CloseFile
@@ -67,7 +67,7 @@ proc DEM::write::writeModelPartEvent { } {
 proc DEM::write::writeCustomFilesEvent { } {
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
-    
+
     write::RenameFileInModel $orig_name "MainKratos.py"
     write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
 }

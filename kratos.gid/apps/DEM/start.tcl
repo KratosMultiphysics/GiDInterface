@@ -71,6 +71,7 @@ proc ::DEM::BeforeMeshGeneration_working {elementsize} {
 }
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {
+
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
     foreach group [$root selectNodes $xp1] {
@@ -82,11 +83,10 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
             }
         }
     }
-    # wkcf::Preprocess   what is this???
-    # if {[catch {DEM::write::BeforeMeshGeneration $elementsize} err]} {
-	# WarnWinText $err
-    # }
-
+    #wkcf::Preprocess   what is this???
+    if {[catch {DEM::write::BeforeMeshGenerationUtils $elementsize} err]} {
+	WarnWinText $err
+    }
 }
 
 

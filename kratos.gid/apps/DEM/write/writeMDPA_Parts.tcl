@@ -10,13 +10,16 @@ proc DEM::write::WriteMDPAParts { } {
     writeMaterialsParts
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
-    write::writeNodalCoordinatesOnParts
+    write::writeNodalCoordinatesOnParts; # Begin Nodes
 
     # Element connectivities (Groups on STParts)
-    write::writeElementConnectivities
+    write::writeElementConnectivities; # Begin elements SphericContinuumParticle3D
 
     # Element radius
-    writeSphereRadius
+    writeSphereRadius; # Begin NodalData RADIUS
+
+    # Begin NodalData COHESIVE_GROUP
+    # Begin NodalData SKIN_SPHERE
 
     # SubmodelParts
     write::writePartSubModelPart
@@ -47,10 +50,171 @@ proc DEM::write::GetNodalConditionsGroups { {include_cond 0} } {
     return $groups
 }
 
-proc DEM::write::writeVelocityMeshes { } {
+proc DEM::write::write2VelocityMeshes { } {
     foreach {cid groupid} [DEM::write::GetNodalConditionsGroups 1] {
         ::write::writeGroupSubModelPart $cid $groupid "nodal"
     }
+}
+
+proc DEM::write::writeVelocityMeshes { } {
+    set i 0
+    foreach {cond group_list} [GetSpheresGroupsListInConditions] {
+        if {$cond eq "DEM-VelocityBC"} {
+            set cnd [Model::getCondition $cond]
+            foreach group $group_list {
+                incr i
+                write::WriteString "Begin SubModelPart $i // GUI DEM-VelocityBC - $cond - group identifier: $group"
+                write::WriteString "  Begin SubModelPartData // DEM-VelocityBC. Group name: $group"
+                set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
+                set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
+
+                set prescribeMotion_flag [write::getValueByNode [$group_node selectNodes "./value\[@n='PrescribeMotion_flag'\]"]]
+                if {[write::isBooleanTrue $prescribeMotion_flag]} {
+
+                    # Linear velocity
+                    set vX [write::getValueByNode [$group_node selectNodes "./value\[@n='LINEAR_VELOCITY_X'\]"]]
+                    set vY [write::getValueByNode [$group_node selectNodes "./value\[@n='LINEAR_VELOCITY_Y'\]"]]
+                    set vZ [write::getValueByNode [$group_node selectNodes "./value\[@n='LINEAR_VELOCITY_Z'\]"]]
+                    write::WriteString "    LINEAR_VELOCITY \[3\] ($vX,$vY,$vZ)"
+
+                    # Period
+                    set periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='LINEAR_VELOCITY_PERIODIC_flag'\]"]]
+                    if {[write::isBooleanTrue $periodic]} {
+                        set period [write::getValueByNode [$group_node selectNodes "./value\[@n='VELOCITY_PERIOD'\]"]]
+                    } else {
+                        set period 0.0
+                    }
+                    write::WriteString "    VELOCITY_PERIOD $period"
+
+                    # Angular velocity
+                    set wX  [write::getValueByNode [$group_node selectNodes "./value\[@n='ANGULAR_VELOCITY_X'\]"]]
+                    set wY  [write::getValueByNode [$group_node selectNodes "./value\[@n='ANGULAR_VELOCITY_Y'\]"]]
+                    set wZ  [write::getValueByNode [$group_node selectNodes "./value\[@n='ANGULAR_VELOCITY_Z'\]"]]
+                    write::WriteString "    ANGULAR_VELOCITY \[3\] ($wX,$wY,$wZ)"
+
+                    # Angular center of rotation
+                    set oX [write::getValueByNode [$group_node selectNodes "./value\[@n='ROTATION_CENTER_X'\]"]]
+                    set oY [write::getValueByNode [$group_node selectNodes "./value\[@n='ROTATION_CENTER_Y'\]"]]
+                    set oZ [write::getValueByNode [$group_node selectNodes "./value\[@n='ROTATION_CENTER_Z'\]"]]
+                    write::WriteString "    ROTATION_CENTER \[3\] ($oX,$oY,$oZ)"
+
+                    # Angular Period
+                    set angular_periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='ANGULAR_VELOCITY_PERIODIC_flag'\]"]]
+                    if {[write::isBooleanTrue $angular_periodic]} {
+                        set angular_period [write::getValueByNode [$group_node selectNodes "./value\[@n='ANGULAR_VELOCITY_PERIOD'\]"]]
+                    } else {
+                        set angular_period 0.0
+                    }
+                    write::WriteString "    ANGULAR_VELOCITY_PERIOD $angular_period"
+
+                    # Interval
+                    # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
+                    # lassign [write::getInterval $interval] ini end
+                    # if {![string is double $ini]} {
+                    #     set ini [write::getValue DEMTimeParameters StartTime]
+                    # }
+                    # write::WriteString "    ${cond}_START_TIME $ini"
+                    # if {![string is double $end]} {
+                    #     set end [write::getValue DEMTimeParameters EndTime]
+                    # }
+                    # write::WriteString "    ${cond}_STOP_TIME $end"
+
+                    write::WriteString "    VELOCITY_START_TIME 0.0"
+                    write::WriteString "    VELOCITY_STOP_TIME 10100000"
+                    write::WriteString "    ANGULAR_VELOCITY_START_TIME 0.0"
+                    write::WriteString "    ANGULAR_VELOCITY_STOP_TIME 10100000.0"
+                }
+
+                # Hardcoded
+                # write::WriteString "    FIXED_MESH_OPTION $fixed_mesh_option"
+                # write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
+                # write::WriteString "    FREE_BODY_MOTION 0"
+                # write::WriteString "    RIGID_BODY_MASS 0.0"
+                # write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] (0.0,0.0,0.0)"
+                # write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,0.0)"
+                # write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
+                # write::WriteString "    TOP 0"
+                # write::WriteString "    BOTTOM 0"
+                # write::WriteString "    FORCE_INTEGRATION_GROUP 0"
+                write::WriteString "  End SubModelPartData"
+                write::WriteString "  Begin SubModelPartNodes"
+                GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
+                write::WriteString "  End SubModelPartNodes"
+                write::WriteString "End SubModelPart"
+                write::WriteString ""
+            }
+        } elseif {$cond eq "DEM-VelocityIC"} {
+            set cnd [Model::getCondition $cond]
+            foreach group $group_list {
+                incr i
+                write::WriteString "Begin SubModelPart $i // GUI DEM-VelocityIC - $cond - group identifier: $group"
+                write::WriteString "  Begin SubModelPartData // DEM-VelocityIC. Group name: $group"
+                set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
+                set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
+
+                set prescribeMotion_flag [write::getValueByNode [$group_node selectNodes "./value\[@n='PrescribeMotion_flag'\]"]]
+                if {[write::isBooleanTrue $prescribeMotion_flag]} {
+
+                    # Linear velocity
+                    set vX [write::getValueByNode [$group_node selectNodes "./value\[@n='INITIAL_VELOCITY_X_VALUE'\]"]]
+                    set vY [write::getValueByNode [$group_node selectNodes "./value\[@n='INITIAL_VELOCITY_Y_VALUE'\]"]]
+                    set vZ [write::getValueByNode [$group_node selectNodes "./value\[@n='INITIAL_VELOCITY_Z_VALUE'\]"]]
+                    write::WriteString "    INITIAL_VELOCITY \[3\] ($vX,$vY,$vZ)"
+
+                    # Angular velocity
+                    set wX  [write::getValueByNode [$group_node selectNodes "./value\[@n='INITIAL_ANGULAR_VELOCITY_X_VALUE'\]"]]
+                    set wY  [write::getValueByNode [$group_node selectNodes "./value\[@n='INITIAL_ANGULAR_VELOCITY_Y_VALUE'\]"]]
+                    set wZ  [write::getValueByNode [$group_node selectNodes "./value\[@n='INITIAL_ANGULAR_VELOCITY_Z_VALUE'\]"]]
+                    write::WriteString "    INITIAL_ANGULAR_VELOCITY \[3\] ($wX,$wY,$wZ)"
+
+                }
+
+                write::WriteString "  End SubModelPartData"
+                write::WriteString "  Begin SubModelPartNodes"
+                GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
+                write::WriteString "  End SubModelPartNodes"
+                write::WriteString "End SubModelPart"
+                write::WriteString ""
+            }
+        }
+    }
+}
+
+
+proc DEM::write::GetSpheresGroupsListInConditions { } {
+    set conds_groups_dict [dict create ]
+    set groups [list ]
+
+    # Get all the groups with spheres
+    foreach group [GetSpheresGroups] {
+        foreach surface [GiD_EntitiesGroups get $group elements] {
+            foreach involved_group [GiD_EntitiesGroups entity_groups elements $surface] {
+                set involved_group_id [write::GetWriteGroupName $involved_group]
+                if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
+            }
+        }
+    }
+
+    # Find the relations condition -> group
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition"
+    foreach cond [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set condid [$cond @n]
+        foreach cond_group [$cond selectNodes "group"] {
+            set group [write::GetWriteGroupName [$cond_group @n]]
+            if {$group in $groups} {dict lappend conds_groups_dict $condid [$cond_group @n]}
+        }
+    }
+    return $conds_groups_dict
+}
+
+proc DEM::write::GetSpheresGroups { } {
+    set groups [list ]
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC'\]/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set groupid [$group @n]
+        lappend groups [write::GetWriteGroupName $groupid]
+    }
+    return $groups
 }
 
 proc DEM::write::writeMaterialsParts { } {

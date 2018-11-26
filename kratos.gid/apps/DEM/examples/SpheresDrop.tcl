@@ -54,6 +54,7 @@ proc ::DEM::examples::AssignToTree { } {
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Body]
+    $DEMPartsNode setAttribute ov volume
     set props [list Material "DEM-DefaultMaterial"]
     foreach {prop val} $props {
         set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
