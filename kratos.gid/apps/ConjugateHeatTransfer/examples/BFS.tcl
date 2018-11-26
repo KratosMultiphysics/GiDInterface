@@ -94,6 +94,10 @@ proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
     GiD_Groups edit color Fluid_Bottom_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Fluid_Bottom_Wall lines 4
 
+    GiD_Groups create Fluid_Outlet_Point
+    GiD_Groups edit color Fluid_Outlet_Point "#3b3b3bff"
+    GiD_EntitiesGroups assign Fluid_Outlet_Point points 1
+
     # Create the groups for the heating structure
     GiD_Groups create Heating
     GiD_Groups edit color Heating "#d12f1f"
@@ -170,6 +174,9 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
 
     # Fluid conditions
     set fluid_conditions [spdAux::getRoute "FLBC"]
+    set fluid_outlet "$fluid_conditions/condition\[@n='Outlet$nd'\]"
+    set fluid_outlet_cond [customlib::AddConditionGroupOnXPath $fluid_outlet Fluid_Outlet_Point]
+    $fluid_outlet_cond setAttribute ov point
     set fluid_noslip "$fluid_conditions/condition\[@n='NoSlip$nd'\]"
     set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Top_Wall]
     $no_slip_cond setAttribute ov $cond_type
@@ -209,7 +216,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     spdAux::AddIntervalGroup Fluid "Fluid//Initial"
     set thermic_fluid_temperature_node [customlib::AddConditionGroupOnXPath $thermic_fluid_temperature "Fluid//Initial"]
     $thermic_fluid_temperature_node setAttribute ov $body_type
-    set props [list ByFunction Yes function_value "-32*(y**2)+48*y-16"]
+    set props [list ByFunction Yes function_value "293.5 if y > 0.5 else 393.15 - 100*y/0.5"]
     foreach {prop val} $props {
          set propnode [$thermic_fluid_temperature_node selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -240,7 +247,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     spdAux::AddIntervalGroup Heating "Heating//Initial"
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Heating//Initial"]
     $thermalnodNode setAttribute ov $body_type
-    set props [list value 100]
+    set props [list value 393.15]
     foreach {prop val} $props {
          set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -255,7 +262,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Heating_Bottom_Wall]
     $thermalNode setAttribute ov $cond_type
-    set props [list value 293.15]
+    set props [list value 393.15]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
