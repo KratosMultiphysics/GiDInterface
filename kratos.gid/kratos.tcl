@@ -228,9 +228,9 @@ proc Kratos::AfterReadGIDProject { filespd } {
         set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
         spdAux::LoadIntervalGroups $root
         spdAux::LoadModelFiles $root
-        after idle Kratos::upgrade_problemtype $filespd $nd $activeapp
+        after idle [list Kratos::upgrade_problemtype $filespd $nd $activeapp]
     } else {
-        gid_groups_conds::open_spd_file $filespd
+        gid_groups_conds::open_spd_file "$filespd"
         customlib::UpdateDocument
         spdAux::LoadModelFiles
         spdAux::LoadIntervalGroups
