@@ -33,7 +33,7 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
 
     # Geometry creation
     ## Points ##
-    set coordinates [list 30 0 0 30 1 0 0 1 0 0 0 0]
+    set coordinates [list 30 0 0 30 1 0 0 1 0 0 0.5 0 0 0 0]
     set fluid_points [list ]
     foreach {x y z} $coordinates {
         lappend fluid_points [GiD_Geometry create point append Fluid $x $y $z]
@@ -86,13 +86,17 @@ proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
     GiD_Groups edit color Fluid_Top_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Fluid_Top_Wall lines 2
 
-    GiD_Groups create Fluid_Left_Wall
-    GiD_Groups edit color Fluid_Left_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Fluid_Left_Wall lines 3
+    GiD_Groups create Fluid_Left_Top_Wall
+    GiD_Groups edit color Fluid_Left_Top_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Fluid_Left_Top_Wall lines 3
+
+    GiD_Groups create Fluid_Left_Bottom_Wall
+    GiD_Groups edit color Fluid_Left_Bottom_Wall "#3b3b3bff"
+    GiD_EntitiesGroups assign Fluid_Left_Bottom_Wall lines 4
 
     GiD_Groups create Fluid_Bottom_Wall
     GiD_Groups edit color Fluid_Bottom_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Fluid_Bottom_Wall lines 4
+    GiD_EntitiesGroups assign Fluid_Bottom_Wall lines 5
 
     GiD_Groups create Fluid_Outlet_Point
     GiD_Groups edit color Fluid_Outlet_Point "#3b3b3bff"
@@ -184,14 +188,16 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     $no_slip_cond setAttribute ov $cond_type
     set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Bottom_Wall]
     $no_slip_cond setAttribute ov $cond_type
+    set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Left_Bottom_Wall]
+    $no_slip_cond setAttribute ov $cond_type
     
     set fluid_inlet "$fluid_conditions/condition\[@n='AutomaticInlet$nd'\]"
     set inlets [list Total 1 End "-32*(y**2)+48*y-16"]
     foreach {interval_name ini end function} $inlets {
-        GiD_Groups create "Fluid_Left_Wall//$interval_name"
-        GiD_Groups edit state "Fluid_Left_Wall//$interval_name" hidden
-        spdAux::AddIntervalGroup Inlet "Fluid_Left_Wall//$interval_name"
-        set inlet_node [customlib::AddConditionGroupOnXPath $fluid_inlet "Fluid_Left_Wall//$interval_name"]
+        GiD_Groups create "Fluid_Left_Top_Wall//$interval_name"
+        GiD_Groups edit state "Fluid_Left_Top_Wall//$interval_name" hidden
+        spdAux::AddIntervalGroup Fluid_Left_Top_Wall "Fluid_Left_Top_Wall//$interval_name"
+        set inlet_node [customlib::AddConditionGroupOnXPath $fluid_inlet "Fluid_Left_Top_Wall//$interval_name"]
         $inlet_node setAttribute ov $cond_type
         set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
         foreach {prop val} $props {
