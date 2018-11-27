@@ -21,6 +21,7 @@ proc MPM::write::Init { } {
 
 # Events
 proc MPM::write::writeModelPartEvent { } {
+    write::initWriteConfiguration [Structural::write::GetAttributes]
     write::initWriteConfiguration [GetAttributes]
 
     MPM::write::UpdateMaterials
