@@ -53,7 +53,7 @@
           <parameter n="LINEAR_VELOCITY_Y" pn="Vy" type="double" v="0.0" parent="LinearPeriodic" unit_magnitude="Velocity" units="m/s"/>
           <parameter n="LINEAR_VELOCITY_Z" pn="Vz" type="double" v="0.0" parent="LinearPeriodic" unit_magnitude="Velocity" units="m/s"/>
           <parameter n="LINEAR_VELOCITY_PERIODIC_flag" pn="Periodic linear velocity" type="bool" parent="LinearPeriodic" v="false">
-          <parameter n="VELOCITY_PERIOD" pn="Period linear velocity" parent="LinearPeriodic" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+           <parameter n="VELOCITY_PERIOD" pn="Period linear velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
           <parameter n="ANGULAR_VELOCITY_X" pn="ω x" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
           <parameter n="ANGULAR_VELOCITY_Y" pn="ω y" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
           <parameter n="ANGULAR_VELOCITY_Z" pn="ω z" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
@@ -61,10 +61,10 @@
           <parameter n="ROTATION_CENTER_Y" pn="Center y" type="double" v="0.0" parent="LinearPeriodic" />
           <parameter n="ROTATION_CENTER_Z" pn="Center z" type="double" v="0.0" parent="LinearPeriodic" />
           <parameter n="ANGULAR_VELOCITY_PERIODIC_flag" pn="Periodic angular velocity" parent="LinearPeriodic" type="bool" v="false">
-          <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="LinearPeriodic" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+           <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+          <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" type="combo" v="velocities.dat"/>
+          <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z"/>
 
-          <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" v="velocities.dat"/></parameter>
-          <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z"/></parameter>
 
 
         </parameter>
