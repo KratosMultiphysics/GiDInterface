@@ -117,7 +117,7 @@
         <!-- </parameter> -->
 
         <!-- <parameter n="Options"          parent="true" pn="Settings"                                      help="Options that will affect the behaviour during the contact bewteen Discrete Elements and this wall"> -->
-          <parameter n="RigidPlane"                   pn="Is ghost wall"       v="false" type="bool"/>
+          <parameter n="IsGhost"                      pn="Is ghost wall"         v="false" type="bool"/>
           <parameter n="friction_coeff"               pn="Friction angle (deg)"  v="30.0"                help="Coulomb friction coefficient"/>
           <parameter n="CohesiveWall"                 pn="Cohesive Wall"         v="false" type="bool"   help="Specify if the wall presents a cohesive behaviour">
            <parameter n="WallCohesion"   parent="true" pn="Wall Cohesion (Pa)"    v="0.0"                 help="JKR or DMT energy surface"/> </parameter>
