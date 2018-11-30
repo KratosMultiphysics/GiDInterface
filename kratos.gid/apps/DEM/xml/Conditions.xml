@@ -16,13 +16,19 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-VelocityBC" pn="DEM-VelocityBC" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface, Volume" ProcessName="DEM-VelocityBC-Process" help="" VariableName="Prescribe motion on spheres">
+  <ConditionItem n="DEM-VelocityBC" pn="DEM-VelocityBC" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-VelocityBC-Process" help="" VariableName="SPHEREBC">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
 
-    <ConditionItem n="DEM-VelocityIC" pn="DEM-VelocityIC" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface, Volume" ProcessName="DEM-VelocityIC-Process" help="" VariableName="Prescribe initial motion on spheres">
+    <ConditionItem n="DEM-VelocityIC" pn="DEM-VelocityIC" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-VelocityIC-Process" help="" VariableName="SPHEREIC">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+  <ConditionItem n="DEM-CustomSmp" pn="DEM-CustomSmp" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="CustomSMP-Process" help="" VariableName="SUBMP">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>

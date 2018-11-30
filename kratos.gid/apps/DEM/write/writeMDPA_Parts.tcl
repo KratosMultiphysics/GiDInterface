@@ -11,6 +11,7 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts; # Begin Nodes
+    write::writeNodalCoordinatesOnGroups [GetWallsGroupsDEMSmp]
 
     # Element connectivities (Groups on STParts)
     write::writeElementConnectivities; # Begin elements SphericContinuumParticle3D
@@ -24,7 +25,45 @@ proc DEM::write::WriteMDPAParts { } {
     # SubmodelParts
     write::writePartSubModelPart
     writeVelocityMeshes
+
+    # CustomSubmodelParts
+    #WriteWallCustomDEMSmp no cal pq en dem ja troba tots els grups.
 }
+
+proc DEM::write::WriteWallCustomDEMSmp { } {
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set groupid [$group @n]
+        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
+        W "$destination_mdpa"
+        if {$destination_mdpa == "DEM"} {
+
+            #write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
+            write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
+            write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
+            write::WriteString  "End SubModelPartData"
+            write::WriteString  "Begin SubModelPartNodes"
+            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
+            write::WriteString  "End SubModelPartNodes"
+            write::WriteString  "End SubModelPart"
+            write::WriteString  ""
+        }
+    }
+}
+
+proc DEM::write::GetWallsGroupsDEMSmp { } {
+    set groups [list ]
+    set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp2] {
+        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
+        if {$destination_mdpa == "DEM"} {
+            set groupid [$group @n]
+            lappend groups [write::GetWriteGroupName $groupid]
+            }
+        }
+    return $groups
+}
+
 
 proc DEM::write::writeSphereRadius { } {
     set root [customlib::GetBaseRoot]
