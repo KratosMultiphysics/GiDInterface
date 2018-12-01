@@ -16,7 +16,7 @@
       <NodalCondition n="ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />  
+      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -27,6 +27,32 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
+
+  <ElementItem n="UpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian (Axis-symmetry)" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements an axis-symmetric Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianAxisymmetry2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangianAxisymmetry2D4N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures></ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
+      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" />
+      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
+      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
+    </outputs>
+  </ElementItem>
+
   <ElementItem n="UpdatedLagrangian3D" pn="Updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -51,11 +77,13 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-  <ElementItem n="GRID3D" pn="Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+
+  <!--background grid-->
+  <ElementItem n="GRID2D" pn="Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
-      <item GeometryType="Hexahedra" nodes="8" KratosName="Element3D8N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -70,11 +98,12 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
-  <ElementItem n="GRID2D" pn="Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+
+  <ElementItem n="GRID3D" pn="Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="Element3D8N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
