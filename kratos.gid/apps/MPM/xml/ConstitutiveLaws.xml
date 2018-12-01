@@ -28,7 +28,8 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
+  <!-- <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
   help="Linear Elastic Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -36,7 +37,7 @@
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
     </inputs>
     <outputs></outputs>
-  </CLaw>
+  </CLaw> -->
 
   <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
 	help="Linear Elastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
@@ -59,7 +60,8 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="HyperElasticAxisym2DLaw" pn="Hyperelastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
+  <!-- <CLaw n="HyperElasticAxisym2DLaw" pn="Hyperelastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
   help="Hyperelastic Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -67,7 +69,7 @@
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
     </inputs>
     <outputs></outputs>
-  </CLaw>
+  </CLaw> -->
 
   <CLaw n="HyperElastic3DLaw" pn="Hyperelastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
 	help="HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
@@ -93,7 +95,8 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="HenckyMCPlasticAxisym2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
+  <!-- <CLaw n="HenckyMCPlasticAxisym2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
   help="Mohr Coulomb Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -104,7 +107,7 @@
       <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Internal dilatancy angle" v="0" unit_magnitude="Angle" units="°"/>
     </inputs>
     <outputs></outputs>
-  </CLaw>
+  </CLaw> -->
 
   <CLaw n="HenckyMCPlastic3DLaw" pn="Mohr Coulomb" class="HenckyMCPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
 	help="Mohr Coulomb Plasticity Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
@@ -137,7 +140,8 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="HenckyMCStrainSofteningPlasticAxisym2DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
+  <!-- <CLaw n="HenckyMCStrainSofteningPlasticAxisym2DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
   help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -152,7 +156,7 @@
       <parameter n="SHAPE_FUNCTION_BETA" pn="Exponential Softening Beta Coefficient" v="1.0"/>
     </inputs>
     <outputs></outputs>
-  </CLaw>
+  </CLaw> -->
 
   <CLaw n="HenckyMCStrainSofteningPlastic3DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
 	help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
@@ -187,7 +191,8 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="HenckyBorjaCamClayPlasticAxisym2DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
+  <!-- <CLaw n="HenckyBorjaCamClayPlasticAxisym2DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
   help="Modified Cam Clay Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -200,7 +205,7 @@
       <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
     </inputs>
     <outputs></outputs>
-  </CLaw>
+  </CLaw> -->
 
   <CLaw n="HenckyBorjaCamClayPlastic3DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
 	help="Modified Cam Clay Plasticity Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
