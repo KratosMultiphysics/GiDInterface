@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
 
-    <ConditionItem n="PointLoad2D" pn="Load on points" Interval="Total"
+  <ConditionItem n="PointLoad2D" pn="Load on points" Interval="Total"
 		 ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point" ProcessName="AssignVectorByDirectionToConditionProcess" help="Point load application by means of the AssignVectorByDirectionToConditionProcess in the core"
@@ -16,7 +16,8 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="PointLoad2DAxisym" pn="Load on points" Interval="Total"
+  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
+  <!-- <ConditionItem n="PointLoad2DAxisym" pn="Load on points" Interval="Total"
      ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point" ProcessName="AssignVectorByDirectionToConditionProcess" help="Point load application by means of the AssignVectorByDirectionToConditionProcess in the core"
@@ -29,7 +30,7 @@
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
-  </ConditionItem>
+  </ConditionItem> -->
 
   <ConditionItem n="PointLoad3D" pn="Load on points" Interval="Total"
 		 ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
@@ -61,7 +62,8 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="LineLoad2DAxisym" pn="Load on lines" Interval="Total"
+  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
+  <!-- <ConditionItem n="LineLoad2DAxisym" pn="Load on lines" Interval="Total"
 	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="AssignVectorByDirectionToConditionProcess" help="Load on lines, load vector referred to global axes"
@@ -74,7 +76,7 @@
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
-  </ConditionItem>
+  </ConditionItem> -->
 
   <ConditionItem n="SurfaceLoad3D" pn="Load on surfaces" Interval="Total"
 	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
@@ -92,6 +94,7 @@
     </outputs>
   </ConditionItem>
 
+  <!-- FIXME: Make it possible also for 2D axis-symmetric -->
   <ConditionItem n="Slip2D" pn="Slip" Interval="False"
 	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
@@ -104,7 +107,6 @@
     <outputs>
     </outputs>
   </ConditionItem>
-
 
   <ConditionItem n="Slip3D" pn="Slip" Interval="False"
 	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
