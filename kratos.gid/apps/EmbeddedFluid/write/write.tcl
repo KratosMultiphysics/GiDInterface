@@ -13,6 +13,7 @@ proc EmbeddedFluid::write::Init { } {
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid" "EmbeddedFluid"]
     SetAttribute main_script_file "KratosFluid.py"
+    SetAttribute model_part_name "FluidModelPart"
     SetAttribute materials_file "FluidMaterials.json"
 }
 
