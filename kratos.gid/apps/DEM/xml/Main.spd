@@ -5,6 +5,6 @@
     <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
     <include n="Conditions" active="1" path="apps/DEM/xml/Conditions.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
-    <include n="Results" active="1" path="apps/DEM/xml/Results.spd"/>
+    <include n="Results" active="1" un="DEMResults" path="apps/DEM/xml/Results.spd"/>
     <include n="materials" active="1" path="apps/DEM/xml/Materials.spd"/>
   </container>

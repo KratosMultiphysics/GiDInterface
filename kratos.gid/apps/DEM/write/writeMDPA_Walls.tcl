@@ -173,6 +173,7 @@ proc DEM::write::writeConditionMeshes { } {
         if {$cond eq "DEM-FEM-Wall"} {
             set cnd [Model::getCondition $cond]
             foreach group $group_list {
+                variable wallProperties
                 incr i
                 write::WriteString "Begin SubModelPart $i // GUI DEM-FEM-Wall - $cond - group identifier: $group"
                 write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
@@ -185,10 +186,16 @@ proc DEM::write::writeConditionMeshes { } {
                     if {$motion_type == "LinearPeriodic"} {
 
                         # Linear velocity
-                        set vX [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityX'\]"]]
-                        set vY [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityY'\]"]]
-                        set vZ [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityZ'\]"]]
-                        write::WriteString "    LINEAR_VELOCITY \[3\] ($vX,$vY,$vZ)"
+                        set velocity [dict get $wallProperties $group VELOCITY_MODULUS]
+                        lassign [split [dict get $wallProperties $group DIRECTION_VECTOR] ","] velocity_X velocity_Y velocity_Z
+                        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+                        lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
+                        write::WriteString "        LINEAR_VELOCITY \[3\] ($vx, $vy, $vz)"
+
+                        # set vX [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityX'\]"]]
+                        # set vY [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityY'\]"]]
+                        # set vZ [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityZ'\]"]]
+                        # write::WriteString "    LINEAR_VELOCITY \[3\] ($vX,$vY,$vZ)"
 
                         # Period
                         set periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearPeriodic'\]"]]

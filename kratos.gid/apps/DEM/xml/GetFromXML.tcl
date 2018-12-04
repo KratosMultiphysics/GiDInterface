@@ -24,8 +24,17 @@ proc DEM::xml::MultiAppEvent {args} {
 }
 
 proc DEM::xml::CustomTree { args } {
+    set root [customlib::GetBaseRoot]
     spdAux::SetValueOnTreeItem values OpenMP ParallelType
     spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
+
+    # Graphs in output settings
+    if {[$root selectNodes "[spdAux::getRoute DEMResults]/condition\[@n='Graphs'\]"] eq ""} {
+        gid_groups_conds::addF [spdAux::getRoute DEMResults] include [list n Graphs active 1 path {apps/DEM/xml/Graphs.spd}]
+    }
+
+    customlib::ProcessIncludes $::Kratos::kratos_private(Path)
+    spdAux::parseRoutes
 }
 
 
