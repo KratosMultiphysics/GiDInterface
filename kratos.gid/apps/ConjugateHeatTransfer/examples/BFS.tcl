@@ -6,8 +6,8 @@ proc ::ConjugateHeatTransfer::examples::BFS {args} {
 		if { $retval == "cancel" } { return }
     }
     DrawBFSGeometry$::Model::SpatialDimension
-    AssignGroups$::Model::SpatialDimension
-    TreeAssignation$::Model::SpatialDimension
+    AssignBFSGroups$::Model::SpatialDimension
+    TreeAssignationBFS$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -72,7 +72,7 @@ proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
 
 
 # Group assign
-proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
+proc ConjugateHeatTransfer::examples::AssignBFSGroups2D {args} {
     # Create the groups for the fluid
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -123,7 +123,7 @@ proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
     GiD_Groups edit color Heating_Bottom_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Heating_Bottom_Wall lines 8
 }
-proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
+proc ConjugateHeatTransfer::examples::AssignBFSGroups3D {args} {
     # Create the groups
     # GiD_Groups create Fluid
     # GiD_Groups edit color Fluid "#26d1a8ff"
@@ -147,11 +147,11 @@ proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
 }
 
 # Tree assign
-proc ConjugateHeatTransfer::examples::TreeAssignation3D {args} {
+proc ConjugateHeatTransfer::examples::TreeAssignationBFS3D {args} {
     # TreeAssignationCylinderInFlow2D
     # AddCuts
 }
-proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
+proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
