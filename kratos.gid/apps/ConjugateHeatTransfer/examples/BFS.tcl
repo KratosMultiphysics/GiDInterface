@@ -5,7 +5,7 @@ proc ::ConjugateHeatTransfer::examples::BFS {args} {
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawSquareGeometry$::Model::SpatialDimension
+    DrawBFSGeometry$::Model::SpatialDimension
     AssignGroups$::Model::SpatialDimension
     TreeAssignation$::Model::SpatialDimension
 
@@ -17,7 +17,7 @@ proc ::ConjugateHeatTransfer::examples::BFS {args} {
 
 
 # Draw Geometry
-proc ConjugateHeatTransfer::examples::DrawSquareGeometry3D {args} {
+proc ConjugateHeatTransfer::examples::DrawBFSGeometry3D {args} {
     # DrawSquareGeometry2D
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
@@ -25,7 +25,7 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry3D {args} {
     # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape 
 }
 
-proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
+proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers create HeatSource
