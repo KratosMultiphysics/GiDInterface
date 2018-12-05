@@ -99,14 +99,18 @@ proc DEM::write::WriteWallCustomSmp { } {
 
 proc DEM::write::writeConditions { wall_properties } {
     foreach group [GetWallsGroups] {
+        W $group
         set mid [dict get $wall_properties $group]
         set format [write::GetFormatDict $group $mid 3]
+        W $format
         write::WriteString "Begin Conditions RigidFace3D3N // GUI DEM-FEM-Wall group identifier: $group"
         GiD_WriteCalculationFile connectivities $format
         write::WriteString "End Conditions"
         write::WriteString ""
     }
 }
+
+
 
 proc DEM::write::GetWallsGroups { } {
     set groups [list ]
@@ -206,11 +210,11 @@ proc DEM::write::writeConditionMeshes { } {
                         write::WriteString "    VELOCITY_PERIOD $period"
 
                         # Angular velocity
-                        set velocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
+                        set avelocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
                         lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
                         lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
-                        lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] wx wy wz
-                        write::WriteString "    ANGULAR_VELOCITY \[3\] ($wX,$wY,$wZ)"
+                        lassign [MathUtils::ScalarByVectorProd $avelocity [list $velocity_X $velocity_Y $velocity_Z] ] wx wy wz
+                        write::WriteString "    ANGULAR_VELOCITY \[3\] ($wx,$wy,$wz)"
 
                         # set wX  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityX'\]"]]
                         # set wY  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityY'\]"]]
