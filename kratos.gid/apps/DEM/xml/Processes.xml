@@ -39,41 +39,31 @@
 <Process n="DEM-FEM-Wall-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
   <inputs>
     <parameter n="SetActive"                          type="bool"   v="false" pn="Activate"       help="Set Yes to activate the group">
-      <parameter n="DEM-ImposedMotion"  parent="true" type="combo"  v="None"  pn="Type of Motion" values="None,LinearPeriodic,FreeMotion" pvalues="None,Linear/Periodic,Free motion" help="Set Yes to impose a predefined motion to the group">
+      <parameter n="DEM-ImposedMotion"  parent="true" type="combo"  v="None"  pn="Type of Motion" values="None,LinearPeriodic,FreeMotion" pvalues="None,Linear-Periodic,Free motion" help="Set Yes to impose a predefined motion to the group">
         <parameter n="Mass"             parent="FreeMotion"         v="1.0"   pn="Mass(Kg)"/>
-        <!-- <blockdata n="Centroid" pn="Centroid" parent="FreeMotion" name="Centroid" sequence="1" icon="time3" editable_name="unique" sequence_type="non_void_disabled"> -->
-        <!-- <blockdata n="Centroid"         parent="FreeMotion"    name="Centroid"               pn="Centroid"> -->
-        <parameter n="Centroid" pn="Centroid" parent="FreeMotion">
-          <parameter n="CX"             parent="FreeMotion"         v="0.0"   pn="Cx(m)"/>
-          <parameter n="CY"             parent="FreeMotion"         v="0.0"   pn="Cy(m)"/>
-          <parameter n="CZ"             parent="FreeMotion"         v="0.0"   pn="Cz(m)"/>
-        </parameter>
+        <parameter n="CenterOfMass" pn="Center of mass(m)" parent="FreeMotion" type="inline_vector" v="0.0,0.0,0.0" />
+        <parameter n="Inertia"        pn="Inertia(Kg*m2)"  parent="FreeMotion" type="inline_vector" v="1.0,1.0,1.0" />
 
-        <!-- <parameter n="DEM-Inertias"     parent="FreeMotion"                   pn="Inertias"> -->
-          <parameter n="IX"             parent="FreeMotion"         v="1.0"   pn="Ix(Kg*m2)"/>
-          <parameter n="IY"             parent="FreeMotion"         v="1.0"   pn="Iy(Kg*m2)"/>
-          <parameter n="IZ"             parent="FreeMotion"         v="1.0"   pn="Iz(Kg*m2)"/>
-        <!-- </parameter> -->
 
         <!-- <parameter n="DEM-DOFS"         parent="FreeMotion"                   pn="Degrees of Freedom"> -->
-          <parameter n="Ax"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity X"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity X"/>
+          <parameter n="Ax"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity X"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity X">
            <parameter n="Vx"             parent="Constant"                    v="0.0"   pn="   Value (m/s)"                   help="X Velocity"/>
-           <parameter n="FilenameVx"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/>
-          <parameter n="Ay"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity Y"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity Y"/>
+           <parameter n="FilenameVx"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
+          <parameter n="Ay"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity Y"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity Y">
            <parameter n="Vy"             parent="Constant"                    v="0.0"   pn="   Value (m/s)"                   help="Y Velocity"/>
-           <parameter n="FilenameVy"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/>
-          <parameter n="Az"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity Z"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity Z"/>
+           <parameter n="FilenameVy"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
+          <parameter n="Az"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity Z"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity Z">
            <parameter n="Vz"             parent="Constant"                    v="0.0"   pn="   Value (m/s)"                   help="Z Velocity"/>
-           <parameter n="FilenameVz"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/>
-          <parameter n="Bx"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity X" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity X"/>
+           <parameter n="FilenameVz"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
+          <parameter n="Bx"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity X" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity X">
            <parameter n="AVx"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="X Angular Velocity"/>
-           <parameter n="FilenameAVx"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/>
-          <parameter n="By"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity Y" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity Y"/>
+           <parameter n="FilenameAVx"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
+          <parameter n="By"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity Y" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity Y">
            <parameter n="AVy"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="Y Angular Velocity"/>
-           <parameter n="FilenameAVy"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/>
-          <parameter n="Bz"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity Z" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity Z"/>
+           <parameter n="FilenameAVy"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
+          <parameter n="Bz"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity Z" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity Z">
            <parameter n="AVz"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="Z Angular Velocity"/>
-           <parameter n="FilenameAVz"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/>
+           <parameter n="FilenameAVz"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
           <parameter n="VStart"         parent="FreeMotion"                   v="0.0"   pn="Start time (s)"                   help="Start Time"/>
           <parameter n="VEnd"           parent="FreeMotion"                   v="100.0" pn="End time (s)"                     help="Start Time"/>
         <!-- </parameter> -->
@@ -120,6 +110,7 @@
         <!-- <parameter n="Options"          parent="true" pn="Settings"                                      help="Options that will affect the behaviour during the contact bewteen Discrete Elements and this wall"> -->
           <parameter n="IsGhost"                      pn="Is ghost wall"         v="false" type="bool"/>
           <parameter n="friction_coeff"               pn="Friction angle (deg)"  v="30.0"                help="Coulomb friction coefficient"/>
+          <parameter n="GraphPrint"                   pn="Print forces on this group"         v="false" type="bool"/>
           <parameter n="CohesiveWall"                 pn="Cohesive Wall"         v="false" type="bool"   help="Specify if the wall presents a cohesive behaviour">
            <parameter n="WallCohesion"   parent="true" pn="Wall Cohesion (Pa)"    v="0.0"                 help="JKR or DMT energy surface"/> </parameter>
           <parameter n="DEM_Wear"                     pn="Compute Wear"          v="false" type="bool"   help="If activated, wear will be computed on this wall. It can increase computation time">
@@ -134,13 +125,8 @@
         <!-- </parameter> -->
 
         <!-- <parameter n="LinearVelocity"    parent="LinearPeriodic" pn="Linear velocity"> -->
-
-          <parameter n="VELOCITY_MODULUS" pn="Velocity modulus" parent="LinearPeriodic" type="double" v="1.0" units="m/s" unit_magnitude="Velocity"/>
-          <parameter n="DIRECTION_VECTOR" pn="Direction vector" parent="LinearPeriodic" type="inline_vector" v="1.0,0.0,0.0" />
-
-          <parameter n="LinearVelocityX" parent="LinearPeriodic" pn="Vx (m/s)"              v="0.0"    help="Component X of the Linear Velocity"/>
-          <parameter n="LinearVelocityY" parent="LinearPeriodic" pn="Vy (m/s)"              v="0.0"    help="Component Y of the Linear Velocity"/>
-          <parameter n="LinearVelocityZ" parent="LinearPeriodic" pn="Vz (m/s)"              v="0.0"    help="Component Z of the Linear Velocity"/>
+          <parameter n="VelocityModulus" pn="Velocity modulus" parent="LinearPeriodic" type="double"        v="1.0" units="m/s" unit_magnitude="Velocity"/>
+          <parameter n="DirectionVector" pn="Direction vector" parent="LinearPeriodic" type="inline_vector" v="1.0,0.0,0.0" />
           <parameter n="LinearPeriodic"  parent="LinearPeriodic" pn="Periodic" type="bool"  v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
            <parameter n="LinearPeriod"    parent="true"           pn="Period (s)"            v="5.0"    help="in seconds"/> </parameter>
           <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Start time (s)"        v="0.0"    help="in seconds"/>
@@ -148,12 +134,9 @@
         <!-- </parameter> -->
 
         <!-- <parameter n="AngularVelocity"    parent="LinearPeriodic" pn="Angular velocity"> -->
-          <parameter n="AngularVelocityX" parent="LinearPeriodic" pn="Wx (rad/s)"            v="0.0"    help="Component X of the Angular Velocity"/>
-          <parameter n="AngularVelocityY" parent="LinearPeriodic" pn="Wy (rad/s)"            v="0.0"    help="Component Y of the Angular Velocity"/>
-          <parameter n="AngularVelocityZ" parent="LinearPeriodic" pn="Wz (rad/s)"            v="0.0"    help="Component Z of the Angular Velocity"/>
-          <parameter n="CenterOfRotationX" parent="LinearPeriodic" pn="CenterX (m)"          v="0.0"    help="Component X of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center"/>
-          <parameter n="CenterOfRotationY" parent="LinearPeriodic" pn="CenterY (m)"          v="0.0"    help="Component y of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center"/>
-          <parameter n="CenterOfRotationZ" parent="LinearPeriodic" pn="CenterZ (m)"          v="0.0"    help="Component z of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center"/>
+          <parameter n="AngularVelocityModulus" pn="Angular velocity modulus(rad/s)" parent="LinearPeriodic" type="double"        v="0.0" units="rad/s" unit_magnitude="Angle/T"/>
+          <parameter n="AngularDirectionVector" pn="Direction vector"                parent="LinearPeriodic" type="inline_vector" v="1.0,0.0,0.0" />
+          <parameter n="CenterOfRotation"       pn="Center of rotation(m)"           parent="LinearPeriodic" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center"/>
           <parameter n="AngularPeriodic"  parent="LinearPeriodic" pn="Periodic" type="bool"  v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
            <parameter n="AngularPeriod"    parent="true"           pn="Period (s)"            v="5.0"    help="in seconds"/></parameter>
           <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Start time (s)"        v="0.0"    help="in seconds"/>
