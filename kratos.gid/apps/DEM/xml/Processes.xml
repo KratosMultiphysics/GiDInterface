@@ -184,19 +184,22 @@
     <inputs>
       <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
         <parameter n="DEM-VelocityBCMotion" pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable,FixedDOFs" pvalues="None,Linear/Periodic,From a table,Fixed DOFs">
-          <parameter n="LINEAR_VELOCITY_X" pn="Vx" type="double" v="0.0" parent="LinearPeriodic" unit_magnitude="Velocity" units="m/s"/>
-          <parameter n="LINEAR_VELOCITY_Y" pn="Vy" type="double" v="0.0" parent="LinearPeriodic" unit_magnitude="Velocity" units="m/s"/>
-          <parameter n="LINEAR_VELOCITY_Z" pn="Vz" type="double" v="0.0" parent="LinearPeriodic" unit_magnitude="Velocity" units="m/s"/>
-          <parameter n="LINEAR_VELOCITY_PERIODIC_flag" pn="Periodic linear velocity" type="bool" parent="LinearPeriodic" v="false">
-           <parameter n="VELOCITY_PERIOD" pn="Period linear velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
-          <parameter n="ANGULAR_VELOCITY_X" pn="ω x" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
-          <parameter n="ANGULAR_VELOCITY_Y" pn="ω y" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
-          <parameter n="ANGULAR_VELOCITY_Z" pn="ω z" type="double" v="0.0" function="0" parent="LinearPeriodic" unit_magnitude="Angle/T" units="rad/s"/>
-          <parameter n="ROTATION_CENTER_X" pn="Center x" type="double" v="0.0" parent="LinearPeriodic" />
-          <parameter n="ROTATION_CENTER_Y" pn="Center y" type="double" v="0.0" parent="LinearPeriodic" />
-          <parameter n="ROTATION_CENTER_Z" pn="Center z" type="double" v="0.0" parent="LinearPeriodic" />
-          <parameter n="ANGULAR_VELOCITY_PERIODIC_flag" pn="Periodic angular velocity" parent="LinearPeriodic" type="bool" v="false">
-           <parameter n="ANGULAR_VELOCITY_PERIOD" pn="Period angular velocity" parent="true" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+
+          <parameter n="VelocityModulus" pn="Velocity modulus" parent="LinearPeriodic" type="double"        v="1.0" units="m/s" unit_magnitude="Velocity"/>
+          <parameter n="DirectionVector" pn="Direction vector" parent="LinearPeriodic" type="inline_vector" v="1.0,0.0,0.0" />
+          <parameter n="LinearPeriodic"  parent="LinearPeriodic" pn="Periodic" type="bool"  v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
+           <parameter n="LinearPeriod"    parent="true"           pn="Period (s)"            v="5.0"    help="in seconds"/> </parameter>
+          <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Start time (s)"        v="0.0"    help="in seconds"/>
+          <parameter n="LinearEndTime"   parent="LinearPeriodic" pn="End time (s)"          v="1000.0" help="in seconds"/>
+
+          <parameter n="AngularVelocityModulus" pn="Angular velocity modulus(rad/s)" parent="LinearPeriodic" type="double"        v="0.0" units="rad/s" unit_magnitude="Angle/T"/>
+          <parameter n="AngularDirectionVector" pn="Direction vector"                parent="LinearPeriodic" type="inline_vector" v="1.0,0.0,0.0" />
+          <parameter n="CenterOfRotation"       pn="Center of rotation(m)"           parent="LinearPeriodic" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center"/>
+          <parameter n="AngularPeriodic"  parent="LinearPeriodic" pn="Periodic" type="bool"  v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
+           <parameter n="AngularPeriod"    parent="true"           pn="Period (s)"            v="5.0"    help="in seconds"/></parameter>
+          <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Start time (s)"        v="0.0"    help="in seconds"/>
+          <parameter n="AngularEndTime"   parent="LinearPeriodic" pn="End time (s)"          v="1000.0" help="in seconds"/>
+
           <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" type="combo" v="velocities.dat"/>
           <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z"/>
         </parameter>
@@ -204,15 +207,13 @@
     </inputs>
   </Process>
 
-  <Process n="DEM-VelocityIC-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
+  <Process n="DEM-VelocityIC-Process"         pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
     <inputs>
-      <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
-        <parameter n="INITIAL_VELOCITY_X_VALUE" pn="Initial Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="INITIAL_VELOCITY_Y_VALUE" pn="Initial Vy" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="INITIAL_VELOCITY_Z_VALUE" pn="Initial Vz" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
-        <parameter n="INITIAL_ANGULAR_VELOCITY_X_VALUE" pn="Initial ω x" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
-        <parameter n="INITIAL_ANGULAR_VELOCITY_Y_VALUE" pn="Initial ω y" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
-        <parameter n="INITIAL_ANGULAR_VELOCITY_Z_VALUE" pn="Initial ω z" type="double" v="0.0" function="0" parent="true" unit_magnitude="Angle/T" units="rad/s"/>
+      <parameter n="PrescribeMotion_flag"             type="bool"          v="false"        pn="Prescribe motion" >
+        <parameter n="InitialVelocityModulus"         type="double"        v="1.0"          pn="Initial velocity modulus"                parent="true" units="m/s"   unit_magnitude="Velocity"/>
+        <parameter n="iDirectionVector"                type="inline_vector" v="1.0,0.0,0.0"  pn="Direction vector"         parent="true"/>
+        <parameter n="InitialAngularVelocityModulus"  type="double"        v="0.0"          pn="Initial angular velocity modulus(rad/s)" parent="true" units="rad/s" unit_magnitude="Angle/T"/>
+        <parameter n="iAngularDirectionVector"         type="inline_vector" v="1.0,0.0,0.0"  pn="Direction vector"         parent="true"/>
       </parameter>
     </inputs>
   </Process>
