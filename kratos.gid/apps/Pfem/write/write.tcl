@@ -23,6 +23,7 @@ proc Pfem::write::Init { } {
 
 proc Pfem::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
+    write::SetParallelismConfiguration
 }
 
 # Model Part Blocks
@@ -253,7 +254,7 @@ proc Pfem::write::getConditionsParametersDict {un {condition_type "Condition"}} 
                     set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
                     lassign [split $value ","] ValX ValY ValZ
                     if {$ValZ eq ""} {set ValZ 0.0}
-                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]] 
+                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]]
             } elseif {$in_type eq "double" || $in_type eq "integer"} {
                 set printed 0
                 if {[$in_obj getAttribute "function"] eq "1"} {
@@ -324,16 +325,16 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
             if {$contact eq "Yes"} { set contact_active True }
         }
         if {$contact_active eq True} {
-            lappend nodal_results "CONTACT_FORCE"         
+            lappend nodal_results "CONTACT_FORCE"
             lappend nodal_results "NORMAL"
         }
     }
-    
+
     if {$problemtype ne "Solid"} {
         if {$contact_active ne True} {
-            lappend nodal_results "NORMAL" 
+            lappend nodal_results "NORMAL"
         }
-        set nodal_flags_results [list]  
+        set nodal_flags_results [list]
         lappend nodal_flags_results "FREE_SURFACE" "INLET"
         dict set resultDict nodal_flags_results $nodal_flags_results
     }

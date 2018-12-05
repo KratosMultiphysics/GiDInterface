@@ -34,7 +34,7 @@ proc Pfem::write::getParametersDict { } {
 
     ##### loads_process_list
     dict set projectParametersDict loads_process_list [Pfem::write::GetConditionsParametersDictWithGravity]
-    
+
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
     dict set projectParametersDict output_process_list $output_process_list
@@ -53,15 +53,15 @@ proc Pfem::write::GetConditionsParametersDictWithGravity { } {
         set cx [write::getValue FLGravity Cx]
         set cy [write::getValue FLGravity Cy]
         set cz [write::getValue FLGravity Cz]
-        
+
         set fluid_bodies_list [Pfem::write::GetFluidBodies]
 
         foreach body $fluid_bodies_list {
 
             set processDict [dict create]
             set parametersDict [dict create]
-                
-            dict set parametersDict "model_part_name" $body	    
+
+            dict set parametersDict "model_part_name" $body
             dict set parametersDict "variable_name" "VOLUME_ACCELERATION"
             dict set parametersDict "value" [list $cx $cy $cz]
             dict set parametersDict "constrained" false
@@ -69,7 +69,7 @@ proc Pfem::write::GetConditionsParametersDictWithGravity { } {
             dict set processDict python_module "assign_vector_components_to_nodes_process"
             dict set processDict kratos_module "KratosMultiphysics.SolidMechanicsApplication"
             dict set processDict Parameters $parametersDict
-            
+
             lappend loads_list $processDict
         }
     }
@@ -80,9 +80,9 @@ proc Pfem::write::GetPFEM_ProblemDataDict { } {
     dict set problemDataDict problem_name [Kratos::GetModelName]
 
     dict set problemDataDict echo_level [write::getValue Results EchoLevel]
-    
+
     #dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
-    
+
     #set problemtype [write::getValue PFEM_DomainType]
     #if {$problemtype ne "Solid"} {
     #	set cx [write::getValue FLGravity Cx]
@@ -121,22 +121,22 @@ proc Pfem::write::GetPFEM_ModelDataDict { } {
     dict set modelDataDict bodies_list $bodies_list
     dict set modelDataDict domain_parts_list $bodies_parts_list
     dict set modelDataDict processes_parts_list [write::getSubModelPartNames "PFEM_NodalConditions" "PFEM_Loads"]
-    
+
     return $modelDataDict
 }
 
 proc Pfem::write::GetPFEM_SolverSettingsDict { } {
 
     set equationType [write::getValue PFEM_EquationType]
-    set solverSettingsDict [dict create]        
+    set solverSettingsDict [dict create]
     set strategyId [write::getValue PFEM_SolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $strategyId] getAttribute "python_module"] 
-    
+    set strategy_write_name [[::Model::GetSolutionStrategy $strategyId] getAttribute "python_module"]
+
     if {$equationType eq "Monolithic"} {
         return [GetPFEM_MonolithicSolverSettingsDict $strategy_write_name [DofsInElements]]
     } else {
 
-        # Solver type  
+        # Solver type
         dict set solverSettingsDict solver_type $strategy_write_name
         # Solver parameters
         set solverParametersDict [dict create]
@@ -146,7 +146,7 @@ proc Pfem::write::GetPFEM_SolverSettingsDict { } {
         foreach dof [DofsInElements] {
             lappend solversList [GetPFEM_MonolithicSolverSettingsDict $solver_name $dof]
         }
-        
+
         dict set solverParametersDict solvers $solversList
 
         # Set parameters to solver settings
@@ -171,7 +171,7 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
     dict set integrationDataDict solution_type [write::getValue PFEM_SolutionType]
 
     set solutiontype [write::getValue PFEM_SolutionType]
-        
+
     if {$solutiontype ne "Dynamic"} {
         dict set integrationDataDict integration_method "Static"
         dict set integrationDataDict analysis_type [write::getValue PFEM_AnalysisType]
@@ -180,7 +180,7 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
             dict set integrationDataDict integration_method "Bdf"
             dict set integrationDataDict time_integration_order 1
             dict set integrationDataDict analysis_type "Non-linear"
-        } else {   
+        } else {
             dict set integrationDataDict time_integration "Implicit"
             dict set integrationDataDict integration_method [write::getValue PFEM_Scheme]
         }
@@ -188,8 +188,8 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
 
     # Solving strategy settings
     set strategyDataDict [dict create]
-    
-    # Solution strategy parameters and Solvers   
+
+    # Solution strategy parameters and Solvers
     set strategyDataDict [dict merge $strategyDataDict [write::getSolutionStrategyParametersDict] ]
 
     # Get integration order as term for the integration settings
@@ -197,7 +197,7 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
     if {$exist_time_integration eq 1} {
         dict set integrationDataDict time_integration_order [dict get $strategyDataDict time_integration_order]
         dict unset strategyDataDict time_integration_order
-    }   
+    }
 
     # Buffer size for contact
     set contact_list [Pfem::write::GetPFEM_ContactList]
@@ -206,7 +206,7 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
         set buffer_size 3
     }
     dict set integrationDataDict buffer_size  [expr $buffer_size]
-    
+
     dict set solverParametersDict time_integration_settings $integrationDataDict
 
     # Get convergence criterion settings
@@ -227,27 +227,27 @@ proc Pfem::write::GetPFEM_MonolithicSolverSettingsDict { solver_name dofs } {
 	    dict set convergenceDataDict residual_relative_tolerance [dict get $strategyDataDict residual_relative_tolerance]
 	    dict set convergenceDataDict residual_absolute_tolerance [dict get $strategyDataDict residual_absolute_tolerance]
 	    dict unset strategyDataDict residual_relative_tolerance
-	    dict unset strategyDataDict residual_absolute_tolerance	    
+	    dict unset strategyDataDict residual_absolute_tolerance
 	}
     }
-    
+
     dict set solverParametersDict convergence_criterion_settings $convergenceDataDict
 
-    set reform_dofs true        
+    set reform_dofs true
     dict set strategyDataDict reform_dofs_at_each_step [expr $reform_dofs]
 
     set strategy_data_size [dict size $strategyDataDict]
     if { $strategy_data_size ne 0 } {
         dict set solverParametersDict solving_strategy_settings $strategyDataDict
     }
-    
+
     # Linear solver settings
     set solverParametersDict [dict merge $solverParametersDict [write::getSolversParametersDict Pfem] ]
 
     # Add Dofs
     # here [list {*}$dofs] forces the to be a list of items for correct writting json file (DARK TRICK)
     dict set solverParametersDict dofs [list {*}$dofs]
-    
+
     dict set solverSettingsDict Parameters $solverParametersDict
 
 
@@ -300,6 +300,7 @@ proc Pfem::write::GetPFEM_ContactDict { } {
     foreach contact $contact_list {
         lappend contact_domains [Pfem::write::GetPFEM_ContactProcessDict $contact]
     }
+    set contact_dict [dict create]
     if {[llength $contact_list]} {
         dict set contact_dict "python_module" "contact_domain_process"
         dict set contact_dict "kratos_module" "KratosMultiphysics.ContactMechanicsApplication"
@@ -435,7 +436,7 @@ proc Pfem::write::GetPFEM_RemeshDict { } {
             dict set bodyDict "python_module" "meshing_domain"
             dict set bodyDict "model_part_name" $body_name
             dict set bodyDict "alpha_shape" 2.4
-            dict set bodyDict "offset_factor" 0.0        
+            dict set bodyDict "offset_factor" 0.0
             set refine [write::getStringBinaryFromValue [Pfem::write::GetRemeshProperty $body_name "Refine"]]
             set meshing_strategyDict [dict create ]
             dict set meshing_strategyDict "python_module" "meshing_strategy"
@@ -555,7 +556,7 @@ proc Pfem::write::GetPFEM_FluidRemeshDict { } {
             } else {
                 dict set bodyDict "alpha_shape" 1.25
             }
-            dict set bodyDict "offset_factor" 0.0        
+            dict set bodyDict "offset_factor" 0.0
             set refine [write::getStringBinaryFromValue [Pfem::write::GetRemeshProperty $body_name "Refine"]]
             set meshing_strategyDict [dict create ]
             dict set meshing_strategyDict "python_module" "fluid_meshing_strategy"
@@ -880,7 +881,7 @@ proc Pfem::write::DofsInElements { } {
                   lappend dofs $item
                 }
             }
-	    }   
+	    }
 	}
     return $dofs
 }
