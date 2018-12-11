@@ -99,10 +99,8 @@ proc DEM::write::WriteWallCustomSmp { } {
 
 proc DEM::write::writeConditions { wall_properties } {
     foreach group [GetWallsGroups] {
-        W $group
         set mid [dict get $wall_properties $group]
         set format [write::GetFormatDict $group $mid 3]
-        W $format
         write::WriteString "Begin Conditions RigidFace3D3N // GUI DEM-FEM-Wall group identifier: $group"
         GiD_WriteCalculationFile connectivities $format
         write::WriteString "End Conditions"

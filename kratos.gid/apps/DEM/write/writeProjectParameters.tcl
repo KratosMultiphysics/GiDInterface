@@ -1,21 +1,31 @@
 
 # Project Parameters
+
+# proc ::DEM::write::getParametersEventtest { } {
+
+#     set project_parameters_dict [dict create]
+#     dict set project_parameters_dict [DEM::write::getParametersEvent1]
+#     dict set project_parameters_dict "PostBoundingBox"                  "SphericPartDEMElement3D"
+#     dict set project_parameters_dict "PostPoissonRatio"                  "false"
+#     return $project_parameters_dict
+# }
+
 proc DEM::write::getParametersEvent { } {
     set project_parameters_dict [dict create]
 
-    dict set project_parameters_dict "Dimension" [expr 3]
-    dict set project_parameters_dict "PeriodicDomainOption" [write::getValue Boundingbox PeriodicDomain]
-    dict set project_parameters_dict "BoundingBoxOption"    [write::getValue Boundingbox UseBB]
-    dict set project_parameters_dict "AutomaticBoundingBoxOption"   [write::getValue Boundingbox AutomaticBB]
-    dict set project_parameters_dict "BoundingBoxEnlargementFactor" [write::getValue Boundingbox BBFactor]
-    dict set project_parameters_dict "BoundingBoxStartTime" [write::getValue Boundingbox StartTime]
-    dict set project_parameters_dict "BoundingBoxStopTime"  [write::getValue Boundingbox StopTime]
-    dict set project_parameters_dict "BoundingBoxMaxX"      [write::getValue Boundingbox MaxX]
-    dict set project_parameters_dict "BoundingBoxMaxY"      [write::getValue Boundingbox MaxY]
-    dict set project_parameters_dict "BoundingBoxMaxZ"      [write::getValue Boundingbox MaxZ]
-    dict set project_parameters_dict "BoundingBoxMinX"      [write::getValue Boundingbox MinX]
-    dict set project_parameters_dict "BoundingBoxMinY"      [write::getValue Boundingbox MinY]
-    dict set project_parameters_dict "BoundingBoxMinZ"      [write::getValue Boundingbox MinZ]
+    dict set project_parameters_dict "Dimension"                            [expr 3]
+    dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
+    dict set project_parameters_dict "BoundingBoxOption"                    [write::getValue Boundingbox UseBB]
+    dict set project_parameters_dict "AutomaticBoundingBoxOption"           [write::getValue Boundingbox AutomaticBB]
+    dict set project_parameters_dict "BoundingBoxEnlargementFactor"         [write::getValue Boundingbox BBFactor]
+    dict set project_parameters_dict "BoundingBoxStartTime"                 [write::getValue Boundingbox StartTime]
+    dict set project_parameters_dict "BoundingBoxStopTime"                  [write::getValue Boundingbox StopTime]
+    dict set project_parameters_dict "BoundingBoxMaxX"                      [write::getValue Boundingbox MaxX]
+    dict set project_parameters_dict "BoundingBoxMaxY"                      [write::getValue Boundingbox MaxY]
+    dict set project_parameters_dict "BoundingBoxMaxZ"                      [write::getValue Boundingbox MaxZ]
+    dict set project_parameters_dict "BoundingBoxMinX"                      [write::getValue Boundingbox MinX]
+    dict set project_parameters_dict "BoundingBoxMinY"                      [write::getValue Boundingbox MinY]
+    dict set project_parameters_dict "BoundingBoxMinZ"                      [write::getValue Boundingbox MinZ]
 
     # dem_inlet_option
     set numinlets [llength [DEM::write::GetInletGroups]]
