@@ -1,4 +1,4 @@
-namespace eval ::Buoyancy {
+namespace eval ::ConjugateHeatTransfer {
     # Variable declaration
     variable id
     variable dir
@@ -7,24 +7,21 @@ namespace eval ::Buoyancy {
     variable kratos_name
 }
 
-proc ::Buoyancy::Init { } {
+proc ::ConjugateHeatTransfer::Init { } {
     # Variable initialization
     variable id
     variable dir
     variable prefix
     variable kratos_name
     variable attributes
-
-    set id "Buoyancy"
     
-    set kratos_name Buoyancyapplication
+    set kratos_name ConvectionDiffusionApplication
     
-    #W "Sourced FSI"
-    set dir [apps::getMyDir "Buoyancy"]
-    set prefix Buoyancy_
+    set id ConjugateHeatTransfer
+    set dir [apps::getMyDir "ConjugateHeatTransfer"]
+    set prefix ConjugateHeatTransfer
     
-    apps::LoadAppById "Fluid"
-    apps::LoadAppById "ConvectionDiffusion"
+    apps::LoadAppById "Buoyancy"
     
     # Intervals 
     dict set attributes UseIntervals 1
@@ -34,10 +31,9 @@ proc ::Buoyancy::Init { } {
     
     set ::Model::ValidSpatialDimensions [list 2D 3D]
     LoadMyFiles
-    #::spdAux::CreateDimensionWindow
 }
 
-proc ::Buoyancy::LoadMyFiles { } {
+proc ::ConjugateHeatTransfer::LoadMyFiles { } {
     variable id
     variable dir
     
@@ -49,16 +45,19 @@ proc ::Buoyancy::LoadMyFiles { } {
     }
 }
 
-proc ::Buoyancy::GetAttribute {name} {
+proc ::ConjugateHeatTransfer::CustomToolbarItems { } {
+    variable dir
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConjugateHeatTransfer::examples::HeatedSquare] [= "Example\nSquare external heat"]   
+}
+
+proc ::ConjugateHeatTransfer::GetAttribute {name} {
     variable attributes
     set value ""
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
 }
-
-proc ::Buoyancy::CustomToolbarItems { } {
-    variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Buoyancy::examples::HeatedSquare] [= "Example\nHeated square"]   
+proc ::ConjugateHeatTransfer::CustomMenus { } {
+    ConjugateHeatTransfer::examples::UpdateMenus
 }
 
-::Buoyancy::Init
+::ConjugateHeatTransfer::Init

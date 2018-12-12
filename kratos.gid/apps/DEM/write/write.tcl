@@ -41,25 +41,25 @@ proc DEM::write::writeModelPartEvent { } {
 
     variable delete_previous_mdpa
     if {$delete_previous_mdpa} {
-        catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[file tail [GiD_Info project modelname] ].mdpa"]}
+        catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[Kratos::GetModelName].mdpa"]}
     }
 
-    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM.mdpa"
+    write::OpenFile "[Kratos::GetModelName]DEM.mdpa"
     WriteMDPAParts
     write::CloseFile
 
     # MDPA Inlet
-    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_Inlet.mdpa"
+    write::OpenFile "[Kratos::GetModelName]DEM_Inlet.mdpa"
     WriteMDPAInlet
     write::CloseFile
 
     # MDPA Walls
-    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_FEM_boundary.mdpa"
+    write::OpenFile "[Kratos::GetModelName]DEM_FEM_boundary.mdpa"
     WriteMDPAWalls
     write::CloseFile
 
-    # MDPA Clusters
-    write::OpenFile "[file tail [GiD_Info project ModelName]]DEM_Clusters.mdpa"
+    # MDPA Walls
+    write::OpenFile "[Kratos::GetModelName]DEM_Clusters.mdpa"
     WriteMDPAClusters
     write::CloseFile
 }

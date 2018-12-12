@@ -17,15 +17,17 @@ proc MPM::write::Init { } {
     # SetAttribute validApps [list "MPM"]
     SetAttribute main_script_file "KratosParticle.py"
     SetAttribute materials_file "ParticleMaterials.json"
+    SetAttribute model_part_name ""
 }
 
 # Events
 proc MPM::write::writeModelPartEvent { } {
+    write::initWriteConfiguration [Structural::write::GetAttributes]
     write::initWriteConfiguration [GetAttributes]
 
     MPM::write::UpdateMaterials
     
-    set filename "[file tail [GiD_Info project ModelName]]"
+    set filename [Kratos::GetModelName]
     
     ## Grid MPDA ##
     # Headers

@@ -8,7 +8,7 @@ proc Solid::write::getParametersDict { } {
     set problemDataDict [dict create] 
     
     # Add items
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set problemDataDict problem_name $model_name
 
     # Parallelization

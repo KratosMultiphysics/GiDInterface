@@ -228,9 +228,9 @@ proc Kratos::AfterReadGIDProject { filespd } {
         set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
         spdAux::LoadIntervalGroups $root
         spdAux::LoadModelFiles $root
-        after idle Kratos::upgrade_problemtype $filespd $nd $activeapp
+        after idle [list Kratos::upgrade_problemtype $filespd $nd $activeapp]
     } else {
-        gid_groups_conds::open_spd_file $filespd
+        gid_groups_conds::open_spd_file "$filespd"
         customlib::UpdateDocument
         spdAux::LoadModelFiles
         spdAux::LoadIntervalGroups
@@ -244,7 +244,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         if {[GiD_Info Project Modelname] eq "UNNAMED"} {
             error "Save your model first"
         } {
-            set filename [file join [GiD_Info Project Modelname].gid [file tail [GiD_Info Project Modelname]].dat]
+            set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName].dat]
         }
     }
     FileSelector::CopyFilesIntoModel [file dirname $filename]
@@ -350,7 +350,11 @@ proc Kratos::LoadEnvironment { } {
     }
 }
 
-proc Kratos::load_gid_groups_conds {} {
+proc Kratos::GetModelName { } {
+    return [file tail [GiD_Info project ModelName]]
+}
+
+proc Kratos::load_gid_groups_conds {} {  
     package require customlib_extras ;#this require also customLib
     package require customlib_native_groups
     package require json::write

@@ -1,5 +1,6 @@
 namespace eval ::ConvectionDiffusion {
     # Variable declaration
+    variable id
     variable dir
     variable prefix
     variable attributes
@@ -8,11 +9,13 @@ namespace eval ::ConvectionDiffusion {
 
 proc ::ConvectionDiffusion::Init { } {
     # Variable initialization
+    variable id
     variable dir
     variable prefix
     variable attributes
     variable kratos_name
 
+    set id ConvectionDiffusion
     set kratos_name "ConvectionDiffusionApplication"
     set dir [apps::getMyDir "ConvectionDiffusion"]
     set attributes [dict create]
@@ -30,13 +33,16 @@ proc ::ConvectionDiffusion::Init { } {
 }
 
 proc ::ConvectionDiffusion::LoadMyFiles { } {
+    variable id
     variable dir
 
     #uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
+    if {[apps::getActiveAppId] eq $id} {
+        uplevel #0 [list source [file join $dir examples examples.tcl]]
+    }
 }
 
 proc ::ConvectionDiffusion::GetAttribute {name} {
@@ -48,7 +54,7 @@ proc ::ConvectionDiffusion::GetAttribute {name} {
 
 proc ::ConvectionDiffusion::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConvectionDiffusion::examples::CylinderHeatFlow] [= "Example\nCylinder heat flow"]   
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConvectionDiffusion::examples::HeatedSquare] [= "Example\nSquare heat flow"]   
 }
 
 proc ::ConvectionDiffusion::CustomMenus { } {

@@ -1,6 +1,6 @@
 # Project Parameters
 proc ::MPM::write::getParametersDict { } {
-    set project_parameters_dict [Structural::write::getParametersEvent]
+    set project_parameters_dict [Structural::write::getParametersDict]
 
     # Quasi-static must be written as Quasi-static...
     set solutiontype [write::getValue STSoluType]

@@ -172,7 +172,7 @@ proc write::writeAppMDPA {appid} {
 
     #### MDPA Write ####
     set wevent [$activeapp getWriteModelPartEvent]
-    set filename "[file tail [GiD_Info project ModelName]].mdpa"
+    set filename "[Kratos::GetModelName].mdpa"
 
     CloseFile
     OpenFile $filename
