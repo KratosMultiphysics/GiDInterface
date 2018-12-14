@@ -129,11 +129,15 @@ proc FSI::write::GetOutputProcessesDict { } {
     set output_processes_dict [dict create]
     set gid_output_list [list ]
 
-    # Structure
-    lappend gid_output_list [lindex [dict get $FSI::write::structure_project_parameters output_processes gid_output] 0]
-    
-    # Fluid
-    lappend gid_output_list [lindex [dict get $FSI::write::fluid_project_parameters output_processes gid_output] 0]
+    # Set a different output_name for the fluid and structure domains
+    set structure_output [lindex [dict get $FSI::write::structure_project_parameters output_processes gid_output] 0]
+    dict set structure_output Parameters output_name "[dict get $structure_output Parameters output_name]_structure"
+    set fluid_output [lindex [dict get $FSI::write::fluid_project_parameters output_processes gid_output] 0]
+    dict set fluid_output Parameters output_name "[dict get $fluid_output Parameters output_name]_fluid"
+
+    # Append the fluid and structure output processes to the output processes dictionary
+    lappend gid_output_list $structure_output
+    lappend gid_output_list $fluid_output
     
     dict set output_processes_dict gid_output $gid_output_list
     return $output_processes_dict
