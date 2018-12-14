@@ -22,7 +22,8 @@ if (parallel_type == "MPI"):
     import KratosMultiphysics.mpi as KratosMPI
 
 ## Fluid model part definition
-main_model_part = ModelPart(ProjectParameters["problem_data"]["model_part_name"].GetString())
+model = Model()
+main_model_part = model.CreateModelPart(ProjectParameters["problem_data"]["model_part_name"].GetString())
 main_model_part.ProcessInfo.SetValue(DOMAIN_SIZE, ProjectParameters["problem_data"]["domain_size"].GetInt())
 
 ###TODO replace this "model" for real one once available
