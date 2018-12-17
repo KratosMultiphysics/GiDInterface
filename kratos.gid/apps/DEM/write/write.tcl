@@ -12,6 +12,7 @@ proc DEM::write::Init { } {
     SetAttribute writeCoordinatesByGroups 1
     SetAttribute properties_location mdpa
     SetAttribute parts_un DEMParts
+    SetAttribute graphs_un DEMGraphs
     SetAttribute materials_un DEMMaterials
     SetAttribute conditions_un DEMConditions
     SetAttribute nodal_conditions_un DEMNodalConditions

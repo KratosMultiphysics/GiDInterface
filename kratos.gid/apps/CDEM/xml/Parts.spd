@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <condition n="Parts" pn="Parts" ov="point,line,surface,volume" ovm="element" icon="shells16" help="Select your group" un="DEMParts">
-	<!-- <value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements ElementType DEM]">
+	<value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements ElementType DEM]">
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
-	</value> -->
+	</value>
 	<value n="ConstitutiveLaw" pn="Constitutive law" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]"  help="Select a constitutive law">
 		<dependencies node="../value[@n = 'Material']" actualize="1"/>
 	</value>

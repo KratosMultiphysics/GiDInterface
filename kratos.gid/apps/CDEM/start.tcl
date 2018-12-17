@@ -28,10 +28,9 @@ proc ::CDEM::Init { } {
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
-
     set ::Model::ValidSpatialDimensions [list 3D]
+
     LoadMyFiles
-    # ::spdAux::CreateDimensionWindow
 }
 
 proc ::CDEM::LoadMyFiles { } {
@@ -39,6 +38,7 @@ proc ::CDEM::LoadMyFiles { } {
 
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
+    uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]
 }

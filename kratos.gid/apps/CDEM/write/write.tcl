@@ -7,6 +7,7 @@ namespace eval ::CDEM::write {
 
 proc ::CDEM::write::Init { } {
     DEM::write::Init
+    SetAttribute partscont_un DEMPartsCont
 }
 
 # Events

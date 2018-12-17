@@ -8,6 +8,8 @@ proc DEM::write::WriteMDPAWalls { } {
     # Nodal coordinates (only for Walls <inefficient> )
     write::writeNodalCoordinatesOnGroups [GetWallsGroups]
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
+    write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
+
 
     # Nodal conditions and conditions
     writeConditions $wall_properties
@@ -17,7 +19,10 @@ proc DEM::write::WriteMDPAWalls { } {
 
     # CustomSubmodelParts
     WriteWallCustomSmp
+    WriteWallGraphsFlag
 }
+
+
 
 proc DEM::write::WriteWallProperties { } {
     #set print_list [list "WALL_FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
@@ -95,7 +100,37 @@ proc DEM::write::WriteWallCustomSmp { } {
     }
 }
 
+proc DEM::write::WriteWallGraphsFlag { } {
+    set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/group"
+    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set groupid [$group @n]
+            write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
+            write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
+            write::WriteString  "FORCE_INTEGRATION_GROUP 1"
+            write::WriteString  "End SubModelPartData"
+            write::WriteString  "Begin SubModelPartNodes"
+            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
+            write::WriteString  "End SubModelPartNodes"
+            write::WriteString  "End SubModelPart"
+            write::WriteString  ""
+    }
+}
 
+proc DEM::write::GetNodesForGraphs { } {
+    W "DEM::write::GetNodesForGraphs"
+    set groups [list ]
+    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+    #set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/condition\[@n = 'Graphs'\]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set groupid [$group @n]
+        lappend groups [write::GetWriteGroupName $groupid]
+    }
+    W $groups
+
+    return $groups
+}
 
 proc DEM::write::writeConditions { wall_properties } {
     foreach group [GetWallsGroups] {
