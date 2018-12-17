@@ -16,21 +16,20 @@
     </outputs>
   </ConditionItem>
 
-  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
-  <!-- <ConditionItem n="PointLoad2DAxisym" pn="Load on points" Interval="Total"
+  <ConditionItem n="PointLoad2DAxisym" pn="Load on points" Interval="Total"
      ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point" ProcessName="AssignVectorByDirectionToConditionProcess" help="Point load application by means of the AssignVectorByDirectionToConditionProcess in the core"
 		 units="N/m" unit_magnitude="F/L" VariableName="POINT_LOAD">
     <TopologyFeatures>
-      <item  GeometryType="Point" nodes="1" KratosName="MPMAxisymPointLoadCondition2D1N"/>
+      <item  GeometryType="Point" nodes="1" KratosName="MPMGridAxisymPointLoadCondition2D1N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
-  </ConditionItem> -->
+  </ConditionItem>
 
   <ConditionItem n="PointLoad3D" pn="Load on points" Interval="Total"
 		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
@@ -61,22 +60,21 @@
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
   </ConditionItem>
-  
-  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
-  <!-- <ConditionItem n="LineLoad2DAxisym" pn="Load on lines" Interval="Total"
+
+  <ConditionItem n="LineLoad2DAxisym" pn="Load on lines" Interval="Total"
 	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="AssignVectorByDirectionToConditionProcess" help="Load on lines, load vector referred to global axes"
 	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
     <TopologyFeatures>
-      <item  GeometryType="Line" nodes="2" KratosName="MPMAxisymLineLoadCondition2D2N"/>
+      <item  GeometryType="Line" nodes="2" KratosName="MPMGridAxisymLineLoadCondition2D2N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
     <outputs>
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
-  </ConditionItem> -->
+  </ConditionItem>
 
   <ConditionItem n="SurfaceLoad3D" pn="Load on surfaces" Interval="Total"
 	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
@@ -94,10 +92,22 @@
     </outputs>
   </ConditionItem>
 
-  <!-- FIXME: Make it possible also for 2D axis-symmetric -->
   <ConditionItem n="Slip2D" pn="Slip" Interval="False"
 	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
+	ElementType="Line" ProcessName="ApplyMPMSlipBoundaryProcess" help="">
+    <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+  <ConditionItem n="Slip2DAxisymmetry" pn="Slip" Interval="False"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyMPMSlipBoundaryProcess" help="">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>

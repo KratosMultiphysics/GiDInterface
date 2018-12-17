@@ -28,7 +28,6 @@
     </outputs>
   </ElementItem>
 
-  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
   <ElementItem n="UpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian (Axis-symmetry)" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements an axis-symmetric Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
