@@ -39,9 +39,10 @@ proc ::MPM::write::getParametersDict { } {
     }
     dict set project_parameters_dict solver_settings particle_per_element $number
 
-    # TODO: to be activated if the other axis-symmetric options is chosen
-    # # Axis-symmetric flag
-    # dict set project_parameters_dict solver_settings axis_symmetric_flag true
+    # Axis-symmetric flag
+    if {$::Model::SpatialDimension eq "2Da"} {
+        dict set project_parameters_dict solver_settings axis_symmetric_flag true
+    }
 
     # Pressure dofs
     dict set project_parameters_dict solver_settings pressure_dofs false

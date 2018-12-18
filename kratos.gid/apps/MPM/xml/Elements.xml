@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangian2D" pn="Updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="UpdatedLagrangian2D" pn="Updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="Updated Lagrangian 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangian2D3N"/>
@@ -28,8 +28,7 @@
     </outputs>
   </ElementItem>
 
-  <!-- TODO: tobe activated when 2D Axisym type is chosen -->
-  <ElementItem n="UpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian (Axis-symmetry)" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements an axis-symmetric Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="UpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="Updated Lagrangian 2D axis-symmetric element for large deformation kinematics consist of a material point and connectivity nodes" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianAxisymmetry2D3N"/>
@@ -56,7 +55,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="UpdatedLagrangian3D" pn="Updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="UpdatedLagrangian3D" pn="Updated lagrangian" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangian3D4N"/>
@@ -82,7 +81,7 @@
   </ElementItem>
 
   <!--background grid-->
-  <ElementItem n="GRID2D" pn="Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="GRID2D" pn="Background Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="2D Background element required for the computation of material point method." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
@@ -102,7 +101,27 @@
     <outputs></outputs>
   </ElementItem>
 
-  <ElementItem n="GRID3D" pn="Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="GRID2D" pn="Background Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="2D axis-symmetric Background element required for the computation of material point method." AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Dimension" value="4D"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ElementItem>
+
+  <ElementItem n="GRID3D" pn="Background Grid" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" help="3D Background element required for the computation of material point method." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
