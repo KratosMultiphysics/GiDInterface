@@ -83,7 +83,7 @@ proc write::WriteJSON {processDict} {
 proc write::GetDefaultOutputDict { {appid ""} } {
     set outputDict [dict create]
     set resultDict [dict create]
-    
+
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
     set GiDPostDict [dict create]
     dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
@@ -516,7 +516,7 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
 }
 
 proc write::GetDefaultProblemDataDict { {appid ""} } {
-    
+
     if {$appid eq ""} {set results_UN Results } {set results_UN [GetConfigurationAttribute results_un]}
 
     # Problem name
@@ -545,7 +545,7 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     set paralleltype [write::getValue ParallelType]
 
     set outputProcessParams [dict create]
-    dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]] 
+    dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
     dict set outputProcessParams output_name $model_name
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict $appid]
 
@@ -557,7 +557,7 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
         dict set outputConfigDict help "This process writes postprocessing files for GiD"
     } else {
         dict set outputConfigDict python_module gid_output_process_mpi
-        dict set outputConfigDict kratos_module TrilinosApplication
+        dict set outputConfigDict kratos_module KratosMultiphysics.TrilinosApplication
         dict set outputConfigDict process_name GiDOutputProcessMPI
         dict set outputConfigDict help "This process writes postprocessing files in MPI for GiD"
     }
