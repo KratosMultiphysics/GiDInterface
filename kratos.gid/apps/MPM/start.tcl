@@ -21,7 +21,7 @@ proc ::MPM::Init { } {
 
     set prefix MPM
 
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
+    set ::Model::ValidSpatialDimensions [list 2D 2Da 3D]
     # spdAux::SetSpatialDimmension "3D"
 
     # Allow to open the tree

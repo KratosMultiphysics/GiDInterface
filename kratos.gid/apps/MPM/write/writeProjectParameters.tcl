@@ -39,11 +39,19 @@ proc ::MPM::write::getParametersDict { } {
     }
     dict set project_parameters_dict solver_settings particle_per_element $number
 
+    # Axis-symmetric flag
+    if {$::Model::SpatialDimension eq "2Da"} {
+        dict set project_parameters_dict solver_settings axis_symmetric_flag true
+    }
+
     # Pressure dofs
     dict set project_parameters_dict solver_settings pressure_dofs false
 
     # Rotation dofs
     dict unset project_parameters_dict solver_settings rotation_dofs
+
+    # Line search
+    dict unset project_parameters_dict solver_settings line_search
 
     # Add the solver information
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
