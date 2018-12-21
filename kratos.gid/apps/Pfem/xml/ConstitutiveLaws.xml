@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
   <!--linear elastic laws-->
-  <CLaw n="Newtonian3DLaw" pn="Newtonian" Type="Fluid3D" LargeDeformation="True" App="Pfem" kratos_module="ConstitutiveModelsApplication"
+  <CLaw n="NewtonianFluid3DLaw" pn="Newtonian" Type="Fluid3D" LargeDeformation="True" App="Pfem" kratos_module="ConstitutiveModelsApplication"
 	help="Newtonian fluid" Dimension="3D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
@@ -11,7 +11,7 @@
     <outputs>
     </outputs>
   </CLaw>
-  <CLaw n="NewtonianPlaneStrain2DLaw" pn="Newtonian (Plane Strain)" Type="FluidPlaneStrain" LargeDeformation="True" App="Pfem" kratos_module="ConstitutiveModelsApplication"
+  <CLaw n="NewtonianFluidPlaneStrain2DLaw" pn="Newtonian (Plane Strain)" Type="FluidPlaneStrain" LargeDeformation="True" App="Pfem" kratos_module="ConstitutiveModelsApplication"
 	help="Newtonian fluid" Dimension="2D" ProductionReady="ProductionReady">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>

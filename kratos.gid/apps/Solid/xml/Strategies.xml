@@ -3,9 +3,7 @@
   <StrategyItem n="Implicit" pn="Implicit" SolutionType="Dynamic" kratos_module="SolidMechanicsApplication" python_module="solid_mechanics_implicit_dynamic_solver" MinimumKratosVersion="8500" App="Solid" ProductionReady="ProductionReady" help="">
     <parameter_list>
       <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
-      <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="Residual_criterion"
-		 values ="Residual_criterion,Variable_criterion,And_criterion,Or_criterion"
-		 pvalues ="Residual criterion,Variable criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
+      <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="Residual_criterion" values ="Residual_criterion,Variable_criterion,And_criterion,Or_criterion" pvalues ="Residual criterion,Variable criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
         <parameter n="variable_relative_tolerance" pn="Variable relative tolerance" type="double" v="1e-4" parent="Variable_criterion,And_criterion,Or_criterion" help="Relative displacement tolerance employed in the nonlinear iteration"/>
         <parameter n="variable_absolute_tolerance" pn="Variable absolute tolerance" type="double" v="1e-9" parent="Variable_criterion,And_criterion,Or_criterion" help="Absolute displacement tolerance employed in the nonlinear iteration"/>
         <parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-4" parent="Residual_criterion,And_criterion,Or_criterion" help="Relative residual tolerance employed in the nonlinear iteration"/>
@@ -122,7 +120,6 @@
     </schemes>
   </StrategyItem>
   <StrategyItem n="Explicit" pn="Explicit" SolutionType="Dynamic" kratos_module="SolidMechanicsApplication" python_module="solid_mechanics_explicit_dynamic_solver" MinimumKratosVersion="8500" App="Solid" ProductionReady="ProductionReady" help="Default solver Super LU">
-
     <!-- list of options to be filled -->
     <parameter_list>
       <parameter n="max_delta_time" pn="Maximum delta time" type="double" v="1.0e-5" help="Maximum delta time allowed"/>
@@ -157,7 +154,6 @@
 
   </StrategyItem>
   <StrategyItem n="Static" pn="Static" SolutionType="Static" kratos_module="SolidMechanicsApplication" python_module="solid_mechanics_static_solver" MinimumKratosVersion="8500" App="Solid" ProductionReady="ProductionReady" help="Default solver Super LU">
-
     <!-- list of options to be filled -->
     <parameter_list>
       <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
@@ -196,7 +192,6 @@
 
   </StrategyItem>
   <StrategyItem n="Quasi-static" pn="Quasi-static" SolutionType="Quasi-static" kratos_module="SolidMechanicsApplication" python_module="solid_mechanics_static_solver" MinimumKratosVersion="8500" App="Solid" ProductionReady="ProductionReady" help="Default solver Super LU">
-
     <!-- list of options to be filled -->
     <parameter_list>
       <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
