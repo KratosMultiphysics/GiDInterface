@@ -17,6 +17,7 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+      <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -44,6 +45,7 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+      <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -69,7 +71,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
     </NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
+    </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
       <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
