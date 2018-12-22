@@ -67,7 +67,7 @@
 			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
 			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
-            <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,And_criterion,or_criterion"
+            <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,and_criterion,or_criterion"
                        pvalues ="Residual criterion,Temperature criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
 				<parameter n="solution_relative_tolerance" pn="Temperature relative tolerance" type="double" v="1e-5" parent="displacement_criterion,and_criterion,or_criterion" help="Relative temperature tolerance employed in the nonlinear iteration"/>
 				<parameter n="solution_absolute_tolerance" pn="Temperature absolute tolerance" type="double" v="1e-7" parent="displacement_criterion,and_criterion,or_criterion" help="Absolute temperature tolerance employed in the nonlinear iteration"/>

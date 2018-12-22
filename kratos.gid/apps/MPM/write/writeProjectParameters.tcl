@@ -26,11 +26,19 @@ proc ::MPM::write::getParametersDict { } {
     # materials file
     dict set project_parameters_dict solver_settings material_import_settings materials_filename [GetAttribute materials_file]
 
+    # Axis-symmetric flag
+    if {$::Model::SpatialDimension eq "2Da"} {
+        dict set project_parameters_dict solver_settings axis_symmetric_flag true
+    }
+
     # Pressure dofs
     dict set project_parameters_dict solver_settings pressure_dofs false
 
     # Rotation dofs
     dict unset project_parameters_dict solver_settings rotation_dofs
+
+    # Line search
+    dict unset project_parameters_dict solver_settings line_search
 
     # Add the solver information
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]

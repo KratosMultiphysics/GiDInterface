@@ -2,6 +2,7 @@ namespace eval Pfem::xml {
     variable dir
     variable bodyNodalCondition
     variable body_UN
+    variable Elements
 }
 
 proc Pfem::xml::Init { } {
@@ -21,8 +22,8 @@ proc Pfem::xml::Init { } {
     Model::getProcesses "../../Solid/xml/Processes.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
-    Model::getNodalConditions "../../Solid/xml/NodalConditions.xml"
     Model::getNodalConditions NodalConditions.xml
+    Model::getNodalConditions "../../Solid/xml/NodalConditions.xml"
     Model::getMaterials Materials.xml
     Model::getConditions "../../Solid/xml/Conditions.xml"
     Model::getSolvers "../../Pfem/xml/Solvers.xml"
@@ -104,10 +105,10 @@ proc Pfem::xml::CustomTree { args } {
 
     #results
     set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype eq "Fluids"} {
-	spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
-	spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
-	spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
+    if {$problemtype eq "Fluid"} {        
+	    spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
+	    spdAux::SetValueOnTreeItem v Yes NodalResults PRESSURE
+	    spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
     }
     spdAux::SetValueOnTreeItem v No NodalResults VELOCITY_REACTION
 
@@ -127,8 +128,14 @@ proc Pfem::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
     set domain_type [write::getValue PFEM_DomainType]
     set fluid_exclusive_conditions [list "VELOCITY" "INLET" "PRESSURE"]
     set current_condition [$domNode @n]
-    if {$domain_type eq "Fluids" && $current_condition ni $fluid_exclusive_conditions} {
-        return hidden
+    if {$domain_type eq "Fluid"} {
+        if {$current_condition ni $fluid_exclusive_conditions} {              
+            return hidden
+        }
+    } elseif {$domain_type eq "Solid"} {        
+        if {$current_condition eq "INLET"} {
+            return hidden
+        }        
     }
     return normal
 }
@@ -145,57 +152,46 @@ proc Pfem::xml::CheckElementOutputState { domNode args } {
     return [::Model::CheckElementOutputState $elemsactive $paramName]
 }
 
-proc Pfem::xml::ProcGetElementsDict {domNode args} {
+proc Pfem::xml::ProcGetElements {domNode args} {
+    set cumplen [list ]
+    set domain_type_un PFEM_DomainType
+    set domain_type_route [spdAux::getRoute $domain_type_un]
+    set equation_type_un PFEM_EquationType
+    set equation_type_route [spdAux::getRoute $equation_type_un]
+
+    if {$domain_type_route ne ""} {
+        set domain_type_node [$domNode selectNodes $domain_type_route]
+        set domain_type_value [get_domnode_attribute $domain_type_node v]
+
+        set equation_type_node [$domNode selectNodes $equation_type_route]
+        set equation_type_value [get_domnode_attribute $equation_type_node v]
+
+        set filter [list ]
+        lappend filter "EquationType" $equation_type_value
+        if {$domain_type_value ne "Coupled"} {
+            lappend filter "ElementType" $domain_type_value
+            set cumplen [Model::GetElements $filter]    
+            set filter [list "ElementType" "Rigid"]
+            lappend filter "EquationType" $equation_type_value
+            lappend cumplen {*}[Model::GetElements $filter]
+        } else {
+            set cumplen [Model::GetElements $filter]
+        }        
+    }
     set names [list ]
-    set blockNode [Pfem::xml::FindMyBlocknode $domNode]
-    set BodyType [get_domnode_attribute [$blockNode selectNodes "value\[@n='BodyType'\]"] v]
-    set argums [list ElementType $BodyType]
-    set elems [Pfem::xml::GetElements $domNode $args]
-    set pnames ""
-    foreach elem $elems {
-        if {[$elem cumple $argums]} {
-            lappend pnames [$elem getName]
-            lappend pnames [$elem getPublicName]
-        }
+    set pnames [list ]
+    foreach elem $cumplen {
+        lappend names [$elem getName]
+        lappend pnames [$elem getName]
+        lappend pnames [$elem getPublicName]
     }
     set diction [join $pnames ","]
-    if {$diction eq ""} {W "No available elements - Check Solution strategy & scheme - Check Kratos mode (developer)"}
-    return $diction
-}
-proc Pfem::xml::ProcGetElementsValues {domNode args} {
-    set names [list ]
-    set blockNode [Pfem::xml::FindMyBlocknode $domNode]
-    set BodyType [get_domnode_attribute [$blockNode selectNodes "value\[@n='BodyType'\]"] v]
-
-    set argums [list ElementType $BodyType]
-    set elems [Pfem::xml::GetElements $domNode $args]
-    foreach elem $elems {
-        if {[$elem cumple $argums]} {
-            lappend names [$elem getName]
-        }
-    }
     set values [join $names ","]
-
+    $domNode setAttribute values $values
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
-    if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]}
+    if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
 
-    return $values
-}
-
-proc Pfem::xml::GetElements {domNode args} {
-
-    set nodeApp [spdAux::GetAppIdFromNode $domNode]
-    set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
-    set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
-
-    get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
-    get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
-
-    set solStratName [::write::getValue $sol_stratUN]
-    set schemeName [write::getValue $schemeUN]
-    set elems [::Model::GetAvailableElements $solStratName $schemeName]
-
-    return $elems
+    return $diction
 }
 
 proc Pfem::xml::FindMyBlocknode {domNode} {
@@ -262,13 +258,71 @@ proc Pfem::xml::ProcSolutionTypeState {domNode args} {
         set domain_type_node [$domNode selectNodes $domain_type_route]
         set domain_type_value [get_domnode_attribute $domain_type_node v]
 
-        if {$domain_type_value ne "Solids"} {
+        if {$domain_type_value ne "Solid"} {
             $domNode setAttribute values Dynamic
             $domNode setAttribute v Dynamic
             set state disabled
         } {
             $domNode setAttribute values "Static,Quasi-static,Dynamic"
             set state normal
+        }
+    }
+    return $state
+}
+
+proc Pfem::xml::ProcEquationTypeState {domNode args} {
+    set domain_type_un PFEM_DomainType
+    set domain_type_route [spdAux::getRoute $domain_type_un]
+    set state normal
+    if {$domain_type_route ne ""} {
+        set domain_type_node [$domNode selectNodes $domain_type_route]
+        set domain_type_value [get_domnode_attribute $domain_type_node v]
+
+        if {$domain_type_value ne "Solid"} {
+            $domNode setAttribute values Segregated
+            $domNode setAttribute v Segregated
+            set state disabled
+        } elseif {$domain_type_value eq "Solid"} {
+            $domNode setAttribute values Monolithic
+            $domNode setAttribute v Monolithic
+            set state disabled
+        } else {
+            $domNode setAttribute values "Monolithic,Segregated"
+            set state normal
+        }
+    }
+    return $state
+}
+
+proc Pfem::xml::ProcStrategyTypeState {domNode args} {
+    set domain_type_un PFEM_DomainType
+    set domain_type_route [spdAux::getRoute $domain_type_un]
+    set state normal
+    if {$domain_type_route ne ""} {
+        set domain_type_node [$domNode selectNodes $domain_type_route]
+        set domain_type_value [get_domnode_attribute $domain_type_node v]
+
+        if {$domain_type_value ne "Solid"} {
+            $domNode setAttribute values Implicit
+            $domNode setAttribute v Implicit
+            set state disabled
+        } {
+            set solution_type_un PFEM_SolutionType
+            set solution_type_route [spdAux::getRoute $solution_type_un]
+            set state normal
+            if {$solution_type_route ne ""} {
+                set solution_type_node [$domNode selectNodes $solution_type_route]
+                set solution_type_value [get_domnode_attribute $solution_type_node v]
+                if {$solution_type_value eq "Static"} {
+                    $domNode setAttribute values Static
+                    $domNode setAttribute v Static
+                    set state disabled
+                } elseif {$solution_type_value eq "Quasi-static"} {
+                    $domNode setAttribute values Quasi-static
+                    $domNode setAttribute v Quasi-static
+                    set state disabled
+                }
+            }
         }
     }
     return $state
@@ -282,13 +336,13 @@ proc Pfem::xml::ProcGetBodyTypeValues {domNode args} {
         set domain_type_node [$domNode selectNodes $domain_type_route]
         set domain_type_value [get_domnode_attribute $domain_type_node v]
 
-        if {$domain_type_value eq "Fluids"} {
+        if {$domain_type_value eq "Fluid"} {
             set values [list Fluid Rigid]
         }
         if {$domain_type_value eq "Coupled"} {
             set values [list Fluid Solid Rigid]
         }
-        if {$domain_type_value eq "Solids"} {
+        if {$domain_type_value eq "Solid"} {
             set values [list Solid Rigid]
         }
     }
@@ -307,8 +361,8 @@ proc Pfem::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
     set ids [list ]
     set domainType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute PFEM_DomainType]] v]
     set filter [list Solid Pfem]
-    if {$domainType eq "Solids"} {set filter "Solid"}
-    if {$domainType eq "Fluids"} {set filter "Pfem"}
+    if {$domainType eq "Solid"} {set filter "Solid"}
+    if {$domainType eq "Fluid"} {set filter "Pfem"}
     if {$domainType eq "Coupled"} {set filter "Pfem"}
 
     foreach ss $Sols {
@@ -659,6 +713,7 @@ proc Pfem::xml::UpdateBody {body_name_old body_name body_type body_mesh body_con
     [$node selectNodes "./value\[@n = 'MeshingStrategy'\]"] setAttribute v $body_mesh
     [$node selectNodes "./value\[@n = 'ContactStrategy'\]"] setAttribute v $body_cont
 }
+
 
 # TODO: Event After rename group for bodies associetion. Wait Event register system
 

@@ -431,11 +431,18 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
     }
     set ret ""
     foreach {name value} $dep_list {
+        set values [split $value ","]
+        foreach v $values {
+            lappend ins "@v='$v'"
+            lappend out "@v!='$v'"
+        }
+        set in_string [join $ins " or "]
+        set out_string [join $out " and "]
         set nodev "../value\[@n='$name'\]"
-        append ret " <dependencies value='$value' node=\""
+        append ret " <dependencies condition=\"$in_string\" node=\""
         append ret $nodev
         append ret "\"  att1='state' v1='normal'/>"
-        append ret " <dependencies condition=\"@v!='$value'\" node=\""
+        append ret " <dependencies condition=\"$out_string\" node=\""
         append ret $nodev
         append ret "\"  att1='state' v1='hidden'/>"
     }
