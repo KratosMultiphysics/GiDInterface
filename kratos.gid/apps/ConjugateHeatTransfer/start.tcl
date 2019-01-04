@@ -47,7 +47,10 @@ proc ::ConjugateHeatTransfer::LoadMyFiles { } {
 
 proc ::ConjugateHeatTransfer::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConjugateHeatTransfer::examples::HeatedSquare] [= "Example\nSquare external heat"]   
+    if {$::Model::SpatialDimension eq "2D"} {
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConjugateHeatTransfer::examples::HeatedSquare] [= "Example\nSquare external heat"]   
+        Kratos::ToolbarAddItem "ExampleBFS" "example.png" [list -np- ::ConjugateHeatTransfer::examples::BFS] [= "Example\nBFS"]   
+    }
 }
 
 proc ::ConjugateHeatTransfer::GetAttribute {name} {

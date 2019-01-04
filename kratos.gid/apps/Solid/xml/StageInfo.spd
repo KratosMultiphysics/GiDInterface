@@ -9,7 +9,7 @@
       <value n="DeltaTime"  pn="Time step" icon="data" v="1.0" help="Time increment (s) or Load step for the analysis"/>
       <value n="EndTime" pn="End time" icon="data" v="1.0" help="Total time or Total steps for the analysis"/>
       <!--<value n="UseAutomaticDeltaTime" pn="Automatic Delta time" v="Fixed"  values="Fixed,Automatic" help="Select the Delta time option to be used"/>-->
-      <include n="Intervals" icon="timeIntervals" active="1" state="[HideIfUniqueName SLSolStrat Static]" path="apps/Common/xml/Intervals.spd"/>
+      <include n="Intervals" icon="timeIntervals" active="1" state="[HideIfUniqueName SLSoluType Static]" path="apps/Common/xml/Intervals.spd"/>
     </container>    
 </container>
     

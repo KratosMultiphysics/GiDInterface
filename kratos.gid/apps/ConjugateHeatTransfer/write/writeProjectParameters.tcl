@@ -11,7 +11,7 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     dict set projectParametersDict solver_settings [ConjugateHeatTransfer::write::GetSolverSettingsDict]
 
     # output processes
-    dict set projectParametersDict output_processes [ConjugateHeatTransfer::write::GetOutputProcessList]
+    dict set projectParametersDict output_processes [ConjugateHeatTransfer::write::GetOutputProcessesList]
 
     # Restart options
     dict set projectParametersDict restart_options [write::GetDefaultRestartDict]
@@ -68,22 +68,32 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
 }
 
 proc ConjugateHeatTransfer::write::GetProcessList { } {
-    set processes [dict create ]
+    set processes [dict create]
 
-    #write::SetConfigurationAttribute model_part_name [Fluid::write::GetAttribute model_part_name]
-    dict set processes fluid_processes [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings processes]
-    dict set processes solid_processes [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes]
+    # Get and add fluid processes
+    dict set processes fluid_constraints_process_list [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings processes constraints_process_list]
+
+    # Get and add solid processes
+    dict set processes solid_initial_conditions_process_list [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes initial_conditions_process_list]
+    dict set processes solid_constraints_process_list [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes constraints_process_list]
+    dict set processes solid_list_other_processes [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes list_other_processes]
 
     return $processes
 }
-proc ConjugateHeatTransfer::write::GetOutputProcessList { } {
-    set output_process [dict create ]
-    
-    lappend fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0]
-    dict set output_process fluid_output_processes $fluid_output
+proc ConjugateHeatTransfer::write::GetOutputProcessesList { } {
+    set output_process [dict create]
+    set gid_output_list [list]
 
-    lappend solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0]
-    dict set output_process solid_output_processes $solid_output
+    # Set a different output_name for the fluid and solid domains
+    set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0] 
+    dict set fluid_output Parameters output_name "[dict get $fluid_output Parameters output_name]_fluid"
+    set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0] 
+    dict set solid_output Parameters output_name "[dict get $solid_output Parameters output_name]_solid"
+
+    # Append the fluid and solid output processes to the output processes list
+    lappend gid_output_processes_list $fluid_output
+    lappend gid_output_processes_list $solid_output
+    dict set output_process gid_output_processes $gid_output_processes_list
     
     return $output_process
 }

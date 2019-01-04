@@ -7,52 +7,47 @@
 
 <!-- Currently Available in ParticleMechanicsApplication -->
   <!--linear elastic laws-->
-  <CLaw n="LinearElastic3DLaw" pn="Elastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
-	help="Linear Elastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
-    <inputs>
-      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
-      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-    </inputs>
-    <outputs>
-
-    </outputs>
-  </CLaw>
-  <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Elastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
+  <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
 	help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
     </inputs>
-    <outputs>
-
-    </outputs>
+    <outputs></outputs>
   </CLaw>
-  <CLaw n="LinearElasticPlaneStress2DLaw" pn="Elastic (Plane Stress)" Type="PlaneStress" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+
+  <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic (Plane Stress)" Type="PlaneStress" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
 	help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
     </inputs>
-    <outputs>
-
-    </outputs>
+    <outputs></outputs>
   </CLaw>
-  <!--hyper elastic laws-->
-  <CLaw n="HyperElastic3DLaw" pn="Hyperelastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
-	help="HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+
+  <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  help="Linear Elastic Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+    <inputs>
+        <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+        <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
+  <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+	help="Linear Elastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
     </inputs>
-    <outputs>
-
-    </outputs>
+    <outputs></outputs>
   </CLaw>
+
+  <!--hyper elastic laws-->
   <CLaw n="HyperElasticPlaneStrain2DLaw" pn="Hyperelastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
 	help="Hyperelastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
@@ -60,27 +55,32 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
     </inputs>
-    <outputs>
-
-    </outputs>
+    <outputs></outputs>
   </CLaw>
+
+  <CLaw n="HyperElasticAxisym2DLaw" pn="Hyperelastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  help="Hyperelastic Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+    <inputs>
+        <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+        <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
+  <CLaw n="HyperElastic3DLaw" pn="Hyperelastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+	help="HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
   <!-- Mohr Coulomb -->
-  <CLaw n="HenckyMCPlastic3DLaw" pn="Mohr Coulomb" class="HenckyMCPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help=" " Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
-    <inputs>
-      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
-      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-      <parameter n="COHESION" pn="Cohesion" v="0.0"  unit_magnitude="P" units="Pa"/>
-      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle" v="30"  unit_magnitude="Angle" units="°"/>
-      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Internal dilatancy angle" v="0" unit_magnitude="Angle" units="°"/>
-    </inputs>
-    <outputs>
-
-    </outputs>
-  </CLaw>
   <CLaw n="HenckyMCPlasticPlaneStrain2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help=" " Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Mohr Coulomb Plasticity Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -89,31 +89,38 @@
       <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle" v="30"  unit_magnitude="Angle" units="°"/>
       <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Internal dilatancy angle" v="0" unit_magnitude="Angle" units="°"/>
     </inputs>
-    <outputs>
-
-    </outputs>
+    <outputs></outputs>
   </CLaw>
+
+  <CLaw n="HenckyMCPlasticAxisym2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+  help="Mohr Coulomb Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+      <parameter n="COHESION" pn="Cohesion" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Internal dilatancy angle" v="0" unit_magnitude="Angle" units="°"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
+  <CLaw n="HenckyMCPlastic3DLaw" pn="Mohr Coulomb" class="HenckyMCPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help="Mohr Coulomb Plasticity Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+      <parameter n="COHESION" pn="Cohesion" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Internal dilatancy angle" v="0" unit_magnitude="Angle" units="°"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
   <!-- Mohr Coulomb Strain Softening -->
-  <CLaw n="HenckyMCStrainSofteningPlastic3DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help=" " Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
-    <inputs>
-      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
-      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
-      <parameter n="COHESION" pn="Cohesion (Peak)" v="0.0"  unit_magnitude="P" units="Pa"/>
-      <parameter n="COHESION_RESIDUAL" pn="Cohesion (Residual)" v="0.0"  unit_magnitude="P" units="Pa"/>
-      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle (Peak)" v="30"  unit_magnitude="Angle" units="°"/>
-      <parameter n="INTERNAL_FRICTION_ANGLE_RESIDUAL" pn="Internal friction angle (Residual)" v="30"  unit_magnitude="Angle" units="°"/>
-      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Peak Internal dilatancy angle (Peak)" v="0" unit_magnitude="Angle" units="°"/>
-      <parameter n="INTERNAL_DILATANCY_ANGLE_RESIDUAL" pn="Internal dilatancy angle (Residual)" v="0" unit_magnitude="Angle" units="°"/>
-      <parameter n="SHAPE_FUNCTION_BETA" pn="Exponential Softening Beta Coefficient" v="1.0"/>
-    </inputs>
-    <outputs>
-
-    </outputs>
-  </CLaw>
   <CLaw n="HenckyMCStrainSofteningPlasticPlaneStrain2DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help=" " Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -126,29 +133,46 @@
       <parameter n="INTERNAL_DILATANCY_ANGLE_RESIDUAL" pn="Internal dilatancy angle (Residual)" v="0" unit_magnitude="Angle" units="°"/>
       <parameter n="SHAPE_FUNCTION_BETA" pn="Exponential Softening Beta Coefficient" v="1.0"/>
     </inputs>
-    <outputs>
-
-    </outputs>
+    <outputs></outputs>
   </CLaw>
+
+  <CLaw n="HenckyMCStrainSofteningPlasticAxisym2DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+  help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+      <parameter n="COHESION" pn="Cohesion (Peak)" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="COHESION_RESIDUAL" pn="Cohesion (Residual)" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle (Peak)" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE_RESIDUAL" pn="Internal friction angle (Residual)" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Peak Internal dilatancy angle (Peak)" v="0" unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE_RESIDUAL" pn="Internal dilatancy angle (Residual)" v="0" unit_magnitude="Angle" units="°"/>
+      <parameter n="SHAPE_FUNCTION_BETA" pn="Exponential Softening Beta Coefficient" v="1.0"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
+  <CLaw n="HenckyMCStrainSofteningPlastic3DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+      <parameter n="COHESION" pn="Cohesion (Peak)" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="COHESION_RESIDUAL" pn="Cohesion (Residual)" v="0.0"  unit_magnitude="P" units="Pa"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE" pn="Internal friction angle (Peak)" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_FRICTION_ANGLE_RESIDUAL" pn="Internal friction angle (Residual)" v="30"  unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE" pn="Peak Internal dilatancy angle (Peak)" v="0" unit_magnitude="Angle" units="°"/>
+      <parameter n="INTERNAL_DILATANCY_ANGLE_RESIDUAL" pn="Internal dilatancy angle (Residual)" v="0" unit_magnitude="Angle" units="°"/>
+      <parameter n="SHAPE_FUNCTION_BETA" pn="Exponential Softening Beta Coefficient" v="1.0"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
   <!-- Borja Modified Cam Clay -->
-  <CLaw n="HenckyBorjaCamClayPlastic3DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help=" " Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
-    <inputs>
-      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-      <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />
-      <parameter n="OVER_CONSOLIDATION_RATIO" pn="Over Consolidation Ratio (OCR)" v="1.0"/>
-      <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
-      <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
-      <parameter n="CRITICAL_STATE_LINE" pn="Slope of Critical State Line (CSL)" v="1.05"/>
-      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="5.4e6" />
-      <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
-    </inputs>
-    <outputs>
-
-    </outputs>
-  </CLaw>
   <CLaw n="HenckyBorjaCamClayPlasticPlaneStrain2DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help=" " Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Modified Cam Clay Plasticity Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />
@@ -159,10 +183,37 @@
       <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="5.4e6" />
       <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
     </inputs>
-    <outputs>
-
-    </outputs>
+    <outputs></outputs>
   </CLaw>
 
+  <CLaw n="HenckyBorjaCamClayPlasticAxisym2DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+  help="Modified Cam Clay Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />
+      <parameter n="OVER_CONSOLIDATION_RATIO" pn="Over Consolidation Ratio (OCR)" v="1.0"/>
+      <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
+      <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
+      <parameter n="CRITICAL_STATE_LINE" pn="Slope of Critical State Line (CSL)" v="1.05"/>
+      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="5.4e6" />
+      <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+
+  <CLaw n="HenckyBorjaCamClayPlastic3DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
+	help="Modified Cam Clay Plasticity Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+      <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />
+      <parameter n="OVER_CONSOLIDATION_RATIO" pn="Over Consolidation Ratio (OCR)" v="1.0"/>
+      <parameter n="SWELLING_SLOPE" pn="Slope of swelling line" v="0.018"/>
+      <parameter n="NORMAL_COMPRESSION_SLOPE" pn="Slope of Normal Consolidation Line (NCL)" v="0.13"/>
+      <parameter n="CRITICAL_STATE_LINE" pn="Slope of Critical State Line (CSL)" v="1.05"/>
+      <parameter n="INITIAL_SHEAR_MODULUS" pn="Initial Shear Modulus" unit_magnitude="P" units="Pa" v="5.4e6" />
+      <parameter n="ALPHA_SHEAR" pn="Volumetric-deviatoric coupling constant" v="0.0"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
 
 </ConstitutiveLaws>

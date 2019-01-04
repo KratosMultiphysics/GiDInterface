@@ -26,24 +26,19 @@ proc ::MPM::write::getParametersDict { } {
     # materials file
     dict set project_parameters_dict solver_settings material_import_settings materials_filename [GetAttribute materials_file]
 
-    # Geometry in elements
-    set geometry_element [dict get $project_parameters_dict solver_settings geometry_element]
-    if {$geometry_element eq "Triangle"} {
-        dict unset project_parameters_dict solver_settings particle_per_element_quadrilateral
-        set number [dict get $project_parameters_dict solver_settings particle_per_element_triangle]
-        dict unset project_parameters_dict solver_settings particle_per_element_triangle
-    } else {
-        dict unset project_parameters_dict solver_settings particle_per_element_triangle
-        set number [dict get $project_parameters_dict solver_settings particle_per_element_quadrilateral]
-        dict unset project_parameters_dict solver_settings particle_per_element_quadrilateral
+    # Axis-symmetric flag
+    if {$::Model::SpatialDimension eq "2Da"} {
+        dict set project_parameters_dict solver_settings axis_symmetric_flag true
     }
-    dict set project_parameters_dict solver_settings particle_per_element $number
 
     # Pressure dofs
     dict set project_parameters_dict solver_settings pressure_dofs false
 
     # Rotation dofs
     dict unset project_parameters_dict solver_settings rotation_dofs
+
+    # Line search
+    dict unset project_parameters_dict solver_settings line_search
 
     # Add the solver information
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
