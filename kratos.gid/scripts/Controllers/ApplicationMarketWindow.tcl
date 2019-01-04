@@ -34,6 +34,7 @@ proc spdAux::activeApp { appid } {
         foreach elem [$root getElementsByTagName "appLink"] {
             if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
                 $elem setAttribute "active" 1
+                set must_open_init_window 0
             } else {
                 $elem setAttribute "active" 0
             }
@@ -74,6 +75,8 @@ proc spdAux::CreateWindow {} {
     }
     
     if {$must_open_init_window == 0} {return ""}
+
+    if {[apps::getActiveApp] ne ""} {return ""}
     
     spdAux::DestroyInitWindow
                 
