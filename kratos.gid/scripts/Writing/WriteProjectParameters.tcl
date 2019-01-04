@@ -111,6 +111,24 @@ proc write::GetDefaultOutputDict { {appid ""} } {
     dict set outputDict "point_data_configuration" [GetEmptyList]
     return $outputDict
 }
+
+proc write::GetDefaultOutputDictVtk { {appid ""} } {
+    set resultDict [dict create]
+    dict set resultDict model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
+
+
+    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
+
+    set outputCT [getValue $results_UN OutputControlType]
+    dict set resultDict output_control_type $outputCT
+    if {$outputCT eq "time"} {set frequency [getValue $results_UN OutputDeltaTime]} {set frequency [getValue $results_UN OutputDeltaStep]}
+    dict set resultDict output_frequency $frequency
+
+    dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
+
+    return $resultDict
+}
+
 proc write::GetEmptyList { } {
     # This is a gipsy code
     set a [list ]
@@ -542,8 +560,8 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # prepare params
     set model_name [Kratos::GetModelName]
-    set paralleltype [write::getValue ParallelType]
 
+    # Setup GiD-Output
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
     dict set outputProcessParams output_name $model_name
@@ -557,11 +575,23 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
 
     dict set outputConfigDict Parameters $outputProcessParams
 
+    # Setup Vtk-Output
+    # set outputProcessParamsVtk [dict create]
+    # dict set outputProcessParamsVtk model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
+
+    set outputConfigDictVtk [dict create]
+    dict set outputConfigDictVtk python_module vtk_output_process
+    dict set outputConfigDictVtk kratos_module KratosMultiphysics
+    dict set outputConfigDictVtk process_name VtkOutputProcess
+    dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
+    dict set outputConfigDictVtk Parameters [write::GetDefaultOutputDictVtk $appid]
+
     set output_process_list [list ]
     lappend output_process_list $outputConfigDict
+    lappend output_process_list $outputConfigDictVtk
 
     set outputProcessesDict [dict create]
-    dict set outputProcessesDict gid_output $output_process_list
+    dict set outputProcessesDict output_config $output_process_list
 }
 
 proc write::GetDefaultRestartDict { } {
