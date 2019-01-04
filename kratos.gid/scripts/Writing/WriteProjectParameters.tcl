@@ -576,9 +576,6 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     dict set outputConfigDict Parameters $outputProcessParams
 
     # Setup Vtk-Output
-    # set outputProcessParamsVtk [dict create]
-    # dict set outputProcessParamsVtk model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
-
     set outputConfigDictVtk [dict create]
     dict set outputConfigDictVtk python_module vtk_output_process
     dict set outputConfigDictVtk kratos_module KratosMultiphysics
