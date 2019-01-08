@@ -37,7 +37,7 @@ proc ConvectionDiffusion::write::writeModelPartEvent { } {
     writeProperties
 
     # Materials (write materials in *.mdpa)
-    #write::writeMaterials [GetAttribute validApps]
+    # write::writeMaterials [GetAttribute validApps]
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}

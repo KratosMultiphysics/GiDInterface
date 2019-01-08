@@ -14,7 +14,7 @@ proc ConjugateHeatTransfer::write::Init { } {
     unset ConjugateHeatTransferConditions(temp)
 
     SetAttribute main_script_file "MainKratos.py"
-    SetAttribute materials_file "ConjugateHeatTransferMaterials.json"
+    #SetAttribute materials_file "ConjugateHeatTransferMaterials.json"
     SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
 
@@ -74,6 +74,7 @@ proc ConjugateHeatTransfer::write::PrepareBuoyancy { } {
 }
 
 proc ConjugateHeatTransfer::write::WriteMaterialsFile { } {
+    Buoyancy::write::WriteMaterialsFile
     ConvectionDiffusion::write::WriteMaterialsFile
 }
 
