@@ -18,7 +18,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     
     dict set projectParametersDict processes $processes
     # Output configuration
-    dict set projectParametersDict output_processes [GetOutputProcessList]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
 
     # Restart options
     set restartDict [dict create]
@@ -131,23 +131,4 @@ proc ConvectionDiffusion::write::GetSolverSettingsDict {} {
     dict set solverSettingsDict time_stepping $timeSteppingDict
 
     return $solverSettingsDict
-}
-
-proc ConvectionDiffusion::write::GetOutputProcessList { } {
-    set result [dict create ]
-    
-    set gid_output [list ]
-    set res_dict [dict create]
-    dict set res_dict python_module gid_output_process
-    dict set res_dict kratos_module KratosMultiphysics
-    dict set res_dict process_name GiDOutputProcess
-    dict set res_dict Parameters postprocess_parameters [write::GetDefaultOutputDict]
-    
-    set partgroup [write::getPartsSubModelPartId]
-    dict set res_dict Parameters "model_part_name" [concat [lindex $partgroup 0]]
-    set model_name [Kratos::GetModelName]
-    dict set res_dict Parameters output_name $model_name
-    lappend gid_output $res_dict
-    dict set result gid_output $gid_output
-    return $result
 }

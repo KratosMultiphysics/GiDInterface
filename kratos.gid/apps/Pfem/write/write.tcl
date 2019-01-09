@@ -10,7 +10,7 @@ proc Pfem::write::Init { } {
     variable bodies_list
     set bodies_list [list ]
     Solid::write::AddValidApps "Pfem"
-    
+
     SetAttribute parts_un PFEM_Parts
     SetAttribute nodal_conditions_un PFEM_NodalConditions
     SetAttribute conditions_un PFEM_Loads
@@ -23,6 +23,7 @@ proc Pfem::write::Init { } {
 
 proc Pfem::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
+    write::SetParallelismConfiguration
 }
 
 # Model Part Blocks
@@ -30,7 +31,7 @@ proc Pfem::write::writeModelPartEvent { } {
     # Init data
     SetAttribute main_script_file [Pfem::write::GetMainScriptFilename]
     write::initWriteConfiguration [GetAttributes]
-    
+
     # Headers
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
@@ -42,10 +43,10 @@ proc Pfem::write::writeModelPartEvent { } {
 
     # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
-    
+
     # Nodal conditions and conditions
     Solid::write::writeConditions
-    
+
     # SubmodelParts
     Pfem::write::writeSubmodelParts
 }
@@ -53,7 +54,7 @@ proc Pfem::write::writeModelPartEvent { } {
 proc Pfem::write::writeSubmodelParts { } {
     # Submodelparts for Parts
     write::writePartSubModelPart
-    
+
     # Solo Malla , no en conditions
     writeNodalConditions [GetAttribute nodal_conditions_un]
 
@@ -155,7 +156,7 @@ proc Pfem::write::getPropertiesList {parts_un} {
 	    }
 
 	}
-    
+
 
     dict set props_dict material_models_list $props
 
@@ -249,6 +250,11 @@ proc Pfem::write::getConditionsParametersDict {un {condition_type "Condition"}} 
                     }
                     dict set paramDict $inputName [list $ValX $ValY $ValZ]
                 }
+            } elseif {$in_type eq "inline_vector"} {
+                    set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
+                    lassign [split $value ","] ValX ValY ValZ
+                    if {$ValZ eq ""} {set ValZ 0.0}
+                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]]
             } elseif {$in_type eq "double" || $in_type eq "integer"} {
                 set printed 0
                 if {[$in_obj getAttribute "function"] eq "1"} {
@@ -310,18 +316,27 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
     set nodal_results [write::GetResultsList $results_UN OnNodes]
 
     set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Fluids"} {
-	set root [customlib::GetBaseRoot]
-	set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
-	set contact_active False
-	foreach body_node [$root selectNodes $xp1] {
-	    set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
-	    if {$contact eq "Yes"} { set contact_active True }
-	}
-	if {$contact_active eq True} {
-	    lappend nodal_results "CONTACT_FORCE"
-	    lappend nodal_results "NORMAL"
-	}
+    set contact_active False
+    if {$problemtype ne "Fluid"} {
+        set root [customlib::GetBaseRoot]
+        set xp1 "[spdAux::getRoute "PFEM_Bodies"]/blockdata"
+        foreach body_node [$root selectNodes $xp1] {
+            set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
+            if {$contact eq "Yes"} { set contact_active True }
+        }
+        if {$contact_active eq True} {
+            lappend nodal_results "CONTACT_FORCE"
+            lappend nodal_results "NORMAL"
+        }
+    }
+
+    if {$problemtype ne "Solid"} {
+        if {$contact_active ne True} {
+            lappend nodal_results "NORMAL"
+        }
+        set nodal_flags_results [list]
+        lappend nodal_flags_results "FREE_SURFACE" "INLET"
+        dict set resultDict nodal_flags_results $nodal_flags_results
     }
 
     dict set resultDict nodal_results $nodal_results
@@ -334,11 +349,7 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
 
 proc Pfem::write::GetMainScriptFilename { } {
     set problemtype [write::getValue PFEM_DomainType]
-    if {$problemtype ne "Fluids"} {
-        return "RunMainPfem.py"
-    } else {
-        return "RunPFEM.py"
-    }
+    return "RunPfem.py"
 }
 
 # Functions to use the write attribute system

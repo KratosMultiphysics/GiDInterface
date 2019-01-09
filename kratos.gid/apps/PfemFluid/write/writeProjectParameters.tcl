@@ -1,6 +1,7 @@
 
 proc PfemFluid::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
+    write::SetParallelismConfiguration
 }
 
 # Project Parameters
