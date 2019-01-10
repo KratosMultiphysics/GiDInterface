@@ -328,23 +328,23 @@ proc DEM::write::writeConditionMeshes { } {
                         }
                         if {$Ay == "Constant"} {
                             set fix_vy [write::getValueByNode [$group_node selectNodes "./value\[@n='Vy'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_vy"
+                            write::WriteString "    IMPOSED_VELOCITY_Y_VALUE $fix_vy"
                         }
                         if {$Az == "Constant"} {
                             set fix_vz [write::getValueByNode [$group_node selectNodes "./value\[@n='Vz'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_vz"
+                            write::WriteString "    IMPOSED_VELOCITY_Z_VALUE $fix_vz"
                         }
                         if {$Bx == "Constant"} {
                             set fix_avx [write::getValueByNode [$group_node selectNodes "./value\[@n='AVx'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_avx"
+                            write::WriteString "    IMPOSED_ANGULAR_VELOCITY_X_VALUE $fix_avx"
                         }
                         if {$By == "Constant"} {
                             set fix_avy [write::getValueByNode [$group_node selectNodes "./value\[@n='AVy'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_avy"
+                            write::WriteString "    IMPOSED_ANGULAR_VELOCITY_Y_VALUE $fix_avy"
                         }
                         if {$Bz == "Constant"} {
                             set fix_avz [write::getValueByNode [$group_node selectNodes "./value\[@n='AVz'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_avz"
+                            write::WriteString "    IMPOSED_ANGULAR_VELOCITY_Z_VALUE $fix_avz"
                         }
                         set VStart [write::getValueByNode [$group_node selectNodes "./value\[@n='VStart'\]"]]
                         set VEnd  [write::getValueByNode [$group_node selectNodes "./value\[@n='VEnd'\]"]]
@@ -360,27 +360,27 @@ proc DEM::write::writeConditionMeshes { } {
                         set iBz [write::getValueByNode [$group_node selectNodes "./value\[@n='iBz'\]"]]
                         if {$iAx == "true"} {
                             set fix_vx [write::getValueByNode [$group_node selectNodes "./value\[@n='iVx'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_vx"
+                            write::WriteString "    INITIAL_VELOCITY_X_VALUE $fix_vx"
                         }
                         if {$iAy == "true"} {
                             set fix_vy [write::getValueByNode [$group_node selectNodes "./value\[@n='iVy'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_vy"
+                            write::WriteString "    INITIAL_VELOCITY_Y_VALUE $fix_vy"
                         }
                         if {$iAz == "true"} {
                             set fix_vz [write::getValueByNode [$group_node selectNodes "./value\[@n='iVz'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_vz"
+                            write::WriteString "    INITIAL_VELOCITY_Z_VALUE $fix_vz"
                         }
                         if {$iBx == "true"} {
                             set fix_avx [write::getValueByNode [$group_node selectNodes "./value\[@n='iAVx'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_avx"
+                            write::WriteString "    INITIAL_ANGULAR_VELOCITY_X_VALUE $fix_avx"
                         }
                         if {$iBy == "true"} {
                             set fix_avy [write::getValueByNode [$group_node selectNodes "./value\[@n='iAVy'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_avy"
+                            write::WriteString "    INITIAL_ANGULAR_VELOCITY_Y_VALUE $fix_avy"
                         }
                         if {$iBz == "true"} {
                             set fix_avz [write::getValueByNode [$group_node selectNodes "./value\[@n='iAVz'\]"]]
-                            write::WriteString "    IMPOSED_VELOCITY_X_VALUE $fix_avz"
+                            write::WriteString "    INITIAL_ANGULAR_VELOCITY_Z_VALUE $fix_avz"
                         }
 
                         # impose forces and moments
@@ -416,23 +416,25 @@ proc DEM::write::writeConditionMeshes { } {
                             write::WriteString "    EXTERNAL_APPLIED_MOMENT_Z $MZ"
                         }
                     }
-                # Hardcoded
-                write::WriteString "    FIXED_MESH_OPTION $fixed_mesh_option"
-                write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
-                write::WriteString "    FREE_BODY_MOTION $free_body_motion"
-                set is_ghost [write::getValueByNode [$group_node selectNodes "./value\[@n='IsGhost'\]"]]
-                write::WriteString "    IS_GHOST $is_ghost"
-                write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
-                write::WriteString "    TOP 0"
-                write::WriteString "    BOTTOM 0"
 
-                set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
-                if {$GraphPrint == "true"} {
-                    set GraphPrintval 1
-                } else {
-                    set GraphPrintval 0
+                    #Hardcoded
+                    write::WriteString "    FIXED_MESH_OPTION $fixed_mesh_option"
+                    write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
+                    write::WriteString "    FREE_BODY_MOTION $free_body_motion"
+                    set is_ghost [write::getValueByNode [$group_node selectNodes "./value\[@n='IsGhost'\]"]]
+                    write::WriteString "    IS_GHOST $is_ghost"
+                    write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
+                    write::WriteString "    TOP 0"
+                    write::WriteString "    BOTTOM 0"
+
+                    set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
+                    if {$GraphPrint == "true"} {
+                        set GraphPrintval 1
+                    } else {
+                        set GraphPrintval 0
+                    }
+                    write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
                 }
-                write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
                 write::WriteString "  End SubModelPartData"
 
                 write::WriteString "  Begin SubModelPartNodes"
@@ -441,7 +443,7 @@ proc DEM::write::writeConditionMeshes { } {
 
                 write::WriteString "End SubModelPart"
                 write::WriteString ""
-                }
+
             }
         }
     }

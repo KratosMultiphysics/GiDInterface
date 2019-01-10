@@ -45,55 +45,55 @@
         <parameter n="Inertia"        pn="Inertia(Kg*m2)"  parent="FreeMotion" type="inline_vector" v="1.0,1.0,1.0" />
 
 
-        <!-- <parameter n="DEM-DOFS"         parent="FreeMotion"                   pn="Degrees of Freedom"> -->
-          <parameter n="Ax"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity X"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity X">
+        <parameter n="DEM-DOFS"         parent="FreeMotion"  type="combo"      v="No"    pn="Degrees of Freedom"     values="No,Yes"                 pvalues="No,Yes">
+          <parameter n="Ax"             parent="FreeMotion,Yes" type="combo"      v="No"    pn="Fix Velocity X"         values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Velocity X">
            <parameter n="Vx"             parent="Constant"                    v="0.0"   pn="   Value (m/s)"                   help="X Velocity"/>
            <parameter n="FilenameVx"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
-          <parameter n="Ay"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity Y"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity Y">
+          <parameter n="Ay"             parent="FreeMotion,Yes" type="combo"      v="No"    pn="Fix Velocity Y"         values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Velocity Y">
            <parameter n="Vy"             parent="Constant"                    v="0.0"   pn="   Value (m/s)"                   help="Y Velocity"/>
            <parameter n="FilenameVy"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
-          <parameter n="Az"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Velocity Z"         pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Velocity Z">
+          <parameter n="Az"             parent="FreeMotion,Yes" type="combo"      v="No"    pn="Fix Velocity Z"         values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Velocity Z">
            <parameter n="Vz"             parent="Constant"                    v="0.0"   pn="   Value (m/s)"                   help="Z Velocity"/>
            <parameter n="FilenameVz"     parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
-          <parameter n="Bx"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity X" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity X">
+          <parameter n="Bx"             parent="FreeMotion,Yes" type="combo"      v="No"    pn="Fix Angular Velocity X" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Angular Velocity X">
            <parameter n="AVx"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="X Angular Velocity"/>
            <parameter n="FilenameAVx"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
-          <parameter n="By"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity Y" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity Y">
+          <parameter n="By"             parent="FreeMotion,Yes" type="combo"      v="No"    pn="Fix Angular Velocity Y" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Angular Velocity Y">
            <parameter n="AVy"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="Y Angular Velocity"/>
            <parameter n="FilenameAVy"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
-          <parameter n="Bz"             parent="FreeMotion" type="combo"      v="No"    pn="Fix Angular Velocity Z" pvalues="No,Constant,FromATable" values="No,Constant,From a table" help="Fix Angular Velocity Z">
+          <parameter n="Bz"             parent="FreeMotion,Yes" type="combo"      v="No"    pn="Fix Angular Velocity Z" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Angular Velocity Z">
            <parameter n="AVz"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="Z Angular Velocity"/>
            <parameter n="FilenameAVz"    parent="FromATable" type="combo"    v="- No file -"     pn="   Filename"            help="X Velocity file"/></parameter>
-          <parameter n="VStart"         parent="FreeMotion"                   v="0.0"   pn="Start time (s)"                   help="Start Time"/>
-          <parameter n="VEnd"           parent="FreeMotion"                   v="100.0" pn="End time (s)"                     help="Start Time"/>
-        <!-- </parameter> -->
+          <parameter n="VStart"         parent="FreeMotion,Yes"                   v="0.0"   pn="Start time (s)"                   help="Start Time"/>
+          <parameter n="VEnd"           parent="FreeMotion,Yes"                   v="100.0" pn="End time (s)"                     help="Start Time"/>
+        </parameter>
 
-        <!-- <parameter n="DEM-InitialVelocities"  parent="FreeMotion"   v="100.0" pn="Initial Velocities"> -->
-          <parameter n="iAx"                   parent="FreeMotion"   v="false" pn="Set Initial Velocity X"   type="bool"  help="Set Initial Velocity X">
+        <parameter n="DEM-InitialVelocities"  parent="FreeMotion"  type="combo"      v="No" pn="Initial Velocities" values="No,Yes">
+          <parameter n="iAx"                   parent="FreeMotion,Yes"   v="false" pn="Set Initial Velocity X"   type="bool"  help="Set Initial Velocity X">
            <parameter n="iVx"                   parent="true"         v="0.0"   pn="   Value (m/s)"           help="X Velocity"/></parameter>
-          <parameter n="iAy"                   parent="FreeMotion"   v="false" pn="Set Initial Velocity Y"   type="bool" help="Set Initial Velocity Y">
+          <parameter n="iAy"                   parent="FreeMotion,Yes"   v="false" pn="Set Initial Velocity Y"   type="bool" help="Set Initial Velocity Y">
            <parameter n="iVy"                   parent="true"         v="0.0"   pn="   Value (m/s)"           help="Y Velocity"/></parameter>
-          <parameter n="iAz"                   parent="FreeMotion"   v="false" pn="Set Initial Velocity Z"   type="bool" help="Set Initial Velocity Z">
+          <parameter n="iAz"                   parent="FreeMotion,Yes"   v="false" pn="Set Initial Velocity Z"   type="bool" help="Set Initial Velocity Z">
            <parameter n="iVz"                   parent="true"         v="0.0"   pn="   Value (m/s)"           help="Z Velocity"/></parameter>
-          <parameter n="iBx"                   parent="FreeMotion"   v="false" pn="Set Initial Angular Velocity X" type="bool" help="Set Initial Ang Velocity X">
+          <parameter n="iBx"                   parent="FreeMotion,Yes"   v="false" pn="Set Initial Angular Velocity X" type="bool" help="Set Initial Ang Velocity X">
            <parameter n="iAVx"                  parent="true"         v="0.0"   pn="   Value (rad/s)"         help="X Angular Velocity"/></parameter>
-          <parameter n="iBy"                   parent="FreeMotion"   v="false" pn="Set Initial Angular Velocity Y" type="bool" help="Set Initial Ang Velocity Y">
+          <parameter n="iBy"                   parent="FreeMotion,Yes"   v="false" pn="Set Initial Angular Velocity Y" type="bool" help="Set Initial Ang Velocity Y">
            <parameter n="iAVy"                  parent="true"         v="0.0"   pn="   Value (rad/s)"         help="Y Angular Velocity"/></parameter>
-          <parameter n="iBz"                   parent="FreeMotion"   v="false" pn="Set Initial Angular Velocity Z" type="bool" help="Set Initial Ang Velocity Z">
+          <parameter n="iBz"                   parent="FreeMotion,Yes"   v="false" pn="Set Initial Angular Velocity Z" type="bool" help="Set Initial Ang Velocity Z">
            <parameter n="iAVz"                  parent="true"         v="0.0"   pn="   Value (rad/s)"         help="Z Angular Velocity"/></parameter>
-        <!-- </parameter> -->
+        </parameter>
 
-        <!-- <parameter n="DEM-RBImposedForces"    parent="FreeMotion"                   pn="Impose external forces"> -->
-          <parameter n="ExternalForceX"   parent="FreeMotion"   type="combo"    v="No"                pn="External Forces"  values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the X direction to the group">
+        <parameter n="DEM-RBImposedForces"    parent="FreeMotion"  type="combo"      v="No" pn="Impose external forces" values="No,Yes">
+          <parameter n="ExternalForceX"   parent="FreeMotion,Yes"   type="combo"    v="No"                pn="External Forces"  values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the X direction to the group">
           <parameter n="FX"                    parent="Constant"     v="0.0"         pn="   Fx(N)"         help="Insert the value of the external force in X direction"/>
           <parameter n="FilenameFX"            parent="FromATable"   type="combo"  v="- No file -" pn="   Filename"      help="Insert here the name of the file containing the external force in X direction"/></parameter>
-          <parameter n="ExternalForceY"   parent="FreeMotion"   type="combo"    v="No"                pn="External Forces"  values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Y direction  to the group">
+          <parameter n="ExternalForceY"   parent="FreeMotion,Yes"   type="combo"    v="No"                pn="External Forces"  values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Y direction  to the group">
           <parameter n="FY"                    parent="Constant"     v="0.0"         pn="   Fy(N)"         help="Insert the value of the external force in Y direction"/>
           <parameter n="FilenameFY"            parent="FromATable"   type="combo"  v="- No file -" pn="   Filename"      help="Insert here the name of the file containing the external force in Y direction"/></parameter>
-          <parameter n="ExternalForceZ"   parent="FreeMotion"   type="combo"    v="No"                pn="External Forces"  values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Z direction  to the group">
+          <parameter n="ExternalForceZ"   parent="FreeMotion,Yes"   type="combo"    v="No"                pn="External Forces"  values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Z direction  to the group">
           <parameter n="FZ"                    parent="Constant"     v="0.0"         pn="   Fz(N)"         help="Insert the value of the external force in Z direction"/>
           <parameter n="FilenameFZ"            parent="FromATable"   type="combo"  v="- No file -" pn="   Filename"      help="Insert here the name of the file containing the external force in Z direction"/></parameter>
-        <!-- </parameter> -->
+        </parameter>
 
         <!-- <parameter n="DEM-RBImposedMoments"    parent="FreeMotion"                   pn="Impose external moments"> -->
           <parameter n="ExternalMomentX"   parent="FreeMotion"   type="combo"    v="No"                pn="External Moments"  values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the X direction to the group">
