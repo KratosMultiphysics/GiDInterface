@@ -21,6 +21,7 @@ proc ConvectionDiffusion::write::Init { } {
     SetAttribute materials_file "ConvectionDiffusionMaterials.json"
     SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
+    SetAttribute output_model_part_name "thermal_computing_domain"
 }
 
 # Events
