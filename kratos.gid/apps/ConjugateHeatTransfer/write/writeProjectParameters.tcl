@@ -90,6 +90,15 @@ proc ConjugateHeatTransfer::write::GetOutputProcessesList { } {
     set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0] 
     dict set solid_output Parameters output_name "[dict get $solid_output Parameters output_name]_solid"
 
+    set solid_nodal_variables [dict get $solid_output Parameters postprocess_parameters result_file_configuration nodal_results]
+    set valid_list [list ]
+    foreach solid_nodal_variable $solid_nodal_variables {
+        if {$solid_nodal_variable in [list "TEMPERATURE"]} {
+            lappend valid_list $solid_nodal_variable
+        }
+    }
+    dict set solid_output Parameters postprocess_parameters result_file_configuration nodal_results $valid_list
+
     # Append the fluid and solid output processes to the output processes list
     lappend gid_output_processes_list $fluid_output
     lappend gid_output_processes_list $solid_output
