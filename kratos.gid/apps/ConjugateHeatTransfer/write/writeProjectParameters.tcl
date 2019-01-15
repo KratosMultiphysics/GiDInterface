@@ -45,7 +45,7 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_import_settings input_filename "use_input_model_part"
     dict unset ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_import_settings input_type
     # Buoyancy Thermic > model_part_name
-    dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_part_name FluidThermicModelPart
+    dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_part_name "FluidThermalModelPart"
     # Solid Thermic > Modelpart name -> mdpa solid
     dict set ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings model_import_settings input_filename "${filename}_[GetAttribute solid_mdpa_suffix]"
 
@@ -89,6 +89,15 @@ proc ConjugateHeatTransfer::write::GetOutputProcessesList { } {
     dict set fluid_output Parameters output_name "[dict get $fluid_output Parameters output_name]_fluid"
     set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0] 
     dict set solid_output Parameters output_name "[dict get $solid_output Parameters output_name]_solid"
+
+    set solid_nodal_variables [dict get $solid_output Parameters postprocess_parameters result_file_configuration nodal_results]
+    set valid_list [list ]
+    foreach solid_nodal_variable $solid_nodal_variables {
+        if {$solid_nodal_variable in [list "TEMPERATURE"]} {
+            lappend valid_list $solid_nodal_variable
+        }
+    }
+    dict set solid_output Parameters postprocess_parameters result_file_configuration nodal_results $valid_list
 
     # Append the fluid and solid output processes to the output processes list
     lappend gid_output_processes_list $fluid_output

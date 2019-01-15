@@ -72,17 +72,17 @@ proc Buoyancy::write::writeSubModelParts { } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
     foreach group [$root selectNodes $xp1] {
-	set groupid [$group @n]
-	set groupid [write::GetWriteGroupName $groupid]
-	set condid [[$group parent] @n]
-	set cond [::Model::getCondition $condid]
+        set groupid [$group @n]
+        set groupid [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
 
-	if {![$cond hasTopologyFeatures]} {
-	    ::write::writeGroupSubModelPart $condid $groupid "Nodes"
-	} else {
-	    ::write::writeGroupSubModelPartByUniqueId $condid $groupid $Fluid::write::FluidConditionMap "Conditions"
-	    #::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
-	}
+        if {![$cond hasTopologyFeatures]} {
+            ::write::writeGroupSubModelPart $condid $groupid "Nodes"
+        } else {
+            ::write::writeGroupSubModelPartByUniqueId $condid $groupid $Fluid::write::FluidConditionMap "Conditions"
+            #::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
+        }
     }
 }
 

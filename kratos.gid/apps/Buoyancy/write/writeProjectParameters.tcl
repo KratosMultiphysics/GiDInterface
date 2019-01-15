@@ -81,9 +81,11 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
     dict set settings fluid_solver_settings domain_size $nDim
 
     # Thermal things
+    set prev [ConvectionDiffusion::write::GetAttribute materials_file]
     ConvectionDiffusion::write::SetAttribute materials_file "BuoyancyMaterials.json"
     write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
     dict set settings thermal_solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
+    ConvectionDiffusion::write::SetAttribute materials_file $prev
 
     dict set settings thermal_solver_settings problem_domain_sub_model_part_list [list [dict get $settings fluid_solver_settings volume_model_part_name]]
 

@@ -8,14 +8,13 @@ namespace eval ConjugateHeatTransfer::write {
 }
 
 proc ConjugateHeatTransfer::write::Init { } {
-    # Namespace variables inicialization
+    # Namespace variables initialization
     variable ConjugateHeatTransferConditions
     set ConjugateHeatTransferConditions(temp) 0
     unset ConjugateHeatTransferConditions(temp)
 
     SetAttribute main_script_file "MainKratos.py"
-    #SetAttribute main_script_file "KratosConjugateHeatTransfer.py"
-    SetAttribute materials_file "ConjugateHeatTransferMaterials.json"
+    #SetAttribute materials_file "ConjugateHeatTransferMaterials.json"
     SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
 
@@ -75,6 +74,7 @@ proc ConjugateHeatTransfer::write::PrepareBuoyancy { } {
 }
 
 proc ConjugateHeatTransfer::write::WriteMaterialsFile { } {
+    Buoyancy::write::WriteMaterialsFile
     ConvectionDiffusion::write::WriteMaterialsFile
 }
 
