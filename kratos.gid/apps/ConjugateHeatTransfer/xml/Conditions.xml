@@ -3,7 +3,7 @@
 
   <!-- Fluid side -->
   <ConditionItem n="FluidNoSlipInterface2D" pn="Fluid interface" ImplementedInFile=".cpp" Interval="False"
-	ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
 	ElementType="Line" ProcessName="PythonProcess" help="Process to set the interface flag.">
     <TopologyFeatures>
@@ -15,7 +15,7 @@
   </ConditionItem>
 
   <ConditionItem n="FluidNoSlipInterface3D" pn="Fluid interface" ImplementedInFile=".cpp" Interval="False"
-	ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
 	ElementType="Surface" ProcessName="PythonProcess" help="Process to set the interface flag.">
     <TopologyFeatures>

@@ -195,9 +195,6 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
         }
     }
     
-    set fluid_interface_path "$fluid_conditions/condition\[@n='FluidNoSlipInterface$nd'\]"
-    set fluid_interface [customlib::AddConditionGroupOnXPath $fluid_interface_path Fluid_Right_Wall]
-    $fluid_interface setAttribute ov $cond_type
 
     # Fluid thermic initial condition
     set thermic_fluid_BC_xpath [spdAux::getRoute "Buoyancy_CNVDFFNodalConditions"]
@@ -216,6 +213,10 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
             W "Warning - Couldn't find property Fluid Temperature $prop"
         }
     }
+    set thermic_fluid_BC_xpath [spdAux::getRoute "Buoyancy_CNVDFFBC"]
+    set thermic_fluid_interface_path "$thermic_fluid_BC_xpath/condition\[@n='FluidNoSlipInterface$nd'\]"
+    set thermic_fluid_interface [customlib::AddConditionGroupOnXPath $thermic_fluid_interface_path Fluid_Right_Wall]
+    $thermic_fluid_interface setAttribute ov $cond_type
     
     # Thermal Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
