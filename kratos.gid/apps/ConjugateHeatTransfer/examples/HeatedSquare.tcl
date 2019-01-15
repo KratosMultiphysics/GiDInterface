@@ -94,6 +94,10 @@ proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
     GiD_Groups edit color Fluid_Bottom_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Fluid_Bottom_Wall lines 4
 
+    GiD_Groups create Fluid_Bottom_Left_Corner
+    GiD_Groups edit color Fluid_Bottom_Left_Corner "#3b3b3bff"
+    GiD_EntitiesGroups assign Fluid_Bottom_Left_Corner points 1
+
     # Create the groups for the heating structure
     GiD_Groups create Heating
     GiD_Groups edit color Heating "#d12f1f"
@@ -179,10 +183,18 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     $no_slip_cond setAttribute ov $cond_type
     set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Bottom_Wall]
     $no_slip_cond setAttribute ov $cond_type
+    set outletNode [customlib::AddConditionGroupOnXPath "$fluid_conditions/condition\[@n='Outlet$nd'\]" Fluid_Bottom_Left_Corner]
+    $outletNode setAttribute ov Point
+    set props [list value 0.0]
+    foreach {prop val} $props {
+         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Outlet $prop"
+        }
+    }
     
-    set fluid_interface_path "$fluid_conditions/condition\[@n='FluidNoSlipInterface$nd'\]"
-    set fluid_interface [customlib::AddConditionGroupOnXPath $fluid_interface_path Fluid_Right_Wall]
-    $fluid_interface setAttribute ov $cond_type
 
     # Fluid thermic initial condition
     set thermic_fluid_BC_xpath [spdAux::getRoute "Buoyancy_CNVDFFNodalConditions"]
@@ -201,6 +213,10 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
             W "Warning - Couldn't find property Fluid Temperature $prop"
         }
     }
+    set thermic_fluid_BC_xpath [spdAux::getRoute "Buoyancy_CNVDFFBC"]
+    set thermic_fluid_interface_path "$thermic_fluid_BC_xpath/condition\[@n='FluidNoSlipInterface$nd'\]"
+    set thermic_fluid_interface [customlib::AddConditionGroupOnXPath $thermic_fluid_interface_path Fluid_Right_Wall]
+    $thermic_fluid_interface setAttribute ov $cond_type
     
     # Thermal Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
