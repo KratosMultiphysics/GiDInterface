@@ -208,8 +208,23 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
         }
     }
 
-    # Fluid thermal interface
+    # Fluid thermmal boundary condition
     set fluid_thermal_boundary_conditions_xpath [spdAux::getRoute "Buoyancy_CNVDFFBC"]
+    set fluid_imposed_temperature "$fluid_thermal_boundary_conditions_xpath/condition\[@n='ImposedTemperature$nd'\]"
+    set fluid_thermal_node [customlib::AddConditionGroupOnXPath $fluid_imposed_temperature Fluid_Left_Top_Wall]
+    $fluid_thermal_node setAttribute ov $cond_type
+    set props [list value 293.5]
+    foreach {prop val} $props {
+         set propnode [$fluid_thermal_node selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property ImposedTemperature $prop"
+        }
+    }
+
+
+    # Fluid thermal interface
     set fluid_thermal_interface_path "$fluid_thermal_boundary_conditions_xpath/condition\[@n='FluidThermalInterface$nd'\]"
     set fluid_interface [customlib::AddConditionGroupOnXPath $fluid_thermal_interface_path Fluid_Bottom_Wall]
     $fluid_interface setAttribute ov $cond_type
@@ -283,7 +298,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     $thermal_interface setAttribute ov $cond_type
 
     # Time parameters
-    set time_parameters [list EndTime 100 DeltaTime 0.5]
+    set time_parameters [list EndTime 100 DeltaTime 0.1]
     set time_params_path [spdAux::getRoute "TimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
