@@ -58,7 +58,6 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
 
     set coupling_settings [dict create]
     dict set coupling_settings max_iteration [write::getValue CHTGeneralParameters max_iteration]
-    dict set coupling_settings relaxation_factor  [write::getValue CHTGeneralParameters relaxation_factor]
     dict set coupling_settings temperature_relative_tolerance  [write::getValue CHTGeneralParameters temperature_relative_tolerance]
     dict set coupling_settings fluid_interfaces_list $fluid_interfaces_list
     dict set coupling_settings solid_interfaces_list $solid_interfaces_list
