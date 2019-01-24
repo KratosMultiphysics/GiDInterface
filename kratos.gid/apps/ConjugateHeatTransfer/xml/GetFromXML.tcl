@@ -32,9 +32,16 @@ proc ConjugateHeatTransfer::xml::CustomTree { args } {
 
     apps::setActiveAppSoft ConjugateHeatTransfer
 
+    # Remove the solid thermal interface condition in the fluid domain section of the tree
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'SolidThermalInterface2D'\]"]
     if {$result_node ne "" } {$result_node delete}
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'SolidThermalInterface3D'\]"]
+    if {$result_node ne "" } {$result_node delete}
+
+    # Remove the fluid thermal interface condition in the solid domain section of the tree
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute CNVDFFBC]/condition\[@n = 'FluidThermalInterface2D'\]"]
+    if {$result_node ne "" } {$result_node delete}
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute CNVDFFBC]/condition\[@n = 'FluidThermalInterface3D'\]"]
     if {$result_node ne "" } {$result_node delete}
 }
 
