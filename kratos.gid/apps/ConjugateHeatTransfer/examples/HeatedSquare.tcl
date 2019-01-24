@@ -22,7 +22,7 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry3D {args} {
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
-    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape 
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
 }
 
 proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
@@ -38,7 +38,7 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
     foreach {x y z} $coordinates {
         lappend fluid_points [GiD_Geometry create point append Fluid $x $y $z]
     }
-    
+
     set coordinates [list 1 1 0 2 1 0 2 0 0 1 0 0]
     set convection_points [list ]
     foreach {x y z} $coordinates {
@@ -194,7 +194,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
             W "Warning - Couldn't find property Outlet $prop"
         }
     }
-    
+
 
     # Fluid thermic initial condition
     set thermic_fluid_BC_xpath [spdAux::getRoute "Buoyancy_CNVDFFNodalConditions"]
@@ -214,10 +214,10 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
         }
     }
     set thermic_fluid_BC_xpath [spdAux::getRoute "Buoyancy_CNVDFFBC"]
-    set thermic_fluid_interface_path "$thermic_fluid_BC_xpath/condition\[@n='FluidNoSlipInterface$nd'\]"
+    set thermic_fluid_interface_path "$thermic_fluid_BC_xpath/condition\[@n='FluidThermalInterface$nd'\]"
     set thermic_fluid_interface [customlib::AddConditionGroupOnXPath $thermic_fluid_interface_path Fluid_Right_Wall]
     $thermic_fluid_interface setAttribute ov $cond_type
-    
+
     # Thermal Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Heating]
@@ -263,8 +263,8 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
             W "Warning - Couldn't find property ImposedTemperature $prop"
         }
     }
-    
-    set thermalcond "$thermalConditions/condition\[@n='ConvectionDiffusionInterface$nd'\]"
+
+    set thermalcond "$thermalConditions/condition\[@n='SolidThermalInterface$nd'\]"
     set thermal_interface [customlib::AddConditionGroupOnXPath $thermalcond Heating_Left_Wall]
     $thermal_interface setAttribute ov $cond_type
 
@@ -281,7 +281,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
-    
+
     # Parallelism
     set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
     set time_params_path [spdAux::getRoute "Parallelization"]
@@ -296,6 +296,6 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
 # proc ConjugateHeatTransfer::examples::AddCuts { } {
 #     # Cuts
 #     set results [spdAux::getRoute "Results"]
-#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
+#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
 #     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 # }
