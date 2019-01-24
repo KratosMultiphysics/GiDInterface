@@ -2,7 +2,7 @@
 <ConditionList>
 
   <!-- Fluid side -->
-  <ConditionItem n="FluidThermalInterface2D" pn="Fluid interface" ImplementedInFile=".cpp" Interval="False"
+  <ConditionItem n="FluidThermalInterface2D" pn="Fluid thermal interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
 	ElementType="Line" ProcessName="PythonProcess" help="Process to set the interface flag.">
@@ -14,7 +14,7 @@
     </inputs>
   </ConditionItem>
 
-  <ConditionItem n="FluidThermalInterface3D" pn="Fluid interface" ImplementedInFile=".cpp" Interval="False"
+  <ConditionItem n="FluidThermalInterface3D" pn="Fluid thermal interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
 	ElementType="Surface" ProcessName="PythonProcess" help="Process to set the interface flag.">
@@ -28,7 +28,7 @@
   </ConditionItem>
 
 <!-- Structural side -->
-  <ConditionItem n="SolidThermalInterface2D" pn="Convection diffusion interface" ImplementedInFile=".cpp" Interval="False"
+  <ConditionItem n="SolidThermalInterface2D" pn="Solid thermal interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="ConvectionDiffusion"
 	ElementType="Line" ProcessName="PythonProcess" help="Process to set the interface flag.">
@@ -37,7 +37,7 @@
     </TopologyFeatures>
   </ConditionItem>
 
-  <ConditionItem n="SolidThermalInterface3D" pn="Convection diffusion interface" ImplementedInFile=".cpp" Interval="False"
+  <ConditionItem n="SolidThermalInterface3D" pn="Solid thermal interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="ConvectionDiffusion"
 	ElementType="Surface" ProcessName="PythonProcess" help="Process to set the interface flag.">
