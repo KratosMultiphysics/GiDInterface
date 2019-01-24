@@ -11,8 +11,8 @@ proc ConjugateHeatTransfer::xml::Init { } {
     Model::getConditions Conditions.xml
 
     Model::getMaterials "../../ConvectionDiffusion/xml/Materials.xml"
-    
-    Model::getConstitutiveLaws "../../ConvectionDiffusion/xml/ConstitutiveLaws.xml" 
+
+    Model::getConstitutiveLaws "../../ConvectionDiffusion/xml/ConstitutiveLaws.xml"
 }
 
 proc ConjugateHeatTransfer::xml::getUniqueName {name} {
@@ -31,10 +31,10 @@ proc ConjugateHeatTransfer::xml::CustomTree { args } {
     Buoyancy::xml::CustomTree
 
     apps::setActiveAppSoft ConjugateHeatTransfer
-    
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'ConvectionDiffusionInterface2D'\]"]
+
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'SolidThermalInterface2D'\]"]
     if {$result_node ne "" } {$result_node delete}
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'ConvectionDiffusionInterface3D'\]"]
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Buoyancy_CNVDFFBC]/condition\[@n = 'SolidThermalInterface3D'\]"]
     if {$result_node ne "" } {$result_node delete}
 }
 
