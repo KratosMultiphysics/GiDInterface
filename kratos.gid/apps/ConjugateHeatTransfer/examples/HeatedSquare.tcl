@@ -185,7 +185,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     $no_slip_cond setAttribute ov $cond_type
     set outletNode [customlib::AddConditionGroupOnXPath "$fluid_conditions/condition\[@n='Outlet$nd'\]" Fluid_Bottom_Left_Corner]
     $outletNode setAttribute ov Point
-    set props [list value 0.0]
+    set props [list value 9800.0]
     foreach {prop val} $props {
          set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -239,7 +239,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     spdAux::AddIntervalGroup Heating "Heating//Initial"
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Heating//Initial"]
     $thermalnodNode setAttribute ov $body_type
-    set props [list value 100]
+    set props [list ByFunction Yes function_value "193*x - 93"]
     foreach {prop val} $props {
          set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
