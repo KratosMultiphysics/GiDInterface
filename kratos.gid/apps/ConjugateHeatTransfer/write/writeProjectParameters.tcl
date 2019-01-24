@@ -53,8 +53,8 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     dict set solver_settings_dict solid_domain_solver_settings thermal_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
 
     # Coupling settings
-    set fluid_interfaces_list [write::GetSubModelPartFromCondition FLBC FluidThermalInterface$::Model::SpatialDimension]
     set solid_interfaces_list [write::GetSubModelPartFromCondition CNVDFFBC SolidThermalInterface$::Model::SpatialDimension]
+    set fluid_interfaces_list [write::GetSubModelPartFromCondition Buoyancy_CNVDFFBC FluidThermalInterface$::Model::SpatialDimension]
 
     set coupling_settings [dict create]
     dict set coupling_settings max_iteration [write::getValue CHTGeneralParameters max_iteration]
