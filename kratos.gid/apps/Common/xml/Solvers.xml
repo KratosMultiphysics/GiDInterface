@@ -6,7 +6,7 @@
         </inputs>
     </solver>
 
-    <solver n="SuperLUSolver" pn="SuperLU" SolverType="Standard" Parallelism="OpenMP">
+    <solver n="ExternalSolversApplication.SuperLUSolver" pn="SuperLU" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
             <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>
@@ -68,14 +68,14 @@
         </inputs>
     </solver>
     -->
-    
+
     <!--Trilinos Solvers-->
     <solver n="AutomaticMPI" pn="Automatic" SolverType="Standard" Parallelism="MPI" help="Let Kratos to automatically set the default solver according to the selected strategy.">
         <inputs>
         </inputs>
     </solver>
 
-    <solver n="MultiLevelSolver" pn="Multilevel Solver" SolverType="Standard" Parallelism="MPI">
+    <solver n="multi_level" pn="Multilevel Solver" SolverType="Standard" Parallelism="MPI">
         <inputs>
 			<parameter n="max_iteration" pn="Max iterations" type="integer" v="200" help=""/>
 			<parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
@@ -86,7 +86,7 @@
         </inputs>
     </solver>
 
-    <solver n="AztecSolver" pn="Aztec Solver" SolverType="Standard" Parallelism="MPI">
+    <solver n="aztec" pn="Aztec Solver" SolverType="Standard" Parallelism="MPI">
         <inputs>
 			<parameter n="max_iteration" pn="Max iterations" type="integer" v="200" help=""/>
 			<parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
@@ -97,7 +97,7 @@
         </inputs>
     </solver>
 
-    <solver n="AmgclMPISolver" pn="Trilinos AMGCL" SolverType="Standard" Parallelism="MPI">
+    <solver n="amgcl" pn="Trilinos AMGCL" SolverType="Standard" Parallelism="MPI">
         <inputs>
 			<parameter n="max_iteration" pn="Max iterations" type="integer" v="200" help=""/>
 			<parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
@@ -110,7 +110,7 @@
         </inputs>
     </solver>
 
-    <solver n="Klu" pn="KLU" SolverType="Standard" Parallelism="MPI">
+    <solver n="klu" pn="KLU" SolverType="Standard" Parallelism="MPI">
         <inputs>
 			<parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>
