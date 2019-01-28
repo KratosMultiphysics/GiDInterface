@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+
+    <Process n="ApplyThermalInterfaceProcess" pn="Apply thermal interface process" python_module="apply_thermal_interface_process" kratos_module="KratosMultiphysics.ConvectionDiffusionApplication">
+		<inputs>
+		</inputs>
+    </Process>
+
+</ProcessList>
