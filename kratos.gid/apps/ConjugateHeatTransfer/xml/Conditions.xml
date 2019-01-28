@@ -10,7 +10,7 @@
       <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <inputs>
-      <parameter n="mapper_face" pn="Face" v="unique" values="Unique,Positive,Negative" type="combo"/>
+      
     </inputs>
   </ConditionItem>
 
@@ -23,7 +23,7 @@
       <item  GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
     </TopologyFeatures>
     <inputs>
-      <parameter n="mapper_face" pn="Face" v="unique" values="Unique,Positive,Negative" type="combo"/>
+      
     </inputs>
   </ConditionItem>
 
