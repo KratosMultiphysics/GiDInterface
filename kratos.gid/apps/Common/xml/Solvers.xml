@@ -21,7 +21,7 @@
         </inputs>
     </solver>
 
-    <solver n="GMRESSolver" pn="GMRES" SolverType="Standard" Parallelism="OpenMP">
+    <solver n="ExternalSolversApplication.GMRESSolver" pn="GMRES" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="200" help=""/>
             <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
