@@ -6,7 +6,7 @@ proc ::DemLauncher::Init { } {
     variable available_apps
 
     set dir [apps::getMyDir "DemLauncher"]
-    set available_apps [list DEM DEMPFEM]
+    set available_apps [list DEM DEMPFEM FluidDEM]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
     
