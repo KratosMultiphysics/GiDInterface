@@ -45,8 +45,8 @@ proc Fluid::xml::CustomTree { args } {
 }
 
 # Usage 
-# Fluid::xml::CreateNewInlet Inlet true "6*y*(1-y)"
-proc Fluid::xml::CreateNewInlet { base_group_name {uses_formula false} {value 10.0} {direction automatic_inwards_normal} {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} {interval_data {new true name inlet1 ini 0 end "End"}} } {
+# Fluid::xml::CreateNewInlet Inlet {new false name Total} true "6*y*(1-y)"
+proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name inlet1 ini 0 end "End"}} {uses_formula false} {value 10.0} {direction automatic_inwards_normal} {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
     # Fluid Inlet
     set nd $::Model::SpatialDimension
     set condtype line
