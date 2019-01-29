@@ -81,7 +81,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict time_stepping $timeSteppingDict
 
     # Solution strategy parameters and Solvers
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict STSolStrat STScheme STStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
     # Submodelpart lists
