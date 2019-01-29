@@ -187,23 +187,8 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
 
     # Fluid Inlet
     set function {1.5*(0.5*(1-cos(0.5*pi*t))*1.0)*(4.0/0.1681)*y*(0.41-y) if t<2.0 else 1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)}
+    Fluid::xml::CreateNewInlet Inlet {new false name Total} true $function
     
-    GiD_Groups create "Inlet//Total"
-    GiD_Groups edit state "Inlet//Total" hidden
-    spdAux::AddIntervalGroup Inlet "Inlet//Total"
-    set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet "Inlet//Total"]
-    $inletNode setAttribute ov $condtype
-    set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval Total]
-    foreach {prop val} $props {
-            set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-            if {$propnode ne "" } {
-                $propnode setAttribute v $val
-            } else {
-            W "Warning - Couldn't find property Inlet $prop"
-        }
-    }
-    
-
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]

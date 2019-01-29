@@ -141,17 +141,7 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
     
     # Fluid Inlet
-    set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet Inlet]
-    $inletNode setAttribute ov $condtype
-    set props [list ByFunction No modulus 0.6067 direction automatic_inwards_normal Interval Total]
-    foreach {prop val} $props {
-         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Inlet $prop"
-        }
-    }  
+    Fluid::xml::CreateNewInlet Inlet {new false name Total} false 0.6067
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
