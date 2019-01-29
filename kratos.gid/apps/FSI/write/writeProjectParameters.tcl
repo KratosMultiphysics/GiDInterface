@@ -37,6 +37,8 @@ proc FSI::write::GetProblemDataDict { } {
 }
 
 proc FSI::write::GetSolverSettingsDict { } {
+    variable mdpa_names
+
     set solver_settings_dict [dict create]
     set currentStrategyId [write::getValue FSISolStrat]
     set currentCouplingSchemeId [write::getValue FSIScheme]
@@ -76,35 +78,15 @@ proc FSI::write::GetSolverSettingsDict { } {
     set fluid_interfaces_list [write::GetSubModelPartFromCondition FLBC $fluid_interface_uniquename]
     dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
     
-    return $solver_settings_dict
-    dict set FSIParametersDict solver_settings $solver_settings_dict
-
-    # Structural section
-    UpdateUniqueNames Structural
-    apps::setActiveAppSoft Structural
-    write::initWriteConfiguration [Structural::write::GetAttributes]
-
-    set StructuralParametersDict [Structural::write::getParametersEvent]
-    set current [dict get $StructuralParametersDict solver_settings model_import_settings input_filename]
-    dict set StructuralParametersDict solver_settings model_import_settings input_filename "${current}_Structural"
-
-    # Fluid section
-    UpdateUniqueNames Fluid
-    apps::setActiveAppSoft Fluid
-    write::initWriteConfiguration [Fluid::write::GetAttributes]
-
-    # Get the fluid parameters dict
-    set FluidParametersDict [Fluid::write::getParametersDict]
-
-    # Change the input_filename
-    set current [dict get $FluidParametersDict solver_settings model_import_settings input_filename]
-    dict set FluidParametersDict solver_settings model_import_settings input_filename "${current}_Fluid"
+    # Change the input_filenames
+    dict set solver_settings_dict structure_solver_settings model_import_settings input_filename [dict get $mdpa_names Structural]
+    dict set solver_settings_dict fluid_solver_settings model_import_settings input_filename [dict get $mdpa_names Fluid]
 
     # Add the MESH_DISPLACEMENT to the gid_output process
-    set gid_output [lindex [dict get $FluidParametersDict output_processes gid_output] 0]
-    set nodalresults [dict get $gid_output Parameters postprocess_parameters result_file_configuration nodal_results]
-    lappend nodalresults "MESH_DISPLACEMENT"
-    dict set gid_output Parameters postprocess_parameters result_file_configuration nodal_results $nodalresults
+    # set gid_output [lindex [dict get $FluidParametersDict output_processes gid_output] 0]
+    # set nodalresults [dict get $gid_output Parameters postprocess_parameters result_file_configuration nodal_results]
+    # lappend nodalresults "MESH_DISPLACEMENT"
+    # dict set gid_output Parameters postprocess_parameters result_file_configuration nodal_results $nodalresults
  
 
 }

@@ -186,17 +186,23 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
 
     # Fluid Inlet
-    set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet Inlet]
+    set function {1.5*(0.5*(1-cos(0.5*pi*t))*1.0)*(4.0/0.1681)*y*(0.41-y) if t<2.0 else 1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)}
+    
+    GiD_Groups create "Inlet//Total"
+    GiD_Groups edit state "Inlet//Total" hidden
+    spdAux::AddIntervalGroup Inlet "Inlet//Total"
+    set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet "Inlet//Total"]
     $inletNode setAttribute ov $condtype
-    set props [list ByFunction Yes function_modulus {1.5*(0.5*(1-cos(0.5*pi*t))*1.0)*(4.0/0.1681)*y*(0.41-y) if t<2.0 else 1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)} direction automatic_inwards_normal Interval Total]
+    set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval Total]
     foreach {prop val} $props {
-         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
+            set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
+            if {$propnode ne "" } {
+                $propnode setAttribute v $val
+            } else {
             W "Warning - Couldn't find property Inlet $prop"
         }
     }
+    
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
@@ -244,8 +250,13 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         #      }
         # }
     } {
+        set gname "FluidALEMeshFreeX//Total"
+        GiD_Groups create $gname
+        GiD_Groups edit state $gname hidden
+        spdAux::AddIntervalGroup FluidALEMeshFreeX $gname
+
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
-        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshFreeX]
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list constrainedX 0 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -256,7 +267,12 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
                 W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
              }
         }
-        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshFixXY]
+        
+        set gname "FluidALEMeshFixXY//Total"
+        GiD_Groups create $gname
+        GiD_Groups edit state $gname hidden
+        spdAux::AddIntervalGroup FluidALEMeshFixXY $gname
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -267,7 +283,11 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
                 W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
              }
         }
-        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement Cylinder]
+        set gname "Cylinder//Total"
+        GiD_Groups create $gname
+        GiD_Groups edit state $gname hidden
+        spdAux::AddIntervalGroup Cylinder $gname
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -338,8 +358,12 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     }
 
     # Structural Displacement
+    set gname "FixedDisplacement//Total"
+    GiD_Groups create $gname
+    GiD_Groups edit state $gname hidden
+    spdAux::AddIntervalGroup FixedDisplacement $gname
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
-    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement FixedDisplacement]
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement $gname]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
     set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
