@@ -137,9 +137,7 @@ proc FSI::examples::TreeAssignationHorizontalFlexibleBar {args} {
     }
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
-    # Fluid Interface
-    set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
-    
+
     # Fluid Inlet
     Fluid::xml::CreateNewInlet Inlet {new false name Total} false 0.6067
 
