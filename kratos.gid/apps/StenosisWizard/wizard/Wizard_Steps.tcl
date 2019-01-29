@@ -222,8 +222,8 @@ proc StenosisWizard::Wizard::LastStep { } {
     }
     
     
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
+    #gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
+    #gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
     spdAux::RequestRefresh
     
 }
