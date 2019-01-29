@@ -188,26 +188,10 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set no_slip_cond [customlib::AddConditionGroupOnXPath $fluid_noslip Fluid_Left_Bottom_Wall]
     $no_slip_cond setAttribute ov $cond_type
 
-    set fluid_inlet "$fluid_conditions/condition\[@n='AutomaticInlet$nd'\]"
-    set inlets [list Total 1 End "-32*(y**2)+48*y-16"]
-    foreach {interval_name ini end function} $inlets {
-        GiD_Groups create "Fluid_Left_Top_Wall//$interval_name"
-        GiD_Groups edit state "Fluid_Left_Top_Wall//$interval_name" hidden
-        spdAux::AddIntervalGroup Fluid_Left_Top_Wall "Fluid_Left_Top_Wall//$interval_name"
-        set inlet_node [customlib::AddConditionGroupOnXPath $fluid_inlet "Fluid_Left_Top_Wall//$interval_name"]
-        $inlet_node setAttribute ov $cond_type
-        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
-        foreach {prop val} $props {
-             set propnode [$inlet_node selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property Inlet $prop"
-            }
-        }
-    }
+    # Fluid inlet
+    Fluid::xml::CreateNewInlet Inlet {new false name Total} true "-32*(y**2)+48*y-16"
 
-    # Fluid thermmal boundary condition
+    # Fluid thermal boundary condition
     set fluid_thermal_boundary_conditions_xpath [spdAux::getRoute "Buoyancy_CNVDFFBC"]
     set fluid_imposed_temperature "$fluid_thermal_boundary_conditions_xpath/condition\[@n='ImposedTemperature$nd'\]"
     set fluid_thermal_node [customlib::AddConditionGroupOnXPath $fluid_imposed_temperature Fluid_Left_Top_Wall]

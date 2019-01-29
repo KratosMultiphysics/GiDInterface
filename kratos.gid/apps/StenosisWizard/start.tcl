@@ -2,12 +2,14 @@ namespace eval ::StenosisWizard {
     # Variable declaration
     variable dir
     variable kratos_name
+    variable attributes
 }
 
 proc ::StenosisWizard::Init { } {
     # Variable initialization
     variable dir
     variable kratos_name
+    variable attributes
     
     # Init Working directory
     set dir [apps::getMyDir "StenosisWizard"]
@@ -18,6 +20,8 @@ proc ::StenosisWizard::Init { } {
     set kratos_name $::Fluid::kratos_name
     # Don't open the tree
     set ::spdAux::TreeVisibility 0
+
+    dict set attributes UseIntervals 1
     
     # Enable the Wizard Module
     Kratos::LoadWizardFiles
@@ -54,6 +58,12 @@ proc ::StenosisWizard::StartWizardWindow { } {
 }
 proc ::StenosisWizard::CustomToolbarItems { } {
     return "-1"    
+}
+proc ::StenosisWizard::GetAttribute {name} {
+    variable attributes
+    set value ""
+    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
+    return $value
 }
 
 ::StenosisWizard::Init
