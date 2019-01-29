@@ -157,8 +157,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
 
     # Solution strategy set only transient
     spdAux::SetValueOnTreeItem v "transient" CNVDFFSolStrat
-    spdAux::SetValueOnTreeItem v "ExternalSolversApplication.SuperLUSolver" CNVDFFtransientlinear_solver_settings Solver
-
+    
     # Fluid Parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
