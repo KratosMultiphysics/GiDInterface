@@ -39,7 +39,7 @@ proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
         lappend fluid_points [GiD_Geometry create point append Fluid $x $y $z]
     }
 
-    set coordinates [list 30 -0.5 0 30 0 0 0 0 0 0 -0.5 0]
+    set coordinates [list 30 -2.0 0 30 0 0 0 0 0 0 -2.0 0]
     set convection_points [list ]
     foreach {x y z} $coordinates {
         lappend convection_points [GiD_Geometry create point append HeatSource $x $y $z]
@@ -161,11 +161,11 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
 
     # Solution strategy set only transient
     spdAux::SetValueOnTreeItem v "transient" CNVDFFSolStrat
-    
+
     # Fluid parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
-    set props [list Element Monolithic$nd Material Water ConstitutiveLaw Newtonian]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.001875 THERMAL_CONDUCTIVITY 1.0 SPECIFIC_HEAT 0.002640845
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
