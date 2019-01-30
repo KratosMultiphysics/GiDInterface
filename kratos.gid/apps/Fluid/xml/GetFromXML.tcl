@@ -62,7 +62,7 @@ proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name 
     }
     GiD_Groups create "$base_group_name//$interval_name"
     GiD_Groups edit state "$base_group_name//$interval_name" hidden
-    spdAux::AddIntervalGroup Inlet "$base_group_name//$interval_name"
+    spdAux::AddIntervalGroup $base_group_name "$base_group_name//$interval_name"
     set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet "$base_group_name//$interval_name"]
     $inletNode setAttribute ov $condtype
     if {[write::isBooleanTrue $uses_formula]} {
