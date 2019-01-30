@@ -189,7 +189,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     $no_slip_cond setAttribute ov $cond_type
 
     # Fluid inlet
-    Fluid::xml::CreateNewInlet Inlet {new false name Total} true "-32*(y**2)+48*y-16"
+    Fluid::xml::CreateNewInlet Fluid_Left_Top_Wall {new false name Total} true "-32*(y**2)+48*y-16"
 
     # Fluid thermal boundary condition
     set fluid_thermal_boundary_conditions_xpath [spdAux::getRoute "Buoyancy_CNVDFFBC"]
