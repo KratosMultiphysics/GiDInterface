@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-    <ConditionItem n="HeatFlux2D" pn="Heat flux" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Line" ProcessName="AssignScalarVariableProcess" help="" units="W/m^2" unit_magnitude="Power/L^2">
+    <ConditionItem n="HeatFlux2D" pn="Heat flux" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Line" ProcessName="AssignScalarVariableProcess" help="" units="W/m^2" unit_magnitude="Power/L^2">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
         </TopologyFeatures>
@@ -12,10 +12,10 @@
         <outputs></outputs>
     </ConditionItem>
 
-    <ConditionItem n="HeatFlux3D" pn="Heat flux" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Surface" ProcessName="AssignScalarVariableProcess" help="" units="W/m^2" unit_magnitude="Power/L^2">
+    <ConditionItem n="HeatFlux3D" pn="Heat flux" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Surface" ProcessName="AssignScalarVariableProcess" help="" units="W/m^2" unit_magnitude="Power/L^2">
         <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="Condition3D3N"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="Condition3D4N"/>
+            <item GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
+            <item GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
@@ -25,10 +25,9 @@
         <outputs></outputs>
     </ConditionItem>
 
-    <ConditionItem n="ImposedTemperature2D" pn="Imposed temperature" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="TEMPERATURE" App="ConvectionDiffusion" ElementType="Line,Surface" ProcessName="AssignScalarVariableProcess" help="Fixes the temperature to a constant scalar value" units="K" unit_magnitude="Temp">
+    <ConditionItem n="ImposedTemperature2D" pn="Imposed temperature" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="TEMPERATURE" App="ConvectionDiffusion" ElementType="Line,Surface" ProcessName="AssignScalarVariableProcess" help="Fixes the temperature to a constant scalar value" units="K" unit_magnitude="Temp">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
-            <item GeometryType="Triangle" nodes="3" KratosName="Condition2D3N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
@@ -38,13 +37,11 @@
         <outputs></outputs>
     </ConditionItem>
 
-    <ConditionItem n="ImposedTemperature3D" pn="Imposed temperature" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="TEMPERATURE" App="ConvectionDiffusion" ElementType="Line,Surface,Volume" ProcessName="AssignScalarVariableProcess" help="Fixes the temperature to a constant scalar value." units="K" unit_magnitude="Temp">
+    <ConditionItem n="ImposedTemperature3D" pn="Imposed temperature" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="TEMPERATURE" App="ConvectionDiffusion" ElementType="Line,Surface,Volume" ProcessName="AssignScalarVariableProcess" help="Fixes the temperature to a constant scalar value." units="K" unit_magnitude="Temp">
         <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
-            <item GeometryType="Triangle" nodes="3" KratosName="Condition3D3N"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="Condition3D4N"/>
-            <item GeometryType="Tetrahedra" nodes="4" KratosName="Condition3D4N"/>
-            <item GeometryType="Hexahedra" nodes="8" KratosName="Condition3D8N"/>
+            <item GeometryType="Line" nodes="2" KratosName="Condition3D2N"/>
+            <item GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
+            <item GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
