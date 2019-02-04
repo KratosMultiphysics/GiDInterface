@@ -126,6 +126,7 @@ namespace eval Kratos {
 
 proc Kratos::InitGIDProject { dir } {
     variable kratos_private
+    uplevel 1 [list source [file join $dir scripts Quicktest.tcl]]
     variable must_quit
     variable must_write_calc_data
     variable must_exist_calc_data
@@ -453,4 +454,9 @@ proc Kratos::PrintArray {a {pattern *}} {
         set nameString [format %s(%s) $a $name]
         W "[format "%-*s = %s" $maxl $nameString $array($name)]"
     }
+}
+
+proc ::Kratos::Quicktest {example_app example_dim example_cmd} {
+    apps::setActiveApp Examples
+    ::Examples::LaunchExample $example_app $example_dim $example_cmd
 }
