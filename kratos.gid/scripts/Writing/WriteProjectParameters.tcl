@@ -124,7 +124,7 @@ proc write::GetDefaultOutputDictVtk { {appid ""} } {
     dict set resultDict output_control_type step
     if {$outputCT eq "time"} {set frequency 1} {set frequency [getValue $results_UN OutputDeltaStep]}
     dict set resultDict output_frequency               $frequency
-    dict set resultDict file_format                    "ascii"
+    dict set resultDict file_format                    [getValue $results_UN VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "true"
     dict set resultDict folder_name                    "vtk_output"
