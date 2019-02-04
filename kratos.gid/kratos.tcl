@@ -126,7 +126,6 @@ namespace eval Kratos {
 
 proc Kratos::InitGIDProject { dir } {
     variable kratos_private
-    uplevel 1 [list source [file join $dir scripts Quicktest.tcl]]
     variable must_quit
     variable must_write_calc_data
     variable must_exist_calc_data
