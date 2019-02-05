@@ -287,7 +287,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     $thermal_interface setAttribute ov $cond_type
 
     # Time parameters
-    set time_parameters [list EndTime 100 DeltaTime 1.0]
+    set time_parameters [list EndTime 500 DeltaTime 2.5]
     set time_params_path [spdAux::getRoute "TimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
