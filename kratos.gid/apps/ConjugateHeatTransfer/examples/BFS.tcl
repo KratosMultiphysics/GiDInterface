@@ -39,7 +39,7 @@ proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
         lappend fluid_points [GiD_Geometry create point append Fluid $x $y $z]
     }
 
-    set coordinates [list 30 -0.5 0 30 0 0 0 0 0 0 -0.5 0]
+    set coordinates [list 30 -2.0 0 30 0 0 0 0 0 0 -2.0 0]
     set convection_points [list ]
     foreach {x y z} $coordinates {
         lappend convection_points [GiD_Geometry create point append HeatSource $x $y $z]
@@ -161,11 +161,11 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
 
     # Solution strategy set only transient
     spdAux::SetValueOnTreeItem v "transient" CNVDFFSolStrat
-    
+
     # Fluid parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
-    set props [list Element Monolithic$nd Material Water ConstitutiveLaw Newtonian]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.001875 CONDUCTIVITY 1.0 SPECIFIC_HEAT 0.002640845]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -189,14 +189,14 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     $no_slip_cond setAttribute ov $cond_type
 
     # Fluid inlet
-    Fluid::xml::CreateNewInlet Fluid_Left_Top_Wall {new false name Total} true "-32*(y**2)+48*y-16"
+    Fluid::xml::CreateNewInlet Fluid_Left_Top_Wall {new false name Total} true "-24*(y**2)+36*y-12"
 
     # Fluid thermal boundary condition
     set fluid_thermal_boundary_conditions_xpath [spdAux::getRoute "Buoyancy_CNVDFFBC"]
     set fluid_imposed_temperature "$fluid_thermal_boundary_conditions_xpath/condition\[@n='ImposedTemperature$nd'\]"
     set fluid_thermal_node [customlib::AddConditionGroupOnXPath $fluid_imposed_temperature Fluid_Left_Top_Wall]
     $fluid_thermal_node setAttribute ov $cond_type
-    set props [list value 293.5]
+    set props [list value 273.15]
     foreach {prop val} $props {
          set propnode [$fluid_thermal_node selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -205,7 +205,6 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
             W "Warning - Couldn't find property ImposedTemperature $prop"
         }
     }
-
 
     # Fluid thermal interface
     set fluid_thermal_interface_path "$fluid_thermal_boundary_conditions_xpath/condition\[@n='FluidThermalInterface$nd'\]"
@@ -220,7 +219,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     spdAux::AddIntervalGroup Fluid "Fluid//Initial"
     set thermic_fluid_temperature_node [customlib::AddConditionGroupOnXPath $thermic_fluid_temperature "Fluid//Initial"]
     $thermic_fluid_temperature_node setAttribute ov $body_type
-    set props [list ByFunction Yes function_value "293.5 if y > 0.5 else 393.15 - 100*y/0.5"]
+    set props [list value 273.15]
     foreach {prop val} $props {
          set propnode [$thermic_fluid_temperature_node selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -230,10 +229,17 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
         }
     }
 
+    # Fluid Boussinesq settings
+    set fluid_boussinesq_settings_xpath [spdAux::getRoute "Buoyancy_Boussinesq"]
+    set fluid_boussinesq_params [list gravity "0.0,0.0,0.0" ambient_temperature 273.15]
+    foreach {field value} $fluid_boussinesq_params {
+        [$root selectNodes "$fluid_boussinesq_settings_xpath/value\[@n = '$field'\]"] setAttribute v $value
+    }
+
     # Solid parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Heating]
-    set props [list Element EulerianConvDiff$nd Material Gold DENSITY 19300.0 CONDUCTIVITY 310 SPECIFIC_HEAT 125.6]
+    set props [list Element EulerianConvDiff$nd DENSITY 0.0 CONDUCTIVITY 10 SPECIFIC_HEAT 0.0]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -251,7 +257,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     spdAux::AddIntervalGroup Heating "Heating//Initial"
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Heating//Initial"]
     $thermalnodNode setAttribute ov $body_type
-    set props [list value 393.15]
+    set props [list value 273.15]
     foreach {prop val} $props {
          set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -266,7 +272,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Heating_Bottom_Wall]
     $thermalNode setAttribute ov $cond_type
-    set props [list value 393.15]
+    set props [list value 274.15]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -281,7 +287,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     $thermal_interface setAttribute ov $cond_type
 
     # Time parameters
-    set time_parameters [list EndTime 100 DeltaTime 0.1]
+    set time_parameters [list EndTime 500 DeltaTime 2.5]
     set time_params_path [spdAux::getRoute "TimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
@@ -295,10 +301,17 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     }
 
     # Parallelism
-    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set time_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+    set parallelism_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set parallelism_params_path [spdAux::getRoute "Parallelization"]
+    foreach {n v} $parallelism_parameters {
+        [$root selectNodes "$parallelism_params_path/value\[@n = '$n'\]"] setAttribute v $v
+    }
+
+    # Coupling settings
+    set coupling_settings [list max_iteration 25 temperature_relative_tolerance 1e-6]
+    set coupling_settings_path [spdAux::getRoute "CHTGeneralParameters"]
+    foreach {n v} $coupling_settings {
+        [$root selectNodes "$coupling_settings_path/value\[@n = '$n'\]"] setAttribute v $v
     }
 
     spdAux::RequestRefresh
