@@ -272,7 +272,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Heating_Bottom_Wall]
     $thermalNode setAttribute ov $cond_type
-    set props [list value 274.15]
+    set props [list value 274.15 Interval "Total"]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
