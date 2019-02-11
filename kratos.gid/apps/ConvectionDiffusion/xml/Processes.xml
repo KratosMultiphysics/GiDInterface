@@ -1,36 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <ProcessList>
-    
-    <!-- <Process n="ApplySlipProcess" pn="Scalar value" python_module="apply_slip_process"
-        kratos_module="KratosMultiphysics.ConvectionDiffusionApplication">
-		<inputs>
-		</inputs>
-    </Process>
 
-    <Process n="ApplyNoSlipProcess" pn="Scalar value" python_module="apply_noslip_process"
-        kratos_module="KratosMultiphysics.ConvectionDiffusionApplication">
-		<inputs>
-		</inputs>
-    </Process>
-
-    <Process n="ApplyInletProcess" pn="Assign automatic inlet process" python_module="apply_inlet_process"
-        kratos_module="KratosMultiphysics.ConvectionDiffusionApplication" help="" >
+    <Process n="ApplyThermalFaceProcess" pn="Apply thermal face process" python_module="apply_thermal_face_process"
+        kratos_module="KratosMultiphysics.ConvectionDiffusionApplication" help="Process to set the thermal face properties" >
         <inputs>
-            <parameter n="modulus" pn="Value" type="double" v="1.0" function="1" has_units="1"/>
-            <parameter n="direction" pn="Normal direction" type="combo" values="automatic_inwards_normal,automatic_outwards_normal" pvalues="Inwards,Outwards" v="automatic_inwards_normal" help=""/>
-        </inputs>
-    </Process>
-
-    <Process n="ApplyOutletProcess" pn="Assign outlet process" python_module="apply_outlet_process"
-        kratos_module="KratosMultiphysics.ConvectionDiffusionApplication" help="" >
-        <inputs>
-            <parameter n="constrained" pn="Imposed" type="bool" v="1" />
-            <parameter n="value" pn="Value" type="double" function="1" v="0.0" has_units="1"/>
-			<parameter n="hydrostatic_outlet" pn="Add hydrostatic contribution" type="bool" v="false" help="If true, adds the hydrostatic pressure component to the outlet pressure.">
-				<parameter parent="true" n="h_top" pn="Top height" type="double" v="0.0" unit_magnitude="L" units="m" help="Fluid height above the outlet. If equals 0.0 triangular distribution is considered."/>
+			<parameter n="ambient_temperature" pn="Ambient temperature" type="double" v="273.15" function="0" help="Set the ambient temperature. Only required if convection or radiation are considered" units="K" unit_magnitude="Temp"/>
+			<parameter n="add_ambient_radiation" pn="Add ambient radiation" type="bool" v="false" help="Add the ambient radiation contribution">
+                <parameter parent="true" n="emissivity" pn="Emissivity" type="double" v="0.0" />
+			</parameter>
+			<parameter n="add_ambient_convection" pn="Add ambient convection" type="bool" v="false" help="Add the ambient convection contribution">
+                <parameter parent="true" n="convection_coefficient" pn="Convection coefficient" type="double" v="0.0" units="W/m^2/K" unit_magnitude="Power/L^2/Temp"/>
 			</parameter>
         </inputs>
-    </Process> -->
+    </Process>
 
 </ProcessList>
