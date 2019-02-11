@@ -136,7 +136,7 @@ proc FluidDEM::write::writeParametersEvent { } {
     PfemFluid::write::writeParametersEvent
 }
 
-proc PfemFluid::write::GetTimeSettings { } {
+proc FluidDEM::write::GetTimeSettings { } {
     set result [dict create]
     dict set result time_step [write::getValue PFEMFLUID_TimeParameters PFEMDeltaTime]
     dict set result start_time 0.0
@@ -165,6 +165,6 @@ proc DEM::write::GetGravity { } {
     return [list $gx $gy $gz]
 }
 
-proc PfemFluid::write::GetGravity { } {
+proc FluidDEM::write::GetGravity { } {
     return [DEM::write::GetGravity]
 }
