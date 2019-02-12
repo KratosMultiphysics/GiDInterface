@@ -1,8 +1,14 @@
 namespace eval ::FluidDEM::write {
+    variable fluid_project_parameters
+    variable dem_project_parameters
 }
 
 proc ::FluidDEM::write::Init { } {    
     
+    variable fluid_project_parameters
+    variable dem_project_parameters
+    set fluid_project_parameters [dict create]
+    set dem_project_parameters [dict create]
     SetAttribute main_script_file "MainKratos.py"
 
 }

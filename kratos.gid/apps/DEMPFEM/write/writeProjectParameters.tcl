@@ -1,6 +1,6 @@
 # Project Parameters
 proc ::DEMPFEM::write::getParametersDict { } {
-    set projectParametersDict [DEM::write::getParametersEvent]
+    set projectParametersDict [DEM::write::getParametersDict]
 
     dict set projectParametersDict coupling_level_type 1
     dict set projectParametersDict time_averaging_type 0

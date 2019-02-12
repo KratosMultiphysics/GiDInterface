@@ -4,7 +4,7 @@
 
   <container n="Fluid" pn="Fluid" icon="app" prefix="FL" tree_state="open" open_window="0">
     <include n="AnalysisType" active="1" path="apps/Fluid/xml/AnalysisType.spd"/>
-    <include n="Parts" active="1" path="apps/Fluid/xml/Parts.spd"/>
+    <include n="FluidParts" active="1" path="apps/Fluid/xml/Parts.spd"/>
     <include n="InitialConditions" active="1" path="apps/Fluid/xml/InitialConditions.spd"/>
     <include n="BoundaryConditions" active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/Fluid/xml/SolutionStrategy.spd"/>
@@ -14,7 +14,7 @@
 
   <container n="DEM" pn="DEM"  icon="demData" prefix="DEM" tree_state="open" open_window="0">
     <include n="StageInfo" active="1" icon="folder" path="apps/DEM/xml/StageInfo.spd"/>
-    <include n="Parts" active="1" icon="bodies" path="apps/DEM/xml/Parts.spd"/>
+    <include n="DEMParts" active="1" icon="bodies" path="apps/DEM/xml/Parts.spd"/>
     <include n="Conditions" icon="contactStrategy" active="1" path="apps/DEM/xml/Conditions.spd"/>
     <include n="SolutionStrategy" icon="settings" active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
     <include n="materials" active="1" icon="sheets" path="apps/DEM/xml/Materials.spd"/>
@@ -25,7 +25,7 @@
     <include n="Parallelism" active="1" icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/>
     <include n="TimeParameters" active="1" icon="timeParams" state="normal" path="apps/FluidDEM/xml/TimeParameters.spd"/>
     <include n="Intervals" active="1" icon="timeInterval" state="normal" path="apps/Common/xml/Intervals.spd"/>
-    <include n="Gravity" active="1" icon="gravityForce" path="apps/DEM/xml/Gravity.spd"/>
+    <include n="Gravity" active="1" icon="gravityForce" un="DEMGravity,FLGravity" path="apps/DEM/xml/Gravity.spd"/>
     <include n="Results" pn="Fluid results" active="1" un="FLResults" path="apps/Common/xml/Results.spd"/>
     <include n="Results" pn="DEM results" icon="seeResults" active="1" path="apps/DEM/xml/Results.spd"/>
   </container>

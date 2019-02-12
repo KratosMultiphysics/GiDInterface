@@ -22,7 +22,6 @@ proc FluidDEM::xml::CustomTree { args } {
     spdAux::parseRoutes
     set root [customlib::GetBaseRoot]
 
-    spdAux::ViewDoc
     # Remove Fluid things to move them to Common
     set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'ParallelType'\]"]
 	if { $result_node ne "" } {$result_node delete}

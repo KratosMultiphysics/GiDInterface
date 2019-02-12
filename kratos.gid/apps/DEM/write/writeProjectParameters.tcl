@@ -1,6 +1,6 @@
 
 # Project Parameters
-proc DEM::write::getParametersEvent { } {
+proc DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
     dict set project_parameters_dict "Dimension" [expr 3]
@@ -131,5 +131,5 @@ proc DEM::write::GetGravity { } {
 
 proc DEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
-    write::WriteJSON [getParametersEvent]
+    write::WriteJSON [getParametersDict]
 }
