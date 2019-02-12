@@ -18,10 +18,18 @@ proc FluidDEM::xml::getUniqueName {name} {
 
 proc FluidDEM::xml::CustomTree { args } {
     DEM::xml::CustomTree
-    #PfemFluid::xml::CustomTree
-    #spdAux::SetValueOnTreeItem values Fluid PFEMFLUID_DomainType
-
+    Fluid::xml::CustomTree
+    spdAux::parseRoutes
     set root [customlib::GetBaseRoot]
+
+    spdAux::ViewDoc
+    # Remove Fluid things to move them to Common
+    set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'ParallelType'\]"]
+	if { $result_node ne "" } {$result_node delete}
+    set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'Gravity'\]"]
+	if { $result_node ne "" } {$result_node delete}
+    set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'TimeParameters'\]"]
+	if { $result_node ne "" } {$result_node delete}
 
     set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'ParallelType'\]"]
 	if { $result_node ne "" } {$result_node delete}

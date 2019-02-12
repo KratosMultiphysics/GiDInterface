@@ -8,7 +8,6 @@
     <include n="InitialConditions" active="1" path="apps/Fluid/xml/InitialConditions.spd"/>
     <include n="BoundaryConditions" active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/Fluid/xml/SolutionStrategy.spd"/>
-    <include n="Results" active="1" un="FLResults" path="apps/Common/xml/Results.spd"/>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
     <include n="Materials" active="1" path="apps/Fluid/xml/Materials.spd"/>
   </container>
@@ -18,7 +17,6 @@
     <include n="Parts" active="1" icon="bodies" path="apps/DEM/xml/Parts.spd"/>
     <include n="Conditions" icon="contactStrategy" active="1" path="apps/DEM/xml/Conditions.spd"/>
     <include n="SolutionStrategy" icon="settings" active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
-    <include n="Results" icon="seeResults" active="1" path="apps/DEM/xml/Results.spd"/>
     <include n="materials" active="1" icon="sheets" path="apps/DEM/xml/Materials.spd"/>
   </container>
 
@@ -28,6 +26,8 @@
     <include n="TimeParameters" active="1" icon="timeParams" state="normal" path="apps/FluidDEM/xml/TimeParameters.spd"/>
     <include n="Intervals" active="1" icon="timeInterval" state="normal" path="apps/Common/xml/Intervals.spd"/>
     <include n="Gravity" active="1" icon="gravityForce" path="apps/DEM/xml/Gravity.spd"/>
+    <include n="Results" pn="Fluid results" active="1" un="FLResults" path="apps/Common/xml/Results.spd"/>
+    <include n="Results" pn="DEM results" icon="seeResults" active="1" path="apps/DEM/xml/Results.spd"/>
   </container>
 
 </container>
