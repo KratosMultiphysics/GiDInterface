@@ -10,8 +10,8 @@ proc ::FluidDEM::write::Init { } {
 # Events
 proc FluidDEM::write::writeModelPartEvent { } {
 
-    PfemFluid::write::Init
-    PfemFluid::write::writeModelPartEvent
+    Fluid::write::Init
+    Fluid::write::writeModelPartEvent
 
     DEM::write::Init
     set DEM::write::delete_previous_mdpa 0

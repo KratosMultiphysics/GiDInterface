@@ -279,7 +279,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
         switch $type {
             "inline_vector" {
                 set ndim [string index $::Model::SpatialDimension 0]
-                append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' dimensions='$ndim'  help='$help'  state='$state' />"
+                append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' $has_units  dimensions='$ndim'  help='$help'  state='$state' />"
             }
             "vector" {
                 set vector_type [$param getAttribute "vectorType"]
