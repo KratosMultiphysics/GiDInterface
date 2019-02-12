@@ -15,7 +15,7 @@
       </parameter>
       <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
         <parameter n="FIXED_MESH_OPTION" pn="Update velocity, not displacements" type="bool" v="false" parent="true" help="If activated, the wall will not move and will just have an imposed velocity field"/>
-        <parameter n="LINEAR_VELOCITY" pn="V(x,y,z)" type="inline_vector" v="0.0,0.0,0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
+        <!-- <parameter n="LINEAR_VELOCITY" pn="V(x,y,z)" type="inline_vector" v="0.0,0.0,0.0" parent="true" unit_magnitude="Velocity" units="m/s"/> -->
         <parameter n="LINEAR_VELOCITY_X" pn="Vx" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
         <parameter n="LINEAR_VELOCITY_Y" pn="Vy" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>
         <parameter n="LINEAR_VELOCITY_Z" pn="Vz" type="double" v="0.0" parent="true" unit_magnitude="Velocity" units="m/s"/>

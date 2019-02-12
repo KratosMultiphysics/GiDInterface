@@ -133,14 +133,14 @@ proc FluidDEM::write::writeParametersEvent { } {
 
     # PFEM
     write::OpenFile ProjectParameters.json
-    PfemFluid::write::writeParametersEvent
+    Fluid::write::writeParametersEvent
 }
 
 proc FluidDEM::write::GetTimeSettings { } {
     set result [dict create]
-    dict set result time_step [write::getValue PFEMFLUID_TimeParameters PFEMDeltaTime]
+    dict set result time_step [write::getValue FLUID_TimeParameters DeltaTime]
     dict set result start_time 0.0
-    dict set result end_time [write::getValue PFEMFLUID_TimeParameters EndTime]
+    dict set result end_time [write::getValue FLUID_TimeParameters EndTime]
     return $result
 }
 
