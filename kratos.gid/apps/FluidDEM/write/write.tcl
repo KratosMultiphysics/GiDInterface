@@ -10,12 +10,17 @@ proc ::FluidDEM::write::Init { } {
 # Events
 proc FluidDEM::write::writeModelPartEvent { } {
 
+    set filename [Kratos::GetModelName]
+
     Fluid::write::Init
-    Fluid::write::writeModelPartEvent
+    Fluid::write::InitConditionsMap
+    Fluid::write::SetCoordinatesByGroups 1
+    write::writeAppMDPA Fluid
+    write::RenameFileInModel "$filename.mdpa" "${filename}Fluid.mdpa"
 
     DEM::write::Init
     set DEM::write::delete_previous_mdpa 0
-    DEM::write::writeModelPartEvent
+    write::writeAppMDPA DEM
     
 }
 proc FluidDEM::write::writeCustomFilesEvent { } {

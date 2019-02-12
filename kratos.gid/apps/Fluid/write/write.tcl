@@ -24,7 +24,7 @@ proc Fluid::write::Init { } {
     SetAttribute output_model_part_name "fluid_computational_model_part"
 }
 
-# Events
+# MDPA write event
 proc Fluid::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
