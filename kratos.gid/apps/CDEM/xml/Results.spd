@@ -38,13 +38,7 @@
     </container>
 
     <container n="BondElem" pn="On bond results" un="BondElem" help="Results on bond elements" open_window="1" icon="options">
-        <value n="ContactMeshOption"        type="bool" values="true,false"     v="false"           pn="Contact mesh"        help="Calculate and show the bonds between particles"/>
-        <value n="LocalContactForce"        type="bool" values="true,false"     v="false"           pn="Local contact force" state="[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} true]" help="Displays the local contact forces between particles"/>
-    </container>
-
-    <container n="PrintGraphs" pn="Graphs on DEM-Wall" un="DGraphs" open="1" icon="options">
-        <value n="GraphExportFreq"    v="1e-3"    pn="Graph print frequency (s)"  help="Graph frequency for active DEM-Walls"/>
-        <!-- <value n="Print_total_force_on_this_group"  pn="Print total force on this group"  type="bool" state="disabled" v="true"/>
-        <value n="Print_total_torque_on_this_group" pn="Print total torque on this group" type="bool" state="disabled" v="true"/> -->
+        <value n="ContactMeshOption"  type="bool"   values="true,false" v="false" pn="Contact mesh" help="Calculate and show the bonds between particles"/>
+        <value n="LocalContactForce"  type="bool"   values="true,false" v="false" pn="Local contact force" state="[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} true]" help="Displays the local contact forces between particles"/>
     </container>
 </container>

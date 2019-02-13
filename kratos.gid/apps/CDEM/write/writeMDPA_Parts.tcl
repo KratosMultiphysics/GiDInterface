@@ -11,18 +11,18 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts; # Begin Nodes
-    #write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
-    write::writeNodalCoordinatesOnGroups [WriteWallGraphsFlag]
+    write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsInitialC]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundayC]
 
-    # Element connectivities (Groups on STParts)
-    write::writeElementConnectivities; # Begin elements SphericContinuumParticle3D
+    # Element connectivities
+    write::writeElementConnectivities
 
-    # Element radius
-    writeSphereRadius; # Begin NodalData RADIUS
+    # Begin NodalData RADIUS
+    writeSphereRadius
 
     # Begin NodalData COHESIVE_GROUP
+    writeCohesiveGroups
     # Begin NodalData SKIN_SPHERE
 
     # SubmodelParts
@@ -53,25 +53,6 @@ proc DEM::write::WriteWallCustomDEMSmp { } {
         }
     }
 }
-
-
-# proc DEM::write::WriteWallGraphsFlag { } {
-#     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
-#     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-#         set groupid [$group @n]
-#         set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-
-#             #write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-#             write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-#             write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
-#             write::WriteString  "End SubModelPartData"
-#             write::WriteString  "Begin SubModelPartNodes"
-#             GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
-#             write::WriteString  "End SubModelPartNodes"
-#             write::WriteString  "End SubModelPart"
-#             write::WriteString  ""
-#     }
-# }
 
 proc DEM::write::GetDEMGroupsCustomSubmodelpart { } {
     set groups [list ]
@@ -114,6 +95,22 @@ proc DEM::write::writeSphereRadius { } {
         set groupid [$group @n]
         set grouppid [write::GetWriteGroupName $groupid]
         write::WriteString "Begin NodalData RADIUS // GUI group identifier: $grouppid"
+        #GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
+        GiD_WriteCalculationFile connectivities [dict create $groupid "%-08s %10d 0 %10g\n"]
+
+        write::WriteString "End NodalData"
+        write::WriteString ""
+    }
+
+}
+
+proc DEM::write::writeCohesiveGroups { } {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute [GetAttribute partscont_un]]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        set grouppid [write::GetWriteGroupName $groupid]
+        write::WriteString "Begin NodalData COHESIVE_GROUP // GUI group identifier: $grouppid"
         GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
         write::WriteString "End NodalData"
         write::WriteString ""
@@ -319,11 +316,11 @@ proc DEM::write::writeMaterialsParts { } {
     #set ::write::mat_dict $old_mat_dict
     # WV inletProperties
 
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
+    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
 
     foreach group [dict keys $partsProperties] {
         write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-        #dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
+        dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
         dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
         foreach {prop val} [dict get $partsProperties $group] {
             if {$prop in $printable} {

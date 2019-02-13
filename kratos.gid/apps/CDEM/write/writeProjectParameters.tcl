@@ -1,17 +1,7 @@
-
 # Project Parameters
+proc ::CDEM::write::getParametersEvent { } {
 
-# proc ::DEM::write::getParametersEventtest { } {
-
-#     set project_parameters_dict [dict create]
-#     dict set project_parameters_dict [DEM::write::getParametersEvent1]
-#     dict set project_parameters_dict "PostBoundingBox"                  "SphericPartDEMElement3D"
-#     dict set project_parameters_dict "PostPoissonRatio"                  "false"
-#     return $project_parameters_dict
-# }
-
-proc DEM::write::getParametersEvent { } {
-    set project_parameters_dict [dict create]
+set project_parameters_dict [dict create]
 
     dict set project_parameters_dict "Dimension"                            [expr 3]
     dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
@@ -67,7 +57,7 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "FinalTime"                            $FinalTime
     dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
     dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
-    dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
+    #dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 
     # Output timestep
@@ -103,38 +93,13 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "PostParticleMoment"               [write::getValue PostPrint ParticleMoment]
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint EulerAngles]
     dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue PostPrint RollingResistanceMoment]
-    #dict set project_parameters_dict "PostNodalArea"                    [write::getValue PostPrint NodalArea]
-    #dict set project_parameters_dict "PostRHS"                          [write::getValue PostPrint Rhs]
-    #dict set project_parameters_dict "PostDampForces"                   [write::getValue PostPrint DampForces]
-    #dict set project_parameters_dict "PostAppliedForces"                [write::getValue PostPrint AppliedForces]
-    #dict set project_parameters_dict "PostGroupId"                      [write::getValue PostPrint GroupId]
-    #dict set project_parameters_dict "PostExportId"                     [write::getValue PostPrint ExportId]
-    dict set project_parameters_dict "problem_name" [Kratos::GetModelName]
+    dict set project_parameters_dict "problem_name"                     [file tail [GiD_Info Project ModelName]]
 
     return $project_parameters_dict
 }
 
-proc DEM::write::GetTimeSettings { } {
-    set result [dict create]
-    dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
-    dict set result EndTime [write::getValue DEMTimeParameters EndTime]
-    return $result
-}
 
-proc DEM::write::GetGravity { } {
-    set gravity_value [write::getValue DEMGravity GravityValue]
-    set gravity_X [write::getValue DEMGravity Cx]
-    set gravity_Y [write::getValue DEMGravity Cy]
-    set gravity_Z [write::getValue DEMGravity Cz]
-    # Normalize director vector
-    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
-    # Get value by components
-    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
-
-    return [list $gx $gy $gz]
-}
-
-proc DEM::write::writeParametersEvent { } {
+proc CDEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
     write::WriteJSON [getParametersEvent]
 }

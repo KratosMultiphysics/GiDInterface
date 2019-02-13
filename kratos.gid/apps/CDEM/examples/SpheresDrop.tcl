@@ -1,5 +1,5 @@
 
-proc ::DEM::examples::SpheresDrop {args} {
+proc ::CDEM::examples::SpheresDrop {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -15,7 +15,7 @@ proc ::DEM::examples::SpheresDrop {args} {
     GidUtils::UpdateWindow LAYER
 }
 
-proc ::DEM::examples::DrawGeometry { } {
+proc ::CDEM::examples::DrawGeometry { } {
     Kratos::ResetModel
 
     GiD_Process Mescape Geometry Create Object Rectangle -5 -5 0 5 5 0 escape
@@ -37,7 +37,7 @@ proc ::DEM::examples::DrawGeometry { } {
     GiD_EntitiesLayers assign "Body" -also_lower_entities volumes 1
 }
 
-proc ::DEM::examples::AssignToTree { } {
+proc ::CDEM::examples::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
@@ -54,7 +54,6 @@ proc ::DEM::examples::AssignToTree { } {
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Body]
-    $DEMPartsNode setAttribute ov volume
     set props [list Material "DEM-DefaultMaterial"]
     foreach {prop val} $props {
         set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
@@ -129,14 +128,14 @@ proc ::DEM::examples::AssignToTree { } {
     spdAux::RequestRefresh
 }
 
-proc DEM::examples::AssignMeshSize { } {
+proc CDEM::examples::AssignMeshSize { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape
 }
 
 
-proc DEM::examples::ErasePreviousIntervals { } {
+proc CDEM::examples::ErasePreviousIntervals { } {
     set root [customlib::GetBaseRoot]
     set interval_base [spdAux::getRoute "Intervals"]
     foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {

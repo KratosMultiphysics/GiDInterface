@@ -110,7 +110,7 @@ proc spdAux::ProcGetSchemes {domNode args} {
         #}
     set solStratName [::write::getValue $sol_stratUN]
     #W "Unique name: $sol_stratUN - Nombre $solStratName"
-    set schemes [::Model::GetAvailableSchemes $solStratName]
+    set schemes [::Model::GetAvailableSchemes $solStratName {*}$args]
 
     set ids [list ]
     if {[llength $schemes] == 0} {
@@ -145,7 +145,7 @@ proc spdAux::ProcGetConstitutiveLaws { domNode args } {
     set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
     set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
     #W "Const Laws que han pasado la criba: $Claws"
-    if {[llength $Claws] == 0} { 
+    if {[llength $Claws] == 0} {
         set names [list "None"]
     } {
         set names [list ]

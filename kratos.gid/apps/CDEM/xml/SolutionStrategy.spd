@@ -23,7 +23,9 @@
                 <value n="RollingFriction"              type="bool"     values="true,false" v="false" pn="Rolling friction" help="If activated, the Rolling Friction parameter set in the Materials Tree will be taken into account. Otherwise it will be ignored. Will increase computation time slightly"/>
                 <value n="VirtualMassCoef"              v="1.0"         pn="Virtual mass coefficient" help="Virtual mass"/>
                 <value n="GlobalDamping"                v="0.0"         pn="Global damping"           help="Choose the value for the damping. 0.0 means no damping at all, while 1.0 means full damping."/>
-	</container>
+
+
+        </container>
 	<container     n="TimeParameters"               un="DEMTimeParameters"  pn="Time parameters" help="Problem parameters" icon="time4" open_window="0">
                 <value n="StartTime"                    v="0.0"                 pn="Start time" help=""/>
                 <value n="EndTime"                      v="1.0"                 pn="End time" help=""/>
