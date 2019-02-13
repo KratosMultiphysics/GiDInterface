@@ -21,6 +21,7 @@ proc ConvectionDiffusion::write::Init { } {
     SetAttribute materials_file "ConvectionDiffusionMaterials.json"
     SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
+    SetAttribute output_model_part_name "thermal_computing_domain"
 }
 
 # Events
@@ -37,7 +38,7 @@ proc ConvectionDiffusion::write::writeModelPartEvent { } {
     writeProperties
 
     # Materials (write materials in *.mdpa)
-    #write::writeMaterials [GetAttribute validApps]
+    # write::writeMaterials [GetAttribute validApps]
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}

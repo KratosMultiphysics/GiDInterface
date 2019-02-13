@@ -115,8 +115,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
 
     # Monolithic solution strategy set
     spdAux::SetValueOnTreeItem v "transient" CNVDFFSolStrat
-    spdAux::SetValueOnTreeItem v "SuperLUSolver" CNVDFFtransientlinear_solver_settings Solver
-
+    
     # Fluid Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Body]

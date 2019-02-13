@@ -134,13 +134,7 @@ proc StenosisWizard::Wizard::Fluid { win } {
 }
 proc StenosisWizard::Wizard::NextFluid { } {
     # Inlet
-    gid_groups_conds::delete {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='Inlet3D']/group}
-    set where {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='AutomaticInlet3D']}
-    set gnode [customlib::AddConditionGroupOnXPath $where "Inlet"]
-    [$gnode selectNodes "./value\[@n = 'direction'\]"] setAttribute v "automatic_inwards_normal"
-    
-    set propnode [$gnode selectNodes "./value\[@n = 'modulus'\]"]
-    $propnode setAttribute v [smart_wizard::GetProperty Fluid Inlet,value]
+    Fluid::xml::CreateNewInlet Inlet {new false name Total} false [smart_wizard::GetProperty Fluid Inlet,value]
 
     # Outlet
     gid_groups_conds::delete {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='Outlet3D']/group}
@@ -222,8 +216,8 @@ proc StenosisWizard::Wizard::LastStep { } {
     }
     
     
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
+    #gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
+    #gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
     spdAux::RequestRefresh
     
 }

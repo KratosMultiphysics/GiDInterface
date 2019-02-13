@@ -88,6 +88,7 @@ proc ::MPM::write::getParametersDict { } {
     dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
     dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
     dict unset project_parameters_dict output_processes gid_output
+    dict unset project_parameters_dict output_processes vtk_output
 
     return $project_parameters_dict
 }

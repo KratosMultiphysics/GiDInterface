@@ -15,7 +15,6 @@
 
     <container n="Parameters" pn="Parameters" un="CHTGeneralParameters" >
         <value n="max_iteration" pn="Max num of iterations" v="10" />
-        <value n="relaxation_factor" pn="Relaxation factor" v="0.7" />
         <value n="temperature_relative_tolerance" pn="Temperature relative tolerance" v="1e-5" />
     </container>
 

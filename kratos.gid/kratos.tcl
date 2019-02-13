@@ -454,3 +454,8 @@ proc Kratos::PrintArray {a {pattern *}} {
         W "[format "%-*s = %s" $maxl $nameString $array($name)]"
     }
 }
+
+proc ::Kratos::Quicktest {example_app example_dim example_cmd} {
+    apps::setActiveApp Examples
+    ::Examples::LaunchExample $example_app $example_dim $example_cmd
+}
