@@ -408,10 +408,10 @@ proc Kratos::IsModelEmpty { } {
 }
 
 proc Kratos::BeforeMeshGeneration {elementsize} {
-    # foreach group [GiD_Groups list] {
-    #     GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
-    #     GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
-    # }
+    foreach group [GiD_Groups list] {
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
+    }
     # GiD_Set ForceMesh(Points) 1
     # GiD_Set ForceMesh(Lines) 1
     # GiD_Set ForceMesh(Surfaces) 1
