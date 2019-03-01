@@ -174,7 +174,7 @@ proc Structural::write::getLastConditionId { } {
 
 # Custom files
 proc Structural::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True [GetAttribute model_part_name]
 }
 
 proc Structural::write::GetUsedElements { {get "Objects"} } {
