@@ -91,6 +91,7 @@ proc spdAux::processIncludes { } {
     set root [customlib::GetBaseRoot]
     spdAux::processAppIncludes $root
     spdAux::processDynamicNodes $root
+    spdAux::parseRoutes
 }
 
 proc spdAux::processDynamicNodes { root } {
