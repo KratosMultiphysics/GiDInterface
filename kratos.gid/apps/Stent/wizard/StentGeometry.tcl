@@ -46,12 +46,34 @@ proc Stent::Wizard::DrawGeometry {} {
     set points_z(0,0) 0.0
 
     set i 0
-    for {set j 1} {$j <= $num_rows} {incr j} {
-        if {[expr $i % 2] eq 0} {
+    for {set j 1} {$j < $num_rows} {incr j} {
+        if {[expr $j % 2] eq 0} {
             set tj [expr $j-2]
             set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column]
         }
     }
+    for {set j 0} {$j < $num_rows} {incr j} {
+        if {[expr $j % 2] eq 0} {
+            for {set i 0} {$i < $num_cols} {incr i} {
+                if {[expr $i % 2] eq 0} {
+                    set ti [expr $i-2]
+                    set points_x($i,$j) [expr $points_x($ti,$j) + $point_distance_row]
+                    set points_y($i,$j) [expr $points_y($ti,$j)]
+                }
+            }
+        } else {
+            for {set i 0} {$i < $num_cols} {incr i} {
+                if {[expr $i % 2] eq 0} {
+                    set ti [expr $i-1]
+                    set tj [expr $j-1]
+                    set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
+                    set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column/2]
+                }
+            }
+        }
+    }
+
+
 }
 
 proc ValidateDraw { } {
