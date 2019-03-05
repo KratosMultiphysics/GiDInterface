@@ -8,7 +8,7 @@
           <Item n="NumberOfWires" pn="Number of wires" v="5" type="integer" />
           <Item n="AngleBetweenWires" pn="Angle between wires" v="30" type="double" units="deg" />
           <Item n="StentRadius" pn="Stent radius" v="5" type="double" units="mm" />
-          <Item n="StentLength" pn="Stent length" v="50" type="double" units="mm" />
+          <Item n="StentLength" pn="Stent length approx" v="50" type="double" units="mm" />
           <Item n="DrawButton" pn="Create geometry" type="button" v="::Stent::Wizard::DrawGeometry" />
         </Frame>
         <Frame n="Image" position="right">
