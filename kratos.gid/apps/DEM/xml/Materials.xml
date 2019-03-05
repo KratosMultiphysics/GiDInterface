@@ -12,7 +12,9 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" type="double" help="Particle sphericity"/>
-	  </inputs>
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT,DEM_D_Conical_damage" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion,Conical damage" v="Hertz" type="combo">
+	    <parameter n="PARTICLE_COHESION2" pn="Cohesion2" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
+    </inputs>
   </Material>
   <Material n="DEM-SoyBean" MaterialType="DEM" help="">
     <inputs>

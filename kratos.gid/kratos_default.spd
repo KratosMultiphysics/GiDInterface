@@ -26,6 +26,7 @@
 	<appLink n="DEM" public="0" pn="DEM" active="0" appid="DEM" prefix="DEM"/>
 	<appLink n="MPM" public="1" pn="MPM" active="0" appid="MPM" prefix="MPM"/>
 	<appLink n="DEMPFEM" public="0" pn="DEM+PFEM" active="0" appid="DEMPFEM" prefix="DEMPFEM"/>
+	<appLink n="CDEM" public="0" pn="Cohesive DEM" active="0" appid="CDEM" prefix="CDEM"/>
 	<appLink n="Examples" public="1" pn="Examples" active="0" appid="Examples" prefix="EXA_"/>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">
 		<value n='units_mesh' pn='Mesh units' unit_mesh_definition="1"/>
@@ -166,12 +167,12 @@
 		</proc>
 		<proc n='edit_database_list' args='args'>
 			<![CDATA[
-	return [spdAux::ProcEdit_database_list $domNode {*}$args]  
+	return [spdAux::ProcEdit_database_list $domNode {*}$args]
 		]]>
 		</proc>
 		<proc n='CambioMat' args='args'>
 			<![CDATA[
-	  return [spdAux::ProcCambioMat $domNode $args] 
+	  return [spdAux::ProcCambioMat $domNode $args]
 	  ]]>
 		</proc>
 		<proc n='ConditionState' args='args'>

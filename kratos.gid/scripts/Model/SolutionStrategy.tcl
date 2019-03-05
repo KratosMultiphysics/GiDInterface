@@ -8,22 +8,22 @@ namespace eval Model {
 catch {Scheme destroy}
 oo::class create Scheme {
     superclass Entity
-    
+
     variable elementfilters
     variable elementForceIn
     variable elementForceOut
-    
+
     constructor {n} {
         next $n
         variable elementfilters
         variable elementForceIn
         variable elementForceOut
-        
+
         set elementfilters [dict create]
         set elementForceIn [dict create]
         set elementForceOut [dict create]
     }
-            
+
     method addElementFilter {efn efvl} {
         variable elementfilters
         dict set elementfilters $efn $efvl
@@ -31,7 +31,7 @@ oo::class create Scheme {
     method getElementFilters { } {
         variable elementfilters
         return $elementfilters
-    }        
+    }
     method addElementForceIn {efn efvl} {
         variable elementForceIn
         dict set elementForceIn $efn $efvl
@@ -39,7 +39,7 @@ oo::class create Scheme {
     method getElementForceIn { } {
         variable elementForceIn
         return $elementForceIn
-    }        
+    }
     method addElementForceOut {efn efvl} {
         variable elementForceOut
         dict set elementForceOut $efn $efvl
@@ -48,10 +48,13 @@ oo::class create Scheme {
         variable elementForceOut
         return $elementForceOut
     }
-    
-    method cumple {args} {
-        set sol_strat [dict get $args "SolutionStrategy"]
-        set a [dict remove $args "SolutionStrategy"]
+
+    method cumple {arguments} {
+        #W $args
+        #W "[my getName] -> args $arguments"
+        set sol_strat [dict get $arguments SolutionStrategy]
+        #W "[my getName] -> $sol_strat"
+        set a [dict remove $arguments SolutionStrategy]
         set c [next $a]
         if {$c && ![write::isBooleanFalse [my getAttribute "NeedElements"]]} {
             set c 0
@@ -61,29 +64,29 @@ oo::class create Scheme {
         }
         return $c
     }
-    
+
 }
 # Clase Solution Strategey
 catch {SolStrat destroy}
 oo::class create SolStrat {
     superclass Entity
-    
+
     variable solverEntries
     variable elementfilters
     variable schemes
-    
+
     constructor {n} {
         next $n
         variable solverEntries
         variable schemes
         variable elementfilters
-        
+
         set schemes [list ]
         set solverEntries [list ]
         set elementfilters [dict create]
     }
-    
-    
+
+
     method addSolverEntry {se} {
         variable solverEntries
         lappend solverEntries $se
@@ -94,7 +97,7 @@ oo::class create SolStrat {
     }
     method addScheme {se} {
         variable schemes
-        
+
         lappend schemes $se
     }
     method getSchemes { } {
@@ -103,14 +106,14 @@ oo::class create SolStrat {
     }
     method getScheme { sid } {
         variable schemes
-        
+
         set goodscheme ""
         foreach sc $schemes {
             if {[$sc getName] eq $sid} {set goodscheme $sc; break}
         }
         return $goodscheme
     }
-    
+
     method addElementFilter {efn efvl} {
         variable elementfilters
         dict set elementfilters $efn $efvl
@@ -121,7 +124,7 @@ oo::class create SolStrat {
     }
     method cumple {args} {
         set c [next {*}$args]
-         
+
         if {$c && ![write::isBooleanFalse [my getAttribute "NeedElements"]]} {
             set c 0
             foreach sc [my getSchemes] {
@@ -130,10 +133,10 @@ oo::class create SolStrat {
                 }
             }
         }
-        
+
         return $c
     }
-    
+
 }
 }
 
@@ -157,7 +160,7 @@ proc Model::ForgetSolutionStrategy { id } {
 # Parsing
 proc Model::ParseSolutionStrategies { doc } {
     variable SolutionStrategies
-    
+
     set SolNodeList [$doc getElementsByTagName StrategyItem]
     foreach SolNode $SolNodeList {
         lappend SolutionStrategies [ParseSolNode $SolNode]
@@ -167,14 +170,14 @@ proc Model::ParseSolutionStrategies { doc } {
 
 proc Model::ParseSolNode { node } {
     set name [$node getAttribute n]
-    
+
     set st [SolStrat new $name]
     $st setPublicName [$node getAttribute pn]
-    
+
     foreach att [$node attributes] {
         $st setAttribute $att [$node getAttribute $att]
     }
-    
+
     set paramListNode [list ]
     foreach nod [$node childNodes] {
         if {[$nod nodeName] eq "parameter_list"} {
@@ -206,10 +209,10 @@ proc Model::ParseSolNode { node } {
 }
 
 proc Model::ParseScheme {st scn} {
-    
+
     set sc [Model::Scheme new [$scn @n]]
     $sc setPublicName [$scn @pn]
-    
+
     if {[llength [$scn getElementsByTagName parameter_list]]} {
         foreach inn [[$scn getElementsByTagName parameter_list] getElementsByTagName parameter] {
             set sc [ParseInputParamNode $sc $inn]
@@ -227,8 +230,8 @@ proc Model::ParseScheme {st scn} {
             set sc [ParseElementFilter $sc $ef "out"]
         }
     }
-    
-    
+
+
     foreach att [$scn attributes] {
         $sc setAttribute $att [$scn getAttribute $att]
     }
@@ -240,7 +243,7 @@ proc Model::ParseElementFilter {st ef {forced ""}} {
     set n [$ef @field]
     set v [$ef @value]
     set values [split $v ","]
-    
+
     if {$forced eq ""} {
         $st addElementFilter $n $values
     } elseif {$forced eq "in"} {
@@ -256,7 +259,7 @@ proc Model::ParseElementFilter {st ef {forced ""}} {
 # Getters
 proc Model::GetSolutionStrategies { args } {
     variable SolutionStrategies
-    
+
     if {$args eq "{}"} {return $SolutionStrategies}
     set cumplen [list ]
     foreach ss $SolutionStrategies {
@@ -268,7 +271,7 @@ proc Model::GetSolutionStrategies { args } {
 
 proc Model::GetSolutionStrategy { id } {
     variable SolutionStrategies
-    
+
     foreach ss $SolutionStrategies {
         if {[$ss getName] eq $id} { return $ss}
     }
@@ -276,21 +279,25 @@ proc Model::GetSolutionStrategy { id } {
 }
 
 
-proc Model::GetAvailableSchemes {solstrat} {
+proc Model::GetAvailableSchemes {solstrat args} {
     #W "GAS $solstrat"
     set solst [Model::GetSolutionStrategy $solstrat]
     set cumplen [list ]
+    set arguments [dict create]
+    set arguments [dict merge {*}$args $arguments]
+    dict set arguments SolutionStrategy [$solst getName]
+    #W "$solstrat $arguments"
     foreach sch [$solst getSchemes] {
-        if {[$sch cumple "SolutionStrategy" [$solst getName]]} {lappend cumplen $sch}
+        if {[$sch cumple $arguments]} {lappend cumplen $sch}
     }
     return $cumplen
 }
 
 proc Model::GetAvailableSolvers {solstrat solverentryid} {
     variable Solvers
-    
+
     set goodSolvers [list ]
-    
+
     set solst [Model::GetSolutionStrategy $solstrat]
     foreach sentry [$solst getSolversEntries] {
         if {[$sentry getName] eq $solverentryid} {
@@ -305,7 +312,7 @@ proc Model::GetAvailableSolvers {solstrat solverentryid} {
 
 proc Model::GetAllSolStratParams {} {
     variable SolutionStrategies
-    
+
     set inputs [dict create ]
     foreach st $SolutionStrategies {
         foreach {k v} [$st getInputs] {
@@ -329,7 +336,7 @@ proc Model::GetSolStratParams {args} {
 
 proc Model::GetAllSchemeParams {} {
     variable SolutionStrategies
-    
+
     set inputs [dict create ]
     foreach st $SolutionStrategies {
         foreach sc [$st getSchemes] {
@@ -340,7 +347,7 @@ proc Model::GetAllSchemeParams {} {
     }
     return $inputs
 }
-proc Model::GetSchemesParams {args} {    
+proc Model::GetSchemesParams {args} {
     set inputs [dict create ]
     foreach st [GetSolutionStrategies {*}$args] {
         foreach sc [$st getSchemes] {
@@ -352,7 +359,7 @@ proc Model::GetSchemesParams {args} {
     return $inputs
 }
 
-proc Model::GetAvailableElements {solutionStrategyId schemeId} { 
+proc Model::GetAvailableElements {solutionStrategyId schemeId} {
     variable Elements
     variable SolutionStrategies
     #W "GetAvailableElements ss $solutionStrategyId sch $schemeId"
@@ -371,14 +378,14 @@ proc Model::GetAvailableElements {solutionStrategyId schemeId} {
             set i 0
             if {[llength $include]} {set i [$elem cumple $include]}
             set o 0
-            if {[llength $exclude]} {set o [$elem cumple $exclude]}        
+            if {[llength $exclude]} {set o [$elem cumple $exclude]}
             if {[expr ($f && !$o) || $i]} { lappend cumplen $elem}
         }
     }
     return $cumplen
 }
 
-proc Model::GetAvailableConditions {solutionStrategyId schemeId} { 
+proc Model::GetAvailableConditions {solutionStrategyId schemeId} {
     variable Conditions
     variable SolutionStrategies
 
@@ -388,11 +395,11 @@ proc Model::GetAvailableConditions {solutionStrategyId schemeId} {
     set solst [Model::GetSolutionStrategy $solutionStrategyId]
     set scheme [$solst getScheme $schemeId]
     set filters [$scheme getElementFilters]
-    
+
     foreach elem $Conditions {
         if {[$elem cumple $filters]} { lappend cumplen $elem} { lappend cumplen $elem}
     }
-    
+
     return $cumplen
 }
 

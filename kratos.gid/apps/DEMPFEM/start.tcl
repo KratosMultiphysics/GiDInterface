@@ -12,25 +12,25 @@ proc ::DEMPFEM::Init { } {
     variable prefix
     variable kratos_name
     variable attributes
-    
+
     set attributes [dict create]
     set kratos_name DEMPFEMapplication
-    
+
     #W "Sourced FSI"
     set dir [apps::getMyDir "DEMPFEM"]
     set prefix DEMPFEM_
-    
+
     set ::spdAux::TreeVisibility 0
-    
+
     apps::LoadAppById "DEM"
     apps::LoadAppById "PfemFluid"
-    
-    # Intervals 
+
+    # Intervals
     dict set attributes UseIntervals 1
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
-    
+
     set ::Model::ValidSpatialDimensions [list 3D]
     LoadMyFiles
     # ::spdAux::CreateDimensionWindow
@@ -38,7 +38,7 @@ proc ::DEMPFEM::Init { } {
 
 proc ::DEMPFEM::LoadMyFiles { } {
     variable dir
-    
+
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
@@ -47,6 +47,10 @@ proc ::DEMPFEM::LoadMyFiles { } {
 
 proc ::DEMPFEM::BeforeMeshGeneration {elementsize} {
     ::DEM::BeforeMeshGeneration $elementsize
+}
+
+proc ::DEMPFEM::AfterMeshGeneration {fail} {
+    ::DEM::AfterMeshGeneration $fail
 }
 
 proc ::DEMPFEM::GetAttribute {name} {
@@ -58,7 +62,7 @@ proc ::DEMPFEM::GetAttribute {name} {
 
 proc ::DEMPFEM::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::DEMPFEM::examples::InnerSphere] [= "Example\nInnerSphere"]   
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::DEMPFEM::examples::InnerSphere] [= "Example\nInnerSphere"]
 }
 
 ::DEMPFEM::Init
