@@ -18,5 +18,9 @@ proc Stent::write::WriteMaterialsFile { } {
 proc Stent::write::writeCustomFilesEvent { } {
     Structural::write::writeCustomFilesEvent
 }
+proc Stent::write::writeParametersEvent { } {
+    Structural::write::writeParametersEvent
+    
+}
 
 Stent::write::Init

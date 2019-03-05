@@ -70,6 +70,9 @@ proc ::Stent::CustomToolbarItems { } {
     
 }
 
+proc ::Stent::BeforeMeshGeneration { size } { 
+    ::Structural::BeforeMeshGeneration $size
+}
 
 
 ::Stent::Init

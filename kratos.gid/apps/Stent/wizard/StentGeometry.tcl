@@ -237,6 +237,8 @@ proc Stent::Wizard::DrawGeometry {} {
     }
 
     movenodestocylinder
+    GiD_Process Mescape Utilities Collapse model Yes 
+
 }
 
 proc Stent::Wizard::FillBidimensionalArray { size_x size_y { value 0.0} } {
