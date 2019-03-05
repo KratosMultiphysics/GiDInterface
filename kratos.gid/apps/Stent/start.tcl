@@ -50,7 +50,7 @@ proc ::Stent::LoadMyFiles { } {
 
 proc ::Stent::StartWizardWindow { } {
     variable dir
-    gid_groups_conds::close_all_windows
+    #gid_groups_conds::close_all_windows
     
     smart_wizard::Init
     smart_wizard::SetWizardNamespace "::Stent::Wizard"
@@ -61,6 +61,15 @@ proc ::Stent::StartWizardWindow { } {
 
     smart_wizard::CreateWindow
 }
+
+proc ::Stent::CustomToolbarItems { } {
+    variable dir
+    
+    Kratos::ToolbarAddItem "Generator" "example.png" [list -np- ::Stent::StartWizardWindow] [= "Geometry generator"]
+    
+    
+}
+
 
 
 ::Stent::Init
