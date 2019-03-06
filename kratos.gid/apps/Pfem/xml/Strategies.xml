@@ -188,7 +188,7 @@
           <filter field="SolverType" value="Standard"/>
         </filterFeatures>
         <defaults>
-          <solver n="BICGSTABSolver">
+          <solver n="bicgstab">
           </solver>
         </defaults>
       </linearSolverItem>
