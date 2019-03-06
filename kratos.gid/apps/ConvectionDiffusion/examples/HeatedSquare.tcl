@@ -22,7 +22,7 @@ proc ConvectionDiffusion::examples::DrawSquareGeometry3D {args} {
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
-    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape 
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
 }
 
 proc ConvectionDiffusion::examples::DrawSquareGeometry2D {args} {
@@ -115,7 +115,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
 
     # Monolithic solution strategy set
     spdAux::SetValueOnTreeItem v "transient" CNVDFFSolStrat
-    
+
     # Fluid Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Body]
@@ -152,7 +152,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Left_Wall]
     $thermalNode setAttribute ov $cond_type
-    set props [list value 303.15]
+    set props [list value 303.15 Interval Total]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -164,7 +164,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
 
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Right_Wall]
     $thermalNode setAttribute ov $cond_type
-    set props [list value 293.15]
+    set props [list value 293.15 Interval Total]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -200,6 +200,6 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
 # proc ConvectionDiffusion::examples::AddCuts { } {
 #     # Cuts
 #     set results [spdAux::getRoute "Results"]
-#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
+#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
 #     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 # }
