@@ -236,9 +236,24 @@ proc Stent::Wizard::DrawGeometry {} {
         GiD_Geometry -v2 create line $cont4 stline $layer_name $punto1 $punto2
     }
 
-    movenodestocylinder
+    MoveNodesToCylinder
     GiD_Process Mescape Utilities Collapse model Yes 
 
+    for {set i 1} {$i <= $number_wires} {incr i} {
+        lappend bottom $i
+        lappend top [expr $cont1 +1 - $i]
+    }
+    GiD_Groups create bottom
+    GiD_EntitiesGroups assign bottom points $bottom
+    
+    GiD_Groups create top
+    GiD_EntitiesGroups assign top points $top
+
+    
+    GiD_Process 'Redraw
+    GidUtils::UpdateWindow GROUPS
+    GidUtils::UpdateWindow LAYER
+    GiD_Process 'Zoom Frame
 }
 
 proc Stent::Wizard::FillBidimensionalArray { size_x size_y { value 0.0} } {
@@ -249,7 +264,7 @@ proc Stent::Wizard::FillBidimensionalArray { size_x size_y { value 0.0} } {
     }
     return [array get farray]
 }
-proc Stent::Wizard::movenodestocylinder { } {
+proc Stent::Wizard::MoveNodesToCylinder { } {
     GidUtils::DisableGraphics 
     set kk [GiD_Set CreateAlwaysNewPoint]
     GiD_Set CreateAlwaysNewPoint 1
