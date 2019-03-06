@@ -390,6 +390,18 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
     }
 }
 
+proc spdAux::GetAppliedGroups { {root ""} } {
+    customlib::UpdateDocument
+    
+    if {$root eq "" } {
+        set root [customlib::GetBaseRoot]
+    }
+    set group_list [list ]
+    foreach group_node [$root getElementsByTagName "group"] {
+        lappend group_list [write::GetWriteGroupName [$group_node @n]]
+    }
+    return [lsort -unique $group_list]
+}
 
 proc spdAux::LoadModelFiles { {root "" }} {
     if {$root eq ""} {

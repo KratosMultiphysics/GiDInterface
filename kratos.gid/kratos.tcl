@@ -408,7 +408,7 @@ proc Kratos::IsModelEmpty { } {
 }
 
 proc Kratos::BeforeMeshGeneration {elementsize} {
-    foreach group [GiD_Groups list] {
+    foreach group [spdAux::GetAppliedGroups] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
     }
