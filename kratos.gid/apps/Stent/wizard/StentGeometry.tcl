@@ -162,7 +162,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set s 1
     set d -1
 
-
+    set wires_1 [list]
     for {set m [expr $number_wires +2]} {$m < [expr $cont1+1]} {incr m} {
 
         if {$s eq 0 && $cont3 eq $number_wires} {
@@ -181,14 +181,14 @@ proc Stent::Wizard::DrawGeometry {} {
                 incr cont2
                 set punto1 $m
                 set punto2 [expr $punto1 - $number_wires]
-                GiD_Geometry -v2 create line $cont2 stline $layer_name $punto1 $punto2
+                lappend wires_1 [GiD_Geometry -v2 create line $cont2 stline $layer_name $punto1 $punto2]
             }
         } else {
             incr cont3
             incr cont2
             set punto1 $m
             set punto2 [expr $punto1 - $number_wires]
-            GiD_Geometry -v2 create line $cont2 stline $layer_name $punto1 $punto2
+            lappend wires_1 [GiD_Geometry -v2 create line $cont2 stline $layer_name $punto1 $punto2]
         }
     }
 
@@ -197,7 +197,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set n 0
     set s 1
     set d -1
-
+    set wires_2 [list ]
 
     for {set m [expr 100000 + $number_wires +2]} {$m < [expr $cont11+1]} {incr m} {
 
@@ -217,23 +217,24 @@ proc Stent::Wizard::DrawGeometry {} {
                 incr cont22
                 set punto1 $m
                 set punto2 [expr $punto1 - $number_wires - 1]
-                GiD_Geometry -v2 create line $cont22 stline $layer_name $punto1 $punto2
+                lappend wires_2 [GiD_Geometry -v2 create line $cont22 stline $layer_name $punto1 $punto2]
             }
         } else {
             incr cont3
             incr cont22
             set punto1 $m
             set punto2 [expr $punto1 - $number_wires - 1]
-            GiD_Geometry -v2 create line $cont22 stline $layer_name $punto1 $punto2
+            lappend wires_2 [GiD_Geometry -v2 create line $cont22 stline $layer_name $punto1 $punto2]
         }
     }
 
     set cont4 1000000
+    set joints [list ]
     for {set q 2} {$q < $cont1} {incr q} {
         incr cont4
         set punto1 $q
         set punto2 [expr $punto1 +100000]
-        GiD_Geometry -v2 create line $cont4 stline $layer_name $punto1 $punto2
+        lappend joints [GiD_Geometry -v2 create line $cont4 stline $layer_name $punto1 $punto2]
     }
 
     MoveNodesToCylinder
@@ -248,6 +249,17 @@ proc Stent::Wizard::DrawGeometry {} {
     
     GiD_Groups create top
     GiD_EntitiesGroups assign top points $top
+
+    GiD_Groups create wires_1
+    GiD_EntitiesGroups assign wires_1 lines $wires_1
+    GiD_Groups create wires_2
+    GiD_EntitiesGroups assign wires_2 lines $wires_2
+    GiD_Groups create joints
+    GiD_EntitiesGroups assign joints lines $joints
+    GiD_Groups create structure
+    GiD_EntitiesGroups assign structure lines $wires_1
+    GiD_EntitiesGroups assign structure lines $wires_2
+    GiD_EntitiesGroups assign structure lines $joints
 
     
     GiD_Process 'Redraw
