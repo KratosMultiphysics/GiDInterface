@@ -119,12 +119,12 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
         GiD_EntitiesGroups assign Fluid surfaces 1
         GiD_EntitiesGroups assign Structure surfaces 2
         GiD_EntitiesGroups assign Inlet lines 2
+        GiD_EntitiesGroups assign Slip lines 3
         GiD_EntitiesGroups assign Outlet lines 4
         GiD_EntitiesGroups assign NoSlip lines $fluidLines
         GiD_EntitiesGroups unassign NoSlip lines {2 3 4}
-        GiD_EntitiesGroups assign Slip lines 3
-        GiD_EntitiesGroups assign FluidInterface lines $fluidinteractionLines
         GiD_EntitiesGroups assign FluidALEMeshBC lines $fluidLines
+        GiD_EntitiesGroups assign FluidInterface lines $fluidinteractionLines
         GiD_EntitiesGroups assign FixedDisplacement lines [lindex $strucLines end]
         GiD_EntitiesGroups assign StructureInterface lines [lrange $strucLines 0 end-1]
 
@@ -132,8 +132,8 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
         GiD_EntitiesGroups assign StructureShortSides lines {16 18}
         GiD_EntitiesGroups assign FluidLongSides lines {12 14}
         GiD_EntitiesGroups assign FluidShortSides lines 13
-
     }
+
     GidUtils::UpdateWindow GROUPS
 }
 
@@ -249,7 +249,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     } {
         GiD_Groups create "FluidALEMeshBC//Total"
         GiD_Groups edit state "FluidALEMeshBC//Total" hidden
-        spdAux::AddIntervalGroup Inlet "FluidALEMeshBC//Total"
+        spdAux::AddIntervalGroup FluidALEMeshBC "FluidALEMeshBC//Total"
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement "FluidALEMeshBC//Total"]
         $fluidDisplacementNode setAttribute ov line
