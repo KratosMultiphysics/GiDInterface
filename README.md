@@ -13,7 +13,7 @@ If you need the latest release, launch your GiD, navigate to Data > Problemtype 
 * Navigate to kratos.gid/exec/
 * Create there a symbolic link to the kratos installation folder (where runkratos is located)
   * Unix : `ln -s ~/Kratos Kratos`
-  * Windows : `mklink /J Kratos C:/kratos` (Kratos installation folder)
+  * Windows : `mklink /J Kratos C:\kratos` (Kratos installation folder)
 
 ## Usage
 * Run GiD
