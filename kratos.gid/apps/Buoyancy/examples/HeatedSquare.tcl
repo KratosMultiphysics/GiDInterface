@@ -6,6 +6,7 @@ proc ::Buoyancy::examples::HeatedSquare {args} {
 		if { $retval == "cancel" } { return }
     }
     DrawSquareGeometry$::Model::SpatialDimension
+    AssignSquareGeometryMeshSizes$::Model::SpatialDimension
     AssignGroups$::Model::SpatialDimension
     TreeAssignation$::Model::SpatialDimension
 
@@ -51,6 +52,16 @@ proc Buoyancy::examples::DrawSquareGeometry2D {args} {
 
 }
 
+# Mesh sizes assign
+proc Buoyancy::examples::AssignSquareGeometryMeshSizes2D {args} {
+    set default_mesh_size 0.0125
+    GiD_Process Mescape Meshing AssignSizes Surfaces $default_mesh_size 1 escape escape 
+    GiD_Process Mescape Meshing AssignSizes Lines $default_mesh_size 1 2 3 4 escape escape
+}
+
+proc Buoyancy::examples::AssignSquareGeometryMeshSizes3D {args} {
+    # To be implemented
+}
 
 # Group assign
 proc Buoyancy::examples::AssignGroups2D {args} {
@@ -197,7 +208,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     }
 
     # Time parameters
-    set time_parameters [list EndTime 100 DeltaTime 0.5]
+    set time_parameters [list EndTime 200 DeltaTime 0.5]
     set time_params_path [spdAux::getRoute "FLTimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
