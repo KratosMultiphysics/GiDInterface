@@ -122,7 +122,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd Material Water]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.2039 DYNAMIC_VISCOSITY 0.000587 CONDUCTIVITY 0.83052 SPECIFIC_HEAT 1004.84]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -154,12 +154,12 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Right_Wall] setAttribute ov $condtype
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Bottom_Wall] setAttribute ov $condtype
 
-    # Thermal Nodal Conditions
+    # Thermal Nodal Conditions (Initial condition)
     set thermalNodalConditions [spdAux::getRoute "CNVDFFNodalConditions"]
     set thermalnodcond "$thermalNodalConditions/condition\[@n='TEMPERATURE'\]"
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond Fluid]
     $thermalnodNode setAttribute ov $fluidtype
-    set props [list value 303.15]
+    set props [list ByFunction Yes function_value "303.15-10*x"]
     foreach {prop val} $props {
          set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -169,12 +169,12 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
         }
     }
 
-    # Thermal Conditions
+    # Thermal Conditions (Boundary conditions)
     set thermalConditions [spdAux::getRoute "CNVDFFBC"]
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Left_Wall]
     $thermalNode setAttribute ov $condtype
-    set props [list value 303.15]
+    set props [list value 303.15 Interval Total]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -186,7 +186,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
 
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Right_Wall]
     $thermalNode setAttribute ov $condtype
-    set props [list value 293.15]
+    set props [list value 293.15 Interval Total]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
