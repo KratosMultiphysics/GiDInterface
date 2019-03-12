@@ -12,12 +12,15 @@
     <include n="Materials" active="1" path="apps/Fluid/xml/Materials.spd"/>
   </container>
 
-  <container n="DEM" pn="DEM"  icon="demData" prefix="DEM" tree_state="open" open_window="0">
-    <include n="StageInfo" active="1" icon="folder" path="apps/DEM/xml/StageInfo.spd"/>
-    <include n="DEMParts" active="1" icon="bodies" path="apps/DEM/xml/Parts.spd"/>
-    <include n="Conditions" icon="contactStrategy" active="1" path="apps/DEM/xml/Conditions.spd"/>
-    <include n="SolutionStrategy" icon="settings" active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
-    <include n="materials" active="1" icon="sheets" path="apps/DEM/xml/Materials.spd"/>
+  <container n="DEM" pn="DEM" icon="units" prefix="DEM" tree_state="open" open_window="0">
+    <include n="StageInfo"        active="1" path="apps/DEM/xml/StageInfo.spd"/>
+    <include n="Parts"            active="1" path="apps/DEM/xml/Parts.spd"/>
+    <include n="Intervals"        active="1" path="apps/Common/xml/Intervals.spd"/>
+    <include n="Conditions"       active="1" path="apps/DEM/xml/Conditions.spd"/>
+    <include n="SolutionStrategy" active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
+    <include n="Results"          active="1" path="apps/DEM/xml/Results.spd" un="DEMResults" />
+    <include n="Graphs"          active="1" path="apps/DEM/xml/Graphs.spd" un="DEMGraphs" />
+    <include n="materials"        active="1" path="apps/DEM/xml/Materials.spd"/>
   </container>
 
   <container n="FluidDEM" pn="General" icon="doRestart" prefix="FluidDEM_" un="FluidDEM_CouplingParameters" tree_state="open" open_window="0">
