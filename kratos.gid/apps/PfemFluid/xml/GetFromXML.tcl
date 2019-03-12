@@ -574,4 +574,22 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
     }
 }
 
+proc PfemFluid::xml::ProcCheckStateBoundingBox3Dimension {domNode args} {
+    set state 0
+    set args {*}$args
+    set arglist [split $args " "]
+    set xpath {*}[lindex $arglist 0]
+    set checkvalue [split [lindex $arglist 1] ","]
+    set pst [$domNode selectNodes $xpath]
+    #W "xpath $xpath checkvalue $checkvalue pst $pst"
+    if {$pst in $checkvalue} { set state 1} 
+    if {$state} {
+
+        set checkdim "3D"
+
+        if {$checkdim eq $::Model::SpatialDimension} {set state 1} else {set state 0}
+    }
+    if {$state} {return "normal"} else {return "hidden"}
+}
+
 PfemFluid::xml::Init

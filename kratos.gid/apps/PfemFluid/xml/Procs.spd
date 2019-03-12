@@ -80,5 +80,10 @@
 		return [PfemFluid::xml::ProcCheckNodalConditionStatePFEM $domNode $args]
 		]]>
 	</proc>
+	<proc n='CheckStateBoundingBox3Dimension' args='args'>
+		<![CDATA[
+		return [PfemFluid::xml::ProcCheckStateBoundingBox3Dimension $domNode $args]
+		]]>
+	</proc>
 
 </container>

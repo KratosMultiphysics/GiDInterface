@@ -257,13 +257,14 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
         }
         dict set bodyDict meshing_strategy $meshing_strategyDict
 
+
+
         set spatial_bounding_boxDict [dict create ]
-        set upX [expr 0.0]; set upY [expr 0.0]; set upZ [expr 0.0]
-        dict set spatial_bounding_boxDict "upper_point" [list $upX $upY $upZ]
-        set lpX [expr 0.0]; set lpY [expr 0.0]; set lpZ [expr 0.0]
-        dict set spatial_bounding_boxDict "lower_point" [list $lpX $lpY $lpZ]
-        set vlX [expr 0.0]; set vlY [expr 0.0]; set vlZ [expr 0.0]
-        dict set spatial_bounding_boxDict "velocity" [list $vlX $vlY $vlZ]
+        dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
+        dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
+        dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
+        dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
+        dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
         dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
 
         set refining_parametersDict [dict create ]
@@ -376,12 +377,11 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
         dict set bodyDict meshing_strategy $meshing_strategyDict
 
         set spatial_bounding_boxDict [dict create ]
-        set upX [expr 0.0]; set upY [expr 0.0]; set upZ [expr 0.0]
-        dict set spatial_bounding_boxDict "upper_point" [list $upX $upY $upZ]
-        set lpX [expr 0.0]; set lpY [expr 0.0]; set lpZ [expr 0.0]
-        dict set spatial_bounding_boxDict "lower_point" [list $lpX $lpY $lpZ]
-        set vlX [expr 0.0]; set vlY [expr 0.0]; set vlZ [expr 0.0]
-        dict set spatial_bounding_boxDict "velocity" [list $vlX $vlY $vlZ]
+        dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
+        dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
+        dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
+        dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
+        dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
         dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
 
         set refining_parametersDict [dict create ]
@@ -668,4 +668,18 @@ proc PfemFluid::write::GetGravity { } {
     set cy [write::getValue PFEMFLUID_Gravity Cy]
     set cz [write::getValue PFEMFLUID_Gravity Cz]
     return [list $cx $cy $cz]
+}
+
+proc PfemFluid::write::GetLowerPointBoundingBox { } {
+    set minX [write::getValue PFEMFLUID_BoundingBox MinX]
+    set minY [write::getValue PFEMFLUID_BoundingBox MinY]
+    set minZ [write::getValue PFEMFLUID_BoundingBox MinZ]
+    return [list $minX $minY $minZ]
+}
+
+proc PfemFluid::write::GetUpperPointBoundingBox { } {
+    set maxX [write::getValue PFEMFLUID_BoundingBox MaxX]
+    set maxY [write::getValue PFEMFLUID_BoundingBox MaxY]
+    set maxZ [write::getValue PFEMFLUID_BoundingBox MaxZ]
+    return [list $maxX $maxY $maxZ]
 }

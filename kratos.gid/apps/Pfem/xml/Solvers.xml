@@ -5,7 +5,7 @@
         </inputs>
     </solver>
     
-    <solver n="SuperLUSolver" pn="SuperLU" SolverType="Standard">
+    <solver n="ExternalSolversApplication.super_lu" pn="SuperLU" SolverType="Standard">
         <inputs>
             <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
 <!--
@@ -13,40 +13,40 @@
 -->
         </inputs>
     </solver>
-    <solver n="CGSolver" pn="Conjugate Gradients" SolverType="Standard">
+    <solver n="cg" pn="Conjugate Gradients" SolverType="Standard">
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="5000" help=""/>
             <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-9" help=""/>
-			<parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="None,DiagonalPreconditioner,ILU0Preconditioner" v="None" help=""/>
+			<parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="none,diagonal,ilu0" v="none" help=""/>
 			<parameter n="scaling" pn="Scaling" type="bool" v="False" help=""/>
 <!--
 			<parameter n="verbosity" pn="Verbosity" type="combo" values="0,1,2,3" v="0" help=""/>
 -->
         </inputs>
     </solver>
-    <solver n="GMRESSolver" pn="GMRES" SolverType="Standard">
+    <solver n="ExternalSolversApplication.gmres" pn="GMRES" SolverType="Standard">
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="5000" help=""/>
             <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-9" help=""/>
-			<parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="None,DiagonalPreconditioner,ILU0Preconditioner" v="None" help=""/>
+			<parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="none,diagonal,ilu0" v="None" help=""/>
 			<parameter n="scaling" pn="Scaling" type="bool" v="False" help=""/>
 <!--
             <parameter n="verbosity" pn="Verbosity" type="combo" values="0,1,2,3" v="0" help=""/>
 -->
         </inputs>
     </solver>
-    <solver n="BICGSTABSolver" pn="BiCGStab" SolverType="Standard">
+    <solver n="bicgstab" pn="BiCGStab" SolverType="Standard">
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="5000" help=""/>
             <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-9" help=""/>
-            <parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="None,DiagonalPreconditioner,ILU0Preconditioner" v="None" help=""/>
+            <parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="none,diagonal,ilu0"  v="ilu0" help=""/>
             <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
 <!--
             <parameter n="verbosity" pn="Verbosity" type="combo" values="0,1,2,3" v="0" help=""/>
 -->
         </inputs>
     </solver>
-    <solver n="AMGCL" pn="AMGCL" SolverType="Standard">
+    <solver n="amgcl" pn="amgcl" SolverType="Standard">
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="5000" help=""/>
             <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-9" help=""/>
