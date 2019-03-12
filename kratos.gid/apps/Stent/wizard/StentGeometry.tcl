@@ -43,7 +43,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set point_distance_column [expr $point_distance_row * tan($degtorad * (90-$angle))]
 
     set num_cols [expr 1 + ($number_wires *2)]
-    set num_rows [expr 2 + (int(double($stent_length)/$point_distance_column) *2)]
+    set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
 
     array set points_x [FillBidimensionalArray $num_cols $num_rows 0.0]
     array set points_y [FillBidimensionalArray $num_cols $num_rows 0.0]
@@ -146,7 +146,7 @@ proc Stent::Wizard::DrawGeometry {} {
 
             } else {
                 incr cont11
-                if {$g eq 1 || $j eq 0 || $j eq $num_rows} {
+                if {$g eq 1 || $j eq 0 || $j eq [expr $num_rows -1 ]} {
                     GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) 0.0
                 } else {
                     GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) $b_points_z($i,$j)
