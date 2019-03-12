@@ -3,12 +3,14 @@ namespace eval ::FluidDEM::write {
     variable dem_project_parameters
 }
 
-proc ::FluidDEM::write::Init { } {    
-    
+proc ::FluidDEM::write::Init { } {
+
     variable fluid_project_parameters
     variable dem_project_parameters
+    variable general_project_parameters
     set fluid_project_parameters [dict create]
     set dem_project_parameters [dict create]
+    set general_project_parameters [dict create]
     SetAttribute main_script_file "MainKratos.py"
 
 }
@@ -27,17 +29,17 @@ proc FluidDEM::write::writeModelPartEvent { } {
     DEM::write::Init
     set DEM::write::delete_previous_mdpa 0
     write::writeAppMDPA DEM
-    
+
 }
 proc FluidDEM::write::writeCustomFilesEvent { } {
     SetAttribute main_script_file "MainKratos.py"
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
-    
+
 }
 
 proc FluidDEM::write::WriteMaterialsFile { } {
-    
+
 }
 
 proc FluidDEM::write::SetAttribute {att val} {
