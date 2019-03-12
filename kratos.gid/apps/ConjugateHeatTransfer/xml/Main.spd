@@ -34,6 +34,7 @@
         <include n="InitialConditions" active="1" path="apps/ConvectionDiffusion/xml/InitialConditions.spd"/>
         <include n="BoundaryConditions" active="1" path="apps/ConvectionDiffusion/xml/BoundaryConditions.spd"/>
         <include n="SolutionStrategy" active="1" path="apps/Buoyancy/xml/SolutionStrategyConvectionDiffusion.spd"/>
+        <include n="Materials" active="1" path="apps/ConvectionDiffusion/xml/Materials.spd"/>   
     </container>
 
     <container n="CHT" pn="Coupling" icon="app" prefix="CHT" tree_state="open" open_window="0">
