@@ -196,7 +196,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set fluid_imposed_temperature "$fluid_thermal_boundary_conditions_xpath/condition\[@n='ImposedTemperature$nd'\]"
     set fluid_thermal_node [customlib::AddConditionGroupOnXPath $fluid_imposed_temperature Fluid_Left_Top_Wall]
     $fluid_thermal_node setAttribute ov $cond_type
-    set props [list value 273.15]
+    set props [list constrained True Interval Total value 273.15]
     foreach {prop val} $props {
          set propnode [$fluid_thermal_node selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -219,7 +219,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     spdAux::AddIntervalGroup Fluid "Fluid//Initial"
     set thermic_fluid_temperature_node [customlib::AddConditionGroupOnXPath $thermic_fluid_temperature "Fluid//Initial"]
     $thermic_fluid_temperature_node setAttribute ov $body_type
-    set props [list value 273.15]
+    set props [list Interval Initial value 273.15]
     foreach {prop val} $props {
          set propnode [$thermic_fluid_temperature_node selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -257,7 +257,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     spdAux::AddIntervalGroup Heating "Heating//Initial"
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Heating//Initial"]
     $thermalnodNode setAttribute ov $body_type
-    set props [list value 273.15]
+    set props [list Interval Initial value 273.15]
     foreach {prop val} $props {
          set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -272,7 +272,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Heating_Bottom_Wall]
     $thermalNode setAttribute ov $cond_type
-    set props [list value 274.15 Interval "Total"]
+    set props [list constrained True value 274.15 Interval Total]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -316,11 +316,3 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
 
     spdAux::RequestRefresh
 }
-
-
-# proc ConjugateHeatTransfer::examples::AddCuts { } {
-#     # Cuts
-#     set results [spdAux::getRoute "Results"]
-#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
-#     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
-# }
