@@ -10,7 +10,7 @@
 #     return $project_parameters_dict
 # }
 
-proc DEM::write::getParametersEvent { } {
+proc DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
     dict set project_parameters_dict "Dimension"                            [expr 3]
@@ -47,7 +47,24 @@ proc DEM::write::getParametersEvent { } {
     dict set project_parameters_dict "RotationOption"                       [write::getValue AdvOptions CalculateRotations]
     dict set project_parameters_dict "CleanIndentationsOption"              [write::getValue AdvOptions CleanIndentations]
     set strategy_parameters_dict [dict create]
+
+    set ElementType [::wkcf::GetElementType]
+	if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
+	    set dem_strategy "sphere_strategy"
+	} elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
+	    set dem_strategy "continuum_sphere_strategy"
+	} elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
+	   set dem_strategy "thermal_sphere_strategy"
+	} elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
+	   set dem_strategy "thermal_continuum_sphere_strategy"
+	} elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
+	   set dem_strategy "thermal_continuum_sphere_strategy"
+	} elseif {$ElementType eq "IceContPartDEMElement3D"} {
+	   set dem_strategy "ice_continuum_sphere_strategy"
+	}
+
     dict set strategy_parameters_dict "RemoveBallsInitiallyTouchingWalls"   [write::getValue AdvOptions RemoveParticlesInWalls]
+    dict set strategy_parameters_dict "strategy"                            $dem_strategy
     dict set project_parameters_dict "strategy_parameters"                  $strategy_parameters_dict
 
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
