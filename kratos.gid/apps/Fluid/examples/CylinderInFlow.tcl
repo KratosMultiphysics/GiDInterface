@@ -23,7 +23,7 @@ proc Fluid::examples::DrawCylinderInFlowGeometry3D {args} {
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     GiD_Layers edit opaque Fluid 0
 
-    GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape 
+    GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
 }
 proc Fluid::examples::DrawCylinderInFlowGeometry2D {args} {
     Kratos::ResetModel
@@ -168,10 +168,10 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
 
     set fluidConditions [spdAux::getRoute "FLBC"]
     ErasePreviousIntervals
-    
+
     # Fluid Inlet
     Fluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 1} true "6*y*(1-y)*sin(pi*t*0.5)"
-    Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 0 end End} true "6*y*(1-y)"
+    Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 1 end End} true "6*y*(1-y)"
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
@@ -224,6 +224,6 @@ proc Fluid::examples::ErasePreviousIntervals { } {
 proc Fluid::examples::AddCuts { } {
     # Cuts
     set results [spdAux::getRoute "FLResults"]
-    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
+    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }
