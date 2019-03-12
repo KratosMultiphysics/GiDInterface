@@ -119,12 +119,12 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
         GiD_EntitiesGroups assign Fluid surfaces 1
         GiD_EntitiesGroups assign Structure surfaces 2
         GiD_EntitiesGroups assign Inlet lines 2
+        GiD_EntitiesGroups assign Slip lines 3
         GiD_EntitiesGroups assign Outlet lines 4
         GiD_EntitiesGroups assign NoSlip lines $fluidLines
         GiD_EntitiesGroups unassign NoSlip lines {2 3 4}
-        GiD_EntitiesGroups assign Slip lines 3
-        GiD_EntitiesGroups assign FluidInterface lines $fluidinteractionLines
         GiD_EntitiesGroups assign FluidALEMeshBC lines $fluidLines
+        GiD_EntitiesGroups assign FluidInterface lines $fluidinteractionLines
         GiD_EntitiesGroups assign FixedDisplacement lines [lindex $strucLines end]
         GiD_EntitiesGroups assign StructureInterface lines [lrange $strucLines 0 end-1]
 
@@ -132,8 +132,8 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
         GiD_EntitiesGroups assign StructureShortSides lines {16 18}
         GiD_EntitiesGroups assign FluidLongSides lines {12 14}
         GiD_EntitiesGroups assign FluidShortSides lines 13
-
     }
+
     GidUtils::UpdateWindow GROUPS
 }
 
@@ -199,20 +199,8 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
 
     # Fluid Inlet
-    GiD_Groups create "Inlet//Total"
-    GiD_Groups edit state "Inlet//Total" hidden
-    spdAux::AddIntervalGroup Inlet "Inlet//Total"
-    set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet "Inlet//Total"]
-    $inletNode setAttribute ov $condtype
-    set props [list ByFunction Yes function_modulus {0.1214*(1-cos(0.1*pi*t))*y*(1-y) if t<10 else 0.2428*y*(1-y)} direction automatic_inwards_normal Interval Total]
-    foreach {prop val} $props {
-         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Inlet $prop"
-        }
-    }
+    set function {0.1214*(1-cos(0.1*pi*t))*y*(1-y) if t<10 else 0.2428*y*(1-y)}
+    Fluid::xml::CreateNewInlet Inlet {new false name Total} true $function
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
@@ -261,7 +249,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     } {
         GiD_Groups create "FluidALEMeshBC//Total"
         GiD_Groups edit state "FluidALEMeshBC//Total" hidden
-        spdAux::AddIntervalGroup Inlet "FluidALEMeshBC//Total"
+        spdAux::AddIntervalGroup FluidALEMeshBC "FluidALEMeshBC//Total"
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement "FluidALEMeshBC//Total"]
         $fluidDisplacementNode setAttribute ov line
@@ -338,7 +326,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement FixedDisplacement]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
-    set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
+    set props [list constrainedX 1 ByFunctionX No valueX 0.0 constrainedY 1 ByFunctionY No valueY 0.0 constrainedZ 1 ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {

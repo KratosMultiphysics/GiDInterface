@@ -12,7 +12,7 @@ oo::class create Entity {
     variable outputs
     variable attributes
     variable help
-    
+
     constructor {n} {
         variable name
         variable publicname
@@ -20,7 +20,7 @@ oo::class create Entity {
         variable outputs
         variable attributes
         variable help
-        
+
         set name $n
         set publicname $n
         set inputs [dict create]
@@ -28,7 +28,7 @@ oo::class create Entity {
         set attributes [dict create]
         set help ""
     }
-    
+
     #method setAttribute {att val} {variable name; W "$name -> adding $att : $val"; variable attributes; dict set attributes $att $val}
     method setAttribute {att val} {variable attributes; dict set attributes $att $val}
     method hasAttribute {att} {
@@ -45,11 +45,11 @@ oo::class create Entity {
     }
     method addAttribute {key values} {variable attributes; dict set attributes $key $values}
     method getAttributes {} {variable attributes; return $attributes}
-    
+
     method getName { } {variable name; return $name}
     method getPublicName { } {variable publicname; return $publicname}
     method setPublicName { pn } {variable publicname; set publicname $pn}
-    
+
     method getHelp { } {variable help; if {$help eq ""} {variable publicname; return $publicname} {return $help} }
     method setHelp { h } {variable help; set help $h}
 
@@ -62,7 +62,7 @@ oo::class create Entity {
         lassign $args n pn t v h vs pvs
         dict set inputs $n [::Model::Parameter new $n $pn $t $v $h $vs $pvs]
     }
-    
+
     method addOutputDone {out} {
         variable outputs
         dict set outputs [$out getName] $out
@@ -72,7 +72,7 @@ oo::class create Entity {
         lassign $args n pn t v h vs pvs
         dict set outputs $n [::Model::Parameter new $n $pn $t $v $h $vs $pvs]
     }
-        
+
     method getInputs { } {variable inputs; return $inputs}
     method getInputPn {in} {
         variable inputs
@@ -91,7 +91,7 @@ oo::class create Entity {
         }
         return $dv
     }
-    
+
     method getOutputs { } {variable outputs; return $outputs}
     method getOutputPn {in} {
         variable outputs
@@ -101,20 +101,20 @@ oo::class create Entity {
         }
         return $pn
     }
-    
+
 
     method addInputDependency {n dn dv} {
         variable inputs
         [dict get $inputs $n] setDep $dn $dv
 
     }
-    
-    
+
+
     method cumple {args} {
         #W "Cumplimos con los filtros: $args"
         set c 1
         if {$::Kratos::kratos_private(DevMode) ne "release"} {
-            
+
         } elseif {[my getAttribute "ProductionReady"] ne "" && [my getAttribute "ProductionReady"] ne "ProductionReady"} {
             #W "[my getName] no paso - [my getAttribute "ProductionReady"] "
             return 0
@@ -123,7 +123,7 @@ oo::class create Entity {
             foreach {k listfiltervalues} {*}$args {
                 set listfiltervalues [string map {, " "} $listfiltervalues]
                 #W "k: $k vs : $listfiltervalues"
-                set listattributesvalues [my getAttribute $k]
+                set listattributesvalues [string map {, " "} [my getAttribute $k]]
                 #W "My value $listattributesvalues"
                 set b1 0
                 foreach possiblevalue $listfiltervalues {
@@ -132,7 +132,7 @@ oo::class create Entity {
                         break
                     }
                 }
-               
+
                 if {$b1 eq 0} {
                     set c 0
                     break

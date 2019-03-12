@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
     <StrategyItem n="Explicit" pn="Explicit">
-        <!-- list of options to be filled -->
+        <!-- list of options to be filled type="Translational,Rotational" -->
         <parameter_list></parameter_list>
         <linearSolvers></linearSolvers>
         <schemes>
-            <scheme n="Symplectic_Euler" pn="Symplectic Euler">
+            <scheme n="Symplectic_Euler" pn="Symplectic Euler" type="Translational">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Forward_Euler" pn="Forward Euler" type="Translational">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Taylor_Scheme" pn="Taylor" type="Translational">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Newmark_Beta_Method" pn="Newmark Beta" type="Translational">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Velocity_Verlet" pn="Velocity Verlet" type="Translational">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Direct_Integration" pn="Direct Integration" type="Rotational">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Runge_Kutta" pn="Runge-Kutta" type="Rotational">
+                <parameter_list></parameter_list>
+                <element_filters></element_filters>
+            </scheme>
+            <scheme n="Quaternion_Integration" pn="Quaternion based" type="Rotational">
                 <parameter_list></parameter_list>
                 <element_filters></element_filters>
             </scheme>

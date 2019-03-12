@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstitutiveLaws>
+    <!-- contact laws-->
+    <CLaw n="DEM_D_Hertz_viscous_Coulomb" pn="Hertz" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" help=" " OutputMode="Material">
+        <inputs></inputs>
+        <outputs></outputs>
+    </CLaw>
+</ConstitutiveLaws>

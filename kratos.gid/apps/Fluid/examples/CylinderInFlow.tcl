@@ -167,28 +167,11 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     }
 
     set fluidConditions [spdAux::getRoute "FLBC"]
-
-    # Fluid Inlet
-    set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
-    set inlets [list inlet1 0 1 "6*y*(1-y)*sin(pi*t*0.5)" inlet2 1 End "6*y*(1-y)"]
     ErasePreviousIntervals
-    foreach {interval_name ini end function} $inlets {
-        spdAux::CreateInterval $interval_name $ini $end
-        GiD_Groups create "Inlet//$interval_name"
-        GiD_Groups edit state "Inlet//$interval_name" hidden
-        spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
-        set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet "Inlet//$interval_name"]
-        $inletNode setAttribute ov $condtype
-        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
-        foreach {prop val} $props {
-             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property Inlet $prop"
-            }
-        }
-    }
+    
+    # Fluid Inlet
+    Fluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 1} true "6*y*(1-y)*sin(pi*t*0.5)"
+    Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 0 end End} true "6*y*(1-y)"
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"

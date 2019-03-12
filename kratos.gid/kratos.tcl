@@ -1,7 +1,7 @@
-##################################################################################
+###############################################################
 #   This file is common for all Kratos Applications.
 #   Do not change anything here unless it's strictly necessary.
-##################################################################################
+###############################################################
 
 ##########################################################
 #################### GiD Tcl events ######################
@@ -73,7 +73,7 @@ proc AfterWriteCalcFileGIDProject { filename errorflag } {
         if {$errcode} {return "-cancel-"}
     } else {
         if {$Kratos::must_exist_calc_data} {
-            
+
         }
     }
 }
@@ -87,7 +87,7 @@ proc AfterMeshGeneration { fail } {
 
 proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {
     set run 1
-    
+
     catch {
         set paralleltype [write::getValue ParallelType]
         if {$paralleltype eq "MPI"} {set run 0}
@@ -96,14 +96,14 @@ proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args 
         return ""
     } {
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
-        
+
     }
-    
+
 }
 
 proc GiD_Event_BeforeSaveGIDProject { modelname} {
     set fail [::Kratos::CheckValidProjectName $modelname]
-    
+
     if {$fail} {
         W [= "Wrong project name. Avoid boolean and numeric names."]
         return "-cancel-"
@@ -141,7 +141,7 @@ proc Kratos::InitGIDProject { dir } {
     if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
         WarnWin [_ "Error: %s Interface requires GiD %s or later." $kratos_private(Name) $kratos_private(MinimumGiDVersion)]
     }
-    
+
     #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
     if { [lsearch -exact $::auto_path [file join $dir scripts]] == -1 } {
         lappend ::auto_path [file join $dir scripts]
@@ -165,7 +165,7 @@ proc Kratos::InitGIDProject { dir } {
     }
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel 1 [list source [file join $dir libs $filename]]
-    }    
+    }
     set kratos_private(UseWizard) 0
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
@@ -185,7 +185,7 @@ proc Kratos::InitGIDProject { dir } {
     update
     spdAux::LoadModelFiles
     gid_groups_conds::close_all_windows
-    #kike: the problem here is that the model.spd with the information of the application 
+    #kike: the problem here is that the model.spd with the information of the application
     #was not loaded because is invoked by a posterior event. I don't know really why is working apparently well !!
     set activeapp_dom [spdAux::SetActiveAppFromDOM]
     if { $activeapp_dom == "" } {
@@ -196,7 +196,7 @@ proc Kratos::InitGIDProject { dir } {
 
 # Event triggered when opening a GiD model with kratos
 proc Kratos::AfterReadGIDProject { filespd } {
-    variable kratos_private 
+    variable kratos_private
     # Dont open the init window. Saved models have already app and dimension
     set spdAux::must_open_init_window 0
 
@@ -223,7 +223,7 @@ proc Kratos::AfterReadGIDProject { filespd } {
             set activeapp [get_domnode_attribute $activeapp_node v]
         } else {
             W "Unable to get the active application"
-            return ""   
+            return ""
         }
         set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
         spdAux::LoadIntervalGroups $root
@@ -269,7 +269,7 @@ proc Kratos::ForceRun { } {
 
 proc Kratos::RestoreVariables { } {
     variable kratos_private
-    
+
     foreach {k v} $kratos_private(RestoreVars) {
         set $k $v
     }
@@ -279,7 +279,7 @@ proc Kratos::RestoreVariables { } {
 proc Kratos::AddRestoreVar {varName} {
     variable kratos_private
     if {[info exists $varName]} {
-        set val [set $varName]   
+        set val [set $varName]
         lappend kratos_private(RestoreVars) $varName $val
     }
 }
@@ -378,7 +378,7 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     set action [$w createwindow]
     destroy $w
     if { $action < 1 } { return }
-    
+
     customlib::UpdateDocument
     spdAux::SetSpatialDimmension $dim
     apps::setActiveApp $app_id
@@ -386,7 +386,7 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     gid_groups_conds::transform_problemtype $spd_file
     #GiD_Process escape escape escape escape Data Defaults TransfProblem $project
 
-    
+
     spdAux::LoadModelFiles
     spdAux::LoadIntervalGroups
 }
@@ -408,9 +408,9 @@ proc Kratos::IsModelEmpty { } {
 }
 
 proc Kratos::BeforeMeshGeneration {elementsize} {
-    foreach group [GiD_Groups list] {
+    foreach group [spdAux::GetAppliedGroups] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
     }
     # GiD_Set ForceMesh(Points) 1
     # GiD_Set ForceMesh(Lines) 1
@@ -431,14 +431,14 @@ proc Kratos::CheckValidProjectName {modelname} {
     if {[write::isBoolean $filename]} {set fail 1}
     if {$filename == "null"} {set fail 1}
     return $fail
-    
+
 }
 
 proc Kratos::PrintArray {a {pattern *}} {
     # ABSTRACT:
     # Print the content of array nicely
-    
-    upvar 1 $a array  
+
+    upvar 1 $a array
     if {![array exists array]} {
         error "\"$a\" isn't an array"
     }
@@ -453,4 +453,9 @@ proc Kratos::PrintArray {a {pattern *}} {
         set nameString [format %s(%s) $a $name]
         W "[format "%-*s = %s" $maxl $nameString $array($name)]"
     }
+}
+
+proc ::Kratos::Quicktest {example_app example_dim example_cmd} {
+    apps::setActiveApp Examples
+    ::Examples::LaunchExample $example_app $example_dim $example_cmd
 }
