@@ -48,7 +48,8 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "CleanIndentationsOption"              [write::getValue AdvOptions CleanIndentations]
     set strategy_parameters_dict [dict create]
 
-    set ElementType [::wkcf::GetElementType]
+    # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
+    set ElementType SphericPartDEMElement3D
 	if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
 	    set dem_strategy "sphere_strategy"
 	} elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
@@ -79,11 +80,13 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]
     set time_params [DEM::write::GetTimeSettings]
         set MaxTimeStep [dict get $time_params DeltaTime]
+    # TODO: MAXTIMESTEP is get from General and it should be getting its value from DEM block
     dict set project_parameters_dict "MaxTimeStep"                          $MaxTimeStep
         set FinalTime [dict get $time_params EndTime]
     dict set project_parameters_dict "FinalTime"                            $FinalTime
-    dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
-    dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
+    # TODO: check for inconsistencies in DEMTIMEPARAMETERS  UN
+    # dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
+    # dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
     dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 

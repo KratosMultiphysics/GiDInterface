@@ -15,8 +15,9 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict "MaxTimeStep"                      $MaxTimeStep
         set TTime [dict get $time_things EndTime]
     dict set project_parameters_dict "FinalTime"                        $TTime
-    dict set project_parameters_dict "ControlTime"                      [write::getValue DEMTimeParameters DEM-ScreenInfoOutput]
-    dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue DEMTimeParameters DEM-NeighbourSearchFrequency]
+    # TODO: check this getValues no working correctly
+    # dict set project_parameters_dict "ControlTime"                      [write::getValue DEMTimeParameters ScreenInfoOutput]
+    # dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue DEMTimeParameters NeighbourSearchFrequency]
 
     # Properties
     set properties_dict [dict create]

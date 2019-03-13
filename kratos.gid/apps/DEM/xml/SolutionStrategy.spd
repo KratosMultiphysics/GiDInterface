@@ -24,12 +24,12 @@
                 <value n="VirtualMassCoef"              v="1.0"         pn="Virtual mass coefficient" help="Virtual mass"/>
                 <value n="GlobalDamping"                v="0.0"         pn="Global damping"           help="Choose the value for the damping. 0.0 means no damping at all, while 1.0 means full damping."/>
 	</container>
-	<container     n="TimeParameters"               un="DEMTimeParameters"  pn="Time parameters" help="Problem parameters" icon="time4" open_window="0">
-                <value n="StartTime"                    v="0.0"                 pn="Start time" help=""/>
-                <value n="EndTime"                      v="1.0"                 pn="End time" help=""/>
-                <value n="DeltaTime"                    v="1e-6"                pn="Delta time" help=""/>
-                <value n="ScreenInfoOutput"             v="5" state="normal"    pn="Info screen output" help="How often the user gets information on the running process (in seconds)"/>
-                <value n="NeighbourSearchFrequency"     v="50"                  pn="Search frequency" help="Search for new particle or wall neighbours. If set to '10', a single search will be computed out every ten steps"/>
+	<container     n="TimeParameters"               un="DEMTimeParameters"  pn="Time parameters"    help="Problem parameters" icon="time4" open_window="0">
+                <value n="StartTime"                    v="0.0"                 pn="Start time"         help=""/>
+                <value n="EndTime"                      v="1.0"                 pn="End time"           help=""/>
+                <value n="DeltaTime"                    v="1e-6"                pn="Delta time"         help=""/>
+                <value n="ScreenInfoOutput"             v="5"                   pn="Info screen output" help="How often the user gets information on the running process (in seconds)"/>
+                <value n="NeighbourSearchFrequency"     v="50"                  pn="Search frequency"   help="Search for new particle or wall neighbours. If set to '10', a single search will be computed out every ten steps"/>
 	</container>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
 	<dynamicnode command="spdAux::injectSolvers" args=""/>
