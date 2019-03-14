@@ -3,7 +3,7 @@
   <value n="StartTime" pn="Start time" icon="data" state="hidden" v="0.0" help=""/>
   <value n="DeltaTime" pn="Time Step (s)" icon="data" v="0.001" help=""/>
   <value n="EndTime" pn="End time" icon="data" v="1.0" help=""/>
-  <!--<value n="UseAutomaticDeltaTime" pn="Automatic Delta time" v="Fixed" values="Fixed,Automatic" help="Select the Delta time option to be used"/>-->
+  <value n="UseAutomaticDeltaTime" pn="Adaptive Time Step" icon="data" v="No" values="Yes,No" help=""/>
   <include n="Intervals" icon="sheets" active="1" state="normal" path="apps/Common/xml/Intervals.spd"/>
 </container>
   
