@@ -6,14 +6,13 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e5" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
       <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" type="double" help="Particle sphericity"/>
-      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT,DEM_D_Conical_damage" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion,Conical damage" v="Hertz" type="combo">
-	    <parameter n="PARTICLE_COHESION2" pn="Cohesion2" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>
   <Material n="DEM-SoyBean" MaterialType="DEM" help="">
@@ -22,13 +21,14 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e7" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
       <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.5" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="2" type="integer"/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.8324" type="double" help="Particle sphericity"/>
-	  </inputs>
+	    <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
+    </inputs>
   </Material>
   <Material n="DEM-CornKernel" MaterialType="DEM" help="">
     <inputs>
@@ -36,13 +36,15 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e7" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
       <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.5" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="2" type="integer"/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.6770" type="double" help="Particle sphericity"/>
-	  </inputs>
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
+
+    </inputs>
   </Material>
   <Material n="DEM-Wheat5" MaterialType="DEM" help="">
     <inputs>
@@ -50,13 +52,14 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e7" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
       <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.25" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="3" type="integer"/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
-	  </inputs>
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
+    </inputs>
   </Material>
   <Material n="DEM-Rock1" MaterialType="DEM" help="">
     <inputs>
@@ -64,13 +67,14 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e9" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
       <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.1" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="4" type="integer"/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
-	  </inputs>
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
+    </inputs>
   </Material>
   <Material n="DEM-Rock2" MaterialType="DEM" help="">
     <inputs>
@@ -78,13 +82,14 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e9" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
       <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.1" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="5" type="integer"/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
-	  </inputs>
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
+    </inputs>
   </Material>
   <Material n="DEM-Ballast" MaterialType="DEM" help="">
     <inputs>
@@ -92,12 +97,13 @@
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="5.1e9" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.18" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
       <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="PARTICLE_COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.4" type="double" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="PARTICLE_MATERIAL" pn="Color" v="6" type="integer"/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.00" type="double" help="Particle sphericity"/>
-	  </inputs>
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
+    </inputs>
   </Material>
 </Materials>
