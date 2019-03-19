@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
+
   <ConditionItem n="PotentialWallCondition2D" pn="Far field" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="" App="Fluid"
@@ -14,6 +15,7 @@
     <outputs>
     </outputs>
   </ConditionItem>
+
   <ConditionItem n="PotentialWallCondition3D" pn="Far field" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="" App="Fluid"
@@ -28,6 +30,7 @@
     <outputs>
     </outputs>
   </ConditionItem>
+<!-- 
 	<ConditionItem n="Wake2D" pn="Wake" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="False" VariableName="" App="Fluid"
@@ -41,6 +44,7 @@
     <outputs>
     </outputs>
   </ConditionItem>
+
   <ConditionItem n="Wake3D" pn="Wake" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False" VariableName="" App="Fluid"
@@ -53,7 +57,8 @@
     </inputs>
     <outputs>
     </outputs>
-  </ConditionItem>
+  </ConditionItem> -->
+
   <ConditionItem n="Body2D" pn="Body" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="" App="Fluid"
@@ -68,6 +73,7 @@
     <outputs>
     </outputs>
   </ConditionItem>
+
   <ConditionItem n="Body3D" pn="Body" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="" App="Fluid"
@@ -82,4 +88,5 @@
     <outputs>
     </outputs>
   </ConditionItem>
+
 </ConditionList>

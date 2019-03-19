@@ -8,7 +8,7 @@ proc ::PotentialFluid::examples::NACA0012 {args} {
     DrawNACA0012Geometry$::Model::SpatialDimension
     AssignGroupsNACA0012$::Model::SpatialDimension
     AssignNACA0012MeshSizes$::Model::SpatialDimension
-    #TreeAssignationNACA0012$::Model::SpatialDimension
+    TreeAssignationNACA0012$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -96,93 +96,74 @@ proc PotentialFluid::examples::AssignNACA0012MeshSizes2D {args} {
     Kratos::BeforeMeshGeneration $fluid_mesh_size
 }
 
-# # Tree assign
-# proc PotentialFluid::examples::TreeAssignationNACA00123D {args} {
-#     TreeAssignationNACA00122D
-#     AddCuts
-# }
-# proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
-#     set nd $::Model::SpatialDimension
-#     set root [customlib::GetBaseRoot]
+# Tree assign
+proc PotentialFluid::examples::TreeAssignationNACA00123D {args} {
+    TreeAssignationNACA00122D
+    AddCuts
+}
 
-#     set condtype line
-#     if {$nd eq "3D"} { set condtype surface }
+proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
+    set nd $::Model::SpatialDimension
+    set root [customlib::GetBaseRoot]
 
-#     # Monolithic solution strategy set
-#     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
+    set condtype line
+    if {$nd eq "3D"} { set condtype surface }
 
-#     # Fluid Parts
-#     set fluidParts [spdAux::getRoute "FLParts"]
-#     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-#     # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
-#     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
-#     foreach {prop val} $props {
-#         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-#         if {$propnode ne "" } {
-#             $propnode setAttribute v $val
-#         } else {
-#             W "Warning - Couldn't find property Fluid $prop"
-#         }
-#     }
+    # Fluid Parts
+    set fluidParts [spdAux::getRoute "FLParts"]
+    set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
+    set props [list Element PotentialFlowElement$nd ConstitutiveLaw Inviscid DENSITY 1.225]
+    foreach {prop val} $props {
+        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property Fluid $prop"
+        }
+    }
 
-#     set fluidConditions [spdAux::getRoute "FLBC"]
-#     ErasePreviousIntervals
+    set fluidConditions [spdAux::getRoute "FLBC"]
+    ErasePreviousIntervals
 
-#     # Fluid Inlet
-#     Fluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 1} true "6*y*(1-y)*sin(pi*t*0.5)"
-#     Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 1 end End} true "6*y*(1-y)"
+    # Far field
+    set fluidFarField "$fluidConditions/condition\[@n='PotentialWallCondition$nd'\]"
+    set farFieldNode [customlib::AddConditionGroupOnXPath $fluidFarField FarField]
+    $farFieldNode setAttribute ov $condtype
+    set props [list inlet_phi 1.0 velocity_infinityX 10.0 velocity_infinityY 0.0 velocity_infinityZ 0.0]
+    foreach {prop val} $props {
+         set propnode [$farFieldNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find far field property $prop"
+        }
+    }
 
-#     # Fluid Outlet
-#     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-#     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
-#     $outletNode setAttribute ov $condtype
-#     set props [list value 0.0]
-#     foreach {prop val} $props {
-#          set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-#          if {$propnode ne "" } {
-#               $propnode setAttribute v $val
-#          } else {
-#             W "Warning - Couldn't find property Outlet $prop"
-#         }
-#     }
+    # Fluid Conditions
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Body$nd'\]" UpperSurface] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Body$nd'\]" LowerSurface] setAttribute ov $condtype
 
-#     # Fluid Conditions
-#     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
-#     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
+    # Parallelism
+    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set time_params_path [spdAux::getRoute "Parallelization"]
+    foreach {n v} $time_parameters {
+        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+    }
 
-#     # Time parameters
-#     set time_parameters [list EndTime 45 DeltaTime 0.1]
-#     set time_params_path [spdAux::getRoute "FLTimeParameters"]
-#     foreach {n v} $time_parameters {
-#         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-#     }
-#     # Output
-#     set time_parameters [list OutputControlType step OutputDeltaStep 1]
-#     set time_params_path [spdAux::getRoute "FLResults"]
-#     foreach {n v} $time_parameters {
-#         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-#     }
-#     # Parallelism
-#     set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-#     set time_params_path [spdAux::getRoute "Parallelization"]
-#     foreach {n v} $time_parameters {
-#         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-#     }
+    spdAux::RequestRefresh
+}
 
-#     spdAux::RequestRefresh
-# }
+proc PotentialFluid::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
+}
 
-# proc PotentialFluid::examples::ErasePreviousIntervals { } {
-#     set root [customlib::GetBaseRoot]
-#     set interval_base [spdAux::getRoute "Intervals"]
-#     foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-#         if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-#     }
-# }
-
-# proc PotentialFluid::examples::AddCuts { } {
-#     # Cuts
-#     set results [spdAux::getRoute "FLResults"]
-#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
-#     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
-# }
+proc PotentialFluid::examples::AddCuts { } {
+    # Cuts
+    set results [spdAux::getRoute "FLResults"]
+    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
+    [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
+}
