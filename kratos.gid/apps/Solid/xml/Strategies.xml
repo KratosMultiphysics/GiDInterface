@@ -188,6 +188,27 @@
           <forceOut field="n" value="UpdatedLagrangianVElement2D,UpdatedLagrangianVElement3D"/>
         </element_filters>
       </scheme>
+      <scheme n="StaticStep" pn="Beams Static" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
+        <parameter_list></parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Beam"/>
+          <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>      
+      <scheme n="SimoStep" pn="Beams Simo" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
+        <parameter_list></parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Beam"/>
+          <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
+      <scheme n="EmcStep" pn="Beams EMC" help="Conservative Scheme for large rotations in beams" ProductionReady="Developer">
+        <parameter_list></parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Beam"/>
+          <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
     </schemes>
 
   </StrategyItem>
@@ -226,7 +247,28 @@
           <forceOut field="n" value="UpdatedLagrangianVElement2D,UpdatedLagrangianVElement3D"/>
         </element_filters>
       </scheme>
+      <scheme n="StaticStep" pn="Beams Static" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
+        <parameter_list></parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Beam"/>
+          <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
+      <scheme n="SimoStep" pn="Beams Simo" help="Scheme for large rotations in beams" ProductionReady="ProductionReady">
+        <parameter_list>
+          <parameter n="bossak_factor" pn="Bossak factor" type="double" v="0.0" help="Damping factor for the bossak scheme [-0.3,0]"/>
+        </parameter_list><element_filters>
+          <filter field="ElementType" value="Beam"/>
+          <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
+      <scheme n="EmcStep" pn="Beams EMC" help="Conservative Scheme for large rotations in beams" ProductionReady="Developer">
+        <parameter_list></parameter_list>
+        <element_filters>
+          <filter field="ElementType" value="Beam"/>
+          <filter field="kratos_module" value="SolidMechanicsApplication"/>
+        </element_filters>
+      </scheme>
     </schemes>
-
   </StrategyItem>
 </StrategyList>
