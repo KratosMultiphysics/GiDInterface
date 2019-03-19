@@ -39,6 +39,7 @@ proc ::PotentialFluid::Init { } {
 proc ::PotentialFluid::LoadMyFiles { } {
     variable dir
 
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
@@ -49,6 +50,11 @@ proc ::PotentialFluid::GetAttribute {name} {
     set value ""
     catch {set value [dict get $attributes $name]}
     return $value
+}
+
+proc ::PotentialFluid::CustomToolbarItems { } {
+    variable dir
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PotentialFluid::examples::NACA0012] [= "Example\nNACA 0012"]   
 }
 
 
