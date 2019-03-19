@@ -1,5 +1,6 @@
 namespace eval PotentialFluid::write {
     variable writeAttributes
+    variable FluidConditionMap
 }
 
 proc PotentialFluid::write::Init { } {
@@ -26,6 +27,7 @@ proc PotentialFluid::write::writeModelPartEvent { } {
     write::writeMaterials [::Fluid::GetAttribute validApps]
     write::writeNodalCoordinatesOnParts
     write::writeElementConnectivities
+    Fluid::write::InitConditionsMap
     Fluid::write::writeConditions
     Fluid::write::writeMeshes
 }
