@@ -423,10 +423,10 @@
   </CLaw>
 
   <!--constitutive laws for beams-->
-  <CLaw n="UserDefined2D" pn="GeneralSection" Type="1D_UR" App="Solid" kratos_module="SolidMechanicsApplication"
+  <CLaw n="UserDefined2D" pn="UserDefined" Type="1D_UR" App="Solid" kratos_module="SolidMechanicsApplication"
 	help="Linear Elastic Behaviour for Beams" Dimension="2D" ProductionReady="ProductionReady">
     <inputs>
-      <parameter n="AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
+      <parameter n="CROSS_SECTION_AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
       <parameter n="INERTIA_X" pn="Ix" v="1.0" />
       <parameter n="INERTIA_Y" pn="Iy" v="1.0" />
       <parameter n="DENSITY" pn="Density"/>
@@ -436,10 +436,10 @@
     <outputs>
     </outputs>
   </CLaw>
-  <CLaw n="UserDefined3D" pn="GeneralSection" Type="1D_UR" App="Solid" kratos_module="SolidMechanicsApplication"
+  <CLaw n="UserDefined3D" pn="UserDefined" Type="1D_UR" App="Solid" kratos_module="SolidMechanicsApplication"
 	help="Linear Elastic Behaviour for Beams" Dimension="3D" ProductionReady="ProductionReady">
     <inputs>
-      <parameter n="AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
+      <parameter n="CROSS_SECTION_AREA" pn="Area" v="1.0" unit_magnitude="Area" units="m^2" />
       <parameter n="INERTIA_X" pn="Ix" />
       <parameter n="INERTIA_Y" pn="Iy" />
       <parameter n="DENSITY" pn="Density"/>
