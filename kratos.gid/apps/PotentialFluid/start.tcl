@@ -3,7 +3,7 @@ namespace eval ::PotentialFluid {
     variable dir
     variable prefix
     variable attributes
-    variable oldVolumeMesher
+    variable app_id
     variable kratos_name
 }
 
@@ -13,7 +13,8 @@ proc ::PotentialFluid::Init { } {
     variable prefix
     variable attributes
     variable kratos_name
-    set kratos_name CompressiblePotentialFlowApplication
+    set app_id "PotentialFluid"
+    set kratos_name "CompressiblePotentialFlowApplication"
 
     apps::LoadAppById "Fluid"
 

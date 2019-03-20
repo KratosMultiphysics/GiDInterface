@@ -10,9 +10,10 @@ proc PotentialFluid::write::Init { } {
     SetAttribute conditions_un FLBC
     SetAttribute materials_un PTFLMaterials
     SetAttribute drag_un FLDrags
+    SetAttribute time_parameters_un FLTimeParameters
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid" "PotentialFluid"]
-    SetAttribute main_script_file "KratosFluid.py"
+    SetAttribute main_script_file "KratosPotentialFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
 }
 
@@ -32,8 +33,8 @@ proc PotentialFluid::write::writeModelPartEvent { } {
     Fluid::write::writeMeshes
 }
 proc PotentialFluid::write::writeCustomFilesEvent { } {
-    write::CopyFileIntoModel "python/KratosPotentialFlow.py"
-    write::RenameFileInModel "KratosPotentialFlow.py" "MainKratos.py"
+    write::CopyFileIntoModel "python/KratosPotentialFluid.py"
+    write::RenameFileInModel "KratosPotentialFluid.py" "MainKratos.py"
 }
 
 
