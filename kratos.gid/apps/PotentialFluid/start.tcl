@@ -23,7 +23,11 @@ proc ::PotentialFluid::Init { } {
 
     set prefix PTFL
 
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
+    # TODO: activate this as soon as the 3D wake detection is working
+    #set ::Model::ValidSpatialDimensions [list 2D 3D]
+    # TODO: remove this as soon as the 3D wake detection is working
+    set ::Model::ValidSpatialDimensions [list 2D]
+    spdAux::SetSpatialDimmension "2D"
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
@@ -34,7 +38,8 @@ proc ::PotentialFluid::Init { } {
     Kratos::AddRestoreVar "::GidPriv(DuplicateEntities)"
     set ::GidPriv(DuplicateEntities) 1
 
-    ::spdAux::CreateDimensionWindow
+    # TODO: activate this as soon as the 3D wake detection is working
+    #::spdAux::CreateDimensionWindow
 }
 
 proc ::PotentialFluid::LoadMyFiles { } {
