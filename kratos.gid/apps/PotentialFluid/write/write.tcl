@@ -16,6 +16,7 @@ proc PotentialFluid::write::Init { } {
     SetAttribute validApps [list "Fluid" "PotentialFluid"]
     SetAttribute main_script_file "KratosPotentialFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
+    SetAttribute output_model_part_name "fluid_computational_model_part"
 }
 
 # Events
