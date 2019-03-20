@@ -9,6 +9,7 @@ proc PotentialFluid::write::Init { } {
     SetAttribute nodal_conditions_un FLNodalConditions
     SetAttribute conditions_un FLBC
     SetAttribute materials_un PTFLMaterials
+    SetAttribute results_un Results
     SetAttribute drag_un FLDrags
     SetAttribute time_parameters_un FLTimeParameters
     SetAttribute writeCoordinatesByGroups 0
