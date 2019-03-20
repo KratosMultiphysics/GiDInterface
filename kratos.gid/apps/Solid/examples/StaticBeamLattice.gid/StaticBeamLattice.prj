@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gid version="13.5">
+  <pre>
+    <layer_to_use name="helicoide"/>
+    <groups>
+      <group id="1" name="Wires" color="#ff00ffff"/>
+      <group id="14" name="Connectors" color="#333333ff"/>
+      <group id="15" name="Displacement2" color="#4d804dff"/>
+      <group id="16" name="Displacement1" color="#ff0000ff"/>
+      <group id="17" name="Displacement3" color="#ffff00ff"/>
+      <group id="18" name="Displacement4" color="#00ff00ff"/>
+      <group id="19" name="Displacement5" color="#00ff55ff"/>
+      <group id="20" name="Displacement6" color="#00ffaaff"/>
+    </groups>
+    <entities_groups>
+      <entities_group name="points">
+        <vector name="entity_ids" length="14" type="integer">1:6 18 27:32 100018</vector>
+        <vector name="entity_num_groups" length="14" type="ushort">1x14</vector>
+        <vector name="entity_groups" length="14" type="ushort">19 20 19 19 16 19 17 15x4 18 15 17</vector>
+      </entities_group>
+      <entities_group name="lines">
+        <vector name="entity_ids" length="66" type="integer">1:24 100001:100024 1000007:1000018 1000020:1000025</vector>
+        <vector name="entity_num_groups" length="66" type="ushort">1x66</vector>
+        <vector name="entity_groups" length="66" type="ushort">1x48 14x18</vector>
+      </entities_group>
+    </entities_groups>
+  </pre>
+</gid>
