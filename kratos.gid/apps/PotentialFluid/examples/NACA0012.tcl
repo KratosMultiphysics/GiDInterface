@@ -68,13 +68,17 @@ proc PotentialFluid::examples::AssignGroupsNACA00122D {args} {
     GiD_EntitiesGroups assign FarField lines 6
     GiD_EntitiesGroups assign FarField lines 7
 
-    GiD_Groups create UpperSurface
-    GiD_Groups edit color UpperSurface "#42eb71ff"
-    GiD_EntitiesGroups assign UpperSurface lines 2
+    # GiD_Groups create UpperSurface
+    # GiD_Groups edit color UpperSurface "#42eb71ff"
+    # GiD_EntitiesGroups assign UpperSurface lines 2
 
-    GiD_Groups create LowerSurface
-    GiD_Groups edit color LowerSurface "#42eb71ff"
-    GiD_EntitiesGroups assign LowerSurface lines 3
+    # GiD_Groups create LowerSurface
+    # GiD_Groups edit color LowerSurface "#42eb71ff"
+    # GiD_EntitiesGroups assign LowerSurface lines 3
+
+    GiD_Groups create Body
+    GiD_Groups edit color Body "#42eb71ff"
+    GiD_EntitiesGroups assign Body lines {2 3}
 }
 
 proc PotentialFluid::examples::AssignGroupsNACA00123D {args} {
@@ -90,8 +94,9 @@ proc PotentialFluid::examples::AssignNACA0012MeshSizes2D {args} {
     set fluid_mesh_size 2.0
     set airfoil_mesh_size 0.01
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.3 escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get UpperSurface lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get LowerSurface lines] escape escape
+    # GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get UpperSurface lines] escape escape
+    # GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get LowerSurface lines] escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get Body lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
     Kratos::BeforeMeshGeneration $fluid_mesh_size
 }
@@ -140,8 +145,7 @@ proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
     }
 
     # Fluid Conditions
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Body$nd'\]" UpperSurface] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Body$nd'\]" LowerSurface] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Body$nd'\]" Body] setAttribute ov $condtype
 
     # Parallelism
     set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
