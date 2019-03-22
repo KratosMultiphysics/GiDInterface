@@ -96,7 +96,7 @@ proc ::DEM::AfterMeshGeneration { fail } {
 	# GidUtils::DisableGraphics
     # }
     if {[catch {::DEM::write::Elements_Substitution} msg]} {
-      W "::DEM::write::Elements_Substitution!. $msg"
+      # W "::DEM::write::Elements_Substitution!. $msg"
     }
 
     # if {!$without_window} {
