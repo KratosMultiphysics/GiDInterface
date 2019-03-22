@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<container n="ModelType" pn="Physics" icon="modelling" help="Model information" state="normal" tree_state="closed" open_window="0">
-  <value n="DomainType" pn="Physics type" icon="data" un="PFEMFLUID_DomainType" v="Fluids" values="Fluids,FSI" help="Type of problem to be solved" actualize_tree="1"/>   
-  <include n="Meshing Domains" active="1" state="hidden" path="apps/PfemFluid/xml/MeshingDomains.spd"/> 
-  <include n="Contact Strategies" active="1" state="hidden" path="apps/PfemFluid/xml/Contact.spd"/>
-</container>
-    

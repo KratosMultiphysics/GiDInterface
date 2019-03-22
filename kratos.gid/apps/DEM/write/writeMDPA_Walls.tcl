@@ -118,7 +118,7 @@ proc DEM::write::WriteWallGraphsFlag { } {
 }
 
 proc DEM::write::GetNodesForGraphs { } {
-    W "DEM::write::GetNodesForGraphs"
+    #W "DEM::write::GetNodesForGraphs"
     set groups [list ]
     #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     #set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/condition\[@n = 'Graphs'\]/group"
@@ -127,7 +127,7 @@ proc DEM::write::GetNodesForGraphs { } {
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
     }
-    W $groups
+    #W $groups
 
     return $groups
 }

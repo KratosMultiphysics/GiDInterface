@@ -6,7 +6,7 @@ proc ::FluidLauncher::Init { } {
     variable available_apps
 
     set dir [apps::getMyDir "FluidLauncher"]
-    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer]
+    set available_apps [list Fluid EmbeddedFluid Buoyancy ConjugateHeatTransfer]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
     

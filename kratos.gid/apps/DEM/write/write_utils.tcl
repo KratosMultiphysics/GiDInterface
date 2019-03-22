@@ -563,8 +563,8 @@ proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
             # lappend surfaces_to_add_to_skin_spheres $surface_id; # esta linea es la que asigna skin a las placas
         }
     }
-    W $surfaces_to_add_to_skin_spheres
-    W $bound_sphere_surface_list
+    # W $surfaces_to_add_to_skin_spheres
+    # W $bound_sphere_surface_list
     set total_skin_surface_sphere_list [concat $surfaces_to_add_to_skin_spheres $bound_sphere_surface_list]
     set total_skin_sphere_list [list $points_to_add_to_skin_spheres $lines_to_add_to_skin_spheres $total_skin_surface_sphere_list {}]
     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE all_geometry $total_skin_sphere_list

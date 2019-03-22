@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<condition n="PartsCont" pn="PartsCont" ov="point,line,surface,volume" ovm="element" icon="shells16" help="Select your group" un="DEMPartsCont">
-</condition>

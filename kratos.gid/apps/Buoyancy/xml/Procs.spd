@@ -96,7 +96,7 @@
 		set parts_un STParts
 	    if {[spdAux::getRoute $parts_un] ne ""} {
 			set conditionId [$domNode @n]
-			W $conditionId
+			
 			if {$conditionId eq "TEMPERATURE"} {return "normal"}
 			set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
 			set elemnames [list ]
