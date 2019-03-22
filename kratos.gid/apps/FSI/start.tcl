@@ -51,6 +51,7 @@ proc ::FSI::CustomToolbarItems { } {
     if {$::Model::SpatialDimension eq "2D"} {
         Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::TurekBenchmark] [= "Example\nTurek benchmark - FSI2"] 
     }
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]
 }
 
 proc ::FSI::CustomMenus { } {
