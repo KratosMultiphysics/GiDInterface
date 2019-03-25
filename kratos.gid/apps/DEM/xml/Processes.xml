@@ -7,10 +7,12 @@
       <parameter n="COMPUTE_WEAR" pn="Compute wear" type="bool" v="false" help="If activated, wear will be computed on this wall. It can increase computation time">
         <parameter n="SEVERITY_OF_WEAR" pn="Severity of abrasion" parent="true" type="double" v="0.001" help="Archards abrasion K parameter" />
         <parameter n="IMPACT_WEAR_SEVERITY" pn="Severity of impact" parent="true" type="double" v="0.001" help="Archards impact K parameter" />
-        <parameter n="BRINELL_HARDNESS" pn="Brinell Hardness (HB)" parent="true" type="double" v="200.0" help="Brinell hardness value" /></parameter>
+        <parameter n="BRINELL_HARDNESS" pn="Brinell Hardness (HB)" parent="true" type="double" v="200.0" help="Brinell hardness value" />
+      </parameter>
       <parameter n="Rigid_structure" pn="Rigid structure" type="bool" v="false" help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus">
         <parameter n="YOUNG_MODULUS" pn="Young modulus" type="double" v="1e20" parent="true" unit_magnitude="P" units="Pa"/>
-        <parameter n="POISSON_RATIO" pn="Poisson ratio" type="double" v="0.25" parent="true" /></parameter>
+        <parameter n="POISSON_RATIO" pn="Poisson ratio" type="double" v="0.25" parent="true" />
+      </parameter>
       <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
         <parameter n="SetActive" pn="Activate" type="bool" v="false" parent="true" icon="active.gif">
           <parameter n="DEM-RBImposedMotion" pn="Type of Motion" v="None" parent="true" type="combo" values="None,LinearPeriodic,FreeMotion" pvalues="None,Linear/Periodic,Free motion" help="Set Yes to impose a predefined motion to the group">
@@ -172,7 +174,8 @@
       <parameter n="MAX_RAND_DEVIATION_ANGLE" pn="Max. random velocity deviation" type="double" v="1.0" units="°" unit_magnitude="Angle"/>
       <parameter n="FLOW_MEASUREMENT" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
         <parameter n="INLET_NUMBER_OF_PARTICLES" pn="Particles per second" parent="Particles" type="double" v="200.0" />
-        <parameter n="INLET_NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" /></parameter>
+        <parameter n="INLET_NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" />
+      </parameter>
       <parameter n="DIAMETER" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L"/>
       <parameter n="PROBABILITY_DISTRIBUTION" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" pvalues="Normal,Lognormal"/>
       <parameter n="STANDARD_DEVIATION" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L"/>
@@ -235,7 +238,8 @@
     <inputs>
       <parameter n="LINEAR_VELOCITY" pn="V" type="vector" v="0.0,0.0,0.0" function="0" has_units="1"/>
       <parameter n="LINEAR_VELOCITY_PERIODIC" pn="Periodic linear velocity" type="bool" v="0">
-        <parameter n="LINEAR_VELOCITY_PERIOD" pn="Period linear velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/></parameter>
+        <parameter n="LINEAR_VELOCITY_PERIOD" pn="Period linear velocity" parent="1" type="double" v="1.0" units="s" unit_magnitude="T"/>
+      </parameter>
     </inputs>
   </Process>
 </ProcessList>

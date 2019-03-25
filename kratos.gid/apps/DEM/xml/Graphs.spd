@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<condition n="Graphs" pn="Graphs" un="DEMGraphs" ov="[CheckGeometry 2]">
-    <value n="GraphExportFreq"              v="1e-3"        pn="Printing delta time (s)"  help="Printing delta time"/>
-    <value n="Print_total_force_on_this_group"  pn="Print total force on this group"  type="bool" state="disabled" v="true"/>
-    <value n="Print_total_torque_on_this_group" pn="Print total torque on this group" type="bool" state="disabled" v="true"/>
+<condition n="Graphs" pn="Graphs" un="DEMGraphs" icon="results" ov="[CheckGeometry 2]">
+    <value n="GraphExportFreq"  v="1e-3"        pn="Printing delta time (s)"          icon="black1" help="Printing delta time"/>
+    <value n="Print_total_force_on_this_group"  pn="Print total force on this group"  icon="black1" type="bool" state="disabled" v="true"/>
+    <value n="Print_total_torque_on_this_group" pn="Print total torque on this group" icon="black1" type="bool" state="disabled" v="true"/>
 </condition>
 
 
