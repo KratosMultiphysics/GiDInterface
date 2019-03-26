@@ -12,25 +12,25 @@ proc ::FluidDEM::Init { } {
     variable prefix
     variable kratos_name
     variable attributes
-    
+
     set attributes [dict create]
     set kratos_name FluidDEMapplication
-    
+
     #W "Sourced FSI"
     set dir [apps::getMyDir "FluidDEM"]
     set prefix FluidDEM_
-    
+
     set ::spdAux::TreeVisibility 0
-    
+
     apps::LoadAppById "DEM"
     apps::LoadAppById "Fluid"
-    
-    # Intervals 
+
+    # Intervals
     dict set attributes UseIntervals 1
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
-    
+
     set ::Model::ValidSpatialDimensions [list 3D]
     LoadMyFiles
     # ::spdAux::CreateDimensionWindow
@@ -38,7 +38,7 @@ proc ::FluidDEM::Init { } {
 
 proc ::FluidDEM::LoadMyFiles { } {
     variable dir
-    
+
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
@@ -47,6 +47,15 @@ proc ::FluidDEM::LoadMyFiles { } {
 
 proc ::FluidDEM::BeforeMeshGeneration {elementsize} {
     ::DEM::BeforeMeshGeneration $elementsize
+}
+
+proc ::FluidDEM::AfterMeshGeneration { fail } {
+    if {[catch {::DEM::write::Elements_Substitution} msg]} {
+      W "::DEM::write::Elements_Substitution!. $msg"
+    }
+    # if {!$without_window} {
+	# GidUtils::EnableGraphics
+    # }
 }
 
 proc ::FluidDEM::GetAttribute {name} {
@@ -58,7 +67,7 @@ proc ::FluidDEM::GetAttribute {name} {
 
 proc ::FluidDEM::CustomToolbarItems { } {
     variable dir
-    #Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FluidDEM::examples::InnerSphere] [= "Example\nInnerSphere"]   
+    #Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FluidDEM::examples::InnerSphere] [= "Example\nInnerSphere"]
 }
 
 ::FluidDEM::Init

@@ -71,7 +71,6 @@ proc ::DEM::BeforeMeshGeneration_working {elementsize} {
 }
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {
-
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
     foreach group [$root selectNodes $xp1] {
@@ -96,9 +95,8 @@ proc ::DEM::AfterMeshGeneration { fail } {
 	# GidUtils::DisableGraphics
     # }
     if {[catch {::DEM::write::Elements_Substitution} msg]} {
-      # W "::DEM::write::Elements_Substitution!. $msg"
+      W "::DEM::write::Elements_Substitution!. $msg"
     }
-
     # if {!$without_window} {
 	# GidUtils::EnableGraphics
     # }
