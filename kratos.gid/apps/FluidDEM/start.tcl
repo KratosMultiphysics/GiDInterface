@@ -50,12 +50,7 @@ proc ::FluidDEM::BeforeMeshGeneration {elementsize} {
 }
 
 proc ::FluidDEM::AfterMeshGeneration { fail } {
-    if {[catch {::DEM::write::Elements_Substitution} msg]} {
-      W "::DEM::write::Elements_Substitution!. $msg"
-    }
-    # if {!$without_window} {
-	# GidUtils::EnableGraphics
-    # }
+    ::DEM::AfterMeshGeneration
 }
 
 proc ::FluidDEM::GetAttribute {name} {
