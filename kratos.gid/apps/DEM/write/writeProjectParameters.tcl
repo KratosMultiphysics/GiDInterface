@@ -66,7 +66,7 @@ proc DEM::write::getParametersDict { } {
 
     dict set strategy_parameters_dict "RemoveBallsInitiallyTouchingWalls"   [write::getValue AdvOptions RemoveParticlesInWalls]
     dict set strategy_parameters_dict "strategy"                            $dem_strategy
-    dict set project_parameters_dict "strategy_parameters"                  $strategy_parameters_dict
+    dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
 
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
     dict set project_parameters_dict "RollingFrictionOption"                [write::getValue AdvOptions RollingFriction]
