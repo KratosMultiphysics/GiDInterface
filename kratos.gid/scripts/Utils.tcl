@@ -26,6 +26,10 @@ proc Kratos::ResetModel { } {
     }
 }
 
+proc Kratos::GetModelName { } {
+    return [file tail [GiD_Info project ModelName]]
+}
+
 proc Kratos::IsModelEmpty { } {
     if {[GiD_Groups list] != ""} {return false}
     if {[GiD_Layers list] != "Layer0"} {return false}

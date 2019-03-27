@@ -36,7 +36,7 @@ proc Kratos::RegisterGiDEvents { } {
     
     # Save
     GiD_RegisterEvent GiD_Event_BeforeSaveGIDProject Kratos::Event_BeforeSaveGIDProject PROBLEMTYPE Kratos
-    GiD_RegisterEvent GiD_Event_AfterSaveGIDProject Kratos::Event_AfterSaveGIDProject PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_SaveModelSPD Kratos::Event_SaveModelSPD PROBLEMTYPE Kratos
     
     # Extra
     GiD_RegisterEvent GiD_Event_ChangedLanguage Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
@@ -62,33 +62,31 @@ proc Kratos::Event_InitProblemtype { dir } {
     if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
         WarnWin [_ "Error: %s Interface requires GiD %s or later." $kratos_private(Name) $kratos_private(MinimumGiDVersion)]
     }
-    
+
     #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
     if { [lsearch -exact $::auto_path [file join $dir scripts]] == -1 } {
         lappend ::auto_path [file join $dir scripts]
     }
-    #source [file join $dir scripts Menus.tcl]
-    # JG Sources will be in a different proc
-    foreach filename {Utils.tcl Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
+    # foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl WriteElements.tcl WriteConditions.tcl} {
+    #     uplevel 1 [list source [file join $dir scripts Writing $filename]]
+    # }
+    foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
+     WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
+     WriteProjectParameters.tcl WriteSubModelPart.tcl} {
+        uplevel 1 [list source [file join $dir scripts Writing $filename]]
+    }
+    foreach filename {Utils.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
-    # JG Sources will be in a different proc
     foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
         uplevel 1 [list source [file join $dir scripts Controllers $filename]]
     }
-    
-    # JG Sources will be in a different proc
     foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
         uplevel 1 [list source [file join $dir scripts Model $filename]]
     }
-    # JG Sources will be in a different proc
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel 1 [list source [file join $dir libs $filename]]
     }
-    foreach {dirname filename} {SorterWindow SorterWindow.tcl wcb wcb.tcl} {
-        uplevel 1 [list source [file join $dir libs $dirname $filename]]
-    }
-    
     set kratos_private(UseWizard) 0
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
@@ -108,7 +106,13 @@ proc Kratos::Event_InitProblemtype { dir } {
     update
     spdAux::LoadModelFiles
     gid_groups_conds::close_all_windows
-    after 500 [list spdAux::CreateWindow]
+    #kike: the problem here is that the model.spd with the information of the application
+    #was not loaded because is invoked by a posterior event. I don't know really why is working apparently well !!
+    set activeapp_dom [spdAux::SetActiveAppFromDOM]
+    if { $activeapp_dom == "" } {
+        #open a window to allow the user select the app
+        after 500 [list spdAux::CreateWindow]
+    }
 }
 
 proc Kratos::Event_LoadModelSPD { filespd } {
@@ -204,7 +208,6 @@ proc Kratos::AddRestoreVar {varName} {
         lappend kratos_private(RestoreVars) $varName $val
     }
 }
-
 
 proc Kratos::LoadWizardFiles { } {
     set ::Kratos::kratos_private(UseWizard) 1
@@ -303,9 +306,9 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
 
 
 proc Kratos::Event_BeforeMeshGeneration {elementsize} {
-    foreach group [GiD_Groups list] {
+    foreach group [spdAux::GetAppliedGroups] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape 
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
     }
     # GiD_Set ForceMesh(Points) 1
     # GiD_Set ForceMesh(Lines) 1
@@ -373,7 +376,7 @@ proc Kratos::Event_BeforeSaveGIDProject { modelname} {
     }
 }
 
-proc Kratos::Event_AfterSaveGIDProject { filespd } {
+proc Kratos::Event_SaveModelSPD { filespd } {
     gid_groups_conds::save_spd_file $filespd
     Kratos::RegisterEnvironment
     FileSelector::CopyFilesIntoModel [file dirname $filespd]
