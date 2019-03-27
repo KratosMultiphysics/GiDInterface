@@ -23,12 +23,12 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_AfterRenameGroup Kratos::Event_AfterRenameGroup PROBLEMTYPE Kratos
     
     # Mesh
-    GiD_RegisterEvent GiD_Event_BeforeMeshGeneration  Kratos::Event_BeforeMeshGeneration  PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_BeforeMeshGeneration Kratos::Event_BeforeMeshGeneration PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_AfterMeshGeneration Kratos::Event_AfterMeshGeneration PROBLEMTYPE Kratos
     
     # Write - Calculation
-    GiD_RegisterEvent GiD_Event_AfterWriteCalculationFile  Kratos::Event_AfterWriteCalculationFile  PROBLEMTYPE Kratos
-    GiD_RegisterEvent GiD_Event_BeforeRunCalculation  Kratos::Event_BeforeRunCalculation  PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_AfterWriteCalculationFile Kratos::Event_AfterWriteCalculationFile PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_BeforeRunCalculation Kratos::Event_BeforeRunCalculation PROBLEMTYPE Kratos
     
     # Postprocess
     GiD_RegisterEvent GiD_Event_InitGIDPostProcess Kratos::Event_InitGIDPostProcess PROBLEMTYPE Kratos
@@ -39,7 +39,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_AfterSaveGIDProject Kratos::Event_AfterSaveGIDProject PROBLEMTYPE Kratos
     
     # Extra
-    GiD_RegisterEvent GiD_Event_ChangedLanguage  Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_ChangedLanguage Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
     
     # End
     GiD_RegisterEvent GiD_Event_EndProblemtype Kratos::Event_EndProblemtype PROBLEMTYPE Kratos
@@ -69,7 +69,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     }
     #source [file join $dir scripts Menus.tcl]
     # JG Sources will be in a different proc
-    foreach filename {Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
+    foreach filename {Utils.tcl Applications.tcl Writing.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
     # JG Sources will be in a different proc
@@ -187,13 +187,6 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     return $errcode
 }
 
-proc Kratos::ForceRun { } {
-    # validated by escolano@cimne.upc.edu
-    variable must_write_calc_data
-    set must_write_calc_data 0
-    GiD_Process Utilities Calculate
-    set must_write_calc_data 1
-}
 
 proc Kratos::RestoreVariables { } {
     variable kratos_private
@@ -212,14 +205,6 @@ proc Kratos::AddRestoreVar {varName} {
     }
 }
 
-proc Kratos::DestroyWindows {} {
-    gid_groups_conds::close_all_windows
-    spdAux::DestroyWindow
-    if {$::Kratos::kratos_private(UseWizard)} {
-        smart_wizard::DestroyWindow
-    }
-    ::Kratos::EndCreatePreprocessTBar
-}
 
 proc Kratos::LoadWizardFiles { } {
     set ::Kratos::kratos_private(UseWizard) 1
@@ -315,21 +300,7 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     spdAux::LoadIntervalGroups
 }
 
-proc Kratos::ResetModel { } {
-    foreach layer [GiD_Info layers] {
-        GiD_Process 'Layers Delete $layer Yes escape escape
-    }
-    foreach group [GiD_Groups list] {
-        if {[GiD_Groups exists $group]} {GiD_Groups delete $group}
-    }
-}
 
-proc Kratos::IsModelEmpty { } {
-    if {[GiD_Groups list] != ""} {return false}
-    if {[GiD_Layers list] != "Layer0"} {return false}
-    if {[GiD_Geometry list point 1:end] != ""} {return false}
-    return true
-}
 
 proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     foreach group [GiD_Groups list] {
@@ -408,39 +379,10 @@ proc Kratos::Event_AfterSaveGIDProject { filespd } {
     FileSelector::CopyFilesIntoModel [file dirname $filespd]
 }
 
-proc Kratos::CheckValidProjectName {modelname} {
-    set fail 0
-    set filename [file tail $modelname]
-    if {[string is double $filename]} {set fail 1}
-    if {[write::isBoolean $filename]} {set fail 1}
-    if {$filename == "null"} {set fail 1}
-    return $fail
-    
-}
 
 proc Kratos::Event_ChangedLanguage  { newlan } {
     Kratos::UpdateMenus
 }
 
-proc Kratos::PrintArray {a {pattern *}} {
-    # ABSTRACT:
-    # Print the content of array nicely
-    
-    upvar 1 $a array  
-    if {![array exists array]} {
-        error "\"$a\" isn't an array"
-    }
-    set maxl 0
-    foreach name [lsort [array names array $pattern]] {
-        if {[string length $name] > $maxl} {
-            set maxl [string length $name]
-        }
-    }
-    set maxl [expr {$maxl + [string length $a] + 2}]
-    foreach name [lsort [array names array $pattern]] {
-        set nameString [format %s(%s) $a $name]
-        W "[format "%-*s = %s" $maxl $nameString $array($name)]"
-    }
-}
 
 Kratos::Start
