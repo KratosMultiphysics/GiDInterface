@@ -3,10 +3,10 @@ proc ::Fluid::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
     # Problem data
-    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict [apps::getActiveAppId]]
+    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
 
     # output configuration
-    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict [apps::getActiveAppId]]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
 
     # Solver settings
     dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
@@ -85,7 +85,7 @@ proc Fluid::write::getGravityProcessDict {} {
     dict set pdict "process_name" "AssignVectorByDirectionProcess"
     set params [dict create]
     set partgroup [write::getPartsSubModelPartId]
-    dict set params "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]] 
+    dict set params "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]]
     dict set params "variable_name" "BODY_FORCE"
     dict set params "modulus" $value
     dict set params "constrained" false
