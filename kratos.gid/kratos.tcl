@@ -177,7 +177,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         if {[GiD_Info Project Modelname] eq "UNNAMED"} {
             error "Save your model first"
         } {
-            set filename [file join [GiD_Info Project Modelname].gid [file tail [GiD_Info Project Modelname]].dat]
+            set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName].dat]
         }
     }
     FileSelector::CopyFilesIntoModel [file dirname $filename]

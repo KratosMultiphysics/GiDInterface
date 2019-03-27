@@ -93,7 +93,7 @@ set project_parameters_dict [dict create]
     dict set project_parameters_dict "PostParticleMoment"               [write::getValue PostPrint ParticleMoment]
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint EulerAngles]
     dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue PostPrint RollingResistanceMoment]
-    dict set project_parameters_dict "problem_name"                     [file tail [GiD_Info Project ModelName]]
+    dict set project_parameters_dict "problem_name"                     [Kratos::GetModelName]
 
     return $project_parameters_dict
 }
