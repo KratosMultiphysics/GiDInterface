@@ -1,3 +1,5 @@
+
+
 namespace eval EmbeddedFluid::xml::BoundingBox {
     variable winpath
     variable box
@@ -5,6 +7,7 @@ namespace eval EmbeddedFluid::xml::BoundingBox {
 }
 
 proc EmbeddedFluid::xml::BoundingBox::Init {} {
+    package require wcb
     variable winpath
     set winpath ".gid.bboxwindow"
     variable box

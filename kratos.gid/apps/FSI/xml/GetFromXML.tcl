@@ -11,11 +11,13 @@ proc FSI::xml::Init { } {
     Model::ForgetSolutionStrategies
     Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
     Model::getSolutionStrategies "../../Structural/xml/Strategies.xml"
+    #Model::ForgetSolutionStrategy Eigen
     Model::getSolutionStrategies Strategies.xml
     Model::getConditions Conditions.xml
 
     Model::ForgetSolvers
     Model::getSolvers "../../Common/xml/Solvers.xml"
+    Model::getSolvers "../../Structural/xml/Solvers.xml"
     Model::getSolvers Coupling_solvers.xml
 }
 
@@ -46,8 +48,19 @@ proc FSI::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
     spdAux::SetValueOnTreeItem v "Yes" FLStratParams compute_reactions
 
+    # Remove Eigen
+    #spdAux::SetValueOnTreeItem values "Static,Quasi-static,Dynamic,formfinding" STSoluType
+
+
     # Disable MPI parallelism until it is fully tested
     #spdAux::SetValueOnTreeItem values "OpenMP" ParallelType
+
+    # Mesh movement results in fluid output settings
+    set root [customlib::GetBaseRoot]
+    if {[$root selectNodes "[spdAux::getRoute FLResults]/container\[@n='OnNodes'\]"] ne ""} {
+        gid_groups_conds::addF "[spdAux::getRoute FLResults]/container\[@n='OnNodes'\]" value [list n MESH_DISPLACEMENT pn "Mesh displacement" v Yes values "Yes,No"]
+        gid_groups_conds::addF "[spdAux::getRoute FLResults]/container\[@n='OnNodes'\]" value [list n MESH_VELOCITY pn "Mesh velocity" v No values "Yes,No"]
+    }
 }
 
 # Overwriting some procs

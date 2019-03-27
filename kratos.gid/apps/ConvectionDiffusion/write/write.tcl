@@ -19,40 +19,9 @@ proc ConvectionDiffusion::write::Init { } {
     SetAttribute validApps [list "ConvectionDiffusion"]
     SetAttribute main_script_file "KratosConvectionDiffusion.py"
     SetAttribute materials_file "ConvectionDiffusionMaterials.json"
-    SetAttribute properties_location "mdpa"
-}
-
-proc ConvectionDiffusion::write::GetAttribute {att} {
-    variable writeAttributes
-    return [dict get $writeAttributes $att]
-}
-
-proc ConvectionDiffusion::write::GetAttributes {} {
-    variable writeAttributes
-    return $writeAttributes
-}
-
-proc ConvectionDiffusion::write::SetAttribute {att val} {
-    variable writeAttributes
-    dict set writeAttributes $att $val
-}
-
-proc ConvectionDiffusion::write::AddAttribute {att val} {
-    variable writeAttributes
-    dict lappend writeAttributes $att $val
-}
-
-proc ConvectionDiffusion::write::AddAttributes {configuration} {
-    variable writeAttributes
-    set writeAttributes [dict merge $writeAttributes $configuration]
-}
-
-proc ConvectionDiffusion::write::AddValidApps {appid} {
-    AddAttribute validApps $appid
-}
-
-proc ConvectionDiffusion::write::SetCoordinatesByGroups {value} {
-    SetAttribute writeCoordinatesByGroups $value
+    SetAttribute properties_location json
+    SetAttribute model_part_name ThermalModelPart
+    SetAttribute output_model_part_name "thermal_computing_domain"
 }
 
 # Events
@@ -68,8 +37,8 @@ proc ConvectionDiffusion::write::writeModelPartEvent { } {
     write::writeModelPartData
     writeProperties
 
-    # Materials
-    write::writeMaterials [GetAttribute validApps]
+    # Materials (write materials in *.mdpa)
+    # write::writeMaterials [GetAttribute validApps]
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
@@ -206,6 +175,39 @@ proc ConvectionDiffusion::write::writeConditionsMesh { } {
         } 
         write::writeConditionGroupedSubmodelParts $condid $groups_dict
     }
+}
+
+proc ConvectionDiffusion::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
+
+proc ConvectionDiffusion::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc ConvectionDiffusion::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
+}
+
+proc ConvectionDiffusion::write::AddAttribute {att val} {
+    variable writeAttributes
+    dict lappend writeAttributes $att $val
+}
+
+proc ConvectionDiffusion::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
+}
+
+proc ConvectionDiffusion::write::AddValidApps {appid} {
+    AddAttribute validApps $appid
+}
+
+proc ConvectionDiffusion::write::SetCoordinatesByGroups {value} {
+    SetAttribute writeCoordinatesByGroups $value
 }
 
 ConvectionDiffusion::write::Init

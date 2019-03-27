@@ -23,7 +23,7 @@ proc Fluid::examples::DrawCylinderInFlowGeometry3D {args} {
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     GiD_Layers edit opaque Fluid 0
 
-    GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape 
+    GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
 }
 proc Fluid::examples::DrawCylinderInFlowGeometry2D {args} {
     Kratos::ResetModel
@@ -167,28 +167,11 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     }
 
     set fluidConditions [spdAux::getRoute "FLBC"]
+    ErasePreviousIntervals
 
     # Fluid Inlet
-    set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
-    set inlets [list inlet1 0 1 "6*y*(1-y)*sin(pi*t*0.5)" inlet2 1 End "6*y*(1-y)"]
-    ErasePreviousIntervals
-    foreach {interval_name ini end function} $inlets {
-        spdAux::CreateInterval $interval_name $ini $end
-        GiD_Groups create "Inlet//$interval_name"
-        GiD_Groups edit state "Inlet//$interval_name" hidden
-        spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
-        set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet "Inlet//$interval_name"]
-        $inletNode setAttribute ov $condtype
-        set props [list ByFunction Yes function_modulus $function direction automatic_inwards_normal Interval $interval_name]
-        foreach {prop val} $props {
-             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property Inlet $prop"
-            }
-        }
-    }
+    Fluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 1} true "6*y*(1-y)*sin(pi*t*0.5)"
+    Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 1 end End} true "6*y*(1-y)"
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
@@ -216,7 +199,7 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     }
     # Output
     set time_parameters [list OutputControlType step OutputDeltaStep 1]
-    set time_params_path [spdAux::getRoute "Results"]
+    set time_params_path [spdAux::getRoute "FLResults"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
     }
@@ -240,7 +223,7 @@ proc Fluid::examples::ErasePreviousIntervals { } {
 
 proc Fluid::examples::AddCuts { } {
     # Cuts
-    set results [spdAux::getRoute "Results"]
-    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
+    set results [spdAux::getRoute "FLResults"]
+    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }

@@ -15,7 +15,7 @@ proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
     if {$node ne ""} {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
     } {
-        W "$name $it not found - Check GetFromXML.tcl file"
+        error "$name $it not found - Check GetFromXML.tcl file"
     }
 }
 
@@ -209,6 +209,15 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
         set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
+        set symbol_data [$cnd getSymbol]
+        if { [llength $symbol_data] } {
+            set txt "<symbol"
+            foreach {attribute value} $symbol_data {
+                append txt " $attribute='$value'"
+            }
+            append txt "/>"
+            append node $txt
+        }
         set inputs [concat [$process getInputs] [$cnd getInputs] ]
         foreach {inName in} $inputs {
             set forcedParams [list cnd_v [$cnd getDefault $inName v] n $n units $units um $um base $process]
@@ -270,6 +279,8 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
         switch $type {
             "inline_vector" {
                 set ndim [string index $::Model::SpatialDimension 0]
+                # TODO: Add units when Compassis enables units in vectors
+                #append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' $has_units  dimensions='$ndim'  help='$help'  state='$state' />"
                 append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' dimensions='$ndim'  help='$help'  state='$state' />"
             }
             "vector" {
@@ -422,11 +433,18 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
     }
     set ret ""
     foreach {name value} $dep_list {
+        set values [split $value ","]
+        foreach v $values {
+            lappend ins "@v='$v'"
+            lappend out "@v!='$v'"
+        }
+        set in_string [join $ins " or "]
+        set out_string [join $out " and "]
         set nodev "../value\[@n='$name'\]"
-        append ret " <dependencies value='$value' node=\""
+        append ret " <dependencies condition=\"$in_string\" node=\""
         append ret $nodev
         append ret "\"  att1='state' v1='normal'/>"
-        append ret " <dependencies condition=\"@v!='$value'\" node=\""
+        append ret " <dependencies condition=\"$out_string\" node=\""
         append ret $nodev
         append ret "\"  att1='state' v1='hidden'/>"
     }
@@ -754,9 +772,9 @@ proc spdAux::ProcGet_materials_list_simple {domNode args} {
     set filters [list ]
     if {$const_law_name != ""} {
         set const_law [Model::getConstitutiveLaw $const_law_name]
-	if {$const_law != ""} {
-	    set filters [$const_law getMaterialFilters]
-	}
+        if {$const_law != ""} {
+            set filters [$const_law getMaterialFilters]
+        }
     }
     set materials [Model::GetMaterialsNames $filters]
 

@@ -21,7 +21,6 @@ proc ::PfemFluid::Init { } {
     if {$::Kratos::kratos_private(DevMode) ne "dev"} {error [= "You need to change to Developer mode in the Kratos menu"] }
     dict set attributes UseRestart 1
     LoadMyFiles
-    ::spdAux::CreateDimensionWindow
 }
 
 proc ::PfemFluid::LoadMyFiles { } {

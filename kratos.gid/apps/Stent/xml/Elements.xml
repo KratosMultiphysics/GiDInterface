@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementList>
+  <ElementItem n="LinearBeamElement3D" pn="Beam small displacements" ImplementedInFile="small_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam" AnalysisType="linear,non_linear">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="CrLinearBeamElement3D2N"/>
+    </TopologyFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Beam3D"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="ROTATION"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="ANGULAR_VELOCITY"/>
+      <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="FORCE" pn="Force" />
+      <parameter n="MOMENT" pn="Moment"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="BeamElement3D" pn="Beam large displacements" ImplementedInFile="large_displacement_beam_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="True" LocalAxesAutomaticFunction="Structural::xml::AddLocalAxesToBeamElement" LargeDeformation="False" help="This element implements a small displacement timoshenko beam structural model" RotationDofs="True" ElementType="Beam" AnalysisType="non_linear">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="CrBeamElement3D2N"/>
+    </TopologyFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Beam3D"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="ROTATION"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="ANGULAR_VELOCITY"/>
+      <NodalCondition n="ANGULAR_ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="FORCE" pn="Force" />
+      <parameter n="MOMENT" pn="Moment"/>
+    </outputs>
+  </ElementItem>
+  <!--truss elements-->
+  <ElementItem n="TrussLinearElement2D" pn="Truss small displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="linear,non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="TrussLinearElement3D2N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Truss"/>
+      <filter field="StrainSize" value="1"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="TrussElement2D" pn="Truss large displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="TrussElement3D2N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Truss"/>
+      <filter field="StrainSize" value="1"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="TrussLinearElement3D" pn="Truss small displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" help="This element implements a small displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="linear,non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="TrussLinearElement3D2N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Truss"/>
+      <filter field="StrainSize" value="1"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="TrussElement3D" pn="Truss large displacements" ImplementedInFile="truss_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements truss" RotationDofs="False" ElementType="Truss" AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="TrussElement3D2N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Truss"/>
+      <filter field="StrainSize" value="1"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+    </outputs>
+  </ElementItem>
+  <!--cable elements-->
+  <ElementItem n="CableElement2D" pn="Cable large displacements" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements cable" RotationDofs="False" ElementType="Cable" AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="CableElement3D2N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Truss"/>
+      <filter field="StrainSize" value="1"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="CableElement3D" pn="Cable large displacements" ImplementedInFile="cable_element_3D2N.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="True" help="This element implements a large displacements cable" RotationDofs="False" ElementType="Cable" AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="CableElement3D2N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="Truss"/>
+      <filter field="StrainSize" value="1"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONDENSED_DOF_LIST"/>
+      <NodalCondition n="CONDENSED_DOF_LIST_2D"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor"/>
+    </outputs>
+  </ElementItem>
+</ElementList>

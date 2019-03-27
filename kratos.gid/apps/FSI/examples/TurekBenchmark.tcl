@@ -117,16 +117,16 @@ proc FSI::examples::DrawTurekBenchmarkStructureGeometry {args} {
 
 proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
     # Structure and fluid mesh settings
-    set str_flag_tail_divisions 5
-    set str_flag_long_sides_divisions 100
-    set fluid_cylinder_element_size 0.0035
-    set fluid_flag_tail_element_size 0.0035
-    set fluid_flag_long_sides_element_size 0.0035
-    set fluid_walls_element_size 0.02
-    set fluid_domain_element_size 0.02
+    set str_flag_tail_divisions 15
+    set str_flag_long_sides_divisions 175
+    set fluid_cylinder_element_size 0.0015
+    set fluid_flag_tail_element_size 0.00125
+    set fluid_flag_long_sides_element_size 0.002
+    set fluid_walls_element_size 0.01
+    set fluid_domain_element_size 0.01
 
     # Transition factor settings
-    GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.1 escape escape
+    GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.3 escape escape
 
     # Structure meshing settings
     GiD_Process Mescape Meshing ElemType Quadrilateral 2 escape 
@@ -186,18 +186,9 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
 
     # Fluid Inlet
-    set inletNode [customlib::AddConditionGroupOnXPath $fluidInlet Inlet]
-    $inletNode setAttribute ov $condtype
-    set props [list ByFunction Yes function_modulus {1.5*(0.5*(1-cos(0.5*pi*t))*1.0)*(4.0/0.1681)*y*(0.41-y) if t<2.0 else 1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)} direction automatic_inwards_normal Interval Total]
-    foreach {prop val} $props {
-         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Inlet $prop"
-        }
-    }
-
+    set function {1.5*(0.5*(1-cos(0.5*pi*t))*1.0)*(4.0/0.1681)*y*(0.41-y) if t<2.0 else 1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)}
+    Fluid::xml::CreateNewInlet Inlet {new false name Total} true $function
+    
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
@@ -244,8 +235,13 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         #      }
         # }
     } {
+        set gname "FluidALEMeshFreeX//Total"
+        GiD_Groups create $gname
+        GiD_Groups edit state $gname hidden
+        spdAux::AddIntervalGroup FluidALEMeshFreeX $gname
+
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
-        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshFreeX]
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list constrainedX 0 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -256,7 +252,12 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
                 W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
              }
         }
-        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidALEMeshFixXY]
+        
+        set gname "FluidALEMeshFixXY//Total"
+        GiD_Groups create $gname
+        GiD_Groups edit state $gname hidden
+        spdAux::AddIntervalGroup FluidALEMeshFixXY $gname
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -267,7 +268,11 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
                 W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
              }
         }
-        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement Cylinder]
+        set gname "Cylinder//Total"
+        GiD_Groups create $gname
+        GiD_Groups edit state $gname hidden
+        spdAux::AddIntervalGroup Cylinder $gname
+        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
         foreach {prop val} $props {
@@ -326,8 +331,8 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
-    set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
-    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 10000.0 YOUNG_MODULUS 1.4e6 POISSON_RATIO 0.4]
+    set constLawNameStruc [expr {$nd == "3D" ? "KirchhoffSaintVenant3DLaw" : "KirchhoffSaintVenantPlaneStrain2DLaw"}]
+    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc DENSITY 10000.0 YOUNG_MODULUS 1.4e6 POISSON_RATIO 0.4]
     foreach {prop val} $props {
          set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -338,8 +343,12 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     }
 
     # Structural Displacement
+    set gname "FixedDisplacement//Total"
+    GiD_Groups create $gname
+    GiD_Groups edit state $gname hidden
+    spdAux::AddIntervalGroup FixedDisplacement $gname
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
-    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement FixedDisplacement]
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement $gname]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
     set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
     foreach {prop val} $props {
@@ -411,7 +420,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         }
     }
 
-    set change_list [list Solver MVQN_recursive buffer_size 7]
+    set change_list [list Solver MVQN]
     set xpath [spdAux::getRoute FSIPartitionedcoupling_strategy]
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]

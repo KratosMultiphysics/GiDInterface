@@ -2,6 +2,7 @@
 <StrategyList>
     <StrategyItem n="implicit" pn="Implicit" SolutionType="Dynamic" ImplementedInFile="structural_mechanics_implicit_dynamic_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_implicit_dynamic_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="">
         <parameter_list>
+            <parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
             <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,And_criterion,or_criterion"
                        pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
@@ -40,6 +41,7 @@
             </scheme>
         </schemes>
     </StrategyItem>
+
     <StrategyItem n="Eigen" pn="Eigen" SolutionType="eigen_value" ImplementedInFile="structural_mechanics_eigensolver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_eigensolver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="">
         <parameter_list>
         </parameter_list>
@@ -66,8 +68,10 @@
             </scheme> -->
         </schemes>
     </StrategyItem>
-    <StrategyItem n="static" pn="Static" SolutionType="Static formfinding" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
+
+    <StrategyItem n="static" pn="Static" SolutionType="Static Quasi-static formfinding" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
         <parameter_list>
+            <parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
             <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,and_criterion,or_criterion"
                        pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
@@ -94,4 +98,5 @@
             </scheme>
         </schemes>
     </StrategyItem>
+    
 </StrategyList>

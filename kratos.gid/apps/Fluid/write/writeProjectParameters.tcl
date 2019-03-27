@@ -2,42 +2,11 @@
 proc ::Fluid::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
-    # First section -> Problem data
-    set problemDataDict [dict create]
-    set model_name [file tail [GiD_Info Project ModelName]]
-    dict set problemDataDict problem_name $model_name
-
-    # Parallelization
-    set paralleltype [write::getValue ParallelType]
-    dict set problemDataDict "parallel_type" $paralleltype
-    if {$paralleltype eq "OpenMP"} {
-        #set nthreads [write::getValue Parallelization OpenMPNumberOfThreads]
-        #dict set problemDataDict NumberofThreads $nthreads
-    } else {
-        #set nthreads [write::getValue Parallelization MPINumberOfProcessors]
-        #dict set problemDataDict NumberofProcessors $nthreads
-    }
-
-    # Write the echo level in the problem data section
-    set echo_level [write::getValue Results EchoLevel]
-    dict set problemDataDict echo_level $echo_level
-
-    # Time Parameters
-    dict set problemDataDict start_time [write::getValue FLTimeParameters StartTime]
-    dict set problemDataDict end_time [write::getValue FLTimeParameters EndTime]
-    set automaticDeltaTime [write::getValue FLTimeParameters AutomaticDeltaTime]
-    #if {$automaticDeltaTime eq "Yes"} {
-    #    dict set problemDataDict "CFL_number" [write::getValue FLTimeParameters CFLNumber]
-    #} else {
-    #    dict set problemDataDict "time_step" [write::getValue FLTimeParameters DeltaTime]
-    #}
-
-    #dict set problemDataDict divergence_step [expr [write::getValue FLTimeParameters DivergenceCleareanceStep]]
-
-    dict set projectParametersDict problem_data $problemDataDict
+    # Problem data
+    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
 
     # output configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
 
     # Solver settings
     dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
@@ -89,7 +58,7 @@ proc Fluid::write::getDragProcessList {} {
         dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
         dict set pdict "process_name" "ComputeBodyFittedDragProcess"
         set params [dict create]
-        dict set params "model_part_name" $submodelpart
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
         dict set params "write_drag_output_file" $write_output
         dict set params "print_drag_to_screen" $print_screen
         dict set params "interval" [write::getInterval $interval_name]
@@ -116,7 +85,7 @@ proc Fluid::write::getGravityProcessDict {} {
     dict set pdict "process_name" "AssignVectorByDirectionProcess"
     set params [dict create]
     set partgroup [write::getPartsSubModelPartId]
-    dict set params "model_part_name" [concat [lindex $partgroup 0]]
+    dict set params "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]] 
     dict set params "variable_name" "BODY_FORCE"
     dict set params "modulus" $value
     dict set params "constrained" false
@@ -189,7 +158,7 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
 
 proc Fluid::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
-    dict set solverSettingsDict model_part_name "FluidModelPart"
+    dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
     set currentStrategyId [write::getValue FLSolStrat]
@@ -199,7 +168,7 @@ proc Fluid::write::getSolverSettingsDict { } {
     # model import settings
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set modelDict input_filename $model_name
     dict set solverSettingsDict model_import_settings $modelDict
 
@@ -233,6 +202,24 @@ proc Fluid::write::getSolverSettingsDict { } {
         dict set timeSteppingDict "time_step" [write::getValue FLTimeParameters DeltaTime]
     }
     dict set solverSettingsDict time_stepping $timeSteppingDict
+
+    # For monolithic schemes, set the formulation settings
+    if {$currentStrategyId eq "Monolithic"} {
+        set formulationSettingsDict [dict create]
+        # Set element type
+        dict set formulationSettingsDict element_type "vms"
+        # Set OSS and remove oss_switch from the original dictionary
+        # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
+        if {[dict exists $solverSettingsDict oss_switch]} {
+            dict set formulationSettingsDict use_orthogonal_subscales [write::getStringBinaryFromValue [dict get $solverSettingsDict oss_switch]]
+            dict unset solverSettingsDict oss_switch
+        }
+        # Set dynamic tau and remove dynamic_tau from the original dictionary
+        dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
+        dict unset solverSettingsDict dynamic_tau
+        # Include the formulation settings in the solver settings dict
+        dict set solverSettingsDict formulation $formulationSettingsDict
+    }
 
     return $solverSettingsDict
 }

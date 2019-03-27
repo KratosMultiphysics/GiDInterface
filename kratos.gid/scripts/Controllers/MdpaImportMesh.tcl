@@ -184,7 +184,7 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
                 if {$dim eq 2} {
                     set element_type "Quadrilateral"
                 } else {
-                    set element_type "Hexaedra"
+                    set element_type "Hexahedra"
                 }
             }
             9 {
@@ -203,10 +203,10 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
                 set element_type "Prism"
             }
             20 {
-                set element_type "Hexaedra"
+                set element_type "Hexahedra"
             }
             27 {
-                set element_type "Hexaedra"
+                set element_type "Hexahedra"
             }
         }
     }

@@ -11,9 +11,6 @@ proc PfemFluid::write::Init { } {
     Solid::write::AddValidApps "PfemFluid"
 }
 
-proc PfemFluid::write::writeParametersEvent { } {
-    write::WriteJSON [getParametersDict]
-}
 
 # Model Part Blocks
 proc PfemFluid::write::writeModelPartEvent { } {
@@ -128,7 +125,7 @@ proc PfemFluid::write::getConditionsParametersDict {un {condition_type "Conditio
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
-        dict set paramDict model_part_name $groupId
+        dict set paramDict model_part_name PfemFluidModelPart.$groupId
         
         set process_attributes [$process getAttributes]
         set process_parameters [$process getInputs]

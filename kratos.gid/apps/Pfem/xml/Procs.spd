@@ -25,14 +25,9 @@
 	     if {$resp} {return "normal"} else {return "hidden"}
     ]]>
   </proc>
-  <proc n='GetElementsDict' args='args'>
+  <proc n='GetElements' args='args'>
     <![CDATA[
-	     return [Pfem::xml::ProcGetElementsDict $domNode $args]
-    ]]>
-  </proc>
-  <proc n='GetElementsValues' args='args'>
-    <![CDATA[
-	     return [Pfem::xml::ProcGetElementsValues $domNode $args]
+	     return [Pfem::xml::ProcGetElements $domNode $args]
     ]]>
   </proc>
   <proc n='SolutionTypeState' args='args'>
@@ -40,6 +35,16 @@
 	     return [Pfem::xml::ProcSolutionTypeState $domNode $args]
     ]]>
   </proc>
+  <proc n='EquationTypeState' args='args'>
+    <![CDATA[
+	     return [Pfem::xml::ProcEquationTypeState $domNode $args]
+    ]]>
+  </proc>
+  <proc n='StrategyTypeState' args='args'>
+    <![CDATA[
+	     return [Pfem::xml::ProcStrategyTypeState $domNode $args]
+    ]]>
+  </proc>  
   <proc n='GetBodyTypeValues' args='args'>
     <![CDATA[
 	     return [Pfem::xml::ProcGetBodyTypeValues $domNode $args]

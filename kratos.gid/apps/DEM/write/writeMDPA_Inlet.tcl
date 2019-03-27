@@ -6,7 +6,7 @@ proc DEM::write::WriteMDPAInlet { } {
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnGroups [GetInletGroups]
-    
+
     # SubmodelParts
     writeInletMeshes
 }
@@ -23,7 +23,7 @@ proc DEM::write::GetInletGroups { } {
 
 proc DEM::write::writeInletMeshes { } {
     variable inletProperties
-    
+
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
         if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
@@ -59,7 +59,7 @@ proc DEM::write::writeInletMeshes { } {
                 set number_of_particles [dict get $inletProperties $groupid INLET_NUMBER_OF_PARTICLES]
                 set mass_flow_option 0
                 set mass_flow 0.5
-            }   
+            }
             write::WriteString "        INLET_NUMBER_OF_PARTICLES $number_of_particles"
             write::WriteString "        IMPOSED_MASS_FLOW_OPTION $mass_flow_option"
             write::WriteString "        MASS_FLOW $mass_flow"
@@ -74,7 +74,7 @@ proc DEM::write::writeInletMeshes { } {
             write::WriteString "        STANDARD_DEVIATION [dict get $inletProperties $groupid STANDARD_DEVIATION]"
             write::WriteString "        RANDOM_ORIENTATION 1"
             write::WriteString "        ORIENTATION \[4\] (0.0, 0.0, 0.0, 1.0)"
-            
+
             write::WriteString "    End SubModelPartData"
             write::WriteString "    Begin SubModelPartNodes"
             GiD_WriteCalculationFile nodes -sorted $gdict
@@ -92,12 +92,12 @@ proc DEM::write::writeMaterialsInlet { } {
     set ::write::mat_dict [dict create]
     write::processMaterials $xp1 $DEM::write::last_property_id
     set DEM::write::last_property_id [expr $last_property_id + [dict size $::write::mat_dict]]
-    
+
     set inletProperties $::write::mat_dict
     set ::write::mat_dict $old_mat_dict
     # WV inletProperties
 
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO PARTICLE_FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
+    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
 
     foreach group [dict keys $inletProperties] {
         write::WriteString "Begin Properties [dict get $inletProperties $group MID] // Inlet group: [write::GetWriteGroupName $group]"

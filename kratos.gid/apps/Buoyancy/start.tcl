@@ -1,5 +1,6 @@
 namespace eval ::Buoyancy {
     # Variable declaration
+    variable id
     variable dir
     variable prefix
     variable attributes
@@ -8,17 +9,19 @@ namespace eval ::Buoyancy {
 
 proc ::Buoyancy::Init { } {
     # Variable initialization
+    variable id
     variable dir
     variable prefix
     variable kratos_name
     variable attributes
+
+    set id "Buoyancy"
     
     set kratos_name Buoyancyapplication
     
     #W "Sourced FSI"
     set dir [apps::getMyDir "Buoyancy"]
     set prefix Buoyancy_
-    
     
     apps::LoadAppById "Fluid"
     apps::LoadAppById "ConvectionDiffusion"
@@ -35,12 +38,15 @@ proc ::Buoyancy::Init { } {
 }
 
 proc ::Buoyancy::LoadMyFiles { } {
+    variable id
     variable dir
     
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
+    if {[apps::getActiveAppId] eq $id} {
+        uplevel #0 [list source [file join $dir examples examples.tcl]]
+    }
 }
 
 proc ::Buoyancy::GetAttribute {name} {
@@ -52,7 +58,7 @@ proc ::Buoyancy::GetAttribute {name} {
 
 proc ::Buoyancy::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Buoyancy::examples::HeatedSquare] [= "Example\nHeated square"]   
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Buoyancy::examples::HeatedSquare] [= "Example\nBuoyancy driven cavity flow (Ra = 1e6 - Pr = 0.71)"]   
 }
 
 ::Buoyancy::Init

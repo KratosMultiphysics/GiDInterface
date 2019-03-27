@@ -6,6 +6,7 @@ proc ::Buoyancy::examples::HeatedSquare {args} {
 		if { $retval == "cancel" } { return }
     }
     DrawSquareGeometry$::Model::SpatialDimension
+    AssignSquareGeometryMeshSizes$::Model::SpatialDimension
     AssignGroups$::Model::SpatialDimension
     TreeAssignation$::Model::SpatialDimension
 
@@ -51,6 +52,16 @@ proc Buoyancy::examples::DrawSquareGeometry2D {args} {
 
 }
 
+# Mesh sizes assign
+proc Buoyancy::examples::AssignSquareGeometryMeshSizes2D {args} {
+    set default_mesh_size 0.0125
+    GiD_Process Mescape Meshing AssignSizes Surfaces $default_mesh_size 1 escape escape 
+    GiD_Process Mescape Meshing AssignSizes Lines $default_mesh_size 1 2 3 4 escape escape
+}
+
+proc Buoyancy::examples::AssignSquareGeometryMeshSizes3D {args} {
+    # To be implemented
+}
 
 # Group assign
 proc Buoyancy::examples::AssignGroups2D {args} {
@@ -74,6 +85,10 @@ proc Buoyancy::examples::AssignGroups2D {args} {
     GiD_Groups create Bottom_Wall
     GiD_Groups edit color Bottom_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Bottom_Wall lines 4
+
+    GiD_Groups create Pressure
+    GiD_Groups edit color Pressure "#42eb71ff"
+    GiD_EntitiesGroups assign Pressure point 1
 
 }
 proc Buoyancy::examples::AssignGroups3D {args} {
@@ -118,7 +133,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd Material Water]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.2039 DYNAMIC_VISCOSITY 0.000587 CONDUCTIVITY 0.83052 SPECIFIC_HEAT 1004.84]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -131,18 +146,18 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     set fluidConditions [spdAux::getRoute "FLBC"]
 
     # Fluid Outlet
-    # set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-    # set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
-    # $outletNode setAttribute ov $condtype
-    # set props [list value 0.0]
-    # foreach {prop val} $props {
-    #      set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-    #      if {$propnode ne "" } {
-    #           $propnode setAttribute v $val
-    #      } else {
-    #         W "Warning - Couldn't find property Outlet $prop"
-    #     }
-    # }
+    set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
+    set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Pressure]
+    $outletNode setAttribute ov $condtype
+    set props [list value 0.0]
+    foreach {prop val} $props {
+         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property Outlet $prop"
+        }
+    }
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Left_Wall] setAttribute ov $condtype
@@ -150,12 +165,12 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Right_Wall] setAttribute ov $condtype
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Bottom_Wall] setAttribute ov $condtype
 
-    # Thermal Nodal Conditions
+    # Thermal Nodal Conditions (Initial condition)
     set thermalNodalConditions [spdAux::getRoute "CNVDFFNodalConditions"]
     set thermalnodcond "$thermalNodalConditions/condition\[@n='TEMPERATURE'\]"
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond Fluid]
     $thermalnodNode setAttribute ov $fluidtype
-    set props [list value 303.15]
+    set props [list ByFunction Yes function_value "303.15-10*x"]
     foreach {prop val} $props {
          set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -165,12 +180,12 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
         }
     }
 
-    # Thermal Conditions
+    # Thermal Conditions (Boundary conditions)
     set thermalConditions [spdAux::getRoute "CNVDFFBC"]
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Left_Wall]
     $thermalNode setAttribute ov $condtype
-    set props [list value 303.15]
+    set props [list value 303.15 Interval Total]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -182,7 +197,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
 
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Right_Wall]
     $thermalNode setAttribute ov $condtype
-    set props [list value 293.15]
+    set props [list value 293.15 Interval Total]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -193,7 +208,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     }
 
     # Time parameters
-    set time_parameters [list EndTime 100 DeltaTime 0.5]
+    set time_parameters [list EndTime 200 DeltaTime 0.5]
     set time_params_path [spdAux::getRoute "FLTimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v

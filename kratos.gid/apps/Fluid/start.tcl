@@ -4,6 +4,7 @@ namespace eval ::Fluid {
     variable prefix
     variable attributes
     variable kratos_name
+    variable app_id
 }
 
 proc ::Fluid::Init { } {
@@ -12,6 +13,9 @@ proc ::Fluid::Init { } {
     variable prefix
     variable attributes
     variable kratos_name
+    variable app_id
+    
+    set app_id Fluid
 
     set kratos_name "FluidDynamicsApplication"
     set dir [apps::getMyDir "Fluid"]
@@ -47,7 +51,10 @@ proc ::Fluid::GetAttribute {name} {
 
 proc ::Fluid::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Fluid::examples::CylinderInFlow] [= "Example\nCylinder in air flow"]   
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Fluid::examples::CylinderInFlow] [= "Example\nCylinder in air flow"]
+    if {$::Model::SpatialDimension eq "2D"} {
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Fluid::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]
+    }
 }
 
 proc ::Fluid::CustomMenus { } {

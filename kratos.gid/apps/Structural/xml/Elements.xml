@@ -374,7 +374,7 @@
     </outputs>
   </ElementItem>
   <!--membrane elements-->
-  <ElementItem n="PrestressedMembraneElement" pn="Membrane prestressed" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="Developer" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane" AnalysisType="non_linear">
+  <ElementItem n="PrestressedMembraneElement" pn="Membrane prestressed" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="PreStressMembraneElement3D3N"/>

@@ -35,6 +35,10 @@ proc ::Examples::LoadMyFiles { } {
 proc ::Examples::StartWindow { } {
     variable doc
     variable examples_window
+
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
     set root [$doc documentElement]
 
     spdAux::DestroyInitWindow
@@ -113,7 +117,9 @@ proc ::Examples::LaunchExample {example_app example_dim example_cmd} {
 proc ::Examples::DestroyExamplesWindow {} {
     
     variable examples_window
-    if {[winfo exists $examples_window]} {destroy $examples_window}
+    if { ![GidUtils::IsTkDisabled] } {
+        if {[winfo exists $examples_window]} {destroy $examples_window}
+    }
 }
 
 ::Examples::Init

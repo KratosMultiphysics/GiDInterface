@@ -3,6 +3,7 @@ namespace eval ::Structural {
     variable dir
     variable attributes
     variable kratos_name
+    variable app_id
 }
 
 proc ::Structural::Init { } {
@@ -10,6 +11,9 @@ proc ::Structural::Init { } {
     variable dir
     variable attributes
     variable kratos_name
+    variable app_id
+
+    set app_id Structural
     
     set dir [apps::getMyDir "Structural"]
     set attributes [dict create]
@@ -38,6 +42,7 @@ proc ::Structural::LoadMyFiles { } {
 
 proc ::Structural::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::TrussCantilever] [= "Example\nTruss cantilever"]   
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]   
 }
 
 proc ::Structural::CustomMenus { } {

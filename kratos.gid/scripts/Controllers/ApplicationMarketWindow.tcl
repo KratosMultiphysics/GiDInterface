@@ -1,9 +1,12 @@
 
 proc spdAux::reactiveApp { } {
     #W "Reactive"
-    variable initwind
-    destroy $initwind
-    
+    variable initwind    
+    if { ![GidUtils::IsTkDisabled] } {
+        if { [winfo exists $initwind] } {
+            destroy $initwind
+        }
+    }
     set root [customlib::GetBaseRoot]
     set ::Model::SpatialDimension [[$root selectNodes "value\[@n='nDim'\]"] getAttribute v ]
     set appname [[$root selectNodes "hiddenfield\[@n='activeapp'\]"] @v ]
@@ -31,6 +34,7 @@ proc spdAux::activeApp { appid } {
         foreach elem [$root getElementsByTagName "appLink"] {
             if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
                 $elem setAttribute "active" 1
+                set must_open_init_window 0
             } else {
                 $elem setAttribute "active" 0
             }
@@ -49,26 +53,33 @@ proc spdAux::activeApp { appid } {
     }
 }
 
+proc spdAux::SetActiveAppFromDOM { } {
+    set activeapp_dom ""
+    set root [customlib::GetBaseRoot]
+    set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
+    if {$activeapp_node ne ""} {
+        set activeapp_dom [get_domnode_attribute $activeapp_node v]
+        if { $activeapp_dom != "" } {
+            apps::setActiveApp $activeapp_dom
+        }
+    }
+    return $activeapp_dom
+}
+
 proc spdAux::CreateWindow {} {
     variable initwind
     variable must_open_init_window
     
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
+    
     if {$must_open_init_window == 0} {return ""}
-    set root [customlib::GetBaseRoot]
+
+    if {[apps::getActiveApp] ne ""} {return ""}
     
-    set activeapp_node [$::gid_groups_conds::doc selectNodes "//hiddenfield\[@n='activeapp'\]"]
-    if {$activeapp_node ne ""} {
-        set activeapp [get_domnode_attribute $activeapp_node v]
-    } else {
-        return ""   
-    }
     spdAux::DestroyInitWindow
-        
-    if { $activeapp ne "" } {
-        apps::setActiveApp $activeapp
-        return ""
-    }
-    
+                
     set w .gid.win_example
     toplevel $w
     wm withdraw $w
@@ -107,7 +118,7 @@ proc spdAux::CreateWindow {} {
     # More button
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
         set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
-        set img [gid_themes::GetImageModule $more_path]
+        set img [gid_themes::GetImage $more_path Kratos]
         ttk::button $w.information.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]
         ttk::label $w.information.text_more -text "More..."
         
@@ -172,7 +183,7 @@ proc spdAux::CreateDimensionWindow { } {
         foreach dim $::Model::ValidSpatialDimensions {
             set imagepath [getImagePathDim $dim]
             if {![file exists $imagepath]} {set imagepath [file nativename [file join $dir images "$dim.png"]]}
-            set img [gid_themes::GetImageModule $imagepath ""]
+            set img [gid_themes::GetImage $imagepath "Kratos"]
             set but [ttk::button $w.information.img$dim -image $img -command [list spdAux::SwitchDimAndCreateWindow $dim] ]
             
             grid $w.information.img$dim -column $i -row 0

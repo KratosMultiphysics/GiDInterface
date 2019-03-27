@@ -91,6 +91,7 @@ proc spdAux::processIncludes { } {
     set root [customlib::GetBaseRoot]
     spdAux::processAppIncludes $root
     spdAux::processDynamicNodes $root
+    spdAux::parseRoutes
 }
 
 proc spdAux::processDynamicNodes { root } {
@@ -134,6 +135,16 @@ proc spdAux::CustomTreeCommon { } {
     
 }
 
+
+proc spdAux::ForceTreePreload { } {
+    foreach node [[customlib::GetBaseRoot] getElementsByTagName value] { 
+        if {[$node hasAttribute "values"] } {
+            get_domnode_attribute $node values
+        }
+    }
+}
+
+# No workea
 proc spdAux::ForceExtremeLoad { } {
     
     set root [customlib::GetBaseRoot]
@@ -154,8 +165,13 @@ proc spdAux::getImagePathDim { dim } {
     return $imagepath
 }
 proc spdAux::DestroyWindow {} {
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
     variable initwind
-    if {[winfo exists $initwind]} {destroy $initwind}
+    if {[winfo exists $initwind]} {
+        destroy $initwind    
+    }
 }
 
 # Routes
@@ -374,6 +390,21 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
     }
 }
 
+proc spdAux::GetAppliedGroups { {root ""} } {
+    customlib::UpdateDocument
+    
+    if {$root eq "" } {
+        set root [customlib::GetBaseRoot]
+    }
+    set group_list [list ]
+    foreach group_node [$root getElementsByTagName "group"] {
+        set parent [[$group_node parent] nodeName]
+        if {$parent eq "condition"} {
+            lappend group_list [write::GetWriteGroupName [$group_node @n]]
+        }
+    }
+    return [lsort -unique $group_list]
+}
 
 proc spdAux::LoadModelFiles { {root "" }} {
     if {$root eq ""} {

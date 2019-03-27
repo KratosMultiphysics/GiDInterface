@@ -8,7 +8,9 @@
       <item GeometryType="Sphere" nodes="1" KratosName="SphericParticle3D"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures></ConstitutiveLaw_FilterFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="DEM"/>
+    </ConstitutiveLaw_FilterFeatures>
     <NodalConditions></NodalConditions>
     <inputs></inputs>
     <outputs></outputs>

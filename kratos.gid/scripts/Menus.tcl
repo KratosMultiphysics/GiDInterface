@@ -29,6 +29,9 @@ proc Kratos::ToolbarRefresh {} {
 }
 
 proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
     global KBitmapsNames KBitmapsCommands KBitmapsHelp
     variable kratos_private
     Kratos::EndCreatePreprocessTBar
@@ -95,6 +98,9 @@ proc Kratos::EndCreatePreprocessTBar {} {
 
 
 proc Kratos::UpdateMenus { } {
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
     Kratos::ChangeMenus
     apps::ExecuteOnCurrentApp CustomMenus
 }

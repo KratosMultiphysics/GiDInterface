@@ -165,7 +165,7 @@ proc Solid::examples::TreeAssignationEccentricColumn3D {args} {
     }
     
     # Solver
-    set solver_parameters [list Solver AMGCL max_iteration 2000 tolerance 1e-6 krylov_type cg]
+    set solver_parameters [list Solver amgcl max_iteration 2000 tolerance 1e-6 krylov_type cg]
     set solver_params_path [spdAux::getRoute "SLStaticlinear_solver_settings"]
     foreach {n v} $solver_parameters {
         [$root selectNodes "$solver_params_path/value\[@n = '$n'\]"] setAttribute v $v

@@ -4,7 +4,15 @@ import KratosMultiphysics.DelaunayMeshingApplication
 import KratosMultiphysics.PfemFluidDynamicsApplication
 import KratosMultiphysics.SolidMechanicsApplication
 
-import MainFluidPFEM
+from pfem_fluid_dynamics_analysis import PfemFluidDynamicsAnalysis
 
-MainFluidPFEM.Solution().Run()
+if __name__ == "__main__":
 
+  with open("ProjectParameters.json",'r') as parameter_file:
+    parameters = KratosMultiphysics.Parameters(parameter_file.read())
+
+  model = KratosMultiphysics.Model()
+
+  simulation = PfemFluidDynamicsAnalysis(model,parameters)
+
+  simulation.Run()

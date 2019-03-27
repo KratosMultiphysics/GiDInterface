@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="SolutionStrat" pn="Solution" help="Solution Strategy" icon="solution" open_window="0">
+
+    <include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
+
+    <container n="TimeParameters" pn="Time parameters" un="CNVDFFTimeParameters,FLTimeParameters,TimeParameters" help="Time parameters" open_window="0" icon="time4">
+        <value n="StartTime" pn="Start time" v="0.0" help=""/>
+        <value n="EndTime" pn="End time" v="1" help=""/>
+        <value n="AutomaticDeltaTime" pn="Automatic delta time" un="FLAutomaticDeltaTime" v="No" values="Yes,No" help=""/>
+        <value n="DeltaTime" pn="Delta time" v="0.01" help="User-defined time step" state="[checkStateByUniqueName FLAutomaticDeltaTime No]"/>
+        <value n="CFLNumber" pn="CFL number" v="1" help="Desired CFL number for automatic time step computation" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
+        <value n="MinimumDeltaTime" pn="Minimum delta time" v="0.0001" help="Minimum delta time allowed" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
+        <value n="MaximumDeltaTime" pn="Maximum delta time" v="0.01" help="Maximum delta time allowed" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
+    </container>
+
+    <container n="Parameters" pn="Parameters" un="CHTGeneralParameters" >
+        <value n="max_iteration" pn="Max num of iterations" v="10" />
+        <value n="temperature_relative_tolerance" pn="Temperature relative tolerance" v="1e-5" />
+    </container>
+
+</container>

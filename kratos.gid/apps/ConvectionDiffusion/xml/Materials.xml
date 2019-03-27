@@ -9,6 +9,14 @@
         </inputs>
     </Material>
 
+    <Material n="Gold" MaterialType="ConvectionDiffusion" help="Steel physical properties">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" v="19300" unit_magnitude="Density" units="kg/m^3"/>
+            <parameter n="CONDUCTIVITY" pn="Thermal conductivity" v="310.0" unit_magnitude="Power/(L*Temp)" units="W/(m*K)"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" v="125.6" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)"/>
+        </inputs>
+    </Material>
+
     <Material n="Air" MaterialType="ConvectionDiffusion" help="Air physical properties">
         <inputs>
             <parameter n="DENSITY" pn="Density" v="1.225" unit_magnitude="Density" units="kg/m^3"/>

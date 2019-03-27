@@ -10,7 +10,7 @@
     </container>
 
     <container n="ALEParams" pn="ALE parameters" un="FSIALEParams" icon="groupsTreeNew.gif" state="normal" open_window="0">
-        <value n="MeshSolver" pn="Mesh solver" type="combo" values="mesh_solver_laplacian,mesh_solver_structural_similarity" dict="mesh_solver_laplacian,Laplacian,mesh_solver_structural_similarity,Structural similarity" v="mesh_solver_structural_similarity" help="Available ALE mesh solvers."/>
+        <value n="MeshSolver" pn="Mesh solver" type="combo" values="laplacian,structural_similarity" dict="laplacian,Laplacian,structural_similarity,Structural similarity" v="structural_similarity" help="Available ALE mesh solvers."/>
     </container>
 
 </container>

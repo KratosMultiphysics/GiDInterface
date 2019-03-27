@@ -37,7 +37,6 @@ proc PfemFluid::xml::MultiAppEvent {args} {
 }
 
 proc PfemFluid::xml::CustomTree { args } {
-    
     #HOW TO USE THIS FUNCTION:
     #spdAux::SetValueOnTreeItem arg1 arg2 arg3 (arg4)
     #arg1: attribute_to_modify 
@@ -45,17 +44,20 @@ proc PfemFluid::xml::CustomTree { args } {
     #arg3: unique_name_of_the_node  ('unique name is defined by the attribute un=)
     #arg4 (optional): name_of_the_child_we_want_to_modify  ('name'is defined by the attribute n=)
 
+    set app_root [customlib::GetBaseRoot]
+    foreach node [$app_root getElementsByTagName container ] { if {[$node hasAttribute prefix] && [$node getAttribute prefix] eq "PFEMFLUID_"} {set app_root $node; break } }
+
     #set icon data as default
-    foreach node [[customlib::GetBaseRoot] getElementsByTagName value ] { $node setAttribute icon data }
+    foreach node [$app_root getElementsByTagName value ] { $node setAttribute icon data }
 
     #problem settings
-    foreach node [[customlib::GetBaseRoot] getElementsByTagName container ] { if {[$node hasAttribute solstratname]} {$node setAttribute icon folder } }
+    foreach node [$app_root getElementsByTagName container ] { if {[$node hasAttribute solstratname]} {$node setAttribute icon folder } }
     #TODO: (for JG) the previous icons should be changed automatically looking at the strategies.xml
 
     
     #intervals
     spdAux::SetValueOnTreeItem icon sheets Intervals
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
         $node setAttribute icon select
     }        
     
@@ -63,39 +65,41 @@ proc PfemFluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEMFLUID_NodalConditions VELOCITY
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEMFLUID_NodalConditions PRESSURE
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition" ] { 
         $node setAttribute icon select
-	$node setAttribute groups_icon groupCreated
+	    $node setAttribute groups_icon groupCreated
     }
 
     #loads
-    spdAux::SetValueOnTreeItem icon setLoad PFEMFLUID_Loads 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] { 
-        $node setAttribute icon select
-	$node setAttribute groups_icon groupCreated
+    if {[spdAux::getRoute PFEMFLUID_Loads] ne ""} {
+        spdAux::SetValueOnTreeItem icon setLoad PFEMFLUID_Loads 
+        foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] { 
+            $node setAttribute icon select
+            $node setAttribute groups_icon groupCreated
+        }
     }
 
     #materials
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ] { 
         $node setAttribute icon select
     }
     
     #solver settings
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }   
 
-    foreach node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
         $node setAttribute icon select
     }   
 
     
     #units
-    [[customlib::GetBaseRoot] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
+    [[$app_root parent] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
 
     #results
     spdAux::SetValueOnTreeItem v Yes NodalResults VELOCITY
@@ -104,13 +108,20 @@ proc PfemFluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v No NodalResults VELOCITY_REACTION
     spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT_REACTION
     
-    set inlet_result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
+    set inlet_result_node [[$app_root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
     if {$inlet_result_node ne "" } {$inlet_result_node delete}
 
     #restart
     spdAux::SetValueOnTreeItem icon doRestart Restart     
     spdAux::SetValueOnTreeItem icon select Restart RestartOptions
     
+    # 3D gravity
+    if {$Model::SpatialDimension eq "3D"} {
+        catch {
+            spdAux::SetValueOnTreeItem v -9.81 PFEMFLUID_Gravity Cy  
+            spdAux::SetValueOnTreeItem v 0.0 PFEMFLUID_Gravity Cz  
+        }
+    }
     
 }
 
@@ -395,6 +406,7 @@ proc PfemFluid::xml::ProcGetRigidBodiesValues {domNode args} {
 }
 
 proc PfemFluid::xml::StartSortingWindow { } {
+    package require SorterWindow
     set data_dict [dict create]
     set conds [PfemFluid::xml::GetConditionsAndGroups PFEMFLUID_Loads]
     set nodalconds [PfemFluid::xml::GetConditionsAndGroups PFEMFLUID_NodalConditions]
@@ -560,6 +572,24 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
         }
         gid_groups_conds::addF $block_path value [list n Body pn Body v - values {[GetRigidBodiesValues]} help $help]
     }
+}
+
+proc PfemFluid::xml::ProcCheckStateBoundingBox3Dimension {domNode args} {
+    set state 0
+    set args {*}$args
+    set arglist [split $args " "]
+    set xpath {*}[lindex $arglist 0]
+    set checkvalue [split [lindex $arglist 1] ","]
+    set pst [$domNode selectNodes $xpath]
+    #W "xpath $xpath checkvalue $checkvalue pst $pst"
+    if {$pst in $checkvalue} { set state 1} 
+    if {$state} {
+
+        set checkdim "3D"
+
+        if {$checkdim eq $::Model::SpatialDimension} {set state 1} else {set state 0}
+    }
+    if {$state} {return "normal"} else {return "hidden"}
 }
 
 PfemFluid::xml::Init

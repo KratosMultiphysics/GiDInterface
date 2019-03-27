@@ -110,7 +110,7 @@ proc spdAux::ProcGetSchemes {domNode args} {
         #}
     set solStratName [::write::getValue $sol_stratUN]
     #W "Unique name: $sol_stratUN - Nombre $solStratName"
-    set schemes [::Model::GetAvailableSchemes $solStratName]
+    set schemes [::Model::GetAvailableSchemes $solStratName {*}$args]
 
     set ids [list ]
     if {[llength $schemes] == 0} {
@@ -145,7 +145,7 @@ proc spdAux::ProcGetConstitutiveLaws { domNode args } {
     set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
     set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
     #W "Const Laws que han pasado la criba: $Claws"
-    if {[llength $Claws] == 0} { 
+    if {[llength $Claws] == 0} {
         set names [list "None"]
     } {
         set names [list ]
@@ -207,20 +207,25 @@ proc spdAux::ProcGetSolverParameterDict { domNode args } {
 proc spdAux::ProcGetSolverParameterValues { domNode args } {
 
     set solver_node [[$domNode parent] selectNodes "./value\[@n='Solver'\]"]
-    #get_domnode_attribute $solver_node values
-    set solver [Model::GetSolver [get_domnode_attribute $solver_node v]]
-    set param_name [get_domnode_attribute $domNode n]
-    set param [$solver getInputPn $param_name]
-    set values [$param getValues]
-    set v [get_domnode_attribute $domNode v]
-    if {$v eq "" || $v ni $values} {
-        set v [$param getDv]
-        if {$v eq "" || $v ni $values} {
-            set v [lindex $values 0]
+    get_domnode_attribute $solver_node values
+    set solver_name [get_domnode_attribute $solver_node v]
+    if {$solver_name ne "Automatic"} {
+        set solver [Model::GetSolver $solver_name]
+        set param_name [get_domnode_attribute $domNode n]
+        set param [$solver getInputPn $param_name]
+        if {$param ne ""} {
+            set values [$param getValues]
+            set v [get_domnode_attribute $domNode v]
+            if {$v eq "" || $v ni $values} {
+                set v [$param getDv]
+                if {$v eq "" || $v ni $values} {
+                    set v [lindex $values 0]
+                }
+                $domNode setAttribute v $v
+            }
+            if {$param ne ""} {return [join $values ","]}
         }
-        $domNode setAttribute v $v
     }
-    if {$param ne ""} {return [join $values ","]}
     return ""
 }
 proc spdAux::ProcGetSolversValues { domNode args } {
