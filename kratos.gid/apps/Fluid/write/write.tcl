@@ -120,10 +120,10 @@ proc Fluid::write::writeBoundaryConditions { } {
 
     # Write the conditions
     if {$::Model::SpatialDimension eq "3D"} {
-        set kname WallCondition3D3N
+        set kname SurfaceCondition3D3N
         set nnodes 3
     } {
-        set kname WallCondition2D2N
+        set kname LineCondition2D2N
         set nnodes 2
     }
     write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $Fluid::write::FluidConditionMap
