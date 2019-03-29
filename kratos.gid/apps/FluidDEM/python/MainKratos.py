@@ -6,35 +6,28 @@
 
 from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
 
-import sys
-
 # Kratos
 from KratosMultiphysics import *
+from KratosMultiphysics.ExternalSolversApplication   import *
 from KratosMultiphysics.DEMApplication import *
 from KratosMultiphysics.FluidDynamicsApplication import *
 from KratosMultiphysics.SwimmingDEMApplication import *
-from KratosMultiphysics.DelaunayMeshingApplication import *
-from KratosMultiphysics.SolidMechanicsApplication import *
-from KratosMultiphysics.PfemFluidDynamicsApplication import *
-from KratosMultiphysics.ExternalSolversApplication import *
 
+from swimming_DEM_analysis import SwimmingDEMAnalysis
 
-class Solution:
-    def __init__(self, model, algorithm = None, varying_parameters = Parameters("{}")):
+class SwimmingDEMAnalysisWithFlush(SwimmingDEMAnalysis):
+    def __init__(self, model, algorithm = None, parameters=Parameters("{}")):
+        with open('ProjectParameters.json','r') as parameter_file:
+            parameters = Parameters(parameter_file.read())
+        super(SwimmingDEMAnalysisWithFlush, self).__init__(model, parameters)
 
-        self.model=model
-        
-        self.alg = algorithm
+    def __enter__ (self):
+        return self
 
-        if self.alg == None:
-            import swimming_DEM_PFEM_algorithm
-            self.alg = swimming_DEM_PFEM_algorithm.Algorithm(model,varying_parameters)
-
-    def Run(self):
-        return self.alg.Run()
+    def __exit__(self, exception_type, exception_value, traceback):
+        pass
 
 if __name__=="__main__":
-
     model = Model()
-
-    Solution(model).Run()
+    simulation = SwimmingDEMAnalysisWithFlush(model=model)
+    simulation.Run()
