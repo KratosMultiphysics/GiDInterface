@@ -45,6 +45,12 @@ proc Stent::Wizard::DrawGeometry {} {
     set num_cols [expr 1 + ($number_wires *2)]
     set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
 
+    #abs( H - ( ( cant j - 1) * b/2))
+    # if ((abs (H-((cantj-1)*(b/2)))) > (abs (H-(cantj*(b/2))))):
+    if {[expr abs($stent_length - ($num_rows -1) ) > abs($stent_length - ($num_rows*($point_distance_column/2)) )]} {
+        incr num_rows
+    }
+
     array set points_x [FillBidimensionalArray $num_cols $num_rows 0.0]
     array set points_y [FillBidimensionalArray $num_cols $num_rows 0.0]
     array set points_z [FillBidimensionalArray $num_cols $num_rows 0.0]
@@ -262,10 +268,18 @@ proc Stent::Wizard::DrawGeometry {} {
     GiD_EntitiesGroups assign structure lines $wires_1
     GiD_EntitiesGroups assign structure lines $wires_2
     GiD_EntitiesGroups assign structure lines $joints
-    GiD_Groups create inner_nodes
-    GiD_EntitiesGroups assign inner_nodes points $inner_nodes
-    GiD_Groups create outer_nodes
-    GiD_EntitiesGroups assign outer_nodes points $outer_nodes
+    GiD_Groups create "inner nodes"
+    GiD_EntitiesGroups assign "inner nodes" points $inner_nodes
+    foreach point $top {
+        set idx [lsearch $outer_nodes $point]
+        set outer_nodes [lreplace $outer_nodes $idx $idx]
+    }
+    foreach point $bottom {
+        set idx [lsearch $outer_nodes $point]
+        set outer_nodes [lreplace $outer_nodes $idx $idx]
+    }
+    GiD_Groups create "outer nodes"
+    GiD_EntitiesGroups assign "outer nodes" points $outer_nodes
     
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
