@@ -114,6 +114,8 @@ proc Stent::Wizard::DrawGeometry {} {
         }
     }
 
+    set inner_nodes [list ]
+    set outer_nodes [list ]
     set cont1 1
     set c 1
     GiD_Geometry -v2 create point $cont1 $layer_name $points_x(0,0) $points_y(0,0) 0.0
@@ -126,9 +128,9 @@ proc Stent::Wizard::DrawGeometry {} {
             } else {
                 incr cont1
                 if {$c eq 0 || $j eq [expr $num_rows - 1] || $j eq 0} {
-                    GiD_Geometry -v2 create point $cont1 $layer_name $points_x($i,$j) $points_y($i,$j) $points_z($i,$j)
+                    lappend outer_nodes [GiD_Geometry -v2 create point $cont1 $layer_name $points_x($i,$j) $points_y($i,$j) $points_z($i,$j)]
                 } else {
-                    GiD_Geometry -v2 create point $cont1 $layer_name $points_x($i,$j) $points_y($i,$j) [expr -1.0 * $wire_diameter]
+                    lappend inner_nodes [GiD_Geometry -v2 create point $cont1 $layer_name $points_x($i,$j) $points_y($i,$j) [expr -1.0 * $wire_diameter]]
                 }
             }
         }
@@ -147,9 +149,9 @@ proc Stent::Wizard::DrawGeometry {} {
             } else {
                 incr cont11
                 if {$g eq 1 || $j eq 0 || $j eq [expr $num_rows -1 ]} {
-                    GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) 0.0
+                    lappend outer_nodes [GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) 0.0]
                 } else {
-                    GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) $b_points_z($i,$j)
+                    lappend inner_nodes [GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) $b_points_z($i,$j)]
                 }
             }
         }
@@ -260,7 +262,10 @@ proc Stent::Wizard::DrawGeometry {} {
     GiD_EntitiesGroups assign structure lines $wires_1
     GiD_EntitiesGroups assign structure lines $wires_2
     GiD_EntitiesGroups assign structure lines $joints
-
+    GiD_Groups create inner_nodes
+    GiD_EntitiesGroups assign inner_nodes points $inner_nodes
+    GiD_Groups create outer_nodes
+    GiD_EntitiesGroups assign outer_nodes points $outer_nodes
     
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
