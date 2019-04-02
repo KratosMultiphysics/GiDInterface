@@ -218,7 +218,7 @@
           <parameter n="VStart"         parent="FixedDOFs"                   v="0.0"   pn="Start time (s)"                   help="Start Time"/>
           <parameter n="VEnd"           parent="FixedDOFs"                   v="100.0" pn="End time (s)"                     help="Start Time"/>
 
-          <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" type="combo" v="velocities.dat"/>
+          <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" type="file" v="velocities.dat"/>
           <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z"/>
 
         </parameter>
