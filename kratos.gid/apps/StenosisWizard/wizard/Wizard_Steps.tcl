@@ -1,21 +1,39 @@
 
 namespace eval StenosisWizard::Wizard {
     # Namespace variables declaration
-    
+    variable curr_win
 }
 
 proc StenosisWizard::Wizard::Init { } {
     #W "Carga los pasos"
+    variable curr_win
+    set curr_win ""
 }
 
 proc StenosisWizard::Wizard::Geometry { win } {
+    variable curr_win
+    set curr_win $win
     smart_wizard::AutoStep $win Geometry
     smart_wizard::SetWindowSize 650 500
 }
 
 proc StenosisWizard::Wizard::GeometryTypeChange { } {
-    set Type [ smart_wizard::GetProperty Geometry Type,value]
+    variable curr_win
+
+    set type [ smart_wizard::GetProperty Geometry Type,value]
     # TODO: Mostrar u ocultar cosas segun el tipo elegido, y poner valores por defecto
+    switch $type {
+        "Circular" {
+            smart_wizard::SetProperty Geometry Type,value 5
+        }
+        "Triangular" {
+            smart_wizard::SetProperty Geometry Type,value 12
+        }
+
+    }
+    
+    #smart_wizard::AutoStep $curr_win Geometry
+    
 }
 proc StenosisWizard::Wizard::NextGeometry { } {
     
