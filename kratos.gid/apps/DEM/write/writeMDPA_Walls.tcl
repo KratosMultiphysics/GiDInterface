@@ -126,8 +126,6 @@ proc DEM::write::GetNodesForGraphs { } {
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
     }
-    W $groups
-
     return $groups
 }
 

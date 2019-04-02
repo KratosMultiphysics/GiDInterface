@@ -199,12 +199,28 @@
           <parameter n="AngularDirectionVector" pn="Direction vector"                parent="LinearPeriodic" type="inline_vector" v="1.0,0.0,0.0" />
           <parameter n="CenterOfRotation"       pn="Center of rotation(m)"           parent="LinearPeriodic" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center"/>
           <parameter n="AngularPeriodic"  parent="LinearPeriodic" pn="Periodic" type="bool"  v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
-           <parameter n="AngularPeriod"    parent="true"           pn="Period (s)"            v="5.0"    help="in seconds"/></parameter>
+           <parameter n="AngularPeriod"    parent="true"           pn="Period (s)"            v="5.0"    help="in seconds"/> </parameter>
           <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Start time (s)"        v="0.0"    help="in seconds"/>
           <parameter n="AngularEndTime"   parent="LinearPeriodic" pn="End time (s)"          v="1000.0" help="in seconds"/>
 
+          <parameter n="Ax"             parent="FixedDOFs" type="combo"      v="No"    pn="Fix Velocity X"         values="No,Constant" pvalues="No,Constant" help="Fix Velocity X">
+           <parameter n="Vx"             parent="Constant"                    v="1.0"   pn="   Value (m/s)"                   help="X Velocity"/></parameter>
+          <parameter n="Ay"             parent="FixedDOFs" type="combo"      v="No"    pn="Fix Velocity Y"         values="No,Constant" pvalues="No,Constant" help="Fix Velocity Y">
+           <parameter n="Vy"             parent="Constant"                    v="0.0"   pn="   Value (m/s)"                   help="Y Velocity"/></parameter>
+          <parameter n="Az"             parent="FixedDOFs" type="combo"      v="No"    pn="Fix Velocity Z"         values="No,Constant" pvalues="No,Constant" help="Fix Velocity Z">
+           <parameter n="Vz"             parent="Constant"                    v="0.0"   pn="   Value (m/s)"                   help="Z Velocity"/></parameter>
+          <parameter n="Bx"             parent="FixedDOFs" type="combo"      v="No"    pn="Fix Angular Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity X">
+           <parameter n="AVx"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="X Angular Velocity"/></parameter>
+          <parameter n="By"             parent="FixedDOFs" type="combo"      v="No"    pn="Fix Angular Velocity Y" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity Y">
+           <parameter n="AVy"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="Y Angular Velocity"/></parameter>
+          <parameter n="Bz"             parent="FixedDOFs" type="combo"      v="No"    pn="Fix Angular Velocity Z" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity Z">
+           <parameter n="AVz"            parent="Constant"                    v="0.0"   pn="   Value (rad/s)"                 help="Z Angular Velocity"/></parameter>
+          <parameter n="VStart"         parent="FixedDOFs"                   v="0.0"   pn="Start time (s)"                   help="Start Time"/>
+          <parameter n="VEnd"           parent="FixedDOFs"                   v="100.0" pn="End time (s)"                     help="Start Time"/>
+
           <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" type="combo" v="velocities.dat"/>
           <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z"/>
+
         </parameter>
       </parameter>
     </inputs>
