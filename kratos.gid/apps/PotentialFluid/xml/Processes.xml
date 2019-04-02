@@ -3,8 +3,6 @@
 <ProcessList>
 	<Process n="DefineWakeProcess2D" pn="Scalar value" python_module="define_wake_process_2d" kratos_module="KratosMultiphysics.CompressiblePotentialFlowApplication">
 		<inputs>
-			<parameter n="wake_direction" pn="Wake direction" type="vector" v="1.0,0.0,0.0" vectorType="double" help=""/>
-			<parameter n="epsilon" pn="Epsilon" type="double" v="1e-6" help=""/>
 		</inputs>
 	</Process>
 
@@ -17,7 +15,6 @@
 
 	<Process n="FarFieldProcess" pn="Far Field Process" python_module="apply_far_field_process" kratos_module="KratosMultiphysics.CompressiblePotentialFlowApplication">
 		<inputs>
-			<parameter n="inlet_phi" pn="Inlet phi" type="double" v="1.0" help=""/>
 			<parameter n="velocity_infinity" pn="Velocity infinity" type="vector" v="1.0,0.0,0.0" vectorType="double" help=""/>
 		</inputs>
 	</Process>

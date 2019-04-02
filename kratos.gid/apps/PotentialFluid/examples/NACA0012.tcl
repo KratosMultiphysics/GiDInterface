@@ -134,7 +134,7 @@ proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
     set fluidFarField "$fluidConditions/condition\[@n='PotentialWallCondition$nd'\]"
     set farFieldNode [customlib::AddConditionGroupOnXPath $fluidFarField FarField]
     $farFieldNode setAttribute ov $condtype
-    set props [list inlet_phi 1.0 velocity_infinityX 10.0 velocity_infinityY 0.0 velocity_infinityZ 0.0]
+    set props [list velocity_infinityX 10.0 velocity_infinityY 0.0 velocity_infinityZ 0.0]
     foreach {prop val} $props {
          set propnode [$farFieldNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
