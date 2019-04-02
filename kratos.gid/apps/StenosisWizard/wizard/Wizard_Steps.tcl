@@ -24,7 +24,7 @@ proc StenosisWizard::Wizard::NextGeometry { } {
 proc StenosisWizard::Wizard::DrawGeometry {} {
     Kratos::ResetModel
     
-    set err [ValidateDraw]
+    set err [StenosisWizard::Wizard::ValidateDraw]
     if {$err ne 0} {
         return ""
     }
@@ -74,14 +74,14 @@ proc StenosisWizard::Wizard::DrawTriangular {length radius start end delta } {
     GiD_Process Geometry Delete surfaces 1: escape escape Mescape 
 
 
-    GiD_Groups create INLET
-    GiD_EntitiesGroups assign INLET surfaces 17
-    GiD_Groups create OUTLET
-    GiD_EntitiesGroups assign OUTLET surfaces 18
-    GiD_Groups create NOSLIPWALLS
-    GiD_EntitiesGroups assign NOSLIPWALLS surfaces {8 11 14 16}
-    GiD_Groups create FLUID
-    GiD_EntitiesGroups assign FLUID volumes 1
+    GiD_Groups create Inlet
+    GiD_EntitiesGroups assign Inlet surfaces 17
+    GiD_Groups create Outlet
+    GiD_EntitiesGroups assign Outlet surfaces 18
+    GiD_Groups create NoSlip
+    GiD_EntitiesGroups assign NoSlip surfaces {8 11 14 16}
+    GiD_Groups create Fluid
+    GiD_EntitiesGroups assign Fluid volumes 1
 
     GidUtils::EnableGraphics
 }
@@ -104,7 +104,6 @@ proc StenosisWizard::Wizard::DrawCircular {length radius start end delta precisi
     # first cut
     lappend points [list $start $radius 0]
     #W $points
-    
     
     for {set i [expr $start + $delta_z]} {$i < [expr $end - $delta_z]} {set i [expr $i + $delta_z]} {
         set y $radius
@@ -143,7 +142,6 @@ proc StenosisWizard::Wizard::DrawCircular {length radius start end delta precisi
     GiD_Groups create Fluid
     GiD_EntitiesGroups assign Fluid volumes {1}
     
-    
     # Partimos las superficies para refinar el mallado en el centro
     GiD_Process Mescape Geometry Edit DivideSurf NumDivisions 2 USense 3 escape escape
     GiD_Process Mescape Geometry Edit DivideSurf NumDivisions 1 USense 3 escape escape
@@ -151,7 +149,7 @@ proc StenosisWizard::Wizard::DrawCircular {length radius start end delta precisi
 }
 
 
-proc ValidateDraw { } {
+proc StenosisWizard::Wizard::ValidateDraw { } {
     return 0
 }
 
@@ -162,10 +160,10 @@ proc StenosisWizard::Wizard::Material { win } {
 
 proc StenosisWizard::Wizard::NextMaterial { } {
     # Quitar parts existentes
-    gid_groups_conds::delete {container[@n='StenosisWizard']/condition[@n='Parts']/group}
+    gid_groups_conds::delete {container[@n='Fluid']/condition[@n='Parts']/group}
     
     # Crear una part con los datos que toquen
-    set where {container[@n='StenosisWizard']/condition[@n='Parts']} 
+    set where {container[@n='Fluid']/condition[@n='Parts']} 
     set gnode [customlib::AddConditionGroupOnXPath $where "Fluid"]
     
     set props [list ConstitutiveLaw DENSITY VISCOSITY YIELD_STRESS POWER_LAW_K POWER_LAW_N]
@@ -192,14 +190,14 @@ proc StenosisWizard::Wizard::NextFluid { } {
     Fluid::xml::CreateNewInlet Inlet {new false name Total} false [smart_wizard::GetProperty Fluid Inlet,value]
 
     # Outlet
-    gid_groups_conds::delete {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='Outlet3D']/group}
-    set where {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='Outlet3D']}
+    gid_groups_conds::delete {container[@n='Fluid']/container[@n='BoundaryConditions']/condition[@n='Outlet3D']/group}
+    set where {container[@n='Fluid']/container[@n='BoundaryConditions']/condition[@n='Outlet3D']}
     set gnode [customlib::AddConditionGroupOnXPath $where "Outlet"]
     set propnode [$gnode selectNodes "./value\[@n = 'value'\]"]
     $propnode setAttribute v [smart_wizard::GetProperty Fluid Outlet,value]
     
-    gid_groups_conds::delete {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='NoSlip3D']/group}
-    set where {container[@n='StenosisWizard']/container[@n='BoundaryConditions']/condition[@n='NoSlip3D']}
+    gid_groups_conds::delete {container[@n='Fluid']/container[@n='BoundaryConditions']/condition[@n='NoSlip3D']/group}
+    set where {container[@n='Fluid']/container[@n='BoundaryConditions']/condition[@n='NoSlip3D']}
     set gnode [customlib::AddConditionGroupOnXPath $where "NoSlip"]
     spdAux::RequestRefresh
 }
@@ -247,14 +245,14 @@ proc StenosisWizard::Wizard::LastStep { } {
     set e [smart_wizard::GetProperty Simulation EndTime,value]
     set d [smart_wizard::GetProperty Simulation DeltaTime,value]
     
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='InitialTime']} "v $i"
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='EndTime']} "v $e"
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='DeltaTime']} "v $d"
+    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='InitialTime']} "v $i"
+    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='EndTime']} "v $e"
+    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='DeltaTime']} "v $d"
     
-    gid_groups_conds::copyNode {container[@n='StenosisWizard']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='StenosisWizard']/container[@n='Results']/container[@n='CutPlanes']}
+    gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
     
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]} {name Main}
-    gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]/value[@n='normal']} {v 0.0,1.0,0.0}
+    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]} {name Main}
+    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]/value[@n='normal']} {v 0.0,1.0,0.0}
     
     set ncuts [smart_wizard::GetProperty Simulation Cuts,value]
     set length [smart_wizard::GetProperty Geometry Length,value]
@@ -263,7 +261,7 @@ proc StenosisWizard::Wizard::LastStep { } {
     for {set i 1} {$i <= $ncuts} {incr i} {
         set x [expr -$length + ($i * $delta)]
         set x [expr double(round(100*$x))/100]
-        gid_groups_conds::copyNode {container[@n='StenosisWizard']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='StenosisWizard']/container[@n='Results']/container[@n='CutPlanes']}
+        gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
         set cutplane "container\[@n='StenosisWizard'\]/container\[@n='Results'\]/container\[@n='CutPlanes'\]/blockdata\[@n='CutPlane'\]\[[expr $i +2]\]"
         gid_groups_conds::setAttributesF $cutplane "name CutPlane$i"
         gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 1.0,0.0,0.0"
@@ -271,8 +269,8 @@ proc StenosisWizard::Wizard::LastStep { } {
     }
     
     
-    #gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
-    #gid_groups_conds::setAttributesF {container[@n='StenosisWizard']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
+    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
+    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
     spdAux::RequestRefresh
     
 }
