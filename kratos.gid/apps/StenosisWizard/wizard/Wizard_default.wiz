@@ -7,6 +7,7 @@
           <Item n="ImageGeom" v="geometry.png" type="image"/>
         </Frame>
         <Frame  n="Data" position="left">
+          <Item n="Type" pn="Stenosis type" v="Circular" type="combo" values="Circular,Triangular" onchange="StenosisWizard::Wizard::GeometryTypeChange" />
           <Item n="Length" pn="Length" v="80" type="double" />
           <Item n="Radius" pn="Radius" v="9.53" type="double" />
           <Item n="Z" pn="Z0" v="30" type="double" />

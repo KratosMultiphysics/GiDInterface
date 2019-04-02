@@ -13,6 +13,10 @@ proc StenosisWizard::Wizard::Geometry { win } {
     smart_wizard::SetWindowSize 650 500
 }
 
+proc StenosisWizard::Wizard::GeometryTypeChange { } {
+    set Type [ smart_wizard::GetProperty Geometry Type,value]
+    # TODO: Mostrar u ocultar cosas segun el tipo elegido, y poner valores por defecto
+}
 proc StenosisWizard::Wizard::NextGeometry { } {
     
 }
@@ -25,12 +29,65 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
         return ""
     }
     # Get the parameters
+    set type [ smart_wizard::GetProperty Geometry Type,value]
     set length [ smart_wizard::GetProperty Geometry Length,value]
     set radius [ smart_wizard::GetProperty Geometry Radius,value]
     set start [expr [ smart_wizard::GetProperty Geometry Z,value] *-1.0]
     set end [ smart_wizard::GetProperty Geometry Z,value]
     set delta [ smart_wizard::GetProperty Geometry Delta,value]
     set precision [ smart_wizard::GetProperty Geometry Precision,value]
+
+    switch $type {
+        "Circular" {
+            DrawCircular $length $radius $start $end $delta $precision
+        }   
+        "Triangular" {
+            DrawTriangular $length $radius $start $end $delta
+        }
+    }
+    
+    # Update the groups window to show the created groups
+    GidUtils::UpdateWindow GROUPS
+    # Zoom frame to center the view
+    GiD_Process 'Zoom Frame escape
+
+}
+
+proc StenosisWizard::Wizard::DrawTriangular {length radius start end delta } {
+    GidUtils::DisableGraphics
+    set origin_x [expr double($length)/-2]
+    set end_x [expr double($length)/2]
+    GiD_Process Geometry Create Line $origin_x,0 $end_x,0 escape Mescape
+    GiD_Process Geometry Create Line $origin_x,$radius $end_x,$radius escape Mescape 
+    GiD_Process Utilities Copy Lines DoExtrude Surfaces MaintainLayers Rotation FJoin 1 FJoin 2 360 2 escape Mescape 
+    GiD_Process Geometry Create Object Cone 0.0 -$radius 0.0 0.0 1.0 0.0 $end $delta escape Mescape 
+    GiD_Process Geometry Delete Volumes 1 escape MEscape 
+    GiD_Process Geometry Create IntMultSurfs 1 2 3 4 5 escape Mescape 
+    GiD_Process Geometry Delete Surfaces 7 9 10 13 15 18 19 20 21 escape Mescape
+    GiD_Process Geometry Delete Lines 1 9 13 15 17 18 20 24 25 26 escape Mescape 
+    GiD_Process Geometry Create NurbsSurface 3 escape Mescape
+    GiD_Process Geometry Create NurbsSurface 4 escape Mescape 
+    GiD_Process Geometry Create volume 8 11 14 16 17 18 escape Mescape
+    GiD_Process Utilities Collapse Model Yes escape Mescape 
+    GiD_Process Geometry Delete points 1: escape Mescape 
+    GiD_Process Geometry Delete lines 1: escape Mescape 
+    GiD_Process Geometry Delete surfaces 1: escape escape Mescape 
+
+
+    GiD_Groups create INLET
+    GiD_EntitiesGroups assign INLET surfaces 17
+    GiD_Groups create OUTLET
+    GiD_EntitiesGroups assign OUTLET surfaces 18
+    GiD_Groups create NOSLIPWALLS
+    GiD_EntitiesGroups assign NOSLIPWALLS surfaces {8 11 14 16}
+    GiD_Groups create FLUID
+    GiD_EntitiesGroups assign FLUID volumes 1
+
+    GidUtils::EnableGraphics
+}
+
+proc StenosisWizard::Wizard::DrawCircular {length radius start end delta precision } {
+    
     #W "Drawing tube: \nLength $length \nStart $start \nEnd $end \nDelta $delta \nPrecision $precision"
     set points [list]
     
@@ -86,15 +143,13 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
     GiD_Groups create Fluid
     GiD_EntitiesGroups assign Fluid volumes {1}
     
-    GidUtils::UpdateWindow GROUPS
-    
-    GiD_Process 'Zoom Frame escape
     
     # Partimos las superficies para refinar el mallado en el centro
     GiD_Process Mescape Geometry Edit DivideSurf NumDivisions 2 USense 3 escape escape
     GiD_Process Mescape Geometry Edit DivideSurf NumDivisions 1 USense 3 escape escape
     
 }
+
 
 proc ValidateDraw { } {
     return 0
