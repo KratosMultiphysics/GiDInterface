@@ -194,19 +194,23 @@ proc DEM::write::writeVelocityMeshes { } {
                         }
                         write::WriteString "    ANGULAR_VELOCITY_PERIOD $angular_period"
 
-                        # Interval
+                        # # Interval
                         # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
                         # lassign [write::getInterval $interval] ini end
                         # if {![string is double $ini]} {
                         #     set ini [write::getValue DEMTimeParameters StartTime]
                         # }
-                        # write::WriteString "    ${cond}_START_TIME $ini"
+                        # # write::WriteString "    ${cond}_START_TIME $ini"
+                        # write::WriteString "    VELOCITY_START_TIME $ini"
+                        # write::WriteString "    ANGULAR_VELOCITY_START_TIME $ini"
                         # if {![string is double $end]} {
                         #     set end [write::getValue DEMTimeParameters EndTime]
                         # }
-                        # write::WriteString "    ${cond}_STOP_TIME $end"
+                        # # write::WriteString "    ${cond}_STOP_TIME $end"
+                        # write::WriteString "    VELOCITY_STOP_TIME $end"
+                        # write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $end"
 
-                        # set intervals
+
                         set LinearStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearStartTime'\]"]]
                         set LinearEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearEndTime'\]"]]
                         set AngularStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularStartTime'\]"]]
