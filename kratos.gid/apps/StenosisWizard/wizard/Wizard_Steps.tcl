@@ -13,7 +13,7 @@ proc StenosisWizard::Wizard::Init { } {
 proc StenosisWizard::Wizard::Geometry { win } {
     variable curr_win
     set curr_win $win
-    smart_wizard::AutoStep $win Geometry
+    smart_wizard::AutoStep $curr_win Geometry
     smart_wizard::SetWindowSize 650 500
 }
 
@@ -24,15 +24,18 @@ proc StenosisWizard::Wizard::GeometryTypeChange { } {
     # TODO: Mostrar u ocultar cosas segun el tipo elegido, y poner valores por defecto
     switch $type {
         "Circular" {
-            smart_wizard::SetProperty Geometry Type,value 5
+            smart_wizard::SetProperty Geometry Length,value 100
+            smart_wizard::SetProperty Geometry Precision,state normal
+            smart_wizard::SetProperty Geometry ImageGeom,value Geometry.png
         }
         "Triangular" {
-            smart_wizard::SetProperty Geometry Type,value 12
+            smart_wizard::SetProperty Geometry Length,value 200
+            smart_wizard::SetProperty Geometry Precision,state hidden
+            smart_wizard::SetProperty Geometry ImageGeom,value GeometryTriangular.png
         }
 
     }
-    
-    #smart_wizard::AutoStep $curr_win Geometry
+    smart_wizard::AutoStep $curr_win Geometry
     
 }
 proc StenosisWizard::Wizard::NextGeometry { } {

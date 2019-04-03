@@ -4,7 +4,7 @@
     <Step id="Geometry" title="Geometry definition" subtitle="Create the parametric artheria">
       <Data>
         <Frame n="Image" position="right">
-          <Item n="ImageGeom" v="geometry.png" type="image"/>
+          <Item n="ImageGeom" v="Geometry.png" type="image"/>
         </Frame>
         <Frame  n="Data" position="left">
           <Item n="Type" pn="Stenosis type" v="Circular" type="combo" values="Circular,Triangular" onchange="StenosisWizard::Wizard::GeometryTypeChange" />
@@ -12,7 +12,7 @@
           <Item n="Radius" pn="Radius" v="9.53" type="double" />
           <Item n="Z" pn="Z0" v="30" type="double" />
           <Item n="Delta" pn="delta" v="5" type="double" />
-          <Item n="Precision" pn="Divisions" v="50" type="double" />
+          <Item n="Precision" pn="Divisions" v="50" type="double"/>
           <Item n="DrawButton" pn="Create geometry" type="button" v="::StenosisWizard::Wizard::DrawGeometry" />
         </Frame>
       </Data>
