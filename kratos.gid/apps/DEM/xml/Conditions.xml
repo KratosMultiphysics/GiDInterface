@@ -8,12 +8,18 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
-  <ConditionItem n="Inlet" pn="Inlet" Interval="False" ProcessName="DEMInletProcess" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface" help="" VariableName="INLET">
+
+  <!-- <ConditionItem n="Inlet" pn="Inlet" Interval="False" ProcessName="DEM-Inlet-Process" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface" help="" VariableName="INLET">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs>
-      <!--<parameter n="FORCE" pn="External Load" v="false"/>-->
     </outputs>
+  </ConditionItem> -->
+
+   <ConditionItem n="Inlet" pn="DEM-Inlet" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-Inlet-Process" help="" VariableName="INLET">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
   </ConditionItem>
 
   <ConditionItem n="DEM-VelocityBC" pn="DEM-VelocityBC" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-VelocityBC-Process" help="" VariableName="SPHEREBC">
@@ -45,4 +51,5 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem> -->
+
 </ConditionList>

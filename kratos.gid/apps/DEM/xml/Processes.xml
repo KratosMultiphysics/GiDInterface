@@ -4,7 +4,7 @@
 
 <Process n="DEM-FEM-Wall-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
   <inputs>
-    <parameter n="SetActive"            type="bool"         pn="Activate"       v="false"     help="Set Yes to activate the group">
+    <parameter n="SetActive"            type="bool"         pn="Activate"       v="true"     help="Set Yes to activate the group">
       <parameter n="DEM-ImposedMotion"  parent="true"       pn="Type of Motion" type="combo"  v="None" values="None,LinearPeriodic,FreeMotion" pvalues="None,Linear-Periodic,Free motion" help="Set Yes to impose a predefined motion to the group">
         <parameter n="Mass"             parent="FreeMotion" pn="Mass"           type="double" v="1.0"                  units="Kg"     unit_magnitude="M"/>
         <parameter n="CenterOfMass"     parent="FreeMotion" pn="Center of mass" type="inline_vector"   v="0.0,0.0,0.0" units="m"      unit_magnitude="L"/>
@@ -73,16 +73,16 @@
         <!-- </parameter> -->
 
         <!-- <parameter n="Options"          parent="true" pn="Settings"                                      help="Options that will affect the behaviour during the contact bewteen Discrete Elements and this wall"> -->
-          <parameter n="IsGhost"                        pn="Is ghost wall"      v="false" type="bool"/>
-          <parameter n="friction_coeff"                 pn="Friction angle"     v="30.0"  type="double" units="deg" unit_magnitude="Angle" help="Coulomb friction coefficient"/>
-          <parameter n="GraphPrint"                     pn="Print group forces" v="false" type="bool"/>
-          <parameter n="CohesiveWall"                   pn="Cohesive Wall"      v="false" type="bool"   help="Specify if the wall presents a cohesive behaviour">
+          <parameter n="IsGhost"         parent="true"  pn="Is ghost wall"      v="false" type="bool"/>
+          <parameter n="friction_coeff"  parent="true"  pn="Friction angle"     v="30.0"  type="double" units="deg" unit_magnitude="Angle" help="Coulomb friction coefficient"/>
+          <parameter n="GraphPrint"      parent="true"  pn="Print group forces" v="false" type="bool"/>
+          <parameter n="CohesiveWall"    parent="true"  pn="Cohesive Wall"      v="false" type="bool"   help="Specify if the wall presents a cohesive behaviour">
            <parameter n="WallCohesion"   parent="true"  pn="Wall Cohesion"      v="0.0"   type="double" units="N/m^2" unit_magnitude="F/L^2" help="JKR or DMT energy surface"/> </parameter>
-          <parameter n="DEM_Wear"                       pn="Compute Wear"       v="false" type="bool"   help="If activated, wear will be computed on this wall. It can increase computation time">
+          <parameter n="DEM_Wear"        parent="true"  pn="Compute Wear"       v="false" type="bool"   help="If activated, wear will be computed on this wall. It can increase computation time">
            <parameter n="K_Abrasion"     parent="true"  pn="Abrasion level"     v="0.001" type="double" help="Archard abrasion K parameter"/>
            <parameter n="K_Impact"       parent="true"  pn="Impact level"       v="0.001" type="double" help="Archard impact K parameter"/>
            <parameter n="H_Brinell"      parent="true"  pn="Brinell Hardness"   v="200.0" type="double" help="Brinell hardness value"/> </parameter>
-          <parameter n="RigidPlane"                     pn="Rigid Structure"    v="false" type="bool"   help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus">
+          <parameter n="RigidPlane"      parent="true"  pn="Rigid Structure"    v="true" type="bool"   help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus">
            <parameter n="YoungModulus"   parent="false" pn="Young Modulus"      v="1e20"  type="double" units="N/m^2" unit_magnitude="F/L^2"/>
            <parameter n="PoissonRatio"   parent="false" pn="Poisson Ratio"      v="0.25"/> </parameter>
            <parameter n="fixed_wall"     parent="LinearPeriodic"  pn="Update velocity, not displacements"  v="false" type="bool" help="If activated, the wall will not move and will just have an imposed velocity field"/>
@@ -170,20 +170,79 @@
   </Process>
 
 
-  <Process n="DEMInletProcess" pn="" python_module="" kratos_module="KratosMultiphysics">
+  <Process n="DEM-Inlet-Process" pn="" python_module="" kratos_module="KratosMultiphysics">
     <inputs>
-      <parameter n="ELEMENT_TYPE" pn="Element type" type="combo" v="SphericParticle3D" values="SphericParticle3D" pvalues="Sphere"/>
-      <parameter n="VELOCITY_MODULUS" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity"/>
-      <parameter n="DIRECTION_VECTOR" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" />
-      <parameter n="MAX_RAND_DEVIATION_ANGLE" pn="Max. random velocity deviation" type="double" v="1.0" units="°" unit_magnitude="Angle"/>
-      <parameter n="FLOW_MEASUREMENT" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
-        <parameter n="INLET_NUMBER_OF_PARTICLES" pn="Particles per second" parent="Particles" type="double" v="200.0" />
-        <parameter n="INLET_NUMBER_OF_KILOGRAMS" pn="Kilograms per second" parent="Kilograms" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" />
+      <parameter n="SetActive"        type="bool"         pn="Activate"       v="true">
+        <parameter n="InletMotionType" pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable" pvalues="None,Linear/Periodic,From a table">
+          <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity modulus" type="double"        v="1.0"   units="m/s" unit_magnitude="Velocity"/>
+          <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" />
+          <parameter n="LinearPeriodic"  parent="LinearPeriodic" pn="Periodic"         type="bool"          v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period">
+            <parameter n="LinearPeriod"    parent="true"          pn="Period"           type="double"        v="5.0"   units="s"   unit_magnitude="T"/> </parameter>
+          <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Start time"       type="double"        v="0.0"   units="s"   unit_magnitude="T"/>
+          <parameter n="LinearEndTime"   parent="LinearPeriodic" pn="End time"         type="double"        v="100.0" units="s"   unit_magnitude="T"/>
+
+          <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity modulus" type="double"        v="0.0"    units="rad/s" unit_magnitude="Angle/T"/>
+          <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector"         type="inline_vector" v="1.0,0.0,0.0" />
+          <parameter n="CenterOfRotation"       parent="LinearPeriodic" pn="Center of rotation(m)"    type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the rotation center. Linear velocity is imposed to this center"/>
+          <parameter n="AngularPeriodic"        parent="LinearPeriodic" pn="Periodic"                 type="bool"          v="false"  help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period">
+            <parameter n="AngularPeriod"         parent="true"           pn="Period"                   type="double"        v="5.0"    units="s"      unit_magnitude="T"/> </parameter>
+          <parameter n="AngularStartTime"       parent="LinearPeriodic" pn="Start time"               type="double"        v="0.0"    units="s"      unit_magnitude="T"/>
+          <parameter n="AngularEndTime"         parent="LinearPeriodic" pn="End time"                 type="double"        v="1000.0" units="s"      unit_magnitude="T"/>
+
+          <!-- Ready to activate fixed dofs on inlet when required. -->
+          <!-- <parameter n="Ax"      parent="FixedDOFs" type="combo"  v="No"    pn="Fix Velocity X"         values="No,Constant" pvalues="No,Constant" help="Fix Velocity X">
+            <parameter n="Vx"      parent="Constant" type="double" v="1.0"   pn="   Value"               help="X Velocity"/></parameter>
+          <parameter n="Ay"      parent="FixedDOFs" type="combo"  v="No"    pn="Fix Velocity Y"         values="No,Constant" pvalues="No,Constant" help="Fix Velocity Y">
+            <parameter n="Vy"      parent="Constant" type="double" v="0.0"   pn="   Value"               help="Y Velocity"/></parameter>
+          <parameter n="Az"      parent="FixedDOFs" type="combo"  v="No"    pn="Fix Velocity Z"         values="No,Constant" pvalues="No,Constant" help="Fix Velocity Z">
+            <parameter n="Vz"      parent="Constant" type="double" v="0.0"   pn="   Value"               help="Z Velocity"/></parameter>
+          <parameter n="Bx"      parent="FixedDOFs" type="combo"  v="No"    pn="Fix Angular Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity X">
+            <parameter n="AVx"     parent="Constant" type="double" v="0.0"   pn="   Value"               unit_magnitude="Angle/T" units="rad/s" help="X Angular Velocity"/></parameter>
+          <parameter n="By"      parent="FixedDOFs" type="combo"  v="No"    pn="Fix Angular Velocity Y" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity Y">
+            <parameter n="AVy"     parent="Constant" type="double" v="0.0"   pn="   Value"               unit_magnitude="Angle/T" units="rad/s" help="Y Angular Velocity"/></parameter>
+          <parameter n="Bz"      parent="FixedDOFs" type="combo"  v="No"    pn="Fix Angular Velocity Z" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity Z">
+            <parameter n="AVz"     parent="Constant" type="double" v="0.0"   pn="   Value"               unit_magnitude="Angle/T" units="rad/s" help="Z Angular Velocity"/></parameter>
+          <parameter n="VStart"  parent="FixedDOFs" type="double" v="0.0"   pn="Start time"/>
+          <parameter n="VEnd"    parent="FixedDOFs" type="double" v="100.0" pn="End time"  /> -->
+
+          <parameter n="VelocitiesFilename"     pn="Filename"           parent="FromATable" type="file"  v="velocities.dat"/>
+          <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z"/>
+        </parameter>
+
+        <parameter n="VelocityModulus"        parent="true"      pn="Inlet injection speed"               type="double"        v="1.0" units="m/s" unit_magnitude="Velocity"/>
+        <parameter n="DirectionVector"        parent="true"      pn="Direction vector"                    type="inline_vector" v="1.0,0.0,0.0"/>
+        <parameter n="VelocityDeviation"      parent="true"      pn="Max random velocity deviation (deg)" type="double"        v="1.0" units="°" unit_magnitude="Angle"/>
+        <parameter n="TypeOfFlowMeasurement"  parent="true"      pn="Flow measurement"                    type="combo"         v="- Please select option -" values="None,Particles,Kilograms" pvalues="- Please select option -,Particles per second,Kilograms per second">
+          <parameter n="NumberOfParticles"    parent="Particles" pn="Particles per second"                type="double"        v="200.0"/>
+          <parameter n="InletLimitedVelocity" parent="Kilograms" pn="Inlet injection speed limit (m/s)"   type="double"        v="2.0" help="Inlet injection speed limit (m/s)"/>
+          <parameter n="InletMassFlow"        parent="Kilograms" pn="Mass flow (Kg/s)"                    type="double"        v="0.5" unit_magnitude="M/T" units="kg/s"/>
+        </parameter>
+
+        <parameter n="InletElementType"   pn="Element Type"    parent="true"                type="combo"  v="SphericParticle3D"  values="SphericParticle3D,Cluster3D,SingleSphereCluster"  pvalues="Sphere,Cluster,SingleSphereCluster" help="Choose if you want this Inlet to insert spheres or clusters">
+          <parameter n="Excentricity"                          parent="SingleSphereCluster" type="double" v="0.1"    pn="Excentricity (%)"                            help="% of the radius"/>
+          <parameter n="ProbabilityDistributionOfExcentricity" parent="SingleSphereCluster" type="combo"  v="normal" pn="Probability Distribution of excentricity"    values="normal,lognormal" help="Choose the probablility distribution of the diameter"/>
+          <parameter n="StandardDeviationOfExcentricity"       parent="SingleSphereCluster" type="double" v="0.1"    pn="Standard Deviation of excentricity"          help="Standard Deviation of the Diameter, assuming Normal Distribution. If 0.0 is chosen, a uniform diameter distribution will be created"/>
+          <parameter n="ClusterType"      pn="Cluster Type"    parent="Cluster3D"           type="combo"  v="Rock1Cluster3D"     values="Rock1Cluster3D,Rock2Cluster3D,Ballast1Cluster3D,Ballast1Cluster3Dred,Ballast2Cluster3D,Ballast2Cluster3Dred,Ballast3Cluster3D,Ballast3Cluster3Dred,Ballast4Cluster3D,Ballast4Cluster3Dred,Ballast5Cluster3D,Ballast2Cluster5Dred,Ballast6Cluster3D,Ballast6Cluster3Dred,LineCluster3D,RingCluster3D,SoyBeanCluster3D,SoyBean3Cluster3D,CornKernelCluster3D,CornKernel3Cluster3D,Wheat5Cluster3D,CapsuleCluster3D" help="Choose the shape of the particle or cluster of particles"/>
+          <parameter n="RandomOrientation" pn="Random Orientation" parent="Cluster3D"       type="combo"  v="No"    values="Yes,No"                                  help="Random Orientation">
+            <parameter n="OrientationX"    pn="Orientation X"      parent="Yes" v="0.0"     type="combo"  help="First parameter of the imaginary part of the orientation quaternion"/>
+            <parameter n="OrientationY"    pn="Orientation Y"      parent="Yes" v="0.0"     type="double" help="Second parameter of the imaginary part of the orientation quaternion"/>
+            <parameter n="OrientationZ"    pn="Orientation Z"      parent="Yes" v="0.0"     type="double" help="Third parameter of the imaginary part of the orientation quaternion"/>
+            <parameter n="OrientationW"    pn="Orientation W"      parent="Yes" v="1.0"     type="double" help="Real part of the orientation quaternion"/>
+          </parameter>
+        </parameter>
+
+        <parameter n="InletStartTime"          parent="true" pn="Inlet start time"         type="double" v="0.0"    units="s" unit_magnitude="T" help="Inlet start time"/>
+        <parameter n="InletStopTime"           parent="true" pn="Inlet stop time"          type="double" v="100.0"  units="s" unit_magnitude="T" help="Inlet stop time"/>
+        <parameter n="ParticleDiameter"        parent="true" pn="Diameter"                 type="double" v="1.0"    units="m" unit_magnitude="L"/>
+        <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo"  v="normal" values="normal,lognormal"/>
+        <parameter n="StandardDeviation"       parent="true" pn="Standard deviation"       type="double" v="0.0"    units="m" unit_magnitude="L"/>
+
+        <!-- TO BE FIXED JG!insert material BUT not constitutive law in the tree -->
+        <parameter n="ConstitutiveLaw" special_command="DEM::xml::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>
+
+        <!-- exclude boundaries functionality seems not be implemented in wkcfdem.tcl -->
+        <!-- <parameter id="ExcludeBoundaries" pid="Exclude boundaries" dv="Yes" ivalues="Yes,No" values="Yes,No" help="If active, the nodes on the boundary will not generate elements, only the inner nodes"/> -->
       </parameter>
-      <parameter n="DIAMETER" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L"/>
-      <parameter n="PROBABILITY_DISTRIBUTION" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" pvalues="Normal,Lognormal"/>
-      <parameter n="STANDARD_DEVIATION" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L"/>
-      <parameter n="ConstitutiveLaw" special_command="DEM::xml::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>
     </inputs>
   </Process>
 
