@@ -171,7 +171,7 @@ proc Fluid::write::getSolverSettingsDict { } {
     #set model_name [Kratos::GetModelName]
 
     #is this correct? problem.gid -> problemFluid
-    set model_name [Kratos::GetModelName]"Fluid"
+    set model_name [append [Kratos::GetModelName]"Fluid"]
     dict set modelDict input_filename $model_name
     dict set solverSettingsDict model_import_settings $modelDict
 
