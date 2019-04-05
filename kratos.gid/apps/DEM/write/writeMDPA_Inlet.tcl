@@ -25,10 +25,8 @@ proc DEM::write::GetInletGroups { } {
 
 
 
-proc DEM::write::writeInletMeshes2 { } {
-    # ABSTRACT: Write inlet condition group properties mdpa file (only the nodes)
-
-    # Get the values
+proc DEM::write::writeInletMeshes-new { } {
+    variable inletProperties
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
         if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
@@ -248,7 +246,6 @@ proc DEM::write::writeInletMeshes2 { } {
 
 proc DEM::write::writeInletMeshes { } {
     variable inletProperties
-
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
         if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
