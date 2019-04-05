@@ -25,7 +25,7 @@ proc DEM::write::GetInletGroups { } {
 
 
 
-proc DEM::write::writeInletMeshes-new { } {
+proc DEM::write::writeInletMeshes { } {
     variable inletProperties
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
@@ -60,8 +60,7 @@ proc DEM::write::writeInletMeshes-new { } {
 
                     # Linear velocity
                     set velocity  [dict get $inletProperties $groupid VelocityModulus]
-                    # lassign [split [dict get $inletProperties $groupid DIRECTION_VECTOR] ","] velocity_X velocity_Y velocity_Z
-                    lassign  [dict get $inletProperties $groupid DirectionVector] velocity_X velocity_Y velocity_Z
+                    lassign [split [dict get $inletProperties $groupid DirectionVector] ","] velocity_X velocity_Y velocity_Z
                     lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
                     lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
                     write::WriteString "        LINEAR_VELOCITY \[3\] ($vx, $vy, $vz)"
@@ -79,7 +78,7 @@ proc DEM::write::writeInletMeshes-new { } {
                     # Angular velocity
                     #set velocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
                     set velocity  [dict get $inletProperties $groupid AngularVelocityModulus]
-                    lassign  [dict get $inletProperties $groupid AngularDirectionVector] velocity_X velocity_Y velocity_Z
+                    lassign [split [dict get $inletProperties $groupid AngularDirectionVector] ","] velocity_X velocity_Y velocity_Z
                     lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
                     lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] wX wY wZ
                     write::WriteString "        ANGULAR_VELOCITY \[3\] ($wX,$wY,$wZ)"
@@ -150,7 +149,7 @@ proc DEM::write::writeInletMeshes-new { } {
                 if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
                     set inlet_element_type [dict get $inletProperties $groupid ClusterType]
                     set contains_clusters 1
-                    lassign [::wkcf::GetClusterFileNameAndReplaceInletElementType $inlet_element_type] inlet_element_type cluster_file_name
+                    lassign [GetClusterFileNameAndReplaceInletElementType $inlet_element_type] inlet_element_type cluster_file_name
                 }
 
 
@@ -161,18 +160,22 @@ proc DEM::write::writeInletMeshes-new { } {
                 write::WriteString "        ELEMENT_TYPE $inlet_element_type"
 
                 set velocity_modulus [dict get $inletProperties $groupid VelocityModulus]
-                set velocity_x [expr {$velocity_modulus * [dict get $inletProperties $groupid DirectionVectorX]}]
-                set velocity_y [expr {$velocity_modulus * [dict get $inletProperties $groupid DirectionVectorY]}]
-                set velocity_z [expr {$velocity_modulus * [dict get $inletProperties $groupid DirectionVectorZ]}]
-                write::WriteString "        VELOCITY \[3\] ($velocity_x, $velocity_y, $velocity_z)"
+                lassign [split [dict get $inletProperties $groupid DirectionVector] ","] velocity_X velocity_Y velocity_Z
+                #lassign [write::getValueByNode [dict get $inletProperties $groupid DirectionVector]] velocity_X velocity_Y velocity_Z
+                lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+                lassign [MathUtils::ScalarByVectorProd $velocity_modulus [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
+                write::WriteString "        VELOCITY \[3\] ($vx, $vy, $vz)"
 
                 set max_deviation_angle [dict get $inletProperties $groupid VelocityDeviation]
                 write::WriteString "        MAX_RAND_DEVIATION_ANGLE $max_deviation_angle"
 
-                if {[dict get $inletProperties $groupid ClusterType] eq "SingleSphereCluster3D"} {
-                    write::WriteString "        EXCENTRICITY [dict get $inletProperties $groupid Excentricity]"
-                    write::WriteString "        EXCENTRICITY_PROBABILITY_DISTRIBUTION [dict get $inletProperties $groupid ProbabilityDistributionOfExcentricity]"
-                    write::WriteString "        EXCENTRICITY_STANDARD_DEVIATION [dict get $inletProperties $groupid StandardDeviationOfExcentricity]"
+
+                if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
+                    if {[dict get $inletProperties $groupid ClusterType] eq "SingleSphereCluster3D"} {
+                        write::WriteString "        EXCENTRICITY [dict get $inletProperties $groupid Excentricity]"
+                        write::WriteString "        EXCENTRICITY_PROBABILITY_DISTRIBUTION [dict get $inletProperties $groupid ProbabilityDistributionOfExcentricity]"
+                        write::WriteString "        EXCENTRICITY_STANDARD_DEVIATION [dict get $inletProperties $groupid StandardDeviationOfExcentricity]"
+                    }
                 }
 
                 set inlet_number_of_particles [dict get $inletProperties $groupid NumberOfParticles]
@@ -187,7 +190,7 @@ proc DEM::write::writeInletMeshes-new { } {
 
                 write::WriteString "        IMPOSED_MASS_FLOW_OPTION $mass_flow_option"
 
-                # search for tem id="InletLimitedVelocity"
+                # search for tem id="InletLimitedVelocity" related to dense inlet in spreaddem
                 set inlet_mass_flow [dict get $inletProperties $groupid InletMassFlow]
                 write::WriteString "        MASS_FLOW $inlet_mass_flow"
                 set inlet_start_time [dict get $inletProperties $groupid InletStartTime]
@@ -200,26 +203,32 @@ proc DEM::write::writeInletMeshes-new { } {
                 write::WriteString "        PROBABILITY_DISTRIBUTION $probability_distribution"
                 set standard_deviation [dict get $inletProperties $groupid StandardDeviation]
                 write::WriteString "        STANDARD_DEVIATION $standard_deviation"
-                if {[dict get $inletProperties $groupid RandomOrientation] == "Yes"} {
-                    set random_orientation 1
+
+                if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
+                    if {[dict get $inletProperties $groupid RandomOrientation] == "Yes"} {
+                        set random_orientation 1
+                        }
+
+                    write::WriteString "        RANDOM_ORIENTATION $random_orientation"
+                    set orientation_x [dict get $inletProperties $groupid OrientationX]
+                    set orientation_y [dict get $inletProperties $groupid OrientationY]
+                    set orientation_z [dict get $inletProperties $groupid OrientationZ]
+                    set orientation_w [dict get $inletProperties $groupid OrientationW]
+                    write::WriteString "        ORIENTATION \[4\] ($orientation_x, $orientation_y, $orientation_z, $orientation_w)"
                     }
 
-                write::WriteString "        RANDOM_ORIENTATION $random_orientation"
-                set orientation_x [dict get $inletProperties $groupid OrientationX]
-                set orientation_y [dict get $inletProperties $groupid OrientationY]
-                set orientation_z [dict get $inletProperties $groupid OrientationZ]
-                set orientation_w [dict get $inletProperties $groupid OrientationW]
-                write::WriteString "        ORIENTATION \[4\] ($orientation_x, $orientation_y, $orientation_z, $orientation_w)"
-
-                write::WriteString "        End SubModelPartData"
+                write::WriteString "    End SubModelPartData"
                 # Write nodes
                 write::WriteString "    Begin SubModelPartNodes"
                 GiD_WriteCalculationFile nodes -sorted $gdict
                 write::WriteString "    End SubModelPartNodes"
+                write::WriteString "  End SubModelPart"
+			    write::WriteString "    "
+
             }
         }
 
-    if {$type_of_motion=="NotReady-FromATable"} {
+    if {$motion_type=="NotReady-FromATable"} {
         set properties_path "${basexpath}//c.[list ${cgroupid}]//c.MainProperties"
         set filename [::xmlutils::setXml "${properties_path}//i.VelocitiesFilename" dv]
         GiD_File fprintf $deminletchannel "Begin Table $TableNumber TIME VELOCITY"
@@ -240,11 +249,89 @@ proc DEM::write::writeInletMeshes-new { } {
  }
 
 
+proc DEM::write::GetClusterFileNameAndReplaceInletElementType {inlet_element_type} {
+    if {$inlet_element_type eq "LineCluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "linecluster3D.clu"
+    } elseif {$inlet_element_type eq "RingCluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ringcluster3D.clu"
+    } elseif {$inlet_element_type eq "Wheat5Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "wheat5cluster3D.clu"
+    } elseif {$inlet_element_type eq "SoyBeanCluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "soybeancluster3D.clu"
+    } elseif {$inlet_element_type eq "CornKernel3Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "corn3cluster3D.clu"
+    } elseif {$inlet_element_type eq "CornKernelCluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "cornkernelcluster3D.clu"
+    } elseif {$inlet_element_type eq "Rock1Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "rock1cluster3D.clu"
+    } elseif {$inlet_element_type eq "Rock2Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "rock2cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast1Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast1cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast1Cluster3Dred"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast1cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast2Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast2cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast2Cluster3Dred"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast2cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast3Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast3cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast3Cluster3Dred"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast3cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast4Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast4cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast4Cluster3Dred"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast4cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast5Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast5cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast5Cluster3Dred"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast5cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast6Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast6cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast6Cluster3Dred"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "ballast6cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "SoyBean3Cluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "soybean3cluster3D.clu"
+    } elseif {$inlet_element_type eq "CapsuleCluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "capsulecluster3D.clu"
+    } elseif {$inlet_element_type eq "SingleSphereCluster3D"} {
+	set inlet_element_type "Cluster3D"
+	set cluster_file_name "singlespherecluster3D.clu"
+    } elseif {$inlet_element_type eq "Rock3RefinedCluster3D"} {
+    set inlet_element_type "Cluster3D"
+    set cluster_file_name "rock3refinedcluster3D.clu"
+    }
+
+    return [list $inlet_element_type $cluster_file_name]
+}
 
 
 
 
-proc DEM::write::writeInletMeshes { } {
+
+proc DEM::write::writeInletMeshes-old { } {
     variable inletProperties
     foreach groupid [dict keys $inletProperties ] {
         set what nodal
@@ -263,8 +350,8 @@ proc DEM::write::writeInletMeshes { } {
             write::WriteString "        PROPERTIES_ID [dict get $inletProperties $groupid MID]"
             write::WriteString "        RIGID_BODY_MOTION 0"
             write::WriteString "        IDENTIFIER $mid"
-            write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid ElementType]"
-            write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid ElementType]"
+            write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+            write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
             write::WriteString "        CONTAINS_CLUSTERS 0"
             set velocity [dict get $inletProperties $groupid VELOCITY_MODULUS]
             lassign [split [dict get $inletProperties $groupid DIRECTION_VECTOR] ","] velocity_X velocity_Y velocity_Z

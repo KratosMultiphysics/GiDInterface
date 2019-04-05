@@ -16,7 +16,7 @@
     </outputs>
   </ConditionItem> -->
 
-   <ConditionItem n="DEM-Inlet" pn="DEM-Inlet" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-Inlet-Process" help="" VariableName="INLET">
+   <ConditionItem n="Inlet" pn="DEM-Inlet" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-Inlet-Process" help="" VariableName="INLET">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
