@@ -10,7 +10,10 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict "GravityY"                         $gy
     dict set project_parameters_dict "GravityZ"                         $gz
 
-    # add time_stepping{}
+    # add time_stepping
+    dict set project_parameters_dict time_stepping "automatic_time_step"                "false"
+    dict set project_parameters_dict time_stepping "time_step"                          "0.005"
+
 
     # Problem data  - calling directly GetDefaultProblemDataDict should be enough
     dict set project_parameters_dict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
