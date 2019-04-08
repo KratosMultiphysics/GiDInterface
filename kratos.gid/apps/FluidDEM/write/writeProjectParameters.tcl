@@ -129,6 +129,8 @@ proc ::FluidDEM::write::getParametersDict { } {
     # output configuration  #TODO to be checked/modified by GCasas
     dict set project_parameters_dict sdem_output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
 
+    W $project_parameters_dict
+
     FluidDEM::write::InitExternalProjectParameters
     dict set project_parameters_dict dem_parameters $FluidDEM::write::dem_project_parameters
     dict set dem_project_parameters solver_settings "strategy" "swimming_sphere_strategy"
@@ -140,9 +142,13 @@ proc ::FluidDEM::write::getParametersDict { } {
 
 
 proc FluidDEM::write::writeParametersEvent { } {
+    W "1"
     set projectParametersDict [getParametersDict]
+    W "2"
     write::SetParallelismConfiguration
+    W "3"
     write::WriteJSON $projectParametersDict
+    W "4"
 }
 
 
