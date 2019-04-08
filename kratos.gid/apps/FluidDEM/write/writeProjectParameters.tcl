@@ -12,7 +12,7 @@ proc ::FluidDEM::write::getParametersDict { } {
 
     # add time_stepping
     dict set project_parameters_dict time_stepping "automatic_time_step"                "false"
-    dict set project_parameters_dict time_stepping "time_step"                          "0.005"
+    dict set project_parameters_dict time_stepping "time_step"                          "1e-06"
 
 
     # Problem data  - calling directly GetDefaultProblemDataDict should be enough
@@ -31,7 +31,6 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict coupling "coupling_weighing_type_comment"                  "{fluid_to_DEM, DEM_to_fluid, fluid_fraction} = {lin, lin, imposed} (-1), {lin, const, const} (0), {lin, lin, const} (1), {lin, lin, lin} (2), averaging method (3)"
     dict set project_parameters_dict coupling "interaction_start_time"                          "1"
     dict set project_parameters_dict coupling "time_averaging_type"                             "0.1"
-    dict set project_parameters_dict coupling "coupling_level_type"                             "0"
     dict set project_parameters_dict coupling backward_coupling "meso_scale_length"             "0.2"
     dict set project_parameters_dict coupling backward_coupling "meso_scale_length_comment"     " the radius of the support of the averaging function for homogenization (<=0 for automatic calculation)"
     dict set project_parameters_dict coupling backward_coupling "shape_factor"                  "0.5"
