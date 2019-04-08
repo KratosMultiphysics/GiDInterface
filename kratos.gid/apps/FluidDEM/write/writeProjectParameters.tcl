@@ -137,7 +137,7 @@ proc ::FluidDEM::write::getParametersDict { } {
 
     FluidDEM::write::InitExternalProjectParameters
     dict set project_parameters_dict dem_parameters $FluidDEM::write::dem_project_parameters
-    dict set dem_project_parameters solver_settings "strategy" "swimming_sphere_strategy"
+    dict set project_parameters_dict dem_parameters "solver_settings" "strategy" "swimming_sphere_strategy"
     dict set project_parameters_dict fluid_parameters $FluidDEM::write::fluid_project_parameters
     # set FluidDEM::write::general_project_parameters [getParametersDict]
     # dict set project_parameters_dict $FluidDEM::write::general_project_parameters
