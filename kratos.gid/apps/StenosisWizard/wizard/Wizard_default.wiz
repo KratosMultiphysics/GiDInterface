@@ -7,13 +7,14 @@
           <Item n="ImageGeom" v="Geometry.png" type="image"/>
         </Frame>
         <Frame  n="Data" position="left">
-          <Item n="Type" pn="Stenosis type" v="Circular" type="combo" values="Circular,Triangular" onchange="StenosisWizard::Wizard::GeometryTypeChange" />
-          <Item n="Length" pn="Length" v="80" type="double" />
+          <Item n="Type" pn="Stenosis type" v="Circular" type="combo" values="Circular,Triangular,Polygonal,Spherical" onchange="StenosisWizard::Wizard::GeometryTypeChange" />
+          <Item n="Length" pn="Length" v="100" type="double" />
           <Item n="Radius" pn="Radius" v="9.53" type="double" />
-          <Item n="Z" pn="Z0" v="30" type="double" />
-          <Item n="Delta" pn="delta" v="5" type="double" />
+          <Item n="Z" pn="Z0" v="38.1" type="double" />
+          <Item n="Delta" pn="delta" v="3.18" type="double" />
+          <Item n="Tpoly" pn="Tpoly" v="25.4" type="double" />
           <Item n="Precision" pn="Divisions" v="50" type="double"/>
-          <Item n="DrawButton" pn="Create geometry" type="button" v="::StenosisWizard::Wizard::DrawGeometry" />
+          <Item n="DrawButton" pn="Create geometry" type="button" v="StenosisWizard::Wizard::DrawGeometry" />
         </Frame>
       </Data>
     </Step>

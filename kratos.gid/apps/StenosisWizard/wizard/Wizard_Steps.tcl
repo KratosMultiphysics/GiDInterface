@@ -26,14 +26,29 @@ proc StenosisWizard::Wizard::GeometryTypeChange { } {
             "Circular" {
                 smart_wizard::SetProperty Geometry Length,value 100
                 smart_wizard::SetProperty Geometry Precision,state normal
+                smart_wizard::SetProperty Geometry Tpoly,state hidden
                 smart_wizard::SetProperty Geometry ImageGeom,value Geometry.png
             }
             "Triangular" {
-                smart_wizard::SetProperty Geometry Length,value 200
+                smart_wizard::SetProperty Geometry Length,value 350
+                smart_wizard::SetProperty Geometry Delta,value 16.9
                 smart_wizard::SetProperty Geometry Precision,state hidden
+                smart_wizard::SetProperty Geometry Tpoly,state hidden
                 smart_wizard::SetProperty Geometry ImageGeom,value GeometryTriangular.png
             }
-
+            "Polygonal" {
+                smart_wizard::SetProperty Geometry Length,value 350
+                smart_wizard::SetProperty Geometry Delta,value 16.9
+                smart_wizard::SetProperty Geometry Precision,state hidden
+                smart_wizard::SetProperty Geometry ImageGeom,value GeometryPolygonal.png
+            }
+            "Spherical" {
+                smart_wizard::SetProperty Geometry Length,value 350
+                smart_wizard::SetProperty Geometry Delta,value 17.5
+                smart_wizard::SetProperty Geometry Precision,state hidden
+                smart_wizard::SetProperty Geometry Tpoly,state hidden
+                smart_wizard::SetProperty Geometry ImageGeom,value GeometrySpherical.png
+            }
         }
         smart_wizard::AutoStep $curr_win Geometry
     }
@@ -58,6 +73,7 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
     set end [ smart_wizard::GetProperty Geometry Z,value]
     set delta [ smart_wizard::GetProperty Geometry Delta,value]
     set precision [ smart_wizard::GetProperty Geometry Precision,value]
+    set tpoly [ smart_wizard::GetProperty Geometry TPoly,value] 
 
     switch $type {
         "Circular" {
@@ -65,6 +81,12 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
         }   
         "Triangular" {
             DrawTriangular $length $radius $start $end $delta
+        }
+       "Polygonal" {
+            DrawPolygonal $length $radius $start $end $tpoly $delta 
+        }
+        "Spherical" {
+            DrawSpherical $length $radius $start $end $delta 
         }
     }
     
@@ -93,7 +115,7 @@ proc StenosisWizard::Wizard::DrawTriangular {length radius start end delta } {
     GiD_Process Utilities Collapse Model Yes escape Mescape 
     GiD_Process Geometry Delete points 1: escape Mescape 
     GiD_Process Geometry Delete lines 1: escape Mescape 
-    GiD_Process Geometry Delete surfaces 1: escape escape Mescape 
+    GiD_Process Geometry Delete surfaces 1: escape Mescape 
 
 
     GiD_Groups create Inlet
@@ -104,6 +126,88 @@ proc StenosisWizard::Wizard::DrawTriangular {length radius start end delta } {
     GiD_EntitiesGroups assign NoSlip surfaces {8 11 14 16}
     GiD_Groups create Fluid
     GiD_EntitiesGroups assign Fluid volumes 1
+
+    GidUtils::EnableGraphics
+}
+
+proc StenosisWizard::Wizard::DrawSpherical {length radius start end delta } {
+    #GidUtils::DisableGraphics
+    set origin_x [expr double($length)/-2]
+    set end_x [expr double($length)/2]
+    set m2 [expr double($end) / double ($delta)]
+    set m1 [expr double($delta) / double($end) *-1.0]
+    set ycenter [expr double($delta)/2-$m2*double($end)/2]
+    set sph_radius [expr double($ycenter) + double($delta)]
+
+    GiD_Process Mescape Geometry Create Line $origin_x,0 $end_x,0 escape Mescape
+    GiD_Process Mescape Geometry Create Line $origin_x,$radius $end_x,$radius escape Mescape 
+    GiD_Process Mescape Utilities Copy Lines DoExtrude Surfaces MaintainLayers Rotation FJoin 1 FJoin 2 360 2 escape Mescape 
+
+    GiD_Process Mescape Geometry Create Object Sphere 0.0 $ycenter 0.0 [expr abs($sph_radius)] escape Mescape 
+    #GiD_Process Mescape Geometry Delete Volumes 1 escape Mescape 
+    
+    GiD_Process Mescape Geometry Create IntMultSurfs 1 2 3 4 5 escape Mescape 
+    GiD_Process Mescape Geometry Delete Surfaces 7 9 10 13 15 18 19 20 21 escape Mescape
+    GiD_Process Mescape Geometry Delete Lines 1 9 13 15 17 18 20 24 25 26 escape Mescape 
+    GiD_Process Mescape Geometry Create NurbsSurface 3 escape Mescape
+    GiD_Process Mescape Geometry Create NurbsSurface 4 escape Mescape 
+    GiD_Process Mescape Geometry Create volume 8 11 14 16 17 18 escape Mescape
+    
+    GiD_Process Mescape Utilities Collapse Model Yes escape Mescape 
+    #GiD_Process Mescape Geometry Delete surfaces 1: escape Mescape 
+    #GiD_Process Mescape Geometry Delete lines 1: escape Mescape 
+    #GiD_Process Mescape Geometry Delete points 1: escape Mescape 
+     
+    GiD_Groups create Inlet
+    GiD_EntitiesGroups assign Inlet surfaces 18
+    GiD_Groups create Outlet
+    GiD_EntitiesGroups assign Outlet surfaces 19
+    GiD_Groups create NoSlip
+    GiD_EntitiesGroups assign NoSlip surfaces {8 10 13 16 17}
+    GiD_Groups create Fluid
+    GiD_EntitiesGroups assign Fluid volumes 1
+
+    GidUtils::EnableGraphics
+}
+
+proc StenosisWizard::Wizard::DrawPolygonal {length radius start end delta tpoly } {
+    GidUtils::DisableGraphics
+    set origin_x [expr double($length)/-2]
+    set end_x [expr double($length)/2]
+    set origin_poly [expr $start - (double($tpoly)/2)]
+    set end_poly [expr $end + (double($tpoly)/2)]
+    set neg_halftpoly [expr double($tpoly)/-2]
+    set pos_halftpoly [expr double($tpoly)/2]
+    set doubleneg_radius [expr double($radius) * -2.0]
+
+    GiD_Process Geometry Create Line $origin_x,0 $end_x,0 escape Mescape
+    GiD_Process Geometry Create Line $origin_x,$radius $end_x,$radius escape Mescape 
+    GiD_Process Utilities Copy Lines DoExtrude Surfaces MaintainLayers Rotation FJoin 1 FJoin 2 360 2 escape Mescape 
+
+    
+        GiD_Process Geometry Create Line $origin_x,-$radius $origin_poly,-$radius $neg_halftpoly,$delta $pos_halftpoly,$delta $end_poly,-$radius $end_x,-$radius escape Mescape 
+        GiD_Process Geometry Create Line $origin_x,$doubleneg_radius $end_x,$doubleneg_radius escape Mescape
+        GiD_Process Utilities Copy Lines DoExtrude Surfaces MaintainLayers Rotation FJoin 11 FJoin 12 360 5 6 7 8 9 escape Mescape 
+        GiD_Process Geometry Create IntMultSurfs 1 2 3 4 5 6 escape Mescape 
+        GiD_Process Geometry Create NurbsSurface 17 18 escape Mescape 
+        GiD_Process Geometry Create NurbsSurface 34 33 escape Mescape 
+        GiD_Process Geometry Create volume 8 9 12 13 16 17 21 22 23 24 escape Mescape 
+        GiD_Process Geometry Delete Surfaces 2 6 10 14 18 20 escape Mescape 
+        GiD_Process Geometry Delete Lines 1 10 11 12 15 16 23 29 escape Mescape
+        GiD_Process Geometry Delete Points 11 12 escape Mescape
+
+    GiD_Process Utilities Collapse Model Yes escape Mescape 
+        GiD_Process Geometry Delete Lines 1: escape Mescape
+        GiD_Process Geometry Delete Points 1: escape Mescape
+
+    GiD_Groups create Inlet
+    GiD_EntitiesGroups assign Inlet surfaces {23}
+    GiD_Groups create Outlet
+    GiD_EntitiesGroups assign Outlet surfaces {24}
+    GiD_Groups create NoSlip
+    GiD_EntitiesGroups assign NoSlip surfaces {8 9 12 13 16 17 21 22}
+    GiD_Groups create Fluid
+    GiD_EntitiesGroups assign Fluid volumes {1}
 
     GidUtils::EnableGraphics
 }
