@@ -1,5 +1,6 @@
 # Project Parameters
 proc ::FluidDEM::write::getParametersDict { } {
+    W "5"
     set project_parameters_dict [dict create]
 
     # Gravity
@@ -15,7 +16,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
     # set model_name [Kratos::GetModelName]
     # dict set project_parameters_dict problem_data                         $model_name
-
+    W "6"
     # do_print_results_option
     # dict set project_parameters_dict "ControlTime"            [write::getValue DEMTimeParameters ScreenInfoOutput]
     dict set project_parameters_dict "do_print_results_option"                         "true"
@@ -88,7 +89,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict fluid_nodal_results "VISCOSITY" "false"
     dict set project_parameters_dict fluid_nodal_results "DISTANCE" "false"
     dict set project_parameters_dict fluid_nodal_results "SLIP_VELOCITY" "false"
-
+    W "7"
 
     # set time_things [DEM::write::GetTimeSettings]
     #     set MaxTimeStep [dict get $time_things DeltaTime]
@@ -100,36 +101,36 @@ proc ::FluidDEM::write::getParametersDict { } {
 
     # Properties
     set properties_dict [dict create]
+    W "7.1"
     set partgroup [write::getPartsSubModelPartId]
+    W "7.2"
     dict set properties_dict "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]]
+    W "7.3"
     dict set properties_dict properties_id 1
-    dict set properties_dict hydrodynamic_law_parameters "name" "HydrodynamicInteractionLaw"
-    dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters "name" "default"
-    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters "name" "default"
-    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters "do_apply_faxen_corrections" "false"
-    dict set properties_dict hydrodynamic_law_parameters drag_parameters "name" "StokesDragLaw"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters "name" "default"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters "quadrature_order" "2 "
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters
+    dict set properties_dict hydrodynamic_law_parameters                                         "name"                         "HydrodynamicInteractionLaw"
+    dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         "default"
+    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "name"                         "default"
+    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   "false"
+    dict set properties_dict hydrodynamic_law_parameters drag_parameters                         "name"                         "StokesDragLaw"
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "name"                         "default"
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "quadrature_order"             "2 "
 
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "do_use_mae" "false"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "m" "10"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "window_time_interval" "0.1,"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "type" "4"
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "do_use_mae"                   "false"
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "m"                            "10"
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "window_time_interval"         "0.1,"
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "type"                         "4"
 
     # dict set properties_dict hydrodynamic_law_parameters vorticity_induced_lift_parameters "name" "default"
     # dict set properties_dict hydrodynamic_law_parameters rotation_induced_lift_parameters "name" "default"
     # dict set properties_dict hydrodynamic_law_parameters steady_viscous_torque_parameters "name" "default"
-
+    W "8"
     set properties_list [list ]
     lappend properties_list $properties_dict
     dict set project_parameters_dict properties $properties_list
 
-
+    W "9"
     # output configuration  #TODO to be checked/modified by GCasas
     dict set project_parameters_dict sdem_output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
-
-    W $project_parameters_dict
 
     FluidDEM::write::InitExternalProjectParameters
     dict set project_parameters_dict dem_parameters $FluidDEM::write::dem_project_parameters
