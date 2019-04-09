@@ -25,7 +25,7 @@ proc DEM::write::WriteMDPAWalls { } {
 
 
 proc DEM::write::WriteWallProperties { } {
-    #set print_list [list "WALL_FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
+    #set print_list [list "FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
     set wall_properties [dict create ]
     set cnd [Model::getCondition "DEM-FEM-Wall"]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
@@ -39,7 +39,7 @@ proc DEM::write::WriteWallProperties { } {
         #        write::WriteString "  $prop $v"
         #    }
         #}
-        write::WriteString "  WALL_FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
+        write::WriteString "  FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
         write::WriteString "  WALL_COHESION [write::getValueByNode [$group selectNodes "./value\[@n='WallCohesion'\]"]]"
         set compute_wear_bool [write::getValueByNode [$group selectNodes "./value\[@n='DEM_Wear'\]"]]
         if {[write::isBooleanTrue $compute_wear_bool]} {
@@ -287,6 +287,11 @@ proc DEM::write::writeConditionMeshes { } {
                         }
                         set rigid_body_motion 1
                         set free_body_motion 0
+                        #Hardcoded
+                        write::WriteString "    FIXED_MESH_OPTION $fixed_mesh_option"
+                        write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
+                        write::WriteString "    FREE_BODY_MOTION $free_body_motion"
+
                     } elseif {$motion_type == "FreeMotion"} {
                         set fixed_mesh_option 0
                         set rigid_body_motion 0
@@ -412,12 +417,13 @@ proc DEM::write::writeConditionMeshes { } {
                             set MZ [write::getValueByNode [$group_node selectNodes "./value\[@n='MZ'\]"]]
                             write::WriteString "    EXTERNAL_APPLIED_MOMENT_Z $MZ"
                         }
+                        #Hardcoded
+                        write::WriteString "    FIXED_MESH_OPTION $fixed_mesh_option"
+                        write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
+                        write::WriteString "    FREE_BODY_MOTION $free_body_motion"
                     }
 
                     #Hardcoded
-                    write::WriteString "    FIXED_MESH_OPTION $fixed_mesh_option"
-                    write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
-                    write::WriteString "    FREE_BODY_MOTION $free_body_motion"
                     set is_ghost [write::getValueByNode [$group_node selectNodes "./value\[@n='IsGhost'\]"]]
                     write::WriteString "    IS_GHOST $is_ghost"
                     write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
