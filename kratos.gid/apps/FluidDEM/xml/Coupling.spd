@@ -16,5 +16,5 @@
 		<value n="ViscosityModif" 	pn="Viscosity modification" 	icon="black1" type="int"   v="0"/>
 	</container>
 	<value n="NeighbourSearch" 	    pn="Interparticle  interaction" 	    icon="black1" v="true" values="true,false"/>
-	<value n="TranslatIntScheme" 	pn="Transllational integration scheme" 	icon="black1" type="combo"  v="Hybrid_Basforth"/>
+	<value n="TranslatIntScheme" 	pn="Translational integration scheme" 	icon="black1" type="combo"  v="Hybrid_Bashforth"/>
 </container>

@@ -68,13 +68,15 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict coupling backward_coupling "calculate_diffusivity_option"  $calculate_diffusivity_option
     dict set project_parameters_dict coupling backward_coupling "viscosity_modification_type"   $viscosity_modification_type
 
-    # derivative recovery
-    dict set project_parameters_dict derivative_recovery "store_full_gradient_option" "false"
+    # derivative recovery disabled by now
+    #dict set project_parameters_dict derivative_recovery "store_full_gradient_option" "false"
 
     # custom dem
     set do_search_neighbours [write::getValue FDEMCoupling NeighbourSearch]
     set translational_integration_scheme [write::getValue FDEMCoupling TranslatIntScheme]
+    dict set project_parameters_dict custom_dem "do_solve_dem" true
     dict set project_parameters_dict custom_dem "do_search_neighbours" $do_search_neighbours
+    dict set project_parameters_dict custom_dem "type_of_dem_inlet" VelocityImposed
     dict set project_parameters_dict custom_dem "translational_integration_scheme" $translational_integration_scheme
 
     # dem_nodal_results
