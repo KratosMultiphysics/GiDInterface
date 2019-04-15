@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="DEMNodalResults"                      pn="Nodal results" un="NodalResults" state="normal" open="1" open_window="0" icon="black1">
 
-    <container n="DEMNodalResults"                      pn="DEM nodal results" icon="black1">
+    <container n="DEMNodalResults"                      un="DEMNodalResults" pn="DEM nodal results" icon="black1">
         <value n="ReynoldsN"                            type="bool" values="true,false" v="true"  pn="Particle Reynolds number"      icon="black1"/>
         <value n="SlipVelocity"                         type="bool" values="true,false" v="true"  pn="Slip velocity"                 icon="black1"/>
         <value n="Radius"                               type="bool" values="true,false" v="true"  pn="Radius"                        icon="black1"/>
@@ -30,7 +30,7 @@
         <value n="NonDimensionalVolWear"                type="bool" values="true,false" v="false" pn="Non dimensional volume wear"   icon="black1"/>
     </container>
 
-    <container n="FluidNodalResults"     pn="Fluid nodal results" icon="black1">
+    <container n="FluidNodalResults"     un="FluidNodalResults" pn="Fluid nodal results" icon="black1">
         <value n="MaterialAccel"         type="bool" values="true,false" v="true"  pn="Material acceleration"               icon="black1"/>
         <value n="VelocityGrad"          type="bool" values="true,false" v="true"  pn="Velocity gradient"                   icon="black1"/>
         <value n="PressureGrad"          type="bool" values="true,false" v="true"  pn="Pressure gradient"                   icon="black1"/>

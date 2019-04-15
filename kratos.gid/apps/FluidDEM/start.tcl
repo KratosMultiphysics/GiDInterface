@@ -50,7 +50,7 @@ proc ::FluidDEM::BeforeMeshGeneration {elementsize} {
 }
 
 proc ::FluidDEM::AfterMeshGeneration { fail } {
-    ::DEM::AfterMeshGeneration
+    ::DEM::AfterMeshGeneration fail
 }
 
 proc ::FluidDEM::GetAttribute {name} {
