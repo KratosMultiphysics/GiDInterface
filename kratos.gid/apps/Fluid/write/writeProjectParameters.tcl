@@ -170,7 +170,6 @@ proc Fluid::write::getSolverSettingsDict { } {
     dict set modelDict input_type "mdpa"
     #set model_name [Kratos::GetModelName]
     set model_name [concat [Kratos::GetModelName]Fluid]
-    W $model_name
     dict set modelDict input_filename $model_name
     dict set solverSettingsDict model_import_settings $modelDict
 
