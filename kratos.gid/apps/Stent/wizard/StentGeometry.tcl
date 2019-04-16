@@ -1,4 +1,3 @@
-
 namespace eval Stent::Wizard {
     # Namespace variables declaration
     
@@ -34,7 +33,6 @@ proc Stent::Wizard::DrawGeometry {} {
     set stent_radius [ smart_wizard::GetProperty Geometry StentRadius,value]
     set stent_length [ smart_wizard::GetProperty Geometry StentLength,value]
     set crimped_on [ smart_wizard::GetProperty Geometry CrimpedButton,value]
-    
     # Calculated parameters
     set wire_diameter [expr 2.0*$wire_radius]
     set pi [expr 2*asin(1.0)]
@@ -46,10 +44,9 @@ proc Stent::Wizard::DrawGeometry {} {
     set num_cols [expr 1 + ($number_wires *2)]
     set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
 
-    if {[expr abs($stent_length - 1.0*($num_rows/1.0*($point_distance_row/2))) > abs($stent_length - 1.0*(($num_rows+1)/1.0*($point_distance_row/2)))]} {
-        incr num_rows
-    }
-    if {[expr abs($stent_length - 1.0*($num_rows/1.0*($point_distance_row/2))) > abs($stent_length - 1.0*(($num_rows+1)/1.0*($point_distance_row/2)))]} {
+    #abs( H - ( ( cant j - 1) * b/2))
+    # if ((abs (H-((cantj-1)*(b/2)))) > (abs (H-(cantj*(b/2))))):
+    if {[expr abs($stent_length - ($num_rows -1) ) > abs($stent_length - ($num_rows*($point_distance_column/2)) )]} {
         incr num_rows
     }
 
@@ -57,7 +54,6 @@ proc Stent::Wizard::DrawGeometry {} {
     array set points_y [FillBidimensionalArray $num_cols $num_rows 0.0]
     array set points_z [FillBidimensionalArray $num_cols $num_rows 0.0]
 
-    
     set i 0
     for {set j 1} {$j < $num_rows} {incr j} {
         if {[expr $j % 2] eq 0} {
@@ -123,6 +119,8 @@ proc Stent::Wizard::DrawGeometry {} {
         }
     }
 
+    set inner_nodes [list ]
+    set outer_nodes [list ]
     set cont1 1
     set c 1
     GiD_Geometry -v2 create point $cont1 $layer_name $points_x(0,0) $points_y(0,0) 0.0
@@ -135,9 +133,9 @@ proc Stent::Wizard::DrawGeometry {} {
             } else {
                 incr cont1
                 if {$c eq 0 || $j eq [expr $num_rows - 1] || $j eq 0} {
-                    GiD_Geometry -v2 create point $cont1 $layer_name $points_x($i,$j) $points_y($i,$j) $points_z($i,$j)
+                    lappend outer_nodes [GiD_Geometry -v2 create point $cont1 $layer_name $points_x($i,$j) $points_y($i,$j) $points_z($i,$j)]
                 } else {
-                    GiD_Geometry -v2 create point $cont1 $layer_name $points_x($i,$j) $points_y($i,$j) [expr -1.0 * $wire_diameter]
+                    lappend inner_nodes [GiD_Geometry -v2 create point $cont1 $layer_name $points_x($i,$j) $points_y($i,$j) [expr -1.0 * $wire_diameter]]
                 }
             }
         }
@@ -156,9 +154,9 @@ proc Stent::Wizard::DrawGeometry {} {
             } else {
                 incr cont11
                 if {$g eq 1 || $j eq 0 || $j eq [expr $num_rows -1 ]} {
-                    GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) 0.0
+                    lappend outer_nodes [GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) 0.0]
                 } else {
-                    GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) $b_points_z($i,$j)
+                    lappend inner_nodes [GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x($i,$j) $b_points_y($i,$j) $b_points_z($i,$j)]
                 }
             }
         }
@@ -248,11 +246,10 @@ proc Stent::Wizard::DrawGeometry {} {
 
     MoveNodesToCylinder
     GiD_Process Mescape Utilities Collapse model Yes 
-    
-    # Create the groups
+
     for {set i 1} {$i <= $number_wires} {incr i} {
         lappend bottom $i
-        lappend top [expr $cont1 - $i]
+        lappend top [expr $cont1 +1 - $i]
     }
     GiD_Groups create bottom
     GiD_EntitiesGroups assign bottom points $bottom
@@ -265,18 +262,28 @@ proc Stent::Wizard::DrawGeometry {} {
     GiD_Groups create wires_2
     GiD_EntitiesGroups assign wires_2 lines $wires_2
     GiD_Groups create joints
-    #GiD_EntitiesGroups assign joints lines $joints
+    GiD_EntitiesGroups assign joints lines $joints
     GiD_Groups create structure
     GiD_EntitiesGroups assign structure lines $wires_1
     GiD_EntitiesGroups assign structure lines $wires_2
-    #GiD_EntitiesGroups assign structure lines $joints
-
+    GiD_EntitiesGroups assign structure lines $joints
+    GiD_Groups create "inner nodes"
+    GiD_EntitiesGroups assign "inner nodes" points $inner_nodes
+    foreach point $top {
+        set idx [lsearch $outer_nodes $point]
+        set outer_nodes [lreplace $outer_nodes $idx $idx]
+    }
+    foreach point $bottom {
+        set idx [lsearch $outer_nodes $point]
+        set outer_nodes [lreplace $outer_nodes $idx $idx]
+    }
+    GiD_Groups create "outer nodes"
+    GiD_EntitiesGroups assign "outer nodes" points $outer_nodes
     
-	if {$crimped_on == "Yes"} {
+    if {$crimped_on == "Yes"} {
 		createcrimpado
 		GiD_Process Mescape Utilities Collapse model Yes 
 	} 
-
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
@@ -327,7 +334,6 @@ proc Stent::Wizard::MoveNodesToCylinder { } {
 proc Stent::Wizard::ValidateDraw { } {
     return 0
 }
-
 
 proc Stent::Wizard::createcrimpado { } {
     # Get the parameters
@@ -429,4 +435,3 @@ proc Stent::Wizard::HideCrimpedRadius { } {
 }
 
 Stent::Wizard::Init
-
