@@ -182,65 +182,6 @@ proc Fluid::write::writeConditionsMesh { } {
     }
 }
 
-# proc Fluid::write::writeSkinMesh { } {
-#     variable FluidConditions
-    
-#     set root [customlib::GetBaseRoot]
-#     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-#     #W "Conditions $xp1 [$root selectNodes $xp1]"
-#     set listiniend [list ]
-#     set listgroups [list ]
-#     foreach group [$root selectNodes $xp1] {
-#         set groupid [$group @n]
-#         set groupid [write::GetWriteGroupName $groupid]
-#         set ini $FluidConditions($groupid,initial)
-#         set end $FluidConditions($groupid,final)
-#         lappend listiniend $ini $end
-#         lappend listgroups $groupid
-#     }
-#     set skinconfgroup "SKINCONDITIONS"
-#     if {[GiD_Groups exist $skinconfgroup]} {GiD_Groups delete $skinconfgroup}
-#     GiD_Groups create $skinconfgroup
-#     GiD_Groups edit state $skinconfgroup hidden
-#     foreach group $listgroups {
-#         GiD_EntitiesGroups assign $skinconfgroup nodes [GiD_EntitiesGroups get $group nodes]
-#     }
-#     ::write::writeGroupSubModelPart EXTRA $skinconfgroup "Conditions" $listiniend
-#  }
-
-# proc Fluid::write::CheckClosedVolume {} {
-#     variable BCUN
-#     set isclosed 1
-
-#     set root [customlib::GetBaseRoot]
-#     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-
-#     set listgroups [list ]
-#     foreach group [$root selectNodes $xp1] {
-#         set groupid [$group @n]
-#         set conditionName [[$group parent] @n]
-#         set cond [::Model::getCondition $conditionName]
-#         if {[$cond getAttribute "SkinConditions"] eq "True"} {
-#             set surfaces [GiD_EntitiesGroups get $groupid surfaces]
-#             foreach surf $surfaces {
-#                 set linesraw [GiD_Geometry get surface $surf]
-#                 set nlines [lindex $linesraw 2]
-#                 set linespairs [lrange $linesraw 9 [expr 8 + $nlines]]
-#                 foreach pair $linespairs {
-#                     set lid [lindex $pair 0]
-#                     incr usedsurfaceslines($lid)
-#                 }
-#             }
-#         }
-#     }
-#     foreach lid [array names usedsurfaceslines] {
-#         if {$usedsurfaceslines($lid) ne "2"} {set isclosed 0;}
-#     }
-#     return $isclosed
-# }
-
-
-
 proc Fluid::write::InitConditionsMap { {map "" } } {
     
     variable FluidConditionMap
