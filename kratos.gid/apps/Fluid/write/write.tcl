@@ -3,6 +3,9 @@ namespace eval Fluid::write {
     variable writeCoordinatesByGroups
     variable writeAttributes
     variable FluidConditionMap
+    # after regular conditions are written, we need this number in order to print the custom submodelpart conditions
+    # only if are applied over things that are not in the skin
+    variable last_condition_iterator
 }
 
 proc Fluid::write::Init { } {
@@ -22,6 +25,8 @@ proc Fluid::write::Init { } {
     SetAttribute properties_location "mdpa"
     SetAttribute model_part_name "FluidModelPart"
     SetAttribute output_model_part_name "fluid_computational_model_part"
+    variable last_condition_iterator
+    set last_condition_iterator 0
 }
 
 # MDPA write event
@@ -55,7 +60,10 @@ proc Fluid::write::writeModelPartEvent { } {
     writeMeshes
     
     # Custom SubmodelParts
-    #write::writeBasicSubmodelParts
+    variable last_condition_iterator
+    write::writeBasicSubmodelPartsByUniqueId  $Fluid::write::FluidConditionMap $last_condition_iterator
+
+    # Clean
     unset Fluid::write::FluidConditionMap
 }
 proc Fluid::write::writeCustomFilesEvent { } {
@@ -100,6 +108,7 @@ proc Fluid::write::writeConditions { } {
 
 proc Fluid::write::writeBoundaryConditions { } {
     variable FluidConditionMap
+    variable last_condition_iterator
 
     # Prepare the groups to print
     set BCUN [GetAttribute conditions_un]
@@ -126,7 +135,7 @@ proc Fluid::write::writeBoundaryConditions { } {
         set kname LineCondition2D2N
         set nnodes 2
     }
-    write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $Fluid::write::FluidConditionMap
+    set last_condition_iterator [write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $Fluid::write::FluidConditionMap]
     
     # Clean
     GiD_Groups delete $skin_group_name

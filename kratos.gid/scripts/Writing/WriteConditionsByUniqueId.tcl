@@ -39,6 +39,41 @@ proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMa
 }
 
 
+proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap iter} {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $un]/group"
+    set groups [$root selectNodes $xp1]
+    Model::getConditions "../../Common/xml/Conditions.xml"
+    set conditions_dict [dict create ]
+    set elements_list [list ]
+    foreach group_node $groups {
+        set needConds [write::getValueByNode [$group_node selectNodes "./value\[@n='WriteConditions'\]"]]
+        if {$needConds} {
+            # TODO: be carefull with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
+            set iter [write::writeGroupNodeConditionByUniqueId $group_node "GENERIC_CONDITION" $iter $ConditionMap]
+        }
+    }
+    Model::ForgetCondition GENERIC_CONDITIONS
+    return $iter
+}
+
+proc write::writeBasicSubmodelPartsByUniqueId {ConditionMap iter {un "GenericSubmodelPart"}} {
+    # Write elements
+    set groups [write::_writeElementsForBasicSubmodelParts $un]
+    # Write conditions (By unique id, so need the app ConditionMap)
+    write::_writeConditionsByUniqueIdForBasicSubmodelParts $un $ConditionMap $iter
+    # Write the submodelparts
+    foreach group $groups {
+        set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
+        set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        set what "nodal"
+        set iters ""
+        if {$needElems} {append what "&Elements"}
+        if {$needConds} {append what "&Conditions"}
+        ::write::writeGroupSubModelPartByUniqueId "GENERIC" [$group @n] $ConditionMap $what
+    }
+}
+
 proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap} {
     set obj [list ]
 

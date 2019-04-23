@@ -62,11 +62,10 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
     return $mid
 }
 
-proc write::writeBasicSubmodelPartsByUniqueId {ConditionMapVariableName {un "GenericSubmodelPart"}} {
-    write::_writeElementsForBasicSubmodelParts $un
-}
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
+    # Write elements
     set groups [write::_writeElementsForBasicSubmodelParts $un]
+    # Write conditions (By iterator, so need the app condition iterator)
     set conditions_dict [write::_writeConditionsForBasicSubmodelParts $un $cond_iter ]
     foreach group $groups {
         set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
