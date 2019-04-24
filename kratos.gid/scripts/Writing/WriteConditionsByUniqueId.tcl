@@ -74,7 +74,7 @@ proc write::writeBasicSubmodelPartsByUniqueId {ConditionMap iter {un "GenericSub
     }
 }
 
-proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap} {
+proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap {print_again_repeated 0}} {
     set obj [list ]
 
     # Print header
@@ -97,17 +97,21 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
     for {set i 0} {$i <[llength $obj]} {incr i} {
         set nids [lindex $obj $i]
         set cndid 0
+        set new 0
         if {$nnodes != 1} {
             set eid [lindex $elems $i]
             set cndid [objarray get $ConditionMap $eid]
         }
         if {$cndid == 0} {
+            set new 1
             set cndid [incr iter]
             if {$nnodes != 1} {
                 objarray set $ConditionMap $eid $cndid
             }
         }
-        WriteString "${s1}$cndid 0 $nids"
+        if {$print_again_repeated || $new} {
+            WriteString "${s1}$cndid 0 $nids"
+        }
     }
     incr ::write::current_mdpa_indent_level -1
 
