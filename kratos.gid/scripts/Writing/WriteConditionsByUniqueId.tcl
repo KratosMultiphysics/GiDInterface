@@ -1,5 +1,5 @@
 
-proc write::writeConditionsByUniqueId { baseUN ConditionMapVariableName {iter 0} {cond_id ""}} {
+proc write::writeConditionsByUniqueId { baseUN ConditionMapVariableName {iter 0} {cond_id ""} {print_again_repeated 0}} {
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
@@ -12,13 +12,13 @@ proc write::writeConditionsByUniqueId { baseUN ConditionMapVariableName {iter 0}
         if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
-        set iter [writeGroupNodeConditionByUniqueId $groupNode $condid $iter $ConditionMapVariableName]
+        set iter [writeGroupNodeConditionByUniqueId $groupNode $condid $iter $ConditionMapVariableName $print_again_repeated]
     }
     return $iter
 }
 
 
-proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMapVariableName} {
+proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMapVariableName {print_again_repeated 0}} {
     set groupid [get_domnode_attribute $groupNode n]
     set groupid [GetWriteGroupName $groupid]
     if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
@@ -39,7 +39,7 @@ proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMa
 }
 
 
-proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap iter} {
+proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap iter {print_again_repeated 0}} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $un]/group"
     set groups [$root selectNodes $xp1]
@@ -50,7 +50,7 @@ proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap ite
         set needConds [write::getValueByNode [$group_node selectNodes "./value\[@n='WriteConditions'\]"]]
         if {$needConds} {
             # TODO: be carefull with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
-            set iter [write::writeGroupNodeConditionByUniqueId $group_node "GENERIC_CONDITION" $iter $ConditionMap]
+            set iter [write::writeGroupNodeConditionByUniqueId $group_node "GENERIC_CONDITION" $iter $ConditionMap {print_again_repeated 0}]
         }
     }
     Model::ForgetCondition GENERIC_CONDITIONS
