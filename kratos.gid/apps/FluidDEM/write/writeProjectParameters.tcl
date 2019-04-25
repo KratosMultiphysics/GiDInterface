@@ -45,6 +45,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     set coupling_level_type [write::getValue FDEMCoupling CouplingLevel]
     set interaction_start_time [write::getValue FDEMCoupling InteractionStart]
     dict set project_parameters_dict coupling "coupling_level_type"                             $coupling_level_type
+    dict set project_parameters_dict coupling "coupling_weighing_type"                         2
     dict set project_parameters_dict coupling "interaction_start_time"                          $interaction_start_time
 
     set time_averaging_type [write::getValue FDEMfwCoupling TimeAveraging]
@@ -136,7 +137,7 @@ proc ::FluidDEM::write::getParametersDict { } {
 
     # fluid_nodal_results
     set MATERIAL_ACCELERATION       [write::getValue FluidNodalResults MaterialAccel]
-    set FLUID_GRADIENT              [write::getValue FluidNodalResults VelocityGrad]
+    set VELOCITY_GRADIENT           [write::getValue FluidNodalResults VelocityGrad]
     set PRESSURE_GRADIENT           [write::getValue FluidNodalResults PressureGrad]
     set FLUID_FRACTION              [write::getValue FluidNodalResults FluidFraction]
     set DISPERSE_FRACTION           [write::getValue FluidNodalResults DisperseFraction]
@@ -153,7 +154,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     set BODY_FORCE                  [write::getValue FluidNodalResults BodyForce]
 
     dict set project_parameters_dict fluid_nodal_results "MATERIAL_ACCELERATION" $MATERIAL_ACCELERATION
-    dict set project_parameters_dict fluid_nodal_results "FLUID_GRADIENT" $FLUID_GRADIENT
+    dict set project_parameters_dict fluid_nodal_results "VELOCITY_GRADIENT" false
     dict set project_parameters_dict fluid_nodal_results "PRESSURE_GRADIENT" $PRESSURE_GRADIENT
     dict set project_parameters_dict fluid_nodal_results "FLUID_FRACTION" $FLUID_FRACTION
     dict set project_parameters_dict fluid_nodal_results "DISPERSE_FRACTION" $DISPERSE_FRACTION
@@ -183,9 +184,9 @@ proc ::FluidDEM::write::getParametersDict { } {
     set properties_dict [dict create]
     W "7.1"
     set partgroup [write::getPartsSubModelPartId]
+    # partgroup seria Parts_dem -Begin SubModelPart Parts_dem-, pero fa falta la id desde -Begin Properties 4-
     W "7.2"
-    dict set properties_dict "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]]
-    W "7.3"
+    # dict set properties_dict "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]]
     dict set properties_dict properties_id 1
     dict set properties_dict hydrodynamic_law_parameters                                         "name"                         "HydrodynamicInteractionLaw"
     dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         "default"

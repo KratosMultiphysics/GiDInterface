@@ -141,7 +141,7 @@ proc DEM::write::writeInletMeshes { } {
                 set random_orientation 0
 
                 # Change to SphericSwimmingParticle3D in swimmingDEM application interface. SphericContinuumParticle3D for CDEM?
-                # set default inlet_element_type
+                # set default inlet_element_type, if FLUIDDEM -> SphericSwimmingParticle3D
                 set inlet_element_type SphericParticle3D
                 set inlet_injector_element_type SphericParticle3D
 
