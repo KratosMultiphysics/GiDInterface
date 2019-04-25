@@ -13,12 +13,15 @@ If you need the latest release, launch your GiD, navigate to Data > Problemtype 
 * Navigate to kratos.gid/exec/
 * Create there a symbolic link to the kratos installation folder (where runkratos is located)
   * Unix : `ln -s ~/Kratos Kratos`
-  * Windows : `mklink /J Kratos C:/kratos` (Kratos installation folder)
+  * Windows : `mklink /J Kratos C:\kratos` (Kratos installation folder)
 
 ## Usage
 * Run GiD
 * Go to: Data / Problem type / kratos
 * kratos top menu / Developer mode (recommended)
+* [Fluid dynamics example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#3-set-a-fluid-dynamics-problem)
+* [Structural mechanics example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#4-set-a-structural-mechanics-problem)
+* [Fluid-Structure interaction example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#5-set-a-fluid-structure-interaction-problem)
 
 ## Warnings
 * This repository is in Beta version. This means that everything can change.

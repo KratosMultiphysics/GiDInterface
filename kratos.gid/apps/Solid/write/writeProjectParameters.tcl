@@ -75,10 +75,10 @@ proc Solid::write::getParametersDict { } {
 
     set solutiontype [write::getValue SLSoluType]
     if {$solutiontype ne "Dynamic"} {
-	dict set integrationDataDict integration_method "Static"
-	dict set integrationDataDict analysis_type [write::getValue SLAnalysisType]
+	    dict set integrationDataDict integration_method [write::getValue SLScheme]
+	    dict set integrationDataDict analysis_type [write::getValue SLAnalysisType]
     } else {
-	dict set integrationDataDict time_integration [write::getValue SLSolStrat]
+	    dict set integrationDataDict time_integration [write::getValue SLSolStrat]
         dict set integrationDataDict integration_method [write::getValue SLScheme]
     }
 

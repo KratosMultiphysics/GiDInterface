@@ -5,25 +5,35 @@
   <ConditionItem n="FluidThermalInterface2D" pn="Fluid thermal interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
-	ElementType="Line" ProcessName="ApplyThermalInterfaceProcess" help="This process sets the interface thermal behavior">
+	ElementType="Line" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
+    <DefaultValues>
+      <value n="ambient_temperature" v="0.0" state="hidden" />
+      <value n="add_ambient_radiation" v="False" state="hidden" />
+      <value n="add_ambient_convection" v="False" state="hidden" />
+    </DefaultValues>
     <inputs>
-      
+
     </inputs>
   </ConditionItem>
 
   <ConditionItem n="FluidThermalInterface3D" pn="Fluid thermal interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
-	ElementType="Surface" ProcessName="ApplyThermalInterfaceProcess" help="This process sets the interface thermal behavior">
+	ElementType="Surface" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
       <item  GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
       <item  GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
     </TopologyFeatures>
+    <DefaultValues>
+      <value n="ambient_temperature" v="0.0" state="hidden" />
+      <value n="add_ambient_radiation" v="False" state="hidden" />
+      <value n="add_ambient_convection" v="False" state="hidden" />
+    </DefaultValues>
     <inputs>
-      
+
     </inputs>
   </ConditionItem>
 
@@ -31,20 +41,30 @@
   <ConditionItem n="SolidThermalInterface2D" pn="Solid thermal interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="ConvectionDiffusion"
-	ElementType="Line" ProcessName="ApplyThermalInterfaceProcess" help="This process sets the interface thermal behavior">
+	ElementType="Line" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
+    <DefaultValues>
+      <value n="ambient_temperature" v="0.0" state="hidden" />
+      <value n="add_ambient_radiation" v="False" state="hidden" />
+      <value n="add_ambient_convection" v="False" state="hidden" />
+    </DefaultValues>
   </ConditionItem>
 
   <ConditionItem n="SolidThermalInterface3D" pn="Solid thermal interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="ConvectionDiffusion"
-	ElementType="Surface" ProcessName="ApplyThermalInterfaceProcess" help="This process sets the interface thermal behavior">
+	ElementType="Surface" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
       <item  GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
       <item  GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
     </TopologyFeatures>
+    <DefaultValues>
+      <value n="ambient_temperature" v="0.0" state="hidden" />
+      <value n="add_ambient_radiation" v="False" state="hidden" />
+      <value n="add_ambient_convection" v="False" state="hidden" />
+    </DefaultValues>
   </ConditionItem>
 
 </ConditionList>

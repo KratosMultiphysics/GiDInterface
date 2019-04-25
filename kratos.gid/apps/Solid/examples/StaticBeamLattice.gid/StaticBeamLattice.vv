@@ -1,0 +1,37 @@
+BeginZE /home/jmaria/Desktop/StaticBeamLattice.gid/StaticBeamLattice.vv
+   x -6.89991378784179688 6.89991378784179688
+   y 15.3079414367675781 -4.42514467239379883
+   z -20.6997413635253906 20.6997413635253906
+   e 6.89991378784179688
+   v 0.257072094239774285 -0.00642424184424369993 0.00395524515450007726
+   r -0.966362780489641304
+   m 0.999886155128479004 0.00434141699224710464 0.0144498627632856369 0 -0.0109473904594779015 0.867796599864959717 0.496798992156982422 0 -0.0103827305138111115 -0.496900618076324463 0.867745339870452881 0 0 0 0 1
+   c 0 5.44139814376831055 0
+   pd 0
+   pno 0
+   pfo 0
+   pf 4
+   pv 0
+   NowUse 0
+   DrawingType 0
+   LightVector 90 90 150 0
+   OGLShadow(UseShadows) 0
+   OGLShadow(RenderMode) RenderNice
+   OGLShadow(ShadowBias) -0.002
+   OGLShadow(AmbientShadows) 1
+   OGLShadow(UseFBO) 0
+   OGLShadow(FBOSize) 2048
+   OGLShadow(DimmedLightFactor) 0.02
+   OGLStereo(UseStereo) 0
+   OGLStereo(RelativeEyeDistance) 1
+   OGLStereo(FlipEyes) 0
+   OGLStereo(StereoMode) AnaglyphColors
+   OGLStereo(EyeDistance) 0.075
+   OGLStereo(LeftEyeDistance) 1 0 0 1
+   OGLStereo(RightEyeDistance) 0 1 1 1
+EndZE /home/jmaria/Desktop/StaticBeamLattice.gid/StaticBeamLattice.vv
+
+BeginMirror
+   Mirror 0 Angle 0.0 AngleFake -15.0 SizeFactor 2.0 HeightOffset 0.25 Color #d9e5f24d Backlight Off EdgeStyle No Type Scene DrawMode Mirror
+EndMirror
+

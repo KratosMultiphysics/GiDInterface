@@ -54,6 +54,13 @@ proc FSI::xml::CustomTree { args } {
 
     # Disable MPI parallelism until it is fully tested
     #spdAux::SetValueOnTreeItem values "OpenMP" ParallelType
+
+    # Mesh movement results in fluid output settings
+    set root [customlib::GetBaseRoot]
+    if {[$root selectNodes "[spdAux::getRoute FLResults]/container\[@n='OnNodes'\]"] ne ""} {
+        gid_groups_conds::addF "[spdAux::getRoute FLResults]/container\[@n='OnNodes'\]" value [list n MESH_DISPLACEMENT pn "Mesh displacement" v Yes values "Yes,No"]
+        gid_groups_conds::addF "[spdAux::getRoute FLResults]/container\[@n='OnNodes'\]" value [list n MESH_VELOCITY pn "Mesh velocity" v No values "Yes,No"]
+    }
 }
 
 # Overwriting some procs

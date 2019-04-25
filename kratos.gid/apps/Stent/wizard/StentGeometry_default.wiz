@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Wizard version="1.0.1" wizardid="StentGeometry" title="Stent geometry creator" icon="logo.png">
+  <Steps>
+    <Step id="Geometry" title="Geometry definition" subtitle="Create the parametric stent">
+      <Data>
+        <Frame n="Data" position="left">
+          <Item n="WireRadius" pn="Wire radius" v="0.1" type="double" units="mm" />
+          <Item n="NumberOfWires" pn="Number of wires" v="5" type="integer" />
+          <Item n="AngleBetweenWires" pn="Angle between wires" v="30" type="double" units="deg" />
+          <Item n="StentRadius" pn="Stent radius" v="5" type="double" units="mm" />
+          <Item n="StentLength" pn="Stent length approx" v="50" type="double" units="mm" />
+          <Item n="CrimpedButton" pn="CrimpedGeometry" type="combo" values="Yes,No" onchange="Stent::Wizard::HideCrimpedRadius"/>
+          <Item n="StentRadiusClosed" pn="Stent radius closed" v="3" type="double" units="mm" />
+          <Item n="DrawButton" pn="Create geometry" type="button" v="::Stent::Wizard::DrawGeometry" />
+        </Frame>
+        <Frame n="Image" position="right">
+          <Item n="ImageGeom" v="geometry.png" type="image"/>
+        </Frame>
+      </Data>
+    </Step>
+  </Steps>
+  <Templates>
+  </Templates>
+</Wizard>

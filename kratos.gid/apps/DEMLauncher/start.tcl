@@ -6,17 +6,17 @@ proc ::DemLauncher::Init { } {
     variable available_apps
 
     set dir [apps::getMyDir "DemLauncher"]
-    set available_apps [list DEM DEMPFEM]
+    set available_apps [list DEM DEMPFEM FluidDEM]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
-    
+
     ::DemLauncher::AppSelectorWindow
 }
 
 proc ::DemLauncher::AppSelectorWindow { } {
     variable available_apps
     set initwind $::spdAux::initwind
-    
+
     set root [customlib::GetBaseRoot]
     set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
     if { $nd ne "undefined" } {

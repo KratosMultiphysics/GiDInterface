@@ -83,7 +83,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="KirchhoffSaintVenant2DLaw" pn="Hyperelastic Kirchhoff Saint-Venant Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="KirchhoffSaintVenantPlaneStrain2DLaw" pn="Hyperelastic Kirchhoff Saint-Venant Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Hyperelastic Kirchhoff Saint-Venant behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -94,7 +94,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="KirchhoffSaintVenant2DLaw" pn="Hyper Elastic Kirchhoff Saint-Venant Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="KirchhoffSaintVenantPlaneStress2DLaw" pn="Hyperelastic Kirchhoff Saint-Venant Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Hyperelastic Kirchhoff Saint-Venant behaviour in 2D plane stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -108,7 +108,7 @@
     </CLaw>
 
     <!--plasticity constitutive laws-->
-    <CLaw n="LinearJ2PlasticityPlaneStrain2DLaw" pn="Linear J2 Plasticity" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Plasticity" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 2D (Plane Strain)" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainJ2PlasticityPlaneStrain2DLaw" pn="Linear J2 Plasticity" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Plasticity" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 2D (Plane Strain)" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -122,7 +122,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="LinearJ2Plasticity3DLaw" pn="Linear J2 Plasticity" ProductionReady="ProductionReady" Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainJ2Plasticity3DLaw" pn="Linear J2 Plasticity" ProductionReady="ProductionReady" Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />

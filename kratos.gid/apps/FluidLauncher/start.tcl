@@ -6,7 +6,7 @@ proc ::FluidLauncher::Init { } {
     variable available_apps
 
     set dir [apps::getMyDir "FluidLauncher"]
-    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer]
+    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
     
@@ -48,15 +48,18 @@ proc ::FluidLauncher::FluidAppSelectorWindow { } {
         ttk::label $w.top.title_text -text [_ "Select a fluid application"]
 
         ttk::frame $w.information  -relief ridge
-        set i 0
+        set r 0
+        set c 0
+        set max_cols 3
         foreach app $available_apps {
             set img [::apps::getImgFrom $app]
             set app_publicname [[::apps::getAppById $app] getPublicName]
             set but [ttk::button $w.information.img$app -image $img -command [list ::FluidLauncher::ChangeAppTo $app] ]
             ttk::label $w.information.text$app -text $app_publicname
-            grid $w.information.img$app -column $i -row 0
-            grid $w.information.text$app -column $i -row 1
-            incr i
+            grid $w.information.img$app -column $r -row $c
+            grid $w.information.text$app -column $r -row [expr $c + 1]
+            incr r
+            if {$r >= $max_cols} {incr c 2; set r 0}
         }
         grid $w.top
         grid $w.top.title_text

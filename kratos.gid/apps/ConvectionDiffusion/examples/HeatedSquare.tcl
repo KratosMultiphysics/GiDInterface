@@ -22,7 +22,7 @@ proc ConvectionDiffusion::examples::DrawSquareGeometry3D {args} {
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
-    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape 
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
 }
 
 proc ConvectionDiffusion::examples::DrawSquareGeometry2D {args} {
@@ -115,7 +115,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
 
     # Monolithic solution strategy set
     spdAux::SetValueOnTreeItem v "transient" CNVDFFSolStrat
-    
+
     # Fluid Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Body]
@@ -137,7 +137,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
     spdAux::AddIntervalGroup Body "Body//Initial"
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Body//Initial"]
     $thermalnodNode setAttribute ov $body_type
-    set props [list value 100]
+    set props [list value 303.15 Interval Initial]
     foreach {prop val} $props {
          set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -152,7 +152,7 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
     set thermalcond "$thermalConditions/condition\[@n='ImposedTemperature$nd'\]"
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Left_Wall]
     $thermalNode setAttribute ov $cond_type
-    set props [list value 303.15]
+    set props [list value 303.15 Interval Total]
     foreach {prop val} $props {
          set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -162,20 +162,47 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
         }
     }
 
-    set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Right_Wall]
-    $thermalNode setAttribute ov $cond_type
-    set props [list value 293.15]
-    foreach {prop val} $props {
-         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
+    set thermal_flux_cond "$thermalConditions/condition\[@n='HeatFlux$nd'\]"
+    set thermal_flux_node [customlib::AddConditionGroupOnXPath $thermal_flux_cond Top_Wall]
+    $thermal_flux_node setAttribute ov $cond_type
+    set flux_props [list value 2000 Interval Total]
+    foreach {prop val} $flux_props {
+         set propnode [$thermal_flux_node selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
               $propnode setAttribute v $val
          } else {
-            W "Warning - Couldn't find property ImposedTemperature $prop"
+            W "Warning - Couldn't find property HeatFlux $prop"
+        }
+    }
+
+    set thermal_flux_cond "$thermalConditions/condition\[@n='HeatFlux$nd'\]"
+    set thermal_flux_node [customlib::AddConditionGroupOnXPath $thermal_flux_cond Bottom_Wall]
+    $thermal_flux_node setAttribute ov $cond_type
+    set flux_props [list value 2000 Interval Total]
+    foreach {prop val} $flux_props {
+         set propnode [$thermal_flux_node selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property HeatFlux $prop"
+        }
+    }
+
+    set thermal_face_cond "$thermalConditions/condition\[@n='ThermalFace$nd'\]"
+    set thermal_face_node [customlib::AddConditionGroupOnXPath $thermal_face_cond Right_Wall]
+    $thermal_face_node setAttribute ov $cond_type
+    set face_props [list ambient_temperature 283.15 add_ambient_radiation True emissivity 0.8 add_ambient_convection True convection_coefficient 100.0 Interval Total]
+    foreach {prop val} $face_props {
+         set propnode [$thermal_face_node selectNodes "./value\[@n = '$prop'\]"]
+         if {$propnode ne "" } {
+              $propnode setAttribute v $val
+         } else {
+            W "Warning - Couldn't find property ThermalFace $prop"
         }
     }
 
     # Time parameters
-    set time_parameters [list EndTime 100 DeltaTime 0.5]
+    set time_parameters [list EndTime 3600.0 DeltaTime 25.0]
     set time_params_path [spdAux::getRoute "CNVDFFTimeParameters"]
     foreach {n v} $time_parameters {
         [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
@@ -200,6 +227,6 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
 # proc ConvectionDiffusion::examples::AddCuts { } {
 #     # Cuts
 #     set results [spdAux::getRoute "Results"]
-#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"] 
+#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
 #     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 # }

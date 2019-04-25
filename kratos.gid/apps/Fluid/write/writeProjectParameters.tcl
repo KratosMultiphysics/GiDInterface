@@ -85,7 +85,7 @@ proc Fluid::write::getGravityProcessDict {} {
     dict set pdict "process_name" "AssignVectorByDirectionProcess"
     set params [dict create]
     set partgroup [write::getPartsSubModelPartId]
-    dict set params "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]] 
+    dict set params "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]]
     dict set params "variable_name" "BODY_FORCE"
     dict set params "modulus" $value
     dict set params "constrained" false

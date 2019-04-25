@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="SolStrat" pn="Settings" un="DEMStratSection" help="Data for the..." icon="solution" open_window="0">
+<container n="SolStrat" pn="Settings" un="DEMStratSection" help="Data for the..." icon="analysis" open_window="0">
 	<include n="Gravity" active="1" path="apps/DEM/xml/Gravity.spd"/>
-	<container n="DEM-Boundingbox" pn="Bounding box" un="DEM-Boundingbox" help="Any Discrete Element going outsne of the Bounding Box will be deleted" icon="bbox">
-        <value n="UseBoundingBox" pn="Bounding box" type="bool" values="true,false" v="false" icon="active.gif" help="Any Discrete element going out of the bounding box will be deleted" update_proc="spdAux::RequestRefresh"/>
-        <value n="MaxX" pn="Max X" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Max X"/>
-        <value n="MaxY" pn="Max Y" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Max Y"/>
-        <value n="MaxZ" pn="Max Z" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Max Z"/>
-        <value n="MinX" pn="Min X" v="-10" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Min X"/>
-        <value n="MinY" pn="Min Y" v="-10" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Min Y"/>
-        <value n="MinZ" pn="Min Z" v="-10" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Min Z"/>
-        <value n="StartTime" pn="Start Time" v="0.0" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Time at which the bounding box gets active."/>
-        <value n="StopTime" pn="Stop Time" v="1000.0" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Time at which the bounding box stops acting."/>
-        <value n="PrintBoundingBox" pn="Print bounding box" type="bool" values="true,false" v="false" state="hidden" />
-	</container>	
-	<container n="TimeParameters" pn="Time parameters" un="DEMTimeParameters" help="Problem parameters" icon="time4" open_window="0">
-		<value n="StartTime" pn="Start time" v="0.0" help=""/>
-		<value n="EndTime" pn="End time" v="1.0" help=""/>
-		<value n="DeltaTime" pn="Delta time" v="1e-6" help=""/>
-        <value n="DEM-ScreenInfoOutput" pn="Info screen output" v="5" state="normal" help="How often the user gets information on the running process (in seconds)"/>
-        <value n="DEM-NeighbourSearchFrequency" pn="Search frequency" v="50" help="Search for new particle or wall neighbours. If set to '10', a single search will be computed out every ten steps"/>
+	<container n="Boundingbox"      un="Boundingbox" pn="Bounding box" help="Any Discrete Element going outsne of the Bounding Box will be deleted" icon="bbox" open_window="0">
+                <value n="UseBB"        type="bool"     values="true,false" v="false" pn="Bounding box" icon="black1"  help="Any Discrete element going out of the bounding box will be deleted" update_proc="spdAux::RequestRefresh" />
+                <value n="AutomaticBB"  type="bool"     values="true,false" v="false" pn="Dynamic BB"   icon="black1" state="[getStateFromXPathValue {string(../value[@n='UseBB']/@v)} true]" help="The bounding box is calculated automatically" update_proc="spdAux::RequestRefresh" />
+                <value n="PostBB"       type="bool"     values="true,false" v="false" pn="Print bounding box" icon="black1" state="[getStateFromXPathValue {string(../value[@n='UseBB']/@v)} true]"/>
+                <value n="BBFactor"     v="1.1"         pn="Factor"     state="[getStateFromXPathValue {string(../value[@n='AutomaticBB']/@v)} true]"   icon="black1" help="Enlargement factor for the dynamic bounding box"/>
+                <value n="MaxX"         v="10"          pn="Max X"      state="[getStateBoundingBoxParams]"  icon="black1" help="Max X"/>
+                <value n="MaxY"         v="10"          pn="Max Y"      state="[getStateBoundingBoxParams]"  icon="black1" help="Max Y"/>
+                <value n="MaxZ"         v="10"          pn="Max Z"      state="[getStateBoundingBoxParams]"  icon="black1" help="Max Z"/>
+                <value n="MinX"         v="-10"         pn="Min X"      state="[getStateBoundingBoxParams]"  icon="black1" help="Min X"/>
+                <value n="MinY"         v="-10"         pn="Min Y"      state="[getStateBoundingBoxParams]"  icon="black1" help="Min Y"/>
+                <value n="MinZ"         v="-10"         pn="Min Z"      state="[getStateBoundingBoxParams]"  icon="black1" help="Min Z"/>
+                <value n="StartTime"    v="0.0"         pn="Start Time" state="[getStateFromXPathValue {string(../value[@n='UseBB']/@v)} true]"      icon="black1" help="Time at which the bounding box gets active."/>
+                <value n="StopTime"     v="1000.0"      pn="Stop Time"  state="[getStateFromXPathValue {string(../value[@n='UseBB']/@v)} true]"      icon="black1" help="Time at which the bounding box stops acting."/>
+	        <value n="PeriodicDomain"               type="bool"     values="true,false" v="false" pn="Use as periodic domain" icon="black1" state="[getStateFromXPathValue {string(../value[@n='UseBB']/@v)} true]" help="Consider a parallepipedic periodic domain defined by the bounding box for the DEM problem"/>
+        </container>
+        <container n="AdvOptions"                       un="AdvOptions" pn="Advanced options"         help="Additional options" icon="solver">
+                <value n="CleanIndentations"            type="bool"     values="true,false" v="false" icon="black1" pn="Clean initial indentations" help="If activated, initial indentations between spheres and between spheres and walls are eliminated to avoid explosions (reducing the radius of the spheres accordigly)"/>
+                <value n="RemoveParticlesInWalls"       type="bool"     values="true,false" v="false" icon="black1" pn="Remove spheres initially touching walls" help="If activated, all spheres touching any wall at the beginning of the computations will be eliminated"/>
+                <value n="CalculateRotations"           type="bool"     values="true,false" v="true"  icon="black1" pn="Calculate rotations" help="If activated, torques and rotations will be calculated on the Discrete Elements. Will increase computation time slightly. "/>
+                <value n="RollingFriction"              type="bool"     values="true,false" v="false" icon="black1" pn="Rolling friction" help="If activated, the Rolling Friction parameter set in the Materials Tree will be taken into account. Otherwise it will be ignored. Will increase computation time slightly"/>
+                <value n="VirtualMassCoef"              v="1.0"         pn="Virtual mass coefficient" icon="black1" help="Virtual mass"/>
+                <value n="GlobalDamping"                v="0.0"         pn="Global damping"           icon="black1" help="Choose the value for the damping. 0.0 means no damping at all, while 1.0 means full damping."/>
+	</container>
+	<container     n="TimeParameters"               un="DEMTimeParameters"  pn="Time parameters"    help="Problem parameters" icon="time4" open_window="0">
+                <value n="StartTime"                    v="0.0"                 pn="Start time"         icon="black1" help=""/>
+                <value n="EndTime"                      v="1.0"                 pn="End time"           icon="black1" help=""/>
+                <value n="DeltaTime"                    v="1e-6"                pn="Delta time"         icon="black1" help=""/>
+                <value n="ScreenInfoOutput"             v="5"                   pn="Info screen output" icon="black1" help="How often the user gets information on the running process (in seconds)"/>
+                <value n="NeighbourSearchFrequency"     v="50"                  pn="Search frequency"   icon="black1" help="Search for new particle or wall neighbours. If set to '10', a single search will be computed out every ten steps"/>
 	</container>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
-	<dynamicnode command="spdAux::injectSolvers" args=""/>	
+	<dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>

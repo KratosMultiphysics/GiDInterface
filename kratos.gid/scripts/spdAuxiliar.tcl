@@ -91,6 +91,7 @@ proc spdAux::processIncludes { } {
     set root [customlib::GetBaseRoot]
     spdAux::processAppIncludes $root
     spdAux::processDynamicNodes $root
+    spdAux::parseRoutes
 }
 
 proc spdAux::processDynamicNodes { root } {
@@ -389,6 +390,21 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
     }
 }
 
+proc spdAux::GetAppliedGroups { {root ""} } {
+    customlib::UpdateDocument
+    
+    if {$root eq "" } {
+        set root [customlib::GetBaseRoot]
+    }
+    set group_list [list ]
+    foreach group_node [$root getElementsByTagName "group"] {
+        set parent [[$group_node parent] nodeName]
+        if {$parent eq "condition"} {
+            lappend group_list [write::GetWriteGroupName [$group_node @n]]
+        }
+    }
+    return [lsort -unique $group_list]
+}
 
 proc spdAux::LoadModelFiles { {root "" }} {
     if {$root eq ""} {

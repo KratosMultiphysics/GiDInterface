@@ -583,15 +583,15 @@ proc write::WriteAssignedValues {condNode} {
     return $ret
 }
 
-proc write::writePropertiesJsonFile {{parts_un ""} {filename "materials.json"} {write_claw_name "True"}} {
+proc write::writePropertiesJsonFile {{parts_un ""} {fname "materials.json"} {write_claw_name "True"} {model_part_name ""}} {
     if {$parts_un eq ""} {set parts_un [GetConfigurationAttribute parts_un]}
-    set mats_json [getPropertiesList $parts_un $write_claw_name]
-    write::OpenFile $filename
+    set mats_json [getPropertiesList $parts_un $write_claw_name $model_part_name]
+    write::OpenFile $fname
     write::WriteJSON $mats_json
     write::CloseFile
 }
 
-proc write::getPropertiesList {parts_un {write_claw_name "True"}} {
+proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_name ""}} {
     variable mat_dict
     set props_dict [dict create]
     set props [list ]
@@ -604,6 +604,7 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"}} {
     foreach gNode [$root selectNodes $xp1] {
         set group [get_domnode_attribute $gNode n]
         set sub_model_part [write::getSubModelPartId Parts $group]
+        if {$model_part_name ne ""} {set sub_model_part $model_part_name.$sub_model_part}
         if { [dict exists $mat_dict $group] } {
             set mid [dict get $mat_dict $group MID]
             set prop_dict [dict create]

@@ -24,7 +24,7 @@ proc Fluid::write::Init { } {
     SetAttribute output_model_part_name "fluid_computational_model_part"
 }
 
-# Events
+# MDPA write event
 proc Fluid::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
@@ -120,10 +120,10 @@ proc Fluid::write::writeBoundaryConditions { } {
 
     # Write the conditions
     if {$::Model::SpatialDimension eq "3D"} {
-        set kname WallCondition3D3N
+        set kname SurfaceCondition3D3N
         set nnodes 3
     } {
-        set kname WallCondition2D2N
+        set kname LineCondition2D2N
         set nnodes 2
     }
     write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $Fluid::write::FluidConditionMap

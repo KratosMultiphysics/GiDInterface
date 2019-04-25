@@ -1,6 +1,6 @@
 # Project Parameters
 proc ::DEMPFEM::write::getParametersDict { } {
-    set projectParametersDict [DEM::write::getParametersEvent]
+    set projectParametersDict [DEM::write::getParametersDict]
 
     dict set projectParametersDict coupling_level_type 1
     dict set projectParametersDict time_averaging_type 0
@@ -151,19 +151,6 @@ proc DEM::write::GetTimeSettings { } {
     return $result
 }
 
-
-proc DEM::write::GetGravity { } {
-    set gravity_value [write::getValue DEMGravity GravityValue]
-    set gravity_X [write::getValue DEMGravity Cx]
-    set gravity_Y [write::getValue DEMGravity Cy]
-    set gravity_Z [write::getValue DEMGravity Cz]
-    # Normalize director vector
-    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
-    # Get value by components
-    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
-    
-    return [list $gx $gy $gz]
-}
 
 proc PfemFluid::write::GetGravity { } {
     return [DEM::write::GetGravity]
