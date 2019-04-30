@@ -136,7 +136,9 @@ proc StenosisWizard::Wizard::DrawSpherical {length radius start end delta } {
     set end_x [expr double($length)/2]
     set m2 [expr double($end) / double ($delta)]
     set m1 [expr double($delta) / double($end) *-1.0]
-    set ycenter [expr double($delta)/2-$m2*double($end)/2]
+    set temp1 [expr double($m2) * double($end) /2] 
+    set temp2 [expr double($delta)/2]
+    set ycenter [expr $temp1 - $temp2]
     set sph_radius [expr double($ycenter) + double($delta)]
 
     GiD_Process Mescape Geometry Create Line $origin_x,0 $end_x,0 escape Mescape
