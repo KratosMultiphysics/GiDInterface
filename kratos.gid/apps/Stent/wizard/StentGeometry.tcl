@@ -101,7 +101,7 @@ proc Stent::Wizard::DrawGeometry {} {
                         set tj [expr $j-1]
                         set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
                         set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column_crimped/2]
-                    } elseif {[expr $i % 2] ne 0 0 && $j >= $num_rows_closed && $j < [expr $num_rows_closed + $num_rows_transition]}{
+                    } elseif {[expr $i % 2] ne 0 0 && $j >= $num_rows_closed && $j < [expr $num_rows_closed + $num_rows_transition]}{   
                         set ti [expr $i-1]
                         set tj [expr $j-1]
                         set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
@@ -112,7 +112,6 @@ proc Stent::Wizard::DrawGeometry {} {
                         set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
                         set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column_open/2]
                     }
-
                 }
             }
         }
@@ -142,7 +141,6 @@ proc Stent::Wizard::DrawGeometry {} {
             }
         }
 
-        
         for {set j 0} {$j < $num_rows_total} {incr j} {
             if {[expr $j % 2] == 0 || $j == 0} {
                 for {set i 1} {$i < $num_cols} {incr i} {
@@ -183,10 +181,7 @@ proc Stent::Wizard::DrawGeometry {} {
         set num_rows $num_rows_total
         set inner_nodes [list ]
         set outer_nodes [list ]
-    }
-
-
-    else {
+    } else {
         set point_distance_column [expr $point_distance_row * tan($degtorad * (90-$angle))]
         set num_cols [expr 1 + ($number_wires *2)]
         set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
@@ -266,7 +261,6 @@ proc Stent::Wizard::DrawGeometry {} {
         }
         set inner_nodes [list ]
         set outer_nodes [list ]
-
     }
     set cont1 1
     set c 1
@@ -292,9 +286,6 @@ proc Stent::Wizard::DrawGeometry {} {
                 }
             }
         }
-    
-
-
         GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x(0,0) $b_points_y(0,0) 0.0
         for {set j 0} {$j < $num_rows} {incr j} {
             if {$g eq 1} {set g 0} {set g 1}
