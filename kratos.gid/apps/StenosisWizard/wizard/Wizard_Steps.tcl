@@ -137,6 +137,7 @@ proc StenosisWizard::Wizard::DrawSpherical {length radius start end delta } {
     set m2 [expr double($end) / double ($delta)]
     set m1 [expr double($delta) / double($end) *-1.0]
     set temp1 [expr double($m2) * double($end) /2] 
+    set temp11 [expr $temp1 *-1.0]
     set temp2 [expr double($delta)/2]
     set ycenter [expr $temp1 - $temp2]
     set sph_radius [expr double($ycenter) + double($delta)]
