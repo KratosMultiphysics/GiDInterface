@@ -51,7 +51,7 @@ proc Stent::Wizard::DrawGeometry {} {
 
 
     #IF VARIABLE ANGLE IS ON
-    if {$variable_angle eq "Yes"}{
+    if {$variable_angle == "Yes"}{
         set length_open [expr 0.53*$stent_length]
         set length_linear [expr 0.27*$stent_length]
         set length_closed [expr 0.20*$stent_length] 
@@ -271,7 +271,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set g 1
 
     #IF 1-OVER-2 BUTTON IS OFF
-    if {$one_over_two eq "No"} {
+    if {$one_over_two == "No"} {
         GiD_Geometry -v2 create point $cont1 $layer_name $points_x(0,0) $points_y(0,0) 0.0
         for {set j 0} {$j < $num_rows} {incr j} {
             if {$c eq 1} {set c 0} {set c 1}
@@ -294,7 +294,7 @@ proc Stent::Wizard::DrawGeometry {} {
 
         GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x(0,0) $b_points_y(0,0) 0.0
         for {set j 0} {$j < $num_rows} {incr j} {
-            if {$g eq 1} {set g 0} {set g 1}
+            if {$g == 1} {set g 0} {set g 1}
 
             for {set i 0} {$i < $num_cols} {incr i} {
                 if {$b_points_x($i,$j) eq 0.0 && $b_points_y($i,$j) eq 0.0 } {
