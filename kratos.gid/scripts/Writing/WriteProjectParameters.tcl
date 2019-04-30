@@ -80,37 +80,6 @@ proc write::WriteJSON {processDict} {
     WriteString [write::tcl2json $processDict]
 }
 
-proc write::GetDefaultOutputDict { {appid ""} } {
-    set outputDict [dict create]
-    set resultDict [dict create]
-
-    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
-    set GiDPostDict [dict create]
-    dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
-    dict set GiDPostDict WriteDeformedMeshFlag      [getValue $results_UN GiDWriteMeshFlag]
-    dict set GiDPostDict WriteConditionsFlag        [getValue $results_UN GiDWriteConditionsFlag]
-    dict set GiDPostDict MultiFileFlag              [getValue $results_UN GiDMultiFileFlag]
-    dict set resultDict gidpost_flags $GiDPostDict
-
-    dict set resultDict file_label                 [getValue $results_UN FileLabel]
-    set outputCT [getValue $results_UN OutputControlType]
-    dict set resultDict output_control_type $outputCT
-    if {$outputCT eq "time"} {set frequency [getValue $results_UN OutputDeltaTime]} {set frequency [getValue $results_UN OutputDeltaStep]}
-    dict set resultDict output_frequency $frequency
-
-    dict set resultDict body_output           [getValue $results_UN BodyOutput]
-    dict set resultDict node_output           [getValue $results_UN NodeOutput]
-    dict set resultDict skin_output           [getValue $results_UN SkinOutput]
-
-    dict set resultDict plane_output [GetCutPlanesList $results_UN]
-
-    dict set resultDict nodal_results [GetResultsList $results_UN OnNodes]
-    dict set resultDict gauss_point_results [GetResultsList $results_UN OnElement]
-
-    dict set outputDict "result_file_configuration" $resultDict
-    dict set outputDict "point_data_configuration" [GetEmptyList]
-    return $outputDict
-}
 
 
 proc write::GetEmptyList { } {
@@ -519,6 +488,7 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
 
 proc write::GetDefaultProblemDataDict { {appid ""} } {
 
+    # Get the results unique name. appid parameter is usefull for multiple inheritance app with more than 1 results section
     if {$appid eq ""} {set results_UN Results } {set results_UN [GetConfigurationAttribute results_un]}
 
     # Problem name
@@ -544,10 +514,13 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # Output process must be placed inside json lists
     set gid_output_process_list [list ]
-    lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
+    set need_gid [write::getValue EnableGiDOutput]
+    if {[write::isBooleanTrue $need_gid]}  {
+        lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
+    }
     
     set vtk_output_process_list [list ]
-    set need_vtk [write::getValue VtkOutput EnableVtkOutput]
+    set need_vtk [write::getValue EnableVtkOutput]
     if {[write::isBooleanTrue $need_vtk]}  {
         lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
     }
@@ -567,7 +540,7 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
     dict set outputProcessParams output_name $model_name
-    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict $appid]
+    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputGiDDict $appid]
 
     set outputConfigDict [dict create]
     dict set outputConfigDict python_module gid_output_process
@@ -578,6 +551,40 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
 
     return $outputConfigDict
 }
+
+proc write::GetDefaultOutputGiDDict { {appid ""} } {
+    set outputDict [dict create]
+    set resultDict [dict create]
+
+    if {$appid eq ""} {set results_UN GiDOptions } {set results_UN [apps::getAppUniqueName $appid GiDOptions]}
+    set GiDPostDict [dict create]
+    dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
+    dict set GiDPostDict WriteDeformedMeshFlag      [getValue $results_UN GiDWriteMeshFlag]
+    dict set GiDPostDict WriteConditionsFlag        [getValue $results_UN GiDWriteConditionsFlag]
+    dict set GiDPostDict MultiFileFlag              [getValue $results_UN GiDMultiFileFlag]
+    dict set resultDict gidpost_flags $GiDPostDict
+
+    dict set resultDict file_label                 [getValue $results_UN FileLabel]
+    set outputCT [getValue $results_UN OutputControlType]
+    dict set resultDict output_control_type $outputCT
+    if {$outputCT eq "time"} {set frequency [getValue $results_UN OutputDeltaTime]} {set frequency [getValue $results_UN OutputDeltaStep]}
+    dict set resultDict output_frequency $frequency
+
+    dict set resultDict body_output           [getValue $results_UN BodyOutput]
+    dict set resultDict node_output           [getValue $results_UN NodeOutput]
+    dict set resultDict skin_output           [getValue $results_UN SkinOutput]
+
+
+    if {$appid eq ""} {set results_UN GiDOutput } {set results_UN [apps::getAppUniqueName $appid GiDOutput]}
+    dict set resultDict plane_output [GetCutPlanesList $results_UN]
+    dict set resultDict nodal_results [GetResultsList $results_UN OnNodes]
+    dict set resultDict gauss_point_results [GetResultsList $results_UN OnElement]
+
+    dict set outputDict "result_file_configuration" $resultDict
+    dict set outputDict "point_data_configuration" [GetEmptyList]
+    return $outputDict
+}
+
 proc write::GetDefaultVTKOutput { {appid ""} } {
     
     # prepare params
