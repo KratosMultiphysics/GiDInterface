@@ -51,7 +51,7 @@ proc Stent::Wizard::DrawGeometry {} {
 
 
     #IF VARIABLE ANGLE IS ON
-    if {$variable_angle == "Yes"}{
+    if {$variable_angle eq "Yes"}{
         set length_open [expr 0.53*$stent_length]
         set length_linear [expr 0.27*$stent_length]
         set length_closed [expr 0.20*$stent_length] 
@@ -153,7 +153,8 @@ proc Stent::Wizard::DrawGeometry {} {
                         set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
                     }
                 }
-            } else {
+            } 
+            else {
                 for {set i 0} {$i < $num_cols} {incr i} {
                     if {[expr $i % 2] ne 0 && $j < $num_rows_closed} {
                         set ti [expr $i-1]
@@ -161,13 +162,15 @@ proc Stent::Wizard::DrawGeometry {} {
                         set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
                         set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column_crimped/2]
                         set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
-                    } elseif {[expr $i % 2] ne 0 && $j >= $num_rows_closed && $j < [expr $num_rows_closed + $num_rows_transition]}{
+                    } 
+                    elseif {[expr $i % 2] ne 0 && $j >= $num_rows_closed && $j < [expr $num_rows_closed + $num_rows_transition]}{
                         set ti [expr $i-1]
                         set tj [expr $j-1]
                         set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
                         set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column_transition/2]
                         set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
-                    } elseif {[expr $i % 2] ne 0 && $j >= [expr $num_rows_closed + $num_rows_transition]}{
+                    } 
+                    elseif {[expr $i % 2] ne 0 && $j >= [expr $num_rows_closed + $num_rows_transition]}{
                         set ti [expr $i-1]
                         set tj [expr $j-1]
                         set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
@@ -271,7 +274,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set g 1
 
     #IF 1-OVER-2 BUTTON IS OFF
-    if {$one_over_two == "No"} {
+    if {$one_over_two eq "No"} {
         GiD_Geometry -v2 create point $cont1 $layer_name $points_x(0,0) $points_y(0,0) 0.0
         for {set j 0} {$j < $num_rows} {incr j} {
             if {$c eq 1} {set c 0} {set c 1}
@@ -294,7 +297,7 @@ proc Stent::Wizard::DrawGeometry {} {
 
         GiD_Geometry -v2 create point $cont11 $layer_name $b_points_x(0,0) $b_points_y(0,0) 0.0
         for {set j 0} {$j < $num_rows} {incr j} {
-            if {$g == 1} {set g 0} {set g 1}
+            if {$g eq 1} {set g 0} {set g 1}
 
             for {set i 0} {$i < $num_cols} {incr i} {
                 if {$b_points_x($i,$j) eq 0.0 && $b_points_y($i,$j) eq 0.0 } {
