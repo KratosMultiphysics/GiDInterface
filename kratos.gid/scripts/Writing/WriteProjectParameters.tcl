@@ -112,31 +112,6 @@ proc write::GetDefaultOutputDict { {appid ""} } {
     return $outputDict
 }
 
-proc write::GetDefaultOutputDictVtk { {appid ""} } {
-    set resultDict [dict create]
-    dict set resultDict model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
-
-
-    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
-
-    # manually selecting step, otherwise Paraview won't group the results
-    set outputCT [getValue $results_UN OutputControlType]
-    dict set resultDict output_control_type step
-    if {$outputCT eq "time"} {set frequency 1} {set frequency [getValue $results_UN OutputDeltaStep]}
-    dict set resultDict output_frequency               $frequency
-    dict set resultDict file_format                    [getValue $results_UN VtkFileFormat]
-    dict set resultDict output_precision               7
-    dict set resultDict output_sub_model_parts         "true"
-    dict set resultDict folder_name                    "vtk_output"
-    dict set resultDict save_output_files_in_folder    "true"
-    dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
-    dict set resultDict nodal_data_value_variables     []
-    dict set resultDict element_data_value_variables   []
-    dict set resultDict condition_data_value_variables []
-
-
-    return $resultDict
-}
 
 proc write::GetEmptyList { } {
     # This is a gipsy code
@@ -569,18 +544,22 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # Output process must be placed inside json lists
     set gid_output_process_list [list ]
-    lappend gid_output_process_list [write::GetdefaultGiDOutput $appid]
+    lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
+    
     set vtk_output_process_list [list ]
-    lappend vtk_output_process_list [write::GetdefaultVTKOutput $appid]
+    set need_vtk [write::getValue VtkOutput EnableVtkOutput]
+    if {[write::isBooleanTrue $need_vtk]}  {
+        lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
+    }
 
     set outputProcessesDict [dict create]
     dict set outputProcessesDict gid_output $gid_output_process_list
     dict set outputProcessesDict vtk_output $vtk_output_process_list
-    
+
     return $outputProcessesDict
 }
 
-proc write::GetdefaultGiDOutput { {appid ""} } {
+proc write::GetDefaultGiDOutput { {appid ""} } {
     # prepare params
     set model_name [Kratos::GetModelName]
 
@@ -599,7 +578,7 @@ proc write::GetdefaultGiDOutput { {appid ""} } {
 
     return $outputConfigDict
 }
-proc write::GetdefaultVTKOutput { {appid ""} } {
+proc write::GetDefaultVTKOutput { {appid ""} } {
     
     # prepare params
     set model_name [Kratos::GetModelName]
@@ -610,9 +589,35 @@ proc write::GetdefaultVTKOutput { {appid ""} } {
     dict set outputConfigDictVtk kratos_module KratosMultiphysics
     dict set outputConfigDictVtk process_name VtkOutputProcess
     dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
-    dict set outputConfigDictVtk Parameters [write::GetDefaultOutputDictVtk $appid]
+    dict set outputConfigDictVtk Parameters [write::GetDefaultParametersOutputVTKDict $appid]
 
     return $outputConfigDictVtk
+}
+
+proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
+    set resultDict [dict create]
+    dict set resultDict model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
+
+
+    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
+
+    # manually selecting step, otherwise Paraview won't group the results
+    set outputCT [getValue $results_UN OutputControlType]
+    dict set resultDict output_control_type step
+    if {$outputCT eq "time"} {set frequency 1} {set frequency [getValue $results_UN OutputDeltaStep]}
+    dict set resultDict output_frequency               $frequency
+    dict set resultDict file_format                    [getValue $results_UN VtkFileFormat]
+    dict set resultDict output_precision               7
+    dict set resultDict output_sub_model_parts         "true"
+    dict set resultDict folder_name                    "vtk_output"
+    dict set resultDict save_output_files_in_folder    "true"
+    dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
+    dict set resultDict nodal_data_value_variables     []
+    dict set resultDict element_data_value_variables   []
+    dict set resultDict condition_data_value_variables []
+
+
+    return $resultDict
 }
 
 proc write::GetDefaultRestartDict { } {
