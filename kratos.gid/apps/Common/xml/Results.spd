@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="Results" pn="Results" un="Results" state="normal" open="1" open_window="0" icon="results">
     <container n="GiDOutput" pn="GiD-Output" un="GiDOutput" state="normal" open="1" open_window="0" icon="results">
-        <value n="EnableGiDOutput" pn="Enable output" v="Yes" values="Yes,No" help="Writing output for GiD or not" />
+        <value n="EnableGiDOutput" pn="Enable output" v="Yes" values="Yes,No"  un="EnableGiDOutput" help="Writing output for GiD or not" >
+            <dependencies value="No" node="../value[@n != 'EnableGiDOutput']"  att1="state" v1="hidden"/>
+            <dependencies value="No" node="../container"  att1="state" v1="hidden"/>
+            <dependencies value="Yes" node="../value[@n != 'EnableGiDOutput']"  att1="state" v1="normal"/>
+            <dependencies value="Yes" node="../container"  att1="state" v1="normal"/>
+        </value>
         <value n="FileLabel" pn="File Label" v="step" values="time,step" dict="time,Time,step,Step" help=""/>
         <value n="OutputControlType" pn="Units used for output frequency" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
             <dependencies node="../value" actualize="1"/>
@@ -34,8 +39,8 @@
         </container>
     </container>
     <container n="VtkOutput" pn="Vtk-Output" un="VtkOutput" state="normal" open="1" open_window="0" icon="results">
-        <value n="EnableVtkOutput" pn="Enable output" v="Yes" values="Yes,No" help="Writing output for Vtk or not" />
-        <container n="VtkOptions" pn="Options" un="VtkOptions" help="Vtk postprocess options" open_window="1" icon="options">
+        <value n="EnableVtkOutput" pn="Enable output" v="Yes" values="Yes,No" un="EnableVtkOutput" help="Writing output for Vtk or not" />
+        <container n="VtkOptions" pn="Options" un="VtkOptions" help="Vtk postprocess options" open_window="1" icon="options"  state="[checkStateByUniqueName EnableVtkOutput Yes]">
             <value n="VtkFileFormat" pn="Result format" v="ascii" values="ascii,binary" dict="ascii,Ascii,binary,Binary" help="Vtk result file format" />
         </container>
     </container>
