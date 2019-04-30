@@ -567,6 +567,20 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
 }
 
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
+    # Output process must be placed inside json lists
+    set gid_output_process_list [list ]
+    lappend gid_output_process_list [write::GetdefaultGiDOutput $appid]
+    set vtk_output_process_list [list ]
+    lappend vtk_output_process_list [write::GetdefaultVTKOutput $appid]
+
+    set outputProcessesDict [dict create]
+    dict set outputProcessesDict gid_output $gid_output_process_list
+    dict set outputProcessesDict vtk_output $vtk_output_process_list
+    
+    return $outputProcessesDict
+}
+
+proc write::GetdefaultGiDOutput { {appid ""} } {
     # prepare params
     set model_name [Kratos::GetModelName]
 
@@ -581,9 +595,15 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     dict set outputConfigDict kratos_module KratosMultiphysics
     dict set outputConfigDict process_name GiDOutputProcess
     dict set outputConfigDict help "This process writes postprocessing files for GiD"
-
     dict set outputConfigDict Parameters $outputProcessParams
 
+    return $outputConfigDict
+}
+proc write::GetdefaultVTKOutput { {appid ""} } {
+    
+    # prepare params
+    set model_name [Kratos::GetModelName]
+    
     # Setup Vtk-Output
     set outputConfigDictVtk [dict create]
     dict set outputConfigDictVtk python_module vtk_output_process
@@ -592,14 +612,7 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
     dict set outputConfigDictVtk Parameters [write::GetDefaultOutputDictVtk $appid]
 
-    set gid_output_process_list [list ]
-    lappend gid_output_process_list $outputConfigDict
-    set vtk_output_process_list [list ]
-    lappend vtk_output_process_list $outputConfigDictVtk
-
-    set outputProcessesDict [dict create]
-    dict set outputProcessesDict gid_output $gid_output_process_list
-    dict set outputProcessesDict vtk_output $vtk_output_process_list
+    return $outputConfigDictVtk
 }
 
 proc write::GetDefaultRestartDict { } {
