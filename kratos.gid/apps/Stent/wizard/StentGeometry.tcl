@@ -772,6 +772,26 @@ proc Stent::Wizard::HideVariableAngleButton { } {
 	}
 }
 
+proc Stent::Wizard::HideOneOverTwoButton { } {
+
+    set one_over_two [ smart_wizard::GetProperty Geometry OneOverTwoButton,value]
+	if {$one_over_two  == "Yes"} {
+		#nosequeponer
+	} else {
+	
+	}
+}
+
+proc Stent::Wizard::HideNurbsButton { } {
+
+    set Nurbs_Line  [ smart_wizard::GetProperty Geometry NurbsButton,value]
+	if {$Nurbs_Line  == "Yes"} {
+		#nosequeponer
+	} else {
+	
+	}
+}
+
 
 
 Stent::Wizard::Init
