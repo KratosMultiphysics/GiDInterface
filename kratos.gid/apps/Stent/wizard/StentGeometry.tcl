@@ -118,7 +118,7 @@ proc Stent::Wizard::DrawGeometry {} {
         }
 
         # The same as above to assign the points with z=wire diameter taking into acount the different distance between rows (crimped/transition/open)
-
+        
         array set b_points_x [FillBidimensionalArray $num_cols $num_rows_total 0.0]
         array set b_points_y [FillBidimensionalArray $num_cols $num_rows_total 0.0]
         array set b_points_z [FillBidimensionalArray $num_cols $num_rows_total 0.0]
