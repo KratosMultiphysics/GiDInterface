@@ -432,10 +432,6 @@ proc Stent::Wizard::DrawGeometry {} {
             GiD_Process Mescape Utilities Collapse model Yes 
         } 
 
-        GiD_Process 'Redraw
-        GidUtils::UpdateWindow GROUPS
-        GidUtils::UpdateWindow LAYER
-        GiD_Process 'Zoom Frame 
         
         #Initialization of Matrix1 and Matrix2
         set StarterPoint 0
@@ -571,6 +567,7 @@ proc Stent::Wizard::DrawGeometry {} {
             #DIVIDIR LA NURBSLINE
             set NumDiv [expr $num_rows * 2 - 2]
 #             [GiD_Geometry -v2 edit DivideLine $contNurbs Multiple NumDivisions $NumDiv]
+            GiD_Process Mescape Geometry Edit DivideLine Multiple Point FJoin 3 1 escape escape 
             
 
         }
@@ -704,6 +701,11 @@ proc Stent::Wizard::DrawGeometry {} {
     GiD_Groups create "outer nodes"
     GiD_EntitiesGroups assign "outer nodes" points $outer_nodes
     
+
+    GiD_Process 'Redraw
+    GidUtils::UpdateWindow GROUPS
+    GidUtils::UpdateWindow LAYER
+    GiD_Process 'Zoom Frame 
 
 }
 
