@@ -556,7 +556,8 @@ proc write::GetDefaultOutputGiDDict { {appid ""} } {
     set outputDict [dict create]
     set resultDict [dict create]
 
-    if {$appid eq ""} {set results_UN GiDOptions } {set results_UN [apps::getAppUniqueName $appid GiDOptions]}
+    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
+    set gid_options_xpath "[spdAux::getRoute $result]/container\[@n='GiDOptions'\]"
     set GiDPostDict [dict create]
     dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
     dict set GiDPostDict WriteDeformedMeshFlag      [getValue $results_UN GiDWriteMeshFlag]
