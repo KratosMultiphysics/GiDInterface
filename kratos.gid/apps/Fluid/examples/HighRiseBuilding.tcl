@@ -166,7 +166,7 @@ proc Fluid::examples::TreeAssignationHighRiseBuilding2D {args} {
     set time_parameters [list OutputControlType time OutputDeltaTime 1.0]
     set time_params_path [spdAux::getRoute "FLResults"]
     foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+        [$root selectNodes "$time_params_path/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]/value\[@n = '$n'\]"] setAttribute v $v
     }
     
     # Parallelism
