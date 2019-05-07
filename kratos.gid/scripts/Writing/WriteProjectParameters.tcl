@@ -87,13 +87,19 @@ proc write::GetEmptyList { } {
     set a [list ]
     return $a
 }
+
 proc write::GetCutPlanesList { {results_UN Results} } {
+    set xp1 "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]"
+    return [GetCutPlanesByXPathList $xp1]
+}
+
+proc write::GetCutPlanesByXPathList { xpath } {
 
     set root [customlib::GetBaseRoot]
 
     set list_of_planes [list ]
 
-    set xp1 "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]/blockdata"
+    set xp1 "$xpath/blockdata"
     set planes [$root selectNodes $xp1]
 
     foreach plane $planes {
@@ -374,11 +380,17 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
 }
 
 proc write::GetResultsList { un {cnd ""} } {
+    
+    if {$cnd eq ""} {set xp1 [spdAux::getRoute $un]} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]"}
+    return [GetResultsByXPathList $xp1]
+}
+
+proc write::GetResultsByXPathList { xpath } {
 
     set root [customlib::GetBaseRoot]
 
     set result [list ]
-    if {$cnd eq ""} {set xp1 "[spdAux::getRoute $un]/value"} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]/value"}
+    set xp1 "$xpath/value"
     set resultxml [$root selectNodes $xp1]
     foreach res $resultxml {
         if {[get_domnode_attribute $res v] in [list "Yes" "True" "1"] && [get_domnode_attribute $res state] ne "hidden"} {
@@ -557,29 +569,31 @@ proc write::GetDefaultOutputGiDDict { {appid ""} } {
     set resultDict [dict create]
 
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
-    set gid_options_xpath "[spdAux::getRoute $result]/container\[@n='GiDOptions'\]"
+    set gid_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     set GiDPostDict [dict create]
-    dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
-    dict set GiDPostDict WriteDeformedMeshFlag      [getValue $results_UN GiDWriteMeshFlag]
-    dict set GiDPostDict WriteConditionsFlag        [getValue $results_UN GiDWriteConditionsFlag]
-    dict set GiDPostDict MultiFileFlag              [getValue $results_UN GiDMultiFileFlag]
+    dict set GiDPostDict GiDPostMode                [getValueByXPath $gid_options_xpath GiDPostMode]
+    dict set GiDPostDict WriteDeformedMeshFlag      [getValueByXPath $gid_options_xpath GiDWriteMeshFlag]
+    dict set GiDPostDict WriteConditionsFlag        [getValueByXPath $gid_options_xpath GiDWriteConditionsFlag]
+    dict set GiDPostDict MultiFileFlag              [getValueByXPath $gid_options_xpath GiDMultiFileFlag]
     dict set resultDict gidpost_flags $GiDPostDict
 
-    dict set resultDict file_label                 [getValue $results_UN FileLabel]
-    set outputCT [getValue $results_UN OutputControlType]
+    dict set resultDict file_label                 [getValueByXPath $gid_options_xpath FileLabel]
+    set outputCT [getValueByXPath $gid_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
-    if {$outputCT eq "time"} {set frequency [getValue $results_UN OutputDeltaTime]} {set frequency [getValue $results_UN OutputDeltaStep]}
+    if {$outputCT eq "time"} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]}
     dict set resultDict output_frequency $frequency
 
-    dict set resultDict body_output           [getValue $results_UN BodyOutput]
-    dict set resultDict node_output           [getValue $results_UN NodeOutput]
-    dict set resultDict skin_output           [getValue $results_UN SkinOutput]
+    dict set resultDict body_output [getValueByXPath $gid_options_xpath BodyOutput]
+    dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
+    dict set resultDict skin_output [getValueByXPath $gid_options_xpath SkinOutput]
 
 
-    if {$appid eq ""} {set results_UN GiDOutput } {set results_UN [apps::getAppUniqueName $appid GiDOutput]}
-    dict set resultDict plane_output [GetCutPlanesList $results_UN]
-    dict set resultDict nodal_results [GetResultsList $results_UN OnNodes]
-    dict set resultDict gauss_point_results [GetResultsList $results_UN OnElement]
+    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='CutPlanes'\]"
+    dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
+    set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='OnNodes'\]"
+    dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]
+    set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='OnElement'\]"
+    dict set resultDict gauss_point_results [GetResultsByXPathList $gid_elements_xpath]
 
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [GetEmptyList]

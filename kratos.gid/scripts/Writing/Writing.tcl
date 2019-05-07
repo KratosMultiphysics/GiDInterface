@@ -468,10 +468,14 @@ proc write::getValueByNode { node } {
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
 }
-proc write::getValueByXPath { xpath } {
+proc write::getValueByXPath { xpath { it "" }} {
     set root [customlib::GetBaseRoot]
-    set node [$root selectNodes $xp]
-    
+    set node [$root selectNodes $xpath]
+    if {$node ne ""} {
+        if {$it ne ""} {set node [$node find n $it]}
+        return [write::getValueByNode $node]
+    }
+    return ""
 }
 proc write::getValue { name { it "" } {what noforce} } {
     set root [customlib::GetBaseRoot]
