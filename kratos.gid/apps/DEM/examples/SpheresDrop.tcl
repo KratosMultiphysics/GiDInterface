@@ -90,7 +90,7 @@ proc ::DEM::examples::AssignToTree { } {
         spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
         set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
         $inletNode setAttribute ov surface
-        set props [list Material "DEM-DefaultMaterial" DIAMETER 0.1 VELOCITY_MODULUS $modulus Interval $interval_name DIRECTION_VECTOR "0.0,0.0,-1.0"]
+        set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.1 VelocityModulus $modulus Interval $interval_name DirectionVector "0.0,0.0,-1.0"]
         foreach {prop val} $props {
             set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
             if {$propnode ne "" } {
