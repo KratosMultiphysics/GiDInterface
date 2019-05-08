@@ -31,16 +31,17 @@ proc Fluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v time FLResults OutputControlType
 
     # Drag in output settings
-    if {[$root selectNodes "[spdAux::getRoute FLResults]/condition\[@n='Drag'\]"] eq ""} {
-        gid_groups_conds::addF [spdAux::getRoute FLResults] include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
+    set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
+    if {[$root selectNodes "$xpath/condition\[@n='Drag'\]"] eq ""} {
+        gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
     }
     
     customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     spdAux::parseRoutes
 
     # Nodal reactions in output settings
-    if {[$root selectNodes "[spdAux::getRoute Results]/container\[@n='OnNodes'\]"] ne ""} {
-        gid_groups_conds::addF "[spdAux::getRoute Results]/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
+    if {[$root selectNodes "$xpath/container\[@n='OnNodes'\]"] ne ""} {
+        gid_groups_conds::addF "$xpath/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
     }
 }
 

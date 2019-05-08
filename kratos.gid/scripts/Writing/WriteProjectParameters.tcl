@@ -88,8 +88,8 @@ proc write::GetEmptyList { } {
     return $a
 }
 
-proc write::GetCutPlanesList { {results_UN Results} } {
-    set xp1 "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]"
+proc write::GetCutPlanesList { {cut_planes_UN CutPlanes} } {
+    set xp1 "[spdAux::getRoute CutPlanes]"
     return [GetCutPlanesByXPathList $xp1]
 }
 

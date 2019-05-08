@@ -209,9 +209,9 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
     }
     # Output
     set time_parameters [list OutputControlType step OutputDeltaStep 1]
-    set time_params_path [spdAux::getRoute "Results"]
+    set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
     }
     # Parallelism
     set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
@@ -222,11 +222,3 @@ proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
 
     spdAux::RequestRefresh
 }
-
-
-# proc ConvectionDiffusion::examples::AddCuts { } {
-#     # Cuts
-#     set results [spdAux::getRoute "Results"]
-#     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
-#     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
-# }

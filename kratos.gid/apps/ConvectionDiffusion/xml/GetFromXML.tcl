@@ -34,8 +34,9 @@ proc ConvectionDiffusion::xml::CustomTree { args } {
     spdAux::parseRoutes
 
     # Nodal reactions in output settings
-    if {[$root selectNodes "[spdAux::getRoute Results]/container\[@n='OnNodes'\]"] ne ""} {
-        gid_groups_conds::addF "[spdAux::getRoute Results]/container\[@n='OnNodes'\]" value [list n REACTION_FLUX pn "Reaction flux" v No values "Yes,No"]
+    set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='OnNodes'\]"
+    if {[$root selectNodes $xpath] ne ""} {
+        gid_groups_conds::addF $xpath value [list n REACTION_FLUX pn "Reaction flux" v No values "Yes,No"]
     }
 
     # Make line_search appear only with non-linear strategy
