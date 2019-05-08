@@ -212,7 +212,7 @@
         <parameter n="VelocityModulus"        parent="true"      pn="Inlet injection speed"               type="double"        v="1.0" units="m/s" unit_magnitude="Velocity"/>
         <parameter n="DirectionVector"        parent="true"      pn="Direction vector"                    type="inline_vector" v="1.0,0.0,0.0"/>
         <parameter n="VelocityDeviation"      parent="true"      pn="Max random velocity deviation (deg)" type="double"        v="1.0" units="°" unit_magnitude="Angle"/>
-        <parameter n="TypeOfFlowMeasurement"  parent="true"      pn="Flow measurement"                    type="combo"         v="- Please select option -" values="None,Particles,Kilograms" pvalues="- Please select option -,Particles per second,Kilograms per second">
+        <parameter n="TypeOfFlowMeasurement"  parent="true"      pn="Flow measurement"                    type="combo"         v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
           <parameter n="NumberOfParticles"    parent="Particles" pn="Particles per second"                type="double"        v="200.0"/>
           <parameter n="InletLimitedVelocity" parent="Kilograms" pn="Inlet injection speed limit (m/s)"   type="double"        v="2.0" help="Inlet injection speed limit (m/s)"/>
           <parameter n="InletMassFlow"        parent="Kilograms" pn="Mass flow (Kg/s)"                    type="double"        v="0.5" unit_magnitude="M/T" units="kg/s"/>
