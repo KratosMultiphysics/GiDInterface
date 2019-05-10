@@ -448,10 +448,6 @@ proc Stent::Wizard::DrawGeometry {} {
             createcrimpado
             GiD_Process Mescape Utilities Collapse model Yes 
         } 
-<<<<<<< HEAD
-=======
-
->>>>>>> ad05a752cc3c73b011f187c9e6a902030fd6cb15
         
         #Initialization of Matrix1 and Matrix2
         set StarterPoint 0
