@@ -32,6 +32,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set stent_radius [ smart_wizard::GetProperty Geometry StentRadius,value]
     set stent_length [ smart_wizard::GetProperty Geometry StentLength,value]
     set crimped_on [ smart_wizard::GetProperty Geometry CrimpedButton,value]
+
     set angle [ smart_wizard::GetProperty Geometry AngleBetweenWires,value]
     
     #New Variables to define the changes
@@ -790,7 +791,6 @@ proc Stent::Wizard::DrawGeometry {} {
         set idx [lsearch $outer_nodes $point]
         set outer_nodes [lreplace $outer_nodes $idx $idx]
     }
-
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
@@ -852,7 +852,6 @@ proc Stent::Wizard::createcrimpado { } {
     set stent_radius_closed [ smart_wizard::GetProperty Geometry StentRadiusClosed,value]
     set stent_length [ smart_wizard::GetProperty Geometry StentLength,value]
     
-    
     # Calculated parameters
     set wire_diameter [expr 2.0*$wire_radius]
     set pi [expr 2*asin(1.0)]
@@ -860,8 +859,7 @@ proc Stent::Wizard::createcrimpado { } {
     set stent_perimeter [expr 2*$stent_radius*$pi]
     set point_distance_row [expr $stent_perimeter/$number_wires]
     set point_distance_column [expr $point_distance_row * tan($degtorad * (90-$angle))]
-    
-    
+
     set num_cols [expr 1 + ($number_wires *2)]
     set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
     
@@ -925,7 +923,7 @@ proc Stent::Wizard::createcrimpado { } {
         set z [expr $rho*sin($phi)]
         
         GiD_Process Mescape Geometry Edit MovePoint $num $x $y $z escape
-        
+
     }
     GiD_Set CreateAlwaysNewPoint $old_create_always_new_point  
     GidUtils::EnableGraphics 

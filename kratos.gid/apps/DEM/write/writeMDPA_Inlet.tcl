@@ -178,21 +178,25 @@ proc DEM::write::writeInletMeshes { } {
                     }
                 }
 
-                set inlet_number_of_particles [dict get $inletProperties $groupid NumberOfParticles]
-                write::WriteString "        INLET_NUMBER_OF_PARTICLES $inlet_number_of_particles"
-
                 set type_of_measurement [dict get $inletProperties $groupid TypeOfFlowMeasurement]
-                if {$type_of_measurement eq "mass_flow"} {
+                if {$type_of_measurement eq "Kilograms"} {
                     set mass_flow_option 1
                 } else {
                     set mass_flow_option 0
-                    }
+                }
+
+                if {$mass_flow_option == 0} {
+                    set inlet_number_of_particles [dict get $inletProperties $groupid NumberOfParticles]
+                    write::WriteString "        INLET_NUMBER_OF_PARTICLES $inlet_number_of_particles"
+                }
 
                 write::WriteString "        IMPOSED_MASS_FLOW_OPTION $mass_flow_option"
 
                 # search for tem id="InletLimitedVelocity" related to dense inlet in spreaddem
+                if {$mass_flow_option == 1} {
                 set inlet_mass_flow [dict get $inletProperties $groupid InletMassFlow]
-                write::WriteString "        MASS_FLOW $inlet_mass_flow"
+                    write::WriteString "        MASS_FLOW $inlet_mass_flow"
+                }
                 set inlet_start_time [dict get $inletProperties $groupid InletStartTime]
                 write::WriteString "        INLET_START_TIME $inlet_start_time"
                 set inlet_stop_time [dict get $inletProperties $groupid InletStopTime]
@@ -368,8 +372,8 @@ proc DEM::write::writeInletMeshes-old { } {
                 set number_of_particles [dict get $inletProperties $groupid INLET_NUMBER_OF_PARTICLES]
                 set mass_flow_option 0
                 set mass_flow 0.5
+                write::WriteString "        INLET_NUMBER_OF_PARTICLES $number_of_particles"
             }
-            write::WriteString "        INLET_NUMBER_OF_PARTICLES $number_of_particles"
             write::WriteString "        IMPOSED_MASS_FLOW_OPTION $mass_flow_option"
             write::WriteString "        MASS_FLOW $mass_flow"
             set interval [dict get $inletProperties $groupid Interval]
