@@ -448,6 +448,10 @@ proc Stent::Wizard::DrawGeometry {} {
             createcrimpado
             GiD_Process Mescape Utilities Collapse model Yes 
         } 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ad05a752cc3c73b011f187c9e6a902030fd6cb15
         
         #Initialization of Matrix1 and Matrix2
         set StarterPoint 0
@@ -578,6 +582,7 @@ proc Stent::Wizard::DrawGeometry {} {
         set contNurbs 0
         set new_lines_id $number_wires
 
+<<<<<<< HEAD
         set first_point [expr $num_rows - 1]
         for {set j 0} {$j < $number_wires} {incr j} {
             incr contNurbs
@@ -637,6 +642,19 @@ proc Stent::Wizard::DrawGeometry {} {
                       
         # DivideNurbsLines (create in proc separated)
         GiD_Process Mescape Utilities Collapse model Yes
+=======
+            #NOSE SI VA ESTO
+            GiD_Process 'Redraw
+            GidUtils::UpdateWindow GROUPS
+            GidUtils::UpdateWindow LAYER
+            GiD_Process 'Zoom Frame 
+
+            #DIVIDIR LA NURBSLINE
+            set NumDiv [expr $num_rows * 2 - 2]
+#             [GiD_Geometry -v2 edit DivideLine $contNurbs Multiple NumDivisions $NumDiv]
+            GiD_Process Mescape Geometry Edit DivideLine Multiple Point FJoin 3 1 escape escape 
+            
+>>>>>>> ad05a752cc3c73b011f187c9e6a902030fd6cb15
 
         #JOINTS
         set points_1_id [GiD_Geometry list point]
@@ -794,7 +812,13 @@ proc Stent::Wizard::DrawGeometry {} {
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
+<<<<<<< HEAD
     GiD_Process 'Zoom Frame    
+=======
+    GiD_Process 'Zoom Frame 
+
+}
+>>>>>>> ad05a752cc3c73b011f187c9e6a902030fd6cb15
 
 }
 
