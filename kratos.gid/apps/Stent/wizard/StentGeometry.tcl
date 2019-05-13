@@ -1,14 +1,19 @@
 namespace eval Stent::Wizard {
     # Namespace variables declaration
     
+    variable curr_win
 }
 
 proc Stent::Wizard::Init { } {
     #W "Carga los pasos"
+    variable curr_win
+    set curr_win ""
 }
 
 proc Stent::Wizard::Geometry { win } {
-    smart_wizard::AutoStep $win Geometry
+    variable curr_win
+    set curr_win $win
+    smart_wizard::AutoStep $curr_win Geometry
     smart_wizard::SetWindowSize 650 650
 }
 
@@ -940,23 +945,31 @@ proc Stent::Wizard::CreateCrimpado { wire_radius number_wires angle stent_radius
 # }
 
 proc Stent::Wizard::HideCrimpedRadius { } {
+    variable curr_win
     
     set crimped_on [ smart_wizard::GetProperty Geometry CrimpedButton,value]
     if {$crimped_on == "Yes"} {
-        #mala suerte
+        smart_wizard::SetProperty Geometry StentRadiusClosed,state normal
     } else {
-        
+        smart_wizard::SetProperty Geometry StentRadiusClosed,state hidden
     }
+    smart_wizard::AutoStep $curr_win Geometry
 }
 
 proc Stent::Wizard::HideVariableAngleButton { } {
+    variable curr_win
     
     set variable_angle [ smart_wizard::GetProperty Geometry VariableAngleButton,value]
     if {$variable_angle == "Yes"} {
-        #nosequeponer
+        smart_wizard::SetProperty Geometry AngleCrimped,state normal
+        smart_wizard::SetProperty Geometry AngleTransition,state normal
+        smart_wizard::SetProperty Geometry AngleOpen,state normal
     } else {
-        
+        smart_wizard::SetProperty Geometry AngleCrimped,state hidden
+        smart_wizard::SetProperty Geometry AngleTransition,state hidden
+        smart_wizard::SetProperty Geometry AngleOpen,state hidden
     }
+    smart_wizard::AutoStep $curr_win Geometry
 }
 
 proc Stent::Wizard::HideOneOverTwoButton { } {

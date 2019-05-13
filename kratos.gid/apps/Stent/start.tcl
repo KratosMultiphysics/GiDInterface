@@ -11,6 +11,11 @@ proc ::Stent::Init { } {
     variable kratos_name
     variable app_id
 
+    if {[GiDVersionCmp 14.1.3d] < 0} {
+        W "Minimum GiD version recommended 14.1.3d"
+        W "Download it at https://www.gidhome.com/download/developer-versions/"
+    }
+
     set app_id Stent
     set dir [apps::getMyDir "Stent"]
 
