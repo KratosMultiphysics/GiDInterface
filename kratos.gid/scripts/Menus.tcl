@@ -139,10 +139,11 @@ proc Kratos::ChangeMenus { } {
     GidChangeDataLabel "Problem Data" ""
     GidChangeDataLabel "Local axes" ""
     # GidChangeDataLabel "Local axes" "gid_groups_conds::local_axes_window"
-    
-    GiDMenu::InsertOption "Help" [list ---] end PREPOST {} "" "" insertafter
-    GiDMenu::InsertOption "Help" [list [_ "Visit %s web" Kratos]] end PREPOST [list VisitWeb "http://www.cimne.com/kratos"] "" "" insertafter
-    GiDMenu::InsertOption "Help" [list [_ "Do you want to develop Kratos?"]] end PREPOST [list VisitWeb "https://github.com/KratosMultiphysics"] "" "" insertafter
+    if {[GiDMenu::GetOptionIndex Help [list {Do you want to develop Kratos?}] PRE] == -1} {
+        GiDMenu::InsertOption "Help" [list ---] end PREPOST {} "" "" insertafter
+        GiDMenu::InsertOption "Help" [list [_ "Visit %s web" Kratos]] end PREPOST [list VisitWeb "http://www.cimne.com/kratos"] "" "" insertafter
+        GiDMenu::InsertOption "Help" [list [_ "Do you want to develop Kratos?"]] end PREPOST [list VisitWeb "https://github.com/KratosMultiphysics"] "" "" insertafter
+    }
     
     GiDMenu::UpdateMenus
 }

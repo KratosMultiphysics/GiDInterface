@@ -1,4 +1,3 @@
-
 namespace eval Stent::Wizard {
     # Namespace variables declaration
     
@@ -33,7 +32,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set angle [ smart_wizard::GetProperty Geometry AngleBetweenWires,value]
     set stent_radius [ smart_wizard::GetProperty Geometry StentRadius,value]
     set stent_length [ smart_wizard::GetProperty Geometry StentLength,value]
-    
+    set crimped_on [ smart_wizard::GetProperty Geometry CrimpedButton,value]
     # Calculated parameters
     set wire_diameter [expr 2.0*$wire_radius]
     set pi [expr 2*asin(1.0)]
@@ -281,6 +280,10 @@ proc Stent::Wizard::DrawGeometry {} {
     GiD_Groups create "outer nodes"
     GiD_EntitiesGroups assign "outer nodes" points $outer_nodes
     
+    if {$crimped_on == "Yes"} {
+		createcrimpado
+		GiD_Process Mescape Utilities Collapse model Yes 
+	} 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
@@ -332,5 +335,103 @@ proc Stent::Wizard::ValidateDraw { } {
     return 0
 }
 
-Stent::Wizard::Init
+proc Stent::Wizard::createcrimpado { } {
+    # Get the parameters
+    set wire_radius [ smart_wizard::GetProperty Geometry WireRadius,value]
+    set number_wires [ smart_wizard::GetProperty Geometry NumberOfWires,value]
+    set angle [ smart_wizard::GetProperty Geometry AngleBetweenWires,value]
+    set stent_radius [ smart_wizard::GetProperty Geometry StentRadius,value]
+    set stent_radius_closed [ smart_wizard::GetProperty Geometry StentRadiusClosed,value]
+    set stent_length [ smart_wizard::GetProperty Geometry StentLength,value]
+	
+    
+    # Calculated parameters
+    set wire_diameter [expr 2.0*$wire_radius]
+    set pi [expr 2*asin(1.0)]
+    set degtorad 0.0174532925199
+    set stent_perimeter [expr 2*$stent_radius*$pi]
+    set point_distance_row [expr $stent_perimeter/$number_wires]
+    set point_distance_column [expr $point_distance_row * tan($degtorad * (90-$angle))]
 
+    
+    set num_cols [expr 1 + ($number_wires *2)]
+    set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
+
+    if {[expr abs($stent_length - 1.0*($num_rows/1.0*($point_distance_row/2))) > abs($stent_length - 1.0*(($num_rows+1)/1.0*($point_distance_row/2)))]} {
+        incr num_rows
+    }
+    if {[expr abs($stent_length - 1.0*($num_rows/1.0*($point_distance_row/2))) > abs($stent_length - 1.0*(($num_rows+1)/1.0*($point_distance_row/2)))]} {
+        incr num_rows
+    }
+    
+    GidUtils::DisableGraphics 
+    set t0 [clock seconds]
+    set old_create_always_new_point [GiD_Set CreateAlwaysNewPoint]
+    GiD_Set CreateAlwaysNewPoint 1
+    set xmin 1e15
+    set xmax -1e15
+    set ymin 1e15
+    set ymax -1e15
+    set zmin 1e15
+    set zmax -1e15
+    set length_open [expr 0.53*$stent_length]
+    set length_linear [expr 0.27*$stent_length]
+    set length_closed [expr 0.20*$stent_length]
+    set hinv [expr 1.0/$length_linear]
+    set rmin $stent_radius_closed
+    set rmin2 [expr $stent_radius_closed-$wire_diameter]
+    set rmax  $stent_radius
+    set rmax2 [expr $stent_radius-$wire_diameter]
+    set rhomedio [expr $stent_radius-$wire_radius] 
+    set point_ids [GiD_Geometry list point]
+    foreach num $point_ids {
+        lassign [GiD_Geometry get point $num] layer x y z
+        if { $xmin > $x } { set xmin $x }
+        if { $xmax < $x } { set xmax $x }
+        if { $ymin > $y } { set ymin $y }
+        if { $ymax < $y } { set ymax $y }
+    }
+    
+    set zA $length_closed
+    set zB [expr $zA + $length_linear]
+    foreach num $point_ids {
+        lassign [GiD_Geometry get point $num] layer x y z    
+        set rho [expr sqrt(pow($x,2)+pow($z,2))]
+        set phi [expr atan2($z,$x)]
+        set zeta $y
+        if {$zeta<=$zA} {
+            if { $rho >= $rhomedio } {
+                set rho $rmin
+            } elseif {$rho<= $rhomedio} {
+                set rho $rmin2
+            }        
+        } elseif {$zeta>$zA && $zeta<$zB } {
+            if {$rho>= $rhomedio} {
+                set rho [expr $rmin+(($rmax-$rmin)/($zB-$zA)*($zeta-$zA))]
+            } elseif { $rho<= $rhomedio }  {
+                set rho [expr $rmin2 + (($rmax2-$rmin2)/($zB-$zA)*($zeta-$zA))]
+            }                        
+        }
+        set x [expr $rho*cos($phi)]
+        set y $zeta
+        set z [expr $rho*sin($phi)]
+        
+        GiD_Process Mescape Geometry Edit MovePoint $num $x $y $z escape
+          
+    }
+    GiD_Set CreateAlwaysNewPoint $old_create_always_new_point  
+    GidUtils::EnableGraphics 
+    GiD_Process 'Zoom Frame 
+}
+
+proc Stent::Wizard::HideCrimpedRadius { } {
+
+    set crimped_on [ smart_wizard::GetProperty Geometry CrimpedButton,value]
+	if {$crimped_on == "Yes"} {
+		#mala suerte
+	} else {
+	
+	}
+}
+
+Stent::Wizard::Init
