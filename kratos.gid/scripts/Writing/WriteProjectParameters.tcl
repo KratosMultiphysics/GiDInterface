@@ -380,7 +380,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
 }
 
 proc write::GetResultsList { un {cnd ""} } {
-    
+
     if {$cnd eq ""} {set xp1 [spdAux::getRoute $un]} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]"}
     return [GetResultsByXPathList $xp1]
 }
@@ -530,7 +530,7 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     if {[write::isBooleanTrue $need_gid]}  {
         lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
     }
-    
+
     set vtk_output_process_list [list ]
     set need_vtk [write::getValue EnableVtkOutput]
     if {[write::isBooleanTrue $need_vtk]}  {
@@ -601,10 +601,10 @@ proc write::GetDefaultOutputGiDDict { {appid ""} } {
 }
 
 proc write::GetDefaultVTKOutput { {appid ""} } {
-    
+
     # prepare params
     set model_name [Kratos::GetModelName]
-    
+
     # Setup Vtk-Output
     set outputConfigDictVtk [dict create]
     dict set outputConfigDictVtk python_module vtk_output_process
@@ -630,7 +630,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict output_frequency               $frequency
     dict set resultDict file_format                    [getValue $results_UN VtkFileFormat]
     dict set resultDict output_precision               7
-    dict set resultDict output_sub_model_parts         "true"
+    dict set resultDict output_sub_model_parts         "false"
     dict set resultDict folder_name                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
