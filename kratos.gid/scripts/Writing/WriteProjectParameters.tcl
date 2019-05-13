@@ -588,11 +588,11 @@ proc write::GetDefaultOutputGiDDict { {appid ""} } {
     dict set resultDict skin_output [getValueByXPath $gid_options_xpath SkinOutput]
 
 
-    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='CutPlanes'\]"
+    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]"
     dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
-    set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='OnNodes'\]"
+    set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
     dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]
-    set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='OnElement'\]"
+    set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnElement'\]"
     dict set resultDict gauss_point_results [GetResultsByXPathList $gid_elements_xpath]
 
     dict set outputDict "result_file_configuration" $resultDict
@@ -622,20 +622,21 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
 
 
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
+    set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
 
     # manually selecting step, otherwise Paraview won't group the results
-    set outputCT [getValue $results_UN OutputControlType]
-    dict set resultDict output_control_type step
-    if {$outputCT eq "time"} {set frequency 1} {set frequency [getValue $results_UN OutputDeltaStep]}
+    set outputCT [getValueByXPath $vtk_options_xpath OutputControlType] 
+    dict set resultDict output_control_type $outputCT
+    if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
     dict set resultDict output_frequency               $frequency
-    dict set resultDict file_format                    [getValue $results_UN VtkFileFormat]
+    dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat] 
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
     dict set resultDict folder_name                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
     dict set resultDict nodal_data_value_variables     []
-    dict set resultDict element_data_value_variables   []
+    dict set resultDict element_data_value_variables   [GetResultsList $results_UN OnElement]
     dict set resultDict condition_data_value_variables []
 
 

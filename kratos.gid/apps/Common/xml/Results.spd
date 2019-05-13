@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="Results" pn="Results" un="Results" state="normal" open="1" open_window="0" icon="results">
+    <container n="OnElement" pn="On element" un="ElementResults" icon="triangle" help="Activate the results you want to see in the elements" state="[ActiveIfAnyPartState]" open_window="0">
+        <dynamicnode command="spdAux::injectElementOutputs" args=""/>
+        <dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>
+    </container>
+    <container n="OnNodes" pn="On nodes" un="NodalResults" icon="point3d" help="Activate the results you want to see in the nodes" open_window="1">
+        <value n="PARTITION_INDEX" pn="Partition index" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName ParallelType MPI]"/>
+        <dynamicnode command="spdAux::injectNodalConditionsOutputs" args=""/>
+    </container>
     <container n="GiDOutput" pn="GiD-Output" un="GiDOutput" state="normal" open="1" open_window="0" icon="results">
         <value n="EnableGiDOutput" pn="Enable output" v="Yes" values="Yes,No" un="EnableGiDOutput" help="Writing output for GiD or not">
             <dependencies value="No" node="../container" att1="state" v1="hidden"/>
             <dependencies value="Yes" node="../container" att1="state" v1="normal"/>
         </value>
-        <container n="OnElement" pn="On element" un="ElementResults" icon="triangle" help="Activate the results you want to see in the elements" state="[ActiveIfAnyPartState]" open_window="0">
-            <dynamicnode command="spdAux::injectElementOutputs" args=""/>
-            <dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>
-        </container>
-        <container n="OnNodes" pn="On nodes" un="NodalResults" icon="point3d" help="Activate the results you want to see in the nodes" open_window="1">
-            <value n="PARTITION_INDEX" pn="Partition index" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName ParallelType MPI]"/>
-            <dynamicnode command="spdAux::injectNodalConditionsOutputs" args=""/>
-        </container>
         <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess options" open_window="1" icon="options">
             <value n="FileLabel" pn="File Label" v="step" values="time,step" dict="time,Time,step,Step" help=""/>
             <value n="OutputControlType" pn="Units used for output frequency" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
@@ -41,6 +41,13 @@
         <value n="EnableVtkOutput" pn="Enable output" v="Yes" values="Yes,No" un="EnableVtkOutput" help="Writing output for Vtk or not" />
         <container n="VtkOptions" pn="Options" un="VtkOptions" help="Vtk postprocess options" open_window="1" icon="options" state="[checkStateByUniqueName EnableVtkOutput Yes]">
             <value n="VtkFileFormat" pn="Result format" v="ascii" values="ascii,binary" dict="ascii,Ascii,binary,Binary" help="Vtk result file format" />
+            <value n="FileLabel" pn="File Label" v="step" values="time,step" dict="time,Time,step,Step" help=""/>
+            <value n="OutputControlType" pn="Units used for output frequency" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
+                <dependencies node="../value" actualize="1"/>
+            </value>
+            <value n="OutputDeltaTime" pn="Time between outputs (s)" v="1.0" help="Output will be printed in intervals of this time" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} time]"/>
+            <value n="OutputDeltaStep" pn="Time steps between outputs" v="1" help="Output will be printed in intervals of this number of steps" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} step]"/>
+
         </container>
     </container>
 </container>
