@@ -32,6 +32,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set stent_radius [ smart_wizard::GetProperty Geometry StentRadius,value]
     set stent_length [ smart_wizard::GetProperty Geometry StentLength,value]
     set crimped_on [ smart_wizard::GetProperty Geometry CrimpedButton,value]
+    set stent_radius_closed [ smart_wizard::GetProperty Geometry StentRadiusClosed,value]
 
     set angle [ smart_wizard::GetProperty Geometry AngleBetweenWires,value]
     
@@ -51,7 +52,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set num_cols [expr 1 + ($number_wires *2)]
     
     # Calculate the point coordinates
-    lassign [CalculatePointArrays $stent_length $point_distance_row $angle_open $angle_transition $angle_crimped $variable_angle $num_cols $wire_diameter] num_rows tmp_x tmp_y tmp_z tmp_bx tmp_by tmp_bz
+    lassign [Stent::Wizard::CalculatePointArrays $stent_length $point_distance_row $angle_open $angle_transition $angle_crimped $variable_angle $num_cols $wire_diameter] num_rows tmp_x tmp_y tmp_z tmp_bx tmp_by tmp_bz
     array set points_x $tmp_x
     array set points_y $tmp_y
     array set points_z $tmp_z
@@ -199,7 +200,7 @@ proc Stent::Wizard::DrawGeometry {} {
         GiD_Process Mescape Utilities Collapse model Yes 
 
         if {$crimped_on == "Yes"} {
-            createcrimpado
+            Stent::Wizard::CreateCrimpado $wire_radius $number_wires $angle $stent_radius $stent_radius_closed $stent_length $num_cols $num_rows
             GiD_Process Mescape Utilities Collapse model Yes 
         } 
         
@@ -497,7 +498,7 @@ proc Stent::Wizard::DrawGeometry {} {
         GiD_Process Mescape Utilities Collapse model Yes
 
         if {$crimped_on == "Yes"} {
-            createcrimpado
+            Stent::Wizard::CreateCrimpado  $wire_radius $number_wires $angle $stent_radius $stent_radius_closed $stent_length $num_cols $num_rows
             GiD_Process Mescape Utilities Collapse model Yes 
         } 
 
@@ -856,26 +857,16 @@ proc Stent::Wizard::ValidateDraw { } {
     return 0
 }
 
-proc Stent::Wizard::createcrimpado { } {
-    # Get the parameters
-    set wire_radius [ smart_wizard::GetProperty Geometry WireRadius,value]
-    set number_wires [ smart_wizard::GetProperty Geometry NumberOfWires,value]
-    set angle [ smart_wizard::GetProperty Geometry AngleBetweenWires,value]
-    set stent_radius [ smart_wizard::GetProperty Geometry StentRadius,value]
-    set stent_radius_closed [ smart_wizard::GetProperty Geometry StentRadiusClosed,value]
-    set stent_length [ smart_wizard::GetProperty Geometry StentLength,value]
-    
+proc Stent::Wizard::CreateCrimpado { wire_radius number_wires angle stent_radius stent_radius_closed stent_length num_cols num_rows} {
+
     # Calculated parameters
     set wire_diameter [expr 2.0*$wire_radius]
-    set pi [expr 2*asin(1.0)]
+    set pi $MathUtils::PI
     set degtorad 0.0174532925199
     set stent_perimeter [expr 2*$stent_radius*$pi]
     set point_distance_row [expr $stent_perimeter/$number_wires]
     set point_distance_column [expr $point_distance_row * tan($degtorad * (90-$angle))]
 
-    set num_cols [expr 1 + ($number_wires *2)]
-    set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
-    
     if {[expr abs($stent_length - 1.0*($num_rows/1.0*($point_distance_row/2))) > abs($stent_length - 1.0*(($num_rows+1)/1.0*($point_distance_row/2)))]} {
         incr num_rows
     }
