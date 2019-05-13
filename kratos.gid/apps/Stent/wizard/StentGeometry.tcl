@@ -46,265 +46,18 @@ proc Stent::Wizard::DrawGeometry {} {
     # Calculated parameters
     set wire_diameter [expr 2.0*$wire_radius]
     set pi [expr 2*asin(1.0)]
-    set degtorad 0.0174532925199
     set stent_perimeter [expr 2*$stent_radius*$pi]
     set point_distance_row [expr $stent_perimeter/$number_wires]
     set num_cols [expr 1 + ($number_wires *2)]
     
-    #IF VARIABLE ANGLE IS ON
-    if {$variable_angle eq "Yes"} {
-        set length_open [expr 0.53*$stent_length]
-        set length_linear [expr 0.27*$stent_length]
-        set length_closed [expr 0.20*$stent_length] 
-        
-        set point_distance_column_open [expr $point_distance_row * tan($degtorad * (90-$angle_open))]
-        set point_distance_column_transition [expr $point_distance_row * tan($degtorad * (90-$angle_transition))]
-        set point_distance_column_crimped [expr $point_distance_row * tan($degtorad * (90-$angle_crimped))]
-        
-        set num_rows_open [expr 1 + (int(double($length_open)/($point_distance_column_open/2.0))) ]
-        set num_rows_transition [expr int(double($length_linear)/($point_distance_column_transition/2.0)) ]
-        set num_rows_closed [expr int(double($length_closed)/($point_distance_column_crimped/2.0)) ]
-        
-        
-        while {[expr abs($length_closed - $num_rows_closed*($point_distance_column_crimped/2) ) > abs($length_closed - (($num_rows_closed + 1)*($point_distance_column_crimped/2)) )]} {
-            incr num_rows_closed
-            
-        }
-        while {[expr abs($length_linear - $num_rows_transition *($point_distance_column_transition/2) ) > abs($length_linear - (($num_rows_transition + 1)*($point_distance_column_transition/2)) )]} {
-            incr num_rows_transition
-            
-        }
-        while {[expr abs($length_open - ($num_rows_open -1 )*($point_distance_column_open/2) ) > abs($length_open - ($num_rows_open*($point_distance_column_open/2)) )]} {
-            incr num_rows_open
-            
-        }
-        
-        set num_rows_total [expr $num_rows_open + $num_rows_transition +$num_rows_closed]
-        
-        array set points_x [FillBidimensionalArray $num_cols $num_rows_total 0.0]
-        array set points_y [FillBidimensionalArray $num_cols $num_rows_total 0.0]
-        array set points_z [FillBidimensionalArray $num_cols $num_rows_total 0.0]
-        
-        array set b_points_x [FillBidimensionalArray $num_cols $num_rows_total 0.0]
-        array set b_points_y [FillBidimensionalArray $num_cols $num_rows_total 0.0]
-        array set b_points_z [FillBidimensionalArray $num_cols $num_rows_total 0.0]
-        
-        # This assign the points with z=0 taking into acount the different distance between rows (crimped/transition/open)
-        #Initialization with i=0
-        
-        set i 0
-        for {set j 1} {$j < $num_rows_total} {incr j} {
-            if {[expr $j % 2] eq 0 && $j <= $num_rows_closed} {
-                set tj [expr $j-2]
-                set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_crimped]
-            } elseif {[expr $j % 2] eq 0 && $j > $num_rows_closed && $j <= [expr $num_rows_closed + $num_rows_transition]} {
-                if {$j == [expr $num_rows_closed +1] } {
-                    set tj [expr $j-2]
-                    set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_transition/2 + $point_distance_column_crimped/2]
-                } else {
-                    set tj [expr $j-2]
-                    set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_transition]
-                }
-                # if {$j eq [expr $num_rows_closed + 1] && $point_distance_column_transition < [expr $point_distance_column_crimped/2]} {
-                #     set variable_repeat [expr ceil ( ($point_distance_column_crimped/2) / $point_distance_column_transition)]
-                #     set points_y($i,$j) [expr $points_y($i,$j) + ($variable_repeat *$point_distance_column_transition)]
-                # }
-            } elseif {[expr $j % 2] eq 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
-                set tj [expr $j-2]
-                set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_open]
-                if {$j eq [expr $num_rows_closed + 1 + $num_rows_transition] && $point_distance_column_open <= [expr $point_distance_column_transition/2]} {
-                    set variable_repeat2 [expr ceil ( ($point_distance_column_transition/2) / $point_distance_column_open)]
-                    set points_y($i,$j) [expr $points_y($i,$j) + ($variable_repeat2 * $point_distance_column_open)]
-
-                }
-            }
-        }
-        #The rest of the points
-        for {set j 0} {$j < $num_rows_total} {incr j} {
-            if {[expr $j % 2] eq 0} {
-                for {set i 1} {$i < $num_cols} {incr i} {
-                    if {[expr $i % 2] eq 0} {
-                        set ti [expr $i-2]
-                        set points_x($i,$j) [expr $points_x($ti,$j) + $point_distance_row]
-                        set points_y($i,$j) [expr $points_y($ti,$j)]
-                    }
-                }
-            } else {
-                for {set i 0} {$i < $num_cols} {incr i} {
-                    if {[expr $i % 2] ne 0 && $j <= $num_rows_closed} {
-                        set ti [expr $i-1]
-                        set tj [expr $j-1]
-                        set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
-                        set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column_crimped/2]
-                    } elseif {[expr $i % 2] ne 0 && $j > $num_rows_closed && $j <= [expr $num_rows_closed + $num_rows_transition]} {   
-                        set ti [expr $i-1]
-                        set tj [expr $j-1]
-                        set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
-                        set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column_transition/2]
-                    } elseif {[expr $i % 2] ne 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
-                        set ti [expr $i-1]
-                        set tj [expr $j-1]
-                        set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
-                        set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column_open/2]
-                    }
-                }
-            }
-        }
-        
-        # The same as above to assign the points with z=wire diameter taking into acount the different distance between rows (crimped/transition/open)
-        
-        for {set j 1} {$j < $num_rows_total} {incr j} {
-            if {[expr $j % 2] eq 0 && $j <= $num_rows_closed} {
-                set tj [expr $j-2]
-                set b_points_x(0,$j) $b_points_x(0,$tj)
-                set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_crimped]
-                set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
-            } elseif {[expr $j % 2] eq 0 && $j > $num_rows_closed && $j <= [expr $num_rows_closed + $num_rows_transition]} {
-                if {$j == [expr $num_rows_closed +1] } {
-                    set tj [expr $j-2]
-                    set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_transition/2 + $point_distance_column_crimped/2]
-                } else {
-                    set tj [expr $j-2]
-                    set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_transition]
-                }
-                # set tj [expr $j-2]
-                # set b_points_x(0,$j) $b_points_x(0,$tj)
-                # set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_transition]
-                # if {$j eq [expr $num_rows_closed +1] && $point_distance_column_transition < [expr $point_distance_column_crimped/2]} {
-                #     set variable_repeat [expr ceil ( ($point_distance_column_crimped/2) / $point_distance_column_transition)]
-                #     set b_points_y(0,$j) [expr $b_points_y(0,$j) + ($variable_repeat *$point_distance_column_transition)]
-                # }
-                set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
-            } elseif {[expr $j % 2] eq 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
-                set tj [expr $j-2]
-                set b_points_x(0,$j) $b_points_x(0,$tj)
-                set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_open]
-                if {$j eq [expr $num_rows_closed + 1 + $num_rows_transition] && $point_distance_column_open <= [expr $point_distance_column_transition/2]} {
-                    set variable_repeat2 [expr ceil ( ($point_distance_column_transition/2) / $point_distance_column_open)]
-                    set b_points_y(0,$j) [expr $b_points_y(0,$j) + ($variable_repeat2 * $point_distance_column_open)]
-                }
-                set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
-            }
-        }
-        
-        for {set j 0} {$j < $num_rows_total} {incr j} {
-            if {[expr $j % 2] == 0 || $j == 0} {
-                for {set i 1} {$i < $num_cols} {incr i} {
-                    if {[expr $i % 2] == 0} {
-                        set ti [expr $i-2]
-                        set b_points_x($i,$j) [expr $b_points_x($ti,$j) + $point_distance_row]
-                        set b_points_y($i,$j) [expr $b_points_y($ti,$j)]
-                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
-                    }
-                }
-            } else {
-                for {set i 0} {$i < $num_cols} {incr i} {
-                    if {[expr $i % 2] ne 0 && $j <= $num_rows_closed} {
-                        set ti [expr $i-1]
-                        set tj [expr $j-1]
-                        set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
-                        set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column_crimped/2]
-                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
-                    } elseif {[expr $i % 2] ne 0 && $j > $num_rows_closed && $j <= [expr $num_rows_closed + $num_rows_transition]} {
-                        set ti [expr $i-1]
-                        set tj [expr $j-1]
-                        set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
-                        set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column_transition/2]
-                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
-                    } elseif {[expr $i % 2] ne 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
-                        set ti [expr $i-1]
-                        set tj [expr $j-1]
-                        set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
-                        set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column_open/2]
-                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
-                    }
-                }
-            }
-        }
-        set num_rows $num_rows_total
-        set inner_nodes [list ]
-        set outer_nodes [list ]
-    } else {
-        set point_distance_column [expr $point_distance_row * tan($degtorad * (90-$angle))]
-        set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
-        #abs( H - ( ( cant j - 1) * b/2))
-        # if ((abs (H-((cantj-1)*(b/2)))) > (abs (H-(cantj*(b/2))))):
-        while {[expr abs($stent_length - ($num_rows -1)* ($point_distance_column/2)) > abs($stent_length - ($num_rows*($point_distance_column/2)) )]} {
-            incr num_rows
-        }
-        
-        array set points_x [FillBidimensionalArray $num_cols $num_rows 0.0]
-        array set points_y [FillBidimensionalArray $num_cols $num_rows 0.0]
-        array set points_z [FillBidimensionalArray $num_cols $num_rows 0.0]
-        
-        set i 0
-        for {set j 1} {$j < $num_rows} {incr j} {
-            if {[expr $j % 2] eq 0} {
-                set tj [expr $j-2]
-                set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column]
-            }
-        }
-        
-        for {set j 0} {$j < $num_rows} {incr j} {
-            if {[expr $j % 2] eq 0} {
-                for {set i 1} {$i < $num_cols} {incr i} {
-                    if {[expr $i % 2] eq 0} {
-                        set ti [expr $i-2]
-                        set points_x($i,$j) [expr $points_x($ti,$j) + $point_distance_row]
-                        set points_y($i,$j) [expr $points_y($ti,$j)]
-                    }
-                }
-            } else {
-                for {set i 0} {$i < $num_cols} {incr i} {
-                    if {[expr $i % 2] ne 0} {
-                        set ti [expr $i-1]
-                        set tj [expr $j-1]
-                        set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
-                        set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column/2]
-                    }
-                }
-            }
-        }
-        
-        array set b_points_x [FillBidimensionalArray $num_cols $num_rows 0.0]
-        array set b_points_y [FillBidimensionalArray $num_cols $num_rows 0.0]
-        array set b_points_z [FillBidimensionalArray $num_cols $num_rows 0.0]
-        
-        for {set j 1} {$j < $num_rows} {incr j} {
-            if {[expr $j % 2] eq 0} {
-                set tj [expr $j-2]
-                set b_points_x(0,$j) $b_points_x(0,$tj)
-                set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column]
-                set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
-            }
-        }
-        
-        for {set j 0} {$j < $num_rows} {incr j} {
-            if {[expr $j % 2] == 0 || $j == 0} {
-                for {set i 1} {$i < $num_cols} {incr i} {
-                    if {[expr $i % 2] == 0} {
-                        set ti [expr $i-2]
-                        set b_points_x($i,$j) [expr $b_points_x($ti,$j) + $point_distance_row]
-                        set b_points_y($i,$j) [expr $b_points_y($ti,$j)]
-                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
-                    }
-                }
-            } else {
-                for {set i 0} {$i < $num_cols} {incr i} {
-                    if {[expr $i % 2] ne 0} {
-                        set ti [expr $i-1]
-                        set tj [expr $j-1]
-                        set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
-                        set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column/2]
-                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
-                    }
-                }
-            }
-        }
-        set inner_nodes [list ]
-        set outer_nodes [list ]
-    }
-    
+    # Calculate the point coordinates
+    lassign [CalculatePointArrays $stent_length $point_distance_row $angle_open $angle_transition $angle_crimped $variable_angle $num_cols $wire_diameter] num_rows tmp_x tmp_y tmp_z tmp_bx tmp_by tmp_bz
+    array set points_x $tmp_x
+    array set points_y $tmp_y
+    array set points_z $tmp_z
+    array set b_points_x $tmp_bx
+    array set b_points_y $tmp_by
+    array set b_points_z $tmp_bz
     
     #IF 1-OVER-2 BUTTON IS OFF
     if {$one_over_two eq "No"} {
@@ -639,7 +392,7 @@ proc Stent::Wizard::DrawGeometry {} {
         # DivideNurbsLines (create in proc separated)
         GiD_Process Mescape Utilities Collapse model Yes
 
-        #JOINTS
+        # JOINTS
         set points_1_id [GiD_Geometry list point]
         set cont4 1000000
         set joints [list]
@@ -796,6 +549,266 @@ proc Stent::Wizard::DrawGeometry {} {
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame    
 
+}
+
+proc Stent::Wizard::CalculatePointArrays {stent_length point_distance_row angle_open angle_transition angle_crimped variable_angle num_cols wire_diameter} {
+    
+    set degtorad 0.0174532925199
+
+    #IF VARIABLE ANGLE IS ON
+    if {$variable_angle eq "Yes"} {
+        set length_open [expr 0.53*$stent_length]
+        set length_linear [expr 0.27*$stent_length]
+        set length_closed [expr 0.20*$stent_length] 
+        
+        set point_distance_column_open [expr $point_distance_row * tan($degtorad * (90-$angle_open))]
+        set point_distance_column_transition [expr $point_distance_row * tan($degtorad * (90-$angle_transition))]
+        set point_distance_column_crimped [expr $point_distance_row * tan($degtorad * (90-$angle_crimped))]
+        
+        set num_rows_open [expr 1 + (int(double($length_open)/($point_distance_column_open/2.0))) ]
+        set num_rows_transition [expr int(double($length_linear)/($point_distance_column_transition/2.0)) ]
+        set num_rows_closed [expr int(double($length_closed)/($point_distance_column_crimped/2.0)) ]
+        
+        
+        while {[expr abs($length_closed - $num_rows_closed*($point_distance_column_crimped/2) ) > abs($length_closed - (($num_rows_closed + 1)*($point_distance_column_crimped/2)) )]} {
+            incr num_rows_closed
+            
+        }
+        while {[expr abs($length_linear - $num_rows_transition *($point_distance_column_transition/2) ) > abs($length_linear - (($num_rows_transition + 1)*($point_distance_column_transition/2)) )]} {
+            incr num_rows_transition
+            
+        }
+        while {[expr abs($length_open - ($num_rows_open -1 )*($point_distance_column_open/2) ) > abs($length_open - ($num_rows_open*($point_distance_column_open/2)) )]} {
+            incr num_rows_open
+            
+        }
+        
+        set num_rows_total [expr $num_rows_open + $num_rows_transition +$num_rows_closed]
+        
+        array set points_x [FillBidimensionalArray $num_cols $num_rows_total 0.0]
+        array set points_y [FillBidimensionalArray $num_cols $num_rows_total 0.0]
+        array set points_z [FillBidimensionalArray $num_cols $num_rows_total 0.0]
+        
+        array set b_points_x [FillBidimensionalArray $num_cols $num_rows_total 0.0]
+        array set b_points_y [FillBidimensionalArray $num_cols $num_rows_total 0.0]
+        array set b_points_z [FillBidimensionalArray $num_cols $num_rows_total 0.0]
+        
+        # This assign the points with z=0 taking into acount the different distance between rows (crimped/transition/open)
+        #Initialization with i=0
+        
+        set i 0
+        for {set j 1} {$j < $num_rows_total} {incr j} {
+            if {[expr $j % 2] eq 0 && $j <= $num_rows_closed} {
+                set tj [expr $j-2]
+                set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_crimped]
+            } elseif {[expr $j % 2] eq 0 && $j > $num_rows_closed && $j <= [expr $num_rows_closed + $num_rows_transition]} {
+                if {$j == [expr $num_rows_closed +1] } {
+                    set tj [expr $j-2]
+                    set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_transition/2 + $point_distance_column_crimped/2]
+                } else {
+                    set tj [expr $j-2]
+                    set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_transition]
+                }
+                # if {$j eq [expr $num_rows_closed + 1] && $point_distance_column_transition < [expr $point_distance_column_crimped/2]} {
+                #     set variable_repeat [expr ceil ( ($point_distance_column_crimped/2) / $point_distance_column_transition)]
+                #     set points_y($i,$j) [expr $points_y($i,$j) + ($variable_repeat *$point_distance_column_transition)]
+                # }
+            } elseif {[expr $j % 2] eq 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
+                set tj [expr $j-2]
+                set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_open]
+                if {$j eq [expr $num_rows_closed + 1 + $num_rows_transition] && $point_distance_column_open <= [expr $point_distance_column_transition/2]} {
+                    set variable_repeat2 [expr ceil ( ($point_distance_column_transition/2) / $point_distance_column_open)]
+                    set points_y($i,$j) [expr $points_y($i,$j) + ($variable_repeat2 * $point_distance_column_open)]
+
+                }
+            }
+        }
+        #The rest of the points
+        for {set j 0} {$j < $num_rows_total} {incr j} {
+            if {[expr $j % 2] eq 0} {
+                for {set i 1} {$i < $num_cols} {incr i} {
+                    if {[expr $i % 2] eq 0} {
+                        set ti [expr $i-2]
+                        set points_x($i,$j) [expr $points_x($ti,$j) + $point_distance_row]
+                        set points_y($i,$j) [expr $points_y($ti,$j)]
+                    }
+                }
+            } else {
+                for {set i 0} {$i < $num_cols} {incr i} {
+                    if {[expr $i % 2] ne 0 && $j <= $num_rows_closed} {
+                        set ti [expr $i-1]
+                        set tj [expr $j-1]
+                        set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
+                        set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column_crimped/2]
+                    } elseif {[expr $i % 2] ne 0 && $j > $num_rows_closed && $j <= [expr $num_rows_closed + $num_rows_transition]} {   
+                        set ti [expr $i-1]
+                        set tj [expr $j-1]
+                        set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
+                        set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column_transition/2]
+                    } elseif {[expr $i % 2] ne 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
+                        set ti [expr $i-1]
+                        set tj [expr $j-1]
+                        set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
+                        set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column_open/2]
+                    }
+                }
+            }
+        }
+        
+        # The same as above to assign the points with z=wire diameter taking into acount the different distance between rows (crimped/transition/open)
+        
+        for {set j 1} {$j < $num_rows_total} {incr j} {
+            if {[expr $j % 2] eq 0 && $j <= $num_rows_closed} {
+                set tj [expr $j-2]
+                set b_points_x(0,$j) $b_points_x(0,$tj)
+                set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_crimped]
+                set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
+            } elseif {[expr $j % 2] eq 0 && $j > $num_rows_closed && $j <= [expr $num_rows_closed + $num_rows_transition]} {
+                if {$j == [expr $num_rows_closed +1] } {
+                    set tj [expr $j-2]
+                    set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_transition/2 + $point_distance_column_crimped/2]
+                } else {
+                    set tj [expr $j-2]
+                    set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_transition]
+                }
+                # set tj [expr $j-2]
+                # set b_points_x(0,$j) $b_points_x(0,$tj)
+                # set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_transition]
+                # if {$j eq [expr $num_rows_closed +1] && $point_distance_column_transition < [expr $point_distance_column_crimped/2]} {
+                #     set variable_repeat [expr ceil ( ($point_distance_column_crimped/2) / $point_distance_column_transition)]
+                #     set b_points_y(0,$j) [expr $b_points_y(0,$j) + ($variable_repeat *$point_distance_column_transition)]
+                # }
+                set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
+            } elseif {[expr $j % 2] eq 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
+                set tj [expr $j-2]
+                set b_points_x(0,$j) $b_points_x(0,$tj)
+                set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_open]
+                if {$j eq [expr $num_rows_closed + 1 + $num_rows_transition] && $point_distance_column_open <= [expr $point_distance_column_transition/2]} {
+                    set variable_repeat2 [expr ceil ( ($point_distance_column_transition/2) / $point_distance_column_open)]
+                    set b_points_y(0,$j) [expr $b_points_y(0,$j) + ($variable_repeat2 * $point_distance_column_open)]
+                }
+                set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
+            }
+        }
+        
+        for {set j 0} {$j < $num_rows_total} {incr j} {
+            if {[expr $j % 2] == 0 || $j == 0} {
+                for {set i 1} {$i < $num_cols} {incr i} {
+                    if {[expr $i % 2] == 0} {
+                        set ti [expr $i-2]
+                        set b_points_x($i,$j) [expr $b_points_x($ti,$j) + $point_distance_row]
+                        set b_points_y($i,$j) [expr $b_points_y($ti,$j)]
+                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
+                    }
+                }
+            } else {
+                for {set i 0} {$i < $num_cols} {incr i} {
+                    if {[expr $i % 2] ne 0 && $j <= $num_rows_closed} {
+                        set ti [expr $i-1]
+                        set tj [expr $j-1]
+                        set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
+                        set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column_crimped/2]
+                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
+                    } elseif {[expr $i % 2] ne 0 && $j > $num_rows_closed && $j <= [expr $num_rows_closed + $num_rows_transition]} {
+                        set ti [expr $i-1]
+                        set tj [expr $j-1]
+                        set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
+                        set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column_transition/2]
+                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
+                    } elseif {[expr $i % 2] ne 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
+                        set ti [expr $i-1]
+                        set tj [expr $j-1]
+                        set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
+                        set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column_open/2]
+                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
+                    }
+                }
+            }
+        }
+        set num_rows $num_rows_total
+        set inner_nodes [list ]
+        set outer_nodes [list ]
+    } else {
+        set point_distance_column [expr $point_distance_row * tan($degtorad * (90-$angle))]
+        set num_rows [expr 1 + (int(double($stent_length)/$point_distance_column) *2)]
+        #abs( H - ( ( cant j - 1) * b/2))
+        # if ((abs (H-((cantj-1)*(b/2)))) > (abs (H-(cantj*(b/2))))):
+        while {[expr abs($stent_length - ($num_rows -1)* ($point_distance_column/2)) > abs($stent_length - ($num_rows*($point_distance_column/2)) )]} {
+            incr num_rows
+        }
+        
+        array set points_x [FillBidimensionalArray $num_cols $num_rows 0.0]
+        array set points_y [FillBidimensionalArray $num_cols $num_rows 0.0]
+        array set points_z [FillBidimensionalArray $num_cols $num_rows 0.0]
+        
+        set i 0
+        for {set j 1} {$j < $num_rows} {incr j} {
+            if {[expr $j % 2] eq 0} {
+                set tj [expr $j-2]
+                set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column]
+            }
+        }
+        
+        for {set j 0} {$j < $num_rows} {incr j} {
+            if {[expr $j % 2] eq 0} {
+                for {set i 1} {$i < $num_cols} {incr i} {
+                    if {[expr $i % 2] eq 0} {
+                        set ti [expr $i-2]
+                        set points_x($i,$j) [expr $points_x($ti,$j) + $point_distance_row]
+                        set points_y($i,$j) [expr $points_y($ti,$j)]
+                    }
+                }
+            } else {
+                for {set i 0} {$i < $num_cols} {incr i} {
+                    if {[expr $i % 2] ne 0} {
+                        set ti [expr $i-1]
+                        set tj [expr $j-1]
+                        set points_x($i,$j) [expr $points_x($ti,$tj) + $point_distance_row/2]
+                        set points_y($i,$j) [expr $points_y($ti,$tj) + $point_distance_column/2]
+                    }
+                }
+            }
+        }
+        
+        array set b_points_x [FillBidimensionalArray $num_cols $num_rows 0.0]
+        array set b_points_y [FillBidimensionalArray $num_cols $num_rows 0.0]
+        array set b_points_z [FillBidimensionalArray $num_cols $num_rows 0.0]
+        
+        for {set j 1} {$j < $num_rows} {incr j} {
+            if {[expr $j % 2] eq 0} {
+                set tj [expr $j-2]
+                set b_points_x(0,$j) $b_points_x(0,$tj)
+                set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column]
+                set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
+            }
+        }
+        
+        for {set j 0} {$j < $num_rows} {incr j} {
+            if {[expr $j % 2] == 0 || $j == 0} {
+                for {set i 1} {$i < $num_cols} {incr i} {
+                    if {[expr $i % 2] == 0} {
+                        set ti [expr $i-2]
+                        set b_points_x($i,$j) [expr $b_points_x($ti,$j) + $point_distance_row]
+                        set b_points_y($i,$j) [expr $b_points_y($ti,$j)]
+                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
+                    }
+                }
+            } else {
+                for {set i 0} {$i < $num_cols} {incr i} {
+                    if {[expr $i % 2] ne 0} {
+                        set ti [expr $i-1]
+                        set tj [expr $j-1]
+                        set b_points_x($i,$j) [expr $b_points_x($ti,$tj) + $point_distance_row/2]
+                        set b_points_y($i,$j) [expr $b_points_y($ti,$tj) + $point_distance_column/2]
+                        set b_points_z($i,$j) [expr -1.0 * $wire_diameter]
+                    }
+                }
+            }
+        }
+        set inner_nodes [list ]
+        set outer_nodes [list ]
+    }
+    return [list $num_rows [array get points_x]  [array get points_y ]  [array get points_z ]  [array get b_points_x ]  [array get b_points_y ]  [array get b_points_z]]
 }
 
 proc Stent::Wizard::FillBidimensionalArray { size_x size_y { value 0.0} } {
