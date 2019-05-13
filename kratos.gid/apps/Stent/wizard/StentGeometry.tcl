@@ -57,7 +57,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set num_cols [expr 1 + ($number_wires *2)]
     
     # Calculate the point coordinates
-    lassign [Stent::Wizard::CalculatePointArrays $stent_length $point_distance_row $angle_open $angle_transition $angle_crimped $variable_angle $num_cols $wire_diameter] num_rows tmp_x tmp_y tmp_z tmp_bx tmp_by tmp_bz
+    lassign [Stent::Wizard::CalculatePointArrays $stent_length $point_distance_row $angle $angle_open $angle_transition $angle_crimped $variable_angle $num_cols $wire_diameter] num_rows tmp_x tmp_y tmp_z tmp_bx tmp_by tmp_bz
     array set points_x $tmp_x
     array set points_y $tmp_y
     array set points_z $tmp_z
@@ -557,7 +557,7 @@ proc Stent::Wizard::DrawGeometry {} {
 
 }
 
-proc Stent::Wizard::CalculatePointArrays {stent_length point_distance_row angle_open angle_transition angle_crimped variable_angle num_cols wire_diameter} {
+proc Stent::Wizard::CalculatePointArrays {stent_length point_distance_row angle angle_open angle_transition angle_crimped variable_angle num_cols wire_diameter} {
     
     set degtorad 0.0174532925199
 
