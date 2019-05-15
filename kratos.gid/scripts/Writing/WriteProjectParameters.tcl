@@ -625,19 +625,20 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
 
     # manually selecting step, otherwise Paraview won't group the results
-    set outputCT [getValueByXPath $vtk_options_xpath OutputControlType] 
+    set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
     if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
     dict set resultDict output_frequency               $frequency
-    dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat] 
+    dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
     dict set resultDict folder_name                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
     dict set resultDict nodal_data_value_variables     []
-    dict set resultDict element_data_value_variables   [GetResultsList $results_UN OnElement]
+    dict set resultDict element_data_value_variables   []
     dict set resultDict condition_data_value_variables []
+    dict set resultDict gauss_point_variables   [GetResultsList $results_UN OnElement]
 
 
     return $resultDict
