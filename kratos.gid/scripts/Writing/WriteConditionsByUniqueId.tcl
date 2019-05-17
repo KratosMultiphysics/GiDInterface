@@ -1,5 +1,5 @@
 
-proc write::writeConditionsByUniqueId { baseUN ConditionMapVariableName {iter 0} {cond_id ""}} {
+proc write::writeConditionsByUniqueId { baseUN ConditionMapVariableName {iter 0} {cond_id ""} {print_again_repeated 0}} {
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
@@ -12,13 +12,13 @@ proc write::writeConditionsByUniqueId { baseUN ConditionMapVariableName {iter 0}
         if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
-        set iter [writeGroupNodeConditionByUniqueId $groupNode $condid $iter $ConditionMapVariableName]
+        set iter [writeGroupNodeConditionByUniqueId $groupNode $condid $iter $ConditionMapVariableName $print_again_repeated]
     }
     return $iter
 }
 
 
-proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMapVariableName} {
+proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMapVariableName {print_again_repeated 0}} {
     set groupid [get_domnode_attribute $groupNode n]
     set groupid [GetWriteGroupName $groupid]
     if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
@@ -39,7 +39,42 @@ proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMa
 }
 
 
-proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap} {
+proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap iter {print_again_repeated 0}} {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $un]/group"
+    set groups [$root selectNodes $xp1]
+    Model::getConditions "../../Common/xml/Conditions.xml"
+    set conditions_dict [dict create ]
+    set elements_list [list ]
+    foreach group_node $groups {
+        set needConds [write::getValueByNode [$group_node selectNodes "./value\[@n='WriteConditions'\]"]]
+        if {$needConds} {
+            # TODO: be carefull with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
+            set iter [write::writeGroupNodeConditionByUniqueId $group_node "GENERIC_CONDITION" $iter $ConditionMap {print_again_repeated 0}]
+        }
+    }
+    Model::ForgetCondition GENERIC_CONDITIONS
+    return $iter
+}
+
+proc write::writeBasicSubmodelPartsByUniqueId {ConditionMap iter {un "GenericSubmodelPart"}} {
+    # Write elements
+    set groups [write::_writeElementsForBasicSubmodelParts $un]
+    # Write conditions (By unique id, so need the app ConditionMap)
+    write::_writeConditionsByUniqueIdForBasicSubmodelParts $un $ConditionMap $iter
+    # Write the submodelparts
+    foreach group $groups {
+        set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
+        set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        set what "nodal"
+        set iters ""
+        if {$needElems} {append what "&Elements"}
+        if {$needConds} {append what "&Conditions"}
+        ::write::writeGroupSubModelPartByUniqueId "GENERIC" [$group @n] $ConditionMap $what
+    }
+}
+
+proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap {print_again_repeated 0}} {
     set obj [list ]
 
     # Print header
@@ -62,17 +97,21 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
     for {set i 0} {$i <[llength $obj]} {incr i} {
         set nids [lindex $obj $i]
         set cndid 0
+        set new 0
         if {$nnodes != 1} {
             set eid [lindex $elems $i]
             set cndid [objarray get $ConditionMap $eid]
         }
         if {$cndid == 0} {
+            set new 1
             set cndid [incr iter]
             if {$nnodes != 1} {
                 objarray set $ConditionMap $eid $cndid
             }
         }
-        WriteString "${s1}$cndid 0 $nids"
+        if {$print_again_repeated || $new} {
+            WriteString "${s1}$cndid 0 $nids"
+        }
     }
     incr ::write::current_mdpa_indent_level -1
 

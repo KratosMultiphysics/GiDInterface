@@ -11,6 +11,12 @@
           <Item n="StentLength" pn="Stent length approx" v="50" type="double" units="mm" />
           <Item n="CrimpedButton" pn="CrimpedGeometry" type="combo" values="Yes,No" onchange="Stent::Wizard::HideCrimpedRadius"/>
           <Item n="StentRadiusClosed" pn="Stent radius closed" v="3" type="double" units="mm" />
+          <Item n="VariableAngleButton" pn="Variable Angle" type="combo" values="Yes,No" onchange="Stent::Wizard::HideVariableAngleButton"/>    
+          <Item n="AngleCrimped" pn="Angle Crimped" v="30" type="double" units="deg" />
+          <Item n="AngleTransition" pn="Angle Transition" v="30" type="double" units="deg" />
+          <Item n="AngleOpen" pn="Angle Open" v="30" type="double" units="deg" />
+          <Item n="OneOverTwoButton" pn="Single/Double Braided" type="combo" values="Yes,No" onchange="Stent::Wizard::HideOneOverTwoButton"/>
+          <Item n="NurbsButton" pn="Nurbs Geometry" type="combo" values="Yes,No" onchange="Stent::Wizard::HideNurbsButton"/>
           <Item n="DrawButton" pn="Create geometry" type="button" v="::Stent::Wizard::DrawGeometry" />
         </Frame>
         <Frame n="Image" position="right">

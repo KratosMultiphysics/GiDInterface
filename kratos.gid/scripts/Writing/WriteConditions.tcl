@@ -24,30 +24,6 @@ proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
     return $dictGroupsIterators
 }
 
-
-# proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
-#     set groupid [get_domnode_attribute $groupNode n]
-#     set groupid [GetWriteGroupName $groupid]
-#     if {![dict exists $dictGroupsIterators $groupid]} {
-#         if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
-#         set cond [::Model::getCondition $condid]
-#         if {$cond ne ""} {
-#             lassign [write::getEtype $ov $groupid] etype nnodes
-#             set kname [$cond getTopologyKratosName $etype $nnodes]
-#             if {$kname ne ""} {
-#                 lassign [write::writeGroupConditionByGiDId $groupid $kname $nnodes $iter] initial final
-#                 dict set dictGroupsIterators $groupid [list $initial $final]
-#             } else {
-#                 # If kname eq "" => no topology feature match, condition written as nodal
-#                 if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
-#             }
-#         } else {
-#             error "Could not find conditon named $condid"
-#         }
-#     }
-#     return $dictGroupsIterators
-# }
-
 proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
     set groupid [get_domnode_attribute $groupNode n]
     set groupid [GetWriteGroupName $groupid]

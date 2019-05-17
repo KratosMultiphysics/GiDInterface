@@ -53,25 +53,6 @@ proc DEM::write::WriteWallCustomDEMSmp { } {
     }
 }
 
-
-# proc DEM::write::WriteWallGraphsFlag { } {
-#     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
-#     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-#         set groupid [$group @n]
-#         set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-
-#             #write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-#             write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-#             write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
-#             write::WriteString  "End SubModelPartData"
-#             write::WriteString  "Begin SubModelPartNodes"
-#             GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
-#             write::WriteString  "End SubModelPartNodes"
-#             write::WriteString  "End SubModelPart"
-#             write::WriteString  ""
-#     }
-# }
-
 proc DEM::write::GetDEMGroupsCustomSubmodelpart { } {
     set groups [list ]
     set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
