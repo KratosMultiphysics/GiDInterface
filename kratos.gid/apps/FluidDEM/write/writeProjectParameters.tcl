@@ -181,32 +181,42 @@ proc ::FluidDEM::write::getParametersDict { } {
     # # dict set project_parameters_dict "NeighbourSearchFrequency"         [write::getValue DEMTimeParameters NeighbourSearchFrequency]
 
     # Properties
-    set properties_dict [dict create]
-    W "7.1"
-    set partgroup [write::getPartsSubModelPartId]
-    # partgroup seria Parts_dem -Begin SubModelPart Parts_dem-, pero fa falta la id desde -Begin Properties 4-
-    W "7.2"
-    # dict set properties_dict "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]]
-    dict set properties_dict properties_id 1
-    dict set properties_dict hydrodynamic_law_parameters                                         "name"                         "HydrodynamicInteractionLaw"
-    dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         "default"
-    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "name"                         "default"
-    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   false
-    dict set properties_dict hydrodynamic_law_parameters drag_parameters                         "name"                         "StokesDragLaw"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "name"                         "default"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "quadrature_order"             2
-
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "do_use_mae"                   false
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "m"                            10
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "window_time_interval"         0.1
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "type"                         4
-
-    # dict set properties_dict hydrodynamic_law_parameters vorticity_induced_lift_parameters "name" "default"
-    # dict set properties_dict hydrodynamic_law_parameters rotation_induced_lift_parameters "name" "default"
-    # dict set properties_dict hydrodynamic_law_parameters steady_viscous_torque_parameters "name" "default"
-    W "8"
+    set hydrodynamic_laws_dict [GetHydrodynamicLawsDict]
     set properties_list [list ]
-    lappend properties_list $properties_dict
+    set mat_dict [dict merge [write::getMatDict] $DEM::write::inletProperties]
+    foreach property [dict keys $mat_dict] {
+        if { [dict get $mat_dict $property APPID] eq "DEM"} {
+            set properties_dict [dict create]
+            set law [dict get $hydrodynamic_laws_dict [dict get $mat_dict $property hydrodynamic_law]]
+            WV law
+            W "7.1"
+            set partgroup [write::getPartsSubModelPartId]
+            # partgroup seria Parts_dem -Begin SubModelPart Parts_dem-, pero fa falta la id desde -Begin Properties 4-
+            W "7.2"
+            # dict set properties_dict "model_part_name" [write::GetModelPartNameWithParent [concat [lindex $partgroup 0]]]
+            dict set properties_dict properties_id [dict get $mat_dict $property MID]
+            dict set properties_dict hydrodynamic_law_parameters                                         "name"                         "HydrodynamicInteractionLaw"
+            dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         [dict get $law buoyancy_parameters]
+            dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "name"                         "default"
+            dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   false
+            dict set properties_dict hydrodynamic_law_parameters drag_parameters                         "name"                         "StokesDragLaw"
+            dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "name"                         "default"
+            dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "quadrature_order"             2
+
+            dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "do_use_mae"                   false
+            dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "m"                            10
+            dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "window_time_interval"         [dict get $law window_time_interval]
+            dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "type"                         4
+
+            # dict set properties_dict hydrodynamic_law_parameters vorticity_induced_lift_parameters "name" "default"
+            # dict set properties_dict hydrodynamic_law_parameters rotation_induced_lift_parameters "name" "default"
+            # dict set properties_dict hydrodynamic_law_parameters steady_viscous_torque_parameters "name" "default"
+            W "8"
+            lappend properties_list $properties_dict
+        }
+
+    }
+    
     dict set project_parameters_dict properties $properties_list
 
     W "9"
@@ -225,6 +235,20 @@ proc ::FluidDEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
+proc FluidDEM::write::GetHydrodynamicLawsDict { } {
+    set laws [dict create ]
+    set dem_hydrodynamic_law_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "DEMFluidHydrodynamicLaw"]/blockdata"]
+    foreach hydro_law $dem_hydrodynamic_law_nodes {
+        set law [dict create]
+        set law_name [$hydro_law @name]
+        dict set law name $law_name
+        foreach value [$hydro_law getElementsByTagName "value"] {
+            dict set law [$value @n] [write::getValueByNode $value]
+        }
+        dict set laws $law_name $law
+    }
+    return $laws
+}
 
 proc FluidDEM::write::writeParametersEvent { } {
     W "1"
