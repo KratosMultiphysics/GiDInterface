@@ -41,6 +41,14 @@ proc FluidDEM::xml::CustomTree { args } {
     spdAux::parseRoutes
     set root [customlib::GetBaseRoot]
 
+    # Remove DEM things to move them to Common
+    set dem_gravity_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'Gravity'\]"]
+	if { $dem_gravity_node ne "" } {$dem_gravity_node delete}
+    set dem_inlet_hydrodynamic_law_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'Inlet'\]/value\[@n = 'hydrodynamic_law'\]"]
+    $dem_inlet_hydrodynamic_law_node setAttribute values "\[GetHydrodynamicLaws\]"
+    set dem_parts_hydrodynamic_law_node [$root selectNodes "[spdAux::getRoute "DEMParts"]/value\[@n = 'hydrodynamic_law'\]"]
+    $dem_parts_hydrodynamic_law_node setAttribute values "\[GetHydrodynamicLaws\]"
+
     # Remove Fluid things to move them to Common
     set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'ParallelType'\]"]
 	if { $result_node ne "" } {$result_node delete}
@@ -48,16 +56,11 @@ proc FluidDEM::xml::CustomTree { args } {
 	if { $result_node ne "" } {$result_node delete}
     set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'TimeParameters'\]"]
 	if { $result_node ne "" } {$result_node delete}
+    set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'TimeParameters'\]"]
+	if { $result_node ne "" } {$result_node delete}
 
     set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'ParallelType'\]"]
 	if { $result_node ne "" } {$result_node delete}
-    set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'DEMGravity'\]"]
-	if { $result_node ne "" } {$result_node delete}
-
-    set dem_inlet_hydrodynamic_law_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'Inlet'\]/value\[@n = 'hydrodynamic_law'\]"]
-    $dem_inlet_hydrodynamic_law_node setAttribute values "\[GetHydrodynamicLaws\]"
-    set dem_parts_hydrodynamic_law_node [$root selectNodes "[spdAux::getRoute "DEMParts"]/value\[@n = 'hydrodynamic_law'\]"]
-    $dem_parts_hydrodynamic_law_node setAttribute values "\[GetHydrodynamicLaws\]"
     
 }
 
