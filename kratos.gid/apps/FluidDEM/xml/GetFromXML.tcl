@@ -45,13 +45,15 @@ proc FluidDEM::xml::CustomTree { args } {
 
     set dem_inlet_hydrodynamic_law_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'Inlet'\]/value\[@n = 'hydrodynamic_law'\]"]
     $dem_inlet_hydrodynamic_law_node setAttribute values "\[GetHydrodynamicLaws\]"
+    set dem_parts_hydrodynamic_law_node [$root selectNodes "[spdAux::getRoute "DEMParts"]/value\[@n = 'hydrodynamic_law'\]"]
+    $dem_parts_hydrodynamic_law_node setAttribute values "\[GetHydrodynamicLaws\]"
     
 }
 
 proc FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
     set names [list ]
-    set dem_inlet_hydrodynamic_law_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "DEMFluidHydrodynamicLaw"]/blockdata"]
-    foreach hydro_law $dem_inlet_hydrodynamic_law_nodes {
+    set dem_hydrodynamic_law_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "DEMFluidHydrodynamicLaw"]/blockdata"]
+    foreach hydro_law $dem_hydrodynamic_law_nodes {
         lappend names [$hydro_law @name]
     }
     
