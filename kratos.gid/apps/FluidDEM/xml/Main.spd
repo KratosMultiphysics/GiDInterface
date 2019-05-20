@@ -22,9 +22,10 @@
     <include n="Results"          active="1" path="apps/DEM/xml/Results.spd" un="DEMResults" />
     <include n="Graphs"           active="1" path="apps/DEM/xml/Graphs.spd" un="DEMGraphs" />
     <include n="materials"        active="1" path="apps/DEM/xml/Materials.spd"/>
+    <include n="hydrodynamic_laws" active="1" path="apps/FluidDEM/xml/HydrodynamicLaws.spd"/>
   </container>
 
-  <container n="FluidDEM"       pn="Fluid+DEM"             icon="doRestart" prefix="FluidDEM_" un="FluidDEM_CouplingParameters" tree_state="open" open_window="0">
+  <container n="FluidDEM"       pn="General parameters"  icon="doRestart" prefix="FluidDEM_" un="FluidDEM_CouplingParameters" tree_state="open" open_window="0">
     <value   n="DragType"       pn="Drag Force type"     type="combo"     icon="black1"       values="None,Stokes,AllReynolds,Ganser,Ishii" dict="None,None,Stokes,Stokes,AllReynolds,AllReynolds,Ganser,Ganser,Ishii,Ishii" v="BARBACOA" help="Choose the model for the Drag Force type."/>
     <include n="TimeParameters" active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/TimeParameters.spd"/>
     <!-- <include n="Intervals"      active="1" icon="black1" state="normal"   path="apps/Common/xml/Intervals.spd"/> -->

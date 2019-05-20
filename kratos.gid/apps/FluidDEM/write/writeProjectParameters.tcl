@@ -191,15 +191,15 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set properties_dict hydrodynamic_law_parameters                                         "name"                         "HydrodynamicInteractionLaw"
     dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         "default"
     dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "name"                         "default"
-    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   "false"
+    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   false
     dict set properties_dict hydrodynamic_law_parameters drag_parameters                         "name"                         "StokesDragLaw"
     dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "name"                         "default"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "quadrature_order"             "2 "
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "quadrature_order"             2
 
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "do_use_mae"                   "false"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "m"                            "10"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "window_time_interval"         "0.1,"
-    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "type"                         "4"
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "do_use_mae"                   false
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "m"                            10
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "window_time_interval"         0.1
+    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "type"                         4
 
     # dict set properties_dict hydrodynamic_law_parameters vorticity_induced_lift_parameters "name" "default"
     # dict set properties_dict hydrodynamic_law_parameters rotation_induced_lift_parameters "name" "default"
