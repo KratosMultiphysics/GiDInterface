@@ -164,7 +164,7 @@
         <parameter n="InitialVelocityModulus"         type="double"        v="1.0"          pn="Initial velocity"         parent="true" units="m/s"   unit_magnitude="Velocity"/>
         <parameter n="iDirectionVector"               type="inline_vector" v="1.0,0.0,0.0"  pn="Direction vector"         parent="true"/>
         <parameter n="InitialAngularVelocityModulus"  type="double"        v="0.0"          pn="Initial angular velocity" parent="true" units="rad/s" unit_magnitude="Angle/T"/>
-        <parameter n="iAngularDirectionVector"        type="inline_vector" v="1.0,0.0,0.0"  pn="Direction vector"         parent="true"/>
+        <parameter n="iAngularDirectionVector"        type="inline_vector" v="1.0,0.0,0.0"  pn="Angular direction vector"         parent="true"/>
       </parameter>
     </inputs>
   </Process>
