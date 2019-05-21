@@ -133,8 +133,8 @@ proc DEM::write::writeInletMeshes { } {
                     }
 
                 write::WriteString "        IDENTIFIER $mid"
-                write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
-                write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+                # write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+                # write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
                 write::WriteString "        CONTAINS_CLUSTERS 0"
 
                 set contains_clusters 0

@@ -22,7 +22,7 @@ proc ::FluidDEM::write::getParametersDict { } {
 
     # add time_stepping
     set automatic_time_step [write::getValue FDEMTimeParameters AutomaticDeltaTime]
-    set time_step [write::getValue FDEMTimeParameters FluidDeltaTime]
+    set time_step [write::getValue FDEMTimeParameters DEMDeltaTime]
     dict set project_parameters_dict time_stepping "automatic_time_step"                $automatic_time_step
     dict set project_parameters_dict time_stepping "time_step"                          $time_step
 
