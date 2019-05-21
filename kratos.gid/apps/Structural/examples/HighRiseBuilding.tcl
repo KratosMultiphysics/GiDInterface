@@ -120,16 +120,10 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     }
 
     # Structure domain time parameters
-    set change_list [list EndTime 25.0 DeltaTime 0.05]
-    set xpath [spdAux::getRoute STTimeParameters]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Truss example script"
-        }
-    }
+    set change_list [list EndTime 25.0]
+    [$root selectNodes "[spdAux::getRoute STTimeParameters]/value\[@n = 'EndTime'\]"] setAttribute v 25.0
+    [$root selectNodes "[spdAux::getRoute STTimeParameters]/container\[@n = 'TimeStep'\]/blockdata\[1\]/value\[@n = 'DeltaTime'\]"] setAttribute v 0.05
+       
 
     spdAux::RequestRefresh
 }
