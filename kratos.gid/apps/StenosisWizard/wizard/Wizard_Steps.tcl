@@ -81,7 +81,7 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
     set delta [ smart_wizard::GetProperty Geometry Delta,value]
     set precision [ smart_wizard::GetProperty Geometry Precision,value]
     set sphradius [ smart_wizard::GetProperty Geometry SphRadius,value] 
-    set tpoly [ smart_wizard::GetProperty Geometry TPoly,value] 
+    set tpoly [ smart_wizard::GetProperty Geometry Tpoly,value] 
 
     switch $type {
         "Circular" {
@@ -195,7 +195,7 @@ proc StenosisWizard::Wizard::DrawPolygonal {length radius start end delta tpoly 
     set end_x [expr double($length)/2]
 
     set halfpoly [expr double($tpoly)/2]
-    set hdelta [expr $delta) - $radius)]
+    set hdelta [expr $delta - $radius]
     
     set origin_poly [expr double($start) - double($halfpoly)]
     set end_poly [expr double($end) + double($halfpoly)]
