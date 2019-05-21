@@ -31,14 +31,13 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
     # set model_name [Kratos::GetModelName]
     # dict set project_parameters_dict problem_data                         $model_name
-    W "6"
-    # do_print_results_option
+
     # dict set project_parameters_dict "ControlTime"            [write::getValue DEMTimeParameters ScreenInfoOutput]
-    set do_print_results_option [write::getValue FluidDEM_CouplingParameters PrintResults]
-    dict set project_parameters_dict "do_print_results_option"                          $do_print_results_option
+    #set do_print_results_option [write::getValue FluidDEM_GeneralParameters PrintResults]
+    dict set project_parameters_dict "do_print_results_option"                          true
 
     # output_interval
-    set output_interval [write::getValue FluidDEM_CouplingParameters OutputInterval]
+    set output_interval [write::getValue FluidDEM_GeneralParameters OutputInterval]
     dict set project_parameters_dict "output_interval"                                  $output_interval
 
     # coupling FDEMCoupling
@@ -189,8 +188,7 @@ proc ::FluidDEM::write::getParametersDict { } {
             #WV law
             set partgroup [write::getPartsSubModelPartId]
             dict set properties_dict properties_id [dict get $mat_dict $property MID]
-            #dict set properties_dict hydrodynamic_law_parameters                                         "name"                         "HydrodynamicInteractionLaw"
-            dict set properties_dict hydrodynamic_law_parameters                                         "name"                         [dict get $law hydrodynamic_law]
+            dict set properties_dict hydrodynamic_law_parameters                                         "name"                         HydrodynamicInteractionLaw
             dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         [dict get $law buoyancy_parameters]
             dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "name"                         [dict get $law inviscid_force_parameters]
             dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   [dict get $law do_apply_faxen_corrections]
