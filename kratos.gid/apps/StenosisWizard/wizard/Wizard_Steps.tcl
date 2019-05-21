@@ -380,17 +380,17 @@ proc StenosisWizard::Wizard::Save { } {
 }
 
 proc StenosisWizard::Wizard::Run { } {
-    set root [customlib::GetBaseRoot]
-    set solstrat_un [apps::getCurrentUniqueName SolStrat]
-    #W $solstrat_un
-    if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] v] eq ""} {
-        get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] dict
-    }
-    set solstrat_un [apps::getCurrentUniqueName Scheme]
-    #W $solstrat_un
-    if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] v] eq ""} {
-        get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] dict
-    }
+  # set root [customlib::GetBaseRoot]
+  # set solstrat_un [apps::getCurrentUniqueName SolStrat]
+  # #W $solstrat_un
+  # if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] v] eq ""} {
+  #     get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] dict
+  # }
+  # set solstrat_un [apps::getCurrentUniqueName Scheme]
+  # #W $solstrat_un
+  # if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] v] eq ""} {
+  #     get_domnode_attribute [$root selectNodes [spdAux::getRoute $solstrat_un]] dict
+  # }
     LastStep
     GiD_Process Mescape Utilities Calculate
 }
