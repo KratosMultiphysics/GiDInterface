@@ -51,6 +51,15 @@ proc FluidDEM::xml::CustomTree { args } {
     set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'ParallelType'\]"]
 	if { $result_node ne "" } {$result_node delete}
 
+    spdAux::SetValueOnTreeItem state hidden DEMPreferences
+    spdAux::SetValueOnTreeItem state hidden DEMStratSection TimeParameters
+
+    spdAux::SetValueOnTreeItem state hidden DEMResults DEM-OTimeStepType
+    spdAux::SetValueOnTreeItem state hidden DEMResults DEM-OTimeStepDetail
+    spdAux::SetValueOnTreeItem state hidden DEMResults GiDOptions
+
+
+
     # Remove Fluid things to move them to Common
     set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'ParallelType'\]"]
 	if { $result_node ne "" } {$result_node delete}
@@ -59,16 +68,17 @@ proc FluidDEM::xml::CustomTree { args } {
     set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'TimeParameters'\]"]
 	if { $result_node ne "" } {$result_node delete}
 
-    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/container\[@n = 'GiDOptions'\]"]
-	if { $result_node ne "" } {$result_node delete}
-    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/value\[@n = 'FileLabel'\]"]
-	if { $result_node ne "" } {$result_node delete}
-    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/value\[@n = 'OutputControlType'\]"]
-	if { $result_node ne "" } {$result_node delete}
-    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/value\[@n = 'OutputDeltaTime'\]"]
-	if { $result_node ne "" } {$result_node delete}
-    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/container\[@n = 'OnNodes'\]"]
-	if { $result_node ne "" } {$result_node delete}
+    # set result_node [$root selectNodes "[spdAux::getRoute FLResults]/container\[@n = 'GiDOptions'\]"]
+	# if { $result_node ne "" } {$result_node delete}
+    spdAux::SetValueOnTreeItem state disabled FLSolStrat
+    spdAux::SetValueOnTreeItem state disabled FLScheme
+    spdAux::SetValueOnTreeItem state hidden FLResults FileLabel
+    spdAux::SetValueOnTreeItem state hidden FLResults OutputControlType
+    spdAux::SetValueOnTreeItem state hidden FLResults OutputDeltaTime
+    spdAux::SetValueOnTreeItem state hidden FLResults OnNodes
+    spdAux::SetValueOnTreeItem state hidden FLResults GiDOptions
+    spdAux::SetValueOnTreeItem v MultipleFiles FLResults GiDMultiFileFlag
+
 
 }
 
