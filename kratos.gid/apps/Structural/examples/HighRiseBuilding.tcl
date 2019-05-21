@@ -120,7 +120,6 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     }
 
     # Structure domain time parameters
-    set change_list [list EndTime 25.0]
     [$root selectNodes "[spdAux::getRoute STTimeParameters]/value\[@n = 'EndTime'\]"] setAttribute v 25.0
     [$root selectNodes "[spdAux::getRoute STTimeParameters]/container\[@n = 'TimeStep'\]/blockdata\[1\]/value\[@n = 'DeltaTime'\]"] setAttribute v 0.05
        
