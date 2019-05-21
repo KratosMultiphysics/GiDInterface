@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="hydrodynamic_laws" pn="Hydrodynamic laws" un="DEMFluidHydrodynamicLaw" icon="material16" help="Materials database" open_window="0">
-    
-	<blockdata n="hydrodynamic_law" pn="hydrodynamic law" name="StokesDragOnly" sequence="1" icon="time3" editable_name="unique" sequence_type="non_void_disabled" help="Interval">
-		<value n="buoyancy_parameters" pn="Buoyancy parameters" v="default" values="default" state="disabled" help=""/>
-        <container n="mae_parameters" pn="Mae parameters">
-            <value n="window_time_interval" pn="Window time interval" v="10"></value>
+
+	<blockdata n="hydrodynamic_law"             pn="hydrodynamic law"           name="StokesDragOnly" sequence="1" icon="black1" editable_name="unique" sequence_type="non_void_disabled" help="Interval">
+		<value n="buoyancy_parameters"          pn="Buoyancy parameters"        v="default"       values="default"         state="disabled" help=""/>
+		<value n="inviscid_force_parameters"    pn="Inviscid force parameters"  v="default"       values="default"         state="disabled" help=""/>
+		<value n="do_apply_faxen_corrections"   pn="Faxen corrections"          v="false"         values="false, true"     state="disabled" help=""/>
+		<value n="drag_parameters"              pn="Drag parameters"            v="StokesDragLaw" values="StokesDragLaw"   state="disabled" help=""/>
+		<value n="history_force_parameters"     pn="History force parameters"   v="default"       values="default"         state="disabled" help=""/>
+		<value n="quadrature_order"             pn="Quadrature order"           v="2"             values="2"               state="disabled" help=""/>
+        <container n="mae_parameters"       pn="Mae parameters"                   icon="black1">
+            <value n="do_use_mae"           pn="Use mae"                v="false" state="disabled"  ></value>
+            <value n="m"                    pn="m"                      v="10"    state="disabled"  ></value>
+            <value n="window_time_interval" pn="Window time interval"   v="10"    state="disabled"  ></value>
+            <value n="type"                 pn="type"                   v="4"     state="disabled"  ></value>
         </container>
 	</blockdata>
-</container>  
+</container>
