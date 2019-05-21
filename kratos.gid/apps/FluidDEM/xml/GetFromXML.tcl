@@ -15,7 +15,7 @@ proc FluidDEM::xml::Init { } {
     set inlet_cnd [Model::getCondition "Inlet"]
     # Get the process assigned to the inlet condition
     set inlet_process [Model::GetProcess [$inlet_cnd getProcessName]]
-    # Add the hydrodynamic law parameter 
+    # Add the hydrodynamic law parameter
     set parameter [::Model::Parameter new "hydrodynamic_law" "Hydrodynamic law" "combo" "" "" "" "Select a hydrodynamic law" "uno" ""]
     $inlet_process addInputDone $parameter
     # Change the inlet injector element type
@@ -48,6 +48,8 @@ proc FluidDEM::xml::CustomTree { args } {
     $dem_inlet_hydrodynamic_law_node setAttribute values "\[GetHydrodynamicLaws\]"
     set dem_parts_hydrodynamic_law_node [$root selectNodes "[spdAux::getRoute "DEMParts"]/value\[@n = 'hydrodynamic_law'\]"]
     $dem_parts_hydrodynamic_law_node setAttribute values "\[GetHydrodynamicLaws\]"
+    set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'ParallelType'\]"]
+	if { $result_node ne "" } {$result_node delete}
 
     # Remove Fluid things to move them to Common
     set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'ParallelType'\]"]
@@ -56,12 +58,18 @@ proc FluidDEM::xml::CustomTree { args } {
 	if { $result_node ne "" } {$result_node delete}
     set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'TimeParameters'\]"]
 	if { $result_node ne "" } {$result_node delete}
-    set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'TimeParameters'\]"]
+
+    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/container\[@n = 'GiDOptions'\]"]
+	if { $result_node ne "" } {$result_node delete}
+    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/value\[@n = 'FileLabel'\]"]
+	if { $result_node ne "" } {$result_node delete}
+    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/value\[@n = 'OutputControlType'\]"]
+	if { $result_node ne "" } {$result_node delete}
+    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/value\[@n = 'OutputDeltaTime'\]"]
+	if { $result_node ne "" } {$result_node delete}
+    set result_node [$root selectNodes "[spdAux::getRoute FLResults]/container\[@n = 'OnNodes'\]"]
 	if { $result_node ne "" } {$result_node delete}
 
-    set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'ParallelType'\]"]
-	if { $result_node ne "" } {$result_node delete}
-    
 }
 
 proc FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
@@ -70,12 +78,11 @@ proc FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
     foreach hydro_law $dem_hydrodynamic_law_nodes {
         lappend names [$hydro_law @name]
     }
-    
+
     set values [join $names ","]
     #W "[get_domnode_attribute $domNode v] $names"
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
-    #spdAux::RequestRefresh
     return $values
 }
 
