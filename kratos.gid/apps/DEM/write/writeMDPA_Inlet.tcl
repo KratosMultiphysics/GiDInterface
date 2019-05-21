@@ -132,9 +132,21 @@ proc DEM::write::writeInletMeshes { } {
                     write::WriteString "        //TABLE_VELOCITY_COMPONENT $TableVelocityComponent"
                     }
 
+                # review this lines
+                set inlet_element_type SphericParticle3D
+                if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
+                    set inlet_element_type [dict get $inletProperties $groupid ClusterType]
+                    set contains_clusters 1
+                    lassign [GetClusterFileNameAndReplaceInletElementType $inlet_element_type] inlet_element_type cluster_file_name
+                }
+
+                if {$inlet_element_type eq "Cluster3D"} {
+                    write::WriteString "        CLUSTER_FILE_NAME $cluster_file_name"
+                }
+
                 write::WriteString "        IDENTIFIER $mid"
-                # write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
-                # write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+                write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+                write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
                 write::WriteString "        CONTAINS_CLUSTERS 0"
 
                 set contains_clusters 0
@@ -142,22 +154,6 @@ proc DEM::write::writeInletMeshes { } {
 
                 # Change to SphericSwimmingParticle3D in swimmingDEM application interface. SphericContinuumParticle3D for CDEM?
                 # set default inlet_element_type, if FLUIDDEM -> SphericSwimmingParticle3D
-                set inlet_element_type SphericParticle3D
-                set inlet_injector_element_type SphericParticle3D
-
-                # review this lines
-                if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
-                    set inlet_element_type [dict get $inletProperties $groupid ClusterType]
-                    set contains_clusters 1
-                    lassign [GetClusterFileNameAndReplaceInletElementType $inlet_element_type] inlet_element_type cluster_file_name
-                }
-
-
-                if {$inlet_element_type eq "Cluster3D"} {
-                    write::WriteString "        CLUSTER_FILE_NAME $cluster_file_name"
-                }
-                write::WriteString "        INJECTOR_ELEMENT_TYPE $inlet_injector_element_type"
-                write::WriteString "        ELEMENT_TYPE $inlet_element_type"
 
                 set velocity_modulus [dict get $inletProperties $groupid VelocityModulus]
                 lassign [split [dict get $inletProperties $groupid DirectionVector] ","] velocity_X velocity_Y velocity_Z
