@@ -611,3 +611,27 @@ proc write::GetDefaultRestartDict { } {
     dict set restartDict Restart_Step 0
     return $restartDict
 }
+
+proc write::GetTimeStepIntervals { {time_parameters_un ""} } {
+    if {$time_parameters_un eq ""} {set time_parameters_un [GetConfigurationAttribute time_parameters_un]}
+    set root [customlib::GetBaseRoot]
+
+    set xp "[spdAux::getRoute $time_parameters_un]/container\[@n = 'TimeStep'\]/blockdata"
+    set time_step_interval_nodes [$root selectNodes $xp]
+    
+    # If the app is still working on fixed Delta time
+    if {[llength $time_step_interval_nodes] eq 0} {return [write::getValue $time_parameters_un DeltaTime]}
+
+    # If it works with interval delta time
+    set time_step_intervals_dict [dict create]
+    foreach time_step_interval_node $time_step_interval_nodes {
+        set time_step_interval_name [get_domnode_attribute $time_step_interval_node name]
+        set time_step_interval_delta_time [write::getValueByNode [$time_step_interval_node find n DeltaTime]]
+        set time_step_interval_interval_name [write::getValueByNode [$time_step_interval_node find n Interval]]
+        lassign [write::getInterval $time_step_interval_interval_name] ini end
+        set params [dict create interval [list $ini $end] time_step $time_step_interval_delta_time]
+        dict set time_step_intervals_dict $time_step_interval_name $params
+    }
+
+    return $time_step_intervals_dict
+}

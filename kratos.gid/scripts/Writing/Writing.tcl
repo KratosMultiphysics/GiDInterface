@@ -468,10 +468,10 @@ proc write::getValueByNode { node } {
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
 }
-proc write::getValue { name { it "" } {what noforce} } {
+proc write::getValue { un { it "" } {what noforce} } {
     set root [customlib::GetBaseRoot]
 
-    set xp [spdAux::getRoute $name]
+    set xp [spdAux::getRoute $un]
     set node [$root selectNodes $xp]
     if {$node ne ""} {
         if {$it ne ""} {set node [$node find n $it]}
