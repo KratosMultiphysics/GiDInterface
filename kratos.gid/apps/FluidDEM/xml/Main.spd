@@ -14,14 +14,14 @@
   </container>
 
   <container n="DEM" pn="DEM" icon="gravity" prefix="DEM" tree_state="open" open_window="0">
-    <include n="StageInfo"        active="1" path="apps/DEM/xml/StageInfo.spd"/>
-    <include n="Parts"            active="1" path="apps/DEM/xml/Parts.spd"/>
-    <include n="Intervals"        active="1" path="apps/Common/xml/Intervals.spd"/>
-    <include n="Conditions"       active="1" path="apps/DEM/xml/Conditions.spd"/>
-    <include n="SolutionStrategy" active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
-    <include n="Results"          active="1" path="apps/DEM/xml/Results.spd" un="DEMResults" />
-    <include n="Graphs"           active="1" path="apps/DEM/xml/Graphs.spd" un="DEMGraphs" />
-    <include n="materials"        active="1" path="apps/DEM/xml/Materials.spd"/>
+    <include n="StageInfo"         active="1" path="apps/DEM/xml/StageInfo.spd"/>
+    <include n="Parts"             active="1" path="apps/DEM/xml/Parts.spd"/>
+    <include n="Intervals"         active="1" path="apps/Common/xml/Intervals.spd"/>
+    <include n="Conditions"        active="1" path="apps/DEM/xml/Conditions.spd"/>
+    <include n="SolutionStrategy"  active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
+    <include n="Results"           active="1" path="apps/DEM/xml/Results.spd" un="DEMResults" />
+    <include n="Graphs"            active="1" path="apps/DEM/xml/Graphs.spd" un="DEMGraphs" />
+    <include n="materials"         active="1" path="apps/DEM/xml/Materials.spd"/>
     <include n="hydrodynamic_laws" active="1" path="apps/FluidDEM/xml/HydrodynamicLaws.spd"/>
   </container>
 
@@ -31,9 +31,9 @@
     <!-- <include n="Intervals"      active="1" icon="black1" state="normal"   path="apps/Common/xml/Intervals.spd"/> -->
     <include n="Gravity"        active="1" icon="black1" un="DEMGravity,FLGravity" path="apps/DEM/xml/Gravity.spd"/>
     <!-- <value   n="PrintResults"   pn="Print Results"       v="false"        values="true,false" icon="black1"/> -->
-    <value   n="OutputInterval" pn="Output Interval"     type="double"    v="1e-5"             icon="black1"/>
+    <value   n="OutputInterval" pn="Output Interval"     icon="black1"    type="double" v="1e-5"/>
     <include n="Coupling"       active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/Coupling.spd"/>
     <include n="Parallelism"    active="1" icon="black1" path="apps/Common/xml/Parallelism.spd"/>
-    <include n="NodalResults" pn="Nodal results" icon="black1" active="1" path="apps/FluidDEM/xml/NodalResults.spd"/>
+    <include n="NodalResults"   active="1" icon="black1" pn="Nodal results" path="apps/FluidDEM/xml/NodalResults.spd"/>
   </container>
 </container>

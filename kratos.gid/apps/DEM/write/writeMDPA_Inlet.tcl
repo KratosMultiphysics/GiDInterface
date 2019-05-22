@@ -132,7 +132,10 @@ proc DEM::write::writeInletMeshes { } {
                     write::WriteString "        //TABLE_VELOCITY_COMPONENT $TableVelocityComponent"
                     }
 
-                # review this lines
+                set contains_clusters 0
+                set random_orientation 0
+
+                # TODO. review cluster injection options for $inlet_element_type
                 set inlet_element_type SphericParticle3D
                 if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
                     set inlet_element_type [dict get $inletProperties $groupid ClusterType]
@@ -148,12 +151,7 @@ proc DEM::write::writeInletMeshes { } {
                 write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
                 write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
                 write::WriteString "        CONTAINS_CLUSTERS 0"
-
-                set contains_clusters 0
-                set random_orientation 0
-
-                # Change to SphericSwimmingParticle3D in swimmingDEM application interface. SphericContinuumParticle3D for CDEM?
-                # set default inlet_element_type, if FLUIDDEM -> SphericSwimmingParticle3D
+                # Change to SphericSwimmingParticle3D in FLUIDDEM interface
 
                 set velocity_modulus [dict get $inletProperties $groupid VelocityModulus]
                 lassign [split [dict get $inletProperties $groupid DirectionVector] ","] velocity_X velocity_Y velocity_Z
