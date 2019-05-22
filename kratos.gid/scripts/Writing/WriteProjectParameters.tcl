@@ -20,6 +20,7 @@ proc write::dict2json {dictVal} {
     if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
     return "\{${json}\}"
 }
+
 proc write::json2dict {JSONtext} {
     string range [
         string trim [
@@ -29,6 +30,7 @@ proc write::json2dict {JSONtext} {
             ]
         ] 1 end-1
 }
+
 proc write::tcl2json { value } {
     # Guess the type of the value; deep *UNSUPPORTED* magic!
     # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
@@ -79,8 +81,6 @@ proc write::tcl2json { value } {
 proc write::WriteJSON {processDict} {
     WriteString [write::tcl2json $processDict]
 }
-
-
 
 proc write::GetEmptyList { } {
     # This is a gipsy code
@@ -155,7 +155,6 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
     }
     return $solverSettingsDict
 }
-
 
 proc write::getSolversParametersDict { {appid ""} } {
     if {$appid eq ""} {
@@ -587,7 +586,6 @@ proc write::GetDefaultOutputGiDDict { {appid ""} } {
     dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
     dict set resultDict skin_output [getValueByXPath $gid_options_xpath SkinOutput]
 
-
     set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]"
     dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
     set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
@@ -620,7 +618,6 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     set resultDict [dict create]
     dict set resultDict model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
 
-
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
     set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
 
@@ -639,7 +636,6 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict element_data_value_variables   []
     dict set resultDict condition_data_value_variables []
     dict set resultDict gauss_point_variables   [GetResultsList $results_UN OnElement]
-
 
     return $resultDict
 }
