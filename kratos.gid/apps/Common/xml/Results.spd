@@ -41,7 +41,6 @@
         <value n="EnableVtkOutput" pn="Enable output" v="Yes" values="Yes,No" un="EnableVtkOutput" help="Writing output for Vtk or not" />
         <container n="VtkOptions" pn="Options" un="VtkOptions" help="Vtk postprocess options" open_window="1" icon="options" state="[checkStateByUniqueName EnableVtkOutput Yes]">
             <value n="VtkFileFormat" pn="Result format" v="ascii" values="ascii,binary" dict="ascii,Ascii,binary,Binary" help="Vtk result file format" />
-            <value n="FileLabel" pn="File Label" v="step" values="time,step" dict="time,Time,step,Step" help=""/>
             <value n="OutputControlType" pn="Units used for output frequency" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
                 <dependencies node="../value" actualize="1"/>
             </value>
