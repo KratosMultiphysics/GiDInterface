@@ -11,7 +11,12 @@ namespace eval Kratos {
 }
 
 proc Kratos::Start { } {
-    Kratos::RegisterGiDEvents
+    if {[GidUtils::VersionCmp "14.1.2d"] <0 } {
+        set dir [file dirname [info script]]
+        uplevel 1 [list source [file join $dir scripts DeprecatedEvents.tcl]]
+    } {
+        Kratos::RegisterGiDEvents
+    }
 }
 
 proc Kratos::RegisterGiDEvents { } {
@@ -58,9 +63,16 @@ proc Kratos::Event_InitProblemtype { dir } {
     set kratos_private(DevMode) "release" ; #can be dev or release
     set kratos_private(MenuItems) [dict create]
     set kratos_private(RestoreVars) [list ]
-    array set kratos_private [ReadProblemtypeXml [file join $dir kratos.xml] Infoproblemtype {Name Version MinimumGiDVersion}]
-    if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
-        WarnWin [_ "Error: %s Interface requires GiD %s or later." $kratos_private(Name) $kratos_private(MinimumGiDVersion)]
+    array set kratos_private [ReadProblemtypeXml [file join $dir kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+    if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
+        W "Error: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
+        if { [GidUtils::VersionCmp 14.0.0] < 0 } {
+            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features." 
+        } {
+            W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
+            W "Download it from: https://www.gidhome.com/download/developer-versions/"
+        }
+        
     }
 
     #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
@@ -168,7 +180,9 @@ proc Kratos::Event_EndProblemtype { } {
     Model::DestroyEverything
     Kratos::EndCreatePreprocessTBar
     gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
-    GiD_UnRegisterEvents PROBLEMTYPE Kratos
+    if {![GidUtils::VersionCmp "14.1.2d"] <0 } {
+        GiD_UnRegisterEvents PROBLEMTYPE Kratos
+    }
     unset -nocomplain ::Kratos::kratos_private
 }
 
