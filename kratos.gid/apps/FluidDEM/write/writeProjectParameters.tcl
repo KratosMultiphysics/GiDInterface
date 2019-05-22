@@ -1,6 +1,5 @@
 # Project Parameters
 proc ::FluidDEM::write::getParametersDict { } {
-    W "5"
     set project_parameters_dict [dict create]
 
     set gravity_value [write::getValue DEMGravity GravityValue]
@@ -235,15 +234,10 @@ proc FluidDEM::write::GetHydrodynamicLawsDict { } {
 }
 
 proc FluidDEM::write::writeParametersEvent { } {
-    W "1"
     set projectParametersDict [getParametersDict]
-    W "2"
     write::SetParallelismConfiguration
-    W "3"
     write::WriteJSON $projectParametersDict
-    W "4"
 }
-
 
 proc FluidDEM::write::InitExternalProjectParameters { } {
     # Fluid section

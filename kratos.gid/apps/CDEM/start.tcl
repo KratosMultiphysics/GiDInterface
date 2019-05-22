@@ -16,7 +16,6 @@ proc ::CDEM::Init { } {
     set attributes [dict create]
     set kratos_name DEMapplication
 
-    #W "Sourced FSI"
     set dir [apps::getMyDir "CDEM"]
     set prefix CDEM_
     set ::spdAux::TreeVisibility 0
