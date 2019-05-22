@@ -83,8 +83,8 @@ proc Kratos::Event_InitProblemtype { dir } {
     #     uplevel 1 [list source [file join $dir scripts Writing $filename]]
     # }
     foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
-     WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
-     WriteProjectParameters.tcl WriteSubModelPart.tcl} {
+        WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
+        WriteProjectParameters.tcl WriteSubModelPart.tcl} {
         uplevel 1 [list source [file join $dir scripts Writing $filename]]
     }
     foreach filename {Utils.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
@@ -107,7 +107,11 @@ proc Kratos::Event_InitProblemtype { dir } {
     gid_groups_conds::SetProgramName $kratos_private(Name)
     gid_groups_conds::SetLibDir [file join $dir exec]
     set spdfile [file join $dir kratos_default.spd]
-    gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
+    if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
+        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
+    } {
+        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
+    }
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
