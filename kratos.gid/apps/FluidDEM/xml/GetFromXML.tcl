@@ -10,6 +10,8 @@ proc FluidDEM::xml::Init { } {
 
     Model::ForgetElement SphericPartDEMElement3D
     Model::getElements Elements.xml
+
+    # TODO: Change injector type names #523
 }
 
 proc FluidDEM::xml::getUniqueName {name} {

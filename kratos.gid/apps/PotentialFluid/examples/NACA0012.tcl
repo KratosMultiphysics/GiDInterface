@@ -167,7 +167,8 @@ proc PotentialFluid::examples::ErasePreviousIntervals { } {
 
 proc PotentialFluid::examples::AddCuts { } {
     # Cuts
-    set results [spdAux::getRoute "FLResults"]
+    set results "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
+    
     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }
