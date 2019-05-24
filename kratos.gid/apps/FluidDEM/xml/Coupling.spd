@@ -5,7 +5,7 @@
 	<container n="ForwardCoupling"  pn="Forward coupling"           icon="black1" un="FDEMfwCoupling">
 		<value n="TimeAveraging" 	pn="Time averaging type" 	    icon="black1" type="int" 	v="0" />
 	</container>
-	<container n="BackwardCoupling" pn="Backward coupling"          icon="black1" un="FDEMbwCoupling">
+	<container n="BackwardCoupling" pn="Backward coupling"          state="hidden" icon="black1" un="FDEMbwCoupling">
 		<value n="MesoScaleLength" 	pn="Meso scale length" 			icon="black1" type="float" v="0.2"/>
 		<value n="ShapeFactor" 	   	pn="Shape factor" 				icon="black1" type="float" v="0.5"/>
 		<value n="FilterVelocity"  	pn="Filter velocity" 			icon="black1" v="false" values="true,false"/>
@@ -16,5 +16,5 @@
 		<value n="ViscosityModif" 	pn="Viscosity modification" 	icon="black1" type="int"   v="0"/>
 	</container>
 	<value n="NeighbourSearch" 	    pn="Interparticle  interaction" 	    icon="black1" v="true" values="true,false"/>
-	<value n="TranslatIntScheme" 	pn="Translational integration scheme" 	icon="black1" type="combo"  v="Hybrid_Bashforth"/>
+	<value n="TranslatIntScheme" 	pn="Translational integration scheme" 	state="disabled" icon="black1" type="combo"  v="Hybrid_Bashforth"/>
 </container>
