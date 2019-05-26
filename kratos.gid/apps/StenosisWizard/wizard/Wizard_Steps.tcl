@@ -217,26 +217,25 @@ proc StenosisWizard::Wizard::DrawPolygonal {length radius start end delta tpoly 
     GiD_Process Geometry Create IntMultSurfs 1 2 3 4 5 6 escape Mescape 
     
     
-    GiD_Process Geometry Delete Surfaces 2 4 6 10 12 16 18 21 escape Mescape 
-    # GiD_Process Geometry Delete Lines 1 10 11 12 15 16 23 29 escape Mescape
-    # GiD_Process Geometry Delete Points 11 12 escape Mescape
+    GiD_Process Geometry Delete Surfaces 2 4 6 10 14 18 20 escape Mescape 
+    GiD_Process Geometry Delete Lines 1 10 11 12 15 16 23 29 escape Mescape
+    GiD_Process Geometry Delete Points 11 12 escape Mescape
 
-    # GiD_Process Geometry Create NurbsSurface 17 18 escape Mescape 
-    # GiD_Process Geometry Create NurbsSurface 34 33 escape Mescape 
-    # GiD_Process Geometry Create volume 8 9 12 13 16 17 21 22 23 24 escape Mescape 
-
-    # GiD_Process Utilities Collapse Model Yes escape Mescape 
+    GiD_Process Geometry Create NurbsSurface 17 18 escape Mescape 
+    GiD_Process Geometry Create NurbsSurface 34 33 escape Mescape 
+    GiD_Process Geometry Create volume 8 9 12 13 16 17 21 22 23 24 escape Mescape 
+    GiD_Process Utilities Collapse Model Yes escape Mescape 
     # GiD_Process Geometry Delete Lines 1: escape Mescape
     # GiD_Process Geometry Delete Points 1: escape Mescape
 
-    # GiD_Groups create Inlet
-    # GiD_EntitiesGroups assign Inlet surfaces {23}
-    # GiD_Groups create Outlet
-    # GiD_EntitiesGroups assign Outlet surfaces {24}
-    # GiD_Groups create NoSlip
-    # GiD_EntitiesGroups assign NoSlip surfaces {8 9 12 13 16 17 21 22}
-    # GiD_Groups create Fluid
-    # GiD_EntitiesGroups assign Fluid volumes {1}
+    GiD_Groups create Inlet
+    GiD_EntitiesGroups assign Inlet surfaces {23}
+    GiD_Groups create Outlet
+    GiD_EntitiesGroups assign Outlet surfaces {24}
+    GiD_Groups create NoSlip
+    GiD_EntitiesGroups assign NoSlip surfaces {8 9 12 13 16 17 21 22}
+    GiD_Groups create Fluid
+    GiD_EntitiesGroups assign Fluid volumes {1}
 
     GidUtils::EnableGraphics
 }
