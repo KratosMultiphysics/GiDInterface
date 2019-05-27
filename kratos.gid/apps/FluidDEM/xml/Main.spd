@@ -31,7 +31,6 @@
     <!-- <include n="Intervals"      active="1" icon="black1" state="normal"   path="apps/Common/xml/Intervals.spd"/> -->
     <include n="Gravity"        active="1" icon="black1" un="DEMGravity,FLGravity" path="apps/DEM/xml/Gravity.spd"/>
     <!-- <value   n="PrintResults"   pn="Print Results"       v="false"        values="true,false" icon="black1"/> -->
-    <value   n="OutputInterval" pn="Output Interval"     icon="black1"    type="double" v="1e-5"/>
     <include n="Coupling"       active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/Coupling.spd"/>
     <include n="Parallelism"    active="1" icon="black1" path="apps/Common/xml/Parallelism.spd"/>
     <include n="NodalResults"   active="1" icon="black1" pn="Nodal results" path="apps/FluidDEM/xml/NodalResults.spd"/>

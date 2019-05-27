@@ -2,7 +2,7 @@
 <container n="Coupling" 		    pn="Coupling parameters"        un="FDEMCoupling">
 	<value n="CouplingLevel" 	    pn="Coupling level type" 	    icon="black1" type="int" 	v="1"/>
 	<value n="InteractionStart"     pn="Interaction start time"     icon="black1" type="float" 	v="0.0"/>
-	<container n="ForwardCoupling"  pn="Forward coupling"           icon="black1" un="FDEMfwCoupling">
+	<container n="ForwardCoupling"  pn="Forward coupling"           state="hidden" icon="black1" un="FDEMfwCoupling">
 		<value n="TimeAveraging" 	pn="Time averaging type" 	    icon="black1" type="int" 	v="0" />
 	</container>
 	<container n="BackwardCoupling" pn="Backward coupling"          state="hidden" icon="black1" un="FDEMbwCoupling">

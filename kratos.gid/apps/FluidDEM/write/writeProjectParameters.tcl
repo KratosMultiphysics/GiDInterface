@@ -25,19 +25,18 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict time_stepping "automatic_time_step"                $automatic_time_step
     dict set project_parameters_dict time_stepping "time_step"                          $time_step
 
+    # output_interval
+    set output_interval [write::getValue FDEMTimeParameters OutputInterval]
+    dict set project_parameters_dict "output_interval"                                  $output_interval
 
     # Problem data  - calling directly GetDefaultProblemDataDict should be enough
     dict set project_parameters_dict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
     # set model_name [Kratos::GetModelName]
     # dict set project_parameters_dict problem_data                         $model_name
-
     # dict set project_parameters_dict "ControlTime"            [write::getValue DEMTimeParameters ScreenInfoOutput]
+
     #set do_print_results_option [write::getValue FluidDEM_GeneralParameters PrintResults]
     dict set project_parameters_dict "do_print_results_option"                          true
-
-    # output_interval
-    set output_interval [write::getValue FluidDEM_GeneralParameters OutputInterval]
-    dict set project_parameters_dict "output_interval"                                  $output_interval
 
     # coupling FDEMCoupling
     set coupling_level_type [write::getValue FDEMCoupling CouplingLevel]
