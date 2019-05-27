@@ -78,59 +78,59 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict custom_dem "translational_integration_scheme" $translational_integration_scheme
 
     # dem_nodal_results
-    set REYNOLDS_NUMBER                     [write::getValue DEMNodalResults ReynoldsN]
-    set SLIP_VELOCITY                       [write::getValue DEMNodalResults SlipVelocity]
-    set RADIUS                              [write::getValue DEMNodalResults Radius]
     set ANGULAR_VELOCITY                    [write::getValue DEMNodalResults AngularVelocity]
-    set ELASTIC_FORCES                      [write::getValue DEMNodalResults ElasForces]
+    set BASSET_FORCE                        [write::getValue DEMNodalResults BassetForce]
+    set BUOYANCY                            [write::getValue DEMNodalResults Buoyancy]
     set CONTACT_FORCES                      [write::getValue DEMNodalResults ContactForces]
-    set TOTAL_FORCES                        [write::getValue DEMNodalResults TotalForces]
-    set PRESSURE                            [write::getValue DEMNodalResults Pressure]
-    set PRESSURE_GRAD_PROJECTED             [write::getValue DEMNodalResults PressureGradientProj]
-    set HYDRODYNAMIC_FORCE                  [write::getValue DEMNodalResults HydrodynamicForce]
-    set HYDRODYNAMIC_MOMENT                 [write::getValue DEMNodalResults HydrodynamicMoment]
-    set FLUID_VEL_PROJECTED                 [write::getValue DEMNodalResults FluidVelocityProjected]
-    set FLUID_VEL_PROJECTED_RATE            [write::getValue DEMNodalResults FluidVelocityProjectedRate]
+    set DRAG_FORCE                          [write::getValue DEMNodalResults DragForce]
+    set ELASTIC_FORCES                      [write::getValue DEMNodalResults ElasForces]
+    set FLUID_ACCEL_PROJECTED               [write::getValue DEMNodalResults FluidAccelProjected]
+    set FLUID_FRACTION_GRADIENT_PROJECTED   [write::getValue DEMNodalResults FluidFractionGradientProjected]
+    set FLUID_FRACTION_PROJECTED            [write::getValue DEMNodalResults FluidFractionProjected]
     set FLUID_VEL_LAPL_PROJECTED            [write::getValue DEMNodalResults FluidVelocityLaplacianProjected]
     set FLUID_VEL_LAPL_RATE_PROJECTED       [write::getValue DEMNodalResults FluidVelocityLaplacianRateProjected]
-    set FLUID_ACCEL_PROJECTED               [write::getValue DEMNodalResults FluidAccelProjected]
-    set FLUID_FRACTION_PROJECTED            [write::getValue DEMNodalResults FluidFractionProjected]
-    set FLUID_FRACTION_GRADIENT_PROJECTED   [write::getValue DEMNodalResults FluidFractionGradientProjected]
+    set FLUID_VEL_PROJECTED                 [write::getValue DEMNodalResults FluidVelocityProjected]
+    set FLUID_VEL_PROJECTED_RATE            [write::getValue DEMNodalResults FluidVelocityProjectedRate]
     set FLUID_VISCOSITY_PROJECTED           [write::getValue DEMNodalResults FluidViscosityProjected]
-    set BUOYANCY                            [write::getValue DEMNodalResults Buoyancy]
-    set DRAG_FORCE                          [write::getValue DEMNodalResults DragForce]
-    set VIRTUAL_MASS_FORCE                  [write::getValue DEMNodalResults VirtualMassForce]
-    set BASSET_FORCE                        [write::getValue DEMNodalResults BassetForce]
-    set LIFT_FORCE                          [write::getValue DEMNodalResults LiftForce]
+    set HYDRODYNAMIC_FORCE                  [write::getValue DEMNodalResults HydrodynamicForce]
+    set HYDRODYNAMIC_MOMENT                 [write::getValue DEMNodalResults HydrodynamicMoment]
     set IMPACT_WEAR                         [write::getValue DEMNodalResults ImpactWear]
+    set LIFT_FORCE                          [write::getValue DEMNodalResults LiftForce]
     set NON_DIMENSIONAL_VOLUME_WEAR         [write::getValue DEMNodalResults NonDimensionalVolWear]
+    set PRESSURE                            [write::getValue DEMNodalResults Pressure]
+    set PRESSURE_GRAD_PROJECTED             [write::getValue DEMNodalResults PressureGradientProj]
+    set RADIUS                              [write::getValue DEMNodalResults Radius]
+    set REYNOLDS_NUMBER                     [write::getValue DEMNodalResults ReynoldsN]
+    set SLIP_VELOCITY                       [write::getValue DEMNodalResults SlipVelocity]
+    set TOTAL_FORCES                        [write::getValue DEMNodalResults TotalForces]
+    set VIRTUAL_MASS_FORCE                  [write::getValue DEMNodalResults VirtualMassForce]
 
-    dict set project_parameters_dict dem_nodal_results "REYNOLDS_NUMBER" $REYNOLDS_NUMBER
-    dict set project_parameters_dict dem_nodal_results "SLIP_VELOCITY" $SLIP_VELOCITY
-    dict set project_parameters_dict dem_nodal_results "RADIUS" $RADIUS
     dict set project_parameters_dict dem_nodal_results "ANGULAR_VELOCITY" $ANGULAR_VELOCITY
-    dict set project_parameters_dict dem_nodal_results "ELASTIC_FORCES" $ELASTIC_FORCES
+    dict set project_parameters_dict dem_nodal_results "BASSET_FORCE" $BASSET_FORCE
+    dict set project_parameters_dict dem_nodal_results "BUOYANCY" $BUOYANCY
     dict set project_parameters_dict dem_nodal_results "CONTACT_FORCES" $CONTACT_FORCES
-    dict set project_parameters_dict dem_nodal_results "TOTAL_FORCES" $TOTAL_FORCES
-    dict set project_parameters_dict dem_nodal_results "PRESSURE" $PRESSURE
-    dict set project_parameters_dict dem_nodal_results "PRESSURE_GRAD_PROJECTED" $PRESSURE_GRAD_PROJECTED
-    dict set project_parameters_dict dem_nodal_results "HYDRODYNAMIC_FORCE" $HYDRODYNAMIC_FORCE
-    dict set project_parameters_dict dem_nodal_results "HYDRODYNAMIC_MOMENT" $HYDRODYNAMIC_MOMENT
-    dict set project_parameters_dict dem_nodal_results "FLUID_VEL_PROJECTED" $FLUID_VEL_PROJECTED
-    dict set project_parameters_dict dem_nodal_results "FLUID_VEL_PROJECTED_RATE" $FLUID_VEL_PROJECTED_RATE
+    dict set project_parameters_dict dem_nodal_results "DRAG_FORCE" $DRAG_FORCE
+    dict set project_parameters_dict dem_nodal_results "ELASTIC_FORCES" $ELASTIC_FORCES
+    dict set project_parameters_dict dem_nodal_results "FLUID_ACCEL_PROJECTED" $FLUID_ACCEL_PROJECTED
+    dict set project_parameters_dict dem_nodal_results "FLUID_FRACTION_GRADIENT_PROJECTED" $FLUID_FRACTION_GRADIENT_PROJECTED
+    dict set project_parameters_dict dem_nodal_results "FLUID_FRACTION_PROJECTED" $FLUID_FRACTION_PROJECTED
     dict set project_parameters_dict dem_nodal_results "FLUID_VEL_LAPL_PROJECTED" $FLUID_VEL_LAPL_PROJECTED
     dict set project_parameters_dict dem_nodal_results "FLUID_VEL_LAPL_RATE_PROJECTED" $FLUID_VEL_LAPL_RATE_PROJECTED
-    dict set project_parameters_dict dem_nodal_results "FLUID_ACCEL_PROJECTED" $FLUID_ACCEL_PROJECTED
-    dict set project_parameters_dict dem_nodal_results "FLUID_FRACTION_PROJECTED" $FLUID_FRACTION_PROJECTED
-    dict set project_parameters_dict dem_nodal_results "FLUID_FRACTION_GRADIENT_PROJECTED" $FLUID_FRACTION_GRADIENT_PROJECTED
+    dict set project_parameters_dict dem_nodal_results "FLUID_VEL_PROJECTED_RATE" $FLUID_VEL_PROJECTED_RATE
+    dict set project_parameters_dict dem_nodal_results "FLUID_VEL_PROJECTED" $FLUID_VEL_PROJECTED
     dict set project_parameters_dict dem_nodal_results "FLUID_VISCOSITY_PROJECTED" $FLUID_VISCOSITY_PROJECTED
-    dict set project_parameters_dict dem_nodal_results "BUOYANCY" $BUOYANCY
-    dict set project_parameters_dict dem_nodal_results "DRAG_FORCE" $DRAG_FORCE
-    dict set project_parameters_dict dem_nodal_results "VIRTUAL_MASS_FORCE" $VIRTUAL_MASS_FORCE
-    dict set project_parameters_dict dem_nodal_results "BASSET_FORCE" $BASSET_FORCE
-    dict set project_parameters_dict dem_nodal_results "LIFT_FORCE" $LIFT_FORCE
+    dict set project_parameters_dict dem_nodal_results "HYDRODYNAMIC_FORCE" $HYDRODYNAMIC_FORCE
+    dict set project_parameters_dict dem_nodal_results "HYDRODYNAMIC_MOMENT" $HYDRODYNAMIC_MOMENT
     dict set project_parameters_dict dem_nodal_results "IMPACT_WEAR" $IMPACT_WEAR
+    dict set project_parameters_dict dem_nodal_results "LIFT_FORCE" $LIFT_FORCE
     dict set project_parameters_dict dem_nodal_results "NON_DIMENSIONAL_VOLUME_WEAR" $NON_DIMENSIONAL_VOLUME_WEAR
+    dict set project_parameters_dict dem_nodal_results "PRESSURE_GRAD_PROJECTED" $PRESSURE_GRAD_PROJECTED
+    dict set project_parameters_dict dem_nodal_results "PRESSURE" $PRESSURE
+    dict set project_parameters_dict dem_nodal_results "RADIUS" $RADIUS
+    dict set project_parameters_dict dem_nodal_results "REYNOLDS_NUMBER" $REYNOLDS_NUMBER
+    dict set project_parameters_dict dem_nodal_results "SLIP_VELOCITY" $SLIP_VELOCITY
+    dict set project_parameters_dict dem_nodal_results "TOTAL_FORCES" $TOTAL_FORCES
+    dict set project_parameters_dict dem_nodal_results "VIRTUAL_MASS_FORCE" $VIRTUAL_MASS_FORCE
 
     # fluid_nodal_results
     set MATERIAL_ACCELERATION       [write::getValue FluidNodalResults MaterialAccel]
@@ -149,23 +149,27 @@ proc ::FluidDEM::write::getParametersDict { } {
     set VELOCITY_LAPLACIAN          [write::getValue FluidNodalResults VelocityLaplacian]
     set VELOCITY_LAPLACIAN_RATE     [write::getValue FluidNodalResults VelocityLaplacianRate]
     set BODY_FORCE                  [write::getValue FluidNodalResults BodyForce]
+    set VELOCITY                    [write::getValue FluidNodalResults FVelocity]
+    set PRESSURE                    [write::getValue FluidNodalResults FPressure]
 
-    dict set project_parameters_dict fluid_nodal_results "MATERIAL_ACCELERATION" $MATERIAL_ACCELERATION
-    dict set project_parameters_dict fluid_nodal_results "VELOCITY_GRADIENT" false
-    dict set project_parameters_dict fluid_nodal_results "PRESSURE_GRADIENT" $PRESSURE_GRADIENT
-    dict set project_parameters_dict fluid_nodal_results "FLUID_FRACTION" $FLUID_FRACTION
+    dict set project_parameters_dict fluid_nodal_results "BODY_FORCE" $BODY_FORCE
     dict set project_parameters_dict fluid_nodal_results "DISPERSE_FRACTION" $DISPERSE_FRACTION
-    dict set project_parameters_dict fluid_nodal_results "PARTICLE_VEL_FILTERED" $PARTICLE_VEL_FILTERED
+    dict set project_parameters_dict fluid_nodal_results "DISTANCE" $DISTANCE
     dict set project_parameters_dict fluid_nodal_results "FLUID_FRACTION_GRADIENT" $FLUID_FRACTION_GRADIENT
     dict set project_parameters_dict fluid_nodal_results "FLUID_FRACTION_RATE" $FLUID_FRACTION_RATE
+    dict set project_parameters_dict fluid_nodal_results "FLUID_FRACTION" $FLUID_FRACTION
     dict set project_parameters_dict fluid_nodal_results "HYDRODYNAMIC_REACTION" $HYDRODYNAMIC_REACTION
-    dict set project_parameters_dict fluid_nodal_results "VISCOSITY" $VISCOSITY
-    dict set project_parameters_dict fluid_nodal_results "DISTANCE" $DISTANCE
+    dict set project_parameters_dict fluid_nodal_results "MATERIAL_ACCELERATION" $MATERIAL_ACCELERATION
+    dict set project_parameters_dict fluid_nodal_results "PARTICLE_VEL_FILTERED" $PARTICLE_VEL_FILTERED
+    dict set project_parameters_dict fluid_nodal_results "PRESSURE_GRADIENT" $PRESSURE_GRADIENT
+    dict set project_parameters_dict fluid_nodal_results "PRESSURE" $PRESSURE
     dict set project_parameters_dict fluid_nodal_results "SLIP_VELOCITY" $SLIP_VELOCITY
-    dict set project_parameters_dict fluid_nodal_results "VORTICITY" $VORTICITY
-    dict set project_parameters_dict fluid_nodal_results "VELOCITY_LAPLACIAN" $VELOCITY_LAPLACIAN
+    dict set project_parameters_dict fluid_nodal_results "VELOCITY_GRADIENT" false
     dict set project_parameters_dict fluid_nodal_results "VELOCITY_LAPLACIAN_RATE" $VELOCITY_LAPLACIAN_RATE
-    dict set project_parameters_dict fluid_nodal_results "BODY_FORCE" $BODY_FORCE
+    dict set project_parameters_dict fluid_nodal_results "VELOCITY_LAPLACIAN" $VELOCITY_LAPLACIAN
+    dict set project_parameters_dict fluid_nodal_results "VELOCITY" $VELOCITY
+    dict set project_parameters_dict fluid_nodal_results "VISCOSITY" $VISCOSITY
+    dict set project_parameters_dict fluid_nodal_results "VORTICITY" $VORTICITY
 
     # set time_things [DEM::write::GetTimeSettings]
     #     set MaxTimeStep [dict get $time_things DeltaTime]
