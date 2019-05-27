@@ -17,6 +17,7 @@ proc Fluid::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
+
 }
 
 proc Fluid::xml::getUniqueName {name} {
@@ -43,6 +44,9 @@ proc Fluid::xml::CustomTree { args } {
     if {[$root selectNodes "$xpath/container\[@n='OnNodes'\]"] ne ""} {
         gid_groups_conds::addF "$xpath/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
     }
+    
+    # TODO: remove when Non newtonian is implemented for 2d
+    if {$::Model::SpatialDimension eq "2D"} { Model::ForgetConstitutiveLaw HerschelBulkley }
 }
 
 # Usage 
