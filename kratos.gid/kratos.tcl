@@ -65,13 +65,13 @@ proc Kratos::Event_InitProblemtype { dir } {
     set kratos_private(RestoreVars) [list ]
     array set kratos_private [ReadProblemtypeXml [file join $dir kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
     if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
-        W "Error: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
+        W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
         if { [GidUtils::VersionCmp 14.0.0] < 0 } {
-            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features." 
+            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14." 
         } {
             W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
-            W "Download it from: https://www.gidhome.com/download/developer-versions/"
         }
+        W "Download it from: https://www.gidhome.com/download/developer-versions/"
         
     }
 
