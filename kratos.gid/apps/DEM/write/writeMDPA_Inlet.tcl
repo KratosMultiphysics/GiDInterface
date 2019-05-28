@@ -86,9 +86,8 @@ proc DEM::write::writeInletMeshes { } {
 
                     # Angular center of rotation
                     #lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotation'\]"]] oX oY oZ
-                    lassign  [dict get $inletProperties $groupid CenterOfRotation] oX oY oZ
+                    lassign [split [dict get $inletProperties $groupid CenterOfRotation] ","] oX oY oZ
                     write::WriteString "        ROTATION_CENTER \[3\] ($oX,$oY,$oZ)"
-
 
                     # Angular Period
                     set angular_periodic [dict get $inletProperties $groupid AngularPeriodic]
