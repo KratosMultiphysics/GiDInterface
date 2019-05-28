@@ -113,7 +113,7 @@ proc Structural::write::writeContactConditions { last_iter } {
         set groupid [write::GetWriteGroupName $groupid]
         lassign [write::getEtype $ov $groupid] etype nnodes
         if {$::Model::SpatialDimension eq "3D" && $nnodes == 4} {set kname "SurfaceCondition3D4N"}
-        lassign [write::writeGroupCondition $groupid $kname $nnodes $last_iter] initial final
+        lassign [write::writeGroupCondition $groupid $kname $nnodes  [incr last_iter]] initial final
         dict set ConditionsDictGroupIterators $groupid [list $initial $final]
         set last_iter $final
     }
