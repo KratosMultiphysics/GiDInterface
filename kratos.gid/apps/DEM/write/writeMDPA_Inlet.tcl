@@ -153,8 +153,8 @@ proc DEM::write::writeInletMeshes { } {
                 write::WriteString "        CONTAINS_CLUSTERS 0"
                 # Change to SphericSwimmingParticle3D in FLUIDDEM interface
 
-                set velocity_modulus [dict get $inletProperties $groupid VelocityModulus]
-                lassign [split [dict get $inletProperties $groupid DirectionVector] ","] velocity_X velocity_Y velocity_Z
+                set velocity_modulus [dict get $inletProperties $groupid InVelocityModulus]
+                lassign [split [dict get $inletProperties $groupid InDirectionVector] ","] velocity_X velocity_Y velocity_Z
                 #lassign [write::getValueByNode [dict get $inletProperties $groupid DirectionVector]] velocity_X velocity_Y velocity_Z
                 lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
                 lassign [MathUtils::ScalarByVectorProd $velocity_modulus [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz

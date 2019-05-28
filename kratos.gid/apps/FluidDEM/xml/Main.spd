@@ -25,11 +25,8 @@
   </container>
 
   <container n="FluidDEM"       pn="General parameters"  icon="prdata16" prefix="FluidDEM_" un="FluidDEM_GeneralParameters" tree_state="open" open_window="0">
-    <!-- <value   n="DragType"       pn="Drag Force type"     type="combo"     icon="black1"       values="None,Stokes,AllReynolds,Ganser,Ishii" dict="None,None,Stokes,Stokes,AllReynolds,AllReynolds,Ganser,Ganser,Ishii,Ishii" v="BARBACOA" help="Choose the model for the Drag Force type."/> -->
     <include n="TimeParameters" active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/TimeParameters.spd"/>
-    <!-- <include n="Intervals"      active="1" icon="black1" state="normal"   path="apps/Common/xml/Intervals.spd"/> -->
     <include n="Gravity"        active="1" icon="black1" un="DEMGravity,FLGravity" path="apps/DEM/xml/Gravity.spd"/>
-    <!-- <value   n="PrintResults"   pn="Print Results"       v="false"        values="true,false" icon="black1"/> -->
     <include n="Coupling"       active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/Coupling.spd"/>
     <include n="non-newtonian"  active="1" path="apps/FluidDEM/xml/Herschel-Bulkley.spd"/>
     <include n="Parallelism"    active="1" icon="black1" path="apps/Common/xml/Parallelism.spd"/>

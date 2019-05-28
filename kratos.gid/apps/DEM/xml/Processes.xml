@@ -209,8 +209,8 @@
           <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z"/>
         </parameter>
 
-        <parameter n="VelocityModulus"        parent="true"      pn="Inlet injection speed"               type="double"        v="1.0" units="m/s" unit_magnitude="Velocity"/>
-        <parameter n="DirectionVector"        parent="true"      pn="Direction vector"                    type="inline_vector" v="1.0,0.0,0.0"/>
+        <parameter n="InVelocityModulus"        parent="true"      pn="Inlet injection speed"               type="double"        v="1.0" units="m/s" unit_magnitude="Velocity"/>
+        <parameter n="InDirectionVector"        parent="true"      pn="Direction vector"                    type="inline_vector" v="1.0,0.0,0.0"/>
         <parameter n="VelocityDeviation"      parent="true"      pn="Max random velocity deviation (deg)" type="double"        v="1.0" units="°" unit_magnitude="Angle"/>
         <parameter n="TypeOfFlowMeasurement"  parent="true"      pn="Flow measurement"                    type="combo"         v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second">
           <parameter n="NumberOfParticles"    parent="Particles" pn="Particles per second"                type="double"        v="200.0"/>
