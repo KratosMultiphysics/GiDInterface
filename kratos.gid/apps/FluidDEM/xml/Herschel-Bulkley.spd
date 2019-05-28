@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="non_newtonian_fluid" pn="Non newtonian fluids" un="DEMFluidNonNewtonian" icon="black1" open_window="0">
+	<blockdata n="HerschelBulkley_fluid"      pn="non_newtonian_fluid"    name="Herschel-Bulkley fluid" sequence="1" icon="black1" editable_name="unique" sequence_type="non_void_disabled" help="Interval">
+		<value n="non_newtonian_option"       pn="Active"        		  v="false"   values="false,true" icon="black1"/>
+		<value n="yield_stress"          	  pn="Yield stress"        	  v="0.0"     state="[getStateFromXPathValue {string(../value[@n='non_newtonian_option']/@v)} true]" icon="black1" help=""/>
+		<value n="regularization_coefficient" pn="Shear rate"        	  v="0.0"     state="[getStateFromXPathValue {string(../value[@n='non_newtonian_option']/@v)} true]" icon="black1" help=""/>
+		<value n="power_law_tol"          	  pn="Tolerance"        	  v="0.0"     state="[getStateFromXPathValue {string(../value[@n='non_newtonian_option']/@v)} true]" icon="black1" help=""/>
+		<value n="power_law_k"          	  pn="Consistency factor"     v="0.0"     state="[getStateFromXPathValue {string(../value[@n='non_newtonian_option']/@v)} true]" icon="black1" help=""/>
+		<value n="power_law_n"          	  pn="Flow index"        	  v="0.0"     state="[getStateFromXPathValue {string(../value[@n='non_newtonian_option']/@v)} true]" icon="black1" help=""/>
+	</blockdata>
+</container>

@@ -29,6 +29,21 @@ proc ::FluidDEM::write::getParametersDict { } {
     set output_interval [write::getValue FDEMTimeParameters OutputInterval]
     dict set project_parameters_dict "output_interval"                                  $output_interval
 
+    # non newtonian fluid
+    set non_newtonian_option        [write::getValue DEMFluidNonNewtonian non_newtonian_option]
+    set yield_stress                [write::getValue DEMFluidNonNewtonian yield_stress]
+    set regularization_coefficient  [write::getValue DEMFluidNonNewtonian regularization_coefficient]
+    set power_law_tol               [write::getValue DEMFluidNonNewtonian power_law_tol]
+    set power_law_k                 [write::getValue DEMFluidNonNewtonian power_law_k]
+    set power_law_n                 [write::getValue DEMFluidNonNewtonian power_law_n]
+
+    dict set project_parameters_dict non_newtonian_fluid "non_newtonian_option"         $non_newtonian_option
+    dict set project_parameters_dict non_newtonian_fluid "yield_stress"                 $yield_stress
+    dict set project_parameters_dict non_newtonian_fluid "regularization_coefficient"   $regularization_coefficient
+    dict set project_parameters_dict non_newtonian_fluid "power_law_tol"                $power_law_tol
+    dict set project_parameters_dict non_newtonian_fluid "power_law_k"                  $power_law_k
+    dict set project_parameters_dict non_newtonian_fluid "power_law_n"                  $power_law_n
+
     # Problem data  - calling directly GetDefaultProblemDataDict should be enough
     dict set project_parameters_dict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
     # set model_name [Kratos::GetModelName]
