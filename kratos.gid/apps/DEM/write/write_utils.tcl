@@ -98,7 +98,7 @@ proc DEM::write::Elements_Substitution {} {
                         }
                     }
                 } elseif {$FEMtoDEM == "AttheNodes"} {
-                    # We first delete the elements (lines, triangles, quadrilaterals, tetraedra or hexahedra) of this group,
+                    # We first delete the elements (lines, triangles, quadrilaterals, tetrahedra or hexahedra) of this group,
                     # but not their nodes, which will be used for creating the new sheres
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements]
                     foreach node_id [GiD_EntitiesGroups get $groupid nodes] {
