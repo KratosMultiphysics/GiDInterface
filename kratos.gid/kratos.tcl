@@ -137,6 +137,8 @@ proc Kratos::InitGIDProject { dir } {
     set kratos_private(DevMode) "release" ; #can be dev or release
     set kratos_private(MenuItems) [dict create]
     set kratos_private(RestoreVars) [list ]
+    set kratos_private(LogFilename) ""
+    set kratos_private(Log) [list ]
     array set kratos_private [ReadProblemtypeXml [file join $dir kratos.xml] Infoproblemtype {Name Version MinimumGiDVersion}]
     if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
         WarnWin [_ "Error: %s Interface requires GiD %s or later." $kratos_private(Name) $kratos_private(MinimumGiDVersion)]
