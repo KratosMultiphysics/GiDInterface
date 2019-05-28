@@ -104,8 +104,8 @@ proc Structural::write::writeContactConditions { last_iter } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
     set ov "line"
-    set kname "Condition2D"
-    if {$::Model::SpatialDimension eq "3D"} {set ov "surface"; set kname "Condition3D"}
+    set kname "LineCondition2D2N"
+    if {$::Model::SpatialDimension eq "3D"} {set ov "surface"; set kname "SurfaceCondition3D3N"}
     set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
     set xp2 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
     foreach group [ concat {*}[$root selectNodes $xp1] {*}[$root selectNodes $xp2] ] {
