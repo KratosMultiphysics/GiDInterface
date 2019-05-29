@@ -1,0 +1,9 @@
+<group name='kratos_preferences' label='Kratos'>
+    <labelframe name='main_options' label='General options'>
+        <combobox name='dev_mode' variable='dev_mode' variablemanager='Kratos::ManagePreferences' label='Developer/Release mode' help='Show/Hide some features'>
+            <option value='0' label='Developer'/>
+            <option value='1' label='Release'/>
+        </combobox>
+    </labelframe>
+</group>
+

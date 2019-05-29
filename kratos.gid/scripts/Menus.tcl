@@ -120,9 +120,9 @@ proc Kratos::ChangeMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Write calculation files - No run" ] [incr pos] PRE [list Kratos::WriteCalculationFilesEvent] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Run - No write" ] [incr pos] PRE [list Kratos::ForceRun] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "You are in $fromode" ] [incr pos] PRE [list ] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "Switch to $tomode" ] [incr pos] PRE [list Kratos::SwitchMode] "" "" replace =
+    # GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+    # GiDMenu::InsertOption "Kratos" [list "You are in $fromode" ] [incr pos] PRE [list ] "" "" replace =
+    # GiDMenu::InsertOption "Kratos" [list "Switch to $tomode" ] [incr pos] PRE [list Kratos::SwitchMode] "" "" replace =
 
     if {$::Kratos::kratos_private(UseWizard)} {
         GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
@@ -132,6 +132,7 @@ proc Kratos::ChangeMenus { } {
     GiDMenu::InsertOption "Kratos" [list "Import MDPA"] [incr pos] PRE [list Kratos::ReadPreW] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "About Kratos" ] [incr pos] PREPOST [list Kratos::About] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Kratos preferences" ] [incr pos] PREPOST [list Kratos::About] "" "" replace =
     GidChangeDataLabel "Data units" ""
     GidChangeDataLabel "Interval" ""
     GidChangeDataLabel "Conditions" ""

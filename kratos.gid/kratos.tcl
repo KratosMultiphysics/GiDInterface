@@ -9,6 +9,8 @@
 proc InitGIDProject { dir } {
     #W "InitGIDProject"
     Kratos::InitGIDProject $dir
+    GiD_RegisterPluginPreferencesProc Kratos::ModifyPreferencesWindow
+    #after idle {CreateWidgetsFromXml::UpdatePreferencesWindow}
 }
 proc GiD_Event_AfterNewGIDProject {} {
     # W "GiD_Event_AfterNewGIDProject"
@@ -39,6 +41,7 @@ proc EndGIDProject {} {
     Kratos::EndCreatePreprocessTBar
     gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
     unset -nocomplain ::Kratos::kratos_private
+    GiD_UnRegisterPluginPreferencesProc Kratos::ModifyPreferencesWindow
 }
 
 proc ChangedLanguage { newlan } {
@@ -157,7 +160,7 @@ proc Kratos::InitGIDProject { dir } {
     foreach filename {Logs.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
-    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
+    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl PreferencesWindow.tcl} {
         uplevel 1 [list source [file join $dir scripts Controllers $filename]]
     }
     foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
@@ -298,19 +301,6 @@ proc Kratos::LoadWizardFiles { } {
     set ::Kratos::kratos_private(UseWizard) 1
     package require gid_smart_wizard
     Kratos::UpdateMenus
-}
-
-proc Kratos::SwitchMode {} {
-    variable kratos_private
-    if {$kratos_private(DevMode) eq "dev"} {
-        set kratos_private(DevMode) "release"
-    }  {
-        set kratos_private(DevMode) "dev"
-    }
-    Kratos::RegisterEnvironment
-    #W "Registrado $kratos_private(DevMode)"
-    Kratos::UpdateMenus
-    spdAux::RequestRefresh
 }
 
 proc Kratos::GetPreferencesFilePath { } {
