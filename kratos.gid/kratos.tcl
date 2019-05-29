@@ -20,6 +20,9 @@ proc Kratos::Start { } {
 }
 
 proc Kratos::RegisterGiDEvents { } {
+    # Unregister previous events
+    GiD_UnRegisterEvents PROBLEMTYPE Kratos
+    
     # Init / Load
     GiD_RegisterEvent GiD_Event_InitProblemtype Kratos::Event_InitProblemtype PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_LoadModelSPD Kratos::Event_LoadModelSPD PROBLEMTYPE Kratos
@@ -180,17 +183,19 @@ proc Kratos::Event_LoadModelSPD { filespd } {
 }
 
 proc Kratos::Event_EndProblemtype { } {
-    Kratos::RestoreVariables
-    Kratos::DestroyWindows
-    spdAux::EndRefreshTree
-    Kratos::RegisterEnvironment
-    Model::DestroyEverything
-    Kratos::EndCreatePreprocessTBar
-    gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
     if {![GidUtils::VersionCmp "14.1.2d"] <0 } {
         GiD_UnRegisterEvents PROBLEMTYPE Kratos
     }
-    unset -nocomplain ::Kratos::kratos_private
+    if {[array exists ::Kratos::kratos_private]} {
+        Kratos::RestoreVariables
+        Kratos::DestroyWindows
+        spdAux::EndRefreshTree
+        Kratos::RegisterEnvironment
+        Model::DestroyEverything
+        Kratos::EndCreatePreprocessTBar
+        gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
+        unset -nocomplain ::Kratos::kratos_private
+    }
 }
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
@@ -216,8 +221,10 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
 proc Kratos::RestoreVariables { } {
     variable kratos_private
     
-    foreach {k v} $kratos_private(RestoreVars) {
-        set $k $v
+    if {[info exists kratos_private(RestoreVars)]} {
+        foreach {k v} $kratos_private(RestoreVars) {
+            set $k $v
+        }
     }
     set kratos_private(RestoreVars) [list ]
 }
@@ -264,11 +271,15 @@ proc Kratos::RegisterEnvironment { } {
     variable kratos_private
     set varsToSave [list DevMode]
     set preferences [dict create]
-    dict set preferences DevMode $kratos_private(DevMode)
-    #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
-    set fp [open [Kratos::GetPreferencesFilePath] w]
-    if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
-    close $fp
+    if {[info exists kratos_private(DevMode)]} {
+        dict set preferences DevMode $kratos_private(DevMode)
+        #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
+    }
+    if {[llength [dict keys $preferences]] > 0} {
+        set fp [open [Kratos::GetPreferencesFilePath] w]
+        if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
+        close $fp
+    }
 }
 
 proc Kratos::LoadEnvironment { } {
