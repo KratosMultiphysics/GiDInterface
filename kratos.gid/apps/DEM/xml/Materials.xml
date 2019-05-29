@@ -11,7 +11,7 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" type="double" help="Particle sphericity"/>
-      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>
@@ -26,7 +26,7 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.8324" type="double" help="Particle sphericity"/>
-	    <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+	    <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>
@@ -41,7 +41,7 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.6770" type="double" help="Particle sphericity"/>
-      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
 
     </inputs>
@@ -57,7 +57,7 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
-      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>
@@ -72,7 +72,7 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
-      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>
@@ -87,7 +87,7 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
-      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>
@@ -102,7 +102,7 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.00" type="double" help="Particle sphericity"/>
-      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="Hertz" type="combo">
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>

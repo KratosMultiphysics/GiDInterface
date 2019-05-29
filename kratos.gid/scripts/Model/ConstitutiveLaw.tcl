@@ -192,3 +192,14 @@ proc Model::ForgetConstitutiveLaws { } {
     variable ConstitutiveLaws
     set ConstitutiveLaws [list ]
 }
+
+proc Model::ForgetConstitutiveLaw { cl_id } {
+    variable ConstitutiveLaws
+    set ConstitutiveLaws2 [list ]
+    foreach cl $ConstitutiveLaws {
+        if {[$cl getName] ne $cl_id} {
+            lappend ConstitutiveLaws2 $cl
+        }
+    }
+    set ConstitutiveLaws $ConstitutiveLaws2
+}

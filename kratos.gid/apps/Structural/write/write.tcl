@@ -69,6 +69,9 @@ proc Structural::write::writeModelPartEvent { } {
 proc Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+
+    set last_iter [Structural::write::getLastConditionId]
+    writeContactConditions $last_iter
 }
 
 proc Structural::write::writeMeshes { } {
@@ -95,6 +98,25 @@ proc Structural::write::writeMeshes { } {
     }
 
     writeContacts
+}
+
+proc Structural::write::writeContactConditions { last_iter } {
+    variable ConditionsDictGroupIterators
+    set root [customlib::GetBaseRoot]
+    set ov "line"
+    set kname "LineCondition2D2N"
+    if {$::Model::SpatialDimension eq "3D"} {set ov "surface"; set kname "SurfaceCondition3D3N"}
+    set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
+    set xp2 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
+    foreach group [ concat {*}[$root selectNodes $xp1] {*}[$root selectNodes $xp2] ] {
+        set groupid [$group @n]
+        set groupid [write::GetWriteGroupName $groupid]
+        lassign [write::getEtype $ov $groupid] etype nnodes
+        if {$::Model::SpatialDimension eq "3D" && $nnodes == 4} {set kname "SurfaceCondition3D4N"}
+        lassign [write::writeGroupCondition $groupid $kname $nnodes  [incr last_iter]] initial final
+        dict set ConditionsDictGroupIterators $groupid [list $initial $final]
+        set last_iter $final
+    }
 }
 
 proc Structural::write::writeLoads { } {
@@ -130,7 +152,7 @@ proc Structural::write::writeContacts { } {
                 set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
                 set prev [list ]
                 if {[dict exists $ContactsDict Slaves $slave_group_pair_id]} {set prev [dict get $ContactsDict Slaves $slave_group_pair_id]}
-                set good_name [::write::writeGroupSubModelPart CONTACT $slave_groupid "nodal"]
+                set good_name [::write::writeGroupSubModelPart CONTACT $slave_groupid "Conditions" [dict get $ConditionsDictGroupIterators $slave_groupid]]
                 dict set ContactsDict Slaves $slave_group_pair_id [lappend prev $good_name]
             }
         }
@@ -145,7 +167,7 @@ proc Structural::write::writeContacts { } {
                 if {[dict exists $ContactsDict Masters $master_group_pair_id]} {
                     set prev [dict get $ContactsDict Masters $master_group_pair_id]
                 }
-                set good_name [::write::writeGroupSubModelPart CONTACT $master_groupid "nodal"]
+                set good_name [::write::writeGroupSubModelPart CONTACT $master_groupid "Conditions" [dict get $ConditionsDictGroupIterators $master_groupid]]
                 set name [lappend prev $good_name]
                 dict set ContactsDict Masters $master_group_pair_id $name
                 

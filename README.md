@@ -19,6 +19,9 @@ If you need the latest release, launch your GiD, navigate to Data > Problemtype 
 * Run GiD
 * Go to: Data / Problem type / kratos
 * kratos top menu / Developer mode (recommended)
+* [Fluid dynamics example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#3-set-a-fluid-dynamics-problem)
+* [Structural mechanics example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#4-set-a-structural-mechanics-problem)
+* [Fluid-Structure interaction example](https://github.com/KratosMultiphysics/Kratos/wiki/Running-an-example-from-GiD#5-set-a-fluid-structure-interaction-problem)
 
 ## Warnings
 * This repository is in Beta version. This means that everything can change.

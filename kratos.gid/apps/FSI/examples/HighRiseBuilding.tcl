@@ -142,10 +142,10 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
     }
 
     # Output
-    set time_parameters [list OutputControlType time OutputDeltaTime 1.0]
-    set time_params_path [spdAux::getRoute "FLResults"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+    set params [list OutputControlType time OutputDeltaTime 1.0]
+    set path "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
+    foreach {n v} $params {
+        [$root selectNodes "$path/value\[@n = '$n'\]"] setAttribute v $v
     }
 
     # Fluid domain strategy settings
@@ -213,7 +213,7 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
 
     # Structure domain output parameters
     set change_list [list OutputControlType time OutputDeltaTime 1.0]
-    set xpath [spdAux::getRoute STResults]
+    set xpath "[spdAux::getRoute STResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {

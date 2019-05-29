@@ -17,8 +17,8 @@
 
     <!--define list of NodalConditions-->
     <NodalConditions>
-      <NodalCondition n="POSITIVE_FACE_PRESSURE" v="No"/>
-      <NodalCondition n="NEGATIVE_FACE_PRESSURE" v="No"/>
+      <NodalCondition n="VELOCITY_POTENTIAL" v="No"/>
+      <NodalCondition n="AUXILIARY_VELOCITY_POTENTIAL" v="No"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -43,8 +43,8 @@
 	</ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
-      <NodalCondition n="POSITIVE_FACE_PRESSURE" v="No"/>
-      <NodalCondition n="NEGATIVE_FACE_PRESSURE" v="No"/>
+      <NodalCondition n="VELOCITY_POTENTIAL" v="No"/>
+      <NodalCondition n="AUXILIARY_VELOCITY_POTENTIAL" v="No"/>
     </NodalConditions>
     <inputs>
     </inputs>

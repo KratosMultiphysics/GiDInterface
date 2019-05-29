@@ -3,7 +3,7 @@ namespace eval ::PotentialFluid {
     variable dir
     variable prefix
     variable attributes
-    variable oldVolumeMesher
+    variable app_id
     variable kratos_name
 }
 
@@ -13,7 +13,8 @@ proc ::PotentialFluid::Init { } {
     variable prefix
     variable attributes
     variable kratos_name
-    set kratos_name CompressiblePotentialFlowApplication
+    set app_id "PotentialFluid"
+    set kratos_name "CompressiblePotentialFlowApplication"
 
     apps::LoadAppById "Fluid"
 
@@ -22,7 +23,11 @@ proc ::PotentialFluid::Init { } {
 
     set prefix PTFL
 
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
+    # TODO: activate this as soon as the 3D wake detection is working
+    #set ::Model::ValidSpatialDimensions [list 2D 3D]
+    # TODO: remove this as soon as the 3D wake detection is working
+    set ::Model::ValidSpatialDimensions [list 2D]
+    spdAux::SetSpatialDimmension "2D"
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
@@ -33,12 +38,14 @@ proc ::PotentialFluid::Init { } {
     Kratos::AddRestoreVar "::GidPriv(DuplicateEntities)"
     set ::GidPriv(DuplicateEntities) 1
 
-    ::spdAux::CreateDimensionWindow
+    # TODO: activate this as soon as the 3D wake detection is working
+    #::spdAux::CreateDimensionWindow
 }
 
 proc ::PotentialFluid::LoadMyFiles { } {
     variable dir
 
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
@@ -49,6 +56,11 @@ proc ::PotentialFluid::GetAttribute {name} {
     set value ""
     catch {set value [dict get $attributes $name]}
     return $value
+}
+
+proc ::PotentialFluid::CustomToolbarItems { } {
+    variable dir
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PotentialFluid::examples::NACA0012] [= "Example\nNACA 0012"]   
 }
 
 

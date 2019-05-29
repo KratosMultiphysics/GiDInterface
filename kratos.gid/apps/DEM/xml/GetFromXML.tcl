@@ -48,7 +48,6 @@ proc DEM::xml::InsertConstitutiveLawForParameters {input arguments} {
 
 proc DEM::xml::ProcGetElements { domNode args } {
     set elems [Model::GetElements]
-    #W "************************************************************************"
     set names [list ]
     set pnames [list ]
     foreach elem $elems {

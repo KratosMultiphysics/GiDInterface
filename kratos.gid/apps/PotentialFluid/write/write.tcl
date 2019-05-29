@@ -1,5 +1,6 @@
 namespace eval PotentialFluid::write {
     variable writeAttributes
+    variable FluidConditionMap
 }
 
 proc PotentialFluid::write::Init { } {
@@ -8,11 +9,14 @@ proc PotentialFluid::write::Init { } {
     SetAttribute nodal_conditions_un FLNodalConditions
     SetAttribute conditions_un FLBC
     SetAttribute materials_un PTFLMaterials
+    SetAttribute results_un Results
     SetAttribute drag_un FLDrags
+    SetAttribute time_parameters_un FLTimeParameters
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid" "PotentialFluid"]
-    SetAttribute main_script_file "KratosFluid.py"
+    SetAttribute main_script_file "KratosPotentialFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
+    SetAttribute output_model_part_name "fluid_computational_model_part"
 }
 
 # Events
@@ -26,12 +30,13 @@ proc PotentialFluid::write::writeModelPartEvent { } {
     write::writeMaterials [::Fluid::GetAttribute validApps]
     write::writeNodalCoordinatesOnParts
     write::writeElementConnectivities
+    Fluid::write::InitConditionsMap
     Fluid::write::writeConditions
     Fluid::write::writeMeshes
 }
 proc PotentialFluid::write::writeCustomFilesEvent { } {
-    write::CopyFileIntoModel "python/KratosPotentialFlow.py"
-    write::RenameFileInModel "KratosPotentialFlow.py" "MainKratos.py"
+    write::CopyFileIntoModel "python/KratosPotentialFluid.py"
+    write::RenameFileInModel "KratosPotentialFluid.py" "MainKratos.py"
 }
 
 

@@ -10,7 +10,9 @@ proc Structural::examples::Init { } {
 proc Structural::examples::UpdateMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
     GiDMenu::InsertOption "Kratos" [list "Truss cantilever" ] 8 PRE [list ::Structural::examples::TrussCantilever] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "High-rise building" ] 8 PRE [list ::Structural::examples::HighRiseBuilding] "" "" insertafter =
+    if {$::Model::SpatialDimension eq "2D"} {
+        GiDMenu::InsertOption "Kratos" [list "High-rise building" ] 8 PRE [list ::Structural::examples::HighRiseBuilding] "" "" insertafter =
+    }
     GiDMenu::UpdateMenus
 }
 

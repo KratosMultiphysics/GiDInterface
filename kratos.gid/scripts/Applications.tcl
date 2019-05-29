@@ -29,6 +29,7 @@ proc apps::setActiveApp {appid} {
         if {[$app getName] eq $appid} {
             set activeApp $app
             $app activate
+            Kratos::Log "apps::setActiveApp $appid"
             break
         }
     }

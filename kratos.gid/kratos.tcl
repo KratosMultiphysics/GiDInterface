@@ -63,6 +63,8 @@ proc Kratos::Event_InitProblemtype { dir } {
     set kratos_private(DevMode) "release" ; #can be dev or release
     set kratos_private(MenuItems) [dict create]
     set kratos_private(RestoreVars) [list ]
+    set kratos_private(LogFilename) ""
+    set kratos_private(Log) [list ]
     array set kratos_private [ReadProblemtypeXml [file join $dir kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
     if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
         W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
@@ -72,7 +74,6 @@ proc Kratos::Event_InitProblemtype { dir } {
             W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
         }
         W "Download it from: https://www.gidhome.com/download/developer-versions/"
-        
     }
 
     #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
@@ -87,7 +88,8 @@ proc Kratos::Event_InitProblemtype { dir } {
         WriteProjectParameters.tcl WriteSubModelPart.tcl} {
         uplevel 1 [list source [file join $dir scripts Writing $filename]]
     }
-    foreach filename {Utils.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
+
+    foreach filename {Utils.tcl Logs.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel 1 [list source [file join $dir scripts $filename]]
     }
     foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
@@ -99,6 +101,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel 1 [list source [file join $dir libs $filename]]
     }
+    Kratos::LogInitialData
     set kratos_private(UseWizard) 0
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
@@ -287,7 +290,6 @@ proc Kratos::LoadEnvironment { } {
 proc Kratos::load_gid_groups_conds {} {  
     package require customlib_extras ;#this require also customLib
     package require customlib_native_groups
-    package require json::write
 }
 
 proc Kratos::GiveKratosDefaultsFile {} {
@@ -394,6 +396,7 @@ proc Kratos::Event_BeforeSaveGIDProject { modelname} {
     }
 }
 
+
 proc Kratos::Event_SaveModelSPD { filespd } {
     gid_groups_conds::save_spd_file $filespd
     Kratos::RegisterEnvironment
@@ -405,5 +408,15 @@ proc Kratos::Event_ChangedLanguage  { newlan } {
     Kratos::UpdateMenus
 }
 
+proc ::Kratos::Quicktest {example_app example_dim example_cmd} {
+    apps::setActiveApp Examples
+    ::Examples::LaunchExample $example_app $example_dim $example_cmd
+}
 
-Kratos::Start
+proc Kratos::LogInitialData { } {
+    set initial_data [dict create]
+    dict set initial_data GiD_Version [GiD_Info gidversion]
+    dict set initial_data Problemtype_Git_Hash "68418871cff2b897f7fb9176827871b339fe5f91"
+    
+    Kratos::Log [write::tcl2json $initial_data]
+}
