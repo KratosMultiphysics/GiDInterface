@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-  <ConditionItem n="RotationInlet2D" pn="Rotation inlet velocity" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="VELOCITY" App="Fluid" ElementType="Line" ProcessName="ApplyInletRotationProcess" help="" units="m/s" unit_magnitude="Velocity">
+  <ConditionItem n="RotationFluid2D" pn="Rotation fluid velocity" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="ROTATION" App="FluidDEMapplication" ElementType="Line" ProcessName="ApplyFluidRotationProcess" help="" units="m/s" unit_magnitude="Velocity">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -8,7 +8,7 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
-  <ConditionItem n="RotationInlet3D" pn="Rotation inlet velocity" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="VELOCITY" App="Fluid" ElementType="Surface" ProcessName="ApplyInletRotationProcess" help="" units="m/s" unit_magnitude="Velocity">
+  <ConditionItem n="RotationFluid3D" pn="Rotation fluid velocity" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="ROTATION" App="FluidDEMapplication" ElementType="Surface" ProcessName="ApplyFluidRotationProcess" help="" units="m/s" unit_magnitude="Velocity">
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
     </TopologyFeatures>

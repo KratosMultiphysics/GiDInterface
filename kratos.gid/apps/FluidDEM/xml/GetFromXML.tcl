@@ -10,6 +10,8 @@ proc FluidDEM::xml::Init { } {
 
     Model::ForgetElement SphericPartDEMElement3D
     Model::getElements Elements.xml
+    Model::getProcesses Processes.xml
+    Model::getConditions Conditions.xml
 
     # Get the inlet condition
     set inlet_cnd [Model::getCondition "Inlet"]
@@ -18,6 +20,7 @@ proc FluidDEM::xml::Init { } {
     # Add the hydrodynamic law parameter
     set parameter [::Model::Parameter new "hydrodynamic_law" "Hydrodynamic law" "combo" "" "" "" "Select a hydrodynamic law" "uno" ""]
     $inlet_process addInputDone $parameter
+
     # Change the inlet injector element type
     set inlet_element_type_param [$inlet_process getInputPn InletElementType]
     if {$inlet_element_type_param ne ""} {
