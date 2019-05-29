@@ -273,3 +273,11 @@ proc FluidDEM::write::InitExternalProjectParameters { } {
 
     apps::setActiveAppSoft FluidDEM
 }
+
+# Probably not necessary to rewrite this proc
+# proc spdAux::injectConditions { basenode args} {
+#     #set conditions [::Model::GetConditions [list ImplementedInApplication {FluidDEMapplication}]]
+#     set conditions [::Model::GetConditions ImplementedInApplication FluidDEMapplication]
+#     spdAux::_injectCondsToTree $basenode $conditions
+#     $basenode delete
+# }

@@ -6,6 +6,7 @@
     <include n="FluidParts"          active="1" path="apps/Fluid/xml/Parts.spd"/>
     <include n="InitialConditions"   active="1" path="apps/Fluid/xml/InitialConditions.spd"/>
     <include n="BoundaryConditions"  active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
+    <include n="RotationConditions"  active="1" path="apps/FluidDEM/xml/RotationConditions.spd"/>
     <include n="SolutionStrategy"    active="1" path="apps/Fluid/xml/SolutionStrategy.spd"/>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
     <include n="Materials"           active="1" path="apps/Fluid/xml/Materials.spd"/>
