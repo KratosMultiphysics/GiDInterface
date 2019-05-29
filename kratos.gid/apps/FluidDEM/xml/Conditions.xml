@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-  <ConditionItem n="RotationFluid2D" pn="Rotation fluid velocity" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="ROTATION" App="FluidDEMapplication" ElementType="Line" ProcessName="ApplyFluidRotationProcess" help="" units="m/s" unit_magnitude="Velocity">
+  <!-- <ConditionItem n="RotationFluid2D" pn="Rotation fluid velocity" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="ROTATION" App="FluidDEMapplication" ElementType="Line" ProcessName="ApplyFluidRotationProcess" help="" units="m/s" unit_magnitude="Velocity">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>
     <outputs></outputs>
-  </ConditionItem>
-  <ConditionItem n="RotationFluid3D" pn="Rotation fluid velocity" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="ROTATION" App="FluidDEMapplication" ElementType="Surface" ProcessName="ApplyFluidRotationProcess" help="" units="m/s" unit_magnitude="Velocity">
+  </ConditionItem> -->
+  <ConditionItem n="RotationFluid3D" pn="Rotation fluid velocity" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="ROTATION" App="FluidDEMapplication" ElementType="Volume" ProcessName="ApplyFluidRotationProcess" help="" units="m/s" unit_magnitude="Velocity">
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
+      <!-- <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/> -->
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
     </TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>
