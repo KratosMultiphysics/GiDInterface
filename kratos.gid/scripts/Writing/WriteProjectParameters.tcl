@@ -1,25 +1,28 @@
 
-proc write::dict2json {dictVal} {
-    # XXX: Currently this API isn't symmetrical, as to create proper
-    # XXX: JSON text requires type knowledge of the input data
-    set json ""
-    dict for {key val} $dictVal {
-        # key must always be a string, val may be a number, string or
-        # bare word (true|false|null)
-        if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
-            set val "\"$val\""
-        }
-        if {[isDict $val]} {
-            set val [dict2json $val]
-            set val "\[${val}\]"
-        } else {
-            set val \"$val\"
-        }
-        append json "\"$key\": $val," \n
-    }
-    if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
-    return "\{${json}\}"
-}
+# proc write::dict2json {dictVal} {
+#     # XXX: Currently this API isn't symmetrical, as to create proper
+#     # XXX: JSON text requires type knowledge of the input data
+#     set json ""
+#     dict for {key val} $dictVal {
+#         # key must always be a string, val may be a number, string or
+#         # bare word (true|false|null)
+#         if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
+#             set val "\"$val\""
+#         }
+#         if {[isDict $val]} {
+#             set val [dict2json $val]
+#             set val "\[${val}\]"
+#         } else {
+#             set val \"$val\"
+#         }
+#         append json "\"$key\": $val," \n
+#     }
+#     if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
+#     return "\{${json}\}"
+# }
+
+
+package require json::write
 
 proc write::json2dict {JSONtext} {
     string range [

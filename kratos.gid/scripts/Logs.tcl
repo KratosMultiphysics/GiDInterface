@@ -27,7 +27,7 @@ proc Kratos::InitLog { } {
 
 proc Kratos::Log {msg} {
     variable kratos_private
-    lappend kratos_private(Log) "[clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}] | $msg"
+    lappend kratos_private(Log) "*~* [clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}] | $msg"
 
     # One of the triggers is to flush if we've stored more than 5 
     if {[llength $kratos_private(Log)] > 5} {

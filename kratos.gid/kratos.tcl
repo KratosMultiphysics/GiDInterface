@@ -168,6 +168,7 @@ proc Kratos::InitGIDProject { dir } {
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel 1 [list source [file join $dir libs $filename]]
     }
+    Kratos::LogInitialData
     set kratos_private(UseWizard) 0
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
@@ -359,7 +360,6 @@ proc Kratos::GetModelName { } {
 proc Kratos::load_gid_groups_conds {} {  
     package require customlib_extras ;#this require also customLib
     package require customlib_native_groups
-    package require json::write
 }
 
 proc Kratos::GiveKratosDefaultsFile {} {
@@ -460,4 +460,12 @@ proc Kratos::PrintArray {a {pattern *}} {
 proc ::Kratos::Quicktest {example_app example_dim example_cmd} {
     apps::setActiveApp Examples
     ::Examples::LaunchExample $example_app $example_dim $example_cmd
+}
+
+proc Kratos::LogInitialData { } {
+    set initial_data [dict create]
+    dict set initial_data GiD_Version [GiD_Info gidversion]
+    dict set initial_data Problemtype_Git_Hash "68418871cff2b897f7fb9176827871b339fe5f91"
+    
+    Kratos::Log [write::tcl2json $initial_data]
 }
