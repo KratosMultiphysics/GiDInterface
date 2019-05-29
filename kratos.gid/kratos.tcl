@@ -65,7 +65,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     set kratos_private(RestoreVars) [list ]
     set kratos_private(LogFilename) ""
     set kratos_private(Log) [list ]
-    array set kratos_private [ReadProblemtypeXml [file join $dir kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
     if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
         W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
         if { [GidUtils::VersionCmp 14.0.0] < 0 } {
@@ -77,8 +77,8 @@ proc Kratos::Event_InitProblemtype { dir } {
     }
 
     #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
-    if { [lsearch -exact $::auto_path [file join $dir scripts]] == -1 } {
-        lappend ::auto_path [file join $dir scripts]
+    if { [lsearch -exact $::auto_path [file join $kratos_private(Path) scripts]] == -1 } {
+        lappend ::auto_path [file join $kratos_private(Path) scripts]
     }
     # foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl WriteElements.tcl WriteConditions.tcl} {
     #     uplevel 1 [list source [file join $dir scripts Writing $filename]]
@@ -86,20 +86,20 @@ proc Kratos::Event_InitProblemtype { dir } {
     foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
         WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
         WriteProjectParameters.tcl WriteSubModelPart.tcl} {
-        uplevel 1 [list source [file join $dir scripts Writing $filename]]
+        uplevel 1 [list source [file join $kratos_private(Path) scripts Writing $filename]]
     }
 
     foreach filename {Utils.tcl Logs.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
-        uplevel 1 [list source [file join $dir scripts $filename]]
+        uplevel 1 [list source [file join $kratos_private(Path) scripts $filename]]
     }
     foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
-        uplevel 1 [list source [file join $dir scripts Controllers $filename]]
+        uplevel 1 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
     }
     foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
-        uplevel 1 [list source [file join $dir scripts Model $filename]]
+        uplevel 1 [list source [file join $kratos_private(Path) scripts Model $filename]]
     }
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
-        uplevel 1 [list source [file join $dir libs $filename]]
+        uplevel 1 [list source [file join $kratos_private(Path) libs $filename]]
     }
     Kratos::LogInitialData
     set kratos_private(UseWizard) 0
@@ -108,8 +108,8 @@ proc Kratos::Event_InitProblemtype { dir } {
     Kratos::LoadEnvironment
     Kratos::UpdateMenus
     gid_groups_conds::SetProgramName $kratos_private(Name)
-    gid_groups_conds::SetLibDir [file join $dir exec]
-    set spdfile [file join $dir kratos_default.spd]
+    gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
+    set spdfile [file join $kratos_private(Path) kratos_default.spd]
     if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
         gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
     } {
@@ -420,3 +420,5 @@ proc Kratos::LogInitialData { } {
     
     Kratos::Log [write::tcl2json $initial_data]
 }
+
+Kratos::Start 
