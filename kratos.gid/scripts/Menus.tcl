@@ -12,6 +12,7 @@ proc Kratos::ToolbarAddItem {id icon code tex} {
     dict set kratos_private(MenuItems) $num tex $tex
     return $num
 }
+
 proc Kratos::ToolbarDeleteItem {id} {
     variable kratos_private
     foreach num [dict keys $kratos_private(MenuItems)] {

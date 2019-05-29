@@ -59,7 +59,6 @@ proc EndGIDPostProcess {} {
     ::Kratos::CreatePreprocessModelTBar
 }
 
-
 # Save GiD project files (save XML Tdom structure to spd file)
 proc SaveGIDProject { filespd } {
     gid_groups_conds::save_spd_file $filespd
@@ -81,6 +80,7 @@ proc AfterWriteCalcFileGIDProject { filename errorflag } {
 proc GiD_Event_BeforeMeshGeneration { elementsize } {
     return [Kratos::BeforeMeshGeneration $elementsize]
 }
+
 proc AfterMeshGeneration { fail } {
     Kratos::AfterMeshGeneration $fail
 }
@@ -96,9 +96,7 @@ proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args 
         return ""
     } {
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
-
     }
-
 }
 
 proc GiD_Event_BeforeSaveGIDProject { modelname} {
@@ -387,7 +385,6 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
 
     gid_groups_conds::transform_problemtype $spd_file
     #GiD_Process escape escape escape escape Data Defaults TransfProblem $project
-
 
     spdAux::LoadModelFiles
     spdAux::LoadIntervalGroups
