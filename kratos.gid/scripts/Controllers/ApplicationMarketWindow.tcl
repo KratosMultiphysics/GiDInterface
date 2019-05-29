@@ -194,7 +194,6 @@ proc spdAux::CreateDimensionWindow { } {
         
         grid $w.information
     }
-    
 }
 
 proc spdAux::SetSpatialDimmension {ndim} {
