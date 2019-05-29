@@ -23,15 +23,19 @@ proc Kratos::InitLog { } {
     set logfile [open $logpath "a+"];
     puts $logfile "Kratos Log Session"
     close $logfile
+    set kratos_private(Log) [list ]
 }
 
 proc Kratos::Log {msg} {
     variable kratos_private
-    lappend kratos_private(Log) "*~* [clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}] | $msg"
+    
+    if {[info exists kratos_private(Log)]} {
+        lappend kratos_private(Log) "*~* [clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}] | $msg"
 
-    # One of the triggers is to flush if we've stored more than 5 
-    if {[llength $kratos_private(Log)] > 5} {
-        Kratos::FlushLog
+        # One of the triggers is to flush if we've stored more than 5 
+        if {[llength $kratos_private(Log)] > 5} {
+            Kratos::FlushLog
+        }
     }
 }
 
