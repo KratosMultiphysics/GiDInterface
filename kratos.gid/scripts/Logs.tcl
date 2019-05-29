@@ -37,24 +37,26 @@ proc Kratos::Log {msg} {
 
 proc Kratos::FlushLog { }  {
     variable kratos_private
+    if {[info exists kratos_private(Log)]} {
+        if {[llength $kratos_private(Log)] > 0} {
+            set logpath [Kratos::GetLogFilePath]
 
-    if {[llength $kratos_private(Log)] > 0} {
-        set logpath [Kratos::GetLogFilePath]
+            set logfile [open $logpath "a+"];
 
-        set logfile [open $logpath "a+"];
-
-        try {
-            foreach msg $kratos_private(Log) {
-                puts $logfile $msg
+            try {
+                foreach msg $kratos_private(Log) {
+                    puts $logfile $msg
+                }
+                
+            } finally {
+                close $logfile
             }
-            
-        } finally {
-            close $logfile
-        }
 
-        set kratos_private(Log) [list ]
+            set kratos_private(Log) [list ]
+        }
     }
     after 5000 {Kratos::FlushLog}
+    
 }
 
 Kratos::InitLog
