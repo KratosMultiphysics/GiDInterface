@@ -1,123 +1,8 @@
-###############################################################
+##################################################################################
 #   This file is common for all Kratos Applications.
 #   Do not change anything here unless it's strictly necessary.
-###############################################################
+##################################################################################
 
-##########################################################
-#################### GiD Tcl events ######################
-##########################################################
-proc InitGIDProject { dir } {
-    #W "InitGIDProject"
-    Kratos::InitGIDProject $dir
-    GiD_RegisterPluginPreferencesProc Kratos::ModifyPreferencesWindow
-    #after idle {CreateWidgetsFromXml::UpdatePreferencesWindow}
-}
-proc GiD_Event_AfterNewGIDProject {} {
-    # W "GiD_Event_AfterNewGIDProject"
-}
-
-# Load GiD project files (initialise XML Tdom structure)
-proc GiD_Event_AfterReadGIDProject { filename } {
-    #W "GiD_Event_AfterReadGIDProject"
-    set name [file tail $filename]
-    set spd_file [file join ${filename}.gid ${name}.spd]
-    Kratos::AfterReadGIDProject $spd_file
-}
-
-proc BeforeTransformProblemType {file oldproblemtype newproblemtype} {
-    # W "BeforeTransformProblemType"
-}
-
-proc AfterTransformProblemType {file oldproblemtype newproblemtype messages} {
-    # W "AfterTransformProblemType"
-}
-
-proc EndGIDProject {} {
-    Kratos::RestoreVariables
-    Kratos::DestroyWindows
-    spdAux::EndRefreshTree
-    Kratos::RegisterEnvironment
-    Model::DestroyEverything
-    Kratos::EndCreatePreprocessTBar
-    gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
-    unset -nocomplain ::Kratos::kratos_private
-    GiD_UnRegisterPluginPreferencesProc Kratos::ModifyPreferencesWindow
-}
-
-proc ChangedLanguage { newlan } {
-    Kratos::UpdateMenus
-}
-
-proc InitGIDPostProcess {} {
-    gid_groups_conds::close_all_windows
-    gid_groups_conds::open_post check_default
-}
-
-proc EndGIDPostProcess {} {
-    gid_groups_conds::close_all_windows
-    if {$::spdAux::TreeVisibility} {
-        gid_groups_conds::open_conditions check_default
-        gid_groups_conds::open_conditions menu
-    }
-    ::Kratos::CreatePreprocessModelTBar
-}
-
-# Save GiD project files (save XML Tdom structure to spd file)
-proc SaveGIDProject { filespd } {
-    gid_groups_conds::save_spd_file $filespd
-    Kratos::RegisterEnvironment
-    FileSelector::CopyFilesIntoModel [file dirname $filespd]
-}
-
-proc AfterWriteCalcFileGIDProject { filename errorflag } {
-    if {$Kratos::must_write_calc_data} {
-        set errcode [Kratos::WriteCalculationFilesEvent $filename]
-        if {$errcode} {return "-cancel-"}
-    } else {
-        if {$Kratos::must_exist_calc_data} {
-
-        }
-    }
-}
-
-proc GiD_Event_BeforeMeshGeneration { elementsize } {
-    return [Kratos::BeforeMeshGeneration $elementsize]
-}
-
-proc AfterMeshGeneration { fail } {
-    Kratos::AfterMeshGeneration $fail
-}
-
-proc BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {
-    set run 1
-
-    catch {
-        set paralleltype [write::getValue ParallelType]
-        if {$paralleltype eq "MPI"} {set run 0}
-    }
-    if {$run} {
-        return ""
-    } {
-        return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
-    }
-}
-
-proc GiD_Event_BeforeSaveGIDProject { modelname} {
-    set fail [::Kratos::CheckValidProjectName $modelname]
-
-    if {$fail} {
-        W [= "Wrong project name. Avoid boolean and numeric names."]
-        return "-cancel-"
-    }
-}
-
-proc AfterRenameGroup { oldname newname } {
-    spdAux::RenameIntervalGroup $oldname $newname
-}
-
-##########################################################
-#################### Kratos namespace ####################
-##########################################################
 namespace eval Kratos {
     variable kratos_private
     variable must_quit
@@ -125,7 +10,50 @@ namespace eval Kratos {
     variable must_exist_calc_data
 }
 
-proc Kratos::InitGIDProject { dir } {
+proc Kratos::Start { } {
+    if {[GidUtils::VersionCmp "14.1.2d"] <0 } {
+        set dir [file dirname [info script]]
+        uplevel 1 [list source [file join $dir scripts DeprecatedEvents.tcl]]
+    } {
+        Kratos::RegisterGiDEvents
+    }
+}
+
+proc Kratos::RegisterGiDEvents { } {
+    # Unregister previous events
+    GiD_UnRegisterEvents PROBLEMTYPE Kratos
+    
+    # Init / Load
+    GiD_RegisterEvent GiD_Event_InitProblemtype Kratos::Event_InitProblemtype PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_LoadModelSPD Kratos::Event_LoadModelSPD PROBLEMTYPE Kratos
+    
+    # Groups / Layers
+    GiD_RegisterEvent GiD_Event_AfterRenameGroup Kratos::Event_AfterRenameGroup PROBLEMTYPE Kratos
+    
+    # Mesh
+    GiD_RegisterEvent GiD_Event_BeforeMeshGeneration Kratos::Event_BeforeMeshGeneration PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_AfterMeshGeneration Kratos::Event_AfterMeshGeneration PROBLEMTYPE Kratos
+    
+    # Write - Calculation
+    GiD_RegisterEvent GiD_Event_AfterWriteCalculationFile Kratos::Event_AfterWriteCalculationFile PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_BeforeRunCalculation Kratos::Event_BeforeRunCalculation PROBLEMTYPE Kratos
+    
+    # Postprocess
+    GiD_RegisterEvent GiD_Event_InitGIDPostProcess Kratos::Event_InitGIDPostProcess PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_EndGIDPostProcess Kratos::Event_EndGIDPostProcess PROBLEMTYPE Kratos
+    
+    # Save
+    GiD_RegisterEvent GiD_Event_BeforeSaveGIDProject Kratos::Event_BeforeSaveGIDProject PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_SaveModelSPD Kratos::Event_SaveModelSPD PROBLEMTYPE Kratos
+    
+    # Extra
+    GiD_RegisterEvent GiD_Event_ChangedLanguage Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
+    
+    # End
+    GiD_RegisterEvent GiD_Event_EndProblemtype Kratos::Event_EndProblemtype PROBLEMTYPE Kratos
+}
+
+proc Kratos::Event_InitProblemtype { dir } {
     variable kratos_private
     variable must_quit
     variable must_write_calc_data
@@ -140,14 +68,20 @@ proc Kratos::InitGIDProject { dir } {
     set kratos_private(RestoreVars) [list ]
     set kratos_private(LogFilename) ""
     set kratos_private(Log) [list ]
-    array set kratos_private [ReadProblemtypeXml [file join $dir kratos.xml] Infoproblemtype {Name Version MinimumGiDVersion}]
-    if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
-        WarnWin [_ "Error: %s Interface requires GiD %s or later." $kratos_private(Name) $kratos_private(MinimumGiDVersion)]
+    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+    if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
+        W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
+        if { [GidUtils::VersionCmp 14.0.0] < 0 } {
+            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14." 
+        } {
+            W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
+        }
+        W "Download it from: https://www.gidhome.com/download/developer-versions/"
     }
 
     #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
-    if { [lsearch -exact $::auto_path [file join $dir scripts]] == -1 } {
-        lappend ::auto_path [file join $dir scripts]
+    if { [lsearch -exact $::auto_path [file join $kratos_private(Path) scripts]] == -1 } {
+        lappend ::auto_path [file join $kratos_private(Path) scripts]
     }
     # foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl WriteElements.tcl WriteConditions.tcl} {
     #     uplevel 1 [list source [file join $dir scripts Writing $filename]]
@@ -155,19 +89,20 @@ proc Kratos::InitGIDProject { dir } {
     foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
         WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
         WriteProjectParameters.tcl WriteSubModelPart.tcl} {
-        uplevel 1 [list source [file join $dir scripts Writing $filename]]
+        uplevel 1 [list source [file join $kratos_private(Path) scripts Writing $filename]]
     }
-    foreach filename {Logs.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
-        uplevel 1 [list source [file join $dir scripts $filename]]
+
+    foreach filename {Utils.tcl Logs.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
+        uplevel 1 [list source [file join $kratos_private(Path) scripts $filename]]
     }
-    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl PreferencesWindow.tcl} {
-        uplevel 1 [list source [file join $dir scripts Controllers $filename]]
+    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
+        uplevel 1 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
     }
     foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
-        uplevel 1 [list source [file join $dir scripts Model $filename]]
+        uplevel 1 [list source [file join $kratos_private(Path) scripts Model $filename]]
     }
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
-        uplevel 1 [list source [file join $dir libs $filename]]
+        uplevel 1 [list source [file join $kratos_private(Path) libs $filename]]
     }
     Kratos::LogInitialData
     set kratos_private(UseWizard) 0
@@ -176,9 +111,13 @@ proc Kratos::InitGIDProject { dir } {
     Kratos::LoadEnvironment
     Kratos::UpdateMenus
     gid_groups_conds::SetProgramName $kratos_private(Name)
-    gid_groups_conds::SetLibDir [file join $dir exec]
-    set spdfile [file join $dir kratos_default.spd]
-    gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
+    gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
+    set spdfile [file join $kratos_private(Path) kratos_default.spd]
+    if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
+        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
+    } {
+        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
+    }
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
         gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
@@ -198,9 +137,9 @@ proc Kratos::InitGIDProject { dir } {
     }
 }
 
-# Event triggered when opening a GiD model with kratos
-proc Kratos::AfterReadGIDProject { filespd } {
+proc Kratos::Event_LoadModelSPD { filespd } {
     variable kratos_private
+
     # Dont open the init window. Saved models have already app and dimension
     set spdAux::must_open_init_window 0
 
@@ -213,7 +152,7 @@ proc Kratos::AfterReadGIDProject { filespd } {
     gid_groups_conds::close_all_windows
     update
     if { ![file exists $filespd] } { return }
-
+    
     # Need transform? Get PT version
     set versionPT [gid_groups_conds::give_data_version]
     set kratos_private(problemtype_version) $versionPT
@@ -227,19 +166,35 @@ proc Kratos::AfterReadGIDProject { filespd } {
             set activeapp [get_domnode_attribute $activeapp_node v]
         } else {
             W "Unable to get the active application"
-            return ""
+            return ""   
         }
         set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
         spdAux::LoadIntervalGroups $root
         spdAux::LoadModelFiles $root
-        after idle [list Kratos::upgrade_problemtype $filespd $nd $activeapp]
+        after idle Kratos::upgrade_problemtype $filespd $nd $activeapp
     } else {
-        gid_groups_conds::open_spd_file "$filespd"
+        gid_groups_conds::open_spd_file $filespd
         customlib::UpdateDocument
         spdAux::LoadModelFiles
         spdAux::LoadIntervalGroups
         spdAux::reactiveApp
         spdAux::OpenTree
+    }
+}
+
+proc Kratos::Event_EndProblemtype { } {
+    if {![GidUtils::VersionCmp "14.1.2d"] <0 } {
+        GiD_UnRegisterEvents PROBLEMTYPE Kratos
+    }
+    if {[array exists ::Kratos::kratos_private]} {
+        Kratos::RestoreVariables
+        Kratos::DestroyWindows
+        spdAux::EndRefreshTree
+        Kratos::RegisterEnvironment
+        Model::DestroyEverything
+        Kratos::EndCreatePreprocessTBar
+        gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
+        unset -nocomplain ::Kratos::kratos_private
     }
 }
 
@@ -253,7 +208,6 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     }
     FileSelector::CopyFilesIntoModel [file dirname $filename]
     write::Init
-    spdAux::ForceTreePreload
     set errcode [::write::writeEvent $filename]
     if {$errcode} {
         ::GidUtils::SetWarnLine "Error writing mdpa or json"
@@ -263,19 +217,14 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     return $errcode
 }
 
-proc Kratos::ForceRun { } {
-    # validated by escolano@cimne.upc.edu
-    variable must_write_calc_data
-    set must_write_calc_data 0
-    GiD_Process Utilities Calculate
-    set must_write_calc_data 1
-}
 
 proc Kratos::RestoreVariables { } {
     variable kratos_private
-
-    foreach {k v} $kratos_private(RestoreVars) {
-        set $k $v
+    
+    if {[info exists kratos_private(RestoreVars)]} {
+        foreach {k v} $kratos_private(RestoreVars) {
+            set $k $v
+        }
     }
     set kratos_private(RestoreVars) [list ]
 }
@@ -283,24 +232,28 @@ proc Kratos::RestoreVariables { } {
 proc Kratos::AddRestoreVar {varName} {
     variable kratos_private
     if {[info exists $varName]} {
-        set val [set $varName]
+        set val [set $varName]   
         lappend kratos_private(RestoreVars) $varName $val
     }
-}
-
-proc Kratos::DestroyWindows {} {
-    gid_groups_conds::close_all_windows
-    spdAux::DestroyWindow
-    if {$::Kratos::kratos_private(UseWizard)} {
-        smart_wizard::DestroyWindow
-    }
-    ::Kratos::EndCreatePreprocessTBar
 }
 
 proc Kratos::LoadWizardFiles { } {
     set ::Kratos::kratos_private(UseWizard) 1
     package require gid_smart_wizard
     Kratos::UpdateMenus
+}
+
+proc Kratos::SwitchMode {} {
+    variable kratos_private
+    if {$kratos_private(DevMode) eq "dev"} {
+        set kratos_private(DevMode) "release"
+    }  {
+        set kratos_private(DevMode) "dev"
+    }
+    Kratos::RegisterEnvironment
+    #W "Registrado $kratos_private(DevMode)"
+    Kratos::UpdateMenus
+    spdAux::RequestRefresh
 }
 
 proc Kratos::GetPreferencesFilePath { } {
@@ -318,11 +271,15 @@ proc Kratos::RegisterEnvironment { } {
     variable kratos_private
     set varsToSave [list DevMode]
     set preferences [dict create]
-    dict set preferences DevMode $kratos_private(DevMode)
-    #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
-    set fp [open [Kratos::GetPreferencesFilePath] w]
-    if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
-    close $fp
+    if {[info exists kratos_private(DevMode)]} {
+        dict set preferences DevMode $kratos_private(DevMode)
+        #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
+    }
+    if {[llength [dict keys $preferences]] > 0} {
+        set fp [open [Kratos::GetPreferencesFilePath] w]
+        if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
+        close $fp
+    }
 }
 
 proc Kratos::LoadEnvironment { } {
@@ -339,10 +296,6 @@ proc Kratos::LoadEnvironment { } {
     foreach {k v} [write::json2dict $data] {
         set kratos_private($k) $v
     }
-}
-
-proc Kratos::GetModelName { } {
-    return [file tail [GiD_Info project ModelName]]
 }
 
 proc Kratos::load_gid_groups_conds {} {  
@@ -368,7 +321,7 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     set action [$w createwindow]
     destroy $w
     if { $action < 1 } { return }
-
+    
     customlib::UpdateDocument
     spdAux::SetSpatialDimmension $dim
     apps::setActiveApp $app_id
@@ -376,27 +329,14 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     gid_groups_conds::transform_problemtype $spd_file
     #GiD_Process escape escape escape escape Data Defaults TransfProblem $project
 
+    
     spdAux::LoadModelFiles
     spdAux::LoadIntervalGroups
 }
 
-proc Kratos::ResetModel { } {
-    foreach layer [GiD_Info layers] {
-        GiD_Process 'Layers Delete $layer Yes escape escape
-    }
-    foreach group [GiD_Groups list] {
-        if {[GiD_Groups exists $group]} {GiD_Groups delete $group}
-    }
-}
 
-proc Kratos::IsModelEmpty { } {
-    if {[GiD_Groups list] != ""} {return false}
-    if {[GiD_Layers list] != "Layer0"} {return false}
-    if {[GiD_Geometry list point 1:end] != ""} {return false}
-    return true
-}
 
-proc Kratos::BeforeMeshGeneration {elementsize} {
+proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     foreach group [spdAux::GetAppliedGroups] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
@@ -409,39 +349,74 @@ proc Kratos::BeforeMeshGeneration {elementsize} {
     return $ret
 }
 
-proc Kratos::AfterMeshGeneration {fail} {
+proc Kratos::Event_AfterMeshGeneration {fail} {
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
 }
 
-proc Kratos::CheckValidProjectName {modelname} {
-    set fail 0
-    set filename [file tail $modelname]
-    if {[string is double $filename]} {set fail 1}
-    if {[write::isBoolean $filename]} {set fail 1}
-    if {$filename == "null"} {set fail 1}
-    return $fail
-
+proc Kratos::Event_AfterRenameGroup { oldname newname } {
+    spdAux::RenameIntervalGroup $oldname $newname
 }
 
-proc Kratos::PrintArray {a {pattern *}} {
-    # ABSTRACT:
-    # Print the content of array nicely
+proc Kratos::Event_InitGIDPostProcess {} {
+    gid_groups_conds::close_all_windows
+    gid_groups_conds::open_post check_default
+}
 
-    upvar 1 $a array
-    if {![array exists array]} {
-        error "\"$a\" isn't an array"
+proc Kratos::Event_EndGIDPostProcess {} {
+    gid_groups_conds::close_all_windows
+    if {$::spdAux::TreeVisibility} {
+        gid_groups_conds::open_conditions check_default
+        gid_groups_conds::open_conditions menu
     }
-    set maxl 0
-    foreach name [lsort [array names array $pattern]] {
-        if {[string length $name] > $maxl} {
-            set maxl [string length $name]
+    ::Kratos::CreatePreprocessModelTBar
+}
+
+proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {
+    set run 1
+    
+    catch {
+        set paralleltype [write::getValue ParallelType]
+        if {$paralleltype eq "MPI"} {set run 0}
+    }
+    if {$run} {
+        return ""
+    } {
+        return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
+        
+    }
+    
+}
+
+proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
+    if {$Kratos::must_write_calc_data} {
+        set errcode [Kratos::WriteCalculationFilesEvent $filename]
+        if {$errcode} {return "-cancel-"}
+    } else {
+        if {$Kratos::must_exist_calc_data} {
+            
         }
     }
-    set maxl [expr {$maxl + [string length $a] + 2}]
-    foreach name [lsort [array names array $pattern]] {
-        set nameString [format %s(%s) $a $name]
-        W "[format "%-*s = %s" $maxl $nameString $array($name)]"
+}
+
+proc Kratos::Event_BeforeSaveGIDProject { modelname} {
+    set fail [::Kratos::CheckValidProjectName $modelname]
+    
+    if {$fail} {
+        W [= "Wrong project name. Avoid boolean and numeric names."]
+        return "-cancel-"
     }
+}
+
+
+proc Kratos::Event_SaveModelSPD { filespd } {
+    gid_groups_conds::save_spd_file $filespd
+    Kratos::RegisterEnvironment
+    FileSelector::CopyFilesIntoModel [file dirname $filespd]
+}
+
+
+proc Kratos::Event_ChangedLanguage  { newlan } {
+    Kratos::UpdateMenus
 }
 
 proc ::Kratos::Quicktest {example_app example_dim example_cmd} {
@@ -456,3 +431,5 @@ proc Kratos::LogInitialData { } {
     
     Kratos::Log [write::tcl2json $initial_data]
 }
+
+Kratos::Start 

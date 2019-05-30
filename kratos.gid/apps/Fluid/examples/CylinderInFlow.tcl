@@ -125,7 +125,7 @@ proc Fluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
     GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get Outlet surfaces] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Walls surfaces] escape escape
     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_mesh_size [GiD_EntitiesGroups get Fluid volumes] escape escape
-    Kratos::BeforeMeshGeneration $fluid_mesh_size
+    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 proc Fluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
     set cylinder_mesh_size 0.005
@@ -133,7 +133,7 @@ proc Fluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $cylinder_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cylinder lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    Kratos::BeforeMeshGeneration $fluid_mesh_size
+    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
 

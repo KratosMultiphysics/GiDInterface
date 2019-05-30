@@ -79,7 +79,8 @@ proc spdAux::CreateWindow {} {
     if {[apps::getActiveApp] ne ""} {return ""}
     
     spdAux::DestroyInitWindow
-                
+    if {[winfo exist .gid.win_example]} {destroy .gid.win_example}
+
     set w .gid.win_example
     toplevel $w
     wm withdraw $w

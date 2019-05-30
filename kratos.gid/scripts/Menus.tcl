@@ -166,12 +166,10 @@ proc Kratos::Splash { } {
         set off_x 130
     }
     set line1 "Kratos Multiphysics Version $kratos_private(Version)"
-    ::GidUtils::Splash [file join $kratos_private(Path) images splash.png] .splash 0 \
-        [list $line1 $off_x 230]
+    ::GidUtils::Splash [file join $kratos_private(Path) images splash.png] .splash 0 [list $line1 $off_x 230]
 
 
-    .splash.lv configure -font $fnt -background white -foreground black \
-        -relief solid -borderwidth 1 -padx 12 -pady 3
+    .splash.lv configure -font $fnt -background white -foreground black -relief solid -borderwidth 1 -padx 12 -pady 3
     update
     
     GiD_Set SplashWindow $prev_splash_state
