@@ -11,7 +11,7 @@ namespace eval Kratos {
 }
 
 proc Kratos::Start { } {
-    if {[GidUtils::VersionCmp "14.1.2d"] <0 } {
+    if {[GidUtils::VersionCmp "14.1.4d"] <0 } {
         set dir [file dirname [info script]]
         uplevel 1 [list source [file join $dir scripts DeprecatedEvents.tcl]]
     } {
@@ -20,37 +20,14 @@ proc Kratos::Start { } {
 }
 
 
-proc ChangeVariables { {groupname ""} } {
-    if { [GidUtils::ExistsWindow PREFERENCES] } {
-       GidUtils::CloseWindow PREFERENCES
-    }
-    set xmlfile Preferences.xml
-    if { [info exists CreateWidgetsFromXml::fileread($xmlfile)] } {
-        if { [GetCurrentPrePostMode] == "POST" } {
-            CreateWidgetsFromXml::IniWin $CreateWidgetsFromXml::fileread($xmlfile) $groupname "ChangeVariables" "" 
-        } else {
-            CreateWidgetsFromXml::IniWin $CreateWidgetsFromXml::fileread($xmlfile) $groupname "ChangeVariables" {general kratos_preferences graphical meshing import_export fonts grid postprocess_main} 
-        }
-    } else {
-        if { [GetCurrentPrePostMode] == "POST" } {
-            CreateWidgetsFromXml::ReadXmlFile Preferences.xml $groupname "ChangeVariables"
-        } else {
-            CreateWidgetsFromXml::ReadXmlFile Preferences.xml $groupname "ChangeVariables" 1 {general kratos_preferences graphical meshing import_export fonts grid postprocess_main}
-            
-        }
-    }    
-}
 
 proc Kratos::RegisterGiDEvents { } {
     # Unregister previous events
     GiD_UnRegisterEvents PROBLEMTYPE Kratos
     
     # Init / Load
-    GiD_RegisterEvent GiD_Event_InitProblemtype Kratos::Event_InitProblemtype PROBLEMTYPE Kratos
+    #GiD_RegisterEvent GiD_Event_InitProblemtype Kratos::Event_InitProblemtype PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_LoadModelSPD Kratos::Event_LoadModelSPD PROBLEMTYPE Kratos
-
-    # Preferences window
-    #GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow  
     
     # Groups / Layers
     GiD_RegisterEvent GiD_Event_AfterRenameGroup Kratos::Event_AfterRenameGroup PROBLEMTYPE Kratos
@@ -78,9 +55,11 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_EndProblemtype Kratos::Event_EndProblemtype PROBLEMTYPE Kratos
 }
 
+proc GiD_Event_InitProblemtype { dir } {
+    Kratos::Event_InitProblemtype $dir
+}
+
 proc Kratos::Event_InitProblemtype { dir } {
-    W "init called"
-    W [GidUtils::GetStackTrace]
     variable kratos_private
     variable must_quit
     variable must_write_calc_data
@@ -104,30 +83,10 @@ proc Kratos::Event_InitProblemtype { dir } {
 
     Kratos::LoadCommonScripts
     
-    #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
-    if { [lsearch -exact $::auto_path [file join $kratos_private(Path) scripts]] == -1 } {
-        lappend ::auto_path [file join $kratos_private(Path) scripts]
-    }
+    # Preferences window
+    GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow  
+    Kratos::Start
     
-    foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
-        WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
-        WriteProjectParameters.tcl WriteSubModelPart.tcl} {
-        uplevel 1 [list source [file join $kratos_private(Path) scripts Writing $filename]]
-    }
-
-    foreach filename {Utils.tcl Logs.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
-        uplevel 1 [list source [file join $kratos_private(Path) scripts $filename]]
-    }
-    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
-        uplevel 1 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
-    }
-    foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
-        uplevel 1 [list source [file join $kratos_private(Path) scripts Model $filename]]
-    }
-    foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
-        uplevel 1 [list source [file join $kratos_private(Path) libs $filename]]
-    }
-
     Kratos::LogInitialData
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
@@ -159,6 +118,7 @@ proc Kratos::Event_InitProblemtype { dir } {
         after 500 [list spdAux::CreateWindow]
     }
 }
+
 proc Kratos::InitGlobalVariables {} {
     variable kratos_private
     
@@ -173,7 +133,30 @@ proc Kratos::InitGlobalVariables {} {
 
 proc Kratos::LoadCommonScripts { } {
     variable kratos_private
+    
+    #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
+    if { [lsearch -exact $::auto_path [file join $kratos_private(Path) scripts]] == -1 } {
+        lappend ::auto_path [file join $kratos_private(Path) scripts]
+    }
+    
+    foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
+        WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
+        WriteProjectParameters.tcl WriteSubModelPart.tcl} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename]]
+    }
 
+    foreach filename {Utils.tcl Logs.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts $filename]]
+    }
+    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
+    }
+    foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts Model $filename]]
+    }
+    foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
+        uplevel #0 [list source [file join $kratos_private(Path) libs $filename]]
+    }
 }
 
 proc Kratos::Event_LoadModelSPD { filespd } {
@@ -222,7 +205,7 @@ proc Kratos::Event_LoadModelSPD { filespd } {
 }
 
 proc Kratos::Event_EndProblemtype { } {
-    if {![GidUtils::VersionCmp "14.1.2d"] <0 } {
+    if {![GidUtils::VersionCmp "14.1.4d"] <0 } {
         GiD_UnRegisterEvents PROBLEMTYPE Kratos
     }
     if {[array exists ::Kratos::kratos_private]} {
@@ -476,4 +459,4 @@ proc Kratos::LogInitialData { } {
     Kratos::Log [write::tcl2json $initial_data]
 }
 
-Kratos::Start 
+#Kratos::Start 

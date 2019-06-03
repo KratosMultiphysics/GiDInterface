@@ -131,8 +131,8 @@ proc Kratos::ChangeMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Import MDPA"] [incr pos] PRE [list Kratos::ReadPreW] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Kratos preferences" ] [incr pos] PRE [list ChangeVariables kratos_preferences] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "About Kratos" ] [incr pos] PREPOST [list Kratos::About] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "Kratos preferences" ] [incr pos] PREPOST [list Kratos::About] "" "" replace =
     GidChangeDataLabel "Data units" ""
     GidChangeDataLabel "Interval" ""
     GidChangeDataLabel "Conditions" ""

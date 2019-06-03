@@ -77,3 +77,27 @@ proc spdAux::AddConditionGroupOnNode {basenode groupid} {
 #     }
 #     return [GidUtils::MergeGroups $basenode $groupid]
 # }
+
+# Deprecation date: 03/06/2019
+# Estimated deletion version: never
+# Message: It allows to add the kratos preferences section inside GiD  
+proc ChangeVariables { {groupname ""} } {
+    if { [GidUtils::ExistsWindow PREFERENCES] } {
+       GidUtils::CloseWindow PREFERENCES
+    }
+    set xmlfile Preferences.xml
+    if { [info exists CreateWidgetsFromXml::fileread($xmlfile)] } {
+        if { [GetCurrentPrePostMode] == "POST" } {
+            CreateWidgetsFromXml::IniWin $CreateWidgetsFromXml::fileread($xmlfile) $groupname "ChangeVariables" "" 
+        } else {
+            CreateWidgetsFromXml::IniWin $CreateWidgetsFromXml::fileread($xmlfile) $groupname "ChangeVariables" {general kratos_preferences graphical meshing import_export fonts grid postprocess_main} 
+        }
+    } else {
+        if { [GetCurrentPrePostMode] == "POST" } {
+            CreateWidgetsFromXml::ReadXmlFile Preferences.xml $groupname "ChangeVariables"
+        } else {
+            CreateWidgetsFromXml::ReadXmlFile Preferences.xml $groupname "ChangeVariables" 1 {general kratos_preferences graphical meshing import_export fonts grid postprocess_main}
+            
+        }
+    }    
+}
