@@ -19,6 +19,28 @@ proc Kratos::Start { } {
     }
 }
 
+
+proc ChangeVariables { {groupname ""} } {
+    if { [GidUtils::ExistsWindow PREFERENCES] } {
+       GidUtils::CloseWindow PREFERENCES
+    }
+    set xmlfile Preferences.xml
+    if { [info exists CreateWidgetsFromXml::fileread($xmlfile)] } {
+        if { [GetCurrentPrePostMode] == "POST" } {
+            CreateWidgetsFromXml::IniWin $CreateWidgetsFromXml::fileread($xmlfile) $groupname "ChangeVariables" "" 
+        } else {
+            CreateWidgetsFromXml::IniWin $CreateWidgetsFromXml::fileread($xmlfile) $groupname "ChangeVariables" {general kratos_preferences graphical meshing import_export fonts grid postprocess_main} 
+        }
+    } else {
+        if { [GetCurrentPrePostMode] == "POST" } {
+            CreateWidgetsFromXml::ReadXmlFile Preferences.xml $groupname "ChangeVariables"
+        } else {
+            CreateWidgetsFromXml::ReadXmlFile Preferences.xml $groupname "ChangeVariables" 1 {general kratos_preferences graphical meshing import_export fonts grid postprocess_main}
+            
+        }
+    }    
+}
+
 proc Kratos::RegisterGiDEvents { } {
     # Unregister previous events
     GiD_UnRegisterEvents PROBLEMTYPE Kratos
@@ -26,6 +48,9 @@ proc Kratos::RegisterGiDEvents { } {
     # Init / Load
     GiD_RegisterEvent GiD_Event_InitProblemtype Kratos::Event_InitProblemtype PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_LoadModelSPD Kratos::Event_LoadModelSPD PROBLEMTYPE Kratos
+
+    # Preferences window
+    #GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow  
     
     # Groups / Layers
     GiD_RegisterEvent GiD_Event_AfterRenameGroup Kratos::Event_AfterRenameGroup PROBLEMTYPE Kratos
@@ -54,6 +79,8 @@ proc Kratos::RegisterGiDEvents { } {
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
+    W "init called"
+    W [GidUtils::GetStackTrace]
     variable kratos_private
     variable must_quit
     variable must_write_calc_data
@@ -63,12 +90,8 @@ proc Kratos::Event_InitProblemtype { dir } {
     set must_exist_calc_data 1
     unset -nocomplain kratos_private
     set kratos_private(Path) $dir ;#to know where to find the files
-    set kratos_private(DevMode) "release" ; #can be dev or release
-    set kratos_private(MenuItems) [dict create]
-    set kratos_private(RestoreVars) [list ]
-    set kratos_private(LogFilename) ""
-    set kratos_private(Log) [list ]
-    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+    Kratos::InitGlobalVariables
+
     if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
         W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
         if { [GidUtils::VersionCmp 14.0.0] < 0 } {
@@ -79,13 +102,13 @@ proc Kratos::Event_InitProblemtype { dir } {
         W "Download it from: https://www.gidhome.com/download/developer-versions/"
     }
 
+    Kratos::LoadCommonScripts
+    
     #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
     if { [lsearch -exact $::auto_path [file join $kratos_private(Path) scripts]] == -1 } {
         lappend ::auto_path [file join $kratos_private(Path) scripts]
     }
-    # foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl WriteElements.tcl WriteConditions.tcl} {
-    #     uplevel 1 [list source [file join $dir scripts Writing $filename]]
-    # }
+    
     foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
         WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
         WriteProjectParameters.tcl WriteSubModelPart.tcl} {
@@ -104,8 +127,8 @@ proc Kratos::Event_InitProblemtype { dir } {
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel 1 [list source [file join $kratos_private(Path) libs $filename]]
     }
+
     Kratos::LogInitialData
-    set kratos_private(UseWizard) 0
     set spdAux::ProjectIsNew 0
     Kratos::load_gid_groups_conds
     Kratos::LoadEnvironment
@@ -135,6 +158,22 @@ proc Kratos::Event_InitProblemtype { dir } {
         #open a window to allow the user select the app
         after 500 [list spdAux::CreateWindow]
     }
+}
+proc Kratos::InitGlobalVariables {} {
+    variable kratos_private
+    
+    set kratos_private(DevMode) "release" ; #can be dev or release
+    set kratos_private(MenuItems) [dict create]
+    set kratos_private(RestoreVars) [list ]
+    set kratos_private(LogFilename) ""
+    set kratos_private(Log) [list ]
+    set kratos_private(UseWizard) 0
+    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+}
+
+proc Kratos::LoadCommonScripts { } {
+    variable kratos_private
+
 }
 
 proc Kratos::Event_LoadModelSPD { filespd } {
@@ -417,6 +456,11 @@ proc Kratos::Event_SaveModelSPD { filespd } {
 
 proc Kratos::Event_ChangedLanguage  { newlan } {
     Kratos::UpdateMenus
+}
+
+
+proc Kratos::Event_ModifyPreferencesWindow { root } {
+    Kratos::ModifyPreferencesWindow $root
 }
 
 proc ::Kratos::Quicktest {example_app example_dim example_cmd} {
