@@ -43,8 +43,7 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
 
 proc Kratos::ModifyPreferencesWindow { root } {
     variable kratos_private
-    W "called"
-    W $root
+
     if {[info exists kratos_private(Path)]} {
         set findnode [$root find "name" "general"]
         
@@ -52,8 +51,6 @@ proc Kratos::ModifyPreferencesWindow { root } {
             set xml_preferences_filename [file join $kratos_private(Path) scripts controllers Preferences.xml]
             set xml_data [GidUtils::ReadFile $xml_preferences_filename] 
             CreateWidgetsFromXml::AddAfterName $root "general" $xml_data 
-            W "cargado"
-            #W [$root asXML]
             CreateWidgetsFromXml::UpdatePreferencesWindow
         }
     }
