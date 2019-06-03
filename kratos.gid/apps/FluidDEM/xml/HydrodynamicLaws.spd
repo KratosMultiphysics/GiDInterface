@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="hydrodynamic_laws" pn="Hydrodynamic laws" un="DEMFluidHydrodynamicLaw" icon="material16" help="Materials database" open_window="0">
-	<blockdata n="hydrodynamic_law"             	pn="hydrodynamic law"         name="StokesDragOnly" sequence="1" icon="black1" editable_name="unique" sequence_type="non_void_disabled" help="Interval">
+	<!-- <blockdata n="hydrodynamic_law"             	pn="hydrodynamic law"         name="StokesDragOnly" sequence="1" icon="black1" editable_name="unique" sequence_type="non_void_disabled" help="Interval">
+		<value n="hydrodynamic_law_name"    		pn="Name"           		  v="HydrodynamicInteractionLaw"       values="HydrodynamicInteractionLaw"         state="disabled" help=""/>
 		<value n="buoyancy_parameters"          	pn="Buoyancy"        		  v="default"       values="default" icon="black1" state="disabled" help=""/>
 		<container n="inviscid_force_parameters_tab"  pn="Inviscid force"  		  icon="black1">
 			<value n="inviscid_force_parameters"    pn="Name"           		  v="default"       values="default"         state="disabled" help=""/>
@@ -17,5 +18,27 @@
 				<value n="type"                 	pn="type"                     v="4"     state="disabled"  ></value>
         	</container>
 		</container>
+	</blockdata> -->
+
+		<blockdata n="hydrodynamic_law"             	pn="hydrodynamic law"         name="PowerLawInteraction" sequence="1" icon="black1" editable_name="unique" sequence_type="non_void_disabled" help="Interval">
+        <value n="hydrodynamic_law_name"    		pn="Name"           		  v="PowerLawFluidHydrodynamicInteractionLaw"       values="PowerLawFluidHydrodynamicInteractionLaw"         state="disabled" help=""/>
+		<value n="buoyancy_parameters"          	pn="Buoyancy"        		  v="ArchimedesBuoyancyLaw"       values="ArchimedesBuoyancyLaw" icon="black1" state="disabled" help=""/>
+		<container n="inviscid_force_parameters_tab"  pn="Inviscid force"  		  icon="black1">
+			<value n="inviscid_force_parameters"    pn="Name"           		  v="AutonHuntPrudhommeInviscidForceLaw"       values="AutonHuntPrudhommeInviscidForceLaw"         state="disabled" help=""/>
+			<value n="do_apply_faxen_corrections"   pn="Faxen corrections"        v="false"         values="false, true"     state="disabled" help=""/>
+		</container>
+		<value n="drag_parameters"              	pn="Drag"            		  v="ShahDragLaw" values="ShahDragLaw"   icon="black1" state="disabled" help=""/>
+		<container n="history_force_parameters_tab"   pn="History force parameters" state="hidden" icon="black1">
+			<value n="history_force_parameters"     pn="Name"           		  v="default"       values="default"         state="hidden" help=""/>
+			<value n="quadrature_order"             pn="Quadrature order"         v="2"             values="2"               state="hidden" help=""/>
+			<container n="mae_parameters"       	  pn="Mae parameters"           icon="black1">
+				<value n="do_use_mae"           	pn="Use mae"                  v="false" state="hidden"  ></value>
+				<value n="m"                    	pn="m"                        v="10"    state="hidden"  ></value>
+				<value n="window_time_interval" 	pn="Window time interval"     v="10"    state="hidden"  ></value>
+				<value n="type"                 	pn="type"                     v="4"     state="hidden"  ></value>
+        	</container>
+		</container>
 	</blockdata>
+
+
 </container>

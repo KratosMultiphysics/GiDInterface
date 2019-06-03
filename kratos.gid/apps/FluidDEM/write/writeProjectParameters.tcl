@@ -113,7 +113,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     set IMPACT_WEAR                         [write::getValue DEMNodalResults ImpactWear]
     set LIFT_FORCE                          [write::getValue DEMNodalResults LiftForce]
     set NON_DIMENSIONAL_VOLUME_WEAR         [write::getValue DEMNodalResults NonDimensionalVolWear]
-    set PRESSURE                            [write::getValue DEMNodalResults Pressure]
+    # set PRESSURE                            [write::getValue DEMNodalResults Pressure]
     set PRESSURE_GRAD_PROJECTED             [write::getValue DEMNodalResults PressureGradientProj]
     set RADIUS                              [write::getValue DEMNodalResults Radius]
     set REYNOLDS_NUMBER                     [write::getValue DEMNodalResults ReynoldsN]
@@ -141,7 +141,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict dem_nodal_results "LIFT_FORCE" $LIFT_FORCE
     dict set project_parameters_dict dem_nodal_results "NON_DIMENSIONAL_VOLUME_WEAR" $NON_DIMENSIONAL_VOLUME_WEAR
     dict set project_parameters_dict dem_nodal_results "PRESSURE_GRAD_PROJECTED" $PRESSURE_GRAD_PROJECTED
-    dict set project_parameters_dict dem_nodal_results "PRESSURE" $PRESSURE
+    # dict set project_parameters_dict dem_nodal_results "PRESSURE" $PRESSURE
     dict set project_parameters_dict dem_nodal_results "RADIUS" $RADIUS
     dict set project_parameters_dict dem_nodal_results "REYNOLDS_NUMBER" $REYNOLDS_NUMBER
     dict set project_parameters_dict dem_nodal_results "SLIP_VELOCITY" $SLIP_VELOCITY
@@ -206,7 +206,7 @@ proc ::FluidDEM::write::getParametersDict { } {
             #WV law
             set partgroup [write::getPartsSubModelPartId]
             dict set properties_dict properties_id [dict get $mat_dict $property MID]
-            dict set properties_dict hydrodynamic_law_parameters                                         "name"                         HydrodynamicInteractionLaw
+            dict set properties_dict hydrodynamic_law_parameters                                         "name"                         [dict get $law hydrodynamic_law_name]
             dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         [dict get $law buoyancy_parameters]
             dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "name"                         [dict get $law inviscid_force_parameters]
             dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   [dict get $law do_apply_faxen_corrections]
