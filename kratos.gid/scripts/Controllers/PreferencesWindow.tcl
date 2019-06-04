@@ -1,14 +1,10 @@
 
 proc Kratos::ManagePreferences { cmd name {value ""}} {
-    return 0
-    #name is of the form tk_NormalFont_family tk_NormalFont_size tk_NormalFont_weight
-    set pref_name_list [ split $name _]
-    set tkfont_name [ lindex $pref_name_list 1]
-    set tkfont_option [ lindex $pref_name_list 2]
+    W "$cmd $name $value"
     set ret ""
     switch $cmd {
         "GetValue" {
-            switch $tkfont_option {
+            switch $name {
                 "dev_mode" {
                     set ret $::Kratos::kratos_private(DevMode)
                 }
@@ -16,9 +12,9 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
         }
         "SetValue" {
             set err [ catch {
-                switch $tkfont_option {
+                switch $name {
                     "dev_mode" {
-                    set ::Kratos::kratos_private(DevMode) $value
+                        set ::Kratos::kratos_private(DevMode) $value
                     }
                 }
             } err_txt ]
@@ -28,7 +24,7 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
         }
         "GetDefaultValue" {
             # same as GetValue
-            switch $tkfont_option {
+            switch $name {
             "dev_mode" {
                 set ret "release"
             }
