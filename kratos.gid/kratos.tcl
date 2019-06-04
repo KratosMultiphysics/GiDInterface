@@ -128,6 +128,7 @@ proc Kratos::InitGlobalVariables {} {
     set kratos_private(LogFilename) ""
     set kratos_private(Log) [list ]
     set kratos_private(UseWizard) 0
+    set kratos_private(echo_level) 0
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
 }
 

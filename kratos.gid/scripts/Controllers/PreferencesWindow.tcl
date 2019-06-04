@@ -1,32 +1,21 @@
 
 proc Kratos::ManagePreferences { cmd name {value ""}} {
-    W "$cmd $name $value"
     set ret ""
     switch $cmd {
         "GetValue" {
-            switch $name {
-                "dev_mode" {
-                    set ret $::Kratos::kratos_private(DevMode)
-                }
-            }
+            set ret $::Kratos::kratos_private($name)
         }
         "SetValue" {
-            set err [ catch {
-                switch $name {
-                    "dev_mode" {
-                        set ::Kratos::kratos_private(DevMode) $value
-                    }
-                }
-            } err_txt ]
-            if { $err} {
-                ErrorWin $err_txt
-            }
+            set ::Kratos::kratos_private($name) $value
         }
         "GetDefaultValue" {
             # same as GetValue
             switch $name {
-            "dev_mode" {
+            "DevMode" {
                 set ret "release"
+            }
+            "echo_level" {
+                set ret 0
             }
             }
         }
