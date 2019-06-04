@@ -11,15 +11,15 @@ namespace eval Kratos {
 }
 
 proc Kratos::Start { } {
+    variable kratos_private
+
     if {[GidUtils::VersionCmp "14.1.4d"] <0 } {
         set dir [file dirname [info script]]
-        uplevel 1 [list source [file join $dir scripts DeprecatedEvents.tcl]]
+        uplevel 0 [list source [file join $kratos_private(Path) scripts DeprecatedEvents.tcl]]
     } {
         Kratos::RegisterGiDEvents
     }
 }
-
-
 
 proc Kratos::RegisterGiDEvents { } {
     # Unregister previous events
@@ -54,9 +54,14 @@ proc Kratos::RegisterGiDEvents { } {
     # End
     GiD_RegisterEvent GiD_Event_EndProblemtype Kratos::Event_EndProblemtype PROBLEMTYPE Kratos
 }
-
-proc GiD_Event_InitProblemtype { dir } {
-    Kratos::Event_InitProblemtype $dir
+if {[GidUtils::VersionCmp "14.0.1"] <0 } {
+    proc GiD_Event_InitProblemtype { dir } {
+        Kratos::Event_InitProblemtype $dir
+    }
+} {
+    proc InitGIDProject { dir } {
+        Kratos::Event_InitProblemtype $dir
+    }
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
@@ -68,7 +73,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     set must_write_calc_data 1
     set must_exist_calc_data 1
     unset -nocomplain kratos_private
-    set kratos_private(Path) $dir ;#to know where to find the files
+    set kratos_private(Path) $dir
     Kratos::InitGlobalVariables
 
     if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
@@ -240,7 +245,6 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     return $errcode
 }
 
-
 proc Kratos::RestoreVariables { } {
     variable kratos_private
     
@@ -264,19 +268,6 @@ proc Kratos::LoadWizardFiles { } {
     set ::Kratos::kratos_private(UseWizard) 1
     package require gid_smart_wizard
     Kratos::UpdateMenus
-}
-
-proc Kratos::SwitchMode {} {
-    variable kratos_private
-    if {$kratos_private(DevMode) eq "dev"} {
-        set kratos_private(DevMode) "release"
-    }  {
-        set kratos_private(DevMode) "dev"
-    }
-    Kratos::RegisterEnvironment
-    #W "Registrado $kratos_private(DevMode)"
-    Kratos::UpdateMenus
-    spdAux::RequestRefresh
 }
 
 proc Kratos::GetPreferencesFilePath { } {
@@ -357,8 +348,6 @@ proc Kratos::upgrade_problemtype {spd_file dim app_id} {
     spdAux::LoadIntervalGroups
 }
 
-
-
 proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     foreach group [spdAux::GetAppliedGroups] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
@@ -430,18 +419,15 @@ proc Kratos::Event_BeforeSaveGIDProject { modelname} {
     }
 }
 
-
 proc Kratos::Event_SaveModelSPD { filespd } {
     gid_groups_conds::save_spd_file $filespd
     Kratos::RegisterEnvironment
     FileSelector::CopyFilesIntoModel [file dirname $filespd]
 }
 
-
 proc Kratos::Event_ChangedLanguage  { newlan } {
     Kratos::UpdateMenus
 }
-
 
 proc Kratos::Event_ModifyPreferencesWindow { root } {
     Kratos::ModifyPreferencesWindow $root
@@ -459,5 +445,3 @@ proc Kratos::LogInitialData { } {
     
     Kratos::Log [write::tcl2json $initial_data]
 }
-
-#Kratos::Start 
