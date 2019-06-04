@@ -263,15 +263,24 @@ proc Kratos::Event_EndProblemtype { } {
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
+        # Model must be saved
         if {[GiD_Info Project Modelname] eq "UNNAMED"} {
             error "Save your model first"
         } {
-            set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName].dat]
+            # Prepare the filename
+            set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName]]
         }
     }
+    # The calculation process may need the files of the file selector entries inside the model folder
     FileSelector::CopyFilesIntoModel [file dirname $filename]
+
+    # Start the write configuration clean
     write::Init
+    
+    # Start the writing process
     set errcode [::write::writeEvent $filename]
+    
+    # Kindly inform the user
     if {$errcode} {
         ::GidUtils::SetWarnLine "Error writing mdpa or json"
     } else {
