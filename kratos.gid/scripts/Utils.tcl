@@ -68,3 +68,13 @@ proc Kratos::PrintArray {a {pattern *}} {
         W "[format "%-*s = %s" $maxl $nameString $array($name)]"
     }
 }
+
+proc Kratos::CheckProjectIsNew {filespd} {
+    variable kratos_private
+    set filedir [file dirname $filespd]
+    if {[file nativename $kratos_private(Path)] eq [file nativename $filedir]} {
+        set kratos_private(ProjectIsNew) 1
+    } else {
+        set kratos_private(ProjectIsNew) 0
+    }
+}

@@ -178,44 +178,55 @@ proc Kratos::LoadCommonScripts { } {
 proc Kratos::Event_LoadModelSPD { filespd } {
     variable kratos_private
 
+    # Event called if a model exists, so close all the windows while tree isn't loaded
+    gid_groups_conds::close_all_windows
+    update
+
     # Dont open the init window. Saved models have already app and dimension
     set spdAux::must_open_init_window 0
 
-    set filedir [file dirname $filespd]
-    if {[file nativename $kratos_private(Path)] eq [file nativename $filedir]} {
-        set kratos_private(ProjectIsNew) 1
-    } else {
-        set kratos_private(ProjectIsNew) 0
-    }
-    gid_groups_conds::close_all_windows
-    update
-    if { ![file exists $filespd] } { return }
+    # Need this check for old gid compatibility. Sometimes this event was called by mistake.
+    Kratos::CheckProjectIsNew $filespd
     
-    # Need transform? Get PT version
+    # If the spd file does not exist, sorry
+    if { ![file exists $filespd] } { WarnWin "Could not find the spd file\n$filespd" ;return }
+    
+    #### TRANSFORM SECTION ####
+    # Need transform? Define concepts: Model spd = old version || Problemtype spd = new version || Result of transform == Valid spd
+    # Get PT version
     set versionPT [gid_groups_conds::give_data_version]
     set kratos_private(problemtype_version) $versionPT
     # Open manually the spd file to get the version and the basic information
-    set doc_new [gid_groups_conds::open_XML_file_gzip $filespd]
-    set root [$doc_new documentElement]
-    set versionData [$root @version]
-    if { [package vcompare $versionPT $versionData] == 1 } {
-        set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
-        if {$activeapp_node ne ""} {
-            set activeapp [get_domnode_attribute $activeapp_node v]
-        } else {
-            W "Unable to get the active application"
-            return ""   
-        }
-        set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
-        spdAux::LoadIntervalGroups $root
-        spdAux::LoadModelFiles $root
-        after idle Kratos::upgrade_problemtype $filespd $nd $activeapp
+    set old_doc [gid_groups_conds::open_XML_file_gzip $filespd]
+    set old_root [$old_doc documentElement]
+    set old_versionData [$old_root @version]
+    
+    # Compare the version number
+    if { [package vcompare $versionPT $old_versionData] != 0 } {
+        # If the spd versions are different, transform (no matter which is greater)
+        
+        # Do the transform
+        after idle Kratos::TransformProblemtype $old_root
+
     } else {
+        # If the spd versions are equal, partyhard
+
+        # Load the old spd
         gid_groups_conds::open_spd_file $filespd
+
+        # Refresh the cache
         customlib::UpdateDocument
+        
+        # Load default files (if any) (file selection values store the filepaths in the spd)
         spdAux::LoadModelFiles
+
+        # Load default intervals (if any)
         spdAux::LoadIntervalGroups
+
+        # Reactive the previous app
         spdAux::reactiveApp
+
+        # Open the tree
         spdAux::OpenTree
     }
 }
@@ -353,23 +364,48 @@ proc Kratos::GiveKratosDefaultsFile {} {
     }
 }
 
-proc Kratos::upgrade_problemtype {spd_file dim app_id} {
-    if {[GiDVersionCmp 14.1.1d] < 0} { W "The minimum GiD version for a transform is '14.1.1d'\n Click Ok to try it anyway" }
-    set w [dialogwin_snit .gid._ask -title [_ "Action"] -entrytext \
-            [_ "The model needs to be upgraded. Do you want to upgrade to new version?"]]
+proc Kratos::upgrade_problemtype {old_dom} {
+    # Check if current problemtype allows transforms
+    if {[GiDVersionCmp 14.1.1d] < 0} { W "The minimum GiD version for a transform is '14.1.1d'\n Click Ok to try it anyway (You may lose data)" }
+    
+    # Ask the user if it's ready to tranform
+    set w [dialogwin_snit .gid._ask -title [_ "Transform"] -entrytext [_ "The model needs to be upgraded. Do you want to upgrade to new version? You can lose data"]]
     set action [$w createwindow]
     destroy $w
     if { $action < 1 } { return }
+
+    # Get the old app
+    set old_activeapp_node [$old_dom selectNodes "//hiddenfield\[@n='activeapp'\]"]
+    if {$old_activeapp_node ne ""} {
+        set old_activeapp [get_domnode_attribute $old_activeapp_node v]
+    } else {
+        WarnWin "Unable to get the active application in your model"
+        return ""   
+    }
+    # Get the old dimmension
+    set old_nd [ [$old_dom selectNodes "value\[@n='nDim'\]"] getAttribute v]
+
+    # Load the previous intervals
+    spdAux::LoadIntervalGroups $old_dom
+
+    # Load the previous files (file selection values store the filepaths in the spd)
+    spdAux::LoadModelFiles $old_dom
     
+    # Refresh the cache
     customlib::UpdateDocument
+
+    # Prepare the new spd spatial dimmension
     spdAux::SetSpatialDimmension $dim
+    # Prepare the new spd (and model) active application
     apps::setActiveApp $app_id
 
+    # Call to customlib transform and pray
     gid_groups_conds::transform_problemtype $spd_file
-    #GiD_Process escape escape escape escape Data Defaults TransfProblem $project
 
-    
+    # Load default files (if any) (file selection values store the filepaths in the spd)
     spdAux::LoadModelFiles
+
+    # Load default intervals (if any)
     spdAux::LoadIntervalGroups
 }
 
