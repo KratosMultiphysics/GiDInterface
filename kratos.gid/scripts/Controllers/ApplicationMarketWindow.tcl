@@ -209,7 +209,7 @@ proc spdAux::SetSpatialDimmension {ndim} {
 
 proc spdAux::SwitchDimAndCreateWindow { ndim } {
     variable TreeVisibility
-    variable ProjectIsNew
+    
     
     SetSpatialDimmension $ndim
     spdAux::DestroyWindow
@@ -219,7 +219,7 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
     
     apps::ExecuteOnCurrentXML MultiAppEvent init
     
-    if { $ProjectIsNew eq 0} {
+    if { $::Kratos::kratos_private(ProjectIsNew) eq 1} {
         spdAux::CustomTreeCommon
         apps::ExecuteOnCurrentXML CustomTree ""
     }

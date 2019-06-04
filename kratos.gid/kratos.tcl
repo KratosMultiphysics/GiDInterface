@@ -10,9 +10,10 @@ namespace eval Kratos {
     variable must_exist_calc_data
 }
 
-proc Kratos::Start { } {
+proc Kratos::Events { } {
     variable kratos_private
 
+    # Recommended GiD Version is the latest developer always
     if {[GidUtils::VersionCmp "14.1.4d"] <0 } {
         set dir [file dirname [info script]]
         uplevel 0 [list source [file join $kratos_private(Path) scripts DeprecatedEvents.tcl]]
@@ -53,47 +54,44 @@ proc Kratos::RegisterGiDEvents { } {
     
     # End
     GiD_RegisterEvent GiD_Event_EndProblemtype Kratos::Event_EndProblemtype PROBLEMTYPE Kratos
+    
+    # Preferences window
+    GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow  
 }
-if {[GidUtils::VersionCmp "14.0.1"] <0 } {
+
+# Hard minimum GiD Version is 14
+if {[GidUtils::VersionCmp "14.0.1"] >=0 } {
     proc GiD_Event_InitProblemtype { dir } {
         Kratos::Event_InitProblemtype $dir
     }
 } {
-    proc InitGIDProject { dir } {
-        Kratos::Event_InitProblemtype $dir
-    }
+    # GiD versions previous to 14 are no longer allowed
+    # As we dont register the event InitProblemtype, the rest of events are also unregistered
+    # So no chance to open anything in GiD 13.x or earlier
+    WarnWin "The minimum GiD Version for Kratos is 14 or later \nUpdate at gidhome.com"
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
     variable kratos_private
-    variable must_quit
-    variable must_write_calc_data
-    variable must_exist_calc_data
-    set must_quit 0
-    set must_write_calc_data 1
-    set must_exist_calc_data 1
+
+    # clean private variables array
     unset -nocomplain kratos_private
     set kratos_private(Path) $dir
+
+    # Init Kratos problemtype global vars
     Kratos::InitGlobalVariables
 
-    if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
-        W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
-        if { [GidUtils::VersionCmp 14.0.0] < 0 } {
-            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14." 
-        } {
-            W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
-        }
-        W "Download it from: https://www.gidhome.com/download/developer-versions/"
-    }
+    # GiD Versions earlier than recommended get a message
+    Kratos::WarnAboutMinimumRecommendedGiDVersion
 
+    # Load all common tcl files (not the app ones)
     Kratos::LoadCommonScripts
     
-    # Preferences window
-    GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow  
-    Kratos::Start
+    # Register the rest of events
+    Kratos::Events
     
     Kratos::LogInitialData
-    set spdAux::ProjectIsNew 0
+
     Kratos::load_gid_groups_conds
     Kratos::LoadEnvironment
     Kratos::UpdateMenus
@@ -127,6 +125,13 @@ proc Kratos::Event_InitProblemtype { dir } {
 proc Kratos::InitGlobalVariables {} {
     variable kratos_private
     
+    variable must_quit
+    variable must_write_calc_data
+    variable must_exist_calc_data
+    set must_quit 0
+    set must_write_calc_data 1
+    set must_exist_calc_data 1
+    
     set kratos_private(DevMode) "release" ; #can be dev or release
     set kratos_private(MenuItems) [dict create]
     set kratos_private(RestoreVars) [list ]
@@ -134,6 +139,7 @@ proc Kratos::InitGlobalVariables {} {
     set kratos_private(Log) [list ]
     set kratos_private(UseWizard) 0
     set kratos_private(echo_level) 0
+    set kratos_private(ProjectIsNew) 1
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
 }
 
@@ -173,9 +179,9 @@ proc Kratos::Event_LoadModelSPD { filespd } {
 
     set filedir [file dirname $filespd]
     if {[file nativename $kratos_private(Path)] eq [file nativename $filedir]} {
-        set spdAux::ProjectIsNew 0
+        set kratos_private(ProjectIsNew) 1
     } else {
-        set spdAux::ProjectIsNew 1
+        set kratos_private(ProjectIsNew) 0
     }
     gid_groups_conds::close_all_windows
     update
@@ -444,4 +450,18 @@ proc Kratos::LogInitialData { } {
     dict set initial_data Problemtype_Git_Hash "68418871cff2b897f7fb9176827871b339fe5f91"
     
     Kratos::Log [write::tcl2json $initial_data]
+}
+
+proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
+    variable kratos_private
+
+    if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
+        W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
+        if { [GidUtils::VersionCmp 14.0.0] < 0 } {
+            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14." 
+        } {
+            W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
+        }
+        W "Download it from: https://www.gidhome.com/download/developer-versions/"
+    }
 }
