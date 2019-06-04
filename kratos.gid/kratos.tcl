@@ -5,7 +5,7 @@
 
 namespace eval Kratos {
     variable kratos_private
-    variable must_quit
+    
     variable must_write_calc_data
     variable must_exist_calc_data
 }
@@ -27,6 +27,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_UnRegisterEvents PROBLEMTYPE Kratos
     
     # Init / Load
+    # After new gid project
     #GiD_RegisterEvent GiD_Event_InitProblemtype Kratos::Event_InitProblemtype PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_LoadModelSPD Kratos::Event_LoadModelSPD PROBLEMTYPE Kratos
     
@@ -116,47 +117,59 @@ proc Kratos::InitGlobalVariables {dir} {
     unset -nocomplain kratos_private
     set kratos_private(Path) $dir
     
-    variable must_quit
+    # This variables allows us to Write only and to run only
     variable must_write_calc_data
-    variable must_exist_calc_data
-    set must_quit 0
     set must_write_calc_data 1
+    variable must_exist_calc_data
     set must_exist_calc_data 1
     
+    # DevMode in preferences window
     set kratos_private(DevMode) "release" ; #can be dev or release
+    # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
+    # List of variables to store/load in user preferences
     set kratos_private(RestoreVars) [list ]
+    # Filepath of the log
     set kratos_private(LogFilename) ""
+    # Log message list itself
     set kratos_private(Log) [list ]
+    # Are we using wizard
     set kratos_private(UseWizard) 0
+    # Echo level for messaging
     set kratos_private(echo_level) 0
+    # Project New 1/0
     set kratos_private(ProjectIsNew) 1
+    # Variables from the problemtype definition (kratos.xml)
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
 }
 
 proc Kratos::LoadCommonScripts { } {
     variable kratos_private
     
-    #append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
+    # append to auto_path only folders that must include tcl packages (loaded on demand with package require mechanism)
     if { [lsearch -exact $::auto_path [file join $kratos_private(Path) scripts]] == -1 } {
         lappend ::auto_path [file join $kratos_private(Path) scripts]
     }
     
+    # Writing common scripts
     foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
         WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
         WriteProjectParameters.tcl WriteSubModelPart.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename]]
     }
-
+    # Common scripts
     foreach filename {Utils.tcl Logs.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename]]
     }
+    # Common controllers
     foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
     }
+    # Model class
     foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Model $filename]]
     }
+    # Libs
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel #0 [list source [file join $kratos_private(Path) libs $filename]]
     }

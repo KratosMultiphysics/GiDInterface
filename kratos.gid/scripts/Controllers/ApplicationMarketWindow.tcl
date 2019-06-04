@@ -40,7 +40,7 @@ proc spdAux::activeApp { appid } {
             }
         }
     }
-    if {$::Kratos::must_quit} {return ""}
+    
     set nd [$root selectNodes "value\[@n='nDim'\]"]
     if {[$nd getAttribute v] ne "wait"} {
         if {[$nd getAttribute v] ne "undefined"} {
