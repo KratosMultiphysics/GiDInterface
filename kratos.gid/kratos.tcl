@@ -10,6 +10,18 @@ namespace eval Kratos {
     variable must_exist_calc_data
 }
 
+# Hard minimum GiD Version is 14
+if {[GidUtils::VersionCmp "14.0.1"] >=0 } {
+    proc GiD_Event_InitProblemtype { dir } {
+        Kratos::Event_InitProblemtype $dir
+    }
+} {
+    # GiD versions previous to 14 are no longer allowed
+    # As we dont register the event InitProblemtype, the rest of events are also unregistered
+    # So no chance to open anything in GiD 13.x or earlier
+    WarnWin "The minimum GiD Version for Kratos is 14 or later \nUpdate at gidhome.com"
+}
+
 proc Kratos::Events { } {
     variable kratos_private
 
@@ -58,18 +70,6 @@ proc Kratos::RegisterGiDEvents { } {
     
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow  
-}
-
-# Hard minimum GiD Version is 14
-if {[GidUtils::VersionCmp "14.0.1"] >=0 } {
-    proc GiD_Event_InitProblemtype { dir } {
-        Kratos::Event_InitProblemtype $dir
-    }
-} {
-    # GiD versions previous to 14 are no longer allowed
-    # As we dont register the event InitProblemtype, the rest of events are also unregistered
-    # So no chance to open anything in GiD 13.x or earlier
-    WarnWin "The minimum GiD Version for Kratos is 14 or later \nUpdate at gidhome.com"
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
