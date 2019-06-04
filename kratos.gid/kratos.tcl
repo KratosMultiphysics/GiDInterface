@@ -232,22 +232,36 @@ proc Kratos::Event_LoadModelSPD { filespd } {
 }
 
 proc Kratos::Event_EndProblemtype { } {
-    if {![GidUtils::VersionCmp "14.1.4d"] <0 } {
+    # New event system need an unregister
+    if {[GidUtils::VersionCmp "14.1.4d"] >= 0 } {
         GiD_UnRegisterEvents PROBLEMTYPE Kratos
     }
     if {[array exists ::Kratos::kratos_private]} {
+        # Restore GiD variables that were modified by kratos and must be restored (maybe mesher)
         Kratos::RestoreVariables
+
+        # Close all kratos windows
         Kratos::DestroyWindows
+
+        # Stop the tree refresh loop
         spdAux::EndRefreshTree
+
+        # Save user preferences
         Kratos::RegisterEnvironment
+
+        # Delete all instances of model objects
         Model::DestroyEverything
-        Kratos::EndCreatePreprocessTBar
+
+        # Close customlib things
         gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
+
+        # Clear private global variable
         unset -nocomplain ::Kratos::kratos_private
     }
 }
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
+    # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
         if {[GiD_Info Project Modelname] eq "UNNAMED"} {
             error "Save your model first"
@@ -481,8 +495,13 @@ proc Kratos::Event_BeforeSaveGIDProject { modelname} {
 }
 
 proc Kratos::Event_SaveModelSPD { filespd } {
+    # Save the spd
     gid_groups_conds::save_spd_file $filespd
+
+    # Save user preferences
     Kratos::RegisterEnvironment
+
+    # User files (in file selectors) copied into the model (if required)
     FileSelector::CopyFilesIntoModel [file dirname $filespd]
 }
 
