@@ -292,6 +292,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
 proc Kratos::RestoreVariables { } {
     variable kratos_private
     
+    # Restore GiD variables that kratos modified (maybe the mesher...)
     if {[info exists kratos_private(RestoreVars)]} {
         foreach {k v} $kratos_private(RestoreVars) {
             set $k $v
@@ -302,6 +303,8 @@ proc Kratos::RestoreVariables { } {
 
 proc Kratos::AddRestoreVar {varName} {
     variable kratos_private
+
+    # Add a variable (and value) to the list of variables that will be restored before exiting
     if {[info exists $varName]} {
         set val [set $varName]   
         lappend kratos_private(RestoreVars) $varName $val
@@ -309,52 +312,13 @@ proc Kratos::AddRestoreVar {varName} {
 }
 
 proc Kratos::LoadWizardFiles { } {
-    set ::Kratos::kratos_private(UseWizard) 1
+    variable kratos_private
+    # Load the wizard package
+    set kratos_private(UseWizard) 1
     package require gid_smart_wizard
     Kratos::UpdateMenus
 }
 
-proc Kratos::GetPreferencesFilePath { } {
-    variable kratos_private
-    set dir_name [file dirname [GiveGidDefaultsFile]]
-    set file_name $kratos_private(Name)Vars.txt
-    if { $::tcl_platform(platform) == "windows" } {
-        return [file join $dir_name $file_name]
-    } else {
-        return [file join $dir_name .$file_name]
-    }
-}
-
-proc Kratos::RegisterEnvironment { } {
-    variable kratos_private
-    set varsToSave [list DevMode]
-    set preferences [dict create]
-    if {[info exists kratos_private(DevMode)]} {
-        dict set preferences DevMode $kratos_private(DevMode)
-        #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
-    }
-    if {[llength [dict keys $preferences]] > 0} {
-        set fp [open [Kratos::GetPreferencesFilePath] w]
-        if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
-        close $fp
-    }
-}
-
-proc Kratos::LoadEnvironment { } {
-    variable kratos_private
-    #set kratos_private(DevMode) [gid_groups_conds::get_preference DevMode releasedefault]
-    set data ""
-    set syspath HOME
-    if {$::tcl_platform(platform) eq "windows"} {set syspath APPDATA}
-    catch {
-        set fp [open [Kratos::GetPreferencesFilePath] r]
-        set data [read $fp]
-        close $fp
-    }
-    foreach {k v} [write::json2dict $data] {
-        set kratos_private($k) $v
-    }
-}
 
 proc Kratos::LoadProblemtypeLibraries {} {  
     package require customlib_extras
