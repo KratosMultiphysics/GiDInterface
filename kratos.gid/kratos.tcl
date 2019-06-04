@@ -78,12 +78,12 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Init Kratos problemtype global vars
     Kratos::InitGlobalVariables $dir
 
-    # GiD Versions earlier than recommended get a message
-    Kratos::WarnAboutMinimumRecommendedGiDVersion
-
     # Load all common tcl files (not the app ones)
     Kratos::LoadCommonScripts
     
+    # GiD Versions earlier than recommended get a message
+    Kratos::WarnAboutMinimumRecommendedGiDVersion
+
     # Register the rest of events
     Kratos::Events
     
