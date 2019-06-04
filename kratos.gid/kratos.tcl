@@ -260,34 +260,6 @@ proc Kratos::Event_EndProblemtype { } {
     }
 }
 
-proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
-    # Write the calculation files (mdpa, json...)
-    if {$filename eq ""} {
-        # Model must be saved
-        if {[GiD_Info Project Modelname] eq "UNNAMED"} {
-            error "Save your model first"
-        } {
-            # Prepare the filename
-            set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName]]
-        }
-    }
-    # The calculation process may need the files of the file selector entries inside the model folder
-    FileSelector::CopyFilesIntoModel [file dirname $filename]
-
-    # Start the write configuration clean
-    write::Init
-    
-    # Start the writing process
-    set errcode [::write::writeEvent $filename]
-    
-    # Kindly inform the user
-    if {$errcode} {
-        ::GidUtils::SetWarnLine "Error writing mdpa or json"
-    } else {
-        ::GidUtils::SetWarnLine "MDPA and JSON written OK"
-    }
-    return $errcode
-}
 
 proc Kratos::RestoreVariables { } {
     variable kratos_private
@@ -387,23 +359,31 @@ proc Kratos::Event_AfterRenameGroup { oldname newname } {
 }
 
 proc Kratos::Event_InitGIDPostProcess {} {
+    # Close the tree
     gid_groups_conds::close_all_windows
+    # We don't have (yet) any postprocess window
     gid_groups_conds::open_post check_default
 }
 
 proc Kratos::Event_EndGIDPostProcess {} {
+    # Close all postprocess windows
     gid_groups_conds::close_all_windows
+    # If the tree must be visible
     if {$::spdAux::TreeVisibility} {
+        # Open the tree
         gid_groups_conds::open_conditions check_default
         gid_groups_conds::open_conditions menu
     }
+    # Show the kratos toolbar
     ::Kratos::CreatePreprocessModelTBar
 }
 
 proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedir gidexe args } {
+    # Let's launch the Kratos rocket!
     set run 1
     
     catch {
+        # If the user selected MPI, stop it!
         set paralleltype [write::getValue ParallelType]
         if {$paralleltype eq "MPI"} {set run 0}
     }
@@ -417,17 +397,44 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
+    # Only write if required
     if {$Kratos::must_write_calc_data} {
         set errcode [Kratos::WriteCalculationFilesEvent $filename]
         if {$errcode} {return "-cancel-"}
-    } else {
-        if {$Kratos::must_exist_calc_data} {
-            
+    } 
+}
+
+proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
+    # Write the calculation files (mdpa, json...)
+    if {$filename eq ""} {
+        # Model must be saved
+        if {[GiD_Info Project Modelname] eq "UNNAMED"} {
+            error "Save your model first"
+        } {
+            # Prepare the filename
+            set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName]]
         }
     }
+    # The calculation process may need the files of the file selector entries inside the model folder
+    FileSelector::CopyFilesIntoModel [file dirname $filename]
+
+    # Start the write configuration clean
+    write::Init
+    
+    # Start the writing process
+    set errcode [::write::writeEvent $filename]
+    
+    # Kindly inform the user
+    if {$errcode} {
+        ::GidUtils::SetWarnLine "Error writing mdpa or json"
+    } else {
+        ::GidUtils::SetWarnLine "MDPA and JSON written OK"
+    }
+    return $errcode
 }
 
 proc Kratos::Event_BeforeSaveGIDProject { modelname} {
+    # There are some restrictions in the filenames
     set fail [::Kratos::CheckValidProjectName $modelname]
     
     if {$fail} {
@@ -455,29 +462,15 @@ proc Kratos::Event_ModifyPreferencesWindow { root } {
     Kratos::ModifyPreferencesWindow $root
 }
 
-proc ::Kratos::Quicktest {example_app example_dim example_cmd} {
+proc Kratos::Quicktest {example_app example_dim example_cmd} {
+    # Method used in jginternational tester (check http://github.com/jginternational/kratos-gid-tester)
+
+    # We can only test examples from the Examples app
     apps::setActiveApp Examples
-    ::Examples::LaunchExample $example_app $example_dim $example_cmd
-}
-
-proc Kratos::LogInitialData { } {
-    set initial_data [dict create]
-    dict set initial_data GiD_Version [GiD_Info gidversion]
-    dict set initial_data Problemtype_Git_Hash "68418871cff2b897f7fb9176827871b339fe5f91"
     
-    Kratos::Log [write::tcl2json $initial_data]
-}
+    # So launch the example
+    ::Examples::LaunchExample $example_app $example_dim $example_cmd
 
-proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
-    variable kratos_private
-
-    if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
-        W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
-        if { [GidUtils::VersionCmp 14.0.0] < 0 } {
-            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14." 
-        } {
-            W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
-        }
-        W "Download it from: https://www.gidhome.com/download/developer-versions/"
-    }
+    # And close the windows
+    Kratos::DestroyWindows
 }

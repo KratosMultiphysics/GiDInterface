@@ -79,6 +79,21 @@ proc Kratos::CheckProjectIsNew {filespd} {
     }
 }
 
+
+proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
+    variable kratos_private
+
+    if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
+        W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
+        if { [GidUtils::VersionCmp 14.0.0] < 0 } {
+            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14." 
+        } {
+            W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
+        }
+        W "Download it from: https://www.gidhome.com/download/developer-versions/"
+    }
+}
+
 # Customlib libs and preferences
 proc Kratos::LoadProblemtypeLibraries {} {  
     package require customlib_extras
@@ -164,4 +179,14 @@ proc Kratos::LoadEnvironment { } {
         # Foreach pair key value, restore it
         set kratos_private($k) $v
     }
+}
+
+# LOGS
+
+proc Kratos::LogInitialData { } {
+    set initial_data [dict create]
+    dict set initial_data GiD_Version [GiD_Info gidversion]
+    dict set initial_data Problemtype_Git_Hash "68418871cff2b897f7fb9176827871b339fe5f91"
+    
+    Kratos::Log [write::tcl2json $initial_data]
 }
