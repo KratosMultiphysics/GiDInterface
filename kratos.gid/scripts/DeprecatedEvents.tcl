@@ -5,7 +5,6 @@
 
 # Deprecated events that have been replaced
 # If you are using one of this old methods, change to the new one or die!
-WarnWin 1
 
 ##########################################################
 #################### GiD Tcl events ######################
@@ -22,7 +21,7 @@ proc GiD_Event_AfterReadGIDProject { filename } {
 proc EndGIDProject {} {
     Kratos::Event_EndProblemtype
 }
-WarnWin 2
+
 proc ChangedLanguage { newlan } {
     Kratos::Event_ChangedLanguage
 }
@@ -34,7 +33,7 @@ proc InitGIDPostProcess {} {
 proc EndGIDPostProcess {} {
     ::Kratos::Event_EndGIDPostProcess
 }
-WarnWin 3
+
 # Save GiD project files (save XML Tdom structure to spd file)
 proc SaveGIDProject { filespd } {
     Kratos::Event_SaveModelSPD $filespd
@@ -47,7 +46,7 @@ proc AfterWriteCalcFileGIDProject { fname errorflag } {
 proc GiD_Event_BeforeMeshGeneration { elementsize } {
     return [Kratos::Event_BeforeMeshGeneration $elementsize]
 }
-WarnWin 4
+
 proc AfterMeshGeneration { fail } {
     Kratos::Event_AfterMeshGeneration $fail
 }
@@ -63,4 +62,3 @@ proc GiD_Event_BeforeSaveGIDProject { modelname} {
 proc AfterRenameGroup { oldname newname } {
     spdAux::RenameIntervalGroup $oldname $newname
 }
-WarnWin 5
