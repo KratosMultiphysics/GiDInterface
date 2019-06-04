@@ -39,7 +39,13 @@ proc spdAux::Init { } {
     set GroupsEdited [dict create]
     set must_open_init_window 1
     set must_open_dim_window 1
-    
+}
+
+proc spdAux::StartAsNewProject { } {
+    spdAux::processIncludes
+    spdAux::parseRoutes
+    update
+    spdAux::LoadModelFiles
 }
 
 proc spdAux::RequestRefresh {} {
@@ -117,7 +123,6 @@ proc spdAux::processAppIncludes { root } {
         }
     }
 }
-
 
 proc spdAux::CustomTreeCommon { } {
     set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]

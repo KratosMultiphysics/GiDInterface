@@ -78,6 +78,8 @@ proc spdAux::CreateWindow {} {
 
     if {[apps::getActiveApp] ne ""} {return ""}
     
+    gid_groups_conds::close_all_windows
+    
     spdAux::DestroyInitWindow
     if {[winfo exist .gid.win_example]} {destroy .gid.win_example}
 

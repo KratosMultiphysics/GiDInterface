@@ -74,12 +74,8 @@ if {[GidUtils::VersionCmp "14.0.1"] >=0 } {
 proc Kratos::Event_InitProblemtype { dir } {
     variable kratos_private
 
-    # clean private variables array
-    unset -nocomplain kratos_private
-    set kratos_private(Path) $dir
-
     # Init Kratos problemtype global vars
-    Kratos::InitGlobalVariables
+    Kratos::InitGlobalVariables $dir
 
     # GiD Versions earlier than recommended get a message
     Kratos::WarnAboutMinimumRecommendedGiDVersion
@@ -90,31 +86,22 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Register the rest of events
     Kratos::Events
     
+    # Start the log and register the initial information
     Kratos::LogInitialData
 
-    Kratos::load_gid_groups_conds
+    # Problemtype libraries as CustomLib
+    Kratos::LoadProblemtypeLibraries
+
+    # Load the user environment (stored preferences)
     Kratos::LoadEnvironment
+
+    # Customize GiD menus to add the Kratos entry
     Kratos::UpdateMenus
-    gid_groups_conds::SetProgramName $kratos_private(Name)
-    gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
-    set spdfile [file join $kratos_private(Path) kratos_default.spd]
-    if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
-        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
-    } {
-        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
-    }
-    if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
-        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
-        gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
-        gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images]
-    }
-    spdAux::processIncludes
-    spdAux::parseRoutes
-    update
-    spdAux::LoadModelFiles
-    gid_groups_conds::close_all_windows
-    #kike: the problem here is that the model.spd with the information of the application
-    #was not loaded because is invoked by a posterior event. I don't know really why is working apparently well !!
+    
+    # Start the spd as new project. Mandatory even if we are opening an old case, because this loads the default spd for the future transform
+    spdAux::StartAsNewProject
+
+    # Open the App selection window. It's delayed to wait if GiD calls the Event_LoadModelSPD (open a case instead of new)
     set activeapp_dom [spdAux::SetActiveAppFromDOM]
     if { $activeapp_dom == "" } {
         #open a window to allow the user select the app
@@ -122,8 +109,12 @@ proc Kratos::Event_InitProblemtype { dir } {
     }
 }
 
-proc Kratos::InitGlobalVariables {} {
+proc Kratos::InitGlobalVariables {dir} {
     variable kratos_private
+    
+    # clean and start private variables array
+    unset -nocomplain kratos_private
+    set kratos_private(Path) $dir
     
     variable must_quit
     variable must_write_calc_data
@@ -318,9 +309,24 @@ proc Kratos::LoadEnvironment { } {
     }
 }
 
-proc Kratos::load_gid_groups_conds {} {  
-    package require customlib_extras ;#this require also customLib
+proc Kratos::LoadProblemtypeLibraries {} {  
+    package require customlib_extras
     package require customlib_native_groups
+    variable kratos_private
+    
+    gid_groups_conds::SetProgramName $kratos_private(Name)
+    gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
+    set spdfile [file join $kratos_private(Path) kratos_default.spd]
+    if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
+        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
+    } {
+        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
+    }
+    if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
+        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
+        gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
+        gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images]
+    }
 }
 
 proc Kratos::GiveKratosDefaultsFile {} {
