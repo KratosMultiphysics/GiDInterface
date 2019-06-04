@@ -319,39 +319,7 @@ proc Kratos::LoadWizardFiles { } {
     Kratos::UpdateMenus
 }
 
-
-proc Kratos::LoadProblemtypeLibraries {} {  
-    package require customlib_extras
-    package require customlib_native_groups
-    variable kratos_private
-    
-    gid_groups_conds::SetProgramName $kratos_private(Name)
-    gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
-    set spdfile [file join $kratos_private(Path) kratos_default.spd]
-    if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
-        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
-    } {
-        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
-    }
-    if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
-        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
-        gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
-        gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images]
-    }
-}
-
-proc Kratos::GiveKratosDefaultsFile {} {
-    variable kratos_private
-    set dir_name [file dirname [GiveGidDefaultsFile]]
-    set file_name $kratos_private(Name)$kratos_private(Version).ini
-    if { $::tcl_platform(platform) == "windows" } {
-        return [file join $dir_name $file_name]
-    } else {
-        return [file join $dir_name .$file_name]
-    }
-}
-
-proc Kratos::upgrade_problemtype {old_dom} {
+proc Kratos::TransformProblemtype {old_dom} {
     # Check if current problemtype allows transforms
     if {[GiDVersionCmp 14.1.1d] < 0} { W "The minimum GiD version for a transform is '14.1.1d'\n Click Ok to try it anyway (You may lose data)" }
     
@@ -397,19 +365,20 @@ proc Kratos::upgrade_problemtype {old_dom} {
 }
 
 proc Kratos::Event_BeforeMeshGeneration {elementsize} {
+    # Prepare things before meshing
+
+    # We need to mesh every line and surface assigned to a group that appears in the tree 
     foreach group [spdAux::GetAppliedGroups] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
     }
-    # GiD_Set ForceMesh(Points) 1
-    # GiD_Set ForceMesh(Lines) 1
-    # GiD_Set ForceMesh(Surfaces) 1
-    set ret ""
+    # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
     return $ret
 }
 
 proc Kratos::Event_AfterMeshGeneration {fail} {
+    # Maybe the current application needs to do some extra job
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
 }
 

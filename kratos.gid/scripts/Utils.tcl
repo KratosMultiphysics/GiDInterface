@@ -79,6 +79,38 @@ proc Kratos::CheckProjectIsNew {filespd} {
     }
 }
 
+# Customlib libs and preferences
+proc Kratos::LoadProblemtypeLibraries {} {  
+    package require customlib_extras
+    package require customlib_native_groups
+    variable kratos_private
+    
+    gid_groups_conds::SetProgramName $kratos_private(Name)
+    gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
+    set spdfile [file join $kratos_private(Path) kratos_default.spd]
+    if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
+        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
+    } {
+        gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] "" 0
+    }
+    if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
+        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join [file dirname $spdfile] images]]]
+        gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images Black]
+        gid_groups_conds::add_images_dir [file join [file dirname $spdfile] images]
+    }
+}
+
+proc Kratos::GiveKratosDefaultsFile {} {
+    variable kratos_private
+    set dir_name [file dirname [GiveGidDefaultsFile]]
+    set file_name $kratos_private(Name)$kratos_private(Version).ini
+    if { $::tcl_platform(platform) == "windows" } {
+        return [file join $dir_name $file_name]
+    } else {
+        return [file join $dir_name .$file_name]
+    }
+}
+
 # PREFERENCES
 proc Kratos::GetPreferencesFilePath { } {
     variable kratos_private
