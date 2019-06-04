@@ -6,13 +6,9 @@
 # Deprecated events that have been replaced
 # If you are using one of this old methods, change to the new one or die!
 
-
 ##########################################################
 #################### GiD Tcl events ######################
 ##########################################################
-proc InitGIDProject { dir } {
-    Kratos::Event_InitProblemtype $dir
-}
 
 # Load GiD project files (initialise XML Tdom structure)
 proc GiD_Event_AfterReadGIDProject { filename } {
@@ -38,7 +34,6 @@ proc EndGIDPostProcess {} {
     ::Kratos::Event_EndGIDPostProcess
 }
 
-
 # Save GiD project files (save XML Tdom structure to spd file)
 proc SaveGIDProject { filespd } {
     Kratos::Event_SaveModelSPD $filespd
@@ -51,6 +46,7 @@ proc AfterWriteCalcFileGIDProject { fname errorflag } {
 proc GiD_Event_BeforeMeshGeneration { elementsize } {
     return [Kratos::Event_BeforeMeshGeneration $elementsize]
 }
+
 proc AfterMeshGeneration { fail } {
     Kratos::Event_AfterMeshGeneration $fail
 }

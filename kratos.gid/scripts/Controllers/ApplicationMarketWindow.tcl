@@ -40,7 +40,7 @@ proc spdAux::activeApp { appid } {
             }
         }
     }
-    if {$::Kratos::must_quit} {return ""}
+    
     set nd [$root selectNodes "value\[@n='nDim'\]"]
     if {[$nd getAttribute v] ne "wait"} {
         if {[$nd getAttribute v] ne "undefined"} {
@@ -77,6 +77,8 @@ proc spdAux::CreateWindow {} {
     if {$must_open_init_window == 0} {return ""}
 
     if {[apps::getActiveApp] ne ""} {return ""}
+    
+    gid_groups_conds::close_all_windows
     
     spdAux::DestroyInitWindow
     if {[winfo exist .gid.win_example]} {destroy .gid.win_example}
@@ -209,7 +211,7 @@ proc spdAux::SetSpatialDimmension {ndim} {
 
 proc spdAux::SwitchDimAndCreateWindow { ndim } {
     variable TreeVisibility
-    variable ProjectIsNew
+    
     
     SetSpatialDimmension $ndim
     spdAux::DestroyWindow
@@ -219,7 +221,7 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
     
     apps::ExecuteOnCurrentXML MultiAppEvent init
     
-    if { $ProjectIsNew eq 0} {
+    if { $::Kratos::kratos_private(ProjectIsNew) eq 1} {
         spdAux::CustomTreeCommon
         apps::ExecuteOnCurrentXML CustomTree ""
     }

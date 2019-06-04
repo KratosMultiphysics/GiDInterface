@@ -271,7 +271,7 @@ oo::class create App {
     }
 }
 proc apps::ActivateApp_do {app_name} {
-    set ::Kratos::must_quit 0
+    # set ::Kratos::must_quit 0
     set dir [file join $::Kratos::kratos_private(Path) apps $app_name]
     set fileName [file join $dir start.tcl]
     apps::loadAppFile $fileName
