@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<condition n="Parts" pn="Parts" ov="point,line,surface,volume" ovm="element" icon="shells16" help="Select your group" un="DEMParts">
+<condition n="Parts" pn="Parts" ov="point,line,surface,volume" ovm="node,element" icon="shells16" help="Select your group" un="DEMParts">
 	<value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements ElementType DEM]" help="Select an element" state="hidden">
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
 	</value>
@@ -9,13 +9,13 @@
 	</value>
 
 	<value n="Material" pn="Material" editable='0' help="Choose a material from the database" values='[get_materials_list_simple]' v="DEM-DefaultMaterial" />
-	<value n="AdvancedMeshingFeatures" pn="Advanced Meshing Features" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
+	<value n="AdvancedMeshingFeatures" pn="Advanced meshing features" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
 		<dependencies node="../value" actualize="1"/>
 	</value>
-	<value n="AdvancedMeshingFeaturesAlgorithmType" pn="Advanced Meshing Features Algorithm Type" values="FEMtoDEM,2Dto3D" help="FEMtoDEM: use this algorithm to convert an original FEM mesh (composed of hexaedra, tetrahedra, cuadrilaterals, triangles, lines or points) into spheres located at the nodes, at the centroids of the elements or at both. 2D to 3D: use this algorithm if you want to convert a surface meshed with circles into a mesh of spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
-	<value n="FEMtoDEM" pn="FEM to DEM criterion type" values="AttheNodes,AttheCentroid,AtBothNodesAndCentroids" help="" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="AdvancedMeshingFeaturesAlgorithmType" pn="Algorithm type" v="FEMtoDEM" values="FEMtoDEM,2Dto3D" help="FEMtoDEM: use this algorithm to convert an original FEM mesh (composed of hexaedra, tetrahedra, cuadrilaterals, triangles, lines or points) into spheres located at the nodes, at the centroids of the elements or at both. 2D to 3D: use this algorithm if you want to convert a surface meshed with circles into a mesh of spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="FEMtoDEM" pn="FEM to DEM criterion type" v="AttheNodes" values="AttheNodes,AttheCentroid,AtBothNodesAndCentroids" help="" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="Diameter" pn="Diameter (m)" v="1.0" help="Average diameter of the spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
-	<value n="ProbabilityDistribution" pn="Probability Distribution" values="NormalDistribution,LogDistribution"  help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
-	<value n="StandardDeviation" pn="Standard Deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="ProbabilityDistribution" pn="Probability distribution" v="NormalDistribution" values="NormalDistribution,LogDistribution"  help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="StandardDeviation" pn="Standard deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 
 </condition>
