@@ -35,10 +35,9 @@
         <value n="DisperseFraction"         type="bool" values="true,false" v="false" pn="Disperse phase volume fraction" icon="black1"/>
         <value n="Distance"                 type="bool" values="true,false" v="false" pn="Distance function" icon="black1"/>
         <value n="ParticleVelFiltered"      type="bool" values="true,false" v="false" pn="Filtered disperse phase velocity" icon="black1"/>
-        <value n="SlipVelocity"             type="bool" values="true,false" v="false" pn="Filtered slip velocity" icon="black1"/>
-        <value n="FluidFraction"            type="bool" values="true,false" v="false" pn="Fluid fraction" icon="black1"/>
-        <value n="FluidFractionGrad"        type="bool" values="true,false" v="false" pn="Fluid fraction gradient" icon="black1"/>
-        <value n="FluidFractionRate"        type="bool" values="true,false" v="false" pn="Fluid fraction rate" icon="black1"/>
+        <value n="FluidFraction"            type="bool" values="true,false" v="false" state="disabled" pn="Fluid fraction" icon="black1"/>
+        <value n="FluidFractionGrad"        type="bool" values="true,false" v="false" state="disabled" pn="Fluid fraction gradient" icon="black1"/>
+        <value n="FluidFractionRate"        type="bool" values="true,false" v="false" state="disabled" pn="Fluid fraction rate" icon="black1"/>
         <value n="VelocityLaplacian"        type="bool" values="true,false" v="false" pn="Fluid velocity laplacian" icon="black1"/>
         <value n="VelocityLaplacianRate"    type="bool" values="true,false" v="false" pn="Fluid velocity laplacian rate" icon="black1"/>
         <value n="HydrodynamicReaction"     type="bool" values="true,false" v="false" pn="Hydrodynamic reaction" icon="black1"/>
@@ -46,7 +45,7 @@
         <value n="FPressure"                type="bool" values="true,false" v="true"  pn="Pressure" icon="black1"/>
         <value n="PressureGrad"             type="bool" values="true,false" v="false" pn="Pressure gradient" icon="black1"/>
         <value n="FVelocity"                type="bool" values="true,false" v="true"  pn="Velocity" icon="black1"/>
-        <value n="VelocityGrad"             type="bool" values="true,false" v="false" pn="Velocity gradient" icon="black1"/>
+        <value n="VelocityGrad"             type="bool" values="true,false" v="false" state="disabled" pn="Velocity gradient" icon="black1"/>
         <value n="Viscosity"                type="bool" values="true,false" v="false" pn="Viscosity" icon="black1"/>
         <value n="Vorticity"                type="bool" values="true,false" v="false" pn="Vorticity" icon="black1"/>
     </container>

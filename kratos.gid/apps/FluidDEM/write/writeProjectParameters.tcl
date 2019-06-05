@@ -160,7 +160,6 @@ proc ::FluidDEM::write::getParametersDict { } {
     set HYDRODYNAMIC_REACTION       [write::getValue FluidNodalResults HydrodynamicReaction]
     set VISCOSITY                   [write::getValue FluidNodalResults Viscosity]
     set DISTANCE                    [write::getValue FluidNodalResults Distance]
-    set SLIP_VELOCITY               [write::getValue FluidNodalResults SlipVelocity]
     set VORTICITY                   [write::getValue FluidNodalResults Vorticity]
     set VELOCITY_LAPLACIAN          [write::getValue FluidNodalResults VelocityLaplacian]
     set VELOCITY_LAPLACIAN_RATE     [write::getValue FluidNodalResults VelocityLaplacianRate]
@@ -179,7 +178,6 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict fluid_nodal_results "PARTICLE_VEL_FILTERED" $PARTICLE_VEL_FILTERED
     dict set project_parameters_dict fluid_nodal_results "PRESSURE_GRADIENT" $PRESSURE_GRADIENT
     dict set project_parameters_dict fluid_nodal_results "PRESSURE" $PRESSURE
-    dict set project_parameters_dict fluid_nodal_results "SLIP_VELOCITY" $SLIP_VELOCITY
     dict set project_parameters_dict fluid_nodal_results "VELOCITY_GRADIENT" false
     dict set project_parameters_dict fluid_nodal_results "VELOCITY_LAPLACIAN_RATE" $VELOCITY_LAPLACIAN_RATE
     dict set project_parameters_dict fluid_nodal_results "VELOCITY_LAPLACIAN" $VELOCITY_LAPLACIAN
