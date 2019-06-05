@@ -28,7 +28,7 @@ proc Kratos::Events { } {
     # Recommended GiD Version is the latest developer always
     if {[GidUtils::VersionCmp "14.1.4d"] <0 } {
         set dir [file dirname [info script]]
-        uplevel 0 [list source [file join $kratos_private(Path) scripts DeprecatedEvents.tcl]]
+        uplevel #0 [list source [file join $kratos_private(Path) scripts DeprecatedEvents.tcl]]
     } {
         Kratos::RegisterGiDEvents
     }
