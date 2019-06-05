@@ -62,9 +62,9 @@ proc ::DEM::BeforeMeshGeneration_working {elementsize} {
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
-		if {![write::isBooleanTrue $advanced_meshing_features]} {
+        if {![write::isBooleanTrue $advanced_meshing_features]} {
             foreach volume [GiD_EntitiesGroups get $groupid volumes] {
-            GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
+                GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
             }
         }
     }
@@ -76,15 +76,15 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
-		if {![write::isBooleanTrue $advanced_meshing_features]} {
+        if {![write::isBooleanTrue $advanced_meshing_features]} {
             foreach volume [GiD_EntitiesGroups get $groupid volumes] {
-            GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
+                GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
             }
         }
     }
     #wkcf::Preprocess   what is this???
     if {[catch {DEM::write::BeforeMeshGenerationUtils $elementsize} err]} {
-	WarnWinText $err
+        WarnWinText $err
     }
 }
 
@@ -92,13 +92,13 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
 proc ::DEM::AfterMeshGeneration { fail } {
     # set without_window [GidUtils::AreWindowsDisabled];
     # if {!$without_window} {
-	# GidUtils::DisableGraphics
+        # GidUtils::DisableGraphics
     # }
     if {[catch {::DEM::write::Elements_Substitution} msg]} {
       W "::DEM::write::Elements_Substitution!. $msg"
     }
     # if {!$without_window} {
-	# GidUtils::EnableGraphics
+        # GidUtils::EnableGraphics
     # }
 }
 
