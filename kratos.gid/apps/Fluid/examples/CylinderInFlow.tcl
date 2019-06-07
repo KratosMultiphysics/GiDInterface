@@ -125,7 +125,7 @@ proc Fluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
     GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get Outlet surfaces] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Walls surfaces] escape escape
     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_mesh_size [GiD_EntitiesGroups get Fluid volumes] escape escape
-    Kratos::BeforeMeshGeneration $fluid_mesh_size
+    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 proc Fluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
     set cylinder_mesh_size 0.005
@@ -133,7 +133,7 @@ proc Fluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $cylinder_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cylinder lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    Kratos::BeforeMeshGeneration $fluid_mesh_size
+    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
 
@@ -199,9 +199,9 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     }
     # Output
     set time_parameters [list OutputControlType step OutputDeltaStep 1]
-    set time_params_path [spdAux::getRoute "FLResults"]
+    set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
     }
     # Parallelism
     set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
@@ -223,7 +223,7 @@ proc Fluid::examples::ErasePreviousIntervals { } {
 
 proc Fluid::examples::AddCuts { } {
     # Cuts
-    set results [spdAux::getRoute "FLResults"]
+    set results "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }

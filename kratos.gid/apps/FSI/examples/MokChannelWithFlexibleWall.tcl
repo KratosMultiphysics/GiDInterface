@@ -278,7 +278,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Fluid domain output parameters
     set change_list [list OutputControlType step]
-    set xpath [spdAux::getRoute FLResults]
+    set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
@@ -353,7 +353,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Structure domain output parameters
     set change_list [list OutputControlType step]
-    set xpath [spdAux::getRoute STResults]
+    set xpath "[spdAux::getRoute STResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {

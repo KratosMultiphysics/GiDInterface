@@ -101,7 +101,7 @@ proc spdAux::injectSolStratParams {basenode args} {
             set node "<value n='$parname' pn='$pn' state='\[SolStratParamState\]' v='$dv' help='$helptext' "
 
             if {$actualize} {
-                append node "actualize_tree='1'"
+                append node " actualize_tree='1' "
             }
 
             if {$type eq "bool"} {
@@ -233,7 +233,6 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
         append node "</condition>"
         $conds appendXML $node
     }
-
 }
 
 proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {

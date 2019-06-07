@@ -295,9 +295,9 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
 
     # Output
     set time_parameters [list OutputControlType step OutputDeltaStep 1]
-    set time_params_path [spdAux::getRoute "Results"]
+    set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
+        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
     }
 
     # Parallelism
