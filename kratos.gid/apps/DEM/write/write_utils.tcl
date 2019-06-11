@@ -466,9 +466,10 @@ proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
     
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
+    set groups_to_spherize_list [list ]
     foreach group [$root selectNodes $xp1] {
-	set groupid [$group @n]
-	lappend groups_to_spherize_list $groupid
+        set groupid [$group @n]
+        lappend groups_to_spherize_list $groupid
     }
     
     # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
@@ -493,9 +494,9 @@ proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
     
     set boundarylist [list]
     foreach surface_id [lsort -integer [array names surfaces_higher_entities_list]] {
-	if {$surfaces_higher_entities_list($surface_id) == 1} {
-	    lappend boundarylist $surface_id
-	}
+        if {$surfaces_higher_entities_list($surface_id) == 1} {
+            lappend boundarylist $surface_id
+        }
     }
     return $boundarylist
 }

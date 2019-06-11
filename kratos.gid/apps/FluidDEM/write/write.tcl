@@ -62,4 +62,8 @@ proc FluidDEM::write::AddValidApps {appid} {
     DEM::write::AddAttribute validApps $appid
 }
 
+proc Fluid::write::getFluidModelPartFilename { } {
+    return [Kratos::GetModelName]Fluid
+}
+
 FluidDEM::write::Init
