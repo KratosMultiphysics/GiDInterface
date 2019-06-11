@@ -18,4 +18,5 @@
 	<value n="ProbabilityDistribution" pn="Probability distribution" v="NormalDistribution" values="NormalDistribution,LogDistribution"  help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="StandardDeviation" pn="Standard deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 
+	<dynamicnode command="spdAux::injectPartInputs" args=""/>
 </condition>

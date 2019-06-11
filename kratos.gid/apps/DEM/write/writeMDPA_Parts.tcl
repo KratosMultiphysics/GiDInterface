@@ -359,14 +359,16 @@ proc DEM::write::writeMaterialsParts { } {
     set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
 
     foreach group [dict keys $partsProperties] {
-        write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-        #dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
-        dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
-        foreach {prop val} [dict get $partsProperties $group] {
-            if {$prop in $printable} {
-                write::WriteString "    $prop $val"
+        if {[dict get $partsProperties $group APPID] eq "DEM"} {
+            write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
+            #dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
+            dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
+            foreach {prop val} [dict get $partsProperties $group] {
+                if {$prop in $printable} {
+                    write::WriteString "    $prop $val"
+                }
             }
+            write::WriteString "End Properties\n"
         }
-        write::WriteString "End Properties\n"
     }
 }

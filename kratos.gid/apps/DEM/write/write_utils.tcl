@@ -222,7 +222,6 @@ proc DEM::write::Elements_Substitution {} {
     return $fail
 }
 
-
 proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
     
     set mesh_elements [GiD_EntitiesGroups get $cgroupid all_mesh]
@@ -339,7 +338,6 @@ proc DEM::write::GetNodeHigherentities {node_id} {
     return $higherentity
 }
 
-
 proc DEM::write::GetElementCenter {element_id} {
     set element_data [GiD_Mesh get element $element_id]
     set num_nodes [lindex $element_data 2]
@@ -351,7 +349,6 @@ proc DEM::write::GetElementCenter {element_id} {
     }
     return [MathUtils::ScalarByVectorProd [expr {1.0/$num_nodes}] $sum]
 }
-
 
 proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
     
@@ -396,7 +393,6 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
     DEM::write::ForceTheMeshingOfDEMInletGroups
     
 }
-
 
 proc DEM::write::AlignSurfNormals {direction} {
     # ABSTRACT: Makes all of boundary surfaces' normals point inwards or outwards
@@ -447,14 +443,13 @@ proc DEM::write::CleanAutomaticConditionGroupGiD {args {fieldvalue ""}} {
         GiD_Groups create $fieldvalue
     }
     GiD_Groups edit state $fieldvalue hidden
-    # msg [GiD_Groups get state $fieldvalue]
-    # msg "$fieldvalue [GiD_EntitiesGroups get $fieldvalue elements]"
+    # W [GiD_Groups get state $fieldvalue]
+    # W "$fieldvalue [GiD_EntitiesGroups get $fieldvalue elements]"
     foreach entity $args {
         GiD_EntitiesGroups unassign $fieldvalue $entity
     }
     GidUtils::UpdateWindow GROUPS
 }
-
 
 proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
     # ABSTRACT: Return a list containing all boundaries entities
@@ -466,6 +461,7 @@ proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
     
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
+    set groups_to_spherize_list [list ]
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         lappend groups_to_spherize_list $groupid
@@ -531,7 +527,6 @@ proc DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
     return $boundarylist
 }
 
-
 proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
     
     set list_of_points [GiD_Geometry list point 1:end]
@@ -547,21 +542,21 @@ proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
     set bound_sphere_surface_list [DEM::write::FindBoundariesOfSphericElements surface]
     
     foreach point_id $list_of_points line_id $list_of_lines surface_id $list_of_surfaces {
-        set point_info [GiD_Info list_entities point $point_id]
-        set line_info [GiD_Info list_entities line $line_id]
-        set surface_info [GiD_Info list_entities surface $surface_id]
-        set point_has_no_higher_entities [regexp {HigherEntity: 0} $point_info]
-        set line_has_no_higher_entities [regexp {HigherEntity: 0} $line_info]
-        set surface_has_no_higher_entities [regexp {HigherEntity: 0} $surface_info]
-        if {$point_has_no_higher_entities == 1} {
-            lappend points_to_add_to_skin_spheres $point_id
-        }
-        if {$line_has_no_higher_entities == 1} {
-            lappend lines_to_add_to_skin_spheres $line_id
-        }
-        if {$surface_has_no_higher_entities == 1} {
-            # lappend surfaces_to_add_to_skin_spheres $surface_id; # esta linea es la que asigna skin a las placas
-        }
+	set point_info [GiD_Info list_entities point $point_id]
+	set line_info [GiD_Info list_entities line $line_id]
+	set surface_info [GiD_Info list_entities surface $surface_id]
+	set point_has_no_higher_entities [regexp {HigherEntity: 0} $point_info]
+	set line_has_no_higher_entities [regexp {HigherEntity: 0} $line_info]
+	set surface_has_no_higher_entities [regexp {HigherEntity: 0} $surface_info]
+	if {$point_has_no_higher_entities == 1} {
+	    lappend points_to_add_to_skin_spheres $point_id
+	}
+	if {$line_has_no_higher_entities == 1} {
+	    lappend lines_to_add_to_skin_spheres $line_id
+	}
+	if {$surface_has_no_higher_entities == 1} {
+	    # lappend surfaces_to_add_to_skin_spheres $surface_id; # esta linea es la que asigna skin a las placas
+	}
     }
     # W $surfaces_to_add_to_skin_spheres
     # W $bound_sphere_surface_list
@@ -599,7 +594,6 @@ proc DEM::write::GetSurfaceTypeList {surfacelist} {
     return [list $tetrasurf $hexasurf]
 }
 
-
 proc DEM::write::AssignConditionToGroupGID {entity elist groupid} {
     # Need New GiD_group adaptation
     if {![GiD_Groups exists $groupid]} {
@@ -609,7 +603,6 @@ proc DEM::write::AssignConditionToGroupGID {entity elist groupid} {
     GiD_EntitiesGroups assign $groupid $entity $elist
     GidUtils::UpdateWindow GROUPS
 }
-
 
 proc DEM::write::AssignSpecialBoundaries {entitylist} {
     #set DEMApplication "No"
@@ -652,8 +645,8 @@ proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     #set xp1 "[spdAux::getRoute DEMConditions]/group"DEM-FEM-Wall
     set xp1 "[spdAux::getRoute DEMConditions]/group"
     foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+	set groupid [$group @n]
+	GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
     
     # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-FEM-Wall"] {
@@ -666,8 +659,8 @@ proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
     #set xp1 "[spdAux::getRoute DEMConditions]/group" Inlet
     set xp1 "[spdAux::getRoute DEMConditions]/group"
     foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+	set groupid [$group @n]
+	GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
     
     # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-Inlet"] {
@@ -675,15 +668,14 @@ proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
         # }
 }
 
-
-
 proc DEM::write::FindBoundariesOfSphericElements {entity} {
     
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
+    set groups_to_spherize_list [list ]
     foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        lappend groups_to_spherize_list $groupid
+	    set groupid [$group @n]
+	    lappend groups_to_spherize_list $groupid
     }
     
     # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]

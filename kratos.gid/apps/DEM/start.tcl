@@ -82,7 +82,6 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
             }
         }
     }
-    #wkcf::Preprocess   what is this???
     if {[catch {DEM::write::BeforeMeshGenerationUtils $elementsize} err]} {
         WarnWinText $err
     }

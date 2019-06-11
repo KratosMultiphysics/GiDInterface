@@ -78,6 +78,7 @@ proc DEM::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
+
 proc DEM::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes

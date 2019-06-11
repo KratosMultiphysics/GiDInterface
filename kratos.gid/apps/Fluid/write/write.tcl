@@ -106,6 +106,10 @@ proc Fluid::write::writeConditions { } {
     writeDrags
 }
 
+proc Fluid::write::getFluidModelPartFilename { } {
+    return [Kratos::GetModelName]
+}
+
 proc Fluid::write::writeBoundaryConditions { } {
     variable FluidConditionMap
     variable last_condition_iterator

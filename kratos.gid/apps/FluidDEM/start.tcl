@@ -16,7 +16,6 @@ proc ::FluidDEM::Init { } {
     set attributes [dict create]
     set kratos_name FluidDEMapplication
 
-    #W "Sourced FSI"
     set dir [apps::getMyDir "FluidDEM"]
     set prefix FluidDEM_
 
@@ -50,7 +49,7 @@ proc ::FluidDEM::BeforeMeshGeneration {elementsize} {
 }
 
 proc ::FluidDEM::AfterMeshGeneration { fail } {
-    ::DEM::AfterMeshGeneration
+    ::DEM::AfterMeshGeneration fail
 }
 
 proc ::FluidDEM::GetAttribute {name} {

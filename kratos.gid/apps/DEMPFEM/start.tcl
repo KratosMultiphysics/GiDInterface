@@ -16,7 +16,6 @@ proc ::DEMPFEM::Init { } {
     set attributes [dict create]
     set kratos_name DEMPFEMapplication
 
-    #W "Sourced FSI"
     set dir [apps::getMyDir "DEMPFEM"]
     set prefix DEMPFEM_
 
