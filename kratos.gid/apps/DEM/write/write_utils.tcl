@@ -222,7 +222,6 @@ proc DEM::write::Elements_Substitution {} {
     return $fail
 }
 
-
 proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
     
     set mesh_elements [GiD_EntitiesGroups get $cgroupid all_mesh]
@@ -286,9 +285,9 @@ proc DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes {final_list_of_iso
     # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
     
     foreach node_id [lsort -integer -unique $final_list_of_isolated_nodes] {
-	if {![DEM::write::GetNodeHigherentities $node_id]} {
-	    GiD_Mesh delete node $node_id
-	}
+        if {![DEM::write::GetNodeHigherentities $node_id]} {
+            GiD_Mesh delete node $node_id
+        }
     }
 }
 
@@ -339,7 +338,6 @@ proc DEM::write::GetNodeHigherentities {node_id} {
     return $higherentity
 }
 
-
 proc DEM::write::GetElementCenter {element_id} {
     set element_data [GiD_Mesh get element $element_id]
     set num_nodes [lindex $element_data 2]
@@ -351,7 +349,6 @@ proc DEM::write::GetElementCenter {element_id} {
     }
     return [MathUtils::ScalarByVectorProd [expr {1.0/$num_nodes}] $sum]
 }
-
 
 proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
     
@@ -396,7 +393,6 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
     DEM::write::ForceTheMeshingOfDEMInletGroups
     
 }
-
 
 proc DEM::write::AlignSurfNormals {direction} {
     # ABSTRACT: Makes all of boundary surfaces' normals point inwards or outwards
@@ -447,14 +443,13 @@ proc DEM::write::CleanAutomaticConditionGroupGiD {args {fieldvalue ""}} {
         GiD_Groups create $fieldvalue
     }
     GiD_Groups edit state $fieldvalue hidden
-    # msg [GiD_Groups get state $fieldvalue]
-    # msg "$fieldvalue [GiD_EntitiesGroups get $fieldvalue elements]"
+    # W [GiD_Groups get state $fieldvalue]
+    # W "$fieldvalue [GiD_EntitiesGroups get $fieldvalue elements]"
     foreach entity $args {
         GiD_EntitiesGroups unassign $fieldvalue $entity
     }
     GidUtils::UpdateWindow GROUPS
 }
-
 
 proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
     # ABSTRACT: Return a list containing all boundaries entities
@@ -532,7 +527,6 @@ proc DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
     return $boundarylist
 }
 
-
 proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
     
     set list_of_points [GiD_Geometry list point 1:end]
@@ -600,7 +594,6 @@ proc DEM::write::GetSurfaceTypeList {surfacelist} {
     return [list $tetrasurf $hexasurf]
 }
 
-
 proc DEM::write::AssignConditionToGroupGID {entity elist groupid} {
     # Need New GiD_group adaptation
     if {![GiD_Groups exists $groupid]} {
@@ -610,7 +603,6 @@ proc DEM::write::AssignConditionToGroupGID {entity elist groupid} {
     GiD_EntitiesGroups assign $groupid $entity $elist
     GidUtils::UpdateWindow GROUPS
 }
-
 
 proc DEM::write::AssignSpecialBoundaries {entitylist} {
     #set DEMApplication "No"
@@ -675,8 +667,6 @@ proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
         #         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
         # }
 }
-
-
 
 proc DEM::write::FindBoundariesOfSphericElements {entity} {
     

@@ -151,10 +151,10 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
 
     set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
-        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
+        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n force]
     }
     foreach {n in} [$sch getInputs] {
-        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
+        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n force]
     }
     return $solverSettingsDict
 }
