@@ -563,6 +563,11 @@ proc write::getSpacing {number} {
 }
 proc write::mdpaIndent { {b 4} } {
     variable current_mdpa_indent_level
+    if {[info exists Kratos::kratos_private(mdpa_format)]} {
+        if {$Kratos::kratos_private(mdpa_format) == 0} {
+            return ""
+        }
+    }
     string repeat [string repeat " " $b] $current_mdpa_indent_level
 }
 

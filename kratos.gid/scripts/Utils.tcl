@@ -147,12 +147,14 @@ proc Kratos::GetPreferencesFilePath { } {
 
 proc Kratos::RegisterEnvironment { } {
     variable kratos_private
-    set varsToSave [list DevMode]
+    set vars_to_save [list DevMode echo_level mdpa_format]
     set preferences [dict create]
-    if {[info exists kratos_private(DevMode)]} {
-        dict set preferences DevMode $kratos_private(DevMode)
-        #gid_groups_conds::set_preference DevMode $kratos_private(DevMode)
+    foreach v $vars_to_save {
+        if {[info exists kratos_private($v)]} {
+            dict set preferences $v $kratos_private($v)
+        }
     }
+    
     if {[llength [dict keys $preferences]] > 0} {
         set fp [open [Kratos::GetPreferencesFilePath] w]
         if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}

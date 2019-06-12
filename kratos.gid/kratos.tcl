@@ -123,8 +123,14 @@ proc Kratos::InitGlobalVariables {dir} {
     variable must_exist_calc_data
     set must_exist_calc_data 1
     
+    # User environment (stored for future sessions)
     # DevMode in preferences window
     set kratos_private(DevMode) "release" ; #can be dev or release
+    # Echo level for messaging
+    set kratos_private(echo_level) 0
+    # indent in mdpa files  | 0 ASCII unindented | 1 ASCII indented pretty
+    set kratos_private(mdpa_format) 1
+
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
     # List of variables to store/load in user preferences
@@ -135,8 +141,6 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(Log) [list ]
     # Are we using wizard
     set kratos_private(UseWizard) 0
-    # Echo level for messaging
-    set kratos_private(echo_level) 0
     # Project New 1/0
     set kratos_private(ProjectIsNew) 1
     # Variables from the problemtype definition (kratos.xml)
