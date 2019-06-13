@@ -98,10 +98,6 @@ proc Structural::write::getOldParametersDict { } {
         }
     }
 
-    dict set solverSettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [GetAttribute parts_un]]
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] [GetAttribute conditions_un] ]
-
-
     if {[usesContact]} {
         # Mirar type y ver si es Frictionless o Frictional
         dict set solverSettingsDict contact_settings mortar_type "ALMContactFrictionlessComponents"
