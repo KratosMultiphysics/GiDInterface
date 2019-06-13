@@ -29,6 +29,7 @@
 	<appLink n="MPM" public="1" pn="MPM" active="0" appid="MPM" prefix="MPM"/>
 	<appLink n="DEMPFEM" public="0" pn="DEM+PFEM" active="0" appid="DEMPFEM" prefix="DEMPFEM"/>
 	<appLink n="CDEM" public="0" pn="Cohesive DEM" active="0" appid="CDEM" prefix="CDEM"/>
+	<appLink n="Chimera" public="0" pn="Chimera" active="0" appid="Chimera" prefix="Chim"/>
 	<appLink n="Examples" public="1" pn="Examples" active="0" appid="Examples" prefix="EXA_"/>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">
 		<value n='units_mesh' pn='Mesh units' unit_mesh_definition="1"/>

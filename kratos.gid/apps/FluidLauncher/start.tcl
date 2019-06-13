@@ -5,7 +5,7 @@ namespace eval ::FluidLauncher {
 proc ::FluidLauncher::Init { } {
     variable available_apps
 
-    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM]
+    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM Chimera]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
     
