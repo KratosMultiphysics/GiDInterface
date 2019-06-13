@@ -18,9 +18,24 @@ proc Chimera::xml::CustomTree { args } {
     spdAux::processIncludes
     Fluid::xml::CustomTree {*}$args
     
-    set root [customlib::GetBaseRoot]
     # Change the app name
-    [$root selectNodes "container\[@n = 'Fluid'\]"] setAttribute pn "Chimera"
+    [[customlib::GetBaseRoot] selectNodes "container\[@n = 'Fluid'\]"] setAttribute pn "Chimera"
+    
+    # Add ChimeraParts.spd
+    set xpath "container\[@n = 'Fluid'\]/condition\[@n='ChimeraParts'\]"
+    if {[[customlib::GetBaseRoot] selectNodes $xpath] eq ""} {
+        set chimera_parts [gid_groups_conds::addF "container\[@n = 'Fluid'\]" include [list n ChimeraParts active 1 path {apps/Chimera/xml/ChimeraParts.spd}]]
+    
+        customlib::UpdateDocument
+        set parts [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute FLParts]]
+        set new [$chimera_parts cloneNode]
+        set parent [[$parts nextSibling] parent]
+        $chimera_parts delete
+        $parent insertBefore $new [$parts nextSibling]
+    }
+
+    customlib::ProcessIncludes $::Kratos::kratos_private(Path)
+    spdAux::parseRoutes
 }
 proc Chimera::xml::UpdateParts {domNode args} {
     Fluid::xml::UpdateParts $domNode {*}$args

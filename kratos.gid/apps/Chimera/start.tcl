@@ -3,7 +3,6 @@ namespace eval ::Chimera {
     variable dir
     variable prefix
     variable attributes
-    variable oldMeshType
     variable kratos_name
 }
 
@@ -16,12 +15,12 @@ proc ::Chimera::Init { } {
 
     apps::LoadAppById "Fluid"
     set kratos_name $::Fluid::kratos_name
+    set dir [apps::getMyDir "Chimera"]
     
     set ::Model::ValidSpatialDimensions [list 2D]
     spdAux::SetSpatialDimmension "2D"
     spdAux::processIncludes
 
-    set dir [apps::getMyDir "Chimera"]
     set attributes [dict create]
 
     set prefix Chim
