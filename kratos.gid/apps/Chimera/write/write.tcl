@@ -32,32 +32,11 @@ proc Chimera::write::writeModelPartEvent { } {
     write::writeElementConnectivities
     Fluid::write::writeConditions
     Fluid::write::writeMeshes
-    writeDistances
     Fluid::write::FreeConditionsMap
 }
 proc Chimera::write::writeCustomFilesEvent { } {
     write::CopyFileIntoModel "python/KratosFluid.py"
     write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
-}
-
-proc Chimera::write::writeDistances { } {
-    set must_write [write::getValue EMBFLDistanceSettings ReadingMode]
-    if {$must_write eq "from_mdpa"} {
-        set data [GiD_Info Mesh EmbeddedDistances] 
-        lassign $data nodes_list distances_list
-        set length [objarray length $nodes_list]
-        if {$length eq "0"} {W "Warning: No distances detected! Check Preferences > Mesh type > Embedded"}
-        write::WriteString "Begin NodalData DISTANCE"
-        incr write::current_mdpa_indent_level
-        set s [write::mdpaIndent]
-        for {set i 0} {$i < $length} {incr i } {
-            set node_id [objarray get $nodes_list $i]
-            set distance [objarray get $distances_list $i]
-            write::WriteString "$s$node_id 0 $distance"
-        }
-        incr write::current_mdpa_indent_level -1
-        write::WriteString "End NodalData"
-    }
 }
 
 proc Chimera::write::GetAttribute {att} {
