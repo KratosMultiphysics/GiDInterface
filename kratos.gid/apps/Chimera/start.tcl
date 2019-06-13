@@ -16,14 +16,15 @@ proc ::Chimera::Init { } {
 
     apps::LoadAppById "Fluid"
     set kratos_name $::Fluid::kratos_name
+    
+    set ::Model::ValidSpatialDimensions [list 2D]
+    spdAux::SetSpatialDimmension "2D"
+    spdAux::processIncludes
 
     set dir [apps::getMyDir "Chimera"]
     set attributes [dict create]
 
     set prefix Chim
-
-    set ::Model::ValidSpatialDimensions [list 3D]
-    spdAux::SetSpatialDimmension "3D"
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
@@ -31,10 +32,6 @@ proc ::Chimera::Init { } {
     dict set attributes UseIntervals 1
 
     LoadMyFiles
-    Kratos::AddRestoreVar "::GidPriv(DuplicateEntities)"
-    set ::GidPriv(DuplicateEntities) 1
-
-    #::spdAux::CreateDimensionWindow
 }
 
 proc ::Chimera::LoadMyFiles { } {
@@ -52,28 +49,24 @@ proc ::Chimera::GetAttribute {name} {
     return $value
 }
 
-proc ::Chimera::CustomMenus { } {
-    Chimera::examples::UpdateMenus
-}
-
-proc ::Chimera::BeforeMeshGeneration {elementsize} {
-    variable oldMeshType
+# proc ::Chimera::BeforeMeshGeneration {elementsize} {
+#     variable oldMeshType
     
-    set project_path [GiD_Info project modelname]
-    if {$project_path ne "UNNAMED"} {
-        catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[Kratos::GetModelName].post.res"]}
-        # Set Octree
-        set oldMeshType [GiD_Set MeshType]
-        ::GiD_Set MeshType 2
-    } else {
-        after 500 {WarnWin "You need to save the project before meshing"}
-        return "-cancel-"
-    }
-}
+#     set project_path [GiD_Info project modelname]
+#     if {$project_path ne "UNNAMED"} {
+#         catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[Kratos::GetModelName].post.res"]}
+#         # Set Octree
+#         set oldMeshType [GiD_Set MeshType]
+#         ::GiD_Set MeshType 2
+#     } else {
+#         after 500 {WarnWin "You need to save the project before meshing"}
+#         return "-cancel-"
+#     }
+# }
 
-proc ::Chimera::AfterMeshGeneration {fail} {
-    variable oldMeshType
-    GiD_Set MeshType $oldMeshType
-}
+# proc ::Chimera::AfterMeshGeneration {fail} {
+#     variable oldMeshType
+#     GiD_Set MeshType $oldMeshType
+# }
 
 ::Chimera::Init

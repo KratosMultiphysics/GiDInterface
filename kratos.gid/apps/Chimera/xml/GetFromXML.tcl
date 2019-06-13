@@ -1,44 +1,29 @@
 namespace eval Chimera::xml {
     # Namespace variables declaration
     variable dir
-    variable lastImportMeshSize
-    variable export_dir
-
 }
 
 proc Chimera::xml::Init { } {
     # Namespace variables inicialization
-    variable dir
-    variable lastImportMeshSize
-    set lastImportMeshSize 0
-    Model::DestroyEverything
     Model::InitVariables dir $Chimera::dir
 
-    Model::getSolutionStrategies Strategies.xml
-    Model::getElements "../../Fluid/xml/Elements.xml"
-    Model::getMaterials Materials.xml
-    Model::getNodalConditions "../../Fluid/xml/NodalConditions.xml"
-    Model::getConstitutiveLaws "../../Fluid/xml/ConstitutiveLaws.xml"
-    Model::getProcesses "../../Common/xml/Processes.xml"
-    Model::getProcesses "../../Fluid/xml/Processes.xml"
-    Model::getConditions "../../Fluid/xml/Conditions.xml"
-    Model::getSolvers "../../Common/xml/Solvers.xml"
-}
-
-
-proc Chimera::xml::MultiAppEvent {args} {
-    if {$args eq "init"} {
-        spdAux::parseRoutes
-        spdAux::ConvertAllUniqueNames FL ${::Chimera::prefix}
-    }
+    spdAux::processIncludes
 }
 
 proc Chimera::xml::getUniqueName {name} {
-    return ${::Chimera::prefix}${name}
+    return [Fluid::xml::getUniqueName $name]
 }
 
 proc Chimera::xml::CustomTree { args } {
-
+    spdAux::processIncludes
+    Fluid::xml::CustomTree {*}$args
+    
+    set root [customlib::GetBaseRoot]
+    # Change the app name
+    [$root selectNodes "container\[@n = 'Fluid'\]"] setAttribute pn "Chimera"
+}
+proc Chimera::xml::UpdateParts {domNode args} {
+    Fluid::xml::UpdateParts $domNode {*}$args
 }
 
 Chimera::xml::Init
