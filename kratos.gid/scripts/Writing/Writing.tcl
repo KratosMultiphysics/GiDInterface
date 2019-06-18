@@ -619,6 +619,7 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
         set group [get_domnode_attribute $gNode n]
         set sub_model_part [write::getSubModelPartId Parts $group]
         if {$model_part_name ne ""} {set sub_model_part $model_part_name.$sub_model_part}
+        set sub_model_part [string trim $sub_model_part "."]
         if { [dict exists $mat_dict $group] } {
             set mid [dict get $mat_dict $group MID]
             set prop_dict [dict create]
