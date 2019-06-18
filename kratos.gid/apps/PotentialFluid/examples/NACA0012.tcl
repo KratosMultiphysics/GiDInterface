@@ -98,7 +98,7 @@ proc PotentialFluid::examples::AssignNACA0012MeshSizes2D {args} {
     # GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get LowerSurface lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get Body lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    Kratos::BeforeMeshGeneration $fluid_mesh_size
+    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
 # Tree assign
