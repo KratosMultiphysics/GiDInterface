@@ -7,7 +7,7 @@
 
 <!-- Currently Available in ParticleMechanicsApplication -->
   <!--linear elastic laws-->
-  <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
+  <CLaw n="LinearElasticIsotropicPlaneStrain2DLaw" pn="Linear Elastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
 	help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -17,7 +17,7 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic (Plane Stress)" Type="PlaneStress" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  <CLaw n="LinearElasticIsotropicPlaneStress2DLaw" pn="Linear Elastic (Plane Stress)" Type="PlaneStress" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
 	help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -27,7 +27,7 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  <CLaw n="LinearElasticIsotropicAxisym2DLaw" pn="Linear Elastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
   help="Linear Elastic Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -37,7 +37,7 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  <CLaw n="LinearElasticIsotropic3DLaw" pn="Linear Elastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
 	help="Linear Elastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -48,7 +48,7 @@
   </CLaw>
 
   <!--hyper elastic laws-->
-  <CLaw n="HyperElasticPlaneStrain2DLaw" pn="Hyperelastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
+  <CLaw n="HyperElasticNeoHookeanPlaneStrain2DLaw" pn="Hyperelastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
 	help="Hyperelastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -58,7 +58,7 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="HyperElasticAxisym2DLaw" pn="Hyperelastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  <CLaw n="HyperElasticNeoHookeanAxisym2DLaw" pn="Hyperelastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
   help="Hyperelastic Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -68,7 +68,7 @@
     <outputs></outputs>
   </CLaw>
 
-  <CLaw n="HyperElastic3DLaw" pn="Hyperelastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
+  <CLaw n="HyperElasticNeoHookean3DLaw" pn="Hyperelastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
 	help="HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
