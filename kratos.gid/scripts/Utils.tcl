@@ -9,7 +9,7 @@ proc Kratos::ForceRun { } {
     variable must_write_calc_data
     set temp $must_write_calc_data
     set must_write_calc_data 0
-    GiD_Process Utilities Calculate
+    GiD_Process Mescape Utilities Calculate escape escape
     set must_write_calc_data $temp
 }
 
