@@ -134,7 +134,7 @@ proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
     set fluidFarField "$fluidConditions/condition\[@n='PotentialWallCondition$nd'\]"
     set farFieldNode [customlib::AddConditionGroupOnXPath $fluidFarField FarField]
     $farFieldNode setAttribute ov $condtype
-    set props [list velocity_infinityX 10.0 velocity_infinityY 0.0 velocity_infinityZ 0.0]
+    set props [list angle_of_attack 0.0 mach_infinity 0.03 speed_of_sound 340.0]
     foreach {prop val} $props {
          set propnode [$farFieldNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -168,7 +168,7 @@ proc PotentialFluid::examples::ErasePreviousIntervals { } {
 proc PotentialFluid::examples::AddCuts { } {
     # Cuts
     set results "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
-    
+
     set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
     [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }
