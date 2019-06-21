@@ -15,7 +15,9 @@
 
 	<Process n="FarFieldProcess" pn="Far Field Process" python_module="apply_far_field_process" kratos_module="KratosMultiphysics.CompressiblePotentialFlowApplication">
 		<inputs>
-			<parameter n="velocity_infinity" pn="Velocity infinity" type="vector" v="1.0,0.0,0.0" vectorType="double" help=""/>
+			<parameter n="angle_of_attack" pn="Angle of attack" type="double" v="0.0" help=""/>
+			<parameter n="mach_infinity" pn="Free stream Mach number" type="double" v="0.03" help=""/>
+			<parameter n="speed_of_sound" pn="Free stream speed of sound" type="double" v="340.0" help=""/>
 		</inputs>
 	</Process>
 
