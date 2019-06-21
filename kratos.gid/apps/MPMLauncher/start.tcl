@@ -6,7 +6,7 @@ proc ::MPMLauncher::Init { } {
     variable available_apps
 
     set dir [apps::getMyDir "MPMLauncher"]
-    set available_apps [list MPM]
+    set available_apps [list MPM MPMStructure]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
 
