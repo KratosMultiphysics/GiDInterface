@@ -20,6 +20,11 @@ proc MPM::write::Init { } {
     SetAttribute main_script_file "KratosParticle.py"
     SetAttribute materials_file "ParticleMaterials.json"
     SetAttribute model_part_name ""
+    SetAttribute solution_type_un MPMSoluType
+    SetAttribute solution_strategy_un MPMSolStrat
+    SetAttribute analysis_type_un MPMAnalysisType
+    SetAttribute scheme_un MPMScheme
+    SetAttribute solution_strategy_parameters_un STStratParams
 }
 
 # Events

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="TimeParameters" pn="Time parameters" un="STTimeParameters" icon="time3" help="Problem parameters" state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]" open_window="0">
+	<value n="StartTime" pn="Start time" v="0.0" help=""/>
+	<value n="EndTime" pn="End time" v="1.0" help=""/>
+	<value n="DeltaTime" pn="Delta time" v="0.1" help=""/>
+</container>
