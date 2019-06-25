@@ -35,6 +35,7 @@ proc Structural::write::Init { } {
     SetAttribute analysis_type_un STAnalysisType
     SetAttribute scheme_un STScheme
     SetAttribute solution_strategy_parameters_un STStratParams
+    SetAttribute output_model_part_name ""
 }
 
 # MDPA Blocks

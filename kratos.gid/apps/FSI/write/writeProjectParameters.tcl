@@ -155,6 +155,7 @@ proc FSI::write::InitExternalProjectParameters { } {
     # Fluid section
     UpdateUniqueNames Fluid
     apps::setActiveAppSoft Fluid
+    Fluid::write::Init
     write::initWriteConfiguration [Fluid::write::GetAttributes]
     set FSI::write::fluid_project_parameters [Fluid::write::getParametersDict]
 
@@ -162,6 +163,7 @@ proc FSI::write::InitExternalProjectParameters { } {
     UpdateUniqueNames Structure
     apps::setActiveAppSoft Structure
     Structural::write::SetAttribute time_parameters_un FLTimeParameters
+    Structural::write::Init
     write::initWriteConfiguration [Structural::write::GetAttributes]
     set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
 
