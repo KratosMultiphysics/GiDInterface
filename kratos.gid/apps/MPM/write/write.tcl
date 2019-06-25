@@ -11,6 +11,8 @@ proc MPM::write::Init { } {
     SetAttribute nodal_conditions_un MPMNodalConditions
     SetAttribute conditions_un MPMLoads
     SetAttribute properties_location json 
+    SetAttribute results_un MPMResults
+    SetAttribute conditions_un MPMLoads
     # SetAttribute conditions_un FLBC
     # SetAttribute materials_un EMBFLMaterials
     # SetAttribute writeCoordinatesByGroups 0

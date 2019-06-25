@@ -1,21 +1,21 @@
 # Project Parameters
 
 proc Structural::write::getOldParametersDict { } {
-    set model_part_name [GetAttribute model_part_name]
+    set model_part_name [write::GetConfigurationAttribute model_part_name]
     set projectParametersDict [dict create]
 
     # Problem data
     # Create section
     set problemDataDict [write::GetDefaultProblemDataDict $Structural::app_id]
 
-    set solutiontype [write::getValue STSoluType]
+    set solutiontype [write::getValue [write::GetConfigurationAttribute solution_type_un]]
     # Time Parameters
     if {$solutiontype eq "Static" || $solutiontype eq "eigen_value"} {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
     } {
-        set time_step [write::getValue STTimeParameters DeltaTime]
+        set time_step [write::getValue [write::GetConfigurationAttribute time_parameters_un] DeltaTime]
     }
     # Add section to document
     dict set projectParametersDict problem_data $problemDataDict
@@ -40,8 +40,8 @@ proc Structural::write::getOldParametersDict { } {
         dict set formfinding_process_dict process_name "FormfindingIOProcess"
         set params [dict create]
         dict set params "model_part_name" $model_part_name
-        dict set params "print_mdpa" [write::getValue STResults print_prestress]
-        dict set params "print_prestress" [write::getValue STResults print_mdpa]
+        dict set params "print_mdpa" [write::getValue [write::GetConfigurationAttribute results_un] print_prestress]
+        dict set params "print_prestress" [write::getValue [write::GetConfigurationAttribute results_un] print_mdpa]
         dict set params "read_prestress" [Structural::write::UsingFileInPrestressedMembrane]
         dict set formfinding_process_dict "Parameters" $params
     }
@@ -49,7 +49,7 @@ proc Structural::write::getOldParametersDict { } {
     # TODO: Use default
     # Solution strategy
     set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue STSolStrat]
+    set currentStrategyId [write::getValue [write::GetConfigurationAttribute solution_strategy_un]]
     # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
     set solver_type_name $solutiontype
     if {$solutiontype eq "Quasi-static"} {set solver_type_name "Static"}
@@ -57,12 +57,12 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict model_part_name $model_part_name
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set solverSettingsDict domain_size $nDim
-    dict set solverSettingsDict echo_level [write::getValue STResults EchoLevel]
-    dict set solverSettingsDict analysis_type [write::getValue STAnalysisType]
+    dict set solverSettingsDict echo_level [write::getValue [write::GetConfigurationAttribute results_un] EchoLevel]
+    dict set solverSettingsDict analysis_type [write::getValue [write::GetConfigurationAttribute analysis_type_un] ]
 
     if {$solutiontype eq "Dynamic"} {
-        dict set solverSettingsDict time_integration_method [write::getValue STSolStrat]
-        dict set solverSettingsDict scheme_type [write::getValue STScheme]
+        dict set solverSettingsDict time_integration_method [write::getValue [write::GetConfigurationAttribute solution_strategy_un]]
+        dict set solverSettingsDict scheme_type [write::getValue [write::GetConfigurationAttribute scheme_un]]
     }
 
     # Model import settings
@@ -72,7 +72,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict model_import_settings $modelDict
 
     set materialsDict [dict create]
-    dict set materialsDict materials_filename [GetAttribute materials_file]
+    dict set materialsDict materials_filename [write::GetConfigurationAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
 
     # Time stepping settings
@@ -81,14 +81,14 @@ proc Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict time_stepping $timeSteppingDict
 
     # Solution strategy parameters and Solvers
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict STSolStrat STScheme STStratParams] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict [write::GetConfigurationAttribute solution_strategy_un] [write::GetConfigurationAttribute scheme_un] [write::GetConfigurationAttribute solution_strategy_parameters_un] ] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
     # Submodelpart lists
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart
     # Add them to this list
-    set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
+    set special_nodal_conditions_dont_generate_submodelpart_names [write::GetConfigurationAttribute nodal_conditions_no_submodelpart]
     set special_nodal_conditions [list ]
     foreach cnd_name $special_nodal_conditions_dont_generate_submodelpart_names {
         set cnd [Model::getNodalConditionbyId $cnd_name]
@@ -111,14 +111,15 @@ proc Structural::write::getOldParametersDict { } {
     # Lists of processes
     set processesDict [dict create]
 
-    set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    set nodal_conditions_dict [write::getConditionsParametersDict [write::GetConfigurationAttribute nodal_conditions_un] "Nodal"]
     #lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
     dict set processesDict constraints_process_list $nodal_conditions_dict
     if {[usesContact]} {
         set contact_conditions_dict [GetContactConditionsDict]
         dict set processesDict contact_process_list $contact_conditions_dict
     }
-    dict set processesDict loads_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    W [write::GetConfigurationAttribute conditions_un]
+    dict set processesDict loads_process_list [write::getConditionsParametersDict [write::GetConfigurationAttribute conditions_un]]
 
     # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
     foreach cnd $special_nodal_conditions {
@@ -159,8 +160,8 @@ proc Structural::write::GetContactConditionsDict { } {
     set root [customlib::GetBaseRoot]
 
     # Prepare the xpaths
-    set xp_master "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
-    set xp_slave  "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
+    set xp_master "[spdAux::getRoute [write::GetConfigurationAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
+    set xp_slave  "[spdAux::getRoute [write::GetConfigurationAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
 
     # Get the groups
     set master_group [$root selectNodes $xp_master]
@@ -174,7 +175,7 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_process_dict process_name ALMContactProcess
 
     set contact_parameters_dict [dict create]
-    set model_part_name [GetAttribute model_part_name]
+    set model_part_name [write::GetConfigurationAttribute model_part_name]
     dict set contact_parameters_dict model_part_name $model_part_name
 
     set print_contact [dict create]
@@ -198,12 +199,10 @@ proc Structural::write::GetContactConditionsDict { } {
     return [list $contact_process_dict]
 }
 
-
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 
 }
-
 
 # Project Parameters
 proc Structural::write::getParametersDict { } {
@@ -220,13 +219,14 @@ proc Structural::write::getParametersDict { } {
 
     return $project_parameters_dict
 }
+
 proc Structural::write::writeParametersEvent { } {
     write::WriteJSON [::Structural::write::getParametersDict]
 }
 
 proc Structural::write::UsingRotationDofElements { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [write::GetConfigurationAttribute parts_un]]/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
@@ -237,9 +237,10 @@ proc Structural::write::UsingRotationDofElements { } {
 
     return $bool
 }
+
 proc Structural::write::UsingFileInPrestressedMembrane { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [write::GetConfigurationAttribute parts_un]]/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set found false
     foreach element_node $elements {

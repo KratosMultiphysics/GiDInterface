@@ -58,8 +58,8 @@ proc MPM::xml::getUniqueName {name} {
 
 proc MPM::xml::CustomTree { args } {
 
-    spdAux::SetValueOnTreeItem v "time" Results OutputControlType
-    spdAux::SetValueOnTreeItem values "time" Results OutputControlType
+    spdAux::SetValueOnTreeItem v "time" MPMResults OutputControlType
+    spdAux::SetValueOnTreeItem values "time" MPMResults OutputControlType
     spdAux::SetValueOnTreeItem v No NodalResults PARTITION_INDEX
     spdAux::SetValueOnTreeItem v "SuperLUSolver" MPMimplicitlinear_solver_settings Solver
 }

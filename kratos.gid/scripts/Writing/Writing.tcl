@@ -44,7 +44,7 @@ proc write::initWriteConfiguration {configuration} {
 }
 
 proc write::initWriteData {parts mats} {
-    set configutation [dict create]
+    set configuration [dict create]
     dict set configuration parts_un $parts
     dict set configuration materials_un $mats
 

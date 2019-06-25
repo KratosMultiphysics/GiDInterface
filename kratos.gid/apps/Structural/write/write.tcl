@@ -29,6 +29,11 @@ proc Structural::write::Init { } {
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
     SetAttribute model_part_name "Structure"
+    SetAttribute solution_type_un STSoluType
+    SetAttribute solution_strategy_un STSolStrat
+    SetAttribute analysis_type_un STAnalysisType
+    SetAttribute scheme_un STScheme
+    SetAttribute solution_strategy_parameters_un STStratParams
 }
 
 # MDPA Blocks
