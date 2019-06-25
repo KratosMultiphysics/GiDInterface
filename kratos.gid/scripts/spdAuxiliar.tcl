@@ -282,9 +282,13 @@ proc spdAux::insertDependenciesSoft { originxpath relativepath n attn attv} {
     }
 }
 
-proc spdAux::CheckSolverEntryState {domNode} {
+proc spdAux::GetUniqueNameInLocalApp {name domNode} {
     set appid [GetAppIdFromNode $domNode]
-    set kw [apps::getAppUniqueName $appid SolStrat]
+    return [apps::getAppUniqueName $appid $name]
+}
+
+proc spdAux::CheckSolverEntryState {domNode} {
+    set kw [spdAux::GetUniqueNameInLocalApp SolStrat $domNode]
     set nodo [$domNode selectNodes [getRoute $kw]]
     get_domnode_attribute $nodo dict
     set currentSolStrat [get_domnode_attribute $nodo v]
@@ -294,8 +298,10 @@ proc spdAux::CheckSolverEntryState {domNode} {
         set st [::Model::GetSolutionStrategy $mySolStrat] 
         foreach se [$st getSolversEntries] {
             if {[get_domnode_attribute $domNode n] == [$se getName]} {
+                # W "[$st getName] [$se getName]"
                 set filter [$se getAttribute filter]
                 foreach {k v} $filter {
+                    set k [spdAux::resolveWord $k $domNode]
                     set real [get_domnode_attribute [$domNode selectNodes [getRoute $k]] v]
                     if {$real ni $v} {
                         set ret false
@@ -306,6 +312,14 @@ proc spdAux::CheckSolverEntryState {domNode} {
         }
     }
     
+    return $ret
+}
+
+proc spdAux::resolveWord {word {domNode ""} } {
+    set ret $word
+    if {[string index $word 0] eq "\[" && [string index $word end] eq "\]"} {
+        set ret [{*}[string range $word 1 end-1] $domNode]
+    }
     return $ret
 }
 

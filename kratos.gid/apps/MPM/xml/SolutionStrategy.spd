@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="SolStrat" pn="Solution" un="MPMStratSection" help="Solution Strategy" icon="solution" open_window="0">
+	<include n="TimeParameters" active="1" un="MPMTimeParameters" path="apps/Structural/xml/TimeParameters.spd" state="[checkStateByUniqueName MPMSoluType {Quasi-static Dynamic}]"/>
+	<container n="StratParams" pn="Strategy parameters" un="MPMStratParams" icon="groupsTreeNew.gif" open_window="0">
+		<dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication StructuralMechanicsApplication"/>
+	</container>
+	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
+	<dynamicnode command="spdAux::injectSolvers" args=""/>
+</container>
