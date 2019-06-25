@@ -157,6 +157,9 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
         set dim [string index $element_name end-3]
         set nnodes [string index $element_name end-1]
         switch $nnodes {
+            1 {
+                set element_type "Point"
+            }
             2 {
                 set element_type "Line"
             }
@@ -209,6 +212,11 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
                 set element_type "Hexahedra"
             }
         }
+    }
+    if {$element_type eq "unknown"} {
+        WV element_name
+        WV dim 
+        WV nnodes
     }
     return $element_type
 }
