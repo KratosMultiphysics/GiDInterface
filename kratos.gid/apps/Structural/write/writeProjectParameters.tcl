@@ -118,7 +118,7 @@ proc Structural::write::getOldParametersDict { } {
         set contact_conditions_dict [GetContactConditionsDict]
         dict set processesDict contact_process_list $contact_conditions_dict
     }
-    W [write::GetConfigurationAttribute conditions_un]
+    #W [write::GetConfigurationAttribute conditions_un]
     dict set processesDict loads_process_list [write::getConditionsParametersDict [write::GetConfigurationAttribute conditions_un]]
 
     # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
