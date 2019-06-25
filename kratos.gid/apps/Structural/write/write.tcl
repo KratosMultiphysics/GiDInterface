@@ -17,6 +17,7 @@ proc Structural::write::Init { } {
     variable writeAttributes
     set writeAttributes [dict create]
     SetAttribute validApps [list "Structural"]
+    SetAttribute current_app "Structural"
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute properties_location json
     SetAttribute parts_un STParts

@@ -8,15 +8,13 @@ proc MPM::write::Init { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [dict create]
     SetAttribute parts_un MPMParts
+    SetAttribute current_app "MPM"
     SetAttribute nodal_conditions_un MPMNodalConditions
     SetAttribute conditions_un MPMLoads
     SetAttribute properties_location json 
     SetAttribute results_un MPMResults
     SetAttribute conditions_un MPMLoads
-    # SetAttribute conditions_un FLBC
-    # SetAttribute materials_un EMBFLMaterials
-    # SetAttribute writeCoordinatesByGroups 0
-    # SetAttribute validApps [list "MPM"]
+    SetAttribute time_parameters_un MPMTimeParameters
     SetAttribute main_script_file "KratosParticle.py"
     SetAttribute materials_file "ParticleMaterials.json"
     SetAttribute model_part_name ""
@@ -24,7 +22,7 @@ proc MPM::write::Init { } {
     SetAttribute solution_strategy_un MPMSolStrat
     SetAttribute analysis_type_un MPMAnalysisType
     SetAttribute scheme_un MPMScheme
-    SetAttribute solution_strategy_parameters_un STStratParams
+    SetAttribute solution_strategy_parameters_un MPMStratParams
 }
 
 # Events

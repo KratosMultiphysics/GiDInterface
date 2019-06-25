@@ -479,7 +479,7 @@ proc write::getValueByXPath { xpath { it "" }} {
 }
 proc write::getValue { name { it "" } {what noforce} } {
     set root [customlib::GetBaseRoot]
-
+    
     set xp [spdAux::getRoute $name]
     set node [$root selectNodes $xp]
     if {$node ne ""} {

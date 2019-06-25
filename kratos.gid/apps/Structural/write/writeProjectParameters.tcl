@@ -82,7 +82,7 @@ proc Structural::write::getOldParametersDict { } {
 
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict [write::GetConfigurationAttribute solution_strategy_un] [write::GetConfigurationAttribute scheme_un] [write::GetConfigurationAttribute solution_strategy_parameters_un] ] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict [write::GetConfigurationAttribute current_app] ] ]
 
     # Submodelpart lists
 
@@ -214,7 +214,7 @@ proc Structural::write::getParametersDict { } {
 
     # Merging the old solver_settings with the common one for this app
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict [write::GetConfigurationAttribute current_app]] ]
     dict set project_parameters_dict solver_settings $solverSettingsDict
 
     return $project_parameters_dict
