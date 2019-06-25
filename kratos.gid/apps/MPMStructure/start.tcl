@@ -28,7 +28,7 @@ proc ::MPMStructure::Init { } {
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
     
-    set ::Model::ValidSpatialDimensions [list 3D]
+    set ::Model::ValidSpatialDimensions [list 2D 3D]
     LoadMyFiles
 }
 
