@@ -2,7 +2,7 @@
 <container n="StageInfo" pn="Model information" help="Stage information" icon="analysis" state="normal" open_window="0">
     <value n="SolutionType" pn="Solver Type" un="MPMSoluType" v="Static" values="Static,Quasi-static,Dynamic" help="Solution type" actualize_tree="1"/>
 
-    <value state="hidden" n="SolStratCombo" pn="Time integration method" un="MPMSolStrat" v="implicit" values="implicit" dict="implicit,Implicit" actualize_tree="1" />
+    <value state="hidden" n="SolStratCombo" pn="Time integration method" un="MPMSolStrat" v="mpm_implicit" values="mpm_implicit" dict="mpm_implicit,Implicit" actualize_tree="1" />
     <value state="hidden" n="Scheme" pn="Scheme" un="MPMScheme" v="" values="" dict="[GetSchemes]" actualize_tree="1"/>
     <value state="hidden" n="AnalysisType" pn="Analysis type" un="MPMAnalysisType" v="non_linear" values="linear,non_linear" dict="linear,Linear,non_linear,Nonlinear" help="Analysis type"/>
 </container>

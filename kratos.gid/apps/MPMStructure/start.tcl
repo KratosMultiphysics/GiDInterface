@@ -18,9 +18,8 @@ proc ::MPMStructure::Init { } {
     set dir [apps::getMyDir "MPMStructure"]
     set prefix MPMStructure
     
-    
-    apps::LoadAppById "Structural"
     apps::LoadAppById "MPM"
+    apps::LoadAppById "Structural"
     
     # Intervals 
     dict set attributes UseIntervals 1

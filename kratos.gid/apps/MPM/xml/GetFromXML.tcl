@@ -9,20 +9,14 @@ proc MPM::xml::Init { } {
     variable dir
     Model::InitVariables dir $MPM::dir
 
+    # Import our modified strategies
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies Strategies.xml
+
     # Import our elements
     Model::ForgetElements
     Model::getElements Elements.xml
 
-    # Modify the schemes so more elements are filtered
-    foreach strategy $::Model::SolutionStrategies {
-        $strategy setAttribute NeedElements false
-        foreach scheme [$strategy getSchemes] {
-            $scheme addElementFilter ImplementedInApplication ParticleMechanicsApplication
-        }
-    }
-
-    # Add some parameters
-    set implicit_solution_strategy [Model::GetSolutionStrategy implicit]
 
     # Import our Constitutive Laws
     Model::ForgetConstitutiveLaws
@@ -61,7 +55,8 @@ proc MPM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v "time" MPMResults OutputControlType
     spdAux::SetValueOnTreeItem values "time" MPMResults OutputControlType
     spdAux::SetValueOnTreeItem v No NodalResults PARTITION_INDEX
-    spdAux::SetValueOnTreeItem v "SuperLUSolver" MPMimplicitlinear_solver_settings Solver
+    spdAux::SetValueOnTreeItem v "SuperLUSolver" MPMmpm_implicitlinear_solver_settings Solver
+    spdAux::RequestRefresh
 }
 
 

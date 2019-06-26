@@ -28,6 +28,12 @@ proc MPMStructure::xml::CustomTree { args } {
 
     apps::setActiveAppSoft MPMStructure
 
+    
+    
+    spdAux::SetValueOnTreeItem values "Dynamic" STSoluType 
+    spdAux::SetValueOnTreeItem values "Dynamic" MPMSoluType
+    spdAux::RequestRefresh 
+
 }
 
 # # Overwriting some procs
