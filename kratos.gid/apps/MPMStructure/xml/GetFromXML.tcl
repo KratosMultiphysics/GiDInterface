@@ -9,6 +9,7 @@ proc MPMStructure::xml::Init { } {
     Model::InitVariables dir $MPMStructure::dir
     
     Model::getSolutionStrategies Strategies.xml
+    Model::getConditions Conditions.xml
 }
 
 proc MPMStructure::xml::getUniqueName {name} {

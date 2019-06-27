@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+
+  <ConditionItem n="LineInterface2D" pn="MPM Interface" Interval="False"
+	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
+	ElementType="Point,Line" ProcessName="PythonProcess" help="Load on lines, load vector referred to global axes"
+	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+  <ConditionItem n="LineInterface2Da" pn="MPM Interface" Interval="False"
+	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
+	ElementType="Point,Line" ProcessName="PythonProcess" help="Load on lines, load vector referred to global axes"
+	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+  <ConditionItem n="SurfaceInterface3D" pn="MPM Interface" Interval="False"
+	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
+	ElementType="Point,Line,Surface"  ProcessName="PythonProcess" help="Load on surfaces, load vector referred to global axes"
+	units="N/m^2" unit_magnitude="F/L^2" VariableName="SURFACE_LOAD">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+
+</ConditionList>
