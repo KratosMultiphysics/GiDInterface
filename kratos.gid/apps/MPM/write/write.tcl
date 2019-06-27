@@ -7,6 +7,7 @@ proc MPM::write::Init { } {
     # Namespace variables inicialization
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [dict create]
+    SetAttribute writeCoordinatesByGroups 0
     SetAttribute parts_un MPMParts
     SetAttribute current_app "MPM"
     SetAttribute nodal_conditions_un MPMNodalConditions
@@ -40,8 +41,8 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
 
-    # Nodal coordinates 
-    write::writeNodalCoordinates
+    # Nodal coordinates (1: Print only MPM nodes <inefficient> | 0: the whole mesh <efficient>)
+    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Grid element connectivities
     writeGridConnectivities

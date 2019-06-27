@@ -3,6 +3,8 @@ namespace eval Structural::write {
     variable NodalConditionsGroup
     variable writeAttributes
     variable ContactsDict
+
+    variable RegisteredCustomBlock
 }
 
 proc Structural::write::Init { } {
@@ -10,6 +12,9 @@ proc Structural::write::Init { } {
     variable NodalConditionsGroup
     set ConditionsDictGroupIterators [dict create]
     set NodalConditionsGroup [list ]
+    
+    variable RegisteredCustomBlock
+    set RegisteredCustomBlock [list ]
 
     variable ContactsDict
     set ContactsDict [dict create]
@@ -70,6 +75,9 @@ proc Structural::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
+
+    # Custom blocks for inheritance
+    Structural::write::writeCustomBlock
 }
 
 proc Structural::write::writeConditions { } {
@@ -187,6 +195,14 @@ proc Structural::write::writeCustomBlock { } {
     write::WriteString "Custom write for Structural, any app can call me, so be careful!"
     write::WriteString "End Custom"
     write::WriteString ""
+
+    variable RegisteredCustomBlock
+
+    foreach method $RegisteredCustomBlock {
+        catch {
+            $method
+        }
+    }
 }
 
 proc Structural::write::getLastConditionId { } {
@@ -409,6 +425,11 @@ proc Structural::write::AddValidApps {appList} {
 proc Structural::write::ApplyConfiguration { } {
     variable writeAttributes
     write::SetConfigurationAttributes $writeAttributes
+}
+
+proc Structural::write::RegisterCustomBlockMethod { method } {
+    variable RegisteredCustomBlock
+    lappend RegisteredCustomBlock $method
 }
 
 Structural::write::Init
