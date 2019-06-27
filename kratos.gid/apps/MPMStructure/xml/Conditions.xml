@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
 
-  <ConditionItem n="LineInterface2D" pn="MPM Interface" Interval="False"
-	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
-	ElementType="Point,Line" ProcessName="PythonProcess" help="Load on lines, load vector referred to global axes"
-	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
+  <ConditionItem n="LineMPMInterface2D" pn="MPM Interface" Interval="False" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point,Line" ProcessName="PythonProcess" help="Load on lines, load vector referred to global axes" units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
     <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
@@ -14,12 +11,9 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="LineInterface2Da" pn="MPM Interface" Interval="False"
-	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
-	ElementType="Point,Line" ProcessName="PythonProcess" help="Load on lines, load vector referred to global axes"
-	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
+  <ConditionItem n="LineMPMInterface2Da" pn="MPM Interface" Interval="False" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point,Line" ProcessName="PythonProcess" help="Load on lines, load vector referred to global axes" units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
     <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
@@ -27,12 +21,38 @@
     </outputs>
   </ConditionItem>
 
-  <ConditionItem n="SurfaceInterface3D" pn="MPM Interface" Interval="False"
-	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
-	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
-	ElementType="Point,Line,Surface"  ProcessName="PythonProcess" help="Load on surfaces, load vector referred to global axes"
-	units="N/m^2" unit_magnitude="F/L^2" VariableName="SURFACE_LOAD">
+  <ConditionItem n="SurfaceMPMInterface3D" pn="MPM Interface" Interval="False" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point,Line,Surface" ProcessName="PythonProcess" help="Load on surfaces, load vector referred to global axes" units="N/m^2" unit_magnitude="F/L^2" VariableName="SURFACE_LOAD">
     <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="Condition3D3N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+  <ConditionItem n="LineStructureInterface2D" pn="Structure Interface" Interval="False" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point,Line" ProcessName="PythonProcess" help="Load on lines, load vector referred to global axes" units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+  <ConditionItem n="LineStructureInterface2Da" pn="Structure Interface" Interval="False" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point,Line" ProcessName="PythonProcess" help="Load on lines, load vector referred to global axes" units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+  <ConditionItem n="SurfaceStructureInterface3D" pn="Structure Interface" Interval="False" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point,Line,Surface" ProcessName="PythonProcess" help="Load on surfaces, load vector referred to global axes" units="N/m^2" unit_magnitude="F/L^2" VariableName="SURFACE_LOAD">
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="Condition3D3N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>

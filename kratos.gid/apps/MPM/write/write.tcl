@@ -1,11 +1,14 @@
 namespace eval MPM::write {
     variable writeAttributes
     variable ConditionsDictGroupIterators
+    variable RegisteredCustomBlock
 }
 
 proc MPM::write::Init { } {
     # Namespace variables inicialization
     variable ConditionsDictGroupIterators
+    variable RegisteredCustomBlock
+    set  RegisteredCustomBlock [list ]
     set ConditionsDictGroupIterators [dict create]
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute parts_un MPMParts
@@ -72,6 +75,8 @@ proc MPM::write::writeModelPartEvent { } {
 
     # Write Submodelparts
     writeSubmodelparts particles
+
+    writeCustomBlock
 
     write::CloseFile
 }
@@ -186,6 +191,17 @@ proc MPM::write::UpdateMaterials { } {
     write::setMatDict $matdict
 }
 
+
+proc MPM::write::writeCustomBlock { } {
+    variable RegisteredCustomBlock
+
+    foreach method $RegisteredCustomBlock {
+        catch {
+            $method
+        }
+    }
+}
+
 proc MPM::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
@@ -200,5 +216,12 @@ proc MPM::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
+
+
+proc MPM::write::RegisterCustomBlockMethod { method } {
+    variable RegisteredCustomBlock
+    lappend RegisteredCustomBlock $method
+}
+
 
 MPM::write::Init

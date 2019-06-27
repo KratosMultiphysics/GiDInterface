@@ -191,11 +191,6 @@ proc Structural::write::writeContacts { } {
 }
 
 proc Structural::write::writeCustomBlock { } {
-    write::WriteString "Begin Custom"
-    write::WriteString "Custom write for Structural, any app can call me, so be careful!"
-    write::WriteString "End Custom"
-    write::WriteString ""
-
     variable RegisteredCustomBlock
 
     foreach method $RegisteredCustomBlock {
