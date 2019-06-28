@@ -33,9 +33,10 @@ proc MPMStructure::write::writeModelPartEvent { } {
 
 proc MPMStructure::write::writeCustomFilesEvent { } {
     Structural::write::WriteMaterialsFile
+    MPM::write::WriteMaterialsFile
     
-    write::CopyFileIntoModel "python/KratosMPMStructure.py"
-    write::RenameFileInModel "KratosMPMStructure.py" "MainKratos.py"
+    # write::CopyFileIntoModel "python/KratosMPMStructure.py"
+    # write::RenameFileInModel "KratosMPMStructure.py" "MainKratos.py"
 }
 
 proc MPMStructure::write::CustomBlock { } {

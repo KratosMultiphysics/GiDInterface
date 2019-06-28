@@ -188,12 +188,16 @@ proc MPM::write::writeCustomFilesEvent { } {
     # write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 
     # Materials file
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+    MPM::write::WriteMaterialsFile
     
     # Main python script
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     write::RenameFileInModel $orig_name "MainKratos.py"
+}
+proc MPM::write::WriteMaterialsFile { } {
+
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
 }
 
 proc MPM::write::UpdateMaterials { } {
