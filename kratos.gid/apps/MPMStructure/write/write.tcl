@@ -18,11 +18,14 @@ proc MPMStructure::write::writeModelPartEvent { } {
     
     MPM::write::Init
     MPM::write::SetAttribute writeCoordinatesByGroups 1
+    MPM::write::SetAttribute mpm_grid_extra_conditions [list LineMPMInterface2D LineMPMInterface2Da SurfaceMPMInterface3D]
     MPM::write::RegisterCustomBlockMethod MPMStructure::write::CustomBlock
     write::writeAppMDPA MPM
+    set last_mpm_condition [MPM::write::GetLastConditionId]
     
     Structural::write::Init
     Structural::write::SetCoordinatesByGroups 1
+    Structural::write::SetAttribute last_condition $last_mpm_condition
     write::writeAppMDPA Structural
     dict set mdpa_names Structural "${filename}_Structural"
     write::RenameFileInModel "$filename.mdpa" "[dict get $mdpa_names Structural].mdpa"

@@ -41,6 +41,7 @@ proc Structural::write::Init { } {
     SetAttribute scheme_un STScheme
     SetAttribute solution_strategy_parameters_un STStratParams
     SetAttribute output_model_part_name ""
+    SetAttribute last_condition 0
 }
 
 # MDPA Blocks
@@ -82,7 +83,7 @@ proc Structural::write::writeModelPartEvent { } {
 
 proc Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] [GetAttribute last_condition] ]
 
     set last_iter [Structural::write::getLastConditionId]
     writeContactConditions $last_iter

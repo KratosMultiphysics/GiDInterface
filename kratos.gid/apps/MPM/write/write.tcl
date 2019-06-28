@@ -27,6 +27,9 @@ proc MPM::write::Init { } {
     SetAttribute analysis_type_un MPMAnalysisType
     SetAttribute scheme_un MPMScheme
     SetAttribute solution_strategy_parameters_un MPMStratParams
+    SetAttribute mpm_grid_elements [list GRID2D GRID3D]
+    # Reserved for interfaces
+    SetAttribute mpm_grid_extra_conditions [list ]
 }
 
 # Events
@@ -44,8 +47,7 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
 
-    # Nodal coordinates (1: Print only MPM nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    MPM::write::writeGridNodalCoordinates
 
     # Grid element connectivities
     writeGridConnectivities
@@ -81,12 +83,31 @@ proc MPM::write::writeModelPartEvent { } {
     write::CloseFile
 }
 
+proc MPM::write::writeGridNodalCoordinates { } {
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set body_groups [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
+        if {$elem in [GetAttribute mpm_grid_elements]} {
+            lappend body_groups [$gNode @n]
+        }
+    }
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]"
+    set body_groups [list ]
+    foreach condition [GetAttribute mpm_grid_extra_conditions] {
+        foreach gNode [[customlib::GetBaseRoot] selectNodes "$xp1/condition\[@n='$condition'\]/group"] {
+            lappend body_groups [$gNode @n]
+        }
+    }
+    write::writeNodalCoordinatesOnGroups $body_groups
+}
+
 proc MPM::write::writeBodyNodalCoordinates { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     set body_groups [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        if {$elem ni [list GRID2D GRID3D]} {
+        if {$elem ni [GetAttribute mpm_grid_elements]} {
             lappend body_groups [$gNode @n]
         }
     }
@@ -98,7 +119,7 @@ proc MPM::write::writeBodyElementConnectivities { } {
     set body_groups [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        if {$elem ni [list GRID2D GRID3D]} {
+        if {$elem ni [GetAttribute mpm_grid_elements]} {
             write::writeGroupElementConnectivities $gNode $elem
         }
     }
@@ -108,20 +129,20 @@ proc MPM::write::writeGridConnectivities { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        if {$elem in [list GRID2D GRID3D]} {
+        if {$elem in [GetAttribute mpm_grid_elements]} {
             write::writeGroupElementConnectivities $gNode $elem
         }
     }
 }
 
 proc MPM::write::writeConditions { } {
-
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
 }
+
 proc MPM::write::writeSubmodelparts { type } {
 
-    set grid_elements [list GRID2D GRID3D]
+    set grid_elements [GetAttribute mpm_grid_elements]
 
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     set body_groups [list ]
@@ -146,6 +167,7 @@ proc MPM::write::writeSubmodelparts { type } {
         writeLoads
     }
 }
+
 proc MPM::write::writeLoads { } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
@@ -174,7 +196,6 @@ proc MPM::write::writeCustomFilesEvent { } {
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
-
 proc MPM::write::UpdateMaterials { } {
     set matdict [write::getMatDict]
     foreach {mat props} $matdict {
@@ -190,7 +211,6 @@ proc MPM::write::UpdateMaterials { } {
     }
     write::setMatDict $matdict
 }
-
 
 proc MPM::write::writeCustomBlock { } {
     variable RegisteredCustomBlock
@@ -217,11 +237,20 @@ proc MPM::write::SetAttribute {att val} {
     dict set writeAttributes $att $val
 }
 
+proc MPM::write::GetLastConditionId { } {
+    
+    variable ConditionsDictGroupIterators
+    set max 0
+    foreach interval [dict values $ConditionsDictGroupIterators] {
+        set candidate [lindex $interval end]
+        if {$candidate > $max} {set max $candidate}
+    }
+    return $max
+}
 
 proc MPM::write::RegisterCustomBlockMethod { method } {
     variable RegisteredCustomBlock
     lappend RegisteredCustomBlock $method
 }
-
 
 MPM::write::Init
