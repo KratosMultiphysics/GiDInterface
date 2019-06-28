@@ -65,30 +65,17 @@ proc MPMStructure::write::GetCosimulationParametersDict { } {
     dict set solver_settings_dict start_coupling_time 0.0
     dict set solver_settings_dict predictor_settings predictor_type linear_derivative_based
     dict set solver_settings_dict predictor_settings data_list [list [dict create solver particle data_name disp derivative_data_name vel]]
+    dict set solver_settings_dict convergence_accelerator_settings type mvqn
+    dict set solver_settings_dict convergence_accelerator_settings data_list [list [dict create solver particle data_name disp]]
+    dict set solver_settings_dict convergence_accelerator_settings data_list [list [dict create solver particle data_name disp abs_tolerance 1e-5 rel_tolerance 1e-5]]
+    dict set solver_settings_dict coupling_loop [list ]
+    dict lappend solver_settings_dict coupling_loop [dict create name particle input_data_list [list ] output_data_list [list ] ]
+
     dict set propertiesDict solver_settings $solver_settings_dict
     
 
     "solver_settings": {
 
-        "convergence_accelerator_settings": {
-            "type": "mvqn",
-            "data_list": [
-                {
-                    "solver": "particle",
-                    "data_name": "disp"
-                }
-            ]
-        },
-        "convergence_criteria_settings": {
-            "data_list": [
-                {
-                    "solver": "particle",
-                    "data_name": "disp",
-                    "abs_tolerance": 1e-5,
-                    "rel_tolerance": 1e-5
-                }
-            ]
-        },
         "coupling_loop": [
             {
                 "name": "particle",
