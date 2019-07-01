@@ -52,7 +52,7 @@ proc MPMStructure::write::CustomBlock { } {
         set cnd LineStructureInterface$Model::SpatialDimension
         set nd 2
     }
-    foreach groupid [MPMStructure::write::GetStructureInterfaceGroups] {
+    foreach groupid [MPMStructure::write::GetInterfaceGroups Structure] {
         # Write the Condition block
         set intervals [write::writeGroupCondition $groupid PointLoadCondition${nd}D1N 1 [Structural::write::getLastConditionId]]
         dict set Structural::write::ConditionsDictGroupIterators $groupid $intervals
@@ -63,16 +63,19 @@ proc MPMStructure::write::CustomBlock { } {
     }
 }
 
-proc MPMStructure::write::GetStructureInterfaceGroups { } {
+proc MPMStructure::write::GetInterfaceCondition { type } {
+    if {$::Model::SpatialDimension eq "3D"} {
+        set cnd Surface${type}Interface3D
+    } else {
+        set cnd Line${type}Interface$Model::SpatialDimension
+    }
+}
+
+proc MPMStructure::write::GetInterfaceGroups { type } {
     set groups [list ]
     set root [customlib::GetBaseRoot]
-    if {$::Model::SpatialDimension eq "3D"} {
-        set cnd SurfaceStructureInterface3D
-        set nd 3
-    } else {
-        set cnd LineStructureInterface$Model::SpatialDimension
-        set nd 2
-    }
+    
+    set cnd [MPMStructure::write::GetInterfaceCondition $type]
     set xp1 "[spdAux::getRoute [Structural::write::GetAttribute conditions_un]]/condition\[@n = '$cnd'\]/group"
     foreach group [$root selectNodes $xp1] {
         lappend groups [$group @n]
