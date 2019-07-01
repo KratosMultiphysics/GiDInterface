@@ -21,10 +21,6 @@ proc DEM::write::GetInletGroups { } {
     return $groups
 }
 
-
-
-
-
 proc DEM::write::writeInletMeshes { } {
     variable inletProperties
     foreach groupid [dict keys $inletProperties ] {
