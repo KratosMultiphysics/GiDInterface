@@ -58,18 +58,18 @@ proc MPMStructure::write::GetCosimulationParametersDict { } {
 
     set solver_settings_dict [dict create]
     dict set solver_settings_dict solver_type gauss_seidel_strong_coupling
-    dict set solver_settings_dict echo_level 3
+    dict set solver_settings_dict echo_level [expr 3*1]
     dict set solver_settings_dict num_coupling_iterations 20
     dict set solver_settings_dict start_coupling_time 0.0
     dict set solver_settings_dict predictor_settings predictor_type linear_derivative_based
     dict set solver_settings_dict predictor_settings data_list [list [dict create solver particle data_name disp derivative_data_name vel]]
     dict set solver_settings_dict convergence_accelerator_settings type mvqn
     dict set solver_settings_dict convergence_accelerator_settings data_list [list [dict create solver particle data_name disp]]
-    dict set solver_settings_dict convergence_accelerator_settings data_list [list [dict create solver particle data_name disp abs_tolerance 1e-5 rel_tolerance 1e-5]]
+    dict set solver_settings_dict convergence_criteria_settings data_list [list [dict create solver particle data_name disp abs_tolerance 1e-5 rel_tolerance 1e-5]]
     dict set solver_settings_dict coupling_loop [list ]
     dict lappend solver_settings_dict coupling_loop [dict create name particle input_data_list [list ] output_data_list [list ] ]
     dict lappend solver_settings_dict coupling_loop [dict create name structure \
-        input_data_list [list from_solver particle data_name force io_settings [dict create mapper_type nearest_neighbor mapper_args [list conservative]]] \
+        input_data_list [list [dict create from_solver particle data_name force io_settings [dict create mapper_type nearest_neighbor mapper_args [list conservative]]]] \
         output_data_list [list [dict create to_solver particle data_name disp io_settings [dict create mapper_type nearest_neighbor]] \
         [dict create to_solver particle data_name vel io_settings [dict create mapper_type nearest_neighbor] ]  \
         [dict create to_solver particle data_name normal io_settings [dict create mapper_type nearest_neighbor] ]]] 
@@ -78,7 +78,7 @@ proc MPMStructure::write::GetCosimulationParametersDict { } {
     set particle_dict [dict create solver_type kratos_particle input_file ProjectParametersMPM]
     dict set particle_dict data [dict create disp [dict create geometry_name MPM_Coupling_Interface data_identifier DISPLACEMENT data_format kratos_modelpart] \
     vel [dict create geometry_name MPM_Coupling_Interface data_identifier VELOCITY data_format kratos_modelpart] \
-    force [dict create geometry_name MPM_Coupling_Interface data_identifier CONTACT_FORCE data_format kratos_modelpart] \
+    force [dict create geometry_name MPM_Coupling_Interface data_identifier CONTACT_FORCE type_of_quantity _nodal_point data_format kratos_modelpart] \
     normal [dict create geometry_name MPM_Coupling_Interface data_identifier NORMAL data_format kratos_modelpart]] 
     dict set solvers_dict particle $particle_dict
 
