@@ -444,6 +444,16 @@ proc DEM::write::writeConditionMeshes { } {
                 GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
                 write::WriteString "  End SubModelPartNodes"
 
+                write::WriteString "Begin SubModelPartConditions"
+                set gdict [dict create]
+                set f "%10i\n"
+                set f [subst $f]
+                dict set gdict $group $f
+                GiD_WriteCalculationFile elements -sorted $gdict
+                write::WriteString "End SubModelPartConditions"
+                write::WriteString ""
+
+
                 write::WriteString "End SubModelPart"
                 write::WriteString ""
 
