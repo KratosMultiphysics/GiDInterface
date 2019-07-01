@@ -1,6 +1,7 @@
 namespace eval MPMStructure::write {
     variable mpm_project_parameters
     variable structure_project_parameters
+    variable json_files
 }
 
 proc MPMStructure::write::Init { } {
@@ -8,6 +9,9 @@ proc MPMStructure::write::Init { } {
     variable structure_project_parameters
     set mpm_project_parameters [dict create ]
     set structure_project_parameters [dict create ]
+
+    variable json_files
+    set json_files [dict create structure ProjectParametersFEM mpm ProjectParametersMPM cosim ProjectParametersCosimulation]
     
 }
 
@@ -41,7 +45,6 @@ proc MPMStructure::write::writeCustomFilesEvent { } {
 
 proc MPMStructure::write::CustomBlock { } {
     # Time to write the interface Point condition
-    set root [customlib::GetBaseRoot]
     if {$::Model::SpatialDimension eq "3D"} {
         set cnd SurfaceStructureInterface3D
         set nd 3
@@ -49,9 +52,7 @@ proc MPMStructure::write::CustomBlock { } {
         set cnd LineStructureInterface$Model::SpatialDimension
         set nd 2
     }
-    set xp1 "[spdAux::getRoute [Structural::write::GetAttribute conditions_un]]/condition\[@n = '$cnd'\]/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
+    foreach groupid [MPMStructure::write::GetStructureInterfaceGroups] {
         # Write the Condition block
         set intervals [write::writeGroupCondition $groupid PointLoadCondition${nd}D1N 1 [Structural::write::getLastConditionId]]
         dict set Structural::write::ConditionsDictGroupIterators $groupid $intervals
@@ -62,5 +63,21 @@ proc MPMStructure::write::CustomBlock { } {
     }
 }
 
+proc MPMStructure::write::GetStructureInterfaceGroups { } {
+    set groups [list ]
+    set root [customlib::GetBaseRoot]
+    if {$::Model::SpatialDimension eq "3D"} {
+        set cnd SurfaceStructureInterface3D
+        set nd 3
+    } else {
+        set cnd LineStructureInterface$Model::SpatialDimension
+        set nd 2
+    }
+    set xp1 "[spdAux::getRoute [Structural::write::GetAttribute conditions_un]]/condition\[@n = '$cnd'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        lappend groups [$group @n]
+    }
+    return $groups
+}
 
 MPMStructure::write::Init

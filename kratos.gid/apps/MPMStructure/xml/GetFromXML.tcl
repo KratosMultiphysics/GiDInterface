@@ -8,6 +8,7 @@ proc MPMStructure::xml::Init { } {
     variable dir
     Model::InitVariables dir $MPMStructure::dir
     
+    Model::getProcesses Processes.xml
     Model::getSolutionStrategies Strategies.xml
     Model::getConditions Conditions.xml
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProcessList>
+  <!-- Processes for contact mechanics -->
+  
+  <Process n="MPMInterface" pn="Apply a scalar value over a condition" python_module="apply_mpm_coupling_interface_condition_process" kratos_module="KratosMultiphysics.ParticleMechanicsApplication" help="This process sets a scalar variable value over a condition">
+    <inputs>
+      <parameter n="particles_per_condition" pn="Particles per condition" type="integer" v="0" function="0" has_units="0"/>
+      <parameter n="penalty_factor" pn="Penalty factor" type="doble" v="0" function="0" has_units="0"/>
+      <parameter n="constrained" pn="Constraint type" type="combo" v="contact" values="contact,fixed,slip,contact_slip" function="0" has_units="0"/>
+    </inputs>
+  </Process>
+</ProcessList>
+

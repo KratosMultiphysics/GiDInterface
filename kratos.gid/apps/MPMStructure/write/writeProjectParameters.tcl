@@ -7,20 +7,32 @@ proc MPMStructure::write::getParametersDict { } {
 
     dict set projectParametersDict structure $MPMStructure::write::structure_project_parameters
     dict set projectParametersDict mpm $MPMStructure::write::mpm_project_parameters
+    
+    set max_cnd [Structural::write::getLastConditionId]    
+    if {$::Model::SpatialDimension eq "3D"} {
+        set cnd SurfaceMPMInterface3D
+    } else {
+        set cnd LineMPMInterface$Model::SpatialDimension
+    }
+    set mpm_group_name [lindex [write::GetSubModelPartFromCondition [MPM::write::GetAttribute conditions_un] $cnd] 0]
+    dict set projectParametersDict mpm coupling_settings [dict create interface_model_part_name MPM_Material.$mpm_group_name max_node_id [GiD_Info Mesh MaxNumNodes] max_element_id [GiD_Info Mesh MaxNumElements] max_condition_id $max_cnd ]
+
     dict set projectParametersDict cosimulation [MPMStructure::write::GetCosimulationParametersDict]
     return $projectParametersDict
 }
 
 proc MPMStructure::write::writeParametersEvent { } {
+    variable json_files
+
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
-    write::WriteJSON [dict get $projectParametersDict cosimulation]
+    write::WriteJSON [dict get $projectParametersDict cosimulation].json
     write::CloseFile
-    write::RenameFileInModel ProjectParameters.json ProjectParametersCosimulation.json 
-    write::OpenFile ProjectParametersStructure.json 
+    write::RenameFileInModel ProjectParameters.json [dict get $json_files cosim]
+    write::OpenFile [dict get $json_files structure].json
     write::WriteJSON [dict get $projectParametersDict structure]
     write::CloseFile
-    write::OpenFile ProjectParametersMPM.json 
+    write::OpenFile [dict get $json_files mpm].json 
     write::WriteJSON [dict get $projectParametersDict mpm]
     write::CloseFile
 }
@@ -47,6 +59,7 @@ proc MPMStructure::write::InitExternalProjectParameters { } {
 }
 
 proc MPMStructure::write::GetCosimulationParametersDict { } {
+    variable json_files
     set propertiesDict [dict create ]
 
     set problem_data_dict [dict create]
@@ -75,18 +88,26 @@ proc MPMStructure::write::GetCosimulationParametersDict { } {
         [dict create to_solver particle data_name normal io_settings [dict create mapper_type nearest_neighbor] ]]] 
     
     set solvers_dict [dict create]
-    set particle_dict [dict create solver_type kratos_particle input_file ProjectParametersMPM]
-    dict set particle_dict data [dict create disp [dict create geometry_name MPM_Coupling_Interface data_identifier DISPLACEMENT data_format kratos_modelpart] \
-    vel [dict create geometry_name MPM_Coupling_Interface data_identifier VELOCITY data_format kratos_modelpart] \
-    force [dict create geometry_name MPM_Coupling_Interface data_identifier CONTACT_FORCE type_of_quantity _nodal_point data_format kratos_modelpart] \
-    normal [dict create geometry_name MPM_Coupling_Interface data_identifier NORMAL data_format kratos_modelpart]] 
+    set mpm_interface_geometry_name "MPM_Coupling_Interface"
+    set particle_dict [dict create solver_type kratos_particle input_file [dict get $json_files structure]]
+    dict set particle_dict data [dict create disp [dict create geometry_name $mpm_interface_geometry_name data_identifier DISPLACEMENT data_format kratos_modelpart] \
+    vel [dict create geometry_name $mpm_interface_geometry_name data_identifier VELOCITY data_format kratos_modelpart] \
+    force [dict create geometry_name $mpm_interface_geometry_name data_identifier CONTACT_FORCE type_of_quantity _nodal_point data_format kratos_modelpart] \
+    normal [dict create geometry_name $mpm_interface_geometry_name data_identifier NORMAL data_format kratos_modelpart]] 
     dict set solvers_dict particle $particle_dict
 
-    set structure_dict [dict create solver_type kratos_structural input_file ProjectParametersFEM]
-    dict set structure_dict data [dict create disp [dict create geometry_name Structure.LineLoad2D_NormalCalculator data_identifier DISPLACEMENT data_format kratos_modelpart] \
-    vel [dict create geometry_name Structure.LineLoad2D_NormalCalculator data_identifier VELOCITY data_format kratos_modelpart] \
-    force [dict create geometry_name Structure.LineLoad2D_NormalCalculator data_identifier POINT_LOAD type_of_quantity _nodal_point data_format kratos_modelpart] \
-    normal [dict create geometry_name Structure.LineLoad2D_NormalCalculator data_identifier NORMAL data_format kratos_modelpart]] 
+    if {$::Model::SpatialDimension eq "3D"} {
+        set cnd SurfaceStructureInterface3D
+    } else {
+        set cnd LineStructureInterface$Model::SpatialDimension
+    }
+    set structural_group_name [lindex [write::GetSubModelPartFromCondition [Structural::write::GetAttribute conditions_un] $cnd] 0]
+    set structural_interface_geometry_name "Structure.$structural_group_name"
+    set structure_dict [dict create solver_type kratos_structural input_file [dict get $json_files structure]]
+    dict set structure_dict data [dict create disp [dict create geometry_name $structural_interface_geometry_name data_identifier DISPLACEMENT data_format kratos_modelpart] \
+    vel [dict create geometry_name $structural_interface_geometry_name data_identifier VELOCITY data_format kratos_modelpart] \
+    force [dict create geometry_name $structural_interface_geometry_name data_identifier POINT_LOAD type_of_quantity _nodal_point data_format kratos_modelpart] \
+    normal [dict create geometry_name $structural_interface_geometry_name data_identifier NORMAL data_format kratos_modelpart]] 
     dict set solvers_dict structure $structure_dict
     dict set solver_settings_dict solvers $solvers_dict
 
