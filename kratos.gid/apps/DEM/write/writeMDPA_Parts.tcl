@@ -17,7 +17,9 @@ proc DEM::write::WriteMDPAParts { } {
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundayC]
 
     # Element connectivities (Groups on STParts)
+    PrepareCustomMeshedParts
     write::writeElementConnectivities; # Begin elements SphericContinuumParticle3D
+    RestoreCustomMeshedParts
 
     # Element radius
     writeSphereRadius; # Begin NodalData RADIUS
@@ -371,4 +373,30 @@ proc DEM::write::writeMaterialsParts { } {
             write::WriteString "End Properties\n"
         }
     }
+}
+
+proc DEM::write::PrepareCustomMeshedParts { } {
+    variable restore_ov
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        set prev_ov [$group @ov]
+        dict set restore_ov $groupid $prev_ov
+        $group setAttribute ov volume
+    }
+}
+
+proc DEM::write::RestoreCustomMeshedParts { } {
+    variable restore_ov
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        if {$groupid in [dict keys $restore_ov]} {
+            set prev_ov [dict get $restore_ov $groupid]
+            $group setAttribute ov $prev_ov
+        }
+    }
+    set restore_ov [dict create]
 }
