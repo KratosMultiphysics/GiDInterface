@@ -41,7 +41,7 @@ proc ::FluidDEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    #uplevel #0 [list source [file join $dir examples examples.tcl]]
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
 
 proc ::FluidDEM::BeforeMeshGeneration {elementsize} {
@@ -62,6 +62,7 @@ proc ::FluidDEM::GetAttribute {name} {
 proc ::FluidDEM::CustomToolbarItems { } {
     variable dir
     #Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FluidDEM::examples::InnerSphere] [= "Example\nInnerSphere"]
+    Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::FluidDEM::examples::CylinderInFlow] [= "Example\nCylinderInFlow"]
 }
 
 ::FluidDEM::Init
