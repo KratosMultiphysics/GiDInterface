@@ -16,7 +16,7 @@ proc ::Chimera::Init { } {
     apps::LoadAppById "Fluid"
     set kratos_name $::Fluid::kratos_name
     set dir [apps::getMyDir "Chimera"]
-    
+
     set ::Model::ValidSpatialDimensions [list 2D]
     spdAux::SetSpatialDimmension "2D"
     spdAux::processIncludes
@@ -36,6 +36,7 @@ proc ::Chimera::Init { } {
 proc ::Chimera::LoadMyFiles { } {
     variable dir
 
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
@@ -48,9 +49,16 @@ proc ::Chimera::GetAttribute {name} {
     return $value
 }
 
+proc ::Chimera::CustomToolbarItems { } {
+    variable dir
+    if {$::Model::SpatialDimension eq "2D"} {
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Chimera::examples::ChimeraCross] [= "Example\nCross section flow"]
+    }
+}
+
 # proc ::Chimera::BeforeMeshGeneration {elementsize} {
 #     variable oldMeshType
-    
+
 #     set project_path [GiD_Info project modelname]
 #     if {$project_path ne "UNNAMED"} {
 #         catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[Kratos::GetModelName].post.res"]}
