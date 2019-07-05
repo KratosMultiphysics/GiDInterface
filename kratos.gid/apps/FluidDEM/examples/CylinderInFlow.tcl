@@ -120,8 +120,6 @@ proc FluidDEM::examples::AssignGroupsCylinderInFlow3D {args} {
 
 }
 
-GiD_Process "-tcl- RaiseEvent_GenericProc ::GiD_Event_BeforeMeshGeneration 0.1" Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces 5 escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces 6 escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces 1 2 4 7 escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces 3 escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces escape escape Mescape Meshing ElemType Sphere Volumes 2 escape escape Mescape Utilities SwapNormals Surfaces Select 1 5 4 3 2 Mescape Meshing ElemType Triangle {1 2 3 4 5 6 7} escape Mescape Meshing MeshCriteria Mesh Surfaces 1 2 3 4 5 6 7 escape Mescape Meshing Generate Yes 0.1 MeshingParametersFrom=Preferences escape
-
 # Mesh sizes
 proc FluidDEM::examples::AssignCylinderInFlowMeshSizes3D {args} {
     set cylinder_mesh_size 0.1
@@ -138,7 +136,6 @@ proc FluidDEM::examples::AssignCylinderInFlowMeshSizes3D {args} {
     GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get SpheresInlet surfaces] escape escape
     GiD_Process Mescape Meshing AssignSizes Volumes 0.1 {*}[GiD_EntitiesGroups get Spheres volumes] escape escape
 
-    # Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
 
