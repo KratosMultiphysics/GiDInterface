@@ -18,7 +18,7 @@ proc ::FluidDEM::examples::CylinderInFlow {args} {
     GiD_Process 'Zoom Frame
 
     GiD_Process Mescape Meshing ElemType Sphere Volumes 2 escape
-    GiD_Process Mescape Meshing Generate Yes 0.1
+    MeshGenerationOKDo 0.1
 
 }
 
@@ -44,6 +44,7 @@ proc FluidDEM::examples::DrawCylinderInFlowGeometry3D {args} {
     GiD_Process escape escape 'Render Flat escape
     GiD_Process 'Rotate Angle 0 0 'rotate scr y -45 'rotate scr x 45 escape
 }
+
 proc FluidDEM::examples::DrawCylinderInFlowGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
