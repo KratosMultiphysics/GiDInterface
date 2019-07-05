@@ -44,7 +44,7 @@ proc write::initWriteConfiguration {configuration} {
 }
 
 proc write::initWriteData {parts mats} {
-    set configutation [dict create]
+    set configuration [dict create]
     dict set configuration parts_un $parts
     dict set configuration materials_un $mats
 
@@ -479,7 +479,7 @@ proc write::getValueByXPath { xpath { it "" }} {
 }
 proc write::getValue { name { it "" } {what noforce} } {
     set root [customlib::GetBaseRoot]
-
+    
     set xp [spdAux::getRoute $name]
     set node [$root selectNodes $xp]
     if {$node ne ""} {

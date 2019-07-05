@@ -3,6 +3,8 @@ namespace eval Structural::write {
     variable NodalConditionsGroup
     variable writeAttributes
     variable ContactsDict
+
+    variable RegisteredCustomBlock
 }
 
 proc Structural::write::Init { } {
@@ -10,6 +12,9 @@ proc Structural::write::Init { } {
     variable NodalConditionsGroup
     set ConditionsDictGroupIterators [dict create]
     set NodalConditionsGroup [list ]
+    
+    variable RegisteredCustomBlock
+    set RegisteredCustomBlock [list ]
 
     variable ContactsDict
     set ContactsDict [dict create]
@@ -17,6 +22,7 @@ proc Structural::write::Init { } {
     variable writeAttributes
     set writeAttributes [dict create]
     SetAttribute validApps [list "Structural"]
+    SetAttribute current_app "Structural"
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute properties_location json
     SetAttribute parts_un STParts
@@ -29,6 +35,13 @@ proc Structural::write::Init { } {
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
     SetAttribute model_part_name "Structure"
+    SetAttribute solution_type_un STSoluType
+    SetAttribute solution_strategy_un STSolStrat
+    SetAttribute analysis_type_un STAnalysisType
+    SetAttribute scheme_un STScheme
+    SetAttribute solution_strategy_parameters_un STStratParams
+    SetAttribute output_model_part_name ""
+    SetAttribute last_condition 0
 }
 
 # MDPA Blocks
@@ -63,11 +76,14 @@ proc Structural::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
+
+    # Custom blocks for inheritance
+    Structural::write::writeCustomBlock
 }
 
 proc Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] [GetAttribute last_condition] ]
 
     set last_iter [Structural::write::getLastConditionId]
     writeContactConditions $last_iter
@@ -176,10 +192,13 @@ proc Structural::write::writeContacts { } {
 }
 
 proc Structural::write::writeCustomBlock { } {
-    write::WriteString "Begin Custom"
-    write::WriteString "Custom write for Structural, any app can call me, so be careful!"
-    write::WriteString "End Custom"
-    write::WriteString ""
+    variable RegisteredCustomBlock
+
+    foreach method $RegisteredCustomBlock {
+        catch {
+            $method
+        }
+    }
 }
 
 proc Structural::write::getLastConditionId { } {
@@ -402,6 +421,11 @@ proc Structural::write::AddValidApps {appList} {
 proc Structural::write::ApplyConfiguration { } {
     variable writeAttributes
     write::SetConfigurationAttributes $writeAttributes
+}
+
+proc Structural::write::RegisterCustomBlockMethod { method } {
+    variable RegisteredCustomBlock
+    lappend RegisteredCustomBlock $method
 }
 
 Structural::write::Init

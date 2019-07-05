@@ -154,7 +154,7 @@ proc Structural::xml::ProcGetElementsStructural { domNode args } {
     set elems [::Model::GetAvailableElements $solStratName $schemeName]
     #W "************************************************************************"
 
-    set analysis_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STAnalysisType]] v]
+    set analysis_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute [apps::getAppUniqueName $nodeApp AnalysisType]]] v]
     set params [list AnalysisType $analysis_type]
 
     set names [list ]

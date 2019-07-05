@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="ContactParameters" pn="Contact parameters" un="STContactParams" icon="contact">
+	<value n="contact_type" pn="Contact type" v="FrictionlessComponents" values="FrictionlessComponents,Frictional" dict="FrictionlessComponents,Frictionless,Frictional,Frictional"/>
+</container>

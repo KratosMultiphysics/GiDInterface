@@ -8,7 +8,9 @@
       <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangian2D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures></ConstitutiveLaw_FilterFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="ImplementedInApplication" value="ParticleMechanicsApplication"/>
+    </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
@@ -16,7 +18,7 @@
       <NodalCondition n="ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
       <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
@@ -36,7 +38,9 @@
       <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangianAxisymmetry2D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures></ConstitutiveLaw_FilterFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="ImplementedInApplication" value="ParticleMechanicsApplication"/>
+    </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
@@ -44,7 +48,7 @@
       <NodalCondition n="ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+      <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
       <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
@@ -64,7 +68,9 @@
       <item GeometryType="Hexahedra" nodes="8" KratosName="UpdatedLagrangian3D8N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures></ConstitutiveLaw_FilterFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="ImplementedInApplication" value="ParticleMechanicsApplication"/>
+    </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>

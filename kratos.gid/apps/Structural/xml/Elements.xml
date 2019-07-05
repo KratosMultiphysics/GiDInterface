@@ -18,6 +18,7 @@
       <filter field="StrainSize" value="3"/>
       <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
@@ -53,6 +54,7 @@
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="4"/>
       <filter field="HybridType" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -89,6 +91,7 @@
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -121,6 +124,7 @@
       <filter field="StrainSize" value="4"/>
       <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -151,6 +155,7 @@
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="False"/>
       <filter field="LargeDeformation" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -186,6 +191,7 @@
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
       <filter field="HybridType" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -221,6 +227,7 @@
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -255,6 +262,7 @@
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
       <filter field="HybridType" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -290,6 +298,7 @@
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -323,6 +332,7 @@
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="D-R"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -361,6 +371,7 @@
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="6"/>
       <filter field="HybridType" value="D-R"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -400,6 +411,7 @@
       <filter field="Dimension" value="3D"/>
       <filter field="StrainSize" value="3"/>
       <filter field="HybridType" value="False"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -427,6 +439,7 @@
     </TopologyFeatures>
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Beam2D"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
@@ -450,6 +463,7 @@
     </TopologyFeatures>
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Beam2D"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
@@ -473,6 +487,7 @@
     </TopologyFeatures>
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Beam3D"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
@@ -496,6 +511,7 @@
     </TopologyFeatures>
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Beam3D"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
@@ -523,6 +539,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
       <filter field="StrainSize" value="1"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -547,6 +564,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
       <filter field="StrainSize" value="1"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -571,6 +589,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
       <filter field="StrainSize" value="1"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -595,6 +614,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
       <filter field="StrainSize" value="1"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -620,6 +640,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
       <filter field="StrainSize" value="1"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -644,6 +665,7 @@
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Truss"/>
       <filter field="StrainSize" value="1"/>
+      <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
