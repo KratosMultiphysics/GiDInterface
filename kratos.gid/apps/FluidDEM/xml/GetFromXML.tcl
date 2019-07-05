@@ -32,6 +32,7 @@ proc FluidDEM::xml::Init { } {
 
     set element [::Model::getElement "SphericPartDEMElement3D"]
     $element addInputDone $parameter
+    spdAux::parseRoutes
 }
 
 proc FluidDEM::xml::getUniqueName {name} {
@@ -86,6 +87,7 @@ proc FluidDEM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden FLResults GiDOptions
     spdAux::SetValueOnTreeItem v MultipleFiles FLResults GiDMultiFileFlag
 
+    spdAux::parseRoutes
 
 }
 

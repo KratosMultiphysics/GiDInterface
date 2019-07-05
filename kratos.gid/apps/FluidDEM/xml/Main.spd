@@ -16,7 +16,6 @@
   <container n="DEM" pn="DEM" icon="gravity" prefix="DEM" tree_state="open" open_window="0">
     <include n="StageInfo"         active="1" path="apps/DEM/xml/StageInfo.spd"/>
     <include n="Parts"             active="1" path="apps/DEM/xml/Parts.spd"/>
-    <include n="Intervals"         active="1" path="apps/Common/xml/Intervals.spd"/>
     <include n="Conditions"        active="1" path="apps/DEM/xml/Conditions.spd"/>
     <include n="SolutionStrategy"  active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
     <include n="Results"           active="1" path="apps/DEM/xml/Results.spd" un="DEMResults" />
@@ -27,6 +26,7 @@
 
   <container n="FluidDEM"       pn="General parameters"  icon="prdata16" prefix="FluidDEM_" un="FluidDEM_GeneralParameters" tree_state="open" open_window="0">
     <include n="TimeParameters" active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/TimeParameters.spd"/>
+    <include n="Intervals"         active="1" path="apps/Common/xml/Intervals.spd"/>
     <include n="Gravity"        active="1" icon="black1" un="DEMGravity,FLGravity" path="apps/DEM/xml/Gravity.spd"/>
     <include n="Coupling"       active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/Coupling.spd"/>
     <include n="non-newtonian"  active="1" path="apps/FluidDEM/xml/Herschel-Bulkley.spd"/>
