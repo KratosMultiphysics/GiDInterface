@@ -5,6 +5,7 @@ proc ::FluidDEM::examples::CylinderInFlow {args} {
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
+
     DrawCylinderInFlowGeometry$::Model::SpatialDimension
     AssignGroupsCylinderInFlow$::Model::SpatialDimension
     AssignCylinderInFlowMeshSizes$::Model::SpatialDimension
@@ -15,6 +16,10 @@ proc ::FluidDEM::examples::CylinderInFlow {args} {
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
+
+    GiD_Process Mescape Meshing ElemType Sphere Volumes 2 escape
+    GiD_Process Mescape Meshing Generate Yes 0.1
+
 }
 
 
@@ -122,8 +127,7 @@ proc FluidDEM::examples::AssignCylinderInFlowMeshSizes3D {args} {
     set cylinder_mesh_size 0.1
     set walls_mesh_size 0.1
     set fluid_mesh_size 0.1
-    # Auto remesh when reloading the problem
-    GiD_Process "::GiD_Event_BeforeMeshGeneration 0.1" Mescape
+
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $cylinder_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cylinder surfaces] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $walls_mesh_size {*}[GiD_EntitiesGroups get Inlet surfaces] escape escape
