@@ -122,6 +122,7 @@ proc FluidDEM::examples::AssignCylinderInFlowMeshSizes3D {args} {
     set cylinder_mesh_size 0.1
     set walls_mesh_size 0.1
     set fluid_mesh_size 0.1
+    # Auto remesh when reloading the problem
     GiD_Process "::GiD_Event_BeforeMeshGeneration 0.1" Mescape
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $cylinder_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cylinder surfaces] escape escape
@@ -175,7 +176,7 @@ proc FluidDEM::examples::TreeAssignationCylinderInFlow3D {args} {
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
-    set props [list value 0.0]
+    set props [list hydrostatic_outlet true]
     foreach {prop val} $props {
          set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
