@@ -12,8 +12,16 @@ namespace eval Kratos {
 
 # Hard minimum GiD Version is 14
 if {[GidUtils::VersionCmp "14.0.1"] >=0 } {
-    proc GiD_Event_InitProblemtype { dir } {
-        Kratos::Event_InitProblemtype $dir
+    if {[GidUtils::VersionCmp "14.1.1"] >=0 } {
+        # GiD Developer versions
+        proc GiD_Event_InitProblemtype { dir } {
+            Kratos::Event_InitProblemtype $dir
+        } 
+    } {
+        # GiD Official versions
+        proc InitGIDProject { dir } {
+            Kratos::Event_InitProblemtype $dir
+        } 
     }
 } {
     # GiD versions previous to 14 are no longer allowed
@@ -75,7 +83,7 @@ proc Kratos::RegisterGiDEvents { } {
 
 proc Kratos::Event_InitProblemtype { dir } {
     variable kratos_private
-
+    
     # Init Kratos problemtype global vars
     Kratos::InitGlobalVariables $dir
 
