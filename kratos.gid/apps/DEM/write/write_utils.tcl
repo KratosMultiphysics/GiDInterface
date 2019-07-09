@@ -100,7 +100,7 @@ proc DEM::write::Elements_Substitution {} {
                 } elseif {$FEMtoDEM == "AttheNodes"} {
                     # We first delete the elements (lines, triangles, quadrilaterals, tetrahedra or hexahedra) of this group,
                     # but not their nodes, which will be used for creating the new sheres
-                    GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements]
+                    if {[GiD_EntitiesGroups get $groupid elements -count] >0} {GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements]}
                     foreach node_id [GiD_EntitiesGroups get $groupid nodes] {
                         if {$probldistr == "NormalDistribution"} {
                             set final_elem_radius [DEM::write::NormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
@@ -266,13 +266,12 @@ proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
 }
 
 proc DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
-    
-    #GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid nodes]
-    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type linear]
-    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type triangle]
-    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type quadrilateral]
-    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type tetrahedra]
-    GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type hexahedra]
+    set elem_types [list line triangle quadrilateral tetrahedra hexahedra]
+    foreach elem_type $elem_types {
+        if {[GiD_EntitiesGroups get $cgroupid elements -count -element_type $elem_type] > 0} {
+            GiD_Mesh delete element [GiD_EntitiesGroups get $cgroupid elements -element_type $elem_type]
+        }
+    }
 }
 
 proc DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes {final_list_of_isolated_nodes} {
@@ -542,21 +541,21 @@ proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
     set bound_sphere_surface_list [DEM::write::FindBoundariesOfSphericElements surface]
     
     foreach point_id $list_of_points line_id $list_of_lines surface_id $list_of_surfaces {
-	set point_info [GiD_Info list_entities point $point_id]
-	set line_info [GiD_Info list_entities line $line_id]
-	set surface_info [GiD_Info list_entities surface $surface_id]
-	set point_has_no_higher_entities [regexp {HigherEntity: 0} $point_info]
-	set line_has_no_higher_entities [regexp {HigherEntity: 0} $line_info]
-	set surface_has_no_higher_entities [regexp {HigherEntity: 0} $surface_info]
-	if {$point_has_no_higher_entities == 1} {
-	    lappend points_to_add_to_skin_spheres $point_id
-	}
-	if {$line_has_no_higher_entities == 1} {
-	    lappend lines_to_add_to_skin_spheres $line_id
-	}
-	if {$surface_has_no_higher_entities == 1} {
-	    # lappend surfaces_to_add_to_skin_spheres $surface_id; # esta linea es la que asigna skin a las placas
-	}
+        set point_info [GiD_Info list_entities point $point_id]
+        set line_info [GiD_Info list_entities line $line_id]
+        set surface_info [GiD_Info list_entities surface $surface_id]
+        set point_has_no_higher_entities [regexp {HigherEntity: 0} $point_info]
+        set line_has_no_higher_entities [regexp {HigherEntity: 0} $line_info]
+        set surface_has_no_higher_entities [regexp {HigherEntity: 0} $surface_info]
+        if {$point_has_no_higher_entities == 1} {
+            lappend points_to_add_to_skin_spheres $point_id
+        }
+        if {$line_has_no_higher_entities == 1} {
+            lappend lines_to_add_to_skin_spheres $line_id
+        }
+        if {$surface_has_no_higher_entities == 1} {
+            # lappend surfaces_to_add_to_skin_spheres $surface_id; # esta linea es la que asigna skin a las placas
+        }
     }
     # W $surfaces_to_add_to_skin_spheres
     # W $bound_sphere_surface_list
@@ -645,8 +644,8 @@ proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     #set xp1 "[spdAux::getRoute DEMConditions]/group"DEM-FEM-Wall
     set xp1 "[spdAux::getRoute DEMConditions]/group"
     foreach group [$root selectNodes $xp1] {
-	set groupid [$group @n]
-	GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
     
     # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-FEM-Wall"] {
@@ -659,8 +658,8 @@ proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
     #set xp1 "[spdAux::getRoute DEMConditions]/group" Inlet
     set xp1 "[spdAux::getRoute DEMConditions]/group"
     foreach group [$root selectNodes $xp1] {
-	set groupid [$group @n]
-	GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
     
     # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-Inlet"] {
@@ -674,8 +673,8 @@ proc DEM::write::FindBoundariesOfSphericElements {entity} {
     set xp1 "[spdAux::getRoute DEMParts]/group"
     set groups_to_spherize_list [list ]
     foreach group [$root selectNodes $xp1] {
-	    set groupid [$group @n]
-	    lappend groups_to_spherize_list $groupid
+            set groupid [$group @n]
+            lappend groups_to_spherize_list $groupid
     }
     
     # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]

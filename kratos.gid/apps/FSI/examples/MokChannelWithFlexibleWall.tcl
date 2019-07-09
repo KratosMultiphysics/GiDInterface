@@ -70,7 +70,7 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
         GiD_Process 'Layers Off Structure escape Mescape
         GiD_Process Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.25 1 escape Mescape
         GiD_Process 'Layers On Structure escape 'Layers Off Fluid escape Mescape
-        GiD_Process Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.25 2 escape Mescape
+        GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.25 2 escape Mescape
         GiD_Process 'Layers On Fluid escape
         GiD_Process 'Layers Transparent Fluid 127 escape
     }
