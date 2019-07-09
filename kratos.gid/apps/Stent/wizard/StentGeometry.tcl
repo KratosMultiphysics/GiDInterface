@@ -508,7 +508,20 @@ proc Stent::Wizard::DrawGeometry {} {
             incr cont4
             set punto1 $q
             set punto2 [expr $punto1 +100000]
-            lappend joints [GiD_Geometry -v2 create line $cont4 stline $layer_name $punto1 $punto2]
+
+            if {[GiD_Geometry list point $punto2] == $punto2} {
+                set dist1 [MathUtils::VectorDistance2 [lrange [GiD_Geometry get point $punto1] 1 end] [list 0 0 0]]
+                set dist2 [MathUtils::VectorDistance2 [lrange [GiD_Geometry get point $punto2] 1 end] [list 0 0 0]]
+                set first $punto1
+                set second $punto2
+                if {$dist1>$dist2} {
+                    set first $punto2
+                    set second $punto1
+                }
+                #MathUtils::VectorDistance2
+                set line [GiD_Geometry -v2 create line $cont4 stline $layer_name $first $second]
+                if {[string is entier $line]} {lappend joints $line}
+                }
         }
         
         MoveNodesToCylinder
