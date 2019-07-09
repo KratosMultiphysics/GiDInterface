@@ -38,7 +38,7 @@ proc Stent::Wizard::DrawGeometry {} {
     set stent_length [ smart_wizard::GetProperty Geometry StentLength,value]
     set crimped_on [ smart_wizard::GetProperty Geometry CrimpedButton,value]
     set stent_radius_closed [ smart_wizard::GetProperty Geometry StentRadiusClosed,value]
-
+    
     set angle [ smart_wizard::GetProperty Geometry AngleBetweenWires,value]
     
     #New Variables to define the changes
@@ -199,11 +199,11 @@ proc Stent::Wizard::DrawGeometry {} {
         array set Matrix1 [FillBidimensionalArray $number_wires $num_rows 0.0]
         array set Matrix2 [FillBidimensionalArray $number_wires $num_rows 0.0]
         #array set NurbsMatrix [FillBidimensionalArray $number_wires [expr ($num_rows*2) - 1 ] 0.0]
-
-       
+        
+        
         MoveNodesToCylinder
         GiD_Process Mescape Utilities Collapse model Yes 
-
+        
         if {$crimped_on == "Yes"} {
             Stent::Wizard::CreateCrimpado $wire_radius $number_wires $angle $stent_radius $stent_radius_closed $stent_length $num_cols $num_rows
             GiD_Process Mescape Utilities Collapse model Yes 
@@ -279,7 +279,7 @@ proc Stent::Wizard::DrawGeometry {} {
             }
             
         }
-    
+        
         for {set j 0} {$j < $number_wires} {incr j} {
             set ti [expr $num_rows -1]
             if {$Matrix2($j,$ti) eq $Matrix1(0,$ti)} {
@@ -293,12 +293,12 @@ proc Stent::Wizard::DrawGeometry {} {
             } else {
                 set index($j) 0
             }
-        
+            
         }   
-             
+        
         #Creation of NurbsMatrix: each row have all the points to join with each NurbsLine       
         for {set j 0} {$j < $number_wires} {incr j} {
-                                                        
+            
             set count3 0
             for {set i 0} {$i < $num_rows} {incr i} {
                 set NurbsMatrix($j,$i) $Matrix1($j,$i)
@@ -310,7 +310,7 @@ proc Stent::Wizard::DrawGeometry {} {
                 set NurbsMatrix($j,$i) $Matrix2($t,$ip)               
             }
         }
-
+        
         GidUtils::DisableGraphics
         set contNurbs 0
         for {set j 0} {$j < $number_wires} {incr j} {
@@ -337,7 +337,7 @@ proc Stent::Wizard::DrawGeometry {} {
         
         set contNurbs 0
         set new_lines_id $number_wires
-
+        
         set first_point [expr $num_rows - 1]
         for {set j 0} {$j < $number_wires} {incr j} {
             incr contNurbs
@@ -392,14 +392,14 @@ proc Stent::Wizard::DrawGeometry {} {
                 }
             }
             lappend wires_2 [expr $new_lines_id - 1]
-                       
+            
         }
-                      
+        
         # DivideNurbsLines (create in proc separated)
         GiD_Process Mescape Utilities Collapse model Yes
-
+        
         # JOINTS
-        set points_1_id [GiD_Geometry list point]
+        set points_1_id [lrange [GiD_Geometry list point] [expr $number_wires + 1] end-[expr $number_wires + 1]]
         set cont4 1000000
         set joints [list]
         foreach point_1 $points_1_id {
@@ -407,16 +407,17 @@ proc Stent::Wizard::DrawGeometry {} {
                 incr cont4
                 set punto1 $point_1
                 set punto2 [expr $punto1 +100000]
-                lappend joints [GiD_Geometry -v2 create line $cont4 stline $layer_name $punto1 $punto2]
+                set line [GiD_Geometry -v2 create line $cont4 stline $layer_name $punto1 $punto2]
+                if {[string is entier $line]} {lappend joints $line}
             }
         }
-
-
+        
+        
         GidUtils::EnableGraphics 
         GiD_Process 'Zoom Frame
-
-
-    #ELSE it is straight line
+        
+        
+        #ELSE it is straight line
     } else {
         set cont2 0
         set cont3 [expr $number_wires + 1]
@@ -489,7 +490,7 @@ proc Stent::Wizard::DrawGeometry {} {
                 lappend wires_2 [GiD_Geometry -v2 create line $cont22 stline $layer_name $punto1 $punto2]
             }
         }
-
+        
         set cont4 1000000
         set joints [list]
         for {set q 1} {$q < $cont1} {incr q} {
@@ -498,49 +499,50 @@ proc Stent::Wizard::DrawGeometry {} {
             set punto2 [expr $punto1 +100000]
             lappend joints [GiD_Geometry -v2 create line $cont4 stline $layer_name $punto1 $punto2]
         }
-   
+        WV joints
+        
         MoveNodesToCylinder
         GiD_Process Mescape Utilities Collapse model Yes
-
+        
         if {$crimped_on == "Yes"} {
             Stent::Wizard::CreateCrimpado  $wire_radius $number_wires $angle $stent_radius $stent_radius_closed $stent_length $num_cols $num_rows
             GiD_Process Mescape Utilities Collapse model Yes 
         } 
-
+        
     }
-
-
+    
+    
     for {set i 1} {$i <= $number_wires} {incr i} {
         lappend bottom $i
         lappend top [expr $cont1 +1 - $i]
     }
-
-
+    
+    
     GiD_Groups create bottom
     GiD_EntitiesGroups assign bottom points $bottom
     
     GiD_Groups create top
     GiD_EntitiesGroups assign top points $top
-  
+    
     GiD_Groups create structure
     
     GiD_Groups create wires_1
     GiD_EntitiesGroups assign wires_1 lines $wires_1   
     GiD_EntitiesGroups assign structure lines $wires_1
-
+    
     GiD_Groups create wires_2
     GiD_EntitiesGroups assign wires_2 lines $wires_2
     GiD_EntitiesGroups assign structure lines $wires_2
-
+    
     GiD_Groups create joints
     GiD_EntitiesGroups assign joints lines $joints
     GiD_EntitiesGroups assign structure lines $joints
-        
+    
     GiD_Groups create "inner nodes"
     GiD_EntitiesGroups assign "inner nodes" points $inner_nodes
     GiD_Groups create "outer nodes"
     GiD_EntitiesGroups assign "outer nodes" points $outer_nodes
-
+    
     foreach point $top {
         set idx [lsearch $outer_nodes $point]
         set outer_nodes [lreplace $outer_nodes $idx $idx]
@@ -554,13 +556,13 @@ proc Stent::Wizard::DrawGeometry {} {
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame    
-
+    
 }
 
 proc Stent::Wizard::CalculatePointArrays {stent_length point_distance_row angle angle_open angle_transition angle_crimped variable_angle num_cols wire_diameter} {
     
     set degtorad 0.0174532925199
-
+    
     #IF VARIABLE ANGLE IS ON
     if {$variable_angle eq "Yes"} {
         set length_open [expr 0.53*$stent_length]
@@ -616,16 +618,16 @@ proc Stent::Wizard::CalculatePointArrays {stent_length point_distance_row angle 
                     set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_transition]
                 }
                 # if {$j eq [expr $num_rows_closed + 1] && $point_distance_column_transition < [expr $point_distance_column_crimped/2]} {
-                #     set variable_repeat [expr ceil ( ($point_distance_column_crimped/2) / $point_distance_column_transition)]
-                #     set points_y($i,$j) [expr $points_y($i,$j) + ($variable_repeat *$point_distance_column_transition)]
-                # }
+                    #     set variable_repeat [expr ceil ( ($point_distance_column_crimped/2) / $point_distance_column_transition)]
+                    #     set points_y($i,$j) [expr $points_y($i,$j) + ($variable_repeat *$point_distance_column_transition)]
+                    # }
             } elseif {[expr $j % 2] eq 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
                 set tj [expr $j-2]
                 set points_y($i,$j) [expr $points_y($i,$tj) + $point_distance_column_open]
                 if {$j eq [expr $num_rows_closed + 1 + $num_rows_transition] && $point_distance_column_open <= [expr $point_distance_column_transition/2]} {
                     set variable_repeat2 [expr ceil ( ($point_distance_column_transition/2) / $point_distance_column_open)]
                     set points_y($i,$j) [expr $points_y($i,$j) + ($variable_repeat2 * $point_distance_column_open)]
-
+                    
                 }
             }
         }
@@ -681,9 +683,9 @@ proc Stent::Wizard::CalculatePointArrays {stent_length point_distance_row angle 
                 # set b_points_x(0,$j) $b_points_x(0,$tj)
                 # set b_points_y(0,$j) [expr $b_points_y(0,$tj) + $point_distance_column_transition]
                 # if {$j eq [expr $num_rows_closed +1] && $point_distance_column_transition < [expr $point_distance_column_crimped/2]} {
-                #     set variable_repeat [expr ceil ( ($point_distance_column_crimped/2) / $point_distance_column_transition)]
-                #     set b_points_y(0,$j) [expr $b_points_y(0,$j) + ($variable_repeat *$point_distance_column_transition)]
-                # }
+                    #     set variable_repeat [expr ceil ( ($point_distance_column_crimped/2) / $point_distance_column_transition)]
+                    #     set b_points_y(0,$j) [expr $b_points_y(0,$j) + ($variable_repeat *$point_distance_column_transition)]
+                    # }
                 set b_points_z(0,$j) [expr -1.0 * $wire_diameter]
             } elseif {[expr $j % 2] eq 0 && $j > [expr $num_rows_closed + $num_rows_transition]} {
                 set tj [expr $j-2]
@@ -863,7 +865,7 @@ proc Stent::Wizard::ValidateDraw { } {
 }
 
 proc Stent::Wizard::CreateCrimpado { wire_radius number_wires angle stent_radius stent_radius_closed stent_length num_cols num_rows} {
-
+    
     # Calculated parameters
     set wire_diameter [expr 2.0*$wire_radius]
     set pi $MathUtils::PI
@@ -871,7 +873,7 @@ proc Stent::Wizard::CreateCrimpado { wire_radius number_wires angle stent_radius
     set stent_perimeter [expr 2*$stent_radius*$pi]
     set point_distance_row [expr $stent_perimeter/$number_wires]
     set point_distance_column [expr $point_distance_row * tan($degtorad * (90-$angle))]
-
+    
     if {[expr abs($stent_length - 1.0*($num_rows/1.0*($point_distance_row/2))) > abs($stent_length - 1.0*(($num_rows+1)/1.0*($point_distance_row/2)))]} {
         incr num_rows
     }
@@ -932,7 +934,7 @@ proc Stent::Wizard::CreateCrimpado { wire_radius number_wires angle stent_radius
         set z [expr $rho*sin($phi)]
         
         GiD_Process Mescape Geometry Edit MovePoint $num $x $y $z escape
-
+        
     }
     GiD_Set CreateAlwaysNewPoint $old_create_always_new_point  
     GidUtils::EnableGraphics 
@@ -940,9 +942,9 @@ proc Stent::Wizard::CreateCrimpado { wire_radius number_wires angle stent_radius
 }
 
 # proc Stent::Wizard::DivideNurbsLines { } {
-#     set number_wires [smart_wizard::GetProperty Geometry NumberOfWires,value]
- 
-# }
+    #     set number_wires [smart_wizard::GetProperty Geometry NumberOfWires,value]
+    
+    # }
 
 proc Stent::Wizard::HideCrimpedRadius { } {
     variable curr_win
