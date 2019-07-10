@@ -63,29 +63,10 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
 }
 
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $un]/group"
-    set groups [$root selectNodes $xp1]
-    Model::getElements "../../Common/xml/Elements.xml"
-    Model::getConditions "../../Common/xml/Conditions.xml"
-    set conditions_dict [dict create ]
-    set elements_list [list ]
-    foreach group $groups {
-        set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
-        set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
-        if {$needElems} {
-            writeGroupElementConnectivities $group "GENERIC_ELEMENT"
-            lappend elements_list [$group @n]
-        }
-        if {$needConds} {
-            set iters [write::writeGroupNodeCondition $conditions_dict $group "GENERIC_CONDITION" [incr cond_iter]]
-            set conditions_dict [dict merge $conditions_dict $iters]
-            set cond_iter [lindex $iters 1 1]
-        }
-    }
-    Model::ForgetElement GENERIC_ELEMENT
-    Model::ForgetCondition GENERIC_CONDITIONS
-
+    # Write elements
+    set groups [write::_writeElementsForBasicSubmodelParts $un]
+    # Write conditions (By iterator, so need the app condition iterator)
+    set conditions_dict [write::_writeConditionsForBasicSubmodelParts $un $cond_iter ]
     foreach group $groups {
         set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
@@ -98,6 +79,41 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     return $conditions_dict
 }
 
+proc write::_writeConditionsForBasicSubmodelParts {un cond_iter} {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $un]/group"
+    set groups [$root selectNodes $xp1]
+    Model::getConditions "../../Common/xml/Conditions.xml"
+    set conditions_dict [dict create ]
+    set elements_list [list ]
+    foreach group $groups {
+        set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        if {$needConds} {
+            set iters [write::writeGroupNodeCondition $conditions_dict $group "GENERIC_CONDITION" [incr cond_iter]]
+            set conditions_dict [dict merge $conditions_dict $iters]
+            set cond_iter [lindex $iters 1 1]
+        }
+    }
+    Model::ForgetCondition GENERIC_CONDITIONS
+    return $conditions_dict
+}
+
+proc write::_writeElementsForBasicSubmodelParts {un} {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $un]/group"
+    set groups [$root selectNodes $xp1]
+    Model::getElements "../../Common/xml/Elements.xml"
+    #set elements_list [list ]
+    foreach group $groups {
+        set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
+        if {$needElems} {
+            writeGroupElementConnectivities $group "GENERIC_ELEMENT"
+            #lappend elements_list [$group @n]
+        }
+    }
+    Model::ForgetElement GENERIC_ELEMENT
+    return $groups
+}
 
 proc write::getSubModelPartNames { args } {
 

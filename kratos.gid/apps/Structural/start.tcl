@@ -42,7 +42,9 @@ proc ::Structural::LoadMyFiles { } {
 
 proc ::Structural::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::TrussCantilever] [= "Example\nTruss cantilever"]   
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]   
+    if {$::Model::SpatialDimension eq "2D"} {
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]   
+    }
 }
 
 proc ::Structural::CustomMenus { } {

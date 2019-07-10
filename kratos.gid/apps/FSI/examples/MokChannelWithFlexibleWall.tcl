@@ -70,7 +70,7 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
         GiD_Process 'Layers Off Structure escape Mescape
         GiD_Process Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.25 1 escape Mescape
         GiD_Process 'Layers On Structure escape 'Layers Off Fluid escape Mescape
-        GiD_Process Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.25 2 escape Mescape
+        GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,0.25 2 escape Mescape
         GiD_Process 'Layers On Fluid escape
         GiD_Process 'Layers Transparent Fluid 127 escape
     }
@@ -278,7 +278,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Fluid domain output parameters
     set change_list [list OutputControlType step]
-    set xpath [spdAux::getRoute FLResults]
+    set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
@@ -353,7 +353,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Structure domain output parameters
     set change_list [list OutputControlType step]
-    set xpath [spdAux::getRoute STResults]
+    set xpath "[spdAux::getRoute STResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {

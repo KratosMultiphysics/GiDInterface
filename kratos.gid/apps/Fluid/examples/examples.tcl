@@ -8,9 +8,9 @@ proc Fluid::examples::Init { } {
 }
 
 proc Fluid::examples::UpdateMenus { } {
-    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Cylinder in air flow" ] 8 PRE [list ::Fluid::examples::CylinderInFlow] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "High-rise building" ] 8 PRE [list ::Fluid::examples::HighRiseBuilding] "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "---"] 7 PRE "" "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "Cylinder in air flow" ] 7 PRE [list ::Fluid::examples::CylinderInFlow] "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "High-rise building" ] 7 PRE [list ::Fluid::examples::HighRiseBuilding] "" "" insertafter =
     GiDMenu::UpdateMenus
 }
 

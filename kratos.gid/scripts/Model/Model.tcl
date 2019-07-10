@@ -31,7 +31,7 @@ proc Model::Init { } {
     variable Solvers
     variable Processes
     
-    set dir $::Kratos::kratos_private(Path)
+    #set dir $::Kratos::kratos_private(Path)
     
     set SolutionStrategies [list ]
     set Elements [list ]

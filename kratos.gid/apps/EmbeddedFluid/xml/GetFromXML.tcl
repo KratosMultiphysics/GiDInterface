@@ -52,8 +52,10 @@ proc EmbeddedFluid::xml::CustomTree { args } {
     if {[$root selectNodes "[spdAux::getRoute EMBFLSolutionParameters]/container\[@n='AdaptivitySettings'\]"] eq ""} {
         gid_groups_conds::addF [spdAux::getRoute EMBFLSolutionParameters] include [list n AdaptivitySettings active 1 path {apps/EmbeddedFluid/xml/AdaptivitySettings.spd}]
     }
-    if {[$root selectNodes "[spdAux::getRoute Results]/condition\[@n='EmbeddedDrag'\]"] eq ""} {
-        gid_groups_conds::addF [spdAux::getRoute Results] include [list n EmbeddedDrag active 1 path {apps/EmbeddedFluid/xml/EmbeddedDrag.spd}]
+    
+    set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/condition\[@n='EmbeddedDrag'\]"
+    if {[$root selectNodes $xpath] eq ""} {
+        gid_groups_conds::addF "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]" include [list n EmbeddedDrag active 1 path {apps/EmbeddedFluid/xml/EmbeddedDrag.spd}]
     }
     customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     spdAux::parseRoutes

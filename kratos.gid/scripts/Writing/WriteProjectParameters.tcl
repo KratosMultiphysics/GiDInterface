@@ -1,25 +1,29 @@
 
-proc write::dict2json {dictVal} {
-    # XXX: Currently this API isn't symmetrical, as to create proper
-    # XXX: JSON text requires type knowledge of the input data
-    set json ""
-    dict for {key val} $dictVal {
-        # key must always be a string, val may be a number, string or
-        # bare word (true|false|null)
-        if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
-            set val "\"$val\""
-        }
-        if {[isDict $val]} {
-            set val [dict2json $val]
-            set val "\[${val}\]"
-        } else {
-            set val \"$val\"
-        }
-        append json "\"$key\": $val," \n
-    }
-    if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
-    return "\{${json}\}"
-}
+# proc write::dict2json {dictVal} {
+#     # XXX: Currently this API isn't symmetrical, as to create proper
+#     # XXX: JSON text requires type knowledge of the input data
+#     set json ""
+#     dict for {key val} $dictVal {
+#         # key must always be a string, val may be a number, string or
+#         # bare word (true|false|null)
+#         if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
+#             set val "\"$val\""
+#         }
+#         if {[isDict $val]} {
+#             set val [dict2json $val]
+#             set val "\[${val}\]"
+#         } else {
+#             set val \"$val\"
+#         }
+#         append json "\"$key\": $val," \n
+#     }
+#     if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
+#     return "\{${json}\}"
+# }
+
+
+package require json::write
+
 proc write::json2dict {JSONtext} {
     string range [
         string trim [
@@ -29,6 +33,7 @@ proc write::json2dict {JSONtext} {
             ]
         ] 1 end-1
 }
+
 proc write::tcl2json { value } {
     # Guess the type of the value; deep *UNSUPPORTED* magic!
     # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
@@ -80,76 +85,24 @@ proc write::WriteJSON {processDict} {
     WriteString [write::tcl2json $processDict]
 }
 
-proc write::GetDefaultOutputDict { {appid ""} } {
-    set outputDict [dict create]
-    set resultDict [dict create]
-
-    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
-    set GiDPostDict [dict create]
-    dict set GiDPostDict GiDPostMode                [getValue $results_UN GiDPostMode]
-    dict set GiDPostDict WriteDeformedMeshFlag      [getValue $results_UN GiDWriteMeshFlag]
-    dict set GiDPostDict WriteConditionsFlag        [getValue $results_UN GiDWriteConditionsFlag]
-    dict set GiDPostDict MultiFileFlag              [getValue $results_UN GiDMultiFileFlag]
-    dict set resultDict gidpost_flags $GiDPostDict
-
-    dict set resultDict file_label                 [getValue $results_UN FileLabel]
-    set outputCT [getValue $results_UN OutputControlType]
-    dict set resultDict output_control_type $outputCT
-    if {$outputCT eq "time"} {set frequency [getValue $results_UN OutputDeltaTime]} {set frequency [getValue $results_UN OutputDeltaStep]}
-    dict set resultDict output_frequency $frequency
-
-    dict set resultDict body_output           [getValue $results_UN BodyOutput]
-    dict set resultDict node_output           [getValue $results_UN NodeOutput]
-    dict set resultDict skin_output           [getValue $results_UN SkinOutput]
-
-    dict set resultDict plane_output [GetCutPlanesList $results_UN]
-
-    dict set resultDict nodal_results [GetResultsList $results_UN OnNodes]
-    dict set resultDict gauss_point_results [GetResultsList $results_UN OnElement]
-
-    dict set outputDict "result_file_configuration" $resultDict
-    dict set outputDict "point_data_configuration" [GetEmptyList]
-    return $outputDict
-}
-
-proc write::GetDefaultOutputDictVtk { {appid ""} } {
-    set resultDict [dict create]
-    dict set resultDict model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
-
-
-    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
-
-    # manually selecting step, otherwise Paraview won't group the results
-    set outputCT [getValue $results_UN OutputControlType]
-    dict set resultDict output_control_type step
-    if {$outputCT eq "time"} {set frequency 1} {set frequency [getValue $results_UN OutputDeltaStep]}
-    dict set resultDict output_frequency               $frequency
-    dict set resultDict file_format                    "ascii"
-    dict set resultDict output_precision               7
-    dict set resultDict output_sub_model_parts         "true"
-    dict set resultDict folder_name                    "vtk_output"
-    dict set resultDict save_output_files_in_folder    "true"
-    dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
-    dict set resultDict nodal_data_value_variables     []
-    dict set resultDict element_data_value_variables   []
-    dict set resultDict condition_data_value_variables []
-
-
-    return $resultDict
-}
-
 proc write::GetEmptyList { } {
     # This is a gipsy code
     set a [list ]
     return $a
 }
-proc write::GetCutPlanesList { {results_UN Results} } {
+
+proc write::GetCutPlanesList { {cut_planes_UN CutPlanes} } {
+    set xp1 "[spdAux::getRoute CutPlanes]"
+    return [GetCutPlanesByXPathList $xp1]
+}
+
+proc write::GetCutPlanesByXPathList { xpath } {
 
     set root [customlib::GetBaseRoot]
 
     set list_of_planes [list ]
 
-    set xp1 "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]/blockdata"
+    set xp1 "$xpath/blockdata"
     set planes [$root selectNodes $xp1]
 
     foreach plane $planes {
@@ -198,14 +151,13 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
 
     set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
-        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
+        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n force]
     }
     foreach {n in} [$sch getInputs] {
-        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
+        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n force]
     }
     return $solverSettingsDict
 }
-
 
 proc write::getSolversParametersDict { {appid ""} } {
     if {$appid eq ""} {
@@ -431,10 +383,16 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
 
 proc write::GetResultsList { un {cnd ""} } {
 
+    if {$cnd eq ""} {set xp1 [spdAux::getRoute $un]} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]"}
+    return [GetResultsByXPathList $xp1]
+}
+
+proc write::GetResultsByXPathList { xpath } {
+
     set root [customlib::GetBaseRoot]
 
     set result [list ]
-    if {$cnd eq ""} {set xp1 "[spdAux::getRoute $un]/value"} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]/value"}
+    set xp1 "$xpath/value"
     set resultxml [$root selectNodes $xp1]
     foreach res $resultxml {
         if {[get_domnode_attribute $res v] in [list "Yes" "True" "1"] && [get_domnode_attribute $res state] ne "hidden"} {
@@ -539,11 +497,12 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
          append parent $forced_parent "."
     }
     append result $parent $child_name
-    return $result
+    return [string trim $result "."]
 }
 
 proc write::GetDefaultProblemDataDict { {appid ""} } {
 
+    # Get the results unique name. appid parameter is usefull for multiple inheritance app with more than 1 results section
     if {$appid eq ""} {set results_UN Results } {set results_UN [GetConfigurationAttribute results_un]}
 
     # Problem name
@@ -567,6 +526,27 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
 }
 
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
+    # Output process must be placed inside json lists
+    set gid_output_process_list [list ]
+    set need_gid [write::getValue EnableGiDOutput]
+    if {[write::isBooleanTrue $need_gid]}  {
+        lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
+    }
+
+    set vtk_output_process_list [list ]
+    set need_vtk [write::getValue EnableVtkOutput]
+    if {[write::isBooleanTrue $need_vtk]}  {
+        lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
+    }
+
+    set outputProcessesDict [dict create]
+    dict set outputProcessesDict gid_output $gid_output_process_list
+    dict set outputProcessesDict vtk_output $vtk_output_process_list
+
+    return $outputProcessesDict
+}
+
+proc write::GetDefaultGiDOutput { {appid ""} } {
     # prepare params
     set model_name [Kratos::GetModelName]
 
@@ -574,15 +554,57 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
     dict set outputProcessParams output_name $model_name
-    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputDict $appid]
+    dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputGiDDict $appid]
 
     set outputConfigDict [dict create]
     dict set outputConfigDict python_module gid_output_process
     dict set outputConfigDict kratos_module KratosMultiphysics
     dict set outputConfigDict process_name GiDOutputProcess
     dict set outputConfigDict help "This process writes postprocessing files for GiD"
-
     dict set outputConfigDict Parameters $outputProcessParams
+
+    return $outputConfigDict
+}
+
+proc write::GetDefaultOutputGiDDict { {appid ""} } {
+    set outputDict [dict create]
+    set resultDict [dict create]
+
+    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
+    set gid_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
+    set GiDPostDict [dict create]
+    dict set GiDPostDict GiDPostMode                [getValueByXPath $gid_options_xpath GiDPostMode]
+    dict set GiDPostDict WriteDeformedMeshFlag      [getValueByXPath $gid_options_xpath GiDWriteMeshFlag]
+    dict set GiDPostDict WriteConditionsFlag        [getValueByXPath $gid_options_xpath GiDWriteConditionsFlag]
+    dict set GiDPostDict MultiFileFlag              [getValueByXPath $gid_options_xpath GiDMultiFileFlag]
+    dict set resultDict gidpost_flags $GiDPostDict
+
+    dict set resultDict file_label                 [getValueByXPath $gid_options_xpath FileLabel]
+    set outputCT [getValueByXPath $gid_options_xpath OutputControlType]
+    dict set resultDict output_control_type $outputCT
+    if {$outputCT eq "time"} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]}
+    dict set resultDict output_frequency $frequency
+
+    dict set resultDict body_output [getValueByXPath $gid_options_xpath BodyOutput]
+    dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
+    dict set resultDict skin_output [getValueByXPath $gid_options_xpath SkinOutput]
+
+    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]"
+    dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
+    set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
+    dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]
+    set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnElement'\]"
+    dict set resultDict gauss_point_results [GetResultsByXPathList $gid_elements_xpath]
+
+    dict set outputDict "result_file_configuration" $resultDict
+    dict set outputDict "point_data_configuration" [GetEmptyList]
+    return $outputDict
+}
+
+proc write::GetDefaultVTKOutput { {appid ""} } {
+
+    # prepare params
+    set model_name [Kratos::GetModelName]
 
     # Setup Vtk-Output
     set outputConfigDictVtk [dict create]
@@ -590,16 +612,35 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     dict set outputConfigDictVtk kratos_module KratosMultiphysics
     dict set outputConfigDictVtk process_name VtkOutputProcess
     dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
-    dict set outputConfigDictVtk Parameters [write::GetDefaultOutputDictVtk $appid]
+    dict set outputConfigDictVtk Parameters [write::GetDefaultParametersOutputVTKDict $appid]
 
-    set gid_output_process_list [list ]
-    lappend gid_output_process_list $outputConfigDict
-    set vtk_output_process_list [list ]
-    lappend vtk_output_process_list $outputConfigDictVtk
+    return $outputConfigDictVtk
+}
 
-    set outputProcessesDict [dict create]
-    dict set outputProcessesDict gid_output $gid_output_process_list
-    dict set outputProcessesDict vtk_output $vtk_output_process_list
+proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
+    set resultDict [dict create]
+    dict set resultDict model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
+
+    if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
+    set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
+
+    # manually selecting step, otherwise Paraview won't group the results
+    set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
+    dict set resultDict output_control_type $outputCT
+    if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
+    dict set resultDict output_frequency               $frequency
+    dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
+    dict set resultDict output_precision               7
+    dict set resultDict output_sub_model_parts         "false"
+    dict set resultDict folder_name                    "vtk_output"
+    dict set resultDict save_output_files_in_folder    "true"
+    dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
+    dict set resultDict nodal_data_value_variables     []
+    dict set resultDict element_data_value_variables   []
+    dict set resultDict condition_data_value_variables []
+    dict set resultDict gauss_point_variables   [GetResultsList $results_UN OnElement]
+
+    return $resultDict
 }
 
 proc write::GetDefaultRestartDict { } {

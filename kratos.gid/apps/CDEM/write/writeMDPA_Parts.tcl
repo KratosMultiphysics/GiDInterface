@@ -38,7 +38,6 @@ proc DEM::write::WriteWallCustomDEMSmp { } {
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
         set groupid [$group @n]
         set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-        W "$destination_mdpa"
         if {$destination_mdpa == "DEM"} {
 
             #write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"

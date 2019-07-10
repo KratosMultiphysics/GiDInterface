@@ -468,6 +468,15 @@ proc write::getValueByNode { node } {
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
 }
+proc write::getValueByXPath { xpath { it "" }} {
+    set root [customlib::GetBaseRoot]
+    set node [$root selectNodes $xpath]
+    if {$node ne ""} {
+        if {$it ne ""} {set node [$node find n $it]}
+        return [write::getValueByNode $node]
+    }
+    return ""
+}
 proc write::getValue { name { it "" } {what noforce} } {
     set root [customlib::GetBaseRoot]
 
@@ -554,6 +563,11 @@ proc write::getSpacing {number} {
 }
 proc write::mdpaIndent { {b 4} } {
     variable current_mdpa_indent_level
+    if {[info exists Kratos::kratos_private(mdpa_format)]} {
+        if {$Kratos::kratos_private(mdpa_format) == 0} {
+            return ""
+        }
+    }
     string repeat [string repeat " " $b] $current_mdpa_indent_level
 }
 
@@ -605,6 +619,7 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
         set group [get_domnode_attribute $gNode n]
         set sub_model_part [write::getSubModelPartId Parts $group]
         if {$model_part_name ne ""} {set sub_model_part $model_part_name.$sub_model_part}
+        set sub_model_part [string trim $sub_model_part "."]
         if { [dict exists $mat_dict $group] } {
             set mid [dict get $mat_dict $group MID]
             set prop_dict [dict create]

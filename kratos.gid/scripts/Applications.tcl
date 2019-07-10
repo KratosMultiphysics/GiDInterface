@@ -29,6 +29,7 @@ proc apps::setActiveApp {appid} {
         if {[$app getName] eq $appid} {
             set activeApp $app
             $app activate
+            Kratos::Log "apps::setActiveApp $appid"
             break
         }
     }
@@ -224,15 +225,7 @@ oo::class create App {
     
     method activate { } {
         variable name
-        set ::Kratos::must_quit 0
-        set dir [file join $::Kratos::kratos_private(Path) apps $name]
-        set fileName [file join $dir start.tcl]
-        apps::loadAppFile $fileName
-        if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
-            set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
-            gid_groups_conds::add_images_dir [file join $dir images Black]
-        } 
-        gid_groups_conds::add_images_dir [file join $dir images]
+        apps::ActivateApp_do $name
     }
     
     method getPrefix { } {variable prefix; return $prefix}
@@ -258,12 +251,12 @@ oo::class create App {
         variable name
         set f ::${name}::xml::${func}
         if {[info procs $f] ne ""} {$f {*}$args}
-	}
+        }
     method execute { func args } {
         variable name
         set f ::${name}::${func}
         if {[info procs $f] ne ""} {$f {*}$args}
-	}
+        }
     
     method setPublic {v} {
         variable public
@@ -277,9 +270,20 @@ oo::class create App {
         return [set ::${name}::kratos_name]
     }
 }
+proc apps::ActivateApp_do {app_name} {
+    # set ::Kratos::must_quit 0
+    set dir [file join $::Kratos::kratos_private(Path) apps $app_name]
+    set fileName [file join $dir start.tcl]
+    apps::loadAppFile $fileName
+    if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
+        set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
+        gid_groups_conds::add_images_dir [file join $dir images Black]
+    } 
+    gid_groups_conds::add_images_dir [file join $dir images]
+}
 
 proc apps::loadAppFile {fileName} {
-	uplevel 2 [list source $fileName]
+    uplevel 2 [list source $fileName]
 }
 
 apps::Init

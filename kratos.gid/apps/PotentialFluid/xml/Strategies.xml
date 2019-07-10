@@ -3,7 +3,7 @@
   <StrategyItem n="potential_flow_solver" pn="Navier Stokes - Potential flow"
 		ImplementedInFile="navier_stokes_potential_flow_solver.py"
 		ImplementedInApplication="FluidDynamicsApplication"
-		ImplementedInPythonFile="Potential_flow"
+		ImplementedInPythonFile="potential_flow"
 		MinimumKratosVersion="8500" App="Fluid"
 		ProductionReady="ProductionReady"
 		help="">

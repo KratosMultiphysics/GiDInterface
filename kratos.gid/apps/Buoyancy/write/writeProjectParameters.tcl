@@ -30,7 +30,7 @@ proc Buoyancy::write::GetProblemData_Dict { } {
     set problemDataDict [dict create ]
 
     # problem name
-    set model_name [file tail [GiD_Info Project ModelName]]
+    set model_name [Kratos::GetModelName]
     dict set problemDataDict problem_name $model_name
 
     # domain size
