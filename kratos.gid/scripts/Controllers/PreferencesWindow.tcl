@@ -33,7 +33,7 @@ proc Kratos::ModifyPreferencesWindow { root } {
         set findnode [$root find "name" "general"]      
         
         if { $findnode != "" } {
-            set xml_preferences_filename [file join $kratos_private(Path) scripts controllers Preferences.xml]
+            set xml_preferences_filename [file join $kratos_private(Path) scripts Controllers Preferences.xml]
             set xml_data [GidUtils::ReadFile $xml_preferences_filename] 
             CreateWidgetsFromXml::AddAfterName $root "general" $xml_data 
             CreateWidgetsFromXml::UpdatePreferencesWindow
@@ -49,7 +49,7 @@ proc Kratos::ModifyPreferencesWindowOld { } {
     if {[info exists kratos_private(Path)]} {
         set findnode [$root find "name" "general"]   
         if { $findnode != "" } {
-            set xml_preferences_filename [file join $kratos_private(Path) scripts controllers Preferences.xml]
+            set xml_preferences_filename [file join $kratos_private(Path) scripts Controllers Preferences.xml]
             set xml_data [GidUtils::ReadFile $xml_preferences_filename] 
             CreateWidgetsFromXml::AddAfterName $root "general" $xml_data 
             CreateWidgetsFromXml::UpdatePreferencesWindow
