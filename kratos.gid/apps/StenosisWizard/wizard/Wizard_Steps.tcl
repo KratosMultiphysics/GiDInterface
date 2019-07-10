@@ -395,33 +395,41 @@ proc StenosisWizard::Wizard::Run { } {
 }
 
 proc StenosisWizard::Wizard::LastStep { } {
-    set i [smart_wizard::GetProperty Simulation InitialTime,value]
-    set e [smart_wizard::GetProperty Simulation EndTime,value]
-    set d [smart_wizard::GetProperty Simulation DeltaTime,value]
+    set initial [smart_wizard::GetProperty Simulation InitialTime,value]
+    set end [smart_wizard::GetProperty Simulation EndTime,value]
+    set delta [smart_wizard::GetProperty Simulation DeltaTime,value]
     
-    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='InitialTime']} "v $i"
-    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='EndTime']} "v $e"
-    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='DeltaTime']} "v $d"
-    
-    gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
-    
-    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]} {name Main}
-    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]/value[@n='normal']} {v 0.0,1.0,0.0}
+    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='StartTime']} "v $initial"
+    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='EndTime']} "v $end"
+    gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='DeltaTime']} "v $delta"
     
     set ncuts [smart_wizard::GetProperty Simulation Cuts,value]
     set length [smart_wizard::GetProperty Geometry Length,value]
     set delta [expr 2.0*double($length)/(double($ncuts)+1.0)]
     #W "$length $delta"
+
+    # Cut planes    
+    #gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
+    
+    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]} {name Main}
+    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]/value[@n='normal']} {v 0.0,1.0,0.0}
+    spdAux::ClearCutPlanes
+    set cutplane_xp "[spdAux::getRoute CutPlanes]/blockdata\[1\]"
+    
     for {set i 1} {$i <= $ncuts} {incr i} {
         set x [expr -$length + ($i * $delta)]
         set x [expr double(round(100*$x))/100]
-        gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
-        set cutplane "container\[@n='StenosisWizard'\]/container\[@n='Results'\]/container\[@n='CutPlanes'\]/blockdata\[@n='CutPlane'\]\[[expr $i +2]\]"
+        gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
+        set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $i +1]\]"
         gid_groups_conds::setAttributesF $cutplane "name CutPlane$i"
         gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 1.0,0.0,0.0"
         gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v $x,0.0,0.0"
     }
     
+    gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
+    set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $ncuts +2]\]"
+    gid_groups_conds::setAttributesF $cutplane "name CutPlane[expr $ncuts +1]"
+    gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 0.0,1.0,0.0"
     
     #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
     #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
