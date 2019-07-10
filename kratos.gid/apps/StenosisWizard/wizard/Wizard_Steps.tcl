@@ -310,6 +310,7 @@ proc StenosisWizard::Wizard::ValidateDraw { } {
 proc StenosisWizard::Wizard::Material { win } {
     smart_wizard::AutoStep $win Material
     smart_wizard::SetWindowSize 300 450
+    StenosisWizard::Wizard::FluidTypeChange
 }
 
 proc StenosisWizard::Wizard::NextMaterial { } {
@@ -320,7 +321,7 @@ proc StenosisWizard::Wizard::NextMaterial { } {
     set where {container[@n='Fluid']/condition[@n='Parts']} 
     set gnode [customlib::AddConditionGroupOnXPath $where "Fluid"]
     
-    set props [list ConstitutiveLaw DENSITY VISCOSITY YIELD_STRESS POWER_LAW_K POWER_LAW_N]
+    set props [list ConstitutiveLaw DENSITY DYNAMIC_VISCOSITY YIELD_STRESS POWER_LAW_K POWER_LAW_N]
     foreach prop $props {
         set propnode [$gnode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -330,10 +331,27 @@ proc StenosisWizard::Wizard::NextMaterial { } {
     spdAux::RequestRefresh
 }
 
-proc StenosisWizard::Wizard::ChangeFluidType {win} {
-    W "Hey $win"
-}
+proc StenosisWizard::Wizard::FluidTypeChange { } {
+    variable curr_win
 
+    set type [ smart_wizard::GetProperty Material ConstitutiveLaw,value]
+    if {[GiDVersionCmp 14.1.3d] >= 0} {
+        switch $type {
+            "Newtonian" {
+                smart_wizard::SetProperty Material YIELD_STRESS,state hidden
+                smart_wizard::SetProperty Material POWER_LAW_K,state hidden
+                smart_wizard::SetProperty Material POWER_LAW_N,state hidden
+            }
+            "HerschelBulkley" {
+                smart_wizard::SetProperty Material YIELD_STRESS,state normal
+                smart_wizard::SetProperty Material POWER_LAW_K,state normal
+                smart_wizard::SetProperty Material POWER_LAW_N,state normal
+            }
+        }
+        smart_wizard::AutoStep $curr_win Material
+    }
+    
+}
 
 proc StenosisWizard::Wizard::Fluid { win } {
     smart_wizard::AutoStep $win Fluid
