@@ -31,7 +31,12 @@ proc PfemFluid::write::getNewParametersDict { } {
     # dict set projectParametersDict output_process_list $output_process_list
 
     ##### output_configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    # dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    set xpath [spdAux::getRoute Results]
+    dict set projectParametersDict output_configuration [write::GetDefaultOutputGiDDict PfemFluid $xpath]
+    dict set projectParametersDict output_configuration result_file_configuration nodal_results [write::GetResultsByXPathList [spdAux::getRoute NodalResults]]
+    dict set projectParametersDict output_configuration result_file_configuration gauss_point_results [write::GetResultsList $results_UN OnElement]
+    
 
     return $projectParametersDict
 }

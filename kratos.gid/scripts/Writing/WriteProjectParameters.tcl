@@ -566,12 +566,12 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     return $outputConfigDict
 }
 
-proc write::GetDefaultOutputGiDDict { {appid ""} } {
+proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     set outputDict [dict create]
     set resultDict [dict create]
 
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
-    set gid_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
+    if {$gid_options_xpath eq ""} {set gid_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"}
     set GiDPostDict [dict create]
     dict set GiDPostDict GiDPostMode                [getValueByXPath $gid_options_xpath GiDPostMode]
     dict set GiDPostDict WriteDeformedMeshFlag      [getValueByXPath $gid_options_xpath GiDWriteMeshFlag]
