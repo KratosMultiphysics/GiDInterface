@@ -359,6 +359,7 @@ proc StenosisWizard::Wizard::Fluid { win } {
 }
 proc StenosisWizard::Wizard::NextFluid { } {
     # Inlet
+    Fluid::xml::ClearInlets true
     Fluid::xml::CreateNewInlet Inlet {new false name Total} false [smart_wizard::GetProperty Fluid Inlet,value]
 
     # Outlet

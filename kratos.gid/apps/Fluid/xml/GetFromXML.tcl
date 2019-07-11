@@ -87,4 +87,20 @@ proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name 
     
 }
 
+
+proc Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
+    
+    set nd $::Model::SpatialDimension
+    set fluidConditions [spdAux::getRoute $fluid_conditions_UN]
+    set fluidInlets "$fluidConditions/condition\[@n='$inlet_condition_name_base$nd'\]/group"
+    foreach inlet [[customlib::GetBaseRoot] selectNodes $fluidInlets] {
+        set group_name [$inlet @n]
+        if {[GiD_Groups exists $group_name]} {set group_name [GiD_Groups get parent $group_name]}
+        $inlet delete
+        if {$delete_groups} {
+            if {[GiD_Groups exists $group_name]} {GiD_Groups delete $group_name}
+        }
+    }
+}
+
 Fluid::xml::Init
