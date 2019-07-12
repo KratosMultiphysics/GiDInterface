@@ -788,3 +788,16 @@ proc spdAux::ProcGet_materials_list_simple {domNode args} {
     if {$v ni $res_raw_list} {$domNode setAttribute v $v}
     return [join $res_raw_list ","]
 }
+
+proc spdAux::ClearCutPlanes { {cut_planes_un CutPlanes} } {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute $cut_planes_un]/blockdata"
+    set first true
+    foreach plane [$root selectNodes $xp1] {
+        if {$first != true} {
+            $plane delete
+        } {set first false}
+        
+    }
+
+}
