@@ -122,10 +122,13 @@ proc Fluid::write::writeBoundaryConditions { } {
     set groups [list ]
     foreach group [$root selectNodes $xp1] {
         set group_id [$group @n]
-        if {[[Model::getCondition [[$group parent] @n]] getAttribute "Interval"] ne "False"} {
-            set group_id [GiD_Groups get parent $group_id]
+        set condition [Model::getCondition [[$group parent] @n]]
+        if {[write::isBooleanTrue [$condition getAttribute SkinConditions]]} {
+            if {[$condition getAttribute "Interval"] ne "False"} {
+                set group_id [GiD_Groups get parent $group_id]
+            }
+            lappend groups $group_id
         }
-        lappend groups $group_id
     }
     set skin_group_name "_HIDDEN__SKIN_"
     if {[GiD_Groups exists $skin_group_name]} {GiD_Groups delete $skin_group_name}
