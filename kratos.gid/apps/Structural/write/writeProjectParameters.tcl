@@ -166,7 +166,9 @@ proc Structural::write::GetContactConditionsDict { } {
     set master_group [$root selectNodes $xp_master]
     set slave_group [$root selectNodes $xp_slave]
 
-    if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
+    set contacts [list ]
+
+    #if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
 
     set contact_process_dict [dict create ]
     dict set contact_process_dict python_module alm_contact_process
@@ -195,7 +197,9 @@ proc Structural::write::GetContactConditionsDict { } {
     
     dict set contact_process_dict Parameters $contact_parameters_dict
 
-    return [list $contact_process_dict]
+    lappend contacts $contact_process_dict
+
+    return $contacts
 }
 
 
