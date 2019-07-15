@@ -89,9 +89,9 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     spdAux::AddIntervalGroup Ground "Ground//Total"
     GiD_Groups edit state "Ground//Total" hidden
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
-    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement Ground]
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Ground//Total"]
     $structDisplacementNode setAttribute ov line
-    set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
+    set props [list constrained Yes ByFunction No value 0.0]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
