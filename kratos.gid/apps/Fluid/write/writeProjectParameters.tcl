@@ -9,7 +9,9 @@ proc ::Fluid::write::getParametersDict { } {
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
 
     # Solver settings
-    dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
+    set solver_settings_dict [Fluid::write::getSolverSettingsDict]
+    dict set solver_settings_dict "reform_dofs_at_each_step" false
+    dict set projectParametersDict solver_settings $solver_settings_dict
 
     # Boundary conditions processes
     set processesDict [dict create]
