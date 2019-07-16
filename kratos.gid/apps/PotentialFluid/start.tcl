@@ -22,12 +22,7 @@ proc ::PotentialFluid::Init { } {
     set attributes [dict create]
 
     set prefix PTFL
-
-    # TODO: activate this as soon as the 3D wake detection is working
-    #set ::Model::ValidSpatialDimensions [list 2D 3D]
-    # TODO: remove this as soon as the 3D wake detection is working
-    set ::Model::ValidSpatialDimensions [list 2D]
-    spdAux::SetSpatialDimmension "2D"
+    set ::Model::ValidSpatialDimensions [list 2D 3D]
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
@@ -60,7 +55,7 @@ proc ::PotentialFluid::GetAttribute {name} {
 
 proc ::PotentialFluid::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PotentialFluid::examples::NACA0012] [= "Example\nNACA 0012"]   
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PotentialFluid::examples::NACA0012] [= "Example\nNACA 0012"]
 }
 
 
