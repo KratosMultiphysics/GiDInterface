@@ -48,7 +48,21 @@
   <ConditionItem n="Wake3D" pn="Wake" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False" VariableName="" App="Fluid"
-	ElementType="Line" ProcessName="DefineWakeProcess3D" help="" >
+	ElementType="Line" ProcessName="PlaceholderProcess" help="" >
+    <TopologyFeatures>
+    </TopologyFeatures>
+	<DegreesOfFreedom>
+	</DegreesOfFreedom>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+    <ConditionItem n="Tip3D" pn="Wing Tips" ImplementedInFile=".cpp" Interval="False"
+	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False" VariableName="" App="Fluid"
+	ElementType="Point" ProcessName="PlaceholderProcess" help="" >
     <TopologyFeatures>
     </TopologyFeatures>
 	<DegreesOfFreedom>
