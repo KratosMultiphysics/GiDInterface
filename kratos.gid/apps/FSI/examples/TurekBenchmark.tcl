@@ -350,7 +350,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement $gname]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
-    set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
+    set props [list constrained Yes ByFunction No value 0.0]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
