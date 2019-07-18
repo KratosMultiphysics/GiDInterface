@@ -7,6 +7,9 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts]/group"
+    if {[llength [$root selectNodes $xp1]] < 1} {
+        set xp1 "[spdAux::getRoute $parts]/condition/group"
+    }
     if {$alt_path ne ""} {
         set xp1 $alt_path
     }
