@@ -621,7 +621,6 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
     if {[llength [$root selectNodes $xp1]] < 1} {
         set xp1 "[spdAux::getRoute $parts_un]/condition/group"
     }
-    W [$root selectNodes $xp1]
     foreach gNode [$root selectNodes $xp1] {
         set group [get_domnode_attribute $gNode n]
         set sub_model_part [write::getSubModelPartId Parts $group]
