@@ -801,10 +801,11 @@ proc spdAux::ClearCutPlanes { {cut_planes_un CutPlanes} } {
     }
 
 }
+
 proc spdAux::injectPartsByElementType {domNode args} {
     set element_types [dict create]
 
-    foreach element [Model::GetElements] {
+    foreach element [Model::GetElements {*}$args] {
         if {[$element hasAttribute ElementType]} {
             dict lappend element_types [$element getAttribute ElementType] $element
         }
