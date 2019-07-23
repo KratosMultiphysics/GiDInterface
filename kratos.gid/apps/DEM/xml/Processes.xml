@@ -58,56 +58,49 @@
           <parameter n="ExternalForceZ"      parent="FreeMotion,Yes" type="combo"  v="No"          pn="External Forces"  values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Z direction  to the group">
           <parameter n="FZ"                  parent="Constant"                     v="0.0"         pn="   Fz"            units="N" unit_magnitude="F" help="Insert the value of the external force in Z direction"/>
           <parameter n="FilenameFZ"          parent="FromATable"     type="file"   v="- No file -" pn="   Filename"      help="Insert here the name of the file containing the external force in Z direction"/></parameter>
-        </parameter>
 
-        <!-- <parameter n="DEM-RBImposedMoments"    parent="FreeMotion"                   pn="Impose external moments"> -->
-          <parameter n="ExternalMomentX"  parent="FreeMotion"   type="combo"  v="No"          pn="External Moments"   values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the X direction to the group">
+          <parameter n="ExternalMomentX"  parent="FreeMotion,Yes"   type="combo"  v="No"          pn="External Moments"   values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the X direction to the group">
           <parameter n="MX"                parent="Constant"                  v="0.0"         pn="   Mx"              units="N*m" unit_magnitude="F*L" help="Insert the value of the external force in X direction"/>
           <parameter n="FilenameMX"        parent="FromATable"  type="file"   v="- No file -" pn="   FilenameMx(N*m)" help="Insert here the name of the file containing the external force in X direction"/></parameter>
-          <parameter n="ExternalMomentY"   parent="FreeMotion"  type="combo"  v="No"          pn="External Moments"   values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the Y direction  to the group">
+          <parameter n="ExternalMomentY"   parent="FreeMotion,Yes"  type="combo"  v="No"          pn="External Moments"   values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the Y direction  to the group">
           <parameter n="MY"                parent="Constant"                  v="0.0"         pn="   My"              units="N*m" unit_magnitude="F*L" help="Insert the value of the external force in Y direction"/>
           <parameter n="FilenameMY"        parent="FromATable"  type="file"   v="- No file -" pn="   FilenameMy(N*m)" help="Insert here the name of the file containing the external force in Y direction"/></parameter>
-          <parameter n="ExternalMomentZ"   parent="FreeMotion"  type="combo"  v="No"          pn="External Moments"   values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the Z direction  to the group">
+          <parameter n="ExternalMomentZ"   parent="FreeMotion,Yes"  type="combo"  v="No"          pn="External Moments"   values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the Z direction  to the group">
           <parameter n="MZ"                parent="Constant"                  v="0.0"         pn="   Mz"              units="N*m" unit_magnitude="F*L" help="Insert the value of the external force in Z direction"/>
           <parameter n="FilenameMZ"        parent="FromATable"  type="file"   v="- No file -" pn="   FilenameMz(N*m)" help="Insert here the name of the file containing the external force in Z direction"/></parameter>
-        <!-- </parameter> -->
+        </parameter>
 
-        <!-- <parameter n="Options"          parent="true" pn="Settings"                                      help="Options that will affect the behaviour during the contact bewteen Discrete Elements and this wall"> -->
-          <parameter n="IsGhost"         parent="true"  pn="Is ghost wall"      v="false" type="bool"/>
-          <parameter n="friction_coeff"  parent="true"  pn="Friction angle"     v="30.0"  type="double" units="deg" unit_magnitude="Angle" help="Coulomb friction coefficient"/>
-          <parameter n="GraphPrint"      parent="true"  pn="Print group forces" v="false" type="bool"/>
-          <parameter n="CohesiveWall"    parent="true"  pn="Cohesive Wall"      v="false" type="bool"   help="Specify if the wall presents a cohesive behaviour">
-           <parameter n="WallCohesion"   parent="true"  pn="Wall Cohesion"      v="0.0"   type="double" units="N/m^2" unit_magnitude="F/L^2" help="JKR or DMT energy surface"/> </parameter>
-          <parameter n="DEM_Wear"        parent="true"  pn="Compute Wear"       v="false" type="bool"   help="If activated, wear will be computed on this wall. It can increase computation time">
-           <parameter n="K_Abrasion"     parent="true"  pn="Abrasion level"     v="0.001" type="double" help="Archard abrasion K parameter"/>
-           <parameter n="K_Impact"       parent="true"  pn="Impact level"       v="0.001" type="double" help="Archard impact K parameter"/>
-           <parameter n="H_Brinell"      parent="true"  pn="Brinell Hardness"   v="200.0" type="double" help="Brinell hardness value"/> </parameter>
-          <parameter n="RigidPlane"      parent="true"  pn="Rigid Structure"    v="true" type="bool"   help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus">
-           <parameter n="YoungModulus"   parent="false" pn="Young Modulus"      v="1e20"  type="double" units="N/m^2" unit_magnitude="F/L^2"/>
-           <parameter n="PoissonRatio"   parent="false" pn="Poisson Ratio"      v="0.25"/> </parameter>
-           <parameter n="fixed_wall"     parent="LinearPeriodic"  pn="Update velocity, not displacements"  v="false" type="bool" help="If activated, the wall will not move and will just have an imposed velocity field"/>
-          <!-- <parameter n="is-embedded-in-fluid"                    pn="Embed this Wall in the fluid"        v="false" type="bool" state="hidden" help="If activated, the fluid will also feel this group as a wall"/> -->
-        <!-- </parameter> -->
+        <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity" type="double"        v="1.0"    units="m/s" unit_magnitude="Velocity"/>
+        <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" />
+        <parameter n="LinearPeriodic"  parent="LinearPeriodic" pn="Periodic"         type="bool"          v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
+          <parameter n="LinearPeriod"    parent="true"          pn="Period"           type="double"        v="5.0"    units="s" unit_magnitude="T"/> </parameter>
+        <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Start time"       type="double"        v="0.0"    units="s" unit_magnitude="T"/>
+        <parameter n="LinearEndTime"   parent="LinearPeriodic" pn="End time"         type="double"        v="100.0"  units="s" unit_magnitude="T"/>
 
-        <!-- <parameter n="LinearVelocity"    parent="LinearPeriodic" pn="Linear velocity"> -->
-          <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity" type="double"        v="1.0"    units="m/s" unit_magnitude="Velocity"/>
-          <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" />
-          <parameter n="LinearPeriodic"  parent="LinearPeriodic" pn="Periodic"         type="bool"          v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
-           <parameter n="LinearPeriod"    parent="true"          pn="Period"           type="double"        v="5.0"    units="s" unit_magnitude="T"/> </parameter>
-          <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Start time"       type="double"        v="0.0"    units="s" unit_magnitude="T"/>
-          <parameter n="LinearEndTime"   parent="LinearPeriodic" pn="End time"         type="double"        v="100.0"  units="s" unit_magnitude="T"/>
-        <!-- </parameter> -->
+        <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity"   type="double"        v="0.0"    units="rad/s" unit_magnitude="Angle/T"/>
+        <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector"   type="inline_vector" v="1.0,0.0,0.0" />
+        <parameter n="CenterOfRotation"       parent="LinearPeriodic" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" units="m" unit_magnitude="L" help="Components of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center"/>
+        <parameter n="AngularPeriodic"        parent="LinearPeriodic" pn="Periodic"           type="bool"          v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
+          <parameter n="AngularPeriod"          parent="true"          pn="Period"             type="double"        v="5.0"    units="s"      unit_magnitude="T"/> </parameter>
+        <parameter n="AngularStartTime"       parent="LinearPeriodic" pn="Start time"         type="double"        v="0.0"    units="s"      unit_magnitude="T"/>
+        <parameter n="AngularEndTime"         parent="LinearPeriodic" pn="End time"           type="double"        v="100.0"  units="s"      unit_magnitude="T"/>
+        <parameter n="fixed_wall"     parent="LinearPeriodic"  pn="Update velocity, not displacements"  v="false" type="bool" help="If activated, the wall will not move and will just have an imposed velocity field"/>
 
-        <!-- <parameter n="AngularVelocity"    parent="LinearPeriodic" pn="Angular velocity"> -->
-          <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity"   type="double"        v="0.0"    units="rad/s" unit_magnitude="Angle/T"/>
-          <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector"   type="inline_vector" v="1.0,0.0,0.0" />
-          <parameter n="CenterOfRotation"       parent="LinearPeriodic" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" units="m" unit_magnitude="L" help="Components of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center"/>
-          <parameter n="AngularPeriodic"        parent="LinearPeriodic" pn="Periodic"           type="bool"          v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period">
-           <parameter n="AngularPeriod"          parent="true"          pn="Period"             type="double"        v="5.0"    units="s"      unit_magnitude="T"/> </parameter>
-          <parameter n="AngularStartTime"       parent="LinearPeriodic" pn="Start time"         type="double"        v="0.0"    units="s"      unit_magnitude="T"/>
-          <parameter n="AngularEndTime"         parent="LinearPeriodic" pn="End time"           type="double"        v="100.0"  units="s"      unit_magnitude="T"/>
-        <!-- </parameter> -->
       </parameter>
+
+      <parameter n="IsGhost"         parent="true"  pn="Is ghost wall"      v="false" type="bool"/>
+      <parameter n="friction_coeff"  parent="true"  pn="Friction angle"     v="30.0"  type="double" units="deg" unit_magnitude="Angle" help="Coulomb friction coefficient"/>
+      <parameter n="GraphPrint"      parent="true"  pn="Print group forces" v="false" type="bool"/>
+      <parameter n="CohesiveWall"    parent="true"  pn="Cohesive Wall"      v="false" type="bool"   help="Specify if the wall presents a cohesive behaviour">
+        <parameter n="WallCohesion"   parent="true"  pn="Wall Cohesion"      v="0.0"   type="double" units="N/m^2" unit_magnitude="F/L^2" help="JKR or DMT energy surface"/> </parameter>
+      <parameter n="DEM_Wear"        parent="true"  pn="Compute Wear"       v="false" type="bool"   help="If activated, wear will be computed on this wall. It can increase computation time">
+        <parameter n="K_Abrasion"     parent="true"  pn="Abrasion level"     v="0.001" type="double" help="Archard abrasion K parameter"/>
+        <parameter n="K_Impact"       parent="true"  pn="Impact level"       v="0.001" type="double" help="Archard impact K parameter"/>
+        <parameter n="H_Brinell"      parent="true"  pn="Brinell Hardness"   v="200.0" type="double" help="Brinell hardness value"/> </parameter>
+      <parameter n="RigidPlane"      parent="true"  pn="Rigid Structure"    v="true" type="bool"   help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus">
+        <parameter n="YoungModulus"   parent="false" pn="Young Modulus"      v="1e20"  type="double" units="N/m^2" unit_magnitude="F/L^2"/>
+        <parameter n="PoissonRatio"   parent="false" pn="Poisson Ratio"      v="0.25"/> </parameter>
+
     </parameter>
   </inputs>
 </Process>
