@@ -433,6 +433,8 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
     set ret ""
     foreach {name value} $dep_list {
         set values [split $value ","]
+        set ins ""
+        set out ""
         foreach v $values {
             lappend ins "@v='$v'"
             lappend out "@v!='$v'"
