@@ -25,6 +25,7 @@ proc ::PfemFluid::Init { } {
 
 proc ::PfemFluid::LoadMyFiles { } {
     variable dir
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir .. Solid write write.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
@@ -58,6 +59,14 @@ proc ::PfemFluid::CustomToolbarItems { } {
     if {[GiD_Info problemtypepath] eq "E:/PROYECTOS/Kratos/interfaces/GiD/kratos.gid"} {
         Kratos::ToolbarAddItem "Conditions" "list.png" [list -np- PfemFluid::xml::StartSortingWindow] [= "Sort the conditions"]
     }
+}
+
+
+proc ::PfemFluid::CustomToolbarItems { } {
+    variable dir
+
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemFluid::examples::WaterDamBreak] [= "Example\nWater dam break"]
+   
 }
 
 ::PfemFluid::Init
