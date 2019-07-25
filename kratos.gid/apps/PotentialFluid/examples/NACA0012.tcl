@@ -152,7 +152,7 @@ proc PotentialFluid::examples::AddCuts { } {
 }
 
 # Draw Geometry
-proc PotentialFluid::examples::DrawWINGGeometry3D {args} {
+proc PotentialFluid::examples::DrawNACA0012Geometry3D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
@@ -192,7 +192,7 @@ proc PotentialFluid::examples::DrawWINGGeometry3D {args} {
 }
 
 # Group assign
-proc PotentialFluid::examples::AssignGroupsWING3D {args} {
+proc PotentialFluid::examples::AssignGroupsNACA00123D {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid volumes 1
@@ -216,7 +216,7 @@ proc PotentialFluid::examples::AssignGroupsWING3D {args} {
     GiD_EntitiesGroups assign WingTips points {1 7}
 }
 
-proc PotentialFluid::examples::AssignWINGMeshSizes3D {args} {
+proc PotentialFluid::examples::AssignNACA0012MeshSizes3D {args} {
     set fluid_mesh_size 2.0
     set wing_lines_mesh_size 0.05
     set wing_points_mesh_size 0.01
@@ -229,7 +229,7 @@ proc PotentialFluid::examples::AssignWINGMeshSizes3D {args} {
     Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
-proc PotentialFluid::examples::TreeAssignationWING3D {args} {
+proc PotentialFluid::examples::TreeAssignationNACA00123D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
