@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<condition n="Parts" pn="Parts" ov="[CheckGeometrySolid]" ovm="element" icon="shells16" help="Select your group" un="STParts" update_proc="UpdateParts">
+<container  n="Parts" pn="Parts" un="STParts" icon="shells16" >
+	<dynamicnode command="spdAux::injectPartsByElementType" args="ImplementedInApplication StructuralMechanicsApplication"/>
+</container>
+<!-- <condition n="Parts" pn="Parts" ov="[CheckGeometrySolid]" ovm="element" icon="shells16" help="Select your group" un="STParts" update_proc="UpdateParts">
 	  <value n="Element" pn="Element" actualize_tree="1" values="" v="" dict="[GetElements]" state="normal" >
 			<dependencies node="../value" actualize="1" />
 	  </value>
@@ -13,4 +16,4 @@
 			<dependencies node="../value" actualize="1"/>
 	  </value>
 	  <dynamicnode command="spdAux::injectPartInputs" args=""/>
-</condition>
+</condition> -->

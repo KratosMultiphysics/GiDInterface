@@ -89,25 +89,6 @@
 	  
 	  ]]>
 	</proc>
-		  			
-		  <proc n='CheckNodalConditionStateSolid' args='args'>
-	  <![CDATA[
-	  # Overwritten the base function to add Solution Type restrictions
-		set parts_un STParts
-	    if {[spdAux::getRoute $parts_un] ne ""} {
-			set conditionId [$domNode @n]
-			set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
-			set elemnames [list ]
-			foreach elem $elems { lappend elemnames [$elem @v]}
-			set elemnames [lsort -unique $elemnames]
-			
-			set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
-			set params [list analysis_type $solutionType]
-			if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
-		} {return "normal"}
-	  ]]>
-	</proc>		
-	  
 	          <proc n='CheckGeometryStructural' args='args'>
           <![CDATA[                
                 if {$::Model::SpatialDimension eq "3D"} {return surface,volume} {return surface}                
@@ -129,5 +110,11 @@
       return [Structural::xml::ProcCheckGeometrySolid $domNode $args]              
       ]]>
     </proc>
+	
+    <proc n='CheckNodalConditionStateStructural' args='args'>
+	  <![CDATA[
+	  return [Structural::xml::ProcCheckNodalConditionStateStructural $domNode $args]
+	  ]]>
+	</proc>		
 
 </container>

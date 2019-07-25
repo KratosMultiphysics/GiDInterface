@@ -365,6 +365,9 @@ proc write::getPartsGroupsId {} {
 
     set listOfGroups [list ]
     set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/group"
+    if {[llength [$root selectNodes $xp1]] < 1} {
+        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/condition/group"
+    }
     set groups [$root selectNodes $xp1]
 
     foreach group $groups {
@@ -615,6 +618,9 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
     #set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts_un]/group"
+    if {[llength [$root selectNodes $xp1]] < 1} {
+        set xp1 "[spdAux::getRoute $parts_un]/condition/group"
+    }
     foreach gNode [$root selectNodes $xp1] {
         set group [get_domnode_attribute $gNode n]
         set sub_model_part [write::getSubModelPartId Parts $group]

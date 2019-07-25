@@ -807,3 +807,53 @@ proc spdAux::ClearCutPlanes { {cut_planes_un CutPlanes} } {
     }
 
 }
+
+proc spdAux::injectPartsByElementType {domNode args} {
+    set element_types [dict create]
+
+    foreach element [Model::GetElements {*}$args] {
+        if {[$element hasAttribute ElementType]} {
+            dict lappend element_types [$element getAttribute ElementType] $element
+        }
+    }
+
+    foreach element_type [dict keys $element_types] {
+        set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
+        set ovm "element"
+        if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
+        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
+            <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
+                    <dependencies node=\"../value\" actualize=\"1\" />
+            </value>
+            <value n=\"ConstitutiveLaw\" pn=\"Constitutive law\" v=\"\" actualize_tree=\"1\"
+                    values=\"\[GetConstitutiveLaws\]\" dict=\"\[GetAllConstitutiveLaws\]\">
+                    <dependencies node=\"../value\" actualize=\"1\"/>
+            </value>
+            <value n=\"Material\" pn=\"Material\" editable='0' help=\"Choose a material from the database\" update_proc=\"CambioMat\"
+                    values_tree='\[give_materials_list\]' v=\"Steel\" actualize_tree=\"1\" state=\"normal\">
+                    <edit_command n=\"Update material data\" pn=\"Update material data\" icon=\"refresh\" proc='edit_database_list'/>
+                    <dependencies node=\"../value\" actualize=\"1\"/>
+            </value>
+            <dynamicnode command=\"spdAux::injectPartInputs\" args=\"\"/>
+        </condition>"
+        set base [$domNode parent]
+        $base appendXML $condition_string
+        set orig [$base lastChild]
+        set new [$orig cloneNode -deep]
+        $orig delete
+        $base insertBefore $new $domNode
+    }
+    
+    $domNode delete
+    customlib::UpdateDocument
+    spdAux::processDynamicNodes $base
+}
+
+proc spdAux::GetElementsCommonPropertyValues {elements prop} {
+    set vals [list ]
+    foreach element $elements {
+        lappend vals [$element getAttribute $prop]
+    }
+    return [lsort -unique $vals]
+}
+

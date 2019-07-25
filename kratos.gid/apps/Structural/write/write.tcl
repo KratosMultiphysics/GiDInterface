@@ -200,7 +200,7 @@ proc Structural::write::WriteMaterialsFile { } {
 }
 
 proc Structural::write::GetUsedElements { {get "Objects"} } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set lista [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
@@ -212,7 +212,7 @@ proc Structural::write::GetUsedElements { {get "Objects"} } {
 }
 
 proc Structural::write::writeLocalAxes { } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
         set e [Model::getElement $elem_name]
