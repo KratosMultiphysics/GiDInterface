@@ -41,6 +41,7 @@ proc PotentialFluid::xml::CustomTree { args } {
     #Fluid::xml::CustomTree {*}$args
     
     spdAux::SetValueOnTreeItem state hidden PTFLGravity
+    spdAux::SetValueOnTreeItem state hidden PTFLTimeParameters
     
 }
 
