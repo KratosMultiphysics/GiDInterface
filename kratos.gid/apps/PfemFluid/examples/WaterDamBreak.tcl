@@ -8,7 +8,7 @@ proc ::PfemFluid::examples::WaterDamBreak {args} {
 
     Kratos::ResetModel
     DrawWaterDamBreakGeometry$::Model::SpatialDimension
-    # AssignGroupsWaterDamBreak$::Model::SpatialDimension
+    AssignGroupsWaterDamBreakGeometry$::Model::SpatialDimension
     # AssignWaterDamBreakMeshSizes$::Model::SpatialDimension
     # TreeAssignationWaterDamBreak$::Model::SpatialDimension
 
@@ -62,7 +62,7 @@ proc PfemFluid::examples::AssignGroupsWaterDamBreakGeometry2D {args} {
 
     GiD_Groups create Rigid_Walls
     GiD_Groups edit color Rigid_Walls "#e0210fff"
-    GiD_EntitiesGroups assign Rigid_Walls lines lines {1 4 5 6 7 8 9 10 11 12}
+    GiD_EntitiesGroups assign Rigid_Walls lines {1 4 5 6 7 8 9 10 11 12}
 
 }
 proc PfemFluid::examples::AssignGroupsWaterDamBreakGeometry3D {args} {
