@@ -10,7 +10,7 @@ proc ::PfemFluid::examples::WaterDamBreak {args} {
     DrawWaterDamBreakGeometry$::Model::SpatialDimension
     AssignGroupsWaterDamBreakGeometry$::Model::SpatialDimension
     # AssignWaterDamBreakMeshSizes$::Model::SpatialDimension
-    # TreeAssignationWaterDamBreak$::Model::SpatialDimension
+    TreeAssignationWaterDamBreak$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -69,25 +69,51 @@ proc PfemFluid::examples::AssignGroupsWaterDamBreakGeometry3D {args} {
     # To be implemented
 }
 
-
-
-# Mesh sizes
-proc PfemFluid::examples::AssignWaterDamBreakGeometryMeshSizes3D {args} {
-    # To be implemented
-}
-
-proc PfemFluid::examples::AssignWaterDamBreakGeometryMeshSizes2D {args} {
-    # DO NOTHING
-}
-
-
 # Tree assign
-proc PfemFluid::examples::TreeAssignationWaterDamBreakGeometry3D {args} {
+proc PfemFluid::examples::TreeAssignationWaterDamBreak3D {args} {
     # To be implemented
 }
 
-proc PfemFluid::examples::TreeAssignationWaterDamBreakGeometry2D {args} {
+proc PfemFluid::examples::TreeAssignationWaterDamBreak2D {args} {
 # ONLY ASSIGN VELOCITY X Y EQUAL TO 0 TO THE RIGID LINES (SEE ABOVE)
+    # Fluid Parts
+    set bodies_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]"
+    gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[2\]" {name Body2}
+
+    set fluid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/condition\[@n='Parts'\]"
+    set fluidNode [customlib::AddConditionGroupOnXPath $fluid_part_xpath Fluid]
+    set props [list ConstitutiveLaw Newtonian DENSITY 1e3]
+    foreach {prop val} $props {
+        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property Fluid $prop"
+        }
+    }
+
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/value\[@n='BodyType'\]" {v Rigid}
+    set rigid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/condition\[@n='Parts'\]"
+    set rigidNode [customlib::AddConditionGroupOnXPath $rigid_part_xpath Rigid_Walls]
+    
+    # Velocidad
+    GiD_Groups clone Rigid_Walls Total
+    GiD_Groups edit parent Total Rigid_Walls
+    spdAux::AddIntervalGroup Rigid_Walls "Rigid_Walls//Total"
+    GiD_Groups edit state "Rigid_Walls//Total" hidden
+    set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
+    set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Rigid_Walls//Total"]
+    $fixVelocityNode setAttribute ov line
+    # set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
+    # foreach {prop val} $props {
+    #      set propnode [$fixVelocityNode selectNodes "./value\[@n = '$prop'\]"]
+    #      if {$propnode ne "" } {
+    #           $propnode setAttribute v $val
+    #      } else {
+    #         W "Warning - Couldn't find property Structure $prop"
+    #      }
+    # }
 }
 
 proc PfemFluid::examples::ErasePreviousIntervals { } {
