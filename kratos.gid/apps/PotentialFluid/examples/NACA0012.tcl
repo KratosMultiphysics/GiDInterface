@@ -14,6 +14,8 @@ proc ::PotentialFluid::examples::NACA0012 {args} {
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
+    # Meshing
+    GiD_Process "-tcl- RaiseEvent_GenericProc ::GiD_Event_BeforeMeshGeneration 5.61249" Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces 2 3 escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces 1 4 5 6 7 8 escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces escape escape Mescape Meshing MeshCriteria Mesh Lines 14 escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces escape escape Mescape Meshing Generate 5.61249 MeshingParametersFrom=Preferences escape Mescape Meshing MeshView
 }
 
 proc PotentialFluid::examples::DrawNACA0012Geometry2D {args} {
@@ -161,6 +163,7 @@ proc PotentialFluid::examples::DrawNACA0012Geometry3D {args} {
     ## Airfoil
     GiD_Process 'Rotate Angle 270 0
     GiD_Process Mescape Geometry Create NurbsLine 1.000000 0 0.000000 0.998459 0 0.000224 0.993844 0 0.000891 0.986185 0 0.001990 0.975528 0 0.003501 0.961940 0 0.005399 0.945503 0 0.007651 0.926320 0 0.010221 0.904508 0 0.013071 0.880203 0 0.016158 0.853553 0 0.019438 0.824724 0 0.022869 0.793893 0 0.026405 0.761249 0 0.030000 0.726995 0 0.033610 0.691342 0 0.037188 0.654508 0 0.040686 0.616723 0 0.044055 0.578217 0 0.047242 0.539230 0 0.050196 0.500000 0 0.052862 0.460770 0 0.055184 0.421783 0 0.057108 0.383277 0 0.058582 0.345492 0 0.059557 0.308658 0 0.059988 0.273005 0 0.059841 0.238751 0 0.059088 0.206107 0 0.057712 0.175276 0 0.055708 0.146447 0 0.053083 0.119797 0 0.049854 0.095492 0 0.046049 0.073680 0 0.041705 0.054497 0 0.036867 0.038060 0 0.031580 0.024472 0 0.025893 0.013815 0 0.019854 0.006156 0 0.013503 0.001541 0 0.006877 0.000000 0 0.000000 0.001541 0 -0.006877 0.006156 0 -0.013503 0.013815 0 -0.019854 0.024472 0 -0.025893 0.038060 0 -0.031580 0.054497 0 -0.036867 0.073680 0 -0.041705 0.095492 0 -0.046049 0.119797 0 -0.049854 0.146447 0 -0.053083 0.175276 0 -0.055708 0.206107 0 -0.057712 0.238751 0 -0.059088 0.273005 0 -0.059841 0.308658 0 -0.059988 0.345492 0 -0.059557 0.383277 0 -0.058582 0.421783 0 -0.057108 0.460770 0 -0.055184 0.500000 0 -0.052862 0.539230 0 -0.050196 0.578217 0 -0.047242 0.616723 0 -0.044055 0.654508 0 -0.040686 0.691342 0 -0.037188 0.726995 0 -0.033610 0.761249 0 -0.030000 0.793893 0 -0.026405 0.824724 0 -0.022869 0.853553 0 -0.019438 0.880203 0 -0.016158 0.904508 0 -0.013071 0.926320 0 -0.010221 0.945503 0 -0.007651 0.961940 0 -0.005399 0.975528 0 -0.003501 0.986185 0 -0.001990 0.993844 0 -0.000891 0.998459 0 -0.000224 Join 1 escape escape escape escape escape escape escape escape Escape
+    #GiD_Process Mescape Geometry Create NurbsLine 1.000000 0 0.000000 1.5 0 0 1 0 0.1 0.5 0 0.1 Join 1 escape escape escape escape escape escape escape escape Escape
     GiD_Process Mescape Geometry Edit DivideLine Multiple NumDivisions 2 1 escape escape escape
     set AOA 5
 
@@ -204,8 +207,14 @@ proc PotentialFluid::examples::AssignGroupsNACA00123D {args} {
     GiD_Groups create Body
     GiD_Groups edit color Body "#42eb71ff"
     GiD_EntitiesGroups assign Body surfaces {2 3}
-    GiD_EntitiesGroups assign Body lines {2 3 8 9 14 15}
-    GiD_EntitiesGroups assign Body points {1 2 7 8}
+
+    GiD_Groups create BodyLines
+    GiD_Groups edit color BodyLines "#42eb71ff"
+    GiD_EntitiesGroups assign BodyLines lines {2 3 8 9 14 15}
+
+    GiD_Groups create BodyPoints
+    GiD_Groups edit color BodyPoints "#42eb71ff"
+    GiD_EntitiesGroups assign BodyPoints points {1 2 7 8}
 
     GiD_Groups create Wake
     GiD_Groups edit color Wake "#e0210fff"
@@ -217,16 +226,16 @@ proc PotentialFluid::examples::AssignGroupsNACA00123D {args} {
 }
 
 proc PotentialFluid::examples::AssignNACA0012MeshSizes3D {args} {
-    set fluid_mesh_size 2.0
-    set wing_lines_mesh_size 0.05
-    set wing_points_mesh_size 0.01
+    #set fluid_mesh_size 2.0
+    set wing_lines_mesh_size 0.1
+    # set wing_points_mesh_size 0.1
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.3 escape escape
     # GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get UpperSurface lines] escape escape
     # GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get LowerSurface lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines $wing_lines_mesh_size {*}[GiD_EntitiesGroups get Body lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Points $wing_points_mesh_size {*}[GiD_EntitiesGroups get Body points] escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $wing_lines_mesh_size {*}[GiD_EntitiesGroups get BodyLines lines] escape escape
+    # GiD_Process Mescape Meshing AssignSizes Points $wing_points_mesh_size {*}[GiD_EntitiesGroups get Body points] escape escape
     # GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
+    #Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
 proc PotentialFluid::examples::TreeAssignationNACA00123D {args} {
