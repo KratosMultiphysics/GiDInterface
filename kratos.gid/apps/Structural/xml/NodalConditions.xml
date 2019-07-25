@@ -19,10 +19,10 @@
 		       analysis_type="Static,Quasi-static,Dynamic,eigen_value,formfinding"  unit_magnitude="P"  units="Pa" v="Yes" App="Structural" state="CheckNodalConditionStateSolid" Interval="Total">
   </NodalConditionItem>
   <NodalConditionItem  n="CONTACT" pn="Contact master" ProcessName="ALMContactProcess" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
-		       analysis_type="Static,Quasi-static,Dynamic,eigen_value"  App="Structural" state="" Interval="Total"  ov="[CheckGeometry 2]"  ProductionReady="Developer">
+		       analysis_type="Static,Quasi-static,Dynamic,eigen_value"  App="Structural" state="" Interval="Total"  ov="[CheckGeometry 2]">
   </NodalConditionItem>
   <NodalConditionItem  n="CONTACT_SLAVE" pn="Contact slave" ProcessName="ALMContactSlaveProcess" VariableName="" ImplementedInApplication="ContactStructuralMechanicsApplication"
-		       analysis_type="Static,Quasi-static,Dynamic,eigen_value"  App="Structural" state="" Interval="False"  ov="[CheckGeometry 2]"  ProductionReady="Developer">
+		       analysis_type="Static,Quasi-static,Dynamic,eigen_value"  App="Structural" state="" Interval="False"  ov="[CheckGeometry 2]">
   </NodalConditionItem>
   <NodalConditionItem n="ROTATION" pn="Rotation" ProcessName="AssignVectorVariableProcess" App="Structural" ImplementedInApplication="StructuralMechanicsApplication"
 					  analysis_type="Static,Quasi-static,Dynamic,eigen_value,formfinding" unit_magnitude="Angle" units="rad" VariableName="ROTATION" state="CheckNodalConditionStateSolid" Interval="Total">
