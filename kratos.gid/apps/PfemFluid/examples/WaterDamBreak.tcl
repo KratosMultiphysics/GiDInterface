@@ -3,7 +3,7 @@ proc ::PfemFluid::examples::WaterDamBreak {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
-		if { $retval == "cancel" } { return }
+                if { $retval == "cancel" } { return }
     }
 
     Kratos::ResetModel
@@ -25,15 +25,30 @@ proc PfemFluid::examples::DrawWaterDamBreakGeometry3D {args} {
 }
 
 proc PfemFluid::examples::DrawWaterDamBreakGeometry2D {args} {
-    GiD_Layers create PfemFluid
-    GiD_Layers edit to_use PfemFluid
+    set layer PfemFluid
+    GiD_Layers create $layer
+    GiD_Layers edit to_use $layer
 
     ## Lines ##
-    GiD_Process Mescape Geometry Create Line 0 0 0 0.146 0 0 0.146 0.292 0 0 0.292 0 0 0 0 Old escape 
-    GiD_Process Mescape Geometry Create Line 0 0.292 0 Old 0 0.608 0 0.608 0.608 0 0.608 0 0 0.316 0 0 0.316 0.048 0 0.292 0.048 0 0.292 0 0 0.146 0 0 Old escape 
-  
+    set points_inner [list 0 0 0 0.146 0 0 0.146 0.292 0 0 0.292 0]
+    foreach {x y z} $points_inner {
+        GiD_Geometry create point append $layer $x $y $z
+    }
+    set points_outer [list 0 0.608 0 0.608 0.608 0 0.608 0 0 0.316 0 0 0.316 0.048 0 0.292 0.048 0 0.292 0 0]
+    foreach {x y z} $points_outer {
+        GiD_Geometry create point append $layer $x $y $z
+    }
+    set lines_inner [list 1 2 2 3 3 4 4 1]
+    foreach {p1 p2} $lines_inner {
+        GiD_Geometry create line append stline $layer $p1 $p2
+    }
+    set lines_outer [list 4 5 5 6 6 7 7 8 8 9 9 10 10 11 11 2]
+    foreach {p1 p2} $lines_outer {
+        GiD_Geometry create line append stline $layer $p1 $p2
+    }
+    
     ## Surface ##
-    GiD_Process Mescape Geometry Create NurbsSurface 2 3 1 4 escape escape
+    GiD_Process Mescape Geometry Create NurbsSurface 2 3 4 1 escape escape
 }
 
 

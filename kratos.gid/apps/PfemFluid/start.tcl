@@ -55,18 +55,12 @@ proc ::PfemFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
 
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemFluid::examples::WaterDamBreak] [= "Example\nWater dam break"]
+
     # Solo para JG
     if {[GiD_Info problemtypepath] eq "E:/PROYECTOS/Kratos/interfaces/GiD/kratos.gid"} {
         Kratos::ToolbarAddItem "Conditions" "list.png" [list -np- PfemFluid::xml::StartSortingWindow] [= "Sort the conditions"]
     }
-}
-
-
-proc ::PfemFluid::CustomToolbarItems { } {
-    variable dir
-
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemFluid::examples::WaterDamBreak] [= "Example\nWater dam break"]
-   
 }
 
 ::PfemFluid::Init
