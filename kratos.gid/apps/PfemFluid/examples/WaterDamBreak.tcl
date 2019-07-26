@@ -80,6 +80,7 @@ proc PfemFluid::examples::TreeAssignationWaterDamBreak2D {args} {
     set bodies_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]"
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[2\]" {name Body2}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/value\[@n='BodyType'\]" {v Fluid}
 
     set fluid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/condition\[@n='Parts'\]"
     set fluidNode [customlib::AddConditionGroupOnXPath $fluid_part_xpath Fluid]
@@ -96,6 +97,7 @@ proc PfemFluid::examples::TreeAssignationWaterDamBreak2D {args} {
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/value\[@n='BodyType'\]" {v Rigid}
     set rigid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/condition\[@n='Parts'\]"
     set rigidNode [customlib::AddConditionGroupOnXPath $rigid_part_xpath Rigid_Walls]
+    $rigidNode setAttribute ov line
     
     # Velocidad
     GiD_Groups clone Rigid_Walls Total
