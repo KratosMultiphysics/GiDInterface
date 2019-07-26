@@ -56,6 +56,7 @@ proc ::PfemFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
 
     Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemFluid::examples::WaterDamBreak] [= "Example\nWater dam break"]
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemFluid::examples::DamBreakFSI] [= "Example\nDam break FSI"]
 
     # Solo para JG
     if {[GiD_Info problemtypepath] eq "E:/PROYECTOS/Kratos/interfaces/GiD/kratos.gid"} {
