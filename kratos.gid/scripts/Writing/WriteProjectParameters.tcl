@@ -630,7 +630,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
     dict set resultDict output_frequency               $frequency
     dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
-    dict set resultDict output_precision               7
+    dict set resultDict output_precision               "7"
     dict set resultDict output_sub_model_parts         "false"
     dict set resultDict folder_name                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
