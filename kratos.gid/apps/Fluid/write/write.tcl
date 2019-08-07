@@ -22,7 +22,7 @@ proc Fluid::write::Init { } {
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_script_file "KratosFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
-    SetAttribute properties_location "mdpa"
+    SetAttribute properties_location json
     SetAttribute model_part_name "FluidModelPart"
     SetAttribute output_model_part_name "fluid_computational_model_part"
     variable last_condition_iterator
@@ -34,7 +34,7 @@ proc Fluid::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
-    
+
     InitConditionsMap
 
     # Init data
@@ -44,21 +44,18 @@ proc Fluid::write::writeModelPartEvent { } {
     write::writeModelPartData
     writeProperties
 
-    # Materials
-    write::writeMaterials [GetAttribute validApps]
-
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
-    
+
     # Nodal conditions and conditions
     writeConditions
-    
+
     # SubmodelParts
     writeMeshes
-    
+
     # Custom SubmodelParts
     variable last_condition_iterator
     write::writeBasicSubmodelPartsByUniqueId  $Fluid::write::FluidConditionMap $last_condition_iterator
@@ -68,7 +65,7 @@ proc Fluid::write::writeModelPartEvent { } {
 }
 proc Fluid::write::writeCustomFilesEvent { } {
     # Materials file TODO -> Python script must read from here
-    #write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
 
     # Main python script
     set orig_name [GetAttribute main_script_file]
@@ -77,7 +74,7 @@ proc Fluid::write::writeCustomFilesEvent { } {
 }
 
 proc Fluid::write::Validate {} {
-    set err ""    
+    set err ""
     set root [customlib::GetBaseRoot]
 
     # Check only 1 part in Parts
@@ -143,7 +140,7 @@ proc Fluid::write::writeBoundaryConditions { } {
         set nnodes 2
     }
     set last_condition_iterator [write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $Fluid::write::FluidConditionMap]
-    
+
     # Clean
     GiD_Groups delete $skin_group_name
 }
@@ -162,7 +159,7 @@ proc Fluid::write::writeMeshes { } {
 }
 
 proc Fluid::write::writeConditionsMesh { } {
-    
+
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     set grouped_conditions [list ]
@@ -193,13 +190,13 @@ proc Fluid::write::writeConditionsMesh { } {
         foreach group [$root selectNodes $xp] {
             set groupid [get_domnode_attribute $group n]
             dict set groups_dict $groupid what "Conditions"
-        } 
+        }
         write::writeConditionGroupedSubmodelPartsByUniqueId $condid $groups_dict $Fluid::write::FluidConditionMap
     }
 }
 
 proc Fluid::write::InitConditionsMap { {map "" } } {
-    
+
     variable FluidConditionMap
     if {$map eq ""} {
         set FluidConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
@@ -208,7 +205,7 @@ proc Fluid::write::InitConditionsMap { {map "" } } {
     }
 }
 proc Fluid::write::FreeConditionsMap { } {
-    
+
     variable FluidConditionMap
     unset FluidConditionMap
 }
