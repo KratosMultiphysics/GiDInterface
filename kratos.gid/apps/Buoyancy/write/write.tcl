@@ -2,7 +2,7 @@ namespace eval Buoyancy::write {
     variable writeAttributes
 }
 
-proc Buoyancy::write::Init { } {    
+proc Buoyancy::write::Init { } {
     Fluid::write::Init
     Fluid::write::SetAttribute thermal_bc_un "CNVDFFBC"
     Fluid::write::SetAttribute thermal_initial_cnd_un [ConvectionDiffusion::write::GetAttribute nodal_conditions_un]
@@ -24,18 +24,15 @@ proc Buoyancy::write::writeModelPartEvent { } {
     write::writeModelPartData
     Fluid::write::writeProperties
 
-    # Materials (write materials in *.mdpa)
-    write::writeMaterials [Fluid::write::GetAttribute validApps]
-
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[Fluid::write::GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
-    
+
     # Nodal conditions and conditions
     Fluid::write::writeConditions
-    
+
     # SubmodelParts
     Fluid::write::writeMeshes
     write::writeNodalConditions [GetAttribute thermal_initial_cnd_un]
@@ -43,7 +40,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
 
     # Boussinesq nodes
     Buoyancy::write::writeBoussinesqSubModelPart
-    
+
     # Custom SubmodelParts
     #write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
 }
@@ -58,7 +55,7 @@ proc Buoyancy::write::writeCustomFilesEvent { } {
 
 proc Buoyancy::write::Validate {} {
     set err ""
-    
+
     return $err
 }
 
@@ -68,7 +65,7 @@ proc Buoyancy::write::WriteMaterialsFile { } {
 
 proc Buoyancy::write::writeSubModelParts { } {
     set BCUN [GetAttribute thermal_bc_un]
-    
+
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
     foreach group [$root selectNodes $xp1] {

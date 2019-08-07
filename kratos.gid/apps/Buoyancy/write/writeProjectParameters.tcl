@@ -8,7 +8,7 @@ proc ::Buoyancy::write::getParametersDict { } {
     # output configuration
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
 
-    # restart options 
+    # restart options
     dict set projectParametersDict restart_options [Buoyancy::write::GetRestart_Dict]
 
     # solver settings
@@ -53,7 +53,7 @@ proc Buoyancy::write::GetProblemData_Dict { } {
 }
 
 proc Buoyancy::write::GetRestart_Dict { } {
-    
+
     set restartDict [dict create]
     dict set restartDict SaveRestart False
     dict set restartDict RestartFrequency 0
@@ -75,8 +75,9 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
 
     # Fluid things
     write::SetConfigurationAttributes [Fluid::write::GetAttributes]
+    Fluid::write::SetAttribute materials_file "BuoyancyMaterials.json"
     dict set settings fluid_solver_settings [Fluid::write::getSolverSettingsDict]
-   
+
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set settings fluid_solver_settings domain_size $nDim
 
@@ -110,7 +111,7 @@ proc Buoyancy::write::GetBoussinesqProcess { } {
     dict set process kratos_module KratosMultiphysics.FluidDynamicsApplication
     dict set process process_name ApplyBoussinesqForceProcess
     set params [dict create]
-    
+
     set groupid "_Boussinesq_hidden_"
     set groupId [::write::getSubModelPartId Boussinesq $groupid]
     dict set params model_part_name [write::GetModelPartNameWithParent $groupId]
