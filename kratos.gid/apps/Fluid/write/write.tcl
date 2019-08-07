@@ -64,7 +64,7 @@ proc Fluid::write::writeModelPartEvent { } {
     unset Fluid::write::FluidConditionMap
 }
 proc Fluid::write::writeCustomFilesEvent { } {
-    # Materials file TODO -> Python script must read from here
+    # Write the fluid materials json file
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
 
     # Main python script
