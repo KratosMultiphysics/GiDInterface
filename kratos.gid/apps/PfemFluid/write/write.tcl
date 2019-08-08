@@ -1,6 +1,7 @@
 namespace eval PfemFluid::write {
     variable remesh_domains_dict
     variable bodies_list
+    variable Names
 }
 
 proc PfemFluid::write::Init { } {
@@ -9,6 +10,8 @@ proc PfemFluid::write::Init { } {
     variable bodies_list
     set bodies_list [list ]
     Solid::write::AddValidApps "PfemFluid"
+    variable Names
+    set Names [dict create DeltaTime DeltaTime]
 }
 
 

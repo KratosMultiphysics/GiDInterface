@@ -71,6 +71,7 @@ proc DEMPFEM::examples::TreeAssignation3D {args} {
     # DEM - PARTS
     set demPart [customlib::AddConditionGroupOnXPath [spdAux::getRoute "DEMParts"] Dem]
     set props [list Element SphericPartDEMElement3D ConstitutiveLaw Hertz Material DEM-DefaultMaterial]
+    $demPart setAttribute ov $fluidtype
     foreach {prop val} $props {
         set propnode [$demPart selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {

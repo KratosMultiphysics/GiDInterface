@@ -169,7 +169,7 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
         dict set timeSteppingDict automatic_time_step "false"
     }
 
-    dict set timeSteppingDict time_step [write::getValue PFEMFLUID_TimeParameters DeltaTime]
+    dict set timeSteppingDict time_step [write::getValue PFEMFLUID_TimeParameters [dict get $::PfemFluid::write::Names DeltaTime]]
 
     # set time_params [PfemFluid::write::GetTimeSettings]
     # dict set timeSteppingDict "time_step" [dict get $time_params time_step]
@@ -410,14 +410,16 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
         dict set bodyDict meshing_strategy $meshing_strategyDict
 
 
-
-        set spatial_bounding_boxDict [dict create ]
-        dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
-        dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
-        dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
-        dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
-        dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
-        dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+        if {[spdAux::getRoute PFEMFLUID_BoundingBox] ne ""} {
+            W [spdAux::getRoute PFEMFLUID_BoundingBox]
+            set spatial_bounding_boxDict [dict create ]
+            dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
+            dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
+            dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
+            dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
+            dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
+            dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+        }
 
         set refining_parametersDict [dict create ]
         dict set refining_parametersDict "critical_size" 0.0
@@ -528,13 +530,15 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
         }
         dict set bodyDict meshing_strategy $meshing_strategyDict
 
-        set spatial_bounding_boxDict [dict create ]
-        dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
-        dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
-        dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
-        dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
-        dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
-        dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+        if {[spdAux::getRoute PFEMFLUID_BoundingBox] ne ""} {
+            set spatial_bounding_boxDict [dict create ]
+            dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
+            dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
+            dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
+            dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
+            dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
+            dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+        }
 
         set refining_parametersDict [dict create ]
         dict set refining_parametersDict "critical_size" 0.0
