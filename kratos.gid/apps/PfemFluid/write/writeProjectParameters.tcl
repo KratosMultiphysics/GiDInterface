@@ -154,6 +154,12 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
 
 
     dict set solverSettingsDict model_part_name "PfemFluidModelPart"
+    if {$problemtype eq "Fluids"} {
+        dict set solverSettingsDict physics_type "fluid"
+    }
+    if {$problemtype eq "FSI"} {
+        dict set solverSettingsDict physics_type "fsi"
+    }
     set nDim $::Model::SpatialDimension
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set solverSettingsDict domain_size $nDim
