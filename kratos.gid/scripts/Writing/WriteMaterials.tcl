@@ -28,17 +28,19 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
 
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
-
-            set claws [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] values]
-            set claw [get_domnode_attribute [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"] v]
+            
+            set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
+            set element_name [write::getValueByNode $element_node "force"]
+            
+            set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
+            set claw [write::getValueByNode $claw_node "force"]
             set const_law [Model::getConstitutiveLaw $claw]
             if {$const_law ne ""} {
                 set output_type [$const_law getOutputMode]
-
                 if {$output_type eq "Parameters"} {
                     set s1 [$gNode selectNodes ".//value"]
                 } else {
-                    set real_material_name [get_domnode_attribute $valueNode v]
+                    set real_material_name [write::getValueByNode $valueNode "force"]
                     set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
                     set matNode [$root selectNodes $xp3]
                     set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
