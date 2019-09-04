@@ -95,6 +95,9 @@ proc write::writeEvent { filename } {
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
+    #### Force values update ####
+    spdAux::ForceTreePreload
+
     #### Validate ####
     set errcode [writeValidateInApp $appid]
 
