@@ -4,6 +4,9 @@ proc write::writeElementConnectivities { } {
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts]/group"
+    if {[llength [$root selectNodes $xp1]] < 1} {
+        set xp1 "[spdAux::getRoute $parts]/condition/group"
+    }
     foreach gNode [$root selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
         write::writeGroupElementConnectivities $gNode $elem

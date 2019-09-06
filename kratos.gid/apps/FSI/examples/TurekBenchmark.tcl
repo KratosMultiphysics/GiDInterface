@@ -27,16 +27,16 @@ proc FSI::examples::DrawTurekBenchmarkFluidGeometry {args} {
 
     # Set fluid domain geometry
     if {$::Model::SpatialDimension eq "2D"} {
-        GiD_Process 'Layers ChangeName Layer0 Fluid escape Mescape \
-        Geometry Create Object Rectangle 0,0 2.5,0.41 Mescape \
-        Geometry Delete Surfaces 1 escape Mescape \
-        'GetPointCoord Silent FNoJoin 0.2,0.2 escape Mescape \
-        Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 Mescape \
-        Geometry Delete Surfaces 1 escape escape Mescape \
-        Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 6 NoJoin @0,0.02 @-0.4,0 escape escape escape escape escape Mescape \
-        Geometry Create IntMultLines 5 6 escape 8 10 escape escape escape escape Mescape \
-        Geometry Delete AllTypes points 7 9 lines 12 14 surfaces volumes dimensions points lines 15 surfaces volumes dimensions escape Mescape \
-        Geometry Create NurbsSurface 1 2 3 4 7 9 11 13 16 escape escape
+        GiD_Process 'Layers ChangeName Layer0 Fluid escape Mescape 
+        GiD_Process MEscape Geometry Create Object Rectangle 0,0 2.5,0.41 Mescape 
+        GiD_Process MEscape Geometry Delete Surfaces 1 escape Mescape \
+        'GetPointCoord Silent FNoJoin 0.2,0.2 escape escape 
+        GiD_Process MEscape Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 escape escape escape 
+        GiD_Process MEscape Geometry Delete Surfaces 1 escape escape  
+        GiD_Process MEscape Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 6 NoJoin @0,0.02 @-0.4,0 escape escape escape escape escape  
+        GiD_Process MEscape Geometry Create IntMultLines 5 6 escape 8 10 escape escape escape escape  
+        GiD_Process MEscape Geometry Delete AllTypes points 7 9 lines 12 14 surfaces volumes dimensions points lines 15 surfaces volumes dimensions escape escape 
+        GiD_Process MEscape Geometry Create NurbsSurface 1 2 3 4 7 9 11 13 16 escape escape
     } else {
         # 3D version not implemented yet
     }
@@ -328,7 +328,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
+    set structParts {container[@n='FSI']/container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "KirchhoffSaintVenant3DLaw" : "KirchhoffSaintVenantPlaneStrain2DLaw"}]

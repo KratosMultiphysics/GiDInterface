@@ -248,6 +248,10 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
     set um ""
     set n ""
     set special_command [$param getAttribute "special_command"]
+    set show_in_window 1
+    if {[$param hasAttribute "show_in_window"]} {
+        set show_in_window [$param getAttribute "show_in_window"]
+    }
 
     if {$special_command ne ""} {
         set params [$param getAttribute "args"]
@@ -280,7 +284,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                 set ndim [string index $::Model::SpatialDimension 0]
                 # TODO: Add units when Compassis enables units in vectors
                 #append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' $has_units  dimensions='$ndim'  help='$help'  state='$state' />"
-                append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' dimensions='$ndim'  help='$help'  state='$state' />"
+                append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' dimensions='$ndim'  help='$help'  state='$state' show_in_window='$show_in_window' />"
             }
             "vector" {
                 set vector_type [$param getAttribute "vectorType"]
@@ -289,9 +293,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                     set zstate "\[CheckDimension 3D\]"
                     if {$state eq "hidden"} {set zstate hidden}
                     append node "
-                        <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state'/>
-                        <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state'/>
-                        <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate'/>"
+                        <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state' show_in_window='$show_in_window'/>
+                        <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state' show_in_window='$show_in_window'/>
+                        <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate' show_in_window='$show_in_window'/>"
                 } else {
                     foreach i [list "X" "Y" "Z"] {
                         set fname "function_$inName"
@@ -302,7 +306,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                         if {[$param getAttribute "enabled"] in [list "1" "0"]} {
                             set val [expr [$param getAttribute "enabled"] ? "Yes" : "No"]
                             #if {$i eq "Z"} { set val "No" }
-                            append node "<value n='Enabled_$i' pn='$i component' v='$val' values='Yes,No'  help='Enables the $i ${inName}' $zstate >"
+                            append node "<value n='Enabled_$i' pn='$i component' v='$val' values='Yes,No'  help='Enables the $i ${inName}' $zstate  show_in_window='$show_in_window'>"
                             append node "<dependencies value='No' node=\""
                             append node $nodev
                             append node "\" att1='state' v1='hidden'/>"
@@ -327,7 +331,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                         }
                         if {[$param getAttribute "function"] eq "1"} {
                             set fname "${i}function_$inName"
-                            append node "<value n='ByFunction$i' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1'  $zstate >
+                            append node "<value n='ByFunction$i' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1'  $zstate  show_in_window='$show_in_window'>
                                 <dependencies value='No' node=\""
                             append node $nodev
                             append node "\" att1='state' v1='normal'/>
@@ -346,9 +350,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                         set v "v$i"
                         if { $vector_type eq "file" || $vector_type eq "tablefile" } {
                             if {[set $v] eq ""} {set $v "- No file"}
-                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type'/>"
+                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type' show_in_window='$show_in_window'/>"
                         } else {
-                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate />"
+                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate  show_in_window='$show_in_window'/>"
                         }
                     }
                 }
@@ -371,7 +375,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                 if {[$param getActualize]} {
                     append node "  actualize_tree='1'  "
                 }
-                append node " state='$state' help='$help'>"
+                append node " state='$state' help='$help' show_in_window='$show_in_window'>"
                 if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
                 append node "</value>"
             }
@@ -383,23 +387,23 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                 if {[$param getActualize]} {
                     append node "  actualize_tree='1'  "
                 }
-                append node " state='$state'>"
+                append node " state='$state'  show_in_window='$show_in_window'>"
                 if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
                 append node "</value>"
             }
             "file" -
             "tablefile" {
-                append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'/>"
+                append node "<value n='$inName' pn='$pn' v='$v' values='\[GetFilesValues\]' update_proc='AddFile' help='$help' state='$state' type='$type'  show_in_window='$show_in_window'/>"
             }
             "integer" {
-                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'/>"
+                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'  show_in_window='$show_in_window'/>"
             }
             default {
                 if {[$param getAttribute "function"] eq "1"} {
                     set fname "function_$inName"
                     set nodev "../value\[@n='$inName'\]"
                     set nodef "../value\[@n='$fname'\]"
-                    append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'>
+                    append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'  show_in_window='$show_in_window'>
                         <dependencies value='No' node=\""
                     append node $nodev
                     append node "\" att1='state' v1='normal'/>
@@ -414,9 +418,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                     append node "\" att1='state' v1='normal'/>
                         </value>"
 
-                    append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'/>"
+                    append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'  show_in_window='$show_in_window'/>"
                 }
-                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'  state='$state'/>"
+                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'  state='$state'  show_in_window='$show_in_window'/>"
             }
         }
     }
@@ -433,6 +437,8 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
     set ret ""
     foreach {name value} $dep_list {
         set values [split $value ","]
+        set ins ""
+        set out ""
         foreach v $values {
             lappend ins "@v='$v'"
             lappend out "@v!='$v'"
@@ -801,3 +807,53 @@ proc spdAux::ClearCutPlanes { {cut_planes_un CutPlanes} } {
     }
 
 }
+
+proc spdAux::injectPartsByElementType {domNode args} {
+    set element_types [dict create]
+
+    foreach element [Model::GetElements {*}$args] {
+        if {[$element hasAttribute ElementType]} {
+            dict lappend element_types [$element getAttribute ElementType] $element
+        }
+    }
+
+    foreach element_type [dict keys $element_types] {
+        set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
+        set ovm "element"
+        if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
+        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
+            <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
+                    <dependencies node=\"../value\" actualize=\"1\" />
+            </value>
+            <value n=\"ConstitutiveLaw\" pn=\"Constitutive law\" v=\"\" actualize_tree=\"1\"
+                    values=\"\[GetConstitutiveLaws\]\" dict=\"\[GetAllConstitutiveLaws\]\">
+                    <dependencies node=\"../value\" actualize=\"1\"/>
+            </value>
+            <value n=\"Material\" pn=\"Material\" editable='0' help=\"Choose a material from the database\" update_proc=\"CambioMat\"
+                    values_tree='\[give_materials_list\]' v=\"Steel\" actualize_tree=\"1\" state=\"normal\">
+                    <edit_command n=\"Update material data\" pn=\"Update material data\" icon=\"refresh\" proc='edit_database_list'/>
+                    <dependencies node=\"../value\" actualize=\"1\"/>
+            </value>
+            <dynamicnode command=\"spdAux::injectPartInputs\" args=\"\"/>
+        </condition>"
+        set base [$domNode parent]
+        $base appendXML $condition_string
+        set orig [$base lastChild]
+        set new [$orig cloneNode -deep]
+        $orig delete
+        $base insertBefore $new $domNode
+    }
+    
+    $domNode delete
+    customlib::UpdateDocument
+    spdAux::processDynamicNodes $base
+}
+
+proc spdAux::GetElementsCommonPropertyValues {elements prop} {
+    set vals [list ]
+    foreach element $elements {
+        lappend vals [$element getAttribute $prop]
+    }
+    return [lsort -unique $vals]
+}
+

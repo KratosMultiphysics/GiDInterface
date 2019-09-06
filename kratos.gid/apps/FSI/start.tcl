@@ -14,7 +14,7 @@ proc ::FSI::Init { } {
     variable attributes
     
     set kratos_name FSIapplication
-    
+
     #W "Sourced FSI"
     set dir [apps::getMyDir "FSI"]
     set prefix FSI

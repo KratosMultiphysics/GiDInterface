@@ -95,6 +95,9 @@ proc write::writeEvent { filename } {
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
+    #### Force values update ####
+    spdAux::ForceTreePreload
+
     #### Validate ####
     set errcode [writeValidateInApp $appid]
 
@@ -365,6 +368,9 @@ proc write::getPartsGroupsId {} {
 
     set listOfGroups [list ]
     set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/group"
+    if {[llength [$root selectNodes $xp1]] < 1} {
+        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/condition/group"
+    }
     set groups [$root selectNodes $xp1]
 
     foreach group $groups {
@@ -462,8 +468,8 @@ proc write::forceUpdateNode {node} {
     catch {get_domnode_attribute $node value}
     catch {get_domnode_attribute $node state}
 }
-proc write::getValueByNode { node } {
-    if {[get_domnode_attribute $node v] eq ""} {
+proc write::getValueByNode { node {what noforce} } {
+    if {[get_domnode_attribute $node v] eq "" || $what eq "force"} {
         write::forceUpdateNode $node
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
@@ -615,6 +621,9 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
     #set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts_un]/group"
+    if {[llength [$root selectNodes $xp1]] < 1} {
+        set xp1 "[spdAux::getRoute $parts_un]/condition/group"
+    }
     foreach gNode [$root selectNodes $xp1] {
         set group [get_domnode_attribute $gNode n]
         set sub_model_part [write::getSubModelPartId Parts $group]

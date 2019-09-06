@@ -164,7 +164,7 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
+    set structParts {container[@n='FSI']/container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov surface
     set constLawNameStruc "LinearElasticPlaneStress2DLaw"

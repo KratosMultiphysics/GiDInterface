@@ -154,6 +154,12 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
 
 
     dict set solverSettingsDict model_part_name "PfemFluidModelPart"
+    if {$problemtype eq "Fluids"} {
+        dict set solverSettingsDict physics_type "fluid"
+    }
+    if {$problemtype eq "FSI"} {
+        dict set solverSettingsDict physics_type "fsi"
+    }
     set nDim $::Model::SpatialDimension
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set solverSettingsDict domain_size $nDim
@@ -369,7 +375,7 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.DelaunayMeshingApplication"
+    dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
     dict set resultDict "python_module" "remesh_domains_process"
     dict set resultDict "process_name" "RemeshDomainsProcess"
 
@@ -482,7 +488,7 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.DelaunayMeshingApplication"
+    dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
     set problemtype [write::getValue PFEMFLUID_DomainType]
 
     dict set resultDict "python_module" "remesh_fluid_domains_process"
