@@ -359,25 +359,8 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
 
             }
             "combo" {
-                set values [$param getValues]
-                set pvalues [$param getPValues]
-                set pv ""
-                for {set i 0} {$i < [llength $values]} {incr i} {
-                    lappend pv [lindex $values $i]
-                    lappend pv [lindex $pvalues $i]
-                }
-                set values [join [$param getValues] ","]
-                set pvalues [join $pv ","]
-                append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
-                if {[llength $pv]} {
-                    append node " dict='$pvalues' "
-                }
-                if {[$param getActualize]} {
-                    append node "  actualize_tree='1'  "
-                }
-                append node " state='$state' help='$help' show_in_window='$show_in_window'>"
-                if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
-                append node "</value>"
+                append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
+                
             }
             "bool" {
                 set values "true,false"
@@ -398,32 +381,66 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
             "integer" {
                 append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'  show_in_window='$show_in_window'/>"
             }
-            default {
-                if {[$param getAttribute "function"] eq "1"} {
-                    set fname "function_$inName"
-                    set nodev "../value\[@n='$inName'\]"
-                    set nodef "../value\[@n='$fname'\]"
-                    append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'  show_in_window='$show_in_window'>
-                        <dependencies value='No' node=\""
-                    append node $nodev
-                    append node "\" att1='state' v1='normal'/>
-                        <dependencies value='Yes'  node=\""
-                    append node $nodev
-                    append node "\" att1='state' v1='hidden'/>
-                        <dependencies value='No' node=\""
-                    append node $nodef
-                    append node "\" att1='state' v1='hidden'/>
-                        <dependencies value='Yes'  node=\""
-                    append node $nodef
-                    append node "\" att1='state' v1='normal'/>
-                        </value>"
+            "FunctionValueNullComponentNDim" {
 
-                    append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'  show_in_window='$show_in_window'/>"
-                }
-                append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double'  state='$state'  show_in_window='$show_in_window'/>"
+            }
+            default {
+                append node [_GetDoubleParameterString $param $inName $pn $v $state $help $show_in_window $has_units]
             }
         }
     }
+    return $node
+}
+
+proc spdAux::_GetDoubleParameterString {param inName pn v state help show_in_window has_units} {
+    set node ""
+
+    if {[$param getAttribute "function"] eq "1"} {
+        set fname "function_$inName"
+        set nodev "../value\[@n='$inName'\]"
+        set nodef "../value\[@n='$fname'\]"
+        append node "<value n='ByFunction' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1' state='$state'  show_in_window='$show_in_window'>
+            <dependencies value='No' node=\""
+        append node $nodev
+        append node "\" att1='state' v1='normal'/>
+            <dependencies value='Yes'  node=\""
+        append node $nodev
+        append node "\" att1='state' v1='hidden'/>
+            <dependencies value='No' node=\""
+        append node $nodef
+        append node "\" att1='state' v1='hidden'/>
+            <dependencies value='Yes'  node=\""
+        append node $nodef
+        append node "\" att1='state' v1='normal'/>
+            </value>"
+
+        append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'  show_in_window='$show_in_window'/>"
+    }
+    append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double' state='$state' show_in_window='$show_in_window'/>"
+    return $node
+}
+
+proc spdAux::_GetComboParameterString {param inName pn v state help show_in_window base} {
+    set node ""
+    set values [$param getValues]
+    set pvalues [$param getPValues]
+    set pv ""
+    for {set i 0} {$i < [llength $values]} {incr i} {
+        lappend pv [lindex $values $i]
+        lappend pv [lindex $pvalues $i]
+    }
+    set values [join [$param getValues] ","]
+    set pvalues [join $pv ","]
+    append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
+    if {[llength $pv]} {
+        append node " dict='$pvalues' "
+    }
+    if {[$param getActualize]} {
+        append node "  actualize_tree='1'  "
+    }
+    append node " state='$state' help='$help' show_in_window='$show_in_window'>"
+    if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
+    append node "</value>"
     return $node
 }
 
