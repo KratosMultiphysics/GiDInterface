@@ -95,6 +95,9 @@ proc write::writeEvent { filename } {
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
+    #### Force values update ####
+    spdAux::ForceTreePreload
+
     #### Validate ####
     set errcode [writeValidateInApp $appid]
 
@@ -465,8 +468,8 @@ proc write::forceUpdateNode {node} {
     catch {get_domnode_attribute $node value}
     catch {get_domnode_attribute $node state}
 }
-proc write::getValueByNode { node } {
-    if {[get_domnode_attribute $node v] eq ""} {
+proc write::getValueByNode { node {what noforce} } {
+    if {[get_domnode_attribute $node v] eq "" || $what eq "force"} {
         write::forceUpdateNode $node
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
