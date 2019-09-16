@@ -292,10 +292,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                 if {$vector_type eq "bool"} {
                     set zstate "\[CheckDimension 3D\]"
                     if {$state eq "hidden"} {set zstate hidden}
-                    append node "
-                        <value n='${inName}X' wn='[concat $n "_X"]' pn='X ${pn}' v='$vX' values='1,0' help='' state='$state' show_in_window='$show_in_window'/>
-                        <value n='${inName}Y' wn='[concat $n "_Y"]' pn='Y ${pn}' v='$vY' values='1,0' help='' state='$state' show_in_window='$show_in_window'/>
-                        <value n='${inName}Z' wn='[concat $n "_Z"]' pn='Z ${pn}' v='$vZ' values='1,0' help='' state='$zstate' show_in_window='$show_in_window'/>"
+                    append node [_GetBooleanParameterString $param ${inName}X "X ${pn}" $vX $state $help $show_in_window $base]
+                    append node [_GetBooleanParameterString $param ${inName}Y "Y ${pn}" $vY $state $help $show_in_window $base]
+                    append node [_GetBooleanParameterString $param ${inName}Z "Z ${pn}" $vZ $zstate $help $show_in_window $base]
                 } else {
                     foreach i [list "X" "Y" "Z"] {
                         set fname "function_$inName"
@@ -360,19 +359,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
             }
             "combo" {
                 append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
-                
             }
             "bool" {
-                set values "true,false"
-                if {$v == 1} {set v true}
-                if {$v == 0} {set v false}
-                append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
-                if {[$param getActualize]} {
-                    append node "  actualize_tree='1'  "
-                }
-                append node " state='$state'  show_in_window='$show_in_window'>"
-                if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
-                append node "</value>"
+                append node [_GetBooleanParameterString $param $inName $pn $v $state $help $show_in_window $base]
             }
             "file" -
             "tablefile" {
@@ -417,6 +406,21 @@ proc spdAux::_GetDoubleParameterString {param inName pn v state help show_in_win
         append node "<value n='$fname' pn='Function' v='' help='$help'  state='$state'  show_in_window='$show_in_window'/>"
     }
     append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='double' state='$state' show_in_window='$show_in_window'/>"
+    return $node
+}
+
+proc spdAux::_GetBooleanParameterString {param inName pn v state help show_in_window base} {
+    set node ""
+    set values "true,false"
+    if {$v == 1} {set v true}
+    if {$v == 0} {set v false}
+    append node "<value n='$inName' pn='$pn' v='$v' values='$values'  help='$help'"
+    if {[$param getActualize]} {
+        append node " actualize_tree='1' "
+    }
+    append node " state='$state' show_in_window='$show_in_window'>"
+    if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
+    append node "</value>"
     return $node
 }
 
