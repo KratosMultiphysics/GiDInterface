@@ -80,7 +80,7 @@ proc Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
     return $pnames
 }
 
-proc Structural::xml::ProcCheckNodalConditionStateSolid {domNode args} {
+proc Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
     # Overwritten the base function to add Solution Type restrictions
     set parts_un STParts
     if {[spdAux::getRoute $parts_un] ne ""} {
@@ -90,7 +90,7 @@ proc Structural::xml::ProcCheckNodalConditionStateSolid {domNode args} {
         if {$cnd_dim ne ""} {
             if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
         }
-        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
+        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/condition/group/value\[@n='Element'\]"]
         set elemnames [list ]
         foreach elem $elems { lappend elemnames [$elem @v]}
         set elemnames [lsort -unique $elemnames]

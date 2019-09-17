@@ -230,7 +230,7 @@ proc Structural::write::writeParametersEvent { } {
 
 proc Structural::write::UsingRotationDofElements { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
@@ -243,7 +243,7 @@ proc Structural::write::UsingRotationDofElements { } {
 }
 proc Structural::write::UsingFileInPrestressedMembrane { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set found false
     foreach element_node $elements {
