@@ -10,8 +10,8 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
     write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
 
-
     # Nodal conditions and conditions
+    W "2"
     writeConditions $wall_properties
 
     # SubmodelParts
@@ -25,12 +25,19 @@ proc DEM::write::WriteMDPAWalls { } {
 
 
 proc DEM::write::WriteWallProperties { } {
+    W "1"
     #set print_list [list "FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
     set wall_properties [dict create ]
     set cnd [Model::getCondition "DEM-FEM-Wall"]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+
+    if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
+    } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+    }
+
+    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     set i $DEM::write::last_property_id
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        W "foreach group customlibGetBaseRoot selectNodes"
         incr i
         write::WriteString "Begin Properties $i"
         #foreach {prop obj} [$cnd getAllInputs] {
@@ -130,11 +137,25 @@ proc DEM::write::GetNodesForGraphs { } {
 }
 
 proc DEM::write::writeConditions { wall_properties } {
+    W "3"
     foreach group [GetWallsGroups] {
+        W "4"
+        W $wall_properties
+        W $group
         set mid [dict get $wall_properties $group]
-        set format [write::GetFormatDict $group $mid 3]
-        write::WriteString "Begin Conditions RigidFace3D3N // GUI DEM-FEM-Wall group identifier: $group"
+        #set format [write::GetFormatDict $group $mid 2]
+        W "6"
+        if {$::Model::SpatialDimension eq "2D"} {
+            set rigid_type "RigidEdge3D2N"
+            set format [write::GetFormatDict $group $mid 2]
+        } else {
+            set rigid_type "RigidFace3D3N"
+            set format [write::GetFormatDict $group $mid 3]
+        }
+
+        write::WriteString "Begin Conditions $rigid_type // GUI DEM-FEM-Wall group identifier: $group"
         GiD_WriteCalculationFile connectivities $format
+        W "7"
         write::WriteString "End Conditions"
         write::WriteString ""
     }
@@ -144,8 +165,15 @@ proc DEM::write::writeConditions { wall_properties } {
 
 proc DEM::write::GetWallsGroups { } {
     set groups [list ]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+
+    if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
+    } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+    }
+
+
+    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        W $group
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
     }
@@ -179,6 +207,15 @@ proc DEM::write::GetWallsGroupsListInConditions { } {
         }
     }
 
+    foreach group [GetWallsGroups] {
+        foreach line [GiD_EntitiesGroups get $group lines] {
+            foreach involved_group [GiD_EntitiesGroups entity_groups lines $line] {
+                set involved_group_id [write::GetWriteGroupName $involved_group]
+                if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
+            }
+        }
+    }
+
     # Find the relations condition -> group
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition"
     foreach cond [[customlib::GetBaseRoot] selectNodes $xp1] {
@@ -204,26 +241,40 @@ proc DEM::write::GetConditionsGroups { } {
 proc DEM::write::writeConditionMeshes { } {
     set i 0
     foreach {cond group_list} [GetWallsGroupsListInConditions] {
-        if {$cond eq "DEM-FEM-Wall"} {
+        W "8"
+        W $cond
+        if {$cond eq "DEM-FEM-Wall" || $cond eq "DEM-FEM-Wall2D"} {
             set cnd [Model::getCondition $cond]
             foreach group $group_list {
                 incr i
+                W "8.1"
                 write::WriteString "Begin SubModelPart $i // GUI DEM-FEM-Wall - $cond - group identifier: $group"
+                W "8.2"
                 write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
+                W "8.3"
                 set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
+                W "8.4"
                 set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
-
+                W "8.5"
                 set is_active [write::getValueByNode [$group_node selectNodes "./value\[@n='SetActive'\]"]]
                 if {[write::isBooleanTrue $is_active]} {
                     set motion_type [write::getValueByNode [$group_node selectNodes "./value\[@n='DEM-ImposedMotion'\]"]]
                     if {$motion_type == "LinearPeriodic"} {
+                        W "8.6"
 
                         # Linear velocity
                         set velocity [write::getValueByNode [$group_node selectNodes "./value\[@n='VelocityModulus'\]"]]
+                        W "8.61"
                         lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='DirectionVector'\]"]] velocity_X velocity_Y velocity_Z
+                        W "8.62"
+                        W $velocity_X
                         lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+                        W "8.63"
                         lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
+
                         write::WriteString "    LINEAR_VELOCITY \[3\] ($vx, $vy, $vz)"
+
+
 
                         # set vX [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityX'\]"]]
                         # set vY [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityY'\]"]]
@@ -438,11 +489,13 @@ proc DEM::write::writeConditionMeshes { } {
                     }
                     write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
                 }
+                W "8.8"
                 write::WriteString "  End SubModelPartData"
 
                 write::WriteString "  Begin SubModelPartNodes"
                 GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
                 write::WriteString "  End SubModelPartNodes"
+                W "8.9"
 
                 write::WriteString "Begin SubModelPartConditions"
                 set gdict [dict create]
@@ -450,9 +503,9 @@ proc DEM::write::writeConditionMeshes { } {
                 set f [subst $f]
                 dict set gdict $group $f
                 GiD_WriteCalculationFile elements -sorted $gdict
+                W "8.10"
                 write::WriteString "End SubModelPartConditions"
                 write::WriteString ""
-
 
                 write::WriteString "End SubModelPart"
                 write::WriteString ""

@@ -20,8 +20,8 @@ proc ::DEM::Init { } {
 
     set kratos_name DEMApplication
 
-    set ::Model::ValidSpatialDimensions [list 3D]
-    spdAux::SetSpatialDimmension "3D"
+    set ::Model::ValidSpatialDimensions [list 2D 3D]
+    #spdAux::SetSpatialDimmension "2D"
 
     LoadMyFiles
 }
