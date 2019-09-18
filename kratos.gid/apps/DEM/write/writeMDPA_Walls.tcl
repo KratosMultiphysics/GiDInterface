@@ -518,24 +518,11 @@ proc DEM::write::writeConditionMeshes2D { } {
 
                         # Angular velocity
                         set avelocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
-                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
-                        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
-                        lassign [MathUtils::ScalarByVectorProd $avelocity [list $velocity_X $velocity_Y $velocity_Z] ] wx wy wz
-                        write::WriteString "    ANGULAR_VELOCITY \[3\] ($wx,$wy,$wz)"
-
-                        # set wX  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityX'\]"]]
-                        # set wY  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityY'\]"]]
-                        # set wZ  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityZ'\]"]]
-                        # write::WriteString "    ANGULAR_VELOCITY \[3\] ($wX,$wY,$wZ)"
+                        write::WriteString "    ANGULAR_VELOCITY \[3\] (0.0,0.0,$avelocity)"
 
                         # Angular center of rotation
-                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotation'\]"]] oX oY oZ
-                        write::WriteString "    ROTATION_CENTER \[3\] ($oX,$oY,$oZ)"
-
-                        # set oX [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotationX'\]"]]
-                        # set oY [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotationY'\]"]]
-                        # set oZ [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotationZ'\]"]]
-                        # write::WriteString "    ROTATION_CENTER \[3\] ($oX,$oY,$oZ)"
+                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotation'\]"]] oX oY
+                        write::WriteString "    ROTATION_CENTER \[3\] ($oX,$oY,0.0)"
 
                         # Angular Period
                         set angular_periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularPeriodic'\]"]]
@@ -577,22 +564,11 @@ proc DEM::write::writeConditionMeshes2D { } {
                         set mass [write::getValueByNode [$group_node selectNodes "./value\[@n='Mass'\]"]]
                         write::WriteString "    RIGID_BODY_MASS $mass"
 
-                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfMass'\]"]] cX cY cZ
-                        write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] ($cX,$cY,$cZ)"
+                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfMass'\]"]] cX cY
+                        write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] ($cX,$cY,0.0)"
 
-
-                        # set cX [write::getValueByNode [$group_node selectNodes "./value\[@n='CX'\]"]]
-                        # set cY [write::getValueByNode [$group_node selectNodes "./value\[@n='CY'\]"]]
-                        # set cZ [write::getValueByNode [$group_node selectNodes "./value\[@n='CZ'\]"]]
-                        # write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] ($cX,$cY,$cZ)"
-
-                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='Inertia'\]"]] iX iY iZ
-                        write::WriteString "    RIGID_BODY_INERTIAS \[3\] ($iX,$iY,$iZ)"
-
-                        # set iX [write::getValueByNode [$group_node selectNodes "./value\[@n='IX'\]"]]
-                        # set iY [write::getValueByNode [$group_node selectNodes "./value\[@n='IY'\]"]]
-                        # set iZ [write::getValueByNode [$group_node selectNodes "./value\[@n='IZ'\]"]]
-                        # write::WriteString "    RIGID_BODY_INERTIAS \[3\] ($iX,$iY,$iZ)"
+                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='Inertia'\]"]] iZ
+                        write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,$iZ)"
 
                         # DOFS
                         set Ax [write::getValueByNode [$group_node selectNodes "./value\[@n='Ax'\]"]]

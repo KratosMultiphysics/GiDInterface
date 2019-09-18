@@ -78,7 +78,7 @@
         <parameter n="LinearEndTime"   parent="LinearPeriodic" pn="End time"         type="double"        v="100.0"  units="s" unit_magnitude="T" show_in_window="0"/>
 
         <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity"   type="double"        v="0.0"    units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
-        <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector"   type="inline_vector" v="1.0,0.0,0.0"  show_in_window="0"/>
+        <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector"   type="inline_vector" v="0.0,0.0,1.0"  show_in_window="0"/>
         <parameter n="CenterOfRotation"       parent="LinearPeriodic" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" units="m" unit_magnitude="L" help="Components of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center" show_in_window="0"/>
         <parameter n="AngularPeriodic"        parent="LinearPeriodic" pn="Periodic"           type="bool"          v="false"  help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period" show_in_window="0">
           <parameter n="AngularPeriod"          parent="true"          pn="Period"             type="double"        v="5.0"    units="s"      unit_magnitude="T" show_in_window="0"/> </parameter>
