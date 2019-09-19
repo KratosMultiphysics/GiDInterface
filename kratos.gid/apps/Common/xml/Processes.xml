@@ -38,7 +38,7 @@
 					kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable"
 					write_command="write::ProcessAxisToVectorComponents" >
 		<inputs>
-			<parameter n="FunctionValueNullComponentNDim" pn="Component" type="FunctionValueNullComponentNDim" v="Value" values="ByFunction,ByValue,Not" /> 
+			<parameter n="FunctionValueNullComponentNDim" pn="Component" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" /> 
 		</inputs>
 	</Process>
 

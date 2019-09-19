@@ -296,62 +296,55 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                     append node [_GetBooleanParameterString $param ${inName}Y "Y ${pn}" $vY $state $help $show_in_window $base]
                     append node [_GetBooleanParameterString $param ${inName}Z "Z ${pn}" $vZ $zstate $help $show_in_window $base]
                 } else {
+                    lassign [split [$param getAttribute "cv"] ","] cX cY cZ
                     foreach i [list "X" "Y" "Z"] {
+                        set v "v$i"
+                        set c "c$i"
                         set fname "function_$inName"
                         set nodev "../value\[@n='${inName}$i'\]"
                         set nodef "../value\[@n='$i$fname'\]"
                         set zstate ""
                         if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"}
-                        if {[$param getAttribute "enabled"] in [list "1" "0"]} {
-                            set val [expr [$param getAttribute "enabled"] ? "Yes" : "No"]
-                            #if {$i eq "Z"} { set val "No" }
-                            append node "<value n='Enabled_$i' pn='$i component' v='$val' values='Yes,No'  help='Enables the $i ${inName}' $zstate  show_in_window='$show_in_window'>"
-                            append node "<dependencies value='No' node=\""
+                        if {[$param getAttribute "function"] eq "1"} {
+                            set values "ByFunction,ByValue,Not" 
+                            set pvalues "By function,By value,Not set"
+                            set selector_param [::Model::Parameter new "${n}_${i}" "$pn $i" "combo" [set $c] "" "" "Component $i" $values $pvalues]
+                            $selector_param addAttribute function 0
+                            append node [_GetComboParameterString $selector_param "${n}_${i}" "$pn $i" [set $c] $state $help $show_in_window $base]
+                            set node [string range $node 0 end-8]
+
+                            set fname "${i}function_$inName"
+
+                            append node "
+                                <dependencies value='Not' node=\""
                             append node $nodev
                             append node "\" att1='state' v1='hidden'/>"
-                            append node "<dependencies value='Yes' node=\""
+                            append node "
+                                <dependencies value='Not' node=\""
+                            append node $nodef
+                            append node "\" att1='state' v1='hidden'/>"
+
+                            append node "
+                                <dependencies value='ByValue' node=\""
                             append node $nodev
-                            append node "\" att1='state' v1='normal'/>"
-                            if {[$param getAttribute "function"] eq "1"} {
-                                set fname "${i}function_$inName"
-                                set nodef "../value\[@n='$fname'\]"
-                                set nodeb "../value\[@n='ByFunction$i'\]"
-                                append node "<dependencies value='No' node=\""
-                                append node $nodef
-                                append node "\" att1='state' v1='hidden'/>"
-                                append node "<dependencies value='No' node=\""
-                                append node $nodeb
-                                append node "\" att1='state' v1='hidden'/>"
-                                append node "<dependencies value='Yes' node=\""
-                                append node $nodeb
-                                append node "\" att1='state' v1='normal'/>"
-                            }
+                            append node "\" att1='state' v1='normal'/>
+                                <dependencies value='ByFunction' node=\""
+                            append node $nodev
+                            append node "\" att1='state' v1='hidden'/>
+                                <dependencies value='ByValue' node=\""
+                            append node $nodef
+                            append node "\" att1='state' v1='hidden'/>
+                                <dependencies value='ByFunction'  node=\""
+                            append node $nodef
+                            append node "\" att1='state' v1='normal'/> "
                             append node "</value>"
+                            append node "<value n='$fname' pn='$i function' v='' help='$help'  $zstate /> "
                         }
-                        if {[$param getAttribute "function"] eq "1"} {
-                            set fname "${i}function_$inName"
-                            append node "<value n='ByFunction$i' pn='by function -> f(x,y,z,t)' v='No' values='Yes,No'  actualize_tree='1'  $zstate  show_in_window='$show_in_window'>
-                                <dependencies value='No' node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='normal'/>
-                                <dependencies value='Yes'  node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='hidden'/>
-                                <dependencies value='No' node=\""
-                            append node $nodef
-                            append node "\" att1='state' v1='hidden'/>
-                                <dependencies value='Yes'  node=\""
-                            append node $nodef
-                            append node "\" att1='state' v1='normal'/>
-                                </value>"
-                            append node "<value n='$fname' pn='$i function' v='' help='$help'  $zstate />"
-                        }
-                        set v "v$i"
                         if { $vector_type eq "file" || $vector_type eq "tablefile" } {
                             if {[set $v] eq ""} {set $v "- No file"}
                             append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type' show_in_window='$show_in_window'/>"
                         } else {
-                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' $has_units help='$help'  $zstate  show_in_window='$show_in_window'/>"
+                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='Value $i' v='[set $v]' $has_units help='$help'  $zstate  show_in_window='$show_in_window'/>"
                         }
                     }
                 }
@@ -369,9 +362,6 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
             }
             "integer" {
                 append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'  show_in_window='$show_in_window'/>"
-            }
-            "FunctionValueNullComponentNDim" {
-
             }
             default {
                 append node [_GetDoubleParameterString $param $inName $pn $v $state $help $show_in_window $has_units]
@@ -426,17 +416,12 @@ proc spdAux::_GetBooleanParameterString {param inName pn v state help show_in_wi
 
 proc spdAux::_GetComboParameterString {param inName pn v state help show_in_window base} {
     set node ""
+
     set values [$param getValues]
-    set pvalues [$param getPValues]
-    set pv ""
-    for {set i 0} {$i < [llength $values]} {incr i} {
-        lappend pv [lindex $values $i]
-        lappend pv [lindex $pvalues $i]
-    }
+    set pvalues [spdAux::_StringifyPValues $values [$param getPValues]]
     set values [join [$param getValues] ","]
-    set pvalues [join $pv ","]
     append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
-    if {[llength $pv]} {
+    if {[llength [$param getPValues]]} {
         append node " dict='$pvalues' "
     }
     if {[$param getActualize]} {
@@ -446,6 +431,16 @@ proc spdAux::_GetComboParameterString {param inName pn v state help show_in_wind
     if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
     append node "</value>"
     return $node
+}
+
+proc spdAux::_StringifyPValues {values pvalues} {
+    set pv ""
+    for {set i 0} {$i < [llength $values]} {incr i} {
+        lappend pv [lindex $values $i]
+        lappend pv [lindex $pvalues $i]
+    }
+    set result [join $pv ","]
+    return $result
 }
 
 proc spdAux::_insert_cond_param_dependencies {base param_name} {
