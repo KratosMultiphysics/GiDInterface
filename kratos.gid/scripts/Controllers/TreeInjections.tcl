@@ -161,7 +161,7 @@ proc spdAux::injectNodalConditions { basenode args} {
     } {
         set nodal_conditions [::Model::GetNodalConditions {*}$args]
     }
-    spdAux::_injectCondsToTree $basenode $nodal_conditions "nodal"
+    spdAux::_injectCondsToTree $basenode $nodal_conditions "nodal" {*}$args
     $basenode delete
 }
 
@@ -173,10 +173,18 @@ proc spdAux::injectConditions { basenode args} {
     spdAux::processDynamicNodes $parent
 }
 
-proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
+proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } {
     set conds [$basenode parent]
     set AppUsesIntervals [apps::ExecuteOnApp [GetAppIdFromNode $conds] GetAttribute UseIntervals]
     if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
+    set initial_conds_flag 0
+    if {$args ne "{}" && $args ne ""} {
+        if {[dict exists {*}$args can_be_initial]} {
+            if {[dict get {*}$args can_be_initial] == true} {
+                set initial_conds_flag 1
+            }
+        }
+    }
 
     foreach cnd $cond_list {
         set n [$cnd getName]
@@ -228,7 +236,12 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} } {
         }
         set CondUsesIntervals [$cnd getAttribute "Interval"]
         if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
-            append node "<value n='Interval' pn='Time interval' v='$CondUsesIntervals' values='\[getIntervals\]'  help='$help'/>"
+            set state normal
+            if {$initial_conds_flag} {
+                set CondUsesIntervals Initial
+                set state hidden
+            }
+            append node "<value n='Interval' pn='Time interval' v='$CondUsesIntervals' values='\[getIntervals\]'  help='$help' state='$state'/>"
         }
         append node "</condition>"
         $conds appendXML $node
