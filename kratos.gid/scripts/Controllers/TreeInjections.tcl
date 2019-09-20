@@ -313,7 +313,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                         if {[$param getAttribute "function"] eq "1"} {
                             set values "ByFunction,ByValue,Not" 
                             set pvalues "By function,By value,Not set"
-                            set selector_name "Selector_${n}_${i}"
+                            set selector_name "selector_${inName}_${i}"
 
                             # Prepare a combobox for select options
                             set selector_param [::Model::Parameter new $selector_name "$pn $i" "combo" [set $c] "" "" "Component $i" $values $pvalues]

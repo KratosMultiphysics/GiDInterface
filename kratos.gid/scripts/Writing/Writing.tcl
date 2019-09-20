@@ -472,7 +472,7 @@ proc write::getValueByNode { node {what noforce} } {
     if {[get_domnode_attribute $node v] eq "" || $what eq "force"} {
         write::forceUpdateNode $node
     }
-    return [getFormattedValue [get_domnode_attribute $node v]]
+    return [getFormattedValue [gid_groups_conds::convert_value_to_default $node]]
 }
 proc write::getValueByXPath { xpath { it "" }} {
     set root [customlib::GetBaseRoot]

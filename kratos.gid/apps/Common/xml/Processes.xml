@@ -36,9 +36,9 @@
 	</Process>
 	<Process n="AssignVectorVariableProcess3" pn="Assign vector variable process" python_module="assign_vector_variable_process"
 					kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable"
-					write_command="write::ProcessAxisToVectorComponents" >
+					write_command="write::ProcessVectorFunctionComponents" >
 		<inputs>
-			<parameter n="Variable" pn="Component" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/> 
+			<parameter n="component" pn="Component" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/> 
 		</inputs>
 	</Process>
 
@@ -54,7 +54,7 @@
 				   kratos_module="KratosMultiphysics" help="This process sets a vector variable value over a condition according to a given modulus an direction"  check="DirectorVectorNonZero direction">
 		<inputs>
       <parameter n="modulus" pn="Value" type="double" v="1.0" function="1" has_units="1"/>
-			<parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" help=""/>
+			<parameter n="direction" pn="Direction" type="vector" vectorType="double" v="0.0,0.0,0.0" help=""/>
 		</inputs>
 	</Process>
 

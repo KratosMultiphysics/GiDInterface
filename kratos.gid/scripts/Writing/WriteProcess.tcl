@@ -1,20 +1,20 @@
 
 proc write::GetRestartProcess { {un ""} {name "" } } {
-
+    
     set root [customlib::GetBaseRoot]
-
+    
     set resultDict [dict create ]
     if {$un eq ""} {set un "Restart"}
     if {$name eq ""} {set name "RestartOptions"}
-
+    
     dict set resultDict "python_module" "restart_process"
     dict set resultDict "kratos_module" "KratosMultiphysics.SolidMechanicsApplication"
     dict set resultDict "help" "This process writes restart files"
     dict set resultDict "process_name" "RestartProcess"
-
+    
     set params [dict create]
     set saveValue [write::getStringBinaryValue $un SaveRestart]
-
+    
     dict set resultDict "process_name" "RestartProcess"
     set model_name [Kratos::GetModelName]
     dict set params "model_part_name" [write::GetModelPartNameWithParent $model_name]
@@ -28,7 +28,7 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     if {$output_control eq "time"} {dict set params "output_frequency" [getValue $un RestartDeltaTime]} {dict set params "output_frequency" [getValue $un RestartDeltaStep]}
     set jsonoutput [write::getStringBinaryValue $un json_output]
     dict set params "json_output" $jsonoutput
-
+    
     dict set resultDict "Parameters" $params
     return $resultDict
 }
@@ -43,16 +43,16 @@ proc write::GetProcessHeader {group process condition {groupId ""}} {
     }
     set paramDict [dict create ]
     dict set paramDict model_part_name [write::GetModelPartNameWithParent $groupId]
-
+    
     set process_attributes [$process getAttributes]
-
+    
     dict set process_attributes process_name [dict get $process_attributes n]
     dict unset process_attributes n
     dict unset process_attributes pn
     if {[dict exists $process_attributes help]} {dict unset process_attributes help}
     if {[dict exists $process_attributes process_name]} {dict unset process_attributes process_name}
     if {[dict exists $process_attributes write_command]} {dict unset process_attributes write_command}
-
+    
     set processDict [dict merge $processDict $process_attributes]
     if {[$condition hasAttribute VariableName]} {
         set variable_name [$condition getAttribute VariableName]
@@ -67,7 +67,7 @@ proc write::GetProcessHeader {group process condition {groupId ""}} {
 
 proc write::ProcessAxisToVectorComponents { groupNode condition process} {
     set processDict [write::GetProcessHeader $groupNode $process $condition]
-
+    
     set axis [write::getValueByXPath [$groupNode toXPath] Axis]
     set const [write::GetInputValue $groupNode [$process getInputPn constrained]]
     set val [write::GetInputValue $groupNode [$process getInputPn value]]
@@ -83,7 +83,26 @@ proc write::ProcessAxisToVectorComponents { groupNode condition process} {
     
     dict set processDict Parameters constrained $constrained
     dict set processDict Parameters value $value
+    
+    return $processDict
+}
 
+proc write::ProcessVectorFunctionComponents { groupNode condition process} {
+    set processDict [write::GetProcessHeader $groupNode $process $condition]
+    set val [write::GetInputValue $groupNode [$process getInputPn component]]
+    foreach i $val {
+        if {$i == "null"} {
+            lappend constrained false
+            lappend value null
+        } {
+            lappend constrained true
+            lappend value $i
+        }
+    }
+    
+    dict set processDict Parameters constrained $constrained
+    dict set processDict Parameters value $value
+    
     return $processDict
 }
 
@@ -99,43 +118,36 @@ proc write::GetInputValue {group in_obj} {
             set ValZ [expr False]
             if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
         } elseif {$vector_type eq "double"} {
-            if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
-                foreach i [list "X" "Y" "Z"] {
-                    if {[expr [get_domnode_attribute [$group find n Enabled_$i] v] ] ne "Yes"} {
-                        set Val$i null
-                    } else {
-                        set printed 0
-                        if {[$in_obj getAttribute "function"] eq "1"} {
-                            if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                                set funcinputName "${i}function_$inputName"
-                                set value [get_domnode_attribute [$group find n $funcinputName] v]
-                                set Val$i $value
-                                set printed 1
-                            }
-                        }
-                        if {!$printed} {
-                            set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
+            
+            foreach i [list "X" "Y" "Z"] {
+                set printed 0
+                if {[$in_obj getAttribute "function"] eq "1"} {
+                    set selector_name "selector_${inputName}_$i"
+                    set selector_value [get_domnode_attribute [$group find n $selector_name] v]
+                    switch $selector_value {
+                        "ByFunction" {
+                            set function_component "function_${inputName}_${i}"
+                            set value [write::getValueByNode [$group find n $function_component] ]
                             set Val$i $value
+                            set printed 1
+                        } 
+                        "ByValue" {
+                            
                         }
-                    }
-                }
-            } else {
-                foreach i [list "X" "Y" "Z"] {
-                    set printed 0
-                    if {[$in_obj getAttribute "function"] eq "1"} {
-                        if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                            set funcinputName "${i}function_$inputName"
-                            set value [get_domnode_attribute [$group find n $funcinputName] v]
-                            set Val$i $value
+                        "Not" {
+                            set Val$i null
                             set printed 1
                         }
                     }
-                    if {!$printed} {
-                        set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
-                        set Val$i $value
-                    }
+                    
+                }
+                if {!$printed} {
+                    set value_component "value_${inputName}_${i}"
+                    set value [expr [gid_groups_conds::convert_value_to_default [$group find n $value_component] ] ]
+                    set Val$i $value
                 }
             }
+            
         } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
             set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
             set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
