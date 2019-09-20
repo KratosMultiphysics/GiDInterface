@@ -111,9 +111,17 @@ proc Structural::write::getOldParametersDict { } {
     # Lists of processes
     set processesDict [dict create]
 
-    set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    #lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
-    dict set processesDict constraints_process_list $nodal_conditions_dict
+    set initial_conditions_list_raw [write::getConditionsParametersDict [GetAttribute initial_conditions_un] "Nodal"]
+    set initial_conditions_list [list ]
+    foreach process $initial_conditions_list_raw {
+        if {[dict exists $process Parameters constrained]} {
+            if {[llength [dict get $process Parameters constrained]] == 1} {dict set process Parameters constrained false}
+            if {[llength [dict get $process Parameters constrained]] == 3} {dict set process Parameters constrained [list false false false]}
+        }
+        lappend initial_conditions_list $process
+    }
+    set nodal_conditions_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    dict set processesDict constraints_process_list [concat $initial_conditions_list $nodal_conditions_list]
     if {[usesContact]} {
         set contact_conditions_dict [GetContactConditionsDict]
         dict set processesDict contact_process_list $contact_conditions_dict

@@ -200,7 +200,7 @@ proc write::getSolversParametersDict { {appid ""} } {
 proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
 
     set root [customlib::GetBaseRoot]
-    set bcCondsDict [list ]
+    set bcCondsList [list ]
     set grouped_conditions [list ]
 
     set xp1 "[spdAux::getRoute $un]/condition/group"
@@ -244,7 +244,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             } else {
                 set processDict [$processWriteCommand $group $condition $process]
             }
-            lappend bcCondsDict $processDict
+            lappend bcCondsList $processDict
         }
     }
 
@@ -275,9 +275,9 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
         }
         dict set processDict Parameters $paramDict
-        lappend bcCondsDict $processDict
+        lappend bcCondsList $processDict
     }
-    return $bcCondsDict
+    return $bcCondsList
 }
 
 proc write::GetResultsList { un {cnd ""} } {
