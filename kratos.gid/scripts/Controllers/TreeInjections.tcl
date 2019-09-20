@@ -289,6 +289,11 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
             "vector" {
                 set vector_type [$param getAttribute "vectorType"]
                 lassign [split $v ","] vX vY vZ
+                if {[$param hasAttribute "fv"] } {
+                    lassign [split [$param getAttribute "fv"] ","] vfX vfY vfZ
+                } {
+                    lassign [list "" "" ""] vfX vfY vfZ
+                }
                 if {$vector_type eq "bool"} {
                     set zstate "\[CheckDimension 3D\]"
                     if {$state eq "hidden"} {set zstate hidden}
@@ -300,51 +305,37 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                     foreach i [list "X" "Y" "Z"] {
                         set v "v$i"
                         set c "c$i"
-                        set fname "function_$inName"
-                        set nodev "../value\[@n='${inName}$i'\]"
-                        set nodef "../value\[@n='$i$fname'\]"
-                        set zstate ""
-                        if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"}
+                        set fname "function_${inName}_${i}"
+                        set vname "value_${inName}_${i}"
+                        set nodef "../value\[@n='$fname'\]"
+                        set nodev "../value\[@n='$vname'\]"
+                        if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"} {set zstate ""}
                         if {[$param getAttribute "function"] eq "1"} {
                             set values "ByFunction,ByValue,Not" 
                             set pvalues "By function,By value,Not set"
-                            set selector_param [::Model::Parameter new "${n}_${i}" "$pn $i" "combo" [set $c] "" "" "Component $i" $values $pvalues]
+                            set selector_name "Selector_${n}_${i}"
+
+                            # Prepare a combobox for select options
+                            set selector_param [::Model::Parameter new $selector_name "$pn $i" "combo" [set $c] "" "" "Component $i" $values $pvalues]
                             $selector_param addAttribute function 0
-                            append node [_GetComboParameterString $selector_param "${n}_${i}" "$pn $i" [set $c] $state $help $show_in_window $base]
+                            append node [_GetComboParameterString $selector_param $selector_name "$pn $i" [set $c] $state $help $show_in_window $base]
                             set node [string range $node 0 end-8]
-
-                            set fname "${i}function_$inName"
-
-                            append node "
-                                <dependencies value='Not' node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='hidden'/>"
-                            append node "
-                                <dependencies value='Not' node=\""
-                            append node $nodef
-                            append node "\" att1='state' v1='hidden'/>"
-
-                            append node "
-                                <dependencies value='ByValue' node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='normal'/>
-                                <dependencies value='ByFunction' node=\""
-                            append node $nodev
-                            append node "\" att1='state' v1='hidden'/>
-                                <dependencies value='ByValue' node=\""
-                            append node $nodef
-                            append node "\" att1='state' v1='hidden'/>
-                                <dependencies value='ByFunction'  node=\""
-                            append node $nodef
-                            append node "\" att1='state' v1='normal'/> "
+                            append node "<dependencies value='Not' node=\"$nodev\" att1='state' v1='hidden'/>"
+                            append node "<dependencies value='Not' node=\"$nodef\" att1='state' v1='hidden'/>"
+                            append node "<dependencies value='ByValue' node=\"$nodev\" att1='state' v1='normal'/>"
+                            append node "<dependencies value='ByFunction' node=\"$nodev\" att1='state' v1='hidden'/>"
+                            append node "<dependencies value='ByValue' node=\"$nodef\" att1='state' v1='hidden'/>"
+                            append node "<dependencies value='ByFunction'  node=\"$nodef\" att1='state' v1='normal'/>"
                             append node "</value>"
-                            append node "<value n='$fname' pn='$i function' v='' help='$help'  $zstate /> "
+
+                            # Function entry
+                            append node "<value n='$fname' pn='Function $i (x,y,z,t)' v='$vfX' help='$help'  $zstate /> "
                         }
                         if { $vector_type eq "file" || $vector_type eq "tablefile" } {
                             if {[set $v] eq ""} {set $v "- No file"}
-                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type' show_in_window='$show_in_window'/>"
+                            append node "<value n='$vname' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type' show_in_window='$show_in_window'/>"
                         } else {
-                            append node "<value n='${inName}$i' wn='[concat $n "_$i"]' pn='Value $i' v='[set $v]' $has_units help='$help'  $zstate  show_in_window='$show_in_window'/>"
+                            append node "<value n='$vname' wn='[concat $n "_$i"]' pn='Value $i' v='[set $v]' $has_units help='$help'  $zstate  show_in_window='$show_in_window'/>"
                         }
                     }
                 }
