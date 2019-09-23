@@ -24,7 +24,13 @@
     </outputs>
   </ConditionItem> -->
 
-   <ConditionItem n="Inlet" pn="DEM-Inlet" Interval="Total" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-Inlet-Process" help="" VariableName="INLET">
+  <ConditionItem n="Inlet" pn="DEM-Inlet" Interval="Total" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-Inlet-Process" help="" VariableName="INLET">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+  <ConditionItem n="Inlet2D" pn="DEM-Inlet" Interval="Total" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ProcessName="DEM-Inlet2D-Process" help="" VariableName="INLET">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>

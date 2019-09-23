@@ -6,18 +6,25 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     set materials_un [GetConfigurationAttribute materials_un]
     set root [customlib::GetBaseRoot]
 
+    W $parts
+    W $materials_un
+    W $root
+
     set xp1 "[spdAux::getRoute $parts]/group"
     if {[llength [$root selectNodes $xp1]] < 1} {
         set xp1 "[spdAux::getRoute $parts]/condition/group"
     }
+    W "processMaterials1"
     if {$alt_path ne ""} {
         set xp1 $alt_path
     }
+    W "processMaterials2"
     set xp2 ".//value\[@n='Material']"
-
+    W "processMaterials3"
     set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : $last_assigned_id }]
-
+    W "processMaterials4"
     foreach gNode [$root selectNodes $xp1] {
+        W "processMaterials5"
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
         set group [$gNode getAttribute n]
         set valueNode [$gNode selectNodes $xp2]
@@ -25,17 +32,22 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
         if { ![dict exists $mat_dict $group] } {
             incr material_number
             set mid $material_number
-
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
-            
             set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
-            set element_name [write::getValueByNode $element_node "force"]
-            
+            W "processMaterials"
+
+            #W $element_node
+             # this is not being used
+            #set element_name [write::getValueByNode $element_node "force"]
+            W "processMaterials"
+
             set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
             set claw [write::getValueByNode $claw_node "force"]
             set const_law [Model::getConstitutiveLaw $claw]
+
             if {$const_law ne ""} {
+
                 set output_type [$const_law getOutputMode]
                 if {$output_type eq "Parameters"} {
                     set s1 [$gNode selectNodes ".//value"]
