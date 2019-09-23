@@ -601,7 +601,11 @@ proc DEM::write::writeMaterialsInlet { } {
     foreach group [dict keys $inletProperties] {
         W "foreach group inletProperties"
         write::WriteString "Begin Properties [dict get $inletProperties $group MID] // Inlet group: [write::GetWriteGroupName $group]"
-        dict set inletProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
+        if {$::Model::SpatialDimension eq "2D"} {set DEM_D_law "DEM_D_Hertz_viscous_Coulomb2D"
+        } else { set DEM_D_law "DEM_D_Hertz_viscous_Coulomb"
+        }
+
+        dict set inletProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME $DEM_D_law
         dict set inletProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
         foreach {prop val} [dict get $inletProperties $group] {
             if {$prop in $printable} {
