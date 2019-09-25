@@ -154,10 +154,10 @@ proc write::GetInputValue {group in_obj} {
             set ValZ "0"
             if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
         } else {
-            set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
-            set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
+            set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n "value_${inputName}_X"] ] ]
+            set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n "value_${inputName}_Y"] ] ]
             set ValZ [expr 0.0]
-            if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
+            if {[$group find n "value_${inputName}_Z"] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n "value_${inputName}_Z"] ]]}
         }
         set return_value [list $ValX $ValY $ValZ]
     } elseif {$in_type eq "inline_vector"} {

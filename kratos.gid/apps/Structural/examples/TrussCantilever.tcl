@@ -95,7 +95,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "XYZ//Total"]
     $structDisplacementNode setAttribute ov point
-    set props [list constrained Yes ByFunction No value 0.0 Interval Total]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -113,7 +113,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "XZ//Total"]
     $structDisplacementNode setAttribute ov point
-    set props [list Axis XZ constrained Yes ByFunction No value 0.0 Interval Total]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -131,6 +131,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Z//Total"]
     $structDisplacementNode setAttribute ov point
+    set props [list selector_component_X Not selector_component_Y Not selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     set props [list Axis Z constrained Yes ByFunction No value 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
