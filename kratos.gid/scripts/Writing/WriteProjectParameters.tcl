@@ -638,7 +638,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict nodal_data_value_variables     []
     dict set resultDict element_data_value_variables   []
     dict set resultDict condition_data_value_variables []
-    dict set resultDict gauss_point_variables   [GetResultsList $results_UN OnElement]
+    dict set resultDict gauss_point_variables_extrapolated_to_nodes   [GetResultsList $results_UN OnElement]
 
     return $resultDict
 }
