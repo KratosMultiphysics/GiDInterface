@@ -132,7 +132,6 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Z//Total"]
     $structDisplacementNode setAttribute ov point
     set props [list selector_component_X Not selector_component_Y Not selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-    set props [list Axis Z constrained Yes ByFunction No value 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -150,7 +149,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     GiD_Groups edit state "Load//Total" hidden
     $structDisplacementNode setAttribute ov point
     set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "Load//Total"]
-    set props [list ByFunction No modulus 10000 directionY -1 Interval Total]
+    set props [list ByFunction No modulus 10000 value_direction_Y -1 Interval Total]
     foreach {prop val} $props {
          set propnode [$LoadNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
