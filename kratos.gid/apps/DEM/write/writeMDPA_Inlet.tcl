@@ -302,7 +302,7 @@ proc DEM::write::writeInletMeshes2D { } {
                     # Angular velocity
                     #set velocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
                     set avelocity  [dict get $inletProperties $groupid AngularVelocityModulus]
-                    write::WriteString "        ANGULAR_VELOCITY \[3\] ($wX,$wY,$avelocity)"
+                    write::WriteString "        ANGULAR_VELOCITY \[3\] (0.0,0.0,$avelocity)"
 
                     # Angular center of rotation
                     #lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotation'\]"]] oX oY oZ

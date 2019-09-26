@@ -383,7 +383,12 @@ proc DEM::write::PrepareCustomMeshedParts { } {
         set groupid [$group @n]
         set prev_ov [$group @ov]
         dict set restore_ov $groupid $prev_ov
-        $group setAttribute ov volume
+        # We must force it to be volume/surface because anything applied to Parts will be converted into Spheres/Circles
+        if {$::Model::SpatialDimension eq "3D"} { 
+            $group setAttribute ov volume
+        } else {
+            $group setAttribute ov surface
+        }
     }
 }
 
@@ -395,6 +400,7 @@ proc DEM::write::RestoreCustomMeshedParts { } {
         set groupid [$group @n]
         if {$groupid in [dict keys $restore_ov]} {
             set prev_ov [dict get $restore_ov $groupid]
+            # Bring back to original entities (Check PrepareCustomMeshedParts)
             $group setAttribute ov $prev_ov
         }
     }

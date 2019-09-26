@@ -4,7 +4,7 @@
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
 	</value>
 
-	<!-- <value n="ConstitutiveLaw" pn="Constitutive law" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]"  help="Select a constitutive law">
+	<value n="ConstitutiveLaw" pn="Constitutive law" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]"  help="Select a constitutive law">
 		<dependencies node="../value[@n = 'Material']" actualize="1"/>
 	</value>
 
@@ -16,7 +16,7 @@
 	<value n="FEMtoDEM" pn="FEM to DEM criterion type" v="AttheNodes" values="AttheNodes,AttheCentroid,AtBothNodesAndCentroids" help="" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="Diameter" pn="Diameter (m)" v="1.0" help="Average diameter of the spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="ProbabilityDistribution" pn="Probability distribution" v="NormalDistribution" values="NormalDistribution,LogDistribution"  help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
-	<value n="StandardDeviation" pn="Standard deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/> -->
+	<value n="StandardDeviation" pn="Standard deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 
     <dynamicnode command="spdAux::injectPartInputs" args=""/>
 </condition>
