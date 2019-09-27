@@ -19,22 +19,6 @@
 	</Process>
 
 	<Process n="AssignVectorVariableProcess" pn="Assign vector variable process" python_module="assign_vector_variable_process"
-					 kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable">
-		<inputs>
-			<parameter n="constrained" pn="Imposed" type="vector" vectorType="bool" v="1,1,1" />
-			<parameter n="value" pn="Value" type="vector" vectorType="double" function="1" v="0.0,0.0,0.0" has_units="1"/>
-		</inputs>
-	</Process>
-	<Process n="AssignVectorVariableProcess2" pn="Assign vector variable process" python_module="assign_vector_variable_process"
-					kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable"
-					write_command="write::ProcessAxisToVectorComponents" >
-		<inputs>
-			<parameter n="Axis" pn="Axis" type="combo" v="XYZ" values="X,Y,Z,XY,XZ,YZ,XYZ" /> 
-			<parameter n="constrained" pn="Imposed" type="bool" v="1" />
-			<parameter n="value" pn="Value" type="double" function="1" v="0.0" has_units="1"/>
-		</inputs>
-	</Process>
-	<Process n="AssignVectorVariableProcess3" pn="Assign vector variable process" python_module="assign_vector_variable_process"
 					kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable"
 					write_command="write::ProcessVectorFunctionComponents" >
 		<inputs>
