@@ -56,20 +56,6 @@ proc ::DEM::CustomMenus { } {
     DEM::examples::UpdateMenus
 }
 
-proc ::DEM::BeforeMeshGeneration_working {elementsize} {
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute DEMParts]/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
-        if {![write::isBooleanTrue $advanced_meshing_features]} {
-            foreach volume [GiD_EntitiesGroups get $groupid volumes] {
-                GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
-            }
-        }
-    }
-}
-
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"

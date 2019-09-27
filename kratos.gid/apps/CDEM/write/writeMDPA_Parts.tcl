@@ -307,7 +307,7 @@ proc DEM::write::GetSpheresGroups { } {
 
 proc DEM::write::writeMaterialsParts { } {
     variable partsProperties
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Parts'\]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
     set partsProperties $::write::mat_dict
     #set ::write::mat_dict [dict create]
     #write::processMaterials $xp1
@@ -315,12 +315,11 @@ proc DEM::write::writeMaterialsParts { } {
     #set ::write::mat_dict $old_mat_dict
     # WV inletProperties
 
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
-
+    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME CONTACT_SIGMA_MIN]
     foreach group [dict keys $partsProperties] {
         write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-        dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
-        dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
+        #dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
+        #dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
         foreach {prop val} [dict get $partsProperties $group] {
             if {$prop in $printable} {
                 write::WriteString "    $prop $val"
@@ -328,4 +327,17 @@ proc DEM::write::writeMaterialsParts { } {
         }
         write::WriteString "End Properties\n"
     }
+
+    # set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
+    # set partsProperties $::write::mat_dict
+    # set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME CONTACT_SIGMA_MIN]
+    # foreach group [dict keys $partsProperties] {
+    #     write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
+    #     foreach {prop val} [dict get $partsProperties $group] {
+    #         if {$prop in $printable} {
+    #             write::WriteString "    $prop $val"
+    #         }
+    #     }
+    #     write::WriteString "End Properties\n"
+    # }
 }

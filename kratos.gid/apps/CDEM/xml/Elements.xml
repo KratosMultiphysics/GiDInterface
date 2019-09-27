@@ -9,7 +9,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="DEM"/>
+      <filter field="App" value="CDEM"/>
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions></NodalConditions>
     <inputs></inputs>
@@ -23,7 +23,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="DEM"/>
+      <filter field="App" value="CDEM"/>
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions></NodalConditions>
     <inputs></inputs>

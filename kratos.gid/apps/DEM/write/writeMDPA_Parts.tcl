@@ -363,7 +363,6 @@ proc DEM::write::writeMaterialsParts { } {
     foreach group [dict keys $partsProperties] {
         if {[dict get $partsProperties $group APPID] eq "DEM"} {
             write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-            #dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
             dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
             foreach {prop val} [dict get $partsProperties $group] {
                 if {$prop in $printable} {
@@ -384,7 +383,7 @@ proc DEM::write::PrepareCustomMeshedParts { } {
         set prev_ov [$group @ov]
         dict set restore_ov $groupid $prev_ov
         # We must force it to be volume/surface because anything applied to Parts will be converted into Spheres/Circles
-        if {$::Model::SpatialDimension eq "3D"} { 
+        if {$::Model::SpatialDimension eq "3D"} {
             $group setAttribute ov volume
         } else {
             $group setAttribute ov surface
