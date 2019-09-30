@@ -68,7 +68,6 @@
 		 ElementType="Point,Line,Surface" ProcessName="AssignModulusAndDirectionToConditionsProcess"
 		 help="Set load value giving a Value (for unit length or unit surface) and a Direction (with no value)"
 		 units="N" unit_magnitude="F" VariableName="FORCE_LOAD">
-    <!-- <symbol proc='Solid::symbols::draw_load' orientation='global'/> -->
     <symbol proc='Solid::symbols::draw_arrow' orientation='global'/>
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="PointLoadCondition3D1N"/>

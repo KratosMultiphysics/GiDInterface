@@ -91,7 +91,7 @@ proc Solid::examples::TreeAssignationStaticBeamLattice3D {args} {
     set solidConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintNode [customlib::AddConditionGroupOnXPath $solidConstraint "Displacement1//Total"]
     $solidConstraintNode setAttribute ov point
-    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -108,7 +108,7 @@ proc Solid::examples::TreeAssignationStaticBeamLattice3D {args} {
     set solidConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintNode [customlib::AddConditionGroupOnXPath $solidConstraint "Displacement2//Total"]
     $solidConstraintNode setAttribute ov point
-    set props [list Enabled_X No ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY Yes Yfunction_value "1.0e-2*t" Enabled_Z No ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X Not selector_component_Y ByFunction function_component_Y "1.0e-2*t" selector_component_Z Not Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -125,7 +125,7 @@ proc Solid::examples::TreeAssignationStaticBeamLattice3D {args} {
     set solidConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintNode [customlib::AddConditionGroupOnXPath $solidConstraint "Displacement3//Total"]
     $solidConstraintNode setAttribute ov point
-    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -142,7 +142,7 @@ proc Solid::examples::TreeAssignationStaticBeamLattice3D {args} {
     set solidConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintNode [customlib::AddConditionGroupOnXPath $solidConstraint "Displacement4//Total"]
     $solidConstraintNode setAttribute ov point
-    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY Yes Yfunction_value "1.0e-2*t" Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByFunction function_component_Y "1.0e-2*t" selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -159,7 +159,7 @@ proc Solid::examples::TreeAssignationStaticBeamLattice3D {args} {
     set solidConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintNode [customlib::AddConditionGroupOnXPath $solidConstraint "Displacement5//Total"]
     $solidConstraintNode setAttribute ov point
-    set props [list Enabled_X No ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z No ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X Not value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z Not Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -176,7 +176,7 @@ proc Solid::examples::TreeAssignationStaticBeamLattice3D {args} {
     set solidConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintNode [customlib::AddConditionGroupOnXPath $solidConstraint "Displacement6//Total"]
     $solidConstraintNode setAttribute ov point
-    set props [list Enabled_X No ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X Not selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
