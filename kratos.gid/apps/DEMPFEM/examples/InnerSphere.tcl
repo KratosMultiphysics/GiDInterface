@@ -105,7 +105,7 @@ proc DEMPFEM::examples::TreeAssignation3D {args} {
     spdAux::AddIntervalGroup FixedVelocity "FixedVelocity//Total"
     set vel_node [customlib::AddConditionGroupOnXPath $pfem_velocity "FixedVelocity//Total"]
     $vel_node setAttribute ov $condtype
-    set props [list Enabled_X Yes ByFunctionX No Xfunction_value "" valueX 0.0 Enabled_Y Yes ByFunctionY No Yfunction_value "" valueY 0.0 Enabled_Z Yes ByFunctionZ No Zfunction_value "" valueZ 0.0 Interval Total]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
             set propnode [$vel_node selectNodes "./value\[@n = '$prop'\]"]
             if {$propnode ne "" } {
