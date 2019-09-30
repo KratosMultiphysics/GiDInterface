@@ -658,7 +658,6 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
                 lappend props $prop_dict
             }
         }
-
     }
 
     dict set props_dict properties $props

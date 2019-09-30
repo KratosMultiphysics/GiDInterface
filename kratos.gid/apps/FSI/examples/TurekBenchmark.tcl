@@ -210,30 +210,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
 
     # Displacement 3D
     if {$nd eq "3D"} {
-        # 3D CASE NOT IMPLEMENTED YET
-        # set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC3D'\]"
-        # set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_full]
-        # $fluidDisplacementNode setAttribute ov surface
-        # set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
-        # foreach {prop val} $props {
-        #      set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-        #      if {$propnode ne "" } {
-        #           $propnode setAttribute v $val
-        #      } else {
-        #         W "Warning - Couldn't find property FluidFixedDisplacement_full $prop"
-        #      }
-        # }
-        # set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_lat]
-        # $fluidDisplacementNode setAttribute ov surface
-        # set props [list constrainedX 0 constrainedY 0 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
-        # foreach {prop val} $props {
-        #      set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-        #      if {$propnode ne "" } {
-        #           $propnode setAttribute v $val
-        #      } else {
-        #         W "Warning - Couldn't find property FluidFixedDisplacement_lat $prop"
-        #      }
-        # }
+        
     } {
         set gname "FluidALEMeshFreeX//Total"
         GiD_Groups create $gname
