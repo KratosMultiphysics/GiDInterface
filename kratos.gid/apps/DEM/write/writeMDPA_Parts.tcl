@@ -1,4 +1,5 @@
 proc DEM::write::WriteMDPAParts { } {
+    W "aqui no deberia entrar"
     variable last_property_id
     # Prepare properties
     write::processMaterials "" $last_property_id

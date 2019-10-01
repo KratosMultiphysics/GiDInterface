@@ -8,12 +8,12 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
 
     W $parts
     W $materials_un
-    W $root
 
     set xp1 "[spdAux::getRoute $parts]/group"
     if {[llength [$root selectNodes $xp1]] < 1} {
         set xp1 "[spdAux::getRoute $parts]/condition/group"
     }
+    W "xp1"
     W "processMaterials1"
     if {$alt_path ne ""} {
         set xp1 $alt_path
@@ -35,33 +35,40 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
             set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
-            W "processMaterials"
+            W "processMaterials6"
 
             #W $element_node
              # this is not being used
             #set element_name [write::getValueByNode $element_node "force"]
-            W "processMaterials"
+            W "processMaterials7"
 
             set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
             set claw [write::getValueByNode $claw_node "force"]
             set const_law [Model::getConstitutiveLaw $claw]
 
+            W $claw
             if {$const_law ne ""} {
 
                 set output_type [$const_law getOutputMode]
+                W $output_type
                 if {$output_type eq "Parameters"} {
+                    W "processMaterials8a"
                     set s1 [$gNode selectNodes ".//value"]
                 } else {
+                    W "processMaterials8b"
                     set real_material_name [write::getValueByNode $valueNode "force"]
                     set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
                     set matNode [$root selectNodes $xp3]
                     set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
                 }
             } else {
+                W "processMaterials9"
                 set s1 [$gNode selectNodes ".//value"]
             }
+            W "processMaterials10"
 
             foreach valueNode $s1 {
+                W "processMaterials11"
                 write::forceUpdateNode $valueNode
                 set name [$valueNode getAttribute n]
                 set state [get_domnode_attribute $valueNode state]
@@ -77,6 +84,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 }
             }
         }
+        W "endprocessMaterials"
     }
 }
 

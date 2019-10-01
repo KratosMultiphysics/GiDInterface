@@ -15,6 +15,7 @@
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>
+
   <Material n="DEM2D-DefaultMaterial" MaterialType="DEM" help="">
     <inputs>
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500.0" type="double"  help="Density of the material (not bulk density)"/>
@@ -26,7 +27,7 @@
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" type="double" help="Particle sphericity"/>
-      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb2D,DEM_D_Linear_viscous_Coulomb2D,,,,," pvalues="Hertz,Linear" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
+      <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb2D,DEM_D_Linear_viscous_Coulomb2D" pvalues="Hertz,Linear" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
 	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter>
     </inputs>
   </Material>

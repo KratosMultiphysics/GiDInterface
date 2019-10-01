@@ -7,9 +7,13 @@ proc CDEM::xml::Init { } {
     # Namespace variables initialization
     variable dir
     Model::InitVariables dir $CDEM::dir
-
+    Model::ForgetElements
+    Model::ForgetMaterials
+    Model::ForgetConstitutiveLaws
     Model::ForgetElement SphericPartDEMElement3D
-    Model::getElements Elements.xml
+    Model::getElements ElementsC.xml
+    Model::getConstitutiveLaws ConstitutiveLawsC.xml
+    Model::getMaterials MaterialsC.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
 }
 
@@ -19,8 +23,6 @@ proc CDEM::xml::getUniqueName {name} {
 
 proc CDEM::xml::CustomTree { args } {
     DEM::xml::CustomTree
-    #spdAux::SetValueOnTreeItem values Fluid PFEMFLUID_DomainType
-
     set root [customlib::GetBaseRoot]
     set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'ParallelType'\]"]
 	if { $result_node ne "" } {$result_node delete}

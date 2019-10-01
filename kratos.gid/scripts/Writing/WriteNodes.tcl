@@ -4,17 +4,11 @@ proc write::writeNodalCoordinatesOnGroups { groups } {
     set s [mdpaIndent]
     WriteString "${s}Begin Nodes"
     incr ::write::current_mdpa_indent_level
-    W "writeNodalCoordinatesOnGroups"
-    W $groups
     foreach group $groups {
-        W $group
-        W "writeNodalCoordinatesOnGroups1"
         dict set formats $group "${s}%5d %14.5f %14.5f %14.5f\n"
     }
     GiD_WriteCalculationFile nodes $formats
-    W "writeNodalCoordinatesOnGroups2"
     incr ::write::current_mdpa_indent_level -1
-    W "writeNodalCoordinatesOnGroups3"
     WriteString "${s}End Nodes"
     WriteString "\n"
 }

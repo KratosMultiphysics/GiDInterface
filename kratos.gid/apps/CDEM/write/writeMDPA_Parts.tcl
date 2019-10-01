@@ -1,8 +1,11 @@
 proc DEM::write::WriteMDPAParts { } {
+    W "aqui si que deberia entrar"
     variable last_property_id
+
     # Prepare properties
-    write::processMaterials "" $last_property_id
+    #write::processMaterials "" $last_property_id   # Aqui es la segunda vez que se llama. PQ?
     set last_property_id [expr $last_property_id + [dict size $::write::mat_dict]]
+
     # Headers
     write::writeModelPartData
 
@@ -308,6 +311,9 @@ proc DEM::write::GetSpheresGroups { } {
 proc DEM::write::writeMaterialsParts { } {
     variable partsProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
+    W "writeMaterialsParts"
+    W $xp1
+
     set partsProperties $::write::mat_dict
     #set ::write::mat_dict [dict create]
     #write::processMaterials $xp1
@@ -324,9 +330,46 @@ proc DEM::write::writeMaterialsParts { } {
             if {$prop in $printable} {
                 write::WriteString "    $prop $val"
             }
+            if {${prop} eq "ConstitutiveLaw"} {
+                        set propname $const_law_write_name
+                        set value [[Model::getConstitutiveLaw [dict get $partsProperties $group $prop]] getKratosName]
+                    } else {
+                        set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
+                        set value [dict get $partsProperties $group $prop]
+                    }
         }
         write::WriteString "End Properties\n"
     }
+
+
+    #write::writeMaterials [GetAttribute validApps]
+
+    # foreach material [dict keys $partsProperties] {
+    #     set matapp [dict get $partsProperties $material APPID]
+    #     if {$appid eq "" || $matapp in $appid} {
+    #         set s [mdpaIndent]
+    #         WriteString "${s}Begin Properties [dict get $partsProperties $material MID]"
+    #         incr current_mdpa_indent_level
+    #         set s [mdpaIndent]
+    #         foreach prop [dict keys [dict get $partsProperties $material] ] {
+    #             if {$prop ni $exclusionList} {
+    #                 if {${prop} eq "ConstitutiveLaw"} {
+    #                     set propname $const_law_write_name
+    #                     set value [[Model::getConstitutiveLaw [dict get $partsProperties $material $prop]] getKratosName]
+    #                 } else {
+    #                     set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
+    #                     set value [dict get $partsProperties $material $prop]
+    #                 }
+    #                 WriteString "${s}$propname $value"
+    #             }
+    #         }
+    #         incr current_mdpa_indent_level -1
+    #         set s [mdpaIndent]
+    #         WriteString "${s}End Properties"
+    #         WriteString ""
+    #     }
+    # }
+
 
     # set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
     # set partsProperties $::write::mat_dict

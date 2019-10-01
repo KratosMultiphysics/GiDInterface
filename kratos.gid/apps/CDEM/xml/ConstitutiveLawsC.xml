@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstitutiveLaws>
+    <!-- contact laws-->
+    <CLaw n="DEM_D_Hertz_viscous_Coulomb" pn="CHertz" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="CDEM" help=" " OutputMode="Material">
+        <inputs></inputs>
+        <parameter n="111DENSITY" pn="111Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+        <parameter n="222DENSITY" pn="222Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+        <parameter n="333DENSITY" pn="333Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+        <outputs></outputs>
+    </CLaw>
+    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+          help="Linear elastic behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29"/>
+        </inputs>
+        <outputs>
+
+        </outputs>
+    </CLaw>
+</ConstitutiveLaws>

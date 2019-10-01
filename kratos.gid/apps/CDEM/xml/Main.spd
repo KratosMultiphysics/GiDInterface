@@ -6,6 +6,6 @@
     <include n="Conditions" active="1" path="apps/DEM/xml/Conditions.spd"/>
     <include n="SolutionStrategy"  active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
     <include n="Results"  active="1" path="apps/CDEM/xml/Results.spd"/>
-    <include n="materials" active="1" path="apps/DEM/xml/Materials.spd"/>
+    <include n="materials" active="1" path="apps/CDEM/xml/Materials.spd"/>
   </container>
 
