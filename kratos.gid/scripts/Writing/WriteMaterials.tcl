@@ -73,8 +73,10 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 set name [$valueNode getAttribute n]
                 set state [get_domnode_attribute $valueNode state]
                 if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
+                    W "processMaterials12"
                     # All the introduced values are translated to 'm' and 'kg' with the help of this function
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
+                    W $value
 
                     # if {[string is double $value]} {
                         #     set value [format "%13.5E" $value]

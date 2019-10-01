@@ -20,6 +20,7 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Element connectivities
     write::writeElementConnectivities
+    W $output_type
 
     # Begin NodalData RADIUS
     writeSphereRadius
@@ -327,16 +328,17 @@ proc DEM::write::writeMaterialsParts { } {
         #dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
         #dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
         foreach {prop val} [dict get $partsProperties $group] {
+            write::WriteString "    $prop $val"
             if {$prop in $printable} {
                 write::WriteString "    $prop $val"
             }
-            if {${prop} eq "ConstitutiveLaw"} {
-                        set propname $const_law_write_name
-                        set value [[Model::getConstitutiveLaw [dict get $partsProperties $group $prop]] getKratosName]
-                    } else {
-                        set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
-                        set value [dict get $partsProperties $group $prop]
-                    }
+            # if {${prop} eq "ConstitutiveLaw"} {
+            #             set propname $const_law_write_name
+            #             set value [[Model::getConstitutiveLaw [dict get $partsProperties $group $prop]] getKratosName]
+            #         } else {
+            #             set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
+            #             set value [dict get $partsProperties $group $prop]
+            #         }
         }
         write::WriteString "End Properties\n"
     }

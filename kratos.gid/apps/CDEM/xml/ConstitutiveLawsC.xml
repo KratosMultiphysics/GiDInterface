@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!-- contact laws-->
-    <CLaw n="DEM_D_Hertz_viscous_Coulomb" pn="CHertz" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="CDEM" help=" " OutputMode="Material">
+    <CLaw n="DEM_D_Hertz_viscous_Coulomb" pn="CHertz" ProductionReady="ProductionReady"
+          help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Parameters" >
         <inputs></inputs>
         <parameter n="111DENSITY" pn="111Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
         <parameter n="222DENSITY" pn="222Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
