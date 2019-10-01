@@ -210,30 +210,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
 
     # Displacement 3D
     if {$nd eq "3D"} {
-        # 3D CASE NOT IMPLEMENTED YET
-        # set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC3D'\]"
-        # set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_full]
-        # $fluidDisplacementNode setAttribute ov surface
-        # set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
-        # foreach {prop val} $props {
-        #      set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-        #      if {$propnode ne "" } {
-        #           $propnode setAttribute v $val
-        #      } else {
-        #         W "Warning - Couldn't find property FluidFixedDisplacement_full $prop"
-        #      }
-        # }
-        # set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_lat]
-        # $fluidDisplacementNode setAttribute ov surface
-        # set props [list constrainedX 0 constrainedY 0 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
-        # foreach {prop val} $props {
-        #      set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-        #      if {$propnode ne "" } {
-        #           $propnode setAttribute v $val
-        #      } else {
-        #         W "Warning - Couldn't find property FluidFixedDisplacement_lat $prop"
-        #      }
-        # }
+        
     } {
         set gname "FluidALEMeshFreeX//Total"
         GiD_Groups create $gname
@@ -243,7 +220,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
-        set props [list constrainedX 0 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list selector_component_X Not selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -259,7 +236,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         spdAux::AddIntervalGroup FluidALEMeshFixXY $gname
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
-        set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z Not.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -274,7 +251,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         spdAux::AddIntervalGroup Cylinder $gname
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
-        set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -350,7 +327,8 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement $gname]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
-    set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {

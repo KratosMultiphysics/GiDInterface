@@ -6,12 +6,12 @@
 	  return [Structural::xml::ProcGetSolutionStrategiesStructural $domNode $args]
 	  ]]>
 	</proc>
-		  			
-    <proc n='CheckNodalConditionStateSolid' args='args'>
+	
+    <proc n='CheckNodalConditionStateStructural' args='args'>
 	  <![CDATA[
-	  return [Structural::xml::ProcCheckNodalConditionStateSolid $domNode $args]
+	  return [Structural::xml::ProcCheckNodalConditionStateStructural $domNode $args]
 	  ]]>
-	</proc>		
+	</proc>	
 
 	<proc n='CheckGeometrySolid' args='args'>
 		<![CDATA[

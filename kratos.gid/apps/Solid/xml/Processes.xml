@@ -14,7 +14,7 @@
            kratos_module="KratosMultiphysics.SolidMechanicsApplication"
 	   help="This process fixes the selected components of a given vector variable">
     <inputs>
-      <parameter n="value" pn="Value" type="vector" vectorType="double" enabled="1" function="1" v="0.0,0.0,0.0" has_units="1" help="Load value"/>
+      <parameter n="component" pn="Value" type="vector" vectorType="double" enabled="1" function="1" v="0.0,0.0,0.0" has_units="1" help="Load value"/>
       <parameter n="compound_assignment" pn="Operation" type="combo" v="direct" values="direct,addition,subtraction,multiplication,division" pvalues="Assign,Add,Subtract,Multiply,Divide" help="operation performed with the assigment"/>
     </inputs>
   </Process>

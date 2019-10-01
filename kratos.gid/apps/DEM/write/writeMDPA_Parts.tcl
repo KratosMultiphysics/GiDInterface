@@ -381,7 +381,7 @@ proc DEM::write::PrepareCustomMeshedParts { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        set prev_ov [$group @ov]
+        if {[$group hasAttribute ov]} {set prev_ov [$group @ov]} {set prev_ov [[$group parent] @ov]} 
         dict set restore_ov $groupid $prev_ov
         $group setAttribute ov volume
     }
