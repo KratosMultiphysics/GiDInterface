@@ -77,6 +77,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     # All the introduced values are translated to 'm' and 'kg' with the help of this function
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
                     W $value
+                    # estos valores no son los que hay dentro de la ley.
 
                     # if {[string is double $value]} {
                         #     set value [format "%13.5E" $value]
