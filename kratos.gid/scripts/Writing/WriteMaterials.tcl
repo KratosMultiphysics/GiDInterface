@@ -28,10 +28,10 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
 
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
-            
-            set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
-            set element_name [write::getValueByNode $element_node "force"]
-            
+
+            # set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
+            # set element_name [write::getValueByNode $element_node "force"]
+
             set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
             set claw [write::getValueByNode $claw_node "force"]
             set const_law [Model::getConstitutiveLaw $claw]
