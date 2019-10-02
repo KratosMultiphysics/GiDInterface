@@ -82,24 +82,18 @@ proc ::DEM::examples::AssignToTree { } {
 
     # Inlet
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
-    set inlets [list Total 2]
-    ErasePreviousIntervals
-    foreach {interval_name modulus} $inlets {
-        GiD_Groups create "Inlet//$interval_name"
-        GiD_Groups edit state "Inlet//$interval_name" hidden
-        spdAux::AddIntervalGroup Inlet "Inlet//$interval_name"
-        set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet//$interval_name"]
-        $inletNode setAttribute ov surface
-        set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.1 VelocityModulus $modulus Interval $interval_name DirectionVector "0.0,0.0,-1.0"]
-        foreach {prop val} $props {
-            set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-            if {$propnode ne "" } {
-                $propnode setAttribute v $val
-            } else {
-                W "Warning - Couldn't find property Inlet $prop"
-            }
+    set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
+    $inletNode setAttribute ov surface
+    set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.1 VelocityModulus 2.0 DirectionVector "0.0,0.0,-1.0"]
+    foreach {prop val} $props {
+        set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property Inlet $prop"
         }
     }
+    
 
     # General data
     # Time parameters
