@@ -204,14 +204,15 @@ proc DEM::write::writeInletMeshes { } {
                 if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
                     if {[dict get $inletProperties $groupid RandomOrientation] == "Yes"} {
                         set random_orientation 1
-                        }
-
+                    } else {
+                        set random_orientation 0
+                        set orientation_x [dict get $inletProperties $groupid OrientationX]
+                        set orientation_y [dict get $inletProperties $groupid OrientationY]
+                        set orientation_z [dict get $inletProperties $groupid OrientationZ]
+                        set orientation_w [dict get $inletProperties $groupid OrientationW]
+                        write::WriteString "        ORIENTATION \[4\] ($orientation_x, $orientation_y, $orientation_z, $orientation_w)"
+                    }
                     write::WriteString "        RANDOM_ORIENTATION $random_orientation"
-                    set orientation_x [dict get $inletProperties $groupid OrientationX]
-                    set orientation_y [dict get $inletProperties $groupid OrientationY]
-                    set orientation_z [dict get $inletProperties $groupid OrientationZ]
-                    set orientation_w [dict get $inletProperties $groupid OrientationW]
-                    write::WriteString "        ORIENTATION \[4\] ($orientation_x, $orientation_y, $orientation_z, $orientation_w)"
                     }
 
                 write::WriteString "    End SubModelPartData"

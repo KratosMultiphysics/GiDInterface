@@ -18,14 +18,11 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Element connectivities (Groups on STParts)
     PrepareCustomMeshedParts
-    write::writeElementConnectivities; # Begin elements SphericContinuumParticle3D
+    write::writeElementConnectivities;
     RestoreCustomMeshedParts
 
     # Element radius
     writeSphereRadius; # Begin NodalData RADIUS
-
-    # Begin NodalData COHESIVE_GROUP
-    # Begin NodalData SKIN_SPHERE
 
     # SubmodelParts
     write::writePartSubModelPart
@@ -381,7 +378,7 @@ proc DEM::write::PrepareCustomMeshedParts { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        if {[$group hasAttribute ov]} {set prev_ov [$group @ov]} {set prev_ov [[$group parent] @ov]} 
+        if {[$group hasAttribute ov]} {set prev_ov [$group @ov]} {set prev_ov [[$group parent] @ov]}
         dict set restore_ov $groupid $prev_ov
         $group setAttribute ov volume
     }

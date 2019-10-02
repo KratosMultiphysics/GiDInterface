@@ -23,6 +23,7 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Begin NodalData COHESIVE_GROUP
     writeCohesiveGroups
+
     # Begin NodalData SKIN_SPHERE
 
     # SubmodelParts
