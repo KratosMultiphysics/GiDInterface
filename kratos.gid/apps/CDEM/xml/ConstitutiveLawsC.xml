@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!-- contact laws-->
-    <CLaw n="DEM_D_Hertz_viscous_Coulomb" pn="CHertz" ProductionReady="ProductionReady"
+    <CLaw n="DEM_KDEM2D" pn="KDEM2D" ProductionReady="ProductionReady"
           help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials" >
         <inputs></inputs>
-        <parameter n="111DENSITY" pn="111Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-        <parameter n="222DENSITY" pn="222Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
-        <parameter n="333DENSITY" pn="333Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
+            <parameter n="CONTACT_TAU_ZERO" pn="Tangential Strength" unit_magnitude="Pressure" units="MPa" v="25"/>
+            <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" unit_magnitude="Pressure" units="MPa" v="5"/>
+            <parameter n="CONTACT_INTERNAL_FRICC" pn="Internal Friction Coeff" v="1"/>
         <outputs></outputs>
     </CLaw>
+
+    <CLaw n="DEM_KDEM" pn="KDEM3D" ProductionReady="ProductionReady"
+          help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials" >
+        <inputs></inputs>
+            <parameter n="CONTACT_TAU_ZERO" pn="Tangential Strength" unit_magnitude="Pressure" units="MPa" v="25"/>
+            <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" unit_magnitude="Pressure" units="MPa" v="5"/>
+            <parameter n="CONTACT_INTERNAL_FRICC" pn="Internal Friction Coeff" v="1"/>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="DEM_KDEM_Rankine2D" pn="RANKINE2D" ProductionReady="ProductionReady"
+          help="Not implemented" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials" >
+        <inputs></inputs>
+            <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" unit_magnitude="Pressure" units="MPa" v="5"/>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="DEM_KDEM_Rankine" pn="RANKINE" ProductionReady="ProductionReady"
+          help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials" >
+        <inputs></inputs>
+            <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" unit_magnitude="Pressure" units="MPa" v="5"/>
+        <outputs></outputs>
+    </CLaw>
+
+
+
     <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>

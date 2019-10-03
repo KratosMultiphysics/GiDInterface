@@ -257,11 +257,6 @@
           </parameter>
         </parameter>
 
-        <parameter n="InletStartTime" parent="true" pn="Inlet start time" type="double" v="0.0" units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
-        <parameter n="InletStopTime" parent="true" pn="Inlet stop time" type="double" v="100.0" units="s" unit_magnitude="T" help="Inlet stop time" show_in_window="0"/>
-        <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
-        <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
-        <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
         <parameter n="InletStartTime"          parent="true" pn="Inject start"         type="double" v="0.0"    units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
         <parameter n="InletStopTime"           parent="true" pn="Inject stop"          type="double" v="100.0"  units="s" unit_magnitude="T" help="Inlet stop time" show_in_window="0"/>
         <parameter n="ParticleDiameter"        parent="true" pn="Diameter"                 type="double" v="1.0"    units="m" unit_magnitude="L" show_in_window="0"/>
