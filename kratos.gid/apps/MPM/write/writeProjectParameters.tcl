@@ -76,7 +76,7 @@ proc ::MPM::write::getParametersDict { } {
     # Output configuration
     set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
     set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
-    dict set body_output_configuration_dict python_module mpm_gid_output_process
+    dict set body_output_configuration_dict python_module particle_gid_output_process
     dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
     dict set body_output_configuration_dict process_name ParticleMPMGiDOutputProcess
     dict set body_output_configuration_dict Parameters model_part_name MPM_Material

@@ -244,16 +244,16 @@
           <parameter n="InletMassFlow" parent="Kilograms" pn="Mass flow (Kg/s)" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" show_in_window="0"/>
         </parameter>
 
-        <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="SphericParticle3D" values="SphericParticle3D,Cluster3D,SingleSphereCluster" pvalues="Sphere,Cluster,SingleSphereCluster" help="Choose if you want this Inlet to insert spheres or clusters" show_in_window="0">
-          <parameter n="Excentricity" parent="SingleSphereCluster" type="double" v="0.1" pn="Excentricity (%)" help="% of the radius" show_in_window="0"/>
-          <parameter n="ProbabilityDistributionOfExcentricity" parent="SingleSphereCluster" type="combo" v="normal" pn="Probability Distribution of excentricity" values="normal,lognormal" help="Choose the probablility distribution of the diameter" show_in_window="0"/>
-          <parameter n="StandardDeviationOfExcentricity" parent="SingleSphereCluster" type="double" v="0.1" pn="Standard Deviation of excentricity" help="Standard Deviation of the Diameter, assuming Normal Distribution. If 0.0 is chosen, a uniform diameter distribution will be created" show_in_window="0"/>
-          <parameter n="ClusterType" pn="Cluster Type" parent="Cluster3D" type="combo" v="Rock1Cluster3D" values="Rock1Cluster3D,Rock2Cluster3D,Ballast1Cluster3D,Ballast1Cluster3Dred,Ballast2Cluster3D,Ballast2Cluster3Dred,Ballast3Cluster3D,Ballast3Cluster3Dred,Ballast4Cluster3D,Ballast4Cluster3Dred,Ballast5Cluster3D,Ballast2Cluster5Dred,Ballast6Cluster3D,Ballast6Cluster3Dred,LineCluster3D,RingCluster3D,SoyBeanCluster3D,SoyBean3Cluster3D,CornKernelCluster3D,CornKernel3Cluster3D,Wheat5Cluster3D,CapsuleCluster3D" help="Choose the shape of the particle or cluster of particles" show_in_window="0"/>
-          <parameter n="RandomOrientation" pn="Random Orientation" parent="Cluster3D" type="combo" v="No" values="Yes,No" help="Random Orientation" show_in_window="0">
-            <parameter n="OrientationX" pn="Orientation X" parent="Yes" v="0.0" type="combo" help="First parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationY" pn="Orientation Y" parent="Yes" v="0.0" type="double" help="Second parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationZ" pn="Orientation Z" parent="Yes" v="0.0" type="double" help="Third parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationW" pn="Orientation W" parent="Yes" v="1.0" type="double" help="Real part of the orientation quaternion" show_in_window="0"/>
+        <parameter n="InletElementType"   pn="Element Type"    parent="true"                type="combo"  v="SphericParticle3D"  values="SphericParticle3D,Cluster3D,SingleSphereCluster"  pvalues="Sphere,Cluster,SingleSphereCluster" help="Choose if you want this Inlet to insert spheres or clusters" show_in_window="0">
+          <parameter n="Excentricity"                          parent="SingleSphereCluster" type="double" v="0.1"    pn="Excentricity (%)"                            help="% of the radius" show_in_window="0"/>
+          <parameter n="ProbabilityDistributionOfExcentricity" parent="SingleSphereCluster" type="combo"  v="normal" pn="Probability Distribution of excentricity"    values="normal,lognormal" help="Choose the probablility distribution of the diameter" show_in_window="0"/>
+          <parameter n="StandardDeviationOfExcentricity"       parent="SingleSphereCluster" type="double" v="0.1"    pn="Standard Deviation of excentricity"          help="Standard Deviation of the Diameter, assuming Normal Distribution. If 0.0 is chosen, a uniform diameter distribution will be created" show_in_window="0"/>
+          <parameter n="ClusterType"      pn="Cluster Type"    parent="Cluster3D"           type="combo"  v="Rock1Cluster3D"     values="Rock1Cluster3D,Rock2Cluster3D,Ballast1Cluster3D,Ballast1Cluster3Dred,Ballast2Cluster3D,Ballast2Cluster3Dred,Ballast3Cluster3D,Ballast3Cluster3Dred,Ballast4Cluster3D,Ballast4Cluster3Dred,Ballast5Cluster3D,Ballast2Cluster5Dred,Ballast6Cluster3D,Ballast6Cluster3Dred,LineCluster3D,RingCluster3D,SoyBeanCluster3D,SoyBean3Cluster3D,CornKernelCluster3D,CornKernel3Cluster3D,Wheat5Cluster3D,CapsuleCluster3D" help="Choose the shape of the particle or cluster of particles" show_in_window="0"/>
+          <parameter n="RandomOrientation" pn="Random Orientation" parent="Cluster3D"       type="combo"  v="Yes"    values="Yes,No"                                  help="Random Orientation" show_in_window="0">
+            <parameter n="OrientationX"    pn="Orientation X"      parent="No" v="0.0"     type="combo"  help="First parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
+            <parameter n="OrientationY"    pn="Orientation Y"      parent="No" v="0.0"     type="double" help="Second parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
+            <parameter n="OrientationZ"    pn="Orientation Z"      parent="No" v="0.0"     type="double" help="Third parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
+            <parameter n="OrientationW"    pn="Orientation W"      parent="No" v="1.0"     type="double" help="Real part of the orientation quaternion" show_in_window="0"/>
           </parameter>
         </parameter>
 
@@ -262,6 +262,11 @@
         <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
         <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
         <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
+        <parameter n="InletStartTime"          parent="true" pn="Inject start"         type="double" v="0.0"    units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
+        <parameter n="InletStopTime"           parent="true" pn="Inject stop"          type="double" v="100.0"  units="s" unit_magnitude="T" help="Inlet stop time" show_in_window="0"/>
+        <parameter n="ParticleDiameter"        parent="true" pn="Diameter"                 type="double" v="1.0"    units="m" unit_magnitude="L" show_in_window="0"/>
+        <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo"  v="normal" values="normal,lognormal" show_in_window="0"/>
+        <parameter n="StandardDeviation"       parent="true" pn="Standard deviation"       type="double" v="0.0"    units="m" unit_magnitude="L" show_in_window="0"/>
 
         <!-- TO BE FIXED JG!insert material BUT not constitutive law in the tree -->
         <parameter n="ConstitutiveLaw" special_command="DEM::xml::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="InitialConditions" pn="Initial Conditions" un="CNVDFFNodalConditions" icon="air" open_window="0">
-	  <dynamicnode command="spdAux::injectNodalConditions" args="App ConvectionDiffusion"/>
+	  <dynamicnode command="spdAux::injectNodalConditions" args="App ConvectionDiffusion  can_be_initial true"/>
 </container>

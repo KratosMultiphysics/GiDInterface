@@ -35,12 +35,9 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
             set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
-            W "processMaterials6"
-
-            #W $element_node
-             # this is not being used
-            #set element_name [write::getValueByNode $element_node "force"]
-            W "processMaterials7"
+            if {$element_node ne ""} {
+                set element_name [write::getValueByNode $element_node "force"]
+            }
 
             set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
             set claw [write::getValueByNode $claw_node "force"]

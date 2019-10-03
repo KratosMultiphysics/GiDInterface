@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-  <ConditionItem n="DEM-FEM-Wall" pn="DEM-FEM Wall" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface" ProcessName="DEM-FEM-Wall-Process" help="Load on surfaces, load vector referred to global axes" VariableName="WALL">
+  <ConditionItem n="DEM-FEM-Wall" pn="DEM-FEM Wall" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface" ProcessName="DEM-FEM-Wall-Process" help="" VariableName="WALL">
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
       <item GeometryType="Triangle" nodes="6" KratosName="WallCondition3D6N"/>

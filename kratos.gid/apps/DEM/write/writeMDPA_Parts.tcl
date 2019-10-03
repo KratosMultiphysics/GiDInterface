@@ -19,14 +19,11 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Element connectivities (Groups on STParts)
     PrepareCustomMeshedParts
-    write::writeElementConnectivities; # Begin elements SphericContinuumParticle3D
+    write::writeElementConnectivities;
     RestoreCustomMeshedParts
 
     # Element radius
     writeSphereRadius; # Begin NodalData RADIUS
-
-    # Begin NodalData COHESIVE_GROUP
-    # Begin NodalData SKIN_SPHERE
 
     # SubmodelParts
     write::writePartSubModelPart
@@ -381,7 +378,7 @@ proc DEM::write::PrepareCustomMeshedParts { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        set prev_ov [$group @ov]
+        if {[$group hasAttribute ov]} {set prev_ov [$group @ov]} {set prev_ov [[$group parent] @ov]}
         dict set restore_ov $groupid $prev_ov
         # We must force it to be volume/surface because anything applied to Parts will be converted into Spheres/Circles
         if {$::Model::SpatialDimension eq "3D"} {
