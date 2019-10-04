@@ -1,9 +1,8 @@
 proc DEM::write::WriteMDPAParts { } {
-    W "aqui si que deberia entrar"
     variable last_property_id
 
     # Prepare properties
-    #write::processMaterials "" $last_property_id   # Aqui es la segunda vez que se llama. PQ?
+    write::processMaterials "" $last_property_id;   # TODO Aqui es la segunda vez que se llama. PQ?
     set last_property_id [expr $last_property_id + [dict size $::write::mat_dict]]
 
     # Headers
@@ -310,77 +309,24 @@ proc DEM::write::GetSpheresGroups { } {
 proc DEM::write::writeMaterialsParts { } {
     variable partsProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
-    W "writeMaterialsParts"
-    W $xp1
-
     set partsProperties $::write::mat_dict
-    #set ::write::mat_dict [dict create]
-    #write::processMaterials $xp1
-    #set partsProperties $::write::mat_dict
-    #set ::write::mat_dict $old_mat_dict
-    # WV inletProperties
-
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME CONTACT_SIGMA_MIN]
+    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS CONTACT_SIGMA_MIN CONTACT_TAU_ZERO CONTACT_INTERNAL_FRICC ConstitutiveLaw]
     foreach group [dict keys $partsProperties] {
-	write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-	#dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
-	#dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
-	foreach {prop val} [dict get $partsProperties $group] {
-	    write::WriteString "    $prop $val"
-	    if {$prop in $printable} {
-		write::WriteString "    $prop $val"
-	    }
-	    # if {${prop} eq "ConstitutiveLaw"} {
-	    #             set propname $const_law_write_name
-	    #             set value [[Model::getConstitutiveLaw [dict get $partsProperties $group $prop]] getKratosName]
-	    #         } else {
-	    #             set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
-	    #             set value [dict get $partsProperties $group $prop]
-	    #         }
-	}
-	write::WriteString "End Properties\n"
+        write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
+        foreach {prop val} [dict get $partsProperties $group] {
+            if {$prop in $printable} {
+                if {$prop eq "ConstitutiveLaw"} {
+                    write::WriteString "    DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME $val"
+                } else {
+                    write::WriteString "    $prop $val"
+                }
+            }
+        }
+        if {$::Model::SpatialDimension eq "2D"} {
+            write::WriteString "    DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Linear_viscous_Coulomb2D"
+        } else {
+            write::WriteString "    DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Linear_viscous_Coulomb"}
+
+        write::WriteString "End Properties\n"
     }
-
-
-    #write::writeMaterials [GetAttribute validApps]
-
-    # foreach material [dict keys $partsProperties] {
-    #     set matapp [dict get $partsProperties $material APPID]
-    #     if {$appid eq "" || $matapp in $appid} {
-    #         set s [mdpaIndent]
-    #         WriteString "${s}Begin Properties [dict get $partsProperties $material MID]"
-    #         incr current_mdpa_indent_level
-    #         set s [mdpaIndent]
-    #         foreach prop [dict keys [dict get $partsProperties $material] ] {
-    #             if {$prop ni $exclusionList} {
-    #                 if {${prop} eq "ConstitutiveLaw"} {
-    #                     set propname $const_law_write_name
-    #                     set value [[Model::getConstitutiveLaw [dict get $partsProperties $material $prop]] getKratosName]
-    #                 } else {
-    #                     set propname [expr { ${prop} eq "ConstitutiveLaw" ? $const_law_write_name : $prop}]
-    #                     set value [dict get $partsProperties $material $prop]
-    #                 }
-    #                 WriteString "${s}$propname $value"
-    #             }
-    #         }
-    #         incr current_mdpa_indent_level -1
-    #         set s [mdpaIndent]
-    #         WriteString "${s}End Properties"
-    #         WriteString ""
-    #     }
-    # }
-
-
-    # set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
-    # set partsProperties $::write::mat_dict
-    # set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME CONTACT_SIGMA_MIN]
-    # foreach group [dict keys $partsProperties] {
-    #     write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-    #     foreach {prop val} [dict get $partsProperties $group] {
-    #         if {$prop in $printable} {
-    #             write::WriteString "    $prop $val"
-    #         }
-    #     }
-    #     write::WriteString "End Properties\n"
-    # }
 }

@@ -1,9 +1,12 @@
+
 # Project Parameters
-proc ::CDEM::write::getParametersEvent { } {
 
-set project_parameters_dict [dict create]
+proc CDEM::write::getParametersDict { } {
+    set project_parameters_dict [dict create]
 
-    dict set project_parameters_dict "Dimension"                            [expr 3]
+    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]
+    } else {set dimension [expr 3]}
+    dict set project_parameters_dict "Dimension"                            [expr $dimension]
     dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
     dict set project_parameters_dict "BoundingBoxOption"                    [write::getValue Boundingbox UseBB]
     dict set project_parameters_dict "AutomaticBoundingBoxOption"           [write::getValue Boundingbox AutomaticBB]
@@ -37,7 +40,26 @@ set project_parameters_dict [dict create]
     dict set project_parameters_dict "RotationOption"                       [write::getValue AdvOptions CalculateRotations]
     dict set project_parameters_dict "CleanIndentationsOption"              [write::getValue AdvOptions CleanIndentations]
     set strategy_parameters_dict [dict create]
+
+    # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
+    set ElementType SphericContPartDEMElement3D
+	if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
+	    set dem_strategy "sphere_strategy"
+	} elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
+	    set dem_strategy "continuum_sphere_strategy"
+	} elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
+	   set dem_strategy "thermal_sphere_strategy"
+	} elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
+	   set dem_strategy "thermal_continuum_sphere_strategy"
+	} elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
+	   set dem_strategy "thermal_continuum_sphere_strategy"
+	} elseif {$ElementType eq "IceContPartDEMElement3D"} {
+	   set dem_strategy "ice_continuum_sphere_strategy"
+	}
+
+
     dict set strategy_parameters_dict "RemoveBallsInitiallyTouchingWalls"   [write::getValue AdvOptions RemoveParticlesInWalls]
+    dict set strategy_parameters_dict "strategy"                            $dem_strategy
     dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
 
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
@@ -52,12 +74,14 @@ set project_parameters_dict [dict create]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]
     set time_params [DEM::write::GetTimeSettings]
         set MaxTimeStep [dict get $time_params DeltaTime]
+    # TODO: MAXTIMESTEP is get from General and it should be getting its value from DEM block
     dict set project_parameters_dict "MaxTimeStep"                          $MaxTimeStep
         set FinalTime [dict get $time_params EndTime]
     dict set project_parameters_dict "FinalTime"                            $FinalTime
-    dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
-    dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
-    #dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
+    # TODO: check for inconsistencies in DEMTIMEPARAMETERS  UN
+    # dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
+    # dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
+    dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 
     # Output timestep
@@ -93,13 +117,38 @@ set project_parameters_dict [dict create]
     dict set project_parameters_dict "PostParticleMoment"               [write::getValue PostPrint ParticleMoment]
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint EulerAngles]
     dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue PostPrint RollingResistanceMoment]
-    dict set project_parameters_dict "problem_name"                     [Kratos::GetModelName]
+    #dict set project_parameters_dict "PostNodalArea"                    [write::getValue PostPrint NodalArea]
+    #dict set project_parameters_dict "PostRHS"                          [write::getValue PostPrint Rhs]
+    #dict set project_parameters_dict "PostDampForces"                   [write::getValue PostPrint DampForces]
+    #dict set project_parameters_dict "PostAppliedForces"                [write::getValue PostPrint AppliedForces]
+    #dict set project_parameters_dict "PostGroupId"                      [write::getValue PostPrint GroupId]
+    #dict set project_parameters_dict "PostExportId"                     [write::getValue PostPrint ExportId]
+    dict set project_parameters_dict "problem_name" [Kratos::GetModelName]
 
     return $project_parameters_dict
 }
 
+proc CDEM::write::GetTimeSettings { } {
+    set result [dict create]
+    dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
+    dict set result EndTime [write::getValue DEMTimeParameters EndTime]
+    return $result
+}
+
+proc CDEM::write::GetGravity { } {
+    set gravity_value [write::getValue DEMGravity GravityValue]
+    set gravity_X [write::getValue DEMGravity Cx]
+    set gravity_Y [write::getValue DEMGravity Cy]
+    set gravity_Z [write::getValue DEMGravity Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+
+    return [list $gx $gy $gz]
+}
 
 proc CDEM::write::writeParametersEvent { } {
-    write::SetParallelismConfiguration
-    write::WriteJSON [getParametersEvent]
+    # write::SetParallelismConfiguration;  # Node is being deleted at init
+    write::WriteJSON [getParametersDict]
 }

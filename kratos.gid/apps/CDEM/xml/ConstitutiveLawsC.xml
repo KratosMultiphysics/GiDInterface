@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!-- contact laws-->
-    <CLaw n="DEM_KDEM2D" pn="KDEM2D" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Parameters">
+    <CLaw n="DEM_KDEM2D" pn="KDEM2D" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
         <inputs>
-            <parameter n="CONTACT_TAU_ZERO" pn="Tangential Strength" unit_magnitude="Pressure" units="MPa" v="25"/>
-            <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" unit_magnitude="Pressure" units="MPa" v="5"/>
+            <parameter n="CONTACT_TAU_ZERO" pn="Tangential Strength" units="MPa" v="25"/>
+            <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" units="MPa" v="5"/>
             <parameter n="CONTACT_INTERNAL_FRICC" pn="Internal Friction Coeff" v="1"/>
         </inputs>
         <outputs></outputs>
