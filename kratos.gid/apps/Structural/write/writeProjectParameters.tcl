@@ -29,6 +29,7 @@ proc Structural::write::getOldParametersDict { } {
         set params [dict create]
         dict set params "result_file_name" [Kratos::GetModelName]
         dict set params "animation_steps" 20
+        dict set params "file_format" "gid"
         dict set params "label_type" "frequency"
         dict set eigen_process_dict "Parameters" $params
     }
@@ -202,7 +203,7 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_parameters_dict assume_master_slave $val
 
     dict set contact_parameters_dict contact_type [write::getValue STContactParams contact_type]
-    
+
     dict set contact_process_dict Parameters $contact_parameters_dict
 
     lappend contacts $contact_process_dict
