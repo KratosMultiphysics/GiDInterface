@@ -296,10 +296,6 @@ proc Structural::write::writeHinges { } {
 }
 
 proc Structural::write::initLocalWriteConfiguration { } {
-
-    if {[usesContact]} {
-         SetAttribute main_script_file "KratosContactStructural.py"
-    }
 }
 
 proc Structural::write::usesContact { } {
