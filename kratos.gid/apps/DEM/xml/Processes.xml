@@ -346,6 +346,19 @@
     </inputs>
   </Process>
 
+   <Process n="Cohesive2D-Process" pn="Define bonded domains" python_module=" " kratos_module="KratosMultiphysics" check="DirectorVectorNonZero direction">
+    <inputs>
+      <!-- <parameter n="WhatMdpa" pn="Destination mdpa" type="combo" values="DEM,DEM-Inlet,FEM" help="Decide what mpda file you want this SubModelPart to be added to"/> -->
+    </inputs>
+  </Process>
+
+ <Process n="Cohesive-Process" pn="Define bonded domains" python_module=" " kratos_module="KratosMultiphysics" check="DirectorVectorNonZero direction">
+    <inputs>
+      <!-- <parameter n="WhatMdpa" pn="Destination mdpa" type="combo" values="DEM,DEM-Inlet,FEM" help="Decide what mpda file you want this SubModelPart to be added to"/> -->
+    </inputs>
+  </Process>
+
+
 
 
 

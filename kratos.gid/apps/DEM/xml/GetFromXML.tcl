@@ -24,9 +24,15 @@ proc DEM::xml::MultiAppEvent {args} {
 }
 
 proc DEM::xml::CustomTree { args } {
-    # set root [customlib::GetBaseRoot]
+    set root [customlib::GetBaseRoot]
     spdAux::SetValueOnTreeItem values OpenMP ParallelType
     spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
+
+    set result_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-Cohesive'\]"]
+	if { $result_node ne "" } {$result_node delete}
+
+    set result_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-Cohesive2D'\]"]
+	if { $result_node ne "" } {$result_node delete}
 
     # # Graphs in output settings
     # if {[$root selectNodes "[spdAux::getRoute DEMResults]/condition\[@n='Graphs'\]"] eq ""} {

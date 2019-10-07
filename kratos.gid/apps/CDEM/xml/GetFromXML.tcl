@@ -22,7 +22,9 @@ proc CDEM::xml::getUniqueName {name} {
 }
 
 proc CDEM::xml::CustomTree { args } {
-    DEM::xml::CustomTree
+    spdAux::SetValueOnTreeItem values OpenMP ParallelType
+    spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
+
     set root [customlib::GetBaseRoot]
     set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'ParallelType'\]"]
 	if { $result_node ne "" } {$result_node delete}

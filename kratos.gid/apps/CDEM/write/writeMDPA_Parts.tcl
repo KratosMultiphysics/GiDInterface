@@ -106,14 +106,22 @@ proc DEM::write::writeSphereRadius { } {
 
 proc DEM::write::writeCohesiveGroups { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute partscont_un]]/group"
+    if {$::Model::SpatialDimension eq "3D"} {
+        set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-Cohesive'\]/group"
+    } else {
+        set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-Cohesive2D'\]/group"
+    }
+    set cohesive_group 0
     foreach group [$root selectNodes $xp1] {
-	set groupid [$group @n]
-	set grouppid [write::GetWriteGroupName $groupid]
-	write::WriteString "Begin NodalData COHESIVE_GROUP // GUI group identifier: $grouppid"
-	GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
-	write::WriteString "End NodalData"
-	write::WriteString ""
+        incr cohesive_group
+        set groupid [$group @n]
+        set grouppid [write::GetWriteGroupName $groupid]
+        write::WriteString "Begin NodalData COHESIVE_GROUP // GUI group identifier: $grouppid"
+
+        GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 $cohesive_group\n"]
+        write::WriteString "End NodalData"
+        write::WriteString ""
+
     }
 }
 

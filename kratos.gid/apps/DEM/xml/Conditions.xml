@@ -52,6 +52,19 @@
     <outputs></outputs>
   </ConditionItem>
 
+  <ConditionItem n="DEM-Cohesive2D" pn="Bonded domains" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" ElementType="Surface" LocalSpaceDimension="1" ProcessName="Cohesive2D-Process" help="" VariableName="COHESIVE">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+   <ConditionItem n="DEM-Cohesive" pn="Bonded domains" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Volume" LocalSpaceDimension="2" ProcessName="Cohesive-Process" help="" VariableName="COHESIVE">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+
 
   <!-- <ConditionItem n="VELOCITY" pn="Velocity" ProcessName="Linear_Velocity_Process" VariableName="VELOCITY" ImplementedInApplication="DEMApplication" analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="DEM" Interval="Total">
     <TopologyFeatures></TopologyFeatures>
