@@ -101,7 +101,7 @@ proc Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
     } {return "normal"}
 }
 
-proc Structural::xml::ProcCheckGeometrySolid {domNode args} {
+proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     set ret "surface"
     if {$::Model::SpatialDimension eq "3D"} {
         set ret "surface,volume"

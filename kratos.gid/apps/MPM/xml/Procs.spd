@@ -12,7 +12,6 @@
 		return [MPM::xml::ProcCheckGeometry $domNode $args]              
 		]]>
 	</proc>
-
 	
 	<proc n='GetElements' args='args'>
 		<![CDATA[
