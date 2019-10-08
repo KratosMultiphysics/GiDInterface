@@ -27,6 +27,7 @@ proc DEM::write::WriteMDPAParts { } {
     writeCohesiveGroups
 
     # Begin NodalData SKIN_SPHERE
+    writeSkinSphereNodes
 
     # SubmodelParts
     write::writePartSubModelPart
@@ -124,6 +125,57 @@ proc DEM::write::writeCohesiveGroups { } {
 
     }
 }
+
+proc DEM::write::writeSkinSphereNodes { } {
+    # Write Skin Sphere
+    set number 1
+    set list_of_active_dem_elements ""
+	if {[GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
+        W "existe"
+        if {$::Model::SpatialDimension eq "2D"} {
+            set skin_element_ids [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE all_mesh -element_type circle] ; # Get the ids of elements in SKIN_SPHERE
+        } else {
+            set skin_element_ids [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE all_mesh -element_type sphere]
+        }
+	} else {
+        W "NO"
+	    set skin_element_ids [list]
+	}
+
+    write::WriteString "Begin NodalData SKIN_SPHERE"
+
+    GiD_WriteCalculationFile connectivities [dict create SKIN_SPHERE_DO_NOT_DELETE "%.0s %10d 0 $number\n"]
+
+    write::WriteString "End NodalData"
+	write::WriteString ""
+
+	# set only_skin_elems_ids [lindex $skin_element_ids 1]
+	# #set list_of_active_dem_elements [regsub -all {\{|\}} $list_of_active_dem_elements " "];  # UNCOMMENT THIS
+
+	# foreach active_element $list_of_active_dem_elements {
+	#     set temporal_list($active_element) 1
+	# }
+
+	# set elements_in_common_list ""
+	# foreach skin_element $only_skin_elems_ids {
+	#     if {[info exists temporal_list($skin_element)]} {
+	# 	    lappend elements_in_common_list $skin_element
+	#     }
+	# }
+
+	# #foreach element_id $elements_in_common_list {}
+    # foreach element_id $skin_element_ids {
+	#     set element_nodes_id($element_id) [lindex [GiD_Mesh get element $element_id] 3] ; # We get the nodes of the element
+	# }
+    # write::WriteString "Begin NodalData SKIN_SPHERE"
+	# foreach element_id $skin_element_ids {
+	#     write::WriteString "$element_nodes_id($element_id) 0 1"
+	# }
+	# write::WriteString "End NodalData"
+	# write::WriteString ""
+}
+
+
 
 proc DEM::write::GetNodalConditionsGroups { {include_cond 0} } {
     set groups [list ]
