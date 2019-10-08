@@ -5,7 +5,7 @@
 <Process n="DEM-FEM-Wall-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
   <inputs>
     <parameter n="SetActive"            type="bool"         pn="Activate"       v="true"     help="Set Yes to activate the group">
-      <parameter n="DEM-ImposedMotion"  parent="true"       pn="Type of Motion" type="combo"  v="None" values="None,LinearPeriodic,FreeMotion" pvalues="None,Linear-Periodic,Free motion" help="Set Yes to impose a predefined motion to the group" show_in_window="0">
+      <parameter n="DEM-ImposedMotion"  parent="true"       pn="Type of Rigid Body Motion" type="combo"  v="None" values="None,LinearPeriodic,FreeMotion" pvalues="None,Imposed linear/angular motion,Free body motion" help="Choose if the solid should should be fixed, have an imposed motion or a free motion" show_in_window="0">
         <parameter n="Mass"             parent="FreeMotion" pn="Mass"           type="double" v="1.0"                  units="Kg"     unit_magnitude="M" show_in_window="0"/>
         <parameter n="CenterOfMass"     parent="FreeMotion" pn="Center of mass" type="inline_vector"   v="0.0,0.0,0.0" units="m"      unit_magnitude="L" show_in_window="0"/>
         <parameter n="Inertia"          parent="FreeMotion" pn="Inertia(Kg*m2)" type="inline_vector"   v="1.0,1.0,1.0" units="Kg*m^2" unit_magnitude="Inertia" show_in_window="0"/>
