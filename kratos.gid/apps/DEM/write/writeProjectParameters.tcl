@@ -13,7 +13,10 @@
 proc DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
-    dict set project_parameters_dict "Dimension"                            [expr 3]
+
+    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]
+    } else {set dimension [expr 3]}
+    dict set project_parameters_dict "Dimension"                            [expr $dimension]
     dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
     dict set project_parameters_dict "BoundingBoxOption"                    [write::getValue Boundingbox UseBB]
     dict set project_parameters_dict "AutomaticBoundingBoxOption"           [write::getValue Boundingbox AutomaticBB]
