@@ -831,6 +831,8 @@ proc spdAux::ClearCutPlanes { {cut_planes_un CutPlanes} } {
 proc spdAux::injectPartsByElementType {domNode args} {
     set element_types [dict create]
 
+    set base [$domNode parent]
+
     foreach element [Model::GetElements {*}$args] {
         if {[$element hasAttribute ElementType]} {
             dict lappend element_types [$element getAttribute ElementType] $element
@@ -856,7 +858,6 @@ proc spdAux::injectPartsByElementType {domNode args} {
             </value>
             <dynamicnode command=\"spdAux::injectPartInputs\" args=\"\"/>
         </condition>"
-        set base [$domNode parent]
         $base appendXML $condition_string
         set orig [$base lastChild]
         set new [$orig cloneNode -deep]
