@@ -5,26 +5,16 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     set parts [GetConfigurationAttribute parts_un]
     set materials_un [GetConfigurationAttribute materials_un]
     set root [customlib::GetBaseRoot]
-
-    W $parts
-    W $materials_un
-
     set xp1 "[spdAux::getRoute $parts]/group"
     if {[llength [$root selectNodes $xp1]] < 1} {
         set xp1 "[spdAux::getRoute $parts]/condition/group"
     }
-    W "xp1"
-    W "processMaterials1"
     if {$alt_path ne ""} {
         set xp1 $alt_path
     }
-    W "processMaterials2"
     set xp2 ".//value\[@n='Material']"
-    W "processMaterials3"
     set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : $last_assigned_id }]
-    W "processMaterials4"
     foreach gNode [$root selectNodes $xp1] {
-        W "processMaterials5"
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
         set group [$gNode getAttribute n]
         set valueNode [$gNode selectNodes $xp2]
@@ -43,38 +33,28 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
             set claw [write::getValueByNode $claw_node "force"]
             set const_law [Model::getConstitutiveLaw $claw]
 
-            W $claw
             if {$const_law ne ""} {
 
                 set output_type [$const_law getOutputMode]
-                W $output_type
                 if {$output_type eq "Parameters"} {
-                    W "processMaterials8a"
                     set s1 [$gNode selectNodes ".//value"]
                 } else {
-                    W "processMaterials8b"
                     set real_material_name [write::getValueByNode $valueNode "force"]
                     set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
                     set matNode [$root selectNodes $xp3]
                     set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
                 }
             } else {
-                W "processMaterials9"
                 set s1 [$gNode selectNodes ".//value"]
             }
-            W "processMaterials10"
 
             foreach valueNode $s1 {
-                W "processMaterials11"
                 write::forceUpdateNode $valueNode
                 set name [$valueNode getAttribute n]
                 set state [get_domnode_attribute $valueNode state]
                 if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
-                    W "processMaterials12"
                     # All the introduced values are translated to 'm' and 'kg' with the help of this function
                     set value [gid_groups_conds::convert_value_to_default $valueNode]
-                    W $value
-                    # estos valores no son los que hay dentro de la ley.
 
                     # if {[string is double $value]} {
                         #     set value [format "%13.5E" $value]
@@ -84,7 +64,6 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 }
             }
         }
-        W "endprocessMaterials"
     }
 }
 
