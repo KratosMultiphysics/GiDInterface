@@ -841,6 +841,7 @@ proc spdAux::injectPartsByElementType {domNode args} {
 
     foreach element_type [dict keys $element_types] {
         set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
+        if {[llength $ov] == 0} {set ov "point,line,surface,volume"}
         set ovm "element"
         if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
         set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
@@ -873,7 +874,7 @@ proc spdAux::injectPartsByElementType {domNode args} {
 proc spdAux::GetElementsCommonPropertyValues {elements prop} {
     set vals [list ]
     foreach element $elements {
-        lappend vals [$element getAttribute $prop]
+        if {[$element hasAttribute $prop]} { lappend vals [$element getAttribute $prop] }
     }
     return [lsort -unique $vals]
 }
