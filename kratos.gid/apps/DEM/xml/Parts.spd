@@ -5,7 +5,7 @@
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
 	</value>
 
-	<value n="ConstitutiveLaw" pn="Constitutive law" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]"  state="hidden" help="Select a constitutive law">
+	<value n="ConstitutiveLaw" pn="Constitutive law" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]"  state="normal" help="Select a constitutive law">
 		<dependencies node="../value[@n = 'Material']" actualize="1"/>
 	</value>
 

@@ -157,11 +157,11 @@ proc DEM::write::GetNodalConditionsGroups { {include_cond 0} } {
     return $groups
 }
 
-proc DEM::write::write2VelocityMeshes { } {
-    foreach {cid groupid} [DEM::write::GetNodalConditionsGroups 1] {
-	::write::writeGroupSubModelPart $cid $groupid "nodal"
-    }
-}
+# proc DEM::write::write2VelocityMeshes { } {
+#     foreach {cid groupid} [DEM::write::GetNodalConditionsGroups 1] {
+# 	::write::writeGroupSubModelPart $cid $groupid "nodal"
+#     }
+# }
 
 proc DEM::write::writeVelocityMeshes { } {
     set i 0

@@ -10,7 +10,7 @@ proc DEM::write::WriteMDPAParts { } {
     writeMaterialsParts
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
-    write::writeNodalCoordinatesOnParts; # Begin Nodes
+    write::writeNodalCoordinatesOnParts
     #write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
     write::writeNodalCoordinatesOnGroups [WriteWallGraphsFlag]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsInitialC]
@@ -18,11 +18,11 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Element connectivities (Groups on STParts)
     PrepareCustomMeshedParts
-    write::writeElementConnectivities;
+    write::writeElementConnectivities
     RestoreCustomMeshedParts
 
     # Element radius
-    writeSphereRadius; # Begin NodalData RADIUS
+    writeSphereRadius
 
     # SubmodelParts
     write::writePartSubModelPart
@@ -347,6 +347,7 @@ proc DEM::write::GetSpheresGroups { } {
     return $groups
 }
 
+
 proc DEM::write::writeMaterialsParts { } {
     variable partsProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Parts'\]/group"
@@ -356,20 +357,20 @@ proc DEM::write::writeMaterialsParts { } {
     #set partsProperties $::write::mat_dict
     #set ::write::mat_dict $old_mat_dict
     # WV inletProperties
-
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
-
+    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME ConstitutiveLaw]
     foreach group [dict keys $partsProperties] {
-        if {[dict get $partsProperties $group APPID] eq "DEM"} {
-            write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-            dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
-            foreach {prop val} [dict get $partsProperties $group] {
-                if {$prop in $printable} {
+        write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
+        dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
+        foreach {prop val} [dict get $partsProperties $group] {
+            if {$prop in $printable} {
+                if {$prop eq "ConstitutiveLaw"} {
+                    write::WriteString "    DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME $val"
+                } else {
                     write::WriteString "    $prop $val"
                 }
             }
-            write::WriteString "End Properties\n"
         }
+        write::WriteString "End Properties\n"
     }
 }
 
