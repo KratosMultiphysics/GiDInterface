@@ -765,7 +765,6 @@ proc DEM::write::FindBoundariesOfSphericElements {entity} {
 
     set boundarylist [list]
     foreach surface_id [lsort -integer [array names surfaces_higher_entities_list]] {
-        # W $surface_id; # esto esta bien
         if {$surfaces_higher_entities_list($surface_id) == 1} {
             lappend boundarylist $surface_id
         }

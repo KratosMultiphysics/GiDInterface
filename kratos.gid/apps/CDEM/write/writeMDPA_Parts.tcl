@@ -12,7 +12,7 @@ proc DEM::write::WriteMDPAParts { } {
     writeMaterialsParts
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
-    write::writeNodalCoordinatesOnParts; # Begin Nodes
+    write::writeNodalCoordinatesOnParts
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsInitialC]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundayC]
@@ -20,10 +20,10 @@ proc DEM::write::WriteMDPAParts { } {
     # Element connectivities
     write::writeElementConnectivities
 
-    # Begin NodalData RADIUS, node 0 radius
+    # Begin NodalData RADIUS
     writeSphereRadius
 
-    # Begin NodalData COHESIVE_GROUP node 0 group
+    # Begin NodalData COHESIVE_GROUP
     writeCohesiveGroups
 
     # Begin NodalData SKIN_SPHERE
@@ -44,7 +44,6 @@ proc DEM::write::WriteWallCustomDEMSmp { } {
 	set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
 	if {$destination_mdpa == "DEM"} {
 
-	    #write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
 	    write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
 	    write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
 	    write::WriteString  "End SubModelPartData"
@@ -118,7 +117,6 @@ proc DEM::write::writeCohesiveGroups { } {
         set groupid [$group @n]
         set grouppid [write::GetWriteGroupName $groupid]
         write::WriteString "Begin NodalData COHESIVE_GROUP // GUI group identifier: $grouppid"
-
         GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 $cohesive_group\n"]
         write::WriteString "End NodalData"
         write::WriteString ""
@@ -131,48 +129,19 @@ proc DEM::write::writeSkinSphereNodes { } {
     set number 1
     set list_of_active_dem_elements ""
 	if {[GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
-        W "existe"
         if {$::Model::SpatialDimension eq "2D"} {
             set skin_element_ids [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE all_mesh -element_type circle] ; # Get the ids of elements in SKIN_SPHERE
         } else {
             set skin_element_ids [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE all_mesh -element_type sphere]
         }
 	} else {
-        W "NO"
 	    set skin_element_ids [list]
 	}
 
     write::WriteString "Begin NodalData SKIN_SPHERE"
-
     GiD_WriteCalculationFile connectivities [dict create SKIN_SPHERE_DO_NOT_DELETE "%.0s %10d 0 $number\n"]
-
     write::WriteString "End NodalData"
 	write::WriteString ""
-
-	# set only_skin_elems_ids [lindex $skin_element_ids 1]
-	# #set list_of_active_dem_elements [regsub -all {\{|\}} $list_of_active_dem_elements " "];  # UNCOMMENT THIS
-
-	# foreach active_element $list_of_active_dem_elements {
-	#     set temporal_list($active_element) 1
-	# }
-
-	# set elements_in_common_list ""
-	# foreach skin_element $only_skin_elems_ids {
-	#     if {[info exists temporal_list($skin_element)]} {
-	# 	    lappend elements_in_common_list $skin_element
-	#     }
-	# }
-
-	# #foreach element_id $elements_in_common_list {}
-    # foreach element_id $skin_element_ids {
-	#     set element_nodes_id($element_id) [lindex [GiD_Mesh get element $element_id] 3] ; # We get the nodes of the element
-	# }
-    # write::WriteString "Begin NodalData SKIN_SPHERE"
-	# foreach element_id $skin_element_ids {
-	#     write::WriteString "$element_nodes_id($element_id) 0 1"
-	# }
-	# write::WriteString "End NodalData"
-	# write::WriteString ""
 }
 
 
@@ -247,7 +216,17 @@ proc DEM::write::writeVelocityMeshes { } {
 		    }
 		    write::WriteString "    ANGULAR_VELOCITY_PERIOD $angular_period"
 
-		    # Interval
+		    # set intervals
+		    set LinearStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearStartTime'\]"]]
+		    set LinearEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearEndTime'\]"]]
+		    set AngularStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularStartTime'\]"]]
+		    set AngularEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularEndTime'\]"]]
+		    write::WriteString "    VELOCITY_START_TIME $LinearStartTime"
+		    write::WriteString "    VELOCITY_STOP_TIME $LinearEndTime"
+		    write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
+		    write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
+
+            # Interval. # TODO, able to assign intervals as start and end time. Both linear and angular could be different
 		    # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
 		    # lassign [write::getInterval $interval] ini end
 		    # if {![string is double $ini]} {
@@ -258,16 +237,6 @@ proc DEM::write::writeVelocityMeshes { } {
 		    #     set end [write::getValue DEMTimeParameters EndTime]
 		    # }
 		    # write::WriteString "    ${cond}_STOP_TIME $end"
-
-		    # set intervals
-		    set LinearStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearStartTime'\]"]]
-		    set LinearEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearEndTime'\]"]]
-		    set AngularStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularStartTime'\]"]]
-		    set AngularEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularEndTime'\]"]]
-		    write::WriteString "    VELOCITY_START_TIME $LinearStartTime"
-		    write::WriteString "    VELOCITY_STOP_TIME $LinearEndTime"
-		    write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
-		    write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
 		}
 
 		write::WriteString "  End SubModelPartData"

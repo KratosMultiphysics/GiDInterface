@@ -1,5 +1,4 @@
 proc DEM::write::WriteMDPAParts { } {
-    W "aqui no deberia entrar"
     variable last_property_id
     # Prepare properties
     write::processMaterials "" $last_property_id
@@ -174,6 +173,17 @@ proc DEM::write::writeVelocityMeshes { } {
                         }
                         write::WriteString "    ANGULAR_VELOCITY_PERIOD $angular_period"
 
+                        set LinearStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearStartTime'\]"]]
+                        set LinearEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearEndTime'\]"]]
+                        set AngularStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularStartTime'\]"]]
+                        set AngularEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularEndTime'\]"]]
+                        set rigid_body_motion 1
+                        write::WriteString "    VELOCITY_START_TIME $LinearStartTime"
+                        write::WriteString "    VELOCITY_STOP_TIME $LinearEndTime"
+                        write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
+                        write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
+
+
                         # # Interval
                         # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
                         # lassign [write::getInterval $interval] ini end
@@ -191,15 +201,6 @@ proc DEM::write::writeVelocityMeshes { } {
                         # write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $end"
 
 
-                        set LinearStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearStartTime'\]"]]
-                        set LinearEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearEndTime'\]"]]
-                        set AngularStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularStartTime'\]"]]
-                        set AngularEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularEndTime'\]"]]
-                        set rigid_body_motion 1
-                        write::WriteString "    VELOCITY_START_TIME $LinearStartTime"
-                        write::WriteString "    VELOCITY_STOP_TIME $LinearEndTime"
-                        write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
-                        write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
 
                     } elseif {$motion_type == "FixedDOFs"} {
                         set rigid_body_motion 0

@@ -5,9 +5,7 @@ proc DEM::write::WriteMDPAInlet { } {
     writeMaterialsInlet
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
-    W "xxxxxxxxxxxxxxxxxxxxx inlet"
     write::writeNodalCoordinatesOnGroups [GetInletGroups]
-    W "xxxxxxxxxxxxxxxxxxxxx inlet end"
 
     # SubmodelParts
     if {$::Model::SpatialDimension eq "2D"} { writeInletMeshes2D
@@ -609,28 +607,19 @@ proc DEM::write::writeInletMeshes-old { } {
 proc DEM::write::writeMaterialsInlet { } {
     variable inletProperties
     variable last_property_id
-    W "1-"
     if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet2D'\]/group"
     } else { set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet'\]/group"
     }
-    W $xp1
-    W $last_property_id
-    W [dict size $::write::mat_dict]
     set old_mat_dict $::write::mat_dict
     set ::write::mat_dict [dict create]
-    W "2-"
     write::processMaterials $xp1 $DEM::write::last_property_id
-    W "3-"
     set DEM::write::last_property_id [expr $last_property_id + [dict size $::write::mat_dict]]
-    W "4-"
     set inletProperties $::write::mat_dict
     set ::write::mat_dict $old_mat_dict
-    # WV inletProperties
-    W "5-"
+
     set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
 
     foreach group [dict keys $inletProperties] {
-        W "foreach group inletProperties"
         write::WriteString "Begin Properties [dict get $inletProperties $group MID] // Inlet group: [write::GetWriteGroupName $group]"
         if {$::Model::SpatialDimension eq "2D"} {set DEM_D_law "DEM_D_Hertz_viscous_Coulomb2D"
         } else { set DEM_D_law "DEM_D_Hertz_viscous_Coulomb"
@@ -645,5 +634,4 @@ proc DEM::write::writeMaterialsInlet { } {
         }
         write::WriteString "End Properties\n"
     }
-    W "end"
 }

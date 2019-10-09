@@ -11,7 +11,6 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
 
     # Nodal conditions and conditions
-    W "2"
     writeConditions $wall_properties
 
     # SubmodelParts
@@ -27,7 +26,6 @@ proc DEM::write::WriteMDPAWalls { } {
 
 
 proc DEM::write::WriteWallProperties { } {
-    W "1"
     #set print_list [list "FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
     set wall_properties [dict create ]
     set cnd [Model::getCondition "DEM-FEM-Wall"]
@@ -39,7 +37,6 @@ proc DEM::write::WriteWallProperties { } {
     #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     set i $DEM::write::last_property_id
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        W "foreach group customlibGetBaseRoot selectNodes"
         incr i
         write::WriteString "Begin Properties $i"
         #foreach {prop obj} [$cnd getAllInputs] {
@@ -139,14 +136,9 @@ proc DEM::write::GetNodesForGraphs { } {
 }
 
 proc DEM::write::writeConditions { wall_properties } {
-    W "3"
+
     foreach group [GetWallsGroups] {
-        W "4"
-        W $wall_properties
-        W $group
         set mid [dict get $wall_properties $group]
-        #set format [write::GetFormatDict $group $mid 2]
-        W "6"
         if {$::Model::SpatialDimension eq "2D"} {
             set rigid_type "RigidEdge3D2N"
             set format [write::GetFormatDict $group $mid 2]
@@ -154,10 +146,8 @@ proc DEM::write::writeConditions { wall_properties } {
             set rigid_type "RigidFace3D3N"
             set format [write::GetFormatDict $group $mid 3]
         }
-
         write::WriteString "Begin Conditions $rigid_type // GUI DEM-FEM-Wall group identifier: $group"
         GiD_WriteCalculationFile connectivities $format
-        W "7"
         write::WriteString "End Conditions"
         write::WriteString ""
     }
@@ -167,15 +157,10 @@ proc DEM::write::writeConditions { wall_properties } {
 
 proc DEM::write::GetWallsGroups { } {
     set groups [list ]
-
     if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
     } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     }
-
-
-    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        W $group
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
     }
@@ -691,13 +676,11 @@ proc DEM::write::writeConditionMeshes2D { } {
                     }
                     write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
                 }
-                W "8.8"
                 write::WriteString "  End SubModelPartData"
 
                 write::WriteString "  Begin SubModelPartNodes"
                 GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
                 write::WriteString "  End SubModelPartNodes"
-                W "8.9"
 
                 write::WriteString "Begin SubModelPartConditions"
                 set gdict [dict create]
@@ -705,10 +688,8 @@ proc DEM::write::writeConditionMeshes2D { } {
                 set f [subst $f]
                 dict set gdict $group $f
                 GiD_WriteCalculationFile elements -sorted $gdict
-                W "8.10"
                 write::WriteString "End SubModelPartConditions"
                 write::WriteString ""
-
                 write::WriteString "End SubModelPart"
                 write::WriteString ""
 
