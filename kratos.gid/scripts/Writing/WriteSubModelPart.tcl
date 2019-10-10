@@ -91,7 +91,7 @@ proc write::_writeConditionsForBasicSubmodelParts {un cond_iter} {
         if {$needConds} {
             set iters [write::writeGroupNodeCondition $conditions_dict $group "GENERIC_CONDITION" [incr cond_iter]]
             set conditions_dict [dict merge $conditions_dict $iters]
-            set cond_iter [lindex $iters 1 1]
+            set cond_iter [lindex $iters end end]
         }
     }
     Model::ForgetCondition GENERIC_CONDITIONS
