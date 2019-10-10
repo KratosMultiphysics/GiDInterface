@@ -62,13 +62,22 @@ proc CDEM::write::getParametersDict { } {
     dict set strategy_parameters_dict "strategy"                            $dem_strategy
     dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
 
+    dict set project_parameters_dict "DeltaOption"                          [write::getValue AdvOptions DeltaOption]
+    dict set project_parameters_dict "SearchTolerance"                      [write::getValue AdvOptions TangencyToleranceValueAbsolute]
+    dict set project_parameters_dict "CoordinationNumber"                   [write::getValue AdvOptions TangencyCoordinationNumber]
+    dict set project_parameters_dict "AmplifiedSearchRadiusExtension"       [write::getValue AdvOptions AmplifiedSearchRadiusExtension]
+    dict set project_parameters_dict "PoissonEffectOption"                  [write::getValue AdvOptions PoissonEffect]
+    dict set project_parameters_dict "ShearStrainParallelToBondOption"      [write::getValue AdvOptions ShearStrainParallelToBondEffect]
+    dict set project_parameters_dict "ComputeStressTensorOption"            [write::getValue AdvOptions ComputeStressTensorOption]
+    dict set project_parameters_dict "MaxAmplificationRatioOfSearchRadius"  1000
+
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
     dict set project_parameters_dict "RollingFrictionOption"                [write::getValue AdvOptions RollingFriction]
     dict set project_parameters_dict "GlobalDamping"                        [write::getValue AdvOptions GlobalDamping]
     dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
-    dict set project_parameters_dict "ElementType"                          "SphericPartDEMElement3D"
+    dict set project_parameters_dict "ElementType"                          $ElementType
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]

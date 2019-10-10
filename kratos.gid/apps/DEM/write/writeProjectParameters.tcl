@@ -77,7 +77,7 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
-    dict set project_parameters_dict "ElementType"                          "SphericPartDEMElement3D"
+    dict set project_parameters_dict "ElementType"                          $ElementType
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]
