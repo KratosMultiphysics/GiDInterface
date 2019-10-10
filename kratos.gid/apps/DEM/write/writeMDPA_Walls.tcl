@@ -552,8 +552,8 @@ proc DEM::write::writeConditionMeshes2D { } {
                         lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfMass'\]"]] cX cY
                         write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] ($cX,$cY,0.0)"
 
-                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='Inertia'\]"]] iZ
-                        write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,$iZ)"
+                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='Inertia'\]"]] iX iY
+                        write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,$iX)"
 
                         # DOFS
                         set Ax [write::getValueByNode [$group_node selectNodes "./value\[@n='Ax'\]"]]
