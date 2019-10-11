@@ -55,6 +55,7 @@ proc ConvectionDiffusion::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     write::writeBasicSubmodelParts [getLastConditionId]
 }
+
 proc ConvectionDiffusion::write::writeCustomFilesEvent { } {
     # Materials
     WriteMaterialsFile
@@ -85,7 +86,8 @@ proc ConvectionDiffusion::write::getLastConditionId { } {
 }
 
 proc ConvectionDiffusion::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False ThermalModelPart
+    # write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False ThermalModelPart
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False
 }
 
 # MDPA Blocks
