@@ -11,10 +11,10 @@
   </Process>
 
   <Process n="AssignVectorComponentsToNodesProcess" pn="Assign a vector value process" python_module="assign_vector_components_to_nodes_process"
-           kratos_module="KratosMultiphysics.SolidMechanicsApplication"
+           kratos_module="KratosMultiphysics.SolidMechanicsApplication" write_command="Solid::write::ProcessVectorFunctionComponents" 
 	   help="This process fixes the selected components of a given vector variable">
     <inputs>
-      <parameter n="value" pn="Value" type="vector" vectorType="double" enabled="1" function="1" v="0.0,0.0,0.0" has_units="1" help="Load value"/>
+     <parameter n="component" pn="Component" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
       <parameter n="compound_assignment" pn="Operation" type="combo" v="direct" values="direct,addition,subtraction,multiplication,division" pvalues="Assign,Add,Subtract,Multiply,Divide" help="operation performed with the assigment"/>
     </inputs>
   </Process>

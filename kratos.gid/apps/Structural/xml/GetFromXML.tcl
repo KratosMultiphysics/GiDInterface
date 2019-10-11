@@ -3,8 +3,8 @@ namespace eval Structural::xml {
 }
 
 proc Structural::xml::Init { } {
-     variable dir
-     Model::InitVariables dir $Structural::dir
+    variable dir
+    Model::InitVariables dir $Structural::dir
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -101,7 +101,7 @@ proc Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
     } {return "normal"}
 }
 
-proc Structural::xml::ProcCheckGeometrySolid {domNode args} {
+proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     set ret "surface"
     if {$::Model::SpatialDimension eq "3D"} {
         set ret "surface,volume"

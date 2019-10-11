@@ -4,7 +4,7 @@ import KratosMultiphysics.DelaunayMeshingApplication
 import KratosMultiphysics.PfemFluidDynamicsApplication
 import KratosMultiphysics.SolidMechanicsApplication
 
-from pfem_fluid_dynamics_analysis import PfemFluidDynamicsAnalysis
+from KratosMultiphysics.PfemFluidDynamicsApplication.pfem_fluid_dynamics_analysis import PfemFluidDynamicsAnalysis
 
 if __name__ == "__main__":
 

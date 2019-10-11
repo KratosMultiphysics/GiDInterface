@@ -242,6 +242,25 @@ if 0 {
 
 }
 
+
+proc Solid::write::ProcessVectorFunctionComponents { groupNode condition process} {
+    set processDict [write::GetProcessHeader $groupNode $process $condition]
+    set val [write::GetInputValue $groupNode [$process getInputPn component]]
+    foreach i $val {
+        if {$i == "null"} {
+            lappend value null
+        } {
+            lappend value $i
+        }
+    }
+    
+    dict set processDict Parameters compound_assignment [write::GetInputValue $groupNode [$process getInputPn compound_assignment]]
+    dict set processDict Parameters value $value
+    
+    
+    return $processDict
+}
+
 proc Solid::write::getPropertiesList {parts_un} {
     set mat_dict [write::getMatDict]
     set props_dict [dict create]

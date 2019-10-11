@@ -25,6 +25,7 @@ proc ::PfemFluid::Init { } {
 
 proc ::PfemFluid::LoadMyFiles { } {
     variable dir
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
     uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
     uplevel #0 [list source [file join $dir .. Solid write write.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
@@ -53,6 +54,9 @@ proc ::PfemFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
+
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemFluid::examples::WaterDamBreak] [= "Example\nWater dam break"]
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemFluid::examples::DamBreakFSI] [= "Example\nDam break FSI"]
 
     # Solo para JG
     if {[GiD_Info problemtypepath] eq "E:/PROYECTOS/Kratos/interfaces/GiD/kratos.gid"} {
