@@ -46,7 +46,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
 }
 proc Buoyancy::write::writeCustomFilesEvent { } {
     # Materials
-    WriteMaterialsFile
+    Buoyancy::write::WriteMaterialsFile
 
     # Main python script
     set orig_name "MainKratos.py"
@@ -60,7 +60,8 @@ proc Buoyancy::write::Validate {} {
 }
 
 proc Buoyancy::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] "BuoyancyMaterials.json" "False"
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False [GetAttribute model_part_name]
+    write::writePropertiesJsonFile [GetAttribute parts_un] "BuoyancyMaterials.json" False ThermalModelPart
 }
 
 proc Buoyancy::write::writeSubModelParts { } {

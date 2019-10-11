@@ -75,7 +75,7 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
 
     # Fluid things
     write::SetConfigurationAttributes [Fluid::write::GetAttributes]
-    Fluid::write::SetAttribute materials_file "BuoyancyMaterials.json"
+    #Fluid::write::SetAttribute materials_file "BuoyancyMaterials.json"
     dict set settings fluid_solver_settings [Fluid::write::getSolverSettingsDict]
 
     set nDim [expr [string range [write::getValue nDim] 0 0]]
