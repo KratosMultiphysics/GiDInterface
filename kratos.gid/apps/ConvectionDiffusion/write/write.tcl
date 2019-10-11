@@ -85,7 +85,7 @@ proc ConvectionDiffusion::write::getLastConditionId { } {
 }
 
 proc ConvectionDiffusion::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] "False"
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False ThermalModelPart
 }
 
 # MDPA Blocks
