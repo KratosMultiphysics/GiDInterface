@@ -65,12 +65,17 @@ proc Fluid::write::writeModelPartEvent { } {
 }
 proc Fluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+    Fluid::write::WriteMaterialsFile
 
     # Main python script
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     write::RenameFileInModel $orig_name "MainKratos.py"
+}
+
+# Custom files
+proc Fluid::write::WriteMaterialsFile { } {
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True [GetAttribute model_part_name]
 }
 
 proc Fluid::write::Validate {} {
