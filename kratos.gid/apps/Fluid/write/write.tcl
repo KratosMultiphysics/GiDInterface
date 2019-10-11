@@ -74,8 +74,8 @@ proc Fluid::write::writeCustomFilesEvent { } {
 }
 
 # Custom files
-proc Fluid::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True [GetAttribute model_part_name]
+proc Fluid::write::WriteMaterialsFile { {write_const_law True} } {
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law [GetAttribute model_part_name]
 }
 
 proc Fluid::write::Validate {} {

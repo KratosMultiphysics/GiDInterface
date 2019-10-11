@@ -60,7 +60,7 @@ proc Buoyancy::write::Validate {} {
 }
 
 proc Buoyancy::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False [GetAttribute model_part_name]
+    Fluid::write::WriteMaterialsFile False
     write::writePropertiesJsonFile [GetAttribute parts_un] "BuoyancyMaterials.json" False ThermalModelPart
 }
 
