@@ -34,6 +34,7 @@ proc FSI::write::writeModelPartEvent { } {
 }
 
 proc FSI::write::writeCustomFilesEvent { } {
+    Fluid::write::WriteMaterialsFile
     Structural::write::WriteMaterialsFile
     
     write::CopyFileIntoModel "python/KratosFSI.py"

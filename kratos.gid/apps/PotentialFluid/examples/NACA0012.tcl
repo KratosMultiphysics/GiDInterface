@@ -14,8 +14,7 @@ proc ::PotentialFluid::examples::NACA0012 {args} {
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
-    # Meshing
-    GiD_Process "-tcl- RaiseEvent_GenericProc ::GiD_Event_BeforeMeshGeneration 5.61249" Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces 2 3 escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces 1 4 5 6 7 8 escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces escape escape Mescape Meshing MeshCriteria Mesh Lines 14 escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces escape escape Mescape Meshing MeshCriteria Mesh Lines escape escape escape Mescape Meshing MeshCriteria Mesh Surfaces escape escape Mescape Meshing Generate 5.61249 MeshingParametersFrom=Preferences escape Mescape Meshing MeshView
+    
 }
 
 proc PotentialFluid::examples::DrawNACA0012Geometry2D {args} {
@@ -84,7 +83,7 @@ proc PotentialFluid::examples::AssignNACA0012MeshSizes2D {args} {
     # GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get LowerSurface lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $airfoil_mesh_size {*}[GiD_EntitiesGroups get Body lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
+    
 }
 
 proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
@@ -92,11 +91,16 @@ proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
     set root [customlib::GetBaseRoot]
 
     set condtype line
-    if {$nd eq "3D"} { set condtype surface }
+    set elemtype surface
+    if {$nd eq "3D"} { 
+        set condtype surface 
+        set elemtype volume 
+    }
 
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
+    $fluidNode setAttribute ov $elemtype
     set props [list Element PotentialFlowElement$nd ConstitutiveLaw Inviscid DENSITY 1.225]
     foreach {prop val} $props {
         set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
