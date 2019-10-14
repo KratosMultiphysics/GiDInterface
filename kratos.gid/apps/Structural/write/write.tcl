@@ -58,13 +58,14 @@ proc Structural::write::writeModelPartEvent { } {
 
     # Write Conditions section
     Structural::write::writeConditions
+    
+    # Custom SubmodelParts
+    set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
+    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
 
     # SubmodelParts
     Structural::write::writeMeshes
 
-    # Custom SubmodelParts
-    set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
-    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
 }
 
 proc Structural::write::writeConditions { } {
