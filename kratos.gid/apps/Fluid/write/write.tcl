@@ -56,12 +56,12 @@ proc Fluid::write::writeModelPartEvent { } {
     # Nodal conditions and conditions
     writeConditions
     
-    # SubmodelParts
-    writeMeshes
-    
     # Custom SubmodelParts
     variable last_condition_iterator
     write::writeBasicSubmodelPartsByUniqueId  $Fluid::write::FluidConditionMap $last_condition_iterator
+    
+    # SubmodelParts
+    writeMeshes
 
     # Clean
     unset Fluid::write::FluidConditionMap
