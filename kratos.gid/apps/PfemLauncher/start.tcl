@@ -5,7 +5,6 @@ namespace eval ::PfemLauncher {
 proc ::PfemLauncher::Init { } {
     variable available_apps
 
-    set dir [apps::getMyDir "PfemLauncher"]
     set available_apps [list Pfem PfemFluid DEMPFEM]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
@@ -25,7 +24,6 @@ proc ::PfemLauncher::AppSelectorWindow { } {
         # }
     } {
         [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
-        set dir $::Kratos::kratos_private(Path)
 
         set initwind .gid.win_example
         if { [ winfo exist $initwind]} {

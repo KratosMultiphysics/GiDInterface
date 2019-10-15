@@ -157,6 +157,11 @@
 	  return [spdAux::ProcgetStateFromXPathValue $domNode $args]
 	  ]]>
 		</proc>
+		<proc n='getStateFromXPathValueDisabled' args='args'>
+			<![CDATA[
+	  return [spdAux::ProcgetStateFromXPathValueDisabled $domNode $args]
+	  ]]>
+		</proc>
 		<proc n='get_materials_list_simple' args='args'>
 			<![CDATA[
 	return [spdAux::ProcGet_materials_list_simple $domNode {*}$args]

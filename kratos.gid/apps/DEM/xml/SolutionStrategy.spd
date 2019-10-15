@@ -3,7 +3,7 @@
 	<include n="Gravity" active="1" path="apps/DEM/xml/Gravity.spd"/>
 	<container n="Boundingbox"      un="Boundingbox" pn="Bounding box" help="Any Discrete Element going outsne of the Bounding Box will be deleted" icon="bbox" open_window="0">
                 <value n="UseBB"        type="bool"     values="true,false" v="false" pn="Bounding box" icon="black1"  help="Any Discrete element going out of the bounding box will be deleted" update_proc="spdAux::RequestRefresh" />
-                <value n="AutomaticBB"  type="bool"     values="true,false" v="false" pn="Dynamic BB"   icon="black1" state="[getStateFromXPathValue {string(../value[@n='UseBB']/@v)} true]" help="The bounding box is calculated automatically" update_proc="spdAux::RequestRefresh" />
+                <value n="AutomaticBB"  type="bool"     values="true,false" v="false" pn="Automatic Size"   icon="black1" state="[getStateFromXPathValue {string(../value[@n='UseBB']/@v)} true]" help="The bounding box is calculated automatically" update_proc="spdAux::RequestRefresh" />
                 <value n="PostBB"       type="bool"     values="true,false" v="false" pn="Print bounding box" icon="black1" state="[getStateFromXPathValue {string(../value[@n='UseBB']/@v)} true]"/>
                 <value n="BBFactor"     v="1.1"         pn="Factor"     state="[getStateFromXPathValue {string(../value[@n='AutomaticBB']/@v)} true]"   icon="black1" help="Enlargement factor for the dynamic bounding box"/>
                 <value n="MaxX"         v="10"          pn="Max X"      state="[getStateBoundingBoxParams]"  icon="black1" help="Max X"/>

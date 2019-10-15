@@ -15,4 +15,19 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
+
+  <ElementItem n="CylinderPartDEMElement2D" pn="Circle Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" ElementType="DEM" help="">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Circle" nodes="1" KratosName="CylinderParticle2D"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="DEM"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions></NodalConditions>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ElementItem>
+
 </ElementList>

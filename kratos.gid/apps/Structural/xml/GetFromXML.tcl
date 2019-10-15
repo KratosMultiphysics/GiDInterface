@@ -3,8 +3,8 @@ namespace eval Structural::xml {
 }
 
 proc Structural::xml::Init { } {
-     variable dir
-     Model::InitVariables dir $Structural::dir
+    variable dir
+    Model::InitVariables dir $Structural::dir
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -41,11 +41,12 @@ proc Structural::xml::CustomTree { args } {
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT_SLAVE'\]"]
     if {$result_node ne "" } {$result_node delete}
 
-    if {[[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STResults]/value\[@n='print_prestress'\]"] eq ""} {
-        gid_groups_conds::addF [spdAux::getRoute STResults] value [list n print_prestress pn "Print prestress" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
+    set xpath "[spdAux::getRoute STResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
+    if {[[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n='print_prestress'\]"] eq ""} {
+        gid_groups_conds::addF $xpath value [list n print_prestress pn "Print prestress" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
     }
-    if {[[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STResults]/value\[@n='print_mdpa'\]"] eq ""} {
-        gid_groups_conds::addF [spdAux::getRoute STResults] value [list n print_mdpa pn "Print modelpart" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
+    if {[[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n='print_mdpa'\]"] eq ""} {
+        gid_groups_conds::addF $xpath value [list n print_mdpa pn "Print modelpart" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
     }
 }
 
@@ -79,7 +80,7 @@ proc Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
     return $pnames
 }
 
-proc Structural::xml::ProcCheckNodalConditionStateSolid {domNode args} {
+proc Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
     # Overwritten the base function to add Solution Type restrictions
     set parts_un STParts
     if {[spdAux::getRoute $parts_un] ne ""} {
@@ -89,7 +90,7 @@ proc Structural::xml::ProcCheckNodalConditionStateSolid {domNode args} {
         if {$cnd_dim ne ""} {
             if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
         }
-        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
+        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/condition/group/value\[@n='Element'\]"]
         set elemnames [list ]
         foreach elem $elems { lappend elemnames [$elem @v]}
         set elemnames [lsort -unique $elemnames]
@@ -100,7 +101,7 @@ proc Structural::xml::ProcCheckNodalConditionStateSolid {domNode args} {
     } {return "normal"}
 }
 
-proc Structural::xml::ProcCheckGeometrySolid {domNode args} {
+proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     set ret "surface"
     if {$::Model::SpatialDimension eq "3D"} {
         set ret "surface,volume"

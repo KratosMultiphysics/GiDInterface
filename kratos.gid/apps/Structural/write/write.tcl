@@ -10,7 +10,7 @@ proc Structural::write::Init { } {
     variable NodalConditionsGroup
     set ConditionsDictGroupIterators [dict create]
     set NodalConditionsGroup [list ]
-    
+
     variable ContactsDict
     set ContactsDict [dict create]
 
@@ -18,18 +18,19 @@ proc Structural::write::Init { } {
     set writeAttributes [dict create]
     SetAttribute validApps [list "Structural"]
     SetAttribute writeCoordinatesByGroups 0
-    SetAttribute properties_location json 
+    SetAttribute properties_location json
     SetAttribute parts_un STParts
     SetAttribute time_parameters_un STTimeParameters
     SetAttribute results_un STResults
     SetAttribute materials_un STMaterials
-    SetAttribute conditions_un STLoads
+    SetAttribute initial_conditions_un STInitialConditions
     SetAttribute nodal_conditions_un STNodalConditions
+    SetAttribute conditions_un STLoads
     SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
     SetAttribute model_part_name "Structure"
-    SetAttribute output_model_part_name "computing_domain"
+    SetAttribute output_model_part_name ""
 }
 
 # MDPA Blocks
@@ -37,7 +38,7 @@ proc Structural::write::writeModelPartEvent { } {
     variable ConditionsDictGroupIterators
     initLocalWriteConfiguration
     write::initWriteConfiguration [GetAttributes]
-    
+
     # Headers
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
@@ -45,7 +46,7 @@ proc Structural::write::writeModelPartEvent { } {
 
     # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
-    
+
     # Element connectivities (Groups on STParts)
     write::writeElementConnectivities
 
@@ -57,13 +58,14 @@ proc Structural::write::writeModelPartEvent { } {
 
     # Write Conditions section
     Structural::write::writeConditions
+    
+    # Custom SubmodelParts
+    set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
+    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
 
     # SubmodelParts
     Structural::write::writeMeshes
 
-    # Custom SubmodelParts
-    set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
-    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
 }
 
 proc Structural::write::writeConditions { } {
@@ -75,7 +77,7 @@ proc Structural::write::writeConditions { } {
 }
 
 proc Structural::write::writeMeshes { } {
-    
+
     # There are some Conditions and nodalConditions that dont generate a submodelpart
     # Add them to this list
     set special_nodal_conditions_dont_generate_submodelpart_names [GetAttribute nodal_conditions_no_submodelpart]
@@ -85,10 +87,11 @@ proc Structural::write::writeMeshes { } {
         Model::ForgetNodalCondition $cnd_name
     }
     write::writePartSubModelPart
-    
+
     # Solo Malla , no en conditions
+    write::writeNodalConditions [GetAttribute initial_conditions_un]
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
-    
+
     # A Condition y a meshes-> salvo lo que no tenga topologia
     writeLoads
 
@@ -104,16 +107,16 @@ proc Structural::write::writeContactConditions { last_iter } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
     set ov "line"
-    set kname "Condition2D"
-    if {$::Model::SpatialDimension eq "3D"} {set ov "surface"; set kname "Condition3D"}
+    set kname "LineCondition2D2N"
+    if {$::Model::SpatialDimension eq "3D"} {set ov "surface"; set kname "SurfaceCondition3D3N"}
     set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT'\]/group"
     set xp2 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n='CONTACT_SLAVE'\]/group"
     foreach group [ concat {*}[$root selectNodes $xp1] {*}[$root selectNodes $xp2] ] {
         set groupid [$group @n]
         set groupid [write::GetWriteGroupName $groupid]
         lassign [write::getEtype $ov $groupid] etype nnodes
-        
-        lassign [write::writeGroupCondition $groupid $kname $nnodes $last_iter] initial final
+        if {$::Model::SpatialDimension eq "3D" && $nnodes == 4} {set kname "SurfaceCondition3D4N"}
+        lassign [write::writeGroupCondition $groupid $kname $nnodes  [incr last_iter]] initial final
         dict set ConditionsDictGroupIterators $groupid [list $initial $final]
         set last_iter $final
     }
@@ -170,7 +173,7 @@ proc Structural::write::writeContacts { } {
                 set good_name [::write::writeGroupSubModelPart CONTACT $master_groupid "Conditions" [dict get $ConditionsDictGroupIterators $master_groupid]]
                 set name [lappend prev $good_name]
                 dict set ContactsDict Masters $master_group_pair_id $name
-                
+
             }
         }
     }
@@ -183,7 +186,7 @@ proc Structural::write::writeCustomBlock { } {
     write::WriteString ""
 }
 
-proc Structural::write::getLastConditionId { } { 
+proc Structural::write::getLastConditionId { } {
     variable ConditionsDictGroupIterators
     set top 1
     if {$ConditionsDictGroupIterators ne ""} {
@@ -200,7 +203,7 @@ proc Structural::write::WriteMaterialsFile { } {
 }
 
 proc Structural::write::GetUsedElements { {get "Objects"} } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set lista [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
@@ -212,11 +215,11 @@ proc Structural::write::GetUsedElements { {get "Objects"} } {
 }
 
 proc Structural::write::writeLocalAxes { } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
         set e [Model::getElement $elem_name]
-        if {[write::isBooleanTrue [$e getAttribute "RequiresLocalAxes"]]} { 
+        if {[write::isBooleanTrue [$e getAttribute "RequiresLocalAxes"]]} {
             set group [$gNode @n]
             write::writeLinearLocalAxesGroup $group
         }
@@ -241,12 +244,12 @@ proc Structural::write::writeHinges { } {
     }
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set group [$gNode @n]
-        
+
         # If the group has any line
         if {[GiD_EntitiesGroups get $group lines -count] > 0} {
             # Print the header once per group
             write::WriteString "Begin ElementalData CONDENSED_DOF_LIST // Group: $group"
-            
+
             # Get the tree data for this group
             set first_list [list ]
             set last_list [list ]
@@ -285,7 +288,7 @@ proc Structural::write::writeHinges { } {
                     set value [join $last_list ,]
                     write::WriteString [format "%5d \[%d\] (%s)" $end [llength $last_list] $value]
                 }
-            } 
+            }
             # Write the tail
             write::WriteString "End ElementalData"
             write::WriteString ""
@@ -294,15 +297,11 @@ proc Structural::write::writeHinges { } {
 }
 
 proc Structural::write::initLocalWriteConfiguration { } {
-    
-    if {[usesContact]} {
-         SetAttribute main_script_file "KratosContactStructural.py"
-    }
 }
 
 proc Structural::write::usesContact { } {
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'CONTACT'\]/group"]
-    
+
     if {$result_node ne ""} {
         return 1
     } {
@@ -314,7 +313,7 @@ proc Structural::write::usesContact { } {
 proc Structural::write::writeValidateEvent { } {
     set problem 0
     set problem_message [list ]
-    
+
     # Truss mesh validation
     set validation [validateTrussMesh]
     incr problem [lindex $validation 0]
@@ -328,7 +327,7 @@ proc Structural::write::validateTrussMesh { } {
     set truss_element_names [list "TrussLinearElement2D" "TrussElement2D" "TrussLinearElement3D" "TrussElement3D"]
     set error 0
     set error_message ""
-    
+
     # Used elements
     set truss_elements [list ]
     foreach elem [GetUsedElements "Name"] {
@@ -336,11 +335,11 @@ proc Structural::write::validateTrussMesh { } {
             lappend truss_elements $elem
         }
     }
-    
+
     # Check groups assigned to each element
     foreach element_name $truss_elements {
         set group_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n = 'Element' and @v = '$element_name'\]/.."]
-        
+
         foreach group_node $group_nodes {
             set group_name [$group_node @n]
             set num_lines [GiD_EntitiesGroups get $group_name lines -count]
@@ -352,16 +351,16 @@ proc Structural::write::validateTrussMesh { } {
             }
         }
     }
-    
+
     return [list $error $error_message]
 }
 
 
 proc Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
-    
+
     write::SetParallelismConfiguration
-    
+
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     write::RenameFileInModel $orig_name "MainKratos.py"

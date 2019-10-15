@@ -12,25 +12,28 @@ proc Solid::examples::Init { } {
 }
 
 proc Solid::examples::UpdateMenus3D { } {
-    GiDMenu::InsertOption "Kratos" [list "DynamicBeam" ] 8 PRE [list ::Solid::examples::DynamicBeam] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "CircularTank" ] 9 PRE [list ::Solid::examples::CircularTank] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "EccentricColumn" ] 10 PRE [list ::Solid::examples::EccentricColumn] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "DynamicRod" ] 11 PRE [list ::Solid::examples::DynamicRod] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "StaticBeamLattice" ] 12 PRE [list ::Solid::examples::StaticBeamLattice] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "---"] 13 PRE "" "" "" insertafter =
+    set menu_id 7
+    GiDMenu::InsertOption "Kratos" [list "DynamicBeam" ] [incr menu_id] PRE [list ::Solid::examples::DynamicBeam] "" "" insertbefore =
+    GiDMenu::InsertOption "Kratos" [list "CircularTank" ] [incr menu_id] PRE [list ::Solid::examples::CircularTank] "" "" insertbefore =
+    GiDMenu::InsertOption "Kratos" [list "EccentricColumn" ] [incr menu_id] PRE [list ::Solid::examples::EccentricColumn] "" "" insertbefore =
+    GiDMenu::InsertOption "Kratos" [list "DynamicRod" ] [incr menu_id] PRE [list ::Solid::examples::DynamicRod] "" "" insertbefore =
+    GiDMenu::InsertOption "Kratos" [list "StaticBeamLattice" ] [incr menu_id] PRE [list ::Solid::examples::StaticBeamLattice] "" "" insertbefore =
+    GiDMenu::InsertOption "Kratos" [list "---"] [incr menu_id] PRE "" "" "" insertbefore =
     GiDMenu::UpdateMenus
 }
 
 proc Solid::examples::UpdateMenus2D { } {
-    GiDMenu::InsertOption "Kratos" [list "NotchedBeam" ] 8 PRE [list ::Solid::examples::NotchedBeam] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "DynamicRod" ] 9 PRE [list ::Solid::examples::DynamicRod] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "---"] 10 PRE "" "" "" insertafter =
+    set menu_id 7
+    GiDMenu::InsertOption "Kratos" [list "NotchedBeam" ] [incr menu_id] PRE [list ::Solid::examples::NotchedBeam] "" "" insertbefore =
+    GiDMenu::InsertOption "Kratos" [list "DynamicRod" ] [incr menu_id] PRE [list ::Solid::examples::DynamicRod] "" "" insertbefore =
+    GiDMenu::InsertOption "Kratos" [list "---"] [incr menu_id] PRE "" "" "" insertbefore =
     GiDMenu::UpdateMenus
 }
 
 proc Solid::examples::UpdateMenus2Da { } {
-    GiDMenu::InsertOption "Kratos" [list "CircularTank" ] 8 PRE [list ::Solid::examples::CircularTank] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "---"] 9 PRE "" "" "" insertafter =
+    set menu_id 7
+    GiDMenu::InsertOption "Kratos" [list "CircularTank" ] [incr menu_id] PRE [list ::Solid::examples::CircularTank] "" "" insertbefore =
+    GiDMenu::InsertOption "Kratos" [list "---"] [incr menu_id] PRE "" "" "" insertbefore =
     GiDMenu::UpdateMenus
 }
 

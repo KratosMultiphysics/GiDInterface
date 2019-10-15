@@ -2,12 +2,13 @@
 <container n="TimeParameters" pn="Time parameters" un="FDEMTimeParameters,FLTimeParameters" help="Problem parameters" icon="time4" open_window="1">
 	<value n="StartTime" pn="Start time" v="0.0" help=""/>
 	<value n="EndTime" pn="End time" v="1.0" help=""/>
-	<value n="DeltaTime" pn="fake delta time" v="1e-6" help="" state="hidden"/>
+	<value n="DeltaTime" pn="Fluid Delta time" v="1e-5" help="" state="normal"/>
 	<value n="DEMDeltaTime" pn="DEM Delta time" v="1e-6" help=""/>
+    <value n="OutputInterval" pn="Output Interval"  type="double" v="1e-5"/>
 	<value n="ScreenInfoOutput" pn="Info screen output" v="5" help="How often the user gets information on the running process (in seconds)"/>
 	<value n="NeighbourSearchFrequency" pn="Search frequency" v="50" help="Search for new particle or wall neighbours. If set to '10', a single search will be computed out every ten steps"/>
-	<value n="AutomaticDeltaTime" pn="Fluid Automatic delta time" un="FLAutomaticDeltaTime" v="No" values="Yes,No" help=""/>
-	<value n="FluidDeltaTime" pn="Fluid Delta time" v="0.01" help="User-defined time step" state="[checkStateByUniqueName FLAutomaticDeltaTime No]"/>
+	<value n="AutomaticDeltaTime" pn="Fluid Automatic delta time" state="disabled" un="FLAutomaticDeltaTime" v="false" values="true,false" help=""/>
+	<!-- <value n="FluidDeltaTime" pn="Fluid Delta time" v="1e-5" help="User-defined time step" state="[checkStateByUniqueName FLAutomaticDeltaTime false]"/> -->
 	<value n="CFLNumber" pn="CFL number - Fluid" v="1" help="Desired CFL number for automatic time step computation" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
 	<value n="MinimumDeltaTime" pn="Minimum delta time - Fluid" v="0.0001" help="Minimum delta time allowed" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>
 	<value n="MaximumDeltaTime" pn="Maximum delta time - Fluid" v="0.01" help="Maximum delta time allowed" state="[checkStateByUniqueName FLAutomaticDeltaTime Yes]"/>

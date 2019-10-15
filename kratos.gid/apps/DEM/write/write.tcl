@@ -3,6 +3,7 @@ namespace eval DEM::write {
     variable inletProperties
     variable last_property_id
     variable delete_previous_mdpa
+    variable restore_ov
 }
 
 proc DEM::write::Init { } {
@@ -27,6 +28,9 @@ proc DEM::write::Init { } {
 
     variable delete_previous_mdpa
     set delete_previous_mdpa 1
+    
+    variable restore_ov
+    set restore_ov [dict create]
 }
 
 # MDPA Blocks
@@ -78,6 +82,7 @@ proc DEM::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
+
 proc DEM::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes

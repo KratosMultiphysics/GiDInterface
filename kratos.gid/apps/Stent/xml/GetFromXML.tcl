@@ -29,4 +29,8 @@ proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     return $ret
 }
 
+proc Stent::xml::UpdateParts {domNode args} {
+    Structural::xml::UpdateParts $domNode {*}$args
+}
+
 Stent::xml::Init

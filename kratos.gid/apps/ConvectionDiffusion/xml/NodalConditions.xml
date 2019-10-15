@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
 
-    <NodalConditionItem n="TEMPERATURE" pn="Temperature" ProcessName="AssignScalarVariableProcess" VariableName="TEMPERATURE" Interval="Initial" unit_magnitude="Temp" units="K" App="ConvectionDiffusion" ImplementedInApplication="ConvectionDiffusionApplication" >
+    <NodalConditionItem n="TEMPERATURE" pn="Temperature" ProcessName="AssignScalarVariableProcess" VariableName="TEMPERATURE" can_be_initial="true" Interval="Initial" unit_magnitude="Temp" units="K" App="ConvectionDiffusion" ImplementedInApplication="ConvectionDiffusionApplication" >
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
         </DefaultValues>

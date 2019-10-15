@@ -27,16 +27,16 @@ proc FSI::examples::DrawTurekBenchmarkFluidGeometry {args} {
 
     # Set fluid domain geometry
     if {$::Model::SpatialDimension eq "2D"} {
-        GiD_Process 'Layers ChangeName Layer0 Fluid escape Mescape \
-        Geometry Create Object Rectangle 0,0 2.5,0.41 Mescape \
-        Geometry Delete Surfaces 1 escape Mescape \
-        'GetPointCoord Silent FNoJoin 0.2,0.2 escape Mescape \
-        Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 Mescape \
-        Geometry Delete Surfaces 1 escape escape Mescape \
-        Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 6 NoJoin @0,0.02 @-0.4,0 escape escape escape escape escape Mescape \
-        Geometry Create IntMultLines 5 6 escape 8 10 escape escape escape escape Mescape \
-        Geometry Delete AllTypes points 7 9 lines 12 14 surfaces volumes dimensions points lines 15 surfaces volumes dimensions escape Mescape \
-        Geometry Create NurbsSurface 1 2 3 4 7 9 11 13 16 escape escape
+        GiD_Process 'Layers ChangeName Layer0 Fluid escape Mescape 
+        GiD_Process MEscape Geometry Create Object Rectangle 0,0 2.5,0.41 Mescape 
+        GiD_Process MEscape Geometry Delete Surfaces 1 escape Mescape \
+        'GetPointCoord Silent FNoJoin 0.2,0.2 escape escape 
+        GiD_Process MEscape Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 escape escape escape 
+        GiD_Process MEscape Geometry Delete Surfaces 1 escape escape  
+        GiD_Process MEscape Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 6 NoJoin @0,0.02 @-0.4,0 escape escape escape escape escape  
+        GiD_Process MEscape Geometry Create IntMultLines 5 6 escape 8 10 escape escape escape escape  
+        GiD_Process MEscape Geometry Delete AllTypes points 7 9 lines 12 14 surfaces volumes dimensions points lines 15 surfaces volumes dimensions escape escape 
+        GiD_Process MEscape Geometry Create NurbsSurface 1 2 3 4 7 9 11 13 16 escape escape
     } else {
         # 3D version not implemented yet
     }
@@ -210,30 +210,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
 
     # Displacement 3D
     if {$nd eq "3D"} {
-        # 3D CASE NOT IMPLEMENTED YET
-        # set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC3D'\]"
-        # set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_full]
-        # $fluidDisplacementNode setAttribute ov surface
-        # set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
-        # foreach {prop val} $props {
-        #      set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-        #      if {$propnode ne "" } {
-        #           $propnode setAttribute v $val
-        #      } else {
-        #         W "Warning - Couldn't find property FluidFixedDisplacement_full $prop"
-        #      }
-        # }
-        # set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement FluidFixedDisplacement_lat]
-        # $fluidDisplacementNode setAttribute ov surface
-        # set props [list constrainedX 0 constrainedY 0 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
-        # foreach {prop val} $props {
-        #      set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-        #      if {$propnode ne "" } {
-        #           $propnode setAttribute v $val
-        #      } else {
-        #         W "Warning - Couldn't find property FluidFixedDisplacement_lat $prop"
-        #      }
-        # }
+        
     } {
         set gname "FluidALEMeshFreeX//Total"
         GiD_Groups create $gname
@@ -243,7 +220,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
-        set props [list constrainedX 0 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list selector_component_X Not selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -259,7 +236,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         spdAux::AddIntervalGroup FluidALEMeshFixXY $gname
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
-        set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z Not.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -274,7 +251,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         spdAux::AddIntervalGroup Cylinder $gname
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
-        set props [list constrainedX 1 constrainedY 1 constrainedZ 1 valueX 0.0 valueY 0.0 valueZ 0.0 Interval Total]
+        set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
         foreach {prop val} $props {
              set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
              if {$propnode ne "" } {
@@ -299,7 +276,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
 
     # Fluid domain output parameters
     set change_list [list OutputControlType time OutputDeltaTime 0.01]
-    set xpath [spdAux::getRoute FLResults]
+    set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
@@ -328,7 +305,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='FSI']/container[@n='Structural']/condition[@n='Parts']}
+    set structParts {container[@n='FSI']/container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "KirchhoffSaintVenant3DLaw" : "KirchhoffSaintVenantPlaneStrain2DLaw"}]
@@ -350,7 +327,8 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement $gname]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
-    set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -377,7 +355,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
 
     # Structure domain output parameters
     set change_list [list OutputControlType time OutputDeltaTime 0.01]
-    set xpath [spdAux::getRoute STResults]
+    set xpath "[spdAux::getRoute STResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     foreach {name value} $change_list {
         set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {

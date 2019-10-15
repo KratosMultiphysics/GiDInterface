@@ -69,7 +69,7 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     gid_groups_conds::setAttributesF {container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='Structural']/condition[@n='Parts']}
+    set structParts {container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov surface
     set constLawNameStruc "LinearElasticPlaneStress2DLaw"
@@ -89,9 +89,10 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     spdAux::AddIntervalGroup Ground "Ground//Total"
     GiD_Groups edit state "Ground//Total" hidden
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
-    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement Ground]
+    set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Ground//Total"]
     $structDisplacementNode setAttribute ov line
-    set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z Not Interval Total]
+    #set props [list constrained Yes ByFunction No value 0.0]
     foreach {prop val} $props {
          set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -109,7 +110,7 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     set structLoad "container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='LineLoad$nd'\]"
     set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "InterfaceStructure//Total"]
     $LoadNode setAttribute ov line
-    set props [list ByFunction No modulus 50 directionX 1 Interval Total]
+    set props [list ByFunction No modulus 50 value_direction_X 1 Interval Total]
     foreach {prop val} $props {
          set propnode [$LoadNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {

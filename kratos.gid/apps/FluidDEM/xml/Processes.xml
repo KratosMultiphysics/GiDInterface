@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+    <Process n="ApplyFluidRotationProcess" pn="Assign fluid rotation process" python_module="apply_rigid_rotation_process" kratos_module="KratosMultiphysics.SwimmingDEMApplication.PID" help="">
+        <inputs>
+            <parameter n="angular_velocity" pn="Angular velocity" type="double" v="3.14159265359"/>
+            <parameter n="rotation_axis_initial_point" pn="Rotation axis initial point" type="vector" v="0.0,0.0,0.0"/>
+            <parameter n="rotation_axis_final_point" pn="Rotation axis final point" type="vector" v="0.0,0.0,0.0"/>
+            <parameter n="initial_time" pn="Initial time" type="double" v="0.0"/>
+        </inputs>
+    </Process>
+</ProcessList>
+
+    <!-- "python_module" : "apply_rigid_rotation_process",
+                "kratos_module" : "KratosMultiphysics.SwimmingDEMApplication.PID",
+                "Parameters"    : {
+                    "model_part_name" : "FluidModelPart.Parts_fluid",
+                    "angular_velocity" : 3.14,
+                    "rotation_axis_initial_point" : [0.0,0.0,0.0],
+                    "rotation_axis_final_point" : [0.0,0.0,1.0],
+                    "initial_time" : 0.0
+                } -->

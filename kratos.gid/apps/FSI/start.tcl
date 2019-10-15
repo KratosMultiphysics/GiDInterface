@@ -14,7 +14,7 @@ proc ::FSI::Init { } {
     variable attributes
     
     set kratos_name FSIapplication
-    
+
     #W "Sourced FSI"
     set dir [apps::getMyDir "FSI"]
     set prefix FSI
@@ -50,8 +50,8 @@ proc ::FSI::CustomToolbarItems { } {
     # TODO: REMOVE THIS IF STATEMENT ONCE THE 3D MOK BENCHMARK IS IMPLEMENTED
     if {$::Model::SpatialDimension eq "2D"} {
         Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::TurekBenchmark] [= "Example\nTurek benchmark - FSI2"] 
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]
     }
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::FSI::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]
 }
 
 proc ::FSI::CustomMenus { } {

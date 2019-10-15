@@ -95,6 +95,9 @@ proc write::writeEvent { filename } {
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
+    #### Force values update ####
+    spdAux::ForceTreePreload
+
     #### Validate ####
     set errcode [writeValidateInApp $appid]
 
@@ -365,6 +368,9 @@ proc write::getPartsGroupsId {} {
 
     set listOfGroups [list ]
     set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/group"
+    if {[llength [$root selectNodes $xp1]] < 1} {
+        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/condition/group"
+    }
     set groups [$root selectNodes $xp1]
 
     foreach group $groups {
@@ -462,13 +468,24 @@ proc write::forceUpdateNode {node} {
     catch {get_domnode_attribute $node value}
     catch {get_domnode_attribute $node state}
 }
-proc write::getValueByNode { node } {
-    if {[get_domnode_attribute $node v] eq ""} {
+proc write::getValueByNode { node {what noforce} } {
+    if {[get_domnode_attribute $node v] eq "" || $what eq "force"} {
         write::forceUpdateNode $node
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
 }
-proc write::getValue { un { it "" } {what noforce} } {
+
+proc write::getValueByXPath { xpath { it "" }} {
+    set root [customlib::GetBaseRoot]
+    set node [$root selectNodes $xpath]
+    if {$node ne ""} {
+        if {$it ne ""} {set node [$node find n $it]}
+        return [write::getValueByNode $node]
+    }
+    return ""
+}
+
+proc write::getValue { name { it "" } {what noforce} } {
     set root [customlib::GetBaseRoot]
 
     set xp [spdAux::getRoute $un]
@@ -554,6 +571,11 @@ proc write::getSpacing {number} {
 }
 proc write::mdpaIndent { {b 4} } {
     variable current_mdpa_indent_level
+    if {[info exists Kratos::kratos_private(mdpa_format)]} {
+        if {$Kratos::kratos_private(mdpa_format) == 0} {
+            return ""
+        }
+    }
     string repeat [string repeat " " $b] $current_mdpa_indent_level
 }
 
@@ -583,62 +605,5 @@ proc write::WriteAssignedValues {condNode} {
     return $ret
 }
 
-proc write::writePropertiesJsonFile {{parts_un ""} {fname "materials.json"} {write_claw_name "True"} {model_part_name ""}} {
-    if {$parts_un eq ""} {set parts_un [GetConfigurationAttribute parts_un]}
-    set mats_json [getPropertiesList $parts_un $write_claw_name $model_part_name]
-    write::OpenFile $fname
-    write::WriteJSON $mats_json
-    write::CloseFile
-}
-
-proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_name ""}} {
-    variable mat_dict
-    set props_dict [dict create]
-    set props [list ]
-
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
-    #set root [customlib::GetBaseRoot]
-
-    set xp1 "[spdAux::getRoute $parts_un]/group"
-    foreach gNode [$root selectNodes $xp1] {
-        set group [get_domnode_attribute $gNode n]
-        set sub_model_part [write::getSubModelPartId Parts $group]
-        if {$model_part_name ne ""} {set sub_model_part $model_part_name.$sub_model_part}
-        if { [dict exists $mat_dict $group] } {
-            set mid [dict get $mat_dict $group MID]
-            set prop_dict [dict create]
-            dict set prop_dict "model_part_name" $sub_model_part
-            dict set prop_dict "properties_id" $mid
-            set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]
-            set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
-            if {$constitutive_law ne ""} {
-                set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
-                set variables_dict [dict create]
-                foreach prop [dict keys [dict get $mat_dict $group] ] {
-                    if {$prop ni $exclusionList} {
-                        dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
-                    }
-                }
-                set material_dict [dict create]
-
-                if {$write_claw_name eq "True"} {
-                    set constitutive_law_name [$constitutive_law getKratosName]
-                    dict set material_dict constitutive_law [dict create name $constitutive_law_name]
-                }
-                dict set material_dict Variables $variables_list
-                dict set material_dict Tables dictnull
-
-                dict set prop_dict Material $material_dict
-
-                lappend props $prop_dict
-            }
-        }
-
-    }
-
-    dict set props_dict properties $props
-    return $props_dict
-}
 
 write::Init

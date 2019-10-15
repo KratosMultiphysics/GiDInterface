@@ -1,0 +1,14 @@
+<group name='kratos_preferences' label='Kratos'>
+    <labelframe name='main_options' label='General options'>
+        <combobox name='DevMode' variable='DevMode' variablemanager='Kratos::ManagePreferences' label='Mode' help='Show/Hide some experimental features'>
+            <option value='dev' label='Developer'/>
+            <option value='release' label='Release'/>
+        </combobox>
+        <combobox name='echo_level' variable='echo_level' variablemanager='Kratos::ManagePreferences' label='Echo level' help='Show more/less message'>
+            <option value='0' label='0'/>
+            <option value='1' label='1'/>
+            <option value='2' label='2'/>
+        </combobox>
+    </labelframe>
+</group>
+

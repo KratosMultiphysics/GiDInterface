@@ -9,12 +9,13 @@ proc FSI::examples::Init { } {
 }
 
 proc FSI::examples::UpdateMenus { } {
-    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Mok - Channel with flexible wall" ] 8 PRE [list ::FSI::examples::MokChannelFlexibleWall] "" "" insertafter =
+    set menu_id 7
+    GiDMenu::InsertOption "Kratos" [list "Mok - Channel with flexible wall" ] [incr menu_id] PRE [list ::FSI::examples::MokChannelFlexibleWall] "" "" insertbefore =
     if {$::Model::SpatialDimension eq "2D"} {
-        GiDMenu::InsertOption "Kratos" [list "Turek benchmark" ] 9 PRE [list ::FSI::examples::TurekBenchmark] "" "" insertafter =
+        GiDMenu::InsertOption "Kratos" [list "Turek benchmark" ] [incr menu_id] PRE [list ::FSI::examples::TurekBenchmark] "" "" insertbefore =
+        GiDMenu::InsertOption "Kratos" [list "High-rise building" ] [incr menu_id] PRE [list ::FSI::examples::HighRiseBuilding] "" "" insertbefore =
     }
-    GiDMenu::InsertOption "Kratos" [list "High-rise building" ] 8 PRE [list ::FSI::examples::HighRiseBuilding] "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "---"] [incr menu_id] PRE "" "" "" insertbefore =
     GiDMenu::UpdateMenus
 }
 

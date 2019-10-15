@@ -17,6 +17,7 @@ proc Fluid::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
+
 }
 
 proc Fluid::xml::getUniqueName {name} {
@@ -31,17 +32,21 @@ proc Fluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v time FLResults OutputControlType
 
     # Drag in output settings
-    if {[$root selectNodes "[spdAux::getRoute FLResults]/condition\[@n='Drag'\]"] eq ""} {
-        gid_groups_conds::addF [spdAux::getRoute FLResults] include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
+    set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
+    if {[$root selectNodes "$xpath/condition\[@n='Drag'\]"] eq ""} {
+        gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
     }
     
     customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     spdAux::parseRoutes
 
     # Nodal reactions in output settings
-    if {[$root selectNodes "[spdAux::getRoute Results]/container\[@n='OnNodes'\]"] ne ""} {
-        gid_groups_conds::addF "[spdAux::getRoute Results]/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
+    if {[$root selectNodes "$xpath/container\[@n='OnNodes'\]"] ne ""} {
+        gid_groups_conds::addF "$xpath/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
     }
+    
+    # TODO: remove when Non newtonian is implemented for 2d
+    if {$::Model::SpatialDimension eq "2D"} { Model::ForgetConstitutiveLaw HerschelBulkley }
 }
 
 # Usage 
@@ -80,6 +85,22 @@ proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name 
         }
     }
     
+}
+
+
+proc Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
+    
+    set nd $::Model::SpatialDimension
+    set fluidConditions [spdAux::getRoute $fluid_conditions_UN]
+    set fluidInlets "$fluidConditions/condition\[@n='$inlet_condition_name_base$nd'\]/group"
+    foreach inlet [[customlib::GetBaseRoot] selectNodes $fluidInlets] {
+        set group_name [$inlet @n]
+        if {[GiD_Groups exists $group_name]} {set group_name [GiD_Groups get parent $group_name]}
+        $inlet delete
+        if {$delete_groups} {
+            if {[GiD_Groups exists $group_name]} {GiD_Groups delete $group_name}
+        }
+    }
 }
 
 Fluid::xml::Init
