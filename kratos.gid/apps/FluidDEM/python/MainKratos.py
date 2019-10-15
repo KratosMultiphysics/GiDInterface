@@ -13,7 +13,7 @@ from KratosMultiphysics.DEMApplication import *
 from KratosMultiphysics.FluidDynamicsApplication import *
 from KratosMultiphysics.SwimmingDEMApplication import *
 
-from swimming_DEM_analysis import SwimmingDEMAnalysis
+from KratosMultiphysics.SwimmingDEMApplication.swimming_DEM_analysis import SwimmingDEMAnalysis
 
 class SwimmingDEMAnalysisWithFlush(SwimmingDEMAnalysis):
     def __init__(self, model, algorithm = None, parameters=Parameters("{}")):

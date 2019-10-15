@@ -78,7 +78,7 @@ proc Solid::examples::TreeAssignationEccentricColumn3D {args} {
     set solidConstraintX {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintXNode [customlib::AddConditionGroupOnXPath $solidConstraintX "ConstraintX//Total"]
     $solidConstraintXNode setAttribute ov line
-    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y No ByFunctionY No valueY 0.0 Enabled_Z No ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z Not Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintXNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -95,7 +95,7 @@ proc Solid::examples::TreeAssignationEccentricColumn3D {args} {
     set solidConstraintZ {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintZNode [customlib::AddConditionGroupOnXPath $solidConstraintZ "ConstraintZ//Total"]
     $solidConstraintZNode setAttribute ov line
-    set props [list Enabled_X No ByFunctionX No valueX 0.0 Enabled_Y No ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X Not selector_component_Y Not selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintZNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {

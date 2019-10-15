@@ -1,24 +1,24 @@
 # utility for advanced meshing features in DEM
 proc DEM::write::Elements_Substitution {} {
-    
+
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
     package require math::statistics
     set seed [expr srand(0)]
     set fail 0
     set final_list_of_isolated_nodes [list]
-    
+
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
         if {[write::isBooleanTrue $advanced_meshing_features]} {
-            
+
             set AdvancedMeshingFeaturesAlgorithmType [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeaturesAlgorithmType'\]"]]
             set FEMtoDEM [write::getValueByNode [$group selectNodes "./value\[@n='FEMtoDEM'\]"]]
             set Diameter [write::getValueByNode [$group selectNodes "./value\[@n='Diameter'\]"]]
             set ProbabilityDistribution [write::getValueByNode [$group selectNodes "./value\[@n='ProbabilityDistribution'\]"]]
             set StandardDeviation [write::getValueByNode [$group selectNodes "./value\[@n='StandardDeviation'\]"]]
-            
+
             if {$AdvancedMeshingFeaturesAlgorithmType eq "FEMtoDEM"} {
                 set element_radius [expr {0.5*$Diameter}]
                 set standard_deviation $StandardDeviation
@@ -29,7 +29,7 @@ proc DEM::write::Elements_Substitution {} {
                     set nodes_to_delete [list]
                     set element_ids [GiD_EntitiesGroups get $groupid elements] ;               # get ids of all elements in cgroupid
                     array set is_external_element [DEM::write::Compute_External_Elements 3 $groupid $element_ids]
-                    
+
                     foreach element_id $element_ids { ;                                         # loop on each of the elements by id
                         set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ;   # get the nodes of the element
                         lappend nodes_to_delete {*}$element_nodes ;                             # add those nodes to the nodes_to_delete list
@@ -42,23 +42,23 @@ proc DEM::write::Elements_Substitution {} {
                         # create a new node starting from the center of the given element
                         set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
                         # create a new sphere element starting from the previous node and obtain its id
-                        
+
                         # lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
                         # if {($is_external_element($element_id)==1) && ([lsearch $cohesive_groups_list $groupid] != -1)} {
                             #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $new_element_id
                             # }
-                        
+
                         foreach container_group [GiD_EntitiesGroups entity_groups elements $element_id] {
                             # get the list of groups to which the element with id $element_id belongs
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
                             # assign the element with id $new_element_id to each of the groups in the loop
                         }
                     }
-                    
+
                     # if {[lsearch $cohesive_groups_list $groupid] == -1} {
                         #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                         # }
-                    
+
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type hexahedra]
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type tetrahedra]
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type triangle]
@@ -81,10 +81,10 @@ proc DEM::write::Elements_Substitution {} {
                             } else {
                                 set final_elem_radius [DEM::write::LognormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
                             }
-                            
+
                             set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
                             # create a new sphere element starting from the previous node and obtain its id
-                            
+
                             set list_of_groups_containing_this_elem [GiD_EntitiesGroups entity_groups nodes $node_id]
                             foreach container_group $list_of_groups_containing_this_elem {
                                 GiD_EntitiesGroups assign $container_group elements $new_element_id
@@ -110,28 +110,28 @@ proc DEM::write::Elements_Substitution {} {
                         set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
                         # create a new sphere element starting from the previous node and obtain its id
                         lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
-                        
+
                         set list_of_groups_containing_this_elem [GiD_EntitiesGroups entity_groups nodes $node_id]
                         foreach container_group $list_of_groups_containing_this_elem {
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
                         }
                     }
-                    
+
                     # if {[lsearch $cohesive_groups_list $groupid] == -1} {
                         #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                         # }
-                    
+
                 } elseif {$FEMtoDEM == "AtBothNodesAndCentroids"} {
                     set nodes_to_delete [list]
                     set element_ids [GiD_EntitiesGroups get $groupid elements]
                     # get the ids of all the elements in groupid
-                    
+
                     foreach element_id $element_ids {
                         # loop on each of the elements by id
-                        
+
                         set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end]
                         # get the nodes of the element
-                        
+
                         lappend nodes_to_delete {*}$element_nodes
                         # add those nodes to the nodes_to_delete list
                         if {$probldistr == "NormalDistribution"} {
@@ -141,43 +141,43 @@ proc DEM::write::Elements_Substitution {} {
                         }
                         set node_id [GiD_Mesh create node append [DEM::write::GetElementCenter $element_id]]
                         # create a new node starting from the center of the given element
-                        
+
                         set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
                         # create a new sphere element starting from the previous node and obtain its id
                         lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
-                        
+
                         foreach container_group [GiD_EntitiesGroups entity_groups elements $element_id] {
                             # get the list of groups to which the element with id $element_id belongs
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
                             # assign the element with id $new_element_id to each of the groups in the loop
                         }
                     }
-                    
+
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type hexahedra]
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type tetrahedra]
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type triangle]
-                    
+
                     foreach node_id [GiD_EntitiesGroups get $groupid nodes] {
                         if {$probldistr == "NormalDistribution"} {
                             set final_elem_radius [DEM::write::NormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
                         } else {
                             set final_elem_radius [DEM::write::LognormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
                         }
-                        
+
                         set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
                         # create a new sphere element starting from the previous node and obtain its id
                         lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
-                        
+
                         set list_of_groups_containing_this_elem [GiD_EntitiesGroups entity_groups nodes $node_id]
                         foreach container_group $list_of_groups_containing_this_elem {
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
                         }
                     }
-                    
+
                     # if {[lsearch $cohesive_groups_list $groupid] == -1} {
                         #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                         # }
-                    
+
                 }
             } else {
                 # 2D to 3D algorithm instead of FEM2DEM
@@ -191,7 +191,7 @@ proc DEM::write::Elements_Substitution {} {
                     lappend group_nodes($groupid) $element_node
                     lappend group_radius($groupid) $element_radius
                 }
-                
+
                 GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements]
                 foreach node_id $group_nodes($groupid) radius $group_radius($groupid) {
                     set final_elem_radius $radius
@@ -203,27 +203,27 @@ proc DEM::write::Elements_Substitution {} {
                         GiD_EntitiesGroups assign $container_group elements $new_element_id
                     }
                 }
-                
+
                 # if {[lsearch $cohesive_groups_list $groupid] == -1} {
                     #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                     # }
             }
-            
+
         }
-        
+
         lappend final_list_of_isolated_nodes {*}[lindex [GiD_EntitiesGroups get $groupid all_mesh] 0]
         DEM::write::Delete_Unnecessary_Elements_From_Mesh $groupid
     }
-    
+
     DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes $final_list_of_isolated_nodes
     # DEM::write::Destroy_Skin_Sphere_Group $KPriv(what_dempack_package)
     # Getting rid of the SKIN_SPHERE_DO_NOT_DELETE group when in discontinuum or swimming
-    
+
     return $fail
 }
 
 proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
-    
+
     set mesh_elements [GiD_EntitiesGroups get $cgroupid all_mesh]
     set real_mesh_elements [lindex $mesh_elements 1]
     set list_of_faces [list]
@@ -234,7 +234,7 @@ proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
     }
     set unrepeated_list [lsort -integer -unique $list_of_faces]
     set elements_in_common 6 ; #TODO: Check this constant
-    
+
     foreach list_elem $unrepeated_list {
         set result($list_elem) [lsearch -all $list_of_faces $list_elem]
         set length($list_elem) [llength $result($list_elem)]
@@ -250,10 +250,10 @@ proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
         }
     }
     set unrepeated_list_exterior_nodes [lsort -integer -unique $list_of_faces]
-    
+
     foreach element_id $element_ids { ; # Here we loop on each of the elements by id
         set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ; # We get the nodes of the element
-        
+
         set is_external_element($element_id) 0
         foreach element_node $element_nodes {
             if {[lsearch $unrepeated_list_exterior_nodes $element_node] != -1} {
@@ -275,14 +275,14 @@ proc DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
 }
 
 proc DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes {final_list_of_isolated_nodes} {
-    
+
     # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE nodes
     # # GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
     # GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
     # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type linear]
     # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
     # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
-    
+
     foreach node_id [lsort -integer -unique $final_list_of_isolated_nodes] {
         if {![DEM::write::GetNodeHigherentities $node_id]} {
             GiD_Mesh delete node $node_id
@@ -350,25 +350,26 @@ proc DEM::write::GetElementCenter {element_id} {
 }
 
 proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
-    
+
     # Align the normal
     DEM::write::AlignSurfNormals Outwards
-    
+
     # Reset Automatic Conditions from previous executions
     set entitytype "surface"
-    
+
     # Automatic Kratos Group for Boundary Condition
     set groupid "-AKGSkinMesh3D"
     DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
-    
+
     # Find boundaries
     set bsurfacelist [DEM::write::FindBoundariesOfNonSphericElements $entitytype]
     set allsurfacelist [DEM::write::FindAllSurfacesOfNonSphericElements $entitytype]
     DEM::write::AssignGeometricalEntitiesToSkinSphere3D
-    
+    DEM::write::AssignGeometricalEntitiesToSkinSphere2D
+
     # Get the surface type list
     lassign [DEM::write::GetSurfaceTypeList $bsurfacelist] tetrasurf hexasurf
-    
+
     # Triangle
     if {[llength $tetrasurf]} {
         # Assign the triangle element type
@@ -376,7 +377,7 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
         # Automatically meshing all the boundary surfaces
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}$tetrasurf escape
     }
-    
+
     # Quadrilateral
     if {[llength $hexasurf]} {
         # Assign the quadrilateral element type
@@ -385,12 +386,12 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}$hexasurf escape
     }
     DEM::write::AssignConditionToGroupGID $entitytype $bsurfacelist $groupid
-    
+
     # Special case of DEM
     DEM::write::AssignSpecialBoundaries $allsurfacelist
     DEM::write::ForceTheMeshingOfDEMFEMWallGroups
     DEM::write::ForceTheMeshingOfDEMInletGroups
-    
+
 }
 
 proc DEM::write::AlignSurfNormals {direction} {
@@ -398,7 +399,7 @@ proc DEM::write::AlignSurfNormals {direction} {
     # Arguments
     # direction => Direction option ["Inwards"|"Outwards"]
     # Note: This procedure in the same used in the fluid_only problem type
-    
+
     switch $direction {
         Inwards {
             set wrong_way "DIFF1ST"
@@ -410,7 +411,7 @@ proc DEM::write::AlignSurfNormals {direction} {
     }
     set volumelist [GiD_Geometry list volume 1:]
     set surfacelist [list]
-    
+
     # For each volume, we look for face surfaces with oriented in the wrong direction
     foreach volume $volumelist {
         set volumeinfo [GiD_Info list_entities volumes $volume]
@@ -430,7 +431,7 @@ proc DEM::write::AlignSurfNormals {direction} {
             }
         }
     }
-    
+
     if {[llength $surfacelist]} {
         # If its in the contour, switch its normal
         eval GiD_Process Mescape Utilities SwapNormals Surfaces Select $surfacelist
@@ -457,7 +458,7 @@ proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
     #  * entity=line for models made of surfaces
     #  * entity=surface for models made of volumes
     # Note: This procedure in the same used in the fluid_only problem type
-    
+
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
     set groups_to_spherize_list [list ]
@@ -465,19 +466,19 @@ proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
         set groupid [$group @n]
         lappend groups_to_spherize_list $groupid
     }
-    
+
     # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
     foreach volume_id [GiD_Geometry list volume 1:end] {
         set volume_info [GiD_Info list_entities volume $volume_id]
         set is_spheric [regexp {Elemtype=9} $volume_info]
-        
+
         foreach group_that_includes_this_volume [GiD_EntitiesGroups entity_groups volumes $volume_id] {
             #next we search $group_that_includes_this_volume among $groups_to_spherize_list:
             if {[lsearch $groups_to_spherize_list $group_that_includes_this_volume] >= 0} {
                 set is_spheric 1
             }
         }
-        
+
         if {$is_spheric==0} {
             foreach item [lrange [GiD_Geometry get volume $volume_id] 2 end] {
                 set surface_id [lindex $item 0]
@@ -485,7 +486,7 @@ proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
             }
         }
     }
-    
+
     set boundarylist [list]
     foreach surface_id [lsort -integer [array names surfaces_higher_entities_list]] {
         if {$surfaces_higher_entities_list($surface_id) == 1} {
@@ -499,16 +500,16 @@ proc DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
     # ABSTRACT: Return a list containing all boundaries entities
     # Arguments
     # entity => surface
-    
+
     set surf_high_entities [list]
     set surf_no_high_entities [list]
     set boundarylist [list]
-    
+
     # Boundary surfaces of all the volumes in the domain
     foreach volume_id [GiD_Geometry list volume 1:end] {
         set volume_info [GiD_Info list_entities volume $volume_id]
         set is_spheric [regexp {Elemtype=9} $volume_info]
-        
+
         # Sphere volumes are excluded
         if {$is_spheric==0} {
             foreach item [lrange [GiD_Geometry get volume $volume_id] 2 end] {
@@ -516,7 +517,7 @@ proc DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
             }
         }
     }
-    
+
     # Surfaces with no higher entities (not belonging to a volume)
     set layers [GiD_Info layers]
     foreach layer $layers {
@@ -526,20 +527,38 @@ proc DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
     return $boundarylist
 }
 
+proc DEM::write::AssignGeometricalEntitiesToSkinSphere2D {} {
+
+    set list_of_points [GiD_Geometry list point 1:end]
+    set list_of_lines [GiD_Geometry list line 1:end]
+    if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
+	GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
+    }
+
+    set points_to_add_to_skin_circles [list]
+    set lines_to_add_to_skin_circles [list]
+    set boundary_circle_line_list [DEM::write::FindBoundariesOfCircularElements line]
+
+    set total_skin_line_circle_list [concat $lines_to_add_to_skin_circles $boundary_circle_line_list]
+    set total_skin_circle_list [list $points_to_add_to_skin_circles $total_skin_line_circle_list {} {}]
+    GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE all_geometry $total_skin_circle_list
+}
+
+
 proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
-    
+
     set list_of_points [GiD_Geometry list point 1:end]
     set list_of_lines [GiD_Geometry list line 1:end]
     set list_of_surfaces [GiD_Geometry list surface 1:end]
     if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
         GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
     }
-    
+
     set points_to_add_to_skin_spheres [list]
     set lines_to_add_to_skin_spheres [list]
     set surfaces_to_add_to_skin_spheres [list]
     set bound_sphere_surface_list [DEM::write::FindBoundariesOfSphericElements surface]
-    
+
     foreach point_id $list_of_points line_id $list_of_lines surface_id $list_of_surfaces {
         set point_info [GiD_Info list_entities point $point_id]
         set line_info [GiD_Info list_entities line $line_id]
@@ -554,18 +573,16 @@ proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
             lappend lines_to_add_to_skin_spheres $line_id
         }
         if {$surface_has_no_higher_entities == 1} {
-            # lappend surfaces_to_add_to_skin_spheres $surface_id; # esta linea es la que asigna skin a las placas
+            # lappend surfaces_to_add_to_skin_spheres $surface_id; # esta linea es la que asigna skin a las placas. en el wcfk va bien
         }
     }
-    # W $surfaces_to_add_to_skin_spheres
-    # W $bound_sphere_surface_list
     set total_skin_surface_sphere_list [concat $surfaces_to_add_to_skin_spheres $bound_sphere_surface_list]
     set total_skin_sphere_list [list $points_to_add_to_skin_spheres $lines_to_add_to_skin_spheres $total_skin_surface_sphere_list {}]
     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE all_geometry $total_skin_sphere_list
 }
 
 proc DEM::write::GetSurfaceTypeList {surfacelist} {
-    
+
     set tetrasurf [list]
     set hexasurf [list]
     foreach surfid $surfacelist {
@@ -607,12 +624,12 @@ proc DEM::write::AssignSpecialBoundaries {entitylist} {
     #set DEMApplication "No"
     #catch {set DEMApplication [::xmlutils::setXml {GeneralApplicationData//c.ApplicationTypes//i.DEM} dv]}
     #if {$DEMApplication eq "Yes"} {
-        
+
         # Automatic Kratos Group for all DEM boundary lines
         set groupid "-AKGDEMSkinMesh3D"
         set entitytype "line"
         DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
-        
+
         # Get all end line list from the boundary surfaces
         set endlinelist [list]
         foreach surfid $entitylist {
@@ -631,15 +648,15 @@ proc DEM::write::AssignSpecialBoundaries {entitylist} {
             }
         }
         set endlinelist [lsort -integer -unique $endlinelist]
-        
+
         # Assign the boundary condition
         DEM::write::AssignConditionToGroupGID $entitytype $endlinelist $groupid
-        
+
         #}
 }
 
 proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
-    
+
     set root [customlib::GetBaseRoot]
     #set xp1 "[spdAux::getRoute DEMConditions]/group"DEM-FEM-Wall
     set xp1 "[spdAux::getRoute DEMConditions]/group"
@@ -647,7 +664,7 @@ proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
         set groupid [$group @n]
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
-    
+
     # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-FEM-Wall"] {
         #         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
         # }
@@ -661,14 +678,63 @@ proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
         set groupid [$group @n]
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
-    
+
     # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-Inlet"] {
         #         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
         # }
 }
 
+proc DEM::write::FindBoundariesOfCircularElements {entity} {
+
+
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute DEMParts]/group"
+    set groups_to_circularize_list [list ]
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        lappend groups_to_circularize_list $groupid
+    }
+
+    # ld wckf:dem  code
+    # set groups_to_circularize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
+    # foreach surface_id [GiD_Geometry list surface 1:end] {} ; #list of surface identifiers in the whole range
+	# set surface_info [GiD_Info list_entities surface $surface_id] ; #info about those surfaces
+	# set is_circular [regexp {Elemtype=10} $surface_info] ; #finding out if the element type is circular
+
+    foreach surface_id [GiD_Geometry list surface 1:end] {
+        set surface_info [GiD_Info list_entities surface $surface_id]
+        set is_circular [regexp {Elemtype=10} $surface_info]
+
+        foreach group_that_includes_this_surface [GiD_EntitiesGroups entity_groups surfaces $surface_id] {
+        #next we search $group_that_includes_this_surface among $groups_to_circularize_list:
+            if {[lsearch $groups_to_circularize_list $group_that_includes_this_surface] >= 0} {
+                set is_circular 1
+            }
+        }
+
+        set number_of_lines_in_the_surface [lindex [GiD_Geometry get surface $surface_id] 2]
+
+        if {$is_circular==1} {
+            foreach item [lrange [GiD_Geometry get surface $surface_id] 9 [expr {8 + $number_of_lines_in_the_surface}]] {
+                set line_id [lindex $item 0]
+                incr lines_higher_entities_list($line_id)
+            }
+        }
+    }
+
+    set boundarylist [list]
+    foreach line_id [lsort -integer [array names lines_higher_entities_list]] {
+        if {$lines_higher_entities_list($line_id) == 1} {
+            lappend boundarylist $line_id
+        }
+    }
+    return $boundarylist
+}
+
+
+
 proc DEM::write::FindBoundariesOfSphericElements {entity} {
-    
+
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
     set groups_to_spherize_list [list ]
@@ -676,19 +742,19 @@ proc DEM::write::FindBoundariesOfSphericElements {entity} {
             set groupid [$group @n]
             lappend groups_to_spherize_list $groupid
     }
-    
+
     # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
     foreach volume_id [GiD_Geometry list volume 1:end] {
         set volume_info [GiD_Info list_entities volume $volume_id]
         set is_spheric [regexp {Elemtype=9} $volume_info]
-        
+
         foreach group_that_includes_this_volume [GiD_EntitiesGroups entity_groups volumes $volume_id] {
             #next we search $group_that_includes_this_volume among $groups_to_spherize_list:
             if {[lsearch $groups_to_spherize_list $group_that_includes_this_volume] >= 0} {
                 set is_spheric 1
             }
         }
-        
+
         if {$is_spheric==1} {
             foreach item [lrange [GiD_Geometry get volume $volume_id] 2 end] {
                 set surface_id [lindex $item 0]
@@ -696,10 +762,9 @@ proc DEM::write::FindBoundariesOfSphericElements {entity} {
             }
         }
     }
-    
+
     set boundarylist [list]
     foreach surface_id [lsort -integer [array names surfaces_higher_entities_list]] {
-        # W $surface_id; # esto esta bien
         if {$surfaces_higher_entities_list($surface_id) == 1} {
             lappend boundarylist $surface_id
         }

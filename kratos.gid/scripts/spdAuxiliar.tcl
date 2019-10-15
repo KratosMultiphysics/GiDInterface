@@ -65,6 +65,8 @@ proc spdAux::TryRefreshTree { } {
             set ::spdAux::refreshTreeTurn 0
             gid_groups_conds::actualize_conditions_window
             gid_groups_conds::actualize_conditions_window
+            
+            gid_groups_conds::check_dependencies
             focus -force $foc
         }
         set ::spdAux::refreshTreeTurn 0
@@ -136,7 +138,7 @@ proc spdAux::CustomTreeCommon { } {
     
 }
 
-
+# FORCEPS
 proc spdAux::ForceTreePreload { } {
     foreach node [[customlib::GetBaseRoot] getElementsByTagName value] { 
         if {[$node hasAttribute "values"] } {

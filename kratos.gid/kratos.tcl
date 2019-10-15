@@ -167,7 +167,7 @@ proc Kratos::LoadCommonScripts { } {
     # Writing common scripts
     foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
         WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
-        WriteProjectParameters.tcl WriteSubModelPart.tcl} {
+        WriteProjectParameters.tcl WriteSubModelPart.tcl WriteProcess.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename]]
     }
     # Common scripts
@@ -219,7 +219,7 @@ proc Kratos::Event_LoadModelSPD { filespd } {
         # If the spd versions are different, transform (no matter which is greater)
         
         # Do the transform
-        after idle Kratos::TransformProblemtype $old_root
+        after idle [list Kratos::TransformProblemtype $old_root ${filespd}]
 
     } else {
         # If the spd versions are equal, partyhard
@@ -304,7 +304,7 @@ proc Kratos::LoadWizardFiles { } {
     Kratos::UpdateMenus
 }
 
-proc Kratos::TransformProblemtype {old_dom} {
+proc Kratos::TransformProblemtype {old_dom old_filespd} {
     # Check if current problemtype allows transforms
     if {[GiDVersionCmp 14.1.1d] < 0} { W "The minimum GiD version for a transform is '14.1.1d'\n Click Ok to try it anyway (You may lose data)" }
     
@@ -335,12 +335,13 @@ proc Kratos::TransformProblemtype {old_dom} {
     customlib::UpdateDocument
 
     # Prepare the new spd spatial dimmension
-    spdAux::SetSpatialDimmension $dim
+    spdAux::SetSpatialDimmension $old_nd
+
     # Prepare the new spd (and model) active application
-    apps::setActiveApp $app_id
+    apps::setActiveApp $old_activeapp
 
     # Call to customlib transform and pray
-    gid_groups_conds::transform_problemtype $spd_file
+    gid_groups_conds::transform_problemtype $old_filespd
 
     # Load default files (if any) (file selection values store the filepaths in the spd)
     spdAux::LoadModelFiles

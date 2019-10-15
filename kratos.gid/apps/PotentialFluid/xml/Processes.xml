@@ -8,7 +8,8 @@
 
 	<Process n="DefineWakeProcess3D" pn="Scalar value" python_module="define_wake_process_3d" kratos_module="KratosMultiphysics.CompressiblePotentialFlowApplication">
 		<inputs>
-			<parameter n="wake_direction" pn="Wake direction" type="vector" v="1.0,0.0,0.0" vectorType="double" help=""/>
+			<!-- <parameter n="wake_stl_file_name" pn="Wake stl file name" type="string" v="wake_mesh" help=""/> -->
+			<!-- <parameter n="wake_direction" pn="Wake direction" type="vector" v="1.0,0.0,0.0" vectorType="double" help=""/> -->
 			<parameter n="epsilon" pn="Epsilon" type="double" v="1e-6" help=""/>
 		</inputs>
 	</Process>

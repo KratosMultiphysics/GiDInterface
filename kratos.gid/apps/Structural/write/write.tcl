@@ -23,8 +23,9 @@ proc Structural::write::Init { } {
     SetAttribute time_parameters_un STTimeParameters
     SetAttribute results_un STResults
     SetAttribute materials_un STMaterials
-    SetAttribute conditions_un STLoads
+    SetAttribute initial_conditions_un STInitialConditions
     SetAttribute nodal_conditions_un STNodalConditions
+    SetAttribute conditions_un STLoads
     SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file "StructuralMaterials.json"
     SetAttribute main_script_file "KratosStructural.py"
@@ -87,6 +88,7 @@ proc Structural::write::writeMeshes { } {
     write::writePartSubModelPart
 
     # Solo Malla , no en conditions
+    write::writeNodalConditions [GetAttribute initial_conditions_un]
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
 
     # A Condition y a meshes-> salvo lo que no tenga topologia
@@ -200,7 +202,7 @@ proc Structural::write::WriteMaterialsFile { } {
 }
 
 proc Structural::write::GetUsedElements { {get "Objects"} } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set lista [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
@@ -212,7 +214,7 @@ proc Structural::write::GetUsedElements { {get "Objects"} } {
 }
 
 proc Structural::write::writeLocalAxes { } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
         set e [Model::getElement $elem_name]
@@ -294,10 +296,6 @@ proc Structural::write::writeHinges { } {
 }
 
 proc Structural::write::initLocalWriteConfiguration { } {
-
-    if {[usesContact]} {
-         SetAttribute main_script_file "KratosContactStructural.py"
-    }
 }
 
 proc Structural::write::usesContact { } {

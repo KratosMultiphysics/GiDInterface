@@ -9,7 +9,9 @@ proc ::Fluid::write::getParametersDict { } {
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
 
     # Solver settings
-    dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
+    set solver_settings_dict [Fluid::write::getSolverSettingsDict]
+    dict set solver_settings_dict "reform_dofs_at_each_step" false
+    dict set projectParametersDict solver_settings $solver_settings_dict
 
     # Boundary conditions processes
     set processesDict [dict create]
@@ -172,11 +174,10 @@ proc Fluid::write::getSolverSettingsDict { } {
     dict set modelDict input_filename $model_name
     dict set solverSettingsDict model_import_settings $modelDict
 
-    if {0} {
-        set materialsDict [dict create]
-        dict set materialsDict materials_filename [GetAttribute materials_file]
-        dict set solverSettingsDict material_import_settings $materialsDict
-    }
+    # material import settings
+    set materialsDict [dict create]
+    dict set materialsDict materials_filename [GetAttribute materials_file]
+    dict set solverSettingsDict material_import_settings $materialsDict
 
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict FLSolStrat FLScheme FLStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]

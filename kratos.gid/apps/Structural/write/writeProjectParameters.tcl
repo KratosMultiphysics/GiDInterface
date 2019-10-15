@@ -29,6 +29,7 @@ proc Structural::write::getOldParametersDict { } {
         set params [dict create]
         dict set params "result_file_name" [Kratos::GetModelName]
         dict set params "animation_steps" 20
+        dict set params "file_format" "gid"
         dict set params "label_type" "frequency"
         dict set eigen_process_dict "Parameters" $params
     }
@@ -111,9 +112,17 @@ proc Structural::write::getOldParametersDict { } {
     # Lists of processes
     set processesDict [dict create]
 
-    set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    #lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
-    dict set processesDict constraints_process_list $nodal_conditions_dict
+    set initial_conditions_list_raw [write::getConditionsParametersDict [GetAttribute initial_conditions_un] "Nodal"]
+    set initial_conditions_list [list ]
+    foreach process $initial_conditions_list_raw {
+        if {[dict exists $process Parameters constrained]} {
+            if {[llength [dict get $process Parameters constrained]] == 1} {dict set process Parameters constrained false}
+            if {[llength [dict get $process Parameters constrained]] == 3} {dict set process Parameters constrained [list false false false]}
+        }
+        lappend initial_conditions_list $process
+    }
+    set nodal_conditions_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    dict set processesDict constraints_process_list [concat $initial_conditions_list $nodal_conditions_list]
     if {[usesContact]} {
         set contact_conditions_dict [GetContactConditionsDict]
         dict set processesDict contact_process_list $contact_conditions_dict
@@ -166,7 +175,9 @@ proc Structural::write::GetContactConditionsDict { } {
     set master_group [$root selectNodes $xp_master]
     set slave_group [$root selectNodes $xp_slave]
 
-    if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
+    set contacts [list ]
+
+    #if {[llength $master_group] > 1 || [llength $slave_group] > 1} {error "Max 1 group allowed in contact master and slave"}
 
     set contact_process_dict [dict create ]
     dict set contact_process_dict python_module alm_contact_process
@@ -192,10 +203,12 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_parameters_dict assume_master_slave $val
 
     dict set contact_parameters_dict contact_type [write::getValue STContactParams contact_type]
-    
+
     dict set contact_process_dict Parameters $contact_parameters_dict
 
-    return [list $contact_process_dict]
+    lappend contacts $contact_process_dict
+
+    return $contacts
 }
 
 
@@ -226,7 +239,7 @@ proc Structural::write::writeParametersEvent { } {
 
 proc Structural::write::UsingRotationDofElements { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
@@ -239,7 +252,7 @@ proc Structural::write::UsingRotationDofElements { } {
 }
 proc Structural::write::UsingFileInPrestressedMembrane { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set found false
     foreach element_node $elements {
