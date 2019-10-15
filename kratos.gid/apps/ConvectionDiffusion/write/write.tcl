@@ -49,11 +49,12 @@ proc ConvectionDiffusion::write::writeModelPartEvent { } {
     # Nodal conditions and conditions
     writeConditions
     
+    # Custom SubmodelParts
+    write::writeBasicSubmodelParts [getLastConditionId]
+    
     # SubmodelParts
     writeMeshes
     
-    # Custom SubmodelParts
-    write::writeBasicSubmodelParts [getLastConditionId]
 }
 
 proc ConvectionDiffusion::write::writeCustomFilesEvent { } {
