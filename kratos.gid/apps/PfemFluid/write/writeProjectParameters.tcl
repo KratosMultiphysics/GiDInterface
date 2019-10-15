@@ -61,12 +61,12 @@ proc PfemFluid::write::getParametersDict { } {
     dict set projectParametersDict problem_process_list $problemProcessList
 
     ##### constraints_process_list
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set projectParametersDict loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
+    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
 
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
@@ -175,7 +175,7 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
         dict set timeSteppingDict automatic_time_step "false"
     }
 
-    dict set timeSteppingDict time_step [write::getValue PFEMFLUID_TimeParameters DeltaTime]
+    dict set timeSteppingDict time_step [write::getValue PFEMFLUID_TimeParameters [dict get $::PfemFluid::write::Names DeltaTime]]
 
     # set time_params [PfemFluid::write::GetTimeSettings]
     # dict set timeSteppingDict "time_step" [dict get $time_params time_step]
@@ -282,12 +282,12 @@ proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
 proc PfemFluid::write::GetPFEM_ProcessList { } {
     set resultList [list ]
 
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set resultList constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set resultList loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
+    dict set resultList loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
     
     dict set resultList auxiliar_process_list []
 
@@ -529,13 +529,15 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
         }
         dict set bodyDict meshing_strategy $meshing_strategyDict
 
-        set spatial_bounding_boxDict [dict create ]
-        dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
-        dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
-        dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
-        dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
-        dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
-        dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+        if {[spdAux::getRoute PFEMFLUID_BoundingBox] ne ""} {
+            set spatial_bounding_boxDict [dict create ]
+            dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
+            dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
+            dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
+            dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
+            dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
+            dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+        }
 
         set spatial_refining_boxDict [dict create ]
         dict set spatial_refining_boxDict "use_refining_box" [write::getValue PFEMFLUID_RefiningBox UseRefiningBox]

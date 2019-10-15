@@ -15,6 +15,7 @@ proc EmbeddedFluid::write::Init { } {
     SetAttribute main_script_file "KratosFluid.py"
     SetAttribute model_part_name "FluidModelPart"
     SetAttribute materials_file "FluidMaterials.json"
+    SetAttribute properties_location json
 }
 
 # Events
@@ -27,7 +28,6 @@ proc EmbeddedFluid::write::writeModelPartEvent { } {
     write::initWriteConfiguration [GetAttributes]
     write::writeModelPartData
     Fluid::write::writeProperties
-    write::writeMaterials [GetAttribute validApps]
     write::writeNodalCoordinatesOnParts
     write::writeElementConnectivities
     Fluid::write::writeConditions
@@ -36,14 +36,13 @@ proc EmbeddedFluid::write::writeModelPartEvent { } {
     Fluid::write::FreeConditionsMap
 }
 proc EmbeddedFluid::write::writeCustomFilesEvent { } {
-    write::CopyFileIntoModel "python/KratosFluid.py"
-    write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
+    Fluid::write::writeCustomFilesEvent
 }
 
 proc EmbeddedFluid::write::writeDistances { } {
     set must_write [write::getValue EMBFLDistanceSettings ReadingMode]
     if {$must_write eq "from_mdpa"} {
-        set data [GiD_Info Mesh EmbeddedDistances] 
+        set data [GiD_Info Mesh EmbeddedDistances]
         lassign $data nodes_list distances_list
         set length [objarray length $nodes_list]
         if {$length eq "0"} {W "Warning: No distances detected! Check Preferences > Mesh type > Embedded"}
