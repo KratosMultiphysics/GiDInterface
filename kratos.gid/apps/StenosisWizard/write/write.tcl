@@ -8,6 +8,7 @@ proc StenosisWizard::write::Init { } {
 
 
 proc StenosisWizard::write::writeCustomFilesEvent { } {
+    Fluid::write::WriteMaterialsFile
     write::CopyFileIntoModel "../Fluid/python/KratosFluid.py"
     write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
 }

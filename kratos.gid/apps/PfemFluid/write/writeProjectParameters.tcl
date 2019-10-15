@@ -61,12 +61,12 @@ proc PfemFluid::write::getParametersDict { } {
     dict set projectParametersDict problem_process_list $problemProcessList
 
     ##### constraints_process_list
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set projectParametersDict loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
+    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
 
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
@@ -282,12 +282,12 @@ proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
 proc PfemFluid::write::GetPFEM_ProcessList { } {
     set resultList [list ]
 
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set resultList constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set resultList loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
+    dict set resultList loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
     
     dict set resultList auxiliar_process_list []
 

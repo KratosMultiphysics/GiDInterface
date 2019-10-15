@@ -1,7 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
-    <CLaw n="DEM_D_Hertz_viscous_Coulomb" pn="Hertz" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" help=" " OutputMode="Material">
+    <CLaw n="DEM_D_Hertz_viscous_Coulomb" pn="Hertz" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="3D" help=" " OutputMode="Material">
         <inputs></inputs>
         <outputs></outputs>
     </CLaw>
+
+    <CLaw n="DEM_D_Hertz_viscous_Coulomb2D" pn="Hertz" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="2D" help=" " OutputMode="Material">
+        <inputs></inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="DEM_D_Linear_viscous_Coulomb" pn="Linear" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="3D" help=" " OutputMode="Material">
+        <inputs></inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="DEM_D_Linear_viscous_Coulomb2D" pn="Linear" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="2D" help=" " OutputMode="Material">
+        <inputs></inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="DEM_D_Bentonite_Colloid" pn="Bentonite-Colloid" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="3D" help=" " OutputMode="Material">
+        <inputs></inputs>
+        <outputs></outputs>
+    </CLaw>
+    <CLaw n="DEM_D_Hertz_viscous_Coulomb_JKR" pn="Hertz with JKR cohesion" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="3D" help=" " OutputMode="Material">
+        <inputs>
+            <parameter n="PARTICLE_COHESION" pn="Particle cohesion" units="Pa" unit_magnitude="P" v="0.0"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+    <CLaw n="DEM_D_Linear_viscous_Coulomb_JKR" pn="Linear with JKR cohesion" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="3D" help=" " OutputMode="Material">
+        <inputs>
+            <parameter n="PARTICLE_COHESION" pn="Particle cohesion" units="Pa" unit_magnitude="P" v="0.0"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+    <CLaw n="DEM_D_Hertz_viscous_Coulomb_DMT" pn="Hertz with DMT cohesion" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="3D" help=" " OutputMode="Material">
+        <inputs>
+            <parameter n="PARTICLE_COHESION" pn="Particle cohesion" units="Pa" unit_magnitude="P" v="0.0"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+    <CLaw n="DEM_D_Linear_viscous_Coulomb_DMT" pn="Linear with DMT cohesion" ProductionReady="ProductionReady" ImplementedInApplication="DEMApplication" App="DEM" Dimension="3D" help=" " OutputMode="Material">
+        <inputs>
+            <parameter n="PARTICLE_COHESION" pn="Particle cohesion" units="Pa" unit_magnitude="P" v="0.0"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
 </ConstitutiveLaws>

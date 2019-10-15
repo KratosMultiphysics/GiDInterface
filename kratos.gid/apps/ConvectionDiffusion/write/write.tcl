@@ -55,9 +55,10 @@ proc ConvectionDiffusion::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     write::writeBasicSubmodelParts [getLastConditionId]
 }
+
 proc ConvectionDiffusion::write::writeCustomFilesEvent { } {
     # Materials
-    WriteMaterialsFile
+    WriteMaterialsFile False
 
     # Main python script
     set orig_name [GetAttribute main_script_file]
@@ -84,8 +85,10 @@ proc ConvectionDiffusion::write::getLastConditionId { } {
     return $top
 }
 
-proc ConvectionDiffusion::write::WriteMaterialsFile { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] "False"
+proc ConvectionDiffusion::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
+    set model_part_name ""
+    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law $model_part_name
 }
 
 # MDPA Blocks

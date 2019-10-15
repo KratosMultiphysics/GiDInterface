@@ -90,7 +90,7 @@
 	  ]]>
 	</proc>
 
-	<proc n='CheckNodalConditionStateSolid' args='args'>
+	<proc n='CheckNodalConditionStateStructural' args='args'>
 		<![CDATA[
 	  # Overwritten the base function to add Solution Type restrictions
 		set parts_un STParts
@@ -126,11 +126,6 @@
 		if { [$domNode @n] eq "TEMPERATURE"} {return "normal"}
 	  return [spdAux::ProcCheckNodalConditionState $domNode $args]
 	  ]]>
-	</proc>
-	<proc n='CheckGeometrySolid' args='args'>
-		<![CDATA[                
-      return [Structural::xml::ProcCheckGeometrySolid $domNode $args]              
-      ]]>
 	</proc>
 
 	<proc n="ElementOutputState" args='args'>

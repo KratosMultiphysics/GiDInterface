@@ -10,7 +10,7 @@ proc DEM::write::WriteMDPAParts { } {
     writeMaterialsParts
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
-    write::writeNodalCoordinatesOnParts; # Begin Nodes
+    write::writeNodalCoordinatesOnParts
     #write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
     write::writeNodalCoordinatesOnGroups [WriteWallGraphsFlag]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsInitialC]
@@ -18,14 +18,11 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Element connectivities (Groups on STParts)
     PrepareCustomMeshedParts
-    write::writeElementConnectivities; # Begin elements SphericContinuumParticle3D
+    write::writeElementConnectivities
     RestoreCustomMeshedParts
 
     # Element radius
-    writeSphereRadius; # Begin NodalData RADIUS
-
-    # Begin NodalData COHESIVE_GROUP
-    # Begin NodalData SKIN_SPHERE
+    writeSphereRadius
 
     # SubmodelParts
     write::writePartSubModelPart
@@ -176,6 +173,17 @@ proc DEM::write::writeVelocityMeshes { } {
                         }
                         write::WriteString "    ANGULAR_VELOCITY_PERIOD $angular_period"
 
+                        set LinearStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearStartTime'\]"]]
+                        set LinearEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearEndTime'\]"]]
+                        set AngularStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularStartTime'\]"]]
+                        set AngularEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularEndTime'\]"]]
+                        set rigid_body_motion 1
+                        write::WriteString "    VELOCITY_START_TIME $LinearStartTime"
+                        write::WriteString "    VELOCITY_STOP_TIME $LinearEndTime"
+                        write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
+                        write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
+
+
                         # # Interval
                         # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
                         # lassign [write::getInterval $interval] ini end
@@ -193,15 +201,6 @@ proc DEM::write::writeVelocityMeshes { } {
                         # write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $end"
 
 
-                        set LinearStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearStartTime'\]"]]
-                        set LinearEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearEndTime'\]"]]
-                        set AngularStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularStartTime'\]"]]
-                        set AngularEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularEndTime'\]"]]
-                        set rigid_body_motion 1
-                        write::WriteString "    VELOCITY_START_TIME $LinearStartTime"
-                        write::WriteString "    VELOCITY_STOP_TIME $LinearEndTime"
-                        write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
-                        write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
 
                     } elseif {$motion_type == "FixedDOFs"} {
                         set rigid_body_motion 0
@@ -348,6 +347,7 @@ proc DEM::write::GetSpheresGroups { } {
     return $groups
 }
 
+
 proc DEM::write::writeMaterialsParts { } {
     variable partsProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Parts'\]/group"
@@ -357,21 +357,20 @@ proc DEM::write::writeMaterialsParts { } {
     #set partsProperties $::write::mat_dict
     #set ::write::mat_dict $old_mat_dict
     # WV inletProperties
-
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
-
+    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME ConstitutiveLaw]
     foreach group [dict keys $partsProperties] {
-        if {[dict get $partsProperties $group APPID] eq "DEM"} {
-            write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-            #dict set partsProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_D_Hertz_viscous_Coulomb
-            dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
-            foreach {prop val} [dict get $partsProperties $group] {
-                if {$prop in $printable} {
+        write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
+        dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
+        foreach {prop val} [dict get $partsProperties $group] {
+            if {$prop in $printable} {
+                if {$prop eq "ConstitutiveLaw"} {
+                    write::WriteString "    DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME $val"
+                } else {
                     write::WriteString "    $prop $val"
                 }
             }
-            write::WriteString "End Properties\n"
         }
+        write::WriteString "End Properties\n"
     }
 }
 
@@ -381,9 +380,14 @@ proc DEM::write::PrepareCustomMeshedParts { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        set prev_ov [$group @ov]
+        if {[$group hasAttribute ov]} {set prev_ov [$group @ov]} {set prev_ov [[$group parent] @ov]}
         dict set restore_ov $groupid $prev_ov
-        $group setAttribute ov volume
+        # We must force it to be volume/surface because anything applied to Parts will be converted into Spheres/Circles
+        if {$::Model::SpatialDimension eq "3D"} {
+            $group setAttribute ov volume
+        } else {
+            $group setAttribute ov surface
+        }
     }
 }
 
@@ -395,6 +399,7 @@ proc DEM::write::RestoreCustomMeshedParts { } {
         set groupid [$group @n]
         if {$groupid in [dict keys $restore_ov]} {
             set prev_ov [dict get $restore_ov $groupid]
+            # Bring back to original entities (Check PrepareCustomMeshedParts)
             $group setAttribute ov $prev_ov
         }
     }

@@ -117,7 +117,7 @@ proc EmbeddedFluid::write::getMeshAdaptivityProcessDict {} {
     dict set pdict "process_name" "MmgProcess"
         # MmgProcess settings dictionary
         set params_dict [dict create]
-        dict set params_dict "model_part_name" "MainModelPart"
+        dict set params_dict "model_part_name" "FluidModelPart"
         dict set params_dict "initial_step" [write::getValue EMBFLAdaptivitySettings initial_step]
         dict set params_dict "step_frequency" [write::getValue EMBFLAdaptivitySettings step_frequency]
         dict set params_dict "initial_remeshing" [write::getValue EMBFLAdaptivitySettings initial_remeshing]
