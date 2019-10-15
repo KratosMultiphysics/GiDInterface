@@ -563,9 +563,9 @@ proc Stent::Wizard::CalculatePointArrays {stent_length point_distance_row angle 
 
     #IF VARIABLE ANGLE IS ON
     if {$variable_angle eq "Yes"} {
-        set length_open [expr 0.53*$stent_length]
-        set length_linear [expr 0.27*$stent_length]
-        set length_closed [expr 0.20*$stent_length] 
+        set length_open [expr 0.649*$stent_length]
+        set length_linear [expr 0.200*$stent_length]
+        set length_closed [expr 0.151*$stent_length]
         
         set point_distance_column_open [expr $point_distance_row * tan($degtorad * (90-$angle_open))]
         set point_distance_column_transition [expr $point_distance_row * tan($degtorad * (90-$angle_transition))]
@@ -889,9 +889,9 @@ proc Stent::Wizard::CreateCrimpado { wire_radius number_wires angle stent_radius
     set ymax -1e15
     set zmin 1e15
     set zmax -1e15
-    set length_open [expr 0.53*$stent_length]
-    set length_linear [expr 0.27*$stent_length]
-    set length_closed [expr 0.20*$stent_length]
+    set length_open [expr 0.649*$stent_length]
+    set length_linear [expr 0.200*$stent_length]
+    set length_closed [expr 0.151*$stent_length]
     set hinv [expr 1.0/$length_linear]
     set rmin $stent_radius_closed
     set rmin2 [expr $stent_radius_closed-$wire_diameter]
