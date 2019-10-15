@@ -18,49 +18,54 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
         set group [$gNode getAttribute n]
         set valueNode [$gNode selectNodes $xp2]
-        set material_name "material $material_number"
-        if { ![dict exists $mat_dict $group] } {
-            incr material_number
-            set mid $material_number
-            dict set mat_dict $group MID $material_number
-            dict set mat_dict $group APPID $nodeApp
-            set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
-            if {$element_node ne ""} {
-                set element_name [write::getValueByNode $element_node "force"]
-            }
+        
+        if {$valueNode ne ""} {
+            set material_name "material $material_number"
+            if { ![dict exists $mat_dict $group] } {
+                incr material_number
+                set mid $material_number
 
-            set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
-            set claw [write::getValueByNode $claw_node "force"]
-            set const_law [Model::getConstitutiveLaw $claw]
+                dict set mat_dict $group MID $material_number
+                dict set mat_dict $group APPID $nodeApp
 
-            if {$const_law ne ""} {
-
-                set output_type [$const_law getOutputMode]
-                if {$output_type eq "Parameters"} {
-                    set s1 [$gNode selectNodes ".//value"]
-                } else {
-                    set real_material_name [write::getValueByNode $valueNode "force"]
-                    set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
-                    set matNode [$root selectNodes $xp3]
-                    set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                catch {
+                    set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
+                    if {$element_node ne ""} {
+                        set element_name [write::getValueByNode $element_node "force"]
+                    }
+                    set element_name [write::getValueByNode $element_node "force"]
                 }
-            } else {
-                set s1 [$gNode selectNodes ".//value"]
-            }
 
-            foreach valueNode $s1 {
-                write::forceUpdateNode $valueNode
-                set name [$valueNode getAttribute n]
-                set state [get_domnode_attribute $valueNode state]
-                if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
-                    # All the introduced values are translated to 'm' and 'kg' with the help of this function
-                    set value [gid_groups_conds::convert_value_to_default $valueNode]
+                set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
+                set claw [write::getValueByNode $claw_node "force"]
+                set const_law [Model::getConstitutiveLaw $claw]
+                if {$const_law ne ""} {
+                    set output_type [$const_law getOutputMode]
+                    if {$output_type eq "Parameters"} {
+                        set s1 [$gNode selectNodes ".//value"]
+                    } else {
+                        set real_material_name [write::getValueByNode $valueNode "force"]
+                        set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
+                        set matNode [$root selectNodes $xp3]
+                        set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
 
-                    # if {[string is double $value]} {
-                        #     set value [format "%13.5E" $value]
-                        # }
+                    }
 
-                    dict set mat_dict $group $name $value
+                    foreach valueNode $s1 {
+                        write::forceUpdateNode $valueNode
+                        set name [$valueNode getAttribute n]
+                        set state [get_domnode_attribute $valueNode state]
+                        if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
+                            # All the introduced values are translated to 'm' and 'kg' with the help of this function
+                            set value [gid_groups_conds::convert_value_to_default $valueNode]
+
+                            # if {[string is double $value]} {
+                                #     set value [format "%13.5E" $value]
+                                # }
+
+                            dict set mat_dict $group $name $value
+                        }
+                    }
                 }
             }
         }
