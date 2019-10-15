@@ -322,7 +322,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                         set vname "value_${inName}_${i}"
                         set nodef "../value\[@n='$fname'\]"
                         set nodev "../value\[@n='$vname'\]"
-                        if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"} {set zstate ""}
+                        if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"; set state "\[CheckDimension 3D\]"} {set zstate ""}
                         if {[$param getAttribute "function"] eq "1"} {
                             set values "ByFunction,ByValue,Not" 
                             set pvalues "By function,By value,Not set"
