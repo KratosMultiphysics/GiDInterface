@@ -79,7 +79,7 @@ proc Solid::examples::TreeAssignationDynamicBeam3D {args} {
     set solidConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintNode [customlib::AddConditionGroupOnXPath $solidConstraint "Constraint//Total"]
     $solidConstraintNode setAttribute ov point
-    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -96,7 +96,7 @@ proc Solid::examples::TreeAssignationDynamicBeam3D {args} {
     set solidAngularConstraint {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='ANGULAR_VELOCITY']}
     set solidAngularConstraintNode [customlib::AddConditionGroupOnXPath $solidAngularConstraint "AngularConstraint//Total"]
     $solidAngularConstraintNode setAttribute ov point
-    set props [list Enabled_X Yes ByFunctionX No valueX 2.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 2.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$solidAngularConstraintNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {

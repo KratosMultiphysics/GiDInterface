@@ -31,7 +31,12 @@ proc PfemFluid::write::getNewParametersDict { } {
     # dict set projectParametersDict output_process_list $output_process_list
 
     ##### output_configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    # dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
+    set xpath [spdAux::getRoute Results]
+    dict set projectParametersDict output_configuration [write::GetDefaultOutputGiDDict PfemFluid $xpath]
+    dict set projectParametersDict output_configuration result_file_configuration nodal_results [write::GetResultsByXPathList [spdAux::getRoute NodalResults]]
+    dict set projectParametersDict output_configuration result_file_configuration gauss_point_results [write::GetResultsList ElementResults]
+    
 
     return $projectParametersDict
 }
@@ -56,12 +61,12 @@ proc PfemFluid::write::getParametersDict { } {
     dict set projectParametersDict problem_process_list $problemProcessList
 
     ##### constraints_process_list
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set projectParametersDict loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
+    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
 
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
@@ -149,6 +154,12 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
 
 
     dict set solverSettingsDict model_part_name "PfemFluidModelPart"
+    if {$problemtype eq "Fluids"} {
+        dict set solverSettingsDict physics_type "fluid"
+    }
+    if {$problemtype eq "FSI"} {
+        dict set solverSettingsDict physics_type "fsi"
+    }
     set nDim $::Model::SpatialDimension
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set solverSettingsDict domain_size $nDim
@@ -271,12 +282,12 @@ proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
 proc PfemFluid::write::GetPFEM_ProcessList { } {
     set resultList [list ]
 
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set resultList constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set resultList loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
+    dict set resultList loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
     
     dict set resultList auxiliar_process_list []
 
@@ -364,7 +375,7 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.DelaunayMeshingApplication"
+    dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
     dict set resultDict "python_module" "remesh_domains_process"
     dict set resultDict "process_name" "RemeshDomainsProcess"
 
@@ -477,7 +488,7 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.DelaunayMeshingApplication"
+    dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
     set problemtype [write::getValue PFEMFLUID_DomainType]
 
     dict set resultDict "python_module" "remesh_fluid_domains_process"

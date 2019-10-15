@@ -30,8 +30,8 @@
     <outputs>
     </outputs>
   </ConditionItem>
-<!-- 
-	<ConditionItem n="Wake2D" pn="Wake" ImplementedInFile=".cpp" Interval="False"
+
+	<!-- <ConditionItem n="Wake2D" pn="Wake" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="False" VariableName="" App="Fluid"
 	ElementType="Point" ProcessName="DefineWakeProcess" help="">
@@ -43,12 +43,12 @@
     </inputs>
     <outputs>
     </outputs>
-  </ConditionItem>
+  </ConditionItem> -->
 
   <ConditionItem n="Wake3D" pn="Wake" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False" VariableName="" App="Fluid"
-	ElementType="Line" ProcessName="DefineWakeProcess" help="" >
+	ElementType="Line" ProcessName="PlaceholderProcess" help="" >
     <TopologyFeatures>
     </TopologyFeatures>
 	<DegreesOfFreedom>
@@ -57,7 +57,21 @@
     </inputs>
     <outputs>
     </outputs>
-  </ConditionItem> -->
+  </ConditionItem>
+
+    <ConditionItem n="Tip3D" pn="Wing Tips" ImplementedInFile=".cpp" Interval="False"
+	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
+	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False" VariableName="" App="Fluid"
+	ElementType="Point" ProcessName="PlaceholderProcess" help="" >
+    <TopologyFeatures>
+    </TopologyFeatures>
+	<DegreesOfFreedom>
+	</DegreesOfFreedom>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
 
   <ConditionItem n="Body2D" pn="Body" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
@@ -77,7 +91,7 @@
   <ConditionItem n="Body3D" pn="Body" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="CompressiblePotentialFlowApplication" ProductionReady="ProductionReady"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" VariableName="" App="Fluid"
-	ElementType="Surface" ProcessName="DefineWakeProcess3D" help="" >
+	ElementType="Surface" ProcessName="PlaceholderProcess" help="" >
     <TopologyFeatures>
       <item  GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
     </TopologyFeatures>

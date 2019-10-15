@@ -1,25 +1,28 @@
 
-proc write::dict2json {dictVal} {
-    # XXX: Currently this API isn't symmetrical, as to create proper
-    # XXX: JSON text requires type knowledge of the input data
-    set json ""
-    dict for {key val} $dictVal {
-        # key must always be a string, val may be a number, string or
-        # bare word (true|false|null)
-        if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
-            set val "\"$val\""
-        }
-        if {[isDict $val]} {
-            set val [dict2json $val]
-            set val "\[${val}\]"
-        } else {
-            set val \"$val\"
-        }
-        append json "\"$key\": $val," \n
-    }
-    if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
-    return "\{${json}\}"
-}
+# proc write::dict2json {dictVal} {
+#     # XXX: Currently this API isn't symmetrical, as to create proper
+#     # XXX: JSON text requires type knowledge of the input data
+#     set json ""
+#     dict for {key val} $dictVal {
+#         # key must always be a string, val may be a number, string or
+#         # bare word (true|false|null)
+#         if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
+#             set val "\"$val\""
+#         }
+#         if {[isDict $val]} {
+#             set val [dict2json $val]
+#             set val "\[${val}\]"
+#         } else {
+#             set val \"$val\"
+#         }
+#         append json "\"$key\": $val," \n
+#     }
+#     if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
+#     return "\{${json}\}"
+# }
+
+
+package require json::write
 
 proc write::json2dict {JSONtext} {
     string range [
@@ -148,10 +151,10 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
 
     set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
-        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
+        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n force]
     }
     foreach {n in} [$sch getInputs] {
-        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n ]
+        dict set solverSettingsDict $n [write::getValue $StratParamsUN $n force]
     }
     return $solverSettingsDict
 }
@@ -197,7 +200,7 @@ proc write::getSolversParametersDict { {appid ""} } {
 proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
 
     set root [customlib::GetBaseRoot]
-    set bcCondsDict [list ]
+    set bcCondsList [list ]
     set grouped_conditions [list ]
 
     set xp1 "[spdAux::getRoute $un]/condition/group"
@@ -229,120 +232,19 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set processName [$condition getProcessName]
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
-            set paramDict [dict create]
-            dict set paramDict model_part_name [write::GetModelPartNameWithParent $groupId]
+            set processWriteCommand [$process getAttribute write_command]
+            if {$processWriteCommand eq ""} {
+                set processDict [write::GetProcessHeader $group $process $condition $groupId]
 
-            set process_attributes [$process getAttributes]
-            set process_parameters [$process getInputs]
-
-            dict set process_attributes process_name [dict get $process_attributes n]
-            dict unset process_attributes n
-            dict unset process_attributes pn
-            if {[dict exists $process_attributes help]} {dict unset process_attributes help}
-            if {[dict exists $process_attributes process_name]} {dict unset process_attributes process_name}
-
-            set processDict [dict merge $processDict $process_attributes]
-            if {[$condition hasAttribute VariableName]} {
-                set variable_name [$condition getAttribute VariableName]
-                # "lindex" is a rough solution. Look for a better one.
-                if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
-            }
-            foreach {inputName in_obj} $process_parameters {
-                set in_type [$in_obj getType]
-                if {$in_type eq "vector"} {
-                    set vector_type [$in_obj getAttribute "vectorType"]
-                    if {$vector_type eq "bool"} {
-                        set ValX [expr [get_domnode_attribute [$group find n ${inputName}X] v] ? True : False]
-                        set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
-                        set ValZ [expr False]
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
-                    } elseif {$vector_type eq "double"} {
-                        if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
-                            foreach i [list "X" "Y" "Z"] {
-                                if {[expr [get_domnode_attribute [$group find n Enabled_$i] v] ] ne "Yes"} {
-                                    set Val$i null
-                                } else {
-                                    set printed 0
-                                    if {[$in_obj getAttribute "function"] eq "1"} {
-                                        if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                                            set funcinputName "${i}function_$inputName"
-                                            set value [get_domnode_attribute [$group find n $funcinputName] v]
-                                            set Val$i $value
-                                            set printed 1
-                                        }
-                                    }
-                                    if {!$printed} {
-                                        set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
-                                        set Val$i $value
-                                    }
-                                }
-                            }
-                        } else {
-                            foreach i [list "X" "Y" "Z"] {
-                                set printed 0
-                                if {[$in_obj getAttribute "function"] eq "1"} {
-                                    if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                                        set funcinputName "${i}function_$inputName"
-                                        set value [get_domnode_attribute [$group find n $funcinputName] v]
-                                        set Val$i $value
-                                        set printed 1
-                                    }
-                                }
-                                if {!$printed} {
-                                    set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
-                                    set Val$i $value
-                                }
-                            }
-                        }
-                    } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
-                        set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
-                        set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
-                        set ValZ "0"
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
-                    } else {
-                        set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
-                        set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
-                        set ValZ [expr 0.0]
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
-                    }
-                    dict set paramDict $inputName [list $ValX $ValY $ValZ]
-                } elseif {$in_type eq "inline_vector"} {
-                    set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
-                    lassign [split $value ","] ValX ValY ValZ
-                    if {$ValZ eq ""} {set ValZ 0.0}
-                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]]
-                } elseif {$in_type eq "double" || $in_type eq "integer"} {
-                    set printed 0
-                    if {[$in_obj getAttribute "function"] eq "1"} {
-                        if {[get_domnode_attribute [$group find n "ByFunction"] v]  eq "Yes"} {
-                            set funcinputName "function_$inputName"
-                            set value [get_domnode_attribute [$group find n $funcinputName] v]
-                            dict set paramDict $inputName $value
-                            set printed 1
-                        }
-                    }
-                    if {!$printed} {
-                        set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
-                        #set value [get_domnode_attribute [$group find n $inputName] v]
-                        dict set paramDict $inputName [expr $value]
-                    }
-                } elseif {$in_type eq "bool"} {
-                    set value [get_domnode_attribute [$group find n $inputName] v]
-                    set value [expr $value ? True : False]
-                    dict set paramDict $inputName [expr $value]
-                } elseif {$in_type eq "tablefile"} {
-                    set value [get_domnode_attribute [$group find n $inputName] v]
-                    dict set paramDict $inputName $value
-                } else {
-                    if {[get_domnode_attribute [$group find n $inputName] state] ne "hidden" } {
-                        set value [get_domnode_attribute [$group find n $inputName] v]
-                        dict set paramDict $inputName $value
-                    }
+                set process_parameters [$process getInputs]
+                foreach {inputName in_obj} $process_parameters {
+                    dict set processDict Parameters $inputName [write::GetInputValue $group $in_obj]
                 }
+                
+            } else {
+                set processDict [$processWriteCommand $group $condition $process]
             }
-            if {[$group find n Interval] ne ""} {dict set paramDict interval [write::getInterval  [get_domnode_attribute [$group find n Interval] v]] }
-            dict set processDict Parameters $paramDict
-            lappend bcCondsDict $processDict
+            lappend bcCondsList $processDict
         }
     }
 
@@ -373,9 +275,9 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
         }
         dict set processDict Parameters $paramDict
-        lappend bcCondsDict $processDict
+        lappend bcCondsList $processDict
     }
-    return $bcCondsDict
+    return $bcCondsList
 }
 
 proc write::GetResultsList { un {cnd ""} } {
@@ -400,39 +302,6 @@ proc write::GetResultsByXPathList { xpath } {
     return $result
 }
 
-proc write::GetRestartProcess { {un ""} {name "" } } {
-
-    set root [customlib::GetBaseRoot]
-
-    set resultDict [dict create ]
-    if {$un eq ""} {set un "Restart"}
-    if {$name eq ""} {set name "RestartOptions"}
-
-    dict set resultDict "python_module" "restart_process"
-    dict set resultDict "kratos_module" "KratosMultiphysics.SolidMechanicsApplication"
-    dict set resultDict "help" "This process writes restart files"
-    dict set resultDict "process_name" "RestartProcess"
-
-    set params [dict create]
-    set saveValue [write::getStringBinaryValue $un SaveRestart]
-
-    dict set resultDict "process_name" "RestartProcess"
-    set model_name [Kratos::GetModelName]
-    dict set params "model_part_name" [write::GetModelPartNameWithParent $model_name]
-    dict set params "save_restart" $saveValue
-    dict set params "restart_file_name" $model_name
-    set xp1 "[spdAux::getRoute $un]/container\[@n = '$name'\]/value"
-    set file_label [getValue $un RestartFileLabel]
-    dict set params "restart_file_label" $file_label
-    set output_control [getValue $un RestartControlType]
-    dict set params "output_control_type" $output_control
-    if {$output_control eq "time"} {dict set params "output_frequency" [getValue $un RestartDeltaTime]} {dict set params "output_frequency" [getValue $un RestartDeltaStep]}
-    set jsonoutput [write::getStringBinaryValue $un json_output]
-    dict set params "json_output" $jsonoutput
-
-    dict set resultDict "Parameters" $params
-    return $resultDict
-}
 
 
 proc write::getAllMaterialParametersDict {matname} {
@@ -494,7 +363,7 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
          append parent $forced_parent "."
     }
     append result $parent $child_name
-    return $result
+    return [string trim $result "."]
 }
 
 proc write::GetDefaultProblemDataDict { {appid ""} } {
@@ -563,12 +432,12 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     return $outputConfigDict
 }
 
-proc write::GetDefaultOutputGiDDict { {appid ""} } {
+proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     set outputDict [dict create]
     set resultDict [dict create]
 
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
-    set gid_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
+    if {$gid_options_xpath eq ""} {set gid_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"}
     set GiDPostDict [dict create]
     dict set GiDPostDict GiDPostMode                [getValueByXPath $gid_options_xpath GiDPostMode]
     dict set GiDPostDict WriteDeformedMeshFlag      [getValueByXPath $gid_options_xpath GiDWriteMeshFlag]
@@ -586,7 +455,7 @@ proc write::GetDefaultOutputGiDDict { {appid ""} } {
     dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
     dict set resultDict skin_output [getValueByXPath $gid_options_xpath SkinOutput]
 
-    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]"
+    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='CutPlanes'\]"
     dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
     set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
     dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]
@@ -635,7 +504,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict nodal_data_value_variables     []
     dict set resultDict element_data_value_variables   []
     dict set resultDict condition_data_value_variables []
-    dict set resultDict gauss_point_variables   [GetResultsList $results_UN OnElement]
+    dict set resultDict gauss_point_variables_extrapolated_to_nodes   [GetResultsList $results_UN OnElement]
 
     return $resultDict
 }

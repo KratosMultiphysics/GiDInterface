@@ -7,13 +7,13 @@
 	  ]]>
 	</proc>
 		  			
-    <proc n='CheckNodalConditionStateSolid' args='args'>
+    <proc n='CheckNodalConditionStateStructural' args='args'>
 	  <![CDATA[
-	  return [Structural::xml::ProcCheckNodalConditionStateSolid $domNode $args]
+	  return [Structural::xml::ProcCheckNodalConditionStateStructural $domNode $args]
 	  ]]>
 	</proc>		
 
-	<proc n='CheckGeometrySolid' args='args'>
+	<proc n='CheckGeometryStructural' args='args'>
 		<![CDATA[
 		return [Structural::xml::ProcCheckGeometryStructural $domNode $args]              
 		]]>

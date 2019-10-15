@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials>
+  <Material n="DEMCont-DefaultMaterial" MaterialType="DEM" help="">
+    <inputs>
+      <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500.0" type="double"  help="Density of the material (not bulk density)"/>
+      <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e5" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
+      <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
+      <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
+      <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
+      <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>
+      <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
+      <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
+      <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" type="double" help="Particle sphericity"/>
+      <!-- <parameter n="DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Constituve Law" values="DEM_D_Hertz_viscous_Coulomb,DEM_D_Linear_viscous_Coulomb,DEM_D_Bentonite_Colloid,DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" pvalues="Hertz,Linear,Bentonite-Colloid,Hertz with JKR cohesion,Linear with JKR cohesion,Hertz with DMT cohesion,Linear with DMT cohesion" v="DEM_D_Hertz_viscous_Coulomb" type="combo">
+	    <parameter n="PARTICLE_COHESION" pn="Cohesion" parent="DEM_D_Hertz_viscous_Coulomb_JKR,DEM_D_Linear_viscous_Coulomb_JKR,DEM_D_Hertz_viscous_Coulomb_DMT,DEM_D_Linear_viscous_Coulomb_DMT" unit_magnitude="P" units="Pa" v="0.0" type="double" help="Particle cohesion (JKR or DMT)"/> </parameter> -->
+      <!-- <parameter n="DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME" pn="Continuum constituve Law" values="KDEM_Rankine" pvalues="KDEM_Rankine" v="KDEM_Rankine" type="combo">
+	      <parameter n="CONTACT_SIGMA_MIN" pn="NormalTensileStrength" parent="KDEM_Rankine" unit_magnitude="P" units="Pa" v="0.0" type="double" help=""/>
+      </parameter> -->
+    </inputs>
+  </Material>
+</Materials>

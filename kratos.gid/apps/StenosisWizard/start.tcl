@@ -17,6 +17,9 @@ proc ::StenosisWizard::Init { } {
     spdAux::SetSpatialDimmension "3D"
     # Load Fluid App
     apps::LoadAppById "Fluid"
+    
+    spdAux::processIncludes
+    
     set kratos_name $::Fluid::kratos_name
     # Don't open the tree
     set ::spdAux::TreeVisibility 0

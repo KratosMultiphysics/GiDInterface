@@ -5,7 +5,6 @@ namespace eval ::ThermicLauncher {
 proc ::ThermicLauncher::Init { } {
     variable available_apps
 
-    set dir [apps::getMyDir "ThermicLauncher"]
     set available_apps [list ConvectionDiffusion Buoyancy ConjugateHeatTransfer]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
@@ -25,7 +24,6 @@ proc ::ThermicLauncher::AppSelectorWindow { } {
         # }
     } {
         [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
-        set dir $::Kratos::kratos_private(Path)
 
         set initwind .gid.win_example
         if { [ winfo exist $initwind]} {

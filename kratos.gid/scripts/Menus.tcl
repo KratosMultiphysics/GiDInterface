@@ -12,6 +12,7 @@ proc Kratos::ToolbarAddItem {id icon code tex} {
     dict set kratos_private(MenuItems) $num tex $tex
     return $num
 }
+
 proc Kratos::ToolbarDeleteItem {id} {
     variable kratos_private
     foreach num [dict keys $kratos_private(MenuItems)] {
@@ -119,9 +120,9 @@ proc Kratos::ChangeMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Write calculation files - No run" ] [incr pos] PRE [list Kratos::WriteCalculationFilesEvent] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Run - No write" ] [incr pos] PRE [list Kratos::ForceRun] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "You are in $fromode" ] [incr pos] PRE [list ] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "Switch to $tomode" ] [incr pos] PRE [list Kratos::SwitchMode] "" "" replace =
+    # GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+    # GiDMenu::InsertOption "Kratos" [list "You are in $fromode" ] [incr pos] PRE [list ] "" "" replace =
+    # GiDMenu::InsertOption "Kratos" [list "Switch to $tomode" ] [incr pos] PRE [list Kratos::SwitchMode] "" "" replace =
 
     if {$::Kratos::kratos_private(UseWizard)} {
         GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
@@ -130,6 +131,8 @@ proc Kratos::ChangeMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Import MDPA"] [incr pos] PRE [list Kratos::ReadPreW] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+    if {[GidUtils::VersionCmp "14.1.4d"] <0 } { set cmd  [list ChangeVariables kratos_preferences] } {set cmd  [list PreferencesWindow kratos_preferences]}
+    GiDMenu::InsertOption "Kratos" [list "Kratos preferences" ] [incr pos] PRE $cmd "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "About Kratos" ] [incr pos] PREPOST [list Kratos::About] "" "" replace =
     GidChangeDataLabel "Data units" ""
     GidChangeDataLabel "Interval" ""
@@ -164,12 +167,10 @@ proc Kratos::Splash { } {
         set off_x 130
     }
     set line1 "Kratos Multiphysics Version $kratos_private(Version)"
-    ::GidUtils::Splash [file join $kratos_private(Path) images splash.png] .splash 0 \
-        [list $line1 $off_x 230]
+    ::GidUtils::Splash [file join $kratos_private(Path) images splash.png] .splash 0 [list $line1 $off_x 230]
 
 
-    .splash.lv configure -font $fnt -background white -foreground black \
-        -relief solid -borderwidth 1 -padx 12 -pady 3
+    .splash.lv configure -font $fnt -background white -foreground black -relief solid -borderwidth 1 -padx 12 -pady 3
     update
     
     GiD_Set SplashWindow $prev_splash_state

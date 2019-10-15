@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<container n="FluidDEM" pn="Fluid-DEM" icon="groupCreated" prefix="FluidDEM_" tree_state="open" open_window="0">
-
-  <container n="Fluid" pn="Fluid" icon="app" prefix="FL" tree_state="open" open_window="0">
-    <include n="AnalysisType" active="1" path="apps/Fluid/xml/AnalysisType.spd"/>
-    <include n="FluidParts" active="1" path="apps/Fluid/xml/Parts.spd"/>
-    <include n="InitialConditions" active="1" path="apps/Fluid/xml/InitialConditions.spd"/>
-    <include n="BoundaryConditions" active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
-    <include n="SolutionStrategy" active="1" path="apps/Fluid/xml/SolutionStrategy.spd"/>
+<container n="FluidDEM" icon="ImageFileBrowser" pn="FluidDEM" prefix="FluidDEM_" tree_state="open" open_window="0">
+  <container n="Fluid" pn="Fluid"    icon="app" prefix="FL" tree_state="open" open_window="0">
+    <include n="AnalysisType"        active="1" path="apps/Fluid/xml/AnalysisType.spd"/>
+    <include n="FluidParts"          active="1" path="apps/Fluid/xml/Parts.spd"/>
+    <include n="InitialConditions"   active="1" path="apps/Fluid/xml/InitialConditions.spd"/>
+    <include n="BoundaryConditions"  active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
+    <!-- <include n="RotationConditions"  active="1" path="apps/FluidDEM/xml/RotationConditions.spd"/> -->
+    <include n="SolutionStrategy"    active="1" path="apps/Fluid/xml/SolutionStrategy.spd"/>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
-    <include n="Materials" active="1" path="apps/Fluid/xml/Materials.spd"/>
+    <include n="Materials"           active="1" path="apps/Fluid/xml/Materials.spd"/>
+    <include n="Results"             active="1" path="apps/Common/xml/Results.spd"   pn="Fluid results"  icon="black1"  un="FLResults"/>
   </container>
 
-  <container n="DEM" pn="DEM" icon="units" prefix="DEM" tree_state="open" open_window="0">
-    <include n="StageInfo"        active="1" path="apps/DEM/xml/StageInfo.spd"/>
-    <include n="Parts"            active="1" path="apps/DEM/xml/Parts.spd"/>
-    <include n="Intervals"        active="1" path="apps/Common/xml/Intervals.spd"/>
-    <include n="Conditions"       active="1" path="apps/DEM/xml/Conditions.spd"/>
-    <include n="SolutionStrategy" active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
-    <include n="Results"          active="1" path="apps/DEM/xml/Results.spd" un="DEMResults" />
-    <include n="Graphs"          active="1" path="apps/DEM/xml/Graphs.spd" un="DEMGraphs" />
-    <include n="materials"        active="1" path="apps/DEM/xml/Materials.spd"/>
+  <container n="DEM" pn="DEM" icon="gravity" prefix="DEM" tree_state="open" open_window="0">
+    <include n="StageInfo"         active="1" path="apps/DEM/xml/StageInfo.spd"/>
+    <include n="Parts"             active="1" path="apps/DEM/xml/Parts.spd"/>
+    <include n="Conditions"        active="1" path="apps/DEM/xml/Conditions.spd"/>
+    <include n="SolutionStrategy"  active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>
+    <include n="Results"           active="1" path="apps/DEM/xml/Results.spd" un="DEMResults" />
+    <include n="Graphs"            active="1" path="apps/DEM/xml/Graphs.spd" un="DEMGraphs" />
+    <include n="materials"         active="1" path="apps/DEM/xml/Materials.spd"/>
+    <include n="hydrodynamic_laws" active="1" path="apps/FluidDEM/xml/HydrodynamicLaws.spd"/>
   </container>
 
-  <container n="FluidDEM" pn="General" icon="doRestart" prefix="FluidDEM_" un="FluidDEM_CouplingParameters" tree_state="open" open_window="0">
-    <value n="DragType" icon="select" pn="Drag Force type" type="combo" values="None,Stokes,AllReynolds,Ganser,Ishii" dict="None,None,Stokes,Stokes,AllReynolds,AllReynolds,Ganser,Ganser,Ishii,Ishii" v="BARBACOA" help="Choose the model for the Drag Force type."/>
-    <include n="Parallelism" active="1" icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/>
-    <include n="TimeParameters" active="1" icon="timeParams" state="normal" path="apps/FluidDEM/xml/TimeParameters.spd"/>
-    <include n="Intervals" active="1" icon="timeInterval" state="normal" path="apps/Common/xml/Intervals.spd"/>
-    <include n="Gravity" active="1" icon="gravityForce" un="DEMGravity,FLGravity" path="apps/DEM/xml/Gravity.spd"/>
-    <include n="Results" pn="Fluid results" active="1" un="FLResults" path="apps/Common/xml/Results.spd"/>
-    <include n="Results" pn="DEM results" icon="seeResults" active="1" path="apps/DEM/xml/Results.spd"/>
+  <container n="FluidDEM"       pn="General parameters"  icon="prdata16" prefix="FluidDEM_" un="FluidDEM_GeneralParameters" tree_state="open" open_window="0">
+    <include n="TimeParameters" active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/TimeParameters.spd"/>
+    <include n="Intervals"         active="1" path="apps/Common/xml/Intervals.spd"/>
+    <include n="Gravity"        active="1" icon="black1" un="DEMGravity,FLGravity" path="apps/DEM/xml/Gravity.spd"/>
+    <include n="Coupling"       active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/Coupling.spd"/>
+    <include n="non-newtonian"  active="1" path="apps/FluidDEM/xml/Herschel-Bulkley.spd"/>
+    <include n="Parallelism"    active="1" icon="black1" path="apps/Common/xml/Parallelism.spd"/>
+    <include n="NodalResults"   active="1" icon="black1" pn="Nodal results" path="apps/FluidDEM/xml/NodalResults.spd"/>
   </container>
-
 </container>

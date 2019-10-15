@@ -82,7 +82,7 @@ proc Solid::examples::TreeAssignationNotchedBeam2D {args} {
     set solidConstraintXY {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintXYNode [customlib::AddConditionGroupOnXPath $solidConstraintXY "ConstraintXY//Total"]
     $solidConstraintXYNode setAttribute ov line
-    set props [list Enabled_X Yes ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z Not Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintXYNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {
@@ -100,7 +100,7 @@ proc Solid::examples::TreeAssignationNotchedBeam2D {args} {
     set solidConstraintY {container[@n='Solid']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set solidConstraintYNode [customlib::AddConditionGroupOnXPath $solidConstraintY "ConstraintY//Total"]
     $solidConstraintYNode setAttribute ov line
-    set props [list Enabled_X No ByFunctionX No valueX 0.0 Enabled_Y Yes ByFunctionY No valueY 0.0 Enabled_Z Yes ByFunctionZ No valueZ 0.0]
+    set props [list selector_component_X Not selector_component_Y Not selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     foreach {prop val} $props {
          set propnode [$solidConstraintYNode selectNodes "./value\[@n = '$prop'\]"]
          if {$propnode ne "" } {

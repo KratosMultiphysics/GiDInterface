@@ -75,8 +75,11 @@ oo::class create Parameter {
     
     method getType { } {variable type; return $type}
     method getDv { } {variable dv; return $dv}
+    method setDv { v } {variable dv; set dv $v}
     method getValues { } {variable values; return $values}
+    method setValues { vs } {variable values; set values $vs}
     method getPValues { } {variable pvalues; return $pvalues}
+    method setPValues { pvs } {variable pvalues; set pvalues $pvs}
     
     method setUnits {u} {variable units; set units $u}
     method getUnits { } {variable units; return $units}

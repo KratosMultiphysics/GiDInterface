@@ -5,7 +5,6 @@ namespace eval ::FluidLauncher {
 proc ::FluidLauncher::Init { } {
     variable available_apps
 
-    set dir [apps::getMyDir "FluidLauncher"]
     set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
@@ -25,7 +24,6 @@ proc ::FluidLauncher::FluidAppSelectorWindow { } {
         }
     } {
         [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
-        set dir $::Kratos::kratos_private(Path)
 
         set initwind .gid.win_example
         if { [ winfo exist $initwind]} {

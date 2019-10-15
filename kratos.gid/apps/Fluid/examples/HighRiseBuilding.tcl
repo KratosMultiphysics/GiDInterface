@@ -97,7 +97,7 @@ proc Fluid::examples::AssignHighRiseBuildingMeshSizes2D {args} {
     GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Bottom_Wall lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $building_mesh_size {*}[GiD_EntitiesGroups get InterfaceFluid lines] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    Kratos::BeforeMeshGeneration $fluid_mesh_size
+    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
 
