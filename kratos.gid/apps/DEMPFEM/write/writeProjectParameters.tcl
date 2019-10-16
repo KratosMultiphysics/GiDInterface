@@ -133,6 +133,7 @@ proc DEMPFEM::write::writeParametersEvent { } {
 
     # PFEM
     write::OpenFile ProjectParameters.json
+    dict set ::PfemFluid::write::Names DeltaTime PFEMDeltaTime
     PfemFluid::write::writeParametersEvent
 }
 

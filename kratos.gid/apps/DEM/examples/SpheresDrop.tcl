@@ -20,20 +20,25 @@ proc ::DEM::examples::DrawGeometry { } {
 
     GiD_Process Mescape Geometry Create Object Rectangle -5 -5 0 5 5 0 escape
     GiD_Process Mescape Geometry Create Object Rectangle -2 -2 5 2 2 5 escape
+    GiD_Process Mescape Geometry Create Object Rectangle -2 -2 6 2 2 6 escape
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape
 
     GiD_Groups create "Floor"
     GiD_Groups create "Inlet"
+    GiD_Groups create "ClusterInlet"
     GiD_Groups create "Body"
     GiD_Layers create "Floor"
     GiD_Layers create "Inlet"
+    GiD_Layers create "ClusterInlet"
     GiD_Layers create "Body"
 
     GiD_EntitiesGroups assign "Floor" surfaces 1
     GiD_EntitiesGroups assign "Inlet" surfaces 2
+    GiD_EntitiesGroups assign "ClusterInlet" surfaces 3
     GiD_EntitiesGroups assign "Body" volumes 1
     GiD_EntitiesLayers assign "Floor" -also_lower_entities surfaces 1
     GiD_EntitiesLayers assign "Inlet" -also_lower_entities surfaces 2
+    GiD_EntitiesLayers assign "ClusterInlet" -also_lower_entities surfaces 3
     GiD_EntitiesLayers assign "Body" -also_lower_entities volumes 1
 }
 
@@ -84,7 +89,7 @@ proc ::DEM::examples::AssignToTree { } {
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
     $inletNode setAttribute ov surface
-    set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.1 VelocityModulus 2.0 DirectionVector "0.0,0.0,-1.0"]
+    set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
     foreach {prop val} $props {
         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -93,7 +98,21 @@ proc ::DEM::examples::AssignToTree { } {
             W "Warning - Couldn't find property Inlet $prop"
         }
     }
-    
+
+
+    # ClusterInlet
+    set DEMClusterInlet "$DEMConditions/condition\[@n='Inlet'\]"
+    set inletNode [customlib::AddConditionGroupOnXPath $DEMClusterInlet "ClusterInlet"]
+    $inletNode setAttribute ov surface
+    set props [list Material "DEM-DefaultMaterial" InletElementType "Cluster3D" ClusterType "Rock1Cluster3D" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,1.0"]
+    foreach {prop val} $props {
+        set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property Inlet $prop"
+        }
+    }
 
     # General data
     # Time parameters

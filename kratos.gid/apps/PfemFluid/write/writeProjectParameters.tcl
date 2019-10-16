@@ -61,12 +61,12 @@ proc PfemFluid::write::getParametersDict { } {
     dict set projectParametersDict problem_process_list $problemProcessList
 
     ##### constraints_process_list
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set projectParametersDict loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
+    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
 
     ##### Restart
     set output_process_list [GetPFEM_OutputProcessList]
@@ -175,7 +175,7 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
         dict set timeSteppingDict automatic_time_step "false"
     }
 
-    dict set timeSteppingDict time_step [write::getValue PFEMFLUID_TimeParameters DeltaTime]
+    dict set timeSteppingDict time_step [write::getValue PFEMFLUID_TimeParameters [dict get $::PfemFluid::write::Names DeltaTime]]
 
     # set time_params [PfemFluid::write::GetTimeSettings]
     # dict set timeSteppingDict "time_step" [dict get $time_params time_step]
@@ -282,12 +282,12 @@ proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
 proc PfemFluid::write::GetPFEM_ProcessList { } {
     set resultList [list ]
 
-    set group_constraints [PfemFluid::write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
+    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     dict set resultList constraints_process_list [concat $group_constraints $body_constraints]
 
     ##### loads_process_list
-    dict set resultList loads_process_list [PfemFluid::write::getConditionsParametersDict PFEMFLUID_Loads]
+    dict set resultList loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
     
     dict set resultList auxiliar_process_list []
 
@@ -346,8 +346,6 @@ proc PfemFluid::write::GetPfem_ContactProcessDict {contact_name} {
     }
     dict set contact_parameters "variables_of_properties" $properties_dict
     dict set mesh_strat "contact_parameters" $contact_parameters
-    dict set cont_dict "elemental_variables_to_transfer" [list "CAUCHY_STRESS_VECTOR" "DEFORMATION_GRADIENT" ]
-    dict set cont_dict "contact_bodies_list" [PfemFluid::write::GetBodiesWithContactList $contact_name]
     dict set cont_dict "meshing_domains" $mesh_strat
     return $cont_dict
 }
@@ -416,7 +414,6 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
         dict set bodyDict meshing_strategy $meshing_strategyDict
 
 
-
         set spatial_bounding_boxDict [dict create ]
         dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
         dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
@@ -424,6 +421,15 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
         dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
         dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
         dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+
+        set spatial_refining_boxDict [dict create ]
+        dict set spatial_refining_boxDict "mesh_size"        [write::getValue PFEMFLUID_RefiningBox RefinedMeshSize]
+        dict set spatial_refining_boxDict "use_refining_box" [write::getValue PFEMFLUID_RefiningBox UseRefiningBox]
+        dict set spatial_refining_boxDict "initial_time"     [write::getValue PFEMFLUID_RefiningBox StartTime]
+        dict set spatial_refining_boxDict "final_time"       [write::getValue PFEMFLUID_RefiningBox StopTime]
+        dict set spatial_refining_boxDict "upper_point"      [PfemFluid::write::GetUpperPointRefiningBox]
+        dict set spatial_refining_boxDict "lower_point"      [PfemFluid::write::GetLowerPointRefiningBox]
+        dict set bodyDict spatial_refining_box $spatial_refining_boxDict
 
         set refining_parametersDict [dict create ]
         dict set refining_parametersDict "critical_size" 0.0
@@ -462,19 +468,8 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
         dict set refine_boundaryDict "on_error" false
         dict set refining_parametersDict refine_boundary $refine_boundaryDict
 
-        set refining_boxDict [dict create]
-        dict set refining_boxDict "refine_in_box_only" false
-        set upX [expr 0.0]; set upY [expr 0.0]; set upZ [expr 0.0]
-        dict set refining_boxDict "upper_point" [list $upX $upY $upZ]
-        set lpX [expr 0.0]; set lpY [expr 0.0]; set lpZ [expr 0.0]
-        dict set refining_boxDict "lower_point" [list $lpX $lpY $lpZ]
-        set vlX [expr 0.0]; set vlY [expr 0.0]; set vlZ [expr 0.0]
-        dict set refining_boxDict "velocity" [list $vlX $vlY $vlZ]
-        dict set refining_parametersDict refining_box $refining_boxDict
-
         dict set bodyDict refining_parameters $refining_parametersDict
 
-        dict set bodyDict "elemental_variables_to_transfer" [list "CAUCHY_STRESS_VECTOR" "DEFORMATION_GRADIENT"]
         lappend meshing_domains_list $bodyDict
     }
     dict set paramsDict meshing_domains $meshing_domains_list
@@ -534,13 +529,24 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
         }
         dict set bodyDict meshing_strategy $meshing_strategyDict
 
-        set spatial_bounding_boxDict [dict create ]
-        dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
-        dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
-        dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
-        dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
-        dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
-        dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+        if {[spdAux::getRoute PFEMFLUID_BoundingBox] ne ""} {
+            set spatial_bounding_boxDict [dict create ]
+            dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
+            dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
+            dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
+            dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
+            dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
+            dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
+        }
+
+        set spatial_refining_boxDict [dict create ]
+        dict set spatial_refining_boxDict "use_refining_box" [write::getValue PFEMFLUID_RefiningBox UseRefiningBox]
+        dict set spatial_refining_boxDict "mesh_size"        [write::getValue PFEMFLUID_RefiningBox RefinedMeshSize]
+        dict set spatial_refining_boxDict "initial_time"     [write::getValue PFEMFLUID_RefiningBox StartTime]
+        dict set spatial_refining_boxDict "final_time"       [write::getValue PFEMFLUID_RefiningBox StopTime]
+        dict set spatial_refining_boxDict "upper_point"      [PfemFluid::write::GetUpperPointRefiningBox]
+        dict set spatial_refining_boxDict "lower_point"      [PfemFluid::write::GetLowerPointRefiningBox]
+        dict set bodyDict spatial_refining_box $spatial_refining_boxDict
 
         set refining_parametersDict [dict create ]
         dict set refining_parametersDict "critical_size" 0.0
@@ -579,19 +585,8 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
         dict set refine_boundaryDict "on_error" false
         dict set refining_parametersDict refine_boundary $refine_boundaryDict
 
-        set refining_boxDict [dict create]
-        dict set refining_boxDict "refine_in_box_only" false
-        set upX [expr 0.0]; set upY [expr 0.0]; set upZ [expr 0.0]
-        dict set refining_boxDict "upper_point" [list $upX $upY $upZ]
-        set lpX [expr 0.0]; set lpY [expr 0.0]; set lpZ [expr 0.0]
-        dict set refining_boxDict "lower_point" [list $lpX $lpY $lpZ]
-        set vlX [expr 0.0]; set vlY [expr 0.0]; set vlZ [expr 0.0]
-        dict set refining_boxDict "velocity" [list $vlX $vlY $vlZ]
-        dict set refining_parametersDict refining_box $refining_boxDict
-
         dict set bodyDict refining_parameters $refining_parametersDict
 
-        dict set bodyDict "elemental_variables_to_transfer" [list "CAUCHY_STRESS_VECTOR" "DEFORMATION_GRADIENT"]
         lappend meshing_domains_list $bodyDict
     }
     dict set paramsDict meshing_domains $meshing_domains_list
@@ -839,5 +834,19 @@ proc PfemFluid::write::GetUpperPointBoundingBox { } {
     set maxX [write::getValue PFEMFLUID_BoundingBox MaxX]
     set maxY [write::getValue PFEMFLUID_BoundingBox MaxY]
     set maxZ [write::getValue PFEMFLUID_BoundingBox MaxZ]
+    return [list $maxX $maxY $maxZ]
+}
+
+proc PfemFluid::write::GetLowerPointRefiningBox { } {
+    set minX [write::getValue PFEMFLUID_RefiningBox MinX]
+    set minY [write::getValue PFEMFLUID_RefiningBox MinY]
+    set minZ [write::getValue PFEMFLUID_RefiningBox MinZ]
+    return [list $minX $minY $minZ]
+}
+
+proc PfemFluid::write::GetUpperPointRefiningBox { } {
+    set maxX [write::getValue PFEMFLUID_RefiningBox MaxX]
+    set maxY [write::getValue PFEMFLUID_RefiningBox MaxY]
+    set maxZ [write::getValue PFEMFLUID_RefiningBox MaxZ]
     return [list $maxX $maxY $maxZ]
 }

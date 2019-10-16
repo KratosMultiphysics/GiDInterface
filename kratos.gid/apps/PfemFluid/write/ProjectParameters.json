@@ -111,15 +111,9 @@
 			    "on_distance": false,
 			    "on_threshold": false,
 			    "on_error": false
-			},
-			"refining_box":{
-			    "refine_in_box_only": false,
-			    "upper_point": [0.0, 0.0, 0.0],
-			    "lower_point": [0.0, 0.0, 0.0],
-			    "velocity": [0.0, 0.0, 0.0]
 			}
 		    },
-		    "elemental_variables_to_transfer":[ "CAUCHY_STRESS_VECTOR", "DEFORMATION_GRADIENT" ]
+		    "elemental_variables_to_transfer":[]
 		}
 	    ]
 	}
@@ -254,8 +248,6 @@
                             }
                         }
                     },
-                    "elemental_variables_to_transfer":[ "CAUCHY_STRESS_VECTOR", "DEFORMATION_GRADIENT" ],
-                    "contact_bodies_list": ["body1"]
                 }
             ]
         }
@@ -319,7 +311,7 @@
             "skin_output"         : false,
             "plane_output"        : [],
             "nodal_results"       : ["DISPLACEMENT","REACTION","VELOCITY","ACCELERATION"],
-            "gauss_point_results" : ["GREEN_LAGRANGE_STRAIN_TENSOR","CAUCHY_STRESS_TENSOR","VON_MISES_STRESS"],
+            "gauss_point_results" : [],
 	    "additional_list_files": []
 
         },

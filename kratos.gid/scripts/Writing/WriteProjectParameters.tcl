@@ -455,7 +455,7 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
     dict set resultDict skin_output [getValueByXPath $gid_options_xpath SkinOutput]
 
-    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]"
+    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='CutPlanes'\]"
     dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
     set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
     dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]

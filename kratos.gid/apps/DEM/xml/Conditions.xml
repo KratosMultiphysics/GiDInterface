@@ -9,8 +9,27 @@
     <outputs></outputs>
   </ConditionItem>
 
+  <ConditionItem n="DEM-FEM-Wall2D" pn="DEM-FEM Wall" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="DEM-FEM-Wall-Process" help="Load on surfaces, load vector referred to global axes" VariableName="WALL">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+    </TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
   <ConditionItem n="Inlet" pn="DEM-Inlet" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface" ProcessName="DEM-Inlet-Process" help="" VariableName="INLET">
-    <TopologyFeatures></TopologyFeatures>
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
+      <item GeometryType="Triangle" nodes="6" KratosName="WallCondition3D6N"/>
+    </TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+  <ConditionItem n="Inlet2D" pn="DEM-Inlet" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="DEM-Inlet2D-Process" help="" VariableName="INLET">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+    </TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
@@ -32,6 +51,19 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
+
+  <ConditionItem n="DEM-Cohesive2D" pn="Bonded domains" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" ElementType="Surface" LocalSpaceDimension="1" ProcessName="Cohesive2D-Process" help="" VariableName="COHESIVE">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+   <ConditionItem n="DEM-Cohesive" pn="Bonded domains" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Volume" LocalSpaceDimension="2" ProcessName="Cohesive-Process" help="" VariableName="COHESIVE">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
 
 
   <!-- <ConditionItem n="VELOCITY" pn="Velocity" ProcessName="Linear_Velocity_Process" VariableName="VELOCITY" ImplementedInApplication="DEMApplication" analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="DEM" Interval="Total">
