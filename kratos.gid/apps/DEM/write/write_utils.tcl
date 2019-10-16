@@ -367,6 +367,9 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
     DEM::write::AssignGeometricalEntitiesToSkinSphere3D
     DEM::write::AssignGeometricalEntitiesToSkinSphere2D
 
+    if {$::Model::SpatialDimension eq "2D"} {DEM::write::AssignGeometricalEntitiesToSkinSphere2D
+    } else {DEM::write::AssignGeometricalEntitiesToSkinSphere3D}
+
     # Get the surface type list
     lassign [DEM::write::GetSurfaceTypeList $bsurfacelist] tetrasurf hexasurf
 
