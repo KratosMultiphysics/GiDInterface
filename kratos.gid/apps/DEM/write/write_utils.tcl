@@ -364,8 +364,6 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
     # Find boundaries
     set bsurfacelist [DEM::write::FindBoundariesOfNonSphericElements $entitytype]
     set allsurfacelist [DEM::write::FindAllSurfacesOfNonSphericElements $entitytype]
-    DEM::write::AssignGeometricalEntitiesToSkinSphere3D
-    DEM::write::AssignGeometricalEntitiesToSkinSphere2D
 
     if {$::Model::SpatialDimension eq "2D"} {DEM::write::AssignGeometricalEntitiesToSkinSphere2D
     } else {DEM::write::AssignGeometricalEntitiesToSkinSphere3D}
