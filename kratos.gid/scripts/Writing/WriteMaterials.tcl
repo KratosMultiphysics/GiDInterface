@@ -139,7 +139,8 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
             set prop_dict [dict create]
             dict set prop_dict "model_part_name" $sub_model_part
             dict set prop_dict "properties_id" $mid
-            set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]
+            set constitutive_law_id ""
+            if {[dict exists $mat_dict $group ConstitutiveLaw ]} {set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]}
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
             if {$constitutive_law ne ""} {
                 set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
