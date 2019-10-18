@@ -142,11 +142,13 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
    
 
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body3'\]/value\[@n='BodyType'\]" {v Rigid}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body3'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
     set interface_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body3'\]/condition\[@n='Parts'\]"
     set interfaceNode [customlib::AddConditionGroupOnXPath $interface_part_xpath Interface]
     $interfaceNode setAttribute ov line
    
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body4'\]/value\[@n='BodyType'\]" {v Rigid}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body4'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
     set rigid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body4'\]/condition\[@n='Parts'\]"
     set rigidNode [customlib::AddConditionGroupOnXPath $rigid_part_xpath Rigid_Walls]
     $rigidNode setAttribute ov line

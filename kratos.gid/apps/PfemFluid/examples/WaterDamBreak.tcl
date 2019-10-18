@@ -98,6 +98,7 @@ proc PfemFluid::examples::TreeAssignationWaterDamBreak2D {args} {
     set rigid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/condition\[@n='Parts'\]"
     set rigidNode [customlib::AddConditionGroupOnXPath $rigid_part_xpath Rigid_Walls]
     $rigidNode setAttribute ov line
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
     
     # Velocidad
     GiD_Groups clone Rigid_Walls Total
