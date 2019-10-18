@@ -362,6 +362,9 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
     DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
 
     # Find boundaries
+    if {[GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
+	    GiD_Groups delete SKIN_SPHERE_DO_NOT_DELETE
+    }
     set bsurfacelist [DEM::write::FindBoundariesOfNonSphericElements $entitytype]
     set allsurfacelist [DEM::write::FindAllSurfacesOfNonSphericElements $entitytype]
 

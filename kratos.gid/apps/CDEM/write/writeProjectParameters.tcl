@@ -93,6 +93,23 @@ proc CDEM::write::getParametersDict { } {
     dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 
+    set material_test_parameters_dict [dict create]
+    set material_analysis [write::getValue DEMTestMaterial Active]
+    if {$material_analysis == "true"} {
+
+    dict set material_test_parameters_dict "TestType"           [write::getValue DEMTestMaterial TestType]
+    dict set material_test_parameters_dict "ConfinementPressure" [write::getValue DEMTestMaterial ConfinementPressure]
+    dict set material_test_parameters_dict "LoadVelocity"       [write::getValue DEMTestMaterial LoadVelocity]
+    dict set material_test_parameters_dict "Meshtype"           [write::getValue DEMTestMaterial Meshtype]
+    dict set material_test_parameters_dict "Specimenlength"     [write::getValue DEMTestMaterial Specimenlength]
+    dict set material_test_parameters_dict "Specimendiameter"   [write::getValue DEMTestMaterial Specimendiameter]
+    set SpecimenDiameter                                        [write::getValue DEMTestMaterial Specimendiameter]
+    set MeasuringSurface [expr ($SpecimenDiameter*$SpecimenDiameter*3.141592/4.0)]
+    dict set material_test_parameters_dict "MeasuringSurface"   $MeasuringSurface
+
+    dict set project_parameters_dict "material_test_settings"   $material_test_parameters_dict
+    }
+
     # Output timestep
         set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
         if {$output_criterion eq "Detail_priority"} {

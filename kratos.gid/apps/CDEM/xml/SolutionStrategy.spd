@@ -40,6 +40,15 @@
                 <value n="ScreenInfoOutput"             v="5"                   pn="Info screen output" icon="black1" help="How often the user gets information on the running process (in seconds)"/>
                 <value n="NeighbourSearchFrequency"     v="50"                  pn="Search frequency"   icon="black1" help="Search for new particle or wall neighbours. If set to '10', a single search will be computed out every ten steps"/>
 	</container>
+        <container     n="TestMaterial"                 un="DEMTestMaterial"    pn="Material Analysis"  help="Testing specimens under certain pressure conditions" icon="black1" open_window="0">
+                <value n="Active"                       v="false" type="bool"   pn="Activate"           values="true,false"                 icon="black1"/>
+                <value n="TestType"                     v="UCS"                 pn="Select test type"   values="UCS,Triaxial,Oedometric,Hydrostatic,BTS,Shear" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
+                <value n="ConfinementPressure"          v="0.0"                 pn="Confinement pressure" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
+                <value n="LoadVelocity"                 v="0.1"                 pn="Loading speed"      state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1" help="Total loading speed defined as the sum of top and bottom loading speeds"/>
+                <value n="Meshtype"                     v="Current"             pn="Select mesh type"   values="Current,Predefined"                            state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
+                <value n="Specimenlength"               v="0.30"                pn="Length"      state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
+                <value n="Specimendiameter"             v="0.15"                pn="Diameter"      state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
+        </container>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
 	<dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>
