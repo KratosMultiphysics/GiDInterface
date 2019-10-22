@@ -80,6 +80,29 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
 
 
 proc ::DEM::AfterMeshGeneration { fail } {
+
+    # Useful if the boundary line of the dem group is used as pressure plate
+    # foreach element in group SKIN_SPHERE_DO_NOT_DELETE {
+    #    if (elementtype == line and dimension=2D) { remove element from group SKIN_SPHERE_DO_NOT_DELETE
+    #    } elseif (elementtype == triangle and dimension=3D) { remove element from group SKIN_SPHERE_DO_NOT_DELETE
+    #    }
+    # }
+
+    # foreach element in group_condition DEM-FEMWALL  {
+    #    if (elementtype == circle and dimension=2D) { remove element from group_condition DEM-FEMWALL
+    #    } elseif (elementtype == sphere and dimension=3D) { rremove element from group_condition DEM-FEMWALL
+    #    }
+    # }
+
+    if [GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE] {
+        GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
+        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type linear]
+        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
+        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
+    }
+
+
+
     # set without_window [GidUtils::AreWindowsDisabled];
     # if {!$without_window} {
         # GidUtils::DisableGraphics
