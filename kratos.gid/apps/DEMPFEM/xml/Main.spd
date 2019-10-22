@@ -6,6 +6,7 @@
     <include n="ModelType" active="1" path="apps/PfemFluid/xml/ModelType.spd"/>
     <include n="Bodies" active="1" icon="meshingStrategies" path="apps/PfemFluid/xml/Bodies.spd"/>
     <include n="BoundaryConditions" active="1" path="apps/PfemFluid/xml/NodalConditions.spd"/>
+    <include n="MeshBoxes" active="1" icon="boundingBox" path="apps/PfemFluid/xml/MeshBoxes.spd"/>   
     <include n="SolutionStrategy" active="1" path="apps/PfemFluid/xml/SolutionStrategy.spd"/>
     <include n="Results" active="1" path="apps/PfemFluid/xml/Results.spd"/>
     <include n="Restart" active="1" state='hidden' path="apps/Common/xml/Restart.spd"/>
