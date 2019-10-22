@@ -11,5 +11,5 @@
     <include n="Parallelism" active="1"  icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/> 
     <include n="Results" active="1" path="apps/PfemFluid/xml/Results.spd"/>
     <include n="Restart" active="1" state='hidden' path="apps/Common/xml/Restart.spd"/>
-    <include n="materials" active="1" path="apps/PfemFluid/xml/Materials.spd"/> 
+    <include n="materials" active="0" path="apps/PfemFluid/xml/Materials.spd"/> 
   </container>
