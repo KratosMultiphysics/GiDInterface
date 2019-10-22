@@ -7,8 +7,10 @@ proc DEM::examples::Init { } {
 }
 
 proc DEM::examples::UpdateMenus { } {
-    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Spheres drop" ] 8 PRE [list ::DEM::examples::SpheresDrop] "" "" insertafter =
+    if {$::Model::SpatialDimension eq "3D"} {
+        GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
+        GiDMenu::InsertOption "Kratos" [list "Spheres drop" ] 8 PRE [list ::DEM::examples::SpheresDrop] "" "" insertafter =
+    }
     GiDMenu::UpdateMenus
 }
 

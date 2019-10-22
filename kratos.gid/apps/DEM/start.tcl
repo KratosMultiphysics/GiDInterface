@@ -48,7 +48,9 @@ proc ::DEM::GetAttribute {name} {
 
 proc ::DEM::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example\nSpheres drop"]
+    if {$::Model::SpatialDimension eq "3D"} {
+        Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example\nSpheres drop"]
+    }
 }
 
 proc ::DEM::CustomMenus { } {
