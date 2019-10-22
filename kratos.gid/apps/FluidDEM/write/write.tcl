@@ -32,6 +32,7 @@ proc FluidDEM::write::writeModelPartEvent { } {
 
 }
 proc FluidDEM::write::writeCustomFilesEvent { } {
+    Fluid::write::WriteMaterialsFile False
     SetAttribute main_script_file "MainKratos.py"
     set orig_name [GetAttribute main_script_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]

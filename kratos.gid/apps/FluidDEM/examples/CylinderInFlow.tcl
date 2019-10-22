@@ -18,7 +18,7 @@ proc ::FluidDEM::examples::CylinderInFlow {args} {
     GiD_Process 'Zoom Frame
 
     GiD_Process Mescape Meshing ElemType Sphere Volumes 2 escape
-    MeshGenerationOKDo 0.1
+    # MeshGenerationOKDo 0.1
 
 }
 
@@ -261,7 +261,7 @@ proc ::FluidDEM::examples::AssignToTree { } {
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "SpheresInlet"]
     $inletNode setAttribute ov surface
-    set props [list Material "DEM-DefaultMaterial" NumberOfParticles 10000 ParticleDiameter 0.01 VelocityModulus 2 Interval "Total" DirectionVector "1.0,0.0,0.0"]
+    set props [list Material "DEM-DefaultMaterial" NumberOfParticles 10000 ParticleDiameter 0.01 VelocityModulus 2 DirectionVector "1.0,0.0,0.0"]
     foreach {prop val} $props {
         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
