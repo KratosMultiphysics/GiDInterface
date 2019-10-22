@@ -46,14 +46,16 @@ proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap ite
     Model::getConditions "../../Common/xml/Conditions.xml"
     set conditions_dict [dict create ]
     set elements_list [list ]
+    set generic_condition_name GENERIC_CONDITION3D
+    if {$::Model::SpatialDimension ne "3D"} {set generic_condition_name GENERIC_CONDITION2D}
     foreach group_node $groups {
         set needConds [write::getValueByNode [$group_node selectNodes "./value\[@n='WriteConditions'\]"]]
         if {$needConds} {
-            # TODO: be carefull with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
-            set iter [write::writeGroupNodeConditionByUniqueId $group_node "GENERIC_CONDITION" $iter $ConditionMap {print_again_repeated 0}]
+            # TODO: be careful with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
+            set iter [write::writeGroupNodeConditionByUniqueId $group_node $generic_condition_name $iter $ConditionMap {print_again_repeated 0}]
         }
     }
-    Model::ForgetCondition GENERIC_CONDITIONS
+    Model::ForgetCondition $generic_condition_name
     return $iter
 }
 

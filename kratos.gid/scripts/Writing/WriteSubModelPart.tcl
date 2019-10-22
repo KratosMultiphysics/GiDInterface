@@ -86,15 +86,17 @@ proc write::_writeConditionsForBasicSubmodelParts {un cond_iter} {
     Model::getConditions "../../Common/xml/Conditions.xml"
     set conditions_dict [dict create ]
     set elements_list [list ]
+    set generic_condition_name GENERIC_CONDITION3D
+    if {$::Model::SpatialDimension ne "3D"} {set generic_condition_name GENERIC_CONDITION2D}
     foreach group $groups {
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
         if {$needConds} {
-            set iters [write::writeGroupNodeCondition $conditions_dict $group "GENERIC_CONDITION" [incr cond_iter]]
+            set iters [write::writeGroupNodeCondition $conditions_dict $group $generic_condition_name [incr cond_iter]]
             set conditions_dict [dict merge $conditions_dict $iters]
             set cond_iter [lindex $iters end end]
         }
     }
-    Model::ForgetCondition GENERIC_CONDITIONS
+    Model::ForgetCondition $generic_condition_name
     return $conditions_dict
 }
 
