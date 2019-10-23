@@ -40,7 +40,11 @@ proc DEM::write::Elements_Substitution {} {
                         }
                         set node_id [GiD_Mesh create node append [DEM::write::GetElementCenter $element_id]]
                         # create a new node starting from the center of the given element
-                        set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                        if {$::Model::SpatialDimension eq "3D"} {
+                            set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                        } else {
+                            set new_element_id [GiD_Mesh create element append circle 1 $node_id $final_elem_radius 0 0 1]
+                        }
                         # create a new sphere element starting from the previous node and obtain its id
 
                         # lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
@@ -82,8 +86,11 @@ proc DEM::write::Elements_Substitution {} {
                                 set final_elem_radius [DEM::write::LognormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
                             }
 
-                            set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
-                            # create a new sphere element starting from the previous node and obtain its id
+                            if {$::Model::SpatialDimension eq "3D"} {
+                                set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                            } else {
+                                set new_element_id [GiD_Mesh create element append circle 1 $node_id $final_elem_radius 0 0 1]
+                            }
 
                             set list_of_groups_containing_this_elem [GiD_EntitiesGroups entity_groups nodes $node_id]
                             foreach container_group $list_of_groups_containing_this_elem {
@@ -107,7 +114,11 @@ proc DEM::write::Elements_Substitution {} {
                         } else {
                             set final_elem_radius [DEM::write::LognormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
                         }
-                        set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                        if {$::Model::SpatialDimension eq "3D"} {
+                            set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                        } else {
+                            set new_element_id [GiD_Mesh create element append circle 1 $node_id $final_elem_radius 0 0 1]
+                        }
                         # create a new sphere element starting from the previous node and obtain its id
                         lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
 
@@ -116,7 +127,6 @@ proc DEM::write::Elements_Substitution {} {
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
                         }
                     }
-
                     # if {[lsearch $cohesive_groups_list $groupid] == -1} {
                         #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                         # }
@@ -142,7 +152,11 @@ proc DEM::write::Elements_Substitution {} {
                         set node_id [GiD_Mesh create node append [DEM::write::GetElementCenter $element_id]]
                         # create a new node starting from the center of the given element
 
-                        set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                        if {$::Model::SpatialDimension eq "3D"} {
+                            set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                        } else {
+                            set new_element_id [GiD_Mesh create element append circle 1 $node_id $final_elem_radius 0 0 1]
+                        }
                         # create a new sphere element starting from the previous node and obtain its id
                         lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
 
@@ -152,7 +166,6 @@ proc DEM::write::Elements_Substitution {} {
                             # assign the element with id $new_element_id to each of the groups in the loop
                         }
                     }
-
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type hexahedra]
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type tetrahedra]
                     GiD_Mesh delete element [GiD_EntitiesGroups get $groupid elements -element_type triangle]
@@ -164,7 +177,11 @@ proc DEM::write::Elements_Substitution {} {
                             set final_elem_radius [DEM::write::LognormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
                         }
 
-                        set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                        if {$::Model::SpatialDimension eq "3D"} {
+                            set new_element_id [GiD_Mesh create element append sphere 1 $node_id $final_elem_radius]
+                        } else {
+                            set new_element_id [GiD_Mesh create element append circle 1 $node_id $final_elem_radius 0 0 1]
+                        }
                         # create a new sphere element starting from the previous node and obtain its id
                         lappend list_of_elements_to_add_to_skin_sphere_group {*}$new_element_id
 
@@ -173,11 +190,9 @@ proc DEM::write::Elements_Substitution {} {
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
                         }
                     }
-
                     # if {[lsearch $cohesive_groups_list $groupid] == -1} {
                         #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                         # }
-
                 }
             } else {
                 # 2D to 3D algorithm instead of FEM2DEM
@@ -203,18 +218,15 @@ proc DEM::write::Elements_Substitution {} {
                         GiD_EntitiesGroups assign $container_group elements $new_element_id
                     }
                 }
-
                 # if {[lsearch $cohesive_groups_list $groupid] == -1} {
                     #     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE elements $list_of_elements_to_add_to_skin_sphere_group
                     # }
             }
-
         }
 
         lappend final_list_of_isolated_nodes {*}[lindex [GiD_EntitiesGroups get $groupid all_mesh] 0]
         DEM::write::Delete_Unnecessary_Elements_From_Mesh $groupid
     }
-
     DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes $final_list_of_isolated_nodes
     # DEM::write::Destroy_Skin_Sphere_Group $KPriv(what_dempack_package)
     # Getting rid of the SKIN_SPHERE_DO_NOT_DELETE group when in discontinuum or swimming
@@ -660,32 +672,31 @@ proc DEM::write::AssignSpecialBoundaries {entitylist} {
 }
 
 proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
-
     set root [customlib::GetBaseRoot]
-    #set xp1 "[spdAux::getRoute DEMConditions]/group"DEM-FEM-Wall
-    set xp1 "[spdAux::getRoute DEMConditions]/group"
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
-
-    # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-FEM-Wall"] {
-        #         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
-        # }
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+    }
 }
 
 proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
     set root [customlib::GetBaseRoot]
-    #set xp1 "[spdAux::getRoute DEMConditions]/group" Inlet
-    set xp1 "[spdAux::getRoute DEMConditions]/group"
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
-
-    # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-Inlet"] {
-        #         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
-        # }
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet2D'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+    }
 }
 
 proc DEM::write::FindBoundariesOfCircularElements {entity} {
