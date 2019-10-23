@@ -82,27 +82,17 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
 proc ::DEM::AfterMeshGeneration { fail } {
 
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-FEM-Wall'\]"
+    # Separar 2d de 3d
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        #GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
-        GiD_EntitiesGroups unassign $groupid elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
-        GiD_EntitiesGroups unassign $groupid elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
-
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
     }
-
-    # set xp1 "[spdAux::getRoute DEMConditions]/group"
-
-    # set DEMConditions [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-FEM-Wall'\]"]
-    # foreach group [$root selectNodes $walls] {}
-    #     W "1111111111111"
-    #     W $group
-    #     set groupid [$group @n]
-    #     W $group
-    #     #GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
-    #     GiD_EntitiesGroups unassign $group elements [GiD_EntitiesGroups get $group elements -element_type circle]
-    #     GiD_EntitiesGroups unassign $group elements [GiD_EntitiesGroups get $group elements -element_type sphere]
-    #
+    set xp2 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
+    foreach group [$root selectNodes $xp2] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
+    }
 
     if [GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE] {
         GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]

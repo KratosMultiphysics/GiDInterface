@@ -660,32 +660,31 @@ proc DEM::write::AssignSpecialBoundaries {entitylist} {
 }
 
 proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
-
     set root [customlib::GetBaseRoot]
-    #set xp1 "[spdAux::getRoute DEMConditions]/group"DEM-FEM-Wall
-    set xp1 "[spdAux::getRoute DEMConditions]/group"
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
-
-    # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-FEM-Wall"] {
-        #         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
-        # }
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+    }
 }
 
 proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
     set root [customlib::GetBaseRoot]
-    #set xp1 "[spdAux::getRoute DEMConditions]/group" Inlet
-    set xp1 "[spdAux::getRoute DEMConditions]/group"
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
     }
-
-    # foreach group_id [::xmlutils::setXmlContainerIds "DEM//c.DEM-Conditions//c.DEM-Inlet"] {
-        #         GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
-        # }
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet2D'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+    }
 }
 
 proc DEM::write::FindBoundariesOfCircularElements {entity} {
