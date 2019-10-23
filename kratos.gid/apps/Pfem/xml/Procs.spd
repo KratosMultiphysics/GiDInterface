@@ -12,12 +12,6 @@
              
     ]]>
   </proc>
-  <proc n='CheckNodalConditionStateSolid' args='args'>
-    <![CDATA[
-	     return [Pfem::xml::ProcCheckNodalConditionStateSolid $domNode $args]
-	     
-    ]]>
-  </proc>
   <proc n='ElementOutputState' args='args'>
     <![CDATA[
 	     # Overwritten the base function due to Parts splitted
@@ -81,6 +75,11 @@
     ]]>
   </proc>
   <proc n='CheckNodalConditionStatePFEM' args='args'>
+    <![CDATA[
+	     return [Pfem::xml::ProcCheckNodalConditionStatePFEM $domNode $args]
+    ]]>
+  </proc>
+  <proc n='CheckNodalConditionStateSolid' args='args'>
     <![CDATA[
 	     return [Pfem::xml::ProcCheckNodalConditionStatePFEM $domNode $args]
     ]]>

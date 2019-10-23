@@ -137,7 +137,7 @@ proc Pfem::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
             return hidden
         }        
     }
-    return normal
+    return [Pfem::xml::ProcCheckNodalConditionStateSolid $domNode {*}$args]
 }
 
 proc Pfem::xml::CheckElementOutputState { domNode args } {
@@ -248,6 +248,7 @@ proc Pfem::xml::ProcCheckNodalConditionStateSolid {domNode args} {
     set params [list analysis_type $solutionType]
     if {[::Model::CheckElementsNodalCondition $conditionId $elemsactive $params]} {return "normal"} else {return "hidden"}
 }
+
 
 
 proc Pfem::xml::ProcSolutionTypeState {domNode args} {
