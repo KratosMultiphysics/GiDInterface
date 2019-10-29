@@ -147,7 +147,7 @@
           <parameter n="LinearEndTime" parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
 
           <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity modulus" type="double" v="0.0" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
-          <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+          <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="0.0,0.0,1.0" show_in_window="0"/>
           <parameter n="CenterOfRotation" parent="LinearPeriodic" pn="Center of rotation(m)" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the rotation center. Linear velocity is imposed to this center" show_in_window="0"/>
           <parameter n="AngularPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
             <parameter n="AngularPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
@@ -190,7 +190,7 @@
         <parameter n="InitialVelocityModulus" type="double" v="1.0" pn="Initial velocity" parent="true" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
         <parameter n="iDirectionVector" type="inline_vector" v="1.0,0.0,0.0" pn="Direction vector" parent="true" show_in_window="0"/>
         <parameter n="InitialAngularVelocityModulus" type="double" v="0.0" pn="Initial angular velocity" parent="true" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
-        <parameter n="iAngularDirectionVector" type="inline_vector" v="1.0,0.0,0.0" pn="Angular direction vector" parent="true" show_in_window="0"/>
+        <parameter n="iAngularDirectionVector" type="inline_vector" v="0.0,0.0,1.0" pn="Angular direction vector" parent="true" show_in_window="0"/>
       </parameter>
     </inputs>
   </Process>
