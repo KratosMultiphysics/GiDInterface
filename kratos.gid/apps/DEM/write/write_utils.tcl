@@ -676,12 +676,12 @@ proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
     }
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
     }
 }
 
@@ -690,12 +690,12 @@ proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
     }
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet2D'\]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $group_id all_geometry] 2] escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
     }
 }
 
