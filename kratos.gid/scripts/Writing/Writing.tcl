@@ -605,7 +605,7 @@ proc write::InitWriteFormats { } {
         dict set formats_dict ID "%d"
         dict set formats_dict CONNECTIVITY "%d"
         dict set formats_dict MAT_ID "%d"
-        dict set formats_dict COORDINATE "%.16f"
+        dict set formats_dict COORDINATE "%.10f"
     }
 }
 
