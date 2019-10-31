@@ -6,12 +6,12 @@ proc write::writeNodalCoordinatesOnGroups { groups } {
     # // id          X        Y        Z
     # End Nodes
     variable formats_dict
+    set id_f [dict get $formats_dict ID]
+    set coord_f [dict get $formats_dict COORDINATE]
     set formats [dict create]
     set s [mdpaIndent]
     WriteString "${s}Begin Nodes"
     incr ::write::current_mdpa_indent_level
-    set id_f [dict get $formats_dict ID]
-    set coord_f [dict get $formats_dict COORDINATE]
     foreach group $groups {
         dict set formats $group "${s}$id_f $coord_f $coord_f $coord_f\n"
     }
