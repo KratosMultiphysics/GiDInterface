@@ -4,6 +4,10 @@
             <option value='dev' label='Developer'/>
             <option value='release' label='Release'/>
         </combobox>
+        <combobox name='mdpa_format' variable='mdpa_format' variablemanager='Kratos::ManagePreferences' label='MDPA Optimization' help=''>
+            <option value='0' label='Optimized'/>
+            <option value='1' label='Readable'/>
+        </combobox>
         <combobox name='echo_level' variable='echo_level' variablemanager='Kratos::ManagePreferences' label='Echo level' help='Show more/less message'>
             <option value='0' label='0'/>
             <option value='1' label='1'/>

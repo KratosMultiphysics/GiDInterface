@@ -84,7 +84,7 @@ proc Kratos::RegisterGiDEvents { } {
 proc Kratos::Event_InitProblemtype { dir } {
     variable kratos_private
     
-    # Init Kratos problemtype global vars
+    # Init Kratos problemtype global vars with default values
     Kratos::InitGlobalVariables $dir
 
     # Load all common tcl files (not the app ones)
@@ -102,7 +102,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Problemtype libraries as CustomLib
     Kratos::LoadProblemtypeLibraries
 
-    # Load the user environment (stored preferences)
+    # Load the Kratos problemtype global and user environment (stored preferences)
     Kratos::LoadEnvironment
 
     # Customize GiD menus to add the Kratos entry
