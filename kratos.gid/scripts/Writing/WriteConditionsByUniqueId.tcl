@@ -85,7 +85,9 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
 
     # Get the entities to print
     if {$nnodes == 1} {
-        set formats [dict create $groupid "%10d \n"]
+        variable formats_dict
+        set id_f [dict get $formats_dict ID]
+        set formats [dict create $groupid "${s}$id_f \n"]
         set obj [GiD_EntitiesGroups get $groupid nodes]
     } else {
         set formats [write::GetFormatDict $groupid 0 $nnodes]
@@ -152,6 +154,9 @@ proc write::writeConditionGroupedSubmodelPartsByUniqueId {cid groups_dict condit
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "Elements"} {tableid_list ""} } {
     variable submodelparts
+    variable formats_dict
+
+    set id_f [dict get $formats_dict ID]
 
     set mid ""
     set what [split $what "&"]
@@ -169,7 +174,7 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
         incr ::write::current_mdpa_indent_level 2
         set s2 [mdpaIndent]
         set gdict [dict create]
-        set f "${s2}%5i\n"
+        set f "${s2}$id_f\n"
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
@@ -199,7 +204,7 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
             set elems [GiD_WriteCalculationFile elements -sorted -return $gdict]
             for {set i 0} {$i <[llength $elems]} {incr i} {
                 set eid [objarray get $ConditionsMap [lindex $elems $i]]
-                WriteString "${s2}[format %10d $eid]"
+                WriteString "${s2}[format $id_f $eid]"
             }
         }
         WriteString "${s1}End SubModelPartConditions"

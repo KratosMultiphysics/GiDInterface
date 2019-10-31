@@ -58,7 +58,7 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
     if {$nnodes == 1} {
         variable formats_dict
         set id_f [dict get $formats_dict ID]
-        set formats [dict create $groupid "$id_f \n"]
+        set formats [dict create $groupid "${s}$id_f \n"]
         set obj [GiD_EntitiesGroups get $groupid nodes]
     } else {
         set formats [write::GetFormatDict $groupid 0 $nnodes]
