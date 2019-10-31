@@ -594,6 +594,7 @@ proc write::mdpaIndent { {b 4} } {
     string repeat [string repeat " " $b] $current_mdpa_indent_level
 }
 
+# Sets the precission for the diffetent entities written in the mdpa
 proc write::InitWriteFormats { } {
     variable formats_dict
     if {$::Kratos::kratos_private(mdpa_format) == 1} {
