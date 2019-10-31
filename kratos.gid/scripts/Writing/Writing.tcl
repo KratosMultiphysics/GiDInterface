@@ -10,6 +10,7 @@ namespace eval write {
     variable MDPA_loop_control
     variable current_configuration
     variable current_mdpa_indent_level
+    variable formats_dict
 }
 
 proc write::Init { } {
@@ -33,6 +34,10 @@ proc write::Init { } {
     set MDPA_loop_control 0
 
     set current_mdpa_indent_level 0
+
+    
+    variable formats_dict
+    set formats_dict [dict create]
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -92,6 +97,11 @@ proc write::writeEvent { filename } {
         return 1
     }
     if {$time_monitor} {set inittime [clock seconds]}
+    
+    # Set write formats depending on the user's configuration
+    InitWriteFormats
+
+    # Current active app
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
@@ -246,8 +256,12 @@ proc write::transformGroupName {groupid} {
 
 # Warning! Indentation must be set before calling here!
 proc write::GetFormatDict { groupid mid num} {
+    variable formats_dict
+    set id_f [dict get $formats_dict ID]
+    set mid_f [dict get $formats_dict MAT_ID]
+
     set s [mdpaIndent]
-    set f "${s}%5d [format "%10d" $mid] [string repeat "%10d " $num]\n"
+    set f "${s}$id_f [format $mid_f $mid] [string repeat "$id_f " $num]"
     return [dict create $groupid $f]
 }
 
@@ -575,6 +589,21 @@ proc write::mdpaIndent { {b 4} } {
         }
     }
     string repeat [string repeat " " $b] $current_mdpa_indent_level
+}
+
+proc write::InitWriteFormats { } {
+    variable formats_dict
+    if {$::Kratos::kratos_private(mdpa_format) == 1} {
+        dict set formats_dict ID "%5d"
+        dict set formats_dict CONNECTIVITY "%10d"
+        dict set formats_dict MAT_ID "%10d"
+        dict set formats_dict COORDINATE "%14.10f"
+    } else {
+        dict set formats_dict ID "%d"
+        dict set formats_dict CONNECTIVITY "%d"
+        dict set formats_dict MAT_ID "%d"
+        dict set formats_dict COORDINATE "%.10f"
+    }
 }
 
 proc write::CopyFileIntoModel { filepath } {
