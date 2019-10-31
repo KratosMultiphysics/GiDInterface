@@ -228,6 +228,9 @@ proc Structural::write::writeLocalAxes { } {
 
 # This is the kind of code I hate
 proc Structural::write::writeHinges { } {
+    
+    # format for writing ids
+    set id_f [dict get $write::formats_dict ID]
 
     # Preprocess old_conditions. Each mesh linear element remembers the origin line in geometry
     set match_dict [dict create]
@@ -282,11 +285,11 @@ proc Structural::write::writeHinges { } {
                 set end [::tcl::mathfunc::max {*}$linear_elements]
                 if {[llength $first_list] > 0} {
                     set value [join $first_list ,]
-                    write::WriteString [format "%5d \[%d\] (%s)" $first [llength $first_list] $value]
+                    write::WriteString [format "$id_f \[%d\] (%s)" $first [llength $first_list] $value]
                 }
                 if {[llength $last_list] > 0} {
                     set value [join $last_list ,]
-                    write::WriteString [format "%5d \[%d\] (%s)" $end [llength $last_list] $value]
+                    write::WriteString [format "$id_f \[%d\] (%s)" $end [llength $last_list] $value]
                 }
             }
             # Write the tail
