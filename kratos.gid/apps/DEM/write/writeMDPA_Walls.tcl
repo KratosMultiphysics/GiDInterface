@@ -26,7 +26,6 @@ proc DEM::write::WriteMDPAWalls { } {
 
 
 proc DEM::write::WriteWallProperties { } {
-    #set print_list [list "FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
     set wall_properties [dict create ]
     set cnd [Model::getCondition "DEM-FEM-Wall"]
 
