@@ -595,19 +595,27 @@ proc write::mdpaIndent { {b 4} } {
 }
 
 # Sets the precission for the diffetent entities written in the mdpa
+# To customize the formats and precissions for your mdpa.
+# You can edit in your write mdpa event script using write::SetWriteFormatFor
 proc write::InitWriteFormats { } {
-    variable formats_dict
     if {$::Kratos::kratos_private(mdpa_format) == 1} {
-        dict set formats_dict ID "%5d"
-        dict set formats_dict CONNECTIVITY "%10d"
-        dict set formats_dict MAT_ID "%10d"
-        dict set formats_dict COORDINATE "%14.10f"
+        # Readable
+        write::SetWriteFormatFor ID "%5d"
+        write::SetWriteFormatFor CONNECTIVITY "%10d"
+        write::SetWriteFormatFor MAT_ID "%10d"
+        write::SetWriteFormatFor COORDINATE "%14.10f"
     } else {
-        dict set formats_dict ID "%d"
-        dict set formats_dict CONNECTIVITY "%d"
-        dict set formats_dict MAT_ID "%d"
-        dict set formats_dict COORDINATE "%.10f"
+        # Optimized
+        write::SetWriteFormatFor ID "%d"
+        write::SetWriteFormatFor CONNECTIVITY "%d"
+        write::SetWriteFormatFor MAT_ID "%d"
+        write::SetWriteFormatFor COORDINATE "%.10f"
     }
+}
+
+proc write::SetWriteFormatFor { what format } {
+    variable formats_dict
+    dict set formats_dict $what $format
 }
 
 proc write::CopyFileIntoModel { filepath } {
