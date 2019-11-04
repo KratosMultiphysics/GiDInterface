@@ -47,7 +47,9 @@ proc write::writeGroupConditionByGiDId {groupid kname nnodes} {
 
     # Get the entities to print
     if {$nnodes == 1} {
-        set formats [dict create $groupid "${s}%10d \n"]
+        variable formats_dict
+        set id_f [dict get $formats_dict ID]
+        set formats [dict create $groupid "${s}$id_f \n"]
         GiD_WriteCalculationFile nodes $formats
     } else {
         set formats [write::GetFormatDict $groupid 0 $nnodes]
@@ -64,6 +66,9 @@ proc write::writeGroupConditionByGiDId {groupid kname nnodes} {
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPartByGiDId { cid group {what "Elements"} {tableid_list ""} } {
     variable submodelparts
+    variable formats_dict
+
+    set id_f [dict get $formats_dict ID]
 
     set mid ""
     set what [split $what "&"]
@@ -81,7 +86,7 @@ proc write::writeGroupSubModelPartByGiDId { cid group {what "Elements"} {tableid
         incr ::write::current_mdpa_indent_level 2
         set s2 [mdpaIndent]
         set gdict [dict create]
-        set f "${s2}%5i\n"
+        set f "${s2}$id_f\n"
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2

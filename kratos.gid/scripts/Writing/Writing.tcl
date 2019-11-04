@@ -10,6 +10,7 @@ namespace eval write {
     variable MDPA_loop_control
     variable current_configuration
     variable current_mdpa_indent_level
+    variable formats_dict
 }
 
 proc write::Init { } {
@@ -33,6 +34,10 @@ proc write::Init { } {
     set MDPA_loop_control 0
 
     set current_mdpa_indent_level 0
+
+    
+    variable formats_dict
+    set formats_dict [dict create]
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -92,6 +97,11 @@ proc write::writeEvent { filename } {
         return 1
     }
     if {$time_monitor} {set inittime [clock seconds]}
+    
+    # Set write formats depending on the user's configuration
+    InitWriteFormats
+
+    # Current active app
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
@@ -246,8 +256,12 @@ proc write::transformGroupName {groupid} {
 
 # Warning! Indentation must be set before calling here!
 proc write::GetFormatDict { groupid mid num} {
+    variable formats_dict
+    set id_f [dict get $formats_dict ID]
+    set mid_f [dict get $formats_dict MAT_ID]
+
     set s [mdpaIndent]
-    set f "${s}%5d [format "%10d" $mid] [string repeat "%10d " $num]\n"
+    set f "${s}$id_f [format $mid_f $mid] [string repeat "$id_f " $num]\n"
     return [dict create $groupid $f]
 }
 
@@ -398,6 +412,9 @@ proc write::writePartSubModelPart { } {
 }
 
 proc write::writeLinearLocalAxesGroup {group} {
+    variable formats_dict
+    set id_f [dict get $formats_dict ID]
+    set coord_f [dict get $formats_dict COORDINATE]
     set elements [GiD_EntitiesGroups get $group elements -element_type linear]
     set num_elements [objarray length $elements]
     if {$num_elements} {
@@ -408,7 +425,7 @@ proc write::writeLinearLocalAxesGroup {group} {
             set y0 [lindex $raw 1]
             set y1 [lindex $raw 4]
             set y2 [lindex $raw 7]
-            write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
+            write::WriteString [format "$id_f \[3\]($coord_f, $coord_f, $coord_f)" $line $y0 $y1 $y2]
         }
         write::WriteString "End ElementalData"
         write::WriteString ""
@@ -575,6 +592,30 @@ proc write::mdpaIndent { {b 4} } {
         }
     }
     string repeat [string repeat " " $b] $current_mdpa_indent_level
+}
+
+# Sets the precission for the diffetent entities written in the mdpa
+# To customize the formats and precissions for your mdpa.
+# You can edit in your write mdpa event script using write::SetWriteFormatFor
+proc write::InitWriteFormats { } {
+    if {$::Kratos::kratos_private(mdpa_format) == 1} {
+        # Readable
+        write::SetWriteFormatFor ID "%5d"
+        write::SetWriteFormatFor CONNECTIVITY "%10d"
+        write::SetWriteFormatFor MAT_ID "%10d"
+        write::SetWriteFormatFor COORDINATE "%14.10f"
+    } else {
+        # Optimized
+        write::SetWriteFormatFor ID "%d"
+        write::SetWriteFormatFor CONNECTIVITY "%d"
+        write::SetWriteFormatFor MAT_ID "%d"
+        write::SetWriteFormatFor COORDINATE "%.10f"
+    }
+}
+
+proc write::SetWriteFormatFor { what format } {
+    variable formats_dict
+    dict set formats_dict $what $format
 }
 
 proc write::CopyFileIntoModel { filepath } {
