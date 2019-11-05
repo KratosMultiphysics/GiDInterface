@@ -399,15 +399,12 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     catch {
         # If the user selected MPI, stop it!
         set paralleltype [write::getValue ParallelType]
+        # MPI must be launched manually
         if {$paralleltype eq "MPI"} {set run 0}
     }
-    if {$run} {
-        return ""
-    } {
+    if {!$run} {
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
-        
     }
-    
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
