@@ -459,8 +459,24 @@ proc DEM::write::writeMaterialsParts { } {
     variable partsProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
     set partsProperties $::write::mat_dict
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS CONTACT_SIGMA_MIN CONTACT_TAU_ZERO CONTACT_INTERNAL_FRICC ConstitutiveLaw]
-    foreach group [dict keys $partsProperties] {
+    set printable [list PARTICLE_DENSITY \
+						YOUNG_MODULUS \
+						POISSON_RATIO \
+						FRICTION \
+						COEFFICIENT_OF_RESTITUTION \
+						PARTICLE_MATERIAL \
+						ROLLING_FRICTION \
+						ROLLING_FRICTION_WITH_WALLS \
+						CONTACT_SIGMA_MIN \
+						CONTACT_TAU_ZERO \
+						CONTACT_INTERNAL_FRICC \
+						ConstitutiveLaw \
+						SHEAR_ENERGY_COEF \
+						LOOSE_MATERIAL_YOUNG_MODULUS \
+						FRACTURE_ENERGY \
+						INTERNAL_FRICTION_ANGLE]
+
+	foreach group [dict keys $partsProperties] {
         write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
         foreach {prop val} [dict get $partsProperties $group] {
             if {$prop in $printable} {

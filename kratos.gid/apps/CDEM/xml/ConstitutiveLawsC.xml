@@ -5,7 +5,7 @@
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Tangential Strength" units="MPa" unit_magnitude="P" v="25"/>
             <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" units="MPa" unit_magnitude="P" v="5"/>
-            <parameter n="CONTACT_INTERNAL_FRICC" pn="Internal Friction Coeff" v="1"/>
+            <parameter n="CONTACT_INTERNAL_FRICC" pn="Contact Internal Friction" v="1"/>
         </inputs>
         <outputs></outputs>
     </CLaw>
@@ -14,7 +14,7 @@
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Tangential Strength" units="MPa" unit_magnitude="P" v="25"/>
             <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" units="MPa" unit_magnitude="P" v="5"/>
-            <parameter n="CONTACT_INTERNAL_FRICC" pn="Internal Friction Coeff" v="1"/>
+            <parameter n="CONTACT_INTERNAL_FRICC" pn="Contact Internal Friction" v="1"/>
         </inputs>
         <outputs></outputs>
     </CLaw>
@@ -45,6 +45,30 @@
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Mohr-Coulomb Cohesion" units="MPa" unit_magnitude="P" v="25"/>
             <parameter n="INTERNAL_FRICTION_ANGLE" pn="Mohr-Coulomb Friction Angle" units="deg" v="30"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="DEM_KDEM_with_damage_parallel_bond" pn="KDEM with damage" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
+        <inputs>
+            <parameter n="CONTACT_TAU_ZERO" pn="Mohr-Coulomb Cohesion" units="MPa" unit_magnitude="P" v="10"/>
+            <parameter n="CONTACT_SIGMA_MIN" pn="Normal Tensile Strength" units="MPa" unit_magnitude="P" v="13"/>
+            <parameter n="CONTACT_INTERNAL_FRICC" pn="Contact Internal Friction" v="0.44"/>
+            <parameter n="SHEAR_ENERGY_COEF" pn="Shear energy" v="4.0"/>
+            <parameter n="LOOSE_MATERIAL_YOUNG_MODULUS" pn="Loose Young modulus" units="Pa" unit_magnitude="P" v="14e8"/>
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy" v="20.0"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="DEM_KDEM_with_damage_parallel_bond_2D" pn="KDEM with damage" ProductionReady="ProductionReady" help="Not implemented" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
+        <inputs>
+            <parameter n="CONTACT_TAU_ZERO" pn="Mohr-Coulomb Cohesion" units="MPa" unit_magnitude="P" v="10"/>
+            <parameter n="CONTACT_SIGMA_MIN" pn="Normal Tensile Strength" units="MPa" unit_magnitude="P" v="13"/>
+            <parameter n="CONTACT_INTERNAL_FRICC" pn="Contact Internal Friction" v="0.44"/>
+            <parameter n="SHEAR_ENERGY_COEF" pn="Shear energy" v="4.0"/>
+            <parameter n="LOOSE_MATERIAL_YOUNG_MODULUS" pn="Loose Young modulus" units="Pa" unit_magnitude="P" v="14e8"/>
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy" v="20.0"/>
         </inputs>
         <outputs></outputs>
     </CLaw>
