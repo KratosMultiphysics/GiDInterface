@@ -44,7 +44,11 @@ proc DEM::write::WriteWallProperties { } {
 	#        write::WriteString "  $prop $v"
 	#    }
 	#}
-	write::WriteString "  FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
+    set friction_value [write::getValueByNode [$group selectNodes "./value\[@n='friction_angle'\]"]]
+    set pi $MathUtils::PI
+    set propvalue [expr {tan($friction_value*$pi/180.0)}]
+	write::WriteString "  FRICTION $propvalue"
+	# write::WriteString "  FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
 	write::WriteString "  WALL_COHESION [write::getValueByNode [$group selectNodes "./value\[@n='WallCohesion'\]"]]"
 	set compute_wear_bool [write::getValueByNode [$group selectNodes "./value\[@n='DEM_Wear'\]"]]
 	if {[write::isBooleanTrue $compute_wear_bool]} {
