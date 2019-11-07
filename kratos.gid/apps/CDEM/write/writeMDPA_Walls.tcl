@@ -45,7 +45,12 @@ proc DEM::write::WriteWallProperties { } {
 	#        write::WriteString "  $prop $v"
 	#    }
 	#}
-	write::WriteString "  FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
+
+    set friction_value [write::getValueByNode [$group selectNodes "./value\[@n='friction_angle'\]"]]
+    set pi $MathUtils::PI
+    set propvalue [expr {tan($friction_value*$pi/180.0)}]
+	write::WriteString "  FRICTION $propvalue"
+	#write::WriteString "  FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
 	write::WriteString "  WALL_COHESION [write::getValueByNode [$group selectNodes "./value\[@n='WallCohesion'\]"]]"
 	set compute_wear_bool [write::getValueByNode [$group selectNodes "./value\[@n='DEM_Wear'\]"]]
 	if {[write::isBooleanTrue $compute_wear_bool]} {
@@ -430,8 +435,6 @@ proc DEM::write::writeConditionMeshes { } {
             write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
 
             set material_analysis [write::getValue DEMTestMaterial Active]
-            W $material_analysis
-            W "material_analysis"
             if {$material_analysis == "true"} {
                 set is_material_test [write::getValueByNode [$group_node selectNodes "./value\[@n='MaterialTest'\]"]]
                 if {$is_material_test == "true"} {
