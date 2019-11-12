@@ -46,11 +46,8 @@ import os
 
 # Import kratos core and applications
 import KratosMultiphysics
-import KratosMultiphysics.SolidMechanicsApplication     as KratosSolid
 import KratosMultiphysics.ExternalSolversApplication    as KratosSolvers
 import KratosMultiphysics.DelaunayMeshingApplication    as KratosPfemg
-import KratosMultiphysics.ContactMechanicsApplication   as KratosContact
-import KratosMultiphysics.PfemSolidMechanicsApplication as KratosPfemSolid
 import KratosMultiphysics.PfemFluidDynamicsApplication  as KratosPfemFluid
 
 ######################################################################################
@@ -102,10 +99,6 @@ solver = solver_module.CreateSolver(main_model_part, ProjectParameters["solver_s
 
 # Add variables (always before importing the model part)
 solver.AddVariables()
-
-# Add PfemSolidMechanicsApplication Variables
-import pfem_solid_variables
-pfem_solid_variables.AddVariables(main_model_part)
 
 # Read model_part (note: the buffer_size is set here) (restart is read here)
 solver.ImportModelPart()
