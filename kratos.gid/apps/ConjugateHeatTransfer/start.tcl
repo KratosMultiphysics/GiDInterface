@@ -37,7 +37,7 @@ proc ::ConjugateHeatTransfer::LoadMyFiles { } {
     variable id
     variable dir
 
-    uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
+    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     if {[apps::getActiveAppId] eq $id} {
