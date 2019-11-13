@@ -51,7 +51,7 @@ proc ::CDEM::xml::CreateAndAssignBondedGroups { } {
         set group_id "$group_base//SG$entity_id"
         GiD_Groups create $group_id
         # Assign entity to subgroup
-        GiD_EntitiesGroups assign $group_id volumes $entity_id
+        GiD_EntitiesGroups assign $group_id $entity $entity_id
         # Assign the subgroup to the tree condition
         set cohesive_group [customlib::AddConditionGroupOnXPath $cohesive_cond $group_id]
     }
