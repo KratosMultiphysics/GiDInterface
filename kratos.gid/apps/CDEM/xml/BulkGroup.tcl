@@ -1,5 +1,5 @@
 
-proc ::CDEM::examples::BulkGroup {args} {
+proc ::CDEM::xml::BulkGroup {args} {
     
 
     if {![Kratos::IsModelEmpty]} {
@@ -22,7 +22,7 @@ proc ::CDEM::examples::BulkGroup {args} {
     spdAux::RequestRefresh
 }
 
-proc ::CDEM::examples::CreateAndAssignBondedGroups { } {
+proc ::CDEM::xml::CreateAndAssignBondedGroups { } {
 
     # Prepare the variables
     set entity surface
