@@ -1,52 +1,50 @@
 
 proc ::CDEM::examples::BulkGroup {args} {
+    
+
     if {![Kratos::IsModelEmpty]} {
-        set txt "Bulk grouping of all the current volumes is about to be executed"
+        set entity surfaces
+        if {$::Model::SpatialDimension eq "3D"} {
+            set entity volumes
+        }
+        set txt "Bulk grouping of all the current $entity is about to be executed"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-
-    if {$::Model::SpatialDimension eq "2D"} {
-        CreateAndAssign2DBondedGroups
-    } else {
-        CreateAndAssign3DBondedGroups
-    }
-
+    CreateAndAssignBondedGroups
+    
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
 }
 
-proc ::CDEM::examples::CreateAndAssign3DBondedGroups { } {
-
-    set volume_list [GiD_Geometry -v2 list volume]
-
-    for {set i 0} {$i < [llength $volume_list]} {incr i} {
-
-        set volume_id [lindex $volume_list $i]
-        GiD_Groups create Bonded_domain_groups//SG$volume_id
-        GiD_EntitiesGroups assign Bonded_domain_groups//SG$volume_id volumes $volume_id
-
-        set DEMConditions [spdAux::getRoute "DEMConditions"]
-        set cohesive_cond "$DEMConditions/condition\[@n='DEM-Cohesive'\]"
-        set cohesive_group [customlib::AddConditionGroupOnXPath $cohesive_cond Bonded_domain_groups//SG$volume_id]
+proc ::CDEM::examples::CreateAndAssignBondedGroups { } {
+    # Prepare the variables
+    set entity surface
+    set condition_id "DEM-Cohesive2D"
+    if {$::Model::SpatialDimension eq "3D"} {
+        set entity volume
+        set condition_id "DEM-Cohesive"
     }
-}
+    # Locate the condition
+    set DEMConditions [spdAux::getRoute "DEMConditions"]
+    set cohesive_cond "$DEMConditions/condition\[@n='$condition_id'\]"
 
-proc ::CDEM::examples::CreateAndAssign2DBondedGroups { } {
-
-    set surface_list [GiD_Geometry -v2 list surface]
-
-    for {set i 0} {$i < [llength $surface_list]} {incr i} {
-
-        set surface_id [lindex $surface_list $i]
-        GiD_Groups create Bonded_domain_groups//SG$surface_id
-        GiD_EntitiesGroups assign Bonded_domain_groups//SG$surface_id surfaces $surface_id
-
-        set DEMConditions [spdAux::getRoute "DEMConditions"]
-        set cohesive_cond "$DEMConditions/condition\[@n='DEM-Cohesive2D'\]"
-        set cohesive_group [customlib::AddConditionGroupOnXPath $cohesive_cond Bonded_domain_groups//SG$surface_id]
+    # Get the list of entities (surfaces/volumes)
+    set entity_list [GiD_Geometry -v2 list $entity]
+    # Foreach entity, create subgroup and assign it to the condition
+    set entity_list_length [objarray length $entity_list]
+    for {set i 0} {$i < $entity_list_length} {incr i} {
+        # Get the entity id
+        set entity_id [objarray get $entity_list $i] 
+        # Create the subgroup
+        set group_id "Bonded_domain_groups//SG$entity_id"
+        GiD_Groups create $group_id
+        # Assign entity to subgroup
+        GiD_EntitiesGroups assign $group_id volumes $entity_id
+        # Assign the subgroup to the tree condition
+        set cohesive_group [customlib::AddConditionGroupOnXPath $cohesive_cond $group_id]
     }
 }
