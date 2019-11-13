@@ -13,13 +13,12 @@ proc PfemFluid::xml::Init { } {
     
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
-    Model::getConstitutiveLaws "../../PfemFluid/xml/ConstitutiveLaws.xml"
-    Model::getProcesses "../../Solid/xml/Processes.xml"
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
+    # Model::getProcesses "../../Solid/xml/Processes.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
-    Model::getNodalConditions "../../Solid/xml/NodalConditions.xml"
     Model::getNodalConditions NodalConditions.xml
-    Model::getConditions "../../Solid/xml/Conditions.xml"
+    # Model::getConditions "../../Solid/xml/Conditions.xml"
     Model::getSolvers "../../Pfem/xml/Solvers.xml"
     
     Model::ForgetNodalCondition "CONTACT"
