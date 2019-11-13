@@ -4,6 +4,7 @@ namespace eval CDEM::examples {
 
 proc CDEM::examples::Init { } {
     uplevel #0 [list source [file join $::CDEM::dir examples ContinuumDrop.tcl]]
+    uplevel #0 [list source [file join $::CDEM::dir examples BulkGroup.tcl]]
 }
 
 proc CDEM::examples::UpdateMenus { } {
