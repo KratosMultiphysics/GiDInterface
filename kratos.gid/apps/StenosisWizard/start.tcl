@@ -33,7 +33,7 @@ proc ::StenosisWizard::Init { } {
 
 proc ::StenosisWizard::LoadMyFiles { } {
     variable dir
-    uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
+    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     smart_wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]
     uplevel #0 [list source [file join $dir wizard Wizard_Steps.tcl]]
