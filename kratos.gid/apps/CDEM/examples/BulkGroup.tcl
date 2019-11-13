@@ -6,7 +6,12 @@ proc ::CDEM::examples::BulkGroup {args} {
         if { $retval == "cancel" } { return }
     }
 
-    CreateAndAssign3DBondedGroups
+
+    if {$::Model::SpatialDimension eq "2D"} {
+        CreateAndAssign2DBondedGroups
+    } else {
+        CreateAndAssign3DBondedGroups
+    }
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -15,9 +20,6 @@ proc ::CDEM::examples::BulkGroup {args} {
 }
 
 proc ::CDEM::examples::CreateAndAssign3DBondedGroups { } {
-
-    # This procedure can be called from the command line of GiD, after loading the CDEM problemtype, just by typing:
-    # -np- ::CDEM::CreateAndAssign3DBondedGroups
 
     set volume_list [GiD_Geometry -v2 list volume]
 
@@ -30,5 +32,21 @@ proc ::CDEM::examples::CreateAndAssign3DBondedGroups { } {
         set DEMConditions [spdAux::getRoute "DEMConditions"]
         set cohesive_cond "$DEMConditions/condition\[@n='DEM-Cohesive'\]"
         set cohesive_group [customlib::AddConditionGroupOnXPath $cohesive_cond Bonded_domain_groups//SG$volume_id]
+    }
+}
+
+proc ::CDEM::examples::CreateAndAssign2DBondedGroups { } {
+
+    set surface_list [GiD_Geometry -v2 list surface]
+
+    for {set i 0} {$i < [llength $surface_list]} {incr i} {
+
+        set surface_id [lindex $surface_list $i]
+        GiD_Groups create Bonded_domain_groups//SG$surface_id
+        GiD_EntitiesGroups assign Bonded_domain_groups//SG$surface_id surfaces $surface_id
+
+        set DEMConditions [spdAux::getRoute "DEMConditions"]
+        set cohesive_cond "$DEMConditions/condition\[@n='DEM-Cohesive2D'\]"
+        set cohesive_group [customlib::AddConditionGroupOnXPath $cohesive_cond Bonded_domain_groups//SG$surface_id]
     }
 }
