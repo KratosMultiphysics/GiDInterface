@@ -14,11 +14,9 @@ proc PfemFluid::xml::Init { } {
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
     Model::getConstitutiveLaws ConstitutiveLaws.xml
-    Model::getProcesses "../../Solid/xml/Processes.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
     Model::getNodalConditions NodalConditions.xml
-    Model::getConditions "../../Solid/xml/Conditions.xml"
     Model::getSolvers "../../Pfem/xml/Solvers.xml"
     
     Model::ForgetNodalCondition "CONTACT"
@@ -239,24 +237,6 @@ proc PfemFluid::xml::ProcGetContactDomains {domNode args} {
     return [join $values ,]
 }
 
-proc PfemFluid::xml::ProcCheckNodalConditionStateSolid {domNode args} {
-    # Overwritten the base function to add Solution Type restrictions
-    set elemsactive [list ]
-    foreach parts_un [PfemFluid::write::GetPartsUN] {
-        set parts_path [spdAux::getRoute $parts_un]
-        set xp1 "$parts_path/group/value\[@n='Element'\]"
-        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-            lappend elemsactive [get_domnode_attribute $gNode v]
-        }
-    }
-    if {$elemsactive eq ""} {return "hidden"}
-    set elemsactive [lsort -unique $elemsactive]
-    set conditionId [$domNode @n]
-    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute PFEMFLUID_SolutionType]] v]
-    set params [list analysis_type $solutionType]
-    if {[::Model::CheckElementsNodalCondition $conditionId $elemsactive $params]} {return "normal"} else {return "hidden"}
-}
-
 proc PfemFluid::xml::ProcSolutionTypeState {domNode args} {
     set domain_type_un PFEMFLUID_DomainType
     set domain_type_route [spdAux::getRoute $domain_type_un]
@@ -265,14 +245,10 @@ proc PfemFluid::xml::ProcSolutionTypeState {domNode args} {
         set domain_type_node [$domNode selectNodes $domain_type_route]
         set domain_type_value [get_domnode_attribute $domain_type_node v]
         
-        if {$domain_type_value ne "Solids"} {
-            $domNode setAttribute values Dynamic 
-            $domNode setAttribute v Dynamic
-            set state disabled
-        } {
-            $domNode setAttribute values "Dynamic,Static"
-            set state normal
-        }
+        $domNode setAttribute values Dynamic 
+        $domNode setAttribute v Dynamic
+        set state disabled
+        
     }
     return $state
 }

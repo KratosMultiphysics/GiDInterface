@@ -138,21 +138,6 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
 
     set problemtype [write::getValue PFEMFLUID_DomainType]
 
-    if {$problemtype eq "Solids"} {
-
-        dict set solverSettingsDict solution_type [write::getValue PFEMFLUID_SolutionType]
-
-        set solutiontype [write::getValue PFEMFLUID_SolutionType]
-
-        if {$solutiontype eq "Static"} {
-            dict set solverSettingsDict analysis_type [write::getValue PFEMFLUID_LinearType]
-        } elseif {$solutiontype eq "Dynamic"} {
-            dict set solverSettingsDict time_integration_method [write::getValue PFEMFLUID_SolStrat]
-            dict set solverSettingsDict scheme_type [write::getValue PFEMFLUID_Scheme]
-        }
-    }
-
-
     dict set solverSettingsDict model_part_name "PfemFluidModelPart"
     if {$problemtype eq "Fluids"} {
         dict set solverSettingsDict physics_type "fluid"
@@ -219,22 +204,6 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
     dict set solverSettingsDict solver_type $strategy_write_name
 
-    set problemtype [write::getValue PFEMFLUID_DomainType]
-
-    if {$problemtype eq "Solids"} {
-
-        dict set solverSettingsDict solution_type [write::getValue PFEMFLUID_SolutionType]
-
-        set solutiontype [write::getValue PFEMFLUID_SolutionType]
-
-        if {$solutiontype eq "Static"} {
-            dict set solverSettingsDict analysis_type [write::getValue PFEMFLUID_LinearType]
-        } elseif {$solutiontype eq "Dynamic"} {
-            dict set solverSettingsDict time_integration_method [write::getValue PFEMFLUID_SolStrat]
-            dict set solverSettingsDict scheme_type [write::getValue PFEMFLUID_Scheme]
-        }
-    }
-
     # model import settings
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
@@ -249,9 +218,9 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     set bodies_parts_list [list ]
     foreach body $bodies_list {
         set body_parts [dict get $body parts_list]
-	foreach part $body_parts {
-	    lappend bodies_parts_list $part
-	}
+        foreach part $body_parts {
+            lappend bodies_parts_list $part
+        }
     }
 
     dict set solverSettingsDict bodies_list $bodies_list
@@ -269,11 +238,7 @@ proc PfemFluid::write::GetPFEM_OutputProcessList { } {
 proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
     set resultList [list ]
     set problemtype [write::getValue PFEMFLUID_DomainType]
-    if {$problemtype ne "Solids"} {
-        lappend resultList [GetPFEM_FluidRemeshDict]
-    } else {
-        lappend resultList [GetPFEM_RemeshDict]
-    }
+    lappend resultList [GetPFEM_FluidRemeshDict]
     return $resultList
 }
 
