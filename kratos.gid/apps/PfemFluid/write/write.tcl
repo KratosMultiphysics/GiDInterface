@@ -9,7 +9,6 @@ proc PfemFluid::write::Init { } {
     set remesh_domains [dict create ]
     variable bodies_list
     set bodies_list [list ]
-    Solid::write::AddValidApps "PfemFluid"
     variable Names
     set Names [dict create DeltaTime DeltaTime]
 }
@@ -32,7 +31,6 @@ proc PfemFluid::write::writeModelPartEvent { } {
         write::initWriteData $part_un "PFEMFLUID_Materials"
         write::writeElementConnectivities
     }
-    Solid::write::writeConditions
     PfemFluid::write::writeMeshes
 }
 
@@ -45,8 +43,6 @@ proc PfemFluid::write::writeMeshes { } {
     # Solo Malla , no en conditions
     writeNodalConditions "PFEMFLUID_NodalConditions"
     
-    # A Condition y a meshes-> salvo lo que no tenga topologia
-    Solid::write::writeLoads
 }
 
 
@@ -92,7 +88,6 @@ proc PfemFluid::write::GetPartsUN { } {
 
 # Custom files (Copy python scripts, write materials file...)
 proc PfemFluid::write::writeCustomFilesEvent { } {
-    Solid::write::WriteMaterialsFile
     
     write::CopyFileIntoModel "python/RunPFEM.py"
     write::RenameFileInModel "RunPFEM.py" "MainKratos.py"

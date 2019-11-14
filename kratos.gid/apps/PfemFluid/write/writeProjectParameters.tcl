@@ -138,21 +138,6 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
 
     set problemtype [write::getValue PFEMFLUID_DomainType]
 
-    if {$problemtype eq "Solids"} {
-
-        dict set solverSettingsDict solution_type [write::getValue PFEMFLUID_SolutionType]
-
-        set solutiontype [write::getValue PFEMFLUID_SolutionType]
-
-        if {$solutiontype eq "Static"} {
-            dict set solverSettingsDict analysis_type [write::getValue PFEMFLUID_LinearType]
-        } elseif {$solutiontype eq "Dynamic"} {
-            dict set solverSettingsDict time_integration_method [write::getValue PFEMFLUID_SolStrat]
-            dict set solverSettingsDict scheme_type [write::getValue PFEMFLUID_Scheme]
-        }
-    }
-
-
     dict set solverSettingsDict model_part_name "PfemFluidModelPart"
     if {$problemtype eq "Fluids"} {
         dict set solverSettingsDict physics_type "fluid"
@@ -219,22 +204,6 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
     dict set solverSettingsDict solver_type $strategy_write_name
 
-    set problemtype [write::getValue PFEMFLUID_DomainType]
-
-    if {$problemtype eq "Solids"} {
-
-        dict set solverSettingsDict solution_type [write::getValue PFEMFLUID_SolutionType]
-
-        set solutiontype [write::getValue PFEMFLUID_SolutionType]
-
-        if {$solutiontype eq "Static"} {
-            dict set solverSettingsDict analysis_type [write::getValue PFEMFLUID_LinearType]
-        } elseif {$solutiontype eq "Dynamic"} {
-            dict set solverSettingsDict time_integration_method [write::getValue PFEMFLUID_SolStrat]
-            dict set solverSettingsDict scheme_type [write::getValue PFEMFLUID_Scheme]
-        }
-    }
-
     # model import settings
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
@@ -249,9 +218,9 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     set bodies_parts_list [list ]
     foreach body $bodies_list {
         set body_parts [dict get $body parts_list]
-	foreach part $body_parts {
-	    lappend bodies_parts_list $part
-	}
+        foreach part $body_parts {
+            lappend bodies_parts_list $part
+        }
     }
 
     dict set solverSettingsDict bodies_list $bodies_list
@@ -269,13 +238,7 @@ proc PfemFluid::write::GetPFEM_OutputProcessList { } {
 proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
     set resultList [list ]
     set problemtype [write::getValue PFEMFLUID_DomainType]
-    if {$problemtype ne "Solids"} {
-        lappend resultList [GetPFEM_FluidRemeshDict]
-    } else {
-        lappend resultList [GetPFEM_RemeshDict]
-    }
-    set contactDict [GetPFEM_ContactDict]
-    if {[dict size $contactDict]} {lappend resultList $contactDict}
+    lappend resultList [GetPFEM_FluidRemeshDict]
     return $resultList
 }
 
@@ -292,62 +255,6 @@ proc PfemFluid::write::GetPFEM_ProcessList { } {
     dict set resultList auxiliar_process_list []
 
     return $resultList
-}
-
-proc PfemFluid::write::GetPFEM_ContactDict { } {
-    set contact_dict [dict create]
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
-    set contact_list [list ]
-    foreach body_node [$root selectNodes $xp1] {
-        set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
-        if {$contact ne "No contact strategy" && $contact ne "" && $contact ni $contact_list} {lappend contact_list $contact}
-    }
-    #W $contact_list
-    set contact_domains [list ]
-    foreach contact $contact_list {
-        lappend contact_domains [PfemFluid::write::GetPfem_ContactProcessDict $contact]
-    }
-    if {[llength $contact_list]} {
-        dict set contact_dict "python_module" "contact_domain_process"
-        dict set contact_dict "kratos_module" "KratosMultiphysics.ContactMechanicsApplication"
-        dict set contact_dict "help"          "This process applies contact domain search by remeshing outer boundaries"
-        dict set contact_dict "process_name"  "ContactDomainProcess"
-        set params [dict create]
-        dict set params "model_part_name"       "model_part_name"
-        dict set params "meshing_control_type"  "step"
-        dict set params "meshing_frequency"     1.0
-        dict set params "meshing_before_output" true
-        dict set params "meshing_domains"       $contact_domains
-        dict set contact_dict "Parameters"    $params
-    }
-    return $contact_dict
-}
-
-proc PfemFluid::write::GetPfem_ContactProcessDict {contact_name} {
-    set cont_dict [dict create]
-    dict set cont_dict "python_module" "contact_domain"
-    dict set cont_dict "model_part_name" "sub_model_part_name"
-    dict set cont_dict "alpha_shape" 1.4
-    dict set cont_dict "offset_factor" 0.0
-    set mesh_strat [dict create]
-    dict set mesh_strat "python_module" "contact_meshing_strategy"
-    dict set mesh_strat "meshing_frequency" 0
-    dict set mesh_strat "remesh" true
-    dict set mesh_strat "constrained" false
-    set contact_parameters [dict create]
-
-    dict set contact_parameters "contact_condition_type" "ContactDomainLM2DCondition"
-    dict set contact_parameters "friction_law_type" "FrictionLaw"
-    dict set contact_parameters "kratos_module" "KratosMultiphysics.ContactMechanicsApplication"
-    set properties_dict [dict create]
-    foreach prop [list FRICTION_ACTIVE MU_STATIC MU_DYNAMIC PENALTY_PARAMETER TANGENTIAL_PENALTY_RATIO TAU_STAB] {
-        dict set properties_dict $prop [PfemFluid::write::GetContactProperty ${contact_name} $prop]
-    }
-    dict set contact_parameters "variables_of_properties" $properties_dict
-    dict set mesh_strat "contact_parameters" $contact_parameters
-    dict set cont_dict "meshing_domains" $mesh_strat
-    return $cont_dict
 }
 
 proc PfemFluid::write::GetBodiesWithContactList {contact_name} {
