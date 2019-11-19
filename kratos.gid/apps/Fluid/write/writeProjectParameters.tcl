@@ -208,7 +208,7 @@ proc Fluid::write::getSolverSettingsDict { } {
     if {$currentStrategyId eq "Monolithic"} {
         set formulationSettingsDict [dict create]
         # Set element type
-        dict set formulationSettingsDict element_type "vms"
+        dict set formulationSettingsDict element_type "qsvms"
         # Set OSS and remove oss_switch from the original dictionary
         # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
         if {[dict exists $solverSettingsDict oss_switch]} {
