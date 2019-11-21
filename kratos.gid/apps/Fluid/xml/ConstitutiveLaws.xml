@@ -20,7 +20,7 @@
     </CLaw>
 
     <!-- TODO: Add back the Herschel–Bulkley constitutive law once the new elements, which will use the Kratos constitutive laws, migration are set as default monolithic element -->
-    <CLaw n="Bingham3DLaw" pn="Bingham3DLaw" ProductionReady="ProductionReady" help="Bingham fluid -> tau = tau0 + k * gamma" App="Fluid" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
+    <CLaw n="Bingham3DLaw" pn="Bingham" ProductionReady="ProductionReady" help="Bingham fluid -> tau = tau0 + k * gamma" App="Fluid" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Kinematic viscosity" unit_magnitude="L^2/T" units="m^2/s" v="1e-3" help="Fluidized viscosity."/>
