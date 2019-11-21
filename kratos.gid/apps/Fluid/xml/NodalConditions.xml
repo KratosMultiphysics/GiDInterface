@@ -15,7 +15,7 @@
     </DefaultValues>
   </NodalConditionItem>
   
-  <NodalConditionItem n="WSS" pn="Pressure" ProcessName="AssignScalarVariableProcess" VariableName="WSS" Interval="False" unit_magnitude="P" units="Pa" App="Fluid" ImplementedInApplication="FluidDynamicsApplication">
+  <NodalConditionItem n="WSS" pn="WSS" ProcessName="AssignScalarVariableProcess" VariableName="WSS" Interval="False" unit_magnitude="P" units="Pa" App="Fluid" ImplementedInApplication="FluidDynamicsApplication">
 
     <DefaultValues>
       <value n="constrained" v="0" state="hidden" />
