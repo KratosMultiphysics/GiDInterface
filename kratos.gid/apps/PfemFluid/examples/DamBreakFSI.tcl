@@ -102,18 +102,23 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
 
     # Fluid Parts
     set bodies_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]"
+    gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[2\]" {name FluidBody}
     
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[2\]" {name Body2}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[3\]" {name SolidBody}
     
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[3\]" {name Body3}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[4\]" {name RigidInterfaceBody}
 
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[4\]" {name Body4}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[5\]" {name RigidWallsBody}
 
-    set fluid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/condition\[@n='Parts'\]"
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/value\[@n='BodyType'\]" {v Fluid}
+    
+    gid_groups_conds::setAttributesF $bodies_xpath {state hidden}
+
+    set fluid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='FluidBody'\]/condition\[@n='Parts'\]"
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='FluidBody'\]/value\[@n='BodyType'\]" {v Fluid}
     set fluidNode [customlib::AddConditionGroupOnXPath $fluid_part_xpath Fluid]
     set props [list ConstitutiveLaw Newtonian DENSITY 1e3]
     foreach {prop val} $props {
@@ -126,9 +131,9 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
     }
 
     # Solid Parts
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/value\[@n='BodyType'\]" {v Solid}
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
-    set solid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/condition\[@n='Parts'\]"
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='SolidBody'\]/value\[@n='BodyType'\]" {v Solid}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='SolidBody'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
+    set solid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='SolidBody'\]/condition\[@n='Parts'\]"
     set solidNode [customlib::AddConditionGroupOnXPath $solid_part_xpath Solid]
     set props [list Element UpdatedLagrangianVSolidElement2D ConstitutiveLaw Hypoelastic DENSITY 2500 YOUNG_MODULUS 1000000 POISSON_RATIO 0]
     foreach {prop val} $props {
@@ -140,16 +145,16 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
         }
     }
    
-
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body3'\]/value\[@n='BodyType'\]" {v Rigid}
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body3'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
-    set interface_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body3'\]/condition\[@n='Parts'\]"
+    # Rigid Parts
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/value\[@n='BodyType'\]" {v Rigid}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
+    set interface_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/condition\[@n='Parts'\]"
     set interfaceNode [customlib::AddConditionGroupOnXPath $interface_part_xpath Interface]
     $interfaceNode setAttribute ov line
    
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body4'\]/value\[@n='BodyType'\]" {v Rigid}
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body4'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
-    set rigid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body4'\]/condition\[@n='Parts'\]"
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidWallsBody'\]/value\[@n='BodyType'\]" {v Rigid}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidWallsBody'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
+    set rigid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidWallsBody'\]/condition\[@n='Parts'\]"
     set rigidNode [customlib::AddConditionGroupOnXPath $rigid_part_xpath Rigid_Walls]
     $rigidNode setAttribute ov line
     

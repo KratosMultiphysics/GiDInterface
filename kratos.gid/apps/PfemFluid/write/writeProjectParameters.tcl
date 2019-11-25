@@ -261,8 +261,10 @@ proc PfemFluid::write::GetBodiesWithContactList {contact_name} {
     set bodies_list [list ]
     set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     foreach body_node [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
-        if {$contact eq $contact_name} {lappend bodies_list [get_domnode_attribute $body_node name]}
+        if {[get_domnode_attribute $body_node state] ne "hidden"} {
+            set contact [get_domnode_attribute [$body_node selectNodes ".//value\[@n='ContactStrategy'\]"] v]
+            if {$contact eq $contact_name} {lappend bodies_list [get_domnode_attribute $body_node name]}
+        }
     }
     return $bodies_list
 }
@@ -507,7 +509,7 @@ proc PfemFluid::write::GetRemeshProperty { body_name property } {
     set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     set remesh_name ""
     foreach body_node [$root selectNodes $xp1] {
-        if {[$body_node @name] eq $body_name} {
+        if {[$body_node @name] eq $body_name && [get_domnode_attribute $body_node state] ne "hidden"} {
             set remesh_name [get_domnode_attribute [$body_node selectNodes ".//value\[@n='MeshingStrategy'\]"] v]
             break
         }
@@ -529,18 +531,20 @@ proc PfemFluid::write::ProcessBodiesList { } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"
     foreach body_node [$root selectNodes $xp1] {
-        set body [dict create]
-        set name [$body_node @name]
-        set body_type_path ".//value\[@n='BodyType'\]"
-        set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
-        set parts [list ]
-        foreach part_node [$body_node selectNodes "./condition/group"] {
-            lappend parts [write::getSubModelPartId "Parts" [$part_node @n]]
+        if {[get_domnode_attribute $body_node state] ne "hidden"} {
+            set body [dict create]
+            set name [$body_node @name]
+            set body_type_path ".//value\[@n='BodyType'\]"
+            set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
+            set parts [list ]
+            foreach part_node [$body_node selectNodes "./condition/group"] {
+                lappend parts [write::getSubModelPartId "Parts" [$part_node @n]]
+            }
+            dict set body "body_type" $body_type
+            dict set body "body_name" $name
+            dict set body "parts_list" $parts
+            lappend bodiesList $body
         }
-        dict set body "body_type" $body_type
-        dict set body "body_name" $name
-        dict set body "parts_list" $parts
-        lappend bodiesList $body
     }
     return $bodiesList
 }
