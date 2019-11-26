@@ -127,6 +127,7 @@ proc CDEM::write::getParametersDict { } {
     dict set project_parameters_dict "OutputTimeStep"                   $output_timestep
     dict set project_parameters_dict "PostBoundingBox"                  [write::getValue Boundingbox PostBB]
     dict set project_parameters_dict "PostLocalContactForce"            [write::getValue BondElem LocalContactForce]
+    dict set project_parameters_dict "PostContactFailureId"             [write::getValue BondElem TypeOfFailure]
     dict set project_parameters_dict "PostDisplacement"                 [write::getValue PostPrint Displacement]
     dict set project_parameters_dict "PostRadius"                       [write::getValue PostPrint Radius]
     dict set project_parameters_dict "PostVelocity"                     [write::getValue PostPrint PostVel]
