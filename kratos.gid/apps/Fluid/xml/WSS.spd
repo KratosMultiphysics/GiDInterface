@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<condition n="WSS" pn="Drag" un="FLDrags" ov="[CheckGeometry 2]" icon="drag">
+    <value n="write_WSS_output_file" pn="Write wss output file" v="1" values="0,1"/>
+    <value n="print_WSS_to_screen" pn="Print wss to screen"  v="0" values="0,1"/>
+    <value n="Interval" pn="Time interval" v="Total" values="[getIntervals]" help=""/>
+</condition>
