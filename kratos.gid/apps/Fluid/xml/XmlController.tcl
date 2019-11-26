@@ -39,7 +39,7 @@ proc Fluid::xml::CustomTree { args } {
     
     # WSS in output settings
     set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
-    if {[$root selectNodes "$xpath/condition\[@n='WSS'\]"] eq ""} {
+    if {[$root selectNodes "$xpath/condition\[@n='Wss'\]"] eq ""} {
         gid_groups_conds::addF $xpath include [list n WSS active 1 path {apps/Fluid/xml/WSS.spd}]
     }
     

@@ -35,16 +35,16 @@ proc Fluid::write::getAuxiliarProcessList {} {
     set process_list [list ]
 
     foreach process [getDragProcessList] {lappend process_list $process}
-    foreach process [getWSSProcessList] {lappend process_list $process}
+    foreach process [getWssProcessList] {lappend process_list $process}
 
     return $process_list
 }
 
-proc Fluid::write::getWSSProcessList {} {
+proc Fluid::write::getWssProcessList {} {
     set root [customlib::GetBaseRoot]
 
     set process_list [list ]
-    set xp1 "[spdAux::getRoute [GetAttribute drag_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute wss_un]]/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
@@ -52,8 +52,8 @@ proc Fluid::write::getWSSProcessList {} {
         set cid [[$group parent] @n]
         set submodelpart [::write::getSubModelPartId $cid $groupName]
 
-        set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write_drag_output_file'\]"]]]
-        set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print_drag_to_screen'\]"]]]
+        set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write_wss_output_file'\]"]]]
+        set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print_wss_to_screen'\]"]]]
         set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
 
         set pdict [dict create]
