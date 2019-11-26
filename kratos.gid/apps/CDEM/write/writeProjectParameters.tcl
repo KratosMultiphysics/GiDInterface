@@ -99,10 +99,10 @@ proc CDEM::write::getParametersDict { } {
 
     dict set material_test_parameters_dict "TestType"           [write::getValue DEMTestMaterial TestType]
     dict set material_test_parameters_dict "ConfinementPressure" [write::getValue DEMTestMaterial ConfinementPressure]
-    dict set material_test_parameters_dict "LoadVelocity"       [write::getValue DEMTestMaterial LoadVelocity]
-    dict set material_test_parameters_dict "Meshtype"           [write::getValue DEMTestMaterial Meshtype]
-    dict set material_test_parameters_dict "Specimenlength"     [write::getValue DEMTestMaterial Specimenlength]
-    dict set material_test_parameters_dict "Specimendiameter"   [write::getValue DEMTestMaterial Specimendiameter]
+    dict set material_test_parameters_dict "LoadingVelocity"       [write::getValue DEMTestMaterial LoadVelocity]
+    dict set material_test_parameters_dict "MeshType"           [write::getValue DEMTestMaterial Meshtype]
+    dict set material_test_parameters_dict "SpecimenLength"     [write::getValue DEMTestMaterial Specimenlength]
+    dict set material_test_parameters_dict "SpecimenDiameter"   [write::getValue DEMTestMaterial Specimendiameter]
     set SpecimenDiameter                                        [write::getValue DEMTestMaterial Specimendiameter]
     set MeasuringSurface [expr ($SpecimenDiameter*$SpecimenDiameter*3.141592/4.0)]
     dict set material_test_parameters_dict "MeasuringSurface"   $MeasuringSurface
