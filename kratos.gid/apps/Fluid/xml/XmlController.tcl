@@ -37,6 +37,13 @@ proc Fluid::xml::CustomTree { args } {
         gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
     }
     
+    # WSS in output settings
+    set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
+    if {[$root selectNodes "$xpath/condition\[@n='WSS'\]"] eq ""} {
+        gid_groups_conds::addF $xpath include [list n WSS active 1 path {apps/Fluid/xml/WSS.spd}]
+    }
+    
+
     customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     spdAux::parseRoutes
 

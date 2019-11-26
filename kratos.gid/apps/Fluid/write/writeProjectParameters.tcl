@@ -37,7 +37,6 @@ proc Fluid::write::getAuxiliarProcessList {} {
     foreach process [getDragProcessList] {lappend process_list $process}
     foreach process [getWSSProcessList] {lappend process_list $process}
 
-
     return $process_list
 }
 
@@ -72,7 +71,6 @@ proc Fluid::write::getWSSProcessList {} {
 
     return $process_list
 }
-
 
 
 proc Fluid::write::getDragProcessList {} {
