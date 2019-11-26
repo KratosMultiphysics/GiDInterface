@@ -11,7 +11,7 @@ DEL "%2\%1.info"
 DEL "%2\%1.err"
 
 set PATH=%3\\exec\\kratos;%3\\exec\\kratos\\libs;%PATH%
-set PYTHONPATH=%3\\exec\\kratos 
+REM set PYTHONPATH=%3\\exec\\kratos 
 REM Set the number of threads for OpenMP
 REM export OMP_NUM_THREADS=%5
 REM set OMP_NUM_THREADS=%5
