@@ -7,7 +7,6 @@ proc ::MPM::examples::FallingSandBall {args} {
     }
     DrawFallingSandBallGeometry$::Model::SpatialDimension
     AssignGroupsFallingSandBall$::Model::SpatialDimension
-    AssignFallingSandBallMeshSizes$::Model::SpatialDimension
     TreeAssignationFallingSandBall$::Model::SpatialDimension
 
     GiD_Process 'Redraw
@@ -29,6 +28,7 @@ proc MPM::examples::DrawFallingSandBallGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Sand
     GiD_Layers edit to_use Sand
+    GiD_Layers edit color Sand "#e1aa72"
 
     # Sand circle
     GiD_Process Mescape Geometry Create Object CirclePNR 2.0 3.0 0.0 0.0 0.0 1.0 0.5 escape escape 
@@ -37,6 +37,7 @@ proc MPM::examples::DrawFallingSandBallGeometry2D {args} {
     # Grid creation
     GiD_Layers create Grid
     GiD_Layers edit to_use Grid
+    GiD_Layers edit color Grid "#fddda0"
     
     ## Points ##
     set coordinates [list {0 0 0} {0 4 0} {4 4 0} {4 0 0}]
