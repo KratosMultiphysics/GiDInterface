@@ -56,14 +56,29 @@ proc MPM::examples::DrawFallingSandBallGeometry2D {args} {
 
     ## Surface ##
     GiD_Process Mescape Geometry Create NurbsSurface {*}$grid_lines escape escape
-
 }
 
 
 # Group assign
 proc MPM::examples::AssignGroupsFallingSandBall2D {args} {
-    
+    # Create the groups
+    GiD_Groups create Sand
+    GiD_Groups edit color Sand "#26d1a8ff"
+    GiD_EntitiesGroups assign Sand surfaces 1
+
+    GiD_Groups create Grid
+    GiD_Groups edit color Grid "#e0210fff"
+    GiD_EntitiesGroups assign Grid surfaces 2
+
+    GiD_Groups create FixedDisplacement
+    GiD_Groups edit color FixedDisplacement "#3b3b3bff"
+    GiD_EntitiesGroups assign FixedDisplacement lines 5
+
+    GiD_Groups create Slip
+    GiD_Groups edit color Slip "#42eb71ff"
+    GiD_EntitiesGroups assign Slip lines {2 4}
 }
+
 proc MPM::examples::AssignGroupsFallingSandBall3D {args} {
     
 }
@@ -72,6 +87,7 @@ proc MPM::examples::AssignGroupsFallingSandBall3D {args} {
 proc MPM::examples::TreeAssignationFallingSandBall3D {args} {
     TreeAssignationFallingSandBall2D
 }
+
 proc MPM::examples::TreeAssignationFallingSandBall2D {args} {
     
 }
