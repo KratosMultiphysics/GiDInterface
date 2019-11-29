@@ -38,7 +38,6 @@
     <NodalConditions>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
-      <NodalCondition n="WSS" />
     </NodalConditions>
     <inputs>
     </inputs>

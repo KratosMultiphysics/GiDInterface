@@ -14,7 +14,7 @@ proc Fluid::write::Init { } {
     SetAttribute conditions_un FLBC
     SetAttribute materials_un FLMaterials
     SetAttribute drag_un FLDrags
-    SetAttribute wss_un FLWsss
+    SetAttribute wss_un FLWss
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_script_file "KratosFluid.py"
@@ -89,7 +89,7 @@ proc Fluid::write::writeProperties { } {
 proc Fluid::write::writeConditions { } {
     writeBoundaryConditions
     writeDrags
-    writeWsss
+    writeWss
 }
 
 proc Fluid::write::writeBoundaryConditions { } {
@@ -106,7 +106,7 @@ proc Fluid::write::writeDrags { } {
     Model::ForgetNodalCondition Drag
 }
 
-proc Fluid::write::writeWsss { } {
+proc Fluid::write::writeWss { } {
     lappend ::Model::NodalConditions [::Model::NodalCondition new Wss]
     write::writeNodalConditions [GetAttribute wss]
     Model::ForgetNodalCondition Wss

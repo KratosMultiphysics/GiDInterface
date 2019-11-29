@@ -44,30 +44,23 @@ proc Fluid::write::getWssProcessList {} {
     set root [customlib::GetBaseRoot]
 
     set process_list [list ]
-    set xp1 "[spdAux::getRoute [GetAttribute wss_un]]/group"
-    set groups [$root selectNodes $xp1]
-    foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
+    set xp1 "[spdAux::getRoute [GetAttribute wss_un]]"
 
-        set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write_wss_output_file'\]"]]]
-        set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print_wss_to_screen'\]"]]]
-        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+    set write_output [write::getStringBinaryFromValue [write::getValueByNode [$root selectNodes "$xp1/value\[@n='write_wss_output_file'\]"]]]
+    set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$root selectNodes "$xp1/value\[@n='print_wss_to_screen'\]"]]]
 
-        set pdict [dict create]
-        dict set pdict "python_module" "compute_wss_statistics_process"
-        dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsBiomedicalApplication"
-        dict set pdict "process_name" "ComputeWssStatisticsProcess"
-        set params [dict create]
-        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
-        dict set params "calculate_wss" true
-        dict set params "calculate_osi" true
-        dict set pdict "Parameters" $params
+    set pdict [dict create]
+    dict set pdict "python_module" "compute_wss_statistics_process"
+    dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsBiomedicalApplication"
+    dict set pdict "process_name" "ComputeWssStatisticsProcess"
+    set params [dict create]
+    dict set params "model_part_name" GENERIC__HIDDEN__SKIN_
+    dict set params "calculate_wss" true
+    dict set params "calculate_osi" true
+    dict set pdict "Parameters" $params
 
-        lappend process_list $pdict
-    }
+    lappend process_list $pdict
+    
 
     return $process_list
 }

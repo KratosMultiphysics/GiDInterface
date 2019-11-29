@@ -17,7 +17,7 @@ proc Fluid::write::Init { } {
     SetAttribute materials_un FLMaterials
     SetAttribute results_un FLResults
     SetAttribute drag_un FLDrags
-    SetAttribute wss_un FLWsss
+    SetAttribute wss_un FLWss
     SetAttribute time_parameters_un FLTimeParameters
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid"]
@@ -26,6 +26,7 @@ proc Fluid::write::Init { } {
     SetAttribute properties_location json
     SetAttribute model_part_name "FluidModelPart"
     SetAttribute output_model_part_name "fluid_computational_model_part"
+    SetAttribute skin_group_name "_HIDDEN__SKIN_"
     variable last_condition_iterator
     set last_condition_iterator 0
 }
@@ -63,6 +64,7 @@ proc Fluid::write::writeModelPartEvent { } {
 
     # Clean
     unset Fluid::write::FluidConditionMap
+    GiD_Groups delete [GetAttribute skin_group_name]
 }
 proc Fluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
@@ -109,7 +111,7 @@ proc Fluid::write::writeProperties { } {
 proc Fluid::write::writeConditions { } {
     writeBoundaryConditions
     writeDrags
-    writeWsss
+    writeWss
 }
 
 proc Fluid::write::getFluidModelPartFilename { } {
@@ -136,7 +138,7 @@ proc Fluid::write::writeBoundaryConditions { } {
             lappend groups $group_id
         }
     }
-    set skin_group_name "_HIDDEN__SKIN_"
+    set skin_group_name [GetAttribute skin_group_name]
     if {[GiD_Groups exists $skin_group_name]} {GiD_Groups delete $skin_group_name}
     spdAux::MergeGroups $skin_group_name $groups
 
@@ -150,8 +152,6 @@ proc Fluid::write::writeBoundaryConditions { } {
     }
     set last_condition_iterator [write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $Fluid::write::FluidConditionMap]
 
-    # Clean
-    GiD_Groups delete $skin_group_name
 }
 
 proc Fluid::write::writeDrags { } {
@@ -160,12 +160,11 @@ proc Fluid::write::writeDrags { } {
     Model::ForgetNodalCondition Drag
 }
 
-proc Fluid::write::writeWsss { } {
+proc Fluid::write::writeWss { } {
     lappend ::Model::NodalConditions [::Model::NodalCondition new Wss]
     write::writeNodalConditions [GetAttribute wss_un]
     Model::ForgetNodalCondition Wss
 }
-
 
 proc Fluid::write::writeMeshes { } {
     write::writePartSubModelPart
@@ -200,6 +199,8 @@ proc Fluid::write::writeConditionsMesh { } {
         }
     }
 
+    ::write::writeGroupSubModelPartByUniqueId "GENERIC" _HIDDEN__SKIN_ $Fluid::write::FluidConditionMap "Conditions"
+
     foreach condid $grouped_conditions {
         set xp "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='$condid'\]/group"
         set groups_dict [dict create ]
@@ -209,6 +210,8 @@ proc Fluid::write::writeConditionsMesh { } {
         }
         write::writeConditionGroupedSubmodelPartsByUniqueId $condid $groups_dict $Fluid::write::FluidConditionMap
     }
+
+
 }
 
 proc Fluid::write::InitConditionsMap { {map "" } } {
