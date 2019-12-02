@@ -503,7 +503,6 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
     dict set resultDict nodal_data_value_variables      [list ]
-    dict set resultDict nodal_nonhistorical_results     [list ]
     dict set resultDict element_data_value_variables    [list ]
     dict set resultDict condition_data_value_variables  [list ]
     dict set resultDict gauss_point_variables_extrapolated_to_nodes   [GetResultsList $results_UN OnElement]
