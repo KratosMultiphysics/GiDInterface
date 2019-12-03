@@ -1,15 +1,18 @@
 
-proc write::writeConditionsByGiDId { baseUN {cond_id ""} {properties_dict ""}} {
+proc write::writeConditionsByGiDId { baseUN {force_write_cond_id ""} {properties_dict ""}} {
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
+    if {$force_write_cond_id ne ""} {
+        set xp1 "[spdAux::getRoute $baseUN]/condition\[@n='$force_write_cond_id'\]/group"
+    }
     set groupNodes [$root selectNodes $xp1]
     if {[llength $groupNodes] < 1} {
         set xp1 "[spdAux::getRoute $baseUN]/group"
         set groupNodes [$root selectNodes $xp1]
     }
     foreach groupNode $groupNodes {
-        if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
+        if {$force_write_cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $force_write_cond_id}
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
         set mid 0
