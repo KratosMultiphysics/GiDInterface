@@ -140,20 +140,7 @@ proc DEM::write::GetNodesForGraphs { } {
 
 proc DEM::write::writeConditions { wall_properties } {
 
-    foreach group [GetWallsGroups] {
-        set mid [dict get $wall_properties $group]
-        if {$::Model::SpatialDimension eq "2D"} {
-            set rigid_type "RigidEdge3D2N"
-            set format [write::GetFormatDict $group $mid 2]
-        } else {
-            set rigid_type "RigidFace3D3N"
-            set format [write::GetFormatDict $group $mid 3]
-        }
-        write::WriteString "Begin Conditions $rigid_type // GUI DEM-FEM-Wall group identifier: $group"
-        GiD_WriteCalculationFile connectivities $format
-        write::WriteString "End Conditions"
-        write::WriteString ""
-    }
+    write::writeConditionsByGiDId DEMConditions DEM-FEM-Wall $wall_properties
 }
 
 
