@@ -138,7 +138,9 @@ proc Fluid::write::writeBoundaryConditions { } {
             lappend groups $group_id
         }
     }
+    set skin_group_name "_HIDDEN__SKIN_"
     set skin_group_name [GetAttribute skin_group_name]
+
     if {[GiD_Groups exists $skin_group_name]} {GiD_Groups delete $skin_group_name}
     spdAux::MergeGroups $skin_group_name $groups
 
@@ -199,7 +201,7 @@ proc Fluid::write::writeConditionsMesh { } {
         }
     }
 
-    ::write::writeGroupSubModelPartByUniqueId "GENERIC" _HIDDEN__SKIN_ $Fluid::write::FluidConditionMap "Conditions"
+    # ::write::writeGroupSubModelPartByUniqueId "GENERIC" _HIDDEN__SKIN_ $Fluid::write::FluidConditionMap "Conditions"
 
     foreach condid $grouped_conditions {
         set xp "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='$condid'\]/group"
