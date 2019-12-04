@@ -19,7 +19,7 @@ proc CDEM::write::getParametersDict { } {
 	   set dem_strategy "ice_continuum_sphere_strategy"
 	}
 
-    dict set strategy_parameters_dict "strategy" $dem_strategy
+    dict set project_parameters_dict "solver_settings" "strategy" $dem_strategy
 
     dict set project_parameters_dict "DeltaOption"                          [write::getValue AdvOptions DeltaOption]
     dict set project_parameters_dict "SearchTolerance"                      [write::getValue AdvOptions TangencyToleranceValueAbsolute]
@@ -59,5 +59,6 @@ proc CDEM::write::GetGravity { } {
 }
 
 proc CDEM::write::writeParametersEvent { } {
-    DEM::write::writeParametersEvent
+    write::SetParallelismConfiguration
+    write::WriteJSON [CDEM::write::getParametersDict]
 }
