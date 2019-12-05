@@ -20,6 +20,7 @@ proc CDEM::write::getParametersDict { } {
 	}
 
     dict set project_parameters_dict "solver_settings" "strategy" $dem_strategy
+    dict set project_parameters_dict "ElementType" $ElementType
 
     dict set project_parameters_dict "DeltaOption"                          [write::getValue AdvOptions DeltaOption]
     dict set project_parameters_dict "SearchTolerance"                      [write::getValue AdvOptions TangencyToleranceValueAbsolute]
