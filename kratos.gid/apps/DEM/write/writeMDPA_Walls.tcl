@@ -14,8 +14,8 @@ proc DEM::write::WriteMDPAWalls { } {
     writeConditions $wall_properties
 
     # SubmodelParts
-    if {$::Model::SpatialDimension eq "2D"} { writeConditionMeshes2D
-    } else {writeConditionMeshes}
+    if {$::Model::SpatialDimension eq "2D"} { writeWallConditionMeshes2D
+    } else {writeWallConditionMeshes}
 
 
     # CustomSubmodelParts
@@ -215,7 +215,8 @@ proc DEM::write::GetConditionsGroups { } {
     return $groups
 }
 
-proc DEM::write::writeConditionMeshes { } {
+proc DEM::write::writeWallConditionMeshes { } {
+    W "DEMwalls- proc DEM::write::writeWallConditionMeshes"
     set i 0
     set cond "DEM-FEM-Wall"
     foreach group [GetWallsGroups] {
@@ -449,12 +450,13 @@ proc DEM::write::writeConditionMeshes { } {
 }
 
 
-proc DEM::write::writeConditionMeshes2D { } {
+proc DEM::write::writeWallConditionMeshes2D { } {
+    W "DEMwalls- proc DEM::write::writeWallConditionMeshes2d"
     set i 0
     set cond "DEM-FEM-Wall2D"
     foreach group [GetWallsGroups] {
         incr i
-        write::WriteString "Begin SubModelPart $i // GUI DEM-FEM-Wall - $cond - group identifier: $group"
+        write::WriteString "Begin SubModelPart $i // GUI DEM-FEM-Wall2D - $cond - group identifier: $group"
         write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
         set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
         set group_node [[customlib::GetBaseRoot] selectNodes $xp1]

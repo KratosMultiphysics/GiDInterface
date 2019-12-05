@@ -156,7 +156,7 @@
           <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="1000.0" units="s" unit_magnitude="T" show_in_window="0"/>
 
           <parameter n="Ax" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Velocity X" show_in_window="0">
-            <parameter n="Vx" parent="Constant" type="double" v="1.0" pn="   Value" help="X Velocity" show_in_window="0"/>
+            <parameter n="Vx" parent="Constant" type="double" v="0.0" pn="   Value" help="X Velocity" show_in_window="0"/>
           </parameter>
           <parameter n="Ay" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity Y" values="No,Constant" pvalues="No,Constant" help="Fix Velocity Y" show_in_window="0">
             <parameter n="Vy" parent="Constant" type="double" v="0.0" pn="   Value" help="Y Velocity" show_in_window="0"/>

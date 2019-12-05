@@ -14,8 +14,8 @@ proc DEM::write::WriteMDPAWalls { } {
     writeConditions $wall_properties
 
     # SubmodelParts
-    if {$::Model::SpatialDimension eq "2D"} { writeConditionMeshes2D
-    } else {writeConditionMeshes}
+    if {$::Model::SpatialDimension eq "2D"} {CDEM::write::writeWallConditionMeshes2D
+    } else {CDEM::write::writeWallConditionMeshes}
 
 
     # CustomSubmodelParts
@@ -25,7 +25,7 @@ proc DEM::write::WriteMDPAWalls { } {
 
 
 
-proc DEM::write::WriteWallProperties { } {
+proc CDEM::write::WriteWallProperties { } {
     #set print_list [list "FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
     set wall_properties [dict create ]
     set cnd [Model::getCondition "DEM-FEM-Wall"]
@@ -89,7 +89,7 @@ proc DEM::write::WriteWallProperties { } {
 }
 
 
-proc DEM::write::WriteWallCustomSmp { } {
+proc CDEM::write::WriteWallCustomSmp { } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     set i $DEM::write::last_property_id
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
@@ -111,7 +111,7 @@ proc DEM::write::WriteWallCustomSmp { } {
     }
 }
 
-proc DEM::write::WriteWallGraphsFlag { } {
+proc CDEM::write::WriteWallGraphsFlag { } {
     set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/group"
     #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
@@ -128,7 +128,7 @@ proc DEM::write::WriteWallGraphsFlag { } {
     }
 }
 
-proc DEM::write::GetNodesForGraphs { } {
+proc CDEM::write::GetNodesForGraphs { } {
     set groups [list ]
     #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     #set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/condition\[@n = 'Graphs'\]/group"
@@ -140,8 +140,7 @@ proc DEM::write::GetNodesForGraphs { } {
     return $groups
 }
 
-proc DEM::write::writeConditions { wall_properties } {
-
+proc CDEM::write::writeConditions { wall_properties } {
     foreach group [GetWallsGroups] {
         set mid [dict get $wall_properties $group]
         if {$::Model::SpatialDimension eq "2D"} {
@@ -160,7 +159,7 @@ proc DEM::write::writeConditions { wall_properties } {
 
 
 
-proc DEM::write::GetWallsGroups { } {
+proc CDEM::write::GetWallsGroups { } {
     set groups [list ]
     if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
     } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
@@ -172,7 +171,7 @@ proc DEM::write::GetWallsGroups { } {
     return $groups
 }
 
-proc DEM::write::GetWallsGroupsSmp { } {
+proc CDEM::write::GetWallsGroupsSmp { } {
     set groups [list ]
     set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp2] {
@@ -185,7 +184,7 @@ proc DEM::write::GetWallsGroupsSmp { } {
     return $groups
 }
 
-proc DEM::write::GetWallsGroupsListInConditions { } {
+proc CDEM::write::GetWallsGroupsListInConditions { } {
     set conds_groups_dict [dict create ]
     set groups [list ]
 
@@ -220,7 +219,7 @@ proc DEM::write::GetWallsGroupsListInConditions { } {
     return $conds_groups_dict
 }
 
-proc DEM::write::GetConditionsGroups { } {
+proc CDEM::write::GetConditionsGroups { } {
     set groups [list ]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
@@ -230,7 +229,8 @@ proc DEM::write::GetConditionsGroups { } {
     return $groups
 }
 
-proc DEM::write::writeConditionMeshes { } {
+proc CDEM::write::writeWallConditionMeshes { } {
+    W "CDEMwalls- proc DEM::write::writeWallConditionMeshes"
     set i 0
     set cond "DEM-FEM-Wall"
     foreach group [GetWallsGroups] {
@@ -480,12 +480,13 @@ proc DEM::write::writeConditionMeshes { } {
 }
 
 
-proc DEM::write::writeConditionMeshes2D { } {
+proc CDEM::write::writeWallConditionMeshes2D { } {
+    W "CDEMwalls- proc CDEM::write::writeWallConditionMeshes2d"
     set i 0
     set cond "DEM-FEM-Wall2D"
     foreach group [GetWallsGroups] {
         incr i
-        write::WriteString "Begin SubModelPart $i // GUI DEM-FEM-Wall - $cond - group identifier: $group"
+        write::WriteString "Begin SubModelPart $i // GUI DEM-FEM-Wall2D - $cond - group identifier: $group"
         write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
         set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
         set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
@@ -685,7 +686,7 @@ proc DEM::write::writeConditionMeshes2D { } {
                 set is_material_test [write::getValueByNode [$group_node selectNodes "./value\[@n='MaterialTest'\]"]]
                 if {$is_material_test == "true"} {
                     set as_condition [write::getValueByNode [$group_node selectNodes "./value\[@n='DefineTopBot'\]"]]
-                    if {$as_condition eq "Top"} {
+                    if {$as_condition eq "top"} {
                         write::WriteString "    TOP 1"
                         write::WriteString "    BOTTOM 0"
                     } else {
@@ -724,4 +725,3 @@ proc DEM::write::writeConditionMeshes2D { } {
         write::WriteString ""
     }
 }
-
