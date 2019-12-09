@@ -1,10 +1,10 @@
 #!/bin/bash
 # OutputFile: "$2/$1.info"
 # ErrorFile: "$2/$1.err"
-#delete previous result file 
-rm -f "$2/$1*.post.bin" 
-rm -f "$2/$1*.post.res" 
-rm -f "$2/$1*.post.msh" 
+#delete previous result file
+rm -f "$2/$1*.post.bin"
+rm -f "$2/$1*.post.res"
+rm -f "$2/$1*.post.msh"
 rm -f "$2/$1.info"
 rm -f "$2/$1.err"
 rm -f "$2/$1.flavia.dat"

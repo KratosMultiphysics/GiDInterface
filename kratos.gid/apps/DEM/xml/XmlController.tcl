@@ -28,11 +28,13 @@ proc DEM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem values OpenMP ParallelType
     spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
 
-    set result_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-Cohesive'\]"]
-	if { $result_node ne "" } {$result_node delete}
-
-    set result_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-Cohesive2D'\]"]
-	if { $result_node ne "" } {$result_node delete}
+    # 3D gravity
+    if {$Model::SpatialDimension eq "3D"} {
+        catch {
+            spdAux::SetValueOnTreeItem v 0.0 DEMGravity Cy
+            spdAux::SetValueOnTreeItem v -1.0 DEMGravity Cz
+        }
+    }
 
     # # Graphs in output settings
     # if {[$root selectNodes "[spdAux::getRoute DEMResults]/condition\[@n='Graphs'\]"] eq ""} {

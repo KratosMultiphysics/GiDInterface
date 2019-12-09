@@ -4,47 +4,47 @@
     <value n="DEM-OTimeStepDetail"  pn="Time interval (s)"  v="1e-2"            help="Set a printing interval for the GiD results"          icon="black1" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Detail_priority]"/>
     <value n="DEM-OTimeStepStorage" pn="Number of files"    v="100"             help="Select the total amount of GiD result files to print" icon="black1" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Storage_priority]"/>
     <container n="PartElem"         pn="Print in Post-Process" un="PostPrint"   help="Results on DEM elements that can be colored or shown as vectors on GiD, among other options" open_window="1" icon="options">
-        <value n="Displacement"             type="bool" values="true,false" v="true"  pn="Displacement (DEM+FEM)"           icon="black1" help="Displacement"/>
-        <value n="Radius"                   type="bool" values="true,false" v="true"  pn="Particle Radius (DEM)"            icon="black1"  help="Radius"/>
-        <value n="PostVel"                  type="bool" values="true,false" v="true"  pn="Velocity (DEM+FEM)"               icon="black1"  help="Velocity"/>
-        <value n="AngularVelocity"          type="bool" values="true,false" v="false" pn="Angular velocity (DEM)"           icon="black1"  help="Angular velocity"/>
-        <value n="ElasForces"               type="bool" values="true,false" v="false" pn="Elastic Forces (FEM)"             icon="black1"  help="Elastic Forces"/>
-        <value n="ContactForces"            type="bool" values="true,false" v="false" pn="Contact Forces (FEM)"             icon="black1"  help="Contact Forces"/>
-        <value n="RigidElementForces"       type="bool" values="true,false" v="false" pn="Rigid Element Forces (DEM)"       icon="black1"  help="Rigid Element Forces"/>
-        <value n="TangElasForces"           type="bool" values="true,false" v="false" pn="Tangential Elastic Forces (FEM)"  icon="black1"  help="Tangential Elastic Forces"/>
-        <value n="TotalForces"              type="bool" values="true,false" v="false" pn="Total forces (DEM)"               icon="black1"  help="Total Forces"/>
-        <value n="Stresses"                 type="bool" values="true,false" v="false" pn="Stresses in DEM particles"        icon="black1"  help="Stresses in DEM particles"/>
-        <value n="Pressure"                 type="bool" values="true,false" v="false" pn="Pressure (FEM)"                   icon="black1"  help="Pressure"/>
-        <value n="ShearStress"              type="bool" values="true,false" v="false" pn="Shear Stress (FEM)"               icon="black1"  help="Shear Stress"/>
-        <value n="Wear"                     type="bool" values="true,false" v="false" pn="Wear (FEM)"                       icon="black1"  help="It computes the volume of removed material due to wear"/>
+        <value n="Displacement"             type="bool" values="Yes,No" v="Yes"  pn="Displacement (DEM+FEM)"           icon="black1" help="Displacement"/>
+        <value n="Radius"                   type="bool" values="Yes,No" v="Yes"  pn="Particle Radius (DEM)"            icon="black1"  help="Radius"/>
+        <value n="PostVel"                  type="bool" values="Yes,No" v="Yes"  pn="Velocity (DEM+FEM)"               icon="black1"  help="Velocity"/>
+        <value n="AngularVelocity"          type="bool" values="Yes,No" v="No" pn="Angular velocity (DEM)"           icon="black1"  help="Angular velocity"/>
+        <value n="ElasForces"               type="bool" values="Yes,No" v="No" pn="Elastic Forces (FEM)"             icon="black1"  help="Elastic Forces"/>
+        <value n="ContactForces"            type="bool" values="Yes,No" v="No" pn="Contact Forces (FEM)"             icon="black1"  help="Contact Forces"/>
+        <value n="RigidElementForces"       type="bool" values="Yes,No" v="No" pn="Rigid Element Forces (DEM)"       icon="black1"  help="Rigid Element Forces"/>
+        <value n="TangElasForces"           type="bool" values="Yes,No" v="No" pn="Tangential Elastic Forces (FEM)"  icon="black1"  help="Tangential Elastic Forces"/>
+        <value n="TotalForces"              type="bool" values="Yes,No" v="No" pn="Total forces (DEM)"               icon="black1"  help="Total Forces"/>
+        <value n="Stresses"                 type="bool" values="Yes,No" v="No" pn="Stresses in DEM particles"        icon="black1"  help="Stresses in DEM particles"/>
+        <value n="Pressure"                 type="bool" values="Yes,No" v="No" pn="Pressure (FEM)"                   icon="black1"  help="Pressure"/>
+        <value n="ShearStress"              type="bool" values="Yes,No" v="No" pn="Shear Stress (FEM)"               icon="black1"  help="Shear Stress"/>
+        <value n="Wear"                     type="bool" values="Yes,No" v="No" pn="Wear (FEM)"                       icon="black1"  help="It computes the volume of removed material due to wear"/>
         <!-- disabled -->
-        <value n="NodalArea"                type="bool" values="true,false" v="false" pn="Nodal Area"                       icon="black1" help="Nodal Area" state="hidden"/>
-        <value n="Rhs"                      type="bool" values="true,false" v="false" pn="Rhs"                              icon="black1" help="Rhs" state="hidden"/>
-        <value n="DampForces"               type="bool" values="true,false" v="false" pn="Damp forces"                      icon="black1" help="Damp forces" state="hidden"/>
-        <value n="AppliedForces"            type="bool" values="true,false" v="false" pn="Applied forces"                   icon="black1" help="Applied forces" state="hidden"/>
-        <value n="GroupId"                  type="bool" values="true,false" v="false" pn="GroupId"                          icon="black1" help="GroupId" state="hidden"/>
-        <value n="ExportId"                 type="bool" values="true,false" v="false" pn="Export Id"                        icon="black1" help="ExportId" state="hidden"/>
-        <value n="SkinSphere"               type="bool" values="true,false" v="false" pn="Skin sphere"                      icon="black1" help="Print the spheres that form the skin of the DEM groups" state="hidden"/>
-        <value n="ParticleMoment"           type="bool" values="true,false" v="false" pn="Particle moment (DEM)"            icon="black1" help="Particle moment" state="hidden"/>
-        <value n="EulerAngles"              type="bool" values="true,false" v="false" pn="Euler angles"                     icon="black1" help="Euler angles" state="hidden"/>
-        <value n="RollingResistanceMoment"  type="bool" values="true,false" v="false" pn="Rolling resistance moment (DEM)"  icon="black1" help="Rolling resistance moment" state="hidden"/>
+        <value n="NodalArea"                type="bool" values="Yes,No" v="No" pn="Nodal Area"                       icon="black1" help="Nodal Area" state="hidden"/>
+        <value n="Rhs"                      type="bool" values="Yes,No" v="No" pn="Rhs"                              icon="black1" help="Rhs" state="hidden"/>
+        <value n="DampForces"               type="bool" values="Yes,No" v="No" pn="Damp forces"                      icon="black1" help="Damp forces" state="hidden"/>
+        <value n="AppliedForces"            type="bool" values="Yes,No" v="No" pn="Applied forces"                   icon="black1" help="Applied forces" state="hidden"/>
+        <value n="GroupId"                  type="bool" values="Yes,No" v="No" pn="GroupId"                          icon="black1" help="GroupId" state="hidden"/>
+        <value n="ExportId"                 type="bool" values="Yes,No" v="No" pn="Export Id"                        icon="black1" help="ExportId" state="hidden"/>
+        <value n="SkinSphere"               type="bool" values="Yes,No" v="No" pn="Skin sphere"                      icon="black1" help="Print the spheres that form the skin of the DEM groups" state="hidden"/>
+        <value n="ParticleMoment"           type="bool" values="Yes,No" v="No" pn="Particle moment (DEM)"            icon="black1" help="Particle moment" state="hidden"/>
+        <value n="EulerAngles"              type="bool" values="Yes,No" v="No" pn="Euler angles"                     icon="black1" help="Euler angles" state="hidden"/>
+        <value n="RollingResistanceMoment"  type="bool" values="Yes,No" v="No" pn="Rolling resistance moment (DEM)"  icon="black1" help="Rolling resistance moment" state="hidden"/>
     </container>
     <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess additional options" open="1" icon="options" open_window="0">
         <value n="GiDPostMode"              values="Ascii,Binary"               v="Binary"          pn="Result format"       icon="black1" help="GiD result file format. Choose Binary or Ascii. Ascii takes more hard disk space, but is human readable"/>
-        <value n="GiDWriteMeshFlag"         type="bool" values="true,false"     v="true"            pn="Write deformed mesh" icon="black1" help="Write the GiD deformed or undeformed mesh"/>
-        <value n="GiDWriteConditionsFlag"   type="bool" values="true,false"     v="true"            pn="Write conditions"    icon="black1" help="Write the conditions or only element to the GiD result file"/>
-        <value n="GiDWriteParticlesFlag"    type="bool" values="true,false"     v="false"           pn="Write particles"     icon="black1" help="Write the particles or only element to the GiD result file"/>
+        <value n="GiDWriteMeshFlag"         type="bool" values="Yes,No"     v="Yes"            pn="Write deformed mesh" icon="black1" help="Write the GiD deformed or undeformed mesh"/>
+        <value n="GiDWriteConditionsFlag"   type="bool" values="Yes,No"     v="Yes"            pn="Write conditions"    icon="black1" help="Write the conditions or only element to the GiD result file"/>
+        <value n="GiDWriteParticlesFlag"    type="bool" values="Yes,No"     v="No"           pn="Write particles"     icon="black1" help="Write the particles or only element to the GiD result file"/>
         <value n="GiDMultiFileFlag"         values="multiple_files,single_file" v="multiple_files"  pn="Result file"         icon="black1" help="Write one GiD result file or multiple files" state="hidden" />
     </container>
 
     <container n="BondElem" pn="On bond results" un="BondElem" help="Results on bond elements" open_window="1" icon="options">
-        <value n="ContactMeshOption"        type="bool" values="true,false"     v="false"           pn="Contact mesh"        icon="black1" help="Calculate and show the bonds between particles"/>
-        <value n="LocalContactForce"        type="bool" values="true,false"     v="false"           pn="Local contact force" icon="black1" state="[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} true]" help="Displays the local contact forces between particles"/>
+        <value n="ContactMeshOption"        type="bool" values="Yes,No"     v="No"           pn="Show bonds"        icon="black1" help="Calculate and show the bonds between particles"/>
+        <value n="LocalContactForce"        type="bool" values="Yes,No"     v="No"           pn="Local contact force" icon="black1" state="[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} Yes]" help="Displays the local contact forces between particles"/>
     </container>
 
     <container n="PrintGraphs" pn="Graphs on DEM-Wall" un="DGraphs" open="1" icon="options">
         <value n="GraphExportFreq"    v="1e-3"    pn="Graph print frequency (s)"  icon="black1" help="Graph frequency for active DEM-Walls"/>
-        <!-- <value n="Print_total_force_on_this_group"  pn="Print total force on this group"  type="bool" state="disabled" v="true"/>
-        <value n="Print_total_torque_on_this_group" pn="Print total torque on this group" type="bool" state="disabled" v="true"/> -->
+        <!-- <value n="Print_total_force_on_this_group"  pn="Print total force on this group"  type="bool" state="disabled" v="Yes"/>
+        <value n="Print_total_torque_on_this_group" pn="Print total torque on this group" type="bool" state="disabled" v="Yes"/> -->
     </container>
 </container>
