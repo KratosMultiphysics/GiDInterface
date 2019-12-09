@@ -170,6 +170,7 @@ proc DEM::write::GetWallsGroupsSmp { } {
     return $groups
 }
 
+## TODO: UNDER REVISION, UNUSED PROC
 proc DEM::write::GetWallsGroupsListInConditions { } {
     set conds_groups_dict [dict create ]
     set groups [list ]
@@ -205,6 +206,8 @@ proc DEM::write::GetWallsGroupsListInConditions { } {
     return $conds_groups_dict
 }
 
+
+## TODO: UNDER REVISION, UNUSED PROC
 proc DEM::write::GetConditionsGroups { } {
     set groups [list ]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"

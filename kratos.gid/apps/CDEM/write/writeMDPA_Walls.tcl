@@ -11,7 +11,7 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
 
     # Nodal conditions and conditions
-    writeConditions $wall_properties
+    CDEM::write::writeConditions $wall_properties
 
     # SubmodelParts
     if {$::Model::SpatialDimension eq "2D"} {CDEM::write::writeWallConditionMeshes2D
@@ -21,71 +21,6 @@ proc DEM::write::WriteMDPAWalls { } {
     # CustomSubmodelParts
     WriteWallCustomSmp
     WriteWallGraphsFlag
-}
-
-
-
-proc CDEM::write::WriteWallProperties { } {
-    #set print_list [list "FRICTION" "WALL_COHESION" "COMPUTE_WEAR" "SEVERITY_OF_WEAR" "IMPACT_WEAR_SEVERITY" "BRINELL_HARDNESS" "YOUNG_MODULUS" "POISSON_RATIO"]
-    set wall_properties [dict create ]
-    set cnd [Model::getCondition "DEM-FEM-Wall"]
-
-    if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
-    } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
-    }
-
-    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
-    set i $DEM::write::last_property_id
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-	incr i
-	write::WriteString "Begin Properties $i"
-	#foreach {prop obj} [$cnd getAllInputs] {
-	#    if {$prop in $print_list} {
-	#        set v [write::getValueByNode [$group selectNodes "./value\[@n='$prop'\]"]]
-	#        write::WriteString "  $prop $v"
-	#    }
-	#}
-
-    set friction_value [write::getValueByNode [$group selectNodes "./value\[@n='friction_angle'\]"]]
-    set pi $MathUtils::PI
-    set propvalue [expr {tan($friction_value*$pi/180.0)}]
-	write::WriteString "  FRICTION $propvalue"
-	#write::WriteString "  FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
-	write::WriteString "  WALL_COHESION [write::getValueByNode [$group selectNodes "./value\[@n='WallCohesion'\]"]]"
-	set compute_wear_bool [write::getValueByNode [$group selectNodes "./value\[@n='DEM_Wear'\]"]]
-	if {[write::isBooleanTrue $compute_wear_bool]} {
-	    set compute_wear 1
-	    set severiy_of_wear [write::getValueByNode [$group selectNodes "./value\[@n='K_Abrasion'\]"]]
-	    set impact_wear_severity [write::getValueByNode [$group selectNodes "./value\[@n='K_Impact'\]"]]
-	    set brinell_hardness [write::getValueByNode [$group selectNodes "./value\[@n='H_Brinell'\]"]]
-	} else {
-	    set compute_wear 0
-	    set severiy_of_wear 0.001
-	    set impact_wear_severity 0.001
-	    set brinell_hardness 200.0
-	}
-	set rigid_structure_bool [write::getValueByNode [$group selectNodes "./value\[@n='RigidPlane'\]"]]
-	if {[write::isBooleanTrue $rigid_structure_bool]} {
-	    set young_modulus [write::getValueByNode [$group selectNodes "./value\[@n='YoungModulus'\]"]]
-	    set poisson_ratio [write::getValueByNode [$group selectNodes "./value\[@n='PoissonRatio'\]"]]
-	} else {
-	    set young_modulus 1e20
-	    set poisson_ratio 0.25
-	}
-	write::WriteString "  COMPUTE_WEAR $compute_wear"
-	write::WriteString "  SEVERITY_OF_WEAR $severiy_of_wear"
-	write::WriteString "  IMPACT_WEAR_SEVERITY $impact_wear_severity"
-	write::WriteString "  BRINELL_HARDNESS $brinell_hardness"
-	write::WriteString "  YOUNG_MODULUS $young_modulus"
-	write::WriteString "  POISSON_RATIO $poisson_ratio"
-
-	write::WriteString "End Properties"
-	set groupid [$group @n]
-	dict set wall_properties $groupid $i
-	incr DEM::write::last_property_id
-    }
-    write::WriteString ""
-    return $wall_properties
 }
 
 
@@ -140,6 +75,7 @@ proc CDEM::write::GetNodesForGraphs { } {
     return $groups
 }
 
+# TODO: SHOULD NO LONGER BE REQUIRED SINCE NEW PROC IN DEM::
 proc CDEM::write::writeConditions { wall_properties } {
     foreach group [GetWallsGroups] {
         set mid [dict get $wall_properties $group]
@@ -158,79 +94,8 @@ proc CDEM::write::writeConditions { wall_properties } {
 }
 
 
-
-proc CDEM::write::GetWallsGroups { } {
-    set groups [list ]
-    if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
-    } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
-    }
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-	set groupid [$group @n]
-	lappend groups [write::GetWriteGroupName $groupid]
-    }
-    return $groups
-}
-
-proc CDEM::write::GetWallsGroupsSmp { } {
-    set groups [list ]
-    set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp2] {
-	set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-	if {$destination_mdpa == "FEM"} {
-	    set groupid [$group @n]
-	    lappend groups [write::GetWriteGroupName $groupid]
-	    }
-	}
-    return $groups
-}
-
-proc CDEM::write::GetWallsGroupsListInConditions { } {
-    set conds_groups_dict [dict create ]
-    set groups [list ]
-
-    # Get all the groups with surfaces involved in walls
-    foreach group [GetWallsGroups] {
-	foreach surface [GiD_EntitiesGroups get $group surfaces] {
-	    foreach involved_group [GiD_EntitiesGroups entity_groups surfaces $surface] {
-		set involved_group_id [write::GetWriteGroupName $involved_group]
-		if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
-	    }
-	}
-    }
-
-    foreach group [GetWallsGroups] {
-        foreach line [GiD_EntitiesGroups get $group lines] {
-            foreach involved_group [GiD_EntitiesGroups entity_groups lines $line] {
-                set involved_group_id [write::GetWriteGroupName $involved_group]
-                if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
-            }
-        }
-    }
-
-    # Find the relations condition -> group
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition"
-    foreach cond [[customlib::GetBaseRoot] selectNodes $xp1] {
-	set condid [$cond @n]
-	foreach cond_group [$cond selectNodes "group"] {
-	    set group [write::GetWriteGroupName [$cond_group @n]]
-	    if {$group in $groups} {dict lappend conds_groups_dict $condid [$cond_group @n]}
-	}
-    }
-    return $conds_groups_dict
-}
-
-proc CDEM::write::GetConditionsGroups { } {
-    set groups [list ]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-	set groupid [$group @n]
-	lappend groups [write::GetWriteGroupName $groupid]
-    }
-    return $groups
-}
-
+## CANNOT BE REMOVED SINCE SLIGHTLY DIFFERENT FROM DEM::
 proc CDEM::write::writeWallConditionMeshes { } {
-    W "CDEMwalls- proc DEM::write::writeWallConditionMeshes"
     set i 0
     set cond "DEM-FEM-Wall"
     foreach group [GetWallsGroups] {
@@ -479,9 +344,8 @@ proc CDEM::write::writeWallConditionMeshes { } {
     }
 }
 
-
+## CANNOT BE REMOVED SINCE SLIGHTLY DIFFERENT FROM DEM::
 proc CDEM::write::writeWallConditionMeshes2D { } {
-    W "CDEMwalls- proc CDEM::write::writeWallConditionMeshes2d"
     set i 0
     set cond "DEM-FEM-Wall2D"
     foreach group [GetWallsGroups] {
