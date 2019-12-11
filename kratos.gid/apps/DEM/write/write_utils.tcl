@@ -373,6 +373,8 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
     set groupid "-AKGSkinMesh3D"
     DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
 
+    GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces : escape
+
     # Find boundaries
     if {[GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
 	    GiD_Groups delete SKIN_SPHERE_DO_NOT_DELETE
