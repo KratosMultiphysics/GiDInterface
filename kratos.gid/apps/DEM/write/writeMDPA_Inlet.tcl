@@ -629,7 +629,12 @@ proc DEM::write::writeMaterialsInlet { } {
         dict set inletProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
         foreach {prop val} [dict get $inletProperties $group] {
             if {$prop in $printable} {
-                write::WriteString "    $prop $val"
+				if {$prop eq "FRICTION"} {
+                    set propvalue [expr {tan($val)}]
+                    write::WriteString "    FRICTION $propvalue"
+				} else {
+                	write::WriteString "    $prop $val"
+				}
             }
         }
         write::WriteString "End Properties\n"
