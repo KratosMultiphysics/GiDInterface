@@ -483,8 +483,7 @@ proc DEM::write::writeMaterialsParts { } {
                 if {$prop eq "ConstitutiveLaw"} {
                     write::WriteString "    DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME $val"
                 } elseif {$prop eq "FRICTION"} {
-                    set pi $MathUtils::PI
-                    set propvalue [expr {tan($val*$pi/180.0)}]
+                    set propvalue [expr {tan($val)}]
                     write::WriteString "    FRICTION $propvalue"
                 } else {
                     write::WriteString "    $prop $val"
