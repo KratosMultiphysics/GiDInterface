@@ -426,6 +426,8 @@ proc DEM::write::writeWallConditionMeshes { } {
             W "xxxxxxxxxxxxxxxxxxxxxx"
             DEM::DefineMaterialTestConditions
 
+
+            # DEFINED AT THE END OF THE FILE
             # proc DEM::write::DefineMaterialTestConditions { } {
             #     if CDEM:
 
@@ -467,7 +469,7 @@ proc DEM::write::writeWallConditionMeshes { } {
 
 
 
-
+            # ORIGINAL LINES
             # set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
             # if {$GraphPrint == "true"} {
             #     set GraphPrintval 1
@@ -696,9 +698,9 @@ proc DEM::write::writeWallConditionMeshes2D { } {
             write::WriteString "    IS_GHOST $is_ghost"
             write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
 
-            W "xxxxxxxxxxxxxxxxxxxxxx"
-            W [apps::getActiveAppId]
-            W "xxxxxxxxxxxxxxxxxxxxxx"
+            # W "xxxxxxxxxxxxxxxxxxxxxx"
+            # W [apps::getActiveAppId]
+            # W "xxxxxxxxxxxxxxxxxxxxxx"
             DEM::write::DefineMaterialTestConditions $group_node
 
             # write::WriteString "    TOP 0"
