@@ -6,7 +6,8 @@ proc DEM::write::WriteMDPAWalls { } {
     set wall_properties [WriteWallProperties]
 
     # Nodal coordinates (only for Walls <inefficient> )
-    write::writeNodalCoordinatesOnGroups [GetWallsGroups]
+    W "1"
+    write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroups]
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
     write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
 
@@ -14,7 +15,7 @@ proc DEM::write::WriteMDPAWalls { } {
     CDEM::write::writeConditions $wall_properties
 
     # SubmodelParts
-    if {$::Model::SpatialDimension eq "2D"} {CDEM::write::writeWallConditionMeshes2D
+    if {$::Model::SpatialDimension eq "2D"} {DEM::write::writeWallConditionMeshes2D
     } else {CDEM::write::writeWallConditionMeshes}
 
 
@@ -77,7 +78,7 @@ proc CDEM::write::GetNodesForGraphs { } {
 
 # TODO: SHOULD NO LONGER BE REQUIRED SINCE NEW PROC IN DEM::
 proc CDEM::write::writeConditions { wall_properties } {
-    foreach group [GetWallsGroups] {
+    foreach group [DEM::write::GetWallsGroups] {
         set mid [dict get $wall_properties $group]
         if {$::Model::SpatialDimension eq "2D"} {
             set rigid_type "RigidEdge3D2N"
@@ -94,11 +95,11 @@ proc CDEM::write::writeConditions { wall_properties } {
 }
 
 
-## CANNOT BE REMOVED SINCE SLIGHTLY DIFFERENT FROM DEM::
+## under testing. CAN BE REMOVED IF DefineMaterialTestConditions WORKS AS EXPECTED
 proc CDEM::write::writeWallConditionMeshes { } {
     set i 0
     set cond "DEM-FEM-Wall"
-    foreach group [GetWallsGroups] {
+    foreach group [DEM::write::GetWallsGroups] {
         incr i
         write::WriteString "Begin SubModelPart $i // GUI DEM-FEM-Wall - $cond - group identifier: $group"
         write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
@@ -299,30 +300,72 @@ proc CDEM::write::writeWallConditionMeshes { } {
             write::WriteString "    IS_GHOST $is_ghost"
             write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
 
-            set material_analysis [write::getValue DEMTestMaterial Active]
-            if {$material_analysis == "true"} {
-                set is_material_test [write::getValueByNode [$group_node selectNodes "./value\[@n='MaterialTest'\]"]]
-                if {$is_material_test == "true"} {
-                    set as_condition [write::getValueByNode [$group_node selectNodes "./value\[@n='DefineTopBot'\]"]]
-                    if {$as_condition eq "top"} {
-                        write::WriteString "    TOP 1"
-                        write::WriteString "    BOTTOM 0"
-                    } else {
-                        write::WriteString "    TOP 0"
-                        write::WriteString "    BOTTOM 1"
-                    }
-                }
-            } else {
-                    write::WriteString "    TOP 0"
-                    write::WriteString "    BOTTOM 0"
-            }
+            # proc DEM::write::DefineMaterialTestConditions { } {
+            #     if CDEM:
 
-            set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
-            if {$GraphPrint == "true" || $material_analysis == "true"} {
-                set GraphPrintval 1
-            } else {
-                set GraphPrintval 0
-            }
+            #         set material_analysis [write::getValue DEMTestMaterial Active]
+            #         if {$material_analysis == "true"} {
+            #             set is_material_test [write::getValueByNode [$group_node selectNodes "./value\[@n='MaterialTest'\]"]]
+            #             if {$is_material_test == "true"} {
+            #                 set as_condition [write::getValueByNode [$group_node selectNodes "./value\[@n='DefineTopBot'\]"]]
+            #                 if {$as_condition eq "top"} {
+            #                     write::WriteString "    TOP 1"
+            #                     write::WriteString "    BOTTOM 0"
+            #                 } else {
+            #                     write::WriteString "    TOP 0"
+            #                     write::WriteString "    BOTTOM 1"
+            #                 }
+            #             }
+            #         } else {
+            #                 write::WriteString "    TOP 0"
+            #                 write::WriteString "    BOTTOM 0"
+            #         }
+
+            #         set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
+            #         if {$GraphPrint == "true" || $material_analysis == "true"} {
+            #             set GraphPrintval 1
+            #         } else {
+            #             set GraphPrintval 0
+            #         }
+            #     }
+
+            # else DEM:
+
+            #     set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
+            #     if {$GraphPrint == "true"} {
+            #         set GraphPrintval 1
+            #     } else {
+            #         set GraphPrintval 0
+            #     }
+
+
+
+
+
+            # set material_analysis [write::getValue DEMTestMaterial Active]
+            # if {$material_analysis == "true"} {
+            #     set is_material_test [write::getValueByNode [$group_node selectNodes "./value\[@n='MaterialTest'\]"]]
+            #     if {$is_material_test == "true"} {
+            #         set as_condition [write::getValueByNode [$group_node selectNodes "./value\[@n='DefineTopBot'\]"]]
+            #         if {$as_condition eq "top"} {
+            #             write::WriteString "    TOP 1"
+            #             write::WriteString "    BOTTOM 0"
+            #         } else {
+            #             write::WriteString "    TOP 0"
+            #             write::WriteString "    BOTTOM 1"
+            #         }
+            #     }
+            # } else {
+            #         write::WriteString "    TOP 0"
+            #         write::WriteString "    BOTTOM 0"
+            # }
+
+            # set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
+            # if {$GraphPrint == "true" || $material_analysis == "true"} {
+            #     set GraphPrintval 1
+            # } else {
+            #     set GraphPrintval 0
+            # }
             write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
         }
         write::WriteString "  End SubModelPartData"
@@ -344,11 +387,12 @@ proc CDEM::write::writeWallConditionMeshes { } {
     }
 }
 
-## CANNOT BE REMOVED SINCE SLIGHTLY DIFFERENT FROM DEM::
+## ## under testing. CAN BE REMOVED IF DefineMaterialTestConditions WORKS AS EXPECTED
 proc CDEM::write::writeWallConditionMeshes2D { } {
     set i 0
     set cond "DEM-FEM-Wall2D"
-    foreach group [GetWallsGroups] {
+    W "4"
+    foreach group [DEM::write::GetWallsGroups] {
         incr i
         write::WriteString "Begin SubModelPart $i // GUI DEM-FEM-Wall2D - $cond - group identifier: $group"
         write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
