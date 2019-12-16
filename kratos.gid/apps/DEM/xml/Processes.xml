@@ -124,7 +124,7 @@
           <parameter n="PoissonRatio" parent="false" pn="Poisson Ratio" v="0.25" show_in_window="0"/>
         </parameter>
         <parameter n="MaterialTest" parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
-          <parameter n="DefineTopBot" parent="true" pn="Set wall as" type="combo" v="Pressure plate" values="Top,Bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
+          <parameter n="DefineTopBot" parent="true" pn="Set wall as" type="combo" v="Pressure plate" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
         </parameter>
       </parameter>
     </inputs>
