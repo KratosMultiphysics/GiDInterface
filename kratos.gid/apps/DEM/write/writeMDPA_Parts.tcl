@@ -141,10 +141,14 @@ proc DEM::write::writeDEMConditionMeshes { } {
                         # Linear velocity
                         set velocity [write::getValueByNode [$group_node selectNodes "./value\[@n='VelocityModulus'\]"]]
                         lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='DirectionVector'\]"]] velocity_X velocity_Y velocity_Z
-                        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
-                        lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
-                        if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    LINEAR_VELOCITY \[3\] ($vx, $vy, 0.0)"
-                        } else {write::WriteString "    LINEAR_VELOCITY \[3\] ($vx, $vy, $vz)"}
+                        if {$::Model::SpatialDimension eq "2D"} {
+                            lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y]] velocity_X velocity_Y
+                            lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y] ] vx vy
+                            write::WriteString "    LINEAR_VELOCITY \[3\] ($vx, $vy, 0.0)"
+                        } else {
+                            lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+                            lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
+                            write::WriteString "    LINEAR_VELOCITY \[3\] ($vx, $vy, $vz)"}
 
                         # Period
                         set periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearPeriodic'\]"]]
@@ -155,11 +159,12 @@ proc DEM::write::writeDEMConditionMeshes { } {
 
                         # Angular velocity
                         set avelocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
-                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
-                        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
-                        lassign [MathUtils::ScalarByVectorProd $avelocity [list $velocity_X $velocity_Y $velocity_Z] ] wX wY wZ
                         if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    ANGULAR_VELOCITY \[3\] (0.0,0.0,$avelocity)"
-                        } else {write::WriteString "    ANGULAR_VELOCITY \[3\] ($wX,$wY,$wZ)"}
+                        } else {
+                            lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
+                            lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+                            lassign [MathUtils::ScalarByVectorProd $avelocity [list $velocity_X $velocity_Y $velocity_Z] ] wX wY wZ
+                            write::WriteString "    ANGULAR_VELOCITY \[3\] ($wX,$wY,$wZ)"}
 
                         # Angular center of rotation
                         lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotation'\]"]] oX oY oZ
@@ -273,33 +278,36 @@ proc DEM::write::writeDEMConditionMeshes { } {
                     # Linear velocity
                     set velocity [write::getValueByNode [$group_node selectNodes "./value\[@n='InitialVelocityModulus'\]"]]
                     lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='iDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
-                    lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
-                    lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
-                    #write::WriteString "    INITIAL_VELOCITY \[3\] ($vx, $vy, $vz)"   # why arent we using vectorial def for this
-                    write::WriteString "    INITIAL_VELOCITY_X_VALUE $vx"
-                    write::WriteString "    INITIAL_VELOCITY_Y_VALUE $vy"
-                    if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    INITIAL_VELOCITY_Z_VALUE 0.0"
-                    } else {write::WriteString "    INITIAL_VELOCITY_Z_VALUE $vz"}
+                    #write::WriteString "    INITIAL_VELOCITY \[3\] ($vx, $vy, $vz)"
+                    if {$::Model::SpatialDimension eq "2D"} {
+                        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y]] velocity_X velocity_Y
+                        lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y] ] vx vy
+                        write::WriteString "    INITIAL_VELOCITY_X_VALUE $vx"
+                        write::WriteString "    INITIAL_VELOCITY_Y_VALUE $vy"
+                        write::WriteString "    INITIAL_VELOCITY_Z_VALUE 0.0"
+                    } else {
+                        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+                        lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
+                        write::WriteString "    INITIAL_VELOCITY_X_VALUE $vx"
+                        write::WriteString "    INITIAL_VELOCITY_Y_VALUE $vy"
+                        write::WriteString "    INITIAL_VELOCITY_Z_VALUE $vz"}
 
                     # Angular velocity
                     set avelocity [write::getValueByNode [$group_node selectNodes "./value\[@n='InitialAngularVelocityModulus'\]"]]
-                    lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='iAngularDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
-                    lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
-                    lassign [MathUtils::ScalarByVectorProd $avelocity [list $velocity_X $velocity_Y $velocity_Z] ] wX wY wZ
-
                     if {$::Model::SpatialDimension eq "2D"} {
                         write::WriteString "    INITIAL_ANGULAR_VELOCITY_X_VALUE 0.0"
                         write::WriteString "    INITIAL_ANGULAR_VELOCITY_Y_VALUE 0.0"
                         write::WriteString "    INITIAL_ANGULAR_VELOCITY_Z_VALUE $avelocity"
                     } else {
+                        lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='iAngularDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
+                        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+                        lassign [MathUtils::ScalarByVectorProd $avelocity [list $velocity_X $velocity_Y $velocity_Z] ] wX wY wZ
                         write::WriteString "    INITIAL_ANGULAR_VELOCITY_X_VALUE $wX"
                         write::WriteString "    INITIAL_ANGULAR_VELOCITY_Y_VALUE $wY"
                         write::WriteString "    INITIAL_ANGULAR_VELOCITY_Z_VALUE $wZ"}
-
                 }
                 #Hardcoded
                 write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
-
                 write::WriteString "  End SubModelPartData"
                 write::WriteString "  Begin SubModelPartNodes"
                 GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
@@ -342,16 +350,15 @@ proc DEM::write::GetSpheresGroups { } {
 	if {$::Model::SpatialDimension eq "2D"} { set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC2D'\]/group"
     } else {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC'\]/group"}
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-	set groupid [$group @n]
-	lappend groups [write::GetWriteGroupName $groupid]
+        set groupid [$group @n]
+        lappend groups [write::GetWriteGroupName $groupid]
     }
     if {$::Model::SpatialDimension eq "2D"} { set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityIC2D'\]/group"
     } else {set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityIC'\]/group"}
     foreach group [[customlib::GetBaseRoot] selectNodes $xp2] {
-	set groupid [$group @n]
-	lappend groups [write::GetWriteGroupName $groupid]
+        set groupid [$group @n]
+        lappend groups [write::GetWriteGroupName $groupid]
     }
-
     return $groups
 }
 

@@ -14,8 +14,7 @@ proc DEM::write::WriteMDPAWalls { } {
     CDEM::write::writeConditions $wall_properties
 
     # SubmodelParts
-    if {$::Model::SpatialDimension eq "2D"} {DEM::write::writeWallConditionMeshes2D
-    } else {DEM::write::writeWallConditionMeshes}
+    DEM::write::writeWallConditionMeshes
 
     # CustomSubmodelParts
     WriteWallCustomSmp

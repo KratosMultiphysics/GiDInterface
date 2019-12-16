@@ -8,7 +8,7 @@
       <parameter n="DEM-ImposedMotion"  parent="true"       pn="Type of motion" type="combo"  v="None" values="None,LinearPeriodic,FreeMotion" pvalues="None,Imposed linear/angular motion,Free body motion" help="Choose if the solid should should be fixed, have an imposed motion or a free motion" show_in_window="0">
         <parameter n="Mass"             parent="FreeMotion" pn="Mass"           type="double" v="1.0"                  units="Kg"     unit_magnitude="M" show_in_window="0"/>
         <parameter n="CenterOfMass"     parent="FreeMotion" pn="Center of mass" type="inline_vector"   v="0.0,0.0,0.0" units="m"      unit_magnitude="L" show_in_window="0"/>
-        <parameter n="Inertia"          parent="FreeMotion" pn="Inertia(Kg*m2)" type="inline_vector"   v="1.0,1.0,1.0" units="Kg*m^2" unit_magnitude="Inertia" show_in_window="0"/>
+        <parameter n="Inertia"          parent="FreeMotion" pn="Inertia(Kg*m2)" type="inline_vector"   v="1.0,1.0,1.0" units="Kg*m^2" unit_magnitude="Inertia" show_in_window="0" help="2D: Define value inertia value in the first component"/>
 
           <parameter n="DEM-DOFS" parent="FreeMotion" type="combo" v="No" pn="Degrees of Freedom" values="No,Yes" pvalues="No,Yes" show_in_window="0">
             <parameter n="Ax" parent="FreeMotion,Yes" type="combo" v="No" pn="Fix Velocity X" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Velocity X" show_in_window="0">
