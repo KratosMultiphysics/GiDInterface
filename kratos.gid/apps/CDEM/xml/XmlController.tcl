@@ -12,9 +12,13 @@ proc CDEM::xml::Init { } {
     Model::ForgetConstitutiveLaws
     Model::ForgetElement SphericPartDEMElement3D
     Model::getElements ElementsC.xml
+    Model::ForgetConditions
+    Model::getConditions Conditions.xml
+    Model::getConditions "../../DEM/xml/Conditions.xml"
     Model::getConstitutiveLaws ConstitutiveLawsC.xml
     Model::getMaterials MaterialsC.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
+    Model::getProcesses Processes.xml
 }
 
 proc CDEM::xml::getUniqueName {name} {
@@ -22,15 +26,10 @@ proc CDEM::xml::getUniqueName {name} {
 }
 
 proc CDEM::xml::CustomTree { args } {
-    spdAux::SetValueOnTreeItem values OpenMP ParallelType
-    spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
+    DEM::xml::CustomTree args
 
-    set root [customlib::GetBaseRoot]
-    # set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'ParallelType'\]"]
-	# if { $result_node ne "" } {$result_node delete}
-    set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'DEMGravity'\]"]
-	if { $result_node ne "" } {$result_node delete}
-
+    gid_groups_conds::addF [spdAux::getRoute BondElem] value [list n TypeOfFailure pn "Type of failure" v No values {Yes,No} icon "black1" help "Displays different numbers for different types of failure. 2: tension. 4: shear or combination of stresses. 6: neighbour not found by search. 8: less bonds than minimum"]
+    spdAux::SetValueOnTreeItem state {[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} Yes]} BondElem TypeOfFailure
 }
 
 proc CDEM::xml::ProcGetElements { domNode args } {

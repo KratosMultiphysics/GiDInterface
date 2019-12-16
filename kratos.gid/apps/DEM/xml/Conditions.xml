@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-  <ConditionItem n="DEM-Cohesive2D" pn="Bonded domains" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" ElementType="Surface" LocalSpaceDimension="1" ProcessName="Cohesive2D-Process" help="Assign this condition for each continuum group" VariableName="COHESIVE">
-    <TopologyFeatures></TopologyFeatures>
-    <inputs></inputs>
-    <outputs></outputs>
-  </ConditionItem>
-
-  <ConditionItem n="DEM-Cohesive" pn="Bonded domains" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Volume" LocalSpaceDimension="2" ProcessName="Cohesive-Process" help="Assign this condition for each continuum group" VariableName="COHESIVE">
-    <TopologyFeatures></TopologyFeatures>
-    <inputs></inputs>
-    <outputs></outputs>
-  </ConditionItem>
-
   <ConditionItem n="DEM-FEM-Wall" pn="DEM-FEM Wall" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="DEM-FEM-Wall-Process" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
@@ -75,16 +63,5 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
-
-  <!-- <ConditionItem n="VELOCITY" pn="Velocity" ProcessName="Linear_Velocity_Process" VariableName="VELOCITY" ImplementedInApplication="DEMApplication" analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="DEM" Interval="Total">
-    <TopologyFeatures></TopologyFeatures>
-    <inputs></inputs>
-    <outputs></outputs>
-  </ConditionItem>
-  <ConditionItem n="ANGULAR_VELOCITY" pn="Angular Velocity" ProcessName="Angular_Velocity_Process" VariableName="ANGULAR_VELOCITY" Interval="Total" analysis_type="Dynamic" unit_magnitude="Angle/T" units="rad/s" App="DEM" ImplementedInApplication="DEMApplication">
-    <TopologyFeatures></TopologyFeatures>
-    <inputs></inputs>
-    <outputs></outputs>
-  </ConditionItem> -->
 
 </ConditionList>
