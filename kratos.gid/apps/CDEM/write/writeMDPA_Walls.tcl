@@ -11,7 +11,7 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
 
     # Nodal conditions and conditions
-    CDEM::write::writeConditions $wall_properties
+    DEM::write::writeConditions $wall_properties
 
     # SubmodelParts
     DEM::write::writeWallConditionMeshes

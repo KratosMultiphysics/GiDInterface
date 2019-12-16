@@ -262,7 +262,7 @@ proc DEM::write::writeDEMConditionMeshes { } {
                 write::WriteString "End SubModelPart"
                 write::WriteString ""
             }
-        } elseif {$cond eq "DEM-VelocityIC"} {
+        } elseif {$cond eq "DEM-VelocityIC" || $cond eq "DEM-VelocityIC2D"} {
             set rigid_body_motion 0
             set cnd [Model::getCondition $cond]
             foreach group $group_list {

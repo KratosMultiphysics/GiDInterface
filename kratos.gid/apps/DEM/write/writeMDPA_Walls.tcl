@@ -137,8 +137,9 @@ proc DEM::write::GetNodesForGraphs { } {
 }
 
 proc DEM::write::writeConditions { wall_properties } {
-
-    write::writeConditionsByGiDId DEMConditions DEM-FEM-Wall $wall_properties
+    if {$::Model::SpatialDimension eq "2D"} {write::writeConditionsByGiDId DEMConditions DEM-FEM-Wall2D $wall_properties
+    } else {write::writeConditionsByGiDId DEMConditions DEM-FEM-Wall $wall_properties
+    }
 }
 
 

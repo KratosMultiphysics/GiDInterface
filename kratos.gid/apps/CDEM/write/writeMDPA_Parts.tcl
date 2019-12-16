@@ -31,8 +31,7 @@ proc DEM::write::WriteMDPAParts { } {
 
     # SubmodelParts
     write::writePartSubModelPart
-	if {$::Model::SpatialDimension eq "2D"} {DEM::write::writeDEMConditionMeshes2D
-    } else {DEM::write::writeDEMConditionMeshes}
+	DEM::write::writeDEMConditionMeshes
 
     # CustomSubmodelParts
     #WriteWallCustomDEMSmp not required for dem.
