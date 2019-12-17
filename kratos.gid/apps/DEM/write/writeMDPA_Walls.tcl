@@ -433,7 +433,7 @@ proc DEM::write::writeWallConditionMeshes { } {
             write::WriteString "    IS_GHOST $is_ghost"
             write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
 
-            DEM::write::DefineMaterialTestConditions $group_node
+            DefineMaterialTestConditions $group_node
 
         }
         write::WriteString "  End SubModelPartData"
@@ -455,40 +455,4 @@ proc DEM::write::writeWallConditionMeshes { } {
     }
 }
 
-proc DEM::write::DefineMaterialTestConditions {group_node} {
-    if {[apps::getActiveAppId] eq "CDEM"} {
-        set material_analysis [write::getValue DEMTestMaterial Active]
-        if {$material_analysis == "true"} {
-            set is_material_test [write::getValueByNode [$group_node selectNodes "./value\[@n='MaterialTest'\]"]]
-            if {$is_material_test == "true"} {
-                set as_condition [write::getValueByNode [$group_node selectNodes "./value\[@n='DefineTopBot'\]"]]
-                if {$as_condition eq "top"} {
-                    write::WriteString "    TOP 1"
-                    write::WriteString "    BOTTOM 0"
-                } else {
-                    write::WriteString "    TOP 0"
-                    write::WriteString "    BOTTOM 1"
-                }
-            }
-        } else {
-                write::WriteString "    TOP 0"
-                write::WriteString "    BOTTOM 0"
-        }
-
-        set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
-        if {$GraphPrint == "true" || $material_analysis == "true"} {
-            set GraphPrintval 1
-        } else {
-            set GraphPrintval 0
-        }
-    } else {
-
-        set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
-        if {$GraphPrint == "true"} {
-            set GraphPrintval 1
-        } else {
-            set GraphPrintval 0
-        }
-    }
-    write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
-}
+proc DEM::write::DefineMaterialTestConditions {group_node} {}
