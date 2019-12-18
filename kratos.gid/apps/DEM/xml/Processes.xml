@@ -8,7 +8,7 @@
       <parameter n="DEM-ImposedMotion"  parent="true"       pn="Type of motion" type="combo"  v="None" values="None,LinearPeriodic,FreeMotion" pvalues="None,Imposed linear/angular motion,Free body motion" help="Choose if the solid should should be fixed, have an imposed motion or a free motion" show_in_window="0">
         <parameter n="Mass"             parent="FreeMotion" pn="Mass"           type="double" v="1.0"                  units="Kg"     unit_magnitude="M" show_in_window="0"/>
         <parameter n="CenterOfMass"     parent="FreeMotion" pn="Center of mass" type="inline_vector"   v="0.0,0.0,0.0" units="m"      unit_magnitude="L" show_in_window="0"/>
-        <parameter n="Inertia"          parent="FreeMotion" pn="Inertia(Kg*m2)" type="inline_vector"   v="1.0,1.0,1.0" units="Kg*m^2" unit_magnitude="Inertia" show_in_window="0"/>
+        <parameter n="Inertia"          parent="FreeMotion" pn="Inertia(Kg*m2)" type="inline_vector"   v="1.0,1.0,1.0" units="Kg*m^2" unit_magnitude="Inertia" show_in_window="0" help="2D: Define value inertia value in the first component"/>
 
           <parameter n="DEM-DOFS" parent="FreeMotion" type="combo" v="No" pn="Degrees of Freedom" values="No,Yes" pvalues="No,Yes" show_in_window="0">
             <parameter n="Ax" parent="FreeMotion,Yes" type="combo" v="No" pn="Fix Velocity X" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Velocity X" show_in_window="0">
@@ -124,7 +124,7 @@
           <parameter n="PoissonRatio" parent="false" pn="Poisson Ratio" v="0.25" show_in_window="0"/>
         </parameter>
         <parameter n="MaterialTest" parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
-          <parameter n="DefineTopBot" parent="true" pn="Set wall as" type="combo" v="Pressure plate" values="Top,Bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
+          <parameter n="DefineTopBot" parent="true" pn="Set wall as" type="combo" v="Pressure plate" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
         </parameter>
       </parameter>
     </inputs>
@@ -156,7 +156,7 @@
           <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="1000.0" units="s" unit_magnitude="T" show_in_window="0"/>
 
           <parameter n="Ax" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Velocity X" show_in_window="0">
-            <parameter n="Vx" parent="Constant" type="double" v="1.0" pn="   Value" help="X Velocity" show_in_window="0"/>
+            <parameter n="Vx" parent="Constant" type="double" v="0.0" pn="   Value" help="X Velocity" show_in_window="0"/>
           </parameter>
           <parameter n="Ay" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity Y" values="No,Constant" pvalues="No,Constant" help="Fix Velocity Y" show_in_window="0">
             <parameter n="Vy" parent="Constant" type="double" v="0.0" pn="   Value" help="Y Velocity" show_in_window="0"/>
