@@ -353,10 +353,16 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
 proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     # Prepare things before meshing
 
+    
+    GiD_Process Mescape Meshing MeshCriteria NoMesh Lines 1:end escape escape escape
+    GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces 1:end escape escape escape
+    GiD_Process Mescape Meshing MeshCriteria NoMesh Volumes 1:end escape escape escape
+
     # We need to mesh every line and surface assigned to a group that appears in the tree 
     foreach group [spdAux::GetAppliedGroups] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Volumes {*}[GiD_EntitiesGroups get $group volumes] escape escape escape
     }
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
