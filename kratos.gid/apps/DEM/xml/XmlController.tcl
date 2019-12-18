@@ -87,6 +87,14 @@ proc DEM::xml::ProcGetStateBoundingBoxParams { domNode args } {
     return $ret
 }
 
+proc DEM::xml::ProcGetDEMPartsOvWhat { domNode args } {
+    if {$::Model::SpatialDimension eq "2D"} {
+        return "point,line,surface"
+    } else {
+        return "point,line,surface,volume"
+    }
+}
+
 
 
 DEM::xml::Init
