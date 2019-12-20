@@ -96,5 +96,15 @@ proc DEM::xml::ProcGetDEMPartsOvWhat { domNode args } {
 }
 
 
+proc DEM::xml::InertiaType { args } {
+    set ret inline_vector
+    if {$::Model::SpatialDimension eq "2D"} {
+        set ret double
+    }
+    
+    return $ret
+}
+
+
 
 DEM::xml::Init
