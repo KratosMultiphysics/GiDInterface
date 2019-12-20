@@ -10,7 +10,7 @@ proc spdAux::ProcGetElements { domNode args } {
     if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] v] eq ""} {
         get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
     }
-
+    
     #W "solStrat $sol_stratUN sch $schemeUN"
     set solStratName [::write::getValue $sol_stratUN]
     set schemeName [write::getValue $schemeUN]
@@ -48,11 +48,11 @@ proc spdAux::ProcGetElementsValues { domNode args } {
     if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] v] eq ""} {
         get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
     }
-
+    
     set solStratName [::write::getValue $sol_stratUN]
     set schemeName [write::getValue $schemeUN]
     set elems [::Model::GetAvailableElements $solStratName $schemeName]
-
+    
     set names [list ]
     foreach elem $elems {
         if {[$elem cumple {*}$args]} {
@@ -87,13 +87,13 @@ proc spdAux::ProcGetSolutionStrategies {domNode args} {
         lappend pnames [$ss getName]
         lappend pnames [$ss getPublicName]
     }
-
+    
     $domNode setAttribute values [join $names ","]
     set dv [lindex $names 0]
     #W "dv $dv"
     if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
     if {[$domNode getAttribute v] ni $names} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
-
+    
     return [join $pnames ","]
 }
 
@@ -102,7 +102,7 @@ proc spdAux::ProcGetSchemes {domNode args} {
     #W $nodeApp
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
     set sol_stat_path [spdAux::getRoute $sol_stratUN]
-
+    
     #if {[get_domnode_attribute [$domNode selectNodes $sol_stat_path] v] eq ""} {
         #W "entra"
         get_domnode_attribute [$domNode selectNodes $sol_stat_path] dict
@@ -111,7 +111,7 @@ proc spdAux::ProcGetSchemes {domNode args} {
     set solStratName [::write::getValue $sol_stratUN]
     #W "Unique name: $sol_stratUN - Nombre $solStratName"
     set schemes [::Model::GetAvailableSchemes $solStratName {*}$args]
-
+    
     set ids [list ]
     if {[llength $schemes] == 0} {
         if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v "None";$domNode setAttribute values "None"}
@@ -124,9 +124,9 @@ proc spdAux::ProcGetSchemes {domNode args} {
         lappend pnames [$cl getName]
         lappend pnames [$cl getPublicName]
     }
-
+    
     $domNode setAttribute values [join $names ","]
-
+    
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]}
     spdAux::RequestRefresh
@@ -156,7 +156,7 @@ proc spdAux::ProcGetConstitutiveLaws { domNode args } {
     set values [join $names ","]
     if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
     #spdAux::RequestRefresh
-
+    
     return $values
 }
 #This should go to dict
@@ -170,23 +170,23 @@ proc spdAux::ProcGetAllConstitutiveLaws { domNode args } {
     }
     set diction [join $pnames ","]
     #spdAux::RequestRefresh
-
+    
     return $diction
 }
 proc spdAux::ProcGetSolvers { domNode args } {
-
+    
     set solStrat [get_domnode_attribute [$domNode parent] solstratname]
     set solverEntryId [get_domnode_attribute [$domNode parent] n]
-
+    
     set solvers [Model::GetAvailableSolvers $solStrat $solverEntryId]
-
+    
     set pnames [list ]
     foreach slvr $solvers {
         lappend pnames [$slvr getName]
         lappend pnames [$slvr getPublicName]
     }
     return [join $pnames ","]
-
+    
 }
 
 proc spdAux::ProcGetSolverParameterDict { domNode args } {
@@ -205,7 +205,7 @@ proc spdAux::ProcGetSolverParameterDict { domNode args } {
     return [join $pnames ","]
 }
 proc spdAux::ProcGetSolverParameterValues { domNode args } {
-
+    
     set solver_node [[$domNode parent] selectNodes "./value\[@n='Solver'\]"]
     get_domnode_attribute $solver_node values
     set solver_name [get_domnode_attribute $solver_node v]
@@ -229,15 +229,15 @@ proc spdAux::ProcGetSolverParameterValues { domNode args } {
     return ""
 }
 proc spdAux::ProcGetSolversValues { domNode args } {
-
+    
     set solStrat [get_domnode_attribute [$domNode parent] solstratname]
     set solverEntryId [get_domnode_attribute [$domNode parent] n]
-
+    
     set solvers [Model::GetAvailableSolvers $solStrat $solverEntryId]
-
+    
     set curr_parallel_system OpenMP
     catch {set curr_parallel_system [write::getValue ParallelType]}
-
+    
     set names [list ]
     set pnames [list ]
     foreach slvr $solvers {
@@ -248,17 +248,17 @@ proc spdAux::ProcGetSolversValues { domNode args } {
     #$domNode setAttribute values [join $names ","]
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
     return [join $names ","]
-
+    
 }
 
 proc spdAux::ProcConditionState { domNode args } {
-
+    
     set resp [::Model::CheckConditionState $domNode]
     if {$resp} {return "normal"} else {return "hidden"}
 }
 
 proc spdAux::ProcCheckNodalConditionState { domNode args } {
-
+    
     set nodeApp [GetAppIdFromNode $domNode]
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
     #W $parts_un
@@ -277,7 +277,7 @@ proc spdAux::ProcCheckNodalConditionState { domNode args } {
     } {return "normal"}
 }
 proc spdAux::ProcCheckNodalConditionOutputState { domNode args } {
-
+    
     set nodeApp [GetAppIdFromNode $domNode]
     set NC_un [apps::getAppUniqueName $nodeApp NodalConditions]
     if {[spdAux::getRoute $NC_un] ne ""} {
@@ -313,31 +313,31 @@ proc spdAux::ProccheckStateByUniqueName { domNode args } {
     if {$total} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcSolverParamState { domNode args } {
-
-
+    
+    
     set id [$domNode getAttribute n]
     set nodesolver [[$domNode parent] selectNodes "./value\[@n='Solver'\]"]
     get_domnode_attribute $nodesolver values
     set solverid [get_domnode_attribute $nodesolver v]
-
+    
     if {$solverid eq ""} {set resp 0} {
         set resp [::Model::getSolverParamState $solverid $id]
     }
-
+    
     #spdAux::RequestRefresh
     if {$resp} {return "normal"} else {return "hidden"}
 }
 
 
 proc spdAux::CheckPartParamValue {node material_name} {
-
+    
     set root [customlib::GetBaseRoot]
     #W "Searching [get_domnode_attribute $node n] $material_name"
     if {[$node hasAttribute n] || $material_name ne ""} {
         set id [$node getAttribute n]
         set found 0
         set val 0.0
-
+        
         # primero miramos si el material tiene ese campo
         if {$material_name ne ""} {
             set nodeApp [GetAppIdFromNode $node]
@@ -402,19 +402,19 @@ proc spdAux::ProcPartParamState { domNode args } {
         if {$constLaw eq ""} {return hidden}
         set resp [Model::CheckConstLawParamState $constLaw $id]
     }
-
+    
     #W "Calculando estado de [$domNode @pn] : $resp"
     if {$resp} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcSolverEntryState { domNode args } {
-
+    
     set resp [spdAux::CheckSolverEntryState $domNode]
     if {$resp} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcCheckDimension { domNode args } {
-
+    
     set checkdim [lindex $args 0]
-
+    
     if {$checkdim eq $::Model::SpatialDimension} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcgetStateFromXPathValue2 { domNode args } {
@@ -449,33 +449,33 @@ proc spdAux::ProcgetStateFromXPathValueDisabled { domNode args } {
 
 
 proc spdAux::ProcSolStratParamState { domNode args } {
-
+    
     set resp [::spdAux::SolStratParamState $domNode]
     if {$resp} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcSchemeParamState { domNode args } {
-
+    
     set resp [::spdAux::SchemeParamState $domNode]
     if {$resp} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcConstLawOutputState { domNode args } {
-
+    
     set resp [::spdAux::CheckConstLawOutputState $domNode]
     if {$resp} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcElementOutputState { domNode args } {
-
+    
     set resp [::spdAux::CheckElementOutputState $domNode]
     if {$resp} {return "normal"} else {return "hidden"}
 }
 
 proc spdAux::ProcActiveIfAnyPartState { domNode args } {
-
+    
     set resp [::spdAux::CheckAnyPartState $domNode]
     if {$resp} {return "normal"} else {return "hidden"}
 }
 proc spdAux::ProcActiveIfRestartAvailable { domNode args } {
-
+    
     set active [apps::ExecuteOnApp [GetAppIdFromNode $domNode] GetAttribute UseRestart]
     if {$active ne "" && $active} {return "normal"} else {return "hidden"}
 }
@@ -507,7 +507,7 @@ proc spdAux::ProcChangeStateIfUniqueName { domNode newState args } {
     if {!$total} {return "normal"} else {return $newState}
 }
 proc spdAux::ProcCheckGeometry { domNode args } {
-
+    
     set level [lindex $args 0]
     #W $level
     if {$level eq 1} {
@@ -518,7 +518,7 @@ proc spdAux::ProcCheckGeometry { domNode args } {
     }
 }
 proc spdAux::ProcDirectorVectorNonZero { domNode args } {
-
+    
     set kw [lindex $args 0]
     set update 0
     foreach condgroupnode [$domNode getElementsByTagName group] {
@@ -568,9 +568,9 @@ proc spdAux::ProcGetIntervals {domNode args} {
 
 proc spdAux::PreChargeTree { } {
     return ""
-
+    
     set root [customlib::GetBaseRoot]
-
+    
     foreach field [list value condition container] {
         foreach cndNode [$root getElementsByTagName $field] {
             set a [get_domnode_attribute $cndNode dict]
@@ -592,7 +592,7 @@ proc spdAux::ProcGive_materials_list {domNode args} {
     set compulsory ""
     parse_args $optional $compulsory $args
     set restList ""
-
+    
     proc database_append_list { parentNode database_name level container_name icon_name types_icon_name filters} {
         set l ""
         # We guess the keywords of the levels of the database
@@ -604,7 +604,7 @@ proc spdAux::ProcGive_materials_list {domNode args} {
             error [_ "The has_container flag is not available for the database %s (the different types of materials \
                     should be distributed in several containers)" $database_name]
         }
-
+        
         foreach domNode [$parentNode childNodes] {
             set name [$domNode @name ""]
             if { $name eq "" } { set name [$domNode @name] }
@@ -629,7 +629,7 @@ proc spdAux::ProcGive_materials_list {domNode args} {
         }
         return $l
     }
-
+    
     proc give_caption_name { domNode xp database_name } {
         set first_time 1
         foreach gNode [$domNode selectNodes $xp] {
@@ -644,7 +644,7 @@ proc spdAux::ProcGive_materials_list {domNode args} {
         }
         return $caption_name
     }
-
+    
     proc give_levels_name { domNode name } {
         set xp {container}
         if {[$domNode selectNodes $xp] eq ""} {
@@ -668,17 +668,17 @@ proc spdAux::ProcGive_materials_list {domNode args} {
     set filters [list ]
     if {$const_law_name != ""} {
         set const_law [Model::getConstitutiveLaw $const_law_name]
-	if {$const_law != ""} {
-	    set filters [$const_law getMaterialFilters]
-	}
+        if {$const_law != ""} {
+            set filters [$const_law getMaterialFilters]
+        }
     }
     #W [$parentNode asXML]
     if {$parentNode eq ""} {
         error [_ "Database %s not found in the spd file" $database]
     }
-
+    
     eval lappend resList [database_append_list $parentNode $database 0 $has_container $icon $types_icon $filters]
-
+    
     set res_raw_list [list ]
     foreach m $resList {lappend res_raw_list [lindex $m 1]}
     set v [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'Material'\]"] v]
@@ -722,7 +722,7 @@ proc spdAux::ProcEdit_database_list {domNode args} {
                 set mats_un [apps::getAppUniqueName $appid Materials]
                 set xp3 [spdAux::getRoute $mats_un]
                 append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $matname]
-
+                
                 foreach valueNode [$root selectNodes $xp3] {
                     if {$propname eq [$valueNode getAttribute n] } {
                         set val [$valueNode getAttribute v]
@@ -732,7 +732,7 @@ proc spdAux::ProcEdit_database_list {domNode args} {
                     }
                 }
                 #if {$found} {W "mat $matname value $val"}
-
+                
             }
         }
     }
@@ -755,7 +755,7 @@ proc spdAux::ProcCambioMat {domNode args} {
 proc spdAux::ProcOkNewCondition {domNode args} {
     set cnd_id [$domNode @n]
     set condition [Model::getCondition $cnd_id]
-
+    
     set group_node [$domNode lastChild]
     set interval [$group_node selectNodes "./value\[@n='Interval'\]"]
     if {$interval ne ""} {
@@ -774,37 +774,42 @@ proc spdAux::ProcOkNewCondition {domNode args} {
         GiD_Groups edit state $new_group_id hidden
         $group_node setAttribute n $new_group_id
         AddIntervalGroup $group_id $new_group_id
-
+        
         GiD_Groups window update
         RequestRefresh
     }
 }
 
 proc spdAux::ProcConditionParameterState {domNode args} {
+    set ret ""
     set param_name [get_domnode_attribute $domNode n]
     set cond_node [$domNode parent]
     if {[$cond_node nodeName] eq "group"} {set cond_node [$cond_node parent]}
     set cond_name [get_domnode_attribute $cond_node n]
-
+    
     set cond [Model::getCondition $cond_name]
     if {$cond eq ""} {
         set cond [Model::getNodalConditionbyId $cond_name]
         if {$cond eq ""} {
-            W "No condition found with name $cond_name" ; return normal
+            W "No condition found with name $cond_name" ; set ret normal
         }
     }
-    set process_name [$cond getProcessName]
-    set process [Model::GetProcess $process_name]
-    set param [$process getInputPn $param_name]
-    if {$param eq ""} {return normal}
-
-    set depN [$param getDepN]
-    if {$depN ne ""} {
-        set depV [$param getDepV]
-        set realV [get_domnode_attribute [$domNode selectNodes "../value\[@n='$depN'\]"] v]
-        if {$depV ne $realV} {return hidden}
+    if {$ret eq  ""} {
+        set process_name [$cond getProcessName]
+        set process [Model::GetProcess $process_name]
+        set param [$process getInputPn $param_name]
+        if {$param eq ""} {set ret normal}
     }
-
+    
+    if {$ret eq  ""} {
+        set depN [$param getDepN]
+        if {$depN ne ""} {
+            set depV [$param getDepV]
+            set realV [get_domnode_attribute [$domNode selectNodes "../value\[@n='$depN'\]"] v]
+            if {$depV ne $realV} {set ret hidden}
+        }
+    }
+    if {$ret eq  ""} { set ret normal }
     return normal
 }
 
@@ -826,7 +831,7 @@ proc spdAux::ProcUpdateParts {domNode args} {
     set current [lindex [$domNode selectNodes "./group"] end]
     # If a parameter type is file and the option selected is select file -> open it
     set file_params [$current selectNodes "./value\[@type = 'tablefile' and @v = '- Add new file'\]"]
-
+    
     if {[llength $file_params] > 1} {
         W "Remember to load the files in:"
         foreach file $file_params {
@@ -835,7 +840,7 @@ proc spdAux::ProcUpdateParts {domNode args} {
     } elseif {[llength $file_params] == 1} {
         spdAux::AddFile $file_params
     }
-
+    
     # Active app executexml
     set nodeApp [GetAppIdFromNode $domNode]
     apps::ExecuteOnAppXML $nodeApp UpdateParts $domNode
