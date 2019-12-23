@@ -11,7 +11,7 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts
-    #write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
+    write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
     write::writeNodalCoordinatesOnGroups [WriteWallGraphsFlag]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsInitialC]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundayC]
@@ -30,27 +30,13 @@ proc DEM::write::WriteMDPAParts { } {
     writeDEMConditionMeshes
 
     # CustomSubmodelParts
-    #WriteWallCustomDEMSmp not required for dem.
+    WriteWallCustomDEMSmp; # not required for dem.
 }
 
 ## TODO: proc under revision. Duplicated code. Unused in some situations
 proc DEM::write::WriteWallCustomDEMSmp { } {
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set groupid [$group @n]
-        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-        if {$destination_mdpa == "DEM"} {
-
-            #write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-            write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-            write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
-            write::WriteString  "End SubModelPartData"
-            write::WriteString  "Begin SubModelPartNodes"
-            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
-            write::WriteString  "End SubModelPartNodes"
-            write::WriteString  "End SubModelPart"
-            write::WriteString  ""
-        }
+    foreach groupid [GetDEMGroupsCustomSubmodelpart] {
+        write::writeGroupSubModelPart DEM-CustomSmp $groupid Elements
     }
 }
 
@@ -95,30 +81,13 @@ proc DEM::write::writeSphereRadius { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        set grouppid [write::GetWriteGroupName $groupid]
-        write::WriteString "Begin NodalData RADIUS // GUI group identifier: $grouppid"
+        set print_groupid [write::GetWriteGroupName $groupid]
+        write::WriteString "Begin NodalData RADIUS // GUI group identifier: $print_groupid"
         GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
         write::WriteString "End NodalData"
         write::WriteString ""
     }
 }
-
-# proc DEM::write::GetNodalConditionsGroups { {include_cond 0} } {   # TODO UNUSED CODE
-#     set groups [list ]
-#     set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition/group"
-#     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-#         set groupid [$group @n]
-#         if {$include_cond} {lappend groups [[$group parent] @n]}
-#         lappend groups [write::GetWriteGroupName $groupid]
-#     }
-#     return $groups
-# }
-
-# proc DEM::write::write2VelocityMeshes { } {
-#     foreach {cid groupid} [DEM::write::GetNodalConditionsGroups 1] {
-#         ::write::writeGroupSubModelPart $cid $groupid "nodal"
-#     }
-# }
 
 proc DEM::write::writeDEMConditionMeshes { } {
     set i 0
