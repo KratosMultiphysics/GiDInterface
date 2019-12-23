@@ -306,9 +306,14 @@ proc DEM::write::writeWallConditionMeshes { } {
                 if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] ($cX,$cY,0.0)"
                 } else {write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] ($cX,$cY,$cZ)"}
                 
-                lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='Inertia'\]"]] iX iY iZ
-                if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,$iX)"
-                } else {write::WriteString "    RIGID_BODY_INERTIAS \[3\] ($iX,$iY,$iZ)"}
+                set inertias [write::getValueByNode [$group_node selectNodes "./value\[@n='Inertia'\]"]]
+                if {$::Model::SpatialDimension eq "2D"} {
+                    set iX $inertias
+                    write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,$iX)"
+                } else {
+                    lassign $inertias iX iY iZ
+                    write::WriteString "    RIGID_BODY_INERTIAS \[3\] ($iX,$iY,$iZ)"
+                }
                 
                 # DOFS
                 set Ax [write::getValueByNode [$group_node selectNodes "./value\[@n='Ax'\]"]]
