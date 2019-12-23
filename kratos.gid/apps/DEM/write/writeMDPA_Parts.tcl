@@ -11,7 +11,7 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts
-    write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
+    write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupNamesCustomSubmodelpart]
     write::writeNodalCoordinatesOnGroups [WriteWallGraphsFlag]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsInitialC]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundayC]
@@ -33,21 +33,38 @@ proc DEM::write::WriteMDPAParts { } {
     WriteWallCustomDEMSmp; # not required for dem.
 }
 
-## TODO: proc under revision. Duplicated code. Unused in some situations
 proc DEM::write::WriteWallCustomDEMSmp { } {
-    foreach groupid [GetDEMGroupsCustomSubmodelpart] {
+    foreach group [GetDEMGroupsCustomSubmodelpart] {
+        set groupid [write::GetWriteGroupName [$group @n]]
+
+        # TODO: Missing write properties for Custom Submodelparts
+
+        # Nodes are previously printed
+        # Print elements and connectivities
+        set elem [write::getValueByNode [$group selectNodes ".//value\[@n='Element']"] ]
+        write::writeGroupElementConnectivities $group $elem
+        
+        DEM::write::writeSphereRadiusOnGroup $group
+
         write::writeGroupSubModelPart DEM-CustomSmp $groupid Elements
     }
 }
 
+proc DEM::write::GetDEMGroupNamesCustomSubmodelpart { } {
+    set groups [list ]
+    foreach group [DEM::write::GetDEMGroupsCustomSubmodelpart] {
+        set groupid [$group @n]
+        lappend groups [write::GetWriteGroupName $groupid]
+    }
+    return $groups
+}
 proc DEM::write::GetDEMGroupsCustomSubmodelpart { } {
     set groups [list ]
     set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp2] {
         set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
         if {$destination_mdpa == "DEM"} {
-            set groupid [$group @n]
-            lappend groups [write::GetWriteGroupName $groupid]
+            lappend groups $group
         }
     }
     return $groups
@@ -80,13 +97,17 @@ proc DEM::write::writeSphereRadius { } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set print_groupid [write::GetWriteGroupName $groupid]
-        write::WriteString "Begin NodalData RADIUS // GUI group identifier: $print_groupid"
-        GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
-        write::WriteString "End NodalData"
-        write::WriteString ""
+        DEM::write::writeSphereRadiusOnGroup $group
     }
+}
+
+proc DEM::write::writeSphereRadiusOnGroup { group } {
+    set groupid [$group @n]
+    set print_groupid [write::GetWriteGroupName $groupid]
+    write::WriteString "Begin NodalData RADIUS // GUI group identifier: $print_groupid"
+    GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
+    write::WriteString "End NodalData"
+    write::WriteString ""
 }
 
 proc DEM::write::writeDEMConditionMeshes { } {
