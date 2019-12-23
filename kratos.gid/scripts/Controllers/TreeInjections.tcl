@@ -295,6 +295,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
         switch $type {
             "inline_vector" {
                 set ndim [string index $::Model::SpatialDimension 0]
+                if {[string is double $v]} {
+                    set v [string repeat "${v}," $ndim]
+                }
                 # TODO: Add units when Compassis enables units in vectors
                 #append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' $has_units  dimensions='$ndim'  help='$help'  state='$state' />"
                 append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' dimensions='$ndim'  help='$help'  state='$state' show_in_window='$show_in_window' />"
