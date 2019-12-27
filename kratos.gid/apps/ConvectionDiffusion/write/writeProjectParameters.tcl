@@ -84,7 +84,7 @@ proc ConvectionDiffusion::write::getBodyForceProcessDict {} {
     dict set pdict "process_name" "AssignScalarVariableProcess"
     set params [dict create]
     set partgroup [write::getPartsSubModelPartId]
-    dict set params "model_part_name" [concat [lindex $partgroup 0]]
+    dict set params "model_part_name" [join [list [GetAttribute model_part_name] [lindex $partgroup 0]] "."]
     dict set params "variable_name" "HEAT_FLUX"
     dict set params "value" $value
     dict set params "constrained" false
