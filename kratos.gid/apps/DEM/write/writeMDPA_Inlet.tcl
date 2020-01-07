@@ -35,8 +35,8 @@ proc DEM::write::GetInletGroups { } {
 proc DEM::write::copyClusterFiles { } {
     
     set dir [write::GetConfigurationAttribute dir]
-    set src_dir $::Kratos::kratos_private(Path)
-    set cluster_dir [file join $src_dir exec Kratos applications DEMApplication custom_elements custom_clusters]
+    set src_dir [apps::getMyDir DEM]
+    set cluster_dir [file join $src_dir custom_clusters]
     foreach cluster [GetUsedClusters ] {
         set cluster_dem [lindex [DEM::write::GetClusterFileNameAndReplaceInletElementType $cluster] 1]
         set totalpath [file join $cluster_dir $cluster_dem]
