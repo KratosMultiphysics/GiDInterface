@@ -308,11 +308,14 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
     # Check if current problemtype allows transforms
     if {[GiDVersionCmp 14.1.1d] < 0} { W "The minimum GiD version for a transform is '14.1.1d'\n Click Ok to try it anyway (You may lose data)" }
     
-    # Ask the user if it's ready to tranform
-    set w [dialogwin_snit .gid._ask -title [_ "Transform"] -entrytext [_ "The model needs to be upgraded. Do you want to upgrade to new version? You can lose data"]]
-    set action [$w createwindow]
-    destroy $w
-    if { $action < 1 } { return }
+    # set ::Kratos_AskToTransform to 0 to not not ask if transform and old model, and automatically act like ok was pressed (e.g. to automatize in batch)
+    if { ![info exists ::Kratos_AskToTransform] || $::Kratos_AskToTransform } {
+        # Ask the user if it's ready to tranform
+        set w [dialogwin_snit .gid._ask -title [_ "Transform"] -entrytext [_ "The model needs to be upgraded. Do you want to upgrade to new version? You can lose data"]]
+        set action [$w createwindow]
+        destroy $w
+        if { $action < 1 } { return }
+    }
 
     # Get the old app
     set old_activeapp_node [$old_dom selectNodes "//hiddenfield\[@n='activeapp'\]"]
