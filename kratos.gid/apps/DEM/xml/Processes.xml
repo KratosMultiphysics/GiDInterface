@@ -4,12 +4,12 @@
 
   <Process n="DEM-FEM-Wall-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
     <inputs>
-      <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the group">
-        <parameter n="DEM-ImposedMotion" parent="true" pn="Type of motion" type="combo" v="None" values="None,LinearPeriodic,FreeMotion" pvalues="None,Imposed linear/angular motion,Free body motion" help="Choose if the solid should should be fixed, have an imposed motion or a free motion" show_in_window="0">
-          <parameter n="Mass" parent="FreeMotion" pn="Mass" type="double" v="1.0" units="kg" unit_magnitude="M" show_in_window="0"/>
-          <parameter n="CenterOfMass" parent="FreeMotion" pn="Center of mass" type="inline_vector" v="0.0,0.0,0.0" units="m" unit_magnitude="L" show_in_window="0"/>
-          <parameter n="Inertia" parent="FreeMotion" pn="Inertia(kg*m2)" type="[DEM::xml::InertiaType]" v="1.0" show_in_window="0" help="" />
-          
+    <parameter n="SetActive"            type="bool"         pn="Activate"       v="true"     help="Set Yes to activate the group">
+      <parameter n="DEM-ImposedMotion"  parent="true"       pn="Type of motion" type="combo"  v="None" values="None,LinearPeriodic,FreeMotion" pvalues="None,Imposed linear/angular motion,Free body motion" help="Choose if the solid should should be fixed, have an imposed motion or a free motion" show_in_window="0">
+        <parameter n="Mass"             parent="FreeMotion" pn="Mass"           type="double" v="1.0"                  units="kg"     unit_magnitude="M" show_in_window="0"/>
+        <parameter n="CenterOfMass"     parent="FreeMotion" pn="Center of mass" type="inline_vector"   v="0.0,0.0,0.0" units="m"      unit_magnitude="L" show_in_window="0"/>
+          <parameter n="Inertia"        parent="FreeMotion" pn="Inertia(kg*m2)" type="[DEM::xml::InertiaType]" v="1.0" show_in_window="0" help="" />
+
           <parameter n="DEM-DOFS" parent="FreeMotion" type="combo" v="No" pn="Degrees of Freedom" values="No,Yes" pvalues="No,Yes" show_in_window="0">
             <parameter n="Ax" parent="FreeMotion,Yes" type="combo" v="No" pn="Fix Velocity X" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Velocity X" show_in_window="0">
               <parameter n="Vx" parent="Constant" v="0.0" pn="   Value" unit_magnitude="Velocity" units="m/s" help="X Velocity" show_in_window="0"/>
@@ -90,40 +90,40 @@
 
           <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
           <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-          <parameter n="LinearPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period" show_in_window="0">
-            <parameter n="LinearPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="LinearPeriodic"  parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period" show_in_window="0">
+            <parameter n="LinearPeriod"  parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
           </parameter>
           <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Linear start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="LinearEndTime" parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="LinearEndTime"   parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
 
           <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity" type="double" v="0.0" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
           <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="0.0,0.0,1.0" help="In 2D it is automatically set to +Z" show_in_window="0"/>
-          <parameter n="CenterOfRotation" parent="LinearPeriodic" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" units="m" unit_magnitude="L" help="Components of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center" show_in_window="0"/>
-          <parameter n="AngularPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period" show_in_window="0">
-            <parameter n="AngularPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="CenterOfRotation"       parent="LinearPeriodic" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" units="m" unit_magnitude="L" help="Components of the position of the Rotation Center. If a linear velocity is imposed to this group, it will affect this center" show_in_window="0"/>
+          <parameter n="AngularPeriodic"        parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period" show_in_window="0">
+            <parameter n="AngularPeriod"        parent="true"           pn="Period"   type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
           </parameter>
           <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Angular start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="fixed_wall" parent="LinearPeriodic" pn="Update velocity, not displacements" v="false" type="bool" help="If activated, the wall will not move and will just have an imposed velocity field" show_in_window="0"/>
+          <parameter n="AngularEndTime"   parent="LinearPeriodic" pn="Angular end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="fixed_wall"       parent="LinearPeriodic" pn="Update velocity, not displacements" v="false" type="bool" help="If activated, the wall will not move and will just have an imposed velocity field" show_in_window="0"/>
 
         </parameter>
 
-        <parameter n="IsGhost" parent="true" pn="Is ghost wall" v="false" type="bool" show_in_window="0"/>
+        <parameter n="IsGhost"        parent="true" pn="Is ghost wall" v="false" type="bool" show_in_window="0"/>
         <parameter n="friction_angle" parent="true" pn="Friction angle" v="30.0" type="double" units="deg" unit_magnitude="Angle" help="" show_in_window="0"/>
-        <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
-        <parameter n="CohesiveWall" parent="true" pn="Cohesive Wall" v="false" type="bool" help="Specify if the wall presents a cohesive behaviour" show_in_window="0">
+        <parameter n="GraphPrint"     parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
+        <parameter n="CohesiveWall"   parent="true" pn="Cohesive Wall" v="false" type="bool" help="Specify if the wall presents a cohesive behaviour" show_in_window="0">
           <parameter n="WallCohesion" parent="true" pn="Wall cohesion" v="0.0" type="double" units="N/m^2" unit_magnitude="F/L^2" help="JKR or DMT energy surface" show_in_window="0"/>
         </parameter>
-        <parameter n="DEM_Wear" parent="true" pn="Compute wear" v="false" type="bool" help="If activated, wear will be computed on this wall. It can increase computation time" show_in_window="0">
-          <parameter n="K_Abrasion" parent="true" pn="Abrasion level" v="0.001" type="double" help="Archard abrasion K parameter" show_in_window="0"/>
-          <parameter n="K_Impact" parent="true" pn="Impact level" v="0.001" type="double" help="Archard impact K parameter" show_in_window="0"/>
-          <parameter n="H_Brinell" parent="true" pn="Brinell Hardness" v="200.0" type="double" help="Brinell hardness value" show_in_window="0"/>
+        <parameter n="DEM_Wear"       parent="true" pn="Compute wear" v="false" type="bool" help="If activated, wear will be computed on this wall. It can increase computation time" show_in_window="0">
+          <parameter n="K_Abrasion"   parent="true" pn="Abrasion level" v="0.001" type="double" help="Archard abrasion K parameter" show_in_window="0"/>
+          <parameter n="K_Impact"     parent="true" pn="Impact level" v="0.001" type="double" help="Archard impact K parameter" show_in_window="0"/>
+          <parameter n="H_Brinell"    parent="true" pn="Brinell Hardness" v="200.0" type="double" help="Brinell hardness value" show_in_window="0"/>
         </parameter>
-        <parameter n="RigidPlane" parent="true" pn="Rigid structure" v="true" type="bool" help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus" show_in_window="0">
+        <parameter n="RigidPlane"     parent="true"  pn="Rigid structure" v="true" type="bool" help="Give this DEM-FEM group an ideally rigid behaviour or an elastic response with a particular Young Modulus" show_in_window="0">
           <parameter n="YoungModulus" parent="false" pn="Young Modulus" v="1e20" type="double" units="N/m^2" unit_magnitude="F/L^2" show_in_window="0"/>
           <parameter n="PoissonRatio" parent="false" pn="Poisson Ratio" v="0.25" show_in_window="0"/>
         </parameter>
-        <parameter n="MaterialTest" parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
+        <parameter n="MaterialTest"   parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
           <parameter n="DefineTopBot" parent="true" pn="Set wall as" type="combo" v="Pressure plate" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
         </parameter>
       </parameter>
@@ -140,21 +140,20 @@
 
           <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
           <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-          <parameter n="LinearPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
-            <parameter n="LinearPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="LinearPeriodic"  parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
+            <parameter n="LinearPeriod"  parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
           </parameter>
           <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Linear start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="LinearEndTime" parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="LinearEndTime"   parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
 
           <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity modulus" type="double" v="0.0" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
           <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="0.0,0.0,1.0" show_in_window="0"/>
           <parameter n="CenterOfRotation" parent="LinearPeriodic" pn="Center of rotation(m)" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the rotation center. Linear velocity is imposed to this center" show_in_window="0"/>
-          <parameter n="AngularPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
-            <parameter n="AngularPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="AngularPeriodic"  parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
+            <parameter n="AngularPeriod"  parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
           </parameter>
           <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Angular start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="1000.0" units="s" unit_magnitude="T" show_in_window="0"/>
-
+          <parameter n="AngularEndTime"   parent="LinearPeriodic" pn="Angular end time" type="double" v="1000.0" units="s" unit_magnitude="T" show_in_window="0"/>
           <parameter n="Ax" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Velocity X" show_in_window="0">
             <parameter n="Vx" parent="Constant" type="double" v="0.0" pn="   Value" help="X Velocity" show_in_window="0"/>
           </parameter>
@@ -199,23 +198,23 @@
   <Process n="DEM-Inlet-Process" pn="" python_module="" kratos_module="KratosMultiphysics">
     <inputs>
       <parameter n="SetActive" type="bool" pn="Activate" v="true">
-        <parameter n="InletMotionType" pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable" pvalues="None,Linear/Periodic,From a table" show_in_window="0">
-          <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
-          <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-          <parameter n="LinearPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
-            <parameter n="LinearPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
+        <parameter n="InletMotionType"     pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable" pvalues="None,Linear/Periodic,From a table" show_in_window="0">
+          <parameter n="VelocityModulus"        parent="LinearPeriodic" pn="Velocity modulus"         type="double"         v="1.0"   units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
+          <parameter n="DirectionVector"        parent="LinearPeriodic" pn="Direction vector"         type="inline_vector"  v="1.0,0.0,0.0" show_in_window="0"/>
+          <parameter n="LinearPeriodic"         parent="LinearPeriodic" pn="Periodic"                 type="bool"           v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
+            <parameter n="LinearPeriod"         parent="true"           pn="Period"                   type="double"         v="5.0"   units="s" unit_magnitude="T" show_in_window="0"/>
           </parameter>
-          <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Linear Start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="LinearEndTime" parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="LinearStartTime"        parent="LinearPeriodic" pn="Linear Start time"        type="double"         v="0.0"   units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="LinearEndTime"          parent="LinearPeriodic" pn="Linear end time"          type="double"         v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
 
-          <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity modulus" type="double" v="0.0" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
-          <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-          <parameter n="CenterOfRotation" parent="LinearPeriodic" pn="Center of rotation(m)" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the rotation center. Linear velocity is imposed to this center" show_in_window="0"/>
-          <parameter n="AngularPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
-            <parameter n="AngularPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity modulus" type="double"         v="0.0"   units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
+          <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector"         type="inline_vector"  v="1.0,0.0,0.0" show_in_window="0"/>
+          <parameter n="CenterOfRotation"       parent="LinearPeriodic" pn="Center of rotation(m)"    type="inline_vector"  v="0.0,0.0,0.0" help="Components of the position of the rotation center. Linear velocity is imposed to this center" show_in_window="0"/>
+          <parameter n="AngularPeriodic"        parent="LinearPeriodic" pn="Periodic"                 type="bool"           v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
+            <parameter n="AngularPeriod"        parent="true"           pn="Period"                   type="double"         v="5.0"   units="s" unit_magnitude="T" show_in_window="0"/>
           </parameter>
-          <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Angular start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="1000" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="AngularStartTime"       parent="LinearPeriodic" pn="Angular start time"       type="double"         v="0.0"   units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="AngularEndTime"         parent="LinearPeriodic" pn="Angular end time"         type="double"         v="1000"  units="s" unit_magnitude="T" show_in_window="0"/>
 
           <!-- Ready to activate fixed dofs on inlet when required. -->
           <!-- <parameter n="Ax" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Velocity X">
@@ -246,24 +245,24 @@
           <parameter n="InletMassFlow" parent="Kilograms" pn="Mass flow (kg/s)" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" show_in_window="0"/>
         </parameter>
 
-        <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="SphericParticle3D" values="SphericParticle3D,Cluster3D,SingleSphereCluster" pvalues="Sphere,Cluster,SingleSphereCluster" help="Choose if you want this Inlet to insert spheres or clusters" show_in_window="0">
-          <parameter n="Excentricity" parent="SingleSphereCluster" type="double" v="0.1" pn="Excentricity (%)" help="% of the radius" show_in_window="0"/>
-          <parameter n="ProbabilityDistributionOfExcentricity" parent="SingleSphereCluster" type="combo" v="normal" pn="Probability Distribution of excentricity" values="normal,lognormal" help="Choose the probablility distribution of the diameter" show_in_window="0"/>
-          <parameter n="StandardDeviationOfExcentricity" parent="SingleSphereCluster" type="double" v="0.1" pn="Standard Deviation of excentricity" help="Standard Deviation of the Diameter, assuming Normal Distribution. If 0.0 is chosen, a uniform diameter distribution will be created" show_in_window="0"/>
-          <parameter n="ClusterType" pn="Cluster Type" parent="Cluster3D" type="combo" v="Rock1Cluster3D" values="Rock1Cluster3D,Rock2Cluster3D,Ballast1Cluster3D,Ballast1Cluster3Dred,Ballast2Cluster3D,Ballast2Cluster3Dred,Ballast3Cluster3D,Ballast3Cluster3Dred,Ballast4Cluster3D,Ballast4Cluster3Dred,Ballast5Cluster3D,Ballast2Cluster5Dred,Ballast6Cluster3D,Ballast6Cluster3Dred,LineCluster3D,RingCluster3D,SoyBeanCluster3D,SoyBean3Cluster3D,CornKernelCluster3D,CornKernel3Cluster3D,Wheat5Cluster3D,CapsuleCluster3D" help="Choose the shape of the particle or cluster of particles" show_in_window="0"/>
-          <parameter n="RandomOrientation" pn="Random Orientation" parent="Cluster3D" type="combo" v="Yes" values="Yes,No" help="Random Orientation" show_in_window="0">
-            <parameter n="OrientationX" pn="Orientation X" parent="No" v="0.0" type="combo" help="First parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationY" pn="Orientation Y" parent="No" v="0.0" type="double" help="Second parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationZ" pn="Orientation Z" parent="No" v="0.0" type="double" help="Third parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationW" pn="Orientation W" parent="No" v="1.0" type="double" help="Real part of the orientation quaternion" show_in_window="0"/>
+        <parameter n="InletElementType"   pn="Element Type"    parent="true"                type="combo"  v="SphericParticle3D"  values="SphericParticle3D,Cluster3D,SingleSphereCluster"  pvalues="Sphere,Cluster,SingleSphereCluster" help="Choose if you want this Inlet to insert spheres or clusters" show_in_window="0">
+          <parameter n="Excentricity"                          parent="SingleSphereCluster" type="double" v="0.1"    pn="Excentricity (%)"                            help="% of the radius" show_in_window="0"/>
+          <parameter n="ProbabilityDistributionOfExcentricity" parent="SingleSphereCluster" type="combo"  v="normal" pn="Probability Distribution of excentricity"    values="normal,lognormal" help="Choose the probablility distribution of the diameter" show_in_window="0"/>
+          <parameter n="StandardDeviationOfExcentricity"       parent="SingleSphereCluster" type="double" v="0.1"    pn="Standard Deviation of excentricity"          help="Standard Deviation of the Diameter, assuming Normal Distribution. If 0.0 is chosen, a uniform diameter distribution will be created" show_in_window="0"/>
+          <parameter n="ClusterType"      pn="Cluster Type"    parent="Cluster3D"           type="combo"  v="Rock1Cluster3D"     values="Rock1Cluster3D,Rock2Cluster3D,Ballast1Cluster3D,Ballast1Cluster3Dred,Ballast2Cluster3D,Ballast2Cluster3Dred,Ballast3Cluster3D,Ballast3Cluster3Dred,Ballast4Cluster3D,Ballast4Cluster3Dred,Ballast5Cluster3D,Ballast2Cluster5Dred,Ballast6Cluster3D,Ballast6Cluster3Dred,LineCluster3D,RingCluster3D,SoyBeanCluster3D,SoyBean3Cluster3D,CornKernelCluster3D,CornKernel3Cluster3D,Wheat5Cluster3D,CapsuleCluster3D" help="Choose the shape of the particle or cluster of particles" show_in_window="0"/>
+          <parameter n="RandomOrientation" pn="Random Orientation" parent="Cluster3D"       type="combo"  v="Yes"    values="Yes,No"                                  help="Random Orientation" show_in_window="0">
+            <parameter n="OrientationX"    pn="Orientation X"      parent="No" v="0.0"     type="combo"  help="First parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
+            <parameter n="OrientationY"    pn="Orientation Y"      parent="No" v="0.0"     type="double" help="Second parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
+            <parameter n="OrientationZ"    pn="Orientation Z"      parent="No" v="0.0"     type="double" help="Third parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
+            <parameter n="OrientationW"    pn="Orientation W"      parent="No" v="1.0"     type="double" help="Real part of the orientation quaternion" show_in_window="0"/>
           </parameter>
         </parameter>
 
-        <parameter n="InletStartTime" parent="true" pn="Inlet start" type="double" v="0.0" units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
-        <parameter n="InletStopTime" parent="true" pn="Inlet stop" type="double" v="100.0" units="s" unit_magnitude="T" help="Inlet stop time" show_in_window="0"/>
-        <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
-        <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
-        <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
+        <parameter n="InletStartTime"          parent="true" pn="Inlet start"         type="double" v="0.0"    units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
+        <parameter n="InletStopTime"           parent="true" pn="Inlet stop"          type="double" v="100.0"  units="s" unit_magnitude="T" help="Inlet stop time" show_in_window="0"/>
+        <parameter n="ParticleDiameter"        parent="true" pn="Diameter"                 type="double" v="1.0"    units="m" unit_magnitude="L" show_in_window="0"/>
+        <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo"  v="normal" values="normal,lognormal" show_in_window="0"/>
+        <parameter n="StandardDeviation"       parent="true" pn="Standard deviation"       type="double" v="0.0"    units="m" unit_magnitude="L" show_in_window="0"/>
 
         <!-- TO BE FIXED JG!insert material BUT not constitutive law in the tree -->
         <parameter n="ConstitutiveLaw" special_command="DEM::xml::InsertConstitutiveLawForParameters" args="" pn="" state="hidden"/>
