@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+  <ConditionItem n="DEM-Cohesive2D" pn="Bonded domains" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" ElementType="Surface" LocalSpaceDimension="1" ProcessName="Cohesive2D-Process" help="Assign this condition for each continuum group" VariableName="COHESIVE">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+   <ConditionItem n="DEM-Cohesive" pn="Bonded domains" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Volume" LocalSpaceDimension="2" ProcessName="Cohesive-Process" help="Assign this condition for each continuum group" VariableName="COHESIVE">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+</ConditionList>

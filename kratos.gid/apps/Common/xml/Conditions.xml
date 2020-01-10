@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
     
-  <ConditionItem n="GENERIC_CONDITION" pn="GENERIC_CONDITION" ProductionReady="Developer">
+  <ConditionItem n="GENERIC_CONDITION2D" pn="GENERIC_CONDITION" ProductionReady="Developer">
+    <TopologyFeatures>
+      <item GeometryType="Point"         nodes="1"  KratosName="PointCondition2D1N"/>
+      <item GeometryType="Line"          nodes="2"  KratosName="LineCondition2D2N"/>
+      <item GeometryType="Line"          nodes="3"  KratosName="LineCondition2D3N"/>
+      <item GeometryType="Triangle"      nodes="3"  KratosName="SurfaceCondition2D3N"/>
+      <item GeometryType="Triangle"      nodes="6"  KratosName="SurfaceCondition2D6N"/>
+      <item GeometryType="Quadrilateral" nodes="4"  KratosName="SurfaceCondition2D4N"/>
+      <item GeometryType="Quadrilateral" nodes="8"  KratosName="SurfaceCondition2D8N"/>
+      <item GeometryType="Quadrilateral" nodes="9"  KratosName="SurfaceCondition2D9N"/>
+      <!-- Some of them does not exist in kratos, but this is a developer tool, so... -->
+    </TopologyFeatures>
+  </ConditionItem>
+  <ConditionItem n="GENERIC_CONDITION3D" pn="GENERIC_CONDITION" ProductionReady="Developer">
     <TopologyFeatures>
       <item GeometryType="Point"         nodes="1"  KratosName="PointCondition3D1N"/>
       <item GeometryType="Line"          nodes="2"  KratosName="LineCondition3D2N"/>

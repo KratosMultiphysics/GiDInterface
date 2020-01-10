@@ -18,11 +18,16 @@ proc ::DEM::examples::SpheresDrop {args} {
 proc ::DEM::examples::DrawGeometry { } {
     Kratos::ResetModel
 
+    # Draw floor surface
     GiD_Process Mescape Geometry Create Object Rectangle -5 -5 0 5 5 0 escape
+    # Draw inlet surface
     GiD_Process Mescape Geometry Create Object Rectangle -2 -2 5 2 2 5 escape
+    # Draw the cluster inlet
     GiD_Process Mescape Geometry Create Object Rectangle -2 -2 6 2 2 6 escape
+    # Draw the volume meshed with spheres
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape
 
+    # Group creation
     GiD_Groups create "Floor"
     GiD_Groups create "Inlet"
     GiD_Groups create "ClusterInlet"
@@ -32,6 +37,7 @@ proc ::DEM::examples::DrawGeometry { } {
     GiD_Layers create "ClusterInlet"
     GiD_Layers create "Body"
 
+    # Group assignation
     GiD_EntitiesGroups assign "Floor" surfaces 1
     GiD_EntitiesGroups assign "Inlet" surfaces 2
     GiD_EntitiesGroups assign "ClusterInlet" surfaces 3

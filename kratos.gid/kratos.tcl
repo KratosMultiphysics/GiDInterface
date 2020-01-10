@@ -84,7 +84,7 @@ proc Kratos::RegisterGiDEvents { } {
 proc Kratos::Event_InitProblemtype { dir } {
     variable kratos_private
     
-    # Init Kratos problemtype global vars
+    # Init Kratos problemtype global vars with default values
     Kratos::InitGlobalVariables $dir
 
     # Load all common tcl files (not the app ones)
@@ -102,7 +102,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Problemtype libraries as CustomLib
     Kratos::LoadProblemtypeLibraries
 
-    # Load the user environment (stored preferences)
+    # Load the Kratos problemtype global and user environment (stored preferences)
     Kratos::LoadEnvironment
 
     # Customize GiD menus to add the Kratos entry
@@ -308,11 +308,14 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
     # Check if current problemtype allows transforms
     if {[GiDVersionCmp 14.1.1d] < 0} { W "The minimum GiD version for a transform is '14.1.1d'\n Click Ok to try it anyway (You may lose data)" }
     
-    # Ask the user if it's ready to tranform
-    set w [dialogwin_snit .gid._ask -title [_ "Transform"] -entrytext [_ "The model needs to be upgraded. Do you want to upgrade to new version? You can lose data"]]
-    set action [$w createwindow]
-    destroy $w
-    if { $action < 1 } { return }
+    # set ::Kratos_AskToTransform to 0 to not not ask if transform and old model, and automatically act like ok was pressed (e.g. to automatize in batch)
+    if { ![info exists ::Kratos_AskToTransform] || $::Kratos_AskToTransform } {
+        # Ask the user if it's ready to tranform
+        set w [dialogwin_snit .gid._ask -title [_ "Transform"] -entrytext [_ "The model needs to be upgraded. Do you want to upgrade to new version? You can lose data"]]
+        set action [$w createwindow]
+        destroy $w
+        if { $action < 1 } { return }
+    }
 
     # Get the old app
     set old_activeapp_node [$old_dom selectNodes "//hiddenfield\[@n='activeapp'\]"]
@@ -353,10 +356,16 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
 proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     # Prepare things before meshing
 
+    
+    GiD_Process Mescape Meshing MeshCriteria NoMesh Lines 1:end escape escape escape
+    GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces 1:end escape escape escape
+    GiD_Process Mescape Meshing MeshCriteria NoMesh Volumes 1:end escape escape escape
+
     # We need to mesh every line and surface assigned to a group that appears in the tree 
     foreach group [spdAux::GetAppliedGroups] {
         GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape escape
+        GiD_Process Mescape Meshing MeshCriteria Mesh Volumes {*}[GiD_EntitiesGroups get $group volumes] escape escape escape
     }
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
@@ -399,15 +408,12 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     catch {
         # If the user selected MPI, stop it!
         set paralleltype [write::getValue ParallelType]
+        # MPI must be launched manually
         if {$paralleltype eq "MPI"} {set run 0}
     }
-    if {$run} {
-        return ""
-    } {
+    if {!$run} {
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
-        
     }
-    
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {

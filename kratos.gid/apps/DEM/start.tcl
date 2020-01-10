@@ -28,7 +28,7 @@ proc ::DEM::Init { } {
 proc ::DEM::LoadMyFiles { } {
     variable dir
 
-    uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
+    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
@@ -48,7 +48,9 @@ proc ::DEM::GetAttribute {name} {
 
 proc ::DEM::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example\nSpheres drop"]
+    if {$::Model::SpatialDimension eq "3D"} {
+        Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example\nSpheres drop"]
+    }
 }
 
 proc ::DEM::CustomMenus { } {
@@ -80,6 +82,27 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
 
 
 proc ::DEM::AfterMeshGeneration { fail } {
+
+    set root [customlib::GetBaseRoot]
+    # Separar 2d de 3d
+    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
+    }
+    set xp2 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
+    foreach group [$root selectNodes $xp2] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
+    }
+
+    if [GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE] {
+        GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
+        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type linear]
+        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
+        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
+    }
+
     # set without_window [GidUtils::AreWindowsDisabled];
     # if {!$without_window} {
         # GidUtils::DisableGraphics

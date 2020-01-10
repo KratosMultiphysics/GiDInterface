@@ -30,6 +30,8 @@ proc Kratos::ReadPre { filename } {
     set layer Layer0
     set fail 0
     set state 0
+    set spheres_dict [dict create]
+    set space " "
     ::GidUtils::WaitState
     while { ![eof $fp] } {
         # take next line
@@ -39,7 +41,7 @@ proc Kratos::ReadPre { filename } {
             while { ![eof $fp] } {
                 gets $fp line
                 if {$line ne "End Nodes"} {
-                    lassign [regsub -all {\s+}  $line " "] id x y z
+                    lassign [regsub -all {\s+} $line $space] id x y z
                     GiD_Mesh create node [expr $offset_nodes + $id] [list $x $y $z]
                 } else {
                     break
@@ -52,12 +54,36 @@ proc Kratos::ReadPre { filename } {
                 gets $fp line
                 if {$line ne "End Elements"} {
                     # lo del elemento
-                    set raw [regsub -all {\s+}  $line " "]
+                    set raw [regsub -all {\s+} $line $space]
                     set id [lindex $raw 0]
                     set nodes [lrange $raw 2 end]
-                    set nodes_new [list ]
-                    foreach node $nodes {lappend nodes_new [expr $node + $offset_nodes]}
-                    GiD_Mesh create element [expr $offset_elements + $id] $element_type [llength $nodes_new] $nodes_new
+                    if {[llength $nodes] > 1} {
+                        set nodes_new [list ]
+                        foreach node $nodes {lappend nodes_new [expr $node + $offset_nodes]}
+                        GiD_Mesh create element [expr $offset_elements + $id] $element_type [llength $nodes_new] $nodes_new
+                    } else {
+                        dict set spheres_dict $nodes element_type $element_type
+                        dict set spheres_dict $nodes element $id
+                    }
+                } else {
+                    break
+                }
+            }
+        }
+        if {[string match "Begin NodalData RADIUS*" $line]} {
+            while { ![eof $fp] } {
+                gets $fp line
+                if {$line ne "End NodalData"} {
+                    set raw [regsub -all {\s+} $line $space]
+                    set id [lindex $raw 0]
+                    set element [dict get $spheres_dict $id element]
+                    set rad [lindex $raw 2]
+                    set element_type [dict get $spheres_dict $id element_type]
+                    if {$element_type eq "Circle"} {
+                        GiD_Mesh create element [expr $offset_elements + $element] $element_type 1 [expr $id + $offset_nodes] $rad 0 0 1
+                    } else {
+                        GiD_Mesh create element [expr $offset_elements + $element] $element_type 1 [expr $id + $offset_nodes] $rad
+                    }
                 } else {
                     break
                 }
@@ -69,7 +95,7 @@ proc Kratos::ReadPre { filename } {
                 gets $fp line
                 if {$line ne "End Conditions"} {
                     # lo del elemento
-                    set raw [regsub -all {\s+}  $line " "]
+                    set raw [regsub -all {\s+} $line $space]
                     set id [lindex $raw 0]
                     if {$id in [dict exists $conditions_dict $id]} {next}
                     set nodes [lrange $raw 2 end]
@@ -153,6 +179,10 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
     
     if {$element_name eq "Sphere3D"} {
         set element_type "Sphere"
+    } elseif {$element_name in {"SphericContinuumParticle3D" "SphericParticle3D"}} {
+        set element_type "Sphere"
+    } elseif {$element_name in {"CylinderContinuumParticle2D" "CylinderParticle2D"}} {
+        set element_type "Circle"
     } else {
         set dim [string index $element_name end-3]
         set nnodes [string index $element_name end-1]

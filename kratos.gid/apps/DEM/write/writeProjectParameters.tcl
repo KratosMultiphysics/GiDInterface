@@ -89,7 +89,7 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "FinalTime"                            $FinalTime
     # TODO: check for inconsistencies in DEMTIMEPARAMETERS  UN
     # dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
-    # dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
+    dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
     dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 

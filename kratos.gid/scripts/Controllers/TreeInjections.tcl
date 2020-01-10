@@ -295,6 +295,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
         switch $type {
             "inline_vector" {
                 set ndim [string index $::Model::SpatialDimension 0]
+                if {[string is double $v]} {
+                    set v [string repeat "${v}," $ndim]
+                }
                 # TODO: Add units when Compassis enables units in vectors
                 #append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' $has_units  dimensions='$ndim'  help='$help'  state='$state' />"
                 append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' dimensions='$ndim'  help='$help'  state='$state' show_in_window='$show_in_window' />"
@@ -322,7 +325,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                         set vname "value_${inName}_${i}"
                         set nodef "../value\[@n='$fname'\]"
                         set nodev "../value\[@n='$vname'\]"
-                        if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"} {set zstate ""}
+                        if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"; set state "\[CheckDimension 3D\]"} {set zstate ""}
                         if {[$param getAttribute "function"] eq "1"} {
                             set values "ByFunction,ByValue,Not" 
                             set pvalues "By function,By value,Not set"
@@ -842,8 +845,8 @@ proc spdAux::injectPartsByElementType {domNode args} {
     foreach element_type [dict keys $element_types] {
         set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
         if {[llength $ov] == 0} {set ov "point,line,surface,volume"}
-        set ovm "element"
-        if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
+        set ovm "node,element"
+        #if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
         set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
             <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
                     <dependencies node=\"../value\" actualize=\"1\" />

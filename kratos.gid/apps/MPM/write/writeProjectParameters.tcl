@@ -43,6 +43,7 @@ proc ::MPM::write::getParametersDict { } {
     # Add the solver information
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict MPM] ]
+    dict lappend solverSettingsDict auxiliary_variables_list RAYLEIGH_ALPHA
     dict set project_parameters_dict solver_settings $solverSettingsDict
 
     # Move slip to constraints

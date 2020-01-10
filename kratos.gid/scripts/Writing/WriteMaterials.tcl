@@ -17,50 +17,50 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     foreach gNode [$root selectNodes $xp1] {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
         set group [$gNode getAttribute n]
-        set valueNode [$gNode selectNodes $xp2]
+        
         set material_name "material $material_number"
         if { ![dict exists $mat_dict $group] } {
             incr material_number
             set mid $material_number
+
             dict set mat_dict $group MID $material_number
             dict set mat_dict $group APPID $nodeApp
-            set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
-            if {$element_node ne ""} {
+
+            catch {
+                set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
+                if {$element_node ne ""} {
+                    set element_name [write::getValueByNode $element_node "force"]
+                }
                 set element_name [write::getValueByNode $element_node "force"]
             }
 
             set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
             set claw [write::getValueByNode $claw_node "force"]
             set const_law [Model::getConstitutiveLaw $claw]
-
             if {$const_law ne ""} {
-
                 set output_type [$const_law getOutputMode]
                 if {$output_type eq "Parameters"} {
                     set s1 [$gNode selectNodes ".//value"]
                 } else {
-                    set real_material_name [write::getValueByNode $valueNode "force"]
-                    set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
-                    set matNode [$root selectNodes $xp3]
-                    set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                    set s1 ""
+                    set matvalueNode [$gNode selectNodes $xp2]
+                    if {$matvalueNode ne ""} {
+                        set real_material_name [write::getValueByNode $matvalueNode "force"]
+                        set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
+                        set matNode [$root selectNodes $xp3]
+                        set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                    }
                 }
-            } else {
-                set s1 [$gNode selectNodes ".//value"]
-            }
 
-            foreach valueNode $s1 {
-                write::forceUpdateNode $valueNode
-                set name [$valueNode getAttribute n]
-                set state [get_domnode_attribute $valueNode state]
-                if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
-                    # All the introduced values are translated to 'm' and 'kg' with the help of this function
-                    set value [gid_groups_conds::convert_value_to_default $valueNode]
-
-                    # if {[string is double $value]} {
-                        #     set value [format "%13.5E" $value]
-                        # }
-
-                    dict set mat_dict $group $name $value
+                foreach valueNode $s1 {
+                    write::forceUpdateNode $valueNode
+                    set name [$valueNode getAttribute n]
+                    set state [get_domnode_attribute $valueNode state]
+                    if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
+                        # All the introduced values are translated to 'm' and 'kg' with the help of this function
+                        set value [gid_groups_conds::convert_value_to_default $valueNode]
+                        dict set mat_dict $group $name $value
+                    }
                 }
             }
         }
@@ -134,7 +134,8 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
             set prop_dict [dict create]
             dict set prop_dict "model_part_name" $sub_model_part
             dict set prop_dict "properties_id" $mid
-            set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]
+            set constitutive_law_id ""
+            if {[dict exists $mat_dict $group ConstitutiveLaw ]} {set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]}
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
             if {$constitutive_law ne ""} {
                 set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]

@@ -2,7 +2,9 @@
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable submodelparts
+    variable formats_dict
 
+    set id_f [dict get $formats_dict ID]
     set mid ""
     set what [split $what "&"]
     set group [GetWriteGroupName $group]
@@ -19,7 +21,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         incr ::write::current_mdpa_indent_level 2
         set s2 [mdpaIndent]
         set gdict [dict create]
-        set f "${s2}%5i\n"
+        set f "${s2}$id_f\n"
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
@@ -51,7 +53,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
                 #W $iniend
                 foreach {ini end} $iniend {
                     for {set i $ini} {$i<=$end} {incr i} {
-                        WriteString "${s2}[format %5d $i]"
+                        WriteString "${s2}[format $id_f $i]"
                     }
                 }
             }
@@ -86,15 +88,17 @@ proc write::_writeConditionsForBasicSubmodelParts {un cond_iter} {
     Model::getConditions "../../Common/xml/Conditions.xml"
     set conditions_dict [dict create ]
     set elements_list [list ]
+    set generic_condition_name GENERIC_CONDITION3D
+    if {$::Model::SpatialDimension ne "3D"} {set generic_condition_name GENERIC_CONDITION2D}
     foreach group $groups {
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
         if {$needConds} {
-            set iters [write::writeGroupNodeCondition $conditions_dict $group "GENERIC_CONDITION" [incr cond_iter]]
+            set iters [write::writeGroupNodeCondition $conditions_dict $group $generic_condition_name [incr cond_iter]]
             set conditions_dict [dict merge $conditions_dict $iters]
-            set cond_iter [lindex $iters 1 1]
+            set cond_iter [lindex $iters end end]
         }
     }
-    Model::ForgetCondition GENERIC_CONDITIONS
+    Model::ForgetCondition $generic_condition_name
     return $conditions_dict
 }
 

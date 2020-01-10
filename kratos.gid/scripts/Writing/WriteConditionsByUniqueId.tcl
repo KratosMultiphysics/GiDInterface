@@ -46,14 +46,16 @@ proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap ite
     Model::getConditions "../../Common/xml/Conditions.xml"
     set conditions_dict [dict create ]
     set elements_list [list ]
+    set generic_condition_name GENERIC_CONDITION3D
+    if {$::Model::SpatialDimension ne "3D"} {set generic_condition_name GENERIC_CONDITION2D}
     foreach group_node $groups {
         set needConds [write::getValueByNode [$group_node selectNodes "./value\[@n='WriteConditions'\]"]]
         if {$needConds} {
-            # TODO: be carefull with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
-            set iter [write::writeGroupNodeConditionByUniqueId $group_node "GENERIC_CONDITION" $iter $ConditionMap {print_again_repeated 0}]
+            # TODO: be careful with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
+            set iter [write::writeGroupNodeConditionByUniqueId $group_node $generic_condition_name $iter $ConditionMap {print_again_repeated 0}]
         }
     }
-    Model::ForgetCondition GENERIC_CONDITIONS
+    Model::ForgetCondition $generic_condition_name
     return $iter
 }
 
@@ -83,7 +85,9 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
 
     # Get the entities to print
     if {$nnodes == 1} {
-        set formats [dict create $groupid "%10d \n"]
+        variable formats_dict
+        set id_f [dict get $formats_dict ID]
+        set formats [dict create $groupid "${s}$id_f \n"]
         set obj [GiD_EntitiesGroups get $groupid nodes]
     } else {
         set formats [write::GetFormatDict $groupid 0 $nnodes]
@@ -150,6 +154,9 @@ proc write::writeConditionGroupedSubmodelPartsByUniqueId {cid groups_dict condit
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "Elements"} {tableid_list ""} } {
     variable submodelparts
+    variable formats_dict
+
+    set id_f [dict get $formats_dict ID]
 
     set mid ""
     set what [split $what "&"]
@@ -167,7 +174,7 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
         incr ::write::current_mdpa_indent_level 2
         set s2 [mdpaIndent]
         set gdict [dict create]
-        set f "${s2}%5i\n"
+        set f "${s2}$id_f\n"
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
@@ -197,7 +204,7 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
             set elems [GiD_WriteCalculationFile elements -sorted -return $gdict]
             for {set i 0} {$i <[llength $elems]} {incr i} {
                 set eid [objarray get $ConditionsMap [lindex $elems $i]]
-                WriteString "${s2}[format %10d $eid]"
+                WriteString "${s2}[format $id_f $eid]"
             }
         }
         WriteString "${s1}End SubModelPartConditions"

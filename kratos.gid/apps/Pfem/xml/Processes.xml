@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProcessList>
-    <Process n="AssignInletProcess" pn="Assign a vector value process" python_module="assign_inlet_process" kratos_module="KratosMultiphysics.PfemApplication" help="This process fixes the selected components of a given vector variable">
+    <Process n="AssignInletProcess" pn="Assign a vector value process" python_module="assign_inlet_process" kratos_module="KratosMultiphysics.PfemFluidDynamicsApplication" help="This process fixes the selected components of a given vector variable">
         <inputs>
             <parameter n="value" pn="Component" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
             <!-- <parameter n="value" pn="Value" type="vector" vectorType="double" enabled="1" function="1" v="0.0,0.0,0.0" has_units="1" help="Vector value"/> -->

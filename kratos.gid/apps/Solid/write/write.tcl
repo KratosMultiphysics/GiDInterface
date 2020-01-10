@@ -59,9 +59,9 @@ proc Solid::write::writeModelPartEvent { } {
     if {$writeCoordinatesByGroups} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
     write::writeElementConnectivities
     writeConditions
-    writeMeshes
     set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
+    writeMeshes
     # W $ConditionsDictGroupIterators
     #writeCustomBlock
 }

@@ -71,7 +71,7 @@ proc MPM::write::writeModelPartEvent { } {
 }
 
 proc MPM::write::writeBodyNodalCoordinates { } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set body_groups [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
@@ -83,7 +83,7 @@ proc MPM::write::writeBodyNodalCoordinates { } {
 }
 
 proc MPM::write::writeBodyElementConnectivities { } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set body_groups [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
@@ -94,7 +94,7 @@ proc MPM::write::writeBodyElementConnectivities { } {
 }
 
 proc MPM::write::writeGridConnectivities { } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
         if {$elem in [list GRID2D GRID3D]} {
@@ -112,7 +112,7 @@ proc MPM::write::writeSubmodelparts { type } {
 
     set grid_elements [list GRID2D GRID3D]
 
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set body_groups [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
@@ -170,7 +170,7 @@ proc MPM::write::UpdateMaterials { } {
         # Modificar la ley constitutiva
         dict set matdict $mat THICKNESS  1.0000E+00
         
-        set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group\[@n='$mat'\]/value\[@n='THICKNESS'\]"
+        set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group\[@n='$mat'\]/value\[@n='THICKNESS'\]"
         set vNode [[customlib::GetBaseRoot] selectNodes $xp1] 
         if {$vNode ne ""} {
             dict set matdict $mat THICKNESS [write::getValueByNode $vNode]

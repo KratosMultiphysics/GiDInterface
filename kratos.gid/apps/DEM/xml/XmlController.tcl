@@ -28,11 +28,13 @@ proc DEM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem values OpenMP ParallelType
     spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
 
-    set result_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-Cohesive'\]"]
-	if { $result_node ne "" } {$result_node delete}
-
-    set result_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-Cohesive2D'\]"]
-	if { $result_node ne "" } {$result_node delete}
+    # 3D gravity
+    if {$Model::SpatialDimension eq "3D"} {
+        catch {
+            spdAux::SetValueOnTreeItem v 0.0 DEMGravity Cy
+            spdAux::SetValueOnTreeItem v -1.0 DEMGravity Cz
+        }
+    }
 
     # # Graphs in output settings
     # if {[$root selectNodes "[spdAux::getRoute DEMResults]/condition\[@n='Graphs'\]"] eq ""} {
@@ -82,6 +84,24 @@ proc DEM::xml::ProcGetStateBoundingBoxParams { domNode args } {
     if {[write::isBooleanTrue $bounding_box_active] && [write::isBooleanFalse $bounding_box_automatic]} {
         set ret normal
     }
+    return $ret
+}
+
+proc DEM::xml::ProcGetDEMPartsOvWhat { domNode args } {
+    if {$::Model::SpatialDimension eq "2D"} {
+        return "point,line,surface"
+    } else {
+        return "point,line,surface,volume"
+    }
+}
+
+
+proc DEM::xml::InertiaType { args } {
+    set ret inline_vector
+    if {$::Model::SpatialDimension eq "2D"} {
+        set ret double
+    }
+    
     return $ret
 }
 

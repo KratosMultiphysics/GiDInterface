@@ -2,7 +2,6 @@ import KratosMultiphysics
 import KratosMultiphysics.ExternalSolversApplication
 import KratosMultiphysics.DelaunayMeshingApplication
 import KratosMultiphysics.PfemFluidDynamicsApplication
-import KratosMultiphysics.SolidMechanicsApplication
 
 from KratosMultiphysics.PfemFluidDynamicsApplication.pfem_fluid_dynamics_analysis import PfemFluidDynamicsAnalysis
 

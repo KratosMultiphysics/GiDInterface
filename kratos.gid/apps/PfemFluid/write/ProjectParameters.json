@@ -111,158 +111,16 @@
 			    "on_distance": false,
 			    "on_threshold": false,
 			    "on_error": false
-			},
-			"refining_box":{
-			    "refine_in_box_only": false,
-			    "upper_point": [0.0, 0.0, 0.0],
-			    "lower_point": [0.0, 0.0, 0.0],
-			    "velocity": [0.0, 0.0, 0.0]
 			}
 		    },
-		    "elemental_variables_to_transfer":[ "CAUCHY_STRESS_VECTOR", "DEFORMATION_GRADIENT" ]
+		    "elemental_variables_to_transfer":[]
 		}
 	    ]
 	}
-    },{
-        "python_module"   : "parametric_walls_process",
-        "kratos_module"   : "KratosMultiphysics.ContactMechanicsApplication",
-        "help"            : "This process applies parametric walls and search contact",
-        "process_name"    : "ParametricWallsProcess",
-        "Parameters"      : {
-	    "model_part_name"      : "Solid Domain",
-            "search_control_type"  : "step",
-            "search_frequency"     : 1.0,
-            "parametric_walls" : [
-                {
-                    "python_module": "parametric_wall",
-                    "model_part_name" : "model_part_name",
-                    "rigid_body_settings":{
-                    "rigid_body_element_type": "TranslatoryRigidElement3D1N",
-                    "fixed_body": true,
-                    "compute_body_parameters": false,
-                                "rigid_body_model_part_name": "model_part_name",
-                    "rigid_body_parameters":{
-                        "center_of_gravity": [0.0 ,0.0, 0.0],
-                        "mass":0.0,
-                        "main_inertias": [0.0, 0.0, 0.0],
-                        "main_axes": [ [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0] ]
-                    }
-                    },
-                    "bounding_box_settings":{
-                    "kratos_module": "KratosMultiphysics.ContactMechanicsApplication",
-                    "bounding_box_type": "SpatialBoundingBox",
-                    "bounding_box_parameters":{
-                        "parameters_list":[],
-                        "velocity" : [0.0, 0.0, 0.0]
-                    }
-                    },
-                    "contact_search_settings":{
-                    "kratos_module": "KratosMultiphysics.ContactMechanicsApplication",
-                    "contact_search_type": "ParametricWallContactSearch",
-                    "contact_parameters":{
-                        "contact_condition_type": "PointContactCondition2D1N",
-                        "friction_law_type": "FrictionLaw",
-                        "kratos_module": "KratosMultiphysics.ContactMechanicsApplication",
-                        "variables_of_properties":{
-                            "FRICTION_ACTIVE": false,
-                            "MU_STATIC": 0.3,
-                            "MU_DYNAMIC": 0.2,
-                            "PENALTY_PARAMETER": 1000,
-                            "TANGENTIAL_PENALTY_RATIO": 0.1,
-                            "TAU_STAB": 1
-                            }
-                        }
-                    }
-                }
-
-            ]
-        }
-    },{
-        "help"         : "This process creates the rigid bodies of the model",
-        "kratos_module": "KratosMultiphysics.ContactMechanicsApplication",
-        "python_module": "rigid_bodies_process",
-        "process_name" : "RigidBodyProcess",
-        "Parameters"   : {
-            "model_part_name" : "Main_Domain",
-            "rigid_bodies"    : [
-                {
-                    "python_module"  : "rigid_body",
-                    "model_part_name": "Rigid_Body_Volume",
-                    "rigid_body_settings":{
-                        "rigid_body_element_type": "RigidBodyElement2D1N",
-                        "fixed_body": false,
-                        "compute_body_parameters": true,
-                        "rigid_body_model_part_name": "Rigid_Body_Volume",
-                        "rigid_body_parameters":{
-                            "center_of_gravity": [0,0,0],
-                            "mass": 0,
-                            "main_inertias": [0, 0, 0],
-                            "main_axes": [ [1,0,0], [0,1,0], [0,0,1] ]
-                        }
-                    }
-                },
-                {
-                    "python_module"  : "rigid_body",
-                    "model_part_name": "Rigid_Body_Surface",
-                    "rigid_body_settings":{
-                        "rigid_body_element_type": "RigidBodyElement2D1N",
-                        "fixed_body": false,
-                        "compute_body_parameters": false,
-                        "rigid_body_model_part_name": "Rigid_Body_Surface",
-                        "rigid_body_parameters":{
-                            "center_of_gravity": [2,0,0],
-                            "mass": 1,
-                            "main_inertias": [1, 1, 1],
-                            "main_axes": [ [1,0,0], [0,1,0], [0,0,1] ]
-                        }
-                    }
-                }
-            ]
-            }
-    },{
-        "python_module"   : "contact_domain_process",
-        "kratos_module"   : "KratosMultiphysics.ContactMechanicsApplication",
-        "help"            : "This process applies contact domain search by remeshing outer boundaries",
-        "process_name"    : "ContactDomainProcess",
-        "Parameters"      : {
-            "model_part_name"       : "model_part_name",
-            "meshing_control_type"  : "step",
-            "meshing_frequency"     : 1.0,
-            "meshing_before_output" : true,
-            "meshing_domains" : [
-                {
-                    "python_module": "contact_domain",
-                    "model_part_name": "sub_model_part_name",
-                    "alpha_shape": 1.4,
-                    "offset_factor": 0.0,
-                    "meshing_strategy":{
-                        "python_module": "contact_meshing_strategy",
-                        "meshing_frequency": 0,
-                        "remesh": true,
-                        "constrained": false,
-                        "contact_parameters":{
-                            "contact_condition_type": "ContactDomainLM2DCondition",
-                            "friction_law_type": "FrictionLaw",
-                            "kratos_module": "KratosMultiphysics.ContactMechanicsApplication",
-                            "variables_of_properties":{
-                                "FRICTION_ACTIVE": false,
-                                "MU_STATIC": 0.3,
-                                "MU_DYNAMIC": 0.2,
-                                "PENALTY_PARAMETER": 1000,
-                                "TANGENTIAL_PENALTY_RATIO": 0.1,
-                                "TAU_STAB": 1
-                            }
-                        }
-                    },
-                    "elemental_variables_to_transfer":[ "CAUCHY_STRESS_VECTOR", "DEFORMATION_GRADIENT" ],
-                    "contact_bodies_list": ["body1"]
-                }
-            ]
-        }
     }],
     "constraints_process_list" : [{
         "python_module"   : "assign_value_to_vector_components_process",
-        "kratos_module"   : "KratosMultiphysics.SolidMechanicsApplication",
+        "kratos_module"   : "KratosMultiphysics.PfemFluidDynamicsApplication",
         "help"            : "This process imposes a constraint",
         "process_name"    : "AssignValueToVectorComponentsProcess",
         "Parameters"      : {
@@ -276,7 +134,7 @@
     }],
     "loads_process_list"       : [{
         "python_module"  : "assign_vector_to_conditions_process",
-        "kratos_module"  : "KratosMultiphysics.SolidMechanicsApplication",
+        "kratos_module"  : "KratosMultiphysics.PfemFluidDynamicsApplication",
         "help"           : "This process assigns a load value on conditions",
         "process_name"   : "AssignVectorToConditionsProcess",
         "Parameters"     : {
@@ -286,21 +144,6 @@
             "time_function"   : "incremental",
             "modulus"         : 100,
             "direction"       : [0.0,-1.0,0.0]
-        }
-    }],
-    "output_process_list" : [{
-        "python_module"   : "restart_process",
-        "kratos_module"   : "KratosMultiphysics.SolidMechanicsApplication",
-        "help"            : "This process writes restart files",
-        "process_name"    : "RestartProcess",
-        "Parameters"      : {
-            "model_part_name"     : "Main Model",
-            "save_restart"        : true,
-            "restart_file_name"   : "cutting_test_rigid_2D_json",
-            "restart_file_label"  : "step",
-            "output_control_type" : "time",
-            "output_frequency"    : 0,
-            "json_output"         : false
         }
     }],
     "output_configuration"     : {
@@ -319,7 +162,7 @@
             "skin_output"         : false,
             "plane_output"        : [],
             "nodal_results"       : ["DISPLACEMENT","REACTION","VELOCITY","ACCELERATION"],
-            "gauss_point_results" : ["GREEN_LAGRANGE_STRAIN_TENSOR","CAUCHY_STRESS_TENSOR","VON_MISES_STRESS"],
+            "gauss_point_results" : [],
 	    "additional_list_files": []
 
         },

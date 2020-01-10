@@ -5,9 +5,14 @@
                 return [DEM::xml::ProcGetElements $domNode $args]
                 ]]>
 		</proc>
-			<proc n='getStateBoundingBoxParams' args='args'>
+		<proc n='getStateBoundingBoxParams' args='args'>
 			<![CDATA[
                 return [DEM::xml::ProcGetStateBoundingBoxParams $domNode $args]
+                ]]>
+		</proc>
+		<proc n='GetDEMPartsOvWhat' args='args'>
+			<![CDATA[
+                return [DEM::xml::ProcGetDEMPartsOvWhat $domNode $args]
                 ]]>
 		</proc>
 </container>
