@@ -202,6 +202,16 @@ proc Fluid::write::writeConditionsMesh { } {
     }
 }
 
+proc Fluid::write::GetFluidPartGroups { } {
+    set xp "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set root [customlib::GetBaseRoot]
+    set parts_name_list [list]
+    foreach group [$root selectNodes $xp] {
+        lappend parts_name_list [get_domnode_attribute $group n]
+    }
+    return $parts_name_list
+}
+
 proc Fluid::write::InitConditionsMap { {map "" } } {
 
     variable FluidConditionMap

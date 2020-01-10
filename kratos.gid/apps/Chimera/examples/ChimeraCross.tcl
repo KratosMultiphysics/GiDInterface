@@ -205,7 +205,7 @@ proc ::Chimera::examples::TreeAssignationChimeraCross2D {args} {
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cross] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='ChimeraInterface$nd'\]" No_Slip_Cross] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='ChimeraInternalBoundary$nd'\]" No_Slip_Cross] setAttribute ov $condtype
 
     # Time parameters
     set time_parameters [list EndTime 1.0 DeltaTime 0.01]
