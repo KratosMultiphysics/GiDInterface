@@ -3,6 +3,7 @@ namespace eval Chimera::write {
     
     variable patches
     variable inner_boundaries
+    variable ConditionMap
 }
 
 proc Chimera::write::Init { } {
@@ -20,14 +21,21 @@ proc Chimera::write::writeModelPartEvent { } {
     # Write the background mesh as the fluid
     Fluid::write::writeModelPartEvent
     write::CloseFile
+
+    
+    InitConditionsMap
     
     # Write the patches as independent mdpa
     Chimera::write::writePatches
+    
+    # Clean
+    unset Chimera::write::ConditionMap
 }
 
 proc Chimera::write::writePatches { } {
     set iter $Fluid::write::last_condition_iterator
-    set iterators [dict create ]
+    set condid ChimeraInternalBoundary${Model::SpatialDimension}
+    set ConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
     foreach patch [Chimera::write::GetPatchParts] {
         set group_id [get_domnode_attribute $patch n]
         set patch_name [write::GetWriteGroupName $group_id]
@@ -39,11 +47,11 @@ proc Chimera::write::writePatches { } {
         # Internal patch boundary conditions 
         set internal_boundaries_list [Chimera::write::GetInternalBoundaries $patch_name]
         foreach internal_boundary_group $internal_boundaries_list {
-            incr iter
-            set iterators [write::writeGroupNodeCondition $iterators $internal_boundary_group ChimeraInternalBoundary${Model::SpatialDimension} $iter]
-            set iter [lindex [lindex [dict values $iterators] end] end]
+            set iter [write::writeGroupNodeConditionByUniqueId $internal_boundary_group $condid $iter $Chimera::write::ConditionMap]
         }
-        
+        #foreach internal_boundary_group $internal_boundaries_list {
+        #    ::write::writeGroupSubModelPartByUniqueId $condid $group_id $iterators "Conditions"
+        #}
         #::write::writeGroupSubModelPartByUniqueId $condid $group_id $Fluid::write::FluidConditionMap "Conditions"
         write::CloseFile
     }
@@ -110,6 +118,21 @@ proc Chimera::write::GetInternalBoundaries { {patch_group_id ""} {what "xml"}  }
 proc Chimera::write::writeCustomFilesEvent { } {
     write::CopyFileIntoModel "python/KratosFluid.py"
     write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
+}
+
+proc Chimera::write::InitConditionsMap { {map "" } } {
+
+    variable ConditionMap
+    if {$map eq ""} {
+        set ConditionMap [objarray new intarray [expr [GiD_Info Mesh MaxNumElements] +1] 0]
+    } {
+        set ConditionMap $map
+    }
+}
+proc Chimera::write::FreeConditionsMap { } {
+
+    variable ConditionMap
+    unset ConditionMap
 }
 
 
