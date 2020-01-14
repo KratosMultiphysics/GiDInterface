@@ -21,22 +21,18 @@ proc ::CDEM::examples::DrawGeometryContSpheres { } {
     GiD_Process Mescape Geometry Create Object Rectangle -5 -5 0 5 5 0 escape
     # Draw inlet surface
     GiD_Process Mescape Geometry Create Object Rectangle -2 -2 5 2 2 5 escape
-    # Draw the cluster inlet
-    GiD_Process Mescape Geometry Create Object Rectangle -2 -2 6 2 2 6 escape
     # Draw the volume meshed with spheres
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape
 
     # Group creation
     GiD_Groups create "Floor"
     GiD_Groups create "Inlet"
-    GiD_Groups create "ClusterInlet"
     GiD_Groups create "Body"
 
     # Group assignation
-    GiD_EntitiesLayers assign "Floor" -also_lower_entities surfaces 1
-    GiD_EntitiesLayers assign "Inlet" -also_lower_entities surfaces 2
-    GiD_EntitiesLayers assign "ClusterInlet" -also_lower_entities surfaces 3
-    GiD_EntitiesLayers assign "Body" -also_lower_entities volumes 1
+    GiD_EntitiesGroups assign "Floor" -also_lower_entities surfaces 1
+    GiD_EntitiesGroups assign "Inlet" -also_lower_entities surfaces 2
+    GiD_EntitiesGroups assign "Body" -also_lower_entities volumes 1
 }
 
 proc ::CDEM::examples::AssignToTreeContSpheres { } {

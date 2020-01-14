@@ -28,20 +28,16 @@ proc ::DEM::examples::DrawGeometrySpheresDrop { } {
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape
 
     # Group creation
-    W "22"
     GiD_Groups create "Floor"
     GiD_Groups create "Inlet"
     GiD_Groups create "ClusterInlet"
     GiD_Groups create "Body"
-    W "32"
 
     # Group assignation
-    W "42"
-    GiD_EntitiesLayers assign "Floor" -also_lower_entities surfaces 1
-    GiD_EntitiesLayers assign "Inlet" -also_lower_entities surfaces 2
-    GiD_EntitiesLayers assign "ClusterInlet" -also_lower_entities surfaces 3
-    GiD_EntitiesLayers assign "Body" -also_lower_entities volumes 1
-    W "52"
+    GiD_EntitiesGroups assign "Floor" -also_lower_entities surfaces 1
+    GiD_EntitiesGroups assign "Inlet" -also_lower_entities surfaces 2
+    GiD_EntitiesGroups assign "ClusterInlet" -also_lower_entities surfaces 3
+    GiD_EntitiesGroups assign "Body" -also_lower_entities volumes 1
 }
 
 proc ::DEM::examples::AssignToTreeSpheresDrop { } {
