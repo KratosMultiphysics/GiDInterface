@@ -174,7 +174,10 @@ proc Fluid::write::writeConditionsMesh { } {
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set groupid [write::GetWriteGroupName $groupid]
-        set condid [[$group parent] @n]
+        set condnode [$group parent]
+        set condid [$condnode @n]
+        set print_smp [get_domnode_attribute $condnode print_smp 1]
+        if {[write::isBooleanFalse $print_smp]} {continue}
         set cond [::Model::getCondition $condid]
         if {[$cond getGroupBy] eq "Condition"} {
             # Grouped conditions will be written later

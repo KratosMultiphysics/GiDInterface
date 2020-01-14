@@ -19,6 +19,10 @@ proc Chimera::xml::getUniqueName {name} {
 proc Chimera::xml::CustomTree { args } {
     spdAux::processIncludes
     Fluid::xml::CustomTree {*}$args
+
+    # Protection of submodelparts
+    [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute FLBC]/condition\[@n = 'ChimeraInternalBoundary2D'\]"] setAttribute print_smp 0
+    [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute FLBC]/condition\[@n = 'ChimeraInternalBoundary3D'\]"] setAttribute print_smp 0
     
     # Change the app name
     [[customlib::GetBaseRoot] selectNodes "container\[@n = 'Fluid'\]"] setAttribute pn "Chimera"
@@ -39,6 +43,7 @@ proc Chimera::xml::CustomTree { args } {
     customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     spdAux::parseRoutes
 }
+
 proc Chimera::xml::UpdateParts {domNode args} {
     Fluid::xml::UpdateParts $domNode {*}$args
 }
