@@ -50,6 +50,8 @@ proc Chimera::write::writePatches { } {
         foreach internal_boundary_group $internal_boundaries_list {
             set iter [write::writeGroupNodeConditionByUniqueId $internal_boundary_group $condid $iter $Chimera::write::ConditionMap]
         }
+        # Patch Submodelpart
+        ::write::writeGroupSubModelPartByUniqueId "Patch" $group_id "" "Elements"
         # Internal patch boundary Submodelparts
         foreach internal_boundary_group $internal_boundaries_list {
             ::write::writeGroupSubModelPartByUniqueId $condid [$internal_boundary_group @n] $Chimera::write::ConditionMap "Conditions"
