@@ -26,6 +26,8 @@ proc Chimera::write::writeModelPartEvent { } {
 }
 
 proc Chimera::write::writePatches { } {
+    set iter $Fluid::write::last_condition_iterator
+    set iterators [dict create ]
     foreach patch [Chimera::write::GetPatchParts] {
         set group_id [get_domnode_attribute $patch n]
         set patch_name [write::GetWriteGroupName $group_id]
@@ -36,6 +38,13 @@ proc Chimera::write::writePatches { } {
         write::writeGroupElementConnectivities $patch ChimeraPatch$Model::SpatialDimension
         # Internal patch boundary conditions 
         set internal_boundaries_list [Chimera::write::GetInternalBoundaries $patch_name]
+        foreach internal_boundary_group $internal_boundaries_list {
+            incr iter
+            set iterators [write::writeGroupNodeCondition $iterators $internal_boundary_group ChimeraInternalBoundary${Model::SpatialDimension} $iter]
+            set iter [lindex [lindex [dict values $iterators] end] end]
+        }
+        
+        #::write::writeGroupSubModelPartByUniqueId $condid $group_id $Fluid::write::FluidConditionMap "Conditions"
         write::CloseFile
     }
 }
@@ -55,7 +64,7 @@ proc Chimera::write::GetPatchParts { {what "xml"} } {
     }
 }
 
-proc Chimera::write::GetInternalBoundaries { {patch_group_id ""} } {
+proc Chimera::write::GetInternalBoundaries { {patch_group_id ""} {what "xml"}  } {
     # Empty means all
     set all 0
     if {$patch_group_id eq ""} {
@@ -69,13 +78,20 @@ proc Chimera::write::GetInternalBoundaries { {patch_group_id ""} } {
     set root [customlib::GetBaseRoot]
     foreach cnd_group [$root selectNodes $xp] {
         set cnd_group_name [get_domnode_attribute $cnd_group n]
+        
+        if {$what eq "xml"} {
+            set gr $cnd_group
+        } else {
+            set gr [write::GetWriteGroupName $cnd_group_name]
+        }
+
         if {$all} {
-            lappend internal_boundaries_list [write::GetWriteGroupName $cnd_group_name]
+            lappend internal_boundaries_list $gr
         } else {
             set first_node [objarray get [GiD_EntitiesGroups get $cnd_group_name node] 0]
             set affected_groups [GiD_EntitiesGroups entity_groups nodes $first_node]
             if {$patch_group_id in $affected_groups} {
-                lappend internal_boundaries_list [write::GetWriteGroupName $cnd_group_name]
+                lappend internal_boundaries_list $gr
             }
             # set part_names [Fluid::write::GetFluidPartGroups]
             # set patch_names [Chimera::write::GetPatchParts names]
