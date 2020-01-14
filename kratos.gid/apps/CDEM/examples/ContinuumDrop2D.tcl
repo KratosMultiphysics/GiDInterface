@@ -172,6 +172,20 @@ proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
             W "Couldn't find $name - Check script"
         }
     }
+
+    # AdvOptions parameters
+    set change_list [list TangencyToleranceValueAbsolute 0.05]
+    set xpath [spdAux::getRoute AdvOptions]
+    foreach {name value} $change_list {
+        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check script"
+        }
+    }
+
+
     spdAux::RequestRefresh
 }
 
