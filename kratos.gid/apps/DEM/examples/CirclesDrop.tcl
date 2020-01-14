@@ -26,9 +26,9 @@ proc ::DEM::examples::DrawGeometryCirclesDrop { } {
     GiD_Groups create "Sand"
     GiD_Groups create "LowPart"
 
-    GiD_Process Mescape Geometry Create Line -10 20 0 -10 0 0 escape escape
-    GiD_Process Mescape Geometry Create Line -9 0 0 9 0 0 escape escape
-    GiD_Process Mescape Geometry Create Line 10 0 0 10 20 0 escape escape
+    GiD_Process Mescape Geometry Create Line -10 10 0 -10 0 0 escape escape
+    GiD_Process Mescape Geometry Create Line -9.75 0 0 9.75 0 0 escape escape
+    GiD_Process Mescape Geometry Create Line 10 0 0 10 10 0 escape escape
     GiD_EntitiesGroups assign "Box" lines 1
     GiD_EntitiesGroups assign "Box" lines 2
     GiD_EntitiesGroups assign "Box" lines 3
@@ -46,12 +46,11 @@ proc ::DEM::examples::AssignToTreeCirclesDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
-    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DefaultMaterial' \]"]
+    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
+
     foreach {prop val} $props {
         set propnode [$material_node selectNodes "./value\[@n = '$prop'\]"]
-        W "1"
         if {$propnode ne "" } {
-            W "2"
             $propnode setAttribute v $val
         } else {
             W "Warning - Couldn't find property Material $prop"
@@ -102,24 +101,9 @@ proc ::DEM::examples::AssignToTreeCirclesDrop { } {
         }
     }
 
-    # # Inlet
-    # set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
-    # set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
-    # $inletNode setAttribute ov surface
-    # set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
-    # foreach {prop val} $props {
-    #     set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-    #     if {$propnode ne "" } {
-    #         $propnode setAttribute v $val
-    #     } else {
-    #         W "Warning - Couldn't find property Inlet $prop"
-    #     }
-    # }
-
-
     # General data
     # Time parameters
-    set change_list [list EndTime 20 DeltaTime 1e-5 NeighbourSearchFrequency 20]
+    set change_list [list EndTime 5 DeltaTime 5e-5 NeighbourSearchFrequency 50]
     set xpath [spdAux::getRoute DEMTimeParameters]
     foreach {name value} $change_list {
         set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
@@ -129,27 +113,13 @@ proc ::DEM::examples::AssignToTreeCirclesDrop { } {
             W "Couldn't find $name - Check script"
         }
     }
-
-    # Bounding box
-    set change_list [list UseBB false MinZ -1.0]
-    set xpath [spdAux::getRoute Boundingbox]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check script"
-        }
-    }
-
     spdAux::RequestRefresh
 }
 
 proc ::DEM::examples::AssignMeshSizeCirclesDrop { } {
-    GiD_Process Mescape Meshing AssignSizes Surfaces 1 1:end escape escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines 1 1:end escape escape escape
+    GiD_Process Mescape Meshing AssignSizes Surfaces 0.6 1:end escape escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines 0.6 1:end escape escape escape
 }
-
 
 proc ::DEM::examples::ErasePreviousIntervals { } {
     set root [customlib::GetBaseRoot]
