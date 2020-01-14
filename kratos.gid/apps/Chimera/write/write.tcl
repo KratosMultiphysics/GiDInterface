@@ -1,8 +1,6 @@
 namespace eval Chimera::write {
     variable writeAttributes
     
-    variable patches
-    variable inner_boundaries
     variable ConditionMap
 }
 
@@ -40,7 +38,7 @@ proc Chimera::write::writePatches { } {
         set group_id [get_domnode_attribute $patch n]
         set patch_name [write::GetWriteGroupName $group_id]
         # New file for each patch
-        write::OpenFile ${patch_name}.mdpa
+        write::OpenFile [write::transformGroupName ${patch_name}].mdpa
         # Nodes
         write::writeNodalCoordinatesOnGroups [list $group_id]
         # Elements 
