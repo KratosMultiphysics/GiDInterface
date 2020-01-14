@@ -39,20 +39,22 @@ proc Chimera::write::writePatches { } {
     foreach patch [Chimera::write::GetPatchParts] {
         set group_id [get_domnode_attribute $patch n]
         set patch_name [write::GetWriteGroupName $group_id]
+        # New file for each patch
         write::OpenFile ${patch_name}.mdpa
         # Nodes
         write::writeNodalCoordinatesOnGroups [list $group_id]
         # Elements 
         write::writeGroupElementConnectivities $patch ChimeraPatch$Model::SpatialDimension
-        # Internal patch boundary conditions 
+        # Internal patch boundary Conditions 
         set internal_boundaries_list [Chimera::write::GetInternalBoundaries $patch_name]
         foreach internal_boundary_group $internal_boundaries_list {
             set iter [write::writeGroupNodeConditionByUniqueId $internal_boundary_group $condid $iter $Chimera::write::ConditionMap]
         }
-        #foreach internal_boundary_group $internal_boundaries_list {
-        #    ::write::writeGroupSubModelPartByUniqueId $condid $group_id $iterators "Conditions"
-        #}
-        #::write::writeGroupSubModelPartByUniqueId $condid $group_id $Fluid::write::FluidConditionMap "Conditions"
+        # Internal patch boundary Submodelparts
+        foreach internal_boundary_group $internal_boundaries_list {
+            ::write::writeGroupSubModelPartByUniqueId $condid [$internal_boundary_group @n] $Chimera::write::ConditionMap "Conditions"
+        }
+        # End file
         write::CloseFile
     }
 }
