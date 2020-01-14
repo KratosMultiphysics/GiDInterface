@@ -27,15 +27,15 @@ proc Chimera::write::writeModelPartEvent { } {
 
 proc Chimera::write::writePatches { } {
     foreach patch [Chimera::write::GetPatchParts] {
-        set group_id [get_domnode_attribute $patch name]
+        set group_id [get_domnode_attribute $patch n]
         set patch_name [write::GetWriteGroupName $group_id]
         write::OpenFile ${patch_name}.mdpa
         # Nodes
-        write::writeNodalCoordinatesOnGroups $group_id
+        write::writeNodalCoordinatesOnGroups [list $group_id]
         # Elements 
         write::writeGroupElementConnectivities $patch ChimeraPatch$Model::SpatialDimension
         # Internal patch boundary conditions 
-        Chimera::write::GetInternalBoundaries
+        set internal_boundaries_list [Chimera::write::GetInternalBoundaries $patch_name]
         write::CloseFile
     }
 }

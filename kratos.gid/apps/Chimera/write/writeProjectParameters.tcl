@@ -15,25 +15,25 @@ proc ::Chimera::write::getParametersDict { } {
     set internal_parts_for_chimera_list [list ]
     dict set chimera_settings_dict internal_parts_for_chimera $internal_parts_for_chimera_list
 
-    "chimera_settings":{
-        "chimera_echo_level" : 1,
-        "reformulate_chimera_every_step":true,
-        "chimera_parts": [
-            [
-                {
-                    "model_part_name": "FluidModelPart.GENERIC_background_surface",
-                    "overlap_distance": 0.01
-                }
-            ],
-            [
-                {
-                    "model_part_name": "FluidModelPart.GENERIC_patch_surface",
-                    "overlap_distance": 0.7
-                }
-            ]
-        ],
-        "internal_parts_for_chimera":["FluidModelPart.NoSlip2D_cross"]
-    }
+    # "chimera_settings":{
+    #     "chimera_echo_level" : 1,
+    #     "reformulate_chimera_every_step":true,
+    #     "chimera_parts": [
+    #         [
+    #             {
+    #                 "model_part_name": "FluidModelPart.GENERIC_background_surface",
+    #                 "overlap_distance": 0.01
+    #             }
+    #         ],
+    #         [
+    #             {
+    #                 "model_part_name": "FluidModelPart.GENERIC_patch_surface",
+    #                 "overlap_distance": 0.7
+    #             }
+    #         ]
+    #     ],
+    #     "internal_parts_for_chimera":["FluidModelPart.NoSlip2D_cross"]
+    # }
 
     dict set param_dict solver_settings chimera_settings $chimera_settings_dict
     return $param_dict
