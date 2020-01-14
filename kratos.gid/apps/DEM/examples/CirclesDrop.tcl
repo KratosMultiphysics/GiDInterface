@@ -6,9 +6,9 @@ proc ::DEM::examples::CirclesDrop {args} {
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometry
-    AssignToTree
-    AssignMeshSize
+    DrawGeometryCirclesDrop
+    AssignToTreeCirclesDrop
+    AssignMeshSizeCirclesDrop
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -19,7 +19,7 @@ proc ::DEM::examples::CirclesDrop {args} {
 
 }
 
-proc ::DEM::examples::DrawGeometry { } {
+proc ::DEM::examples::DrawGeometryCirclesDrop { } {
     Kratos::ResetModel
 
     GiD_Groups create "Box"
@@ -42,14 +42,16 @@ proc ::DEM::examples::DrawGeometry { } {
 }
 
 
-proc ::DEM::examples::AssignToTree { } {
+proc ::DEM::examples::AssignToTreeCirclesDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DefaultMaterial' \]"]
     foreach {prop val} $props {
         set propnode [$material_node selectNodes "./value\[@n = '$prop'\]"]
+        W "1"
         if {$propnode ne "" } {
+            W "2"
             $propnode setAttribute v $val
         } else {
             W "Warning - Couldn't find property Material $prop"
@@ -143,7 +145,7 @@ proc ::DEM::examples::AssignToTree { } {
     spdAux::RequestRefresh
 }
 
-proc ::DEM::examples::AssignMeshSize { } {
+proc ::DEM::examples::AssignMeshSizeCirclesDrop { } {
     GiD_Process Mescape Meshing AssignSizes Surfaces 1 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 1 1:end escape escape escape
 }

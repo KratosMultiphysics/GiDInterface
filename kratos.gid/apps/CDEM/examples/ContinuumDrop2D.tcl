@@ -1,15 +1,14 @@
 
 proc ::CDEM::examples::ContinuumDrop2D {args} {
-    W "3"
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometry
-    AssignToTree
-    AssignMeshSize
+    DrawGeometryContinuumDrop
+    AssignToTreeContinuumDrop
+    AssignMeshSizeContinuumDrop
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -20,7 +19,7 @@ proc ::CDEM::examples::ContinuumDrop2D {args} {
 
 }
 
-proc ::CDEM::examples::DrawGeometry { } {
+proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
     Kratos::ResetModel
 
     GiD_Groups create "Box"
@@ -55,7 +54,7 @@ proc ::CDEM::examples::DrawGeometry { } {
 }
 
 
-proc ::CDEM::examples::AssignToTree { } {
+proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
@@ -196,7 +195,7 @@ proc ::CDEM::examples::AssignToTree { } {
     spdAux::RequestRefresh
 }
 
-proc ::CDEM::examples::AssignMeshSize { } {
+proc ::CDEM::examples::AssignMeshSizeContinuumDrop { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 1 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 1 1:end escape escape escape

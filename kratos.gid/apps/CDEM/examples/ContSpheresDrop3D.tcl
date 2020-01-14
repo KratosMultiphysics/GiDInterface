@@ -1,4 +1,3 @@
-
 proc ::CDEM::examples::ContSpheresDrop3D {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
@@ -6,16 +5,16 @@ proc ::CDEM::examples::ContSpheresDrop3D {args} {
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometry
-    AssignToTree
-    AssignMeshSize
+    DrawGeometryContSpheres
+    AssignToTreeContSpheres
+    AssignMeshSizeContSpheres
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
-proc ::CDEM::examples::DrawGeometry { } {
+proc ::CDEM::examples::DrawGeometryContSpheres { } {
     Kratos::ResetModel
 
     # Draw floor surface
@@ -32,23 +31,15 @@ proc ::CDEM::examples::DrawGeometry { } {
     GiD_Groups create "Inlet"
     GiD_Groups create "ClusterInlet"
     GiD_Groups create "Body"
-    GiD_Layers create "Floor"
-    GiD_Layers create "Inlet"
-    GiD_Layers create "ClusterInlet"
-    GiD_Layers create "Body"
 
     # Group assignation
-    GiD_EntitiesGroups assign "Floor" surfaces 1
-    GiD_EntitiesGroups assign "Inlet" surfaces 2
-    GiD_EntitiesGroups assign "ClusterInlet" surfaces 3
-    GiD_EntitiesGroups assign "Body" volumes 1
     GiD_EntitiesLayers assign "Floor" -also_lower_entities surfaces 1
     GiD_EntitiesLayers assign "Inlet" -also_lower_entities surfaces 2
     GiD_EntitiesLayers assign "ClusterInlet" -also_lower_entities surfaces 3
     GiD_EntitiesLayers assign "Body" -also_lower_entities volumes 1
 }
 
-proc ::CDEM::examples::AssignToTree { } {
+proc ::CDEM::examples::AssignToTreeContSpheres { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
@@ -107,7 +98,7 @@ proc ::CDEM::examples::AssignToTree { } {
 
     # cohesive
     set cohesive_spheres "$DEMConditions/condition\[@n='DEM-Cohesive'\]"
-    set cohesivenode [customlib::AddConditionGroupOnXPath $cohesive_spheres "ContDEMPart"]
+    set cohesivenode [customlib::AddConditionGroupOnXPath $cohesive_spheres "Body"]
     $cohesivenode setAttribute ov surface
 
     # General data
@@ -138,7 +129,7 @@ proc ::CDEM::examples::AssignToTree { } {
     spdAux::RequestRefresh
 }
 
-proc DEM::examples::AssignMeshSize { } {
+proc ::CDEM::::examples::AssignMeshSizeContSpheres { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape

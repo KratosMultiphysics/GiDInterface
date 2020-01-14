@@ -6,16 +6,16 @@ proc ::DEM::examples::SpheresDrop {args} {
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometry
-    AssignToTree
-    AssignMeshSize
+    DrawGeometrySpheresDrop
+    AssignToTreeSpheresDrop
+    AssignMeshSizeSpheresDrop
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
-proc ::DEM::examples::DrawGeometry { } {
+proc ::DEM::examples::DrawGeometrySpheresDrop { } {
     Kratos::ResetModel
 
     # Draw floor surface
@@ -28,27 +28,23 @@ proc ::DEM::examples::DrawGeometry { } {
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape
 
     # Group creation
+    W "22"
     GiD_Groups create "Floor"
     GiD_Groups create "Inlet"
     GiD_Groups create "ClusterInlet"
     GiD_Groups create "Body"
-    GiD_Layers create "Floor"
-    GiD_Layers create "Inlet"
-    GiD_Layers create "ClusterInlet"
-    GiD_Layers create "Body"
+    W "32"
 
     # Group assignation
-    GiD_EntitiesGroups assign "Floor" surfaces 1
-    GiD_EntitiesGroups assign "Inlet" surfaces 2
-    GiD_EntitiesGroups assign "ClusterInlet" surfaces 3
-    GiD_EntitiesGroups assign "Body" volumes 1
+    W "42"
     GiD_EntitiesLayers assign "Floor" -also_lower_entities surfaces 1
     GiD_EntitiesLayers assign "Inlet" -also_lower_entities surfaces 2
     GiD_EntitiesLayers assign "ClusterInlet" -also_lower_entities surfaces 3
     GiD_EntitiesLayers assign "Body" -also_lower_entities volumes 1
+    W "52"
 }
 
-proc ::DEM::examples::AssignToTree { } {
+proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
@@ -148,7 +144,7 @@ proc ::DEM::examples::AssignToTree { } {
     spdAux::RequestRefresh
 }
 
-proc DEM::examples::AssignMeshSize { } {
+proc DEM::examples::AssignMeshSizeSpheresDrop { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape

@@ -62,7 +62,6 @@ proc ::CDEM::GetAttribute {name} {
 proc ::CDEM::CustomToolbarItems { } {
     variable dir
     if {$::Model::SpatialDimension eq "2D"} {
-        W "4"
         Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::CDEM::examples::ContinuumDrop2D] [= "Example2D\nRocks fall"]
     }
     if {$::Model::SpatialDimension eq "3D"} {
