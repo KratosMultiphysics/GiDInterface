@@ -55,7 +55,7 @@ proc Fluid::write::writeModelPartEvent { } {
 
     # Custom SubmodelParts
     variable last_condition_iterator
-    write::writeBasicSubmodelPartsByUniqueId  $Fluid::write::FluidConditionMap $last_condition_iterator
+    write::writeBasicSubmodelPartsByUniqueId $Fluid::write::FluidConditionMap $last_condition_iterator
     
     # SubmodelParts
     writeMeshes
@@ -63,6 +63,7 @@ proc Fluid::write::writeModelPartEvent { } {
     # Clean
     unset Fluid::write::FluidConditionMap
 }
+
 proc Fluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     Fluid::write::WriteMaterialsFile
