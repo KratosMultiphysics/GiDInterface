@@ -120,9 +120,9 @@ proc Chimera::write::GetInternalBoundaries { {patch_group_id ""} {what "xml"}  }
 proc Chimera::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     Fluid::write::WriteMaterialsFile
-    
-    write::CopyFileIntoModel "python/KratosFluid.py"
-    write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
+
+    write::CopyFileIntoModel "python/KratosChimera.py"
+    write::RenameFileInModel "KratosChimera.py" "MainKratos.py"
 }
 
 proc Chimera::write::InitConditionsMap { {map "" } } {

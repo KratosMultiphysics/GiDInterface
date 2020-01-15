@@ -1,22 +1,20 @@
 from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
 
 import KratosMultiphysics
-import KratosMultiphysics.FluidDynamicsApplication
-
-from fluid_dynamics_analysis import FluidDynamicsAnalysis
+from KratosMultiphysics.ChimeraApplication.fluid_chimera_analysis import FluidChimeraAnalysis
 
 import sys
 import time
 
-class FluidDynamicsAnalysisWithFlush(FluidDynamicsAnalysis):
+class FluidChimeraAnalysisWithFlush(FluidChimeraAnalysis):
 
     def __init__(self,model,project_parameters,flush_frequency=10.0):
-        super(FluidDynamicsAnalysisWithFlush,self).__init__(model,project_parameters)
+        super(FluidChimeraAnalysisWithFlush,self).__init__(model,project_parameters)
         self.flush_frequency = flush_frequency
         self.last_flush = time.time()
 
     def FinalizeSolutionStep(self):
-        super(FluidDynamicsAnalysisWithFlush,self).FinalizeSolutionStep()
+        super(FluidChimeraAnalysisWithFlush,self).FinalizeSolutionStep()
 
         if self.parallel_type == "OpenMP":
             now = time.time()
@@ -30,5 +28,5 @@ if __name__ == "__main__":
         parameters = KratosMultiphysics.Parameters(parameter_file.read())
 
     model = KratosMultiphysics.Model()
-    simulation = FluidDynamicsAnalysisWithFlush(model,parameters)
+    simulation = FluidChimeraAnalysisWithFlush(model,parameters)
     simulation.Run()
