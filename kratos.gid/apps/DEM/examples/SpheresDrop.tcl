@@ -34,7 +34,7 @@ proc ::DEM::examples::DrawGeometrySpheresDrop { } {
     GiD_Groups create "Body"
 
     # Group assignation
-    GiD_EntitiesGroups assign "Floor" -also_lower_entities surfaces 1
+    GiD_EntitiesGroups assign "Floor" surfaces 1
     GiD_EntitiesGroups assign "Inlet" -also_lower_entities surfaces 2
     GiD_EntitiesGroups assign "ClusterInlet" -also_lower_entities surfaces 3
     GiD_EntitiesGroups assign "Body" -also_lower_entities volumes 1
@@ -114,20 +114,8 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
 
     # General data
     # Time parameters
-    set change_list [list EndTime 20 DeltaTime 1e-5 NeighbourSearchFrequency 20]
+    set change_list [list EndTime 5 DeltaTime 1e-5 NeighbourSearchFrequency 50]
     set xpath [spdAux::getRoute DEMTimeParameters]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check SpheresDrop script"
-        }
-    }
-
-    # Bounding box
-    set change_list [list UseBB true MinZ -1.0]
-    set xpath [spdAux::getRoute Boundingbox]
     foreach {name value} $change_list {
         set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {

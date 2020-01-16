@@ -161,6 +161,7 @@ proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
             W "Couldn't find $name - Check script"
         }
     }
+
     # BondElem parameters
     set change_list [list ContactMeshOption "true"]
     set xpath [spdAux::getRoute BondElem]
