@@ -53,8 +53,10 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     dict set solver_settings_dict solid_domain_solver_settings thermal_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
 
     # Coupling settings
-    set solid_interfaces_list [write::GetSubModelPartFromCondition CNVDFFBC SolidThermalInterface$::Model::SpatialDimension]
-    set fluid_interfaces_list [write::GetSubModelPartFromCondition Buoyancy_CNVDFFBC FluidThermalInterface$::Model::SpatialDimension]
+    set solid_interfaces_list_raw [write::GetSubModelPartFromCondition CNVDFFBC SolidThermalInterface$::Model::SpatialDimension]
+    set fluid_interfaces_list_raw [write::GetSubModelPartFromCondition Buoyancy_CNVDFFBC FluidThermalInterface$::Model::SpatialDimension]
+    foreach solid_interface $solid_interfaces_list_raw {lappend solid_interfaces_list [join [list ThermalModelPart $solid_interface] "."]}
+    foreach fluid_interface $fluid_interfaces_list_raw {lappend fluid_interfaces_list [join [list FluidModelPart $fluid_interface] "."]}
 
     set coupling_settings [dict create]
     dict set coupling_settings max_iteration [write::getValue CHTGeneralParameters max_iteration]
@@ -79,29 +81,75 @@ proc ConjugateHeatTransfer::write::GetProcessList { } {
 
     return $processes
 }
+
+
+proc write::GetDefaultOutputProcessDict { {appid ""} } {
+    # Output process must be placed inside json lists
+    set gid_output_process_list [list ]
+    set need_gid [write::getValue EnableGiDOutput]
+    if {[write::isBooleanTrue $need_gid]}  {
+        lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
+    }
+
+    set vtk_output_process_list [list ]
+    set need_vtk [write::getValue EnableVtkOutput]
+    if {[write::isBooleanTrue $need_vtk]} {
+        lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
+    }
+
+    set outputProcessesDict [dict create]
+    dict set outputProcessesDict gid_output $gid_output_process_list
+    dict set outputProcessesDict vtk_output $vtk_output_process_list
+
+    return $outputProcessesDict
+}
+
 proc ConjugateHeatTransfer::write::GetOutputProcessesList { } {
     set output_process [dict create]
-    set gid_output_list [list]
+    
+    set need_gid [write::getValue EnableGiDOutput]
+    if {[write::isBooleanTrue $need_gid]} {
+        # Set a different output_name for the fluid and solid domains
+        set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0]
+        dict set fluid_output Parameters output_name "[dict get $fluid_output Parameters output_name]_fluid"
+        set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0]
+        dict set solid_output Parameters output_name "[dict get $solid_output Parameters output_name]_solid"
 
-    # Set a different output_name for the fluid and solid domains
-    set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0]
-    dict set fluid_output Parameters output_name "[dict get $fluid_output Parameters output_name]_fluid"
-    set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0]
-    dict set solid_output Parameters output_name "[dict get $solid_output Parameters output_name]_solid"
-
-    set solid_nodal_variables [dict get $solid_output Parameters postprocess_parameters result_file_configuration nodal_results]
-    set valid_list [list ]
-    foreach solid_nodal_variable $solid_nodal_variables {
-        if {$solid_nodal_variable in [list "TEMPERATURE"]} {
-            lappend valid_list $solid_nodal_variable
+        set solid_nodal_variables [dict get $solid_output Parameters postprocess_parameters result_file_configuration nodal_results]
+        set valid_list [list ]
+        foreach solid_nodal_variable $solid_nodal_variables {
+            if {$solid_nodal_variable in [list "TEMPERATURE"]} {
+                lappend valid_list $solid_nodal_variable
+            }
         }
-    }
-    dict set solid_output Parameters postprocess_parameters result_file_configuration nodal_results $valid_list
+        dict set solid_output Parameters postprocess_parameters result_file_configuration nodal_results $valid_list
 
-    # Append the fluid and solid output processes to the output processes list
-    lappend gid_output_processes_list $fluid_output
-    lappend gid_output_processes_list $solid_output
-    dict set output_process gid_output_processes $gid_output_processes_list
+        # Append the fluid and solid output processes to the output processes list
+        lappend gid_output_processes_list $fluid_output
+        lappend gid_output_processes_list $solid_output
+        dict set output_process gid_output_processes $gid_output_processes_list
+    }
+    
+    set need_vtk [write::getValue EnableVtkOutput]
+    if {[write::isBooleanTrue $need_vtk]} {
+    # Set a different output_name for the fluid and solid domains
+        set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes vtk_output] 0]
+        set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes vtk_output] 0]
+
+        set solid_nodal_variables [dict get $solid_output Parameters nodal_solution_step_data_variables]
+        set valid_list [list ]
+        foreach solid_nodal_variable $solid_nodal_variables {
+            if {$solid_nodal_variable in [list "TEMPERATURE"]} {
+                lappend valid_list $solid_nodal_variable
+            }
+        }
+        dict set solid_output Parameters nodal_solution_step_data_variables $valid_list
+
+        # Append the fluid and solid output processes to the output processes list
+        lappend vtk_output_processes_list $fluid_output
+        lappend vtk_output_processes_list $solid_output
+        dict set output_process vtk_output_processes $vtk_output_processes_list
+    }
 
     return $output_process
 }
