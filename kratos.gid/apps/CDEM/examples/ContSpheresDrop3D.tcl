@@ -99,7 +99,7 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
 
     # General data
     # Time parameters
-    set change_list [list EndTime 20 DeltaTime 1e-5 NeighbourSearchFrequency 20]
+    set change_list [list EndTime 3 DeltaTime 1e-5 NeighbourSearchFrequency 50]
     set xpath [spdAux::getRoute DEMTimeParameters]
     foreach {name value} $change_list {
         set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
@@ -119,6 +119,30 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
             $node setAttribute v $value
         } else {
             W "Couldn't find $name - Check ContSpheresDrop3D script"
+        }
+    }
+
+    # BondElem parameters
+    set change_list [list ContactMeshOption "true"]
+    set xpath [spdAux::getRoute BondElem]
+    foreach {name value} $change_list {
+        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check script"
+        }
+    }
+
+    # AdvOptions parameters
+    set change_list [list TangencyToleranceValueAbsolute 0.05]
+    set xpath [spdAux::getRoute AdvOptions]
+    foreach {name value} $change_list {
+        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check script"
         }
     }
 
