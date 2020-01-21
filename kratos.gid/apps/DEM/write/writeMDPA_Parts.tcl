@@ -43,7 +43,7 @@ proc DEM::write::WriteWallCustomDEMSmp { } {
         # Print elements and connectivities
         set elem [write::getValueByNode [$group selectNodes ".//value\[@n='Element']"] ]
         write::writeGroupElementConnectivities $group $elem
-        
+
         DEM::write::writeSphereRadiusOnGroup $group
 
         write::writeGroupSubModelPart DEM-CustomSmp $groupid Elements
@@ -315,8 +315,8 @@ proc DEM::write::GetSpheresGroupsListInConditions { } {
 
     # Get all the groups with spheres
     foreach group [GetSpheresGroups] {
-        foreach surface [GiD_EntitiesGroups get $group elements] {
-            foreach involved_group [GiD_EntitiesGroups entity_groups elements $surface] {
+        foreach surface [GiD_EntitiesGroups get $group nodes] {
+            foreach involved_group [GiD_EntitiesGroups entity_groups nodes $surface] {
                 set involved_group_id [write::GetWriteGroupName $involved_group]
                 if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
             }
