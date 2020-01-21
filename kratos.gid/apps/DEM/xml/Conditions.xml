@@ -58,7 +58,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-CustomSmp" pn="DEM-CustomSmp" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="CustomSMP-Process" help="" VariableName="SUBMP">
+  <ConditionItem n="DEM-CustomSmp" pn="DEM-CustomSmp" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="CustomSMP-Process" help="Elements defined as custom must be previously defined as Parts. Please make sure material properties for the selected elements has already been defined." VariableName="SUBMP">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
