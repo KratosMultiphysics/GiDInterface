@@ -309,6 +309,7 @@ proc DEM::write::writeDEMConditionMeshes { } {
     }
 }
 
+# TODO: This code is extremely inefficient -> find a simple way to solve it
 proc DEM::write::GetSpheresGroupsListInConditions { } {
     set conds_groups_dict [dict create ]
     set groups [list ]
