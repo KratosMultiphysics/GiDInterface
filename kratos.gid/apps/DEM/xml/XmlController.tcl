@@ -36,6 +36,10 @@ proc DEM::xml::CustomTree { args } {
         }
     }
 
+    set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='Element'\]"
+    gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden dict {[GetElements ElementType DEM]} ]
+    set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='AdvancedMeshingFeatures'\]"
+    gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden ]
     # # Graphs in output settings
     # if {[$root selectNodes "[spdAux::getRoute DEMResults]/condition\[@n='Graphs'\]"] eq ""} {
     #     gid_groups_conds::addF [spdAux::getRoute DEMResults] include [list n Graphs active 1 path {apps/DEM/xml/Graphs.spd}]

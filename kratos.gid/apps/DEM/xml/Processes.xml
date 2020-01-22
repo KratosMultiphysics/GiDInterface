@@ -344,7 +344,9 @@
 
   <Process n="CustomSMP-Process" pn="Define custom submodelparts" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" check="DirectorVectorNonZero direction">
     <inputs>
-      <parameter n="WhatMdpa" pn="Destination mdpa" type="combo" values="DEM,DEM-Inlet,FEM" help="Decide what mpda file you want this SubModelPart to be added to"/>
+      <parameter n="WhatMdpa" pn="Destination mdpa" type="combo" v="DEM" values="DEM,DEM-Inlet,FEM" help="Decide what mpda file you want this SubModelPart to be added to"/>
+      <parameter n="Element" pn="Element" type="combo" help=""/>
+      <parameter n="AdvancedMeshingFeatures" pn="AdvancedMeshingFeatures" type="combo" v="0" values="1,0" help="" />
     </inputs>
   </Process>
 
