@@ -13,11 +13,9 @@
 	<appLink n="FluidLauncher" public="1" pn="Fluid" active="0" appid="FluidLauncher" prefix="FLL"/>
 	<appLink n="Fluid" public="0" pn="Fluid" active="0" appid="Fluid" prefix="FL"/>
 	<appLink n="EmbeddedFluid" public="0" pn="Embedded fluid" active="0" appid="EmbeddedFluid" prefix="EMBFL"/>
-	<appLink n="PotentialFluid" public="0" pn="Potential fluid" active="0" appid="PotentialFluid" prefix="PTFL"/>
 	<appLink n="Buoyancy" public="0" pn="Buoyancy" active="0" appid="Buoyancy" prefix="Buoyancy_"/>
 	<appLink n="ConjugateHeatTransfer" public="0" pn="Conjugate heat transfer" active="0" appid="ConjugateHeatTransfer" prefix="CHT"/>
 	<appLink n="FSI" public="1" pn="FSI" active="0" appid="FSI" prefix="FSI"/>
-	<appLink n="PfemFluid" public="1" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
 	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard"/>
 	<appLink n="Stent" public="1" pn="Stent" active="0" appid="Stent" prefix="Stent"/>
 	<appLink n="DEMLauncher" public="1" pn="DEM" active="0" appid="DEMLauncher" prefix="DEMLauncher"/>
