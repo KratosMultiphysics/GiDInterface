@@ -108,7 +108,7 @@
 
         </parameter>
 
-        <parameter n="IsGhost" parent="true" pn="Is ghost wall" v="false" type="bool" show_in_window="0"/>
+        <!-- <parameter n="IsGhost" parent="true" pn="Is ghost wall" v="false" type="bool" show_in_window="0"/> -->
         <parameter n="friction_angle" parent="true" pn="Friction angle" v="30.0" type="double" units="deg" unit_magnitude="Angle" help="" show_in_window="0"/>
         <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
         <parameter n="CohesiveWall" parent="true" pn="Cohesive Wall" v="false" type="bool" help="Specify if the wall presents a cohesive behaviour" show_in_window="0">
