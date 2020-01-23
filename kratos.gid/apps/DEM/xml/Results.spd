@@ -17,6 +17,8 @@
         <value n="Pressure"                 type="bool" values="Yes,No" v="No" pn="Pressure (FEM)"                   icon="black1"  help="Pressure"/>
         <value n="ShearStress"              type="bool" values="Yes,No" v="No" pn="Shear Stress (FEM)"               icon="black1"  help="Shear Stress"/>
         <value n="Wear"                     type="bool" values="Yes,No" v="No" pn="Wear (FEM)"                       icon="black1"  help="It computes the volume of removed material due to wear"/>
+        <value n="EulerAngles"              type="bool" values="Yes,No" v="No" pn="Euler angles"                     icon="black1"  help="Euler angles"/>
+
         <!-- disabled -->
         <value n="NodalArea"                type="bool" values="Yes,No" v="No" pn="Nodal Area"                       icon="black1" help="Nodal Area" state="hidden"/>
         <value n="Rhs"                      type="bool" values="Yes,No" v="No" pn="Rhs"                              icon="black1" help="Rhs" state="hidden"/>
@@ -26,7 +28,6 @@
         <value n="ExportId"                 type="bool" values="Yes,No" v="No" pn="Export Id"                        icon="black1" help="ExportId" state="hidden"/>
         <value n="SkinSphere"               type="bool" values="Yes,No" v="No" pn="Skin sphere"                      icon="black1" help="Print the spheres that form the skin of the DEM groups" state="hidden"/>
         <value n="ParticleMoment"           type="bool" values="Yes,No" v="No" pn="Particle moment (DEM)"            icon="black1" help="Particle moment" state="hidden"/>
-        <value n="EulerAngles"              type="bool" values="Yes,No" v="No" pn="Euler angles"                     icon="black1" help="Euler angles" state="hidden"/>
         <value n="RollingResistanceMoment"  type="bool" values="Yes,No" v="No" pn="Rolling resistance moment (DEM)"  icon="black1" help="Rolling resistance moment" state="hidden"/>
     </container>
     <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess additional options" open="1" icon="options" open_window="0">
