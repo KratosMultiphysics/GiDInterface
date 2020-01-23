@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<condition n="PartsCont" pn="PartsCont" ov="point,line,surface,volume" ovm="node,element" icon="shells16" help="Select your group" un="DEMParts">
+<condition n="PartsCont" pn="PartsCont" ov="point,line,surface,volume" ovm="node,element" icon="shells16" help="Define particle groups" un="DEMParts">
 	<value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements ElementType DEM]" state="hidden">
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
 	</value>
