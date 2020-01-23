@@ -135,11 +135,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
 
     dict set solverSettingsDict bodies_list $bodies_list
     dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
-    set names_list [list ]
-    foreach name [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"] {
-        lappend names_list [write::GetModelPartNameWithParent $name]
-    }
-    dict set solverSettingsDict processes_sub_model_part_list $names_list
+    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
 
     return $solverSettingsDict
 }
@@ -454,7 +450,7 @@ proc PfemFluid::write::ProcessBodiesList { } {
             set body_type [get_domnode_attribute [$body_node selectNodes $body_type_path] v]
             set parts [list ]
             foreach part_node [$body_node selectNodes "./condition/group"] {
-                lappend parts [write::GetModelPartNameWithParent [write::getSubModelPartId "Parts" [$part_node @n]]]
+                lappend parts [write::getSubModelPartId "Parts" [$part_node @n]]
             }
             dict set body "body_type" $body_type
             dict set body "body_name" $name
