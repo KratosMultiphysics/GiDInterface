@@ -315,11 +315,11 @@ proc StenosisWizard::Wizard::Material { win } {
 
 proc StenosisWizard::Wizard::NextMaterial { } {
     # Quitar parts existentes
-    gid_groups_conds::delete {container[@n='Fluid']/condition[@n='Parts']/group}
+    set fluidParts [spdAux::getRoute "FLParts"]
+    gid_groups_conds::delete "${fluidParts}/group"
     
     # Crear una part con los datos que toquen
-    set where {container[@n='Fluid']/condition[@n='Parts']} 
-    set gnode [customlib::AddConditionGroupOnXPath $where "Fluid"]
+    set gnode [customlib::AddConditionGroupOnXPath $fluidParts "Fluid"]
     
     set props [list ConstitutiveLaw DENSITY DYNAMIC_VISCOSITY YIELD_STRESS POWER_LAW_K POWER_LAW_N]
     foreach prop $props {

@@ -73,7 +73,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     # gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Truss']}
+    set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Truss'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov line
     set constLawNameStruc "TrussConstitutiveLaw"
