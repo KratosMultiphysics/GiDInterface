@@ -307,7 +307,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts [spdAux::getRoute "STParts"]
+    set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Solid'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
