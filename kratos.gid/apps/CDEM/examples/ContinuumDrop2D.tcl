@@ -1,14 +1,14 @@
 
-proc ::CDEM::examples::ContinuumDrop {args} {
+proc ::CDEM::examples::ContinuumDrop2D {args} {
     if {![Kratos::IsModelEmpty]} {
-        set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
+        set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometry
-    AssignToTree
-    AssignMeshSize
+    DrawGeometryContinuumDrop
+    AssignToTreeContinuumDrop
+    AssignMeshSizeContinuumDrop
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -19,7 +19,7 @@ proc ::CDEM::examples::ContinuumDrop {args} {
 
 }
 
-proc ::CDEM::examples::DrawGeometry { } {
+proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
     Kratos::ResetModel
 
     GiD_Groups create "Box"
@@ -30,7 +30,7 @@ proc ::CDEM::examples::DrawGeometry { } {
     GiD_Groups create "Low-MidCohesive"
 
     GiD_Process Mescape Geometry Create Line -10 20 0 -10 0 0 escape escape
-    GiD_Process Mescape Geometry Create Line -9 0 0 9 0 0 escape escape
+    GiD_Process Mescape Geometry Create Line -9.75 0 0 9.75 0 0 escape escape
     GiD_Process Mescape Geometry Create Line 10 0 0 10 20 0 escape escape
     GiD_EntitiesGroups assign "Box" lines 1
     GiD_EntitiesGroups assign "Box" lines 2
@@ -45,7 +45,6 @@ proc ::CDEM::examples::DrawGeometry { } {
     GiD_EntitiesGroups assign "LowPart" surfaces 2
     GiD_EntitiesGroups assign "MidPart" surfaces 3
     GiD_EntitiesGroups assign "TopPart" surfaces 4
-
     GiD_EntitiesGroups assign "Low-MidCohesive" surfaces 2
     GiD_EntitiesGroups assign "Low-MidCohesive" surfaces 3
 
@@ -54,7 +53,7 @@ proc ::CDEM::examples::DrawGeometry { } {
 }
 
 
-proc ::CDEM::examples::AssignToTree { } {
+proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
@@ -139,21 +138,6 @@ proc ::CDEM::examples::AssignToTree { } {
         }
     }
 
-    # # Inlet
-    # set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
-    # set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
-    # $inletNode setAttribute ov surface
-    # set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
-    # foreach {prop val} $props {
-    #     set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-    #     if {$propnode ne "" } {
-    #         $propnode setAttribute v $val
-    #     } else {
-    #         W "Warning - Couldn't find property Inlet $prop"
-    #     }
-    # }
-
-
     # cohesiveTop
     set cohesiveTop "$DEMConditions/condition\[@n='DEM-Cohesive2D'\]"
     set cohesivenode [customlib::AddConditionGroupOnXPath $cohesiveTop "TopPart"]
@@ -165,40 +149,51 @@ proc ::CDEM::examples::AssignToTree { } {
     $cohesivenode setAttribute ov surface
 
 
-
-
     # General data
     # Time parameters
-    set change_list [list EndTime 20 DeltaTime 1e-5 NeighbourSearchFrequency 20]
+    set change_list [list EndTime 5 DeltaTime 5e-5 NeighbourSearchFrequency 50]
     set xpath [spdAux::getRoute DEMTimeParameters]
     foreach {name value} $change_list {
         set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
             $node setAttribute v $value
         } else {
-            W "Couldn't find $name - Check ContinuumDrop script"
+            W "Couldn't find $name - Check script"
         }
     }
 
-    # Bounding box
-    set change_list [list UseBB false MinZ -1.0]
-    set xpath [spdAux::getRoute Boundingbox]
+    # BondElem parameters
+    set change_list [list ContactMeshOption "true"]
+    set xpath [spdAux::getRoute BondElem]
     foreach {name value} $change_list {
         set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
         if {$node ne ""} {
             $node setAttribute v $value
         } else {
-            W "Couldn't find $name - Check ContinuumDrop script"
+            W "Couldn't find $name - Check script"
         }
     }
+
+    # AdvOptions parameters
+    set change_list [list TangencyAbsoluteTolerance 0.05]
+    set xpath [spdAux::getRoute AdvOptions]
+    foreach {name value} $change_list {
+        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
+        if {$node ne ""} {
+            $node setAttribute v $value
+        } else {
+            W "Couldn't find $name - Check script"
+        }
+    }
+
 
     spdAux::RequestRefresh
 }
 
-proc ::CDEM::examples::AssignMeshSize { } {
+proc ::CDEM::examples::AssignMeshSizeContinuumDrop { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
-    GiD_Process Mescape Meshing AssignSizes Surfaces 1 1:end escape escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines 1 1:end escape escape escape
+    GiD_Process Mescape Meshing AssignSizes Surfaces 0.6 1:end escape escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines 0.6 1:end escape escape escape
 }
 
 
