@@ -50,7 +50,7 @@ proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
 
 proc ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
     # Materials
-    WriteMaterialsFile False False
+    WriteMaterialsFile False True
 
     # Main python script
     set orig_name [GetAttribute main_script_file]
@@ -78,6 +78,9 @@ proc ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True} {
     ConvectionDiffusion::write::WriteMaterialsFile $write_const_law $include_modelpart_name
 }
 
+proc Buoyancy::write::GetModelPartName { } {
+    return FluidThermalModelPart
+}
 
 proc ConjugateHeatTransfer::write::GetAttribute {att} {
     variable writeAttributes

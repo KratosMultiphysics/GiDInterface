@@ -6,17 +6,19 @@ proc PfemFluid::write::writeParametersEvent { } {
 
 # Project Parameters
 proc PfemFluid::write::getNewParametersDict { } {
+    variable ModelPartName
+    write::SetConfigurationAttribute model_part_name $ModelPartName
     PfemFluid::write::CalculateMyVariables
     set projectParametersDict [dict create]
 
     ##### Problem data #####
     # Create section
-    set problemDataDict [GetPFEM_NewProblemDataDict]
+    set problemDataDict [GetPFEM_ProblemDataDict]
     # Add section to document
     dict set projectParametersDict problem_data $problemDataDict
 
     ##### solver_settings #####
-    set solverSettingsDict [GetPFEM_NewSolverSettingsDict]
+    set solverSettingsDict [GetPFEM_SolverSettingsDict]
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     ##### problem_process_list
@@ -41,46 +43,7 @@ proc PfemFluid::write::getNewParametersDict { } {
     return $projectParametersDict
 }
 
-# Project Parameters
-proc PfemFluid::write::getParametersDict { } {
-    PfemFluid::write::CalculateMyVariables
-    set projectParametersDict [dict create]
-
-    ##### Problem data #####
-    # Create section
-    set problemDataDict [GetPFEM_ProblemDataDict]
-    # Add section to document
-    dict set projectParametersDict problem_data $problemDataDict
-
-    ##### solver_settings #####
-    set solverSettingsDict [GetPFEM_SolverSettingsDict]
-    dict set projectParametersDict solver_settings $solverSettingsDict
-
-    ##### problem_process_list
-    set problemProcessList [GetPFEM_ProblemProcessList]
-    dict set projectParametersDict problem_process_list $problemProcessList
-
-    ##### constraints_process_list
-    set group_constraints [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
-    set body_constraints [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
-    dict set projectParametersDict constraints_process_list [concat $group_constraints $body_constraints]
-
-    ##### loads_process_list
-    dict set projectParametersDict loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
-
-    ##### Restart
-    set output_process_list [GetPFEM_OutputProcessList]
-    dict set projectParametersDict output_process_list $output_process_list
-
-    ##### output_configuration
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
-
-    return $projectParametersDict
-}
-
-
-
-proc PfemFluid::write::GetPFEM_NewProblemDataDict { } {
+proc PfemFluid::write::GetPFEM_ProblemDataDict { } {
     set problemDataDict [dict create]
     dict set problemDataDict problem_name [Kratos::GetModelName]
 
@@ -100,26 +63,6 @@ proc PfemFluid::write::GetPFEM_NewProblemDataDict { } {
     return $problemDataDict
 }
 
-proc PfemFluid::write::GetPFEM_ProblemDataDict { } {
-    set problemDataDict [dict create]
-    dict set problemDataDict problem_name [Kratos::GetModelName]
-
-    dict set problemDataDict model_part_name "Main Domain"
-    set nDim $::Model::SpatialDimension
-    set nDim [expr [string range [write::getValue nDim] 0 0] ]
-    dict set problemDataDict dimension $nDim
-
-    set time_params [PfemFluid::write::GetTimeSettings]
-    dict set problemDataDict time_step [dict get $time_params time_step]
-    dict set problemDataDict start_time [dict get $time_params start_time]
-    dict set problemDataDict end_time [dict get $time_params end_time]
-    dict set problemDataDict echo_level [write::getValue Results EchoLevel]
-    dict set problemDataDict threads [write::getValue Parallelization OpenMPNumberOfThreads]
-    dict set problemDataDict gravity_vector [PfemFluid::write::GetGravity]
-
-    return $problemDataDict
-}
-
 proc PfemFluid::write::GetTimeSettings { } {
     set result [dict create]
     dict set result time_step [write::getValue PFEMFLUID_TimeParameters DeltaTime]
@@ -128,8 +71,9 @@ proc PfemFluid::write::GetTimeSettings { } {
     return $result
 }
 
-proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
+proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     variable bodies_list
+    variable ModelPartName
 
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue PFEMFLUID_SolStrat]
@@ -138,7 +82,7 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
 
     set problemtype [write::getValue PFEMFLUID_DomainType]
 
-    dict set solverSettingsDict model_part_name "PfemFluidModelPart"
+    dict set solverSettingsDict model_part_name $ModelPartName
     if {$problemtype eq "Fluids"} {
         dict set solverSettingsDict physics_type "fluid"
     }
@@ -175,40 +119,6 @@ proc PfemFluid::write::GetPFEM_NewSolverSettingsDict { } {
     dict set modelDict input_type "mdpa"
     dict set modelDict input_filename [Kratos::GetModelName]
     # dict set modelDict input_file_label 0
-    dict set solverSettingsDict model_import_settings $modelDict
-
-    # Solution strategy parameters and Solvers
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict PFEMFLUID_SolStrat PFEMFLUID_Scheme PFEMFLUID_StratParams] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict PfemFluid] ]
-
-    set bodies_parts_list [list ]
-    foreach body $bodies_list {
-        set body_parts [dict get $body parts_list]
-	foreach part $body_parts {
-	    lappend bodies_parts_list $part
-	}
-    }
-
-    dict set solverSettingsDict bodies_list $bodies_list
-    dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
-
-    return $solverSettingsDict
-}
-
-proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
-    variable bodies_list
-
-    set solverSettingsDict [dict create]
-    set currentStrategyId [write::getValue PFEMFLUID_SolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "python_module"]
-    dict set solverSettingsDict solver_type $strategy_write_name
-
-    # model import settings
-    set modelDict [dict create]
-    dict set modelDict input_type "mdpa"
-    dict set modelDict input_filename [Kratos::GetModelName]
-    dict set modelDict input_file_label 0
     dict set solverSettingsDict model_import_settings $modelDict
 
     # Solution strategy parameters and Solvers
@@ -280,6 +190,7 @@ proc PfemFluid::write::GetContactProperty { contact_name property } {
 
 proc PfemFluid::write::GetPFEM_RemeshDict { } {
     variable bodies_list
+    variable ModelPartName
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
     dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
@@ -287,7 +198,7 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
     dict set resultDict "process_name" "RemeshDomainsProcess"
 
     set paramsDict [dict create]
-    dict set paramsDict "model_part_name" "PfemFluidModelPart"
+    dict set paramsDict "model_part_name" $ModelPartName
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
@@ -390,6 +301,7 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
 
 proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     variable bodies_list
+    variable ModelPartName
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
     dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
@@ -399,7 +311,7 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     dict set resultDict "process_name" "RemeshFluidDomainsProcess"
 
     set paramsDict [dict create]
-    dict set paramsDict "model_part_name" "PfemFluidModelPart"
+    dict set paramsDict "model_part_name" $ModelPartName
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true

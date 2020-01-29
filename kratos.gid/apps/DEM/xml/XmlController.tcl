@@ -28,12 +28,18 @@ proc DEM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem values OpenMP ParallelType
     spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
 
-    set result_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-Cohesive'\]"]
-	if { $result_node ne "" } {$result_node delete}
+    # 3D gravity
+    if {$Model::SpatialDimension eq "3D"} {
+        catch {
+            spdAux::SetValueOnTreeItem v 0.0 DEMGravity Cy
+            spdAux::SetValueOnTreeItem v -1.0 DEMGravity Cz
+        }
+    }
 
-    set result_node [$root selectNodes "[spdAux::getRoute "DEMConditions"]/condition\[@n = 'DEM-Cohesive2D'\]"]
-	if { $result_node ne "" } {$result_node delete}
-
+    set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='Element'\]"
+    gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden dict {[GetElements ElementType DEM]} ]
+    set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='AdvancedMeshingFeatures'\]"
+    gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden ]
     # # Graphs in output settings
     # if {[$root selectNodes "[spdAux::getRoute DEMResults]/condition\[@n='Graphs'\]"] eq ""} {
     #     gid_groups_conds::addF [spdAux::getRoute DEMResults] include [list n Graphs active 1 path {apps/DEM/xml/Graphs.spd}]
@@ -82,6 +88,24 @@ proc DEM::xml::ProcGetStateBoundingBoxParams { domNode args } {
     if {[write::isBooleanTrue $bounding_box_active] && [write::isBooleanFalse $bounding_box_automatic]} {
         set ret normal
     }
+    return $ret
+}
+
+proc DEM::xml::ProcGetDEMPartsOvWhat { domNode args } {
+    if {$::Model::SpatialDimension eq "2D"} {
+        return "point,line,surface"
+    } else {
+        return "point,line,surface,volume"
+    }
+}
+
+
+proc DEM::xml::InertiaType { args } {
+    set ret inline_vector
+    if {$::Model::SpatialDimension eq "2D"} {
+        set ret double
+    }
+    
     return $ret
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<condition n="Parts" pn="Parts" groups_icon="groupCreated" ov="[CheckGeometrySolid]" ovm="element" help="Create Parts of the model (materials and element types)" un="SLParts" >
+<condition n="SLParts" pn="Parts" un="SLParts" groups_icon="groupCreated" ov="[CheckGeometrySolid]" ovm="element" help="Create Parts of the model (materials and element types)" >
       <!-- <symbol proc='Solid::symbols::draw_parts_shell' orientation='shell_thickness'/> -->
 	  <!-- <symbol proc='Solid::symbols::draw_parts_beam' orientation='section'/> -->
 	  <!-- <symbol proc='Solid::symbols::draw_parts_free' orientation='free'/> -->

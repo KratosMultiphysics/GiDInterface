@@ -1,24 +1,31 @@
 
-proc write::writeConditionsByGiDId { baseUN  {cond_id ""}} {
+proc write::writeConditionsByGiDId { baseUN {force_write_cond_id ""} {properties_dict ""}} {
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
+    if {$force_write_cond_id ne ""} {
+        set xp1 "[spdAux::getRoute $baseUN]/condition\[@n='$force_write_cond_id'\]/group"
+    }
     set groupNodes [$root selectNodes $xp1]
     if {[llength $groupNodes] < 1} {
         set xp1 "[spdAux::getRoute $baseUN]/group"
         set groupNodes [$root selectNodes $xp1]
     }
     foreach groupNode $groupNodes {
-        if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
+        if {$force_write_cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $force_write_cond_id}
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
-        writeGroupNodeConditionByGiDId $groupNode $condid
+        set mid 0
+        if {$properties_dict ne "" && [dict exists $properties_dict $groupid]} {
+            set mid [dict get $properties_dict $groupid]
+        }
+        writeGroupNodeConditionByGiDId $groupNode $condid $mid
         
     }
 }
 
 
-proc write::writeGroupNodeConditionByGiDId {groupNode condid} {
+proc write::writeGroupNodeConditionByGiDId {groupNode condid {mid 0}} {
     set groupid [get_domnode_attribute $groupNode n]
     set groupid [GetWriteGroupName $groupid]
     if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
@@ -27,7 +34,7 @@ proc write::writeGroupNodeConditionByGiDId {groupNode condid} {
         lassign [write::getEtype $ov $groupid] etype nnodes
         set kname [$cond getTopologyKratosName $etype $nnodes]
         if {$kname ne ""} {
-            write::writeGroupConditionByGiDId $groupid $kname $nnodes
+            write::writeGroupConditionByGiDId $groupid $kname $nnodes $mid
         } else {
             # If kname eq "" => no topology feature match, condition written as nodal
             if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
@@ -38,7 +45,7 @@ proc write::writeGroupNodeConditionByGiDId {groupNode condid} {
 }
 
 
-proc write::writeGroupConditionByGiDId {groupid kname nnodes} {
+proc write::writeGroupConditionByGiDId {groupid kname nnodes { mid 0} } {
     set obj [list ]
 
     # Print header
@@ -52,7 +59,7 @@ proc write::writeGroupConditionByGiDId {groupid kname nnodes} {
         set formats [dict create $groupid "${s}$id_f \n"]
         GiD_WriteCalculationFile nodes $formats
     } else {
-        set formats [write::GetFormatDict $groupid 0 $nnodes]
+        set formats [write::GetFormatDict $groupid $mid $nnodes]
         GiD_WriteCalculationFile connectivities $formats
     }
 
