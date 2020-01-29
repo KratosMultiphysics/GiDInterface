@@ -91,6 +91,12 @@ proc ::MPM::write::getParametersDict { } {
     dict unset project_parameters_dict output_processes gid_output
     dict unset project_parameters_dict output_processes vtk_output
 
+    # REMOVE RAYLEIGH
+    dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
+    dict unset project_parameters_dict solver_settings rayleigh_alpha
+    dict unset project_parameters_dict solver_settings rayleigh_beta
+
+
     return $project_parameters_dict
 }
 proc ::MPM::write::writeParametersEvent { } {
