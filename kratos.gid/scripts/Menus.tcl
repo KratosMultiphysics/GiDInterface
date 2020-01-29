@@ -117,6 +117,7 @@ proc Kratos::ChangeMenus { } {
     if {$kratos_private(DevMode) eq "dev"} {set tomode "release mode";set fromode "developer mode"}
     GiDMenu::InsertOption "Kratos" [list "Kratos data" ] [incr pos] PRE [list gid_groups_conds::open_conditions menu] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Local axes window" ] [incr pos] PRE [list gid_groups_conds::local_axes_window] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "View spd file" ] [incr pos] PRE [list spdAux::ViewDoc] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Write calculation files - No run" ] [incr pos] PRE [list Kratos::WriteCalculationFilesEvent] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Run - No write" ] [incr pos] PRE [list Kratos::ForceRun] "" "" replace =

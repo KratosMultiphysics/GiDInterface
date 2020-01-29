@@ -152,7 +152,7 @@ proc spdAux::ForceExtremeLoad { } {
     
     set root [customlib::GetBaseRoot]
     foreach contNode [$root getElementsByTagName "container"] {
-        W "Opening [$contNode  @n]"
+        W "Opening $contNode [$contNode  @n]"
         $contNode setAttribute tree_state "open"
     }
     gid_groups_conds::actualize_conditions_window

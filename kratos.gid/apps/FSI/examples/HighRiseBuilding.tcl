@@ -76,7 +76,7 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
 
     # Fluid Parts
-    set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
+    set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.225 DYNAMIC_VISCOSITY 1.846e-5]
     foreach {prop val} $props {
@@ -164,7 +164,8 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='FSI']/container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
+    
+    set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Solid'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov surface
     set constLawNameStruc "LinearElasticPlaneStress2DLaw"

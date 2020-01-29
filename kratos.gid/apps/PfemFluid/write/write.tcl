@@ -2,6 +2,7 @@ namespace eval PfemFluid::write {
     variable remesh_domains_dict
     variable bodies_list
     variable Names
+    variable ModelPartName
 }
 
 proc PfemFluid::write::Init { } {
@@ -11,6 +12,8 @@ proc PfemFluid::write::Init { } {
     set bodies_list [list ]
     variable Names
     set Names [dict create DeltaTime DeltaTime]
+    variable ModelPartName
+    set ModelPartName PfemFluidModelPart
 }
 
 

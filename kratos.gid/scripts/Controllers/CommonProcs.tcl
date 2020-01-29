@@ -782,11 +782,13 @@ proc spdAux::ProcOkNewCondition {domNode args} {
 
 proc spdAux::ProcConditionParameterState {domNode args} {
     set ret ""
+    # Current parameter name
     set param_name [get_domnode_attribute $domNode n]
+    
+    # Condition
     set cond_node [$domNode parent]
     if {[$cond_node nodeName] eq "group"} {set cond_node [$cond_node parent]}
     set cond_name [get_domnode_attribute $cond_node n]
-    
     set cond [Model::getCondition $cond_name]
     if {$cond eq ""} {
         set cond [Model::getNodalConditionbyId $cond_name]
@@ -805,12 +807,14 @@ proc spdAux::ProcConditionParameterState {domNode args} {
         set depN [$param getDepN]
         if {$depN ne ""} {
             set depV [$param getDepV]
-            set realV [get_domnode_attribute [$domNode selectNodes "../value\[@n='$depN'\]"] v]
-            if {$depV ne $realV} {set ret hidden}
+            set parent_dependency_node [$domNode selectNodes "../value\[@n='$depN'\]"]
+            set parent_dep_state [get_domnode_attribute $parent_dependency_node state]
+            set realV [get_domnode_attribute $parent_dependency_node v]
+            if {$realV ni [split $realV ','] || $parent_dep_state eq "hidden"} {set ret hidden}
         }
     }
     if {$ret eq  ""} { set ret normal }
-    return normal
+    return $ret
 }
 
 proc spdAux::ProcGetParts {domNode args} {
