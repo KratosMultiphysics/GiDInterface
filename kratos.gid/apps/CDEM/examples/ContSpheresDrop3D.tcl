@@ -135,7 +135,7 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
     }
 
     # AdvOptions parameters
-    set change_list [list TangencyToleranceValueAbsolute 0.05]
+    set change_list [list TangencyAbsoluteTolerance 0.05]
     set xpath [spdAux::getRoute AdvOptions]
     foreach {name value} $change_list {
         set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
