@@ -282,7 +282,6 @@ proc DEM::write::writeInletMeshes { } {
 }
 
 proc DEM::write::DefineInletConditions {inletProperties groupid mid contains_clusters} {
-    W "DEM::write::DefineInletConditions"
     set inlet_element_type SphericParticle3D
     if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
         set inlet_element_type [dict get $inletProperties $groupid ClusterType]
