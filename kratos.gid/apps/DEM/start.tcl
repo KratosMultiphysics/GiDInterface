@@ -63,7 +63,7 @@ proc ::DEM::CustomMenus { } {
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
-    foreach group [$root selectNodes $xp1] {
+    foreach group [concat [$root selectNodes $xp1] [DEM::write::GetDEMGroupsCustomSubmodelpart]] {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
         if {![write::isBooleanTrue $advanced_meshing_features]} {

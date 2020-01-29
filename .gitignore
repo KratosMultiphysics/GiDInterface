@@ -6,3 +6,5 @@ kratos.gid/exec/*
 !kratos.gid/exec/README.md
 *.orig
 .vscode/
+
+custom_tools/*

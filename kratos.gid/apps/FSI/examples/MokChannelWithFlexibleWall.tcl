@@ -182,7 +182,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     if {$::Model::SpatialDimension eq "3D"} { set condtype surface }
 
     # Fluid Parts
-    set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
+    set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 956.0 DYNAMIC_VISCOSITY 0.145]
     foreach {prop val} $props {
@@ -307,7 +307,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='FSI']/container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
+    set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Solid'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
