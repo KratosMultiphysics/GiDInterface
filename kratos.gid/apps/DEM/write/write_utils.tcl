@@ -680,8 +680,8 @@ proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     }
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
     foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
+	set groupid [$group @n]
+	GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 1] escape
     }
 }
 
