@@ -4,15 +4,3 @@
     <value n="Print_total_force_on_this_group"  pn="Print total force on this group"  icon="black1" type="bool" state="disabled" v="true"/>
     <value n="Print_total_torque_on_this_group" pn="Print total torque on this group" icon="black1" type="bool" state="disabled" v="true"/>
 </condition>
-
-
-<!-- <container n="DEM-Graphs" pn="DEM Graphs"   un="DEM-Graphs" help="DEM-Graphs"   open_window="0" icon="options">
-        <value n="ForceTimeGraph"               type="bool"     values="true,false" v="false" pn="Force evolution with time" help="Force evolution with time"/>
-        <value n="GraphExportFreq"              v="1e-3"        pn="Printing delta time (s)"  help="Printing delta time"/>
-        <value n="ForceIntegrationGroup"        pn="Force integration group"        ov="[CheckGeometry 2]" icon="add.gif" help="Force Integration Group. Double click to add a group."/>
-        <container n="UseComputeEnergies"       type="bool"     values="true,false" v="false" pn="Compute energy" un="UseComputeEnergies" help="Results on bond elements" open_window="1" icon="options">
-            <value n="PotentialEnergyReferencePointX"   v="0.0"     pn="Potential Energy Reference Point X" state="[getStateFromXPathValue {string(../value[@n='UseComputeEnergies']/@v)} true]"/>
-            <value n="PotentialEnergyReferencePointX"   v="0.0"     pn="Potential Energy Reference Point X" state="[getStateFromXPathValue {string(../value[@n='UseComputeEnergies']/@v)} true]"/>
-            <value n="PotentialEnergyReferencePointX"   v="0.0"     pn="Potential Energy Reference Point X" state="[getStateFromXPathValue {string(../value[@n='UseComputeEnergies']/@v)} true]"/>
-        </container>
-    </container> -->

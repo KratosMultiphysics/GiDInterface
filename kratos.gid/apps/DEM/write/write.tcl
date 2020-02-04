@@ -13,7 +13,6 @@ proc DEM::write::Init { } {
     SetAttribute writeCoordinatesByGroups 1
     SetAttribute properties_location mdpa
     SetAttribute parts_un DEMParts
-    SetAttribute graphs_un DEMGraphs
     SetAttribute materials_un DEMMaterials
     SetAttribute conditions_un DEMConditions
     SetAttribute nodal_conditions_un DEMNodalConditions
@@ -28,7 +27,7 @@ proc DEM::write::Init { } {
 
     variable delete_previous_mdpa
     set delete_previous_mdpa 1
-    
+
     variable restore_ov
     set restore_ov [dict create]
 }

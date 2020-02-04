@@ -1,24 +1,23 @@
 proc DEM::write::WriteMDPAWalls { } {
     # Headers
     write::writeModelPartData
-    
+
     # Material
     set wall_properties [WriteWallProperties]
-    
+
     # Nodal coordinates (only for Walls <inefficient> )
     write::writeNodalCoordinatesOnGroups [GetWallsGroups]
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
     write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
-    
+
     # Nodal conditions and conditions
     writeConditions $wall_properties
-    
+
     # SubmodelParts
     writeWallConditionMeshes
-    
+
     # CustomSubmodelParts
     WriteWallCustomSmp
-    # WriteWallGraphsFlag  # TODO, under revision
 }
 
 
@@ -26,11 +25,11 @@ proc DEM::write::WriteMDPAWalls { } {
 proc DEM::write::WriteWallProperties { } {
     set wall_properties [dict create ]
     set cnd [Model::getCondition "DEM-FEM-Wall"]
-    
+
     if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
     } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     }
-    
+
     #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
     set i $DEM::write::last_property_id
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
@@ -74,7 +73,7 @@ proc DEM::write::WriteWallProperties { } {
         write::WriteString "  BRINELL_HARDNESS $brinell_hardness"
         write::WriteString "  YOUNG_MODULUS $young_modulus"
         write::WriteString "  POISSON_RATIO $poisson_ratio"
-        
+
         write::WriteString "End Properties"
         set groupid [$group @n]
         dict set wall_properties $groupid $i
@@ -93,7 +92,7 @@ proc DEM::write::WriteWallCustomSmp { } {
         set groupid [$group @n]
         set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
         if {$destination_mdpa == "FEM"} {
-            
+
             #write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
             write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
             write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
@@ -104,23 +103,6 @@ proc DEM::write::WriteWallCustomSmp { } {
             write::WriteString  "End SubModelPart"
             write::WriteString  ""
         }
-    }
-}
-
-proc DEM::write::WriteWallGraphsFlag { } {
-    set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/group"
-    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set groupid [$group @n]
-        write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-        write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
-        write::WriteString  "FORCE_INTEGRATION_GROUP 1"
-        write::WriteString  "End SubModelPartData"
-        write::WriteString  "Begin SubModelPartNodes"
-        GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
-        write::WriteString  "End SubModelPartNodes"
-        write::WriteString  "End SubModelPart"
-        write::WriteString  ""
     }
 }
 
@@ -172,7 +154,7 @@ proc DEM::write::GetWallsGroupsSmp { } {
 proc DEM::write::GetWallsGroupsListInConditions { } {
     set conds_groups_dict [dict create ]
     set groups [list ]
-    
+
     # Get all the groups with surfaces involved in walls
     foreach group [GetWallsGroups] {
         foreach surface [GiD_EntitiesGroups get $group surfaces] {
@@ -182,7 +164,7 @@ proc DEM::write::GetWallsGroupsListInConditions { } {
             }
         }
     }
-    
+
     foreach group [GetWallsGroups] {
         foreach line [GiD_EntitiesGroups get $group lines] {
             foreach involved_group [GiD_EntitiesGroups entity_groups lines $line] {
@@ -191,7 +173,7 @@ proc DEM::write::GetWallsGroupsListInConditions { } {
             }
         }
     }
-    
+
     # Find the relations condition -> group
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition"
     foreach cond [[customlib::GetBaseRoot] selectNodes $xp1] {
@@ -226,7 +208,7 @@ proc DEM::write::writeWallConditionMeshes { } {
         write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
         set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
         set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
-        
+
         set is_active [write::getValueByNode [$group_node selectNodes "./value\[@n='SetActive'\]"]]
         if {[write::isBooleanTrue $is_active]} {
             set motion_type [write::getValueByNode [$group_node selectNodes "./value\[@n='DEM-ImposedMotion'\]"]]
@@ -243,7 +225,7 @@ proc DEM::write::writeWallConditionMeshes { } {
                     lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
                     write::WriteString "    LINEAR_VELOCITY \[3\] ($vx, $vy, $vz)"}
                 # set vX [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityX'\]"]]
-                
+
                 # Period
                 set periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearPeriodic'\]"]]
                 if {[write::isBooleanTrue $periodic]} {
@@ -252,7 +234,7 @@ proc DEM::write::writeWallConditionMeshes { } {
                     set period 0.0
                 }
                 write::WriteString "    VELOCITY_PERIOD $period"
-                
+
                 # Angular velocity
                 set avelocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
                 if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    ANGULAR_VELOCITY \[3\] (0.0,0.0,$avelocity)"
@@ -261,19 +243,19 @@ proc DEM::write::writeWallConditionMeshes { } {
                     lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
                     lassign [MathUtils::ScalarByVectorProd $avelocity [list $velocity_X $velocity_Y $velocity_Z] ] wx wy wz
                     write::WriteString "    ANGULAR_VELOCITY \[3\] ($wx,$wy,$wz)"}
-                
+
                 # Angular center of rotation
                 lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotation'\]"]] oX oY oZ
                 if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    ROTATION_CENTER \[3\] ($oX,$oY,0.0)"
                 } else {write::WriteString "    ROTATION_CENTER \[3\] ($oX,$oY,$oZ)"}
-                
+
                 # Angular Period
                 set angular_periodic [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularPeriodic'\]"]]
                 if {[write::isBooleanTrue $angular_periodic]} {
                     set angular_period [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularPeriod'\]"]]
                 } else {set angular_period 0.0}
                 write::WriteString "    ANGULAR_VELOCITY_PERIOD $angular_period"
-                
+
                 # set intervals
                 set LinearStartTime [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearStartTime'\]"]]
                 set LinearEndTime  [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearEndTime'\]"]]
@@ -283,7 +265,7 @@ proc DEM::write::writeWallConditionMeshes { } {
                 write::WriteString "    VELOCITY_STOP_TIME $LinearEndTime"
                 write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
                 write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
-                
+
                 set fixed_mesh_option_bool [write::getValueByNode [$group_node selectNodes "./value\[@n='fixed_wall'\]"]]
                 if {[write::isBooleanTrue $fixed_mesh_option_bool]} {set fixed_mesh_option 1
                 } else {set fixed_mesh_option 0}
@@ -293,19 +275,19 @@ proc DEM::write::writeWallConditionMeshes { } {
                 write::WriteString "    FIXED_MESH_OPTION $fixed_mesh_option"
                 write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
                 write::WriteString "    FREE_BODY_MOTION $free_body_motion"
-                
+
             } elseif {$motion_type == "FreeMotion"} {
                 set fixed_mesh_option 0
                 set rigid_body_motion 0
                 set free_body_motion 1
-                
+
                 set mass [write::getValueByNode [$group_node selectNodes "./value\[@n='Mass'\]"]]
                 write::WriteString "    RIGID_BODY_MASS $mass"
-                
+
                 lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfMass'\]"]] cX cY cZ
                 if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] ($cX,$cY,0.0)"
                 } else {write::WriteString "    RIGID_BODY_CENTER_OF_MASS \[3\] ($cX,$cY,$cZ)"}
-                
+
                 set inertias [write::getValueByNode [$group_node selectNodes "./value\[@n='Inertia'\]"]]
                 if {$::Model::SpatialDimension eq "2D"} {
                     set iX $inertias
@@ -314,7 +296,7 @@ proc DEM::write::writeWallConditionMeshes { } {
                     lassign $inertias iX iY iZ
                     write::WriteString "    RIGID_BODY_INERTIAS \[3\] ($iX,$iY,$iZ)"
                 }
-                
+
                 # DOFS
                 set Ax [write::getValueByNode [$group_node selectNodes "./value\[@n='Ax'\]"]]
                 set Ay [write::getValueByNode [$group_node selectNodes "./value\[@n='Ay'\]"]]
@@ -334,19 +316,19 @@ proc DEM::write::writeWallConditionMeshes { } {
                     set fix_vz [write::getValueByNode [$group_node selectNodes "./value\[@n='Vz'\]"]]
                     if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    IMPOSED_VELOCITY_Z_VALUE 0.0"
                     } else {write::WriteString "    IMPOSED_VELOCITY_Z_VALUE $fix_vz"}
-                    
+
                 }
                 if {$Bx == "Constant"} {
                     set fix_avx [write::getValueByNode [$group_node selectNodes "./value\[@n='AVx'\]"]]
                     if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    IMPOSED_ANGULAR_VELOCITY_X_VALUE 0.0"
                     } else {write::WriteString "    IMPOSED_ANGULAR_VELOCITY_X_VALUE $fix_avx"}
-                    
+
                 }
                 if {$By == "Constant"} {
                     set fix_avy [write::getValueByNode [$group_node selectNodes "./value\[@n='AVy'\]"]]
                     if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    IMPOSED_ANGULAR_VELOCITY_Y_VALUE 0.0"
                     } else {write::WriteString "    IMPOSED_ANGULAR_VELOCITY_Y_VALUE $fix_avy"}
-                    
+
                 }
                 if {$Bz == "Constant"} {
                     set fix_avz [write::getValueByNode [$group_node selectNodes "./value\[@n='AVz'\]"]]
@@ -356,7 +338,7 @@ proc DEM::write::writeWallConditionMeshes { } {
                 set VEnd  [write::getValueByNode [$group_node selectNodes "./value\[@n='VEnd'\]"]]
                 write::WriteString "    VELOCITY_START_TIME $VStart"
                 write::WriteString "    VELOCITY_STOP_TIME $VEnd"
-                
+
                 # initial conditions
                 set iAx [write::getValueByNode [$group_node selectNodes "./value\[@n='iAx'\]"]]
                 set iAy [write::getValueByNode [$group_node selectNodes "./value\[@n='iAy'\]"]]
@@ -376,25 +358,25 @@ proc DEM::write::writeWallConditionMeshes { } {
                     set fix_vz [write::getValueByNode [$group_node selectNodes "./value\[@n='iVz'\]"]]
                     if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    INITIAL_VELOCITY_Z_VALUE 0.0"
                     } else {write::WriteString "    INITIAL_VELOCITY_Z_VALUE $fix_vz"}
-                    
+
                 }
                 if {$iBx == "true"} {
                     set fix_avx [write::getValueByNode [$group_node selectNodes "./value\[@n='iAVx'\]"]]
                     if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    INITIAL_ANGULAR_VELOCITY_X_VALUE 0.0"
                     } else {write::WriteString "    INITIAL_ANGULAR_VELOCITY_X_VALUE $fix_avx"}
-                    
+
                 }
                 if {$iBy == "true"} {
                     set fix_avy [write::getValueByNode [$group_node selectNodes "./value\[@n='iAVy'\]"]]
                     if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    INITIAL_ANGULAR_VELOCITY_Y_VALUE 0.0"
                     } else {write::WriteString "    INITIAL_ANGULAR_VELOCITY_Y_VALUE $fix_avy"}
-                    
+
                 }
                 if {$iBz == "true"} {
                     set fix_avz [write::getValueByNode [$group_node selectNodes "./value\[@n='iAVz'\]"]]
                     write::WriteString "    INITIAL_ANGULAR_VELOCITY_Z_VALUE $fix_avz"
                 }
-                
+
                 # impose forces and moments
                 set ExternalForceX [write::getValueByNode [$group_node selectNodes "./value\[@n='ExternalForceX'\]"]]
                 set ExternalForceY [write::getValueByNode [$group_node selectNodes "./value\[@n='ExternalForceY'\]"]]
@@ -402,7 +384,7 @@ proc DEM::write::writeWallConditionMeshes { } {
                 set ExternalMomentX [write::getValueByNode [$group_node selectNodes "./value\[@n='ExternalMomentX'\]"]]
                 set ExternalMomentY [write::getValueByNode [$group_node selectNodes "./value\[@n='ExternalMomentY'\]"]]
                 set ExternalMomentZ [write::getValueByNode [$group_node selectNodes "./value\[@n='ExternalMomentZ'\]"]]
-                
+
                 if {$ExternalForceX == "true"} {
                     set FX [write::getValueByNode [$group_node selectNodes "./value\[@n='FX'\]"]]
                     write::WriteString "    EXTERNAL_APPLIED_FORCE_X $FX"
@@ -432,21 +414,21 @@ proc DEM::write::writeWallConditionMeshes { } {
                 write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
                 write::WriteString "    FREE_BODY_MOTION $free_body_motion"
             }
-            
+
             #Hardcoded
             set is_ghost [write::getValueByNode [$group_node selectNodes "./value\[@n='IsGhost'\]"]]
             write::WriteString "    IS_GHOST $is_ghost"
             write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
-            
+
             DefineMaterialTestConditions $group_node
-            
+
         }
         write::WriteString "  End SubModelPartData"
-        
+
         write::WriteString "  Begin SubModelPartNodes"
         GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
         write::WriteString "  End SubModelPartNodes"
-        
+
         write::WriteString "Begin SubModelPartConditions"
         set gdict [dict create]
         set f "%10i\n"
@@ -460,4 +442,12 @@ proc DEM::write::writeWallConditionMeshes { } {
     }
 }
 
-proc DEM::write::DefineMaterialTestConditions {group_node} {}
+proc DEM::write::DefineMaterialTestConditions {group_node} {
+    set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
+    if {$GraphPrint == "true"} {
+        set GraphPrintval 1
+    } else {
+        set GraphPrintval 0
+    }
+    write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
+}

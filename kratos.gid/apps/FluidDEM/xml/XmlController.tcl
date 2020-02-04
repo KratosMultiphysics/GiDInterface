@@ -60,7 +60,7 @@ proc FluidDEM::xml::CustomTree { args } {
 
 
     spdAux::SetValueOnTreeItem state hidden DEMResults
-    spdAux::SetValueOnTreeItem state hidden DEMGraphs
+    # spdAux::SetValueOnTreeItem state hidden DEMGraphs
     # spdAux::SetValueOnTreeItem state hidden DEMResults DEM-OTimeStepType
     # spdAux::SetValueOnTreeItem state hidden DEMResults DEM-OTimeStepDetail
     # spdAux::SetValueOnTreeItem state hidden DEMResults GiDOptions
