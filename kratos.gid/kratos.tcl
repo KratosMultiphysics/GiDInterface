@@ -342,6 +342,7 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
 
     # Prepare the new spd (and model) active application
     apps::setActiveApp $old_activeapp
+    apps::ExecuteOnCurrentXML CustomTree "" 
 
     # Call to customlib transform and pray
     gid_groups_conds::transform_problemtype $old_filespd
