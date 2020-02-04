@@ -45,7 +45,5 @@
 
     <container n="PrintGraphs" pn="Graphs settings" un="DGraphs" open="1" icon="options">
         <value n="GraphExportFreq"    v="1e-3"    pn="Graph print frequency (s)"  icon="black1" help="Graph frequency for active groups"/>
-        <!-- <value n="Print_total_force_on_this_group"  pn="Print total force on this group"  type="bool" state="disabled" v="Yes"/>
-        <value n="Print_total_torque_on_this_group" pn="Print total torque on this group" type="bool" state="disabled" v="Yes"/> -->
     </container>
 </container>

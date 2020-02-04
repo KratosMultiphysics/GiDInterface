@@ -58,6 +58,18 @@
     <outputs></outputs>
   </ConditionItem>
 
+  <ConditionItem n="DEM-GraphCondition" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+  <ConditionItem n="DEM-GraphCondition2D" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
+    <TopologyFeatures></TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
   <ConditionItem n="DEM-CustomSmp" pn="Define custom DEM Submp" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="CustomSMP-Process" help="Elements defined as custom must be previously defined as Parts. Please make sure material properties for the selected elements has already been defined." VariableName="SUBMP">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>

@@ -335,7 +335,17 @@
   </Process>
 
 
+  <Process n="DEM-GraphCondition2D-Process" pn=" " python_module=" " kratos_module="KratosMultiphysics">
+    <inputs>
+    <parameter n="GraphPrint"  pn="Print group forces" v="false" type="bool" show_in_window="0"/>
+    </inputs>
+  </Process>
 
+  <Process n="DEM-GraphCondition-Process" pn=" " python_module=" " kratos_module="KratosMultiphysics">
+    <inputs>
+      <parameter n="GraphPrint"  pn="Print group forces" v="false" type="bool" show_in_window="0"/>
+    </inputs>
+  </Process>
 
   <Process n="CustomSMP-Process" pn="Define custom submodelparts" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" check="DirectorVectorNonZero direction">
     <inputs>

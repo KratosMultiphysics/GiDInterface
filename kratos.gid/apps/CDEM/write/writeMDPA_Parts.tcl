@@ -14,9 +14,9 @@ proc DEM::write::WriteMDPAParts { } {
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
-    write::writeNodalCoordinatesOnGroups [DEM::write::WriteGraphsOnDEM]
     write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupsInitialC]
     write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupsBoundayC]
+    write::writeNodalCoordinatesOnGroups [DEM::GetNodesForGraphs]
 
     # Element connectivities
     write::writeElementConnectivities
