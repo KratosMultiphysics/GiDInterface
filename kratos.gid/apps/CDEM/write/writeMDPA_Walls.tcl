@@ -8,7 +8,6 @@ proc DEM::write::WriteMDPAWalls { } {
     # Nodal coordinates (only for Walls <inefficient> )
     write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroups]
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
-    write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
 
     # Nodal conditions and conditions
     DEM::write::writeConditions $wall_properties
@@ -39,18 +38,6 @@ proc CDEM::write::WriteWallCustomSmp { } {
             write::WriteString  ""
         }
     }
-}
-
-proc CDEM::write::GetNodesForGraphs { } {
-    set groups [list ]
-    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
-    #set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/condition\[@n = 'Graphs'\]/group"
-    set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
-    }
-    return $groups
 }
 
 proc DEM::write::DefineMaterialTestConditions {group_node} {

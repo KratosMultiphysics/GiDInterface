@@ -12,7 +12,7 @@ proc DEM::write::WriteMDPAParts { } {
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts
     write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupNamesCustomSubmodelpart]
-    # write::writeNodalCoordinatesOnGroups [WriteWallGraphsFlag]
+    write::writeNodalCoordinatesOnGroups [WriteGraphsOnDEM]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsInitialC]
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundayC]
 
@@ -30,17 +30,17 @@ proc DEM::write::WriteMDPAParts { } {
     writeDEMConditionMeshes
 
     # CustomSubmodelParts
-    WriteWallCustomDEMSmp; # not required for dem.
+    WriteCustomDEMSmp; # not required for dem.
 }
 
 
-proc DEM::write::WriteWallGraphsFlag { } {
+proc DEM::write::WriteGraphsOnDEM { } {
     set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/group"
     #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
         set groupid [$group @n]
         write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-        write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
+        write::WriteString  "Begin SubModelPartData"
         write::WriteString  "FORCE_INTEGRATION_GROUP 1"
         write::WriteString  "End SubModelPartData"
         write::WriteString  "Begin SubModelPartNodes"
@@ -51,7 +51,7 @@ proc DEM::write::WriteWallGraphsFlag { } {
     }
 }
 
-proc DEM::write::WriteWallCustomDEMSmp { } {
+proc DEM::write::WriteCustomDEMSmp { } {
     foreach group [GetDEMGroupsCustomSubmodelpart] {
         set groupid [write::GetWriteGroupName [$group @n]]
 
