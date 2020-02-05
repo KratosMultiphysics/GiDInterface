@@ -193,6 +193,7 @@ proc DEM::write::writeDEMConditionMeshes { } {
                         write::WriteString "    VELOCITY_STOP_TIME $LinearEndTime"
                         write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
                         write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
+                        write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
 
 
                         # # Interval
@@ -251,10 +252,9 @@ proc DEM::write::writeDEMConditionMeshes { } {
                         set VEnd  [write::getValueByNode [$group_node selectNodes "./value\[@n='VEnd'\]"]]
                         write::WriteString "    VELOCITY_START_TIME $VStart"
                         write::WriteString "    VELOCITY_STOP_TIME $VEnd"
+                        write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
 
                     }
-                    #Hardcoded
-                    write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
 
                 }
 
