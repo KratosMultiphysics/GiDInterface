@@ -135,6 +135,7 @@
   <Process n="DEM-VelocityBC-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
     <inputs>
       <parameter n="PrescribeMotion_flag" pn="Prescribe motion" type="bool" v="false">
+      <parameter n="GraphPrint"                 parent="true"           pn="Print group forces" v="false" type="bool" show_in_window="0"/>
         <parameter n="DEM-VelocityBCMotion"     parent="true"           pn="Motion type" type="combo" v="None" values="None,LinearPeriodic,FromATable,FixedDOFs" pvalues="None,Linear/Periodic,From a table,Fixed DOFs" show_in_window="0">
           <parameter n="VelocityModulus"        parent="LinearPeriodic" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
           <parameter n="DirectionVector"        parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
@@ -182,6 +183,7 @@
   <Process n="DEM-VelocityIC-Process" pn="Impose vector value by direction process" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process fixes all the components of a given vector variable" check="DirectorVectorNonZero direction">
     <inputs>
       <parameter n="PrescribeMotion_flag"            type="bool"          v="false"       pn="Prescribe motion" show_in_window="0">
+        <parameter n="GraphPrint"                    type="bool"          v="false"       pn="Print group forces" parent="true" show_in_window="0"/>
         <parameter n="InitialVelocityModulus"        type="double"        v="1.0"         pn="Initial velocity" parent="true" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
         <parameter n="iDirectionVector"              type="inline_vector" v="1.0,0.0,0.0" pn="Direction vector" parent="true" show_in_window="0"/>
         <parameter n="InitialAngularVelocityModulus" type="double"        v="0.0"         pn="Initial angular velocity" parent="true" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>

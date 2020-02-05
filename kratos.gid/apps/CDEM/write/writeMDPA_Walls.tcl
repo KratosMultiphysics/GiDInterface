@@ -40,7 +40,7 @@ proc CDEM::write::WriteWallCustomSmp { } {
     }
 }
 
-proc DEM::write::DefineMaterialTestConditions {group_node} {
+proc DEM::write::DefineFEMExtraConditions {group_node} {
     set material_analysis [write::getValue DEMTestMaterial Active]
     if {$material_analysis == "true"} {
         set is_material_test [write::getValueByNode [$group_node selectNodes "./value\[@n='MaterialTest'\]"]]

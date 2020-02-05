@@ -408,7 +408,7 @@ proc DEM::write::writeWallConditionMeshes { } {
             write::WriteString "    IS_GHOST $is_ghost"
             write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
 
-            DefineMaterialTestConditions $group_node
+            DefineFEMExtraConditions $group_node
 
         }
         write::WriteString "  End SubModelPartData"
@@ -430,7 +430,7 @@ proc DEM::write::writeWallConditionMeshes { } {
     }
 }
 
-proc DEM::write::DefineMaterialTestConditions {group_node} {
+proc DEM::write::DefineFEMExtraConditions {group_node} {
     set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
     if {$GraphPrint == "true"} {
         set GraphPrintval 1
