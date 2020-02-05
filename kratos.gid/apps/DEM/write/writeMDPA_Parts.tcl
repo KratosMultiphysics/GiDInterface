@@ -36,7 +36,7 @@ proc DEM::write::WriteMDPAParts { } {
 
 
 
-
+# TODO: Simulations do not run with this. Bad mdpa
 proc DEM::write::WriteCustomDEMSmp { } {
     foreach group [GetDEMGroupsCustomSubmodelpart] {
         set groupid [write::GetWriteGroupName [$group @n]]

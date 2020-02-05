@@ -35,10 +35,10 @@ proc DEM::write::WriteMDPAParts { } {
 	DEM::write::writeDEMConditionMeshes
 
     # CustomSubmodelParts
-    #WriteCustomDEMSmp not required for dem.
+    CDEM::write::WriteCustomDEMSmp
 }
 
-## TODO: proc under revision. Duplicated code. Unused in some situations
+## TODO: proc under revision. This works but the proc is different from the DEM::write version.
 proc CDEM::write::WriteCustomDEMSmp { } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
