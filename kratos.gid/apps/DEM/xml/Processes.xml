@@ -10,7 +10,7 @@
         <parameter n="CenterOfMass"     parent="FreeMotion" pn="Center of mass" type="inline_vector"   v="0.0,0.0,0.0" units="m"      unit_magnitude="L" show_in_window="0"/>
           <parameter n="Inertia"        parent="FreeMotion" pn="Inertia(kg*m2)" type="[DEM::xml::InertiaType]" v="1.0" show_in_window="0" help="" />
 
-          <parameter n="DEM-DOFS" parent="FreeMotion" type="combo" v="No" pn="Degrees of Freedom" values="No,Yes" pvalues="No,Yes" show_in_window="0">
+          <parameter n="FEM-DOFS" parent="FreeMotion" type="combo" v="No" pn="Degrees of Freedom" values="No,Yes" pvalues="No,Yes" show_in_window="0">
             <parameter n="Ax" parent="Yes" type="combo" v="No" pn="Fix Velocity X" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Fix Velocity X" show_in_window="0">
               <parameter n="Vx" parent="Constant" v="0.0" pn="   Value" unit_magnitude="Velocity" units="m/s" help="X Velocity" show_in_window="0"/>
               <parameter n="FilenameVx" parent="FromATable" type="file" v="- No file -" pn="   Filename" help="X Velocity file" show_in_window="0"/>
@@ -39,7 +39,7 @@
             <parameter n="VEnd" parent="Yes" v="100.0" pn="End time" unit_magnitude="T" units="s" show_in_window="0"/>
           </parameter>
 
-          <parameter n="DEM-InitialVelocities" parent="FreeMotion" v="No" pn="Initial Velocities" type="combo" values="No,Yes" show_in_window="0">
+          <parameter n="FEM-InitialVelocities" parent="FreeMotion" v="No" pn="Initial Velocities" type="combo" values="No,Yes" show_in_window="0">
             <parameter n="iAx" parent="Yes" v="false" pn="Set Initial Velocity X" type="bool" help="Set Initial Velocity X" show_in_window="0">
               <parameter n="iVx" parent="true" v="0.0" pn="   Value" unit_magnitude="Velocity" units="m/s" help="X Velocity" show_in_window="0"/>
             </parameter>
@@ -60,7 +60,7 @@
             </parameter>
           </parameter>
 
-          <parameter n="DEM-RBImposedForces" parent="FreeMotion" type="combo" v="No" pn="Impose external forces" values="No,Yes" show_in_window="0">
+          <parameter n="FEM-RBImposedForces" parent="FreeMotion" type="combo" v="No" pn="Impose external forces" values="No,Yes" show_in_window="0">
             <parameter n="ExternalForceX" parent="Yes" type="combo" v="No" pn="External Forces" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the X direction to the group" show_in_window="0">
               <parameter n="FX" parent="Constant" v="0.0" pn="   Fx" units="N" unit_magnitude="F" help="Insert the value of the external force in X direction" show_in_window="0"/>
               <parameter n="FilenameFX" parent="FromATable" type="file" v="- No file -" pn="   Filename" help="Insert here the name of the file containing the external force in X direction" show_in_window="0"/>
@@ -88,7 +88,7 @@
             </parameter>
           </parameter>
 
-          <parameter n="VelocityModulus"        parent="LinearPeriodic" pn="Velocity"           type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
+          <parameter n="VelocityModulus"        parent="LinearPeriodic" pn="Velocity"           type="double" v="0.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
           <parameter n="DirectionVector"        parent="LinearPeriodic" pn="Direction vector"   type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
           <parameter n="LinearPeriodic"         parent="LinearPeriodic" pn="Periodic"           type="bool" v="false" help="If activated, the imposed velocity values are the maximum during a harmonic oscillation with a given period" show_in_window="0">
             <parameter n="LinearPeriod"         parent="true"           pn="Period"             type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
