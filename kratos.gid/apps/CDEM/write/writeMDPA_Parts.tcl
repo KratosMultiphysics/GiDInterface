@@ -126,25 +126,6 @@ proc CDEM::write::writeSkinSphereNodes { } {
 }
 
 
-
-# proc CDEM::write::GetNodalConditionsGroups { {include_cond 0} } { # TODO UNUSED CODE
-#     set groups [list ]
-#     set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition/group"
-#     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-# 	set groupid [$group @n]
-# 	if {$include_cond} {lappend groups [[$group parent] @n]}
-# 	lappend groups [write::GetWriteGroupName $groupid]
-#     }
-#     return $groups
-# }
-
-# proc DEM::write::write2VelocityMeshes { } {
-#     foreach {cid groupid} [DEM::write::GetNodalConditionsGroups 1] {
-# 	::write::writeGroupSubModelPart $cid $groupid "nodal"
-#     }
-# }
-
-
 proc CDEM::write::writeMaterialsParts { } {
     variable partsProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
