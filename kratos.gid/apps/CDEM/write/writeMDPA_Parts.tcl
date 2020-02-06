@@ -42,11 +42,12 @@ proc DEM::write::WriteMDPAParts { } {
 proc CDEM::write::WriteCustomDEMSmp { } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-	set groupid [$group @n]
+    set groupid [$group @n]
+    set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
 	set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
 	if {$destination_mdpa == "DEM"} {
 
-	    write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
+	    write::WriteString  "Begin SubModelPart $group_node \/\/ Custom SubModelPart. Group name: $groupid"
 	    write::WriteString  "Begin SubModelPartData"
 	    write::WriteString  "End SubModelPartData"
 	    write::WriteString  "Begin SubModelPartNodes"
