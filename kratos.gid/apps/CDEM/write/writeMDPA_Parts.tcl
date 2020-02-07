@@ -42,20 +42,20 @@ proc DEM::write::WriteMDPAParts { } {
 proc CDEM::write::WriteCustomDEMSmp { } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-    set groupid [$group @n]
-    set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
-	set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-	if {$destination_mdpa == "DEM"} {
-
-	    write::WriteString  "Begin SubModelPart $group_node \/\/ Custom SubModelPart. Group name: $groupid"
-	    write::WriteString  "Begin SubModelPartData"
-	    write::WriteString  "End SubModelPartData"
-	    write::WriteString  "Begin SubModelPartNodes"
-	    GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
-	    write::WriteString  "End SubModelPartNodes"
-	    write::WriteString  "End SubModelPart"
-	    write::WriteString  ""
-	}
+        set group_id [$group @n]
+        set group_raw [write::GetWriteGroupName $group_id]
+        set good_name [write::transformGroupName $group_raw]
+        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
+        if {$destination_mdpa == "DEM"} {
+            write::WriteString  "Begin SubModelPart $good_name \/\/ Custom SubModelPart. Group name: $group_id"
+            write::WriteString  "Begin SubModelPartData"
+            write::WriteString  "End SubModelPartData"
+            write::WriteString  "Begin SubModelPartNodes"
+            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group_id] [subst "%10i\n"]]
+            write::WriteString  "End SubModelPartNodes"
+            write::WriteString  "End SubModelPart"
+            write::WriteString  ""
+        }
     }
 }
 
