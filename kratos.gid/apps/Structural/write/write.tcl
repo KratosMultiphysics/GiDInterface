@@ -358,6 +358,10 @@ proc Structural::write::validateTrussMesh { } {
     return [list $error $error_message]
 }
 
+proc Structural::write::ApplicationSpecificGetCondition {condition group} {
+    return $condition
+}
+
 
 proc Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile

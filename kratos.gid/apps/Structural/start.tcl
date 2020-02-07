@@ -68,4 +68,8 @@ proc ::Structural::BeforeMeshGeneration { size } {
     }
 }
 
+proc ::Structural::ApplicationSpecificGetCondition {condition group} {
+    return [Structural::write::ApplicationSpecificGetCondition $condition $group]
+}
+
 ::Structural::Init
