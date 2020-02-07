@@ -68,8 +68,8 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
         }
     }
 
-    # DEM FEM Walls
     set DEMConditions [spdAux::getRoute "DEMConditions"]
+    # DEM FEM Walls
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
     set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
@@ -79,7 +79,7 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
         if {$propnode ne "" } {
             $propnode setAttribute v $val
         } else {
-            W "Warning - Couldn't find property Outlet $prop"
+            W "Warning - Couldn't find property $prop"
         }
     }
 
@@ -93,7 +93,7 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
         if {$propnode ne "" } {
             $propnode setAttribute v $val
         } else {
-            W "Warning - Couldn't find property Inlet $prop"
+            W "Warning - Couldn't find property $prop"
         }
     }
 
@@ -108,7 +108,21 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
         if {$propnode ne "" } {
             $propnode setAttribute v $val
         } else {
-            W "Warning - Couldn't find property Inlet $prop"
+            W "Warning - Couldn't find property $prop"
+        }
+    }
+
+    # DEM custom submodelpart
+    set custom_dem "$DEMConditions/condition\[@n='DEM-CustomSmp'\]"
+    set customNode [customlib::AddConditionGroupOnXPath $custom_dem Body]
+    $customNode setAttribute ov volume
+    set props [list ]
+    foreach {prop val} $props {
+        set propnode [$customNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property $prop"
         }
     }
 
