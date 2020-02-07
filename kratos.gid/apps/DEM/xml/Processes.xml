@@ -243,7 +243,7 @@
           <parameter n="InletMassFlow" parent="Kilograms" pn="Mass flow (kg/s)" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" show_in_window="0"/>
         </parameter>
 
-        <parameter n="InletElementType"   pn="Element Type"    parent="true"                type="combo"  v="SphericParticle3D"  values="SphericParticle3D,Cluster3D,SingleSphereCluster"  pvalues="Sphere,Cluster,SingleSphereCluster" help="Choose if you want this Inlet to insert spheres or clusters" show_in_window="0">
+        <parameter n="InletElementType"   pn="Element Type"    parent="true"                type="combo"  v="SphericParticle3D"  values="SphericParticle3D,Cluster3D,SingleSphereCluster,FromFile"  pvalues="Sphere,Cluster,SingleSphereCluster,From a file" help="Type of particle to insert. Single particles, clusters or user defined cluster file." show_in_window="0">
           <parameter n="Excentricity"                          parent="SingleSphereCluster" type="double" v="0.1"    pn="Excentricity (%)"                            help="% of the radius" show_in_window="0"/>
           <parameter n="ProbabilityDistributionOfExcentricity" parent="SingleSphereCluster" type="combo"  v="normal" pn="Probability Distribution of excentricity"    values="normal,lognormal" help="Choose the probablility distribution of the diameter" show_in_window="0"/>
           <parameter n="StandardDeviationOfExcentricity"       parent="SingleSphereCluster" type="double" v="0.1"    pn="Standard Deviation of excentricity"          help="Standard Deviation of the Diameter, assuming Normal Distribution. If 0.0 is chosen, a uniform diameter distribution will be created" show_in_window="0"/>
@@ -254,6 +254,8 @@
             <parameter n="OrientationZ"    pn="Orientation Z"      parent="No" v="0.0"     type="double" help="Third parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
             <parameter n="OrientationW"    pn="Orientation W"      parent="No" v="1.0"     type="double" help="Real part of the orientation quaternion" show_in_window="0"/>
           </parameter>
+          <parameter n="ClusterFilename" pn="Cluster file" parent="FromFile" type="file" v="custom.clu" show_in_window="0"/>
+
         </parameter>
 
         <parameter n="InletStartTime"          parent="true" pn="Inlet start"         type="double" v="0.0"    units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
