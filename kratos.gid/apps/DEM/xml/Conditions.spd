@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="Conditions" pn="Conditions" un="DEMConditions" icon="loads" help="Define conditions over particles or finite elements" open_window="0">
+<container n="Conditions" pn="Assign conditions" un="DEMConditions" icon="loads" help="Define conditions over particles or finite elements" open_window="0">
 	<dynamicnode command="spdAux::injectConditions" args="ImplementedInApplication DEMApplication"/>
 </container>

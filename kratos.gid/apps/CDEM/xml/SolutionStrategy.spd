@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="SolStrat" pn="Settings" un="DEMStratSection" icon="analysis" open_window="0">
+<container n="SolStrat" pn="General settings" un="DEMStratSection" icon="analysis" open_window="0">
 	<include n="Gravity" active="1" path="apps/DEM/xml/Gravity.spd"/>
 	<container n="Boundingbox"      un="Boundingbox" pn="Bounding box" help="Define bounding box options for the simulation" icon="bbox" open_window="0">
                 <value n="UseBB"          type="bool"     pn="Bounding box"           values="true,false" v="false"  icon="black1"  help="True: Particles outside the delimited area will be deleted" update_proc="spdAux::RequestRefresh" />
@@ -16,6 +16,16 @@
                 <value n="MinY"           v="-10"         pn="Min Y"                                      state="[getStateBoundingBoxParams]"  icon="black1" help="Min Y"/>
                 <value n="MinZ"           v="-10"         pn="Min Z"                                      state="[getStateBoundingBoxParams]"  icon="black1" help="Min Z"/>
         </container>
+
+	<container     n="TimeParameters"               un="DEMTimeParameters"  pn="Time parameters"    icon="time4" open_window="0">
+                <value n="StartTime"                    v="0.0"                 pn="Start time"         icon="black1" help="Simulation start time"/>
+                <value n="EndTime"                      v="1.0"                 pn="End time"           icon="black1" help="Simulation end time"/>
+                <value n="DeltaTime"                    v="1e-6"                pn="Delta time"         icon="black1" help="Simulation time step value"/>
+                <value n="ScreenInfoOutput"             v="5"                   pn="Info screen output" icon="black1" help="Interval to deliver onscreen information on the running process (in seconds)"/>
+                <value n="NeighbourSearchFrequency"     v="50"                  pn="Search frequency"   icon="black1" help="Search for new particle or wall neighbours. Set its value to '10': a single search will be computed out every ten steps"/>
+	</container>
+	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
+	<dynamicnode command="spdAux::injectSolvers" args=""/>
         <container n="AdvOptions"                               un="AdvOptions" pn="Advanced settings"                    help="Extra settings for particle problems" icon="solver">
                 <value n="DeltaOption"                          type="bool"     pn="Bond creation method"                 values="Absolute,Coordination_Number"       v="Absolute" icon="black1" help="Absolute method: create bonds between particles closer than a fixed a distance value. Coordination number method: The program will iterate until an average number of contacts per particle is achieved."/>
                     <value n="TangencyAbsoluteTolerance"        v="0.0001"      pn="Tangency tolerance value"             icon="black1"                               help="Fixed a distance value" state="[getStateFromXPathValue {string(../value[@n='DeltaOption']/@v)} Absolute]" update_proc="spdAux::RequestRefresh" />
@@ -32,13 +42,6 @@
                 <value n="AmplifiedSearchRadius"                v="1.1"         pn="AmplifiedSearchRadius"                icon="black1" state="hidden" />
                 <!-- <value n="NeighbourSearchAcceptedGap"          v="1.0"             pn="NeighbourSearchAcceptedGap" icon="black1"/> -->
         </container>
-	<container     n="TimeParameters"               un="DEMTimeParameters"  pn="Time parameters"    icon="time4" open_window="0">
-                <value n="StartTime"                    v="0.0"                 pn="Start time"         icon="black1" help="Simulation start time"/>
-                <value n="EndTime"                      v="1.0"                 pn="End time"           icon="black1" help="Simulation end time"/>
-                <value n="DeltaTime"                    v="1e-6"                pn="Delta time"         icon="black1" help="Simulation time step value"/>
-                <value n="ScreenInfoOutput"             v="5"                   pn="Info screen output" icon="black1" help="Interval to deliver onscreen information on the running process (in seconds)"/>
-                <value n="NeighbourSearchFrequency"     v="50"                  pn="Search frequency"   icon="black1" help="Search for new particle or wall neighbours. Set its value to '10': a single search will be computed out every ten steps"/>
-	</container>
         <container     n="TestMaterial"                 un="DEMTestMaterial"    pn="Material Analysis"    help="Testing specimens under certain pressure conditions" icon="black1" open_window="0">
                 <value n="Active"                       v="false" type="bool"   pn="Activate"             values="true,false" icon="black1"/>
                 <value n="TestType"                     v="UCS"                 pn="Select test type"     state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" values="UCS,Triaxial,Oedometric,Hydrostatic,BTS,Shear" icon="black1"/>
@@ -48,6 +51,4 @@
                 <value n="Specimenlength"               v="0.30"                pn="Length"               state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
                 <value n="Specimendiameter"             v="0.15"                pn="Diameter"             state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
         </container>
-	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
-	<dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>
