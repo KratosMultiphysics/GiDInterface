@@ -279,9 +279,27 @@ proc DEM::write::DefineInletConditions {inletProperties groupid mid contains_clu
         write::WriteString "        CLUSTER_FILE_NAME $cluster_file_name"
     }
 
-    if {$inlet_element_type eq "FromFile"} {
+    if {[dict get $inletProperties $groupid InletElementType] eq "FromFile"} {
+        W "2222222222"
+        set inlet_element_type Cluster3D
+        set contains_clusters 1
         set custom_file_name [dict get $inletProperties $groupid ClusterFilename]
+        write::WriteString "        ELEMENT_TYPE $inlet_element_type"
         write::WriteString "        CLUSTER_FILE_NAME $custom_file_name"
+
+        W $custom_file_name
+        W "xxxxxxxxxxxxxxxxxx"
+
+        set dir [write::GetConfigurationAttribute dir]
+        W $dir
+        set src_dir $::Kratos::kratos_private(Path)
+        set cluster_dir [file join $src_dir exec Kratos applications DEMApplication custom_elements custom_clusters]
+        W $cluster_dir
+        set cluster_dem ClusterFilename
+        set totalpath [file join $cluster_dir $cluster_dem]
+        W $totalpath
+        # file copy -force $totalpath $dir
+
     }
 
     write::WriteString "        IDENTIFIER $mid"
