@@ -358,7 +358,9 @@ proc Structural::write::validateTrussMesh { } {
     return [list $error $error_message]
 }
 
-proc Structural::write::ApplicationSpecificGetCondition {condition group} {
+proc Structural::write::ApplicationSpecificGetCondition {condition group etype nnodes} {
+
+    W "$condition $group $etype $nnodes"
     return $condition
 }
 
