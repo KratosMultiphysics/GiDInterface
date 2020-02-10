@@ -52,8 +52,6 @@ proc DEM::write::GetUsedClusters { } {
             set inlet_element_type [dict get $inletProperties $groupid ClusterType]
             lappend cluster_list $inlet_element_type
         } elseif {[dict get $inletProperties $groupid InletElementType] == "FromFile"} {
-            W [dict get $inletProperties $groupid InletElementType]
-            W "a DEM::write::GetUsedClusters"
         }
     }
     return $cluster_list
@@ -267,7 +265,6 @@ proc DEM::write::writeInletMeshes { } {
 }
 
 proc DEM::write::DefineInletConditions {inletProperties groupid mid contains_clusters} {
-    W "3"
     set inlet_element_type SphericParticle3D
     if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
         set inlet_element_type [dict get $inletProperties $groupid ClusterType]
@@ -280,31 +277,23 @@ proc DEM::write::DefineInletConditions {inletProperties groupid mid contains_clu
     }
 
     if {[dict get $inletProperties $groupid InletElementType] eq "FromFile"} {
-        W "2222222222"
         set inlet_element_type Cluster3D
         set contains_clusters 1
         set custom_file_name [dict get $inletProperties $groupid ClusterFilename]
-        write::WriteString "        ELEMENT_TYPE $inlet_element_type"
         write::WriteString "        CLUSTER_FILE_NAME $custom_file_name"
 
-        W $custom_file_name
-        W "xxxxxxxxxxxxxxxxxx"
-
         set dir [write::GetConfigurationAttribute dir]
-        W $dir
         set src_dir $::Kratos::kratos_private(Path)
         set cluster_dir [file join $src_dir exec Kratos applications DEMApplication custom_elements custom_clusters]
-        W $cluster_dir
         set cluster_dem ClusterFilename
         set totalpath [file join $cluster_dir $cluster_dem]
-        W $totalpath
         # file copy -force $totalpath $dir
-
     }
 
     write::WriteString "        IDENTIFIER $mid"
     write::WriteString "        INJECTOR_ELEMENT_TYPE SphericParticle3D"
-    write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+    write::WriteString "        ELEMENT_TYPE $inlet_element_type"
+    #write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
     write::WriteString "        CONTAINS_CLUSTERS $contains_clusters"
     # Change to SphericSwimmingParticle3D in FLUIDDEM interface
 }
