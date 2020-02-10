@@ -371,7 +371,7 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
 
     # Automatic Kratos Group for Boundary Condition
     set groupid "-AKGSkinMesh3D"
-    DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
+    DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid    
 
     # Find boundaries
     if {[GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
@@ -680,8 +680,8 @@ proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     }
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
     foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
+	set groupid [$group @n]
+	GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 1] escape
     }
 }
 
