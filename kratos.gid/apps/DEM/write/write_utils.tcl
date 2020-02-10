@@ -371,13 +371,7 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
 
     # Automatic Kratos Group for Boundary Condition
     set groupid "-AKGSkinMesh3D"
-    DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
-
-    if {$::Model::SpatialDimension eq "2D"} {
-	GiD_Process Mescape Meshing MeshCriteria NoMesh Lines : escape
-    } else {
-	GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces : escape
-    }
+    DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid    
 
     # Find boundaries
     if {[GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
