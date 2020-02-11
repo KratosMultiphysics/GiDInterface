@@ -324,7 +324,7 @@
           <parameter n="InletLimitedVelocity" parent="Kilograms" pn="Inlet injection speed limit (m/s)" type="double" v="2.0" help="Inlet injection speed limit (m/s)" show_in_window="0"/>
           <parameter n="InletMassFlow" parent="Kilograms" pn="Mass flow (kg/s)" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" show_in_window="0"/>
         </parameter>
-        <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="CylinderPartDEMElement2D" values="CylinderPartDEMElement2D" pvalues="Circle" show_in_window="0"/>
+        <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="CylinderParticle2D" values="CylinderParticle2D" pvalues="Circle" show_in_window="0"/>
         <parameter n="InletStartTime" parent="true" pn="Inlet start" type="double" v="0.0" units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
         <parameter n="InletStopTime" parent="true" pn="Inlet stop" type="double" v="100.0" units="s" unit_magnitude="T" help="Inlet stop time" show_in_window="0"/>
         <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
