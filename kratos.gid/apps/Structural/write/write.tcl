@@ -203,13 +203,22 @@ proc Structural::write::WriteMaterialsFile { } {
 }
 
 proc Structural::write::GetUsedElements { {get "Objects"} } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set lista [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+    foreach gNode [Structural::write::GetPartsGroups] {
         set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
         set e [Model::getElement $elem_name]
         if {$get eq "Name"} { set e [$e getName] }
         lappend lista $e
+    }
+    return $lista
+}
+proc Structural::write::GetPartsGroups { {get "Objects"} } {
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set g $gNode
+        if {$get eq "Name"} { set g [$g getName] }
+        lappend lista $g
     }
     return $lista
 }
@@ -359,13 +368,46 @@ proc Structural::write::validateTrussMesh { } {
 }
 
 proc Structural::write::ApplicationSpecificGetCondition {condition group etype nnodes} {
+    # Prepare the return, if nothing to apply, return the same condition
+    set ret $condition
 
-    W "$condition $group $etype $nnodes"
-    set new_cond [Model::Clone $condition]
-    set kname [$new_cond getTopologyKratosName $etype $nnodes]
-    W $kname
+    # Some conditions applied over small displacement parts must change the topology name
 
-    return $condition
+    # Check if any of the used elements is in the list of Small displacements
+    set used_elements [Structural::write::GetUsedElements]
+    set small_disp_elements [Model::GetElements {LargeDeformation False}]
+    set used_small_disp_elements [list]
+
+    foreach elem $used_elements {
+        if {$elem in $small_disp_elements} {
+            lappend used_small_disp_elements $elem
+        }
+    }
+    # used_small_disp_elements contains the used elements which LargeDeformation attribute is set to false
+    if {[llength $used_small_disp_elements] > 0} {
+        if {[Structural::write::GroupUsesSmallDisplacement $group $used_small_disp_elements]} {
+            set new_cond [Model::Clone $condition]
+            set topology [$new_cond getTopologyFeature $etype $nnodes]
+            set new_kname [$topology getAttribute KratosNameSmallDisplacement]
+            if {$new_kname ne ""} {$topology setKratosName $new_kname}
+            set ret $new_cond
+        }
+    }
+    return $ret
+}
+
+proc Structural::write::GroupUsesSmallDisplacement {group used_small_disp_elements} {
+    set ret 0
+    set group_nodes [GiD_EntitiesGroups get $group nodes]
+
+    foreach part_group_small_disp [Structural::write::GetPartsGroups] {
+        set elem_name [get_domnode_attribute [$part_group_small_disp selectNodes ".//value\[@n='Element']"] v]
+        set elem [Model::getElement $elem_name]
+        if {$elem in $used_small_disp_elements} {
+            if {[objarray length [objarray intersection -sorted $group_nodes [GiD_EntitiesGroups get [$part_group_small_disp @n] nodes] ] ] > 0} {set ret 1; break}
+        }
+    }
+    return $ret
 }
 
 
