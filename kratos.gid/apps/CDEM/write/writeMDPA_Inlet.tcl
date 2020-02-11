@@ -16,3 +16,16 @@ proc DEM::write::DefineInletConditions {inletProperties groupid mid contains_clu
     write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
     write::WriteString "        CONTAINS_CLUSTERS $contains_clusters"
 }
+
+proc DEM::write::DefineInletConditions2D {inletProperties groupid mid contains_clusters} {
+    set inlet_element_type CylinderContinuumParticle2D
+
+    if {[dict get $inletProperties $groupid InletElementType] eq "CylinderParticle2D"} {
+        dict set inletProperties $groupid InletElementType CylinderContinuumParticle2D
+    }
+    write::WriteString "        IDENTIFIER $mid"
+    write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+    write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+    write::WriteString "        CONTAINS_CLUSTERS 0"
+    # Change to SphericSwimmingParticle3D in FLUIDDEM interface
+}

@@ -404,14 +404,7 @@ proc DEM::write::writeInletMeshes2D { } {
                 set contains_clusters 0
                 set random_orientation 0
 
-                # TODO. review cluster injection options for $inlet_element_type
-                set inlet_element_type CylinderPartDEMElement2D
-
-                write::WriteString "        IDENTIFIER $mid"
-                write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
-                write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
-                write::WriteString "        CONTAINS_CLUSTERS 0"
-                # Change to SphericSwimmingParticle3D in FLUIDDEM interface
+                DefineInletConditions2D $inletProperties $groupid $mid $contains_clusters
 
                 set velocity_modulus [dict get $inletProperties $groupid InVelocityModulus]
                 lassign [split [dict get $inletProperties $groupid InDirectionVector] ","] velocity_X velocity_Y
@@ -481,6 +474,17 @@ proc DEM::write::writeInletMeshes2D { } {
         write::WriteString "        End Table"
         write::WriteString "        "
     }
+}
+
+
+proc DEM::write::DefineInletConditions2D {inletProperties groupid mid contains_clusters} {
+
+    set inlet_element_type CylinderPartDEMElement2D
+    write::WriteString "        IDENTIFIER $mid"
+    write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+    write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+    write::WriteString "        CONTAINS_CLUSTERS 0"
+    # Change to SphericSwimmingParticle3D in FLUIDDEM interface
 }
 
 proc DEM::write::GetClusterFileNameAndReplaceInletElementType {inlet_element_type} {
