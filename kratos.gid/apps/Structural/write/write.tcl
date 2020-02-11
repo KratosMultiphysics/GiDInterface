@@ -361,6 +361,10 @@ proc Structural::write::validateTrussMesh { } {
 proc Structural::write::ApplicationSpecificGetCondition {condition group etype nnodes} {
 
     W "$condition $group $etype $nnodes"
+    set new_cond [Model::Clone $condition]
+    set kname [$new_cond getTopologyKratosName $etype $nnodes]
+    W $kname
+
     return $condition
 }
 
