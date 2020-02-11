@@ -17,7 +17,7 @@ proc MPM::write::Init { } {
     # SetAttribute validApps [list "MPM"]
     SetAttribute main_script_file "KratosParticle.py"
     SetAttribute materials_file "ParticleMaterials.json"
-    SetAttribute model_part_name ""
+    SetAttribute model_part_name "Background_Grid"
 }
 
 # Events
@@ -155,7 +155,7 @@ proc MPM::write::writeCustomFilesEvent { } {
     # write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 
     # Materials file
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True Initial_MPM_Material
     
     # Main python script
     set orig_name [GetAttribute main_script_file]
