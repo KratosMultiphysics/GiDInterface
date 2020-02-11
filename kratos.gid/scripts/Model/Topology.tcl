@@ -49,6 +49,10 @@ oo::class create Topology {
         variable kratosName
         return $kratosName
     }
+    method setKratosName { new_name } {
+        variable kratosName
+        set kratosName $new_name
+    }
 
     method setAttribute {att val} {variable attributes; dict set attributes $att $val}
     method hasAttribute {att} {
