@@ -171,7 +171,7 @@
   </ElementItem>
   <!--large displacements-->
   <!--total lagrangian-->
-  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ov="surface" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ov="surface" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="TotalLagrangianElement2D3N"/>
@@ -240,7 +240,7 @@
     </outputs>
   </ElementItem>
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+  <ElementItem n="UpdatedLagrangianElement2D" pn="Solid updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianElement2D3N"/>
