@@ -22,6 +22,9 @@ proc PfemFluid::write::Init { } {
 
 # Model Part Blocks
 proc PfemFluid::write::writeModelPartEvent { } {
+    # Init data
+    write::initWriteConfiguration [GetAttributes]
+    
     set parts_un_list [GetPartsUN]
     foreach part_un $parts_un_list {
         write::initWriteData $part_un "PFEMFLUID_Materials"
@@ -102,11 +105,13 @@ proc PfemFluid::write::writeCustomFilesEvent { } {
     
     #write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 }
+
 proc PfemFluid::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
     PfemFluid::write::writePropertiesJsonFile [GetAttribute materials_file] $write_const_law $model_part_name
 }
+
 proc PfemFluid::write::writePropertiesJsonFile { {fname "materials.json"} {write_claw_name "True"} {model_part_name ""}} {
     set mats_json [dict create properties [list ] ]
     foreach parts_un [PfemFluid::write::GetPartsUN] {
