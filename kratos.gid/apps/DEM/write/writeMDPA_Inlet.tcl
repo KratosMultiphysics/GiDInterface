@@ -267,33 +267,31 @@ proc DEM::write::writeInletMeshes { } {
 proc DEM::write::DefineInletConditions {inletProperties groupid mid contains_clusters} {
     set inlet_element_type SphericParticle3D
     if {[dict get $inletProperties $groupid InletElementType] eq "Cluster3D"} {
-        set inlet_element_type [dict get $inletProperties $groupid ClusterType]
         set contains_clusters 1
-        lassign [GetClusterFileNameAndReplaceInletElementType $inlet_element_type] inlet_element_type cluster_file_name
+        if {[dict get $inletProperties $groupid ClusterType] eq "FromFile"} {
+            set custom_file_name [dict get $inletProperties $groupid ClusterFilename]
+            set only_name [file tail $custom_file_name]
+            write::WriteString "        CLUSTER_FILE_NAME $only_name"
+
+            # set dir [write::GetConfigurationAttribute dir]
+            # set src_dir $::Kratos::kratos_private(Path)
+            # set cluster_dir [file join $src_dir exec Kratos applications DEMApplication custom_elements custom_clusters]
+            # set cluster_dem ClusterFilename
+            # set totalpath [file join $cluster_dir $cluster_dem]
+            # file copy -force $totalpath $dir
+        } else {
+            set inlet_element_type [dict get $inletProperties $groupid ClusterType]
+            lassign [GetClusterFileNameAndReplaceInletElementType $inlet_element_type] inlet_element_type cluster_file_name}
     }
 
     if {$inlet_element_type eq "Cluster3D"} {
         write::WriteString "        CLUSTER_FILE_NAME $cluster_file_name"
     }
 
-    if {[dict get $inletProperties $groupid InletElementType] eq "FromFile"} {
-        set inlet_element_type Cluster3D
-        set contains_clusters 1
-        set custom_file_name [dict get $inletProperties $groupid ClusterFilename]
-        write::WriteString "        CLUSTER_FILE_NAME $custom_file_name"
-
-        set dir [write::GetConfigurationAttribute dir]
-        set src_dir $::Kratos::kratos_private(Path)
-        set cluster_dir [file join $src_dir exec Kratos applications DEMApplication custom_elements custom_clusters]
-        set cluster_dem ClusterFilename
-        set totalpath [file join $cluster_dir $cluster_dem]
-        # file copy -force $totalpath $dir
-    }
-
     write::WriteString "        IDENTIFIER $mid"
     write::WriteString "        INJECTOR_ELEMENT_TYPE SphericParticle3D"
-    write::WriteString "        ELEMENT_TYPE $inlet_element_type"
-    #write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
+    #write::WriteString "        ELEMENT_TYPE $inlet_element_type"
+    write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid InletElementType]"
     write::WriteString "        CONTAINS_CLUSTERS $contains_clusters"
     # Change to SphericSwimmingParticle3D in FLUIDDEM interface
 }
