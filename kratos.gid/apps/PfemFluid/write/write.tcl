@@ -98,7 +98,7 @@ proc PfemFluid::write::GetPartsUN { } {
 # Custom files (Copy python scripts, write materials file...)
 proc PfemFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
-    PfemFluid::write::WriteMaterialsFile
+    PfemFluid::write::WriteMaterialsFile False
     
     write::CopyFileIntoModel "python/RunPFEM.py"
     write::RenameFileInModel "RunPFEM.py" "MainKratos.py"
