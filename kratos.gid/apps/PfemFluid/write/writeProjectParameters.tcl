@@ -134,6 +134,10 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
 
+    set materialsDict [dict create]
+    dict set materialsDict materials_filename [GetAttribute materials_file]
+    dict set solverSettingsDict material_import_settings $materialsDict
+
     return $solverSettingsDict
 }
 
