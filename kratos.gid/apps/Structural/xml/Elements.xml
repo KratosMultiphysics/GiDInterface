@@ -175,7 +175,7 @@
   <!--here we could add a list of all of the possible geometries-->
   <TopologyFeatures>
     <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementMixedVolumetricStrainElement2D3N"/>
-    <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementMixedVolumetricStrainElementElement2D4N"/>
+    <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementMixedVolumetricStrainElement2D4N"/>
   </TopologyFeatures>
   <!-- here we add the block of features which we require from the constitutive law-->
   <ConstitutiveLaw_FilterFeatures>
