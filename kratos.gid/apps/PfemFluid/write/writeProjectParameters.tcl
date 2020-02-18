@@ -6,8 +6,6 @@ proc PfemFluid::write::writeParametersEvent { } {
 
 # Project Parameters
 proc PfemFluid::write::getNewParametersDict { } {
-    variable ModelPartName
-    write::SetConfigurationAttribute model_part_name $ModelPartName
     PfemFluid::write::CalculateMyVariables
     set projectParametersDict [dict create]
 
@@ -73,7 +71,6 @@ proc PfemFluid::write::GetTimeSettings { } {
 
 proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     variable bodies_list
-    variable ModelPartName
 
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue PFEMFLUID_SolStrat]
@@ -82,7 +79,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
 
     set problemtype [write::getValue PFEMFLUID_DomainType]
 
-    dict set solverSettingsDict model_part_name $ModelPartName
+    dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     if {$problemtype eq "Fluids"} {
         dict set solverSettingsDict physics_type "fluid"
     }
@@ -137,6 +134,10 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
 
+    set materialsDict [dict create]
+    dict set materialsDict materials_filename [GetAttribute materials_file]
+    dict set solverSettingsDict material_import_settings $materialsDict
+
     return $solverSettingsDict
 }
 
@@ -190,7 +191,6 @@ proc PfemFluid::write::GetContactProperty { contact_name property } {
 
 proc PfemFluid::write::GetPFEM_RemeshDict { } {
     variable bodies_list
-    variable ModelPartName
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
     dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
@@ -198,7 +198,7 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
     dict set resultDict "process_name" "RemeshDomainsProcess"
 
     set paramsDict [dict create]
-    dict set paramsDict "model_part_name" $ModelPartName
+    dict set paramsDict "model_part_name" [GetAttribute model_part_name]
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
@@ -301,7 +301,6 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
 
 proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     variable bodies_list
-    variable ModelPartName
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
     dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
@@ -311,7 +310,7 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     dict set resultDict "process_name" "RemeshFluidDomainsProcess"
 
     set paramsDict [dict create]
-    dict set paramsDict "model_part_name" $ModelPartName
+    dict set paramsDict "model_part_name" [GetAttribute model_part_name]
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
