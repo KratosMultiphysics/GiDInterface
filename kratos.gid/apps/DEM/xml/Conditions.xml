@@ -17,7 +17,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="Inlet" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Surface" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET">
+  <ConditionItem n="Inlet" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET">
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
       <item GeometryType="Triangle" nodes="6" KratosName="WallCondition3D6N"/>
@@ -26,7 +26,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="Inlet2D" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="DEM-Inlet2D-Process" help="Assign particle injection conditions" VariableName="INLET">
+  <ConditionItem n="Inlet2D" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEM-Inlet2D-Process" help="Assign particle injection conditions" VariableName="INLET">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
