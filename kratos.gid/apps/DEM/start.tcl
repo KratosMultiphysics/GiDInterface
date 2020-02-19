@@ -76,6 +76,16 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
                     GiD_Process Mescape Meshing ElemType Circle Surfaces $surfs escape escape
                 }
             }
+        } else {
+            if {$::Model::SpatialDimension eq "3D"} {
+                foreach volume [GiD_EntitiesGroups get $groupid volumes] {
+                    GiD_Process Mescape Meshing ElemType Default Volumes $volume escape escape
+                }
+            } {
+                foreach surfs [GiD_EntitiesGroups get $groupid surfaces] {
+                    GiD_Process Mescape Meshing ElemType Default Surfaces $surfs escape escape
+                }
+            }
         }
     }
     if {[catch {DEM::write::BeforeMeshGenerationUtils $elementsize} err]} {
