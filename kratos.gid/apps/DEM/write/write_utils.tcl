@@ -28,7 +28,7 @@ proc DEM::write::Elements_Substitution {} {
                 if {$FEMtoDEM == "AttheCentroid"} {
                     set nodes_to_delete [list]
                     set element_ids [GiD_EntitiesGroups get $groupid elements] ;               # get ids of all elements in cgroupid
-                    array set is_external_element [DEM::write::Compute_External_Elements 3 $groupid $element_ids]
+                    #array set is_external_element [DEM::write::Compute_External_Elements 3 $groupid $element_ids]
 
                     foreach element_id $element_ids { ;                                         # loop on each of the elements by id
                         set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ;   # get the nodes of the element
@@ -371,7 +371,7 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
 
     # Automatic Kratos Group for Boundary Condition
     set groupid "-AKGSkinMesh3D"
-    DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid    
+    DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
 
     # Find boundaries
     if {[GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
