@@ -809,12 +809,16 @@ proc spdAux::ProcConditionParameterState {domNode args} {
         if {$depN ne ""} {
             set depV [$param getDepV]
             set parent_dependency_node [$domNode selectNodes "../value\[@n='$depN'\]"]
-            set parent_dep_state [get_domnode_attribute $parent_dependency_node state]
+            set current_parent_dep_state [$parent_dependency_node getAttribute cal_state ""]
+            if {$current_parent_dep_state eq ""} {
+                set current_parent_dep_state [get_domnode_attribute $current_parent_dep_state state]
+            }
             set realV [get_domnode_attribute $parent_dependency_node v]
-            if {$realV ni [split $realV ','] || $parent_dep_state eq "hidden"} {set ret hidden}
+            if {$realV ni [split $depV ','] || $current_parent_dep_state eq "hidden"} {set ret hidden}
         }
     }
     if {$ret eq  ""} { set ret normal }
+    $domNode setAttribute cal_state $ret
     return $ret
 }
 
