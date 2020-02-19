@@ -786,10 +786,12 @@ proc spdAux::ProcConditionParameterState {domNode args} {
     # Current parameter name
     set param_name [get_domnode_attribute $domNode n]
     
-    # Condition
+    # Condition xml node
     set cond_node [$domNode parent]
     if {[$cond_node nodeName] eq "group"} {set cond_node [$cond_node parent]}
     set cond_name [get_domnode_attribute $cond_node n]
+
+    # Find condition object
     set cond [Model::getCondition $cond_name]
     if {$cond eq ""} {
         set cond [Model::getNodalConditionbyId $cond_name]
@@ -797,6 +799,8 @@ proc spdAux::ProcConditionParameterState {domNode args} {
             W "No condition found with name $cond_name" ; set ret normal
         }
     }
+
+    # Find process and parameter object
     if {$ret eq  ""} {
         set process_name [$cond getProcessName]
         set process [Model::GetProcess $process_name]
@@ -804,6 +808,7 @@ proc spdAux::ProcConditionParameterState {domNode args} {
         if {$param eq ""} {set ret normal}
     }
     
+    # Check dependencies
     if {$ret eq  ""} {
         set depN [$param getDepN]
         if {$depN ne ""} {
@@ -814,7 +819,7 @@ proc spdAux::ProcConditionParameterState {domNode args} {
                 set current_parent_dep_state [get_domnode_attribute $current_parent_dep_state state]
             }
             set realV [get_domnode_attribute $parent_dependency_node v]
-            if {$realV ni [split $depV ','] || $current_parent_dep_state eq "hidden"} {set ret hidden}
+            if {$realV ni $depV || $current_parent_dep_state eq "hidden"} {set ret hidden}
         }
     }
     if {$ret eq  ""} { set ret normal }

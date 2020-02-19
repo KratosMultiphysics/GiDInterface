@@ -41,7 +41,7 @@ oo::class create Parameter {
         my setHelp $h
         
         set depname ""
-        set depv ""
+        set depv [list ]
         
         set units $u
         set unitMagnitude $um
@@ -69,7 +69,7 @@ oo::class create Parameter {
         variable depv
         
         set depname $dn
-        set depv $dv
+        set depv [split $dv ","]
 
     }
     
