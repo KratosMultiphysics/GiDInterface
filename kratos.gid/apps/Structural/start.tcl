@@ -68,4 +68,8 @@ proc ::Structural::BeforeMeshGeneration { size } {
     }
 }
 
+proc ::Structural::ApplicationSpecificGetCondition {condition group etype nnodes} {
+    return [Structural::write::ApplicationSpecificGetCondition $condition $group $etype $nnodes]
+}
+
 ::Structural::Init

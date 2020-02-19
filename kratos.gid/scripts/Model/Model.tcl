@@ -129,4 +129,9 @@ proc Model::DestroyEverything { } {
     Init
 }
 
+proc Model::Clone {orig} {
+    set new [oo::copy ::$orig]
+    return $new
+}
+
 Model::Init

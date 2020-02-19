@@ -204,6 +204,7 @@ proc spdAux::ProcGetSolverParameterDict { domNode args } {
     }
     return [join $pnames ","]
 }
+
 proc spdAux::ProcGetSolverParameterValues { domNode args } {
     
     set solver_node [[$domNode parent] selectNodes "./value\[@n='Solver'\]"]

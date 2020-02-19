@@ -160,7 +160,7 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
 
     set mid ""
     set what [split $what "&"]
-    set group [GetWriteGroupName $group]
+    set group [write::GetWriteGroupName $group]
     if {![dict exists $submodelparts [list $cid ${group}]]} {
         # Add the submodelpart to the catalog
         set good_name [write::transformGroupName $group]

@@ -32,6 +32,9 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
         set cond [::Model::getCondition $condid]
         if {$cond ne ""} {
             lassign [write::getEtype $ov $groupid] etype nnodes
+            # Let the app change things in the condition based on the model: p.e. -> topology based on element
+            set aux_cond [apps::ExecuteOnCurrentApp ApplicationSpecificGetCondition $cond $groupid $etype $nnodes]
+            if {$aux_cond ne ""} {set cond $aux_cond}
             set kname [$cond getTopologyKratosName $etype $nnodes]
             if {$kname ne ""} {
                 lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
