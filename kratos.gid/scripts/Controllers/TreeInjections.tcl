@@ -416,7 +416,7 @@ proc spdAux::_GetBooleanParameterString {param inName pn v state help show_in_wi
         append node " actualize_tree='1' "
     }
     append node " state='$state' show_in_window='$show_in_window'>"
-    if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
+    # if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
     append node "</value>"
     return $node
 }
@@ -435,7 +435,7 @@ proc spdAux::_GetComboParameterString {param inName pn v state help show_in_wind
         append node "  actualize_tree='1'  "
     }
     append node " state='$state' help='$help' show_in_window='$show_in_window'>"
-    if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
+    # if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
     append node "</value>"
     return $node
 }
@@ -458,8 +458,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
         }
     }
     set ret ""
-    foreach {name value} $dep_list {
-        set values [split $value ","]
+    foreach {name values} $dep_list {
         set ins ""
         set out ""
         foreach v $values {
@@ -707,7 +706,7 @@ proc spdAux::SolStratParamState {outnode} {
         lassign [Model::GetSolStratParamDep $SolStrat $paramName] depN depV
         foreach node [[$outnode parent] childNodes] {
             if {[$node @n] eq $depN} {
-                if {[get_domnode_attribute $node v] ni [split $depV ,]} {
+                if {[get_domnode_attribute $node v] ni $depV} {
                     set ret 0
                     break
                 }
