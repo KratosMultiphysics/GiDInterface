@@ -114,7 +114,7 @@ proc Dam::examples::AssignDamMeshSizes {args} {
     set dam_mesh_size 0.25
     GiD_Process Mescape Meshing AssignSizes Surfaces $dam_mesh_size [GiD_EntitiesGroups get Dam surfaces] escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $dam_mesh_size [GiD_EntitiesGroups get Soil surfaces] escape escape
-    Kratos::BeforeMeshGeneration $dam_mesh_size
+    ##Kratos::BeforeMeshGeneration $dam_mesh_size
 }
 
 # Tree assign
@@ -128,7 +128,7 @@ proc Dam::examples::TreeAssignationDam {args} {
 
     # Dam Part
     set damParts [spdAux::getRoute "DamParts"]
-    set damNode [spdAux::AddConditionGroupOnXPath $damParts Dam]
+    set damNode [customlib::AddConditionGroupOnXPath $damParts Dam]
     set props [list Element SmallDisplacementElement2D ConstitutiveLaw ThermalLinearElastic2DPlaneStrain Material "Concrete-Dam" DENSITY 2400 YOUNG_MODULUS 1.962e10 POISSON_RATIO 0.20 THERMAL_EXPANSION 1e-05]
     foreach {prop val} $props {
         set propnode [$damNode selectNodes "./value\[@n = '$prop'\]"]
@@ -140,7 +140,7 @@ proc Dam::examples::TreeAssignationDam {args} {
     }
 	
 	#Soil Part
-    set soilNode [spdAux::AddConditionGroupOnXPath $damParts Soil]
+    set soilNode [customlib::AddConditionGroupOnXPath $damParts Soil]
     set props_soil [list Element SmallDisplacementElement2D ConstitutiveLaw ThermalLinearElastic2DPlaneStrain Material Soil DENSITY 3000 YOUNG_MODULUS 4.9e10 POISSON_RATIO 0.25 THERMAL_EXPANSION 1e-05]
     foreach {prop val} $props_soil {
         set propnode [$soilNode selectNodes "./value\[@n = '$prop'\]"]
@@ -156,11 +156,11 @@ proc Dam::examples::TreeAssignationDam {args} {
 		# Displacements
 		set damDirichletConditions [spdAux::getRoute "DamNodalConditions"]
 		set displacement "$damDirichletConditions/condition\[@n='DISPLACEMENT'\]"
-		set displacemnetnode [spdAux::AddConditionGroupOnXPath $displacement Displacement]
+		set displacemnetnode [customlib::AddConditionGroupOnXPath $displacement Displacement]
 		
 		# Surface Temperature 
 		set initial "$damDirichletConditions/condition\[@n='INITIALTEMPERATURE'\]"
-		set initialnode [spdAux::AddConditionGroupOnXPath $initial Initial]
+		set initialnode [customlib::AddConditionGroupOnXPath $initial Initial]
 		set props_initial [list is_fixed 0 value 7.5 ]
 		foreach {prop val} $props_initial {
 			 set propnode [$initialnode selectNodes "./value\[@n = '$prop'\]"]
@@ -173,8 +173,8 @@ proc Dam::examples::TreeAssignationDam {args} {
 
 		# Bofang Temperature
 		set bofang "$damDirichletConditions/condition\[@n='BOFANGTEMPERATURE'\]"
-		set bofangnode [spdAux::AddConditionGroupOnXPath $bofang Bofang]
-		set props_bofang [list is_fixed 1 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Surface_Temp 15.19 Bottom_Temp 9.35 Height_Dam 30.0 Temperature_Amplitude 6.51 Day_Ambient_Temp 201 Water_level 20.0 Outer_temp 10.0 Month 7 ]
+		set bofangnode [customlib::AddConditionGroupOnXPath $bofang Bofang]
+		set props_bofang [list is_fixed 1 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Surface_Temp 15.19 Bottom_Temp 9.35 Height_Dam 30.0 Temperature_Amplitude 6.51 Day_Ambient_Temp 201 Water_level 20.0 Month 7 ]
 		foreach {prop val} $props_bofang {
 			 set propnode [$bofangnode selectNodes "./value\[@n = '$prop'\]"]
 			 if {$propnode ne "" } {
@@ -186,7 +186,7 @@ proc Dam::examples::TreeAssignationDam {args} {
 		
 		# Uniform Temperature
 		set uniform "$damDirichletConditions/condition\[@n='INITIALTEMPERATURE'\]"
-		set uniformnode [spdAux::AddConditionGroupOnXPath $uniform Uniform]
+		set uniformnode [customlib::AddConditionGroupOnXPath $uniform Uniform]
 		set props_uniform [list is_fixed 1 value 10.0 ]
 		foreach {prop val} $props_uniform {
 			 set propnode [$uniformnode selectNodes "./value\[@n = '$prop'\]"]
@@ -203,10 +203,10 @@ proc Dam::examples::TreeAssignationDam {args} {
 		# Thermal Parameters 1
 		set damThermalLoadConditions [spdAux::getRoute "DamThermalLoads"]
 		set thermalparameter "$damThermalLoadConditions/condition\[@n='ThermalParameters2D'\]"
-		set thermalparameternode1 [spdAux::AddConditionGroupOnXPath $thermalparameter Thermal_Parameters_1]
+		set thermalparameternode1 [customlib::AddConditionGroupOnXPath $thermalparameter Thermal_Parameters_1]
 		
 		# Thermal Parameters 2
-		set thermalparameternode2 [spdAux::AddConditionGroupOnXPath $thermalparameter Thermal_Parameters_2]
+		set thermalparameternode2 [customlib::AddConditionGroupOnXPath $thermalparameter Thermal_Parameters_2]
 		set props_thermal_2 [list ThermalDensity 3000 ]
 		foreach {prop val} $props_thermal_2 {
 			 set propnode [$thermalparameternode2 selectNodes "./value\[@n = '$prop'\]"]
@@ -222,7 +222,7 @@ proc Dam::examples::TreeAssignationDam {args} {
 		# Hydrostatic Load
         set damLoadConditions [spdAux::getRoute "DamLoads"]
 		set hydro "$damLoadConditions/condition\[@n='HydroLinePressure2D'\]"
-		set hydronode [spdAux::AddConditionGroupOnXPath $hydro Hydrostatic]
+		set hydronode [customlib::AddConditionGroupOnXPath $hydro Hydrostatic]
 		set props_hydro [list Modify 0 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Spe_weight 10000 Water_level 20.0]
 		foreach {prop val} $props_hydro {
 			 set propnode [$hydronode selectNodes "./value\[@n = '$prop'\]"]

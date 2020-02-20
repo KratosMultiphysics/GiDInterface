@@ -233,6 +233,9 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set processWriteCommand [$process getAttribute write_command]
+            
+            dict set processDict process_name $processName
+
             if {$processWriteCommand eq ""} {
                 set processDict [write::GetProcessHeader $group $process $condition $groupId]
 

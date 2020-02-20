@@ -4,17 +4,17 @@
 variable number_tables {}
 
 proc Dam::write::getParametersDict { } {
-
-variable number_tables
-set number_tables 0
-
+    
+    variable number_tables
+    set number_tables 0
+    
     set projectParametersDict [dict create]
-
+    
     ### Problem data
     ### Create section
     set problemDataDict [dict create]
     set damTypeofProblem [write::getValue DamTypeofProblem]
-
+    
     ### Add items to section
     set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
@@ -38,58 +38,58 @@ set number_tables 0
         dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
         dict set problemDataDict time_step [write::getValue DamTimeParameters DeltaTime]
         dict set problemDataDict time_scale [write::getValue DamTimeParameters TimeScale]
-
+        
         set consider_self_weight [write::getValue DamSelfweight ConsiderSelfweight]
         if {$consider_self_weight eq "Yes"} {
             dict set problemDataDict consider_selfweight true
         } else {
             dict set problemDataDict consider_selfweight false
         }
-
+        
         set consider_construction [write::getValue DamConstructionProcess Activate_construction]
         if {$consider_construction eq "Yes"} {
             dict set problemDataDict consider_construction true
         } else {
             dict set problemDataDict consider_construction false
         }
-
+        
         dict set problemDataDict streamlines_utility [Dam::write::StremalinesUtility]
         ### Add section to document
         dict set projectParametersDict problem_data $problemDataDict
     }
     ### Solver Data
     set solversettingsDict [dict create]
-
+    
     ### Preguntar el solver haciendo los ifs correspondientes
     if {$paralleltype eq "OpenMP"} {
-                if {$damTypeofProblem eq "Mechanical"} {
-                        dict set solversettingsDict solver_type "dam_mechanical_solver"
-                } elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
-                        dict set solversettingsDict solver_type "dam_thermo_mechanic_solver"
-                } elseif {$damTypeofProblem eq "UP_Mechanical"} {
-                        dict set solversettingsDict solver_type "dam_UP_mechanical_solver"
-                } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
-                        dict set solversettingsDict solver_type "dam_UP_thermo_mechanic_solver"
-                } elseif {$damTypeofProblem eq "Acoustic"} {
-                        dict set solversettingsDict solver_type "dam_P_solver"
+        if {$damTypeofProblem eq "Mechanical"} {
+            dict set solversettingsDict solver_type "dam_mechanical_solver"
+        } elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
+            dict set solversettingsDict solver_type "dam_thermo_mechanic_solver"
+        } elseif {$damTypeofProblem eq "UP_Mechanical"} {
+            dict set solversettingsDict solver_type "dam_UP_mechanical_solver"
+        } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
+            dict set solversettingsDict solver_type "dam_UP_thermo_mechanic_solver"
+        } elseif {$damTypeofProblem eq "Acoustic"} {
+            dict set solversettingsDict solver_type "dam_P_solver"
         } else {
-                        dict set solversettingsDict solver_type "dam_eigen_solver"
-                }
+            dict set solversettingsDict solver_type "dam_eigen_solver"
+        }
+    } else {
+        if {$damTypeofProblem eq "Mechanical"} {
+            dict set solversettingsDict solver_type "dam_MPI_mechanical_solver"
+        } elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
+            dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
+        } elseif {$damTypeofProblem eq "UP_Mechanical"} {
+            dict set solversettingsDict solver_type "dam_MPI_UP_mechanical_solver"
+        } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
+            dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
+        } elseif {$damTypeofProblem eq "Acoustic"} {
+            W "Acoustic Problem in MPI is not yet implemented, please select an OpenMP option"
         } else {
-                if {$damTypeofProblem eq "Mechanical"} {
-                        dict set solversettingsDict solver_type "dam_MPI_mechanical_solver"
-                } elseif {$damTypeofProblem eq "Thermo-Mechanical"} {
-                        dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
-                } elseif {$damTypeofProblem eq "UP_Mechanical"} {
-                        dict set solversettingsDict solver_type "dam_MPI_UP_mechanical_solver"
-                } elseif {$damTypeofProblem eq "UP_Thermo-Mechanical"} {
-                        dict set solversettingsDict solver_type "dam_MPI_thermo_mechanic_solver"
-                } elseif {$damTypeofProblem eq "Acoustic"} {
-                        W "Acoustic Problem in MPI is not yet implemented, please select an OpenMP option"
-                } else {
             W "Eigen Analysis in MPI is not yet implemented, please select an OpenMP option"
         }
-        }
+    }
     set modelDict [dict create]
     dict set modelDict input_type "mdpa"
     dict set modelDict input_filename $model_name
@@ -97,7 +97,7 @@ set number_tables 0
     dict set solversettingsDict model_import_settings $modelDict
     dict set solversettingsDict echo_level 1
     dict set solversettingsDict buffer_size 2
-
+    
     if {$damTypeofProblem eq "Modal-Analysis"} {
         dict set solversettingsDict solution_type [write::getValue DamModalSoluType]
         dict set solversettingsDict analysis_type [write::getValue DamModalAnalysisType]
@@ -110,27 +110,27 @@ set number_tables 0
         dict set eigensolversetDict lambda_min [write::getValue DamModalLambdaMin]
         dict set eigensolversetDict lambda_max [write::getValue DamModalLambdaMax]
         dict set eigensolversetDict search_dimension [write::getValue DamModalSearchDimension]
-
+        
         ## Adding Eigen Dictionary
         dict set solversettingsDict eigensolver_settings $eigensolversetDict
-
+        
         # Adding submodel and processes
         dict set solversettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
         dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
-
+        
     } else {
         dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
-
+        
         ## Default Values
         set MechanicalSolutionStrategyUN "DamSolStrat"
         set MechanicalSchemeUN "DamScheme"
         set MechanicalDataUN "DamMechanicalData"
         set MechanicalDataParametersUN "DamMechanicalDataParameters"
-
+        
         if {$damTypeofProblem eq "Thermo-Mechanical" } {
-
+            
             dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
-
+            
             set thermalsettingDict [dict create]
             dict set thermalsettingDict echo_level [write::getValue DamThermalEcholevel]
             dict set thermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalReformsSteps]
@@ -140,26 +140,26 @@ set number_tables 0
             dict set thermalsettingDict compute_norm_dx_flag [write::getValue DamThermalComputeNormDx]
             dict set thermalsettingDict theta_scheme [write::getValue DamThermalScheme]
             dict set thermalsettingDict block_builder [write::getValue DamThermalBlockBuilder]
-
+            
             ## Adding linear solver for thermal part
             set thermalsettingDict  [dict merge $thermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratTherm "DamThermo-Mechanical-ThermData"] ]
             dict set thermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
             dict set thermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames "DamThermalLoads"]
-
-
+            
+            
             ## Adding thermal solver settings to solver settings
             dict set solversettingsDict thermal_solver_settings $thermalsettingDict
-
+            
             ## Resetting Variables for the mechanical problem according to the selected problem
             set MechanicalDataUN "DamThermo-Mechanical-MechData"
             set MechanicalDataParametersUN "DamThermo-Mechanical-MechDataParameters"
         }
-
+        
         if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
-
+            
             dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
             dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
-
+            
             set UPthermalsettingDict [dict create]
             dict set UPthermalsettingDict echo_level [write::getValue DamThermalUPEcholevel]
             dict set UPthermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalUPReformsSteps]
@@ -169,23 +169,23 @@ set number_tables 0
             dict set UPthermalsettingDict compute_norm_dx_flag [write::getValue DamThermalUPComputeNormDx]
             dict set UPthermalsettingDict theta_scheme [write::getValue DamThermalUPScheme]
             dict set UPthermalsettingDict block_builder [write::getValue DamThermalUPBlockBuilder]
-
+            
             ## Adding linear solver for thermal part
             set UPthermalsettingDict [dict merge $UPthermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratThermUP "DamUP_Thermo-Mechanical-ThermData"] ]
             dict set UPthermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
             dict set UPthermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames "DamThermalLoads"]
-
-
+            
+            
             ## Adding UP thermal solver settings to solver settings
             dict set solversettingsDict thermal_solver_settings $UPthermalsettingDict
-
+            
             ## Resetting Variables for the mechanical problem according to the selected problem
             set MechanicalDataUN "DamUP_Thermo-Mechanical-MechData"
             set MechanicalDataParametersUN "DamUP_Thermo-Mechanical-MechDataParameters"
         }
-
+        
         if {$damTypeofProblem eq "Acoustic"} {
-
+            
             ### Acostic Settings
             set acousticSolverSettingsDict [dict create]
             dict set acousticSolverSettingsDict strategy_type "Newton-Raphson"
@@ -196,22 +196,22 @@ set number_tables 0
             dict set acousticSolverSettingsDict max_iteration [write::getValue DamAcousticMaxIteration]
             dict set acousticSolverSettingsDict move_mesh_flag [write::getValue DamAcousticMoveMeshFlag]
             dict set acousticSolverSettingsDict echo_level [write::getValue DamAcousticSolverEchoLevel]
-
+            
             set acousticlinearDict [dict create]
             dict set acousticlinearDict solver_type [write::getValue DamAcousticSolver]
             dict set acousticlinearDict max_iteration [write::getValue DamAcousticMaxIter]
             dict set acousticlinearDict tolerance [write::getValue DamAcousticTolerance]
             dict set acousticlinearDict verbosity [write::getValue DamAcousticVerbosity]
             dict set acousticlinearDict GMRES_size [write::getValue DamAcousticGMRESSize]
-
+            
             ## Adding linear solver settings to acoustic solver
             dict set acousticSolverSettingsDict linear_solver_settings $acousticlinearDict
-
+            
             ## Adding Acoustic solver settings to solver settings
             dict set solversettingsDict acoustic_solver_settings $acousticSolverSettingsDict
-
+            
         } elseif {$damTypeofProblem eq "UP_Mechanical"} {
-
+            
             ### UP Mechanical Settings
             set UPmechanicalSolverSettingsDict [dict create]
             dict set UPmechanicalSolverSettingsDict solution_type [write::getValue DamUPMechaSoluType]
@@ -227,14 +227,14 @@ set number_tables 0
             } else {
                 dict set UPmechanicalSolverSettingsDict nonlocal_damage false
             }
-
+            
             ### Adding solvers parameters
             set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [::Dam::write::getSolversParametersDict Dam $MechanicalSolutionStrategyUN "DamUP_MechanicalData"] ]
             ### Adding domains to the problem
             set UPmechanicalSolverSettingsDict [dict merge $UPmechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
             ### Add section to document
             dict set solversettingsDict mechanical_solver_settings $UPmechanicalSolverSettingsDict
-
+            
         } else {
             ### Mechanical Settings
             set mechanicalSolverSettingsDict [dict create]
@@ -261,7 +261,7 @@ set number_tables 0
                 } else {
                     dict set mechanicalSolverSettingsDict nonlocal_damage false
                 }
-
+                
             } else {
                 set typeofDamage [write::getValue DamMechaDamageType]
                 if {$typeofDamage eq "NonLocal"} {
@@ -278,51 +278,51 @@ set number_tables 0
             set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::DefinitionDomains] ]
             ### Add section to document
             dict set solversettingsDict mechanical_solver_settings $mechanicalSolverSettingsDict
-
+            
         }
     }
-
+    
     dict set projectParametersDict solver_settings $solversettingsDict
     dict set projectParametersDict output_configuration [Dam::write::OutputDict]
-
-    set nodal_process_list [Dam::write::getConditionsParametersDict DamNodalConditions "Nodal"]
+    
+    set nodal_process_list [::write::getConditionsParametersDict DamNodalConditions "Nodal"]
     dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
-
-    set mechanical_load_process_list [Dam::write::getConditionsParametersDict DamLoads]
-    set thermal_load_process_list [Dam::write::getConditionsParametersDict DamThermalLoads]
+    
+    set mechanical_load_process_list [::write::getConditionsParametersDict DamLoads]
+    set thermal_load_process_list [::write::getConditionsParametersDict DamThermalLoads]
     set load_process_list [concat $mechanical_load_process_list $thermal_load_process_list]
     set loads [Dam::write::ChangeFileNameforTableid $load_process_list]
     dict set projectParametersDict loads_process_list $loads
-
+    
     dict set projectParametersDict construction_process [Dam::write::GetConstructionDomainProcessDict]
     dict set projectParametersDict transfer_results_process [Dam::write::GetTransferResultsDict]
     dict set projectParametersDict temperature_by_device_list [Dam::write::TemperaturebyDevices]
     dict set projectParametersDict output_device_list [Dam::write::DevicesOutput]
-
+    
     return $projectParametersDict
-
+    
 }
 
 # This process is the responsible of writing files
 proc Dam::write::writeParametersEvent { } {
-
-    set projectParametersDict [getParametersDict]
+    
+    set projectParametersDict [Dam::write::getParametersDict]
     write::WriteJSON $projectParametersDict
-
+    
     set damSelfweight [write::getValue DamSelfweight ConsiderSelfweight]
     if {$damSelfweight eq "Yes" } {
-
+        
         write::OpenFile "[file tail ProjectParametersSelfWeight].json"
         set projectParametersDictSelfWeight [getParametersSelfWeight]
         write::WriteString [write::tcl2json $projectParametersDictSelfWeight]
         write::CloseFile
-
+        
     }
 }
 
 # This process returns a dict of domains according input parameters in the solvers
 proc Dam::write::DefinitionDomains { } {
-
+    
     ### Boundary conditions processes
     set domainsDict [dict create]
     set body_part_list [list ]
@@ -336,7 +336,7 @@ proc Dam::write::DefinitionDomains { } {
     dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
     dict set domainsDict body_domain_sub_model_part_list $body_part_list
     dict set domainsDict mechanical_loads_sub_model_part_list [write::getSubModelPartNames "DamLoads"]
-
+    
     set strategytype [write::getValue DamSolStrat]
     if {$strategytype eq "Arc-length"} {
         dict set domainsDict loads_sub_model_part_list [write::getSubModelPartNames DamLoads]
@@ -347,209 +347,25 @@ proc Dam::write::DefinitionDomains { } {
         dict set domainsDict loads_sub_model_part_list $loads_sub_model_part_list
         dict set domainsDict loads_variable_list $loads_variable_list
     }
-
+    
     return $domainsDict
-}
-
-# This process is equal to such included in the common 'Writing.tcl' file. However, in that file, process_name was removed. Here, this parameter remains, and thus, it can be used in the following proc ()
-
-proc Dam::write::getConditionsParametersDict {un {condition_type "Condition"}} {
-
-    set root [customlib::GetBaseRoot]
-    set bcCondsDict [list ]
-    set grouped_conditions [list ]
-
-    set xp1 "[spdAux::getRoute $un]/condition/group"
-    set groups [$root selectNodes $xp1]
-    if {$groups eq ""} {
-        set xp1 "[spdAux::getRoute $un]/group"
-        set groups [$root selectNodes $xp1]
-    }
-    foreach group $groups {
-        set groupName [$group @n]
-        set cid [[$group parent] @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set groupId [::write::getSubModelPartId $cid $groupName]
-        set grouping_by ""
-        if {$condition_type eq "Condition"} {
-            set condition [::Model::getCondition $cid]
-            if {$condition eq ""} {continue}
-            set grouping_by [$condition getGroupBy]
-        } {
-            set condition [::Model::getNodalConditionbyId $cid]
-            if {$condition eq ""} {continue}
-        }
-        if {$grouping_by eq "Condition"} {
-            # Grouped conditions will be processed later
-            if {$cid ni $grouped_conditions} {
-                lappend grouped_conditions $cid
-            }
-        } else {
-            set processName [$condition getProcessName]
-            set process [::Model::GetProcess $processName]
-            set processDict [dict create]
-            set paramDict [dict create]
-            dict set paramDict model_part_name $groupId
-
-            set process_attributes [$process getAttributes]
-            set process_parameters [$process getInputs]
-
-            dict set process_attributes process_name [dict get $process_attributes n]
-            dict unset process_attributes n
-            dict unset process_attributes pn
-
-            set processDict [dict merge $processDict $process_attributes]
-            if {[$condition hasAttribute VariableName]} {
-                set variable_name [$condition getAttribute VariableName]
-                # "lindex" is a rough solution. Look for a better one.
-                if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
-            }
-            foreach {inputName in_obj} $process_parameters {
-                set in_type [$in_obj getType]
-                if {$in_type eq "vector"} {
-                    set vector_type [$in_obj getAttribute "vectorType"]
-                    if {$vector_type eq "bool"} {
-                        set ValX [expr [get_domnode_attribute [$group find n ${inputName}X] v] ? True : False]
-                        set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
-                        set ValZ [expr False]
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
-                    } elseif {$vector_type eq "double"} {
-                        if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
-                            foreach i [list "X" "Y" "Z"] {
-                                if {[expr [get_domnode_attribute [$group find n Enabled_$i] v] ] ne "Yes"} {
-                                    set Val$i null
-                                } else {
-                                    set printed 0
-                                    if {[$in_obj getAttribute "function"] eq "1"} {
-                                        if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                                            set funcinputName "${i}function_$inputName"
-                                            set value [get_domnode_attribute [$group find n $funcinputName] v]
-                                            set Val$i $value
-                                            set printed 1
-                                        }
-                                    }
-                                    if {!$printed} {
-                                        set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
-                                        set Val$i $value
-                                    }
-                                }
-                            }
-                        } else {
-                            foreach i [list "X" "Y" "Z"] {
-                                set printed 0
-                                if {[$in_obj getAttribute "function"] eq "1"} {
-                                    if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                                        set funcinputName "${i}function_$inputName"
-                                        set value [get_domnode_attribute [$group find n $funcinputName] v]
-                                        set Val$i $value
-                                        set printed 1
-                                    }
-                                }
-                                if {!$printed} {
-                                    set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
-                                    set Val$i $value
-                                }
-                            }
-                        }
-                    } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
-                        set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
-                        set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
-                        set ValZ "0"
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
-                    } else {
-                        set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
-                        set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
-                        set ValZ [expr 0.0]
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
-                    }
-                    dict set paramDict $inputName [list $ValX $ValY $ValZ]
-                } elseif {$in_type eq "inline_vector"} {
-                    set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
-                    lassign [split $value ","] ValX ValY ValZ
-                    if {$ValZ eq ""} {set ValZ 0.0}
-                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]]
-                } elseif {$in_type eq "double" || $in_type eq "integer"} {
-                    set printed 0
-                    if {[$in_obj getAttribute "function"] eq "1"} {
-                        if {[get_domnode_attribute [$group find n "ByFunction"] v]  eq "Yes"} {
-                            set funcinputName "function_$inputName"
-                            set value [get_domnode_attribute [$group find n $funcinputName] v]
-                            dict set paramDict $inputName $value
-                            set printed 1
-                        }
-                    }
-                    if {!$printed} {
-                        set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
-                        #set value [get_domnode_attribute [$group find n $inputName] v]
-                        dict set paramDict $inputName [expr $value]
-                    }
-                } elseif {$in_type eq "bool"} {
-                    set value [get_domnode_attribute [$group find n $inputName] v]
-                    set value [expr $value ? True : False]
-                    dict set paramDict $inputName [expr $value]
-                } elseif {$in_type eq "tablefile"} {
-                    set value [get_domnode_attribute [$group find n $inputName] v]
-                    dict set paramDict $inputName $value
-                } else {
-                    if {[get_domnode_attribute [$group find n $inputName] state] ne "hidden" } {
-                        set value [get_domnode_attribute [$group find n $inputName] v]
-                        dict set paramDict $inputName $value
-                    }
-                }
-            }
-            if {[$group find n Interval] ne ""} {dict set paramDict interval [write::getInterval  [get_domnode_attribute [$group find n Interval] v]] }
-            dict set processDict Parameters $paramDict
-            lappend bcCondsDict $processDict
-        }
-    }
-
-    foreach cid $grouped_conditions {
-        if {$condition_type eq "Condition"} {
-            set condition [::Model::getCondition $cid]
-        } {
-            set condition [::Model::getNodalConditionbyId $cid]
-        }
-
-        set processName [$condition getProcessName]
-        set process [::Model::GetProcess $processName]
-        set processDict [dict create]
-        set paramDict [dict create]
-        dict set paramDict model_part_name $cid
-
-        set process_attributes [$process getAttributes]
-        set process_parameters [$process getInputs]
-
-        dict set process_attributes process_name [dict get $process_attributes n]
-        dict unset process_attributes n
-        dict unset process_attributes pn
-
-        set processDict [dict merge $processDict $process_attributes]
-        if {[$condition hasAttribute VariableName]} {
-            set variable_name [$condition getAttribute VariableName]
-            # "lindex" is a rough solution. Look for a better one.
-            if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
-        }
-        dict set processDict Parameters $paramDict
-        lappend bcCondsDict $processDict
-    }
-    return $bcCondsDict
 }
 
 
 # This process assign a number for the different tables instead of names (this is for matching with .mdpa)
 proc Dam::write::ChangeFileNameforTableid { processList } {
-
-# Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
-variable number_tables
-
+    
+    # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
+    variable number_tables
+    
     set returnList [list ]
     foreach nodalProcess $processList {
         set processName [dict get $nodalProcess process_name]
         set process [::Model::GetProcess $processName]
         set params [$process getInputs]
-
+        
         if {$processName ne "ImposeNodalReferenceTemperatureProcess"} {
-
+            
             foreach {paramName param} $params {
                 if {[$param getType] eq "tablefile" && [dict exists $nodalProcess Parameters $paramName] } {
                     set filename [dict get $nodalProcess Parameters $paramName]
@@ -569,14 +385,14 @@ variable number_tables
                         if {$value != 0} {
                             incr number_tables
                         }
-
+                        
                     }
                 }
             }
         }
-
+        
         lappend returnList $nodalProcess
-
+        
     }
     return $returnList
 }
@@ -584,20 +400,20 @@ variable number_tables
 
 # This process is used to define new list of Output configuratino parameters
 proc Dam::write::OutputDict { {appid ""} } {
-
+    
     set outputDict [dict create]
     set resultDict [dict create]
-
+    
     set GiDPostDict [dict create]
     dict set GiDPostDict GiDPostMode                [write::getValue Results GiDPostMode]
     dict set GiDPostDict WriteDeformedMeshFlag      [write::getValue Results GiDWriteMeshFlag]
     dict set GiDPostDict WriteConditionsFlag        [write::getValue Results GiDWriteConditionsFlag]
     dict set GiDPostDict MultiFileFlag              [write::getValue Results GiDMultiFileFlag]
     dict set resultDict gidpost_flags $GiDPostDict
-
+    
     set outputCT [write::getValue Results OutputControlType]
     dict set resultDict output_control_type $outputCT
-
+    
     if {$outputCT eq "time_s"} {
         set frequency [write::getValue Results OutputDeltaTime_s]
     } elseif {$outputCT eq "time_h"} {
@@ -607,19 +423,19 @@ proc Dam::write::OutputDict { {appid ""} } {
     } elseif {$outputCT eq "time_w"} {
         set frequency [write::getValue Results OutputDeltaTime_w]
     }
-
+    
     dict set resultDict output_frequency $frequency
     dict set resultDict start_output_results [write::getValue Results StartOutputResults]
-
+    
     dict set resultDict body_output           [write::getValue Results BodyOutput]
     dict set resultDict node_output           [write::getValue Results NodeOutput]
     dict set resultDict skin_output           [write::getValue Results SkinOutput]
-
+    
     dict set resultDict plane_output [write::GetCutPlanesList Results]
-
+    
     dict set resultDict nodal_results [write::GetResultsList Results OnNodes]
     dict set resultDict gauss_point_results [write::GetResultsList Results OnElement]
-
+    
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [write::GetEmptyList]
     return $outputDict
@@ -628,7 +444,7 @@ proc Dam::write::OutputDict { {appid ""} } {
 
 # This process is used for checking if the user is interested on streamlines
 proc Dam::write::StremalinesUtility {} {
-
+    
     set nodalList [write::GetResultsList NodalResults]
     if {[lsearch $nodalList Vi_POSITIVE] >= 0 || [lsearch $nodalList Viii_POSITIVE] >= 0} {
         set streamlines true
@@ -638,9 +454,9 @@ proc Dam::write::StremalinesUtility {} {
     return $streamlines
 }
 
- # appid Dam solStratUN DamSolStrat problem_base_UN DamMechanicalData
+# appid Dam solStratUN DamSolStrat problem_base_UN DamMechanicalData
 proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {problem_base_UN ""}} {
-
+    
     #W "Params -> $appid $solStratUN $problem_base_UN"
     set solstratName [write::getValue $solStratUN]
     set sol [::Model::GetSolutionStrategy $solstratName]
@@ -693,51 +509,51 @@ proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {probl
 
 # This process write the construction in process in case is selected
 proc Dam::write::GetConstructionDomainProcessDict { } {
-
+    
     set construction_dict [dict create]
     set data_basenode [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamConstructionProcess"]]
     set activate [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='Activate_construction'\]"] v]
     if {[write::isBooleanTrue $activate]} {
-
-            set params [list gravity_direction reservoir_bottom_coordinate_in_gravity_direction lift_height h_0 aging construction_input_file_name ambient_input_file_name activate_soil_part activate_existing_part]
+        
+        set params [list gravity_direction reservoir_bottom_coordinate_in_gravity_direction lift_height h_0 aging construction_input_file_name ambient_input_file_name activate_soil_part activate_existing_part]
+        foreach param $params {
+            dict set construction_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
+        }
+        
+        # Añado guiones bajos a los nombres de los submodelparts activados en el modelo.
+        set old_name_soil_part [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='name_soil_part'\]"] v]
+        set name_soil_part [string map {" " "_"} $old_name_soil_part]
+        
+        set old_name_existing_part [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='name_existing_part'\]"] v]
+        set name_existing_part [string map {" " "_"} $old_name_existing_part]
+        
+        dict set construction_dict name_soil_part $name_soil_part
+        dict set construction_dict name_existing_part $name_existing_part
+        
+        set params_check [list activate_check_temperature maximum_temperature_increment maximum_temperature minimum_temperature]
+        foreach param_check $params_check {
+            dict set construction_dict $param_check [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param_check'\]"]]
+        }
+        
+        # Añado parámetros específicos del tipo de ley de fuente de calor escogida
+        set source_type [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='source_type'\]"] v]
+        dict set construction_dict source_type $source_type
+        
+        if {$source_type eq "Adiabatic"} {
+            set data_basenode_noorzai [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamNoorzaiData"]]
+            set params [list density specific_heat alpha tmax]
             foreach param $params {
-                dict set construction_dict $param [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param'\]"]]
+                dict set construction_dict $param [write::getValueByNode [$data_basenode_noorzai selectNodes "./value\[@n='$param'\]"]]
             }
-
-            # Añado guiones bajos a los nombres de los submodelparts activados en el modelo.
-            set old_name_soil_part [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='name_soil_part'\]"] v]
-            set name_soil_part [string map {" " "_"} $old_name_soil_part]
-
-            set old_name_existing_part [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='name_existing_part'\]"] v]
-            set name_existing_part [string map {" " "_"} $old_name_existing_part]
-
-            dict set construction_dict name_soil_part $name_soil_part
-            dict set construction_dict name_existing_part $name_existing_part
-
-            set params_check [list activate_check_temperature maximum_temperature_increment maximum_temperature minimum_temperature]
-            foreach param_check $params_check {
-                dict set construction_dict $param_check [write::getValueByNode [$data_basenode selectNodes "./value\[@n='$param_check'\]"]]
+        }
+        if {$source_type eq "NonAdiabatic"} {
+            set data_basenode_azenha [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamAzenhaData"]]
+            set params [list activation_energy gas_constant constant_rate alpha_initial young_inf q_total A B C D]
+            foreach param $params {
+                dict set construction_dict $param [write::getValueByNode [$data_basenode_azenha selectNodes "./value\[@n='$param'\]"]]
             }
-
-            # Añado parámetros específicos del tipo de ley de fuente de calor escogida
-            set source_type [get_domnode_attribute [$data_basenode selectNodes "./value\[@n='source_type'\]"] v]
-            dict set construction_dict source_type $source_type
-
-            if {$source_type eq "Adiabatic"} {
-                set data_basenode_noorzai [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamNoorzaiData"]]
-                set params [list density specific_heat alpha tmax]
-                foreach param $params {
-                    dict set construction_dict $param [write::getValueByNode [$data_basenode_noorzai selectNodes "./value\[@n='$param'\]"]]
-                }
-            }
-            if {$source_type eq "NonAdiabatic"} {
-                set data_basenode_azenha [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamAzenhaData"]]
-                set params [list activation_energy gas_constant constant_rate alpha_initial young_inf q_total A B C D]
-                foreach param $params {
-                    dict set construction_dict $param [write::getValueByNode [$data_basenode_azenha selectNodes "./value\[@n='$param'\]"]]
-                }
-            }
-
+        }
+        
     }
     return $construction_dict
 }
@@ -747,8 +563,8 @@ proc Dam::write::GetTransferResultsDict { } {
     set transfer_results_dict [dict create]
     set consider_save_intermediate_variables [write::getValue DamSaveResults SaveIntermediateResults]
     if {$consider_save_intermediate_variables eq "Yes"} {
-    set damStepSaveResults [write::getValue DamSaveResults SaveIntermediateStep]
-    set damTypeofProblem [write::getValue DamTypeofProblem]
+        set damStepSaveResults [write::getValue DamSaveResults SaveIntermediateStep]
+        set damTypeofProblem [write::getValue DamTypeofProblem]
         if {$damTypeofProblem eq "Mechanical"} {
             dict set transfer_results_dict save_intermediate_mechanical_variables true
             dict set transfer_results_dict save_intermediate_thermal_variables false
@@ -763,7 +579,7 @@ proc Dam::write::GetTransferResultsDict { } {
         dict set transfer_results_dict save_intermediate_thermal_variables false
         dict set transfer_results_dict save_intermediate_variables_step 0
     }
-
+    
     set consider_save_final_variables [write::getValue DamSaveResults SaveFinalResults]
     if {$consider_save_final_variables eq "Yes"} {
         set damTypeofProblem [write::getValue DamTypeofProblem]
@@ -778,38 +594,38 @@ proc Dam::write::GetTransferResultsDict { } {
         dict set transfer_results_dict save_final_mechanical_variables false
         dict set transfer_results_dict save_final_thermal_variables false
     }
-
+    
     set consider_add_previous_results [write::getValue DamPreviousResults AddPreviousResults]
     if {$consider_add_previous_results eq "Yes"} {
         set damTypeofResults [write::getValue DamPreviousResults TypeResults]
         if {$damTypeofResults eq "Mechanical"} {
             set damAddDisplacement [write::getValue DamAddResultsData DisplacementResults]
             set damAddStress [write::getValue DamAddResultsData StressResults]
-                if {$damAddDisplacement eq "Yes"} {
-                    set add_displacement true
-                } else {
-                    set add_displacement false
-                }
-                if {$damAddStress eq "Yes"} {
-                    set add_stress true
-                } else {
-                    set add_stress false
-                }
+            if {$damAddDisplacement eq "Yes"} {
+                set add_displacement true
+            } else {
+                set add_displacement false
+            }
+            if {$damAddStress eq "Yes"} {
+                set add_stress true
+            } else {
+                set add_stress false
+            }
             set add_temperature false
             set add_reference_temperature false
         } elseif {$damTypeofResults eq "Thermal"} {
             set damAddTemperature [write::getValue DamAddResultsData TemperatureResults]
             set damAddRefTemperature [write::getValue DamAddResultsData RefTemperatureResults]
-                if {$damAddTemperature eq "Yes"} {
-                    set add_temperature true
-                } else {
-                    set add_temperature false
-                }
-                if {$damAddRefTemperature eq "Yes"} {
-                    set add_reference_temperature true
-                } else {
-                    set add_reference_temperature false
-                }
+            if {$damAddTemperature eq "Yes"} {
+                set add_temperature true
+            } else {
+                set add_temperature false
+            }
+            if {$damAddRefTemperature eq "Yes"} {
+                set add_reference_temperature true
+            } else {
+                set add_reference_temperature false
+            }
             set add_displacement false
             set add_stress false
         } elseif {$damTypeofResults eq "Thermo-Mechanical"} {
@@ -817,26 +633,26 @@ proc Dam::write::GetTransferResultsDict { } {
             set damAddStress [write::getValue DamAddResultsData StressResults]
             set damAddTemperature [write::getValue DamAddResultsData TemperatureResults]
             set damAddRefTemperature [write::getValue DamAddResultsData RefTemperatureResults]
-                if {$damAddDisplacement eq "Yes"} {
-                    set add_displacement true
-                } else {
-                    set add_displacement false
-                }
-                if {$damAddStress eq "Yes"} {
-                    set add_stress true
-                } else {
-                    set add_stress false
-                }
-                if {$damAddTemperature eq "Yes"} {
-                    set add_temperature true
-                } else {
-                    set add_temperature false
-                }
-                if {$damAddRefTemperature eq "Yes"} {
-                    set add_reference_temperature true
-                } else {
-                    set add_reference_temperature false
-                }
+            if {$damAddDisplacement eq "Yes"} {
+                set add_displacement true
+            } else {
+                set add_displacement false
+            }
+            if {$damAddStress eq "Yes"} {
+                set add_stress true
+            } else {
+                set add_stress false
+            }
+            if {$damAddTemperature eq "Yes"} {
+                set add_temperature true
+            } else {
+                set add_temperature false
+            }
+            if {$damAddRefTemperature eq "Yes"} {
+                set add_reference_temperature true
+            } else {
+                set add_reference_temperature false
+            }
         }
     } else {
         set add_displacement false
@@ -844,7 +660,7 @@ proc Dam::write::GetTransferResultsDict { } {
         set add_temperature false
         set add_reference_temperature false
     }
-
+    
     dict set transfer_results_dict add_previous_results [write::getValue DamPreviousResults AddPreviousResults]
     dict set transfer_results_dict type_of_results [write::getValue DamPreviousResults TypeResults]
     dict set transfer_results_dict add_displacement $add_displacement
@@ -859,7 +675,7 @@ proc Dam::write::GetTransferResultsDict { } {
 
 # This process writes a dictionary for creating new projectparameters exclusively for solving selfweight problem
 proc Dam::write::getParametersSelfWeight { } {
-
+    
     set projectParametersDictSelfWeight [dict create]
     set solversettingsDict [dict create]
     dict set solversettingsDict solver_type "dam_selfweight_solver"
@@ -871,7 +687,7 @@ proc Dam::write::getParametersSelfWeight { } {
     dict set solversettingsDict model_import_settings $modelDict
     dict set solversettingsDict echo_level 1
     dict set solversettingsDict buffer_size 2
-
+    
     # We are only interested in Displacements
     set nodal_part_names [write::getSubModelPartNames "DamNodalConditions" "DamSelfweight"]
     set nodal_names [list ]
@@ -884,7 +700,7 @@ proc Dam::write::getParametersSelfWeight { } {
         }
     }
     dict set solversettingsDict processes_sub_model_part_list $nodal_names
-
+    
     set mechanicalSolverSettingsDict [dict create]
     # Adding predefined values for selfweight problem
     set mechanicalSolverSettingsDict [dict merge $mechanicalSolverSettingsDict [Dam::write::predefinedParametersSelfWeight] ]
@@ -894,23 +710,23 @@ proc Dam::write::getParametersSelfWeight { } {
     dict set solversettingsDict mechanical_solver_settings $mechanicalSolverSettingsDict
     # Adding solver_settings to global dict
     dict set projectParametersDictSelfWeight solver_settings $solversettingsDict
-
+    
     # Adding constrains dict
-    set nodal_process_list [Dam::write::getConditionsParametersDict DamNodalConditions "Nodal"]
+    set nodal_process_list [::write::getConditionsParametersDict DamNodalConditions "Nodal"]
     set nodal_process_list_table_number [Dam::write::ChangeFileNameforTableid $nodal_process_list]
     dict set projectParametersDictSelfWeight constraints_process_list [Dam::write::filteringConstraints $nodal_process_list_table_number]
-
+    
     # Adding selfweight loads dict
-    set selfweight_process_list [Dam::write::getConditionsParametersDict DamSelfweight]
+    set selfweight_process_list [::write::getConditionsParametersDict DamSelfweight]
     set selfweight_process_list_table_number [Dam::write::ChangeFileNameforTableid $selfweight_process_list]
     dict set projectParametersDictSelfWeight loads_process_list $selfweight_process_list_table_number
-
+    
     return $projectParametersDictSelfWeight
 }
 
 # Predefined solver values for selfweight problem
 proc Dam::write::predefinedParametersSelfWeight { } {
-
+    
     set solverSelfParametersDict [dict create]
     dict set solverSelfParametersDict solution_type "Quasi-Static"
     dict set solverSelfParametersDict strategy_type "Newton-Raphson"
@@ -931,7 +747,7 @@ proc Dam::write::predefinedParametersSelfWeight { } {
     dict set solverSelfParametersDict rayleigh_m 0.0
     dict set solverSelfParametersDict rayleigh_k 0.0
     dict set solverSelfParametersDict nonlocal_damage false
-
+    
     set linearSolverSettingsDict [dict create]
     dict set linearSolverSettingsDict solver_type "bicgstab"
     dict set linearSolverSettingsDict max_iteration 200
@@ -939,13 +755,13 @@ proc Dam::write::predefinedParametersSelfWeight { } {
     dict set linearSolverSettingsDict preconditioner_type "ilu0"
     dict set linearSolverSettingsDict scaling false
     dict set solverSelfParametersDict linear_solver_settings $linearSolverSettingsDict
-
+    
     return $solverSelfParametersDict
 }
 
 # This process filters Nodal constraints for selfweight problem
 proc Dam::write::filteringConstraints { processList} {
-
+    
     set returnList [list ]
     foreach nodalProcess $processList {
         set processName [dict get $nodalProcess process_name]
@@ -957,43 +773,43 @@ proc Dam::write::filteringConstraints { processList} {
 }
 
 proc Dam::write::DevicesOutput { } {
-
+    
     set output_state [write::getValue DamOutputState]
     set lista [list ]
-
+    
     if { $output_state == True } {
-
+        
         set root [customlib::GetBaseRoot]
         set xp1 "[spdAux::getRoute DamDevices]/blockdata\[@n='device'\]"
         set nodes [$root selectNodes $xp1]
-
+        
         foreach node $nodes {
-
+            
             set deviceDict [dict create]
             dict set deviceDict python_module "point_output_process"
             dict set deviceDict kratos_module "KratosMultiphysics"
             dict set deviceDict help "This process print the selected value according its position"
             dict set deviceDict process_name "PointOutputProcess"
-
-	    	set name [$node @name]
-	    	set extension ".txt"
-
+            
+            set name [$node @name]
+            set extension ".txt"
+            
             set xp2 "[spdAux::getRoute DamDevices]/blockdata\[@name='$name'\]/value\[@n='Variable'\]"
-	    	set node_xp2 [$root selectNodes $xp2]
-	    	set variable [get_domnode_attribute $node_xp2 v]
-
-	    	set xp3 "[spdAux::getRoute DamDevices]/blockdata\[@name='$name'\]/value\[@n='XPosition'\]"
-	    	set node_xp3 [$root selectNodes $xp3]
-	    	set xposition [write::getValueByNode $node_xp3]
-
-	    	set xp4 "[spdAux::getRoute DamDevices]/blockdata\[@name='$name'\]/value\[@n='YPosition'\]"
-	    	set node_xp4 [$root selectNodes $xp4]
-	    	set yposition [write::getValueByNode $node_xp4]
-
-	    	set xp5 "[spdAux::getRoute DamDevices]/blockdata\[@name='$name'\]/value\[@n='ZPosition'\]"
-	    	set node_xp5 [$root selectNodes $xp5]
-	    	set zposition [write::getValueByNode $node_xp5]
-
+            set node_xp2 [$root selectNodes $xp2]
+            set variable [get_domnode_attribute $node_xp2 v]
+            
+            set xp3 "[spdAux::getRoute DamDevices]/blockdata\[@name='$name'\]/value\[@n='XPosition'\]"
+            set node_xp3 [$root selectNodes $xp3]
+            set xposition [write::getValueByNode $node_xp3]
+            
+            set xp4 "[spdAux::getRoute DamDevices]/blockdata\[@name='$name'\]/value\[@n='YPosition'\]"
+            set node_xp4 [$root selectNodes $xp4]
+            set yposition [write::getValueByNode $node_xp4]
+            
+            set xp5 "[spdAux::getRoute DamDevices]/blockdata\[@name='$name'\]/value\[@n='ZPosition'\]"
+            set node_xp5 [$root selectNodes $xp5]
+            set zposition [write::getValueByNode $node_xp5]
+            
             set parameterDict [dict create]
             set positionList [list ]
             lappend positionList $xposition $yposition $zposition
@@ -1004,73 +820,73 @@ proc Dam::write::DevicesOutput { } {
             lappend outputlist $variable
             dict set parameterDict output_variables $outputlist
             dict set deviceDict Parameters $parameterDict
-
+            
             lappend lista $deviceDict
         }
     }
-
+    
     return $lista
-
+    
 }
 
 proc Dam::write::TemperaturebyDevices { } {
-
-# Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
-variable number_tables
-
+    
+    # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
+    variable number_tables
+    
     set device_temp_state [write::getValue DamTemperatureState]
     set lista [list ]
     set listaFiles [list ]
-
+    
     if { $device_temp_state == True} {
-
+        
         set root [customlib::GetBaseRoot]
         set xp1 "[spdAux::getRoute DamTempDevice]/blockdata\[@n='device'\]"
         set nodes [$root selectNodes $xp1]
-
+        
         set number_devices 0
-
+        
         foreach node $nodes {
-
+            
             set TempdeviceDict [dict create]
             dict set TempdeviceDict  python_module "impose_temperature_by_device_process"
             dict set TempdeviceDict  kratos_module "KratosMultiphysics.DamApplication"
             dict set TempdeviceDict  help "This process assigns a nodal temperature value according the device spatial position"
             dict set TempdeviceDict  process_name "ImposeTemperaturebyDeviceProcess"
-
-	    	set name [$node @name]
-
+            
+            set name [$node @name]
+            
             set xp2 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='is_fixed'\]"
-	    	set node_xp2 [$root selectNodes $xp2]
-	    	set isfixed [get_domnode_attribute $node_xp2 v]
-
+            set node_xp2 [$root selectNodes $xp2]
+            set isfixed [get_domnode_attribute $node_xp2 v]
+            
             set xp3 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='value'\]"
-	    	set node_xp3 [$root selectNodes $xp3]
-	    	set value [write::getValueByNode $node_xp3]
-
-	    	set xp4 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='table'\]"
-	    	set node_xp4 [$root selectNodes $xp4]
-	    	set fileid [write::getValueByNode $node_xp4]
-
-	    	set xp5 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='XPosition'\]"
-	    	set node_xp5 [$root selectNodes $xp5]
-	    	set xposition [write::getValueByNode $node_xp5]
-
-	    	set xp6 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='YPosition'\]"
-	    	set node_xp6 [$root selectNodes $xp6]
-	    	set yposition [write::getValueByNode $node_xp6]
-
-	    	set xp7 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='ZPosition'\]"
-	    	set node_xp7 [$root selectNodes $xp7]
-	    	set zposition [write::getValueByNode $node_xp7]
-
+            set node_xp3 [$root selectNodes $xp3]
+            set value [write::getValueByNode $node_xp3]
+            
+            set xp4 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='table'\]"
+            set node_xp4 [$root selectNodes $xp4]
+            set fileid [write::getValueByNode $node_xp4]
+            
+            set xp5 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='XPosition'\]"
+            set node_xp5 [$root selectNodes $xp5]
+            set xposition [write::getValueByNode $node_xp5]
+            
+            set xp6 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='YPosition'\]"
+            set node_xp6 [$root selectNodes $xp6]
+            set yposition [write::getValueByNode $node_xp6]
+            
+            set xp7 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='ZPosition'\]"
+            set node_xp7 [$root selectNodes $xp7]
+            set zposition [write::getValueByNode $node_xp7]
+            
             set parameterDict [dict create]
             set positionList [list ]
             dict set parameterDict model_part_name "MainModelPart"
             dict set parameterDict variable_name "TEMPERATURE"
             dict set parameterDict is_fixed $isfixed
             dict set parameterDict value $value
-
+            
             if {$fileid ni [list "" "- No file"]} {
                 if {$fileid ni $listaFiles} {
                     lappend listaFiles $fileid
@@ -1087,14 +903,14 @@ variable number_tables
             } else {
                 dict set parameterDict table 0
             }
-
+            
             lappend positionList $xposition $yposition $zposition
             dict set parameterDict position $positionList
             dict set TempdeviceDict  Parameters $parameterDict
-
+            
             lappend lista $TempdeviceDict
         }
     }
-
+    
     return $lista
 }
