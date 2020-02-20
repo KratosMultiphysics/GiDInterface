@@ -4,6 +4,9 @@ namespace eval Dam::write {
     variable TableDict
 
     variable ThermalSubModelPartDict
+
+    # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
+    variable number_tables
 }
 
 proc Dam::write::Init { } {

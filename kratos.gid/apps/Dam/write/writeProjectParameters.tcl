@@ -1,8 +1,5 @@
 ### Project Parameters
 
-# Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
-variable number_tables {}
-
 proc Dam::write::getParametersDict { } {
     
     variable number_tables
@@ -11,17 +8,67 @@ proc Dam::write::getParametersDict { } {
     set projectParametersDict [dict create]
     
     ### Problem data
+    dict set projectParametersDict problem_data [Dam::write::GetProblemDataDict]
+    
+    ### Solver data
+    dict set projectParametersDict solver_settings [Dam::write::GetSolverSettingsDict]
+
+    ### Output data
+    dict set projectParametersDict output_configuration [Dam::write::GetOutputDict]
+    
+    ### Constraints processes
+    dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid [::write::getConditionsParametersDict DamNodalConditions "Nodal"]]
+    
+    ### Load processes
+    set mechanical_load_process_list [::write::getConditionsParametersDict DamLoads]
+    set thermal_load_process_list [::write::getConditionsParametersDict DamThermalLoads]
+    dict set projectParametersDict loads_process_list [Dam::write::ChangeFileNameforTableid [concat $mechanical_load_process_list $thermal_load_process_list]]
+    
+    ### Construction processes
+    dict set projectParametersDict construction_process [Dam::write::GetConstructionDomainProcessDict]
+    
+    ### Transfer results processes
+    dict set projectParametersDict transfer_results_process [Dam::write::GetTransferResultsDict]
+    
+    ### Temperature by device
+    dict set projectParametersDict temperature_by_device_list [Dam::write::TemperaturebyDevices]
+    
+    ### Output device
+    dict set projectParametersDict output_device_list [Dam::write::DevicesOutput]
+    
+    return $projectParametersDict
+    
+}
+
+# This process is the responsible of writing files
+proc Dam::write::writeParametersEvent { } {
+    
+    set projectParametersDict [Dam::write::getParametersDict]
+    write::WriteJSON $projectParametersDict
+    
+    set damSelfweight [write::getValue DamSelfweight ConsiderSelfweight]
+    if {$damSelfweight eq "Yes" } {
+        
+        write::OpenFile "[file tail ProjectParametersSelfWeight].json"
+        set projectParametersDictSelfWeight [getParametersSelfWeight]
+        write::WriteString [write::tcl2json $projectParametersDictSelfWeight]
+        write::CloseFile
+        
+    }
+}
+
+proc Dam::write::GetProblemDataDict { } {
     ### Create section
     set problemDataDict [dict create]
     set damTypeofProblem [write::getValue DamTypeofProblem]
+    set paralleltype [write::getValue ParallelType]
+    set model_name [file tail [GiD_Info Project ModelName]]
     
     ### Add items to section
-    set model_name [file tail [GiD_Info Project ModelName]]
     dict set problemDataDict problem_name $model_name
-    dict set problemDataDict model_part_name "MainModelPart"
+    dict set problemDataDict model_part_name [Dam::write::GetAttribute model_part_name] 
     set nDim [expr [string range [write::getValue nDim] 0 0] ]
     dict set problemDataDict domain_size $nDim
-    set paralleltype [write::getValue ParallelType]
     dict set generalDataDict "parallel_type" $paralleltype
     if {$paralleltype eq "OpenMP"} {
         set nthreads [write::getValue Parallelization OpenMPNumberOfThreads]
@@ -32,7 +79,7 @@ proc Dam::write::getParametersDict { } {
         dict set problemDataDict number_of_threads 1
     }
     if {$damTypeofProblem eq "Modal-Analysis"} {
-        dict set projectParametersDict problem_data $problemDataDict
+        
     } else {
         dict set problemDataDict start_time [write::getValue DamTimeParameters StartTime]
         dict set problemDataDict end_time [write::getValue DamTimeParameters EndTime]
@@ -54,11 +101,17 @@ proc Dam::write::getParametersDict { } {
         }
         
         dict set problemDataDict streamlines_utility [Dam::write::StremalinesUtility]
-        ### Add section to document
-        dict set projectParametersDict problem_data $problemDataDict
     }
-    ### Solver Data
+
+    return $problemDataDict
+}
+
+proc Dam::write::GetSolverSettingsDict { } {
     set solversettingsDict [dict create]
+
+    set damTypeofProblem [write::getValue DamTypeofProblem]
+    set paralleltype [write::getValue ParallelType]
+    set model_name [file tail [GiD_Info Project ModelName]]
     
     ### Preguntar el solver haciendo los ifs correspondientes
     if {$paralleltype eq "OpenMP"} {
@@ -98,6 +151,8 @@ proc Dam::write::getParametersDict { } {
     dict set solversettingsDict echo_level 1
     dict set solversettingsDict buffer_size 2
     
+    dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames [Dam::write::GetAttribute nodal_conditions_un] [Dam::write::GetAttribute conditions_un] [Dam::write::GetAttribute thermal_conditions_un]]
+
     if {$damTypeofProblem eq "Modal-Analysis"} {
         dict set solversettingsDict solution_type [write::getValue DamModalSoluType]
         dict set solversettingsDict analysis_type [write::getValue DamModalAnalysisType]
@@ -115,11 +170,9 @@ proc Dam::write::getParametersDict { } {
         dict set solversettingsDict eigensolver_settings $eigensolversetDict
         
         # Adding submodel and processes
-        dict set solversettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
-        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
+        dict set solversettingsDict problem_domain_sub_model_part_list [write::getSubModelPartNames [Dam::write::GetAttribute parts_un]]
         
     } else {
-        dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
         
         ## Default Values
         set MechanicalSolutionStrategyUN "DamSolStrat"
@@ -128,9 +181,7 @@ proc Dam::write::getParametersDict { } {
         set MechanicalDataParametersUN "DamMechanicalDataParameters"
         
         if {$damTypeofProblem eq "Thermo-Mechanical" } {
-            
-            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
-            
+                        
             set thermalsettingDict [dict create]
             dict set thermalsettingDict echo_level [write::getValue DamThermalEcholevel]
             dict set thermalsettingDict reform_dofs_at_each_step [write::getValue DamThermalReformsSteps]
@@ -144,7 +195,7 @@ proc Dam::write::getParametersDict { } {
             ## Adding linear solver for thermal part
             set thermalsettingDict  [dict merge $thermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratTherm "DamThermo-Mechanical-ThermData"] ]
             dict set thermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
-            dict set thermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames "DamThermalLoads"]
+            dict set thermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames [Dam::write::GetAttribute thermal_conditions_un]]
             
             
             ## Adding thermal solver settings to solver settings
@@ -158,7 +209,7 @@ proc Dam::write::getParametersDict { } {
         if {$damTypeofProblem eq "UP_Thermo-Mechanical" } {
             
             dict set solversettingsDict reference_temperature [write::getValue DamThermalUPReferenceTemperature]
-            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" "DamThermalLoads"]
+            dict set solversettingsDict processes_sub_model_part_list [write::getSubModelPartNames "DamNodalConditions" "DamLoads" [Dam::write::GetAttribute thermal_conditions_un]]
             
             set UPthermalsettingDict [dict create]
             dict set UPthermalsettingDict echo_level [write::getValue DamThermalUPEcholevel]
@@ -173,7 +224,7 @@ proc Dam::write::getParametersDict { } {
             ## Adding linear solver for thermal part
             set UPthermalsettingDict [dict merge $UPthermalsettingDict [::Dam::write::getSolversParametersDict Dam DamSolStratThermUP "DamUP_Thermo-Mechanical-ThermData"] ]
             dict set UPthermalsettingDict problem_domain_sub_model_part_list [Dam::write::getSubModelPartThermalNames]
-            dict set UPthermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames "DamThermalLoads"]
+            dict set UPthermalsettingDict thermal_loads_sub_model_part_list [write::getSubModelPartNames [Dam::write::GetAttribute thermal_conditions_un]]
             
             
             ## Adding UP thermal solver settings to solver settings
@@ -281,43 +332,7 @@ proc Dam::write::getParametersDict { } {
             
         }
     }
-    
-    dict set projectParametersDict solver_settings $solversettingsDict
-    dict set projectParametersDict output_configuration [Dam::write::OutputDict]
-    
-    set nodal_process_list [::write::getConditionsParametersDict DamNodalConditions "Nodal"]
-    dict set projectParametersDict constraints_process_list [Dam::write::ChangeFileNameforTableid $nodal_process_list]
-    
-    set mechanical_load_process_list [::write::getConditionsParametersDict DamLoads]
-    set thermal_load_process_list [::write::getConditionsParametersDict DamThermalLoads]
-    set load_process_list [concat $mechanical_load_process_list $thermal_load_process_list]
-    set loads [Dam::write::ChangeFileNameforTableid $load_process_list]
-    dict set projectParametersDict loads_process_list $loads
-    
-    dict set projectParametersDict construction_process [Dam::write::GetConstructionDomainProcessDict]
-    dict set projectParametersDict transfer_results_process [Dam::write::GetTransferResultsDict]
-    dict set projectParametersDict temperature_by_device_list [Dam::write::TemperaturebyDevices]
-    dict set projectParametersDict output_device_list [Dam::write::DevicesOutput]
-    
-    return $projectParametersDict
-    
-}
-
-# This process is the responsible of writing files
-proc Dam::write::writeParametersEvent { } {
-    
-    set projectParametersDict [Dam::write::getParametersDict]
-    write::WriteJSON $projectParametersDict
-    
-    set damSelfweight [write::getValue DamSelfweight ConsiderSelfweight]
-    if {$damSelfweight eq "Yes" } {
-        
-        write::OpenFile "[file tail ProjectParametersSelfWeight].json"
-        set projectParametersDictSelfWeight [getParametersSelfWeight]
-        write::WriteString [write::tcl2json $projectParametersDictSelfWeight]
-        write::CloseFile
-        
-    }
+    return $solversettingsDict
 }
 
 # This process returns a dict of domains according input parameters in the solvers
@@ -399,7 +414,7 @@ proc Dam::write::ChangeFileNameforTableid { processList } {
 
 
 # This process is used to define new list of Output configuratino parameters
-proc Dam::write::OutputDict { {appid ""} } {
+proc Dam::write::GetOutputDict { {appid ""} } {
     
     set outputDict [dict create]
     set resultDict [dict create]
