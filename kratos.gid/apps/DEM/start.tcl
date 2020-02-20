@@ -22,6 +22,8 @@ proc ::DEM::Init { } {
 
     set ::Model::ValidSpatialDimensions [list 2D 3D]
 
+    GiD_Set CalcWithoutMesh 1
+
     LoadMyFiles
 }
 

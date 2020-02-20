@@ -34,6 +34,11 @@ proc DEM::write::Init { } {
 
 # MDPA Blocks
 proc DEM::write::writeModelPartEvent { } {
+
+    # Validation
+    set err [Validate]
+    if {$err ne ""} {error $err}
+
     variable last_property_id
     set last_property_id 0
 
@@ -114,6 +119,19 @@ proc DEM::write::SetCoordinatesByGroups {value} {
 proc DEM::write::ApplyConfiguration { } {
     variable writeAttributes
     write::SetConfigurationAttributes $writeAttributes
+}
+
+proc DEM::write::Validate {} {
+    set err ""
+    set root [customlib::GetBaseRoot]
+
+    # Check at least one node
+    set number_of_nodes [GiD_Info Mesh NumNodes]
+    if { $number_of_nodes == 0 } {
+        set err "Empty mesh detected (0 nodes present). A mesh is necessary to run the case."
+    }
+
+    return $err
 }
 
 DEM::write::Init
