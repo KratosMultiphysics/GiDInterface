@@ -47,7 +47,14 @@ proc DEM::write::copyClusterFiles { } {
         file copy -force $totalpath $dir
     }
     foreach totalpath $custom_clusters_list {
-        file copy -force $totalpath $dir
+        set only_name [file tail $totalpath]
+        set target_final_total_path [file join $dir $only_name]
+        set suffix "temporary"
+        #this is to avoid copying a file onto itself (giving problems in Windows)
+        set target_temp_total_path $target_final_total_path$suffix
+        file copy -force $totalpath $target_temp_total_path
+        file copy -force $target_temp_total_path $target_final_total_path
+        file delete -force $target_temp_total_path
     }
 }
 
