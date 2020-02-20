@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-  <ConditionItem n="DEM-FEM-Wall" pn="Conditions over finite elements" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="DEM-FEM-Wall-Process" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL">
+  <ConditionItem n="DEM-FEM-Wall" pn="Rigid Walls" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="DEM-FEM-Wall-Process" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidEdge3D2N"/>
       <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
@@ -9,7 +9,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-FEM-Wall2D" pn="Conditions over finite elements" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="DEM-FEM-Wall-Process" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL">
+  <ConditionItem n="DEM-FEM-Wall2D" pn="Rigid Walls" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="DEM-FEM-Wall-Process" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidEdge2D2N"/>
     </TopologyFeatures>
