@@ -237,7 +237,7 @@ proc Dam::examples::TreeAssignationDam {args} {
 	spdAux::SetValueOnTreeItem v "Days" DamTimeScale
 
 	# Results
-    set results [list REACTION No TEMPERATURE Yes POSITIVE_FACE_PRESSURE  Yes]]
+    set results [list REACTION No TEMPERATURE Yes POSITIVE_FACE_PRESSURE Yes]]
     set nodal_path [spdAux::getRoute "NodalResults"]
     foreach {n v} $results {
         [$root selectNodes "$nodal_path/value\[@n = '$n'\]"] setAttribute v $v
