@@ -16,6 +16,19 @@ proc Dam::write::Init { } {
     variable TableDict
     catch {unset TableDict}
     set TableDict [dict create]
+
+    SetAttribute parts_un DamParts
+    SetAttribute nodal_conditions_un DamNodalConditions
+    SetAttribute conditions_un DamLoads
+    SetAttribute thermal_conditions_un DamThermalLoads
+    SetAttribute materials_un DamMaterials
+    SetAttribute results_un Results
+    SetAttribute time_parameters_un DamTimeParameters
+    SetAttribute writeCoordinatesByGroups 0
+    SetAttribute validApps [list "Dam"]
+    SetAttribute main_script_file "MainKratosDam.py"
+    SetAttribute properties_location mdpa
+    SetAttribute model_part_name "MainModelPart"
 }
 
 proc Dam::write::writeCustomFilesEvent { } {
@@ -25,7 +38,8 @@ proc Dam::write::writeCustomFilesEvent { } {
 
 # MDPA Blocks
 proc Dam::write::writeModelPartEvent { } {
-    write::initWriteData "DamParts" "DamMaterials"
+    # Init data
+    write::initWriteConfiguration [GetAttributes]
 
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
@@ -434,5 +448,32 @@ proc Dam::write::getSubModelPartThermalNames { } {
 
     return $submodelThermalPartsNames
 }
+
+
+proc Dam::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
+}
+
+proc Dam::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc Dam::write::SetAttribute {att val} {
+    variable writeAttributes
+    dict set writeAttributes $att $val
+}
+
+proc Dam::write::AddAttribute {att val} {
+    variable writeAttributes
+    dict lappend writeAttributes $att $val
+}
+
+proc Dam::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
+}
+
 
 Dam::write::Init
