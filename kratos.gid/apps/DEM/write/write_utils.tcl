@@ -55,6 +55,7 @@ proc DEM::write::Elements_Substitution {} {
                         foreach container_group [GiD_EntitiesGroups entity_groups elements $element_id] {
                             # get the list of groups to which the element with id $element_id belongs
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
+                            GiD_EntitiesGroups assign $container_group nodes $node_id
                             # assign the element with id $new_element_id to each of the groups in the loop
                         }
                     }
@@ -163,6 +164,7 @@ proc DEM::write::Elements_Substitution {} {
                         foreach container_group [GiD_EntitiesGroups entity_groups elements $element_id] {
                             # get the list of groups to which the element with id $element_id belongs
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
+                            GiD_EntitiesGroups assign $container_group nodes $node_id
                             # assign the element with id $new_element_id to each of the groups in the loop
                         }
                     }
