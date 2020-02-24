@@ -40,6 +40,9 @@ proc ::MPM::write::getParametersDict { } {
     # Line search
     dict unset project_parameters_dict solver_settings line_search
 
+    # Volumetric strain dofs
+    dict unset project_parameters_dict volumetric_strain_dofs
+
     # Add the solver information
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict MPM] ]
