@@ -15,7 +15,6 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     set params [dict create]
     set saveValue [write::getStringBinaryValue $un SaveRestart]
     
-    dict set resultDict "process_name" "RestartProcess"
     set model_name [Kratos::GetModelName]
     dict set params "model_part_name" [write::GetModelPartNameWithParent $model_name]
     dict set params "save_restart" $saveValue
@@ -50,7 +49,7 @@ proc write::GetProcessHeader {group process condition {groupId ""}} {
     dict unset process_attributes n
     dict unset process_attributes pn
     if {[dict exists $process_attributes help]} {dict unset process_attributes help}
-    if {[dict exists $process_attributes process_name]} {dict unset process_attributes process_name}
+    #if {[dict exists $process_attributes process_name]} {dict unset process_attributes process_name}
     if {[dict exists $process_attributes write_command]} {dict unset process_attributes write_command}
     
     set processDict [dict merge $processDict $process_attributes]
@@ -149,10 +148,10 @@ proc write::GetInputValue {group in_obj} {
             }
             
         } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
-            set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
-            set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
+            set ValX "[get_domnode_attribute [$group find n value_${inputName}_X] v]"
+            set ValY "[get_domnode_attribute [$group find n value_${inputName}_Y] v]"
             set ValZ "0"
-            if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
+            if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}_Z] v]"}
         } else {
             set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n "value_${inputName}_X"] ] ]
             set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n "value_${inputName}_Y"] ] ]
