@@ -32,9 +32,7 @@ proc ::Dam::LoadMyFiles { } {
 
 proc ::Dam::CustomToolbarItems { } {
     variable dir
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Dam::examples::ThermoMechaDam] [= "Example\nThermo-mechanical Dam"]
-    }
+    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Dam::examples::ThermoMechaDam] [= "Example\nThermo-mechanical Dam"]
 }
 
 
