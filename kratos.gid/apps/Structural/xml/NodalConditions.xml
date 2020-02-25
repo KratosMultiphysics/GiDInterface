@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
-  <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorVariableProcess" VariableName="DISPLACEMENT" ImplementedInApplication="StructuralMechanicsApplication" analysis_type="Static,Quasi-static" unit_magnitude="L" units="m" App="Structural" state="CheckNodalConditionStateStructural" Interval="Total" can_be_initial="true">
+  <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorVariableProcess" VariableName="DISPLACEMENT" ImplementedInApplication="StructuralMechanicsApplication" analysis_type="Static,Quasi-static,Dynamic,eigen_value,formfinding" unit_magnitude="L" units="m" App="Structural" state="CheckNodalConditionStateStructural" Interval="Total" can_be_initial="true">
     <outputs>
       <parameter n="REACTION" pn="Reaction" v="Yes"/>
     </outputs>
