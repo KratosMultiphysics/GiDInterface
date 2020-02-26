@@ -21,6 +21,10 @@ proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 }
 
 proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
+    return [spdAux::SetValuesOnBaseNode [[customlib::GetBaseRoot] selectNodes $base_path] $prop_value_pairs]
+} 
+
+proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
     foreach {prop val} $prop_value_pairs {
         set propnode [$base_path selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
