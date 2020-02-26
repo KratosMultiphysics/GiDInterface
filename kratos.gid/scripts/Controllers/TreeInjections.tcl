@@ -1,12 +1,13 @@
 
 # Modify the tree: field newValue UniqueName OptionalChild
-proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
+# Example: spdAux::SetValueOnTreeItem v time Results FileLabel
+proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     set root [customlib::GetBaseRoot]
     #W "$field $value $name $it"
     set node ""
 
-    set xp [getRoute $name]
+    set xp [spdAux::getRoute $unique_name]
     if {$xp ne ""} {
         set node [$root selectNodes $xp]
         if {$it ne ""} {set node [$node find n $it]}
@@ -16,6 +17,17 @@ proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
     } {
         error "$name $it not found - Check GetFromXML.tcl file"
+    }
+}
+
+proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
+    foreach {prop val} $prop_value_pairs {
+        set propnode [$base_path selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property $prop"
+        }
     }
 }
 
