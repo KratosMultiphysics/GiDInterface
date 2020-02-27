@@ -172,14 +172,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1000.0 DYNAMIC_VISCOSITY 1.0]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
     # Fluid Interface
@@ -194,14 +187,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
     set props [list value 0.0]
-    foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $outletNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" NoSlip] setAttribute ov $condtype
@@ -221,14 +207,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list selector_component_X Not selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-        foreach {prop val} $props {
-             set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
-             }
-        }
+        spdAux::SetValuesOnBaseNode $fluidDisplacementNode $props
         
         set gname "FluidALEMeshFixXY//Total"
         GiD_Groups create $gname
@@ -237,14 +216,8 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z Not.0 Interval Total]
-        foreach {prop val} $props {
-             set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
-             }
-        }
+        spdAux::SetValuesOnBaseNode $fluidDisplacementNode $props
+
         set gname "Cylinder//Total"
         GiD_Groups create $gname
         GiD_Groups edit state $gname hidden
@@ -252,54 +225,26 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement $gname]
         $fluidDisplacementNode setAttribute ov line
         set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-        foreach {prop val} $props {
-             set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
-             }
-        }
+        spdAux::SetValuesOnBaseNode $fluidDisplacementNode $props
     }
 
     # Fluid domain time parameters
-    set change_list [list EndTime 20.0 DeltaTime 0.002]
+    set parameters [list EndTime 20.0 DeltaTime 0.002]
     set xpath [spdAux::getRoute FLTimeParameters]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Turek benchmark script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Fluid domain output parameters
-    set change_list [list OutputControlType time OutputDeltaTime 0.01]
+    set parameters [list OutputControlType time OutputDeltaTime 0.01]
     set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Turek benchmark script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Fluid monolithic strategy setting
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
 
     # Fluid domain strategy settings
-    set str_change_list [list relative_velocity_tolerance "1e-6" absolute_velocity_tolerance "1e-8" relative_pressure_tolerance "1e-6" absolute_pressure_tolerance "1e-8" maximum_iterations "10"]
+    set parameters [list relative_velocity_tolerance "1e-6" absolute_velocity_tolerance "1e-8" relative_pressure_tolerance "1e-6" absolute_pressure_tolerance "1e-8" maximum_iterations "10"]
     set xpath [spdAux::getRoute FLStratParams]
-    foreach {name value} $str_change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Turek benchmark script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Structural
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
@@ -310,14 +255,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     $structPartsNode setAttribute ov [expr {$nd == "3D" ? "volume" : "surface"}]
     set constLawNameStruc [expr {$nd == "3D" ? "KirchhoffSaintVenant3DLaw" : "KirchhoffSaintVenantPlaneStrain2DLaw"}]
     set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc DENSITY 10000.0 YOUNG_MODULUS 1.4e6 POISSON_RATIO 0.4]
-    foreach {prop val} $props {
-         set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
     set gname "FixedDisplacement//Total"
@@ -328,86 +266,41 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement $gname]
     $structDisplacementNode setAttribute ov [expr {$nd == "3D" ? "surface" : "line"}]
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Structural Interface
     customlib::AddConditionGroupOnXPath "container\[@n='FSI'\]/container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='StructureInterface$nd'\]" StructureInterface
 
     # Structure domain time parameters
-    set change_list [list EndTime 20.0 DeltaTime 0.002]
+    set parameters [list EndTime 20.0 DeltaTime 0.002]
     set xpath [spdAux::getRoute STTimeParameters]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Turek benchmark script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Structure domain output parameters
-    set change_list [list OutputControlType time OutputDeltaTime 0.01]
+    set parameters [list OutputControlType time OutputDeltaTime 0.01]
     set xpath "[spdAux::getRoute STResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Turek benchmark script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Structure Bossak scheme setting
     spdAux::SetValueOnTreeItem v "bossak" STScheme
 
     # Structure domain strategy settings
-    set str_change_list [list residual_relative_tolerance "1e-6" residual_absolute_tolerance "1e-8" max_iteration "10"]
+    set parameters [list residual_relative_tolerance "1e-6" residual_absolute_tolerance "1e-8" max_iteration "10"]
     set xpath [spdAux::getRoute STStratParams]
-    foreach {name value} $str_change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Turek benchmark script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Coupling settings
-    set parallelization_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set parallelization_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $parallelization_parameters {
-        [$root selectNodes "$parallelization_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set xpath [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
-    set change_list [list nl_tol "1e-6" nl_max_it 10]
+    set parameters [list nl_tol "1e-6" nl_max_it 10]
     set xpath [spdAux::getRoute FSIStratParams]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Turek benchmark script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
-    set change_list [list Solver MVQN]
+    set parameters [list Solver MVQN]
     set xpath [spdAux::getRoute FSIPartitionedcoupling_strategy]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Turek benchmark script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
 }

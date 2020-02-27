@@ -25,6 +25,7 @@ proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
 } 
 
 proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
+    if {$base_path eq ""} {error "Empty $base_path"}
     foreach {prop val} $prop_value_pairs {
         set propnode [$base_path selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {

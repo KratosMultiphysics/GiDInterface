@@ -130,26 +130,12 @@ proc Dam::examples::TreeAssignationDam {args} {
     set damParts [spdAux::getRoute "DamParts"]
     set damNode [customlib::AddConditionGroupOnXPath $damParts Dam]
     set props [list Element SmallDisplacementElement2D ConstitutiveLaw ThermalLinearElastic2DPlaneStrain Material "Concrete-Dam" DENSITY 2400 YOUNG_MODULUS 1.962e10 POISSON_RATIO 0.20 THERMAL_EXPANSION 1e-05]
-    foreach {prop val} $props {
-        set propnode [$damNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Dam $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $damNode $props
 	
 	#Soil Part
     set soilNode [customlib::AddConditionGroupOnXPath $damParts Soil]
     set props_soil [list Element SmallDisplacementElement2D ConstitutiveLaw ThermalLinearElastic2DPlaneStrain Material Soil DENSITY 3000 YOUNG_MODULUS 4.9e10 POISSON_RATIO 0.25 THERMAL_EXPANSION 1e-05]
-    foreach {prop val} $props_soil {
-        set propnode [$soilNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Dam $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $soilNode $props_soil
 
 	# Dirichlet Conditions
 	
@@ -162,40 +148,19 @@ proc Dam::examples::TreeAssignationDam {args} {
 		set initial "$damDirichletConditions/condition\[@n='INITIALTEMPERATURE'\]"
 		set initialnode [customlib::AddConditionGroupOnXPath $initial Initial]
 		set props_initial [list is_fixed 0 value 7.5 ]
-		foreach {prop val} $props_initial {
-			 set propnode [$initialnode selectNodes "./value\[@n = '$prop'\]"]
-			 if {$propnode ne "" } {
-				  $propnode setAttribute v $val
-			 } else {
-				W "Warning - Couldn't find property Initial $prop"
-			}
-		}
+        spdAux::SetValuesOnBaseNode $initialnode $props_initial
 
 		# Bofang Temperature
 		set bofang "$damDirichletConditions/condition\[@n='BOFANGTEMPERATURE'\]"
 		set bofangnode [customlib::AddConditionGroupOnXPath $bofang Bofang]
 		set props_bofang [list is_fixed 1 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Surface_Temp 15.19 Bottom_Temp 9.35 Height_Dam 30.0 Temperature_Amplitude 6.51 Day_Ambient_Temp 201 Water_level 20.0 Month 7 ]
-		foreach {prop val} $props_bofang {
-			 set propnode [$bofangnode selectNodes "./value\[@n = '$prop'\]"]
-			 if {$propnode ne "" } {
-				  $propnode setAttribute v $val
-			 } else {
-				W "Warning - Couldn't find property Bofang $prop"
-			}
-		}
+		spdAux::SetValuesOnBaseNode $bofangnode $props_bofang
 		
 		# Uniform Temperature
 		set uniform "$damDirichletConditions/condition\[@n='INITIALTEMPERATURE'\]"
 		set uniformnode [customlib::AddConditionGroupOnXPath $uniform Uniform]
 		set props_uniform [list is_fixed 1 value 10.0 ]
-		foreach {prop val} $props_uniform {
-			 set propnode [$uniformnode selectNodes "./value\[@n = '$prop'\]"]
-			 if {$propnode ne "" } {
-				  $propnode setAttribute v $val
-			 } else {
-				W "Warning - Couldn't find property Uniform $prop"
-			}
-		}
+        spdAux::SetValuesOnBaseNode $uniformnode $props_uniform
 	
 	
 	# Thermal Load Conditions
@@ -208,14 +173,7 @@ proc Dam::examples::TreeAssignationDam {args} {
 		# Thermal Parameters 2
 		set thermalparameternode2 [customlib::AddConditionGroupOnXPath $thermalparameter Thermal_Parameters_2]
 		set props_thermal_2 [list ThermalDensity 3000 ]
-		foreach {prop val} $props_thermal_2 {
-			 set propnode [$thermalparameternode2 selectNodes "./value\[@n = '$prop'\]"]
-			 if {$propnode ne "" } {
-				  $propnode setAttribute v $val
-			 } else {
-				W "Warning - Couldn't find property Thermal_Parameters_2 $prop"
-			}
-		}
+        spdAux::SetValuesOnBaseNode $thermalparameternode2 $props_thermal_2
 		
 	# Load Conditions
    
@@ -224,14 +182,8 @@ proc Dam::examples::TreeAssignationDam {args} {
 		set hydro "$damLoadConditions/condition\[@n='HydroLinePressure2D'\]"
 		set hydronode [customlib::AddConditionGroupOnXPath $hydro Hydrostatic]
 		set props_hydro [list Modify 0 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Spe_weight 10000 Water_level 20.0]
-		foreach {prop val} $props_hydro {
-			 set propnode [$hydronode selectNodes "./value\[@n = '$prop'\]"]
-			 if {$propnode ne "" } {
-				  $propnode setAttribute v $val
-			 } else {
-				W "Warning - Couldn't find property Hydrostatic $prop"
-			}
-		}
+		spdAux::SetValuesOnBaseNode $hydronode $props_hydro
+        
 		
 	# Solution
 	spdAux::SetValueOnTreeItem v "Days" DamTimeScale
@@ -239,10 +191,7 @@ proc Dam::examples::TreeAssignationDam {args} {
 	# Results
     set results [list REACTION No TEMPERATURE Yes POSITIVE_FACE_PRESSURE Yes]]
     set nodal_path [spdAux::getRoute "NodalResults"]
-    foreach {n v} $results {
-        [$root selectNodes "$nodal_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
-	
+    spdAux::SetValuesOnBasePath $nodal_path $results
 
     spdAux::RequestRefresh
 

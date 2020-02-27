@@ -45,57 +45,27 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
-    foreach {prop val} $props {
-        set propnode [$material_node selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Material $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $material_node $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Body]
     $DEMPartsNode setAttribute ov volume
     set props [list Material "DEM-DefaultMaterial"]
-    foreach {prop val} $props {
-        set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Parts $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # DEM FEM Walls
     set DEMConditions [spdAux::getRoute "DEMConditions"]
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
     set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
-    set props [list ]
-    foreach {prop val} $props {
-        set propnode [$wallsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
-    }
 
     # Inlet
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
     $inletNode setAttribute ov surface
     set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
-    foreach {prop val} $props {
-        set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Inlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $inletNode $props
 
 
     # ClusterInlet
@@ -103,27 +73,13 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     set inletNode [customlib::AddConditionGroupOnXPath $DEMClusterInlet "ClusterInlet"]
     $inletNode setAttribute ov surface
     set props [list Material "DEM-DefaultMaterial" InletElementType "Cluster3D" ClusterType "Rock1Cluster3D" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,1.0"]
-    foreach {prop val} $props {
-        set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Inlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $inletNode $props
 
     # General data
     # Time parameters
     set change_list [list EndTime 5 DeltaTime 1e-5 NeighbourSearchFrequency 50]
     set xpath [spdAux::getRoute DEMTimeParameters]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check SpheresDrop script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     spdAux::RequestRefresh
 }
