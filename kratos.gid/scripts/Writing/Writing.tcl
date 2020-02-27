@@ -251,7 +251,7 @@ proc write::transformGroupName {groupid} {
             lappend new_parts [string map [list $bad $good] $part]
         }
     }
-    return [join $new_parts /]
+    return [join $new_parts -]
 }
 
 # Warning! Indentation must be set before calling here!
