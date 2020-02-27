@@ -258,7 +258,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     set constLawNameStruc [expr {$nd == "3D" ? "LinearElastic3DLaw" : "LinearElasticPlaneStress2DLaw"}]
     # set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 1500.0 VISCOSITY 1e-6 YIELD_STRESS 0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45]
     set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc THICKNESS 1.0 DENSITY 1500.0 YOUNG_MODULUS 2.3e6 POISSON_RATIO 0.45]
-    spdAux::SetValuesOnBaseNode $constLawNameStruc $props
+    spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
