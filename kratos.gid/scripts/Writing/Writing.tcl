@@ -377,7 +377,7 @@ proc write::GetNodesFromElementFace {elem_id face_id} {
     return $nodes
 }
 
-proc write::getPartsGroupsId {} {
+proc write::getPartsGroupsId {{what "name"} } {
     set root [customlib::GetBaseRoot]
 
     set listOfGroups [list ]
@@ -388,8 +388,12 @@ proc write::getPartsGroupsId {} {
     set groups [$root selectNodes $xp1]
 
     foreach group $groups {
-        set groupName [get_domnode_attribute $group n]
-        lappend listOfGroups $groupName
+        if {$what eq "node"} {
+            lappend listOfGroups $group
+        } else {
+            set groupName [get_domnode_attribute $group n]
+            lappend listOfGroups $groupName
+        }
     }
     return $listOfGroups
 }
@@ -399,15 +403,19 @@ proc write::getPartsSubModelPartId {} {
 
     set listOfGroups [list ]
 
-    foreach group [getPartsGroupsId] {
-        lappend listOfGroups [write::getSubModelPartId Parts $group]
+    foreach group [getPartsGroupsId node] {
+        set cnd_id [get_domnode_attribute [$group parent] n]
+        set group_name [get_domnode_attribute $group n]
+        lappend listOfGroups [write::getSubModelPartId $cnd_id $group_name]
     }
     return $listOfGroups
 }
 
 proc write::writePartSubModelPart { } {
-    foreach group [getPartsGroupsId] {
-        writeGroupSubModelPart Parts $group "Elements"
+    foreach group [getPartsGroupsId node] {
+        set part_name  [get_domnode_attribute [$group parent] n]
+        set group_name [get_domnode_attribute $group n]
+        writeGroupSubModelPart $part_name $group_name "Elements"
     }
 }
 
