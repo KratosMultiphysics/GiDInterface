@@ -47,9 +47,6 @@ proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
     GiD_EntitiesGroups assign "TopPart" surfaces 4
     GiD_EntitiesGroups assign "Low-MidCohesive" surfaces 2
     GiD_EntitiesGroups assign "Low-MidCohesive" surfaces 3
-
-
-
 }
 
 
@@ -58,85 +55,41 @@ proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEMCont-DefaultMaterial' \]"]
-    foreach {prop val} $props {
-        set propnode [$material_node selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Material $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $material_node $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts LowPart]
     $DEMPartsNode setAttribute ov surface
     set props [list Material "DEMCont-DefaultMaterial"]
-    foreach {prop val} $props {
-        set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Parts $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts MidPart]
     $DEMPartsNode setAttribute ov surface
     set props [list Material "DEMCont-DefaultMaterial"]
-    foreach {prop val} $props {
-        set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Parts $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts TopPart]
     $DEMPartsNode setAttribute ov surface
     set props [list Material "DEMCont-DefaultMaterial"]
-    foreach {prop val} $props {
-        set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Parts $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Sand]
     $DEMPartsNode setAttribute ov surface
     set props [list Material "DEMCont-DefaultMaterial"]
-    foreach {prop val} $props {
-        set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Parts $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # DEM FEM Walls
     set DEMConditions [spdAux::getRoute "DEMConditions"]
     set box "$DEMConditions/condition\[@n='DEM-FEM-Wall2D'\]"
     set wallsNode [customlib::AddConditionGroupOnXPath $box Box]
     $wallsNode setAttribute ov line
-    set props [list ]
-    foreach {prop val} $props {
-        set propnode [$wallsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Wall2D $prop"
-        }
-    }
 
     # cohesiveTop
     set cohesiveTop "$DEMConditions/condition\[@n='DEM-Cohesive2D'\]"
@@ -153,39 +106,17 @@ proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
     # Time parameters
     set change_list [list EndTime 5 DeltaTime 5e-5 NeighbourSearchFrequency 50]
     set xpath [spdAux::getRoute DEMTimeParameters]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     # BondElem parameters
     set change_list [list ContactMeshOption "true"]
     set xpath [spdAux::getRoute BondElem]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     # AdvOptions parameters
     set change_list [list TangencyAbsoluteTolerance 0.05]
     set xpath [spdAux::getRoute AdvOptions]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check script"
-        }
-    }
-
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     spdAux::RequestRefresh
 }
