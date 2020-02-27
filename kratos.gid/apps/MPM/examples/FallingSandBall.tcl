@@ -108,28 +108,14 @@ proc MPM::examples::TreeAssignationFallingSandBall2D {args} {
     $mpm_solid_part setAttribute ov surface
     set constitutive_law_name "HenckyMCPlasticPlaneStrain${nd}Law"
     set props [list Element UpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material Sand DENSITY 2300 YOUNG_MODULUS 6e6 POISSON_RATIO 0.3 THICKNESS 0.1 PARTICLES_PER_ELEMENT 10]
-    foreach {prop val} $props {
-         set propnode [$mpm_solid_part selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Sand $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $mpm_solid_part $props
 
     ## Grid
     set mpm_grid_parts_route "${mpm_parts_route}/condition\[@n='Parts_Grid'\]"
     set mpm_grid_part [customlib::AddConditionGroupOnXPath $mpm_grid_parts_route Grid]
     $mpm_grid_part setAttribute ov surface
     set props [list Element GRID$nd ]
-    foreach {prop val} $props {
-         set propnode [$mpm_grid_part selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Grid $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $mpm_grid_part $props
 
     
     # Fix Displacement
@@ -145,14 +131,7 @@ proc MPM::examples::TreeAssignationFallingSandBall2D {args} {
     set mpm_displacement [customlib::AddConditionGroupOnXPath $mpm_displacement_route "FixedDisplacement//Total"]
     $mpm_displacement setAttribute ov $condtype
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0  selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$mpm_displacement selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Displacement $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $mpm_displacement $props
 
     ## Slip
     set mpm_loads_route [spdAux::getRoute "MPMLoads"]
