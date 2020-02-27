@@ -103,14 +103,7 @@ proc Structural::examples::TreeAssignationIncompressibleCookMembrane2D {args} {
     $structPartsNode setAttribute ov surface
     set constLawNameStruc "LinearElasticPlaneStrain2DLaw"
     set props [list Element SmallDisplacementMixedVolumetricStrainElement$nd ConstitutiveLaw $constLawNameStruc DENSITY 0.0 YOUNG_MODULUS 200.0 POISSON_RATIO 0.4995]
-    foreach {prop val} $props {
-         set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
     GiD_Groups clone LeftEdge Total
@@ -122,14 +115,7 @@ proc Structural::examples::TreeAssignationIncompressibleCookMembrane2D {args} {
     $structDisplacementNode setAttribute ov line
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue selector_component_Z Not Interval Total]
     #set props [list constrained Yes ByFunction No value 0.0]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Line load
     GiD_Groups clone RightEdge Total
@@ -140,14 +126,7 @@ proc Structural::examples::TreeAssignationIncompressibleCookMembrane2D {args} {
     set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "RightEdge//Total"]
     $LoadNode setAttribute ov line
     set props [list ByFunction No modulus 0.00625 value_direction_Y 1 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$LoadNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $LoadNode $props
 
     spdAux::RequestRefresh
 }
@@ -165,14 +144,7 @@ proc Structural::examples::TreeAssignationIncompressibleCookMembrane3D {args} {
     $structPartsNode setAttribute ov volume
     set constLawNameStruc "LinearElastic3DLaw"
     set props [list Element SmallDisplacementMixedVolumetricStrainElement$nd ConstitutiveLaw $constLawNameStruc DENSITY 0.0 YOUNG_MODULUS 200.0 POISSON_RATIO 0.4995]
-    foreach {prop val} $props {
-         set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
     GiD_Groups clone LeftSurface Total
@@ -184,14 +156,7 @@ proc Structural::examples::TreeAssignationIncompressibleCookMembrane3D {args} {
     $structDisplacementNode setAttribute ov surface
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     #set props [list constrained Yes ByFunction No value 0.0]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     GiD_Groups clone SideSurfaces Total
     GiD_Groups edit parent Total SideSurfaces
@@ -202,14 +167,7 @@ proc Structural::examples::TreeAssignationIncompressibleCookMembrane3D {args} {
     $structDisplacementNode setAttribute ov surface
     set props [list selector_component_X Not selector_component_Y Not selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     #set props [list constrained Yes ByFunction No value 0.0]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Surface load
     GiD_Groups clone RightSurface Total
@@ -220,14 +178,7 @@ proc Structural::examples::TreeAssignationIncompressibleCookMembrane3D {args} {
     set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "RightSurface//Total"]
     $LoadNode setAttribute ov surface
     set props [list ByFunction No modulus 0.00625 value_direction_Y 1 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$LoadNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $LoadNode $props
 
     spdAux::RequestRefresh
 }
