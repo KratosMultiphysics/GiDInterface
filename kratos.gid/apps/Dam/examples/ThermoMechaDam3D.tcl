@@ -1,21 +1,21 @@
 
-proc ::Dam::examples::ThermoMechaDam {args} {
+proc ::Dam::examples::ThermoMechaDam3D {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
-    DrawDamGeometry
-    AssignGroupsDam
-    AssignDamMeshSizes
-    TreeAssignationDam
+    DrawDamGeometry3D
+    AssignGroupsDam3D
+    AssignDamMeshSizes3D
+    TreeAssignationDam3D
     
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
-proc Dam::examples::DrawDamGeometry {args} {
+proc Dam::examples::DrawDamGeometry3D {args} {
     
     Kratos::ResetModel
     GiD_Layers create Ground
@@ -64,7 +64,7 @@ proc Dam::examples::DrawDamGeometry {args} {
     
 }
 
-proc Dam::examples::AssignGroupsDam {args} {
+proc Dam::examples::AssignGroupsDam3D {args} {
     
     # Create the groups
     GiD_Groups create Dam
@@ -90,7 +90,7 @@ proc Dam::examples::AssignGroupsDam {args} {
     
 }
 
-proc Dam::examples::AssignDamMeshSizes {args} {
+proc Dam::examples::AssignDamMeshSizes3D {args} {
     
     set dam_mesh_size 2
     GiD_Process Mescape Meshing AssignSizes volumes $dam_mesh_size [GiD_EntitiesGroups get Dam volumes] escape escape
@@ -99,7 +99,7 @@ proc Dam::examples::AssignDamMeshSizes {args} {
 }
 
 # Tree assign
-proc Dam::examples::TreeAssignationDam {args} {
+proc Dam::examples::TreeAssignationDam3D {args} {
     
     set nd 3D
     set root [customlib::GetBaseRoot]
