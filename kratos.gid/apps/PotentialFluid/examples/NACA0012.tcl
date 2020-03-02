@@ -102,14 +102,7 @@ proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     $fluidNode setAttribute ov $elemtype
     set props [list Element PotentialFlowElement$nd ConstitutiveLaw Inviscid DENSITY 1.225]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
     ErasePreviousIntervals
@@ -119,24 +112,15 @@ proc PotentialFluid::examples::TreeAssignationNACA00122D {args} {
     set farFieldNode [customlib::AddConditionGroupOnXPath $fluidFarField FarField]
     $farFieldNode setAttribute ov $condtype
     set props [list angle_of_attack 0.0 mach_infinity 0.03 speed_of_sound 340.0]
-    foreach {prop val} $props {
-         set propnode [$farFieldNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find far field property $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $farFieldNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Body$nd'\]" Body] setAttribute ov $condtype
 
     # Parallelism
-    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set time_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set xpath [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
 }
@@ -253,14 +237,7 @@ proc PotentialFluid::examples::TreeAssignationNACA00123D {args} {
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     set props [list Element PotentialFlowElement$nd ConstitutiveLaw Inviscid DENSITY 1.225]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
     ErasePreviousIntervals
@@ -270,14 +247,7 @@ proc PotentialFluid::examples::TreeAssignationNACA00123D {args} {
     set farFieldNode [customlib::AddConditionGroupOnXPath $fluidFarField FarField]
     $farFieldNode setAttribute ov $condtype
     set props [list angle_of_attack 0.0 mach_infinity 0.03 speed_of_sound 340.0]
-    foreach {prop val} $props {
-         set propnode [$farFieldNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find far field property $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $farFieldNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Body$nd'\]" Body] setAttribute ov $condtype

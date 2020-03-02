@@ -550,7 +550,7 @@ proc DEM::write::AssignGeometricalEntitiesToSkinSphere2D {} {
     set list_of_points [GiD_Geometry list point 1:end]
     set list_of_lines [GiD_Geometry list line 1:end]
     if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
-	GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
+	    GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
     }
 
     set points_to_add_to_skin_circles [list]

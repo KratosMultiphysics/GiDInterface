@@ -18,6 +18,7 @@
 	<appLink n="Buoyancy" public="0" pn="Buoyancy" active="0" appid="Buoyancy" prefix="Buoyancy_"/>
 	<appLink n="ConjugateHeatTransfer" public="0" pn="Conjugate heat transfer" active="0" appid="ConjugateHeatTransfer" prefix="CHT"/>
 	<appLink n="FSI" public="1" pn="FSI" active="0" appid="FSI" prefix="FSI"/>
+    <appLink n="Dam" public="1" pn="Dam" active="0" appid="Dam" prefix="Dam"/>
 	<appLink n="PfemLauncher" public="1" pn="Pfem" active="0" appid="PfemLauncher" prefix="PFEMLauncher_"/>
 	<appLink n="Pfem" public="0" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
 	<appLink n="PfemFluid" public="0" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>

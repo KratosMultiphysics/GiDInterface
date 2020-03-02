@@ -137,7 +137,7 @@ proc write::getSubModelPartNames { args } {
         set groupName [$group @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || $cid eq "Parts"} {
+        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || [string first Parts $cid] >= 0 } {
             set gname [::write::getSubModelPartId $cid $groupName]
             if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
         }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="Utilities" pn="Utilities" icon="icon_utilities" help="Utilities" state="normal" open_window="0">
+
+    <container n="Selfweight" pn="Selfweight" un="DamSelfweight" icon="selfweight" state="normal" actualize_tree="1" open_window="0">
+        <value n="ConsiderSelfweight" pn="Consider Selfweight" un="DamConsiderSelfweight" v="No" values="Yes,No" help="Selfweight just affects to the stresses field but not to displacements field" actualize_tree="1"/>
+        <dynamicnode command="spdAux::injectConditions" args="TypeofCondition Selfweight"/>
+    </container>
+
+    <container n="Construction" pn="Construction" un="DamConstructionProcess" icon="solution16" help="Solution" state="normal" open_window="0">
+        <value n="Activate_construction" pn="Activate construction process" un="DamActivateConstruction" v="No" values="Yes,No" actualize_tree="1"/>
+        <value n="gravity_direction" pn="Gravity direction" v="Z" values="X,Y,Z"  state="[HideIfUniqueName DamActivateConstruction No]"/>
+        <value n="reservoir_bottom_coordinate_in_gravity_direction" pn="Reservoir Bottom Coordinate in Gravity Direction" v="0.0"  state="[HideIfUniqueName DamActivateConstruction No]"/>
+        <value n="lift_height" pn="Lift height" v="0.0" help="Height of each lift" state="[HideIfUniqueName DamActivateConstruction No]"/>
+        <value n="construction_input_file_name" pn="Name of Construction File" v="construction.txt" help="Please copy your file at current directory" state="[HideIfUniqueName DamActivateConstruction No]"/>
+        <value n="activate_soil_part" pn="Activate soil part" un="DamActivateSoilPart" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
+        <value n="name_soil_part" pn="Name soil part" v="" values="[GetParts]" help="Select the soil part" state="[HideIfUniqueName DamActivateSoilPart No]"/>
+        <value n="activate_existing_part" pn="Activate existing dam part" un="DamActivateExistingPart" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
+        <value n="name_existing_part" pn="Name existing part" v="" values="[GetParts]" help="Select the existing part" state="[HideIfUniqueName DamActivateExistingPart No]"/>
+        <value n="activate_check_temperature" pn="Activate check temperature utility" un="DamActivateCheckTemperature" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
+        <value n="maximum_temperature_increment" pn="Maximum temperature increment" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
+        <value n="maximum_temperature" pn="Maximum temperature" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
+        <value n="minimum_temperature" pn="Minimum temperature" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
+        <value n="h_0" pn="Heat Transfer Coefficient" v="1.0" help="W/(m^2 ºC)" state="[HideIfUniqueName DamActivateConstruction No]"/>
+        <value n="ambient_input_file_name" pn="Name of Ambient Temp File" v="ambient.txt" help="Please copy your file at current directory" state="[HideIfUniqueName DamActivateConstruction No]"/>
+        <value n="aging" pn="Consider Aging" un="DamAging" v="No" values="Yes,No" help="If aging is considered, please select a nodal law" state="[HideIfUniqueName DamActivateConstruction No]"/>
+        <value n="source_type" pn="Source Type" un="DamSourceType" v="Adiabatic" values="Adiabatic,NonAdiabatic" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
+        <container n="noorzai" pn="Adiabatic Parameters" un="DamNoorzaiData" state="[noorzaiState]"  open_window="0" >
+            <value n="density" pn="Density" v="2400.0" help="kg/m^3"/>
+            <value n="specific_heat" pn="Specific Heat" v="1000.0" help="J/(KgºC)" />
+            <value n="alpha" pn="Alpha" v="8.47e-6" help="1/s" />
+            <value n="tmax" pn="Maximum Temperature" v="18.0" help="The maximum temperature of concrete under adiabatic condition (ºC)" />
+        </container>
+        <container n="azenha" pn="Non-Adiabatic Parameters" un="DamAzenhaData" state="[azenhaState]" actualize_tree="1" open_window="0" >
+            <value n="activation_energy" pn="Activation Energy" v="45507.0" help="J/mol"/>
+            <value n="gas_constant" pn="Universal Constant" v="8.314472" help="J/(mol ºC)" />
+            <value n="constant_rate" pn="Constant Rate" v="7.2237e10" help="W/m^3" />
+            <value n="alpha_initial" pn="Initial Alpha" v="0.015" />
+            <value n="q_total" pn="Q Total" v="6.7939e7" help="J/m^3"/>
+            <value n="young_inf" pn="Final Young Modulus" state="[checkStateByUniqueName DamAging Yes]" v="2.0e10" help="Young Modulus reached once the curing is completed"/>
+            <value n="A" pn="First Factor" v="0.4"/>
+            <value n="B" pn="Second Factor" v="6.9"/>
+            <value n="C" pn="Third Factor" v="27.0"/>
+            <value n="D" pn="Fourth Factor" v="10.0"/>
+        </container>
+    </container>
+
+    <container n="TransferResults" pn="Transfer results" un="DamTransferResults" icon="transfer_results" actualize_tree="1" open_window="0">
+        <container n="SaveResults" pn="Save results" un="DamSaveResults" help="" actualize_tree="1" open_window="0">
+            <value n="SaveIntermediateResults" pn="Save Intermediate Results" un="DamSaveIntermediateResults" v="No" values="Yes,No" help="" actualize_tree="1"/>
+            <value n="SaveIntermediateStep" pn="Step" un="DamSaveIntermediateStep" state="[checkStateByUniqueName DamSaveIntermediateResults Yes]" v="0" help="" actualize_tree="1"/>
+            <value n="SaveFinalResults" pn="Save Final Results" un="DamSaveFinalResults" v="No" values="Yes,No" help="" actualize_tree="1"/>
+        </container>
+        <container n="PreviousResults" pn="Previous results" un="DamPreviousResults" help="" actualize_tree="1" open_window="0">
+            <value n="AddPreviousResults" pn="Add previous results" un="DamAddPreviousResults" v="No" values="Yes,No" help="" actualize_tree="1"/>
+            <value n="TypeResults" pn="Type of results" un="DamTypeResults" v="Thermo-Mechanical" values="Mechanical,Thermal,Thermo-Mechanical" state="[HideIfUniqueName DamAddPreviousResults No]" help="" actualize_tree="1"/>
+            <container n="AddResultsData" pn="Add data" un="DamAddResultsData" state="[addResultsState]" actualize_tree="1" open_window="0">
+                <value n="DisplacementResults" pn="Displacement results" un="DamDisplacementResults" state="[HideIfUniqueName DamTypeResults Thermal]" v="No" values="Yes,No" help="" actualize_tree="1"/>
+                <value n="StressResults" pn="Nodal cauchy stress results" un="DamStressResults" state="[HideIfUniqueName DamTypeResults Thermal]" v="No" values="Yes,No" help="" actualize_tree="1"/>
+                <value n="FileNameMechanical" pn="File name for mechanical results" un="DamFileMech" v="- No File -" state="[HideIfUniqueName DamTypeResults Thermal]" help="" actualize_tree="1"/>
+                <value n="TemperatureResults" pn="Initial temperature results" un="DamInitialTempResults" state="[HideIfUniqueName DamTypeResults Mechanical]" v="No" values="Yes,No" help="" actualize_tree="1"/>
+                <value n="RefTemperatureResults" pn="Nodal reference temperature results" un="DamRefTempResults" state="[HideIfUniqueName DamTypeResults Mechanical]" v="No" values="Yes,No" help="" actualize_tree="1"/>
+                <value n="FileNameThermal" pn="File name for thermal results" un="DamFileTherm" v="- No File -" state="[HideIfUniqueName DamTypeResults Mechanical]" help="" actualize_tree="1"/>
+            </container>
+        </container>
+    </container>
+
+    <container n="Calibration" pn="Calibration" un="DamCalibration" icon="analysis" open_window="0">
+	  <dynamicnode command="spdAux::injectConditions" args="TypeofCondition Calibration"/>
+      <container n="MonitoringDevices" pn="Monitoring Devices"  icon="prdata16" help="Select your group" un="DamDevices">
+          <value n="DeviceOutputState" pn="Device State" un="DamOutputState" v="False" values="True,False" actualize_tree="1"/>
+          <blockdata n="device" pn="Device" name="Device 1" state="[HideIfUniqueName DamOutputState False]" sequence="1" editable_name="unique" help="Interval">
+              <value n="Variable" pn="Variable" actualize_tree="1" v="DISPLACEMENT" values="DISPLACEMENT,TEMPERATURE" />
+              <value n="XPosition" pn="X Position" actualize_tree="1" type="double" v="0.0" />
+              <value n="YPosition" pn="Y Position" actualize_tree="1" type="double" v="0.0" />
+              <value n="ZPosition" pn="Z Position" actualize_tree="1" type="double" v="0.0" />
+          </blockdata>
+      </container>
+    </container>
+
+    <container n="TemperatureDevice" pn="Temperature Device" ProcessName="ImposeTemperaturebyDeviceProcess" un="DamTempDevice" icon="temp_device" open_window="0">
+        <value n="DeviceTemperatureState" pn="Device State" un="DamTemperatureState" v="False" values="True,False" actualize_tree="1"/>
+        <blockdata n="device" pn="Device" name="Device 1" state="[HideIfUniqueName DamTemperatureState False]" sequence="1" editable_name="unique" help="Interval">
+            <value n="is_fixed" pn="Imposed" actualize_tree="1" type="bool" v="true" values="true,false" />
+            <value n="value" pn="Value" type="double" v="0.0" />
+            <value n="table" pn="Temperature table filename" type="tablefile" v="" values = "[GetFilesValues]" update_proc = "AddFile" />
+            <value n="XPosition" pn="X Position" actualize_tree="1" type="double" v="0.0" />
+            <value n="YPosition" pn="Y Position" actualize_tree="1" type="double" v="0.0" />
+            <value n="ZPosition" pn="Z Position" actualize_tree="1" type="double" v="0.0" />
+        </blockdata>
+    </container>
+
+</container>

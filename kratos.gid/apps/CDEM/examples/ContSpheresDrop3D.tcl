@@ -40,57 +40,27 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEMCont-DefaultMaterial' \]"]
-    foreach {prop val} $props {
-        set propnode [$material_node selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Material $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $material_node $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Body]
     $DEMPartsNode setAttribute ov volume
     set props [list Material "DEMCont-DefaultMaterial"]
-    foreach {prop val} $props {
-        set propnode [$DEMPartsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Parts $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # DEM FEM Walls
     set DEMConditions [spdAux::getRoute "DEMConditions"]
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
     set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
-    set props [list ]
-    foreach {prop val} $props {
-        set propnode [$wallsNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Walls $prop"
-        }
-    }
 
     # Inlet
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
     $inletNode setAttribute ov surface
     set props [list Material "DEMCont-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
-    foreach {prop val} $props {
-        set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Inlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $inletNode $props
 
     # DEM custom submodelpart
     set custom_dem "$DEMConditions/condition\[@n='DEM-CustomSmp'\]"
@@ -115,51 +85,23 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
     # Time parameters
     set change_list [list EndTime 3 DeltaTime 1e-5 NeighbourSearchFrequency 50]
     set xpath [spdAux::getRoute DEMTimeParameters]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check ContSpheresDrop3D script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     # Bounding box
     set change_list [list UseBB true MinZ -1.0]
     set xpath [spdAux::getRoute Boundingbox]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check ContSpheresDrop3D script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     # BondElem parameters
     set change_list [list ContactMeshOption "true"]
     set xpath [spdAux::getRoute BondElem]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     # AdvOptions parameters
     set change_list [list TangencyAbsoluteTolerance 0.05]
     set xpath [spdAux::getRoute AdvOptions]
-    foreach {name value} $change_list {
-        set node [[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check script"
-        }
-    }
-
+    spdAux::SetValuesOnBasePath $xpath $change_list
+    
     spdAux::RequestRefresh
 }
 

@@ -121,14 +121,7 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='FluidBody'\]/value\[@n='BodyType'\]" {v Fluid}
     set fluidNode [customlib::AddConditionGroupOnXPath $fluid_part_xpath Fluid]
     set props [list ConstitutiveLaw Newtonian DENSITY 1e3]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     # Solid Parts
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='SolidBody'\]/value\[@n='BodyType'\]" {v Solid}
@@ -136,14 +129,7 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
     set solid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='SolidBody'\]/condition\[@n='Parts'\]"
     set solidNode [customlib::AddConditionGroupOnXPath $solid_part_xpath Solid]
     set props [list Element UpdatedLagrangianVSolidElement2D ConstitutiveLaw Hypoelastic DENSITY 2500 YOUNG_MODULUS 1000000 POISSON_RATIO 0]
-    foreach {prop val} $props {
-        set propnode [$solidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Solid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $solidNode $props
    
     # Rigid Parts
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/value\[@n='BodyType'\]" {v Rigid}

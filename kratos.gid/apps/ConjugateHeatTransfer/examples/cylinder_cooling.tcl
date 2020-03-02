@@ -124,27 +124,13 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.00125 CONDUCTIVITY 0.625 SPECIFIC_HEAT 1000.0]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     ## Thermal parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set solid_node [customlib::AddConditionGroupOnXPath $parts Solid]
     set props [list Element EulerianConvDiff$nd Material Gold DENSITY 4.0 CONDUCTIVITY 2000.0 SPECIFIC_HEAT 250.0]
-    foreach {prop val} $props {
-        set propnode [$solid_node selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Solid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $solid_node $props
 
     ## Fluid CFD conditions
     set fluid_conditions [spdAux::getRoute "FLBC"]
@@ -182,21 +168,12 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     set fluid_thermal_imposed_temp_cond [customlib::AddConditionGroupOnXPath $fluid_thermal_temperature_cond Fluid_Left_Wall]
     $fluid_thermal_imposed_temp_cond setAttribute ov $cond_type
     set props [list constrained True Interval Total value 0.0]
-    foreach {prop val} $props {
-         set propnode [$fluid_thermal_imposed_temp_cond selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property ImposedTemperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluid_thermal_imposed_temp_cond $props
 
     # Fluid Boussinesq settings
     set fluid_boussinesq_settings_xpath [spdAux::getRoute "Buoyancy_Boussinesq"]
     set fluid_boussinesq_params [list gravity "0.0,0.0,0.0" ambient_temperature 273.15]
-    foreach {field value} $fluid_boussinesq_params {
-        [$root selectNodes "$fluid_boussinesq_settings_xpath/value\[@n = '$field'\]"] setAttribute v $value
-    }
+    spdAux::SetValuesOnBasePath $fluid_boussinesq_settings_xpath $fluid_boussinesq_params
 
     ## Solid thermal conditions
     # Initial conditions
@@ -208,14 +185,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     set solid_temperature_node [customlib::AddConditionGroupOnXPath $solid_initial_temperature "Solid//Initial"]
     $solid_temperature_node setAttribute ov $body_type
     set props [list value 1.0]
-    foreach {prop val} $props {
-         set propnode [$solid_temperature_node selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Solid Temperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $solid_temperature_node $props
 
     # Set thermal interface
     set solid_thermal_conditions [spdAux::getRoute "CNVDFFBC"]
@@ -226,29 +196,23 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     # Time parameters
     set time_parameters [list EndTime 15.0 DeltaTime 0.1]
     set time_params_path [spdAux::getRoute "TimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $time_params_path $time_parameters
 
     # Output
-    set time_parameters [list OutputControlType step OutputDeltaStep 1]
+    set parameters [list OutputControlType step OutputDeltaStep 1]
     set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Parallelism
-    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set time_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set xpath [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
 }
 
 proc ConjugateHeatTransfer::examples::TreeAssignation3D {args} {
-    # To be implemented
+    # TODO: To be implemented
 }
 
 # Assign mesh settings and sizes
