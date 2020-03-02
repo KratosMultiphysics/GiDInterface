@@ -439,7 +439,7 @@ proc Dam::write::GetOutputDict { {appid ""} } {
         set frequency [write::getValue Results OutputDeltaTime_w]
     }
     
-    dict set resultDict output_frequency $frequency
+    dict set resultDict output_interval $frequency
     dict set resultDict start_output_results [write::getValue Results StartOutputResults]
     
     dict set resultDict body_output           [write::getValue Results BodyOutput]
