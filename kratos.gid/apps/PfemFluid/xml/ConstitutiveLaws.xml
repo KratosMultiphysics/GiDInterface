@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--linear elastic laws-->
-	<CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="Newtonian" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
-            <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3"  help="Set the dynamic viscosity."/>
-            <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9"  help="Set the fluid Bulk modulus."/>
+            <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
+            <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the fluid Bulk modulus."/>
         </inputs>
         <outputs>
         </outputs>
     </CLaw>
-	<CLaw n="NonNewtonian" pn="Non Newtonian" ProductionReady="ProductionReady" help="Non Newtonian fluid" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="NonNewtonian" pn="Non Newtonian" ProductionReady="ProductionReady" help="Non Newtonian fluid" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -22,7 +22,7 @@
         <outputs>
         </outputs>
     </CLaw>
-	<CLaw n="MuIrheology" pn="Mu(I) Rheology" ProductionReady="ProductionReady" help="Dense Incompressible granular material" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="MuIrheology" pn="Mu(I) Rheology" ProductionReady="ProductionReady" help="Dense Incompressible granular material" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1600"/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
@@ -36,7 +36,7 @@
         <outputs>
         </outputs>
     </CLaw>
-	<CLaw n="Hypoelastic" pn="Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="Hypoelastic" pn="Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="500"/>
             <parameter n="YOUNG_MODULUS" pn="Young modulus" unit_magnitude="P" units="Pa" v="2.1e+07" help="Set the Young modulus."/>
