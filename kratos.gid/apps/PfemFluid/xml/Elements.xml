@@ -63,24 +63,24 @@
 	       help="To be written by..."
 	       ElementType="Fluid" Dofs="VELOCITY,PRESSURE">
 
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="TwoStepUpdatedLagrangianVPFluidDEMcouplingElement2D"/>
-    </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-	    <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
-	    <filter field="type" value="Fluid"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <!--define list of NodalConditions-->
-    <NodalConditions> 
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>
-    </NodalConditions>
-    <inputs>
-    </inputs>
-    <outputs>
-    </outputs>
+      <!--here we could add a list of all of the possible geometries-->
+      <TopologyFeatures>
+        <item GeometryType="Triangle" nodes="3" KratosName="TwoStepUpdatedLagrangianVPFluidDEMcouplingElement2D"/>
+      </TopologyFeatures>
+      <!-- here we add the block of features which we require from the constitutive law-->
+      <ConstitutiveLaw_FilterFeatures>
+        <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
+        <filter field="type" value="Fluid"/>
+      </ConstitutiveLaw_FilterFeatures>
+      <!--define list of NodalConditions-->
+      <NodalConditions> 
+        <NodalCondition n="VELOCITY"/>
+        <NodalCondition n="PRESSURE"/>
+      </NodalConditions>
+      <inputs>
+      </inputs>
+      <outputs>
+      </outputs>
   </ElementItem>
 
 
