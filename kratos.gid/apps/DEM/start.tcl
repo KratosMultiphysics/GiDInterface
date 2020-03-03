@@ -22,6 +22,8 @@ proc ::DEM::Init { } {
 
     set ::Model::ValidSpatialDimensions [list 2D 3D]
 
+    GiD_Set CalcWithoutMesh 1
+
     LoadMyFiles
 }
 
@@ -76,6 +78,16 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
                     GiD_Process Mescape Meshing ElemType Circle Surfaces $surfs escape escape
                 }
             }
+        } else {
+            if {$::Model::SpatialDimension eq "3D"} {
+                foreach volume [GiD_EntitiesGroups get $groupid volumes] {
+                    GiD_Process Mescape Meshing ElemType Default Volumes $volume escape escape
+                }
+            } {
+                foreach surfs [GiD_EntitiesGroups get $groupid surfaces] {
+                    GiD_Process Mescape Meshing ElemType Default Surfaces $surfs escape escape
+                }
+            }
         }
     }
     if {[catch {DEM::write::BeforeMeshGenerationUtils $elementsize} err]} {
@@ -97,6 +109,42 @@ proc ::DEM::AfterMeshGeneration { fail } {
     foreach group [$root selectNodes $xp2] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
+    }
+
+    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-VelocityIC'\]/group"
+    foreach group [$root selectNodes $xp0] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
+    }
+
+    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-VelocityIC2D'\]/group"
+    foreach group [$root selectNodes $xp0] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
+    }
+
+    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-VelocityBC'\]/group"
+    foreach group [$root selectNodes $xp0] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
+    }
+
+    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-VelocityBC2D'\]/group"
+    foreach group [$root selectNodes $xp0] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
+    }
+
+    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-GraphCondition'\]/group"
+    foreach group [$root selectNodes $xp0] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
+    }
+
+    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-GraphCondition2D'\]/group"
+    foreach group [$root selectNodes $xp0] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
     }
 
     if [GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE] {
