@@ -35,9 +35,43 @@ proc Fluid::write::getAuxiliarProcessList {} {
     set process_list [list ]
 
     foreach process [getDragProcessList] {lappend process_list $process}
+    foreach process [getWssProcessList] {lappend process_list $process}
 
     return $process_list
 }
+
+proc Fluid::write::getWssProcessList {} {
+    set root [customlib::GetBaseRoot]
+
+    set process_list [list ]
+    set xp1 "[spdAux::getRoute [GetAttribute wss_un]]/group"
+    set groups [$root selectNodes $xp1]
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
+
+        set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write_wss_output_file'\]"]]]
+        set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print_wss_to_screen'\]"]]]
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+
+        set pdict [dict create]
+        dict set pdict "python_module" "compute_wss_statistics_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsBiomedicalApplication"
+        dict set pdict "process_name" "ComputeWssStatisticsProcess"
+        set params [dict create]
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        dict set params "calculate_wss" true
+        dict set params "calculate_osi" true
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+    }
+
+    return $process_list
+}
+
 
 proc Fluid::write::getDragProcessList {} {
     set root [customlib::GetBaseRoot]
@@ -208,7 +242,7 @@ proc Fluid::write::getSolverSettingsDict { } {
     if {$currentStrategyId eq "Monolithic"} {
         set formulationSettingsDict [dict create]
         # Set element type
-        dict set formulationSettingsDict element_type "vms"
+        dict set formulationSettingsDict element_type "qsvms"
         # Set OSS and remove oss_switch from the original dictionary
         # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
         if {[dict exists $solverSettingsDict oss_switch]} {

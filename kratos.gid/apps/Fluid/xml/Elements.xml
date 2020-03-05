@@ -38,11 +38,16 @@
     <NodalConditions>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="WSS" />
     </NodalConditions>
     <inputs>
     </inputs>
     <outputs>
       <parameter n="VORTICITY" pn="Vorticity" />
+      <parameter n="WSS" pn="WSS" />
+      <parameter n="TWSS" pn="TWSS" />
+      <parameter n="OSI" pn="OSI" />
+      <parameter n="ECAP" pn="ECAP" />
     </outputs>
   </ElementItem>
   <ElementItem n="Monolithic2D" pn="Monolithic 2D" ImplementedInFile="fractional_step.cpp" ImplementedInApplication="FluidDynamicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a Monolithic Element">
@@ -86,11 +91,16 @@
     <NodalConditions>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="WSS" />
     </NodalConditions>
     <inputs>
     </inputs>
     <outputs>
       <parameter n="VORTICITY" pn="Vorticity" />
+      <parameter n="WSS" pn="WSS" />
+      <parameter n="TWSS" pn="TWSS" />
+      <parameter n="OSI" pn="OSI" />
+      <parameter n="ECAP" pn="ECAP" />
     </outputs>
   </ElementItem>
 

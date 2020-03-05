@@ -17,6 +17,7 @@ proc Fluid::write::Init { } {
     SetAttribute materials_un FLMaterials
     SetAttribute results_un FLResults
     SetAttribute drag_un FLDrags
+    SetAttribute wss_un FLWsss
     SetAttribute time_parameters_un FLTimeParameters
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid"]
@@ -108,6 +109,7 @@ proc Fluid::write::writeProperties { } {
 proc Fluid::write::writeConditions { } {
     writeBoundaryConditions
     writeDrags
+    writeWsss
 }
 
 proc Fluid::write::getFluidModelPartFilename { } {
@@ -157,6 +159,13 @@ proc Fluid::write::writeDrags { } {
     write::writeNodalConditions [GetAttribute drag_un]
     Model::ForgetNodalCondition Drag
 }
+
+proc Fluid::write::writeWsss { } {
+    lappend ::Model::NodalConditions [::Model::NodalCondition new Wss]
+    write::writeNodalConditions [GetAttribute wss_un]
+    Model::ForgetNodalCondition Wss
+}
+
 
 proc Fluid::write::writeMeshes { } {
     write::writePartSubModelPart
