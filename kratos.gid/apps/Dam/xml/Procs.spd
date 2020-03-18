@@ -51,6 +51,16 @@
 	  return [Dam::xml::ProcCheckConditionState $domNode $args]
 	  ]]>
 	</proc>
+    			<proc n='checkTemperatureState' args='args'>
+	  <![CDATA[
+	  return [Dam::xml::ProcCheckTemperatureState $domNode $args]
+	  ]]>
+	</proc>
+        			<proc n='activatePartsState' args='args'>
+	  <![CDATA[
+	  return [Dam::xml::ProcActivatePartsState $domNode $args]
+	  ]]>
+	</proc>
 			<proc n='noorzaiState' args='args'>
 	  <![CDATA[
 	  return [Dam::xml::ProcNoorzaiState $domNode $args]
