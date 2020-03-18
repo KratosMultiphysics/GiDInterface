@@ -8,22 +8,18 @@
 
     <container n="Construction" pn="Construction" un="DamConstructionProcess" icon="solution16" help="Solution" state="normal" open_window="0">
         <value n="Activate_construction" pn="Activate construction process" un="DamActivateConstruction" v="No" values="Yes,No" actualize_tree="1"/>
-        <container n="activate_parts" pn="Preactivate Parts" un="DamActivateParts" state="[activatePartsState]"  open_window="0">
-            <value n="activate_soil_part" pn="Activate soil part" un="DamActivateSoilPart" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
-            <value n="name_soil_part" pn="Name soil part" v="" values="[GetParts]" help="Select the soil part" state="[HideIfUniqueName DamActivateSoilPart No]"/>
-            <value n="activate_existing_part" pn="Activate existing dam part" un="DamActivateExistingPart" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
-            <value n="name_existing_part" pn="Name existing part" v="" values="[GetParts]" help="Select the existing part" state="[HideIfUniqueName DamActivateExistingPart No]"/>
-        </container>
-        <container n="check_temperature" pn="Check Temperature" un="DamCheckTemperature" state="[checkTemperatureState]"  open_window="0" >
-            <value n="activate_check_temperature" pn="Activate check temperature utility" un="DamActivateCheckTemperature" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
-            <value n="maximum_temperature_increment" pn="Maximum temperature increment" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
-            <value n="maximum_temperature" pn="Maximum temperature" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
-            <value n="minimum_temperature" pn="Minimum temperature" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
-        </container>
         <value n="gravity_direction" pn="Gravity direction" v="Z" values="X,Y,Z"  state="[HideIfUniqueName DamActivateConstruction No]"/>
         <value n="reservoir_bottom_coordinate_in_gravity_direction" pn="Reservoir Bottom Coordinate in Gravity Direction" v="0.0"  state="[HideIfUniqueName DamActivateConstruction No]"/>
         <value n="lift_height" pn="Lift height" v="0.0" help="Height of each lift" state="[HideIfUniqueName DamActivateConstruction No]"/>
         <value n="construction_input_file_name" pn="Name of Construction File" v="construction.txt" help="Please copy your file at current directory" state="[HideIfUniqueName DamActivateConstruction No]"/>
+        <value n="activate_soil_part" pn="Activate soil part" un="DamActivateSoilPart" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
+        <value n="name_soil_part" pn="Name soil part" v="" values="[GetParts]" help="Select the soil part" state="[HideIfUniqueName DamActivateSoilPart No]"/>
+        <value n="activate_existing_part" pn="Activate existing dam part" un="DamActivateExistingPart" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
+        <value n="name_existing_part" pn="Name existing part" v="" values="[GetParts]" help="Select the existing part" state="[HideIfUniqueName DamActivateExistingPart No]"/>
+        <value n="activate_check_temperature" pn="Activate check temperature utility" un="DamActivateCheckTemperature" v="No" values="Yes,No" state="[HideIfUniqueName DamActivateConstruction No]" actualize_tree="1"/>
+        <value n="maximum_temperature_increment" pn="Maximum temperature increment" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
+        <value n="maximum_temperature" pn="Maximum temperature" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
+        <value n="minimum_temperature" pn="Minimum temperature" v="0" state="[HideIfUniqueName DamActivateCheckTemperature No]"/>
         <value n="h_0" pn="Heat Transfer Coefficient" v="1.0" help="W/(m^2 ºC)" state="[HideIfUniqueName DamActivateConstruction No]"/>
         <value n="ambient_input_file_name" pn="Name of Ambient Temp File" v="ambient.txt" help="Please copy your file at current directory" state="[HideIfUniqueName DamActivateConstruction No]"/>
         <value n="aging" pn="Consider Aging" un="DamAging" v="No" values="Yes,No" help="If aging is considered, please select a nodal law" state="[HideIfUniqueName DamActivateConstruction No]"/>

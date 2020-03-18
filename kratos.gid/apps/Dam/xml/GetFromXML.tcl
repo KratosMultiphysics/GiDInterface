@@ -403,24 +403,6 @@ proc Dam::xml::ProcGetElementsValues {domNode args} {
     return $values
 }
 
-proc Dam::xml::ProcCheckTemperatureState {domNode args} {
-    set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
-    set state hidden
-    if {$ActivateConstruction} {
-        set state normal
-    }
-    return $state
-}
-
-proc Dam::xml::ProcActivatePartsState {domNode args} {
-    set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
-    set state hidden
-    if {$ActivateConstruction} {
-        set state normal
-    }
-    return $state
-}
-
 proc Dam::xml::ProcNoorzaiState {domNode args} {
     set SourceType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamSourceType]] v]
     set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
