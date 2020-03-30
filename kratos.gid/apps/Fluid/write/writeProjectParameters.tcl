@@ -208,6 +208,7 @@ proc Fluid::write::getSolverSettingsDict { } {
     if {$currentStrategyId eq "Monolithic"} {
         set formulationSettingsDict [dict create]
         # Set element type
+        # TODO: get element type name from the xml -> Avoid Hardcoding
         dict set formulationSettingsDict element_type "vms"
         # Set OSS and remove oss_switch from the original dictionary
         # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
