@@ -17,7 +17,7 @@ proc MPM::write::Init { } {
     # SetAttribute validApps [list "MPM"]
     SetAttribute main_script_file "KratosParticle.py"
     SetAttribute materials_file "ParticleMaterials.json"
-    SetAttribute model_part_name ""
+    SetAttribute model_part_name "Background_Grid"
 }
 
 # Events
@@ -116,13 +116,15 @@ proc MPM::write::writeSubmodelparts { type } {
     set body_groups [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
+        set part_name [get_domnode_attribute [$gNode parent] n]
+        set group_name [get_domnode_attribute $gNode n]
         if {$type eq "grid"} {
             if {$elem in $grid_elements} {
-                write::writeGroupSubModelPart Parts [get_domnode_attribute $gNode n] "Elements"
+                write::writeGroupSubModelPart $part_name $group_name "Elements"
             }
         } else {
             if {$elem ni $grid_elements} {
-                write::writeGroupSubModelPart Parts [get_domnode_attribute $gNode n] "Elements"
+                write::writeGroupSubModelPart $part_name $group_name "Elements"
             }
         }
     }
@@ -155,7 +157,7 @@ proc MPM::write::writeCustomFilesEvent { } {
     # write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 
     # Materials file
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True Initial_MPM_Material
     
     # Main python script
     set orig_name [GetAttribute main_script_file]

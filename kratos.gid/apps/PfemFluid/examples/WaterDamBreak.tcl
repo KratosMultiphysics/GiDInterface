@@ -85,14 +85,7 @@ proc PfemFluid::examples::TreeAssignationWaterDamBreak2D {args} {
     set fluid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/condition\[@n='Parts'\]"
     set fluidNode [customlib::AddConditionGroupOnXPath $fluid_part_xpath Fluid]
     set props [list ConstitutiveLaw Newtonian DENSITY 1e3]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/value\[@n='BodyType'\]" {v Rigid}
     set rigid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body2'\]/condition\[@n='Parts'\]"
@@ -108,15 +101,6 @@ proc PfemFluid::examples::TreeAssignationWaterDamBreak2D {args} {
     set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
     set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Rigid_Walls//Total"]
     $fixVelocityNode setAttribute ov line
-    # set props [list constrainedX Yes ByFunctionX No valueX 0.0 constrainedY Yes ByFunctionY No valueY 0.0 constrainedZ Yes ByFunctionZ No valueZ 0.0]
-    # foreach {prop val} $props {
-    #      set propnode [$fixVelocityNode selectNodes "./value\[@n = '$prop'\]"]
-    #      if {$propnode ne "" } {
-    #           $propnode setAttribute v $val
-    #      } else {
-    #         W "Warning - Couldn't find property Structure $prop"
-    #      }
-    # }
 }
 
 proc PfemFluid::examples::ErasePreviousIntervals { } {

@@ -5,7 +5,7 @@
                    SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Line" ProcessName="AssignScalarVariableProcess"
                    help="Applies an external thermal load" function="1" units="W/m^2" unit_magnitude="Power/L^2">
         <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
@@ -36,7 +36,7 @@
                    SkinConditions="True" VariableName="TEMPERATURE" App="ConvectionDiffusion" ElementType="Point,Line" ProcessName="AssignScalarVariableProcess"
                    help="Imposes a fixed temperature" units="K" unit_magnitude="Temp">
         <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
@@ -51,7 +51,7 @@
                    SkinConditions="True" VariableName="TEMPERATURE" App="ConvectionDiffusion" ElementType="Point,Line,Surface" ProcessName="AssignScalarVariableProcess"
                    help="Imposes a fixed temperature" units="K" unit_magnitude="Temp">
         <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="Condition3D2N"/>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition3D2N"/>
             <item GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
             <item GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
         </TopologyFeatures>
@@ -68,7 +68,7 @@
                    SkinConditions="True" App="ConvectionDiffusion" ElementType="Line" ProcessName="ApplyThermalFaceProcess"
                    help="Assigns the thermal behaviour of the boundary. If it is not set, adiabatic behaviour is assumed">
         <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>

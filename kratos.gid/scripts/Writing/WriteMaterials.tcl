@@ -126,7 +126,8 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
     }
     foreach gNode [$root selectNodes $xp1] {
         set group [get_domnode_attribute $gNode n]
-        set sub_model_part [write::getSubModelPartId Parts $group]
+        set cond_id [get_domnode_attribute [$gNode parent] n]
+        set sub_model_part [write::getSubModelPartId $cond_id $group]
         if {$model_part_name ne ""} {set sub_model_part $model_part_name.$sub_model_part}
         set sub_model_part [string trim $sub_model_part "."]
         if { [dict exists $mat_dict $group] } {

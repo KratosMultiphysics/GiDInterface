@@ -1,12 +1,13 @@
 
 # Modify the tree: field newValue UniqueName OptionalChild
-proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
+# Example: spdAux::SetValueOnTreeItem v time Results FileLabel
+proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     set root [customlib::GetBaseRoot]
     #W "$field $value $name $it"
     set node ""
 
-    set xp [getRoute $name]
+    set xp [spdAux::getRoute $unique_name]
     if {$xp ne ""} {
         set node [$root selectNodes $xp]
         if {$it ne ""} {set node [$node find n $it]}
@@ -16,6 +17,22 @@ proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
     } {
         error "$name $it not found - Check GetFromXML.tcl file"
+    }
+}
+
+proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
+    return [spdAux::SetValuesOnBaseNode [[customlib::GetBaseRoot] selectNodes $base_path] $prop_value_pairs]
+} 
+
+proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
+    if {$base_path eq ""} {error "Empty $base_path"}
+    foreach {prop val} $prop_value_pairs {
+        set propnode [$base_path selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property $prop"
+        }
     }
 }
 
@@ -416,7 +433,7 @@ proc spdAux::_GetBooleanParameterString {param inName pn v state help show_in_wi
         append node " actualize_tree='1' "
     }
     append node " state='$state' show_in_window='$show_in_window'>"
-    if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
+    # if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
     append node "</value>"
     return $node
 }
@@ -435,7 +452,7 @@ proc spdAux::_GetComboParameterString {param inName pn v state help show_in_wind
         append node "  actualize_tree='1'  "
     }
     append node " state='$state' help='$help' show_in_window='$show_in_window'>"
-    if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
+    # if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
     append node "</value>"
     return $node
 }
@@ -458,8 +475,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
         }
     }
     set ret ""
-    foreach {name value} $dep_list {
-        set values [split $value ","]
+    foreach {name values} $dep_list {
         set ins ""
         set out ""
         foreach v $values {
@@ -707,7 +723,7 @@ proc spdAux::SolStratParamState {outnode} {
         lassign [Model::GetSolStratParamDep $SolStrat $paramName] depN depV
         foreach node [[$outnode parent] childNodes] {
             if {[$node @n] eq $depN} {
-                if {[get_domnode_attribute $node v] ni [split $depV ,]} {
+                if {[get_domnode_attribute $node v] ni $depV} {
                     set ret 0
                     break
                 }

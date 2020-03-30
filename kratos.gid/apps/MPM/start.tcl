@@ -42,6 +42,7 @@ proc ::MPM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir xml XmlController.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
+    uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
 
 proc ::MPM::GetAttribute {name} {
@@ -50,5 +51,17 @@ proc ::MPM::GetAttribute {name} {
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
 }
+
+proc ::MPM::CustomToolbarItems { } {
+    variable dir
+    if {$::Model::SpatialDimension eq "2D"} {
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::MPM::examples::FallingSandBall] [= "Example\nFalling sand ball"]
+    }
+}
+
+proc ::MPM::CustomMenus { } {
+    MPM::examples::UpdateMenus
+}
+
 
 ::MPM::Init
