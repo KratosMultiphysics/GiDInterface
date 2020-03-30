@@ -15,4 +15,49 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
+
+  <ElementItem n="QSVMSDEMcoupled3D" pn="QSVMS DEM coupled 3D" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to coupled with solid particles">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
+    </TopologyFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="Fluid"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="PRESSURE"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="VORTICITY" pn="Vorticity" />
+    </outputs>
+  </ElementItem>
+  <ElementItem n="QSVMSDEMcoupled2D" pn="QSVMS DEM coupled 2D" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to coupled with solid particles">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="Fluid"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="PRESSURE"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="VORTICITY" pn="Vorticity" />
+    </outputs>
+  </ElementItem>
 </ElementList>

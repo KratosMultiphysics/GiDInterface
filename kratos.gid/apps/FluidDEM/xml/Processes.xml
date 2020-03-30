@@ -9,6 +9,25 @@
             <parameter n="initial_time" pn="Initial time" type="double" v="0.0"/>
         </inputs>
     </Process>
+    <Process n="ApplyCasasSolutionBodyForceProcess" pn="Assign manufactured solution process" python_module="apply_casas_solution_body_force_process" kratos_module="KratosMultiphysics.SwimmingDEMApplication" help="">
+        <inputs>
+            <parameter n="variable_name" pn="Variable name" type="string" v="BODY_FORCE"/>
+            <parameter n="benchmark_name" pn="Benchmark name" type="string" v="custom_body_force.casas_fluid_fraction_solution"/>
+            <parameter n="benchmark_parameters" pn="Benchmark parameters">
+                <parameter n="viscosity" pn="Viscosity" type="double" v="0.1"/>
+                <parameter n="density" pn="Density" type="double" v="1.0"/>
+                <parameter n="length" pn="Length" type="double" v="1.0"/>
+                <parameter n="omega" pn="Omega" type="double" v="5.0"/>
+                <parameter n="delta_alpha" pn="Delta alpha" type="double" v="0.25"/>
+            </parameter>
+        </inputs>
+    </Process>
+    <Process n="AssignExactVariableToADOFProcess" pn="Assign exact value to a dof" python_module="assign_exact_variable_to_a_dof_process" kratos_module="KratosMultiphysics.SwimmingDEMApplication" help="">
+        <inputs>
+            <parameter n="variable_name" pn="Variable name" type="combo" v="VELOCITY" values="VELOCITY, PRESSURE" pvalues="VELOCITY, PRESSURE"/>
+            <parameter n="exact_variable_name" pn="Exact variable name" type="combo" v="EXACT_VELOCITY" values="EXACT_VELOCITY, EXACT_PRESSURE" pvalues="EXACT_VELOCITY, EXACT_PRESSURE"/>
+        </inputs>
+    </Process>
 </ProcessList>
 
     <!-- "python_module" : "apply_rigid_rotation_process",
