@@ -16,7 +16,7 @@
     <outputs></outputs>
   </ElementItem>
 
-  <ElementItem n="QSVMSDEMcoupled3D" pn="QSVMS DEM coupled 3D" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to coupled with solid particles">
+  <ElementItem n="QSVMSDEMcoupled3D" pn="QSVMS DEM coupled 3D" WriteName="qsvmsDEM" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to coupled with solid particles">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
