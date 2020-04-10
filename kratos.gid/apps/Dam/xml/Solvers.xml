@@ -6,9 +6,8 @@
         </inputs>
     </solver>
 
-    <solver n="super_lu" pn="SuperLU" SolverType="Standard" Parallelism="OpenMP">
+    <solver n="EigenSolversApplication.sparse_lu" pn="SparseLU" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
-            <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>
     </solver>
 

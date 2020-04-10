@@ -17,7 +17,7 @@
         "time_integration_method"            : "Implicit",
         "scheme_type"                        : "Newmark",
         "model_import_settings"              : {
-            "input_type"       : "mdpa",  
+            "input_type"       : "mdpa",
             "input_filename"   : "Particle Domain",
             "input_file_label" : "0"
         },
@@ -30,10 +30,7 @@
         "residual_absolute_tolerance"        : 1e-9,
         "max_iteration"                      : 25,
         "linear_solver_settings"             : {
-             "solver_type" : "super_lu",
-             "tolerance"   : 1e-7,
-             "max_iteration" : 5000,
-             "scaling"     : false
+             "solver_type" : "ExternalSolversApplication.sparse_lu"
         },
         "bodies_list": [
             {"body_name":"body1",
@@ -111,14 +108,14 @@
 			    "on_distance": false,
 			    "on_threshold": false,
 			    "on_error": false
-			},              
+			},
 			"refining_box":{
 			    "refine_in_box_only": false,
 			    "upper_point": [0.0, 0.0, 0.0],
 			    "lower_point": [0.0, 0.0, 0.0],
 			    "velocity": [0.0, 0.0, 0.0]
 			}
-		    },            
+		    },
 		    "elemental_variables_to_transfer":[ "CAUCHY_STRESS_VECTOR", "DEFORMATION_GRADIENT" ]
 		}
 	    ]
@@ -174,7 +171,7 @@
                         }
                     }
                 }
-    
+
             ]
         }
     },{
@@ -321,9 +318,9 @@
             "nodal_results"       : ["DISPLACEMENT","REACTION","VELOCITY","ACCELERATION"],
             "gauss_point_results" : ["GREEN_LAGRANGE_STRAIN_TENSOR","CAUCHY_STRESS_TENSOR","VON_MISES_STRESS"],
 	    "additional_list_files": []
-			    
+
         },
         "point_data_configuration"  : []
     }
-    
+
 }
