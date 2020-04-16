@@ -13,13 +13,12 @@
         <inputs>
             <parameter n="variable_name" pn="Variable name" type="string" v="BODY_FORCE"/>
             <parameter n="benchmark_name" pn="Benchmark name" type="string" v="custom_body_force.casas_fluid_fraction_solution"/>
-            <parameter n="benchmark_parameters" pn="Benchmark parameters">
-                <parameter n="viscosity" pn="Viscosity" type="double" v="0.1"/>
-                <parameter n="density" pn="Density" type="double" v="1.0"/>
-                <parameter n="length" pn="Length" type="double" v="1.0"/>
-                <parameter n="omega" pn="Omega" type="double" v="5.0"/>
-                <parameter n="delta_alpha" pn="Delta alpha" type="double" v="0.25"/>
-            </parameter>
+            <parameter n="benchmark_parameters" pn="Benchmark parameters"/>
+            <parameter n="viscosity" pn="Viscosity" type="double" v="0.1"/>
+            <parameter n="density" pn="Density" type="double" v="1.0"/>
+            <parameter n="length" pn="Length" type="double" v="1.0"/>
+            <parameter n="omega" pn="Omega" type="double" v="5.0"/>
+            <parameter n="delta_alpha" pn="Delta alpha" type="double" v="0.25"/>
         </inputs>
     </Process>
     <Process n="AssignExactVariableToADOFProcess" pn="Assign exact value to a dof" python_module="assign_exact_variable_to_a_dof_process" kratos_module="KratosMultiphysics.SwimmingDEMApplication" help="">

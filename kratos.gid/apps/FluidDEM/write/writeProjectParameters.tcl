@@ -233,7 +233,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     
     # Update the fluid element
     set element_name [FluidDEM::write::GetCurrentFluidElementName]
-    dict set project_parameters_dict fluid_parameters calculation element qsvmsDEM
+    dict set project_parameters_dict fluid_parameters solver_settings formulation "element_type" {*}[FluidDEM::write::GetCurrentFluidElementName]
 
     # set FluidDEM::write::general_project_parameters [getParametersDict]
     # dict set project_parameters_dict $FluidDEM::write::general_project_parameters
@@ -241,9 +241,10 @@ proc ::FluidDEM::write::getParametersDict { } {
 }
 
 proc FluidDEM::write::GetCurrentFluidElementName { } {
-    set element [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "FLParts"]/group"]
-    set element [Model::getElement [$element @n]]
-    set element_name [$element getAttribute WriteName]
+    set gnode [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "FLParts"]/group"]
+    set element [write::getValueByNode [$gnode selectNodes "./value\[@n = 'Element'\]"]]
+    set element [::Model::getElement $element]
+    set element_name [$element getAttribute "WriteName"]
     if {$element_name eq ""} {set element_name "vms"}
     return $element_name
 }
