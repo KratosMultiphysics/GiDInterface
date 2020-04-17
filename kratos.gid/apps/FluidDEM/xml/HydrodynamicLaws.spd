@@ -27,7 +27,7 @@
 			<value n="inviscid_force_parameters"    pn="Name"           		  v="AutonHuntPrudhommeInviscidForceLaw"       values="AutonHuntPrudhommeInviscidForceLaw"         state="disabled" help=""/>
 			<value n="do_apply_faxen_corrections"   pn="Faxen corrections"        v="false"         values="false, true"     state="disabled" help=""/>
 		</container>
-		<value n="drag_parameters"              	pn="Drag"            		  v="ShahDragLaw" values="ShahDragLaw"   icon="black1" state="disabled" help=""/>
+		<value n="drag_parameters"              	pn="Drag"            		  v="ShahDragLaw" values="ShahDragLaw, BeetstraDragLaw, GanserDragLaw, HaiderAndLevenspielDragLaw, NewtonDragLaw, SchillerAndNaumannDragLaw, StokesDragLaw"   icon="black1" state="enabled" help=""/>
 		<container n="history_force_parameters_tab"   pn="History force parameters" state="hidden" icon="black1">
 			<value n="history_force_parameters"     pn="Name"           		  v="default"       values="default"         state="hidden" help=""/>
 			<value n="quadrature_order"             pn="Quadrature order"         v="2"             values="2"               state="hidden" help=""/>
