@@ -4,7 +4,7 @@
   <Material n="Concrete-Dam" MaterialType="Dam" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="2400" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="1.962e10" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
+        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="2.6e10" help="Elastic modulus of the material" unit_magnitude="P" units="Pa"/>
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" help="Poisson coefficient of the material"/>
         <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05" help="Thermal expansion coefficient"/>
     </inputs>
@@ -13,7 +13,7 @@
   <Material n="Soil" MaterialType="Dam" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="3000" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNBilinearCohesive2DLawG_MODULUS" pn="Young Modulus" v="4.9e10" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
+        <parameter n="YOUNBilinearCohesive2DLawG_MODULUS" pn="Young Modulus" v="4.9e10" help="Elastic modulus of the material" unit_magnitude="P" units="Pa"/>
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.25" help="Poisson coefficient of the material"/>
         <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05" help="Thermal expansion coefficient"/>
     </inputs>
@@ -22,9 +22,10 @@
     <Material n="Simplified-Joint" MaterialType="Dam" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+        <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10"/>
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-        <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress" v="20e06"/>
-        <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress" v="2e06"/>
+        <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress"  unit_magnitude="P" units="Pa" v="20e06"/>
+        <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress"  unit_magnitude="P" units="Pa" v="2e06"/>
         <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.7"/>
         <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
     </inputs>
@@ -60,24 +61,6 @@
     <inputs>
         <parameter n="DENSITY_WATER" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000" help="Density of the material"/>
         <parameter n="BULK_MODULUS_FLUID" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2.21e9" help="Set the bulk modulus."/>
-    </inputs>
-  </Material>
-
-    <Material n="Steel" MaterialType="Dam" help="">
-    <inputs>
-        <parameter n="DENSITY" pn="Density" v="7850" help="Density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="206.9e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
-        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.29" help="Poisson coefficient of the material"/>
-        <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1.2e-05" help="Thermal expansion coefficient"/>
-    </inputs>
-  </Material>
-
-  <Material n="Aluminium" MaterialType="Dam" help="">
-    <inputs>
-        <parameter n="DENSITY" pn="Density" v="2650" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="69e9" help="Elastic modulus of the material" unit_magnitude="F/L^2" units="N/m^2"/>
-        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.22" help="Poisson coefficient of the material"/>
-        <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="2.3e-05" help="Thermal expansion coefficient"/>
     </inputs>
   </Material>
 
