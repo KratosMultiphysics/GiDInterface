@@ -31,7 +31,6 @@ proc DEM::write::GetInletGroups { } {
     return $groups
 }
 
-
 proc DEM::write::copyClusterFiles { } {
 
     set dir [write::GetConfigurationAttribute dir]

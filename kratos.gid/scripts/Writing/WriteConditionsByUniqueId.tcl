@@ -126,7 +126,6 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
     return $iter
 }
 
-
 proc write::writeConditionGroupedSubmodelPartsByUniqueId {cid groups_dict conditions_map} {
     set s [mdpaIndent]
     WriteString "${s}Begin SubModelPart $cid // Condition $cid"
@@ -212,4 +211,3 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
     }
     return $mid
 }
-

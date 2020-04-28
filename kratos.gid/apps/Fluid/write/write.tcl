@@ -55,7 +55,7 @@ proc Fluid::write::writeModelPartEvent { } {
 
     # Custom SubmodelParts
     variable last_condition_iterator
-    write::writeBasicSubmodelPartsByUniqueId  $Fluid::write::FluidConditionMap $last_condition_iterator
+    write::writeBasicSubmodelPartsByUniqueId $Fluid::write::FluidConditionMap $last_condition_iterator
     
     # SubmodelParts
     writeMeshes
@@ -63,6 +63,7 @@ proc Fluid::write::writeModelPartEvent { } {
     # Clean
     unset Fluid::write::FluidConditionMap
 }
+
 proc Fluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     Fluid::write::WriteMaterialsFile
@@ -174,7 +175,10 @@ proc Fluid::write::writeConditionsMesh { } {
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set groupid [write::GetWriteGroupName $groupid]
-        set condid [[$group parent] @n]
+        set condnode [$group parent]
+        set condid [$condnode @n]
+        set print_smp [get_domnode_attribute $condnode print_smp 1]
+        if {[write::isBooleanFalse $print_smp]} {continue}
         set cond [::Model::getCondition $condid]
         if {[$cond getGroupBy] eq "Condition"} {
             # Grouped conditions will be written later
@@ -200,6 +204,16 @@ proc Fluid::write::writeConditionsMesh { } {
         }
         write::writeConditionGroupedSubmodelPartsByUniqueId $condid $groups_dict $Fluid::write::FluidConditionMap
     }
+}
+
+proc Fluid::write::GetFluidPartGroups { } {
+    set xp "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set root [customlib::GetBaseRoot]
+    set parts_name_list [list]
+    foreach group [$root selectNodes $xp] {
+        lappend parts_name_list [get_domnode_attribute $group n]
+    }
+    return $parts_name_list
 }
 
 proc Fluid::write::InitConditionsMap { {map "" } } {
