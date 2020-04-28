@@ -76,7 +76,7 @@ proc Dam::write::UpdateMaterials { } {
             set newconstlaw "BilinearCohesive2DLaw"
         }
         if {$constlaw eq "SimplifiedBilinear2DPlaneStress"} {set newconstlaw "SimplifiedBilinear2DLaw"}
-        if {$constlaw eq "SimplifiedBilinear2DPlaneStran"} {
+        if {$constlaw eq "SimplifiedBilinear2DPlaneStrain"} {
             dict set matdict $mat THICKNESS  1.0000E+00
             set newconstlaw "SimplifiedBilinear2DLaw"
         }
