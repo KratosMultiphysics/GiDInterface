@@ -13,7 +13,7 @@
   <Material n="Soil" MaterialType="Dam" help="">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="3000" help="Mass density of the material" unit_magnitude="M/L^3" units="kg/m^3"/>
-        <parameter n="YOUNBilinearCohesive2DLawG_MODULUS" pn="Young Modulus" v="4.9e10" help="Elastic modulus of the material" unit_magnitude="P" units="Pa"/>
+        <parameter n="YOUNG_MODULUS" pn="Young Modulus" v="4.9e10" help="Elastic modulus of the material" unit_magnitude="P" units="Pa"/>
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.25" help="Poisson coefficient of the material"/>
         <parameter n="THERMAL_EXPANSION" pn="Thermal Expansion" v="1e-05" help="Thermal expansion coefficient"/>
     </inputs>
