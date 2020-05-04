@@ -300,7 +300,7 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
 	    <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
-	    <filter field="type" value="Fluid"/>
+	    <filter field="type" value="Solid"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
@@ -330,7 +330,7 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
 	    <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
-	    <filter field="type" value="Fluid"/>
+	    <filter field="type" value="Solid"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions> 
