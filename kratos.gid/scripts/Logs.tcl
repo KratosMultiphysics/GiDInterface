@@ -5,7 +5,8 @@
 
 proc Kratos::GetLogFilePath { } {
     variable kratos_private
-    set dir_name [file dirname [GiveGidDefaultsFile]]
+    set gid_defaults [GiD_GetUserSettingsFilename -create_folders]
+    set dir_name [file dirname $gid_defaults]
     set file_name $kratos_private(LogFilename)
     if {$file_name eq ""} {}
     if { $::tcl_platform(platform) == "windows" } {
@@ -63,5 +64,9 @@ proc Kratos::FlushLog { }  {
     
 }
 
-Kratos::InitLog
-Kratos::FlushLog
+#do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
+if { [GiD_Set SaveGidDefaults] } {
+    Kratos::InitLog
+    Kratos::FlushLog
+}
+
