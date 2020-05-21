@@ -11,7 +11,7 @@ proc Dam::examples::Init { } {
 }
 
 proc ::Dam::examples::ThermoMechaDam { } {
-    W $::Model::SpatialDimension 
+    #W $::Model::SpatialDimension 
     if {$::Model::SpatialDimension eq "2D"} {
         ::Dam::examples::ThermoMechaDam2D
     } {

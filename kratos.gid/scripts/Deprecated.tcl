@@ -103,3 +103,15 @@ if {[GidUtils::VersionCmp "14.1.4d"] <0} {
         }    
     }
 }
+
+
+# Deprecation date: 21/05/2020
+# Estimated deletion version: next release
+# Message: Use of deprecated gid call 
+if {[GidUtils::VersionCmp "14.1.4d"] <0} {
+
+    proc GiD_GetUserSettingsFilename {args} {
+        return [GiveGidDefaultsFile]
+    }
+
+}
