@@ -2,7 +2,7 @@
 <ConstitutiveLaws>
 
     <!--Fluid laws-->
-    <CLaw n="Newtonian2DLaw" pn="2D Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" Dimension="2D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+    <CLaw n="Newtonian2DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" Dimension="2D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -12,7 +12,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="Newtonian3DLaw" pn="3D Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" Dimension="3D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+    <CLaw n="Newtonian3DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" Dimension="3D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -22,7 +22,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="Bingham2DLaw" pn="2D Bingham" ProductionReady="ProductionReady" help="Non Newtonian Bingham fluid" Dimension="2D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+    <CLaw n="Bingham2DLaw" pn="Bingham" ProductionReady="ProductionReady" help="Bingham Model with Papanastasiou Regularization" Dimension="2D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -35,7 +35,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="Bingham3DLaw" pn="3D Bingham" ProductionReady="ProductionReady" help="Non Newtonian Bingham fluid" Dimension="3D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+    <CLaw n="Bingham3DLaw" pn="Bingham" ProductionReady="ProductionReady" help="Bingham Model with Papanastasiou Regularization" Dimension="3D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -48,7 +48,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="PapanastasiouMuIRheology2DLaw" pn="2D Mu(I) Rheology" ProductionReady="ProductionReady" help="Dense Incompressible granular material" Dimension="2D" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="PapanastasiouMuIRheology2DLaw" pn="Mu(I) Rheology" ProductionReady="ProductionReady" help="Dense Incompressible granular material" Dimension="2D" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1600"/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
@@ -63,7 +63,7 @@
         </outputs>
     </CLaw>
 
-     <CLaw n="PapanastasiouMuIRheology3DLaw" pn="3D Mu(I) Rheology" ProductionReady="ProductionReady" help="Dense Incompressible granular material" Dimension="3D" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
+     <CLaw n="PapanastasiouMuIRheology3DLaw" pn="Mu(I) Rheology" ProductionReady="ProductionReady" help="Dense Incompressible granular material" Dimension="3D" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1600"/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
@@ -78,8 +78,8 @@
         </outputs>
     </CLaw>
 
-    <!--Fluid temperature dependent laws-->
-    <CLaw n="NewtonianTemperatureDependent2DLaw" pn="2D Newtonian temperature dependent" ProductionReady="ProductionReady" help="Newtonian temperature dependent fluid" Dimension="2D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+    <!--Fluid temperature dependent laws
+    <CLaw n="NewtonianTemperatureDependent2DLaw" pn="Newtonian temperature dependent" ProductionReady="ProductionReady" help="Newtonian temperature dependent fluid" Dimension="2D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -89,7 +89,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="NewtonianTemperatureDependent3DLaw" pn="3D Newtonian temperature dependent" ProductionReady="ProductionReady" help="Newtonian temperature dependent fluid" Dimension="3D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+    <CLaw n="NewtonianTemperatureDependent3DLaw" pn="Newtonian temperature dependent" ProductionReady="ProductionReady" help="Newtonian temperature dependent fluid" Dimension="3D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -99,7 +99,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="BinghamTemperatureDependent2DLaw" pn="2D Bingham temperature dependent" ProductionReady="ProductionReady" help="Non Newtonian Bingham temperature dependent fluid"  Dimension="2D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+    <CLaw n="BinghamTemperatureDependent2DLaw" pn="Bingham temperature dependent" ProductionReady="ProductionReady" help="Non Newtonian Bingham temperature dependent fluid"  Dimension="2D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -112,7 +112,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="BinghamTemperatureDependent3DLaw" pn="3D Bingham temperature dependent" ProductionReady="ProductionReady" help="Non Newtonian Bingham temperature dependent fluid" Dimension="3D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+    <CLaw n="BinghamTemperatureDependent3DLaw" pn="Bingham temperature dependent" ProductionReady="ProductionReady" help="Non Newtonian Bingham temperature dependent fluid" Dimension="3D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
@@ -123,10 +123,10 @@
         </inputs>
         <outputs>
         </outputs>
-    </CLaw>
+    </CLaw>-->
 
     <!--Solid laws-->
-    <CLaw n="Hypoelastic2DLaw" pn="2D Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" Dimension="2D" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="Hypoelastic2DLaw" pn="Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" Dimension="2D" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="500"/>
             <parameter n="YOUNG_MODULUS" pn="Young modulus" unit_magnitude="P" units="Pa" v="2.1e+07" help="Set the Young modulus."/>
@@ -136,7 +136,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="Hypoelastic3DLaw" pn="3D Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" Dimension="3D" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="Hypoelastic3DLaw" pn="Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" Dimension="3D" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="500"/>
             <parameter n="YOUNG_MODULUS" pn="Young modulus" unit_magnitude="P" units="Pa" v="2.1e+07" help="Set the Young modulus."/>
@@ -146,8 +146,8 @@
         </outputs>
     </CLaw>
 
-    <!--Solid temperature dependent laws-->
-    <CLaw n="HypoelasticTemperatureDependent2DLaw" pn="2D Hypoelastic temperature dependent" ProductionReady="ProductionReady" Dimension="2D" help="Hypoelastic temperature dependent solid" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
+    <!--Solid temperature dependent laws
+    <CLaw n="HypoelasticTemperatureDependent2DLaw" pn="Hypoelastic temperature dependent" ProductionReady="ProductionReady" Dimension="2D" help="Hypoelastic temperature dependent solid" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="500"/>
             <parameter n="YOUNG_MODULUS" pn="Young modulus" unit_magnitude="P" units="Pa" v="2.1e+07" help="Set the Young modulus."/>
@@ -157,7 +157,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="HypoelasticTemperatureDependent3DLaw" pn="3D Hypoelastic temperature dependent" ProductionReady="ProductionReady" Dimension="3D" help="Hypoelastic temperature dependent solid" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="HypoelasticTemperatureDependent3DLaw" pn="Hypoelastic temperature dependent" ProductionReady="ProductionReady" Dimension="3D" help="Hypoelastic temperature dependent solid" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="500"/>
             <parameter n="YOUNG_MODULUS" pn="Young modulus" unit_magnitude="P" units="Pa" v="2.1e+07" help="Set the Young modulus."/>
@@ -165,6 +165,6 @@
         </inputs>
         <outputs>
         </outputs>
-    </CLaw>
+    </CLaw> -->
 
 </ConstitutiveLaws>
