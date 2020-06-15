@@ -473,6 +473,7 @@ proc Kratos::Event_SaveModelSPD { filespd } {
 
     # User files (in file selectors) copied into the model (if required)
     FileSelector::CopyFilesIntoModel [file dirname $filespd]
+
 }
 
 proc Kratos::Event_ChangedLanguage  { newlan } {
