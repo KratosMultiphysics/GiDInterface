@@ -49,7 +49,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="DEM_KDEM_with_damage_parallel_bond" pn="KDEM with damage" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM_with_damage_parallel_bond" pn="KDEM with damage parallel bond 3D" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Mohr-Coulomb Cohesion" units="Pa" unit_magnitude="P" v="10"/>
             <parameter n="CONTACT_SIGMA_MIN" pn="Normal Tensile Strength" units="Pa" unit_magnitude="P" v="13"/>
