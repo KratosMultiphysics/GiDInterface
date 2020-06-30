@@ -17,14 +17,16 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
+  <ConditionList>
   <ConditionItem n="ApplyCasasSolutionBodyForceProcess" pn="Casas manufactured body force" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False" VariableName="BODY_FORCE" App="FluidDEMapplication" ElementType="Volume" ProcessName="ApplyCasasSolutionBodyForceProcess" help="">
-  <TopologyFeatures>
+    <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
-  </TopologyFeatures>
-  <DegreesOfFreedom></DegreesOfFreedom>
-  <inputs></inputs>
-  <outputs></outputs>
-  </ConditionItem>
+    </TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+    </ConditionItem>
+  </ConditionList>
   <ConditionItem n="AssignExactVariableToADOFProcess" pn="Assign exact value to a dof" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False" VariableName="EXACT_VELOCITY" App="FluidDEMapplication" ProcessName="AssignExactVariableToADOFProcess" help="">
   <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>

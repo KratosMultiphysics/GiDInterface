@@ -13,7 +13,6 @@
         <inputs>
             <parameter n="variable_name" pn="Variable name" type="string" v="BODY_FORCE"/>
             <parameter n="benchmark_name" pn="Benchmark name" type="string" v="custom_body_force.casas_fluid_fraction_solution"/>
-            <parameter n="benchmark_parameters" pn="Benchmark parameters"/>
             <parameter n="viscosity" pn="Viscosity" type="double" v="0.1"/>
             <parameter n="density" pn="Density" type="double" v="1.0"/>
             <parameter n="length" pn="Length" type="double" v="1.0"/>
