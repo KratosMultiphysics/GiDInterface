@@ -405,7 +405,11 @@ proc DEM::write::writeWallConditionMeshes { } {
 
             #Hardcoded
             set is_ghost [write::getValueByNode [$group_node selectNodes "./value\[@n='IsGhost'\]"]]
-            write::WriteString "    IS_GHOST $is_ghost"
+            if {$is_ghost == "true"} {
+                write::WriteString "    IS_GHOST 1"
+            } else {
+                write::WriteString "    IS_GHOST 0"
+            }
             write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
 
             DefineFEMExtraConditions $group_node
