@@ -191,6 +191,11 @@ proc Fluid::write::getSolverSettingsDict { } {
     # No skin parts
     dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
 
+    # Time scheme settings
+    if {$currentStrategyId eq "Monolithic"} {
+        dict set solverSettingsDict time_scheme [write::getValue FLScheme]
+    }
+
     # Time stepping settings
     set timeSteppingDict [dict create]
     set automaticDeltaTime [write::getValue FLTimeParameters AutomaticDeltaTime]

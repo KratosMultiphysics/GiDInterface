@@ -40,13 +40,18 @@
 
 		<!-- scheme settings -->
 		<schemes>
-			<scheme n="MN" pn="Monolitic generic scheme" help="FilterElements" ProductionReady="ProductionReady">
-				<parameter_list>
-				</parameter_list>
-				<element_filters>
-					<filter field="n" value="Monolithic2D,Monolithic3D"/>
-				</element_filters>
-			</scheme>
+			<scheme n="bossak" pn="Bossak" help="Bossak scheme for CFD problems." ProductionReady="ProductionReady">
+                <parameter_list></parameter_list>
+                <element_filters>
+                    <filter field="n" value="Monolithic2D,Monolithic3D"/>
+                </element_filters>
+            </scheme>
+			<scheme n="bdf2" pn="BDF2" help="2nd order Backward Differenctiation Formula (BDF2) scheme for CFD problems." ProductionReady="ProductionReady">
+                <parameter_list></parameter_list>
+                <element_filters>
+                    <filter field="n" value="Monolithic2D,Monolithic3D"/>
+                </element_filters>
+            </scheme>
 		</schemes>
 	</StrategyItem>
 
