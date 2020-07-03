@@ -6,7 +6,7 @@ proc DEM::write::WriteMDPAWalls { } {
     set wall_properties [WriteWallProperties]
 
     # Nodal coordinates (only for Walls <inefficient> )
-    write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroups]
+    write::writeNodalCoordinatesOnGroups [DEM::write::GetRigidWallsGroups]
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
 
     # Nodal conditions and conditions
