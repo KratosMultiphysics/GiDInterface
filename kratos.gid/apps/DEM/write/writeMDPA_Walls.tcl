@@ -3,15 +3,17 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeModelPartData
 
     # Material
-    set wall_properties [WriteWallProperties]
+    set wall_properties [WriteRigidWallProperties]
+    set phantom_wall_properties [WritePhantomWallProperties]
 
     # Nodal coordinates (only for Walls <inefficient> )
-    write::writeNodalCoordinatesOnGroups [GetRigidWallsGroups]
+    write::writeNodalCoordinatesOnGroups [GetWallsGroups]
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
 
     # Nodal conditions and conditions
     writeConditions $wall_properties
-    writePhantomConditions $wall_properties
+    writePhantomConditions $phantom_wall_properties
+
     # SubmodelParts
     writeWallConditionMeshes
 
@@ -19,14 +21,75 @@ proc DEM::write::WriteMDPAWalls { } {
     WriteWallCustomSmp
 }
 
-
-
-proc DEM::write::WriteWallProperties { } {
+proc DEM::write::WriteRigidWallProperties { } {
     set wall_properties [dict create ]
-    set cnd [Model::getCondition "DEM-FEM-Wall"]
+	set condition_name 'DEM-FEM-Wall'
+    set cnd [Model::getCondition $condition_name]
 
     if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
-    } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+    } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = $condition_name\]/group"
+    }
+
+    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
+    set i $DEM::write::last_property_id
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+	incr i
+	write::WriteString "Begin Properties $i"
+	#foreach {prop obj} [$cnd getAllInputs] {
+	    #    if {$prop in $print_list} {
+		#        set v [write::getValueByNode [$group selectNodes "./value\[@n='$prop'\]"]]
+		#        write::WriteString "  $prop $v"
+		#    }
+	    #}
+	set friction_value [write::getValueByNode [$group selectNodes "./value\[@n='friction_angle'\]"]]
+	set pi $MathUtils::PI
+	set propvalue [expr {tan($friction_value*$pi/180.0)}]
+	write::WriteString "  FRICTION $propvalue"
+	# write::WriteString "  FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
+	write::WriteString "  WALL_COHESION [write::getValueByNode [$group selectNodes "./value\[@n='WallCohesion'\]"]]"
+	set compute_wear_bool [write::getValueByNode [$group selectNodes "./value\[@n='DEM_Wear'\]"]]
+	if {[write::isBooleanTrue $compute_wear_bool]} {
+	    set compute_wear 1
+	    set severiy_of_wear [write::getValueByNode [$group selectNodes "./value\[@n='K_Abrasion'\]"]]
+	    set impact_wear_severity [write::getValueByNode [$group selectNodes "./value\[@n='K_Impact'\]"]]
+	    set brinell_hardness [write::getValueByNode [$group selectNodes "./value\[@n='H_Brinell'\]"]]
+	} else {
+	    set compute_wear 0
+	    set severiy_of_wear 0.001
+	    set impact_wear_severity 0.001
+	    set brinell_hardness 200.0
+	}
+	set rigid_structure_bool [write::getValueByNode [$group selectNodes "./value\[@n='RigidPlane'\]"]]
+	if {[write::isBooleanTrue $rigid_structure_bool]} {
+	    set young_modulus [write::getValueByNode [$group selectNodes "./value\[@n='YoungModulus'\]"]]
+	    set poisson_ratio [write::getValueByNode [$group selectNodes "./value\[@n='PoissonRatio'\]"]]
+	} else {
+	    set young_modulus 1e20
+	    set poisson_ratio 0.25
+	}
+	write::WriteString "  COMPUTE_WEAR $compute_wear"
+	write::WriteString "  SEVERITY_OF_WEAR $severiy_of_wear"
+	write::WriteString "  IMPACT_WEAR_SEVERITY $impact_wear_severity"
+	write::WriteString "  BRINELL_HARDNESS $brinell_hardness"
+	write::WriteString "  YOUNG_MODULUS $young_modulus"
+	write::WriteString "  POISSON_RATIO $poisson_ratio"
+
+	write::WriteString "End Properties"
+	set groupid [$group @n]
+	dict set wall_properties $groupid $i
+	incr DEM::write::last_property_id
+    }
+    write::WriteString ""
+    return $wall_properties
+}
+
+proc DEM::write::WritePhantomWallProperties { } { #TODO: remove all unnecessary prints
+    set wall_properties [dict create ]
+	set condition_name 'Phantom-Wall'
+    set cnd [Model::getCondition $condition_name]
+
+    if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
+    } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = $condition_name\]/group"
     }
 
     #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
@@ -118,6 +181,13 @@ proc DEM::write::writePhantomConditions { wall_properties } {
     }
 }
 
+proc DEM::write::GetWallsGroups { } {
+    set groups [list ]
+	set groups_rigid [GetRigidWallsGroups]
+	set groups_phantom [GetPhantomWallsGroups]
+	set groups [concat $groups_rigid $groups_phantom]
+    return $groups
+}
 
 proc DEM::write::GetRigidWallsGroups { } {
     set groups [list ]
@@ -207,25 +277,25 @@ proc DEM::write::writeWallConditionMeshes { } {
 
     foreach group [GetRigidWallsGroups] {
 	incr i
-	writeWallConditionMesh $i $group
+	writeWallConditionMesh $i $group "DEM-FEM-Wall"
     }
 
     foreach group [GetPhantomWallsGroups] {
 	incr i
-	writeWallConditionMesh $i $group
+	writeWallConditionMesh $i $group "Phantom-Wall"
     }
 }
 
-proc DEM::write::writeWallConditionMesh { i group } {
+proc DEM::write::writeWallConditionMesh { i group condition_type } {
 
     if {$::Model::SpatialDimension eq "2D"} {
 	set cond "DEM-FEM-Wall2D"
     } else {
-	set cond "DEM-FEM-Wall" # TODO: extend to Phantom walls (now they work with the DEM-FEM-Wall parameters, of which most are ignored)
+	set cond $condition_type
     }
 
 	write::WriteString "Begin SubModelPart $i // $cond - group identifier: $group"
-	write::WriteString "  Begin SubModelPartData // DEM-FEM-Wall. Group name: $group"
+	write::WriteString "  Begin SubModelPartData // $cond. Group name: $group"
 	set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
 	set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
 
