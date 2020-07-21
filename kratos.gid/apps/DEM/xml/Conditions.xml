@@ -46,26 +46,26 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-VelocityBC2D" pn="Boundary conditions over particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line,Surface" ProcessName="DEM-VelocityBC-Process" help="Assign boundary conditions over particles" VariableName="SPHEREBC">
+  <ConditionItem n="DEM-VelocityBC2D" pn="Boundary conditions over particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEM-VelocityBC-Process" help="Assign boundary conditions over particles" VariableName="SPHEREBC">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-VelocityIC2D" pn="Initial conditions over particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line,Surface" ProcessName="DEM-VelocityIC-Process" help="Assign initial conditions over particles" VariableName="SPHEREIC">
+  <ConditionItem n="DEM-VelocityIC2D" pn="Initial conditions over particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEM-VelocityIC-Process" help="Assign initial conditions over particles" VariableName="SPHEREIC">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-GraphCondition" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
+  <ConditionItem n="DEM-GraphCondition" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-GraphCondition2D" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
+  <ConditionItem n="DEM-GraphCondition2D" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
     <TopologyFeatures>
     <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
