@@ -16,6 +16,7 @@ proc DEM::write::WriteMDPAParts { } {
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsCustomSubmodelpart]
     write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupsInitialC]
     write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupsBoundayC]
+    write::writeNodalCoordinatesOnGroups [DEM::write::GetNodesForGraphs]
 
     # Element connectivities
     write::writeElementConnectivities
@@ -34,26 +35,27 @@ proc DEM::write::WriteMDPAParts { } {
 	DEM::write::writeDEMConditionMeshes
 
     # CustomSubmodelParts
-    #WriteWallCustomDEMSmp not required for dem.
+    CDEM::write::WriteCustomDEMSmp
 }
 
-## TODO: proc under revision. Duplicated code. Unused in some situations
-proc CDEM::write::WriteWallCustomDEMSmp { } {
+## TODO: proc under revision. This works but the proc is different from the DEM::write version.
+proc CDEM::write::WriteCustomDEMSmp { } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-	set groupid [$group @n]
-	set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-	if {$destination_mdpa == "DEM"} {
-
-	    write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-	    write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
-	    write::WriteString  "End SubModelPartData"
-	    write::WriteString  "Begin SubModelPartNodes"
-	    GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
-	    write::WriteString  "End SubModelPartNodes"
-	    write::WriteString  "End SubModelPart"
-	    write::WriteString  ""
-	}
+        set group_id [$group @n]
+        set group_raw [write::GetWriteGroupName $group_id]
+        set good_name [write::transformGroupName $group_raw]
+        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
+        if {$destination_mdpa == "DEM"} {
+            write::WriteString  "Begin SubModelPart $good_name \/\/ Custom SubModelPart. Group name: $group_id"
+            write::WriteString  "Begin SubModelPartData"
+            write::WriteString  "End SubModelPartData"
+            write::WriteString  "Begin SubModelPartNodes"
+            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group_id] [subst "%10i\n"]]
+            write::WriteString  "End SubModelPartNodes"
+            write::WriteString  "End SubModelPart"
+            write::WriteString  ""
+        }
     }
 }
 
@@ -125,25 +127,6 @@ proc CDEM::write::writeSkinSphereNodes { } {
 }
 
 
-
-# proc CDEM::write::GetNodalConditionsGroups { {include_cond 0} } { # TODO UNUSED CODE
-#     set groups [list ]
-#     set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition/group"
-#     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-# 	set groupid [$group @n]
-# 	if {$include_cond} {lappend groups [[$group parent] @n]}
-# 	lappend groups [write::GetWriteGroupName $groupid]
-#     }
-#     return $groups
-# }
-
-# proc DEM::write::write2VelocityMeshes { } {
-#     foreach {cid groupid} [DEM::write::GetNodalConditionsGroups 1] {
-# 	::write::writeGroupSubModelPart $cid $groupid "nodal"
-#     }
-# }
-
-
 proc CDEM::write::writeMaterialsParts { } {
     variable partsProperties
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'PartsCont'\]/group"
@@ -163,7 +146,9 @@ proc CDEM::write::writeMaterialsParts { } {
 						SHEAR_ENERGY_COEF \
 						LOOSE_MATERIAL_YOUNG_MODULUS \
 						FRACTURE_ENERGY \
-						INTERNAL_FRICTION_ANGLE]
+						INTERNAL_FRICTION_ANGLE \
+						ROTATIONAL_MOMENT_COEFFICIENT \
+						PARTICLE_COHESION]
 
 	foreach group [dict keys $partsProperties] {
         write::WriteString "Begin Properties [dict get $partsProperties $group MID]"

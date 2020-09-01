@@ -75,7 +75,7 @@ proc PfemFluid::examples::AssignGroupsDamBreakFSIGeometry2D {args} {
     GiD_EntitiesGroups assign Fluid surfaces 1
 
     GiD_Groups create Solid
-    GiD_Groups edit color Solid "#26d1a8ff"
+    GiD_Groups edit color Solid "#3b3b3bff"
     GiD_EntitiesGroups assign Solid surfaces 2
 
     GiD_Groups create Interface
@@ -83,7 +83,7 @@ proc PfemFluid::examples::AssignGroupsDamBreakFSIGeometry2D {args} {
     GiD_EntitiesGroups assign Interface lines {5 6 7}
 
     GiD_Groups create Rigid_Walls
-    GiD_Groups edit color Rigid_Walls "#e0210fff"
+    GiD_Groups edit color Rigid_Walls "#42eb71ff"
     GiD_EntitiesGroups assign Rigid_Walls lines {1 4 9 10 11 12 13}
 
 }
@@ -109,7 +109,7 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[3\]" {name SolidBody}
     
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[4\]" {name RigidInterfaceBody}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[4\]" {name InterfaceBody}
 
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[5\]" {name RigidWallsBody}
@@ -132,9 +132,9 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
     spdAux::SetValuesOnBaseNode $solidNode $props
    
     # Rigid Parts
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/value\[@n='BodyType'\]" {v Rigid}
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
-    set interface_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/condition\[@n='Parts'\]"
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='InterfaceBody'\]/value\[@n='BodyType'\]" {v Interface}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='InterfaceBody'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
+    set interface_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='InterfaceBody'\]/condition\[@n='Parts'\]"
     set interfaceNode [customlib::AddConditionGroupOnXPath $interface_part_xpath Interface]
     $interfaceNode setAttribute ov line
    

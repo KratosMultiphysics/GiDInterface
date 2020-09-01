@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<condition n="PartsCont" pn="Define particle groups" ov="point,line,surface,volume" ovm="node,element" icon="shells16" help="Each group of particles must be defined here. Particles with different properties must be assigned to different groups." un="DEMParts">
+
+<condition n="PartsCont" pn="Define particle groups" ov="[GetDEMPartsOvWhat]" ovm="node,element" icon="shells16" help="Each group of particles must be defined here. Particles with different properties must be assigned to different groups." un="DEMParts">
 	<value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements ElementType DEM]" state="hidden">
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
 	</value>
@@ -9,7 +10,6 @@
 	</value>
 
 	<value n="Material" pn="Material" editable='0' help="Choose a material from the database" values='[get_materials_list_simple]' v="DEMCont-DefaultMaterial" />
-
     <value n="AdvancedMeshingFeatures" pn="Advanced meshing features" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
 		<dependencies node="../value" actualize="1"/>
 	</value>

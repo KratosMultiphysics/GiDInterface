@@ -36,7 +36,7 @@ proc PfemFluid::write::getNewParametersDict { } {
     dict set projectParametersDict output_configuration [write::GetDefaultOutputGiDDict PfemFluid $xpath]
     dict set projectParametersDict output_configuration result_file_configuration nodal_results [write::GetResultsByXPathList [spdAux::getRoute NodalResults]]
     dict set projectParametersDict output_configuration result_file_configuration gauss_point_results [write::GetResultsList ElementResults]
-    
+
 
     return $projectParametersDict
 }
@@ -93,7 +93,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
 
     # Time stepping settings
     set timeSteppingDict [dict create]
-    
+
     set automaticDeltaTime [write::getValue PFEMFLUID_TimeParameters UseAutomaticDeltaTime]
     if {$automaticDeltaTime eq "Yes"} {
         dict set timeSteppingDict automatic_time_step "true"
@@ -162,7 +162,7 @@ proc PfemFluid::write::GetPFEM_ProcessList { } {
 
     ##### loads_process_list
     dict set resultList loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
-    
+
     dict set resultList auxiliar_process_list []
 
     return $resultList
@@ -314,6 +314,11 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
+
+    set update_conditionsDict [dict create ]
+        dict set update_conditionsDict "update_conditions" false
+    dict set paramsDict update_conditions_on_free_surface $update_conditionsDict
+
     set meshing_domains_list [list ]
     foreach body $bodies_list {
         set bodyDict [dict create ]

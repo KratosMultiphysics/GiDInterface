@@ -54,12 +54,12 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
-    # DEM FEM Walls
     set DEMConditions [spdAux::getRoute "DEMConditions"]
+    # DEM FEM Walls
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
     set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
-
+    
     # Inlet
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
@@ -73,7 +73,13 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     set inletNode [customlib::AddConditionGroupOnXPath $DEMClusterInlet "ClusterInlet"]
     $inletNode setAttribute ov surface
     set props [list Material "DEM-DefaultMaterial" InletElementType "Cluster3D" ClusterType "Rock1Cluster3D" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,1.0"]
+
     spdAux::SetValuesOnBaseNode $inletNode $props
+
+    # DEM custom submodelpart
+    set custom_dem "$DEMConditions/condition\[@n='DEM-CustomSmp'\]"
+    set customNode [customlib::AddConditionGroupOnXPath $custom_dem Body]
+    $customNode setAttribute ov volume
 
     # General data
     # Time parameters

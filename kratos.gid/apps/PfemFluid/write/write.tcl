@@ -13,7 +13,7 @@ proc PfemFluid::write::Init { } {
     set bodies_list [list ]
     variable Names
     set Names [dict create DeltaTime DeltaTime]
-    
+
     SetAttribute properties_location json
     SetAttribute model_part_name "PfemFluidModelPart"
     SetAttribute materials_file "PFEMFluidMaterials.json"
@@ -24,17 +24,17 @@ proc PfemFluid::write::Init { } {
 proc PfemFluid::write::writeModelPartEvent { } {
     # Init data
     write::initWriteConfiguration [GetAttributes]
-    
+
     set parts_un_list [GetPartsUN]
     foreach part_un $parts_un_list {
         write::initWriteData $part_un "PFEMFLUID_Materials"
     }
-    
+
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     # write::writeMaterials "PfemFluid"
-    
+
     write::writeNodalCoordinates
     foreach part_un $parts_un_list {
         write::initWriteData $part_un "PFEMFLUID_Materials"
@@ -44,21 +44,21 @@ proc PfemFluid::write::writeModelPartEvent { } {
 }
 
 proc PfemFluid::write::writeMeshes { } {
-    
+
     foreach part_un [GetPartsUN] {
         write::initWriteData $part_un "PFEMFLUID_Materials"
         write::writePartSubModelPart
     }
     # Solo Malla , no en conditions
     writeNodalConditions "PFEMFLUID_NodalConditions"
-    
+
 }
 
 
 proc PfemFluid::write::writeNodalConditions { keyword } {
     write::writeNodalConditions $keyword
     return ""
-    
+
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $keyword]/container/blockdata"
     set groups [$root selectNodes $xp1]
@@ -98,11 +98,11 @@ proc PfemFluid::write::GetPartsUN { } {
 # Custom files (Copy python scripts, write materials file...)
 proc PfemFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
-    PfemFluid::write::WriteMaterialsFile False
-    
+    PfemFluid::write::WriteMaterialsFile
+
     write::CopyFileIntoModel "python/RunPFEM.py"
     write::RenameFileInModel "RunPFEM.py" "MainKratos.py"
-    
+
     #write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 }
 

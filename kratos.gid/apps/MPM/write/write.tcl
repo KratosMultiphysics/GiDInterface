@@ -116,13 +116,15 @@ proc MPM::write::writeSubmodelparts { type } {
     set body_groups [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
+        set part_name [get_domnode_attribute [$gNode parent] n]
+        set group_name [get_domnode_attribute $gNode n]
         if {$type eq "grid"} {
             if {$elem in $grid_elements} {
-                write::writeGroupSubModelPart Parts [get_domnode_attribute $gNode n] "Elements"
+                write::writeGroupSubModelPart $part_name $group_name "Elements"
             }
         } else {
             if {$elem ni $grid_elements} {
-                write::writeGroupSubModelPart Parts [get_domnode_attribute $gNode n] "Elements"
+                write::writeGroupSubModelPart $part_name $group_name "Elements"
             }
         }
     }
