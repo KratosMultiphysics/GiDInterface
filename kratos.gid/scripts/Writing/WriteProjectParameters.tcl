@@ -451,7 +451,11 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     dict set resultDict file_label                 [getValueByXPath $gid_options_xpath FileLabel]
     set outputCT [getValueByXPath $gid_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
-    if {$outputCT eq "time"} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]}
+    if {$outputCT eq "time"} {
+        set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]
+    } {
+        set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]
+    }
     dict set resultDict output_interval $frequency
 
     dict set resultDict body_output [getValueByXPath $gid_options_xpath BodyOutput]
