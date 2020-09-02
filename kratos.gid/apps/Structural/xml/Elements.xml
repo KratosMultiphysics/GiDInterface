@@ -458,8 +458,8 @@
   <ElementItem n="PrestressedMembraneElement" pn="Membrane prestressed" ov="surface" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="PreStressMembraneElement3D3N"/>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="PreStressMembraneElement3D4N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="MembraneElement3D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="MembraneElement3D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
