@@ -388,9 +388,11 @@ proc Structural::write::ApplicationSpecificGetCondition {condition group etype n
         if {[Structural::write::GroupUsesSmallDisplacement $group $used_small_disp_elements]} {
             set new_cond [Model::Clone $condition]
             set topology [$new_cond getTopologyFeature $etype $nnodes]
-            set new_kname [$topology getAttribute KratosNameSmallDisplacement]
-            if {$new_kname ne ""} {$topology setKratosName $new_kname}
-            set ret $new_cond
+            if {$topology ne "" && [$topology hasAttribute KratosNameSmallDisplacement]} {
+                set new_kname [$topology getAttribute KratosNameSmallDisplacement]
+                if {$new_kname ne ""} {$topology setKratosName $new_kname}
+                set ret $new_cond
+            }
         }
     }
     return $ret
