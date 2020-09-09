@@ -65,4 +65,8 @@ proc ::FluidDEM::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::FluidDEM::examples::CylinderInFlow] [= "Example\nCylinderInFlow"]
 }
 
+proc ::FluidDEM::AfterSaveModel {filespd} {
+    ::DEM::AfterSaveModel $filespd
+}
+
 ::FluidDEM::Init
