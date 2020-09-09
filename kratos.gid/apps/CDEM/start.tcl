@@ -71,4 +71,8 @@ proc ::CDEM::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Bulk grouping" [file join $dir images stone.png] [list -np- ::CDEM::xml::BulkGroup] [= "Plugin\nBulk grouping"]
 }
 
+proc ::CDEM::AfterSaveModel {filespd} {
+    ::DEM::AfterSaveModel $filespd
+}
+
 ::CDEM::Init
