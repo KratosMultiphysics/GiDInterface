@@ -166,6 +166,36 @@ proc ::DEM::AfterMeshGeneration { fail } {
     # }
 }
 
+proc ::DEM::AfterSaveModel { filespd } {
+
+    # GiD bug detected in versions prev to 15.0.1
+    # Spheres disapear in groups after load. Fixing it by removing the limitation in the prj file.
+    # GiD Team -> @jginternationa and @escolano
+    # Fixed in any 15.1.X (developer) and 15.0.1 and later (official)
+    if {[GidUtils::VersionCmp "15.0.0"] <= 0} {
+        ::DEM::PatchMissingSpheresInGroup $filespd
+    }
+}
+
+proc ::DEM::PatchMissingSpheresInGroup {filespd} {
+    set prj_file [file join [file dirname $filespd] [file rootname $filespd].prj]
+    if {[file exists $prj_file]} {
+        dom parse [tDOM::xmlReadFile $prj_file] doc
+
+        set grlist [$doc getElementsByTagName group]
+        foreach group $grlist {
+            if {[$group hasAttribute allowed_element_types]} {
+                $group removeAttribute allowed_element_types
+            }
+            if {[$group hasAttribute allowed_types]} {
+                $group removeAttribute allowed_types
+            }
+        }
+        set fp [open $prj_file w]
+        puts $fp [$doc asXML]
+        close $fp
+    }
+}
 
 
 ::DEM::Init
