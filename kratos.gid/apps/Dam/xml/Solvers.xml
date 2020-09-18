@@ -50,6 +50,11 @@
         </inputs>
     </solver>
 
+    <solver n="ExternalSolversApplication.super_lu" pn="SuperLU" SolverType="Standard" Parallelism="OpenMP">
+        <inputs>
+        </inputs>
+    </solver>
+
     <!--
     <solver n="Pastix_Direct" pn="Pastix Direct" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
