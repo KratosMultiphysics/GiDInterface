@@ -7,9 +7,11 @@ proc Buoyancy::examples::Init { } {
 }
 
 proc Buoyancy::examples::UpdateMenus { } {
-    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Heated square" ] 8 PRE [list ::Buoyancy::examples::HeatedSquare] "" "" insertafter =
-    GiDMenu::UpdateMenus
+    if {$::Model::SpatialDimension eq "2D"} {
+        GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
+        GiDMenu::InsertOption "Kratos" [list "Heated square" ] 8 PRE [list ::Buoyancy::examples::HeatedSquare] "" "" insertafter =
+        GiDMenu::UpdateMenus
+    }
 }
 
 Buoyancy::examples::Init

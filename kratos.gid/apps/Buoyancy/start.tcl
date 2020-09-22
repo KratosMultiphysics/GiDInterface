@@ -58,7 +58,10 @@ proc ::Buoyancy::GetAttribute {name} {
 
 proc ::Buoyancy::CustomToolbarItems { } {
     variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Buoyancy::examples::HeatedSquare] [= "Example\nBuoyancy driven cavity flow (Ra = 1e6 - Pr = 0.71)"]   
+    
+    if {$::Model::SpatialDimension eq "2D"} {
+        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Buoyancy::examples::HeatedSquare] [= "Example\nBuoyancy driven cavity flow (Ra = 1e6 - Pr = 0.71)"]   
+    }
 }
 
 ::Buoyancy::Init
