@@ -177,6 +177,13 @@ proc ::DEM::AfterSaveModel { filespd } {
     }
 }
 
+proc ::DEM::AfterRunCalculation {basename dir problemtypedir where error errorfilename} {
+    # Available parameters
+    #W "$basename $dir $problemtypedir $where $error $errorfilename"
+
+    #return -cancel- ; # To avoid the window
+}
+
 proc ::DEM::PatchMissingSpheresInGroup {filespd} {
     set prj_file [file join [file dirname $filespd] [file rootname $filespd].prj]
     if {[file exists $prj_file]} {
