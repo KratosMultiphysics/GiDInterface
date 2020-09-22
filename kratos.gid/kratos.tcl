@@ -63,6 +63,7 @@ proc Kratos::RegisterGiDEvents { } {
     # Write - Calculation
     GiD_RegisterEvent GiD_Event_AfterWriteCalculationFile Kratos::Event_AfterWriteCalculationFile PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_BeforeRunCalculation Kratos::Event_BeforeRunCalculation PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_AfterRunCalculation Kratos::Event_AfterRunCalculation PROBLEMTYPE Kratos
 
     # Postprocess
     GiD_RegisterEvent GiD_Event_InitGIDPostProcess Kratos::Event_InitGIDPostProcess PROBLEMTYPE Kratos
@@ -492,6 +493,11 @@ proc Kratos::Event_ChangedLanguage  { newlan } {
 
 proc Kratos::Event_ModifyPreferencesWindow { root } {
     Kratos::ModifyPreferencesWindow $root
+}
+
+proc Kratos::Event_AfterRunCalculation {basename dir problemtypedir where error errorfilename} {
+    # W "$basename $dir $problemtypedir $where $error $errorfilename"
+    return [apps::ExecuteOnCurrentApp AfterRunCalculation $basename $dir $problemtypedir $where $error $errorfilename]
 }
 
 proc Kratos::Quicktest {example_app example_dim example_cmd} {
