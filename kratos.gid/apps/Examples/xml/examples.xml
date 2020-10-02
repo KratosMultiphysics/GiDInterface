@@ -29,6 +29,5 @@
         <Example id="BuoyancyHeatedSquare2D" app="Buoyancy" logo="BuoyancyHeatedSquare2D.png" name="Buoyancy\nHeated square 2D" dim="2D" cmd="::Buoyancy::examples::HeatedSquare"/>
         <Example id="ConjugateHeatTransferHeatedSquare2D" app="ConjugateHeatTransfer" logo="ConjugateHeatTransferHeatedSquare2D.png" name="ConjugateHeatTransfer\nHeated square 2D" dim="2D" cmd="::ConjugateHeatTransfer::examples::HeatedSquare"/>
         <Example id="ConjugateHeatTransferBFS2D" app="ConjugateHeatTransfer" logo="ConjugateHeatTransferBFS2D.png" name="ConjugateHeatTransfer\nBFS 2D" dim="2D" cmd="::ConjugateHeatTransfer::examples::BFS"/>
-        <Example id="ConjugateHeatTransferHeatedSquare2D" app="ConjugateHeatTransfer" logo="ConjugateHeatTransferHeatedSquare2D.png" name="ConjugateHeatTransfer\nHeated square 2D" dim="2D" cmd="::ConjugateHeatTransfer::examples::HeatedSquare"/>
     </Group>
 </Examples>
