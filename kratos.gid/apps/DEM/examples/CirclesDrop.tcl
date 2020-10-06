@@ -15,6 +15,8 @@ proc ::DEM::examples::CirclesDrop {args} {
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
 
+    GiD_Process Mescape Utilities Variables CircleMesher 0 escape escape
+
     MeshGenerationOKDo 1.0
 
 }
@@ -74,7 +76,7 @@ proc ::DEM::examples::AssignToTreeCirclesDrop { } {
     set change_list [list EndTime 5 DeltaTime 5e-5 NeighbourSearchFrequency 50]
     set xpath [spdAux::getRoute DEMTimeParameters]
     spdAux::SetValuesOnBasePath $xpath $change_list
-    
+
     spdAux::RequestRefresh
 }
 
