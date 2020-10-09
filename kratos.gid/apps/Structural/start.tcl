@@ -14,6 +14,8 @@ proc ::Structural::Init { } {
     variable app_id
 
     set app_id Structural
+    
+    set ::Model::ValidSpatialDimensions [list 2D 2Da 3D]
 
     set dir [apps::getMyDir "Structural"]
     set attributes [dict create]

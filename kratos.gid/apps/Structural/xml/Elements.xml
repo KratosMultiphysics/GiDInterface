@@ -170,75 +170,108 @@
     </outputs>
   </ElementItem>
 
-<!--mixed elements-->
-<ElementItem n="SmallDisplacementMixedVolumetricStrainElement2D" pn="Solid small displacements mixed u - εvol" ov="surface" ImplementedInFile="small_displacement_mixed_volumetric_strain_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" AnalysisType="linear,non_linear" SolutionType="Static, Quasi-static" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" VolumetricStrainDofs="True" help="This element implements a small displacement solid element with the volumetric strain as mixed DOF.">
-  <!--here we could add a list of all of the possible geometries-->
-  <TopologyFeatures>
-    <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementMixedVolumetricStrainElement2D3N"/>
-    <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementMixedVolumetricStrainElement2D4N"/>
-  </TopologyFeatures>
-  <!-- here we add the block of features which we require from the constitutive law-->
-  <ConstitutiveLaw_FilterFeatures>
-    <filter field="Type" value="PlaneStress,PlaneStrain"/>
-    <filter field="Dimension" value="2D"/>
-    <filter field="StrainSize" value="3"/>
-    <filter field="HybridType" value="False"/>
-    <filter field="LargeDeformation" value="False"/>
-  </ConstitutiveLaw_FilterFeatures>
-  <!--define list of NodalConditions-->
-  <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
-  <NodalConditions>
-    <NodalCondition n="DISPLACEMENT"/>
-    <NodalCondition n="VOLUMETRIC_STRAIN"/>
-    <NodalCondition n="VELOCITY"/>
-    <NodalCondition n="ACCELERATION"/>
-    <NodalCondition n="CONTACT"/>
-    <NodalCondition n="CONTACT_SLAVE"/>
-  </NodalConditions>
-  <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
-  <inputs></inputs>
-  <outputs>
-    <parameter n="VOLUMETRIC_STRAIN" pn="Volumetric strain" v="true" />
-    <parameter n="CAUCHY_STRESS_VECTOR" pn="Cauchy stress tensor" v="true" />
-    <parameter n="PK2_STRESS_VECTOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
-  </outputs>
-</ElementItem>
+  <!--mixed elements-->
+  <ElementItem n="SmallDisplacementMixedVolumetricStrainElement2D" pn="Solid small displacements mixed u - εvol" ov="surface" ImplementedInFile="small_displacement_mixed_volumetric_strain_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" AnalysisType="linear,non_linear" SolutionType="Static, Quasi-static" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" VolumetricStrainDofs="True" help="This element implements a small displacement solid element with the volumetric strain as mixed DOF.">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementMixedVolumetricStrainElement2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementMixedVolumetricStrainElement2D4N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress,PlaneStrain"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="StrainSize" value="3"/>
+      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VOLUMETRIC_STRAIN"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
+    </NodalConditions>
+    <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
+    <inputs></inputs>
+    <outputs>
+      <parameter n="VOLUMETRIC_STRAIN" pn="Volumetric strain" v="true" />
+      <parameter n="CAUCHY_STRESS_VECTOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="PK2_STRESS_VECTOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
 
-<ElementItem n="SmallDisplacementMixedVolumetricStrainElement3D" pn="Solid small displacements mixed u - εvol" ov="volume" ImplementedInFile="small_displacement_mixed_volumetric_strain_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" AnalysisType="linear,non_linear" SolutionType="Static, Quasi-static"  MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" VolumetricStrainDofs="True" help="This element implements a small displacement solid element with the volumetric strain as mixed DOF.">
-  <!--here we could add a list of all of the possible geometries-->
-  <TopologyFeatures>
-    <item GeometryType="Tetrahedra" nodes="4" KratosName="SmallDisplacementMixedVolumetricStrainElement3D4N"/>
-    <item GeometryType="Hexahedra" nodes="8" KratosName="SmallDisplacementMixedVolumetricStrainElement3D8N"/>
-  </TopologyFeatures>
-  <!-- here we add the block of features which we require from the constitutive law-->
-  <ConstitutiveLaw_FilterFeatures>
-    <filter field="Dimension" value="3D"/>
-    <filter field="StrainSize" value="6"/>
-    <filter field="HybridType" value="False"/>
-    <filter field="LargeDeformation" value="False"/>
-  </ConstitutiveLaw_FilterFeatures>
-  <!--define list of NodalConditions-->
-  <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
-  <NodalConditions>
-    <NodalCondition n="DISPLACEMENT"/>
-    <NodalCondition n="VOLUMETRIC_STRAIN"/>
-    <NodalCondition n="VELOCITY"/>
-    <NodalCondition n="ACCELERATION"/>
-    <NodalCondition n="CONTACT"/>
-    <NodalCondition n="CONTACT_SLAVE"/>
-  </NodalConditions>
-  <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
-  <inputs></inputs>
-  <outputs>
-    <parameter n="VOLUMETRIC_STRAIN" pn="Volumetric strain" v="true" />
-    <parameter n="CAUCHY_STRESS_VECTOR" pn="Cauchy stress tensor" v="true" />
-    <parameter n="PK2_STRESS_VECTOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
-  </outputs>
-</ElementItem>
+  <ElementItem n="SmallDisplacementMixedVolumetricStrainElement3D" pn="Solid small displacements mixed u - εvol" ov="volume" ImplementedInFile="small_displacement_mixed_volumetric_strain_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" AnalysisType="linear,non_linear" SolutionType="Static, Quasi-static" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Solid" VolumetricStrainDofs="True" help="This element implements a small displacement solid element with the volumetric strain as mixed DOF.">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="SmallDisplacementMixedVolumetricStrainElement3D4N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="SmallDisplacementMixedVolumetricStrainElement3D8N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Dimension" value="3D"/>
+      <filter field="StrainSize" value="6"/>
+      <filter field="HybridType" value="False"/>
+      <filter field="LargeDeformation" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <!--<parameter n="Interval" pn="Time function" v="Full" values="Full,Initial" analysis_type="Dynamic"/>-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VOLUMETRIC_STRAIN"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
+    </NodalConditions>
+    <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
+    <inputs></inputs>
+    <outputs>
+      <parameter n="VOLUMETRIC_STRAIN" pn="Volumetric strain" v="true" />
+      <parameter n="CAUCHY_STRESS_VECTOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="PK2_STRESS_VECTOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
 
   <!--large displacements-->
   <!--total lagrangian-->
   <ElementItem n="TotalLagrangianElement2D" pn="Solid total lagrangian" ov="surface" ImplementedInFile="total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="TotalLagrangianElement2D3N"/>
+      <item GeometryType="Triangle" nodes="6" KratosName="TotalLagrangianElement2D6N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="TotalLagrangianElement2D4N"/>
+      <item GeometryType="Quadrilateral" nodes="8" KratosName="TotalLagrangianElement2D8N"/>
+      <item GeometryType="Quadrilateral" nodes="9" KratosName="TotalLagrangianElement2D9N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress,PlaneStrain"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="StrainSize" value="3"/>
+      <filter field="HybridType" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="TotalLagrangianElement2Da" pn="Solid total lagrangian" ov="surface" ImplementedInFile="axisym_total_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Total Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="TotalLagrangianElement2D3N"/>
@@ -306,8 +339,42 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
+
   <!--updated lagrangian-->
   <ElementItem n="UpdatedLagrangianElement2D" pn="Solid updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianElement2D3N"/>
+      <item GeometryType="Triangle" nodes="6" KratosName="UpdatedLagrangianElement2D6N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangianElement2D4N"/>
+      <item GeometryType="Quadrilateral" nodes="8" KratosName="UpdatedLagrangianElement2D8N"/>
+      <item GeometryType="Quadrilateral" nodes="9" KratosName="UpdatedLagrangianElement2D9N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="PlaneStress,PlaneStrain"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="StrainSize" value="3"/>
+      <filter field="HybridType" value="False"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="CONTACT"/>
+      <NodalCondition n="CONTACT_SLAVE"/>
+    </NodalConditions>
+    <inputs></inputs>
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Green-Lagrange strain tensor" v="true" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="true" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress value" v="true" />
+      <parameter n="ALMANSI_STRAIN_TENSOR" pn="Almansi Strain Tensor" v="false" state="hidden" />
+      <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
+    </outputs>
+  </ElementItem>
+  <ElementItem n="UpdatedLagrangianElement2Da" pn="Solid updated lagrangian" ov="surface" ImplementedInFile="axisym_updated_lagrangian.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True" ElementType="Solid" help="This element it implements a Updated Lagrangian approach to large deformation kinematics" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianElement2D3N"/>
@@ -375,6 +442,7 @@
       <parameter n="PK2_STRESS_TENSOR" pn="PK2 Stress Tensor" v="false" state="hidden"/>
     </outputs>
   </ElementItem>
+
   <!--structural elements-->
   <!--shell elements-->
   <!--large displacements-->
@@ -481,7 +549,7 @@
         <parameter n="PRESTRESS_AXIS_1_GLOBAL" pn="Projection direction 1" type="inline_vector" v="0,0,0" parent="rotational,planar"/>
         <parameter n="PRESTRESS_AXIS_2_GLOBAL" pn="Projection direction 2" type="inline_vector" v="0,0,0" parent="planar"/>
         <parameter n="PROJECTION_TYPE_FILEPATH" pn="Projection file" type="tablefile" parent="file" v="- No file"/>
-      </parameter> 
+      </parameter>
     </inputs>
     <outputs>
       <parameter n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" />
