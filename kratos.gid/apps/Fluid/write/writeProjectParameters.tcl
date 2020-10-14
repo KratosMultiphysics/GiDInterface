@@ -158,6 +158,28 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     return $listOfNoSkinGroups
 }
 
+proc Fluid::write::GetUsedElement { {get "Objects"} } {
+    set root [customlib::GetBaseRoot]
+
+    # Get the fluid part
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    if {[llength [$root selectNodes $xp1]] ne 1} {
+        set err "You must set one part in Parts.\n"
+    }
+
+    set err [Validate]
+    if {$err ne ""} {error $err}
+
+    set element
+    foreach gNode [Fluid::write::GetPartsGroups] {
+        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
+        set e [Model::getElement $elem_name]
+        if {$get eq "Name"} { set e [$e getName] }
+        lappend lista $e
+    }
+    return $lista
+}
+
 proc Fluid::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
