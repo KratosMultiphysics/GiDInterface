@@ -158,26 +158,40 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     return $listOfNoSkinGroups
 }
 
-proc Fluid::write::GetUsedElement { {get "Objects"} } {
+proc Fluid::write::GetUsedElement {} {
     set root [customlib::GetBaseRoot]
 
-    # Get the fluid part
+    # Check that there is only one fluid part
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     if {[llength [$root selectNodes $xp1]] ne 1} {
         set err "You must set one part in Parts.\n"
+        error $err
+    }
+    W "There is one part"
+
+    # Get the fluid part
+    set get "Objects"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set g $gNode
+        if {$get eq "Name"} {
+            set g [$g getName]
+        }
+        lappend lista $g
     }
 
-    set err [Validate]
-    if {$err ne ""} {error $err}
+    W "W lista"
+    W $lista
 
-    set element
-    foreach gNode [Fluid::write::GetPartsGroups] {
-        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
-        set e [Model::getElement $elem_name]
-        if {$get eq "Name"} { set e [$e getName] }
-        lappend lista $e
-    }
-    return $lista
+    # Get the element name from the fluid part
+    set fluid_part [lindex $lista 0]
+    set elem_name [get_domnode_attribute [$fluid_part selectNodes ".//value\[@n='Element']"] v]
+
+    W "W elem_name"
+    W $elem_name
+
+    return $elem_name
 }
 
 proc Fluid::write::getSolverSettingsDict { } {
@@ -233,21 +247,37 @@ proc Fluid::write::getSolverSettingsDict { } {
 
     # For monolithic schemes, set the formulation settings
     if {$currentStrategyId eq "Monolithic"} {
+        # Create formulation dictionary
         set formulationSettingsDict [dict create]
-        # Set element type
-        # TODO: get element type name from the xml -> Avoid Hardcoding
-        dict set formulationSettingsDict element_type "vms"
+
+        # Set formulation dictionary element type
+        set element_name [Fluid::write::GetUsedElement]
+        if {$element_name eq "QSVMS2D" || $element_name eq "QSVMS3D"} {
+            set element_type "qsvms"
+        } elseif {$element_name eq "DVMS2D" || $element_name eq "DVMS3D"} {
+            set element_type "dvms"
+        } elseif {$element_name eq "FIC2D" || $element_name eq "FIC3D"} {
+            set element_type "fic"
+        } else {
+            set err [concat "Wrong monolithic element type: " $element_name]
+            error $err
+        }
+        dict set formulationSettingsDict element_type $element_type
+
         # Set OSS and remove oss_switch from the original dictionary
         # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
         if {[dict exists $solverSettingsDict oss_switch]} {
             dict set formulationSettingsDict use_orthogonal_subscales [write::getStringBinaryFromValue [dict get $solverSettingsDict oss_switch]]
             dict unset solverSettingsDict oss_switch
         }
+
         # Set dynamic tau and remove dynamic_tau from the original dictionary
-        dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
-        dict unset solverSettingsDict dynamic_tau
-        # Include the formulation settings in the solver settings dict
-        dict set solverSettingsDict formulation $formulationSettingsDict
+        if {$element_name eq "QSVMS2D" || $element_name eq "QSVMS3D"} {
+            dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
+            dict unset solverSettingsDict dynamic_tau
+            # Include the formulation settings in the solver settings dict
+            dict set solverSettingsDict formulation $formulationSettingsDict
+        }
     }
 
     return $solverSettingsDict
