@@ -125,9 +125,9 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     spdAux::SetValuesOnBaseNode $LoadNode $props
 
     # Structure domain time parameters
-    set chanparameterse_list [list EndTime 25.0 DeltaTime 0.1]
+    set change_list [list EndTime 25.0 DeltaTime 0.1]
     set xpath [spdAux::getRoute STTimeParameters]
-    spdAux::SetValuesOnBasePath $xpath $parameters
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     spdAux::RequestRefresh
 }

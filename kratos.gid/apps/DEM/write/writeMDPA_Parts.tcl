@@ -428,6 +428,7 @@ proc DEM::write::GetSpheresGroups { } {
 
 proc DEM::write::writeMaterialsParts { } {
     variable partsProperties
+    #TODO: check this nonsense conditions/parts ??
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Parts'\]/group"
     set partsProperties $::write::mat_dict
     #set ::write::mat_dict [dict create]

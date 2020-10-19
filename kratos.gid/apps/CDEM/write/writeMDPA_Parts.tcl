@@ -146,7 +146,9 @@ proc CDEM::write::writeMaterialsParts { } {
 						SHEAR_ENERGY_COEF \
 						LOOSE_MATERIAL_YOUNG_MODULUS \
 						FRACTURE_ENERGY \
-						INTERNAL_FRICTION_ANGLE]
+						INTERNAL_FRICTION_ANGLE \
+						ROTATIONAL_MOMENT_COEFFICIENT \
+						PARTICLE_COHESION]
 
 	foreach group [dict keys $partsProperties] {
         write::WriteString "Begin Properties [dict get $partsProperties $group MID]"

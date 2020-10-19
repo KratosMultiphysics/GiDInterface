@@ -24,7 +24,7 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     dict set params "restart_file_label" $file_label
     set output_control [getValue $un RestartControlType]
     dict set params "output_control_type" $output_control
-    if {$output_control eq "time"} {dict set params "output_frequency" [getValue $un RestartDeltaTime]} {dict set params "output_frequency" [getValue $un RestartDeltaStep]}
+    if {$output_control eq "time"} {dict set params "output_interval" [getValue $un RestartDeltaTime]} {dict set params "output_interval" [getValue $un RestartDeltaStep]}
     set jsonoutput [write::getStringBinaryValue $un json_output]
     dict set params "json_output" $jsonoutput
     

@@ -181,7 +181,7 @@ proc Pfem::write::GetDefaultOutputDict { {appid ""} } {
     set outputCT [write::getValue $results_UN OutputControlType]
     dict set resultDict output_control_type $outputCT
     if {$outputCT eq "time"} {set frequency [write::getValue $results_UN OutputDeltaTime]} {set frequency [write::getValue $results_UN OutputDeltaStep]}
-    dict set resultDict output_frequency $frequency
+    dict set resultDict output_interval $frequency
 
     dict set resultDict node_output           [write::getValue $results_UN NodeOutput]
 

@@ -117,7 +117,8 @@ proc Kratos::LoadProblemtypeLibraries {} {
 
 proc Kratos::GiveKratosDefaultsFile {} {
     variable kratos_private
-    set dir_name [file dirname [GiveGidDefaultsFile]]
+    set gid_defaults [GiD_GetUserSettingsFilename -create_folders]
+    set dir_name [file dirname $gid_defaults]
     set file_name $kratos_private(Name)$kratos_private(Version).ini
     if { $::tcl_platform(platform) == "windows" } {
         return [file join $dir_name $file_name]
@@ -146,19 +147,22 @@ proc Kratos::GetPreferencesFilePath { } {
 }
 
 proc Kratos::RegisterEnvironment { } {
-    variable kratos_private
-    set vars_to_save [list DevMode echo_level mdpa_format]
-    set preferences [dict create]
-    foreach v $vars_to_save {
-        if {[info exists kratos_private($v)]} {
-            dict set preferences $v $kratos_private($v)
+    #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
+    if { [GiD_Set SaveGidDefaults] } {
+        variable kratos_private
+        set vars_to_save [list DevMode echo_level mdpa_format]
+        set preferences [dict create]
+        foreach v $vars_to_save {
+            if {[info exists kratos_private($v)]} {
+                dict set preferences $v $kratos_private($v)
+            }
         }
-    }
-    
-    if {[llength [dict keys $preferences]] > 0} {
-        set fp [open [Kratos::GetPreferencesFilePath] w]
-        if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
-        close $fp
+        
+        if {[llength [dict keys $preferences]] > 0} {
+            set fp [open [Kratos::GetPreferencesFilePath] w]
+            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
+            close $fp
+        }
     }
 }
 

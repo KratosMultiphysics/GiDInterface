@@ -86,7 +86,7 @@
   </ElementItem>
 
   <!--joint elements-->
-  <ElementItem n="SmallDisplacementIntefaceElement3D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
+  <ElementItem n="SmallDisplacementInterfaceElement3D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
@@ -100,6 +100,43 @@
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
       <filter field="Type" value="Interface3D"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="INITIALTEMPERATURE"/>
+      <NodalCondition n="BOFANGTEMPERATURE"/>
+      <NodalCondition n="CONSTANTRESERVOIRTEMPERATURE"/>
+      <NodalCondition n="MONITORINGRESERVOIRTEMPERATURE"/>
+    </NodalConditions>
+
+    <inputs>
+    </inputs>
+
+    <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Total Strain" v="false" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Total Stress" v="false" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress" v="false" />
+    </outputs>
+  </ElementItem>
+
+  <ElementItem n="SmallDisplacementSimplifiedInterfaceElement3D" pn="Simplified Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
+	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
+	       ElementType="SimplifiedJoint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Prism"        nodes="6" KratosName="SmallDisplacementInterfaceElement3D6N"/>
+      <item GeometryType="Hexahedra"   nodes="8" KratosName="SmallDisplacementInterfaceElement3D8N"/>
+    </TopologyFeatures>
+
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="Type" value="SimplifiedInterface3D"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
@@ -161,62 +198,42 @@
     </outputs>
   </ElementItem>
 
-   <!--Acoustic elements-->
-
- <ElementItem n="WaveEquationElement2D" pn="Acoustic Element" ImplementedInFile="wave_equation_element.cpp"
+  <ElementItem n="SmallDisplacementSimplifiedInterfaceElement2D" pn="Simplified Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
 	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
-	       ElementType="Acoustic" help=""  TypeofProblem="Acoustic,UP_Mechanical,UP_Thermo-Mechanical">
+	       ElementType="SimplifiedJoint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle"      nodes="3" KratosName="WaveEquationElement2D3N"/>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="WaveEquationElement2D4N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementInterfaceElement2D4N"/>
     </TopologyFeatures>
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="Wave"/>
+      <filter field="Type" value="SimplifiedInterface"/>
+      <filter field="Dimension" value="2D"/>
+      <filter field="StrainSize" value="3"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
     <NodalConditions>
-      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="DISPLACEMENT"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="INITIALTEMPERATURE"/>
+      <NodalCondition n="BOFANGTEMPERATURE"/>
+      <NodalCondition n="CONSTANTRESERVOIRTEMPERATURE"/>
+      <NodalCondition n="MONITORINGRESERVOIRTEMPERATURE"/>
     </NodalConditions>
 
     <inputs>
     </inputs>
 
     <outputs>
+      <parameter n="GREEN_LAGRANGE_STRAIN_TENSOR" pn="Total Strain" v="false" />
+      <parameter n="CAUCHY_STRESS_TENSOR" pn="Total Stress" v="false" />
+      <parameter n="VON_MISES_STRESS" pn="Von Mises stress" v="false" />
     </outputs>
   </ElementItem>
 
- <ElementItem n="WaveEquationElement3D" pn="Acoustic Element" ImplementedInFile="wave_equation_element.cpp"
-	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
-	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
-	       ElementType="Acoustic" help=""  TypeofProblem="Acoustic,UP_Mechanical,UP_Thermo-Mechanical">
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Tetrahedra"      nodes="4" KratosName="WaveEquationElement3D4N"/>
-      <item GeometryType="Hexahedra" nodes="8" KratosName="WaveEquationElement3D8N"/>
-    </TopologyFeatures>
-
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="Wave"/>
-    </ConstitutiveLaw_FilterFeatures>
-
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="PRESSURE"/>
-    </NodalConditions>
-
-
-    <inputs>
-    </inputs>
-
-    <outputs>
-    </outputs>
-  </ElementItem>
 </ElementList>
