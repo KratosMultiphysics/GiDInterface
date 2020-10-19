@@ -80,7 +80,6 @@ proc FluidDEM::xml::CustomTree { args } {
 
     # set result_node [$root selectNodes "[spdAux::getRoute FLResults]/container\[@n = 'GiDOptions'\]"]
 	# if { $result_node ne "" } {$result_node delete}
-    spdAux::SetValueOnTreeItem state enabled FLSolStrat
     spdAux::SetValueOnTreeItem state disabled FLScheme
     spdAux::SetValueOnTreeItem state hidden FLResults FileLabel
     spdAux::SetValueOnTreeItem state hidden FLResults OutputControlType
