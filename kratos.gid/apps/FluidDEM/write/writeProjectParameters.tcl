@@ -230,9 +230,26 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict dem_parameters $FluidDEM::write::dem_project_parameters
     dict set project_parameters_dict dem_parameters "solver_settings" "strategy" "swimming_sphere_strategy"
     dict set project_parameters_dict fluid_parameters $FluidDEM::write::fluid_project_parameters
+    
+    # Update the fluid element
+    set element_name {*}[FluidDEM::write::GetCurrentFluidElementName]
+    dict set project_parameters_dict fluid_parameters solver_settings formulation element_type $element_name
+    if { $element_name eq "qsvmsDEM" } {
+        dict set project_parameters_dict fluid_parameters solver_settings solver_type "MonolithicDEM"
+    }
+
     # set FluidDEM::write::general_project_parameters [getParametersDict]
     # dict set project_parameters_dict $FluidDEM::write::general_project_parameters
     return $project_parameters_dict
+}
+
+proc FluidDEM::write::GetCurrentFluidElementName { } {
+    set gnode [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "FLParts"]/group"]
+    set element [write::getValueByNode [$gnode selectNodes "./value\[@n = 'Element'\]"]]
+    set element [::Model::getElement $element]
+    set element_name [$element getAttribute "WriteName"]
+    if {$element_name eq ""} {set element_name "vms"}
+    return $element_name
 }
 
 proc FluidDEM::write::GetHydrodynamicLawsDict { } {

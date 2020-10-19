@@ -2,7 +2,7 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="SphericPartDEMElement3D" pn="Spheric Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="DEM" help="">
+  <ElementItem n="SphericPartDEMElement3D" pn="Spheric Element" WriteName="SphericPartDEMElement" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="DEM" help="">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Sphere" nodes="1" KratosName="SphericSwimmingParticle3D"/>
@@ -14,5 +14,49 @@
     <NodalConditions></NodalConditions>
     <inputs></inputs>
     <outputs></outputs>
+  </ElementItem>
+
+  <ElementItem n="QSVMSDEMcoupled3D" pn="QSVMS DEM coupled 3D" WriteName="qsvmsDEM" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to couple with solid particles">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="QSVMSDEMCoupled3D4N"/>
+    </TopologyFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="Fluid"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="PRESSURE"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="VORTICITY" pn="Vorticity" />
+    </outputs>
+  </ElementItem>
+  <ElementItem n="QSVMSDEMcoupled2D" pn="QSVMS DEM coupled 2D" WriteName="qsvmsDEM2D" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to coupled with solid particles">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="QSVMSDEMCoupled2D3N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="Fluid"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="PRESSURE"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="VORTICITY" pn="Vorticity" />
+    </outputs>
   </ElementItem>
 </ElementList>
