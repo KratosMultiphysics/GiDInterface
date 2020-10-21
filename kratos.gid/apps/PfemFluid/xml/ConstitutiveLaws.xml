@@ -104,10 +104,12 @@
         </outputs>
     </CLaw>
 
-    <!--Fluid temperature dependent laws
+    <!--Fluid temperature dependent laws-->
     <CLaw n="NewtonianTemperatureDependent2DLaw" pn="Newtonian temperature dependent" ProductionReady="ProductionReady" help="Newtonian temperature dependent fluid" Dimension="2D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+			<parameter n="CONDUCTIVITY" pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)" units="W/(m*K)" v="0.024"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the fluid Bulk modulus."/>
         </inputs>
@@ -118,6 +120,8 @@
     <CLaw n="NewtonianTemperatureDependent3DLaw" pn="Newtonian temperature dependent" ProductionReady="ProductionReady" help="Newtonian temperature dependent fluid" Dimension="3D" App="Pfem" OutputMode="Parameters" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+			<parameter n="CONDUCTIVITY" pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)" units="W/(m*K)" v="0.024"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the fluid Bulk modulus."/>
         </inputs>
@@ -128,6 +132,8 @@
     <CLaw n="BinghamTemperatureDependent2DLaw" pn="Bingham temperature dependent" ProductionReady="ProductionReady" help="Non Newtonian Bingham temperature dependent fluid"  Dimension="2D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+			<parameter n="CONDUCTIVITY" pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)" units="W/(m*K)" v="0.024"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
             <parameter n="FLOW_INDEX" pn="Flow index" unit_magnitude="" units="" v="1"/>
@@ -141,6 +147,8 @@
     <CLaw n="BinghamTemperatureDependent3DLaw" pn="Bingham temperature dependent" ProductionReady="ProductionReady" help="Non Newtonian Bingham temperature dependent fluid" Dimension="3D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+			<parameter n="CONDUCTIVITY" pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)" units="W/(m*K)" v="0.024"/>
+            <parameter n="SPECIFIC_HEAT" pn="Specific heat" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
             <parameter n="FLOW_INDEX" pn="Flow index" unit_magnitude="" units="" v="1"/>
@@ -149,7 +157,7 @@
         </inputs>
         <outputs>
         </outputs>
-    </CLaw>-->
+    </CLaw>
 
     <!--Solid laws-->
     <CLaw n="Hypoelastic2DLaw" pn="Hypoelastic" ProductionReady="ProductionReady" help="Hypoelastic solid" Dimension="2D" App="Pfem" OutputMode="Parameters" type="Solid" kratos_module="PfemFluidDynamicsApplication">

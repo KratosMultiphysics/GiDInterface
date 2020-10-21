@@ -32,12 +32,12 @@
 	</proc>
 	<proc n='GetElementsValues' args='args'>
 	  <![CDATA[
-	  return [PfemFluid::xml::ProcGetElementsValues $domNode $args]
+	  return [PfemThermic::xml::ProcGetElementsValues $domNode $args]
 	  ]]>
 	</proc>
 	<proc n='GetConstitutiveLaws' args='args'>
 	  <![CDATA[
-	  return [PfemFluid::xml::ProcGetConstitutiveLaws $domNode $args]
+	  return [PfemThermic::xml::ProcGetConstitutiveLaws $domNode $args]
 	  ]]>
 	</proc>
 	<proc n='SolutionTypeState' args='args'>
@@ -47,7 +47,7 @@
 	</proc>
 	<proc n='GetBodyTypeValues' args='args'>
 	  <![CDATA[
-	  return [PfemFluid::xml::ProcGetBodyTypeValues $domNode $args]
+	  return [PfemThermic::xml::ProcGetBodyTypeValues $domNode $args]
 	  ]]>
 	</proc>
 	<proc n='GetSolutionStrategiesPFEM' args='args'>
@@ -82,7 +82,12 @@
 	</proc>
 	<proc n='CheckNodalConditionStatePFEM' args='args'>
 		<![CDATA[
-		return [PfemFluid::xml::ProcCheckNodalConditionStatePFEM $domNode $args]
+		return [PfemThermic::xml::ProcCheckNodalConditionState $domNode $args]
+		]]>
+	</proc>
+	<proc n='CheckNodalConditionState' args='args'>
+		<![CDATA[
+		return [PfemThermic::xml::ProcCheckNodalConditionState $domNode $args]
 		]]>
 	</proc>
 	<proc n='CheckStateBoundingBox3Dimension' args='args'>

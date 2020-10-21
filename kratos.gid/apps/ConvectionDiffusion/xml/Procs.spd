@@ -35,4 +35,9 @@
 		return $r
 	  ]]>
 	</proc>
+	<proc n='CheckNodalConditionState' args='args'>
+		<![CDATA[
+		return [spdAux::ProcCheckNodalConditionState $domNode $args]
+		]]>
+	</proc>
 </container>
