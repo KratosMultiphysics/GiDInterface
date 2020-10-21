@@ -12,6 +12,7 @@ proc FluidDEM::xml::Init { } {
     Model::getElements Elements.xml
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
+    Model::getSolutionStrategies Strategies.xml
 
     # Get the inlet condition
     set inlet_cnd [Model::getCondition "Inlet"]
@@ -24,9 +25,9 @@ proc FluidDEM::xml::Init { } {
     # Change the inlet injector element type
     set inlet_element_type_param [$inlet_process getInputPn InletElementType]
     if {$inlet_element_type_param ne ""} {
-        $inlet_element_type_param setValues "SphericSwimmingParticle3D"
-        $inlet_element_type_param setPValues "Spheres"
-        $inlet_element_type_param setDv "SphericSwimmingParticle3D"
+	$inlet_element_type_param setValues "SphericSwimmingParticle3D"
+	$inlet_element_type_param setPValues "Spheres"
+	$inlet_element_type_param setDv "SphericSwimmingParticle3D"
     }
 
 
@@ -66,7 +67,8 @@ proc FluidDEM::xml::CustomTree { args } {
     # spdAux::SetValueOnTreeItem state hidden DEMResults GiDOptions
     # spdAux::SetValueOnTreeItem state hidden DEMResults PartElem
 
-
+    spdAux::SetValueOnTreeItem state normal FLParts Element
+    spdAux::SetValueOnTreeItem dict {[GetElements ElementType "Fluid"]} FLParts Element
 
     # Remove Fluid things to move them to Common
     set result_node [$root selectNodes "[spdAux::getRoute FLSolutionParameters]/container\[@n = 'ParallelType'\]"]
@@ -78,7 +80,6 @@ proc FluidDEM::xml::CustomTree { args } {
 
     # set result_node [$root selectNodes "[spdAux::getRoute FLResults]/container\[@n = 'GiDOptions'\]"]
 	# if { $result_node ne "" } {$result_node delete}
-    spdAux::SetValueOnTreeItem state disabled FLSolStrat
     spdAux::SetValueOnTreeItem state disabled FLScheme
     spdAux::SetValueOnTreeItem state hidden FLResults FileLabel
     spdAux::SetValueOnTreeItem state hidden FLResults OutputControlType
@@ -95,7 +96,7 @@ proc FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
     set names [list ]
     set dem_hydrodynamic_law_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "DEMFluidHydrodynamicLaw"]/blockdata"]
     foreach hydro_law $dem_hydrodynamic_law_nodes {
-        lappend names [$hydro_law @name]
+	lappend names [$hydro_law @name]
     }
 
     set values [join $names ","]
