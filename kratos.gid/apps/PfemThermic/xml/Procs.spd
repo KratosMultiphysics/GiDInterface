@@ -85,11 +85,6 @@
 		return [PfemThermic::xml::ProcCheckNodalConditionState $domNode $args]
 		]]>
 	</proc>
-	<proc n='CheckNodalConditionState' args='args'>
-		<![CDATA[
-		return [PfemThermic::xml::ProcCheckNodalConditionState $domNode $args]
-		]]>
-	</proc>
 	<proc n='CheckStateBoundingBox3Dimension' args='args'>
 		<![CDATA[
 		return [PfemFluid::xml::ProcCheckStateBoundingBox3Dimension $domNode $args]
