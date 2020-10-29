@@ -65,8 +65,8 @@ proc PfemThermic::write::GetThermicSolverSettingsDict { } {
     dict set thermicSolverSettingsDict material_import_settings  $materialsDict
 	
 	# Solution Strategy and Solvers Parameters
-	set thermicSolverSettingsDict [dict merge $thermicSolverSettingsDict [write::getSolutionStrategyParametersDict CNVDFFSolStrat CNVDFFScheme CNVDFFStratParams] ]
-    set thermicSolverSettingsDict [dict merge $thermicSolverSettingsDict [write::getSolversParametersDict ConvectionDiffusion] ]
+	set thermicSolverSettingsDict [dict merge $thermicSolverSettingsDict [write::getSolutionStrategyParametersDict CNVDFFSolStrat CNVDFFScheme CNVDFFStratParams]]
+    set thermicSolverSettingsDict [dict merge $thermicSolverSettingsDict [write::getSolversParametersDict ConvectionDiffusion]]
 	
 	# "problem_domain_sub_model_part_list"
 	set parts [list ]
