@@ -116,9 +116,8 @@ proc PfemThermic::write::GetTable { prop fileName } {
     set data [split $file_data "\n"]
     foreach line $data {
         if {[scan $line %f%f a b] == 2} {
-			set c [concat \[$a,$b\]]
-			set c [string map [list \" ""] $c]
-			lappend points $c
+			lappend points $a
+			lappend points $b
 		}
     }
 	dict set table data $points

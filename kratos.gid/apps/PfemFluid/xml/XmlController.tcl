@@ -185,16 +185,13 @@ proc PfemFluid::xml::ProcGetElementsValues {domNode args} {
 proc PfemFluid::xml::ProcGetConstitutiveLaws {domNode args} {
     set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
     set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
-	set exclusive_CLs [list "Newtonian2DLaw" "Newtonian3DLaw" "Bingham2DLaw" "Bingham3DLaw" "FrictionalViscoplastic2DLaw" "FrictionalViscoplastic3DLaw" "PapanastasiouMuIRheology2DLaw" "PapanastasiouMuIRheology3DLaw"]
 	
     if {[llength $Claws] == 0} {
         set names [list "None"]
     } {
         set names [list ]
         foreach cl $Claws {
-		    if {[$cl getName] in $exclusive_CLs} {
-			    lappend names [$cl getName]
-            }
+		    lappend names [$cl getName]
         }
     }
 	

@@ -81,7 +81,7 @@ proc PfemThermic::write::GetThermicSolverSettingsDict { } {
 	dict set thermicSolverSettingsDict problem_domain_sub_model_part_list $parts
 	
 	# "processes_sub_model_part_list"
-	dict set thermicSolverSettingsDict processes_sub_model_part_list "[]"
+	dict set thermicSolverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [ConvectionDiffusion::write::GetAttribute nodal_conditions_un] [ConvectionDiffusion::write::GetAttribute conditions_un] ]
 	
 	return $thermicSolverSettingsDict
 }

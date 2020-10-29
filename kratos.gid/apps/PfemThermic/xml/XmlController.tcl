@@ -7,6 +7,9 @@ proc PfemThermic::xml::Init { } {
     # Namespace variables initialization
     variable dir
     Model::InitVariables dir $PfemThermic::dir
+	
+	Model::ForgetConstitutiveLaws
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
 }
 
 proc PfemThermic::xml::getUniqueName {name} {
@@ -14,8 +17,8 @@ proc PfemThermic::xml::getUniqueName {name} {
 }
 
 proc PfemThermic::xml::CustomTree { args } {
-    ConvectionDiffusion::xml::CustomTree
     PfemFluid::xml::CustomTree
+	ConvectionDiffusion::xml::CustomTree
 	
     spdAux::SetValueOnTreeItem values Fluid     PFEMFLUID_DomainType
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
@@ -71,16 +74,13 @@ proc PfemThermic::xml::ProcGetElementsValues {domNode args} {
 proc PfemThermic::xml::ProcGetConstitutiveLaws {domNode args} {
     set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
     set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
-	set exclusive_CLs [list "NewtonianTemperatureDependent2DLaw" "NewtonianTemperatureDependent3DLaw" "BinghamTemperatureDependent2DLaw" "BinghamTemperatureDependent3DLaw"]
 	
     if {[llength $Claws] == 0} {
         set names [list "None"]
     } {
         set names [list ]
         foreach cl $Claws {
-		    if {[$cl getName] in $exclusive_CLs} {
-			    lappend names [$cl getName]
-            }
+		    lappend names [$cl getName]
         }
     }
 	
