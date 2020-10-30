@@ -12,29 +12,22 @@ proc ::PfemThermic::Init { } {
     variable prefix
     variable kratos_name
     variable attributes
-
-    set attributes [dict create]
-    set kratos_name PfemThermicDynamicsApplication
-
-    set dir [apps::getMyDir "PfemThermic"]
+	
+	set dir [apps::getMyDir "PfemThermic"]
     set prefix PFEMTHERMIC_
-
-    set ::spdAux::TreeVisibility 0
+	set kratos_name PfemThermicDynamicsApplication
+    set attributes [dict create]
+	dict set attributes UseIntervals 1
+	dict set attributes UseRestart 1
 
 	apps::LoadAppById "PfemFluid"
     apps::LoadAppById "ConvectionDiffusion"
 	
 	if {$::Kratos::kratos_private(DevMode) ne "dev"} {error [= "You need to change to Developer mode in the Kratos menu"] }
-
-    # Intervals
-    dict set attributes UseIntervals 1
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
 	
-	dict set attributes UseRestart 1
+    set ::spdAux::TreeVisibility 1
+    set ::Model::ValidSpatialDimensions [list 2D 3D]
+
     LoadMyFiles
 }
 
