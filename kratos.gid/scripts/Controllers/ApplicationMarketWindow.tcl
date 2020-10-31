@@ -70,37 +70,41 @@ proc spdAux::CreateWindow {} {
     variable initwind
     variable must_open_init_window
     
+    # No graphics, no window
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }
     
+    # Sometimes we dont need the window (load event)
     if {$must_open_init_window == 0} {return ""}
 
+    # If we have an active app, dont open this window
     if {[apps::getActiveApp] ne ""} {return ""}
     
+    # Close everything else
     gid_groups_conds::close_all_windows
-    
     spdAux::DestroyInitWindow
     if {[winfo exist .gid.win_example]} {destroy .gid.win_example}
 
+    # Window creation
     set w .gid.win_example
     toplevel $w
     wm withdraw $w
-    
     set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
     set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-    
     wm geom $w +$x+$y
     wm transient $w .gid    
     
-    InitWindow $w [_ "Kratos Multiphysics"] Kratos "" "" 1
+    InitWindow $w [_ "Kratos Multiphysics - Application market"] Kratos "" "" 1
     set initwind $w
     ttk::frame $w.top
-    ttk::label $w.top.title_text -text [_ " Application market"]
-    ttk::frame $w.information  -relief ridge 
+    # ttk::label $w.top.title_text -text [_ " Application market"]
+
+    # List of applications -> by family
+    ttk::labelframe $w.information -text " Applications " -relief ridge 
     
-    set appsid [::apps::getAllApplicationsID]
-    set appspn [::apps::getAllApplicationsName]
+    set appsid [::apps::getAllApplicationsID 0]
+    set appspn [::apps::getAllApplicationsName 0]
     
     set col 0
     set row 0
@@ -117,22 +121,57 @@ proc spdAux::CreateWindow {} {
             if {$col >= 5} {set col 0; incr row; incr row}
         }
     }
+
+    # List of tools
+    ttk::labelframe $w.tools -text " Tools " -relief ridge 
+    set toolsid [::apps::getAllApplicationsID 2]
+    set toolspn [::apps::getAllApplicationsName 2]
+    set col 0
+    set row 0
+    foreach toolname $toolspn toolid $toolsid {
+        if {[apps::isPublic $toolid]} {
+            set img [::apps::getImgFrom $toolid]
+            ttk::button $w.tools.img$toolid -image $img -command [list apps::setActiveApp $toolid]
+            ttk::label $w.tools.text$toolid -text $toolname
+            
+            grid $w.tools.img$toolid -column $col -row $row
+            grid $w.tools.text$toolid -column $col -row [expr $row +1]
+            
+            incr col
+            if {$col >= 5} {set col 0; incr row; incr row}
+        }
+    }
     
     # More button
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {
         set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
         set img [gid_themes::GetImage $more_path Kratos]
-        ttk::button $w.information.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]
-        ttk::label $w.information.text_more -text "More..."
-        
-        grid $w.information.img_more -column $col -row $row
-        grid $w.information.text_more -column $col -row [expr $row +1]
+        ttk::button $w.tools.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]
+        ttk::label $w.tools.text_more -text "More..."
+
+        grid $w.tools.img_more -column $col -row $row
+        grid $w.tools.text_more -column $col -row [expr $row +1]
+        incr col
+        if {$col >= 5} {set col 0; incr row; incr row}
     }
+
+    # Settings
+    set settings_path [file nativename [file join $::Kratos::kratos_private(Path) images "settings.png"] ]
+    set img [gid_themes::GetImage $settings_path Kratos]
+    if {[GidUtils::VersionCmp "14.1.4d"] <0 } { set cmd  [list ChangeVariables kratos_preferences] } {set cmd  [list PreferencesWindow kratos_preferences]}
+    ttk::button $w.tools.img_preferences -image $img -command $cmd
+    ttk::label $w.tools.text_preferences -text "Preferences"
+    grid $w.tools.img_preferences -column $col -row $row
+    grid $w.tools.text_preferences -column $col -row [expr $row +1]
+    incr col
+    if {$col >= 5} {set col 0; incr row; incr row}
+    
     
     grid $w.top
-    grid $w.top.title_text
+    # grid $w.top.title_text
     
     grid $w.information
+    grid $w.tools -columnspan 5 -sticky w
 }
 
 proc spdAux::DestroyInitWindow { } {
