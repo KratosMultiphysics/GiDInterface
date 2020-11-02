@@ -116,6 +116,8 @@ proc spdAux::processAppIncludes { root } {
         if {[$elem hasAttribute "public"]} {set public [$elem getAttribute "public"]}
         set app [apps::NewApp $appid $pn $prefix]
         $app setPublic $public
+        if {[$elem hasAttribute "is_tool"] } {$app setIsTool [$elem getAttribute "is_tool"]}
+
         if {$active} {
             set dir $::Kratos::kratos_private(Path)
             set f [file join $dir apps $appid xml Main.spd]
