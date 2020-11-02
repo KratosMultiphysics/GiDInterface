@@ -24,7 +24,6 @@ proc PfemThermic::write::GetSolverSettingsDict { } {
 	
     dict set solverSettingsDict solver_type        "pfem_fluid_thermally_coupled_solver"
     dict set solverSettingsDict domain_size        [expr [string range [write::getValue nDim] 0 0] ]
-	dict set solverSettingsDict materials_filename "PFEMThermicMaterials.json"
 	
 	# "time_stepping"
     set timeSteppingDict [dict create]

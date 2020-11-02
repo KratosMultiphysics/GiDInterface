@@ -24,23 +24,19 @@ proc PfemThermic::examples::DrawThermicConvectionGeometry2D {args} {
     GiD_Layers edit to_use $layer
 
     ## Points ##
-    set coordinates [list -0.5 -0.5 0 0.5 -0.5 0 0.5 0.5 0 -0.5 0.5 0]
-    set fluidPoints [list ]
-    foreach {x y z} $coordinates {
-        lappend fluidPoints [GiD_Geometry create point append Fluid $x $y $z]
+    set points [list -0.5 -0.5 0.0 0.5 -0.5 0.0 0.5 0.5 0.0 -0.5 0.5 0.0]
+    foreach {x y z} $points {
+        GiD_Geometry create point append $layer $x $y $z
     }
-
-    ## Lines ##
-    set fluidLines [list ]
-    set initial [lindex $fluidPoints 0]
-    foreach point [lrange $fluidPoints 1 end] {
-        lappend fluidLines [GiD_Geometry create line append stline Fluid $initial $point]
-        set initial $point
+	
+	## Lines ##
+    set lines [list 1 2 2 3 3 4 4 1]
+    foreach {p1 p2} $lines {
+        GiD_Geometry create line append stline $layer $p1 $p2
     }
-    lappend fluidLines [GiD_Geometry create line append stline Fluid $initial [lindex $fluidPoints 0]]
-
+    
     ## Surface ##
-    GiD_Process Mescape Geometry Create NurbsSurface {*}$fluidLines escape escape
+    GiD_Process Mescape Geometry Create NurbsSurface 1 2 3 4 escape escape
 }
 
 proc PfemThermic::examples::DrawThermicConvectionGeometry3D {args} {
@@ -54,7 +50,7 @@ proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry2D {args} {
     GiD_EntitiesGroups assign Fluid surfaces 1
 
     GiD_Groups create Rigid_Walls
-    GiD_Groups edit color Rigid_Walls "#e0210fff"
+    GiD_Groups edit color Rigid_Walls "#3b3b3bff"
     GiD_EntitiesGroups assign Rigid_Walls lines {1 2 3 4}
 	
 	GiD_Groups create Heat_Walls
@@ -62,7 +58,7 @@ proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry2D {args} {
     GiD_EntitiesGroups assign Heat_Walls lines {1}
 	
 	GiD_Groups create Cold_Walls
-    GiD_Groups edit color Cold_Walls "#e0210fff"
+    GiD_Groups edit color Cold_Walls "#42eb71ff"
     GiD_EntitiesGroups assign Cold_Walls lines {3}
 
 }
@@ -88,7 +84,7 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/value\[@n='BodyType'\]" {v Fluid}
     set fluid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/condition\[@n='Parts'\]"
     set fluidNode [customlib::AddConditionGroupOnXPath $fluid_part_xpath Fluid]
-    set props [list ConstitutiveLaw NewtonianTemperatureDependent2DLaw DENSITY 1000 TEMPERATURE_vs_DENSITY "temp_vs_dens.txt" CONDUCTIVITY 1000.0 SPECIFIC_HEAT 10.0 DYNAMIC_VISCOSITY 0.01 BULK_MODULUS 2100000000.0]
+    set props [list ConstitutiveLaw NewtonianTemperatureDependent2DLaw DENSITY 1000 CONDUCTIVITY 1000.0 SPECIFIC_HEAT 10.0 DYNAMIC_VISCOSITY 0.01 BULK_MODULUS 2100000000.0]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 	
 	# Rigid body
@@ -129,7 +125,7 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
     set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Heat_Walls//TotalH"]
     $fixTemperatureNode setAttribute ov line
-	set props [list value 373.65 Interval Total]
+	set props [list value 373.65 Interval Total constrained 1]
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
 	GiD_Groups clone Cold_Walls TotalC
@@ -137,9 +133,9 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     spdAux::AddIntervalGroup Cold_Walls "Cold_Walls//TotalC"
     GiD_Groups edit state "Cold_Walls//TotalC" hidden
     set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Cold_Walls//TotalH"]
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Cold_Walls//TotalC"]
     $fixTemperatureNode setAttribute ov line
-	set props [list value 372.65 Interval Total]
+	set props [list value 372.65 Interval Total constrained 1]
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
 	# Temperature IC

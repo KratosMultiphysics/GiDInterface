@@ -8,9 +8,9 @@
     <include n="TimeSettings"         active="1" icon="timeParams"    path="apps/PfemFluid/xml/TimeSettings.spd"/>
     <include n="Gravity"              active="1" icon="gravityForce"  path="apps/PfemFluid/xml/Gravity.spd"/>
     <include n="MeshBoxes"            active="1" icon="boundingBox"   path="apps/PfemFluid/xml/MeshBoxes.spd"/>                   
-    <include n="SolutionStrategy"     active="1"                      path="apps/PfemThermic/xml/FluidSolutionStrategy.spd"/> 
+    <include n="SolutionStrategy"     active="1" icon="linear_solver" path="apps/PfemThermic/xml/FluidSolutionStrategy.spd"/> 
 	
-    <container n="ConvectionDiffusion" pn="Thermic Solver Settings" icon="settings" prefix="CNVDFF" open_window="0">
+    <container n="ConvectionDiffusion" pn="Thermic Solver Settings" icon="linear_solver" prefix="CNVDFF" open_window="0">
         <include n="StageInfo"        active="1" icon="select"        path="apps/ConvectionDiffusion/xml/StageInfo.spd"/>
         <include n="SolutionStrategy" active="1"                      path="apps/ConvectionDiffusion/xml/SolutionStrategy.spd"/>
     </container>

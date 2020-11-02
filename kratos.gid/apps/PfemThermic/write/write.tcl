@@ -5,6 +5,9 @@ namespace eval ::PfemThermic::write {
 proc ::PfemThermic::write::Init { } {
     PfemFluid::write::Init
 	ConvectionDiffusion::write::Init
+	
+	PfemFluid::write::SetAttribute materials_file PFEMThermicMaterials.json
+	ConvectionDiffusion::write::SetAttribute materials_file PFEMThermicMaterials.json
 }
 
 # MDPA event
