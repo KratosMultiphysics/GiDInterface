@@ -1,7 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
-
-    <NodalConditionItem n              = "VELOCITY"
+    
+    <NodalConditionItem n              = "DISPLACEMENT"
+	                    pn             = "Displacement"
+						ProcessName    = "AssignVectorVariableProcess"
+						VariableName   = "DISPLACEMENT" 
+		                analysis_type  = "Static,Quasi-static,Dynamic"
+						unit_magnitude = "L"
+						units          = "m"
+						App            = "PfemFluid"
+						state          = "CheckNodalConditionStatePFEM"
+						Interval       = "Total">
+    <symbol proc='gid_groups_conds::draw_symbol_image conditions/displacement.png' orientation='global'/>
+    <outputs>
+        <parameter n="DISPLACEMENT_REACTION" pn="Force Reaction" v="No"/>
+    </outputs>
+    </NodalConditionItem>
+	
+	
+    <NodalConditionItem n              = "ACCELERATION"
+	                    pn             = "Acceleration"
+						ProcessName    = "AssignVectorVariableProcess"
+						VariableName   = "ACCELERATION" 
+		                analysis_type  = "Dynamic"
+						unit_magnitude = "Acceleration"
+						units          = "m/s^2"
+						App            = "PfemFluid"
+						state          = "CheckNodalConditionStatePFEM"
+						Interval       = "Total">
+    </NodalConditionItem>
+	
+	
+	<NodalConditionItem n              = "VELOCITY"
 	                    pn             = "Velocity"
 						ProcessName    = "AssignVectorVariableProcess"
 						VariableName   = "VELOCITY"
@@ -48,7 +78,7 @@
     </NodalConditionItem>
 	
 	
-	<NodalConditionItem n                        = "ImposedTemperature2D"
+	<NodalConditionItem n                        = "TEMPERATURE"
 	                    pn                       = "Temperature"
 						ProcessName              = "AssignScalarVariableProcess"
 						VariableName             = "TEMPERATURE"
@@ -70,7 +100,7 @@
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DefaultValues>
-            <value n="constrained" v="1" state="hidden" />
+            <value n="constrained" v="0" state="hidden" />
         </DefaultValues>
     </NodalConditionItem>
 	

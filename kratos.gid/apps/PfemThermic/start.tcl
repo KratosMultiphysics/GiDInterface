@@ -48,8 +48,21 @@ proc ::PfemThermic::GetAttribute {name} {
 
 proc ::PfemThermic::CustomToolbarItems { } {
     variable dir
+    # Reset the left toolbar
+    set Kratos::kratos_private(MenuItems) [dict create]
+    set img_dir [file join $dir images]
+    if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
+        set img_dir [file join $img_dir Black]
+    }
+	Kratos::ToolbarAddItem "Model" [file join $img_dir "modelProperties.png"] [list -np- gid_groups_conds::open_conditions menu] [= "Define the model properties"]
+    Kratos::ToolbarAddItem "Spacer" "" "" ""
+    Kratos::ToolbarAddItem "Run" [file join $img_dir "runSimulation.png"] {Utilities Calculate} [= "Run the simulation"]
+    Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
+    Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
+    Kratos::ToolbarAddItem "Spacer" "" "" ""
     if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemThermic::examples::ThermicSloshing] [= "Example\nThermic sloshing"]
+        Kratos::ToolbarAddItem "Example" [file join $img_dir "exampleSloshing.png"]   [list -np- ::PfemThermic::examples::ThermicSloshing]   [= "Example\nThermic sloshing"]
+		Kratos::ToolbarAddItem "Example" [file join $img_dir "exampleConvection.png"] [list -np- ::PfemThermic::examples::ThermicConvection] [= "Example\nThermic convection"]
     }
 }
 

@@ -37,7 +37,7 @@
 	</proc>
 	<proc n='GetConstitutiveLaws' args='args'>
 	  <![CDATA[
-	  return [PfemThermic::xml::ProcGetConstitutiveLaws $domNode $args]
+	  return [PfemFluid::xml::ProcGetConstitutiveLaws $domNode $args]
 	  ]]>
 	</proc>
 	<proc n='SolutionTypeState' args='args'>
