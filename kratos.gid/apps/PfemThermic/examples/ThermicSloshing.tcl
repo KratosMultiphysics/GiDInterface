@@ -24,11 +24,11 @@ proc PfemThermic::examples::DrawThermicSloshingGeometry2D {args} {
     GiD_Layers edit to_use $layer
 
     ## Points ##
-    set points_inner [list 0 0 0 3.0 0 0 3.0 0.3 0 0 0.5 0]
+    set points_inner [list 0 0 0 1.0 0 0 1.0 0.3 0 0 0.7 0]
     foreach {x y z} $points_inner {
         GiD_Geometry create point append $layer $x $y $z
     }
-    set points_outer [list 0 1.0 0 3.0 1.0 0]
+    set points_outer [list 0 1.0 0 1.0 1.0 0]
     foreach {x y z} $points_outer {
         GiD_Geometry create point append $layer $x $y $z
     }
@@ -80,7 +80,7 @@ proc PfemThermic::examples::TreeAssignationThermicSloshing2D {args} {
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/value\[@n='BodyType'\]" {v Fluid}
     set fluid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]/condition\[@n='Parts'\]"
     set fluidNode [customlib::AddConditionGroupOnXPath $fluid_part_xpath Fluid]
-    set props [list ConstitutiveLaw NewtonianTemperatureDependent2DLaw DENSITY 1000 CONDUCTIVITY 100.0 SPECIFIC_HEAT 10.0 DYNAMIC_VISCOSITY 0.001 BULK_MODULUS 2100000000.0]
+    set props [list ConstitutiveLaw NewtonianTemperatureDependent2DLaw DENSITY 1000 CONDUCTIVITY 2000.0 SPECIFIC_HEAT 4000 DYNAMIC_VISCOSITY 0.01 BULK_MODULUS 1000000000]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 	
 	# Rigid body
@@ -107,7 +107,7 @@ proc PfemThermic::examples::TreeAssignationThermicSloshing2D {args} {
     set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
     set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Rigid_Walls//TotalT"]
     $fixTemperatureNode setAttribute ov line
-	set props [list value 263.15 Interval Total]
+	set props [list value 338.15 Interval Total constrained 1]
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
 	# Temperature IC
@@ -118,11 +118,11 @@ proc PfemThermic::examples::TreeAssignationThermicSloshing2D {args} {
 	set thermalIC "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
 	set thermalICnode [customlib::AddConditionGroupOnXPath $thermalIC "Fluid//Initial"]
 	$thermalICnode setAttribute ov surface
-	set props [list value 283.15 Interval Initial]
+	set props [list value 293.15 Interval Initial constrained 0]
     spdAux::SetValuesOnBaseNode $thermalICnode $props
 	
 	# Time parameters
-    set time_parameters [list StartTime 0.0 EndTime 0.04 DeltaTime 0.001 UseAutomaticDeltaTime No]
+    set time_parameters [list StartTime 0.0 EndTime 10 DeltaTime 0.005 UseAutomaticDeltaTime No]
     set time_params_path [spdAux::getRoute "PFEMFLUID_TimeParameters"]
     spdAux::SetValuesOnBasePath $time_params_path $time_parameters
 	
@@ -131,6 +131,8 @@ proc PfemThermic::examples::TreeAssignationThermicSloshing2D {args} {
     set xpath [spdAux::getRoute "Parallelization"]
     spdAux::SetValuesOnBasePath $xpath $parameters
 	
+	# Others
+	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
 }
 

@@ -44,7 +44,7 @@ proc PfemThermic::write::GetThermicSolverSettingsDict { } {
     set thermicSolverSettingsDict [dict create]
 	
 	# General data
-	dict set thermicSolverSettingsDict solver_type               [write::getValue CNVDFFSolStrat]
+	dict set thermicSolverSettingsDict solver_type               "transient"
 	dict set thermicSolverSettingsDict analysis_type             [write::getValue CNVDFFAnalysisType]
 	dict set thermicSolverSettingsDict time_integration_method   "implicit"
 	dict set thermicSolverSettingsDict model_part_name           [ConvectionDiffusion::write::GetAttribute model_part_name]
