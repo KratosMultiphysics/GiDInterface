@@ -524,8 +524,10 @@ proc spdAux::injectMaterials { basenode args } {
     foreach mat $materials {
         set matname [$mat getName]
         set mathelp [$mat getAttribute help]
+        set icon [$mat getAttribute icon]
+        if {$icon eq ""} {set icon material16}
         set inputs [$mat getInputs]
-        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='material16' help='Material definition'  morebutton='0'>"
+        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='$icon' help='Material definition'  morebutton='0'>"
         foreach {inName in} $inputs {
             set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]] $mat]
             append matnode $node
