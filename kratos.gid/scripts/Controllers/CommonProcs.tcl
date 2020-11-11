@@ -753,6 +753,78 @@ proc spdAux::ProcCambioMat {domNode args} {
     RequestRefresh
 }
 
+proc spdAux::GetMaterialsList { domNode args } {    
+    set x_path {//container[@n="materials"]}
+    set dom_materials [$domNode selectNodes $x_path]
+    if { $dom_materials == "" } {
+        error [= "xpath '%s' not found in the spd file" $x_path]
+    }
+    set image material
+    set result [list]
+    foreach dom_material [$dom_materials childNodes] {
+        set name [$dom_material @name] 
+        # lappend result [list 0 $name $name $image 1]
+        lappend result $name
+    }
+    return [join $result ,]
+}
+
+proc spdAux::EditDatabaseList { domNode dict dict_units boundary_conds args } {
+    set part [$domNode parent]
+    set has_container ""
+    set database materials    
+    set title [= "Material database"]      
+    set list_name [$domNode @n]    
+    set x_path {//container[@n="materials"]}
+    set dom_materials [$domNode selectNodes $x_path]
+    if { $dom_materials == "" } {
+        error [= "xpath '%s' not found in the spd file" $x_path]
+    }
+    set primary_level material
+    if { [dict exists $dict $list_name] } {
+        set xps $x_path
+        append xps [format_xpath {/blockdata[@n=%s and @name=%s]} $primary_level [dict get $dict $list_name]]
+    } else { 
+        set xps "" 
+    }
+    # Launches the window and gets the selected material in domNodes
+    set domNodes [gid_groups_conds::edit_tree_parts_window -accepted_n $primary_level -select_only_one 1 $boundary_conds $title $x_path $xps]    
+         
+    set ret_dict [dict create]
+    set ret_dict_units [dict create]
+    if {$domNodes ne ""} {
+        foreach k [dict keys $dict] {
+            set Selected_$k [dict get $dict $k]
+            set has_unit [dict exists $dict_units $k]
+            if {$has_unit} {set Selected_unit_$k [dict get $dict_units $k]}
+    
+            if { [llength $domNodes] } {
+                set domNode [lindex $domNodes 0]
+                if { [$domNode @n] == $primary_level } {      
+                    dict set ret_dict $list_name [$domNode @name]
+                }
+                set Selected_$k [$domNode selectNodes "value\[@n='$k'\]/@v"]
+                if {$has_unit} {set Selected_unit_$k [$domNode selectNodes "value\[@n='$k'\]/@units"]}
+            }
+            
+            set name Selected_$k
+            if {$has_unit} {set name_unit Selected_unit_$k}
+
+            set node [$part selectNodes "value\[@n='$k'\]"]
+            if {$node ne "" && [set $name] ne ""} { 
+                
+                #dict set ret_dict $k [set $name]
+                #if {$has_unit} {dict set ret_dict_units $k [set $name_unit]}
+                gid_groups_conds::setAttributes [gid_groups_conds::nice_xpath $node] {*}[set $name] 
+                if {$has_unit} {gid_groups_conds::setAttributes [gid_groups_conds::nice_xpath $node] {*}[set $name_unit] }
+                dict set ret_dict $k [dict get [lindex [set $name] 0] v]
+                if {$has_unit} {dict set ret_dict_units $k [dict get [lindex [set $name_unit] 0] units]}
+            }
+        }
+    }
+    return [list $ret_dict $ret_dict_units]
+}
+
 proc spdAux::ProcOkNewCondition {domNode args} {
     set cnd_id [$domNode @n]
     set condition [Model::getCondition $cnd_id]
