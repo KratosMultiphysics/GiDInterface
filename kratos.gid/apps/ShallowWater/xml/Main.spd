@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
   <container n="ShallowWater" pn="Shallow Water" icon="units" prefix="SW" tree_state="open" open_window="0">
-    <include n="AnalysisType" active="1" path="apps/Fluid/xml/AnalysisType.spd"/>
-    <include n="Parts" active="1" path="apps/Fluid/xml/Parts.spd"/>
-    <include n="BoundaryConditions" active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
+    <include n="Parts" active="1" path="apps/ShallowWater/xml/Parts.spd"/>
+    <include n="InitialConditions" active="1" path="apps/ShallowWater/xml/InitialConditions.spd"/>
+    <include n="BoundaryConditions" active="1" path="apps/ShallowWater/xml/BoundaryConditions.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/Fluid/xml/SolutionStrategy.spd"/>
     <include n="Results" active="1" un="Results,FLResults" path="apps/Common/xml/Results.spd"/>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>

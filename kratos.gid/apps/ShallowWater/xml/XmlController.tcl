@@ -13,9 +13,10 @@ proc ShallowWater::xml::Init { } {
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements "../../Common/xml/Elements.xml"
-    Model::getConditions "../../Common/xml/Conditions.xml"
+    Model::getConditions Conditions.xml
+    Model::getNodalConditions NodalConditions.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
-#    Model::getProcesses Processes.xml
+    Model::getProcesses Processes.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
 }
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+
+	<Process n="ApplySlipProcess" pn="Slip" python_module="apply_slip_process" kratos_module="KratosMultiphysics.ShallowWaterApplication" help="">
+		<inputs>
+		</inputs>
+	</Process>
+
+	<Process n="InitialWaterLevelProcess" pn="Initial condition process" python_module="set_initial_water_level_process" kratos_module="KratosMultiphysics.ShallowWaterApplication" help="">
+		<inputs>
+            <parameter n="variable_name" pn="Variable name" type="combo" values="HEIGHT,FREE_SURFACE_ELEVATION" v="HEIGHT" />
+			<parameter n="constrained" pn="Imposed" type="bool" v="0" />
+            <parameter n="value" pn="Value" type="string" v="" />
+			<parameter n="set_minimum_height" pn="Set minimum height" type="bool" v="1" />
+            <parameter n="minimum_height_value" pn="Minimum height values" type="double" v="1e-3" />
+		</inputs>
+	</Process>
+
+</ProcessList>

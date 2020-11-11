@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodalConditionList>
+
+    <NodalConditionItem n="InitialWaterLevel" pn="Initial water level" ProcessName="InitialWaterLevelProcess" App="ShallowWater" ImplementedInApplication="ShallowWaterApplication">
+        <DefaultValues>
+        </DefaultValues>
+    </NodalConditionItem>
+
+</NodalConditionList>
