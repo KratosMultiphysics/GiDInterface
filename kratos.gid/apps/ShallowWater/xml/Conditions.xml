@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-
-    <ConditionItem n="ImposedFlowRate" pn="Imposed flow rate" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="MOMENTUM" App="ShallowWater" ElementType="Line" ProcessName="AssignVectorVariableProcess" help="" units="m^2/s" unit_magnitude="Flow_rate">
+    <ConditionItem n="ImposedFlowRate" pn="Imposed flow rate" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" Type="BoundaryCondition" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="MOMENTUM" App="ShallowWater" ElementType="Line" ProcessName="AssignVectorVariableProcess" help="" units="m^2/s" unit_magnitude="Flow_rate">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
@@ -10,7 +9,7 @@
         <outputs></outputs>
     </ConditionItem>
 
-    <ConditionItem n="ImposedFreeSurface" pn="Imposed free surface" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="HEIGHT" App="ShallowWater" ElementType="Line" ProcessName="AssignScalarVariableProcess" help="" units="m" unit_magnitude="Height">
+    <ConditionItem n="ImposedFreeSurface" pn="Imposed free surface" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" Type="BoundaryCondition" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="HEIGHT" App="ShallowWater" ElementType="Line" ProcessName="AssignScalarVariableProcess" help="" units="m" unit_magnitude="Height">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
@@ -19,7 +18,7 @@
         <outputs></outputs>
     </ConditionItem>
 
-    <ConditionItem n="Slip" pn="Slip" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="" App="ShallowWater" ElementType="Line" ProcessName="ApplySlipProcess" help="" units="" unit_magnitude="">
+    <ConditionItem n="Slip" pn="Slip" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" Type="BoundaryCondition" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="" App="ShallowWater" ElementType="Line" ProcessName="ApplySlipProcess" help="" units="" unit_magnitude="">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
@@ -28,4 +27,25 @@
         <outputs></outputs>
     </ConditionItem>
 
+    <ConditionItem n="Topography" pn="Topography" ProcessName="TopographyProcess" App="ShallowWater" ImplementedInApplication="ShallowWaterApplication" Type="TopographicData" WorkingSpaceDimension="2D" LocalSpaceDimension="2" SkinConditions="False" ElementType="Surface" >
+        <TopologyFeatures>
+            <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+        </TopologyFeatures>
+        <DegreesOfFreedom></DegreesOfFreedom>
+        <inputs></inputs>
+        <outputs></outputs>
+    </ConditionItem>
+
+    <ConditionItem n="BottomFriction" pn="Manning bottom friction" ProcessName="ApplyConstantScalarValueProcess" App="ShallowWater" ImplementedInApplication="ShallowWaterApplication" Type="TopographicData" WorkingSpaceDimension="2D" LocalSpaceDimension="2" SkinConditions="False" ElementType="Surface" >
+        <TopologyFeatures>
+            <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+        </TopologyFeatures>
+        <DegreesOfFreedom></DegreesOfFreedom>
+        <inputs></inputs>
+        <DefaultValues>
+            <value n="is_fixed" v="0" state="hidden" />
+            <value n="variable_name" v="MANNING" state="hidden" />
+        </DefaultValues>
+        <outputs></outputs>
+    </ConditionItem>
 </ConditionList>

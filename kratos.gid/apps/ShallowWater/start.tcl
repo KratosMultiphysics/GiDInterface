@@ -16,7 +16,7 @@ proc ::ShallowWater::Init { } {
     set app_id "ShallowWater"
     set kratos_name "ShallowWaterApplication"
 
-    apps::LoadAppById "Fluid"
+#    apps::LoadAppById "Fluid"
 
     set dir [apps::getMyDir "ShallowWater"]
     set attributes [dict create]

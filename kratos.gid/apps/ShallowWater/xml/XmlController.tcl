@@ -20,20 +20,20 @@ proc ShallowWater::xml::Init { } {
     Model::getSolvers "../../Common/xml/Solvers.xml"
 }
 
-proc ShallowWater::xml::MultiAppEvent {args} {
-   if {$args eq "init"} {
-     spdAux::parseRoutes
-     spdAux::ConvertAllUniqueNames FL ${::ShallowWater::prefix}
-   }
-}
+# proc ShallowWater::xml::MultiAppEvent {args} {
+#    if {$args eq "init"} {
+#      spdAux::parseRoutes
+#      spdAux::ConvertAllUniqueNames FL ${::ShallowWater::prefix}
+#    }
+# }
 
 proc ShallowWater::xml::getUniqueName {name} {
     return ${::ShallowWater::prefix}${name}
 }
 
 proc ShallowWater::xml::CustomTree { args } {
-    spdAux::SetValueOnTreeItem state hidden SWGravity
-    spdAux::SetValueOnTreeItem state hidden SWTimeParameters
+    spdAux::SetValueOnTreeItem state normal FLGravity
+    spdAux::SetValueOnTreeItem state normal FLTimeParameters
 }
 
 ShallowWater::xml::Init
