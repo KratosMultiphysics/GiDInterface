@@ -123,44 +123,24 @@ proc PfemThermic::examples::TreeAssignationThermicDamBreakFSI {args} {
     $rigidNode setAttribute ov line
 	
     # Velocity BC
-	GiD_Groups clone Rigid_Walls TotalV
-    GiD_Groups edit parent TotalV Rigid_Walls
-    spdAux::AddIntervalGroup Rigid_Walls "Rigid_Walls//TotalV"
-    GiD_Groups edit state "Rigid_Walls//TotalV" hidden
     set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
-    set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Rigid_Walls//TotalV"]
-    $fixVelocityNode setAttribute ov line
+    [customlib::AddConditionGroupOnXPath $fixVelocity "Rigid_Walls"] setAttribute ov line
 	
 	# Temperature BC
-	GiD_Groups clone Rigid_Walls TotalTR
-    GiD_Groups edit parent TotalTR Rigid_Walls
-    spdAux::AddIntervalGroup Rigid_Walls "Rigid_Walls//TotalTR"
-    GiD_Groups edit state "Rigid_Walls//TotalTR" hidden
     set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Rigid_Walls//TotalTR"]
-    $fixTemperatureNode setAttribute ov line
-	set props [list value 330.00 Interval Total constrained 1]
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Rigid_Walls"]
+    set props [list value 330.00 Interval Total constrained 1]
+	$fixTemperatureNode setAttribute ov line
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
 	# Temperature IC
-	GiD_Groups clone Fluid InitialTF
-    GiD_Groups edit parent InitialTF Fluid
-	spdAux::AddIntervalGroup Fluid "Fluid//InitialTF"
-	GiD_Groups edit state "Fluid//InitialTF" hidden
-	set thermalFluidIC "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-	set thermalFluidICnode [customlib::AddConditionGroupOnXPath $thermalFluidIC "Fluid//InitialTF"]
-	$thermalFluidICnode setAttribute ov surface
+	set thermalFluidICnode [customlib::AddConditionGroupOnXPath $fixTemperature "Fluid"]
+	set thermalSolidICnode [customlib::AddConditionGroupOnXPath $fixTemperature "Solid"]
 	set fluidProps [list value 273.15 Interval Initial constrained 0]
-    spdAux::SetValuesOnBaseNode $thermalFluidICnode $fluidProps
-	
-	GiD_Groups clone Solid InitialTS
-    GiD_Groups edit parent InitialTS Solid
-	spdAux::AddIntervalGroup Solid "Solid//InitialTS"
-	GiD_Groups edit state "Solid//InitialTS" hidden
-	set thermalSolidIC "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-	set thermalSolidICnode [customlib::AddConditionGroupOnXPath $thermalSolidIC "Solid//InitialTS"]
-	$thermalSolidICnode setAttribute ov surface
 	set solidProps [list value 373.15 Interval Initial constrained 0]
+	$thermalFluidICnode setAttribute ov surface
+	$thermalSolidICnode setAttribute ov surface
+    spdAux::SetValuesOnBaseNode $thermalFluidICnode $fluidProps
     spdAux::SetValuesOnBaseNode $thermalSolidICnode $solidProps
 	
 	# Time parameters

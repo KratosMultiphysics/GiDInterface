@@ -103,33 +103,18 @@ proc PfemThermic::examples::TreeAssignationThermicFluidDrop {args} {
     $interfaceNode setAttribute ov line
 	
 	# Velocity BC
-	GiD_Groups clone Interface TotalV
-    GiD_Groups edit parent TotalV Interface
-    spdAux::AddIntervalGroup Interface "Interface//TotalV"
-    GiD_Groups edit state "Interface//TotalV" hidden
     set fixSurfaceVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
-    set fixSurfaceVelocityNode [customlib::AddConditionGroupOnXPath $fixSurfaceVelocity "Interface//TotalV"]
-    $fixSurfaceVelocityNode setAttribute ov line
+    [customlib::AddConditionGroupOnXPath $fixSurfaceVelocity "Interface"] setAttribute ov line
 	
 	# Temperature IC
-	GiD_Groups clone Fluid InitialTF
-    GiD_Groups edit parent InitialTF Fluid
-	spdAux::AddIntervalGroup Fluid "Fluid//InitialTF"
-	GiD_Groups edit state "Fluid//InitialTF" hidden
-	set thermalFluidIC "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-	set thermalFluidICnode [customlib::AddConditionGroupOnXPath $thermalFluidIC "Fluid//InitialTF"]
-	$thermalFluidICnode setAttribute ov surface
+	set InitTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
+	set thermalFluidICnode [customlib::AddConditionGroupOnXPath $InitTemperature "Fluid"]
+	set thermalSolidICnode [customlib::AddConditionGroupOnXPath $InitTemperature "Solid"]
 	set fluidProps [list value 310.00 Interval Initial constrained 0]
-    spdAux::SetValuesOnBaseNode $thermalFluidICnode $fluidProps
-	
-	GiD_Groups clone Solid InitialTS
-    GiD_Groups edit parent InitialTS Solid
-	spdAux::AddIntervalGroup Solid "Solid//InitialTS"
-	GiD_Groups edit state "Solid//InitialTS" hidden
-	set thermalSolidIC "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-	set thermalSolidICnode [customlib::AddConditionGroupOnXPath $thermalSolidIC "Solid//InitialTS"]
-	$thermalSolidICnode setAttribute ov surface
 	set solidProps [list value 290.00 Interval Initial constrained 0]
+	$thermalFluidICnode setAttribute ov surface
+	$thermalSolidICnode setAttribute ov surface
+    spdAux::SetValuesOnBaseNode $thermalFluidICnode $fluidProps
     spdAux::SetValuesOnBaseNode $thermalSolidICnode $solidProps
 	
 	# Time parameters

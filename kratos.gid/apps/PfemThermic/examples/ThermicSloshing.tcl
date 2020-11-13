@@ -87,32 +87,19 @@ proc PfemThermic::examples::TreeAssignationThermicSloshing {args} {
     $rigidNode setAttribute ov line
 	
     # Velocity BC
-    GiD_Groups clone Rigid_Walls Total
-    GiD_Groups edit parent Total Rigid_Walls
-    spdAux::AddIntervalGroup Rigid_Walls "Rigid_Walls//Total"
-    GiD_Groups edit state "Rigid_Walls//Total" hidden
-    set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
-    set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Rigid_Walls//Total"]
-    $fixVelocityNode setAttribute ov line
+	set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
+	set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Rigid_Walls"]
+	$fixVelocityNode setAttribute ov line
 	
 	# Temperature BC
-	GiD_Groups clone Rigid_Walls TotalT
-    GiD_Groups edit parent TotalT Rigid_Walls
-    spdAux::AddIntervalGroup Rigid_Walls "Rigid_Walls//TotalT"
-    GiD_Groups edit state "Rigid_Walls//TotalT" hidden
     set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Rigid_Walls//TotalT"]
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Rigid_Walls"]
     $fixTemperatureNode setAttribute ov line
 	set props [list value 338.15 Interval Total constrained 1]
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
 	# Temperature IC
-	GiD_Groups clone Fluid Initial
-    GiD_Groups edit parent Initial Fluid
-	spdAux::AddIntervalGroup Fluid "Fluid//Initial"
-	GiD_Groups edit state "Fluid//Initial" hidden
-	set thermalIC "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-	set thermalICnode [customlib::AddConditionGroupOnXPath $thermalIC "Fluid//Initial"]
+	set thermalICnode [customlib::AddConditionGroupOnXPath $fixTemperature "Fluid"]
 	$thermalICnode setAttribute ov surface
 	set props [list value 293.15 Interval Initial constrained 0]
     spdAux::SetValuesOnBaseNode $thermalICnode $props

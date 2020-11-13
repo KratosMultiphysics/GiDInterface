@@ -128,88 +128,39 @@ proc PfemThermic::examples::TreeAssignationThermicSloshingConvection {args} {
     $rigidNode setAttribute ov line
 	
 	# Velocity BC
-	GiD_Groups clone Bottom_Wall TotalVB
-    GiD_Groups edit parent TotalVB Bottom_Wall
-    spdAux::AddIntervalGroup Bottom_Wall "Bottom_Wall//TotalVB"
-    GiD_Groups edit state "Bottom_Wall//TotalVB" hidden
     set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
-    set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Bottom_Wall//TotalVB"]
-    $fixVelocityNode setAttribute ov line
-	
-	GiD_Groups clone Right_Wall TotalVR
-    GiD_Groups edit parent TotalVR Right_Wall
-    spdAux::AddIntervalGroup Right_Wall "Right_Wall//TotalVR"
-    GiD_Groups edit state "Right_Wall//TotalVR" hidden
-    set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
-    set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Right_Wall//TotalVR"]
-    $fixVelocityNode setAttribute ov line
-	
-	GiD_Groups clone Top_Wall TotalVT
-    GiD_Groups edit parent TotalVT Top_Wall
-    spdAux::AddIntervalGroup Top_Wall "Top_Wall//TotalVT"
-    GiD_Groups edit state "Top_Wall//TotalVT" hidden
-    set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
-    set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Top_Wall//TotalVT"]
-    $fixVelocityNode setAttribute ov line
-	
-	GiD_Groups clone Left_Wall TotalVL
-    GiD_Groups edit parent TotalVL Left_Wall
-    spdAux::AddIntervalGroup Left_Wall "Left_Wall//TotalVL"
-    GiD_Groups edit state "Left_Wall//TotalVL" hidden
-    set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
-    set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Left_Wall//TotalVL"]
-    $fixVelocityNode setAttribute ov line
+    [customlib::AddConditionGroupOnXPath $fixVelocity "Bottom_Wall"] setAttribute ov line
+    [customlib::AddConditionGroupOnXPath $fixVelocity "Right_Wall"]  setAttribute ov line
+    [customlib::AddConditionGroupOnXPath $fixVelocity "Top_Wall"]    setAttribute ov line
+    [customlib::AddConditionGroupOnXPath $fixVelocity "Left_Wall"]   setAttribute ov line
 	
 	# Temperature BC
-	GiD_Groups clone Bottom_Wall TotalTB
-    GiD_Groups edit parent TotalTB Bottom_Wall
-    spdAux::AddIntervalGroup Bottom_Wall "Bottom_Wall//TotalTB"
-    GiD_Groups edit state "Bottom_Wall//TotalTB" hidden
     set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Bottom_Wall//TotalTB"]
-    $fixTemperatureNode setAttribute ov line
+	
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Bottom_Wall"]
 	set props [list value 373.65 Interval Total constrained 1]
+    $fixTemperatureNode setAttribute ov line
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
-	GiD_Groups clone Top_Wall TotalTT
-    GiD_Groups edit parent TotalTT Top_Wall
-    spdAux::AddIntervalGroup Top_Wall "Top_Wall//TotalTT"
-    GiD_Groups edit state "Top_Wall//TotalTT" hidden
-    set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Top_Wall//TotalTT"]
-    $fixTemperatureNode setAttribute ov line
-	set props [list value 373.65 Interval Total constrained 1]
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Top_Wall"]
+    set props [list value 373.65 Interval Total constrained 1]
+	$fixTemperatureNode setAttribute ov line
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
-	GiD_Groups clone Right_Wall TotalTR
-    GiD_Groups edit parent TotalTR Right_Wall
-    spdAux::AddIntervalGroup Right_Wall "Right_Wall//TotalTR"
-    GiD_Groups edit state "Right_Wall//TotalTR" hidden
-    set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Right_Wall//TotalTR"]
-    $fixTemperatureNode setAttribute ov line
-	set props [list value 372.65 Interval Total constrained 1]
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Right_Wall"]
+    set props [list value 372.65 Interval Total constrained 1]
+	$fixTemperatureNode setAttribute ov line
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
-	GiD_Groups clone Left_Wall TotalTL
-    GiD_Groups edit parent TotalTL Left_Wall
-    spdAux::AddIntervalGroup Left_Wall "Left_Wall//TotalTL"
-    GiD_Groups edit state "Left_Wall//TotalTL" hidden
-    set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Left_Wall//TotalTL"]
-    $fixTemperatureNode setAttribute ov line
-	set props [list value 372.65 Interval Total constrained 1]
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Left_Wall"]
+    set props [list value 372.65 Interval Total constrained 1]
+	$fixTemperatureNode setAttribute ov line
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
 	# Temperature IC
-	GiD_Groups clone Fluid Initial
-    GiD_Groups edit parent Initial Fluid
-	spdAux::AddIntervalGroup Fluid "Fluid//Initial"
-	GiD_Groups edit state "Fluid//Initial" hidden
-	set thermalIC "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
-	set thermalICnode [customlib::AddConditionGroupOnXPath $thermalIC "Fluid//Initial"]
-	$thermalICnode setAttribute ov surface
+	set thermalICnode [customlib::AddConditionGroupOnXPath $fixTemperature "Fluid"]
 	set props [list value 373.15 Interval Initial constrained 0]
+	$thermalICnode setAttribute ov surface
     spdAux::SetValuesOnBaseNode $thermalICnode $props
 	
 	# Time parameters
