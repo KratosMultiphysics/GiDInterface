@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="TopographicData" pn="Topographic data" un="SWTD" icon="air" open_window="1">
+<container n="TopographicData" pn="Topographic data" un="SWTD" icon="topography" open_window="1">
     <dynamicnode command="spdAux::injectConditions" args="App ShallowWater Type TopographicData"/>
 </container>

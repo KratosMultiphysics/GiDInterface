@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
-    <StrategyItem n="shallow_water_solver"
-        pn="Shallow water"
+    <StrategyItem n="stabilized_shallow_water_solver"
+        pn="Stabilized shallow water solver"
 		ImplementedInFile="stabilized_shallow_water_solver.py"
 		ImplementedInApplication="ShallowWaterApplication"
-		ImplementedInPythonFile="shallow_water"
+		ImplementedInPythonFile="stabilized_shallow_water_solver"
 		MinimumKratosVersion="9000"
         App="ShallowWater"
-		ProductionReady="ProductionReady"
 		help="">
 
         <!-- list of options to be filled -->
@@ -27,8 +26,9 @@
         </linearSolvers>
 
         <schemes>
-            <scheme n="MN" pn="Monolitic generic scheme" help="FilterElements" ProductionReady="ProductionReady">
+            <scheme n="bdf" pn="Backward differenctiation formula" help="">
                 <parameter_list>
+                    <parameter n="order" pn="Order" type="int" v="2" help=""/>
                 </parameter_list>
                 <element_filters>
                 </element_filters>

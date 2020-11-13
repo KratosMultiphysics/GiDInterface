@@ -31,9 +31,9 @@ proc ShallowWater::xml::getUniqueName {name} {
     return ${::ShallowWater::prefix}${name}
 }
 
-proc ShallowWater::xml::CustomTree { args } {
-    spdAux::SetValueOnTreeItem state normal FLGravity
-    spdAux::SetValueOnTreeItem state normal FLTimeParameters
-}
+# proc ShallowWater::xml::CustomTree { args } {
+    # spdAux::SetValueOnTreeItem state normal FLGravity
+    # spdAux::SetValueOnTreeItem state normal FLTimeParameters
+# }
 
 ShallowWater::xml::Init
