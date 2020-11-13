@@ -6,9 +6,9 @@ proc ::PfemThermic::examples::ThermicConvection {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicConvectionGeometry$::Model::SpatialDimension
-    AssignGroupsThermicConvectionGeometry$::Model::SpatialDimension
-    TreeAssignationThermicConvection$::Model::SpatialDimension
+    DrawThermicConvectionGeometry
+    AssignGroupsThermicConvectionGeometry
+    TreeAssignationThermicConvection
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +17,7 @@ proc ::PfemThermic::examples::ThermicConvection {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicConvectionGeometry2D {args} {
+proc PfemThermic::examples::DrawThermicConvectionGeometry {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
@@ -39,12 +39,8 @@ proc PfemThermic::examples::DrawThermicConvectionGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface 1 2 3 4 escape escape
 }
 
-proc PfemThermic::examples::DrawThermicConvectionGeometry3D {args} {
-    # To be implemented
-}
-
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry2D {args} {
+proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -66,12 +62,9 @@ proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry2D {args} {
     GiD_EntitiesGroups assign Left_Wall lines {4}
 
 }
-proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry3D {args} {
-    # To be implemented
-}
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
+proc PfemThermic::examples::TreeAssignationThermicConvection {args} {
     # Physics
 	spdAux::SetValueOnTreeItem v "Fluids" PFEMFLUID_DomainType
 	
@@ -209,10 +202,6 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
 	# Others
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
-}
-
-proc PfemThermic::examples::TreeAssignationThermicConvection3D {args} {
-    # To be implemented
 }
 
 proc PfemThermic::examples::ErasePreviousIntervals { } {

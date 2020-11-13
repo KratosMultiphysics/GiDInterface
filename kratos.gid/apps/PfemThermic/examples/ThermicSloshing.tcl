@@ -6,9 +6,9 @@ proc ::PfemThermic::examples::ThermicSloshing {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicSloshingGeometry$::Model::SpatialDimension
-    AssignGroupsThermicSloshingGeometry$::Model::SpatialDimension
-    TreeAssignationThermicSloshing$::Model::SpatialDimension
+    DrawThermicSloshingGeometry
+    AssignGroupsThermicSloshingGeometry
+    TreeAssignationThermicSloshing
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +17,7 @@ proc ::PfemThermic::examples::ThermicSloshing {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicSloshingGeometry2D {args} {
+proc PfemThermic::examples::DrawThermicSloshingGeometry {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
@@ -47,12 +47,8 @@ proc PfemThermic::examples::DrawThermicSloshingGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface 2 3 4 1 escape escape
 }
 
-proc PfemThermic::examples::DrawThermicSloshingGeometry3D {args} {
-    # To be implemented
-}
-
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicSloshingGeometry2D {args} {
+proc PfemThermic::examples::AssignGroupsThermicSloshingGeometry {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -62,12 +58,9 @@ proc PfemThermic::examples::AssignGroupsThermicSloshingGeometry2D {args} {
     GiD_EntitiesGroups assign Rigid_Walls lines {1 2 4 5 6 7}
 
 }
-proc PfemThermic::examples::AssignGroupsThermicSloshingGeometry3D {args} {
-    # To be implemented
-}
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicSloshing2D {args} {
+proc PfemThermic::examples::TreeAssignationThermicSloshing {args} {
     # Physics
 	spdAux::SetValueOnTreeItem v "Fluids" PFEMFLUID_DomainType
 	
@@ -142,10 +135,6 @@ proc PfemThermic::examples::TreeAssignationThermicSloshing2D {args} {
 	# Others
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
-}
-
-proc PfemThermic::examples::TreeAssignationThermicSloshing3D {args} {
-    # To be implemented
 }
 
 proc PfemThermic::examples::ErasePreviousIntervals { } {

@@ -12,7 +12,7 @@
 	
     <container n="ConvectionDiffusion" pn="Thermic Solver Settings" icon="linear_solver" prefix="CNVDFF" open_window="0">
         <include n="StageInfo"        active="1" icon="select"        path="apps/ConvectionDiffusion/xml/StageInfo.spd"/>
-        <include n="SolutionStrategy" active="1"                      path="apps/ConvectionDiffusion/xml/SolutionStrategy.spd"/>
+        <include n="SolutionStrategy" active="1"                      path="apps/PfemThermic/xml/SolutionStrategyConvectionDiffusion.spd"/>
     </container>
 	
 	<include n="Parallelism"          active="1" icon="parallel_type" path="apps/Common/xml/Parallelism.spd"/> 

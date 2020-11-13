@@ -6,9 +6,9 @@ proc ::PfemThermic::examples::ThermicFluidDrop {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicFluidDropGeometry$::Model::SpatialDimension
-    AssignGroupsThermicFluidDropGeometry$::Model::SpatialDimension
-    TreeAssignationThermicFluidDrop$::Model::SpatialDimension
+    DrawThermicFluidDropGeometry
+    AssignGroupsThermicFluidDropGeometry
+    TreeAssignationThermicFluidDrop
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +17,7 @@ proc ::PfemThermic::examples::ThermicFluidDrop {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicFluidDropGeometry2D {args} {
+proc PfemThermic::examples::DrawThermicFluidDropGeometry {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
@@ -48,12 +48,8 @@ proc PfemThermic::examples::DrawThermicFluidDropGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface 1 2 3 4 5 6 7 8 escape escape
 }
 
-proc PfemThermic::examples::DrawThermicFluidDropGeometry3D {args} {
-    # To be implemented
-}
-
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicFluidDropGeometry2D {args} {
+proc PfemThermic::examples::AssignGroupsThermicFluidDropGeometry {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -66,12 +62,9 @@ proc PfemThermic::examples::AssignGroupsThermicFluidDropGeometry2D {args} {
     GiD_Groups edit color Interface "#e0210fff"
     GiD_EntitiesGroups assign Interface lines {1 2 3 4 5 6 7 8}
 }
-proc PfemThermic::examples::AssignGroupsThermicFluidDropGeometry3D {args} {
-    # To be implemented
-}
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicFluidDrop2D {args} {
+proc PfemThermic::examples::TreeAssignationThermicFluidDrop {args} {
     # Physics
     gid_groups_conds::setAttributesF [spdAux::getRoute PFEMFLUID_DomainType] {v FSI}
     
@@ -157,10 +150,6 @@ proc PfemThermic::examples::TreeAssignationThermicFluidDrop2D {args} {
 	# Others
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
-}
-
-proc PfemThermic::examples::TreeAssignationThermicFluidDrop3D {args} {
-    # To be implemented
 }
 
 proc PfemThermic::examples::ErasePreviousIntervals { } {

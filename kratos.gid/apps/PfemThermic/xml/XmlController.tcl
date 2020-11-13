@@ -33,9 +33,8 @@ proc PfemThermic::xml::CustomTree { args } {
     foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ]          { $node setAttribute icon select }
     foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { $node setAttribute icon select }   
     foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { $node setAttribute icon select }
-	foreach node [[$root parent] selectNodes "[spdAux::getRoute CNVDFFSolutionParameters]" ]                                                   { $node setAttribute icon select }
-    foreach node [[$root parent] selectNodes "[spdAux::getRoute CNVDFFSolutionParameters]/container\[@n = 'linear_solver_settings'\]" ]        { $node setAttribute icon data   }
-	foreach node [[$root parent] selectNodes "[spdAux::getRoute CNVDFFSolutionParameters]/container\[@n = 'StratParams'\]" ]                   { $node setAttribute icon data   }
+    foreach node [[$root parent] selectNodes "[spdAux::getRoute CNVDFFStratSection]/container\[@n = 'linear_solver_settings'\]" ]              { $node setAttribute icon data   }
+	foreach node [[$root parent] selectNodes "[spdAux::getRoute CNVDFFStratSection]/container\[@n = 'StratParams'\]" ]                         { $node setAttribute icon data   }
 	foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition" ]                                        { $node setAttribute icon select
 	                                                                                                                                             $node setAttribute groups_icon groupCreated }
 	if {[spdAux::getRoute PFEMFLUID_Loads] ne ""} {
@@ -73,15 +72,8 @@ proc PfemThermic::xml::CustomTree { args } {
 	spdAux::SetValueOnTreeItem v      linear    CNVDFFAnalysisType
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
 	spdAux::SetValueOnTreeItem state  disabled  CNVDFFSolStrat
-	
-	set result_node [$root selectNodes "[spdAux::getRoute CNVDFFSolutionParameters]/container\[@n = 'ParallelType'\]"]
-	if { $result_node ne "" } {$result_node delete}
-	set result_node [$root selectNodes "[spdAux::getRoute CNVDFFSolutionParameters]/container\[@n = 'BodyForce'\]"]
-	if { $result_node ne "" } {$result_node delete}
-	set result_node [$root selectNodes "[spdAux::getRoute CNVDFFSolutionParameters]/container\[@n = 'TimeParameters'\]"]
-	if { $result_node ne "" } {$result_node delete}
-	set result_node [$root selectNodes "[spdAux::getRoute CNVDFFStratParams]/value\[@n='line_search'\]"]
-	if { $result_node ne "" } {$result_node delete}
+	spdAux::SetValueOnTreeItem v      No        CNVDFFStratParams line_search
+	spdAux::SetValueOnTreeItem state  hidden    CNVDFFStratParams line_search
 }
 
 proc PfemThermic::xml::ProcGetElementsValues {domNode args} {

@@ -6,9 +6,9 @@ proc ::PfemThermic::examples::ThermicDamBreakFSI {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicDamBreakFSIGeometry$::Model::SpatialDimension
-    AssignGroupsThermicDamBreakFSIGeometry$::Model::SpatialDimension
-    TreeAssignationThermicDamBreakFSI$::Model::SpatialDimension
+    DrawThermicDamBreakFSIGeometry
+    AssignGroupsThermicDamBreakFSIGeometry
+    TreeAssignationThermicDamBreakFSI
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +17,7 @@ proc ::PfemThermic::examples::ThermicDamBreakFSI {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicDamBreakFSIGeometry2D {args} {
+proc PfemThermic::examples::DrawThermicDamBreakFSIGeometry {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
@@ -56,12 +56,8 @@ proc PfemThermic::examples::DrawThermicDamBreakFSIGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface 5 6 7 8 escape escape
 }
 
-proc PfemThermic::examples::DrawThermicDamBreakFSIGeometry3D {args} {
-    # To be implemented
-}
-
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicDamBreakFSIGeometry2D {args} {
+proc PfemThermic::examples::AssignGroupsThermicDamBreakFSIGeometry {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -79,12 +75,9 @@ proc PfemThermic::examples::AssignGroupsThermicDamBreakFSIGeometry2D {args} {
     GiD_EntitiesGroups assign Rigid_Walls lines {1 4 9 10 11 12 13}
 
 }
-proc PfemThermic::examples::AssignGroupsThermicDamBreakFSIGeometry3D {args} {
-    # To be implemented
-}
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicDamBreakFSI2D {args} {
+proc PfemThermic::examples::TreeAssignationThermicDamBreakFSI {args} {
     # Physics
     gid_groups_conds::setAttributesF [spdAux::getRoute PFEMFLUID_DomainType] {v FSI}
     
@@ -188,10 +181,6 @@ proc PfemThermic::examples::TreeAssignationThermicDamBreakFSI2D {args} {
 	# Others
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
-}
-
-proc PfemThermic::examples::TreeAssignationThermicDamBreakFSI3D {args} {
-    # To be implemented
 }
 
 proc PfemThermic::examples::ErasePreviousIntervals { } {
