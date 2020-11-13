@@ -1,4 +1,4 @@
-proc ::PfemThermic::examples::ThermicConvection {args} {
+proc ::PfemThermic::examples::ThermicSloshingConvection {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -6,9 +6,9 @@ proc ::PfemThermic::examples::ThermicConvection {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicConvectionGeometry$::Model::SpatialDimension
-    AssignGroupsThermicConvectionGeometry$::Model::SpatialDimension
-    TreeAssignationThermicConvection$::Model::SpatialDimension
+    DrawThermicSloshingConvectionGeometry$::Model::SpatialDimension
+    AssignGroupsThermicSloshingConvectionGeometry$::Model::SpatialDimension
+    TreeAssignationThermicSloshingConvection$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,34 +17,42 @@ proc ::PfemThermic::examples::ThermicConvection {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicConvectionGeometry2D {args} {
+proc PfemThermic::examples::DrawThermicSloshingConvectionGeometry2D {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
     GiD_Layers edit to_use $layer
 
     ## Points ##
-    set points [list -0.5 -0.5 0.0 0.5 -0.5 0.0 0.5 0.5 0.0 -0.5 0.5 0.0]
-    foreach {x y z} $points {
+    set points_inner [list 0 0 0 1.0 0 0 1.0 0.3 0 0 0.7 0]
+    foreach {x y z} $points_inner {
+        GiD_Geometry create point append $layer $x $y $z
+    }
+    set points_outer [list 0 1.0 0 1.0 1.0 0]
+    foreach {x y z} $points_outer {
         GiD_Geometry create point append $layer $x $y $z
     }
 	
 	## Lines ##
-    set lines [list 1 2 2 3 3 4 4 1]
-    foreach {p1 p2} $lines {
+    set lines_inner [list 1 2 2 3 3 4 4 1]
+    foreach {p1 p2} $lines_inner {
+        GiD_Geometry create line append stline $layer $p1 $p2
+    }
+    set lines_outer [list 4 5 5 6 6 3]
+    foreach {p1 p2} $lines_outer {
         GiD_Geometry create line append stline $layer $p1 $p2
     }
     
     ## Surface ##
-    GiD_Process Mescape Geometry Create NurbsSurface 1 2 3 4 escape escape
+    GiD_Process Mescape Geometry Create NurbsSurface 2 3 4 1 escape escape
 }
 
-proc PfemThermic::examples::DrawThermicConvectionGeometry3D {args} {
+proc PfemThermic::examples::DrawThermicSloshingConvectionGeometry3D {args} {
     # To be implemented
 }
 
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry2D {args} {
+proc PfemThermic::examples::AssignGroupsThermicSloshingConvectionGeometry2D {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -53,25 +61,25 @@ proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry2D {args} {
     GiD_Groups edit color Bottom_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Bottom_Wall lines {1}
 	
-	GiD_Groups create Right_Wall
-    GiD_Groups edit color Right_Wall "#42eb71ff"
-    GiD_EntitiesGroups assign Right_Wall lines {2}
-	
 	GiD_Groups create Top_Wall
     GiD_Groups edit color Top_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Top_Wall lines {3}
+    GiD_EntitiesGroups assign Top_Wall lines {6}
+	
+	GiD_Groups create Right_Wall
+    GiD_Groups edit color Right_Wall "#e0210fff"
+    GiD_EntitiesGroups assign Right_Wall lines {2 7}
 	
 	GiD_Groups create Left_Wall
     GiD_Groups edit color Left_Wall "#e0210fff"
-    GiD_EntitiesGroups assign Left_Wall lines {4}
+    GiD_EntitiesGroups assign Left_Wall lines {4 5}
 
 }
-proc PfemThermic::examples::AssignGroupsThermicConvectionGeometry3D {args} {
+proc PfemThermic::examples::AssignGroupsThermicSloshingConvectionGeometry3D {args} {
     # To be implemented
 }
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
+proc PfemThermic::examples::TreeAssignationThermicSloshingConvection2D {args} {
     # Physics
 	spdAux::SetValueOnTreeItem v "Fluids" PFEMFLUID_DomainType
 	
@@ -93,11 +101,11 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='FluidBody'\]/value\[@n='BodyType'\]" {v Fluid}
     set fluid_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='FluidBody'\]/condition\[@n='Parts'\]"
     set fluidNode [customlib::AddConditionGroupOnXPath $fluid_part_xpath Fluid]
-    set props [list ConstitutiveLaw NewtonianTemperatureDependent2DLaw DENSITY 1000 CONDUCTIVITY 2000.0 SPECIFIC_HEAT 4000 DYNAMIC_VISCOSITY 0.01 BULK_MODULUS 1000000000]
+    set props [list ConstitutiveLaw NewtonianTemperatureDependent2DLaw DENSITY 1000 CONDUCTIVITY 5000 SPECIFIC_HEAT 5000 DYNAMIC_VISCOSITY 0.01 BULK_MODULUS 1000000000]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 	# Add table
 	set filePath [file join [file join [apps::getMyDir "PfemThermic"] examples] tables]
-	set fileName ThermicConvection_DENSITY.txt
+	set fileName ThermicSloshingConvection_DENSITY.txt
 	set fullName [file join $filePath $fileName]
 	spdAux::UpdateFileField $fullName [$fluidNode selectNodes "./value\[@n = 'TEMPERATURE_vs_DENSITY'\]"]
 	
@@ -126,7 +134,7 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     set rigidNode [customlib::AddConditionGroupOnXPath $rigid_part_xpath Left_Wall]
     $rigidNode setAttribute ov line
 	
-    # Velocity BC
+	# Velocity BC
 	GiD_Groups clone Bottom_Wall TotalVB
     GiD_Groups edit parent TotalVB Bottom_Wall
     spdAux::AddIntervalGroup Bottom_Wall "Bottom_Wall//TotalVB"
@@ -160,6 +168,26 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     $fixVelocityNode setAttribute ov line
 	
 	# Temperature BC
+	GiD_Groups clone Bottom_Wall TotalTB
+    GiD_Groups edit parent TotalTB Bottom_Wall
+    spdAux::AddIntervalGroup Bottom_Wall "Bottom_Wall//TotalTB"
+    GiD_Groups edit state "Bottom_Wall//TotalTB" hidden
+    set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Bottom_Wall//TotalTB"]
+    $fixTemperatureNode setAttribute ov line
+	set props [list value 373.65 Interval Total constrained 1]
+    spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
+	
+	GiD_Groups clone Top_Wall TotalTT
+    GiD_Groups edit parent TotalTT Top_Wall
+    spdAux::AddIntervalGroup Top_Wall "Top_Wall//TotalTT"
+    GiD_Groups edit state "Top_Wall//TotalTT" hidden
+    set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
+    set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Top_Wall//TotalTT"]
+    $fixTemperatureNode setAttribute ov line
+	set props [list value 373.65 Interval Total constrained 1]
+    spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
+	
 	GiD_Groups clone Right_Wall TotalTR
     GiD_Groups edit parent TotalTR Right_Wall
     spdAux::AddIntervalGroup Right_Wall "Right_Wall//TotalTR"
@@ -177,7 +205,7 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     set fixTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
     set fixTemperatureNode [customlib::AddConditionGroupOnXPath $fixTemperature "Left_Wall//TotalTL"]
     $fixTemperatureNode setAttribute ov line
-	set props [list value 373.65 Interval Total constrained 1]
+	set props [list value 372.65 Interval Total constrained 1]
     spdAux::SetValuesOnBaseNode $fixTemperatureNode $props
 	
 	# Temperature IC
@@ -202,7 +230,7 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     spdAux::SetValuesOnBasePath $xpath $parameters
 	
 	# Output
-    set parameters [list OutputControlType time OutputDeltaTime 0.1]
+    set parameters [list OutputControlType time OutputDeltaTime 0.01]
 	set xpath [spdAux::getRoute "Results"]
     spdAux::SetValuesOnBasePath $xpath $parameters
 	
@@ -211,7 +239,7 @@ proc PfemThermic::examples::TreeAssignationThermicConvection2D {args} {
     spdAux::RequestRefresh
 }
 
-proc PfemThermic::examples::TreeAssignationThermicConvection3D {args} {
+proc PfemThermic::examples::TreeAssignationThermicSloshingConvection3D {args} {
     # To be implemented
 }
 
