@@ -4,4 +4,9 @@
     <link path="apps/Fluid/Examples/examples.xml"/>
     <link path="apps/Structural/Examples/examples.xml"/>
     <link path="apps/FSI/Examples/examples.xml"/>
+    <link path="apps/Buoyancy/Examples/examples.xml"/>
+    <link path="apps/ConjugateHeatTransfer/Examples/examples.xml"/>
+    <link path="apps/ConvectionDiffusion/Examples/examples.xml"/>
+    <link path="apps/CDEM/Examples/examples.xml"/>
+    <link path="apps/Dam/Examples/examples.xml"/>
 </Examples>

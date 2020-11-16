@@ -128,7 +128,7 @@ proc Examples::PrintGroups { } {
     
     grid columnconfigure $examples_window 0 -weight 1
     grid rowconfigure $examples_window 0 -weight 1
-    wm minsize $examples_window 500 500
+    wm minsize $examples_window 750 500
 }
 
 proc Examples::IsAproved {example group filter} { 
