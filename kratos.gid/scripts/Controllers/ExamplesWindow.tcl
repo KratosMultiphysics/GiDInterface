@@ -81,7 +81,7 @@ proc Examples::StartWindow { {filter ""} } {
 }
 
 proc Examples::getImgFrom {group_name example_logo} {
-    return [apps::getImgFrom "Examples" [file join $group_name $example_logo]]
+    return [apps::getImgFrom $group_name $example_logo]
 }
 
 proc Examples::PrintGroups { } {
@@ -109,7 +109,7 @@ proc Examples::PrintGroups { } {
                 set example_dim [dict get $example dim]
                 set example_app [dict get $example app]
                 set example_cmd [dict get $example cmd]
-                set img [Examples::getImgFrom $group_id $example_logo]
+                set img [Examples::getImgFrom $example_app $example_logo]
                 ttk::button $buttons_frame.img$example_id -image $img -command [list Examples::LaunchExample $example_app $example_dim $example_cmd ]
                 ttk::label $buttons_frame.text$example_id -text $example_name
                 grid $buttons_frame.img$example_id -column $col -row $row
