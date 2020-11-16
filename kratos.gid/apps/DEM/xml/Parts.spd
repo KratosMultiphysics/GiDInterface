@@ -6,12 +6,13 @@
 	</value>
 
 	<value n="ConstitutiveLaw" pn="Constitutive law" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]"  state="normal" help="Select a constitutive law">
-		<dependencies node="../value[@n = 'Material']" actualize="1"/>
 	</value>
 
-	<value n="Material" pn="Material" editable='0' help="Choose a material from the database" values='[get_materials_list_simple]' v="DEM-DefaultMaterial" />
+	<value n="Material" pn="Material" state="disabled" help="Choose a material from the database" v="DEM-DefaultMaterial" values="[GetMaterialsList]">
+		<edit_command n="Edit materials" pn="Edit materials" icon="refresh.png" proc='EditDatabaseList'/>
+	</value>
 	<value n="AdvancedMeshingFeatures" pn="Advanced meshing features" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
-		<dependencies node="../value" actualize="1"/>
+		<dependencies node="../value[@n!='Material']" actualize="1"/>
 	</value>
 
 	<value n="AdvancedMeshingFeaturesAlgorithmType" pn="Algorithm type" v="FEMtoDEM" values="FEMtoDEM,2Dto3D" help="FEMtoDEM: use this algorithm to convert an original FEM mesh (composed of hexaedra, tetrahedra, cuadrilaterals, triangles, lines or points) into spheres located at the nodes, at the centroids of the elements or at both. 2D to 3D: use this algorithm if you want to convert a surface meshed with circles into a mesh of spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
