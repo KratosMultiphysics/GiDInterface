@@ -70,7 +70,7 @@ proc Examples::StartWindow { {filter ""} } {
     grid $examples_window.center -sticky nsew
 
     set $Examples::filter_entry $filter
-    set filter_txt [ttk::label $fcenter.filter_text -text [_ "Search a test:"]]
+    set filter_txt [ttk::label $fcenter.filter_text -text [_ "Search an example:"]]
     set filter_ent [ttk::entry $fcenter.filter_entry -textvariable Examples::filter_entry]
     set filter_btn [ttk::button $fcenter.filter_button -text "Filter" -command [list Examples::PrintGroups]]
     grid $filter_txt $filter_ent $filter_btn -sticky ew
@@ -116,7 +116,7 @@ proc Examples::PrintGroups { } {
                 grid $buttons_frame.text$example_id -column $col -row [expr $row +1]
                 
                 incr col
-                if {$col >= 7} {set col 0; incr row; incr row}
+                if {$col >= 5} {set col 0; incr row; incr row}
             }
         }
         if {$col > 0 || $row > 0 } {
@@ -156,8 +156,7 @@ proc Examples::GetGroupsFromXML {} {
     set groups [$root getElementsByTagName "Group"]
     foreach group $groups {
         set group_id [$group @id]
-        W $group_id
-        dict set groups_of_examples $group_id name [$group @name]
+        if {[$group hasAttribute name]} {dict set groups_of_examples $group_id name [$group @name]}
         set examples [$group getElementsByTagName "Example"]
         foreach example $examples {
             set example_id [$example @id]

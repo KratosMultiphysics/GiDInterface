@@ -11,4 +11,7 @@
     <link path="apps/DEM/Examples/examples.xml"/>
     <link path="apps/Dam/Examples/examples.xml"/>
     <link path="apps/DEMPFEM/Examples/examples.xml"/>
+    <link path="apps/FluidDEM/Examples/examples.xml"/>
+    <link path="apps/EmbeddedFluid/Examples/examples.xml"/>
+    <link path="apps/MPM/Examples/examples.xml"/>
 </Examples>

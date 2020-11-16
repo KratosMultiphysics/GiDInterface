@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Groups>
+    <Group id="Fluid" name="Fluid examples">
+        <Example id="FluidDemCylinderInFlow2D" app="FluidDEM" logo="CylinderInFlow2D.png" name="DEM Cylinder in flow 2D" dim="2D" cmd="::FluidDEM::examples::CylinderInFlow"/>
+        <Example id="FluidDemCylinderInFlow3D" app="FluidDEM" logo="CylinderInFlow2D.png" name="DEM Cylinder in flow 3D" dim="3D" cmd="::FluidDEM::examples::CylinderInFlow"/>
+    </Group>
+    <Group id="DEM" name="DEM examples">
+        <Example id="FluidDemCylinderInFlow2D" app="FluidDEM" logo="CylinderInFlow2D.png" name="Cylinder in flow 2D" dim="2D" cmd="::FluidDEM::examples::CylinderInFlow"/>
+        <Example id="FluidDemCylinderInFlow3D" app="FluidDEM" logo="CylinderInFlow2D.png" name="Cylinder in flow 3D" dim="3D" cmd="::FluidDEM::examples::CylinderInFlow"/>
+    </Group>
+</Groups>
