@@ -170,12 +170,19 @@
 		</proc>
 		<proc n='give_materials_list' args='args'>
 			<![CDATA[
-				return [spdAux::ProcGive_materials_list $domNode {*}$args]
+				return [spdAux::ProcGetMaterialsList $domNode {*}$args]
 			]]>
 		</proc>
 		<proc n='edit_database_list' args='args'>
 			<![CDATA[
-				return [spdAux::ProcEdit_database_list $domNode {*}$args]
+			if { $dict eq "" } {
+					foreach node [[$domNode parent] selectNodes value|container/value] {
+						dict set dict [$node @n] [get_domnode_attribute $node v]
+						dict set dict_units [$node @n] [get_domnode_attribute $node units]   
+					}       
+				}    
+				spdAux::ProcEditDatabaseList $domNode $dict $dict_units $boundary_conds $args
+				#return [spdAux::ProcEdit_database_list $domNode {*}$args]
 			]]>
 		</proc>
 		<proc n='CambioMat' args='args'>
@@ -315,7 +322,7 @@
 
 		<proc n='GetMaterialsList' args='args'>
 			<![CDATA[
-				spdAux::GetMaterialsList $domNode $args
+				spdAux::ProcGetMaterialsList $domNode {*}$args
 			]]>
 		</proc>
 		<proc n='EditDatabaseList' args='args'>
@@ -324,10 +331,9 @@
 					foreach node [[$domNode parent] selectNodes value|container/value] {
 						dict set dict [$node @n] [get_domnode_attribute $node v]
 						dict set dict_units [$node @n] [get_domnode_attribute $node units]   
-						
 					}       
 				}    
-				spdAux::EditDatabaseList $domNode $dict $dict_units $boundary_conds $args
+				spdAux::ProcEditDatabaseList $domNode $dict $dict_units $boundary_conds $args
 			]]>
 		</proc>
 		<dynamicnode command="spdAux::injectProcs" args=""/>

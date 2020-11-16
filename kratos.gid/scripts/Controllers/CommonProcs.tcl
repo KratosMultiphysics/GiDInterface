@@ -582,110 +582,6 @@ proc spdAux::PreChargeTree { } {
     }
 }
 
-proc spdAux::ProcGive_materials_list {domNode args} {
-    set optional {
-        { -has_container container_name "" }
-        { -icon icon_name material16 }
-        { -types_icon types_icon_name ""}
-        { -database database_name materials }
-    }
-    #W $args
-    set compulsory ""
-    parse_args $optional $compulsory $args
-    set restList ""
-    
-    proc database_append_list { parentNode database_name level container_name icon_name types_icon_name filters} {
-        set l ""
-        # We guess the keywords of the levels of the database
-        set level_names [give_levels_name $parentNode $database_name]
-        set primary_level [lindex $level_names 0]
-        set secondary_level [lindex $level_names 1]
-        set materials [Model::GetMaterialsNames $filters]
-        if {$secondary_level eq "" && $container_name ne "" && $level == "0"} {
-            error [_ "The has_container flag is not available for the database %s (the different types of materials \
-                    should be distributed in several containers)" $database_name]
-        }
-        
-        foreach domNode [$parentNode childNodes] {
-            set name [$domNode @name ""]
-            if { $name eq "" } { set name [$domNode @name] }
-            if { [$domNode @n] eq "$secondary_level" } {
-                if {$name in $materials} {
-                    set ret [database_append_list $domNode  $database_name [expr {$level+1}] $container_name $icon_name $types_icon_name $filters]
-                    if { [llength $ret] } {
-                        lappend l [list $level $name $name $types_icon_name 0]
-                        eval lappend l $ret
-                    }
-                }
-            } elseif {[$domNode @n] eq "$primary_level"} {
-                set good 1
-                if { $container_name ne "" } {
-                    set xp [format_xpath {container[@n=%s]} $container_name]
-                    if { [$domNode selectNodes $xp] eq "" } { set good 0 }
-                }
-                if { $good } {
-                    lappend l [list $level $name $name $icon_name 1]
-                }
-            }
-        }
-        return $l
-    }
-    
-    proc give_caption_name { domNode xp database_name } {
-        set first_time 1
-        foreach gNode [$domNode selectNodes $xp] {
-            if {$first_time} {
-                set caption_name [$gNode @n]
-                set first_time 0
-                continue
-            }
-            if {[$gNode @n] ne $caption_name} {
-                error [_ "Please check the n attributes of the database %s" $database_name]
-            }
-        }
-        return $caption_name
-    }
-    
-    proc give_levels_name { domNode name } {
-        set xp {container}
-        if {[$domNode selectNodes $xp] eq ""} {
-            # No seconday level exists
-            set secondary_level ""
-            set xp2 {blockdata}
-            set primary_level [give_caption_name $domNode $xp2 $name]
-        } else {
-            set secondary_level [give_caption_name $domNode $xp $name]
-            set xp3 {container/blockdata}
-            set primary_level [give_caption_name $domNode $xp3 $name]
-        }
-        return [list $primary_level $secondary_level]
-    }
-    #W $database
-    set appid [spdAux::GetAppIdFromNode $domNode]
-    set mats_un [apps::getAppUniqueName $appid Materials]
-    set xp3 [spdAux::getRoute $mats_un]
-    set parentNode [$domNode selectNodes $xp3]
-    set const_law_name [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] v]
-    set filters [list ]
-    if {$const_law_name != ""} {
-        set const_law [Model::getConstitutiveLaw $const_law_name]
-        if {$const_law != ""} {
-            set filters [$const_law getMaterialFilters]
-        }
-    }
-    #W [$parentNode asXML]
-    if {$parentNode eq ""} {
-        error [_ "Database %s not found in the spd file" $database]
-    }
-    
-    eval lappend resList [database_append_list $parentNode $database 0 $has_container $icon $types_icon $filters]
-    
-    set res_raw_list [list ]
-    foreach m $resList {lappend res_raw_list [lindex $m 1]}
-    set v [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'Material'\]"] v]
-    if {$v ni $res_raw_list} {[$domNode selectNodes "../value\[@n = 'Material'\]"] setAttribute v $v}
-    return [join $resList ","]
-}
 
 proc spdAux::ProcEdit_database_list {domNode args} {
     set root [customlib::GetBaseRoot]
@@ -753,23 +649,114 @@ proc spdAux::ProcCambioMat {domNode args} {
     RequestRefresh
 }
 
-proc spdAux::GetMaterialsList { domNode args } {    
-    set x_path {//container[@n="materials"]}
-    set dom_materials [$domNode selectNodes $x_path]
-    if { $dom_materials == "" } {
-        error [= "xpath '%s' not found in the spd file" $x_path]
+proc spdAux::ProcGetMaterialsList { domNode args } {    
+    set optional {
+        { -has_container container_name "" }
+        { -icon icon_name material16 }
+        { -types_icon types_icon_name ""}
+        { -database database_name materials }
     }
-    set image material
-    set result [list]
-    foreach dom_material [$dom_materials childNodes] {
-        set name [$dom_material @name] 
-        # lappend result [list 0 $name $name $image 1]
-        lappend result $name
+    set compulsory ""
+    parse_args $optional $compulsory $args
+    set restList ""
+
+    proc database_append_list { parentNode database_name level container_name icon_name types_icon_name filters} {
+        set l ""
+        # We guess the keywords of the levels of the database
+        set level_names [give_levels_name $parentNode $database_name]
+        set primary_level [lindex $level_names 0]
+        set secondary_level [lindex $level_names 1]
+        set materials [Model::GetMaterialsNames $filters]
+        if {$secondary_level eq "" && $container_name ne "" && $level == "0"} {
+            error [_ "The has_container flag is not available for the database %s (the different types of materials \
+                    should be distributed in several containers)" $database_name]
+        }
+        
+        foreach domNode [$parentNode childNodes] {
+            set name [$domNode @name ""]
+            if { $name eq "" } { set name [$domNode @name] }
+            if { [$domNode @n] eq "$secondary_level" } {
+                if {$name in $materials} {
+                    set ret [database_append_list $domNode  $database_name [expr {$level+1}] $container_name $icon_name $types_icon_name $filters]
+                    if { [llength $ret] } {
+                        lappend l [list $level $name $name $types_icon_name 0]
+                        eval lappend l $ret
+                    }
+                }
+            } elseif {[$domNode @n] eq "$primary_level"} {
+                set good 1
+                if { $container_name ne "" } {
+                    set xp [format_xpath {container[@n=%s]} $container_name]
+                    if { [$domNode selectNodes $xp] eq "" } { set good 0 }
+                }
+                if { $good } {
+                    lappend l [list $level $name $name $icon_name 1]
+                }
+            }
+        }
+        return $l
     }
-    return [join $result ,]
+    
+    proc give_caption_name { domNode xp database_name } {
+        set first_time 1
+        foreach gNode [$domNode selectNodes $xp] {
+            if {$first_time} {
+                set caption_name [$gNode @n]
+                set first_time 0
+                continue
+            }
+            if {[$gNode @n] ne $caption_name} {
+                error [_ "Please check the n attributes of the database %s" $database_name]
+            }
+        }
+        return $caption_name
+    }
+    
+    proc give_levels_name { domNode name } {
+        set xp {container}
+        if {[$domNode selectNodes $xp] eq ""} {
+            # No seconday level exists
+            set secondary_level ""
+            set xp2 {blockdata}
+            set primary_level [give_caption_name $domNode $xp2 $name]
+        } else {
+            set secondary_level [give_caption_name $domNode $xp $name]
+            set xp3 {container/blockdata}
+            set primary_level [give_caption_name $domNode $xp3 $name]
+        }
+        return [list $primary_level $secondary_level]
+    }
+
+    set appid [spdAux::GetAppIdFromNode $domNode]
+    set mats_un [apps::getAppUniqueName $appid Materials]
+    set xp3 [spdAux::getRoute $mats_un]
+    set parentNode [$domNode selectNodes $xp3]
+    set const_law_name [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] v]
+    set filters [list ]
+    if {$const_law_name != ""} {
+        set const_law [Model::getConstitutiveLaw $const_law_name]
+        if {$const_law != ""} {
+            set filters [$const_law getMaterialFilters]
+        }
+    }
+    #W [$parentNode asXML]
+    if {$parentNode eq ""} {
+        error [_ "Database %s not found in the spd file" $database]
+    }
+    
+    eval lappend resList [database_append_list $parentNode $database 0 $has_container $icon $types_icon $filters]
+    
+    set res_raw_list [list ]
+    foreach m $resList {lappend res_raw_list [lindex $m 1]}
+    set v [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'Material'\]"] v]
+    if {$v ni $res_raw_list} {
+        [$domNode selectNodes "../value\[@n = 'Material'\]"] setAttribute v [lindex $res_raw_list 0]
+    }
+    return [join $res_raw_list ","]
+
 }
 
-proc spdAux::EditDatabaseList { domNode dict dict_units boundary_conds args } {
+proc spdAux::ProcEditDatabaseList { domNode dict dict_units boundary_conds args } {
     set part [$domNode parent]
     set has_container ""
     set database materials    
