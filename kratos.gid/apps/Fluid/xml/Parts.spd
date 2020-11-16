@@ -7,7 +7,7 @@
 		<dependencies node="../value[@n!='Material']" actualize="1"/>
 	</value>
 	<value n="Material" pn="Material" state="disabled" help="Choose a material from the database" v="Air" values="[GetMaterialsList]">
-        <edit_command n="Edit materials" pn="Edit materials" icon="refresh.png" proc='EditDatabaseList'/>
-      </value>
+		<edit_command n="Edit materials" pn="Edit materials" icon="refresh.png" proc='EditDatabaseList'/>
+	</value>
 	<dynamicnode command="spdAux::injectPartInputs" args=""/>
 </condition>
