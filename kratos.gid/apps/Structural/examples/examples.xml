@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Group id="Structural" name="Structural examples">
+    <Example id="TrussCantilever2D" app="Structural" logo="TrussCantilever2D.png" name="Truss cantilever 2D" dim="2D" cmd="::Structural::examples::TrussCantilever"/>
+    <Example id="TrussCantilever3D" app="Structural" logo="TrussCantilever3D.png" name="Truss cantilever 3D" dim="3D" cmd="::Structural::examples::TrussCantilever"/>
+</Group>

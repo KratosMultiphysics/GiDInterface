@@ -2,13 +2,6 @@
 <!-- -*- coding: utf-8;-*- -->
 <Examples version="1.0">
     <link path="apps/Fluid/Examples/examples.xml"/>
-    <Group id="Structural" name="Structural examples">
-        <Example id="TrussCantilever2D" app="Structural" logo="TrussCantilever2D.png" name="Truss cantilever 2D" dim="2D" cmd="::Structural::examples::TrussCantilever"/>
-        <Example id="TrussCantilever3D" app="Structural" logo="TrussCantilever3D.png" name="Truss cantilever 3D" dim="3D" cmd="::Structural::examples::TrussCantilever"/>
-    </Group>
-    <Group id="FSI" name="Fluid structure interaction examples">
-        <Example id="MokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall"/>
-        <Example id="MokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall"/>
-        <Example id="TurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark"/>
-    </Group>
+    <link path="apps/Structural/Examples/examples.xml"/>
+    <link path="apps/FSI/Examples/examples.xml"/>
 </Examples>

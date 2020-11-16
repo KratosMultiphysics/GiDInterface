@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group id="FSI" name="Fluid structure interaction examples">
+    <Example id="MokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall"/>
+    <Example id="MokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall"/>
+    <Example id="TurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark"/>
+</Group>
