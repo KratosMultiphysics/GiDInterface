@@ -662,8 +662,9 @@ proc spdAux::CheckConstLawOutputState {outnode} {
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
     set parts_path [getRoute $parts_un]
     set xp1 "$parts_path/group/value\[@n='ConstitutiveLaw'\]"
+    set xp2 "$parts_path/condition/group/value\[@n='Element'\]"
     set constlawactive [list ]
-    foreach gNode [$root selectNodes $xp1] {
+    foreach gNode  [concat [$root selectNodes $xp1] [$root selectNodes $xp2]] {
         lappend constlawactive [get_domnode_attribute $gNode v]
     }
 
@@ -682,7 +683,8 @@ proc spdAux::CheckElementOutputState {outnode {parts_uns ""}} {
     foreach parts_un $parts_uns {
         set parts_path [getRoute $parts_un]
         set xp1 "$parts_path/group/value\[@n='Element'\]"
-        foreach gNode [$root selectNodes $xp1] {
+        set xp2 "$parts_path/condition/group/value\[@n='Element'\]"
+        foreach gNode [concat [$root selectNodes $xp1] [$root selectNodes $xp2]] {
             lappend elemsactive [get_domnode_attribute $gNode v]
         }
     }
@@ -699,7 +701,8 @@ proc spdAux::CheckAnyPartState {domNode {parts_uns ""}} {
     foreach parts_un $parts_uns {
         set parts_path [spdAux::getRoute $parts_un]
         if {$parts_path ne ""} {
-            lappend parts {*}[$domNode selectNodes "$parts_path/group"]
+            set parts_base [[customlib::GetBaseRoot] selectNodes $parts_path]
+            lappend parts {*}[$parts_base getElementsByTagName group]
         }
     }
     if {[llength $parts] > 0} {return true} {return false}
