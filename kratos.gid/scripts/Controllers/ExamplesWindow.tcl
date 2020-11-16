@@ -156,6 +156,7 @@ proc Examples::GetGroupsFromXML {} {
     set groups [$root getElementsByTagName "Group"]
     foreach group $groups {
         set group_id [$group @id]
+        W $group_id
         dict set groups_of_examples $group_id name [$group @name]
         set examples [$group getElementsByTagName "Example"]
         foreach example $examples {
@@ -196,9 +197,12 @@ proc Examples::ResolveLinks { } {
     foreach link [$examples_node getElementsByTagName link] {
         catch {
             set xmlfd [tDOM::xmlOpenFile [file join $::Kratos::kratos_private(Path) [$link @path]]]
-            set node [[dom parse -channel $xmlfd] getElementsByTagName Group]
+            set nodes [[dom parse -channel $xmlfd] getElementsByTagName Group]
             close $xmlfd
-            $examples_node replaceChild $node $link
+            foreach node $nodes {
+                $examples_node insertBefore $node $link
+            }
+            $link delete
         }
     }
 

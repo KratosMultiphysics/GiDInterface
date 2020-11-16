@@ -8,5 +8,7 @@
     <link path="apps/ConjugateHeatTransfer/Examples/examples.xml"/>
     <link path="apps/ConvectionDiffusion/Examples/examples.xml"/>
     <link path="apps/CDEM/Examples/examples.xml"/>
+    <link path="apps/DEM/Examples/examples.xml"/>
     <link path="apps/Dam/Examples/examples.xml"/>
+    <link path="apps/DEMPFEM/Examples/examples.xml"/>
 </Examples>
