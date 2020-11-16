@@ -98,6 +98,7 @@ proc spdAux::CreateWindow {} {
     InitWindow $w [_ "Kratos Multiphysics - Application market"] Kratos "" "" 1
     set initwind $w
     ttk::frame $w.top
+    spdAux::RegisterWindow $initwind
     # ttk::label $w.top.title_text -text [_ " Application market"]
 
     # List of applications -> by family
@@ -217,6 +218,7 @@ proc spdAux::CreateDimensionWindow { } {
         
         InitWindow $w [_ "Kratos Multiphysics"] Kratos "" "" 1
         set initwind $w
+        spdAux::RegisterWindow $examples_window
         ttk::frame $w.top
         ttk::label $w.top.title_text -text [_ " Dimension selection"]
         

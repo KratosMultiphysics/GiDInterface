@@ -17,6 +17,8 @@ namespace eval spdAux {
 
     variable must_open_init_window
     variable must_open_dim_window
+
+    variable list_of_windows
 }
 
 proc spdAux::Init { } {
@@ -29,16 +31,19 @@ proc spdAux::Init { } {
     variable GroupsEdited
     variable must_open_init_window
     variable must_open_dim_window
+    variable list_of_windows
     
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
     set initwind ""
-    set  currentexternalfile ""
+    set currentexternalfile ""
     set refreshTreeTurn 0
     set TreeVisibility 0
     set GroupsEdited [dict create]
     set must_open_init_window 1
     set must_open_dim_window 1
+    
+    set list_of_windows [list ]
 }
 
 proc spdAux::StartAsNewProject { } {
@@ -173,10 +178,13 @@ proc spdAux::DestroyWindow {} {
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }
-    variable initwind
-    if {[winfo exists $initwind]} {
-        destroy $initwind    
+    variable list_of_windows
+    foreach window $list_of_windows {
+        if {[winfo exists $window]} {
+            destroy $window    
+        }
     }
+    set list_of_windows [list ]
 }
 
 # Routes
@@ -439,5 +447,9 @@ proc spdAux::UpdateFileField { fileid domNode} {
     }
 }
 
+proc spdAux::RegisterWindow {window_name} {
+    variable list_of_windows
+    lappend list_of_windows $window_name
+}
 
 spdAux::Init
