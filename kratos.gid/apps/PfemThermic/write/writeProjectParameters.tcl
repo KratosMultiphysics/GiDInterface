@@ -53,14 +53,8 @@ proc PfemThermic::write::GetThermicSolverSettingsDict { } {
 	dict set thermicSolverSettingsDict reform_dofs_at_each_step  "true"
 	
 	# Import data
-	set modelDict     [dict create]
 	set materialsDict [dict create]
-	
-	dict set modelDict     input_type         "use_input_model_part"
-    dict set modelDict     input_filename     "unknown_name"
 	dict set materialsDict materials_filename [ConvectionDiffusion::write::GetAttribute materials_file]
-	
-    dict set thermicSolverSettingsDict model_import_settings     $modelDict
     dict set thermicSolverSettingsDict material_import_settings  $materialsDict
 	
 	# Solution Strategy and Solvers Parameters
