@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Dam" name="Dam examples">
-    <Example id="DAMThermoMechaDam2D" app="Dam" logo="ThermoMechaDam2D.png" name="Dam Thermo\nMechanics 2D" dim="2D" cmd="::Dam::examples::ThermoMechaDam2D"/>
-    <Example id="DAMThermoMechaDam3D" app="Dam" logo="ThermoMechaDam3D.png" name="Dam Thermo\nMechanics 3D" dim="3D" cmd="::Dam::examples::ThermoMechaDam3D"/>
+    <Example id="DAMThermoMechaDam2D" app="Dam" logo="ThermoMechaDam2D.png" name="Thermomechanics 2D" dim="2D" cmd="::Dam::examples::ThermoMechaDam"/>
+    <Example id="DAMThermoMechaDam3D" app="Dam" logo="ThermoMechaDam3D.png" name="Thermomechanics 3D" dim="3D" cmd="::Dam::examples::ThermoMechaDam"/>
 </Group>

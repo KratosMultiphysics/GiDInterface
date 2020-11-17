@@ -77,8 +77,8 @@ proc Examples::StartWindow { {filter ""} } {
     grid $filter_txt $filter_ent $filter_btn -sticky ew
 
     set groups [GetGroupsFromXML]
+
     PrintGroups
-    
 }
 
 proc Examples::getImgFrom {group_name example_logo} {
@@ -132,6 +132,9 @@ proc Examples::PrintGroups { } {
     grid columnconfigure $examples_window 0 -weight 1
     grid rowconfigure $examples_window 0 -weight 1
     wm minsize $examples_window 700 500
+    update
+    
+    ResizeScrolledCanvas $_canvas_scroll
 }
 
 proc Examples::IsAproved {example group filter} { 
@@ -186,7 +189,6 @@ proc Examples::LaunchExample {example_app example_dim example_cmd} {
     apps::setActiveApp $example_app
     $example_cmd
     spdAux::OpenTree
-
 }
 
 proc Examples::DestroyExamplesWindow {} {
