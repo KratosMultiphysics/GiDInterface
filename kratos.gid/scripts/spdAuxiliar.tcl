@@ -174,7 +174,7 @@ proc spdAux::getImagePathDim { dim } {
     set imagepath [file nativename [file join $::Model::dir images "$dim.png"] ]
     return $imagepath
 }
-proc spdAux::DestroyWindow {} {
+proc spdAux::DestroyWindows {} {
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }

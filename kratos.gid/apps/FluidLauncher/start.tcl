@@ -14,7 +14,6 @@ proc ::FluidLauncher::Init { } {
 
 proc ::FluidLauncher::FluidAppSelectorWindow { } {
     variable available_apps
-    set initwind $::spdAux::initwind
     
     set root [customlib::GetBaseRoot]
     set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
@@ -25,7 +24,9 @@ proc ::FluidLauncher::FluidAppSelectorWindow { } {
     } {
         [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
 
-        set initwind .gid.win_example
+        set initwind .gid.win_fluid_launcher
+        spdAux::DestroyWindows
+        spdAux::RegisterWindow $initwind
         if { [ winfo exist $initwind]} {
             destroy $initwind
         }

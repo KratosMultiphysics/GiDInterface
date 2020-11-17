@@ -19,7 +19,6 @@ proc Examples::Init { } {
     
     # Don't open the tree
     set ::spdAux::TreeVisibility 0
-    set ::spdAux::must_open_dim_window 0
     
     LoadMyFiles
 
@@ -44,6 +43,8 @@ proc Examples::StartWindow { {filter ""} } {
     variable examples_window
     variable _canvas_scroll
 
+    set ::spdAux::must_open_dim_window 0
+    
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }
