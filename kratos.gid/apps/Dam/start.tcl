@@ -29,11 +29,4 @@ proc ::Dam::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir examples examples.tcl]]   
 }
 
-
-proc ::Dam::CustomToolbarItems { } {
-    variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Dam::examples::ThermoMechaDam] [= "Example\nThermo-mechanical Dam"]
-}
-
-
 ::Dam::Init

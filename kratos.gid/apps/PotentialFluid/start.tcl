@@ -53,10 +53,4 @@ proc ::PotentialFluid::GetAttribute {name} {
     return $value
 }
 
-proc ::PotentialFluid::CustomToolbarItems { } {
-    variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PotentialFluid::examples::NACA0012] [= "Example\nNACA 0012"]
-}
-
-
 ::PotentialFluid::Init

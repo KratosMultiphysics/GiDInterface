@@ -56,11 +56,4 @@ proc ::Buoyancy::GetAttribute {name} {
     return $value
 }
 
-proc ::Buoyancy::CustomToolbarItems { } {
-    variable dir
-
-    Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow Buoyancy] [= "Examples window"]   
-
-}
-
 ::Buoyancy::Init
