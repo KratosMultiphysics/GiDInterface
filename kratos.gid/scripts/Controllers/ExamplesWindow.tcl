@@ -70,7 +70,7 @@ proc Examples::StartWindow { {filter ""} } {
     AddToScrolledCanvas $examples_window.center $fcenter
     grid $examples_window.center -sticky nsew
 
-    set $Examples::filter_entry $filter
+    set Examples::filter_entry $filter
     set filter_txt [ttk::label $fcenter.filter_text -text [_ "Search an example:"]]
     set filter_ent [ttk::entry $fcenter.filter_entry -textvariable Examples::filter_entry]
     set filter_btn [ttk::button $fcenter.filter_button -text "Filter" -command [list Examples::PrintGroups]]
@@ -172,11 +172,16 @@ proc Examples::GetGroupsFromXML {} {
     }
 }
 
-
-
-
 proc Examples::LaunchExample {example_app example_dim example_cmd} {
+    if {![Kratos::IsModelEmpty]} {
+        set txt "We are going to draw the example geometry. You should save your work first.\nDo you want to lose your unsaved work?"
+        set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
+		if { $retval == "cancel" } { return }
+    }
     Examples::DestroyExamplesWindow
+
+    GiD_Process escape escape escape escape escape Mescape Files New No 
+    
     spdAux::SetSpatialDimmension $example_dim
     apps::setActiveApp $example_app
     $example_cmd
