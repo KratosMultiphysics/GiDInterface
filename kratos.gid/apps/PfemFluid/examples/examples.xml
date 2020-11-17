@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Group id="PfemFluid" name="PFEM Fluid examples">
-    <Example id="PfemFluidWaterDamBreak" app="PfemFluid" logo="WaterDamBreak.png" name="Water Dam Break 2D" dim="2D" cmd="::PfemFluid::examples::WaterDamBreak"/>
-    <Example id="PfemFluidDamBreakFSI" app="PfemFluid" logo="DamBreakFSI.png" name="Dam Break FSI 2D" dim="2D" cmd="::PfemFluid::examples::DamBreakFSI"/>
-</Group>
+<Groups>
+    <Group id="Pfem" name="PfemFluid">
+        <Example id="PfemFluidWaterDamBreak" app="PfemFluid" logo="WaterDamBreak.png" name="Water Dam Break 2D" dim="2D" cmd="::PfemFluid::examples::WaterDamBreak"/>
+        <Example id="PfemFluidDamBreakFSI" app="PfemFluid" logo="DamBreakFSI.png" name="Dam Break FSI 2D" dim="2D" cmd="::PfemFluid::examples::DamBreakFSI"/>
+    </Group>
+    <Group id="Fluid">
+        <Example id="PfemFluidWaterDamBreak" app="PfemFluid" logo="WaterDamBreak.png" name="Water Dam Break 2D" dim="2D" cmd="::PfemFluid::examples::WaterDamBreak"/>
+        <Example id="PfemFluidDamBreakFSI" app="PfemFluid" logo="DamBreakFSI.png" name="Dam Break FSI 2D" dim="2D" cmd="::PfemFluid::examples::DamBreakFSI"/>
+    </Group>
+</Groups>
