@@ -158,40 +158,19 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     return $listOfNoSkinGroups
 }
 
-proc Fluid::write::GetUsedElement {} {
+proc Fluid::write::GetUsedElements {} {
     set root [customlib::GetBaseRoot]
 
-    # Check that there is only one fluid part
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
-    if {[llength [$root selectNodes $xp1]] ne 1} {
-        set err "You must set one part in Parts.\n"
-        error $err
-    }
-    W "There is one part"
-
     # Get the fluid part
-    set get "Objects"
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     set lista [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set g $gNode
-        if {$get eq "Name"} {
-            set g [$g getName]
-        }
-        lappend lista $g
+        set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        if {$name ni $lista} {lappend lista $name}
     }
 
-    W "W lista"
-    W $lista
-
-    # Get the element name from the fluid part
-    set fluid_part [lindex $lista 0]
-    set elem_name [get_domnode_attribute [$fluid_part selectNodes ".//value\[@n='Element']"] v]
-
-    W "W elem_name"
-    W $elem_name
-
-    return $elem_name
+    return $lista
 }
 
 proc Fluid::write::getSolverSettingsDict { } {
@@ -251,7 +230,8 @@ proc Fluid::write::getSolverSettingsDict { } {
         set formulationSettingsDict [dict create]
 
         # Set formulation dictionary element type
-        set element_name [Fluid::write::GetUsedElement]
+        set elements [Fluid::write::GetUsedElements]
+        if {[llength $elements] ne 1} {error "You must select 1 element"} {set element_name [lindex $elements 0]}
         if {$element_name eq "QSVMS2D" || $element_name eq "QSVMS3D"} {
             set element_type "qsvms"
         } elseif {$element_name eq "DVMS2D" || $element_name eq "DVMS3D"} {
