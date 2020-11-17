@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Thermic" name="Thermic examples">
-    <Example id="ConvectionDiffusionHeatedSquare2D" app="ConvectionDiffusion" logo="HeatedSquare2D.png" name="Convection diffusion heated square 2D" dim="2D" cmd="::ConvectionDiffusion::examples::HeatedSquare"/>
+    <Example id="ConvectionDiffusionHeatedSquare2D" app="ConvectionDiffusion" logo="HeatedSquare2D.png" name="Convection diffusion\nheated square 2D" dim="2D" cmd="::ConvectionDiffusion::examples::HeatedSquare"/>
 </Group>

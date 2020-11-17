@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="DEM" name="DEM examples">
-    <Example id="CDEMContinuumDrop2D" app="CDEM" logo="HeatedSquare2D.png" name="CDEM Continuum Drop 2D" dim="2D" cmd="::CDEM::examples::ContinuumDrop2D"/>
-    <Example id="CDEMContSpheresDrop3D2D" app="CDEM" logo="ContSpheresDrop3D.png" name="CDEM Cont Spheres Drop 3D" dim="2D" cmd="::CDEM::examples::ContSpheresDrop3D"/>
+    <Example id="CDEMContinuumDrop2D" app="CDEM" logo="HeatedSquare2D.png" name="CDEM Continuum\nCirclesDrop 2D" dim="2D" cmd="::CDEM::examples::ContinuumDrop2D"/>
+    <Example id="CDEMContSpheresDrop3D2D" app="CDEM" logo="ContSpheresDrop3D.png" name="CDEM Cont\nSpheres Drop 3D" dim="2D" cmd="::CDEM::examples::ContSpheresDrop3D"/>
 </Group>

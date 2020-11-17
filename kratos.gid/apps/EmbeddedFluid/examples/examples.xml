@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Fluid">
-    <Example id="EmbeddedFluidCylinderInFlow3D" app="EmbeddedFluid" logo="EmbeddedCylinderInFlow3D.png" name="Embedded Cylinder in flow 3D" dim="3D" cmd="::EmbeddedFluid::examples::CylinderInFlow"/>
+    <Example id="EmbeddedFluidCylinderInFlow3D" app="EmbeddedFluid" logo="EmbeddedCylinderInFlow3D.png" name="Embedded Cylinder\nin flow 3D" dim="3D" cmd="::EmbeddedFluid::examples::CylinderInFlow"/>
 </Group>

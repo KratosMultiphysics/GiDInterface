@@ -112,12 +112,14 @@ proc Examples::PrintGroups { } {
                 set example_cmd [dict get $example cmd]
                 set img [Examples::getImgFrom $example_app $example_logo]
                 ttk::button $buttons_frame.img$example_id -image $img -command [list Examples::LaunchExample $example_app $example_dim $example_cmd ]
+                ttk::label $buttons_frame.title$example_id -text $example_app -font {bold}
                 ttk::label $buttons_frame.text$example_id -text $example_name
                 grid $buttons_frame.img$example_id -column $col -row $row
-                grid $buttons_frame.text$example_id -column $col -row [expr $row +1]
+                grid $buttons_frame.title$example_id -column $col -row [expr $row +1]
+                grid $buttons_frame.text$example_id -column $col -row [expr $row +2]
                 
                 incr col
-                if {$col >= 5} {set col 0; incr row; incr row}
+                if {$col >= 4} {set col 0; incr row; incr row; incr row}
             }
         }
         if {$col > 0 || $row > 0 } {
@@ -129,7 +131,7 @@ proc Examples::PrintGroups { } {
     
     grid columnconfigure $examples_window 0 -weight 1
     grid rowconfigure $examples_window 0 -weight 1
-    wm minsize $examples_window 750 500
+    wm minsize $examples_window 700 500
 }
 
 proc Examples::IsAproved {example group filter} { 
