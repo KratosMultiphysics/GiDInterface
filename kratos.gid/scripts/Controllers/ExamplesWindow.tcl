@@ -7,6 +7,7 @@ namespace eval ::Examples {
     variable groups_of_examples
 
     variable _canvas_scroll
+    variable _canvas_scroll_w
 }
 
 proc Examples::Init { } {
@@ -42,6 +43,7 @@ proc Examples::LoadMyFiles { } {
 proc Examples::StartWindow { {filter ""} } {
     variable examples_window
     variable _canvas_scroll
+    variable _canvas_scroll_w
 
     set ::spdAux::must_open_dim_window 0
     
@@ -67,6 +69,7 @@ proc Examples::StartWindow { {filter ""} } {
     set c_to_scroll [CreateScrolledCanvas $examples_window.center]
     set fcenter [tk::frame $c_to_scroll.fcenter]
     set _canvas_scroll $fcenter
+    set _canvas_scroll_w $examples_window.center
     AddToScrolledCanvas $examples_window.center $fcenter
     grid $examples_window.center -sticky nsew
 
@@ -89,6 +92,7 @@ proc Examples::PrintGroups { } {
     variable groups_of_examples
     variable examples_window
     variable _canvas_scroll
+    variable _canvas_scroll_w
     variable filter_entry
 
     set filter $filter_entry
@@ -134,7 +138,7 @@ proc Examples::PrintGroups { } {
     wm minsize $examples_window 700 500
     update
     
-    ResizeScrolledCanvas $_canvas_scroll
+    ResizeScrolledCanvas $_canvas_scroll_w
 }
 
 proc Examples::IsAproved {example group filter} { 
