@@ -25,11 +25,10 @@ proc FluidDEM::xml::Init { } {
     # Change the inlet injector element type
     set inlet_element_type_param [$inlet_process getInputPn InletElementType]
     if {$inlet_element_type_param ne ""} {
-	$inlet_element_type_param setValues "SphericSwimmingParticle3D"
-	$inlet_element_type_param setPValues "Spheres"
-	$inlet_element_type_param setDv "SphericSwimmingParticle3D"
+        $inlet_element_type_param setValues "SphericSwimmingParticle3D"
+        $inlet_element_type_param setPValues "Spheres"
+        $inlet_element_type_param setDv "SphericSwimmingParticle3D"
     }
-
 
     set element [::Model::getElement "SphericPartDEMElement3D"]
     $element addInputDone $parameter

@@ -97,7 +97,7 @@
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyMPMSlipBoundaryProcess" help="">
     <TopologyFeatures>
-      <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+      <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
@@ -110,7 +110,7 @@
 	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyMPMSlipBoundaryProcess" help="">
     <TopologyFeatures>
-      <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+      <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>

@@ -52,16 +52,4 @@ proc ::MPM::GetAttribute {name} {
     return $value
 }
 
-proc ::MPM::CustomToolbarItems { } {
-    variable dir
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::MPM::examples::FallingSandBall] [= "Example\nFalling sand ball"]
-    }
-}
-
-proc ::MPM::CustomMenus { } {
-    MPM::examples::UpdateMenus
-}
-
-
 ::MPM::Init
