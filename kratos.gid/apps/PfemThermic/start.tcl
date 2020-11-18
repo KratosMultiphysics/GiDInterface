@@ -60,14 +60,10 @@ proc ::PfemThermic::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "Spacer" "" "" ""
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemThermic::examples::ThermicSloshing]           [= "Example\nThermic sloshing"]
-		Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemThermic::examples::ThermicConvection]         [= "Example\nThermic convection"]
-		Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemThermic::examples::ThermicSloshingConvection] [= "Example\nThermic sloshing convection"]
-		Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemThermic::examples::ThermicDamBreakFSI]        [= "Example\nThermic dam break FSI"]
-		Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemThermic::examples::ThermicCubeDrop]           [= "Example\nThermic cube drop"]
-		Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::PfemThermic::examples::ThermicFluidDrop]          [= "Example\nThermic fluid drop"]
+	if {$::Model::SpatialDimension eq "2D"} {
+	    Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]
     }
+	Kratos::ToolbarAddItem "Spacer" "" "" ""
 }
 
 ::PfemThermic::Init
