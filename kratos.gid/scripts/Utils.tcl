@@ -15,7 +15,7 @@ proc Kratos::ForceRun { } {
 
 proc Kratos::DestroyWindows { } {
     gid_groups_conds::close_all_windows
-    spdAux::DestroyWindow
+    spdAux::DestroyWindows
     if {[info exists ::Kratos::kratos_private(UseWizard)] && $::Kratos::kratos_private(UseWizard)} {
         smart_wizard::DestroyWindow
     }

@@ -158,6 +158,21 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     return $listOfNoSkinGroups
 }
 
+proc Fluid::write::GetUsedElements {} {
+    set root [customlib::GetBaseRoot]
+
+    # Get the fluid part
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set g $gNode
+        set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        if {$name ni $lista} {lappend lista $name}
+    }
+
+    return $lista
+}
+
 proc Fluid::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
@@ -211,21 +226,38 @@ proc Fluid::write::getSolverSettingsDict { } {
 
     # For monolithic schemes, set the formulation settings
     if {$currentStrategyId eq "Monolithic"} {
+        # Create formulation dictionary
         set formulationSettingsDict [dict create]
-        # Set element type
-        # TODO: get element type name from the xml -> Avoid Hardcoding
-        dict set formulationSettingsDict element_type "vms"
+
+        # Set formulation dictionary element type
+        set elements [Fluid::write::GetUsedElements]
+        if {[llength $elements] ne 1} {error "You must select 1 element"} {set element_name [lindex $elements 0]}
+        if {$element_name eq "QSVMS2D" || $element_name eq "QSVMS3D"} {
+            set element_type "qsvms"
+        } elseif {$element_name eq "DVMS2D" || $element_name eq "DVMS3D"} {
+            set element_type "dvms"
+        } elseif {$element_name eq "FIC2D" || $element_name eq "FIC3D"} {
+            set element_type "fic"
+        } else {
+            set err [concat "Wrong monolithic element type: " $element_name]
+            error $err
+        }
+        dict set formulationSettingsDict element_type $element_type
+
         # Set OSS and remove oss_switch from the original dictionary
         # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
         if {[dict exists $solverSettingsDict oss_switch]} {
             dict set formulationSettingsDict use_orthogonal_subscales [write::getStringBinaryFromValue [dict get $solverSettingsDict oss_switch]]
             dict unset solverSettingsDict oss_switch
         }
+
         # Set dynamic tau and remove dynamic_tau from the original dictionary
-        dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
-        dict unset solverSettingsDict dynamic_tau
-        # Include the formulation settings in the solver settings dict
-        dict set solverSettingsDict formulation $formulationSettingsDict
+        if {$element_name eq "QSVMS2D" || $element_name eq "QSVMS3D"} {
+            dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
+            dict unset solverSettingsDict dynamic_tau
+            # Include the formulation settings in the solver settings dict
+            dict set solverSettingsDict formulation $formulationSettingsDict
+        }
     }
 
     return $solverSettingsDict

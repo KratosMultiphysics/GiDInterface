@@ -7,9 +7,6 @@ proc EmbeddedFluid::examples::Init { } {
 }
 
 proc EmbeddedFluid::examples::UpdateMenus { } {
-    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Embedded cylinder test" ] 8 PRE [list ::EmbeddedFluid::examples::CylinderInFlow] "" "" insertafter =
-    GiDMenu::UpdateMenus
 }
 
 EmbeddedFluid::examples::Init

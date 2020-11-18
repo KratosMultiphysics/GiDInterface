@@ -48,20 +48,6 @@ proc ::DEM::GetAttribute {name} {
     return $value
 }
 
-proc ::DEM::CustomToolbarItems { } {
-    variable dir
-    if {$::Model::SpatialDimension eq "3D"} {
-        Kratos::ToolbarAddItem "Example3D" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example3D\nSpheres drop"]
-    }
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example2D" [file join $dir images drop.png] [list -np- ::DEM::examples::CirclesDrop] [= "Example2D\nCircles drop"]
-    }
-}
-
-proc ::DEM::CustomMenus { } {
-    DEM::examples::UpdateMenus
-}
-
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
