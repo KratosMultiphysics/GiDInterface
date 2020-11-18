@@ -32,6 +32,11 @@
                 <value n="ScreenInfoOutput"             v="5"                   pn="Info screen output" icon="black1" help="Interval to deliver onscreen information on the running process (in seconds)"/>
                 <value n="NeighbourSearchFrequency"     v="50"                  pn="Search frequency"   icon="black1" help="Search for new particle or wall neighbours. Set its value to '10': a single search will be computed out every ten steps"/>
         </container>
+        <container     n="HomogenizationDomain"           un="DEMHomogenizationDomain"  pn="Homogenization domain settings"    help="Use it to project the discrete element results onto a continuous domain to analyze continuous results" icon="piec" open_window="0">
+                <value n="Active"                       values="No,Yes" pn="Active"         icon="black1" help="This option to activate or deactivate this tool"/>
+                <value n="GeometrySource"               values="BoundingBox" pn="Bounding Box"           icon="black1" help="Choose the geometry of the domain where to project to"/>
+                <value n="ElementSize"                  v="1.0"                pn="Element Size"         icon="black1" help="Size of the elements disctretizing the homogenization domain"/>
+        </container>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
 	<dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>
