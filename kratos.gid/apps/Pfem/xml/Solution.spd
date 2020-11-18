@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="Solution" pn="Solution" un="PFEM_Solution" icon="settings" help="Solution Settings" open_window="0">
+<container n="Solution" pn="Solution" un="PFEM_Solution" icon="dmsettings" help="Solution Settings" open_window="0">
   <container n="Gravity" pn="Gravity" un="FLGravity" icon="gravity_vector" help="Body forces" actualize_tree="1" state="[HideIfUniqueName PFEM_DomainType Solid]" open_window="0">
     <value n="Cx" pn="X value" icon="data" v="0.0" help="X Vector"/>
     <value n="Cy" pn="Y value" icon="data" v="-9.81" help="Y Vector"/>

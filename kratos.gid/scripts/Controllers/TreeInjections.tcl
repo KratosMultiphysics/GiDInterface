@@ -524,8 +524,10 @@ proc spdAux::injectMaterials { basenode args } {
     foreach mat $materials {
         set matname [$mat getName]
         set mathelp [$mat getAttribute help]
+        set icon [$mat getAttribute icon]
+        if {$icon eq ""} {set icon material16}
         set inputs [$mat getInputs]
-        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='material16' help='Material definition'  morebutton='0'>"
+        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='$icon' help='Material definition'  morebutton='0'>"
         foreach {inName in} $inputs {
             set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]] $mat]
             append matnode $node
@@ -662,8 +664,9 @@ proc spdAux::CheckConstLawOutputState {outnode} {
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
     set parts_path [getRoute $parts_un]
     set xp1 "$parts_path/group/value\[@n='ConstitutiveLaw'\]"
+    set xp2 "$parts_path/condition/group/value\[@n='Element'\]"
     set constlawactive [list ]
-    foreach gNode [$root selectNodes $xp1] {
+    foreach gNode  [concat [$root selectNodes $xp1] [$root selectNodes $xp2]] {
         lappend constlawactive [get_domnode_attribute $gNode v]
     }
 
@@ -682,7 +685,8 @@ proc spdAux::CheckElementOutputState {outnode {parts_uns ""}} {
     foreach parts_un $parts_uns {
         set parts_path [getRoute $parts_un]
         set xp1 "$parts_path/group/value\[@n='Element'\]"
-        foreach gNode [$root selectNodes $xp1] {
+        set xp2 "$parts_path/condition/group/value\[@n='Element'\]"
+        foreach gNode [concat [$root selectNodes $xp1] [$root selectNodes $xp2]] {
             lappend elemsactive [get_domnode_attribute $gNode v]
         }
     }
@@ -699,7 +703,8 @@ proc spdAux::CheckAnyPartState {domNode {parts_uns ""}} {
     foreach parts_un $parts_uns {
         set parts_path [spdAux::getRoute $parts_un]
         if {$parts_path ne ""} {
-            lappend parts {*}[$domNode selectNodes "$parts_path/group"]
+            set parts_base [[customlib::GetBaseRoot] selectNodes $parts_path]
+            lappend parts {*}[$parts_base getElementsByTagName group]
         }
     }
     if {[llength $parts] > 0} {return true} {return false}
@@ -865,19 +870,18 @@ proc spdAux::injectPartsByElementType {domNode args} {
         #if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
         set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
             <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
-                    <dependencies node=\"../value\" actualize=\"1\" />
+                    <dependencies node=\"../value\[@n!='Material'\]\" actualize=\"1\" />
             </value>
             <value n=\"ConstitutiveLaw\" pn=\"Constitutive law\" v=\"\" actualize_tree=\"1\"
                     values=\"\[GetConstitutiveLaws\]\" dict=\"\[GetAllConstitutiveLaws\]\">
-                    <dependencies node=\"../value\" actualize=\"1\"/>
+                    <dependencies node=\"../value\[@n!='Material'\]\" actualize=\"1\" />
             </value>
-            <value n=\"Material\" pn=\"Material\" editable='0' help=\"Choose a material from the database\" update_proc=\"CambioMat\"
-                    values_tree='\[give_materials_list\]' v=\"Steel\" actualize_tree=\"1\" state=\"normal\">
-                    <edit_command n=\"Update material data\" pn=\"Update material data\" icon=\"refresh\" proc='edit_database_list'/>
-                    <dependencies node=\"../value\" actualize=\"1\"/>
+            <value n=\"Material\" pn=\"Material\" editable='0' help=\"Choose a material from the database\" values='\[GetMaterialsList\]' v=\"Steel\" state=\"disabled\">
+                    <edit_command n=\"Update material data\" pn=\"Update material data\" icon=\"refresh\" proc='EditDatabaseList'/>
             </value>
             <dynamicnode command=\"spdAux::injectPartInputs\" args=\"\"/>
         </condition>"
+
         $base appendXML $condition_string
         set orig [$base lastChild]
         set new [$orig cloneNode -deep]

@@ -30,7 +30,7 @@ proc ::Dam::xml::MultiAppEvent {args} {
 
 
 proc Dam::xml::CustomTree { args } {
-
+    customlib::UpdateDocument
     # Add some nodal results
     set nodal_results_base [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
     $nodal_results_base setAttribute state "\[ActiveIfAnyPartState\]"

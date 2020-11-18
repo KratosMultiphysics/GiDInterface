@@ -80,21 +80,37 @@ proc apps::NewApp {appid publicname prefix} {
     return $ap
 }
 
-proc apps::getAllApplicationsName {} {
+# also_tools => 0 all apps no tools | 1 all apps and tools | 2 only tools
+proc apps::getAppsList {{also_tools 1}} {
     variable appList
+    set list [list ]
+    foreach app $appList {
+        set is_tool [$app isTool]
+        set pass 0
+        switch $also_tools {
+            0 { if {!$is_tool} {set pass 1} }
+            1 { set pass 1 }
+            2 { if {$is_tool} {set pass 1} }
+        }
+        if {$pass} {
+            lappend list $app
+        }
+    }
+    return $list
+}
+proc apps::getAllApplicationsName {{also_tools 1}} {
     
     set appnames [list ]
-    foreach app $appList {
+    foreach app [apps::getAppsList $also_tools] {
         lappend appnames [$app getPublicName]
     }
     return $appnames
 }
 
-proc apps::getAllApplicationsID {} {
-    variable appList
+proc apps::getAllApplicationsID {{also_tools 1}} {
     
     set appnames [list ]
-    foreach app $appList {
+    foreach app [apps::getAppsList $also_tools] {
         lappend appnames [$app getName]
     }
     return $appnames
@@ -192,6 +208,7 @@ oo::class create App {
     variable writeValidateEvent
     variable prefix
     variable release
+    variable is_tool
     
     constructor {n} {
         variable name
@@ -203,6 +220,7 @@ oo::class create App {
         variable writeValidateEvent
         variable prefix
         variable public
+        variable is_tool
         
         set name $n
         set publicname $n
@@ -221,6 +239,7 @@ oo::class create App {
         append writeValidateEvent "::writeValidateEvent"
         set prefix ""
         set public 0
+        set is_tool 0
     }
     
     method activate { } {
@@ -258,14 +277,12 @@ oo::class create App {
         if {[info procs $f] ne ""} {$f {*}$args}
         }
     
-    method setPublic {v} {
-        variable public
-        set public $v
-    }
-    method isPublic { } {
-        variable public
-        return $public
-    }
+    method setPublic {v} {variable public; set public $v}
+    method isPublic { } {variable public; return $public}
+    
+    method setIsTool {v} {variable is_tool; set is_tool $v}
+    method isTool { } {variable is_tool; return $is_tool}
+    
     method getKratosApplicationName { } {
         return [set ::${name}::kratos_name]
     }
