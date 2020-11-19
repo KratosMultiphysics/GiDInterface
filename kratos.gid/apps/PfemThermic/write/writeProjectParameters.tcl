@@ -64,8 +64,7 @@ proc PfemThermic::write::GetThermicSolverSettingsDict { } {
 	# "problem_domain_sub_model_part_list"
 	set parts [list ]
 	foreach body_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "PFEMFLUID_Bodies"]/blockdata"] {
-	    if {[get_domnode_attribute $body_node state] ne "hidden" &&
-		    [get_domnode_attribute [$body_node selectNodes ".//value\[@n='BodyType'\]"] v] eq "Fluid"} {
+	    if {[get_domnode_attribute $body_node state] ne "hidden"} {
 			foreach part_node [$body_node selectNodes "./condition/group"] {
                 lappend parts [write::getSubModelPartId "Parts" [$part_node @n]]
             }
@@ -74,7 +73,7 @@ proc PfemThermic::write::GetThermicSolverSettingsDict { } {
 	dict set thermicSolverSettingsDict problem_domain_sub_model_part_list $parts
 	
 	# "processes_sub_model_part_list"
-	dict set thermicSolverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [ConvectionDiffusion::write::GetAttribute nodal_conditions_un] [ConvectionDiffusion::write::GetAttribute conditions_un] ]
+	dict set thermicSolverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
 	
 	return $thermicSolverSettingsDict
 }

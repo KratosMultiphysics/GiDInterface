@@ -156,7 +156,7 @@ proc PfemThermic::examples::TreeAssignationThermicConvection {args} {
     spdAux::SetValuesOnBasePath $xpath $parameters
 	
 	# Output
-    set parameters [list OutputControlType time OutputDeltaTime 0.1]
+    set parameters [list OutputControlType time OutputDeltaTime 0.01]
 	set xpath [spdAux::getRoute "Results"]
     spdAux::SetValuesOnBasePath $xpath $parameters
 	

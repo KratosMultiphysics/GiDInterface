@@ -12,7 +12,8 @@
     <container n="OnElement" pn="On element" un="ElementResults" icon="select" help="Activate the results you want to see in the elements" open_window="0">
         <!--<dynamicnode command="spdAux::injectElementOutputs" args=""/>-->
         <!--<dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>-->
-		<value n="CAUCHY_STRESS_TENSOR" pn="Cauchy stress tensor" v="No" values="Yes,No"/>
+		<value n="CAUCHY_STRESS_VECTOR" pn="Cauchy stress vector" v="No" values="Yes,No"/>
+		<value n="YIELDED"              pn="Yielded"              v="No" values="Yes,No"/>
     </container>
     <container n="OnNodes" pn="On nodes" un="NodalResults" icon="select" help="Activate the results you want to see in the nodes" open_window="0">
         <value n="PARTITION_INDEX" pn="Partition index" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName ParallelType MPI]"/>

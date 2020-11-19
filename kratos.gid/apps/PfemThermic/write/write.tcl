@@ -1,5 +1,4 @@
 namespace eval ::PfemThermic::write {
-    
 }
 
 proc ::PfemThermic::write::Init { } {
@@ -12,7 +11,79 @@ proc ::PfemThermic::write::Init { } {
 
 # MDPA event
 proc PfemThermic::write::writeModelPartEvent { } {
-    PfemFluid::write::writeModelPartEvent
+    set root [customlib::GetBaseRoot]
+	set dictGroupsIterators [dict create]
+	set xp1 "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition/group"
+	variable FluxConditions
+	set FluxConditions(temp) 0
+    unset FluxConditions(temp)
+	
+	# Write geometries (adapted from PfemFluid::write::writeModelPartEvent)
+	write::initWriteConfiguration [PfemFluid::write::GetAttributes]
+	set parts_un_list [PfemFluid::write::GetPartsUN]
+    foreach part_un $parts_un_list {
+        write::initWriteData $part_un "PFEMFLUID_Materials"
+    }
+    write::writeModelPartData
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties"
+    write::writeNodalCoordinates
+    foreach part_un $parts_un_list {
+        write::initWriteData $part_un "PFEMFLUID_Materials"
+        write::writeElementConnectivities
+    }
+	
+	# Write flux conditions (adapted from write::writeConditions)
+	set iter 0
+	foreach group [$root selectNodes $xp1] {
+		set condid [[$group parent] @n]
+		set groupid [get_domnode_attribute $group n]
+		set groupid [write::GetWriteGroupName $groupid]
+		incr iter
+		if {$condid eq "HeatFlux2D"} {
+            set dictGroupsIterators [write::writeGroupNodeCondition $dictGroupsIterators $group $condid $iter]
+        }
+		if {[dict exists $dictGroupsIterators $groupid]} {
+            set iter [lindex [dict get $dictGroupsIterators $groupid] 1]
+        } else {
+            incr iter -1
+        }
+	}
+	
+	# Fill FluxConditions (adapted from ConvectionDiffusion::write::writeBoundaryConditions)
+    foreach group [$root selectNodes $xp1] {
+        set condid [[$group parent] @n]
+		set groupid [get_domnode_attribute $group n]
+        set groupid [write::GetWriteGroupName $groupid]
+        if {$condid eq "HeatFlux2D"} {
+            lassign [dict get $dictGroupsIterators $groupid] ini fin
+            set FluxConditions($groupid,initial) $ini
+            set FluxConditions($groupid,final) $fin
+            set FluxConditions($groupid,SkinCondition) 1
+        }
+    }
+	
+	# Write submodelparts (adapted from PfemFluid::write::writeMeshes)
+	foreach part_un $parts_un_list {
+        write::initWriteData $part_un "PFEMFLUID_Materials"
+        write::writePartSubModelPart
+    }
+	
+	# Write submodel parts with flux conditions (adapted from PfemFluid::write::writeNodalConditions and ConvectionDiffusion::write::writeConditionsMesh)
+    foreach group [$root selectNodes $xp1] {
+        set condid [[$group parent] @n]
+		if {[Model::getNodalConditionbyId $condid] ne ""} {
+		    set groupid [$group @n]
+            set groupid [write::GetWriteGroupName $groupid]
+            if {$condid ne "HeatFlux2D"} {
+                ::write::writeGroupSubModelPart $condid $groupid "nodal"
+            } else {
+                set ini $FluxConditions($groupid,initial)
+                set end $FluxConditions($groupid,final)
+				::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
+            }
+		}
+    }
 }
 
 # Custom files event
