@@ -186,9 +186,11 @@ proc Examples::LaunchExample {example_app example_dim example_cmd} {
 		if { $retval == "cancel" } { return }
     }
     Examples::DestroyExamplesWindow
-
-    GiD_Process escape escape escape escape escape Mescape Files New No 
-    
+    Kratos::ResetModel
+    Model::DestroyEverything
+    set ::problemtype_current(CustomLibAutomatic) 1
+    gid_common_problemtype_init_customlib_automatic $Kratos::kratos_private(Path)
+    set ::problemtype_current(CustomLibAutomatic) 0
     spdAux::SetSpatialDimmension $example_dim
     apps::setActiveApp $example_app
     $example_cmd
