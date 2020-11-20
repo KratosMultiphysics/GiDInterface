@@ -9,9 +9,5 @@
 	<value n="Material" pn="Material" state="disabled" help="Choose a material from the database" v="Air" values="[GetMaterialsList]">
 		<edit_command n="Edit materials" pn="Edit materials" icon="refresh.png" proc='EditDatabaseList'/>
 	</value>
-
-	<value n="AdvancedMeshingFeatures" pn="Advanced meshing features" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
-		<dependencies node="../value[@n!='Material']" actualize="1"/>
-	</value>
 	<dynamicnode command="spdAux::injectPartInputs" args=""/>
 </condition>
