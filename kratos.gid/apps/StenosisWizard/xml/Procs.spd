@@ -35,4 +35,9 @@
 		return $r
 	  ]]>
 	</proc>
+		<proc n='HideIfElement' args='args'>
+	  <![CDATA[
+		return [Fluid::xml::ProcHideIfElement $domNode {*}$args]
+	  ]]>
+	</proc>
 </container>
