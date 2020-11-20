@@ -206,7 +206,7 @@ proc Examples::DestroyExamplesWindow {} {
 proc Examples::ResolveLinks { } {
     variable doc
 
-    set examples_node [$doc selectNodes "/Examples"]
+    set examples_node [$doc selectNodes "/examples"]
     foreach link [$examples_node getElementsByTagName link] {
         catch {
             set xmlfd [tDOM::xmlOpenFile [file join $::Kratos::kratos_private(Path) [$link @path]]]
