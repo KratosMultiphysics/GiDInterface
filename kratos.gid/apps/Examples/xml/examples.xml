@@ -20,4 +20,5 @@
     <link path="apps/EmbeddedFluid/examples/examples.xml"/>
     <link path="apps/MPM/examples/examples.xml"/>
     <link path="apps/PfemFluid/examples/examples.xml"/>
-	<link path="apps/PfemThermic/Examples/examples.xml"/>
+	<link path="apps/PfemThermic/examples/examples.xml"/>
+</examples>
