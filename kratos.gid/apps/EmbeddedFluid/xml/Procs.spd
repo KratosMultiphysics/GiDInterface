@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="procs" pn="procs" includeContainer="No">
-    	<proc n='Fixity' args='args'>
-	  <![CDATA[
+	<proc n='Fixity' args='args'>
+		<![CDATA[
 		return "normal"
 	  ]]>
 	</proc>
-		<proc n='MaxGroups' args='args'>
-	  <![CDATA[
+	<proc n='MaxGroups' args='args'>
+		<![CDATA[
 		set childs [$domNode getElementsByTagName group]
 		if {[llength $childs] > 1} {
 			foreach group [lrange $childs 1 end] {$group delete}
@@ -16,7 +16,7 @@
 	  ]]>
 	</proc>
 	<proc n='CheckIdOnMyParent' args='args'>
-	  <![CDATA[
+		<![CDATA[
 		set r "hidden"
 		set parent [$domNode parent]
 		set wantedname [lindex $args 0]
@@ -33,6 +33,11 @@
 			}
 		}
 		return $r
+	  ]]>
+	</proc>
+	<proc n='HideIfElement' args='args'>
+		<![CDATA[
+		return [Fluid::xml::ProcHideIfElement $domNode {*}$args]
 	  ]]>
 	</proc>
 </container>

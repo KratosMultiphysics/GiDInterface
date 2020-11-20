@@ -730,8 +730,10 @@ proc spdAux::ProcGetMaterialsList { domNode args } {
     set appid [spdAux::GetAppIdFromNode $domNode]
     set mats_un [apps::getAppUniqueName $appid Materials]
     set xp3 [spdAux::getRoute $mats_un]
+
+    # set xp3 [spdAux::getRoute $mats_un]
     set parentNode [$domNode selectNodes $xp3]
-    set const_law_name [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] v]
+    set const_law_name [write::getValueByNode [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] ]
     set filters [list ]
     if {$const_law_name != ""} {
         set const_law [Model::getConstitutiveLaw $const_law_name]
