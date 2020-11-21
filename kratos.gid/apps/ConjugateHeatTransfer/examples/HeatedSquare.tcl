@@ -6,8 +6,8 @@ proc ::ConjugateHeatTransfer::examples::HeatedSquare {args} {
 		if { $retval == "cancel" } { return }
     }
     DrawSquareGeometry$::Model::SpatialDimension
-    AssignGroups$::Model::SpatialDimension
-    TreeAssignation$::Model::SpatialDimension
+    HeatedSquareAssignGroups$::Model::SpatialDimension
+    HeatedSquareTreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -72,7 +72,7 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
 
 
 # Group assign
-proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
+proc ConjugateHeatTransfer::examples::HeatedSquareAssignGroups2D {args} {
     # Create the groups for the fluid
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -119,7 +119,7 @@ proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
     GiD_Groups edit color Heating_Left_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Heating_Left_Wall lines 8
 }
-proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
+proc ConjugateHeatTransfer::examples::HeatedSquareAssignGroups3D {args} {
     # Create the groups
     # GiD_Groups create Fluid
     # GiD_Groups edit color Fluid "#26d1a8ff"
@@ -143,11 +143,11 @@ proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
 }
 
 # Tree assign
-proc ConjugateHeatTransfer::examples::TreeAssignation3D {args} {
+proc ConjugateHeatTransfer::examples::HeatedSquareTreeAssignation3D {args} {
     # TreeAssignationCylinderInFlow2D
     # AddCuts
 }
-proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
+proc ConjugateHeatTransfer::examples::HeatedSquareTreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -162,15 +162,8 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
     set props [list Element Monolithic$nd Material Water ConstitutiveLaw Newtonian]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
-
+    spdAux::SetValuesOnBaseNode $fluidNode $props
+    
     # Fluid conditions
     set fluid_conditions [spdAux::getRoute "FLBC"]
     set fluid_noslip "$fluid_conditions/condition\[@n='NoSlip$nd'\]"
