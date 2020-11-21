@@ -133,7 +133,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element QSVMS$nd ConstitutiveLaw Newtonian DENSITY 1.2039 DYNAMIC_VISCOSITY 0.000587 CONDUCTIVITY 0.83052 SPECIFIC_HEAT 1004.84]
+    set props [list Element QSVMS$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.2039 DYNAMIC_VISCOSITY 0.000587 CONDUCTIVITY 0.83052 SPECIFIC_HEAT 1004.84]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
