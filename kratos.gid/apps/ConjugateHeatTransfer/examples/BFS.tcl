@@ -165,7 +165,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     # Fluid parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.001875 CONDUCTIVITY 1.0 SPECIFIC_HEAT 0.002640845]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.0 DYNAMIC_VISCOSITY 0.001875 CONDUCTIVITY 1.0 SPECIFIC_HEAT 0.002640845]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     # Fluid boundary conditions

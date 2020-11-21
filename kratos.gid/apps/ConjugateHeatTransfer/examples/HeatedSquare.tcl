@@ -161,7 +161,7 @@ proc ConjugateHeatTransfer::examples::HeatedSquareTreeAssignation2D {args} {
     # Fluid Parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
-    set props [list Element Monolithic$nd Material Water ConstitutiveLaw Newtonian]
+    set props [list Element Monolithic$nd Material Water ConstitutiveLaw Newtonian2DLaw]
     spdAux::SetValuesOnBaseNode $fluidNode $props
     
     # Fluid conditions
