@@ -83,7 +83,7 @@
 						ProcessName              = "AssignScalarVariableProcess"
 						VariableName             = "TEMPERATURE"
 						can_be_initial           = "true"
-						Interval                 = "Initial"
+						Interval                 = "Total"
 						unit_magnitude           = "Temp"
 						units                    = "K"
 						App                      = "ConvectionDiffusion"
@@ -100,7 +100,7 @@
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DefaultValues>
-            <value n="constrained" v="0" state="hidden" />
+            <value n="constrained" v="1" state="hidden" />
         </DefaultValues>
     </NodalConditionItem>
 	
@@ -109,7 +109,7 @@
 	                    pn                       = "External heat flux"
 						ProcessName              = "AssignScalarVariableProcess"
 						VariableName             = "FACE_HEAT_FLUX"
-						Interval                 = "True"
+						Interval                 = "Total"
 						unit_magnitude           = "Power/L^2"
 						units                    = "W/m^2"
 						App                      = "ConvectionDiffusion"
@@ -125,6 +125,22 @@
 						function                 = "1">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+        <DefaultValues>
+            <value n="constrained" v="0" state="hidden" />
+        </DefaultValues>
+    </NodalConditionItem>
+	
+	<NodalConditionItem n                        = "HEAT_FLUX"
+	                    pn                       = "Heat source"
+						ProcessName              = "AssignScalarVariableProcess"
+						VariableName             = "HEAT_FLUX"
+						Interval                 = "Total"
+						unit_magnitude           = "Power/L^3"
+						units                    = "W/m^3"
+						App                      = "ConvectionDiffusion"
+                        help                     = "Applies an internal thermal load">
+        <TopologyFeatures>
         </TopologyFeatures>
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
