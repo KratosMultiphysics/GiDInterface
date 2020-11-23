@@ -121,7 +121,8 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict PFEMFLUID_SolStrat PFEMFLUID_Scheme PFEMFLUID_StratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict PfemFluid] ]
-
+	
+	# Body parts list
     set bodies_parts_list [list ]
     foreach body $bodies_list {
         set body_parts [dict get $body parts_list]
@@ -129,9 +130,20 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
             lappend bodies_parts_list $part
         }
     }
-
+	
+	# Constitutive laws
+	set constitutive_list [list]
+    foreach parts_un [PfemFluid::write::GetPartsUN] {
+        set parts_path [spdAux::getRoute $parts_un]
+        set xp1 "$parts_path/group/value\[@n='ConstitutiveLaw'\]"
+        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+            lappend constitutive_list [get_domnode_attribute $gNode v]
+        }
+    }
+	
     dict set solverSettingsDict bodies_list $bodies_list
     dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
+	dict set solverSettingsDict constitutive_laws_list $constitutive_list
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
 
     set materialsDict [dict create]

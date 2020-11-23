@@ -35,6 +35,11 @@
 	  return [PfemFluid::xml::ProcGetElementsValues $domNode $args]
 	  ]]>
 	</proc>
+	<proc n='GetConstitutiveLaws' args='args'>
+	  <![CDATA[
+	  return [PfemFluid::xml::ProcGetConstitutiveLaws $domNode $args]
+	  ]]>
+	</proc>
 	<proc n='SolutionTypeState' args='args'>
 	  <![CDATA[
 	  return [PfemFluid::xml::ProcSolutionTypeState $domNode $args]
