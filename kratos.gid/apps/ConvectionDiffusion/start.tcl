@@ -52,15 +52,4 @@ proc ::ConvectionDiffusion::GetAttribute {name} {
     return $value
 }
 
-proc ::ConvectionDiffusion::CustomToolbarItems { } {
-    variable dir
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConvectionDiffusion::examples::HeatedSquare] [= "Example\nSquare heat flow"]
-    }
-}
-
-proc ::ConvectionDiffusion::CustomMenus { } {
-     #ConvectionDiffusion::examples::UpdateMenus
-}
-
 ::ConvectionDiffusion::Init

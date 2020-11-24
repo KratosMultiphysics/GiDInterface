@@ -30,7 +30,7 @@ proc ::Dam::xml::MultiAppEvent {args} {
 
 
 proc Dam::xml::CustomTree { args } {
-
+    customlib::UpdateDocument
     # Add some nodal results
     set nodal_results_base [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
     $nodal_results_base setAttribute state "\[ActiveIfAnyPartState\]"
@@ -401,6 +401,24 @@ proc Dam::xml::ProcGetElementsValues {domNode args} {
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
     set values [join $names ","]
     return $values
+}
+
+proc Dam::xml::ProcActivatePartsState {domNode args} {
+    set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
+    set state hidden
+    if {$ActivateConstruction} {
+        set state normal
+    }
+    return $state
+}
+
+proc Dam::xml::ProcCheckTemperatureState {domNode args} {
+    set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
+    set state hidden
+    if {$ActivateConstruction} {
+        set state normal
+    }
+    return $state
 }
 
 proc Dam::xml::ProcNoorzaiState {domNode args} {

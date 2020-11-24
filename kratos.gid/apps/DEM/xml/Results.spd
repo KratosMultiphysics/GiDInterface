@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="DEM-Results"          pn="Results" un="DEMResults" state="normal" open="1" open_window="0" icon="piec" help="Adjust the level of detail, frequency and type of the results that must be printed on disk during the computation">
+<container n="DEM-Results"          pn="Output settings" un="DEMResults" state="normal" open="1" open_window="0" icon="piec" help="Adjust the level of detail, frequency and type of the results that must be printed on disk during the computation">
     <value n="DEM-OTimeStepType"    pn="Output Criterion"   v="Detail_priority" values="Detail_priority,Storage_priority"                   icon="black1" dict="Detail_priority,Time interval,Storage_priority,Total number of files" help="Select a printing interval or the total amount of result files to print" update_proc="spdAux::RequestRefresh"/>
     <value n="DEM-OTimeStepDetail"  pn="Time interval (s)"  v="1e-2"            help="Set a printing interval for the GiD results"          icon="black1" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Detail_priority]"/>
     <value n="DEM-OTimeStepStorage" pn="Number of files"    v="100"             help="Select the total amount of GiD result files to print" icon="black1" state="[getStateFromXPathValue {string(../value[@n='DEM-OTimeStepType']/@v)} Storage_priority]"/>
@@ -43,9 +43,7 @@
         <value n="LocalContactForce"        type="bool" values="Yes,No"     v="No"           pn="Local contact force" icon="black1" state="[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} Yes]" help="Displays the local contact forces between particles"/>
     </container>
 
-    <container n="PrintGraphs" pn="Graphs on DEM-Wall" un="DGraphs" open="1" icon="options">
-        <value n="GraphExportFreq"    v="1e-3"    pn="Graph print frequency (s)"  icon="black1" help="Graph frequency for active DEM-Walls"/>
-        <!-- <value n="Print_total_force_on_this_group"  pn="Print total force on this group"  type="bool" state="disabled" v="Yes"/>
-        <value n="Print_total_torque_on_this_group" pn="Print total torque on this group" type="bool" state="disabled" v="Yes"/> -->
+    <container n="PrintGraphs" pn="Graphs settings" un="DGraphs" open="1" icon="options">
+        <value n="GraphExportFreq"    v="1e-3"    pn="Graph print frequency (s)"  icon="black1" help="Graph frequency for active groups"/>
     </container>
 </container>

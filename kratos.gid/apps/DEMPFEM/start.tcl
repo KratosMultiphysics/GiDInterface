@@ -59,9 +59,8 @@ proc ::DEMPFEM::GetAttribute {name} {
     return $value
 }
 
-proc ::DEMPFEM::CustomToolbarItems { } {
-    variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::DEMPFEM::examples::InnerSphere] [= "Example\nInnerSphere"]
+proc ::DEMPFEM::AfterSaveModel {filespd} {
+    ::DEM::AfterSaveModel $filespd
 }
 
 ::DEMPFEM::Init

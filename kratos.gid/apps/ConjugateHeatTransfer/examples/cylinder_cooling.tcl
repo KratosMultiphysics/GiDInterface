@@ -7,9 +7,9 @@ proc ::ConjugateHeatTransfer::examples::CylinderCooling {args} {
     }
 
     DrawCylinderCoolingGeometry$::Model::SpatialDimension
-    AssignGroups$::Model::SpatialDimension
-    TreeAssignation$::Model::SpatialDimension
-    AssignMeshSizes$::Model::SpatialDimension
+    CylinderCoolingAssignGroups$::Model::SpatialDimension
+    CylinderCoolingTreeAssignation$::Model::SpatialDimension
+    CylinderCoolingAssignMeshSizes$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -68,7 +68,7 @@ proc ConjugateHeatTransfer::examples::DrawCylinderCoolingGeometry3D {args} {
 }
 
 # Groups assign
-proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
+proc ConjugateHeatTransfer::examples::CylinderCoolingAssignGroups2D {args} {
     # Create the groups for the fluid
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -104,12 +104,12 @@ proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
     GiD_EntitiesGroups assign Solid_Interface lines 6
 }
 
-proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
+proc ConjugateHeatTransfer::examples::CylinderCoolingAssignGroups3D {args} {
     # To be implemented
 }
 
 # Tree assign
-proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
+proc ConjugateHeatTransfer::examples::CylinderCoolingTreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -123,7 +123,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     ## Fluid parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.00125 CONDUCTIVITY 0.625 SPECIFIC_HEAT 1000.0]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.0 DYNAMIC_VISCOSITY 0.00125 CONDUCTIVITY 0.625 SPECIFIC_HEAT 1000.0]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     ## Thermal parts
@@ -211,12 +211,12 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     spdAux::RequestRefresh
 }
 
-proc ConjugateHeatTransfer::examples::TreeAssignation3D {args} {
+proc ConjugateHeatTransfer::examples::CylinderCoolingTreeAssignation3D {args} {
     # TODO: To be implemented
 }
 
 # Assign mesh settings and sizes
-proc ConjugateHeatTransfer::examples::AssignMeshSizes2D {args} {
+proc ConjugateHeatTransfer::examples::CylinderCoolingAssignMeshSizes2D {args} {
     # Assign centered structured triangular mesh in the solid cylinder
     GiD_Process Mescape Meshing ElemType Triangle 2 escape escape
     GiD_Process MEscape Meshing CenterStruct Assign 0.0 0.5 10 110 2 escape escape
@@ -231,6 +231,6 @@ proc ConjugateHeatTransfer::examples::AssignMeshSizes2D {args} {
     GiD_Process Mescape Meshing Structured Lines 120 6 escape escape
 }
 
-proc ConjugateHeatTransfer::examples::AssignMeshSizes3D {args} {
+proc ConjugateHeatTransfer::examples::CylinderCoolingAssignMeshSizes3D {args} {
     # To be implemented
 }

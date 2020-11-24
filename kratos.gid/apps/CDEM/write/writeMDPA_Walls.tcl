@@ -3,12 +3,11 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeModelPartData
 
     # Material
-    set wall_properties [WriteWallProperties]
+    set wall_properties [WriteRigidWallProperties]
 
     # Nodal coordinates (only for Walls <inefficient> )
-    write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroups]
+    write::writeNodalCoordinatesOnGroups [DEM::write::GetRigidWallsGroups]
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
-    write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
 
     # Nodal conditions and conditions
     DEM::write::writeConditions $wall_properties
@@ -18,7 +17,6 @@ proc DEM::write::WriteMDPAWalls { } {
 
     # CustomSubmodelParts
     WriteWallCustomSmp
-    WriteWallGraphsFlag
 }
 
 
@@ -42,36 +40,7 @@ proc CDEM::write::WriteWallCustomSmp { } {
     }
 }
 
-proc CDEM::write::WriteWallGraphsFlag { } {
-    set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/group"
-    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set groupid [$group @n]
-            write::WriteString  "Begin SubModelPart $groupid \/\/ Custom SubModelPart. Group name: $groupid"
-            write::WriteString  "Begin SubModelPartData // DEM-FEM-Wall. Group name: $groupid"
-            write::WriteString  "FORCE_INTEGRATION_GROUP 1"
-            write::WriteString  "End SubModelPartData"
-            write::WriteString  "Begin SubModelPartNodes"
-            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $groupid] [subst "%10i\n"]]
-            write::WriteString  "End SubModelPartNodes"
-            write::WriteString  "End SubModelPart"
-            write::WriteString  ""
-        }
-}
-
-proc CDEM::write::GetNodesForGraphs { } {
-    set groups [list ]
-    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
-    #set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/condition\[@n = 'Graphs'\]/group"
-    set xp1 "[spdAux::getRoute [GetAttribute graphs_un]]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
-    }
-    return $groups
-}
-
-proc DEM::write::DefineMaterialTestConditions {group_node} {
+proc DEM::write::DefineFEMExtraConditions {group_node} {
     set material_analysis [write::getValue DEMTestMaterial Active]
     if {$material_analysis == "true"} {
         set is_material_test [write::getValueByNode [$group_node selectNodes "./value\[@n='MaterialTest'\]"]]

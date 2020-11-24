@@ -62,6 +62,20 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
     set props [list Material "DEMCont-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
     spdAux::SetValuesOnBaseNode $inletNode $props
 
+    # DEM custom submodelpart
+    set custom_dem "$DEMConditions/condition\[@n='DEM-CustomSmp'\]"
+    set customNode [customlib::AddConditionGroupOnXPath $custom_dem Body]
+    $customNode setAttribute ov volume
+    set props [list ]
+    foreach {prop val} $props {
+        set propnode [$customNode selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+        } else {
+            W "Warning - Couldn't find property $prop"
+        }
+    }
+
     # cohesive
     set cohesive_spheres "$DEMConditions/condition\[@n='DEM-Cohesive'\]"
     set cohesivenode [customlib::AddConditionGroupOnXPath $cohesive_spheres "Body"]

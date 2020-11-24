@@ -15,6 +15,7 @@ proc PotentialFluid::write::Init { } {
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid" "PotentialFluid"]
     SetAttribute main_script_file "KratosPotentialFluid.py"
+    SetAttribute model_part_name "FluidModelPart"
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location json
     SetAttribute output_model_part_name "fluid_computational_model_part"
@@ -53,7 +54,8 @@ proc PotentialFluid::write::writeModelPartEvent { } {
 
 proc PotentialFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False
+    set materials_model_part_name [GetAttribute model_part_name]
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False $materials_model_part_name
 
     write::CopyFileIntoModel "python/KratosPotentialFluid.py"
     write::RenameFileInModel "KratosPotentialFluid.py" "MainKratos.py"

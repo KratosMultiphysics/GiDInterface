@@ -6,9 +6,8 @@
         </inputs>
     </solver>
 
-    <solver n="super_lu" pn="SuperLU" SolverType="Standard" Parallelism="OpenMP">
+    <solver n="EigenSolversApplication.sparse_lu" pn="SparseLU" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
-            <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>
     </solver>
 
@@ -48,6 +47,11 @@
             <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
             <parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="none,diagonal,ilu0" v="ilu0" help=""/>
             <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
+        </inputs>
+    </solver>
+
+    <solver n="ExternalSolversApplication.super_lu" pn="SuperLU" SolverType="Standard" Parallelism="OpenMP">
+        <inputs>
         </inputs>
     </solver>
 

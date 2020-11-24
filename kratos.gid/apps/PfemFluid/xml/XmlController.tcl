@@ -182,6 +182,26 @@ proc PfemFluid::xml::ProcGetElementsValues {domNode args} {
     return $values
 }
 
+proc PfemFluid::xml::ProcGetConstitutiveLaws {domNode args} {
+    set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
+    set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
+	
+    if {[llength $Claws] == 0} {
+        set names [list "None"]
+    } {
+        set names [list ]
+        foreach cl $Claws {
+		    lappend names [$cl getName]
+        }
+    }
+	
+    set values [join $names ","]
+	
+    if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
+    
+    return $values
+}
+
 proc PfemFluid::xml::GetElements {domNode args} {
     
     set nodeApp [spdAux::GetAppIdFromNode $domNode]
@@ -264,8 +284,8 @@ proc PfemFluid::xml::ProcGetBodyTypeValues {domNode args} {
         if {$domain_type_value eq "Fluids"} {
             set values "Fluid,Rigid"
         }
-        if {$domain_type_value eq "Coupled"} {
-            set values "Solid,Fluid,Rigid"
+        if {$domain_type_value eq "FSI"} {
+            set values "Fluid,Solid,Rigid,Interface"
         }
         if {$domain_type_value eq "Solids"} {
             set values "Solid,Rigid"
@@ -284,7 +304,7 @@ proc PfemFluid::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
     set filter [list Solid Pfem]
     if {$domainType eq "Solids"} {set filter "Solid"}
     if {$domainType eq "Fluids"} {set filter "Pfem"}
-    if {$domainType eq "Coupled"} {set filter "Pfem"}
+    if {$domainType eq "FSI"} {set filter "Pfem"}
     
     foreach ss $Sols {
         if {[$ss getAttribute "App"] in $filter} {
@@ -335,6 +355,12 @@ proc PfemFluid::xml::ProcPartsOverWhat {domNode args} {
         } else {
             return "line,surface"
         }
+    } elseif { $BodyType eq "Interface"} {
+        if {$::Model::SpatialDimension eq "3D"} {
+            return "surface"
+        } else {
+            return "line"
+        }
     } else {
         return "point,line,surface,volume"
     }
@@ -369,7 +395,7 @@ proc PfemFluid::xml::ProcGetRigidBodiesValues {domNode args} {
     foreach body_node [$root selectNodes $xp1] {
         foreach subnode [$body_node childNodes] {
             if { [$subnode getAttribute n] eq "BodyType" } { 
-                if { [$subnode getAttribute v] eq "Rigid" } {
+                if { [$subnode getAttribute v] eq "Rigid"  || [$subnode getAttribute v] eq "Interface"} {
                     lappend bodies [$body_node @name]
                     break
                 }                    

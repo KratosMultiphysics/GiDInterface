@@ -582,18 +582,84 @@ proc spdAux::PreChargeTree { } {
     }
 }
 
-proc spdAux::ProcGive_materials_list {domNode args} {
+
+proc spdAux::ProcEdit_database_list {domNode args} {
+    set root [customlib::GetBaseRoot]
+    set matname ""
+    set xnode "[$domNode @n]:"
+    # TODO: REMOVE THIS CHAPUZA
+    set baseframe ".gid.central.boundaryconds.gg.data.f0"
+    set things [winfo children $baseframe]
+    foreach thing $things {
+        if {[winfo class $thing] eq "TLabel"} {
+            set lab [$thing cget -text]
+            if {$lab eq $xnode} {
+                set id [string range [lindex [split $thing "."] end] 1 end]
+                set cbo ${baseframe}.e$id
+                set matname [$cbo get]
+                break
+            }
+        }
+    }
+    if {$matname ne ""} {
+        foreach thing $things {
+            set found 0
+            #set id ""
+            if {[winfo class $thing] eq "TPanedwindow"} {
+                #set id [string range [lindex [split $thing "."] end] 1 end]
+                set thing "${thing}.e"
+            }
+            if {[winfo class $thing] eq "TEntry"} {
+                #if {$id eq "" } {set id [string range [lindex [split $thing "."] end] 1 end]}
+                #set prop ${baseframe}.e$id
+                set varname [$thing cget -textvariable]
+                set propname [lindex [split [lindex [split [lindex [split $varname "::"] end] "("] end] ")"] 0]
+                #W $propname
+                set appid [spdAux::GetAppIdFromNode $domNode]
+                set mats_un [apps::getAppUniqueName $appid Materials]
+                set xp3 [spdAux::getRoute $mats_un]
+                append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $matname]
+                
+                foreach valueNode [$root selectNodes $xp3] {
+                    if {$propname eq [$valueNode getAttribute n] } {
+                        set val [$valueNode getAttribute v]
+                        set $varname $val
+                        #set found 1
+                        break
+                    }
+                }
+                #if {$found} {W "mat $matname value $val"}
+                
+            }
+        }
+    }
+    return ""
+}
+
+proc spdAux::ProcCambioMat {domNode args} {
+    set matname [get_domnode_attribute $domNode v]
+    set exclusion [list "Element" "ConstitutiveLaw" "Material"]
+    set nodes [$domNode selectNodes "../value"]
+    foreach node $nodes {
+        if {[$node @n] ni $exclusion} {
+            #W "[$node @n] [CheckPartParamValue $node $matname]"
+            $node setAttribute v [spdAux::CheckPartParamValue $node $matname]
+        }
+    }
+    RequestRefresh
+}
+
+proc spdAux::ProcGetMaterialsList { domNode args } {    
     set optional {
         { -has_container container_name "" }
         { -icon icon_name material16 }
         { -types_icon types_icon_name ""}
         { -database database_name materials }
     }
-    #W $args
     set compulsory ""
     parse_args $optional $compulsory $args
     set restList ""
-    
+
     proc database_append_list { parentNode database_name level container_name icon_name types_icon_name filters} {
         set l ""
         # We guess the keywords of the levels of the database
@@ -660,12 +726,14 @@ proc spdAux::ProcGive_materials_list {domNode args} {
         }
         return [list $primary_level $secondary_level]
     }
-    #W $database
+
     set appid [spdAux::GetAppIdFromNode $domNode]
     set mats_un [apps::getAppUniqueName $appid Materials]
     set xp3 [spdAux::getRoute $mats_un]
+
+    # set xp3 [spdAux::getRoute $mats_un]
     set parentNode [$domNode selectNodes $xp3]
-    set const_law_name [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] v]
+    set const_law_name [write::getValueByNode [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] ]
     set filters [list ]
     if {$const_law_name != ""} {
         set const_law [Model::getConstitutiveLaw $const_law_name]
@@ -683,74 +751,67 @@ proc spdAux::ProcGive_materials_list {domNode args} {
     set res_raw_list [list ]
     foreach m $resList {lappend res_raw_list [lindex $m 1]}
     set v [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'Material'\]"] v]
-    if {$v ni $res_raw_list} {[$domNode selectNodes "../value\[@n = 'Material'\]"] setAttribute v $v}
-    return [join $resList ","]
+    if {$v ni $res_raw_list} {
+        [$domNode selectNodes "../value\[@n = 'Material'\]"] setAttribute v [lindex $res_raw_list 0]
+    }
+    return [join $res_raw_list ","]
+
 }
 
-proc spdAux::ProcEdit_database_list {domNode args} {
-    set root [customlib::GetBaseRoot]
-    set matname ""
-    set xnode "[$domNode @n]:"
-    # TODO: REMOVE THIS CHAPUZA
-    set baseframe ".gid.central.boundaryconds.gg.data.f0"
-    set things [winfo children $baseframe]
-    foreach thing $things {
-        if {[winfo class $thing] eq "TLabel"} {
-            set lab [$thing cget -text]
-            if {$lab eq $xnode} {
-                set id [string range [lindex [split $thing "."] end] 1 end]
-                set cbo ${baseframe}.e$id
-                set matname [$cbo get]
-                break
-            }
-        }
+proc spdAux::ProcEditDatabaseList { domNode dict dict_units boundary_conds args } {
+    set part [$domNode parent]
+    set has_container ""
+    set database materials    
+    set title [= "Material database"]      
+    set list_name [$domNode @n]    
+    set x_path {//container[@n="materials"]}
+    set dom_materials [$domNode selectNodes $x_path]
+    if { $dom_materials == "" } {
+        error [= "xpath '%s' not found in the spd file" $x_path]
     }
-    if {$matname ne ""} {
-        foreach thing $things {
-            set found 0
-            #set id ""
-            if {[winfo class $thing] eq "TPanedwindow"} {
-                #set id [string range [lindex [split $thing "."] end] 1 end]
-                set thing "${thing}.e"
-            }
-            if {[winfo class $thing] eq "TEntry"} {
-                #if {$id eq "" } {set id [string range [lindex [split $thing "."] end] 1 end]}
-                #set prop ${baseframe}.e$id
-                set varname [$thing cget -textvariable]
-                set propname [lindex [split [lindex [split [lindex [split $varname "::"] end] "("] end] ")"] 0]
-                #W $propname
-                set appid [spdAux::GetAppIdFromNode $domNode]
-                set mats_un [apps::getAppUniqueName $appid Materials]
-                set xp3 [spdAux::getRoute $mats_un]
-                append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $matname]
-                
-                foreach valueNode [$root selectNodes $xp3] {
-                    if {$propname eq [$valueNode getAttribute n] } {
-                        set val [$valueNode getAttribute v]
-                        set $varname $val
-                        #set found 1
-                        break
-                    }
+    set primary_level material
+    if { [dict exists $dict $list_name] } {
+        set xps $x_path
+        append xps [format_xpath {/blockdata[@n=%s and @name=%s]} $primary_level [dict get $dict $list_name]]
+    } else { 
+        set xps "" 
+    }
+    # Launches the window and gets the selected material in domNodes
+    set domNodes [gid_groups_conds::edit_tree_parts_window -accepted_n $primary_level -select_only_one 1 $boundary_conds $title $x_path $xps]    
+         
+    set ret_dict [dict create]
+    set ret_dict_units [dict create]
+    if {$domNodes ne ""} {
+        foreach k [dict keys $dict] {
+            set Selected_$k [dict get $dict $k]
+            set has_unit [dict exists $dict_units $k]
+            if {$has_unit} {set Selected_unit_$k [dict get $dict_units $k]}
+    
+            if { [llength $domNodes] } {
+                set domNode [lindex $domNodes 0]
+                if { [$domNode @n] == $primary_level } {      
+                    dict set ret_dict $list_name [$domNode @name]
                 }
-                #if {$found} {W "mat $matname value $val"}
+                set Selected_$k [$domNode selectNodes "value\[@n='$k'\]/@v"]
+                if {$has_unit} {set Selected_unit_$k [$domNode selectNodes "value\[@n='$k'\]/@units"]}
+            }
+            
+            set name Selected_$k
+            if {$has_unit} {set name_unit Selected_unit_$k}
+
+            set node [$part selectNodes "value\[@n='$k'\]"]
+            if {$node ne "" && [set $name] ne ""} { 
                 
+                #dict set ret_dict $k [set $name]
+                #if {$has_unit} {dict set ret_dict_units $k [set $name_unit]}
+                gid_groups_conds::setAttributes [gid_groups_conds::nice_xpath $node] {*}[set $name] 
+                if {$has_unit} {gid_groups_conds::setAttributes [gid_groups_conds::nice_xpath $node] {*}[set $name_unit] }
+                dict set ret_dict $k [dict get [lindex [set $name] 0] v]
+                if {$has_unit} {dict set ret_dict_units $k [dict get [lindex [set $name_unit] 0] units]}
             }
         }
     }
-    return ""
-}
-
-proc spdAux::ProcCambioMat {domNode args} {
-    set matname [get_domnode_attribute $domNode v]
-    set exclusion [list "Element" "ConstitutiveLaw" "Material"]
-    set nodes [$domNode selectNodes "../value"]
-    foreach node $nodes {
-        if {[$node @n] ni $exclusion} {
-            #W "[$node @n] [CheckPartParamValue $node $matname]"
-            $node setAttribute v [spdAux::CheckPartParamValue $node $matname]
-        }
-    }
-    RequestRefresh
+    return [list $ret_dict $ret_dict_units]
 }
 
 proc spdAux::ProcOkNewCondition {domNode args} {
