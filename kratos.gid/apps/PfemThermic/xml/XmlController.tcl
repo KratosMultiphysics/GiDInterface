@@ -64,7 +64,11 @@ proc PfemThermic::xml::CustomTree { args } {
 	spdAux::SetValueOnTreeItem v No  NodalResults PRESSURE_REACTION
 	spdAux::SetValueOnTreeItem v No  NodalResults DISPLACEMENT
 	spdAux::SetValueOnTreeItem v No  NodalResults DISPLACEMENT_REACTION
-	spdAux::SetValueOnTreeItem v No  NodalResults HeatFlux2D
+	
+	set heatFlux_result_node [[$root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'HeatFlux2D'\]"]
+	if { $heatFlux_result_node ne "" } { $heatFlux_result_node delete }
+	set heatSource_result_node [[$root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'HEAT_FLUX'\]"]
+	if { $heatSource_result_node ne "" } { $heatSource_result_node delete }
 	################################################
 	
 	ConvectionDiffusion::xml::CustomTree

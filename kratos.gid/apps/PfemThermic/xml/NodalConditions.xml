@@ -121,6 +121,7 @@
 						LocalSpaceDimension      = "1"
                         SkinConditions           = "True"
 						ElementType              = "Line"
+						ov                       = "line"
                         help                     = "Applies an external thermal load"
 						function                 = "1">
         <TopologyFeatures>
@@ -131,8 +132,9 @@
         </DefaultValues>
     </NodalConditionItem>
 	
+	
 	<NodalConditionItem n                        = "HEAT_FLUX"
-	                    pn                       = "Heat source"
+	                    pn                       = "Internal heat source"
 						ProcessName              = "AssignScalarVariableProcess"
 						VariableName             = "HEAT_FLUX"
 						Interval                 = "Total"
