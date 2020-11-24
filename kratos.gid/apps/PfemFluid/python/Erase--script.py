@@ -46,7 +46,6 @@ import os
 
 # Import kratos core and applications
 import KratosMultiphysics
-import KratosMultiphysics.ExternalSolversApplication    as KratosSolvers
 import KratosMultiphysics.DelaunayMeshingApplication    as KratosPfemg
 import KratosMultiphysics.PfemFluidDynamicsApplication  as KratosPfemFluid
 

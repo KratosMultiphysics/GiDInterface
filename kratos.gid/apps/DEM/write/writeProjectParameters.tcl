@@ -69,8 +69,8 @@ proc DEM::write::getParametersDict { } {
 
     dict set strategy_parameters_dict "RemoveBallsInitiallyTouchingWalls"   [write::getValue AdvOptions RemoveParticlesInWalls]
     dict set strategy_parameters_dict "strategy"                            $dem_strategy
-    dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
 
+    dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
     dict set project_parameters_dict "RollingFrictionOption"                [write::getValue AdvOptions RollingFriction]
     dict set project_parameters_dict "GlobalDamping"                        [write::getValue AdvOptions GlobalDamping]
@@ -90,6 +90,7 @@ proc DEM::write::getParametersDict { } {
     # TODO: check for inconsistencies in DEMTIMEPARAMETERS  UN
     # dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
     dict set project_parameters_dict "NeighbourSearchFrequency"             [write::getValue DEMTimeParameters NeighbourSearchFrequency]
+    dict set project_parameters_dict "SearchTolerance"                      [write::getValue AdvOptions SearchTolerance]
     dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 

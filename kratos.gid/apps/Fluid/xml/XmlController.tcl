@@ -54,6 +54,9 @@ proc Fluid::xml::CustomTree { args } {
     
     # TODO: remove when Non newtonian is implemented for 2d
     if {$::Model::SpatialDimension eq "2D"} { Model::ForgetConstitutiveLaw HerschelBulkley }
+
+    # Hide dynamic_tau on some elements
+    spdAux::SetValueOnTreeItem state "\[HideIfElement {DVMS2D DVMS3D}\]" FLStratParams dynamic_tau
 }
 
 # Usage 
@@ -108,6 +111,11 @@ proc Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_c
             if {[GiD_Groups exists $group_name]} {GiD_Groups delete $group_name}
         }
     }
+}
+
+proc Fluid::xml::ProcHideIfElement { domNode list_elements } {
+    set element [lindex [Fluid::write::GetUsedElements] 0]
+    if {$element in $list_elements} {return hidden} {return normal}
 }
 
 Fluid::xml::Init

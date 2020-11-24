@@ -42,6 +42,8 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
     Kratos::ToolbarAddItem "Output" "output.png" [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" "stop.png" {Utilities CancelProcess} [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
+    Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]   
+    Kratos::ToolbarAddItem "SpacerApp" "" "" ""
     
     set app_items_toolbar [apps::ExecuteOnCurrentApp CustomToolbarItems]
     if {$app_items_toolbar < 1} {
@@ -117,6 +119,7 @@ proc Kratos::ChangeMenus { } {
     if {$kratos_private(DevMode) eq "dev"} {set tomode "release mode";set fromode "developer mode"}
     GiDMenu::InsertOption "Kratos" [list "Kratos data" ] [incr pos] PRE [list gid_groups_conds::open_conditions menu] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Local axes window" ] [incr pos] PRE [list gid_groups_conds::local_axes_window] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "View spd file" ] [incr pos] PRE [list spdAux::ViewDoc] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Write calculation files - No run" ] [incr pos] PRE [list Kratos::WriteCalculationFilesEvent] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Run - No write" ] [incr pos] PRE [list Kratos::ForceRun] "" "" replace =

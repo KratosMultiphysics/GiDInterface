@@ -69,19 +69,12 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     gid_groups_conds::setAttributesF {container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
+    set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Solid'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov surface
     set constLawNameStruc "LinearElasticPlaneStress2DLaw"
     set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc DENSITY 7850 YOUNG_MODULUS 206.9e9 POISSON_RATIO 0.29 THICKNESS 0.1]
-    foreach {prop val} $props {
-         set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
     GiD_Groups clone Ground Total
@@ -91,16 +84,8 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Ground//Total"]
     $structDisplacementNode setAttribute ov line
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z Not Interval Total]
-    #set props [list constrained Yes ByFunction No value 0.0]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue selector_component_Z Not Interval Total]
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Point load
     GiD_Groups clone InterfaceStructure Total
@@ -111,26 +96,12 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "InterfaceStructure//Total"]
     $LoadNode setAttribute ov line
     set props [list ByFunction No modulus 50 value_direction_X 1 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$LoadNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $LoadNode $props
 
     # Structure domain time parameters
-    set change_list [list EndTime 25.0 DeltaTime 0.05]
+    set parameters [list EndTime 25.0 DeltaTime 0.05]
     set xpath [spdAux::getRoute STTimeParameters]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Truss example script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
 }

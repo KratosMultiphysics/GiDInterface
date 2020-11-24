@@ -40,6 +40,7 @@ proc ::CDEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
+    uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
@@ -59,12 +60,8 @@ proc ::CDEM::GetAttribute {name} {
     return $value
 }
 
-proc ::CDEM::CustomToolbarItems { } {
-    variable dir
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::CDEM::examples::ContinuumDrop] [= "Example\nRocks fall"]
-    }
-    Kratos::ToolbarAddItem "Bulk grouping" [file join $dir images stone.png] [list -np- ::CDEM::xml::BulkGroup] [= "Plugin\nBulk grouping"]
+proc ::CDEM::AfterSaveModel {filespd} {
+    ::DEM::AfterSaveModel $filespd
 }
 
 ::CDEM::Init

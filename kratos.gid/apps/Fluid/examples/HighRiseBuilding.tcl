@@ -120,14 +120,7 @@ proc Fluid::examples::TreeAssignationHighRiseBuilding2D {args} {
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian Material Air]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
     ErasePreviousIntervals
@@ -141,14 +134,7 @@ proc Fluid::examples::TreeAssignationHighRiseBuilding2D {args} {
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
     set props [list value 0.0]
-    foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $outletNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Top_Wall] setAttribute ov $condtype
@@ -156,25 +142,19 @@ proc Fluid::examples::TreeAssignationHighRiseBuilding2D {args} {
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" InterfaceFluid] setAttribute ov $condtype
 
     # Time parameters
-    set time_parameters [list EndTime 40.0 DeltaTime 0.05]
-    set time_params_path [spdAux::getRoute "FLTimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list EndTime 40.0 DeltaTime 0.05]
+    set xpath [spdAux::getRoute "FLTimeParameters"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Output
-    set time_parameters [list OutputControlType time OutputDeltaTime 1.0]
+    set parameters [list OutputControlType time OutputDeltaTime 1.0]
     set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
     
     # Parallelism
-    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set time_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set xpath [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
 }

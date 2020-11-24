@@ -14,37 +14,30 @@ proc ::Structural::Init { } {
     variable app_id
 
     set app_id Structural
-    
+
     set dir [apps::getMyDir "Structural"]
     set attributes [dict create]
-    
+
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
-    
-    # Intervals 
+
+    # Intervals
     dict set attributes UseIntervals 1
     if {$::Kratos::kratos_private(DevMode) eq "dev"} {dict set attributes UseIntervals 1}
-    
+
     set kratos_name StructuralMechanicsApplication
-    
+
     LoadMyFiles
 }
 
 proc ::Structural::LoadMyFiles { } {
     variable dir
-    
+
     uplevel #0 [list source [file join $dir xml XmlController.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     uplevel #0 [list source [file join $dir postprocess formfinding.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]
-}
-
-proc ::Structural::CustomToolbarItems { } {
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::TrussCantilever] [= "Example\nTruss cantilever"]   
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]   
-    }
 }
 
 proc ::Structural::CustomMenus { } {
@@ -62,10 +55,14 @@ proc ::Structural::GetAttribute {name} {
     return $value
 }
 
-proc ::Structural::BeforeMeshGeneration { size } { 
+proc ::Structural::BeforeMeshGeneration { size } {
     foreach group [GiD_Groups list] {
         GiD_AssignData condition relation_line_geo_mesh Lines {0} [GiD_EntitiesGroups get $group lines]
     }
+}
+
+proc ::Structural::ApplicationSpecificGetCondition {condition group etype nnodes} {
+    return [Structural::write::ApplicationSpecificGetCondition $condition $group $etype $nnodes]
 }
 
 ::Structural::Init

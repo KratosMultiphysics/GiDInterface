@@ -14,7 +14,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set processes initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
     dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
     # dict set processes fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
-    dict set processes list_other_processes [list [getBodyForceProcessDict] ]
+    dict set processes list_other_processes [ConvectionDiffusion::write::getBodyForceProcessDictList]
     
     dict set projectParametersDict processes $processes
     # Output configuration
@@ -74,23 +74,27 @@ proc ConvectionDiffusion::write::writeParametersEvent { } {
 }
 
 # Body force SubModelParts and Process collection
-proc ConvectionDiffusion::write::getBodyForceProcessDict {} {
-    set root [customlib::GetBaseRoot]
+proc ConvectionDiffusion::write::getBodyForceProcessDictList {} {
+    set ret [list ]
 
-    set value [write::getValue CNVDFFBodyForce BodyForceValue]
-    set pdict [dict create]
-    dict set pdict "python_module" "assign_scalar_variable_process"
-    dict set pdict "kratos_module" "KratosMultiphysics"
-    dict set pdict "process_name" "AssignScalarVariableProcess"
-    set params [dict create]
-    set partgroup [write::getPartsSubModelPartId]
-    dict set params "model_part_name" [concat [lindex $partgroup 0]]
-    dict set params "variable_name" "HEAT_FLUX"
-    dict set params "value" $value
-    dict set params "constrained" false
-    dict set pdict "Parameters" $params
+    set model_part_name [GetAttribute model_part_name]
+    
+    foreach partgroup [write::getPartsSubModelPartId] {
+        set value [write::getValue CNVDFFBodyForce BodyForceValue]
+        set pdict [dict create]
+        dict set pdict "python_module" "assign_scalar_variable_process"
+        dict set pdict "kratos_module" "KratosMultiphysics"
+        dict set pdict "process_name" "AssignScalarVariableProcess"
+        set params [dict create]
+        dict set params "model_part_name" $model_part_name.${partgroup}
+        dict set params "variable_name" "HEAT_FLUX"
+        dict set params "value" $value
+        dict set params "constrained" false
+        dict set pdict "Parameters" $params
 
-    return $pdict
+        lappend ret $pdict
+    }
+    return $ret
 }
 
 proc ConvectionDiffusion::write::GetSolverSettingsDict {} {

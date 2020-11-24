@@ -28,7 +28,7 @@ proc DEM::write::Elements_Substitution {} {
                 if {$FEMtoDEM == "AttheCentroid"} {
                     set nodes_to_delete [list]
                     set element_ids [GiD_EntitiesGroups get $groupid elements] ;               # get ids of all elements in cgroupid
-                    array set is_external_element [DEM::write::Compute_External_Elements 3 $groupid $element_ids]
+                    #array set is_external_element [DEM::write::Compute_External_Elements 3 $groupid $element_ids]
 
                     foreach element_id $element_ids { ;                                         # loop on each of the elements by id
                         set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ;   # get the nodes of the element
@@ -55,6 +55,7 @@ proc DEM::write::Elements_Substitution {} {
                         foreach container_group [GiD_EntitiesGroups entity_groups elements $element_id] {
                             # get the list of groups to which the element with id $element_id belongs
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
+                            GiD_EntitiesGroups assign $container_group nodes $node_id
                             # assign the element with id $new_element_id to each of the groups in the loop
                         }
                     }
@@ -163,6 +164,7 @@ proc DEM::write::Elements_Substitution {} {
                         foreach container_group [GiD_EntitiesGroups entity_groups elements $element_id] {
                             # get the list of groups to which the element with id $element_id belongs
                             GiD_EntitiesGroups assign $container_group elements $new_element_id
+                            GiD_EntitiesGroups assign $container_group nodes $node_id
                             # assign the element with id $new_element_id to each of the groups in the loop
                         }
                     }
@@ -548,7 +550,7 @@ proc DEM::write::AssignGeometricalEntitiesToSkinSphere2D {} {
     set list_of_points [GiD_Geometry list point 1:end]
     set list_of_lines [GiD_Geometry list line 1:end]
     if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
-	GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
+	    GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
     }
 
     set points_to_add_to_skin_circles [list]
@@ -680,8 +682,8 @@ proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     }
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
     foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
+	set groupid [$group @n]
+	GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 1] escape
     }
 }
 

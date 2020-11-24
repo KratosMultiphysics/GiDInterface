@@ -41,7 +41,7 @@ oo::class create Parameter {
         my setHelp $h
         
         set depname ""
-        set depv ""
+        set depv [list ]
         
         set units $u
         set unitMagnitude $um
@@ -69,11 +69,16 @@ oo::class create Parameter {
         variable depv
         
         set depname $dn
-        set depv $dv
+        set depv [split $dv ","]
 
     }
     
-    method getType { } {variable type; return $type}
+    method getType { } {
+        variable type
+        set ret $type
+        if {[string index $type 0] eq "\["} {set ret [eval [string range $type 1 end-1]]}
+        return $ret
+    }
     method getDv { } {variable dv; return $dv}
     method setDv { v } {variable dv; set dv $v}
     method getValues { } {variable values; return $values}

@@ -1,12 +1,13 @@
 
 # Modify the tree: field newValue UniqueName OptionalChild
-proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
+# Example: spdAux::SetValueOnTreeItem v time Results FileLabel
+proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     set root [customlib::GetBaseRoot]
     #W "$field $value $name $it"
     set node ""
 
-    set xp [getRoute $name]
+    set xp [spdAux::getRoute $unique_name]
     if {$xp ne ""} {
         set node [$root selectNodes $xp]
         if {$it ne ""} {set node [$node find n $it]}
@@ -16,6 +17,23 @@ proc spdAux::SetValueOnTreeItem { field value name {it "" } } {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
     } {
         error "$name $it not found - Check GetFromXML.tcl file"
+    }
+}
+
+proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
+    return [spdAux::SetValuesOnBaseNode [[customlib::GetBaseRoot] selectNodes $base_path] $prop_value_pairs]
+} 
+
+proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
+    if {$base_path eq ""} {error "Empty $base_path"}
+    foreach {prop val} $prop_value_pairs {
+        set propnode [$base_path selectNodes "./value\[@n = '$prop'\]"]
+        if {$propnode ne "" } {
+            $propnode setAttribute v $val
+            catch {get_domnode_attribute $propnode dict}
+        } else {
+            W "Warning - Couldn't find property $prop"
+        }
     }
 }
 
@@ -295,6 +313,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
         switch $type {
             "inline_vector" {
                 set ndim [string index $::Model::SpatialDimension 0]
+                if {[string is double $v]} {
+                    set v [string repeat "${v}," $ndim]
+                }
                 # TODO: Add units when Compassis enables units in vectors
                 #append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' $has_units  dimensions='$ndim'  help='$help'  state='$state' />"
                 append node "<value n='$inName' pn='$pn' v='$v' fieldtype='vector' dimensions='$ndim'  help='$help'  state='$state' show_in_window='$show_in_window' />"
@@ -413,7 +434,7 @@ proc spdAux::_GetBooleanParameterString {param inName pn v state help show_in_wi
         append node " actualize_tree='1' "
     }
     append node " state='$state' show_in_window='$show_in_window'>"
-    if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
+    # if {$base ne ""} {append node [_insert_cond_param_dependencies $base $inName]}
     append node "</value>"
     return $node
 }
@@ -432,7 +453,7 @@ proc spdAux::_GetComboParameterString {param inName pn v state help show_in_wind
         append node "  actualize_tree='1'  "
     }
     append node " state='$state' help='$help' show_in_window='$show_in_window'>"
-    if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
+    # if {$base ne ""} { append node [_insert_cond_param_dependencies $base $inName] }
     append node "</value>"
     return $node
 }
@@ -455,8 +476,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
         }
     }
     set ret ""
-    foreach {name value} $dep_list {
-        set values [split $value ","]
+    foreach {name values} $dep_list {
         set ins ""
         set out ""
         foreach v $values {
@@ -505,8 +525,10 @@ proc spdAux::injectMaterials { basenode args } {
     foreach mat $materials {
         set matname [$mat getName]
         set mathelp [$mat getAttribute help]
+        set icon [$mat getAttribute icon]
+        if {$icon eq ""} {set icon material16}
         set inputs [$mat getInputs]
-        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='material16' help='Material definition'  morebutton='0'>"
+        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='$icon' help='Material definition'  morebutton='0'>"
         foreach {inName in} $inputs {
             set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]] $mat]
             append matnode $node
@@ -643,8 +665,9 @@ proc spdAux::CheckConstLawOutputState {outnode} {
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
     set parts_path [getRoute $parts_un]
     set xp1 "$parts_path/group/value\[@n='ConstitutiveLaw'\]"
+    set xp2 "$parts_path/condition/group/value\[@n='Element'\]"
     set constlawactive [list ]
-    foreach gNode [$root selectNodes $xp1] {
+    foreach gNode  [concat [$root selectNodes $xp1] [$root selectNodes $xp2]] {
         lappend constlawactive [get_domnode_attribute $gNode v]
     }
 
@@ -663,7 +686,8 @@ proc spdAux::CheckElementOutputState {outnode {parts_uns ""}} {
     foreach parts_un $parts_uns {
         set parts_path [getRoute $parts_un]
         set xp1 "$parts_path/group/value\[@n='Element'\]"
-        foreach gNode [$root selectNodes $xp1] {
+        set xp2 "$parts_path/condition/group/value\[@n='Element'\]"
+        foreach gNode [concat [$root selectNodes $xp1] [$root selectNodes $xp2]] {
             lappend elemsactive [get_domnode_attribute $gNode v]
         }
     }
@@ -680,7 +704,8 @@ proc spdAux::CheckAnyPartState {domNode {parts_uns ""}} {
     foreach parts_un $parts_uns {
         set parts_path [spdAux::getRoute $parts_un]
         if {$parts_path ne ""} {
-            lappend parts {*}[$domNode selectNodes "$parts_path/group"]
+            set parts_base [[customlib::GetBaseRoot] selectNodes $parts_path]
+            lappend parts {*}[$parts_base getElementsByTagName group]
         }
     }
     if {[llength $parts] > 0} {return true} {return false}
@@ -704,7 +729,7 @@ proc spdAux::SolStratParamState {outnode} {
         lassign [Model::GetSolStratParamDep $SolStrat $paramName] depN depV
         foreach node [[$outnode parent] childNodes] {
             if {[$node @n] eq $depN} {
-                if {[get_domnode_attribute $node v] ni [split $depV ,]} {
+                if {[get_domnode_attribute $node v] ni $depV} {
                     set ret 0
                     break
                 }
@@ -846,19 +871,18 @@ proc spdAux::injectPartsByElementType {domNode args} {
         #if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
         set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
             <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
-                    <dependencies node=\"../value\" actualize=\"1\" />
+                    <dependencies node=\"../value\[@n!='Material'\]\" actualize=\"1\" />
             </value>
             <value n=\"ConstitutiveLaw\" pn=\"Constitutive law\" v=\"\" actualize_tree=\"1\"
                     values=\"\[GetConstitutiveLaws\]\" dict=\"\[GetAllConstitutiveLaws\]\">
-                    <dependencies node=\"../value\" actualize=\"1\"/>
+                    <dependencies node=\"../value\[@n!='Material'\]\" actualize=\"1\" />
             </value>
-            <value n=\"Material\" pn=\"Material\" editable='0' help=\"Choose a material from the database\" update_proc=\"CambioMat\"
-                    values_tree='\[give_materials_list\]' v=\"Steel\" actualize_tree=\"1\" state=\"normal\">
-                    <edit_command n=\"Update material data\" pn=\"Update material data\" icon=\"refresh\" proc='edit_database_list'/>
-                    <dependencies node=\"../value\" actualize=\"1\"/>
+            <value n=\"Material\" pn=\"Material\" editable='0' help=\"Choose a material from the database\" values='\[GetMaterialsList\]' v=\"Steel\" state=\"disabled\">
+                    <edit_command n=\"Update material data\" pn=\"Update material data\" icon=\"refresh\" proc='EditDatabaseList'/>
             </value>
             <dynamicnode command=\"spdAux::injectPartInputs\" args=\"\"/>
         </condition>"
+
         $base appendXML $condition_string
         set orig [$base lastChild]
         set new [$orig cloneNode -deep]

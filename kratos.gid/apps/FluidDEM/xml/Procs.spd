@@ -51,5 +51,14 @@
                 return [DEM::xml::ProcGetStateBoundingBoxParams $domNode $args]
                 ]]>
 	</proc>
-
+	<proc n='GetDEMPartsOvWhat' args='args'>
+		<![CDATA[
+            return [DEM::xml::ProcGetDEMPartsOvWhat $domNode $args]
+            ]]>
+	</proc>
+		<proc n='HideIfElement' args='args'>
+	  <![CDATA[
+		return [Fluid::xml::ProcHideIfElement $domNode {*}$args]
+	  ]]>
+	</proc>
 </container>

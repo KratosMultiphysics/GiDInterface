@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- -*- coding: utf-8; mode: SGML -*- -->
-<Kratos_data version='7.1.0'>
+<Kratos_data version='7.1.6'>
 	<style show_menubutton_about='0' show_menubutton_search='1'></style>
 	<groups/>
 	<units></units>
@@ -9,7 +9,7 @@
 	<value n="nDim" pn="Dimension" un="nDim" v="undefined" state="disabled" values="undefined,2D,2Da,3D" dict="undefined,Undefined,2D,2D,2Da,2D axisymmetric,3D,3D"/>
 	<appLink n="ThermicLauncher" public="1" pn="Thermic" active="0" appid="ThermicLauncher" prefix="ThermicLauncher"/>
 	<appLink n="ConvectionDiffusion" public="0" pn="Convection-diffusion" active="0" appid="ConvectionDiffusion" prefix="CNVDFF"/>
-	<appLink n="Solid" public="1" pn="Solid" active="0" appid="Solid" prefix="SL"/>
+	<appLink n="Solid" public="0" pn="Solid" active="0" appid="Solid" prefix="SL"/>
 	<appLink n="Structural" public="1" pn="Structural" active="0" appid="Structural" prefix="ST"/>
 	<appLink n="FluidLauncher" public="1" pn="Fluid" active="0" appid="FluidLauncher" prefix="FLL"/>
 	<appLink n="Fluid" public="0" pn="Fluid" active="0" appid="Fluid" prefix="FL"/>
@@ -18,18 +18,20 @@
 	<appLink n="Buoyancy" public="0" pn="Buoyancy" active="0" appid="Buoyancy" prefix="Buoyancy_"/>
 	<appLink n="ConjugateHeatTransfer" public="0" pn="Conjugate heat transfer" active="0" appid="ConjugateHeatTransfer" prefix="CHT"/>
 	<appLink n="FSI" public="1" pn="FSI" active="0" appid="FSI" prefix="FSI"/>
+	<appLink n="Dam" public="1" pn="Dam" active="0" appid="Dam" prefix="Dam"/>
 	<appLink n="PfemLauncher" public="1" pn="Pfem" active="0" appid="PfemLauncher" prefix="PFEMLauncher_"/>
 	<appLink n="Pfem" public="0" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
 	<appLink n="PfemFluid" public="0" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
-	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard"/>
-	<appLink n="Stent" public="1" pn="Stent" active="0" appid="Stent" prefix="Stent"/>
+	<appLink n="PfemThermic" public="0" pn="Pfem Thermic" active="0" appid="PfemThermic" prefix="PFEMTHERMIC_"/>
+	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard" is_tool="1"/>
+	<appLink n="Stent" public="1" pn="Stent" active="0" appid="Stent" prefix="Stent" is_tool="1"/>
 	<appLink n="DEMLauncher" public="1" pn="DEM" active="0" appid="DEMLauncher" prefix="DEMLauncher"/>
 	<appLink n="DEM" public="0" pn="DEM" active="0" appid="DEM" prefix="DEM"/>
 	<appLink n="FluidDEM" public="0" pn="Fluid-DEM" active="0" appid="FluidDEM" prefix="FluidDEM"/>
 	<appLink n="MPM" public="1" pn="MPM" active="0" appid="MPM" prefix="MPM"/>
 	<appLink n="DEMPFEM" public="0" pn="DEM+PFEM" active="0" appid="DEMPFEM" prefix="DEMPFEM"/>
 	<appLink n="CDEM" public="0" pn="Cohesive DEM" active="0" appid="CDEM" prefix="CDEM"/>
-	<appLink n="Examples" public="1" pn="Examples" active="0" appid="Examples" prefix="EXA_"/>
+	<appLink n="Examples" public="1" pn="Examples" active="0" appid="Examples" prefix="EXA_" is_tool="1"/>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">
 		<value n='units_mesh' pn='Mesh units' unit_mesh_definition="1"/>
 		<value n='units_system' pn='Units system' units_system_definition="1">
@@ -169,12 +171,19 @@
 		</proc>
 		<proc n='give_materials_list' args='args'>
 			<![CDATA[
-				return [spdAux::ProcGive_materials_list $domNode {*}$args]
+				return [spdAux::ProcGetMaterialsList $domNode {*}$args]
 			]]>
 		</proc>
 		<proc n='edit_database_list' args='args'>
 			<![CDATA[
-				return [spdAux::ProcEdit_database_list $domNode {*}$args]
+			if { $dict eq "" } {
+					foreach node [[$domNode parent] selectNodes value|container/value] {
+						dict set dict [$node @n] [get_domnode_attribute $node v]
+						dict set dict_units [$node @n] [get_domnode_attribute $node units]   
+					}       
+				}    
+				spdAux::ProcEditDatabaseList $domNode $dict $dict_units $boundary_conds $args
+				#return [spdAux::ProcEdit_database_list $domNode {*}$args]
 			]]>
 		</proc>
 		<proc n='CambioMat' args='args'>
@@ -309,6 +318,23 @@
 		<proc n='GetFilesValues' args='args'>
 			<![CDATA[
 				return [spdAux::ProcGetFilesValues]
+			]]>
+		</proc>
+
+		<proc n='GetMaterialsList' args='args'>
+			<![CDATA[
+				spdAux::ProcGetMaterialsList $domNode {*}$args
+			]]>
+		</proc>
+		<proc n='EditDatabaseList' args='args'>
+			<![CDATA[
+				if { $dict eq "" } {
+					foreach node [[$domNode parent] selectNodes value|container/value] {
+						dict set dict [$node @n] [get_domnode_attribute $node v]
+						dict set dict_units [$node @n] [get_domnode_attribute $node units]   
+					}       
+				}    
+				spdAux::ProcEditDatabaseList $domNode $dict $dict_units $boundary_conds $args
 			]]>
 		</proc>
 		<dynamicnode command="spdAux::injectProcs" args=""/>

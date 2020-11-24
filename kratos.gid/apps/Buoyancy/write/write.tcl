@@ -46,7 +46,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
 }
 proc Buoyancy::write::writeCustomFilesEvent { } {
     # Materials
-    Buoyancy::write::WriteMaterialsFile False
+    Buoyancy::write::WriteMaterialsFile True
 
     # Main python script
     set orig_name "MainKratos.py"
@@ -62,7 +62,7 @@ proc Buoyancy::write::Validate {} {
 proc Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_modelpart_name True} } {
     Fluid::write::WriteMaterialsFile $write_const_law $include_modelpart_name
     set model_part_name ""
-    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name ThermalModelPart}
+    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetModelPartName]}
     write::writePropertiesJsonFile [GetAttribute parts_un] "BuoyancyMaterials.json" $write_const_law $model_part_name
 }
 
@@ -92,6 +92,10 @@ proc Buoyancy::write::writeBoussinesqSubModelPart { } {
     GiD_EntitiesGroups assign $groupid nodes [GiD_Mesh list node]
     ::write::writeGroupSubModelPart Boussinesq $groupid "Nodes"
     GiD_Groups delete $groupid
+}
+
+proc Buoyancy::write::GetModelPartName { } {
+    return ThermalModelPart
 }
 
 proc Buoyancy::write::GetAttribute {att} {

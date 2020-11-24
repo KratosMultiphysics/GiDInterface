@@ -5,7 +5,7 @@ namespace eval ::PfemLauncher {
 proc ::PfemLauncher::Init { } {
     variable available_apps
 
-    set available_apps [list Pfem PfemFluid DEMPFEM]
+    set available_apps [list PfemFluid DEMPFEM PfemThermic]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
     
@@ -14,7 +14,6 @@ proc ::PfemLauncher::Init { } {
 
 proc ::PfemLauncher::AppSelectorWindow { } {
     variable available_apps
-    set initwind $::spdAux::initwind
     
     set root [customlib::GetBaseRoot]
     set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
@@ -25,10 +24,9 @@ proc ::PfemLauncher::AppSelectorWindow { } {
     } {
         [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
 
-        set initwind .gid.win_example
-        if { [ winfo exist $initwind]} {
-            destroy $initwind
-        }
+        set initwind .gid.win_pfem_launcher
+        spdAux::DestroyWindows
+        spdAux::RegisterWindow $initwind
         toplevel $initwind
         wm withdraw $initwind
 

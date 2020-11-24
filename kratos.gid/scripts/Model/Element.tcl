@@ -402,7 +402,7 @@ proc Model::CheckElemParamState {node} {
         if {$depN ne ""} {
             set depV [$param getDepV]
             set realV [get_domnode_attribute [$node selectNodes "../value\[@n='$depN'\]"] v]
-            if {$depV ne $realV} {set ret 0}
+            if {$realV ni $depV} {set ret 0}
         }
     }
     return $ret

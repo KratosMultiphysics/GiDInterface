@@ -73,19 +73,12 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     # gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Truss']}
+    set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Truss'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov line
     set constLawNameStruc "TrussConstitutiveLaw"
     set props [list Element TrussElement$nd ConstitutiveLaw $constLawNameStruc CROSS_AREA 0.01 DENSITY 1500.0]
-    foreach {prop val} $props {
-         set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
     GiD_Groups clone XYZ Total
@@ -96,14 +89,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "XYZ//Total"]
     $structDisplacementNode setAttribute ov point
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Structural Displacement
     GiD_Groups clone XZ Total
@@ -114,14 +100,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "XZ//Total"]
     $structDisplacementNode setAttribute ov point
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Structural Displacement
     GiD_Groups clone Z Total
@@ -132,14 +111,7 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Z//Total"]
     $structDisplacementNode setAttribute ov point
     set props [list selector_component_X Not selector_component_Y Not selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Point load
     set structLoad "container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='PointLoad$nd'\]"
@@ -150,26 +122,12 @@ proc Structural::examples::TreeAssignationTrussCantilever {args} {
     $structDisplacementNode setAttribute ov point
     set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "Load//Total"]
     set props [list ByFunction No modulus 10000 value_direction_Y -1 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$LoadNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $LoadNode $props
 
     # Structure domain time parameters
     set change_list [list EndTime 25.0 DeltaTime 0.1]
     set xpath [spdAux::getRoute STTimeParameters]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Truss example script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $change_list
 
     spdAux::RequestRefresh
 }

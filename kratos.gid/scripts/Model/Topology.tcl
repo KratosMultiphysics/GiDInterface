@@ -7,9 +7,10 @@ namespace eval Model {
 # Clase Topology features
 catch {Topology destroy}
 oo::class create Topology {
-     variable geometryType
-     variable numNodes
-     variable kratosName
+    variable geometryType
+    variable numNodes
+    variable kratosName
+    variable attributes
     
     constructor {geo nod kname} {
         variable numNodes
@@ -18,6 +19,9 @@ oo::class create Topology {
         my setGeometryType $geo
         set numNodes $nod
         set kratosName $kname
+        
+        variable attributes
+        set attributes [dict create]
     }
     
     method setGeometryType {geo} {
@@ -45,6 +49,26 @@ oo::class create Topology {
         variable kratosName
         return $kratosName
     }
+    method setKratosName { new_name } {
+        variable kratosName
+        set kratosName $new_name
+    }
+
+    method setAttribute {att val} {variable attributes; dict set attributes $att $val}
+    method hasAttribute {att} {
+        variable attributes
+        return [dict exists $attributes $att]
+    }
+    method getAttribute {att} {
+        variable attributes
+        set v ""
+        if {[dict exists $attributes $att]} {
+            set v [dict get $attributes $att]
+        }
+        return $v
+    }
+    method addAttribute {key values} {variable attributes; dict set attributes $key $values}
+    method getAttributes {} {variable attributes; return $attributes}
     
 }
 
@@ -58,7 +82,14 @@ proc Model::ParseTopologyNode {parentObject topNode} {
     set krn [$topNode @KratosName]
     
     set topObj [::Model::Topology new $geo $nod $krn]
-    
+
+    set avoid [list GeometryType nodes KratosName]
+    foreach att [$topNode attributes] {
+        if {$att ni $avoid} {
+            $topObj setAttribute $att [$topNode @$att]
+        }
+    }
+        
     $parentObject addTopologyFeature $topObj
     
     return $parentObject

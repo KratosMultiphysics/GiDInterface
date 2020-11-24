@@ -31,7 +31,7 @@ proc Structural::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden STResults CutPlanes
     spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem v 1 GiDOptions EchoLevel
-    
+
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONDENSED_DOF_LIST_2D'\]"]
     if {$result_node ne "" } {$result_node delete}
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONDENSED_DOF_LIST'\]"]
@@ -39,6 +39,8 @@ proc Structural::xml::CustomTree { args } {
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
     if {$result_node ne "" } {$result_node delete}
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT_SLAVE'\]"]
+    if {$result_node ne "" } {$result_node delete}
+    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'VOLUMETRIC_STRAIN'\]"]
     if {$result_node ne "" } {$result_node delete}
 
     set xpath "[spdAux::getRoute STResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
@@ -94,7 +96,7 @@ proc Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
         set elemnames [list ]
         foreach elem $elems { lappend elemnames [$elem @v]}
         set elemnames [lsort -unique $elemnames]
-        
+
         set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
         set params [list analysis_type $solutionType]
         if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
@@ -144,7 +146,7 @@ proc Structural::xml::ProcGetElementsStructural { domNode args } {
     if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] v] eq ""} {
         get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
     }
-    
+
     #W "solStrat $sol_stratUN sch $schemeUN"
     set solStratName [::write::getValue $sol_stratUN]
     set schemeName [write::getValue $schemeUN]
@@ -154,17 +156,28 @@ proc Structural::xml::ProcGetElementsStructural { domNode args } {
     set elems [::Model::GetAvailableElements $solStratName $schemeName]
     #W "************************************************************************"
 
-    set analysis_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STAnalysisType]] v]
+    set solution_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]; # This filters between Static, Quasi-static, Dynamic, formfinding, ...
+    set analysis_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STAnalysisType]] v]; # This filters between linear and non-linear
     set params [list AnalysisType $analysis_type]
 
     set names [list ]
     set pnames [list ]
     foreach elem $elems {
         if {[$elem cumple {*}$args]} {
-            set available {*}[split [$elem getAttribute AnalysisType] {,}]
-            if {$analysis_type in $available} {
+            # Get the available analysis type for the current element
+            set available_analysis_type {*}[split [$elem getAttribute AnalysisType] {,}]
+            # Get the available solution type for the current element
+            if {[$elem hasAttribute SolutionType]} {
+                set available_solution_type {*}[split [$elem getAttribute SolutionType] {,}]
+            } else {
+                set available_solution_type [list]
+            }
+            # Filter according to analysis type and solution type
+            # Note that if the element does not define solution type, all solution types are valid
+            set number_available_solution_types [llength $available_solution_type]
+            if {$analysis_type in $available_analysis_type && ($number_available_solution_types eq 0 || $solution_type in $available_solution_type)} {
                 lappend names [$elem getName]
-                lappend pnames [$elem getName] 
+                lappend pnames [$elem getName]
                 lappend pnames [$elem getPublicName]
             }
         }
@@ -174,7 +187,11 @@ proc Structural::xml::ProcGetElementsStructural { domNode args } {
     #W "[get_domnode_attribute $domNode v] $names"
     $domNode setAttribute values $values
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
-    if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
+    if {[get_domnode_attribute $domNode v] ni $names} {
+        ::GidUtils::SetWarnLine "Warning. [get_domnode_attribute $domNode v] not available for the current settings. Changed to [lindex $names 0]."
+        $domNode setAttribute v [lindex $names 0]
+        spdAux::RequestRefresh
+    }
     #spdAux::RequestRefresh
     return $diction
 }

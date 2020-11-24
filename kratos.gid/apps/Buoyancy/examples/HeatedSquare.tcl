@@ -133,15 +133,8 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.2039 DYNAMIC_VISCOSITY 0.000587 CONDUCTIVITY 0.83052 SPECIFIC_HEAT 1004.84]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    set props [list Element QSVMS$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.2039 DYNAMIC_VISCOSITY 0.000587 CONDUCTIVITY 0.83052 SPECIFIC_HEAT 1004.84]
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
 
@@ -150,14 +143,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Pressure]
     $outletNode setAttribute ov $condtype
     set props [list value 0.0]
-    foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $outletNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" Left_Wall] setAttribute ov $condtype
@@ -171,14 +157,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond Fluid]
     $thermalnodNode setAttribute ov $fluidtype
     set props [list ByFunction Yes function_value "303.15-10*x"]
-    foreach {prop val} $props {
-         set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Temperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $thermalnodNode $props
 
     # Thermal Conditions (Boundary conditions)
     set thermalConditions [spdAux::getRoute "CNVDFFBC"]
@@ -186,45 +165,27 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Left_Wall]
     $thermalNode setAttribute ov $condtype
     set props [list value 303.15 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property ImposedTemperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $thermalNode $props
 
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Right_Wall]
     $thermalNode setAttribute ov $condtype
     set props [list value 293.15 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property ImposedTemperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $thermalNode $props
 
     # Time parameters
     set time_parameters [list EndTime 200 DeltaTime 0.5]
     set time_params_path [spdAux::getRoute "FLTimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $time_params_path $time_parameters
+    
     # Output
-    set time_parameters [list OutputControlType step OutputDeltaStep 1]
+    set parameters [list OutputControlType step OutputDeltaStep 1]
     set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
+    
     # Parallelism
-    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set time_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set params_path [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $params_path $parameters
 
     spdAux::RequestRefresh
 }

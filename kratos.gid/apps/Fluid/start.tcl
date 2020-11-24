@@ -49,16 +49,4 @@ proc ::Fluid::GetAttribute {name} {
     return $value
 }
 
-proc ::Fluid::CustomToolbarItems { } {
-    variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Fluid::examples::CylinderInFlow] [= "Example\nCylinder in air flow"]
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Fluid::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]
-    }
-}
-
-proc ::Fluid::CustomMenus { } {
-    Fluid::examples::UpdateMenus
-}
-
 ::Fluid::Init

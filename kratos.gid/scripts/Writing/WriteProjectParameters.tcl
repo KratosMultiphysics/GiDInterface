@@ -233,6 +233,9 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set processWriteCommand [$process getAttribute write_command]
+            
+            dict set processDict process_name $processName
+
             if {$processWriteCommand eq ""} {
                 set processDict [write::GetProcessHeader $group $process $condition $groupId]
 
@@ -448,8 +451,12 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     dict set resultDict file_label                 [getValueByXPath $gid_options_xpath FileLabel]
     set outputCT [getValueByXPath $gid_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
-    if {$outputCT eq "time"} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]}
-    dict set resultDict output_frequency $frequency
+    if {$outputCT eq "time"} {
+        set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]
+    } {
+        set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]
+    }
+    dict set resultDict output_interval $frequency
 
     dict set resultDict body_output [getValueByXPath $gid_options_xpath BodyOutput]
     dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
@@ -461,6 +468,7 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]
     set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnElement'\]"
     dict set resultDict gauss_point_results [GetResultsByXPathList $gid_elements_xpath]
+    dict set resultDict nodal_nonhistorical_results [list ]
 
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [GetEmptyList]
@@ -494,16 +502,16 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
     if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
-    dict set resultDict output_frequency               $frequency
+    dict set resultDict output_interval               $frequency
     dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
     dict set resultDict folder_name                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
-    dict set resultDict nodal_data_value_variables     []
-    dict set resultDict element_data_value_variables   []
-    dict set resultDict condition_data_value_variables []
+    dict set resultDict nodal_data_value_variables      [list ]
+    dict set resultDict element_data_value_variables    [list ]
+    dict set resultDict condition_data_value_variables  [list ]
     dict set resultDict gauss_point_variables_extrapolated_to_nodes   [GetResultsList $results_UN OnElement]
 
     return $resultDict
