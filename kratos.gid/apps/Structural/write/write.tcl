@@ -151,7 +151,7 @@ proc Structural::write::writeContacts { } {
         foreach slave_group [$root selectNodes $xp_slave] {
             if {$slave_group ne ""} {
                 set slave_groupid_raw [$slave_group @n]
-                set slave_group_pair_id [get_domnode_attribute [$slave_group selectNodes "./value\[@n='pair'\]"] v]
+                set slave_group_pair_id [write::getValueByNode [$slave_group selectNodes "./value\[@n='pair'\]"] ]
                 set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
                 set prev [list ]
                 if {[dict exists $ContactsDict Slaves $slave_group_pair_id]} {set prev [dict get $ContactsDict Slaves $slave_group_pair_id]}
@@ -165,7 +165,7 @@ proc Structural::write::writeContacts { } {
             if {$master_group ne ""} {
                 set master_groupid_raw [$master_group @n]
                 set master_groupid [write::GetWriteGroupName $master_groupid_raw]
-                set master_group_pair_id [get_domnode_attribute [$master_group selectNodes "./value\[@n='pair'\]"] v]
+                set master_group_pair_id [write::getValueByNode [$master_group selectNodes "./value\[@n='pair'\]"] ]
                 set prev [list ]
                 if {[dict exists $ContactsDict Masters $master_group_pair_id]} {
                     set prev [dict get $ContactsDict Masters $master_group_pair_id]
@@ -205,13 +205,14 @@ proc Structural::write::WriteMaterialsFile { } {
 proc Structural::write::GetUsedElements { {get "Objects"} } {
     set lista [list ]
     foreach gNode [Structural::write::GetPartsGroups] {
-        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
+        set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
         set e [Model::getElement $elem_name]
         if {$get eq "Name"} { set e [$e getName] }
         lappend lista $e
     }
     return $lista
 }
+
 proc Structural::write::GetPartsGroups { {get "Objects"} } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set lista [list ]
@@ -226,7 +227,7 @@ proc Structural::write::GetPartsGroups { {get "Objects"} } {
 proc Structural::write::writeLocalAxes { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
+        set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
         set e [Model::getElement $elem_name]
         if {[write::isBooleanTrue [$e getAttribute "RequiresLocalAxes"]]} {
             set group [$gNode @n]
@@ -266,25 +267,25 @@ proc Structural::write::writeHinges { } {
             set first_list [list ]
             set last_list [list ]
             if {$::Model::SpatialDimension eq "3D"} {
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementZ']"] v]]} {lappend first_list 2}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentX']"] v]]} {lappend first_list 3}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentY']"] v]]} {lappend first_list 4}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 5}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 6}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 7}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementZ']"] v]]} {lappend last_list 8}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentX']"] v]]} {lappend last_list 9}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentY']"] v]]} {lappend last_list 10}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 11}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] ]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] ]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementZ']"] ]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstMomentX']"] ]]} {lappend first_list 3}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstMomentY']"] ]]} {lappend first_list 4}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] ]]} {lappend first_list 5}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] ]]} {lappend last_list 6}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] ]]} {lappend last_list 7}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementZ']"] ]]} {lappend last_list 8}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondMomentX']"] ]]} {lappend last_list 9}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondMomentY']"] ]]} {lappend last_list 10}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] ]]} {lappend last_list 11}
             } else {
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 2}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 3}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 4}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 5}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] ]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] ]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] ]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] ]]} {lappend last_list 3}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] ]]} {lappend last_list 4}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] ]]} {lappend last_list 5}
             }
 
             # Write Left and Rigth end of each geometrical bar
@@ -403,7 +404,7 @@ proc Structural::write::GroupUsesSmallDisplacement {group used_small_disp_elemen
     set group_nodes [GiD_EntitiesGroups get $group nodes]
 
     foreach part_group_small_disp [Structural::write::GetPartsGroups] {
-        set elem_name [get_domnode_attribute [$part_group_small_disp selectNodes ".//value\[@n='Element']"] v]
+        set elem_name [write::getValueByNode [$part_group_small_disp selectNodes ".//value\[@n='Element']"] ]
         set elem [Model::getElement $elem_name]
         if {$elem in $used_small_disp_elements} {
             if {[objarray length [objarray intersection -sorted $group_nodes [GiD_EntitiesGroups get [$part_group_small_disp @n] nodes] ] ] > 0} {set ret 1; break}
