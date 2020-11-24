@@ -413,6 +413,21 @@ proc Structural::write::GroupUsesSmallDisplacement {group used_small_disp_elemen
     return $ret
 }
 
+proc Structural::write::PrepareSubGroupsAssignChildEntitiesOnParents { } {
+    # list of groups sorted by lenght. so we always treat childs first and parents last
+    set groups_list [lsort -command {apply {{a b} {expr {[string length $a] - [string length $b]}}}} [GiD_Groups list]]
+    foreach group $groups_list {
+        set parent [GiD_Groups get parent $group]
+        if {$parent ne ""} {
+            foreach elem [GiD_Groups get allowed_types $parent] {
+                if {$elem ni [list "edges" "faces"]} {
+                    GiD_EntitiesGroups assign $parent $elem [GiD_EntitiesGroups get $group $elem]
+                }
+            }
+        }
+    }
+}
+
 
 proc Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
