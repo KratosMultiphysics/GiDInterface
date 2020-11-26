@@ -115,7 +115,7 @@ proc write::writeEvent { filename } {
 
     #### MDPA Write ####
     if {$errcode eq 0} {
-        Kratos::Log "Write app MDPA $appid"
+        Kratos::Log "Write MDPA $appid"
         set errcode [writeAppMDPA $appid]
     }
     #### Project Parameters Write ####

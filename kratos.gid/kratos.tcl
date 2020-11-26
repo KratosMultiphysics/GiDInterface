@@ -142,6 +142,12 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(echo_level) 0
     # indent in mdpa files  | 0 ASCII unindented | 1 ASCII indented pretty
     set kratos_private(mdpa_format) 1
+    # Version of the kratos executable
+    set kratos_private(exec_version) "dev"
+    # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
+    set Kratos::kratos_private(allow_logs) 1
+    # git hash of the problemtype
+    set Kratos::kratos_private(problemtype_git_hash) 0    
 
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
@@ -157,10 +163,6 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(ProjectIsNew) 1
     # Variables from the problemtype definition (kratos.xml)
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
-    # Version of the kratos executable
-    set kratos_private(exec_version) "dev"
-    # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
-    set Kratos::kratos_private(allow_logs) 1
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -400,6 +402,8 @@ proc Kratos::Event_AfterMeshGeneration {fail} {
     set endtime [clock seconds]
     set ttime [expr {$endtime-$tmp_init_mesh_time}]
     Kratos::Log "Mesh end process in [Duration $ttime]"
+    set mesh_data [Kratos::GetMeshBasicData]
+    Kratos::Log "Mesh data -> [write::tcl2json $mesh_data]"
 }
 
 proc Kratos::Event_AfterRenameGroup { oldname newname } {
