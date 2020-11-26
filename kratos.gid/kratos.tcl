@@ -157,6 +157,10 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(ProjectIsNew) 1
     # Variables from the problemtype definition (kratos.xml)
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+    # Version of the kratos executable
+    set kratos_private(exec_version) "dev"
+    # Get the exec version
+    Kratos::GetExecVersion
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -500,6 +504,7 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     # Log it
     Kratos::Log "Save model $filespd"
 }
+
 
 proc Kratos::Event_ChangedLanguage  { newlan } {
     Kratos::UpdateMenus

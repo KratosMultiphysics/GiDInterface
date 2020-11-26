@@ -191,8 +191,9 @@ proc Kratos::LoadEnvironment { } {
 
 proc Kratos::LogInitialData { } {
     set initial_data [dict create]
-    dict set initial_data GiD_Version [GiD_Info gidversion]
-    dict set initial_data Problemtype_Git_Hash "68418871cff2b897f7fb9176827871b339fe5f91"
+    dict set initial_data GiD_version [GiD_Info gidversion]
+    dict set initial_data problemtype_git_hash "68418871cff2b897f7fb9176827871b339fe5f91"
+    dict set initial_data executable_version $Kratos::kratos_private(exec_version)
     
     Kratos::Log [write::tcl2json $initial_data]
 }
@@ -210,4 +211,25 @@ proc Kratos::Duration { int_time } {
         }
     }
     return [join $timeList]
+}
+
+
+proc Kratos::GetExecVersion {} {
+    catch {
+        variable kratos_private
+        set tmp_filename [GidUtils::GetTmpFilename]
+        if { $::tcl_platform(platform) == "unix"} {set command [file join $kratos_private(Path) exec Kratos runkratos]} {set command [file join $kratos_private(Path) exec Kratos runkratos.exe]}
+        set result [exec $command -c "import KratosMultiphysics as Kratos" >> $tmp_filename]
+        set fp [open $tmp_filename r]
+        set file_data [read $fp]
+        close $fp
+        file delete $tmp_filename
+        set data [split $file_data "\n"]
+        foreach line $data {
+            if {[string first "Multi-Physics" $line] > 0} {
+                set kratos_private(exec_version) [string range [string trim $line] 14 end]
+                break;
+            }
+        }
+    }
 }

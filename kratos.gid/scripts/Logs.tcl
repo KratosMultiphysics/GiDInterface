@@ -65,6 +65,7 @@ proc Kratos::FlushLog { }  {
 }
 
 proc Kratos::ViewLog {} {
+    package require gid_cross_platform
     FlushLog
     gid_cross_platform::open_by_extension [Kratos::GetLogFilePath]
 }
