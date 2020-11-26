@@ -7,7 +7,7 @@ proc Kratos::GetLogFilePath { } {
     variable kratos_private
     set gid_defaults [GiD_GetUserSettingsFilename -create_folders]
     set dir_name [file dirname $gid_defaults]
-    set file_name $kratos_private(LogFilename+)
+    set file_name $kratos_private(LogFilename)
     if {$file_name eq ""} {}
     if { $::tcl_platform(platform) == "windows" } {
         return [file join $dir_name KratosLogs $file_name]
