@@ -31,7 +31,7 @@ proc Kratos::Log {msg} {
     variable kratos_private
     
     if {[info exists kratos_private(Log)]} {
-        lappend kratos_private(Log) "*~* [clock format [clock seconds] -format {%Y-%m-%d %H:%M:%S}] | $msg"
+        lappend kratos_private(Log) "*~* [clock format [clock seconds] -format {%Z %Y-%m-%d %H:%M:%S }] | $msg"
 
         # One of the triggers is to flush if we've stored more than 5 
         if {[llength $kratos_private(Log)] > 5} {
@@ -62,6 +62,11 @@ proc Kratos::FlushLog { }  {
     }
     after 5000 {Kratos::FlushLog}
     
+}
+
+proc Kratos::ViewLog {} {
+    FlushLog
+    gid_cross_platform::open_by_extension [Kratos::GetLogFilePath]
 }
 
 #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)

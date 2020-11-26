@@ -85,6 +85,7 @@ proc write::AddConfigurationAttribute {att val} {
 proc write::writeEvent { filename } {
     update ;#else appid is empty running in batch mode with window
     set time_monitor [GetConfigurationAttribute time_monitor]
+    Kratos::Log "Write start $filename"
     customlib::UpdateDocument
     SetConfigurationAttribute dir [file dirname $filename]
     SetConfigurationAttribute model_name [file rootname [file tail $filename]]
@@ -96,7 +97,7 @@ proc write::writeEvent { filename } {
         W [= "Wrong project name. Avoid boolean and numeric names."]
         return 1
     }
-    if {$time_monitor} {set inittime [clock seconds]}
+    set inittime [clock seconds]
     
     # Set write formats depending on the user's configuration
     InitWriteFormats
@@ -109,10 +110,12 @@ proc write::writeEvent { filename } {
     spdAux::ForceTreePreload
 
     #### Validate ####
+    Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
 
     #### MDPA Write ####
     if {$errcode eq 0} {
+        Kratos::Log "Write app MDPA $appid"
         set errcode [writeAppMDPA $appid]
     }
     #### Project Parameters Write ####
@@ -120,6 +123,7 @@ proc write::writeEvent { filename } {
     set filename "ProjectParameters.json"
 
     if {$errcode eq 0} {
+        Kratos::Log "Write project parameters $appid"
         set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
     }
 
@@ -127,13 +131,16 @@ proc write::writeEvent { filename } {
     set wevent [$activeapp getWriteCustomEvent]
     set filename ""
     if {$errcode eq 0} {
+        Kratos::Log "Write custom event $appid"
         set errcode [write::singleFileEvent $filename $wevent "Custom file" 0]
     }
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
     if {$time_monitor}  {
-        set endtime [clock seconds]
-        set ttime [expr {$endtime-$inittime}]
-        W "Total time: [Duration $ttime]"
+        W "Total time: [Kratos::Duration $ttime]"
     }
+    
+    Kratos::Log "Write end $appid in [Kratos::Duration $ttime]"
     return $errcode
 }
 
@@ -471,20 +478,6 @@ proc write::WriteMPIbatFile {un} {
     GiD_File fprintf $fd %s "# Run Python using the script MainKratos.py"
     GiD_File fprintf $fd %s "mpirun --np $num_nodes \"$dir/exec/Kratos/runkratos\" MainKratos.py > \"$model_dir/$model_name.info\" 2> \"$model_dir/$model_name.err\""
     GiD_File fclose $fd
-}
-
-proc write::Duration { int_time } {
-    set timeList [list]
-    foreach div {86400 3600 60 1} mod {0 24 60 60} name {day hr min sec} {
-        set n [expr {$int_time / $div}]
-        if {$mod > 0} {set n [expr {$n % $mod}]}
-        if {$n > 1} {
-            lappend timeList "$n ${name}s"
-        } elseif {$n == 1} {
-            lappend timeList "$n $name"
-        }
-    }
-    return [join $timeList]
 }
 
 proc write::forceUpdateNode {node} {

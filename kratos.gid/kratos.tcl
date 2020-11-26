@@ -8,6 +8,8 @@ namespace eval Kratos {
 
     variable must_write_calc_data
     variable must_exist_calc_data
+
+    variable tmp_init_mesh_time
 }
 
 # Hard minimum GiD Version is 14
@@ -248,6 +250,7 @@ proc Kratos::Event_LoadModelSPD { filespd } {
 }
 
 proc Kratos::Event_EndProblemtype { } {
+    Kratos::Log "End session"
     # New event system need an unregister
     if {[GidUtils::VersionCmp "14.1.4d"] >= 0 } {
         GiD_UnRegisterEvents PROBLEMTYPE Kratos
@@ -359,8 +362,10 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
 
 proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     # Prepare things before meshing
-
-
+    variable tmp_init_mesh_time
+    set inittime [clock seconds]
+    set tmp_init_mesh_time $inittime
+    Kratos::Log "Mesh BeforeMeshGeneration start"
     GiD_Process Mescape Meshing MeshCriteria NoMesh Lines 1:end escape escape escape
     GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces 1:end escape escape escape
     GiD_Process Mescape Meshing MeshCriteria NoMesh Volumes 1:end escape escape escape
@@ -373,6 +378,9 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     }
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    Kratos::Log "Mesh BeforeMeshGeneration end in [Duration $ttime]"
     return $ret
 }
 
@@ -382,8 +390,12 @@ proc Kratos::Event_MeshProgress { total_percent partial_percents_0 partial_perce
 }
 
 proc Kratos::Event_AfterMeshGeneration {fail} {
+    variable tmp_init_mesh_time
     # Maybe the current application needs to do some extra job
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$tmp_init_mesh_time}]
+    Kratos::Log "Mesh end process in [Duration $ttime]"
 }
 
 proc Kratos::Event_AfterRenameGroup { oldname newname } {
@@ -484,6 +496,9 @@ proc Kratos::Event_SaveModelSPD { filespd } {
 
     # Let the current app implement it's Save event
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd
+
+    # Log it
+    Kratos::Log "Save model $filespd"
 }
 
 proc Kratos::Event_ChangedLanguage  { newlan } {
