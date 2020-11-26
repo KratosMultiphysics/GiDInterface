@@ -148,6 +148,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set Kratos::kratos_private(allow_logs) 1
     # git hash of the problemtype
     set Kratos::kratos_private(problemtype_git_hash) 0    
+    # Place were the logs will be placed
+    set Kratos::kratos_private(model_log_folder) ""
 
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
@@ -222,6 +224,8 @@ proc Kratos::Event_LoadModelSPD { filespd } {
     set old_doc [gid_groups_conds::open_XML_file_gzip $filespd]
     set old_root [$old_doc documentElement]
     set old_versionData [$old_root @version]
+    set version_data [dict create model_version $old_versionData ]
+    Kratos::Log "Load model -> [write::tcl2json $version_data]"
 
     # Compare the version number
     if { [package vcompare $versionPT $old_versionData] != 0 } {
@@ -252,6 +256,8 @@ proc Kratos::Event_LoadModelSPD { filespd } {
 
         # Open the tree
         spdAux::OpenTree
+
+        after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]}
     }
 }
 
@@ -262,6 +268,9 @@ proc Kratos::Event_EndProblemtype { } {
         GiD_UnRegisterEvents PROBLEMTYPE Kratos
     }
     if {[array exists ::Kratos::kratos_private]} {
+        # Close the log and moves them to the folder
+        Kratos::FlushLog 
+
         # Restore GiD variables that were modified by kratos and must be restored (maybe mesher)
         Kratos::RestoreVariables
 
@@ -506,7 +515,9 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd
 
     # Log it
+    set Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]
     Kratos::Log "Save model $filespd"
+
 }
 
 

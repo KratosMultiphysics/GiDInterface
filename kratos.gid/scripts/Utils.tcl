@@ -196,12 +196,11 @@ proc Kratos::LogInitialData { } {
     Kratos::GetProblemtypeGitTag 
 
     set initial_data [dict create]
-    dict set initial_data GiD_version [GiD_Info gidversion]
+    dict set initial_data gid_version [GiD_Info gidversion]
     dict set initial_data problemtype_git_hash $Kratos::kratos_private(problemtype_git_hash)
     dict set initial_data problemtype_version $Kratos::kratos_private(Version)
     dict set initial_data executable_version $Kratos::kratos_private(exec_version)
     dict set initial_data current_platform $::tcl_platform(platform)
-    dict set initial_data gid_version [GiD_Info gidversion]
     
     Kratos::Log [write::tcl2json $initial_data]
 }
