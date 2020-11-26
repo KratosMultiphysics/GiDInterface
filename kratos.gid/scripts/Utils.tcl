@@ -190,6 +190,10 @@ proc Kratos::LoadEnvironment { } {
 # LOGS
 
 proc Kratos::LogInitialData { } {
+    
+    # Get the exec version
+    Kratos::GetExecVersion
+    
     set initial_data [dict create]
     dict set initial_data GiD_version [GiD_Info gidversion]
     dict set initial_data problemtype_git_hash "68418871cff2b897f7fb9176827871b339fe5f91"

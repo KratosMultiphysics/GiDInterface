@@ -42,6 +42,7 @@ proc Kratos::Log {msg} {
 
 proc Kratos::FlushLog { }  {
     variable kratos_private
+    W "Hey"
     if {[info exists kratos_private(Log)]} {
         if {[llength $kratos_private(Log)] > 0} {
             set logpath [Kratos::GetLogFilePath]
@@ -60,8 +61,12 @@ proc Kratos::FlushLog { }  {
             set kratos_private(Log) [list ]
         }
     }
-    after 5000 {Kratos::FlushLog}
     
+}
+
+proc Kratos::AutoFlush {} {
+    Kratos::FlushLog
+    after 5000 {Kratos::AutoFlush}
 }
 
 proc Kratos::ViewLog {} {
@@ -73,6 +78,6 @@ proc Kratos::ViewLog {} {
 #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
 if { [GiD_Set SaveGidDefaults] } {
     Kratos::InitLog
-    Kratos::FlushLog
+    Kratos::AutoFlush
 }
 
