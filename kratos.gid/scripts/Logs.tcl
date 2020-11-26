@@ -7,7 +7,7 @@ proc Kratos::GetLogFilePath { } {
     variable kratos_private
     set gid_defaults [GiD_GetUserSettingsFilename -create_folders]
     set dir_name [file dirname $gid_defaults]
-    set file_name $kratos_private(LogFilename)
+    set file_name $kratos_private(LogFilename+)
     if {$file_name eq ""} {}
     if { $::tcl_platform(platform) == "windows" } {
         return [file join $dir_name KratosLogs $file_name]
@@ -18,6 +18,9 @@ proc Kratos::GetLogFilePath { } {
 
 proc Kratos::InitLog { } {
     variable kratos_private
+    
+    if {! $Kratos::kratos_private(allow_logs)} {return ""}
+
     set kratos_private(LogFilename) [clock format [clock seconds] -format "%Y%m%d%H%M%S"].log 
     set logpath [Kratos::GetLogFilePath]
     file mkdir [file dirname $logpath]
@@ -25,10 +28,14 @@ proc Kratos::InitLog { } {
     puts $logfile "Kratos Log Session"
     close $logfile
     set kratos_private(Log) [list ]
+    
+    Kratos::AutoFlush
 }
 
 proc Kratos::Log {msg} {
     variable kratos_private
+
+    if {! $Kratos::kratos_private(allow_logs)} {return ""}
     
     if {[info exists kratos_private(Log)]} {
         lappend kratos_private(Log) "*~* [clock format [clock seconds] -format {%Z %Y-%m-%d %H:%M:%S }] | $msg"
@@ -65,6 +72,7 @@ proc Kratos::FlushLog { }  {
 }
 
 proc Kratos::AutoFlush {} {
+    if {! $Kratos::kratos_private(allow_logs)} {return ""}
     Kratos::FlushLog
     after 5000 {Kratos::AutoFlush}
 }
@@ -78,6 +86,5 @@ proc Kratos::ViewLog {} {
 #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
 if { [GiD_Set SaveGidDefaults] } {
     Kratos::InitLog
-    Kratos::AutoFlush
 }
 

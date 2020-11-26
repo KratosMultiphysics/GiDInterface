@@ -159,6 +159,8 @@ proc Kratos::InitGlobalVariables {dir} {
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
     # Version of the kratos executable
     set kratos_private(exec_version) "dev"
+    # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
+    set Kratos::kratos_private(allow_logs) 1
 }
 
 proc Kratos::LoadCommonScripts { } {
