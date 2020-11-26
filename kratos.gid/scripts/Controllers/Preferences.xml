@@ -8,6 +8,11 @@
             <option value='0' label='Optimized'/>
             <option value='1' label='Readable'/>
         </combobox>
+        <combobox name='allow_logs' variable='allow_logs' variablemanager='Kratos::ManagePreferences' label='Store logs' help=''>
+            <option value='0' label='No'/>
+            <option value='1' label='Only local, so I will get better support from the developers.'/>
+            <option value='2' label='Share anonymous usage data. (See kratos > View current log) Coming soon :)'/>
+        </combobox>
         <combobox name='echo_level' variable='echo_level' variablemanager='Kratos::ManagePreferences' label='Echo level' help='Show more/less message'>
             <option value='0' label='0'/>
             <option value='1' label='1'/>

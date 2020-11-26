@@ -21,6 +21,9 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                 "echo_level" {
                     set ret 0
                 }
+                "allow_logs" {
+                    set ret 1
+                }
                 "mdpa_format" {
                     set ret 1
                 }
