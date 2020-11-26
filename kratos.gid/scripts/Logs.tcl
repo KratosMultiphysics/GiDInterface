@@ -42,7 +42,7 @@ proc Kratos::Log {msg} {
 
 proc Kratos::FlushLog { }  {
     variable kratos_private
-    W "Hey"
+    
     if {[info exists kratos_private(Log)]} {
         if {[llength $kratos_private(Log)] > 0} {
             set logpath [Kratos::GetLogFilePath]
