@@ -82,6 +82,7 @@ proc Kratos::RegisterGiDEvents { } {
 
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
+    CreateWidgetsFromXml::ClearCachePreferences
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
@@ -200,6 +201,10 @@ proc Kratos::LoadCommonScripts { } {
 }
 
 proc Kratos::Event_LoadModelSPD { filespd } {
+    after 1 [list Kratos::LoadModelSPD $filespd]
+}
+
+proc Kratos::LoadModelSPD { filespd } {
     variable kratos_private
 
     # Event called if a model exists, so close all the windows while tree isn't loaded
@@ -259,6 +264,7 @@ proc Kratos::Event_LoadModelSPD { filespd } {
 
         after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]}
     }
+
 }
 
 proc Kratos::Event_EndProblemtype { } {
@@ -266,6 +272,7 @@ proc Kratos::Event_EndProblemtype { } {
     # New event system need an unregister
     if {[GidUtils::VersionCmp "14.1.4d"] >= 0 } {
         GiD_UnRegisterEvents PROBLEMTYPE Kratos
+        GiD_UnRegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
     }
     if {[array exists ::Kratos::kratos_private]} {
         # Close the log and moves them to the folder

@@ -42,7 +42,6 @@ proc Kratos::ModifyPreferencesWindow { root } {
 
     if {[info exists kratos_private(Path)]} {
         set findnode [$root find "name" "general"]      
-        
         if { $findnode != "" } {
             set xml_preferences_filename [file join $kratos_private(Path) scripts Controllers Preferences.xml]
             set xml_data [GidUtils::ReadFile $xml_preferences_filename] 

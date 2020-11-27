@@ -19,17 +19,18 @@ proc Kratos::GetLogFilePath { } {
 proc Kratos::InitLog { } {
     variable kratos_private
     
-    if {! $Kratos::kratos_private(allow_logs)} {return ""}
+    if {[info exists Kratos::kratos_private(allow_logs)] && $Kratos::kratos_private(allow_logs)>0} {
 
-    set kratos_private(LogFilename) [clock format [clock seconds] -format "%Y%m%d%H%M%S"].log 
-    set logpath [Kratos::GetLogFilePath]
-    file mkdir [file dirname $logpath]
-    set logfile [open $logpath "a+"];
-    puts $logfile "Kratos Log Session"
-    close $logfile
-    set kratos_private(Log) [list ]
-    
-    Kratos::AutoFlush
+        set kratos_private(LogFilename) [clock format [clock seconds] -format "%Y%m%d%H%M%S"].log 
+        set logpath [Kratos::GetLogFilePath]
+        file mkdir [file dirname $logpath]
+        set logfile [open $logpath "a+"];
+        puts $logfile "Kratos Log Session"
+        close $logfile
+        set kratos_private(Log) [list ]
+        
+        Kratos::AutoFlush
+    }
 }
 
 proc Kratos::Log {msg} {
@@ -79,8 +80,9 @@ proc Kratos::FlushLog { }  {
 }
 
 proc Kratos::AutoFlush {} {
-    if {! $Kratos::kratos_private(allow_logs)} {return ""}
-    after 5000 {Kratos::AutoFlush}
+    if {[info exists Kratos::kratos_private(allow_logs)] && $Kratos::kratos_private(allow_logs)>0} {
+        after 5000 {Kratos::AutoFlush}
+    }
 }
 
 proc Kratos::ViewLog {} {
@@ -96,8 +98,9 @@ if { [GiD_Set SaveGidDefaults] } {
 
 proc Kratos::MoveLogsToFolder {folder {flush_log 1}} {
     
-    if {! $Kratos::kratos_private(allow_logs)} {return ""}
-    if {$flush_log} {FlushLog}
-    if {![file exists $folder]} {file mkdir $folder}
-    file copy -force [Kratos::GetLogFilePath] $folder
+    if {[info exists Kratos::kratos_private(allow_logs)] && $Kratos::kratos_private(allow_logs)>0} {
+        if {$flush_log} {FlushLog}
+        if {![file exists $folder]} {file mkdir $folder}
+        file copy -force [Kratos::GetLogFilePath] $folder
+    }
 }
