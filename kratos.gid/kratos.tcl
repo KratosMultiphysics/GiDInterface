@@ -523,7 +523,7 @@ proc Kratos::Event_SaveModelSPD { filespd } {
 
     # Log it
     set Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]
-    Kratos::Log "Save model $filespd"
+    Kratos::Log "Save model [file tail $filespd ]"
 
 }
 
