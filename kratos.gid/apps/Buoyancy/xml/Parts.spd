@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<condition n="BuoyancyParts" pn="Parts" ov="[CheckGeometry 1]" ovm="node,element" icon="reservoir16" help="Select your group" un="FLParts" update_proc="MaxGroups">
-	<value n="Element" pn="Element" v="" dict="[GetElements]" actualize="1" values="" />
-	<value n="ConstitutiveLaw" pn="Fluid type" v="Newtonian" actualize_tree="1" />
-	<value n="Material" pn="Material" state="disabled" help="Choose a material from the database" v="Air" values="[GetMaterialsList]">
-        <edit_command n="Edit materials" pn="Edit materials" icon="refresh.png" proc='EditDatabaseList'/>
-      </value>
-	<dynamicnode command="spdAux::injectPartInputs" args=""/>
-</condition>
