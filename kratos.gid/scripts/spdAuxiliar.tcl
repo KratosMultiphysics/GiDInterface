@@ -262,6 +262,7 @@ proc spdAux::insertDependencies { baseNode originUN } {
     set insertxpath [getRoute $originUN]
     set insertonnode [$root selectNodes $insertxpath]
     # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
+    $insertonnode setAttribute "actualize" 1
     $insertonnode setAttribute "actualize_tree" 1
     
     ## Aun no soy capaz de insertar y que funcione
