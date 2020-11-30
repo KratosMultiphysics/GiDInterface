@@ -143,7 +143,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
 	
     dict set solverSettingsDict bodies_list $bodies_list
     dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
-	dict set solverSettingsDict constitutive_laws_list $constitutive_list
+	#dict set solverSettingsDict constitutive_laws_list $constitutive_list
     dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
 
     set materialsDict [dict create]
