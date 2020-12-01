@@ -41,6 +41,7 @@
                 <value n="GlobalDamping"                        v="0.0"         pn="Global damping"                       icon="black1"                               help="Choose the value for the damping. Set it to 1.0 for maximum energy dissipation."/>
                 <value n="AmplifiedSearchRadius"                v="1.1"         pn="AmplifiedSearchRadius"                icon="black1" state="hidden" />
                 <!-- <value n="NeighbourSearchAcceptedGap"          v="1.0"             pn="NeighbourSearchAcceptedGap" icon="black1"/> -->
+                <value n="SearchTolerance"                      v="0.001"       pn="Search tolerance"                     icon="black1"                               help="Minimum tolerance to avoid initial overlaps"/>
         </container>
         <container     n="TestMaterial"                 un="DEMTestMaterial"    pn="Material Analysis"    help="Testing specimens under certain pressure conditions" icon="black1" open_window="0">
                 <value n="Active"                       v="false" type="bool"   pn="Activate"             values="true,false" icon="black1"/>

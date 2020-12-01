@@ -877,7 +877,7 @@ proc spdAux::ProcConditionParameterState {domNode args} {
             set parent_dependency_node [$domNode selectNodes "../value\[@n='$depN'\]"]
             set current_parent_dep_state [$parent_dependency_node getAttribute cal_state ""]
             if {$current_parent_dep_state eq ""} {
-                set current_parent_dep_state [get_domnode_attribute $current_parent_dep_state state]
+                set current_parent_dep_state [get_domnode_attribute $parent_dependency_node state]
             }
             set realV [get_domnode_attribute $parent_dependency_node v]
             if {$realV ni $depV || $current_parent_dep_state eq "hidden"} {set ret hidden}
