@@ -45,10 +45,6 @@ proc ::FSI::LoadMyFiles { } {
     uplevel #0 [list source [file join $FSI::dir examples examples.tcl]]
 }
 
-proc ::FSI::CustomMenus { } {
-    FSI::examples::UpdateMenus
-}
-
 proc ::FSI::GetAttribute {name} {
     variable attributes
     set value ""
