@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-  <container n="DEM" pn="DEM" icon="units" prefix="DEM" tree_state="open" open_window="0">
+  <container n="CDEM" pn="CDEM" icon="units" prefix="DEM" tree_state="open" open_window="0">
     <include n="StageInfo"        active="1" path="apps/DEM/xml/StageInfo.spd"/>
     <include n="PartsCont"        active="1" path="apps/CDEM/xml/PartsCont.spd"   un="DEMParts"/>
     <include n="Conditions"       active="1" path="apps/DEM/xml/Conditions.spd"/>

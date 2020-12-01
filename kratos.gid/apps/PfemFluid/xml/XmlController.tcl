@@ -182,6 +182,26 @@ proc PfemFluid::xml::ProcGetElementsValues {domNode args} {
     return $values
 }
 
+proc PfemFluid::xml::ProcGetConstitutiveLaws {domNode args} {
+    set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
+    set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
+	
+    if {[llength $Claws] == 0} {
+        set names [list "None"]
+    } {
+        set names [list ]
+        foreach cl $Claws {
+		    lappend names [$cl getName]
+        }
+    }
+	
+    set values [join $names ","]
+	
+    if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
+    
+    return $values
+}
+
 proc PfemFluid::xml::GetElements {domNode args} {
     
     set nodeApp [spdAux::GetAppIdFromNode $domNode]

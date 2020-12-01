@@ -17,6 +17,8 @@ namespace eval spdAux {
 
     variable must_open_init_window
     variable must_open_dim_window
+
+    variable list_of_windows
 }
 
 proc spdAux::Init { } {
@@ -29,16 +31,19 @@ proc spdAux::Init { } {
     variable GroupsEdited
     variable must_open_init_window
     variable must_open_dim_window
+    variable list_of_windows
     
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
     set initwind ""
-    set  currentexternalfile ""
+    set currentexternalfile ""
     set refreshTreeTurn 0
     set TreeVisibility 0
     set GroupsEdited [dict create]
     set must_open_init_window 1
     set must_open_dim_window 1
+    
+    set list_of_windows [list ]
 }
 
 proc spdAux::StartAsNewProject { } {
@@ -116,6 +121,8 @@ proc spdAux::processAppIncludes { root } {
         if {[$elem hasAttribute "public"]} {set public [$elem getAttribute "public"]}
         set app [apps::NewApp $appid $pn $prefix]
         $app setPublic $public
+        if {[$elem hasAttribute "is_tool"] } {$app setIsTool [$elem getAttribute "is_tool"]}
+
         if {$active} {
             set dir $::Kratos::kratos_private(Path)
             set f [file join $dir apps $appid xml Main.spd]
@@ -167,14 +174,17 @@ proc spdAux::getImagePathDim { dim } {
     set imagepath [file nativename [file join $::Model::dir images "$dim.png"] ]
     return $imagepath
 }
-proc spdAux::DestroyWindow {} {
+proc spdAux::DestroyWindows {} {
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }
-    variable initwind
-    if {[winfo exists $initwind]} {
-        destroy $initwind    
+    variable list_of_windows
+    foreach window $list_of_windows {
+        if {[winfo exists $window]} {
+            destroy $window    
+        }
     }
+    set list_of_windows [list ]
 }
 
 # Routes
@@ -252,6 +262,7 @@ proc spdAux::insertDependencies { baseNode originUN } {
     set insertxpath [getRoute $originUN]
     set insertonnode [$root selectNodes $insertxpath]
     # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
+    $insertonnode setAttribute "actualize" 1
     $insertonnode setAttribute "actualize_tree" 1
     
     ## Aun no soy capaz de insertar y que funcione
@@ -437,5 +448,9 @@ proc spdAux::UpdateFileField { fileid domNode} {
     }
 }
 
+proc spdAux::RegisterWindow {window_name} {
+    variable list_of_windows
+    lappend list_of_windows $window_name
+}
 
 spdAux::Init

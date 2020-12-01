@@ -3,10 +3,10 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeModelPartData
 
     # Material
-    set wall_properties [WriteWallProperties]
+    set wall_properties [WriteRigidWallProperties]
 
     # Nodal coordinates (only for Walls <inefficient> )
-    write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroups]
+    write::writeNodalCoordinatesOnGroups [DEM::write::GetRigidWallsGroups]
     write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
 
     # Nodal conditions and conditions

@@ -25,10 +25,9 @@ proc ::ThermicLauncher::AppSelectorWindow { } {
     } {
         [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
 
-        set initwind .gid.win_example
-        if { [ winfo exist $initwind]} {
-            destroy $initwind
-        }
+        set initwind .gid.win_thermic_launcher
+        spdAux::DestroyWindows
+        spdAux::RegisterWindow $initwind
         toplevel $initwind
         wm withdraw $initwind
 

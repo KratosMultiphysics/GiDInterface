@@ -40,14 +40,6 @@ proc ::Structural::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
 
-proc ::Structural::CustomToolbarItems { } {
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::TrussCantilever] [= "Example\nTruss cantilever"]
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]
-    }
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::IncompressibleCookMembrane] [= "Example\nIncompressible Cook membrane"]
-}
-
 proc ::Structural::CustomMenus { } {
     Structural::examples::UpdateMenus
 
