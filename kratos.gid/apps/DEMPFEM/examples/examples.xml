@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Groups>
-    <Group id="DEM">
-        <Example id="DEMPFEMInnerSphere3D" app="DEMPFEM" logo="InnerSphere.png" name="Inner Spheres" dim="3D" cmd="::DEMPFEM::examples::InnerSphere"/>
-    </Group>
-    <Group id="PFEM" name="PFEM examples">
-        <Example id="DEMPFEMInnerSphere3D" app="DEMPFEM" logo="InnerSphere.png" name="Inner Spheres" dim="3D" cmd="::DEMPFEM::examples::InnerSphere"/>
-    </Group>
-</Groups>

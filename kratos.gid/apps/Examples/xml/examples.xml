@@ -12,7 +12,6 @@
     <!-- DEM -->
     <link path="apps/DEM/examples/examples.xml"/>
     <link path="apps/CDEM/examples/examples.xml"/>
-    <link path="apps/DEMPFEM/examples/examples.xml"/>
     <link path="apps/FluidDEM/examples/examples.xml"/>
     <link path="apps/Dam/examples/examples.xml"/>
     <!-- More -->
