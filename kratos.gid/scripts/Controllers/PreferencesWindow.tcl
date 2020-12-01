@@ -11,6 +11,7 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
         }
         "SetValue" {
             set ::Kratos::kratos_private($name) $value
+            if {$name eq "allow_logs"} {Kratos::InitLog}
         }
         "GetDefaultValue" {
             # same as GetValue
@@ -20,6 +21,9 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                 }
                 "echo_level" {
                     set ret 0
+                }
+                "allow_logs" {
+                    set ret 1
                 }
                 "mdpa_format" {
                     set ret 1
@@ -38,7 +42,6 @@ proc Kratos::ModifyPreferencesWindow { root } {
 
     if {[info exists kratos_private(Path)]} {
         set findnode [$root find "name" "general"]      
-        
         if { $findnode != "" } {
             set xml_preferences_filename [file join $kratos_private(Path) scripts Controllers Preferences.xml]
             set xml_data [GidUtils::ReadFile $xml_preferences_filename] 

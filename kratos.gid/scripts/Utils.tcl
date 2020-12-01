@@ -190,9 +190,81 @@ proc Kratos::LoadEnvironment { } {
 # LOGS
 
 proc Kratos::LogInitialData { } {
+    
+    # Get the exec version
+    Kratos::GetExecVersion
+    Kratos::GetProblemtypeGitTag 
+
     set initial_data [dict create]
-    dict set initial_data GiD_Version [GiD_Info gidversion]
-    dict set initial_data Problemtype_Git_Hash "68418871cff2b897f7fb9176827871b339fe5f91"
+    dict set initial_data gid_version [GiD_Info gidversion]
+    dict set initial_data problemtype_git_hash $Kratos::kratos_private(problemtype_git_hash)
+    dict set initial_data problemtype_version $Kratos::kratos_private(Version)
+    dict set initial_data executable_version $Kratos::kratos_private(exec_version)
+    dict set initial_data current_platform $::tcl_platform(platform)
     
     Kratos::Log [write::tcl2json $initial_data]
+}
+
+
+proc Kratos::Duration { int_time } {
+    if {$int_time == 0} {return "0 sec"}
+    set timeList [list]
+    foreach div {86400 3600 60 1} mod {0 24 60 60} name {day hr min sec} {
+        set n [expr {$int_time / $div}]
+        if {$mod > 0} {set n [expr {$n % $mod}]}
+        if {$n > 1} {
+            lappend timeList "$n ${name}s"
+        } elseif {$n == 1} {
+            lappend timeList "$n $name"
+        }
+    }
+    return [join $timeList]
+}
+
+
+proc Kratos::GetExecVersion {} {
+    catch {
+        variable kratos_private
+        set tmp_filename [GidUtils::GetTmpFilename]
+        if { $::tcl_platform(platform) == "unix"} {set command [file join $kratos_private(Path) exec Kratos runkratos]} {set command [file join $kratos_private(Path) exec Kratos runkratos.exe]}
+        set result [exec $command -c "import KratosMultiphysics as Kratos" >> $tmp_filename]
+        set fp [open $tmp_filename r]
+        set file_data [read $fp]
+        close $fp
+        file delete $tmp_filename
+        set data [split $file_data "\n"]
+        foreach line $data {
+            if {[string first "Multi-Physics" $line] > 0} {
+                set kratos_private(exec_version) [string range [string trim $line] 14 end]
+                break;
+            }
+        }
+    }
+}
+proc Kratos::GetProblemtypeGitTag {} {
+    catch {
+        variable kratos_private
+        set tmp_filename [GidUtils::GetTmpFilename]
+        set result [exec git -C $kratos_private(Path) log --format="%H" -n 1 >> $tmp_filename]
+        set fp [open $tmp_filename r]
+        set file_data [read $fp]
+        close $fp
+        file delete $tmp_filename
+        set data [split $file_data "\n"]
+        set kratos_private(problemtype_git_hash) [string trim [string trim [lindex $data 0]] "\""]
+    }
+}
+
+proc Kratos::GetMeshBasicData { } {
+    set result [dict create]
+    foreach element_type [GidUtils::GetElementTypes all] {
+        set ne [GiD_Info Mesh NumElements $element_type]       
+        if { $ne } {
+            dict set result $element_type $ne
+        }
+    }
+    
+    dict set result nodes [GiD_Info Mesh NumNodes] 
+    dict set result is_quadratic [expr [GiD_Info Project Quadratic] && ![GiD_Cartesian get iscartesian] ]
+    return $result   
 }
