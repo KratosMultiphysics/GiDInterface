@@ -15,7 +15,6 @@
     <link path="apps/FluidDEM/examples/examples.xml"/>
     <link path="apps/Dam/examples/examples.xml"/>
     <!-- More -->
-    <link path="apps/PotentialFluid/examples/examples.xml"/>
     <link path="apps/EmbeddedFluid/examples/examples.xml"/>
     <link path="apps/MPM/examples/examples.xml"/>
 </examples>

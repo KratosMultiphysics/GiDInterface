@@ -235,7 +235,8 @@ proc ::FluidDEM::write::getParametersDict { } {
     set element_name {*}[FluidDEM::write::GetCurrentFluidElementName]
     dict set project_parameters_dict fluid_parameters solver_settings formulation element_type $element_name
     if { $element_name eq "qsvmsDEM" } {
-        dict set project_parameters_dict fluid_parameters solver_settings solver_type "MonolithicDEM"
+        dict set project_parameters_dict fluid_parameters solver_settings solver_type "Monolithic"
+        dict unset project_parameters_dict fluid_parameters solver_settings time_scheme
     }
 
     # set FluidDEM::write::general_project_parameters [getParametersDict]

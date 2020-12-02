@@ -10,7 +10,6 @@ proc CDEM::xml::Init { } {
     Model::ForgetElements
     Model::ForgetMaterials
     Model::ForgetConstitutiveLaws
-    Model::ForgetElement SphericPartDEMElement3D
     Model::getElements ElementsC.xml
     Model::ForgetConditions
     Model::getConditions Conditions.xml
@@ -50,6 +49,13 @@ proc CDEM::xml::ProcGetElements { domNode args } {
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
 
     return $diction
+}
+
+proc CDEM::xml::MultiAppEvent {args} {
+    if {$args eq "init"} {
+        spdAux::parseRoutes
+        spdAux::ConvertAllUniqueNames DEM ${::CDEM::prefix}
+    }
 }
 
 CDEM::xml::Init
