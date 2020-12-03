@@ -28,6 +28,7 @@ proc PfemThermic::xml::CustomTree { args } {
 	foreach node [$root getElementsByTagName value]     { $node setAttribute icon data }
 	foreach node [$root getElementsByTagName container] { if {[$node hasAttribute solstratname]} {$node setAttribute icon folder} }
 	
+	foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMTHERMIC_FreeSurfaceFlux]"]                                                 { $node setAttribute icon select }
 	foreach node [[$root parent] selectNodes "[spdAux::getRoute Intervals]/blockdata"]                                                         { $node setAttribute icon select }
 	foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ]                                              { $node setAttribute icon select }
     foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ]          { $node setAttribute icon select }
