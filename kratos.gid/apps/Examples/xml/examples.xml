@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- -*- coding: utf-8;-*- -->
 <examples version="1.0">
-    <!-- Main -->
+    <!-- Fluid -->
     <link path="apps/Fluid/examples/examples.xml"/>
-    <link path="apps/Structural/examples/examples.xml"/>
     <link path="apps/FSI/examples/examples.xml"/>
+    <link path="apps/PotentialFluid/examples/examples.xml"/>
+    <link path="apps/EmbeddedFluid/examples/examples.xml"/>
     <!-- Thermic -->
     <link path="apps/Buoyancy/examples/examples.xml"/>
     <link path="apps/ConjugateHeatTransfer/examples/examples.xml"/>
@@ -12,10 +13,8 @@
     <!-- DEM -->
     <link path="apps/DEM/examples/examples.xml"/>
     <link path="apps/CDEM/examples/examples.xml"/>
-    <link path="apps/FluidDEM/examples/examples.xml"/>
-    <link path="apps/Dam/examples/examples.xml"/>
     <!-- More -->
-    <link path="apps/PotentialFluid/examples/examples.xml"/>
-    <link path="apps/EmbeddedFluid/examples/examples.xml"/>
+    <link path="apps/Dam/examples/examples.xml"/>
     <link path="apps/MPM/examples/examples.xml"/>
+    <link path="apps/Structural/examples/examples.xml"/>
 </examples>
