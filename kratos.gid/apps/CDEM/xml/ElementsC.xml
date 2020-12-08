@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
-  <!--solid elements-->
   <!--small displacements-->
   <ElementItem n="SphericPartDEMElement3D" pn="Spheric Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="DEM" help="">
     <!--here we could add a list of all of the possible geometries-->
