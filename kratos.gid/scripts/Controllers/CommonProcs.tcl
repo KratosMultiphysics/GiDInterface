@@ -79,10 +79,10 @@ proc spdAux::ProcGetElementsDict { domNode args } {
 proc spdAux::ProcGetSolutionStrategies {domNode args} {
     set names [list ]
     set pnames [list ]
-    #W $args
-    set Sols [::Model::GetSolutionStrategies {*}$args]
-    #W $Sols
-    foreach ss $Sols {
+    # W $args
+    set sols [::Model::GetSolutionStrategies {*}$args]
+    # W $Sols
+    foreach ss $sols {
         lappend names [$ss getName]
         lappend pnames [$ss getName]
         lappend pnames [$ss getPublicName]
@@ -90,7 +90,7 @@ proc spdAux::ProcGetSolutionStrategies {domNode args} {
     
     $domNode setAttribute values [join $names ","]
     set dv [lindex $names 0]
-    #W "dv $dv"
+    # W "dv $dv"
     if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
     if {[$domNode getAttribute v] ni $names} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
     
@@ -99,7 +99,7 @@ proc spdAux::ProcGetSolutionStrategies {domNode args} {
 
 proc spdAux::ProcGetSchemes {domNode args} {
     set nodeApp [GetAppIdFromNode $domNode]
-    #W $nodeApp
+    # W $nodeApp
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
     set sol_stat_path [spdAux::getRoute $sol_stratUN]
     
@@ -109,6 +109,7 @@ proc spdAux::ProcGetSchemes {domNode args} {
         get_domnode_attribute [$domNode selectNodes $sol_stat_path] values
         #}
     set solStratName [::write::getValue $sol_stratUN]
+    if {$solStratName eq "" } {error "No solution strategy"}
     #W "Unique name: $sol_stratUN - Nombre $solStratName"
     set schemes [::Model::GetAvailableSchemes $solStratName {*}$args]
     

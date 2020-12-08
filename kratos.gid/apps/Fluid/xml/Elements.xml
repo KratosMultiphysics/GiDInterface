@@ -46,7 +46,7 @@
     </outputs>
   </ElementItem>
 
-    <ElementItem n="QSVMS2D" pn="Quasi-static VMS" ImplementedInFile="qs_vms.cpp" ImplementedInApplication="FluidDynamicsApplication"
+    <ElementItem n="QSVMS2D" pn="Quasi-static VMS" ImplementedInFile="qs_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="qsvms"
         MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a quasi-static Variational MultiScale (VMS) monolithic element">
         <!--here we could add a list of all of the possible geometries-->
@@ -73,7 +73,7 @@
         </outputs>
     </ElementItem>
 
-    <ElementItem n="QSVMS3D" pn="Quasi-static VMS" ImplementedInFile="qs_vms.cpp" ImplementedInApplication="FluidDynamicsApplication"
+    <ElementItem n="QSVMS3D" pn="Quasi-static VMS" ImplementedInFile="qs_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="qsvms"
         MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a quasi-static Variational MultiScale (VMS) monolithic element">
         <!--here we could add a list of all of the possible geometries-->
@@ -100,7 +100,7 @@
         </outputs>
     </ElementItem>
 
-    <ElementItem n="DVMS2D" pn="Dynamic VMS" ImplementedInFile="d_vms.cpp" ImplementedInApplication="FluidDynamicsApplication"
+    <ElementItem n="DVMS2D" pn="Dynamic VMS" ImplementedInFile="d_vms.cpp" ImplementedInApplication="FluidDynamicsApplication"  FormulationElementType="dvms"
         MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a dynamic Variational MultiScale (VMS) monolithic element">
         <!--here we could add a list of all of the possible geometries-->
@@ -127,7 +127,7 @@
         </outputs>
     </ElementItem>
 
-    <ElementItem n="DVMS3D" pn="Dynamic VMS" ImplementedInFile="d_vms.cpp" ImplementedInApplication="FluidDynamicsApplication"
+    <ElementItem n="DVMS3D" pn="Dynamic VMS" ImplementedInFile="d_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="dvms"
         MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a dynamic Variational MultiScale (VMS) monolithic element">
         <!--here we could add a list of all of the possible geometries-->
@@ -154,7 +154,7 @@
         </outputs>
     </ElementItem>
 
-    <ElementItem n="FIC2D" pn="FIC" ImplementedInFile="fic.cpp" ImplementedInApplication="FluidDynamicsApplication"
+    <ElementItem n="FIC2D" pn="FIC" ImplementedInFile="fic.cpp" ImplementedInApplication="FluidDynamicsApplication"  FormulationElementType="fic"
         MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a Finite Increment Calculus (FIC) stabilization monolithic element">
         <!--here we could add a list of all of the possible geometries-->
@@ -181,7 +181,7 @@
         </outputs>
     </ElementItem>
 
-    <ElementItem n="FIC3D" pn="FIC" ImplementedInFile="fic.cpp" ImplementedInApplication="FluidDynamicsApplication"
+    <ElementItem n="FIC3D" pn="FIC" ImplementedInFile="fic.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="fic"
         MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a Finite Increment Calculus (FIC) stabilization monolithic element">
         <!--here we could add a list of all of the possible geometries-->
