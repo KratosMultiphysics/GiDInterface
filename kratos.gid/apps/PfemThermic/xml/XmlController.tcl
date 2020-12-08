@@ -74,7 +74,7 @@ proc PfemThermic::xml::CustomTree { args } {
 	
 	ConvectionDiffusion::xml::CustomTree
 	
-	spdAux::SetValueOnTreeItem v      non_linear CNVDFFAnalysisType
+	spdAux::SetValueOnTreeItem v      linear     CNVDFFAnalysisType
 	spdAux::SetValueOnTreeItem values transient  CNVDFFSolStrat
 	spdAux::SetValueOnTreeItem state  disabled   CNVDFFSolStrat
 	spdAux::SetValueOnTreeItem v      No         CNVDFFStratParams line_search
