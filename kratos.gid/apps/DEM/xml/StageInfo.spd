@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="Preferences" pn="Model information" un="DEMPreferences" icon="solution" state="normal" open_window="0">
-    <value n="SolStratCombo" pn="Solution strategy" un="DEMSolStrat" v="" icon="black1" values="" dict="[GetSolutionStrategies]" actualize_tree="1"/>
-    <!-- <value n="Scheme" pn="Translational scheme" un="DEMScheme" v="" values="" dict="[GetSchemes]"  actualize_tree="1"/> -->
+    <value n="SolStratCombo" pn="Solution strategy" un="DEMSolStrat" v="" icon="black1" values="" dict="[GetSolutionStrategies App DEM]" actualize_tree="1"/>
     <value n="DEMTranslationalScheme" pn="Translational scheme" un="DEMTranslationalScheme" v="Symplectic_Euler" icon="black1" help="Select translational integration scheme" values="" dict="[GetSchemes type Translational]"  actualize_tree="1"/>
     <value n="DEMRotationalScheme" pn="Rotational scheme" un="DEMRotationalScheme" v="Direct_Integration" icon="black1" help="Select rotational integration scheme" values="" dict="[GetSchemes type Rotational]"  actualize_tree="1"/>
 </container>

@@ -178,8 +178,10 @@ proc Fluid::write::getSolverSettingsDict { } {
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
-    set currentStrategyId [write::getValue FLSolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
+    set currentStrategyId [write::getValue FLSolStrat "" force]
+    set strategy [::Model::GetSolutionStrategy $currentStrategyId]
+    set strategy_write_name [$strategy getAttribute "ImplementedInPythonFile"]
+    set strategy_type [$strategy getAttribute "Type"]
     dict set solverSettingsDict solver_type $strategy_write_name
 
     # model import settings
@@ -207,7 +209,7 @@ proc Fluid::write::getSolverSettingsDict { } {
     dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
 
     # Time scheme settings
-    if {$currentStrategyId eq "Monolithic"} {
+    if {$strategy_type eq "monolithic"} {
         dict set solverSettingsDict time_scheme [write::getValue FLScheme]
     }
 
@@ -225,23 +227,14 @@ proc Fluid::write::getSolverSettingsDict { } {
     dict set solverSettingsDict time_stepping $timeSteppingDict
 
     # For monolithic schemes, set the formulation settings
-    if {$currentStrategyId eq "Monolithic"} {
+    if {$strategy_type eq "monolithic"} {
         # Create formulation dictionary
         set formulationSettingsDict [dict create]
 
         # Set formulation dictionary element type
         set elements [Fluid::write::GetUsedElements]
         if {[llength $elements] ne 1} {error "You must select 1 element"} {set element_name [lindex $elements 0]}
-        if {$element_name eq "QSVMS2D" || $element_name eq "QSVMS3D"} {
-            set element_type "qsvms"
-        } elseif {$element_name eq "DVMS2D" || $element_name eq "DVMS3D"} {
-            set element_type "dvms"
-        } elseif {$element_name eq "FIC2D" || $element_name eq "FIC3D"} {
-            set element_type "fic"
-        } else {
-            set err [concat "Wrong monolithic element type: " $element_name]
-            error $err
-        }
+        set element_type [Fluid::write::GetMonolithicElementTypeFromElementName $element_name]
         dict set formulationSettingsDict element_type $element_type
 
         # Set OSS and remove oss_switch from the original dictionary
@@ -252,7 +245,7 @@ proc Fluid::write::getSolverSettingsDict { } {
         }
 
         # Set dynamic tau and remove dynamic_tau from the original dictionary
-        if {$element_name eq "QSVMS2D" || $element_name eq "QSVMS3D"} {
+        if {$element_type eq "qsvms"} {
             dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
             dict unset solverSettingsDict dynamic_tau
             # Include the formulation settings in the solver settings dict
@@ -261,4 +254,11 @@ proc Fluid::write::getSolverSettingsDict { } {
     }
 
     return $solverSettingsDict
+}
+
+proc Fluid::write::GetMonolithicElementTypeFromElementName {element_name} {
+    set element [Model::getElement $element_name]
+    if {![$element hasAttribute FormulationElementType]} {error "Your monolithic element $element_name need to define the FormulationElementType field"}
+    set formulation_element_type [$element getAttribute FormulationElementType]
+    return {*}$formulation_element_type
 }
