@@ -37,7 +37,7 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
             if {$aux_cond ne ""} {set cond $aux_cond}
             set kname [$cond getTopologyKratosName $etype $nnodes]
             if {$kname ne ""} {
-                if {$nnodes > 1} {
+                if {$nnodes >= 1} {
                     lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
                     dict set dictGroupsIterators $groupid [list $initial $final]
                 }
