@@ -415,7 +415,7 @@
   </ConditionItem>
 
    <!---  Conditions: NORMAL PRESSURE LOADS -->
-    <ConditionItem n="LinePressure2D" pn="Normal Load" ImplementedInFile="apply_scalar_on_conditions_processs"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical"
+    <!-- <ConditionItem n="LinePressure2D" pn="Normal Load" ImplementedInFile="apply_scalar_on_conditions_processs"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyLoadScalarTableProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
@@ -446,7 +446,7 @@
     </inputs>
     <outputs>
     </outputs>
-  </ConditionItem>
+  </ConditionItem> -->
 
 
    <!---  Conditions: HYDROSTATIC PRESSURE LOADS -->
