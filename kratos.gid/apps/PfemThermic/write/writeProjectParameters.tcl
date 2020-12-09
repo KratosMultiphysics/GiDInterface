@@ -88,7 +88,8 @@ proc PfemThermic::write::GetProcessList { } {
 	set group_constraints   [write::getConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
     set body_constraints    [PfemFluid::write::getBodyConditionsParametersDict PFEMFLUID_NodalConditions "Nodal"]
 	set thermic_constraints [write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute conditions_un]]
-	dict set processes constraints_process_list [concat $group_constraints $body_constraints $thermic_constraints]
+	set other_constraints   [write::getConditionsParametersDict PFEMFLUID_NodalConditions]
+	dict set processes constraints_process_list [concat $group_constraints $body_constraints $thermic_constraints $other_constraints]
 	
 	# "list_other_processes"
 	#dict set processes list_other_processes [ConvectionDiffusion::write::getBodyForceProcessDictList]

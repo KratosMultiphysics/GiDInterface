@@ -12,6 +12,9 @@ proc PfemThermic::xml::Init { } {
 	
 	Model::ForgetNodalConditions
     Model::getNodalConditions NodalConditions.xml
+	
+	Model::ForgetConditions
+    Model::getConditions Conditions.xml
 }
 
 proc PfemThermic::xml::getUniqueName {name} {
@@ -66,8 +69,6 @@ proc PfemThermic::xml::CustomTree { args } {
 	spdAux::SetValueOnTreeItem v No  NodalResults DISPLACEMENT
 	spdAux::SetValueOnTreeItem v No  NodalResults DISPLACEMENT_REACTION
 	
-	set heatFlux_result_node [[$root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'HeatFlux2D'\]"]
-	if { $heatFlux_result_node ne "" } { $heatFlux_result_node delete }
 	set heatSource_result_node [[$root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'HEAT_FLUX'\]"]
 	if { $heatSource_result_node ne "" } { $heatSource_result_node delete }
 	################################################
@@ -90,14 +91,14 @@ proc PfemThermic::xml::ProcGetElementsValues {domNode args} {
     set elems [PfemFluid::xml::GetElements $domNode $args]
 	
     foreach elem $elems {
-        if {[$elem cumple $argums] && [$elem getName] ne "RigidLagrangianElement2D3N"} {
+        if {[$elem cumple $argums] && [$elem getName] ne "RigidLagrangianElement2D3N" && [$elem getName] ne "RigidLagrangianElement3D4N"} {
 			lappend names [$elem getName]
         }
     }
 	
     set values [join $names ","]
     
-    if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
+    if {[get_domnode_attribute $domNode v] eq ""}     {$domNode setAttribute v [lindex $names 0]}
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]}
     
     return $values

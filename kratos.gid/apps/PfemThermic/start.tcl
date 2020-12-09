@@ -54,13 +54,11 @@ proc ::PfemThermic::CustomToolbarItems { } {
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set img_dir [file join $img_dir Black]
     }
-	Kratos::ToolbarAddItem "Model" [file join $img_dir "modelProperties.png"] [list -np- gid_groups_conds::open_conditions menu] [= "Define the model properties"]
-    Kratos::ToolbarAddItem "Run" [file join $img_dir "runSimulation.png"] {Utilities Calculate} [= "Run the simulation"]
-    Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
-    Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
-	if {$::Model::SpatialDimension eq "2D"} {
-	    Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]
-    }
+	Kratos::ToolbarAddItem "Model"                [file join $img_dir "modelProperties.png"] [list -np- gid_groups_conds::open_conditions menu] [= "Define the model properties"]
+    Kratos::ToolbarAddItem "Run"                  [file join $img_dir "runSimulation.png"]   {Utilities Calculate}                              [= "Run the simulation"]
+    Kratos::ToolbarAddItem "Output"               [file join $img_dir "view.png"]            [list -np- PWViewOutput]                           [= "View process info"]
+    Kratos::ToolbarAddItem "Stop"                 [file join $img_dir "cancelProcess.png"]   {Utilities CancelProcess}                          [= "Cancel process"]
+    Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow         [apps::getActiveAppId]]                            [= "Examples window"]
 }
 
 ::PfemThermic::Init

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+    <ConditionItem n                        = "HeatFlux2D"
+	               pn                       = "External heat flux"
+				   ProcessName              = "AssignScalarVariableProcess"
+				   VariableName             = "FACE_HEAT_FLUX"
+				   Interval                 = "Total"
+				   unit_magnitude           = "Power/L^2"
+				   units                    = "W/m^2"
+				   App                      = "ConvectionDiffusion"
+				   ImplementedInApplication = "ConvectionDiffusionApplication"
+				   ImplementedInFile        = ".cpp"
+                   MinimumKratosVersion     = "9000"
+				   ProductionReady          = "ProductionReady"
+				   WorkingSpaceDimension    = "2D"
+				   LocalSpaceDimension      = "1"
+                   SkinConditions           = "True"
+				   ElementType              = "Line"
+				   function                 = "1"
+                   help                     = "Applies an external thermal load">
+        <TopologyFeatures>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+        <DegreesOfFreedom></DegreesOfFreedom>
+        <inputs></inputs>
+        <DefaultValues>
+            <value n="constrained" v="0" state="hidden" />
+        </DefaultValues>
+        <outputs></outputs>
+    </ConditionItem>
+
+    <ConditionItem n                        = "HeatFlux3D"
+	               pn                       = "External heat flux"
+				   ProcessName              = "AssignScalarVariableProcess"
+				   VariableName             = "FACE_HEAT_FLUX"
+				   Interval                 = "Total"
+				   unit_magnitude           = "Power/L^2"
+				   units                    = "W/m^2"
+				   App                      = "ConvectionDiffusion"
+				   ImplementedInApplication = "ConvectionDiffusionApplication"
+				   ImplementedInFile        = ".cpp"
+                   MinimumKratosVersion     = "9000"
+				   ProductionReady          = "ProductionReady"
+				   WorkingSpaceDimension    = "3D"
+				   LocalSpaceDimension      = "2"
+                   SkinConditions           = "True"
+				   ElementType              = "Surface"
+				   function                 = "1"
+                   help                     = "Applies an external thermal load">
+        <TopologyFeatures>
+            <item GeometryType="Triangle"      nodes="3" KratosName="SurfaceCondition3D3N"/>
+            <item GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
+        </TopologyFeatures>
+        <DegreesOfFreedom></DegreesOfFreedom>
+        <inputs></inputs>
+        <DefaultValues>
+            <value n="constrained" v="0" state="hidden" />
+        </DefaultValues>
+        <outputs></outputs>
+    </ConditionItem>
+	
+	<!--<ConditionItem n                        = "HEAT_FLUX2D"
+                   pn                       = "Internal heat source"
+                   ProcessName              = "AssignScalarVariableProcess"
+                   VariableName             = "HEAT_FLUX"
+                   Interval                 = "Total"
+                   unit_magnitude           = "Power/L^3"
+                   units                    = "W/m^3"
+                   App                      = "ConvectionDiffusion"
+				   WorkingSpaceDimension    = "2D"
+				   LocalSpaceDimension      = "2"
+				   ElementType              = "Surface"
+                   help                     = "Applies an internal thermal load">
+        <TopologyFeatures>
+		    <item GeometryType="Triangle"      nodes="3" KratosName="SurfaceCondition3D3N"/>
+            <item GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
+        </TopologyFeatures>
+        <DefaultValues>
+            <value n="constrained" v="0" state="hidden" />
+        </DefaultValues>
+    </ConditionItem>-->
+	
+</ConditionList>
