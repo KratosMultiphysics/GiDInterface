@@ -8,11 +8,13 @@ proc FluidDEM::xml::Init { } {
     variable dir
     Model::InitVariables dir $FluidDEM::dir
 
-    Model::ForgetElement SphericPartDEMElement3D
+    Model::ForgetElements
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies [file join ".." ".." DEM xml "Strategies.xml"]
+    Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
-    Model::getSolutionStrategies Strategies.xml
 
     # Get the inlet condition
     set inlet_cnd [Model::getCondition "Inlet"]

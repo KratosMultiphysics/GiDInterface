@@ -6,6 +6,7 @@
 	<StrategyItem
 		n="Monolithic"
 		pn="Navier Stokes - Monolithic"
+		Type="monolithic"
 		ImplementedInFile="navier_stokes_solver_vmsmonolithic.py"
 		ImplementedInApplication="FluidDynamicsApplication"
 		ImplementedInPythonFile="Monolithic"
@@ -60,6 +61,7 @@
 	<StrategyItem
 		n="FractionalStep"
 		pn="Navier Stokes - Fractional Step"
+		Type="fractional_step"
 		ImplementedInFile="navier_stokes_solver_fractionalstep.py"
 		ImplementedInApplication="FluidDynamicsApplication"
 		ImplementedInPythonFile="FractionalStep"

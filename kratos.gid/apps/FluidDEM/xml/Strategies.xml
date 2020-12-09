@@ -6,6 +6,7 @@
 	<StrategyItem
 		n="MonolithicDEM"
 		pn="Navier Stokes - Monolithic DEM coupled"
+		Type="monolithic"
 		ImplementedInFile="navier_stokes_solver_vms_monolithic_DEMCoupled.py"
 		ImplementedInApplication="SwimmingDEMApplication"
 		ImplementedInPythonFile="MonolithicDEM"
@@ -19,7 +20,7 @@
 			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
 			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
 			<parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="1.0" help=""/>
-			<parameter n="oss_switch" pn="Use orthogonal subscales" type="bool" v="false" help=""/>
+			<!-- <parameter n="oss_switch" pn="Use orthogonal subscales" type="bool" v="false" help=""/> -->
 			<parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
 			<parameter n="relative_velocity_tolerance" pn="Relative velocity tolerance" v="1E-3" type="double" help="Relative velocity tolerance"/>
 			<parameter n="absolute_velocity_tolerance" pn="Absolute velocity tolerance" v="1E-5" type="double" help="Absolute velocity tolerance"/>
@@ -44,7 +45,7 @@
 				<parameter_list>
 				</parameter_list>
 				<element_filters>
-					<filter field="n" value="MonolithicDEM2D,MonolithicDEM3D"/>
+					<filter field="n" value="QSVMSDEMcoupled2D,QSVMSDEMcoupled3D"/>
 				</element_filters>
 			</scheme>
 		</schemes>
