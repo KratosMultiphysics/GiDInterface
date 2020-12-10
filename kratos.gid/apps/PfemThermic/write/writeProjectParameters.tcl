@@ -9,7 +9,7 @@ proc PfemThermic::write::getNewParametersDict { } {
 	
     dict set projectParametersDict problem_data         [PfemFluid::write::GetPFEM_ProblemDataDict]
 	dict set projectParametersDict solver_settings      [PfemThermic::write::GetSolverSettingsDict]
-	dict set projectParametersDict problem_process_list [PfemFluid::write::GetPFEM_ProblemProcessList [write::getValue PFEMTHERMIC_FreeSurfaceFlux]]
+	dict set projectParametersDict problem_process_list [PfemFluid::write::GetPFEM_ProblemProcessList [PfemThermic::write::GetFreeSurfaceHeatFluxParts] [PfemThermic::write::GetFreeSurfaceThermalFaceParts]]
 	dict set projectParametersDict processes            [PfemThermic::write::GetProcessList]
     dict set projectParametersDict output_configuration [write::GetDefaultOutputGiDDict PfemFluid     [spdAux::getRoute Results]]
     dict set projectParametersDict output_configuration result_file_configuration nodal_results       [write::GetResultsByXPathList [spdAux::getRoute NodalResults]]
@@ -98,9 +98,57 @@ proc PfemThermic::write::GetProcessList { } {
 	dict set processes loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
 	
 	# "auxiliar_process_list"
-    dict set processes auxiliar_process_list [PfemThermic::write::getFreeSurfaceFluxProcessDictList]
+    #dict set processes auxiliar_process_list [PfemThermic::write::getFreeSurfaceFluxProcessDictList]
 	
 	return $processes
+}
+
+proc PfemThermic::write::GetFreeSurfaceHeatFluxParts {} {
+    set root [customlib::GetBaseRoot]
+    set listOfProcessedGroups [list ]
+    set groups [list ]
+    set xp1 "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition/group"
+    set xp2 "[spdAux::getRoute PFEMFLUID_NodalConditions]/group"
+    set grs [$root selectNodes $xp1]
+    if {$grs ne ""} {lappend groups {*}$grs}
+    set grs [$root selectNodes $xp2]
+    if {$grs ne ""} {lappend groups {*}$grs}
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || [string first Parts $cid] >= 0 } {
+			if {$cid eq "FreeSurfaceHeatFlux2D" || $cid eq "FreeSurfaceHeatFlux3D"} {
+				set gname [::write::getSubModelPartId $cid $groupName]
+				if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
+			}
+        }
+    }
+    return $listOfProcessedGroups
+}
+
+proc PfemThermic::write::GetFreeSurfaceThermalFaceParts {} {
+    set root [customlib::GetBaseRoot]
+    set listOfProcessedGroups [list ]
+    set groups [list ]
+    set xp1 "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition/group"
+    set xp2 "[spdAux::getRoute PFEMFLUID_NodalConditions]/group"
+    set grs [$root selectNodes $xp1]
+    if {$grs ne ""} {lappend groups {*}$grs}
+    set grs [$root selectNodes $xp2]
+    if {$grs ne ""} {lappend groups {*}$grs}
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || [string first Parts $cid] >= 0 } {
+			if {$cid eq "FreeSurfaceThermalFace2D" || $cid eq "FreeSurfaceThermalFace3D"} {
+				set gname [::write::getSubModelPartId $cid $groupName]
+				if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
+			}
+        }
+    }
+    return $listOfProcessedGroups
 }
 
 proc PfemThermic::write::getFreeSurfaceFluxProcessDictList {} {

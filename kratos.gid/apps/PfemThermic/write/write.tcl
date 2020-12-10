@@ -40,7 +40,7 @@ proc PfemThermic::write::writeModelPartEvent { } {
 		set groupid [get_domnode_attribute $group n]
 		set groupid [write::GetWriteGroupName $groupid]
 		incr iter
-		if {$condid eq "HeatFlux2D" || $condid eq "HeatFlux3D"} {
+		if {$condid eq "HeatFlux2D" || $condid eq "HeatFlux3D" || $condid eq "ThermalFace2D" || $condid eq "ThermalFace3D"} {
             set dictGroupsIterators [write::writeGroupNodeCondition $dictGroupsIterators $group $condid $iter]
         }
 		if {[dict exists $dictGroupsIterators $groupid]} {
@@ -55,7 +55,7 @@ proc PfemThermic::write::writeModelPartEvent { } {
         set condid [[$group parent] @n]
 		set groupid [get_domnode_attribute $group n]
         set groupid [write::GetWriteGroupName $groupid]
-        if {$condid eq "HeatFlux2D" || $condid eq "HeatFlux3D"} {
+        if {$condid eq "HeatFlux2D" || $condid eq "HeatFlux3D" || $condid eq "ThermalFace2D" || $condid eq "ThermalFace3D"} {
             lassign [dict get $dictGroupsIterators $groupid] ini fin
             set FluxConditions($groupid,initial) $ini
             set FluxConditions($groupid,final) $fin
@@ -76,25 +76,26 @@ proc PfemThermic::write::writeModelPartEvent { } {
 		if {[Model::getNodalConditionbyId $condid] ne ""} {
 		    set groupid [$group @n]
             set groupid [write::GetWriteGroupName $groupid]
-            if {$condid ne "HeatFlux2D" && $condid ne "HeatFlux3D"} {
-                ::write::writeGroupSubModelPart $condid $groupid "nodal"
-            } else {
-                set ini $FluxConditions($groupid,initial)
-                set end $FluxConditions($groupid,final)
+			if {$condid ne "HeatFlux2D" && $condid ne "HeatFlux3D" && $condid ne "ThermalFace2D" && $condid ne "ThermalFace3D"} {
+				::write::writeGroupSubModelPart $condid $groupid "nodal"
+			} else {
+				set ini $FluxConditions($groupid,initial)
+				set end $FluxConditions($groupid,final)
 				::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
-            }
+			}
 		# For conditions
 		} else {
 		    if {[Model::getCondition $condid] ne ""} {
 		        set groupid [$group @n]
                 set groupid [write::GetWriteGroupName $groupid]
-                if {$condid ne "HeatFlux2D" && $condid ne "HeatFlux3D"} {
-                    ::write::writeGroupSubModelPart $condid $groupid "Nodes"
-                } else {
-                    set ini $FluxConditions($groupid,initial)
-                    set end $FluxConditions($groupid,final)
-		    		::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
-                }
+				
+				if {$condid ne "HeatFlux2D" && $condid ne "HeatFlux3D" && $condid ne "ThermalFace2D" && $condid ne "ThermalFace3D"} {
+					::write::writeGroupSubModelPart $condid $groupid "Nodes"
+				} else {
+					set ini $FluxConditions($groupid,initial)
+					set end $FluxConditions($groupid,final)
+					::write::writeGroupSubModelPart $condid $groupid "Conditions" [list $ini $end]
+				}
 		    }
 		}
     }
