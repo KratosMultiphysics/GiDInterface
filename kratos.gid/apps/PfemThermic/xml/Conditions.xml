@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
     <ConditionItem n                        = "HeatFlux2D"
-	               pn                       = "External heat flux"
+	               pn                       = "Wall heat flux"
 				   ProcessName              = "AssignScalarVariableProcess"
 				   VariableName             = "FACE_HEAT_FLUX"
 				   Interval                 = "Total"
@@ -30,7 +30,7 @@
     </ConditionItem>
 
     <ConditionItem n                        = "HeatFlux3D"
-	               pn                       = "External heat flux"
+	               pn                       = "Wall heat flux"
 				   ProcessName              = "AssignScalarVariableProcess"
 				   VariableName             = "FACE_HEAT_FLUX"
 				   Interval                 = "Total"
