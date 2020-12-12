@@ -345,7 +345,9 @@ proc PfemFluid::write::GetUpdateConditionsOnFreeSurface { free_surface_heat_flux
 		set nDim $::Model::SpatialDimension
 		set nDim [expr [string range [write::getValue nDim] 0 0] ]
 		if {$free_surface_heat_flux ne "[]"} {
-			lappend free_part_name_list $free_surface_heat_flux
+			foreach part $free_surface_heat_flux {
+				lappend free_part_name_list $part
+			}
 			if {$nDim == 2} {
 				lappend condition_type_list "LineCondition2D2N"
 			} else {
@@ -353,7 +355,9 @@ proc PfemFluid::write::GetUpdateConditionsOnFreeSurface { free_surface_heat_flux
 			}
 		}
 		if {$free_surface_thermal_face ne "[]"} {
-			lappend free_part_name_list $free_surface_thermal_face
+			foreach part $free_surface_thermal_face {
+				lappend free_part_name_list $part
+			}
 			if {$nDim == 2} {
 				lappend condition_type_list "LineCondition2D2N"
 			} else {
