@@ -135,8 +135,8 @@ proc PfemThermic::examples::TreeAssignationThermicCubeDrop {args} {
 	# Temperature IC
 	set thermalFluidICnode [customlib::AddConditionGroupOnXPath $fixTemperature "Fluid"]
 	set thermalSolidICnode [customlib::AddConditionGroupOnXPath $fixTemperature "Solid"]
-	set fluidProps [list value 300.00 Interval Initial constrained 0]
-	set solidProps [list value 380.00 Interval Initial constrained 0]
+	set fluidProps [list value 300.00 Interval Initial constrained 1]
+	set solidProps [list value 380.00 Interval Initial constrained 1]
 	$thermalFluidICnode setAttribute ov surface
 	$thermalSolidICnode setAttribute ov surface
     spdAux::SetValuesOnBaseNode $thermalFluidICnode $fluidProps

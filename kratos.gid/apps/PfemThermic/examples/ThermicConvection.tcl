@@ -141,7 +141,7 @@ proc PfemThermic::examples::TreeAssignationThermicConvection {args} {
 	
 	# Temperature IC
 	set thermalICnode [customlib::AddConditionGroupOnXPath $fixTemperature "Fluid"]
-	set props [list value 373.15 Interval Initial constrained 0]
+	set props [list value 373.15 Interval Initial constrained 1]
 	$thermalICnode setAttribute ov surface
     spdAux::SetValuesOnBaseNode $thermalICnode $props
 	
