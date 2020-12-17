@@ -294,7 +294,11 @@ proc Kratos::Event_EndProblemtype { } {
         Model::DestroyEverything
 
         # Close customlib things
-        gid_groups_conds::end_problemtype [Kratos::GiveKratosDefaultsFile]
+        set filename_user_defaults "" ;#empty to no save
+        if { [GiD_Set SaveGidDefaults] } {
+            set filename_user_defaults [Kratos::GiveKratosDefaultsFile]
+        }
+        gid_groups_conds::end_problemtype $filename_user_defaults
 
         # Clear private global variable
         unset -nocomplain ::Kratos::kratos_private
