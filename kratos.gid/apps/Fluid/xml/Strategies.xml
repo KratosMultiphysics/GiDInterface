@@ -50,7 +50,7 @@
 			<scheme n="bdf2" pn="BDF2" help="2nd order Backward Differenctiation Formula (BDF2) scheme for CFD problems." ProductionReady="ProductionReady">
                 <parameter_list></parameter_list>
                 <element_filters>
-                    <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D"/>
+                    <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D,WeaklyCompressible2D,WeaklyCompressible3D"/>
                 </element_filters>
             </scheme>
 		</schemes>
