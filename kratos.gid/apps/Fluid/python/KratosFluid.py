@@ -2,7 +2,6 @@ from __future__ import print_function, absolute_import, division #makes KratosMu
 
 import KratosMultiphysics
 from KratosMultiphysics.FluidDynamicsApplication.fluid_dynamics_analysis import FluidDynamicsAnalysis
-from KratosMultiphysics import Logger
 
 import sys
 import time
