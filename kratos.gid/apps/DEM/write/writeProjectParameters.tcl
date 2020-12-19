@@ -69,8 +69,12 @@ proc DEM::write::getParametersDict { } {
 
     dict set strategy_parameters_dict "RemoveBallsInitiallyTouchingWalls"   [write::getValue AdvOptions RemoveParticlesInWalls]
     dict set strategy_parameters_dict "strategy"                            $dem_strategy
-    dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
+    set model_import_settings_dict [dict create]
+    dict set model_import_settings_dict "input_type" "mdpa"
+    dict set model_import_settings_dict "restart_load_file_label" " "
+    dict set strategy_parameters_dict "model_import_settings"   $model_import_settings_dict
 
+    dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
     dict set project_parameters_dict "RollingFrictionOption"                [write::getValue AdvOptions RollingFriction]
     dict set project_parameters_dict "GlobalDamping"                        [write::getValue AdvOptions GlobalDamping]
@@ -94,19 +98,20 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 
     # Output timestep
-        set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
-        if {$output_criterion eq "Detail_priority"} {
-            set output_timestep [write::getValue DEMResults DEM-OTimeStepDetail]
-        } elseif {$output_criterion eq "Storage_priority"} {
-            set amount [write::getValue DEMResults DEM-OTimeStepStorage]
-            set OTimeStepStorage [expr (double($FinalTime)/$amount)]
-            set maxamount [expr ($FinalTime/$MaxTimeStep)]
-            if {$amount < $maxamount} {
-                set output_timestep $OTimeStepStorage
-            } else {
-                set output_timestep $MaxTimeStep
-            }
+    set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
+    if {$output_criterion eq "Detail_priority"} {
+        set output_timestep [write::getValue DEMResults DEM-OTimeStepDetail]
+    } elseif {$output_criterion eq "Storage_priority"} {
+        set amount [write::getValue DEMResults DEM-OTimeStepStorage]
+        set OTimeStepStorage [expr (double($FinalTime)/$amount)]
+        set maxamount [expr ($FinalTime/$MaxTimeStep)]
+        if {$amount < $maxamount} {
+            set output_timestep $OTimeStepStorage
+        } else {
+            set output_timestep $MaxTimeStep
         }
+    }
+
     dict set project_parameters_dict "OutputTimeStep"                   $output_timestep
     dict set project_parameters_dict "PostBoundingBox"                  [write::getValue Boundingbox PostBB]
     dict set project_parameters_dict "PostLocalContactForce"            [write::getValue BondElem LocalContactForce]
@@ -133,6 +138,30 @@ proc DEM::write::getParametersDict { } {
     #dict set project_parameters_dict "PostGroupId"                      [write::getValue PostPrint GroupId]
     #dict set project_parameters_dict "PostExportId"                     [write::getValue PostPrint ExportId]
     dict set project_parameters_dict "problem_name" [Kratos::GetModelName]
+
+    set restart_interval [write::getValue DEMResults DEM-RestartPrintTimeInterval]
+    
+
+    set output_processes_dict [dict create]
+    set restart_process_dict [dict create]
+    set restart_parameters_dict [dict create]
+    dict set restart_parameters_dict "model_part_names" [list "SpheresPart" "RigidFacePart"]
+    dict set restart_parameters_dict "echo_level" 0
+    dict set restart_parameters_dict "serializer_trace" "no_trace"
+    dict set restart_parameters_dict "restart_save_frequency" $restart_interval
+    dict set restart_parameters_dict "restart_control_type" "time"
+    dict set restart_parameters_dict "save_restart_files_in_folder" true
+
+    set lst {}    
+    dict set restart_process_dict "python_module" "DEMApplication.DEM_save_restart_process"
+    dict set restart_process_dict "kratos_module" "KratosMultiphysics"
+    dict set restart_process_dict "process_name" "DEMSaveRestartProcess"
+    dict set restart_process_dict "Parameters" $restart_parameters_dict
+    lappend lst $restart_process_dict
+
+    dict set output_processes_dict "restart_processes" $lst
+
+    dict set project_parameters_dict "output_processes" $output_processes_dict
 
     return $project_parameters_dict
 }
