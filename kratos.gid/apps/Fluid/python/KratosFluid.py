@@ -2,6 +2,7 @@ from __future__ import print_function, absolute_import, division #makes KratosMu
 
 import KratosMultiphysics
 from KratosMultiphysics.FluidDynamicsApplication.fluid_dynamics_analysis import FluidDynamicsAnalysis
+from KratosMultiphysics import Logger
 
 import sys
 import time
@@ -12,6 +13,11 @@ class FluidDynamicsAnalysisWithFlush(FluidDynamicsAnalysis):
         super(FluidDynamicsAnalysisWithFlush,self).__init__(model,project_parameters)
         self.flush_frequency = flush_frequency
         self.last_flush = time.time()
+        sys.stdout.flush()
+
+    def Initialize(self):
+        super(FluidDynamicsAnalysisWithFlush,self).Initialize()
+        sys.stdout.flush()
 
     def FinalizeSolutionStep(self):
         super(FluidDynamicsAnalysisWithFlush,self).FinalizeSolutionStep()
