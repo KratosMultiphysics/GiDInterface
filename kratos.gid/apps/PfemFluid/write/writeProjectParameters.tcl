@@ -20,7 +20,7 @@ proc PfemFluid::write::getNewParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     ##### problem_process_list
-    set problemProcessList [GetPFEM_ProblemProcessList]
+    set problemProcessList [GetPFEM_ProblemProcessList "[]" "[]"]
     dict set projectParametersDict problem_process_list $problemProcessList
 
     set processList [GetPFEM_ProcessList]
@@ -158,10 +158,10 @@ proc PfemFluid::write::GetPFEM_OutputProcessList { } {
     # lappend resultList [write::GetRestartProcess Restart]
     return $resultList
 }
-proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
+proc PfemFluid::write::GetPFEM_ProblemProcessList { free_surface_heat_flux free_surface_thermal_face } {
     set resultList [list ]
     set problemtype [write::getValue PFEMFLUID_DomainType]
-    lappend resultList [GetPFEM_FluidRemeshDict]
+    lappend resultList [GetPFEM_FluidRemeshDict $free_surface_heat_flux $free_surface_thermal_face]
     return $resultList
 }
 
@@ -264,7 +264,7 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
 
 
 
-proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
+proc PfemFluid::write::GetPFEM_FluidRemeshDict { free_surface_heat_flux free_surface_thermal_face } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
@@ -279,11 +279,8 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
-
-    set update_conditionsDict [dict create ]
-        dict set update_conditionsDict "update_conditions" false
-    dict set paramsDict update_conditions_on_free_surface $update_conditionsDict
-
+    dict set paramsDict update_conditions_on_free_surface [PfemFluid::write::GetUpdateConditionsOnFreeSurface $free_surface_heat_flux $free_surface_thermal_face]
+	
     set meshing_domains_list [list ]
     foreach body $bodies_list {
         set bodyDict [dict create ]
@@ -336,6 +333,42 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     dict set paramsDict meshing_domains $meshing_domains_list
     dict set resultDict Parameters $paramsDict
     return $resultDict
+}
+
+proc PfemFluid::write::GetUpdateConditionsOnFreeSurface { free_surface_heat_flux free_surface_thermal_face } {
+	set updateConditionsDict [dict create]
+	if {$free_surface_heat_flux eq "[]" && $free_surface_thermal_face eq "[]"} {
+		dict set updateConditionsDict "update_conditions" false
+	} else {
+		set free_part_name_list [list ]
+		set condition_type_list [list ]
+		set nDim $::Model::SpatialDimension
+		set nDim [expr [string range [write::getValue nDim] 0 0] ]
+		if {$free_surface_heat_flux ne "[]"} {
+			foreach part $free_surface_heat_flux {
+				lappend free_part_name_list $part
+			}
+			if {$nDim == 2} {
+				lappend condition_type_list "LineCondition2D2N"
+			} else {
+				lappend condition_type_list "SurfaceCondition3D3N"
+			}
+		}
+		if {$free_surface_thermal_face ne "[]"} {
+			foreach part $free_surface_thermal_face {
+				lappend free_part_name_list $part
+			}
+			if {$nDim == 2} {
+				lappend condition_type_list "LineCondition2D2N"
+			} else {
+				lappend condition_type_list "SurfaceCondition3D3N"
+			}
+		}
+		dict set updateConditionsDict "update_conditions"        true
+		dict set updateConditionsDict "sub_model_part_list"      $free_part_name_list
+		dict set updateConditionsDict "reference_condition_list" $condition_type_list
+    }
+    return $updateConditionsDict
 }
 
 proc PfemFluid::write::GetRemeshProperty { body_name property } {

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="Boundary Conditions" pn="Conditions" icon="boundaryConditions" un="PFEMFLUID_NodalConditions" open_window="0">
-	  <dynamicnode command="spdAux::injectNodalConditions" args=""/>
+	<dynamicnode command="spdAux::injectNodalConditions" args=""/>
+	<dynamicnode command="spdAux::injectConditions"      args=""/>
+	<!--<value n="FreeSurfaceFluxValue" pn="Free surface heat flux" un="PFEMTHERMIC_FreeSurfaceFlux" icon="select" v="0.0" unit_magnitude="Power/L^2" units="W/m^2"/>-->
 </container>

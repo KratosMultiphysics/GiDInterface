@@ -110,8 +110,8 @@ proc PfemThermic::examples::TreeAssignationThermicFluidDrop {args} {
 	set InitTemperature "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='TEMPERATURE'\]"
 	set thermalFluidICnode [customlib::AddConditionGroupOnXPath $InitTemperature "Fluid"]
 	set thermalSolidICnode [customlib::AddConditionGroupOnXPath $InitTemperature "Solid"]
-	set fluidProps [list value 310.00 Interval Initial constrained 0]
-	set solidProps [list value 290.00 Interval Initial constrained 0]
+	set fluidProps [list value 310.00 Interval Initial constrained 1]
+	set solidProps [list value 290.00 Interval Initial constrained 1]
 	$thermalFluidICnode setAttribute ov surface
 	$thermalSolidICnode setAttribute ov surface
     spdAux::SetValuesOnBaseNode $thermalFluidICnode $fluidProps
