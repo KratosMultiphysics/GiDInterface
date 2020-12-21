@@ -36,13 +36,16 @@ export PYTHONPATH="$3/exec/Kratos/python34.zip":"$3/exec/Kratos":$PYTHONPATH
 KERNEL=`uname -s`
 if [ $KERNEL = "Darwin" ]; then
     KERNEL_NAME="macosx"
-    export DYLD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$DYLD_LIBRARY_PATH
+    export DYLD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":"$3/exec/Kratos/python-3.kratos.1/lib":$DYLD_LIBRARY_PATH
     export DYLD_FALLBACK_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$DYLD_FALLBACK_LIBRARY_PATH
     export PYTHONPATH="$3/exec/Kratos/Lib":"$3/exec/Kratos/Lib/lib-dynload/":$PYTHONPATH
-    export PYTHONHOME="$3/exec/Kratos"
+    # export PYTHONHOME="$3/exec/Kratos"
+    # Run kratos using the inner python
+    "$3/exec/Kratos/python-3.kratos.1/bin/python3.9" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
 else
     KERNEL_NAME="linux"
+    
+    # Run Python using the script MainKratos.py
+    "$3/exec/Kratos/runkratos" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
 fi
 
-# Run Python using the script MainKratos.py
-"$3/exec/Kratos/runkratos" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
