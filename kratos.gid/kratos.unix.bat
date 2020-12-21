@@ -38,7 +38,7 @@ if [ $KERNEL = "Darwin" ]; then
     KERNEL_NAME="macosx"
     export DYLD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":"$3/exec/Kratos/python-3.kratos.1/lib":$DYLD_LIBRARY_PATH
     export DYLD_FALLBACK_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$DYLD_FALLBACK_LIBRARY_PATH
-    export PYTHONPATH="$3/exec/Kratos/Lib":"$3/exec/Kratos/Lib/lib-dynload/":$PYTHONPATH
+    export PYTHONPATH="$3/exec/Kratos":"$3/exec/Kratos/Lib/lib-dynload/":$PYTHONPATH
     # export PYTHONHOME="$3/exec/Kratos"
     # Run Kratos Python using the script MainKratos.py
     "$3/exec/Kratos/python-3.kratos.1/bin/python3.9" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
