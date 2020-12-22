@@ -357,6 +357,23 @@ proc StenosisWizard::Wizard::Fluid { win } {
     smart_wizard::AutoStep $win Fluid
     smart_wizard::SetWindowSize 450 450
 }
+
+proc StenosisWizard::Wizard::MulticaseInlet { } {
+    set is_multicase [smart_wizard::GetProperty Fluid Multicase_Inlet,value]
+    
+    if {write::isBooleanTrue $is_multicase]} {
+        smart_wizard::SetProperty Fluid Inlet,state hidden
+        smart_wizard::SetProperty Fluid Inlet_initial,state normal
+        smart_wizard::SetProperty Fluid Inlet_delta,state normal
+        smart_wizard::SetProperty Fluid Inlet_number,state normal
+    } else {
+        smart_wizard::SetProperty Fluid Inlet,state normal
+        smart_wizard::SetProperty Fluid Inlet_initial,state hidden
+        smart_wizard::SetProperty Fluid Inlet_delta,state hidden
+        smart_wizard::SetProperty Fluid Inlet_number,state hidden
+    }
+}
+
 proc StenosisWizard::Wizard::NextFluid { } {
     # Inlet
     Fluid::xml::ClearInlets true

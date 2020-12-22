@@ -150,6 +150,7 @@ proc spdAux::ForceTreePreload { } {
     foreach node [[customlib::GetBaseRoot] getElementsByTagName value] { 
         if {[$node hasAttribute "values"] } {
             get_domnode_attribute $node values
+            get_domnode_attribute $node dict
         }
     }
 }

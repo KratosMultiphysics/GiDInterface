@@ -37,7 +37,11 @@
           <Item n="ImageFluid" v="Inlet.png" type="image"/>
         </Frame>
         <Frame n="Data" position="left">
+          <Item n="Multicase_Inlet" pn="Multicase inlet" v="No" values="Yes,No" type="combo" onchange="StenosisWizard::Wizard::MulticaseInlet"/>
           <Item n="Inlet" pn="Inlet velocity" v="0.3" units="m/s" type="double" mxp="container[@un='FLBC']/group/value[@n='Inlet3D']"/>
+          <Item n="Inlet_initial" pn="Initial inlet velocity" v="0.3" units="m/s" type="double"/>
+          <Item n="Inlet_delta" pn="Inlet increment" v="0.1" units="m/s" type="double"/>
+          <Item n="Inlet_number" pn="Inlet number of cases" v="1" type="integer"/>
           <Item n="Outlet" pn="Outlet pressure" v="0.0" units="Pa" type="double" mxp="container[@un='FLBC']/group/value[@n='Outlet3D']"/>
         </Frame>
       </Data>
