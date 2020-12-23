@@ -11,12 +11,17 @@ import time
 class ConvectionDiffusionAnalysisWithFlush(ConvectionDiffusionAnalysis):
 
     def __init__(self,model,project_parameters,flush_frequency=10.0):
-        super(ConvectionDiffusionAnalysisWithFlush,self).__init__(model,project_parameters)
+        super().__init__(model,project_parameters)
         self.flush_frequency = flush_frequency
         self.last_flush = time.time()
+        sys.stdout.flush()
+
+    def Initialize(self):
+        super().Initialize()
+        sys.stdout.flush()
 
     def FinalizeSolutionStep(self):
-        super(ConvectionDiffusionAnalysisWithFlush,self).FinalizeSolutionStep()
+        super().FinalizeSolutionStep()
 
         if self.parallel_type == "OpenMP":
             now = time.time()
