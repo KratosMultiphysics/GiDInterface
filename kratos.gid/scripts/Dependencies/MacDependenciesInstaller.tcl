@@ -22,7 +22,7 @@ proc ::Kratos::Dependencies::Mac::Init { } {
     variable llvm_path
     set llvm_path "/usr/local/bin/llvm"
 }
-
+::Kratos::Dependencies::Mac::Init
 
 proc ::Kratos::Dependencies::Mac::StartWizard { } {
     variable kratos_private
@@ -70,11 +70,13 @@ proc ::Kratos::Dependencies::Mac::StartWizard { } {
     proc ::Kratos::Dependencies::Mac::CheckBrewMsg { } {
         variable curr_win
         variable brew_path
+        catch {
         if {![file exists $brew_path]} {
             after 5000 {::Kratos::Dependencies::Mac::CheckBrewMsg}
         } else {
             smart_wizard::SetProperty Brew status,value "Status: Installed!"
             smart_wizard::AutoStep $curr_win Brew
+        }
         }
     }
 
@@ -105,6 +107,7 @@ proc ::Kratos::Dependencies::Mac::StartWizard { } {
         smart_wizard::AutoStep $curr_win Python
     }
     proc ::Kratos::Dependencies::Mac::CheckPythonMsg { } {
+        catch {
         variable curr_win
         variable python_path
         if {![file exists $python_path]} {
@@ -112,6 +115,7 @@ proc ::Kratos::Dependencies::Mac::StartWizard { } {
         } else {
             smart_wizard::SetProperty Python status,value "Status: Installed!"
             smart_wizard::AutoStep $curr_win Python
+        }
         }
     }
     
@@ -142,6 +146,7 @@ proc ::Kratos::Dependencies::Mac::StartWizard { } {
         smart_wizard::AutoStep $curr_win Llvm
     }
     proc ::Kratos::Dependencies::Mac::CheckLlvmMsg { } {
+        catch {
         variable curr_win
         variable llvm_path
         if {![file exists $llvm_path]} {
@@ -149,6 +154,7 @@ proc ::Kratos::Dependencies::Mac::StartWizard { } {
         } else {
             smart_wizard::SetProperty Llvm status,value "Status: Installed!"
             smart_wizard::AutoStep $curr_win Llvm
+        }
         }
     }
     
