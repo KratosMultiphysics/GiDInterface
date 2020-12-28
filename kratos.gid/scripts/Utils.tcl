@@ -299,23 +299,8 @@ proc Kratos::MacOsDependencies { } {
             append txt "\r\nDo you agree? Ok to install them (It will take some minutes)"
             set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
             if { $retval == "cancel" } { return }
-            # User pressed Ok -> Install
-            # Detect if brew is installed
-            W "Follow the instructions to install the dependencies needed:"
-            W "Start a Terminal and type:"
-            W "sudo ${::Kratos::kratos_private(Path)}/scripts/Dependencies/macos_brew.sh"
-            W "This will install/update brew -> the package manager for mac -> https://brew.sh"
-            if {$found_python eq 0} {
-                W ""
-                W "The next step is to install python 3. In the same Terminal type:"
-                W "brew install python@3.9"
-            }
-            if {$found_llvm eq 0} {
-                W ""
-                W "The next step is to install llvm. This will last some time. You can use GiD and Kratos meanwhile,"
-                W "but you can't run any case until it's finished. In the same Terminal type:"
-                W "brew install llvm"
-            }
+            ::Kratos::Dependencies::Mac::Init
+            ::Kratos::Dependencies::Mac::StartWizard
         }
     }
 }

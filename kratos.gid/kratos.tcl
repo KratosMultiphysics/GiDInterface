@@ -201,6 +201,10 @@ proc Kratos::LoadCommonScripts { } {
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel #0 [list source [file join $kratos_private(Path) libs $filename]]
     }
+    # Dependencies
+    foreach filename {MacDependenciesInstaller.tcl} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts Dependencies $filename]]
+    }
 }
 
 proc Kratos::Event_LoadModelSPD { filespd } {

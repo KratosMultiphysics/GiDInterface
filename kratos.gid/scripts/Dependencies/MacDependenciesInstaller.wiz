@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Wizard version="1.0.0" wizardid="MacDependency" title="Mac dependencies installer" icon="">
+  <Steps>
+    <Step id="Brew" title="Brew" subtitle="Welcome to the dependency installer">
+      <Data>
+        <Frame n="Data" position="left">
+          <Item n="msg1" v="We need to install brew as a package manager, in order to install the packages we need." type="label"/>
+          <Item n="msg2" v="Visit http://www.brew.sh for further information" type="label"/>
+          <Item n="Visit" pn="Visit website" type="button" v="::Kratos::Dependencies::Mac::VisitBrew" />
+          <Item n="Install" pn="Install brew (need admin privileges)" type="button" v="::Kratos::Dependencies::Mac::InstallBrew" />
+          <Item n="status" v="Status: Not installed" type="label"/>
+        </Frame>
+      </Data>
+    </Step>
+    <Step id="Python" title="Python" subtitle="We need Python3.9">
+      <Data>
+        <Frame n="Data" position="left">
+          <Item n="msg1" v="We need to install python 3.9." type="label"/>
+          <Item n="msg2" v="Visit https://formulae.brew.sh/formula/python@3.9 for further information" type="label"/>
+          <Item n="Visit" pn="Visit website" type="button" v="::Kratos::Dependencies::Mac::VisitPython" />
+          <Item n="Install" pn="Install python from brew" type="button" v="::Kratos::Dependencies::Mac::InstallPython" />
+          <Item n="status" v="Status: Not installed" type="label"/>
+        </Frame>
+      </Data>
+    </Step><Step id="Llvm" title="Llvm" subtitle="We need llvm 11">
+      <Data>
+        <Frame n="Data" position="left">
+          <Item n="msg1" v="We need to install llvm." type="label"/>
+          <Item n="msg2" v="Visit https://formulae.brew.sh/formula/llvm for further information" type="label"/>
+          <Item n="Visit" pn="Visit website" type="button" v="::Kratos::Dependencies::Mac::VisitLlvm" />
+          <Item n="Install" pn="Install llvm from brew" type="button" v="::Kratos::Dependencies::Mac::InstallLlvm" />
+          <Item n="status" v="Status: Not installed" type="label"/>
+        </Frame>
+      </Data>
+    </Step>
+  </Steps>
+  <Templates>
+  </Templates>
+</Wizard>
