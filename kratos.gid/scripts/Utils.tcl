@@ -221,11 +221,11 @@ proc Kratos::Duration { int_time } {
     return [join $timeList]
 }
 
-
 proc Kratos::GetExecVersion {} {
     catch {
         variable kratos_private
         set tmp_filename [GidUtils::GetTmpFilename]
+        # TODO: Fix for mac
         if { $::tcl_platform(platform) == "unix"} {set command [file join $kratos_private(Path) exec Kratos runkratos]} {set command [file join $kratos_private(Path) exec Kratos runkratos.exe]}
         set result [exec $command -c "import KratosMultiphysics as Kratos" >> $tmp_filename]
         set fp [open $tmp_filename r]
@@ -241,6 +241,7 @@ proc Kratos::GetExecVersion {} {
         }
     }
 }
+
 proc Kratos::GetProblemtypeGitTag {} {
     catch {
         variable kratos_private
@@ -267,4 +268,47 @@ proc Kratos::GetMeshBasicData { } {
     dict set result nodes [GiD_Info Mesh NumNodes] 
     dict set result is_quadratic [expr [GiD_Info Project Quadratic] && ![GiD_Cartesian get iscartesian] ]
     return $result   
+}
+
+# Check dependencies for the exec
+proc Kratos::CheckDependencies { } {
+    # Dependencies for macOS
+    Kratos::MacOsDependencies
+
+}
+
+proc Kratos::MacOsDependencies { } {
+    variable kratos_private
+    # If macOS release -> we need llvm and python3 installed in /usr/local/opt
+    # Recommended -> install via brew
+    # Actions -> Detect dependencies | Warn user -> ask for permission | Install im background
+    
+    # Security check
+    set os $::tcl_platform(os)
+    if {$os eq "Darwin"} {
+        # Missing dependencies check
+        set found_deps [Kratos::DetectDependencies]
+        set found_python [expr [lsearch $found_deps python] ne -1 ? 1 : 0]
+        set found_llvm [expr [lsearch $found_deps llvm] ne -1 ? 1 : 0]
+        # Prompt to the user
+        if {$found_python eq 0 || $found_llvm eq 0} {
+            set txt "This version of kratos need to install some dependencies to run:"
+            if {$found_python eq 0} {append txt "\r\n- python3"}
+            if {$found_llvm eq 0} {append txt "\r\n- llvm"}
+            append txt "\r\nIn order to place them in /usr/local/opt we are going to install them via 'brew install'."
+            append txt "\r\nDo you agree? Ok to install them (It will take some minutes)"
+            set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
+            if { $retval == "cancel" } { return }
+            ::Kratos::Dependencies::Mac::Init
+            ::Kratos::Dependencies::Mac::StartWizard
+        }
+    }
+}
+
+# Returns the found dependencies
+proc Kratos::DetectDependencies { } {
+    set ret [list ]
+    if {[file exists "/usr/local/opt/python@3.9"] } {lappend ret python}
+    if {[file exists "/usr/local/opt/llvm"] } {lappend ret llvm}
+    return $ret
 }

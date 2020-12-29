@@ -134,6 +134,10 @@ proc Kratos::ChangeMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Import MDPA"] [incr pos] PRE [list Kratos::ReadPreW] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+    if {$::tcl_platform(os) eq "Darwin"} {
+        GiDMenu::InsertOption "Kratos" [list "MacOS depencency installer"] [incr pos] PRE [list ::Kratos::Dependencies::Mac::StartWizard] "" "" replace =
+        GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
+    }
     if {[GidUtils::VersionCmp "14.1.4d"] <0 } { set cmd  [list ChangeVariables kratos_preferences] } {set cmd [list PreferencesWindow kratos_preferences]}
     GiDMenu::InsertOption "Kratos" [list "Kratos preferences" ] [incr pos] PRE $cmd "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "View current log" ] [incr pos] PREPOST [list Kratos::ViewLog] "" "" replace =
