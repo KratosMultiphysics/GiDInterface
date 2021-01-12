@@ -142,7 +142,7 @@ proc write::GetInputValue {group in_obj} {
                 }
                 if {!$printed} {
                     set value_component "value_${inputName}_${i}"
-                    set value [expr [gid_groups_conds::convert_value_to_default [$group find n $value_component] ] ]
+                    set value [expr [gid_groups_conds::convert_value_to_active [$group find n $value_component] ] ]
                     set Val$i $value
                 }
             }
@@ -153,14 +153,14 @@ proc write::GetInputValue {group in_obj} {
             set ValZ "0"
             if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}_Z] v]"}
         } else {
-            set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n "value_${inputName}_X"] ] ]
-            set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n "value_${inputName}_Y"] ] ]
+            set ValX [expr [gid_groups_conds::convert_value_to_active [$group find n "value_${inputName}_X"] ] ]
+            set ValY [expr [gid_groups_conds::convert_value_to_active [$group find n "value_${inputName}_Y"] ] ]
             set ValZ [expr 0.0]
-            if {[$group find n "value_${inputName}_Z"] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n "value_${inputName}_Z"] ]]}
+            if {[$group find n "value_${inputName}_Z"] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_active [$group find n "value_${inputName}_Z"] ]]}
         }
         set return_value [list $ValX $ValY $ValZ]
     } elseif {$in_type eq "inline_vector"} {
-        set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
+        set value [gid_groups_conds::convert_value_to_active [$group find n $inputName]]
         lassign [split $value ","] ValX ValY ValZ
         if {$ValZ eq ""} {set ValZ 0.0}
         set return_value [list [expr $ValX] [expr $ValY] [expr $ValZ]]
@@ -175,7 +175,7 @@ proc write::GetInputValue {group in_obj} {
             }
         }
         if {!$printed} {
-            set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
+            set value [gid_groups_conds::convert_value_to_active [$group find n $inputName]]
             #set value [get_domnode_attribute [$group find n $inputName] v]
             set return_value [expr $value]
         }
