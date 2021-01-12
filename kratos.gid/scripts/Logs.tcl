@@ -5,7 +5,7 @@
 
 proc Kratos::GetLogFilePath { } {
     variable kratos_private
-    set gid_defaults [GiD_GetUserSettingsFilename -create_folders]
+    set gid_defaults [GiD_GetUserSettingsFilename -create_folders -ignore_alternative_configuration_file]
     set dir_name [file dirname $gid_defaults]
     set file_name $kratos_private(LogFilename)
     if {$file_name eq ""} {}
@@ -18,7 +18,7 @@ proc Kratos::GetLogFilePath { } {
 
 proc Kratos::InitLog { } {
     variable kratos_private
-    
+
     if {[info exists Kratos::kratos_private(allow_logs)] && $Kratos::kratos_private(allow_logs)>0} {
 
         set kratos_private(LogFilename) [clock format [clock seconds] -format "%Y%m%d%H%M%S"].log 
@@ -52,7 +52,7 @@ proc Kratos::Log {msg} {
 proc Kratos::FlushLog { }  {
     variable kratos_private
     
-    if {[info exists kratos_private(Log)]} {
+    if {[info exists kratos_private(Log)] && $Kratos::kratos_private(allow_logs) > 0} {
         # only disturb the disk if we have something new to write
         if {[llength $kratos_private(Log)] > 0} {
             set logpath [Kratos::GetLogFilePath]
@@ -76,7 +76,6 @@ proc Kratos::FlushLog { }  {
             }
         }
     }
-    
 }
 
 proc Kratos::AutoFlush {} {
@@ -93,8 +92,9 @@ proc Kratos::ViewLog {} {
 
 #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
 if { [GiD_Set SaveGidDefaults] } {
-    Kratos::InitLog
+    set Kratos::kratos_private(allow_logs) 0
 }
+Kratos::InitLog
 
 proc Kratos::MoveLogsToFolder {folder {flush_log 1}} {
     
