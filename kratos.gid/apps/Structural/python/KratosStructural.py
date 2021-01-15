@@ -1,5 +1,8 @@
 from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
 
+import sys
+import time
+
 import KratosMultiphysics
 from KratosMultiphysics.StructuralMechanicsApplication.structural_mechanics_analysis import StructuralMechanicsAnalysis
 
@@ -10,8 +13,8 @@ from StructuralMechanicsAnalysis to do modifications
 
 class StructuralMechanicsAnalysisWithFlush(StructuralMechanicsAnalysis):
 
-    def __init__(self,model,project_parameters,flush_frequency=10.0):
-        super().__init__(model,project_parameters)
+    def __init__(self, model, project_parameters, flush_frequency=10.0):
+        super().__init__(model, project_parameters)
         self.flush_frequency = flush_frequency
         self.last_flush = time.time()
         sys.stdout.flush()
@@ -31,9 +34,9 @@ class StructuralMechanicsAnalysisWithFlush(StructuralMechanicsAnalysis):
 
 if __name__ == "__main__":
 
-    with open("ProjectParameters.json",'r') as parameter_file:
+    with open("ProjectParameters.json", 'r') as parameter_file:
         parameters = KratosMultiphysics.Parameters(parameter_file.read())
 
-    model = KratosMultiphysics.Model()
-    simulation = StructuralMechanicsAnalysisWithFlush(model,parameters)
+    global_model = KratosMultiphysics.Model()
+    simulation = StructuralMechanicsAnalysisWithFlush(global_model, parameters)
     simulation.Run()

@@ -1,10 +1,10 @@
 from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
 
-import KratosMultiphysics
-from KratosMultiphysics.FSIApplication.fsi_analysis import FSIAnalysis
-
 import sys
 import time
+
+import KratosMultiphysics
+from KratosMultiphysics.FSIApplication.fsi_analysis import FSIAnalysis
 
 class FSIAnalysisWithFlush(FSIAnalysis):
 
@@ -29,9 +29,9 @@ class FSIAnalysisWithFlush(FSIAnalysis):
 
 if __name__ == "__main__":
 
-    with open("ProjectParameters.json",'r') as parameter_file:
+    with open("ProjectParameters.json", 'r') as parameter_file:
         parameters = KratosMultiphysics.Parameters(parameter_file.read())
 
-    model = KratosMultiphysics.Model()
-    simulation = FSIAnalysisWithFlush(model, parameters)
+    global_model = KratosMultiphysics.Model()
+    simulation = FSIAnalysisWithFlush(global_model, parameters)
     simulation.Run()
