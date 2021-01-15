@@ -1,5 +1,3 @@
-from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
-
 # Time monitoring
 import time as timer
 print(timer.ctime())
@@ -129,7 +127,7 @@ for step in range(buffer_size-1):
 computing_model_part = solver.GetComputingModelPart() # Sacar de aqui un los computing model parts con otra funcion
 thermal_computing_model_part = solver.GetComputingThermalModelPart()
 
-# Importing construction utility 
+# Importing construction utility
 import dam_construction_utility
 construction_utilities = dam_construction_utility.DamConstructionUtility(computing_model_part,
                                      thermal_computing_model_part, ProjectParameters["construction_process"])

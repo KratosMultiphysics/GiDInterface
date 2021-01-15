@@ -1,4 +1,5 @@
-from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
+import sys
+import time
 
 import KratosMultiphysics
 from KratosMultiphysics.ParticleMechanicsApplication.particle_mechanics_analysis import ParticleMechanicsAnalysis
@@ -7,7 +8,6 @@ from KratosMultiphysics.ParticleMechanicsApplication.particle_mechanics_analysis
 For user-scripting it is intended that a new class is derived
 from ParticleMechanicsAnalysis to do modifications
 """
-
 class ParticleMechanicsAnalysisWithFlush(ParticleMechanicsAnalysis):
 
     def __init__(self, model, project_parameters, flush_frequency=10.0):

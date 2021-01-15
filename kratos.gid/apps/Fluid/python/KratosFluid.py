@@ -1,10 +1,8 @@
-from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
+import sys
+import time
 
 import KratosMultiphysics
 from KratosMultiphysics.FluidDynamicsApplication.fluid_dynamics_analysis import FluidDynamicsAnalysis
-
-import sys
-import time
 
 class FluidDynamicsAnalysisWithFlush(FluidDynamicsAnalysis):
 

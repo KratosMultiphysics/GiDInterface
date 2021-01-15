@@ -1,12 +1,9 @@
-from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
+import sys
+import time
 
 import KratosMultiphysics
 import KratosMultiphysics.ConvectionDiffusionApplication
-
 from KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis import ConvectionDiffusionAnalysis
-
-import sys
-import time
 
 class ConvectionDiffusionAnalysisWithFlush(ConvectionDiffusionAnalysis):
 

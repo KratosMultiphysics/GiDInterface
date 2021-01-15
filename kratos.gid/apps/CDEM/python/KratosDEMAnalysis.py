@@ -4,6 +4,7 @@ import sys
 import KratosMultiphysics
 from KratosMultiphysics.DEMApplication.DEM_analysis_stage import DEMAnalysisStage
 from KratosMultiphysics import Logger
+
 class DEMAnalysisStageWithFlush(DEMAnalysisStage):
 
     def __init__(self, model, project_parameters, flush_frequency=10.0):
