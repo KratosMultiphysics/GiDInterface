@@ -49,4 +49,13 @@ proc ::Fluid::GetAttribute {name} {
     return $value
 }
 
+proc ::Fluid::BeforeMeshGeneration {size} {
+    # Check 1 part in Parts
+    set err ""
+    if {[llength [Fluid::xml::GetPartsGroups]] ne 1} {
+        set err "You must set one part in Parts.\nRemember that in kratos, only the entities assigned to the tree will be meshed"
+    }
+    if {$err ne ""} {W $err}
+}
+
 ::Fluid::Init

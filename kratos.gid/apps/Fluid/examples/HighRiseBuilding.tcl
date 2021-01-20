@@ -9,8 +9,8 @@ proc ::Fluid::examples::HighRiseBuilding {args} {
     Kratos::ResetModel
     DrawHighRiseBuildingGeometry$::Model::SpatialDimension
     AssignGroupsHighRiseBuilding$::Model::SpatialDimension
-    AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
     TreeAssignationHighRiseBuilding$::Model::SpatialDimension
+    AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS

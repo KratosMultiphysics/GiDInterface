@@ -17,7 +17,6 @@ proc Fluid::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
-
 }
 
 proc Fluid::xml::getUniqueName {name} {
@@ -66,7 +65,6 @@ proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name 
     set interval_name [dict get $interval_data name] 
     if {[write::isBooleanTrue [dict get $interval_data new]]} {
         spdAux::CreateInterval $interval_name [dict get $interval_data ini] [dict get $interval_data end]
-
     }
     GiD_Groups create "$base_group_name//$interval_name"
     GiD_Groups edit state "$base_group_name//$interval_name" hidden
@@ -87,9 +85,7 @@ proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name 
             W "Warning - Couldn't find property Inlet $prop"
         }
     }
-    
 }
-
 
 proc Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
     
@@ -110,5 +106,14 @@ proc Fluid::xml::ProcHideIfElement { domNode list_elements } {
     set element [lindex [Fluid::write::GetUsedElements] 0]
     if {$element in $list_elements} {return hidden} {return normal}
 }
+
+proc Fluid::xml::GetPartsGroups { } {
+    customlib::UpdateDocument
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute [Fluid::write::GetAttribute parts_un]]/group"
+    return [$root selectNodes $xp1]
+}
+
+
 
 Fluid::xml::Init

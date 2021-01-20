@@ -7,8 +7,8 @@ proc ::Fluid::examples::CylinderInFlow {args} {
     }
     DrawCylinderInFlowGeometry$::Model::SpatialDimension
     AssignGroupsCylinderInFlow$::Model::SpatialDimension
-    AssignCylinderInFlowMeshSizes$::Model::SpatialDimension
     TreeAssignationCylinderInFlow$::Model::SpatialDimension
+    AssignCylinderInFlowMeshSizes$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS

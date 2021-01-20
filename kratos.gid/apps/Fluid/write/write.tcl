@@ -82,11 +82,9 @@ proc Fluid::write::WriteMaterialsFile { {write_const_law True} {include_modelpar
 
 proc Fluid::write::Validate {} {
     set err ""
-    set root [customlib::GetBaseRoot]
 
     # Check only 1 part in Parts
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
-    if {[llength [$root selectNodes $xp1]] ne 1} {
+    if {[llength [Fluid::xml::GetPartsGroups]] ne 1} {
         set err "You must set one part in Parts.\n"
     }
 
