@@ -18,9 +18,9 @@
             <parameter n="TEMPERATURE_vs_VISCOSITY"     pn="Viscosity table"      type="tablefile"                                  v="- No file"/>
 			<parameter n="BULK_MODULUS"                 pn="Bulk modulus"         unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
 			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
-            <!--<parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
             <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
-            <!--<parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
         </inputs>
         <outputs>
         </outputs>
@@ -42,9 +42,9 @@
             <parameter n="TEMPERATURE_vs_VISCOSITY"     pn="Viscosity table"      type="tablefile"                                  v="- No file"/>
 			<parameter n="BULK_MODULUS"                 pn="Bulk modulus"         unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
 			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
-            <!--<parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
             <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
-            <!--<parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
         </inputs>
         <outputs>
         </outputs>
@@ -69,9 +69,9 @@
             <parameter n="YIELD_SHEAR"                  pn="Yield shear"          unit_magnitude="P"               units="Pa"       v="100"/>
             <parameter n="ADAPTIVE_EXPONENT"            pn="Adaptive exponent"    unit_magnitude=""                units="1/s"      v="1000" help="The higher is, the lower is the regularization."/>
 			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
-            <!--<parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
             <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
-            <!--<parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
         </inputs>
         <outputs>
         </outputs>
@@ -96,9 +96,9 @@
             <parameter n="YIELD_SHEAR"                  pn="Yield shear"          unit_magnitude="P"               units="Pa"       v="100"/>
             <parameter n="ADAPTIVE_EXPONENT"            pn="Adaptive exponent"    unit_magnitude=""                units="1/s"      v="1000"/>
 			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
-            <!--<parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
             <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
-            <!--<parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
         </inputs>
         <outputs>
         </outputs>
@@ -122,9 +122,9 @@
             <parameter n="POISSON_RATIO"                pn="Poisson ratio"        unit_magnitude=""                units=""         v="0.25"/>
 			<parameter n="TEMPERATURE_vs_POISSON"       pn="Poisson ratio table"  type="tablefile"                                  v="- No file"/>
 			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="50.0"/>
-            <!--<parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
             <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="500.0"/>
-            <!--<parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
         </inputs>
         <outputs>
         </outputs>
@@ -147,9 +147,9 @@
             <parameter n="POISSON_RATIO"                pn="Poisson ratio"        unit_magnitude=""                units=""         v="0.25"/>
 			<parameter n="TEMPERATURE_vs_POISSON"       pn="Poisson ratio table"  type="tablefile"                                  v="- No file"/>
 			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="50.0"/>
-            <!--<parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
             <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="500.0"/>
-            <!--<parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>-->
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
         </inputs>
         <outputs>
         </outputs>
