@@ -3,6 +3,7 @@ namespace eval ::StenosisWizard {
     variable dir
     variable kratos_name
     variable attributes
+    variable must_open_wizard_window
 }
 
 proc ::StenosisWizard::Init { } {
@@ -10,6 +11,9 @@ proc ::StenosisWizard::Init { } {
     variable dir
     variable kratos_name
     variable attributes
+    variable must_open_wizard_window
+    
+    set  must_open_wizard_window 1
     
     # Init Working directory
     set dir [apps::getMyDir "StenosisWizard"]
@@ -41,7 +45,7 @@ proc ::StenosisWizard::LoadMyFiles { } {
     
     
     # Init the Wizard Window
-    after 600 [::StenosisWizard::StartWizardWindow]
+    #after 600 [::StenosisWizard::StartWizardWindow]
 }
 
 
@@ -56,8 +60,9 @@ proc ::StenosisWizard::StartWizardWindow { } {
     smart_wizard::SetWizardImageDirectory [file join $dir images]
     smart_wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]
     smart_wizard::ImportWizardData
+    variable must_open_wizard_window
 
-    smart_wizard::CreateWindow
+    if {$must_open_wizard_window} {smart_wizard::CreateWindow }
 }
 proc ::StenosisWizard::CustomToolbarItems { } {
     return "-1"    
