@@ -101,7 +101,7 @@ proc PfemThermic::examples::TreeAssignationThermicSloshing {args} {
 	# Temperature IC
 	set thermalICnode [customlib::AddConditionGroupOnXPath $fixTemperature "Fluid"]
 	$thermalICnode setAttribute ov surface
-	set props [list value 293.15 Interval Initial constrained 0]
+	set props [list value 293.15 Interval Initial constrained 1]
     spdAux::SetValuesOnBaseNode $thermalICnode $props
 	
 	# Time parameters
