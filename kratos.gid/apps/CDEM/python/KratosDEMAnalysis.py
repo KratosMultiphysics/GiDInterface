@@ -1,21 +1,19 @@
-import KratosMultiphysics
-from KratosMultiphysics.DEMApplication.DEM_analysis_stage import DEMAnalysisStage
-
 import time
 import sys
-""" model = KratosMultiphysics.Model()
-solution = Main.Solution(model)
-solution.Run() """
+
+import KratosMultiphysics
+from KratosMultiphysics.DEMApplication.DEM_analysis_stage import DEMAnalysisStage
+from KratosMultiphysics import Logger
 
 class DEMAnalysisStageWithFlush(DEMAnalysisStage):
 
     def __init__(self, model, project_parameters, flush_frequency=10.0):
-        super(DEMAnalysisStageWithFlush,self).__init__(model, project_parameters)
+        super().__init__(model, project_parameters)
         self.flush_frequency = flush_frequency
         self.last_flush = time.time()
 
     def FinalizeSolutionStep(self):
-        super(DEMAnalysisStageWithFlush,self).FinalizeSolutionStep()
+        super().FinalizeSolutionStep()
 
         if self.parallel_type == "OpenMP":
             now = time.time()
@@ -24,10 +22,9 @@ class DEMAnalysisStageWithFlush(DEMAnalysisStage):
                 self.last_flush = now
 
 if __name__ == "__main__":
-    from KratosMultiphysics import Logger
     Logger.GetDefaultOutput().SetSeverity(Logger.Severity.INFO)
-    with open("ProjectParametersDEM.json",'r') as parameter_file:
-        project_parameters = KratosMultiphysics.Parameters(parameter_file.read())
+    with open("ProjectParametersDEM.json", 'r') as parameter_file:
+        parameters = KratosMultiphysics.Parameters(parameter_file.read())
 
-    model = KratosMultiphysics.Model()
-    DEMAnalysisStageWithFlush(model, project_parameters).Run()
+    global_model = KratosMultiphysics.Model()
+    DEMAnalysisStageWithFlush(global_model, parameters).Run()
