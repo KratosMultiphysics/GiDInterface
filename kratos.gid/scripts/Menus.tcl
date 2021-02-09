@@ -129,7 +129,7 @@ proc Kratos::ChangeMenus { } {
 
     if {$::Kratos::kratos_private(UseWizard)} {
         GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
-        GiDMenu::InsertOption "Kratos" [list "Wizard window" ] [incr pos] PRE [list Wizard::CreateWindow] "" "" replace =
+        GiDMenu::InsertOption "Kratos" [list "Wizard window" ] [incr pos] PRE [list apps::ExecuteOnCurrentApp StartWizardWindow] "" "" replace =
     }
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Import MDPA"] [incr pos] PRE [list Kratos::ReadPreW] "" "" replace =

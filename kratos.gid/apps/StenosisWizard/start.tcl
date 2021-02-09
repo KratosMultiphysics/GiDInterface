@@ -45,7 +45,7 @@ proc ::StenosisWizard::LoadMyFiles { } {
     
     
     # Init the Wizard Window
-    #after 600 [::StenosisWizard::StartWizardWindow]
+    after 600 [::StenosisWizard::StartWizardWindow]
 }
 
 
