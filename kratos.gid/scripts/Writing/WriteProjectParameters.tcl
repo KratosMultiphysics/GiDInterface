@@ -506,7 +506,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
-    dict set resultDict folder_name                    "vtk_output"
+    dict set resultDict output_path                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
     dict set resultDict nodal_data_value_variables      [list ]
