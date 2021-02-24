@@ -1,5 +1,3 @@
-from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
-
 # Time monitoring
 import time as timer
 print(timer.ctime())
@@ -135,7 +133,7 @@ for process in list_of_processes:
 
 for process in list_of_processes:
     process.ExecuteBeforeOutputStep()
-    
+
 for process in list_of_processes:
     process.ExecuteAfterOutputStep()
 
@@ -155,7 +153,7 @@ gid_output.ExecuteFinalize()
 
 for process in list_of_processes:
     process.ExecuteFinalize()
-    
+
 
 # Time control
 print("Analysis Completed. Elapsed Time = %.3f" % (timer.perf_counter() - initial_time)," seconds.")
