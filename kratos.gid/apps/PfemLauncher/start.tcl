@@ -5,7 +5,7 @@ namespace eval ::PfemLauncher {
 proc ::PfemLauncher::Init { } {
     variable available_apps
 
-    set available_apps [list PfemFluid DEMPFEM PfemThermic]
+    set available_apps [list PfemFluid DEMPFEM PfemThermic PfemMelting]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
     

@@ -5,7 +5,7 @@ namespace eval ::ThermicLauncher {
 proc ::ThermicLauncher::Init { } {
     variable available_apps
 
-    set available_apps [list ConvectionDiffusion Buoyancy ConjugateHeatTransfer]
+    set available_apps [list ConvectionDiffusion Buoyancy ConjugateHeatTransfer PfemMelting]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
     

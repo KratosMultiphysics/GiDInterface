@@ -23,6 +23,7 @@
 	<appLink n="Pfem" public="0" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
 	<appLink n="PfemFluid" public="0" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
 	<appLink n="PfemThermic" public="0" pn="Pfem Thermic" active="0" appid="PfemThermic" prefix="PFEMTHERMIC_"/>
+	<appLink n="PfemMelting" public="0" pn="Pfem Melting" active="0" appid="PfemMelting" prefix="PFEMMELTING_"/>
 	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard" is_tool="1"/>
 	<appLink n="Stent" public="1" pn="Stent" active="0" appid="Stent" prefix="Stent" is_tool="1"/>
 	<appLink n="DEMLauncher" public="1" pn="DEM" active="0" appid="DEMLauncher" prefix="DEMLauncher"/>

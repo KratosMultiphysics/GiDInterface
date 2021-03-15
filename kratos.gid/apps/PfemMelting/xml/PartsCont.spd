@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<condition n="PartsCont" pn="Define particle groups" ov="line" ovm="node,element" icon="shells16" help="Each group of particles must be defined here. Particles with different properties must be assigned to different groups." un="DEMParts">
+	<value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements ElementType Buoyancy]" state="hidden">
+	</value>	
+</condition>
