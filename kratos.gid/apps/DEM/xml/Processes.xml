@@ -61,28 +61,28 @@
           </parameter>
 
           <parameter n="FEM-RBImposedForces" parent="FreeMotion" type="combo" v="No" pn="Impose external forces" values="No,Yes" show_in_window="0">
-            <parameter n="ExternalForceX" parent="Yes" type="combo" v="No" pn="External Forces" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the X direction to the group" show_in_window="0">
+            <parameter n="ExternalForceX" parent="Yes" type="combo" v="No" pn="External Force X" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the X direction to the group" show_in_window="0">
               <parameter n="FX" parent="Constant" v="0.0" pn="   Fx" units="N" unit_magnitude="F" help="Insert the value of the external force in X direction" show_in_window="0"/>
               <parameter n="FilenameFX" parent="FromATable" type="file" v="- No file -" pn="   Filename" help="Insert here the name of the file containing the external force in X direction" show_in_window="0"/>
             </parameter>
-            <parameter n="ExternalForceY" parent="Yes" type="combo" v="No" pn="External Forces" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Y direction  to the group" show_in_window="0">
+            <parameter n="ExternalForceY" parent="Yes" type="combo" v="No" pn="External Force Y" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Y direction  to the group" show_in_window="0">
               <parameter n="FY" parent="Constant" v="0.0" pn="   Fy" units="N" unit_magnitude="F" help="Insert the value of the external force in Y direction" show_in_window="0"/>
               <parameter n="FilenameFY" parent="FromATable" type="file" v="- No file -" pn="   Filename" help="Insert here the name of the file containing the external force in Y direction" show_in_window="0"/>
             </parameter>
-            <parameter n="ExternalForceZ" parent="Yes" type="combo" v="No" pn="External Forces" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Z direction  to the group" show_in_window="0">
+            <parameter n="ExternalForceZ" parent="Yes" type="combo" v="No" pn="External Force Z" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external force in the Z direction  to the group" show_in_window="0">
               <parameter n="FZ" parent="Constant" v="0.0" pn="   Fz" units="N" unit_magnitude="F" help="Insert the value of the external force in Z direction" show_in_window="0"/>
               <parameter n="FilenameFZ" parent="FromATable" type="file" v="- No file -" pn="   Filename" help="Insert here the name of the file containing the external force in Z direction" show_in_window="0"/>
             </parameter>
 
-            <parameter n="ExternalMomentX" parent="Yes" type="combo" v="No" pn="External Moments" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the X direction to the group" show_in_window="0">
+            <parameter n="ExternalMomentX" parent="Yes" type="combo" v="No" pn="External Moment X" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the X direction to the group" show_in_window="0">
               <parameter n="MX" parent="Constant" v="0.0" pn="   Mx" units="N*m" unit_magnitude="F*L" help="Insert the value of the external force in X direction" show_in_window="0"/>
               <parameter n="FilenameMX" parent="FromATable" type="file" v="- No file -" pn="   FilenameMx(N*m)" help="Insert here the name of the file containing the external force in X direction" show_in_window="0"/>
             </parameter>
-            <parameter n="ExternalMomentY" parent="Yes" type="combo" v="No" pn="External Moments" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the Y direction  to the group" show_in_window="0">
+            <parameter n="ExternalMomentY" parent="Yes" type="combo" v="No" pn="External Moment Y" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the Y direction  to the group" show_in_window="0">
               <parameter n="MY" parent="Constant" v="0.0" pn="   My" units="N*m" unit_magnitude="F*L" help="Insert the value of the external force in Y direction" show_in_window="0"/>
               <parameter n="FilenameMY" parent="FromATable" type="file" v="- No file -" pn="   FilenameMy(N*m)" help="Insert here the name of the file containing the external force in Y direction" show_in_window="0"/>
             </parameter>
-            <parameter n="ExternalMomentZ" parent="Yes" type="combo" v="No" pn="External Moments" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the Z direction  to the group" show_in_window="0">
+            <parameter n="ExternalMomentZ" parent="Yes" type="combo" v="No" pn="External Moment Z" values="No,Constant,FromATable" pvalues="No,Constant,From a table" help="Choose the way of imposing the external moment in the Z direction  to the group" show_in_window="0">
               <parameter n="MZ" parent="Constant" v="0.0" pn="   Mz" units="N*m" unit_magnitude="F*L" help="Insert the value of the external force in Z direction" show_in_window="0"/>
               <parameter n="FilenameMZ" parent="FromATable" type="file" v="- No file -" pn="   FilenameMz(N*m)" help="Insert here the name of the file containing the external force in Z direction" show_in_window="0"/>
             </parameter>
