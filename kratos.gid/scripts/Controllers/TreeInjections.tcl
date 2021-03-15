@@ -16,7 +16,7 @@ proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
     if {$node ne ""} {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
     } {
-        error "$name $it not found - Check GetFromXML.tcl file"
+        error "$name $it not found - Check your XmlController.tcl file"
     }
 }
 
