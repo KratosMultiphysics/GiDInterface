@@ -7,11 +7,11 @@ proc PfemMelting::xml::Init { } {
     # Namespace variables initialization
     variable dir
     Model::InitVariables dir $PfemMelting::dir
-    Model::ForgetElements
-    Model::ForgetMaterials
-    Model::ForgetConstitutiveLaws
+    #Model::ForgetElements
+    #Model::ForgetMaterials
+    #Model::ForgetConstitutiveLaws
     Model::getElements ElementsC.xml
-    Model::ForgetConditions
+    #Model::ForgetConditions
     Model::getConditions Conditions.xml
     Model::getConstitutiveLaws ConstitutiveLawsC.xml
     Model::getMaterials MaterialsC.xml
