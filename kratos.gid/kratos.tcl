@@ -82,7 +82,7 @@ proc Kratos::RegisterGiDEvents { } {
 
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
-    CreateWidgetsFromXml::ClearCachePreferences
+    if {[GidUtils::VersionCmp "15.0.0"] >=0 } {CreateWidgetsFromXml::ClearCachePreferences}
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
