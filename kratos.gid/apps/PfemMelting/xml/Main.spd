@@ -6,7 +6,7 @@
         <include n="InitialConditions" active="1" path="apps/Fluid/xml/InitialConditions.spd"/>
         <include n="BoundaryConditions" active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
         <include n="SolutionStrategy" active="1" path="apps/Buoyancy/xml/SolutionStrategyFluid.spd"/>
-        <include n="Materials" active="1" path="apps/PfemMelting/xml/Materials.spd"/>
+        <include n="Materials" active="1" path="apps/Fluid/xml/Materials.spd"/>
     </container>
 
     <container n="ConvectionDiffusion" pn="Thermal" icon="app" prefix="CNVDFF" tree_state="open" open_window="0">
