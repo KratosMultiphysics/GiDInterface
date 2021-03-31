@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
   <container n="PfemMelting" pn="PfemMelting" icon="units" prefix="Buoyancy" tree_state="open" open_window="0">
-    <container n="Fluid" pn="Fluid" icon="units" prefix="FL" tree_state="open" open_window="0">
-        <include n="AnalysisType" active="1" path="apps/Fluid/xml/AnalysisType.spd"/>
+    <container n="Fluid" pn="Melting object" icon="units" prefix="FL" tree_state="open" open_window="0">
+        <include n="AnalysisType" active="1" path="apps/Fluid/xml/AnalysisType.spd" state="hidden"/>
         <include n="Parts" active="1" path="apps/Fluid/xml/Parts.spd"/>
         <include n="InitialConditions" active="1" path="apps/Fluid/xml/InitialConditions.spd"/>
         <include n="BoundaryConditions" active="1" path="apps/Fluid/xml/BoundaryConditions.spd"/>
