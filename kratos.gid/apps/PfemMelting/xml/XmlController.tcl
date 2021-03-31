@@ -8,13 +8,13 @@ proc PfemMelting::xml::Init { } {
     variable dir
     Model::InitVariables dir $PfemMelting::dir
     #Model::ForgetElements
-    #Model::ForgetMaterials
-    #Model::ForgetConstitutiveLaws
-    Model::getElements ElementsC.xml
+    # Model::getElements ElementsC.xml
     #Model::ForgetConditions
-    Model::getConditions Conditions.xml
-    Model::getConstitutiveLaws ConstitutiveLawsC.xml
-    Model::getMaterials MaterialsC.xml
+    # Model::getConditions Conditions.xml
+    Model::ForgetConstitutiveLaws
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
+    Model::ForgetMaterials
+    Model::getMaterials Materials.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
 

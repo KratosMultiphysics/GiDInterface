@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Materials>
-  <Material n="Polymer1" MaterialType="PfemMelting" help="">
-    <inputs>
-      <!-- <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500.0" type="double"  help="Density of the material (not bulk density)"/> -->      
-    </inputs>
-  </Material>
-</Materials>
