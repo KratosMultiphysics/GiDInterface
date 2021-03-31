@@ -38,6 +38,11 @@ proc PfemMelting::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden FLBC Slip3D
     spdAux::SetValueOnTreeItem state hidden FLBC VelocityConstraints3D
     spdAux::SetValueOnTreeItem pn "Fixed velocity boundary" FLBC NoSlip3D
+
+    # Delete this lines when heat conditions are back!
+    # spdAux::SetValueOnTreeItem state hidden CNVDFFBC HeatFlux3D
+    # spdAux::SetValueOnTreeItem state hidden CNVDFFBC ImposedTemperature3D
+    # spdAux::SetValueOnTreeItem state hidden CNVDFFBC ThermalFace3D
 }
 
 
