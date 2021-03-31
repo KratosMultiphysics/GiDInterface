@@ -7,6 +7,7 @@ namespace eval ::PfemMelting::write {
 
 proc ::PfemMelting::write::Init { } {
     Buoyancy::write::Init
+    SetAttribute main_script_file "PfemMeltingAnalysisLauncher.py"
 }
 
 # Events
@@ -24,7 +25,8 @@ proc PfemMelting::write::GetAttribute {att} {
 }
 
 proc PfemMelting::write::SetAttribute {att val} {
-    Buoyancy::write::SetAttribute $att $val
+    variable writeAttributes
+    dict set writeAttributes $att $val
 }
 
 proc PfemMelting::write::AddAttributes {configuration} {
