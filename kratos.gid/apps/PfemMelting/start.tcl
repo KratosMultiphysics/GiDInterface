@@ -29,7 +29,7 @@ proc ::PfemMelting::Init { } {
     set ::spdAux::TreeVisibility 1
     
     #TODO: dimensions?
-    set ::Model::ValidSpatialDimensions [list 2D 3D] 
+    set ::Model::ValidSpatialDimensions [list 3D] 
 
     LoadMyFiles
 }
