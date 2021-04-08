@@ -14,6 +14,7 @@
     <link path="apps/CDEM/examples/examples.xml"/>
     <link path="apps/DEMPFEM/examples/examples.xml"/>
     <link path="apps/FluidDEM/examples/examples.xml"/>
+	<link path="apps/DEMThermic/examples/examples.xml"/>
     <link path="apps/Dam/examples/examples.xml"/>
     <!-- More -->
     <link path="apps/PotentialFluid/examples/examples.xml"/>

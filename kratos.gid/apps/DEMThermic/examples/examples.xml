@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Groups>
+    <Group id="PfemThermic" name="PfemThermic">
+        <Example id="PfemThermicSloshing" app="PfemThermic" logo="exampleSloshing.png" name="Thermic sloshing" dim="2D" cmd="::PfemThermic::examples::ThermicSloshing"/>
+    </Group>
+</Groups>
