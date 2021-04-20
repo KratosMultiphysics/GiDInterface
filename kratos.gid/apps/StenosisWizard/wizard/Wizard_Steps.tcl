@@ -457,20 +457,30 @@ proc StenosisWizard::Wizard::LastStep { } {
 }
 
 proc StenosisWizard::AfterMeshGeneration { fail } {
+
     GidUtils::CloseWindow MESHPROGRESS
     GiD_Process Mescape Mescape Mescape
+    GiD_Process Mescape Files Save 
+    StenosisWizard::Wizard::PostMeshBend
     GiD_Process Mescape Files Save 
 }
 
 
-proc StenosisWizard::Bend { angle } {
-    set ndim 3
-    set ind2 2
-    set indNO 3
+proc StenosisWizard::Wizard::PostMeshBend { } {
+    
+    set length [ smart_wizard::GetProperty Geometry Length,value]
+    set length_plotted [expr $length*2]
+    set orig_x [ expr $length*-1]
+    set angle [ smart_wizard::GetProperty Geometry Bending,value]
+    set angle [expr $angle/2]
+    GidUtils::DisableGraphics
+    StenosisWizard::Wizard::Bend $orig_x $length_plotted $angle
+    GidUtils::EnableGraphics
+    GiD_Process Mescape Meshing MeshView escape 
 
-    #TODO CALCULATE THIS
-    set orig_x -100
-    set len 200
+}
+
+proc StenosisWizard::Wizard::Bend { orig_x len angle} {
 
     lassign [GiD_Info Mesh nodes -array] ids coords
     lassign $coords coord_x coord_y coord_z
