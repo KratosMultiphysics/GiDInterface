@@ -462,5 +462,44 @@ proc StenosisWizard::AfterMeshGeneration { fail } {
     GiD_Process Mescape Files Save 
 }
 
+
+proc StenosisWizard::Bend { angle } {
+    set ndim 3
+    set ind2 2
+    set indNO 3
+
+    #TODO CALCULATE THIS
+    set orig_x -100
+    set len 200
+
+    lassign [GiD_Info Mesh nodes -array] ids coords
+    lassign $coords coord_x coord_y coord_z
+    set size [objarray length $coord_x]
+    
+    for {set i 0} {$i < $size} {incr i} {
+        # primera parte 
+        set id [objarray get $ids $i]
+        set old_val_x [objarray get $coord_x $i]
+        set old_val_y [objarray get $coord_y $i]
+        set old_val_z [objarray get $coord_z $i]
+        set dist_x [expr $old_val_x - $orig_x]
+        set ang [expr $angle*$dist_x/$len]
+
+        set res_x [expr $old_val_x + sin($ang) * $old_val_y]
+        set res_y [expr cos($ang) *$old_val_y]
+        set res_z $old_val_z
+
+        # segunda parte
+        set ang2 [expr $angle*($old_val_x - $orig_x)/$len]
+
+        set res_x [expr $old_val_x + cos($ang2)*($old_val_x - $orig_x) + sin($ang2)*$res_y]
+        set res_y [expr $old_val_y - sin($ang2)*($old_val_x - $orig_x) + cos($ang2)*$res_y]
+        set res_z $old_val_z
+
+        # Move the nodes to the final position
+        GiD_Mesh edit node $id [list $res_x $res_y $res_z]
+    }
+}
+
 StenosisWizard::Wizard::Init
 
