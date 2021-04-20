@@ -484,16 +484,18 @@ proc StenosisWizard::Bend { angle } {
         set old_val_z [objarray get $coord_z $i]
         set dist_x [expr $old_val_x - $orig_x]
         set ang [expr $angle*$dist_x/$len]
-
+        set ang [expr {double(round(10000*$ang))/10000}]
         set res_x [expr $old_val_x + sin($ang) * $old_val_y]
         set res_y [expr cos($ang) *$old_val_y]
         set res_z $old_val_z
-
+       
         # segunda parte
         set ang2 [expr $angle*($old_val_x - $orig_x)/$len]
+        set res_x_tmp $res_x
+        set x_rel [expr $res_x_tmp - $orig_x]
 
-        set res_x [expr $old_val_x + cos($ang2)*($old_val_x - $orig_x) + sin($ang2)*$res_y]
-        set res_y [expr $old_val_y - sin($ang2)*($old_val_x - $orig_x) + cos($ang2)*$res_y]
+        set res_x [expr $orig_x + cos($ang2)*($x_rel) + sin($ang2)*$res_y]
+        set res_y [expr -sin($ang2)*($x_rel) + cos($ang2)*$res_y]
         set res_z $old_val_z
 
         # Move the nodes to the final position
