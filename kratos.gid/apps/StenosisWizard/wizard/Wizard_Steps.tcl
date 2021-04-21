@@ -428,27 +428,30 @@ proc StenosisWizard::Wizard::LastStep { } {
     #W "$length $delta"
 
     # Cut planes    
-    #gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
-    
-    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]} {name Main}
-    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]/value[@n='normal']} {v 0.0,1.0,0.0}
-    spdAux::ClearCutPlanes
-    set cutplane_xp "[spdAux::getRoute CutPlanes]/blockdata\[1\]"
-    
-    for {set i 1} {$i <= $ncuts} {incr i} {
-        set x [expr -$length + ($i * $delta)]
-        set x [expr double(round(100*$x))/100]
+    set cuts_enabled 0
+    if {$cuts_enabled} {
+        #gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
+        
+        #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]} {name Main}
+        #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]/value[@n='normal']} {v 0.0,1.0,0.0}
+        spdAux::ClearCutPlanes
+        set cutplane_xp "[spdAux::getRoute CutPlanes]/blockdata\[1\]"
+        
+        for {set i 1} {$i <= $ncuts} {incr i} {
+            set x [expr -$length + ($i * $delta)]
+            set x [expr double(round(100*$x))/100]
+            gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
+            set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $i +1]\]"
+            gid_groups_conds::setAttributesF $cutplane "name CutPlane$i"
+            gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 1.0,0.0,0.0"
+            gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v $x,0.0,0.0"
+        }
+        
         gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
-        set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $i +1]\]"
-        gid_groups_conds::setAttributesF $cutplane "name CutPlane$i"
-        gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 1.0,0.0,0.0"
-        gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v $x,0.0,0.0"
+        set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $ncuts +2]\]"
+        gid_groups_conds::setAttributesF $cutplane "name CutPlane[expr $ncuts +1]"
+        gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 0.0,1.0,0.0"
     }
-    
-    gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
-    set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $ncuts +2]\]"
-    gid_groups_conds::setAttributesF $cutplane "name CutPlane[expr $ncuts +1]"
-    gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 0.0,1.0,0.0"
     
     #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
     #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
@@ -471,7 +474,7 @@ proc StenosisWizard::Wizard::PostMeshBend { } {
     set length [ smart_wizard::GetProperty Geometry Length,value]
     set length_plotted [expr $length*2]
     set orig_x [ expr $length*-1]
-    set angle [ smart_wizard::GetProperty Geometry Bending,value]
+    set angle [ smart_wizard::GetProperty Simulation Bending,value]
     set angle [expr $angle/2]
     GidUtils::DisableGraphics
     StenosisWizard::Wizard::Bend $orig_x $length_plotted $angle
