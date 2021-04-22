@@ -394,6 +394,7 @@ proc StenosisWizard::Wizard::Mesh { } {
     MeshGenerationOKDo $mesh
 }
 proc StenosisWizard::Wizard::Save { } {
+    LastStep
     GiD_Process Mescape Files Save 
 }
 
@@ -422,19 +423,27 @@ proc StenosisWizard::Wizard::LastStep { } {
     gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='EndTime']} "v $end"
     gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='DeltaTime']} "v $delta"
     
+
+    PlaceCutPlanes
+    
+    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
+    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
+    spdAux::RequestRefresh
+    
+}
+
+proc StenosisWizard::Wizard::PlaceCutPlanes { } {
     set ncuts [smart_wizard::GetProperty Simulation Cuts,value]
     set length [smart_wizard::GetProperty Geometry Length,value]
     set delta [expr 2.0*double($length)/(double($ncuts)+1.0)]
-    #W "$length $delta"
+    set orig_x [ expr $length*-1]
+    
+    set angle [ smart_wizard::GetProperty Simulation Bending,value]
 
     # Cut planes    
-    set cuts_enabled 0
+    set cuts_enabled 1
     if {$cuts_enabled} {
-        #gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
-        
-        #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]} {name Main}
-        #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]/value[@n='normal']} {v 0.0,1.0,0.0}
-        spdAux::ClearCutPlanes
+       spdAux::ClearCutPlanes
         set cutplane_xp "[spdAux::getRoute CutPlanes]/blockdata\[1\]"
         
         for {set i 1} {$i <= $ncuts} {incr i} {
@@ -443,19 +452,34 @@ proc StenosisWizard::Wizard::LastStep { } {
             gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
             set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $i +1]\]"
             gid_groups_conds::setAttributesF $cutplane "name CutPlane$i"
-            gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 1.0,0.0,0.0"
-            gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v $x,0.0,0.0"
+
+            set coords [list [objarray new doublearray -values [list $x $x $x]] [objarray new doublearray -values {0.0 1.0 0.0}] [objarray new doublearray -values {0.0 0.0 1.0}]]           
+            set new_nodes [StenosisWizard::Wizard::BendNodes $orig_x [expr $length*2] [expr $angle/2] $coords]
+            set o [list [objarray get [lindex $new_nodes 0] 0] [objarray get [lindex $new_nodes 1] 0] [objarray get [lindex $new_nodes 2] 0] ]
+            set p1 [list [objarray get [lindex $new_nodes 0] 1] [objarray get [lindex $new_nodes 1] 1] [objarray get [lindex $new_nodes 2] 1] ]
+            set p2 [list [objarray get [lindex $new_nodes 0] 2] [objarray get [lindex $new_nodes 1] 2] [objarray get [lindex $new_nodes 2] 2] ]
+            set v1 [math::linearalgebra::sub $p1 $o]
+            set v2 [math::linearalgebra::sub $p2 $o]
+            set v_norm [::math::linearalgebra::crossproduct $v1 $v2]
+            gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v [join $v_norm {,}]"
+            gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v [join $o {,}]"
         }
         
+        set x $length
+        set coords [list [objarray new doublearray -values [list $x [expr $x +1] $x]] [objarray new doublearray -values {0.0 0.0 0.0}] [objarray new doublearray -values {0.0 0.0 1.0}]]           
+        set new_nodes [StenosisWizard::Wizard::BendNodes $orig_x [expr $length*2] [expr $angle/2] $coords]
+        set o [list [objarray get [lindex $new_nodes 0] 0] [objarray get [lindex $new_nodes 1] 0] [objarray get [lindex $new_nodes 2] 0] ]
+        set p1 [list [objarray get [lindex $new_nodes 0] 1] [objarray get [lindex $new_nodes 1] 1] [objarray get [lindex $new_nodes 2] 1] ]
+        set p2 [list [objarray get [lindex $new_nodes 0] 2] [objarray get [lindex $new_nodes 1] 2] [objarray get [lindex $new_nodes 2] 2] ]
+        set v1 [math::linearalgebra::sub $p1 $o]
+        set v2 [math::linearalgebra::sub $p2 $o]
+        set v_norm [::math::linearalgebra::crossproduct $v1 $v2]
         gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
         set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $ncuts +2]\]"
         gid_groups_conds::setAttributesF $cutplane "name CutPlane[expr $ncuts +1]"
-        gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 0.0,1.0,0.0"
+        gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v [join $v_norm {,}]"
+        gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v [join $o {,}]"
     }
-    
-    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
-    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
-    spdAux::RequestRefresh
     
 }
 
@@ -470,7 +494,7 @@ proc StenosisWizard::AfterMeshGeneration { fail } {
 
 
 proc StenosisWizard::Wizard::PostMeshBend { } {
-    
+
     set length [ smart_wizard::GetProperty Geometry Length,value]
     set length_plotted [expr $length*2]
     set orig_x [ expr $length*-1]
@@ -486,12 +510,26 @@ proc StenosisWizard::Wizard::PostMeshBend { } {
 proc StenosisWizard::Wizard::Bend { orig_x len angle} {
 
     lassign [GiD_Info Mesh nodes -array] ids coords
+    set moved_nodes [StenosisWizard::Wizard::BendNodes $orig_x $len $angle $coords]
+    lassign $moved_nodes coord_x coord_y coord_z
+    set size [objarray length $coord_x]
+    for {set i 0} {$i < $size} {incr i} {
+        set res_x [objarray get $coord_x $i]
+        set res_y [objarray get $coord_y $i]
+        set res_z [objarray get $coord_z $i]
+        GiD_Mesh edit node [objarray get $ids $i] [list $res_x $res_y $res_z]
+    }
+}
+
+proc StenosisWizard::Wizard::BendNodes {orig_x len angle coords} {
     lassign $coords coord_x coord_y coord_z
     set size [objarray length $coord_x]
+    set result_x [objarray new doublearray $size 0.0]
+    set result_y [objarray new doublearray $size 0.0]
+    set result_z [objarray new doublearray $size 0.0]
     
     for {set i 0} {$i < $size} {incr i} {
         # primera parte 
-        set id [objarray get $ids $i]
         set old_val_x [objarray get $coord_x $i]
         set old_val_y [objarray get $coord_y $i]
         set old_val_z [objarray get $coord_z $i]
@@ -507,13 +545,12 @@ proc StenosisWizard::Wizard::Bend { orig_x len angle} {
         set res_x_tmp $res_x
         set x_rel [expr $res_x_tmp - $orig_x]
 
-        set res_x [expr $orig_x + cos($ang2)*($x_rel) + sin($ang2)*$res_y]
-        set res_y [expr -sin($ang2)*($x_rel) + cos($ang2)*$res_y]
-        set res_z $old_val_z
-
-        # Move the nodes to the final position
-        GiD_Mesh edit node $id [list $res_x $res_y $res_z]
+        # Store the nodes final position
+        objarray set $result_x $i [expr $orig_x + cos($ang2)*($x_rel) + sin($ang2)*$res_y]
+        objarray set $result_y $i [expr -sin($ang2)*($x_rel) + cos($ang2)*$res_y]
+        objarray set $result_z $i $old_val_z
     }
+    return [list $result_x $result_y $result_z]
 }
 
 StenosisWizard::Wizard::Init
