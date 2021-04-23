@@ -614,33 +614,49 @@ proc StenosisWizard::Wizard::RedrawCuts { } {
 }
 
 proc StenosisWizard::Wizard::PreviewCurvature {} {
-    set surfaces [GiD_Geometry -v2 list surface]
-
-    set x [list ]
-    set y [list ]
-    set z [list ]
-    
-    foreach surface_id $surfaces {
-        lassign [GiD_Geometry get surface $surface_id render_mesh] elemtype elementnnodes nodes elements normals uvs
-        foreach {cx cy cz} $nodes {
-            lappend x $cx
-            lappend y $cy
-            lappend z $cz
-        }
-    }
-    set coords [list [objarray new doublearray -values $x] [objarray new doublearray -values $y] [objarray new doublearray -values $z]]
-    
-
-    set length [ smart_wizard::GetProperty Geometry Length,value]
-    set orig_x [ expr $length*-0.5]
-    set angle [ smart_wizard::GetProperty Simulation Bending,value]
-    set angle [expr $angle/2]
-    set nodes [StenosisWizard::Wizard::BendNodes $orig_x $length $angle $coords]
-    
     variable draw_render_name
-    Drawer::Register $draw_render_name StenosisWizard::Wizard::RedrawRenderBended $nodes
+    variable curr_win
+    if {[Drawer::IsRegistered $draw_render_name]} {
+        StenosisWizard::Wizard::UnregisterDrawPrecurvature
+    } else {
+        set surfaces [GiD_Geometry -v2 list surface]
+
+        set x [list ]
+        set y [list ]
+        set z [list ]
+        
+        foreach surface_id $surfaces {
+            lassign [GiD_Geometry get surface $surface_id render_mesh] elemtype elementnnodes nodes elements normals uvs
+            foreach {cx cy cz} $nodes {
+                lappend x $cx
+                lappend y $cy
+                lappend z $cz
+            }
+        }
+        set coords [list [objarray new doublearray -values $x] [objarray new doublearray -values $y] [objarray new doublearray -values $z]]
+        
+        set length [ smart_wizard::GetProperty Geometry Length,value]
+        set orig_x [ expr $length*-0.5]
+        set angle [ smart_wizard::GetProperty Simulation Bending,value]
+        set angle [expr $angle/2]
+        set nodes [StenosisWizard::Wizard::BendNodes $orig_x $length $angle $coords]
+        
+        Drawer::Register $draw_render_name StenosisWizard::Wizard::RedrawRenderBended $nodes
+        
+        smart_wizard::SetProperty Simulation PreviewCurvature,name "End preview curvature"
+    }
+    GiD_Process 'Redraw 
+    smart_wizard::AutoStep $curr_win Simulation
+    smart_wizard::SetWindowSize 450 550
 }
 
+
+proc StenosisWizard::Wizard::UnregisterDrawPrecurvature { } {
+    variable draw_render_name
+    Drawer::Unregister $draw_render_name
+    GiD_Process 'Redraw 
+    smart_wizard::SetProperty Simulation PreviewCurvature,name "Preview curvature"
+}
 
 proc StenosisWizard::Wizard::RedrawRenderBended { } { 
     variable draw_render_name
