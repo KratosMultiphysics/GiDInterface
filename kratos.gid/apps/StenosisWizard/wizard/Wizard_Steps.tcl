@@ -24,7 +24,7 @@ proc StenosisWizard::Wizard::GeometryTypeChange { } {
     if {[GiDVersionCmp 14.1.3d] >= 0} {
         switch $type {
             "Circular" {
-                smart_wizard::SetProperty Geometry Length,value 100
+                smart_wizard::SetProperty Geometry Length,value 200
                 smart_wizard::SetProperty Geometry Delta,value 3.18
                 smart_wizard::SetProperty Geometry Precision,state normal
                 smart_wizard::SetProperty Geometry SphRadius,state hidden
@@ -107,8 +107,12 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
 
 proc StenosisWizard::Wizard::DrawTriangular {length radius start end delta } {
     GidUtils::DisableGraphics
+
     set origin_x [expr double($length)/-2]
     set end_x [expr double($length)/2]
+    W "DrawTriangular $length"
+    WV origin_x
+    WV end_x
 
     set layer [GiD_Info Project LayerToUse]
     GiD_Process 'Layers Color $layer 153036015 Transparent $layer 255 escape Mescape
@@ -148,9 +152,9 @@ proc StenosisWizard::Wizard::DrawSpherical {length radius start end delta sphrad
 
     set origin_x [expr double($length)/-2]
     set end_x [expr double($length)/2]
-    # set m2 [expr double($end) / double ($delta)]
-    # set m1 [expr double($delta) / double($end) *-1.0]
-    # vGarate set ycenter [expr double($delta)/2-$m2*double($end)/2]
+    W "DrawSpherical $length"
+    WV origin_x
+    WV end_x
     set hdelta [expr double($delta) - double($radius)]
     set ycenter [expr double ($hdelta) - double($sphradius)]
 
@@ -193,6 +197,9 @@ proc StenosisWizard::Wizard::DrawPolygonal {length radius start end delta tpoly 
     GidUtils::DisableGraphics
     set origin_x [expr double($length)/-2]
     set end_x [expr double($length)/2]
+    W "DrawPolygonal $length"
+    WV origin_x
+    WV end_x
 
     set halfpoly [expr double($tpoly)/2]
     set hdelta [expr $delta - $radius]
@@ -250,10 +257,16 @@ proc StenosisWizard::Wizard::DrawCircular {length radius start end delta precisi
     
     set zona [expr $end - $start]
     set delta_z [expr double($zona) / double($precision)]
+    set origin_x [expr double($length)/-2]
+    set end_x [expr double($length)/2]
+
+    W "DrawCircular $length"
+    WV origin_x
+    WV end_x
     
     # Initial point
-    lappend points [list -$length $radius 0]
-    GiD_Geometry create point 1 $layer -$length $radius 0
+    lappend points [list $origin_x $radius 0]
+    GiD_Geometry create point 1 $layer $origin_x $radius 0
     
     # first cut
     lappend points [list $start $radius 0]
@@ -269,8 +282,8 @@ proc StenosisWizard::Wizard::DrawCircular {length radius start end delta precisi
     # last cut
     lappend points [list $end $radius 0]
     # Final point
-    GiD_Geometry create point 2 $layer $length $radius 0
-    lappend points [list $length $radius 0]
+    GiD_Geometry create point 2 $layer $end_x $radius 0
+    lappend points [list $end_x $radius 0]
     
     set line [GiD_Geometry create line append nurbsline $layer 1 2 -interpolate [llength $points] {*}$points -tangents {1 0 0} {1 0 0}]
     
@@ -577,28 +590,25 @@ proc StenosisWizard::Wizard::DrawCuts { } {
         set c3 [MathUtils::VectorSum $center [MathUtils::ScalarByVectorProd -30 $v1]]
         set c4 [MathUtils::VectorSum $center [MathUtils::ScalarByVectorProd -30 $v2]]
 
-        set n1 [GiD_Mesh create node append $c1]
-        set n2 [GiD_Mesh create node append $c2]
-        set n3 [GiD_Mesh create node append $c3]
-        set n4 [GiD_Mesh create node append $c4]
-        W "$n1 $n2 $n3 $n4"
-        GiD_Mesh create element append Line 2 [list $n1 $n2]
-        GiD_Mesh create element append Line 2 [list $n2 $n3]
-        GiD_Mesh create element append Line 2 [list $n3 $n4]
-        GiD_Mesh create element append Line 2 [list $n4 $n1]
+        StenosisWizard::Wizard::DrawCutPlane $c1 $c2 $c3 $c4
     }
 }
 
 proc StenosisWizard::Wizard::DrawCutPlane { n1 n2 n3 n4 } {
-    
-    GiD_OpenGL draw -vertex $points($n1)
-    GiD_OpenGL draw -vertex $points($n2)
-    GiD_OpenGL draw -vertex $points($n2)
-    GiD_OpenGL draw -vertex $points($n3)
-    GiD_OpenGL draw -vertex $points($n3)
-    GiD_OpenGL draw -vertex $points($n4)
-    GiD_OpenGL draw -vertex $points($n4)
-    GiD_OpenGL draw -vertex $points($n1)
+    set n1 [GiD_Mesh create node append $c1]
+    set n2 [GiD_Mesh create node append $c2]
+    set n3 [GiD_Mesh create node append $c3]
+    set n4 [GiD_Mesh create node append $c4]
+    W "$n1 $n2 $n3 $n4"
+    GiD_Mesh create element append Line 2 [list $n1 $n2]
+    GiD_Mesh create element append Line 2 [list $n2 $n3]
+    GiD_Mesh create element append Line 2 [list $n3 $n4]
+    GiD_Mesh create element append Line 2 [list $n4 $n1]
+
+    GiD_OpenGL draw -begin lines
+    GiD_OpenGL draw -vertex $n1
+    GiD_OpenGL draw -vertex $n2
+    GiD_OpenGL draw -end
 }
 
 StenosisWizard::Wizard::Init

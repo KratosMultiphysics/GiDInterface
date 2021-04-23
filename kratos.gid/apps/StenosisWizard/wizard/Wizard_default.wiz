@@ -8,13 +8,13 @@
         </Frame>
         <Frame  n="Data" position="left">
           <Item n="Type" pn="Stenosis type" v="Circular" type="combo" values="Circular,Spherical,Triangular,Polygonal" onchange="StenosisWizard::Wizard::GeometryTypeChange" />
-          <Item n="Length" pn="Length" v="100" type="double" />
+          <Item n="Length" pn="Length" v="200" type="double" />
           <Item n="Radius" pn="Radius" v="9.53" type="double" />
           <Item n="Z" pn="Z0" v="38.1" type="double" />
           <Item n="Delta" pn="Delta" v="3.18" type="double" />
           <Item n="SphRadius" pn="Sphere radius" v="50.8" type="double" />
           <Item n="Tpoly" pn="Tpoly" v="25.4" type="double" />
-          <Item n="Precision" pn="Divisions" v="50" type="double"/>
+          <Item n="Precision" pn="Curvature precision" v="50" type="double"/>
           <Item n="DrawButton" pn="Create geometry" type="button" v="StenosisWizard::Wizard::DrawGeometry" />
         </Frame>
       </Data>
