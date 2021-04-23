@@ -438,12 +438,12 @@ proc StenosisWizard::Wizard::PlaceCutPlanes { } {
     set delta [expr 2.0*double($length)/(double($ncuts)+1.0)]
     set orig_x [ expr $length*-1]
     
-    set angle [ smart_wizard::GetProperty Simulation Bending,value]
+    set angle [smart_wizard::GetProperty Simulation Bending,value]
 
     # Cut planes    
     set cuts_enabled 1
     if {$cuts_enabled} {
-       spdAux::ClearCutPlanes
+        spdAux::ClearCutPlanes
         set cutplane_xp "[spdAux::getRoute CutPlanes]/blockdata\[1\]"
         
         for {set i 1} {$i <= $ncuts} {incr i} {
@@ -465,10 +465,11 @@ proc StenosisWizard::Wizard::PlaceCutPlanes { } {
             gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v [join $o {,}]"
         }
         
-        set x $length
+        set x 0.0
         set coords [list [objarray new doublearray -values [list $x [expr $x +1] $x]] [objarray new doublearray -values {0.0 0.0 0.0}] [objarray new doublearray -values {0.0 0.0 1.0}]]           
         set new_nodes [StenosisWizard::Wizard::BendNodes $orig_x [expr $length*2] [expr $angle/2] $coords]
         set o [list [objarray get [lindex $new_nodes 0] 0] [objarray get [lindex $new_nodes 1] 0] [objarray get [lindex $new_nodes 2] 0] ]
+        W $o
         set p1 [list [objarray get [lindex $new_nodes 0] 1] [objarray get [lindex $new_nodes 1] 1] [objarray get [lindex $new_nodes 2] 1] ]
         set p2 [list [objarray get [lindex $new_nodes 0] 2] [objarray get [lindex $new_nodes 1] 2] [objarray get [lindex $new_nodes 2] 2] ]
         set v1 [math::linearalgebra::sub $p1 $o]
@@ -551,6 +552,53 @@ proc StenosisWizard::Wizard::BendNodes {orig_x len angle coords} {
         objarray set $result_z $i $old_val_z
     }
     return [list $result_x $result_y $result_z]
+}
+
+proc StenosisWizard::Wizard::DrawCuts { } {
+    set planes [write::GetCutPlanesList]
+    set cont 0
+    if {[GiD_Layers exist cuts]} {GiD_Layers delete cuts}
+    GiD_Process 'Layers New cuts escape 'Layers ToUse cuts escape 
+
+    foreach plane $planes {
+        incr cont 1
+        #if {$cont > 1} {return}
+        set center [dict get $plane point]
+        set normal [dict get $plane normal]
+        lassign [MathUtils::CalculateLocalAxisFromXAxis $normal] v1 v2
+        W "center $center"
+        W "normal $normal"
+        W "v1 $v1"
+        W "v2 $v2"
+        # set v1 [list [expr -1.0*[lindex $normal 0]] [lindex $normal 1] [lindex $normal 2]]
+        # set v2 [list [lindex $normal 0] [lindex $normal 1] 1]
+        set c1 [MathUtils::VectorSum $center  [MathUtils::ScalarByVectorProd 30 $v1]]
+        set c2 [MathUtils::VectorSum $center  [MathUtils::ScalarByVectorProd 30 $v2]]
+        set c3 [MathUtils::VectorSum $center [MathUtils::ScalarByVectorProd -30 $v1]]
+        set c4 [MathUtils::VectorSum $center [MathUtils::ScalarByVectorProd -30 $v2]]
+
+        set n1 [GiD_Mesh create node append $c1]
+        set n2 [GiD_Mesh create node append $c2]
+        set n3 [GiD_Mesh create node append $c3]
+        set n4 [GiD_Mesh create node append $c4]
+        W "$n1 $n2 $n3 $n4"
+        GiD_Mesh create element append Line 2 [list $n1 $n2]
+        GiD_Mesh create element append Line 2 [list $n2 $n3]
+        GiD_Mesh create element append Line 2 [list $n3 $n4]
+        GiD_Mesh create element append Line 2 [list $n4 $n1]
+    }
+}
+
+proc StenosisWizard::Wizard::DrawCutPlane { n1 n2 n3 n4 } {
+    
+    GiD_OpenGL draw -vertex $points($n1)
+    GiD_OpenGL draw -vertex $points($n2)
+    GiD_OpenGL draw -vertex $points($n2)
+    GiD_OpenGL draw -vertex $points($n3)
+    GiD_OpenGL draw -vertex $points($n3)
+    GiD_OpenGL draw -vertex $points($n4)
+    GiD_OpenGL draw -vertex $points($n4)
+    GiD_OpenGL draw -vertex $points($n1)
 }
 
 StenosisWizard::Wizard::Init

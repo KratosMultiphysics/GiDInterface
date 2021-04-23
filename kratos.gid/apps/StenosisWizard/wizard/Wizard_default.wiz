@@ -49,6 +49,7 @@
         </Frame>
         <Frame n="Data" position="left">
           <Item n="Cuts" pn="Number of cuts" v="6" type="integer"/>
+          <Item n="ViewCuts" pn="Draw cuts" type="button" v="StenosisWizard::Wizard::DrawCuts" />
           <Item n="CentralMesh" pn="Central Mesh size" v="1" type="integer" />
           <Item n="MeshSize" pn="Mesh size" v="2" type="integer" />
           <Item n="InitialTime" pn="Initial time" v="0" type="integer" mxp="container[@un='FLTimeParameters']/value[@n='InitialTime']"/>
