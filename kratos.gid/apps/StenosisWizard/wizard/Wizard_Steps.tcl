@@ -11,6 +11,8 @@ proc StenosisWizard::Wizard::Init { } {
     set curr_win ""
     variable draw_cuts_name
     set draw_cuts_name StenosisWizard_cuts
+    variable draw_render_name
+    set draw_render_name StenosisWizard_render
 }
 
 proc StenosisWizard::Wizard::Geometry { win } {
@@ -382,7 +384,7 @@ proc StenosisWizard::Wizard::NextFluid { } {
 
 proc StenosisWizard::Wizard::Simulation { win } {
     smart_wizard::AutoStep $win Simulation
-    smart_wizard::SetWindowSize 450 600
+    smart_wizard::SetWindowSize 450 550
 }
 
 proc StenosisWizard::Wizard::Mesh { } {
@@ -593,6 +595,7 @@ proc StenosisWizard::Wizard::DrawCuts { } {
     }
     GiD_Process 'Redraw 
     smart_wizard::AutoStep $curr_win Simulation
+    smart_wizard::SetWindowSize 450 550
 }
 
 proc StenosisWizard::Wizard::RedrawCuts { } { 
@@ -608,6 +611,47 @@ proc StenosisWizard::Wizard::RedrawCuts { } {
         GiD_OpenGL draw -vertex $c4
         GiD_OpenGL draw -end
     }
+}
+
+proc StenosisWizard::Wizard::PreviewCurvature {} {
+    set surfaces [GiD_Geometry -v2 list surface]
+
+    set x [list ]
+    set y [list ]
+    set z [list ]
+    
+    foreach surface_id $surfaces {
+        lassign [GiD_Geometry get surface $surface_id render_mesh] elemtype elementnnodes nodes elements normals uvs
+        foreach {cx cy cz} $nodes {
+            lappend x $cx
+            lappend y $cy
+            lappend z $cz
+        }
+    }
+    set coords [list [objarray new doublearray -values $x] [objarray new doublearray -values $y] [objarray new doublearray -values $z]]
+    
+
+    set length [ smart_wizard::GetProperty Geometry Length,value]
+    set orig_x [ expr $length*-0.5]
+    set angle [ smart_wizard::GetProperty Simulation Bending,value]
+    set angle [expr $angle/2]
+    set nodes [StenosisWizard::Wizard::BendNodes $orig_x $length $angle $coords]
+    
+    variable draw_render_name
+    Drawer::Register $draw_render_name StenosisWizard::Wizard::RedrawRenderBended $nodes
+}
+
+
+proc StenosisWizard::Wizard::RedrawRenderBended { } { 
+    variable draw_render_name
+    # blue
+    GiD_OpenGL draw -color "0.0 0.0 1.0" -pointsize 5  
+    lassign [Drawer::GetVars $draw_render_name] x y z
+    GiD_OpenGL draw -begin points 
+    foreach cx $x cy $y cz $z {
+        GiD_OpenGL draw -vertex [list $cx $cy $cz]
+    }
+    GiD_OpenGL draw -end
 }
 
 StenosisWizard::Wizard::Init
