@@ -2,12 +2,15 @@
 namespace eval StenosisWizard::Wizard {
     # Namespace variables declaration
     variable curr_win
+    variable ogl_cuts
 }
 
 proc StenosisWizard::Wizard::Init { } {
     #W "Carga los pasos"
     variable curr_win
     set curr_win ""
+    variable draw_cuts_name
+    set draw_cuts_name StenosisWizard_cuts
 }
 
 proc StenosisWizard::Wizard::Geometry { win } {
@@ -379,10 +382,12 @@ proc StenosisWizard::Wizard::NextFluid { } {
 
 proc StenosisWizard::Wizard::Simulation { win } {
     smart_wizard::AutoStep $win Simulation
-    smart_wizard::SetWindowSize 450 500
+    smart_wizard::SetWindowSize 450 600
 }
 
 proc StenosisWizard::Wizard::Mesh { } {
+    LastStep
+    StenosisWizard::Wizard::UnregisterDrawCuts
     if {[lindex [GiD_Info Mesh] 0]>0} {
         #GiD_Process Mescape Meshing reset Yes
         GiD_Process Mescape Meshing CancelMesh PreserveFrozen Yes
@@ -554,18 +559,21 @@ proc StenosisWizard::Wizard::BendNodes {orig_x len angle coords} {
     return [list $result_x $result_y $result_z]
 }
 
-set ::glob_cuts [list ]
-set ::glob_cutshow_id 0
+proc StenosisWizard::Wizard::UnregisterDrawCuts { } {
+    variable draw_cuts_name
+    Drawer::Unregister $draw_cuts_name
+    GiD_Process 'Redraw 
+    smart_wizard::SetProperty Simulation ViewCuts,name "Draw cuts"
+}
 
 proc StenosisWizard::Wizard::DrawCuts { } {
+    variable draw_cuts_name
     variable curr_win
-    if {$::glob_cutshow_id != 0} {
-        GiD_OpenGL unregister $::glob_cutshow_id
-        set ::glob_cutshow_id 0
-        smart_wizard::SetProperty Simulation ViewCuts,pn "Draw cuts"
+    if {[Drawer::IsRegistered $draw_cuts_name]} {
+        StenosisWizard::Wizard::UnregisterDrawCuts
     } else {
         set planes [write::GetCutPlanesList]
-        set ::glob_cuts [list ]
+        set glob_cuts [list ]
         foreach plane $planes {
             set center [dict get $plane point]
             set normal [dict get $plane normal]
@@ -578,30 +586,20 @@ proc StenosisWizard::Wizard::DrawCuts { } {
             set c3 [MathUtils::VectorSum $center [MathUtils::ScalarByVectorProd -30 $v1]]
             set c4 [MathUtils::VectorSum $center [MathUtils::ScalarByVectorProd -30 $v2]]
 
-            lappend ::glob_cuts [list $c1 $c2 $c3 $c4]
+            lappend glob_cuts [list $c1 $c2 $c3 $c4]
         }
-        set ::glob_cutshow_id [GiD_OpenGL register MyRedrawProcedure]
-        smart_wizard::SetProperty Simulation ViewCuts,pn "End draw cuts"
+        Drawer::Register $draw_cuts_name StenosisWizard::Wizard::RedrawCuts $glob_cuts
+        smart_wizard::SetProperty Simulation ViewCuts,name "End draw cuts"
     }
     GiD_Process 'Redraw 
     smart_wizard::AutoStep $curr_win Simulation
 }
 
-proc StenosisWizard::Wizard::DrawCutPlane { c1 c2 c3 c4 } {
-    set n1 [GiD_Mesh create node append $c1]
-    set n2 [GiD_Mesh create node append $c2]
-    set n3 [GiD_Mesh create node append $c3]
-    set n4 [GiD_Mesh create node append $c4]
-    
-    GiD_Mesh create element append Line 2 [list $n1 $n2]
-    GiD_Mesh create element append Line 2 [list $n2 $n3]
-    GiD_Mesh create element append Line 2 [list $n3 $n4]
-    GiD_Mesh create element append Line 2 [list $n4 $n1]
-
-}
-proc MyRedrawProcedure { } { 
+proc StenosisWizard::Wizard::RedrawCuts { } { 
+    variable draw_cuts_name
+    # blue
     GiD_OpenGL draw -color "0.0 0.0 1.0"
-    foreach cuadrado $::glob_cuts {
+    foreach cuadrado [Drawer::GetVars $draw_cuts_name] {
         lassign $cuadrado c1 c2 c3 c4
         GiD_OpenGL draw -begin lineloop 
         GiD_OpenGL draw -vertex $c1

@@ -57,10 +57,11 @@
           <Item n="DeltaTime" pn="Delta time" v="0.1" type="integer" mxp="container[@un='FLTimeParameters']/value[@n='DeltaTime']"/>
           <Item n="Bending" pn="Bending angle" v="1.2" type="double" help="Bending after mesh"/>
           <Item n="Bending_msg" v="Bending process is done after mesh" type="label" help="Bending after mesh"/>
+          <Item n="PreviewCurvature" pn="Preview curvature" type="button" v="StenosisWizard::Wizard::PreviewCurvature" />
         </Frame>
         <Frame position="left">
           <Item n="Save" pn="Save the model" type="button" v="StenosisWizard::Wizard::Save" />
-          <Item n="Mesh" pn="Mesh the geometry" type="button" v="StenosisWizard::Wizard::Mesh" />
+          <Item n="Mesh" pn="Mesh &amp; bend the geometry" type="button" v="StenosisWizard::Wizard::Mesh" />
           <Item n="Run" pn="Calculate" type="button" v="StenosisWizard::Wizard::Run" />
         </Frame>
       </Data>
