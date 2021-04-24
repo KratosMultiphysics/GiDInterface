@@ -18,7 +18,9 @@ proc Kratos::DestroyWindows { } {
     spdAux::DestroyWindows
     if {[info exists ::Kratos::kratos_private(UseWizard)] && $::Kratos::kratos_private(UseWizard)} {
         smart_wizard::DestroyWindow
+        catch {destroy $smart_wizard::wizwindow}
     }
+    catch {destroy $smart_wizard::wizwindow}
     ::Kratos::EndCreatePreprocessTBar
 }
 
