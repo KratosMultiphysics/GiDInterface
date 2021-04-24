@@ -384,7 +384,7 @@ proc StenosisWizard::Wizard::NextFluid { } {
 
 proc StenosisWizard::Wizard::Simulation { win } {
     smart_wizard::AutoStep $win Simulation
-    smart_wizard::SetWindowSize 450 550
+    smart_wizard::SetWindowSize 450 600
 }
 
 proc StenosisWizard::Wizard::Mesh { } {
@@ -594,8 +594,7 @@ proc StenosisWizard::Wizard::DrawCuts { } {
         smart_wizard::SetProperty Simulation ViewCuts,name "End draw cuts"
     }
     GiD_Process 'Redraw 
-    smart_wizard::AutoStep $curr_win Simulation
-    smart_wizard::SetWindowSize 450 550
+    StenosisWizard::Wizard::Simulation $curr_win
 }
 
 proc StenosisWizard::Wizard::RedrawCuts { } { 
@@ -626,7 +625,7 @@ proc StenosisWizard::Wizard::PreviewCurvature {} {
         set z [list ]
         
         foreach surface_id $surfaces {
-            lassign [GiD_Geometry get surface $surface_id render_mesh] elemtype elementnnodes nodes elements normals uvs
+            lassign [GiD_Geometry get surface $surface_id -force render_mesh] elemtype elementnnodes nodes elements normals uvs
             foreach {cx cy cz} $nodes {
                 lappend x $cx
                 lappend y $cy
@@ -646,8 +645,7 @@ proc StenosisWizard::Wizard::PreviewCurvature {} {
         smart_wizard::SetProperty Simulation PreviewCurvature,name "End preview curvature"
     }
     GiD_Process 'Redraw 
-    smart_wizard::AutoStep $curr_win Simulation
-    smart_wizard::SetWindowSize 450 550
+    StenosisWizard::Wizard::Simulation $curr_win
 }
 
 
@@ -661,7 +659,7 @@ proc StenosisWizard::Wizard::UnregisterDrawPrecurvature { } {
 proc StenosisWizard::Wizard::RedrawRenderBended { } { 
     variable draw_render_name
     # blue
-    GiD_OpenGL draw -color "0.0 0.0 1.0" -pointsize 5  
+    GiD_OpenGL draw -color "0.0 0.0 1.0" -pointsize 3  
     lassign [Drawer::GetVars $draw_render_name] x y z
     GiD_OpenGL draw -begin points 
     foreach cx $x cy $y cz $z {
