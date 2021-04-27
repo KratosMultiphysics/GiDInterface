@@ -35,9 +35,9 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
             }
 
             set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
-            set claw [write::getValueByNode $claw_node "force"]
-            set const_law [Model::getConstitutiveLaw $claw]
-            if {$const_law ne ""} {
+            if {$claw_node ne ""} {
+                set claw [write::getValueByNode $claw_node "force"]
+                set const_law [Model::getConstitutiveLaw $claw]
                 set output_type [$const_law getOutputMode]
                 if {$output_type eq "Parameters"} {
                     set s1 [$gNode selectNodes ".//value"]
@@ -113,6 +113,8 @@ proc write::writePropertiesJsonFile {{parts_un ""} {fname "materials.json"} {wri
 
 proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_name ""}} {
     variable mat_dict
+    variable properties_exclusion_list
+    set exclusionList $properties_exclusion_list
     set props_dict [dict create]
     set props [list ]
 
@@ -139,7 +141,6 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
             if {[dict exists $mat_dict $group ConstitutiveLaw ]} {set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]}
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
             if {$constitutive_law ne ""} {
-                set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
                 set variables_dict [dict create]
                 foreach prop [dict keys [dict get $mat_dict $group] ] {
                     if {$prop ni $exclusionList} {

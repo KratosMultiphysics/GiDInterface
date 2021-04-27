@@ -73,9 +73,9 @@ proc DEM::write::writeModelPartEvent { } {
     write::CloseFile
 
     # Materials
-    set mats_json [DEM::write::getDEMMaterialsDict [GetAttribute parts_un] [GetAttribute materials_un]]
+    set materials [DEM::write::getDEMMaterialsDict]
     write::OpenFile [GetAttribute materials_file]
-    write::WriteJSON $mats_json
+    write::WriteJSON $materials
     write::CloseFile
 }
 
