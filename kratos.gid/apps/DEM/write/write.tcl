@@ -16,7 +16,7 @@ proc DEM::write::Init { } {
     SetAttribute materials_un DEMMaterials
     SetAttribute conditions_un DEMConditions
     SetAttribute nodal_conditions_un DEMNodalConditions
-    SetAttribute materials_file "DEMMaterials.json"
+    SetAttribute materials_file "MaterialsDEM.json"
     SetAttribute main_script_file "KratosDEMAnalysis.py"
 
     variable inletProperties
@@ -70,6 +70,12 @@ proc DEM::write::writeModelPartEvent { } {
     # MDPA Walls
     write::OpenFile "[Kratos::GetModelName]DEM_Clusters.mdpa"
     WriteMDPAClusters
+    write::CloseFile
+
+    # Materials
+    set mats_json [getDEMMaterialsDict $parts_un $materials_un]
+    write::OpenFile [GetAttribute materials_file]
+    write::WriteJSON $mats_json
     write::CloseFile
 }
 
