@@ -734,12 +734,15 @@ proc spdAux::ProcGetMaterialsList { domNode args } {
 
     # set xp3 [spdAux::getRoute $mats_un]
     set parentNode [$domNode selectNodes $xp3]
-    set const_law_name [write::getValueByNode [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"] ]
     set filters [list ]
-    if {$const_law_name != ""} {
-        set const_law [Model::getConstitutiveLaw $const_law_name]
-        if {$const_law != ""} {
-            set filters [$const_law getMaterialFilters]
+    set const_law_node [$domNode selectNodes "../value\[@n = 'ConstitutiveLaw'\]"]
+    if {$const_law_node ne ""} {
+        set const_law_name [write::getValueByNode $const_law_node ]
+        if {$const_law_name != ""} {
+            set const_law [Model::getConstitutiveLaw $const_law_name]
+            if {$const_law != ""} {
+                set filters [$const_law getMaterialFilters]
+            }
         }
     }
     #W [$parentNode asXML]
@@ -751,9 +754,9 @@ proc spdAux::ProcGetMaterialsList { domNode args } {
     
     set res_raw_list [list ]
     foreach m $resList {lappend res_raw_list [lindex $m 1]}
-    set v [get_domnode_attribute [$domNode selectNodes "../value\[@n = 'Material'\]"] v]
+    set v [get_domnode_attribute $domNode v]
     if {$v ni $res_raw_list} {
-        [$domNode selectNodes "../value\[@n = 'Material'\]"] setAttribute v [lindex $res_raw_list 0]
+        $domNode setAttribute v [lindex $res_raw_list 0]
     }
     return [join $res_raw_list ","]
 
