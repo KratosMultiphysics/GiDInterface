@@ -57,16 +57,26 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
         set helpslist [list ]
         foreach item [dict keys $kratos_private(MenuItems)] {
             set icon [dict get $kratos_private(MenuItems) $item icon]
-            if {![file exists $icon] && $icon ne ""} {
-                set good_dir $dir
-                if {$theme eq "GiD_black"} {
-                    set good_dir [file join $dir Black]
-                    if {![file exists [file join $good_dir $icon]]} {set good_dir $dir}
+            set icon_path ""
+            if {[file exists $icon]} {
+                set icon_path $icon
+            } else {
+                set list_dirs [list ]
+                if {[apps::getActiveApp] ne ""} {lappend list_dirs [file dirname [apps::getImgPathFrom [[apps::getActiveApp] getName] ]]}
+                lappend list_dirs $dir
+                foreach path $list_dirs {
+                    if {$icon ne ""} {
+                        set good_dir $path
+                        if {$theme eq "GiD_black"} {
+                            set good_dir [file join $path Black]
+                            if {![file exists [file join $good_dir $icon]]} {set good_dir $path}
+                        }
+                        set icon_path [file join $good_dir $icon]
+                        if {[file exists $icon_path]} {break;}
+                    }
                 }
-                set icon [file join $good_dir $icon]
             }
-            
-            lappend iconslist [expr {$icon ne "" ? $icon : "---"}]
+            lappend iconslist [expr {$icon ne "" ? $icon_path : "---"}]
             lappend commslist  [dict get $kratos_private(MenuItems) $item code]
             lappend helpslist [dict get $kratos_private(MenuItems) $item tex]
         }
