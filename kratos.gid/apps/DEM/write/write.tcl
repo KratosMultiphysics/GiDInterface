@@ -137,6 +137,11 @@ proc DEM::write::Validate {} {
         set err "Empty mesh detected (0 nodes present). A mesh is necessary to run the case."
     }
 
+    # Validation of Material relations
+    if {$err eq ""} {
+        set err [DEM::xml::MaterialRelationsValidation]
+    }
+
     return $err
 }
 

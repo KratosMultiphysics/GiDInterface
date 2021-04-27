@@ -128,6 +128,15 @@ proc DEM::xml::injectMaterialRelations { basenode args } {
 
 }
 
+proc DEM::xml::MaterialRelationsValidation { } {
+    set err ""
+    # Get Used Materials
+
+    # At least all materials must be related
+
+    return $err
+}
+
 proc DEM::xml::ShowMaterialRelationWindow { } {
     
 }
