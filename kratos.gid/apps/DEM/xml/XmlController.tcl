@@ -117,10 +117,6 @@ proc DEM::xml::injectMaterialRelations { basenode args } {
         if {$icon eq ""} {set icon material-relation-16}
         set inputs [$mat getInputs]
         set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='$icon' help='Material definition'  morebutton='0'>"
-        append matnode "<value n='material_1' pn='Material A' help='Choose a material from the database' v='DEM-DefaultMaterial' values='\[GetMaterialsList\]'/>"
-        append matnode "<value n='material_2' pn='Material B' help='Choose a material from the database' v='DEM-DefaultMaterial' values='\[GetMaterialsList\]'/>"
-
-        
         foreach {inName in} $inputs {
             set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]] $mat]
             append matnode $node

@@ -2,6 +2,8 @@
 <MaterialRelations>
   <MaterialRelation n="DEM-DefaultMaterialRelation" pn="" help="">
     <inputs>
+      <parameter n="MATERIAL_A" pn="Material A" v="" type="material" help="First material"/>
+      <parameter n="MATERIAL_B" pn="Material B" v="" type="material" help="Second material"/>
       <parameter n="FRICTION" pn="Friction angle" v="30.0" type="double" units="deg" unit_magnitude="Angle" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help=""/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>

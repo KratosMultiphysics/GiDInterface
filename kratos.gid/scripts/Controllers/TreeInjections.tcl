@@ -388,6 +388,9 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
             "integer" {
                 append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'  show_in_window='$show_in_window'/>"
             }
+            "material" {
+                append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>"
+            }
             default {
                 append node [_GetDoubleParameterString $param $inName $pn $v $state $help $show_in_window $has_units]
             }
