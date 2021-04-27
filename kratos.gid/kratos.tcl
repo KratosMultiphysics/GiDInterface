@@ -115,6 +115,9 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Start the spd as new project. Mandatory even if we are opening an old case, because this loads the default spd for the future transform
     spdAux::StartAsNewProject
 
+    # Check dependencies
+    Kratos::CheckDependencies
+
     # Open the App selection window. It's delayed to wait if GiD calls the Event_LoadModelSPD (open a case instead of new)
     set activeapp_dom [spdAux::SetActiveAppFromDOM]
     if { $activeapp_dom == "" } {
@@ -197,6 +200,10 @@ proc Kratos::LoadCommonScripts { } {
     # Libs
     foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
         uplevel #0 [list source [file join $kratos_private(Path) libs $filename]]
+    }
+    # Dependencies
+    foreach filename {MacDependenciesInstaller.tcl} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts Dependencies $filename]]
     }
 }
 
