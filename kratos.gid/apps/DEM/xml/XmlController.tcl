@@ -105,6 +105,9 @@ proc DEM::xml::InertiaType { args } {
     return $ret
 }
 
+proc DEM::xml::ShowMaterialRelationWindow { } {
+    
+}
 
 
 DEM::xml::Init

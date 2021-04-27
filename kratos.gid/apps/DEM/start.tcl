@@ -48,6 +48,13 @@ proc ::DEM::GetAttribute {name} {
     return $value
 }
 
+
+proc ::DEM::CustomToolbarItems { } {
+    variable dir
+    
+    Kratos::ToolbarAddItem "MaterialRelations" "material-relation.png" [list -np- DEM::xml::ShowMaterialRelationWindow] [= "Material relations"]
+}
+
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
