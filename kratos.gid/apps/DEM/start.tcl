@@ -36,6 +36,7 @@ proc ::DEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Clusters.tcl]]
+    uplevel #0 [list source [file join $dir write writeMaterials.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     uplevel #0 [list source [file join $dir write write_utils.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]
