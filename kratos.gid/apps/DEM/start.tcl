@@ -29,6 +29,8 @@ proc ::DEM::Init { } {
 
 proc ::DEM::LoadMyFiles { } {
     variable dir
+    
+    uplevel #0 [list source [file join $dir xml material_relations MaterialRelations.tcl]]
 
     uplevel #0 [list source [file join $dir xml XmlController.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]

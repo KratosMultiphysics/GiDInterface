@@ -13,6 +13,7 @@ proc DEM::xml::Init { } {
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
+    Model::getMaterialRelations "material_relations/MaterialRelations.xml"
 }
 
 proc DEM::xml::getUniqueName {name} {
@@ -103,6 +104,10 @@ proc DEM::xml::InertiaType { args } {
     }
 
     return $ret
+}
+
+proc DEM::xml::injectMaterialRelations { domNode args } {
+    W $domNode
 }
 
 proc DEM::xml::ShowMaterialRelationWindow { } {

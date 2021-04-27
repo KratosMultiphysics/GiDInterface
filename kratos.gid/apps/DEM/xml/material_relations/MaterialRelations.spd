@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="material_relations" pn="Material relations" un="DEMMaterialRelations" icon="material-relation-16" open_window="1" state="disabled">
-    <!-- <dynamicnode command="spdAux::injectMaterials" args=""/> -->
+     <dynamicnode command="DEM::xml::injectMaterialRelations" args=""/> 
 </container>  

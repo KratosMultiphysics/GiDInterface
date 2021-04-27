@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MaterialRelations>
-  <MaterialRelation n="DEM-DefaultMaterialRelation" >
+  <MaterialRelation n="DEM-DefaultMaterialRelation" pn="" help="">
     <inputs>
       <parameter n="FRICTION" pn="Friction angle" v="30.0" type="double" units="deg" unit_magnitude="Angle" help="Particle friction angle (for Coulombs friction)"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help=""/>
@@ -8,6 +8,6 @@
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
 
     </inputs>
-  </MaterialRelations>
+  </MaterialRelation>
 
 </MaterialRelations>
