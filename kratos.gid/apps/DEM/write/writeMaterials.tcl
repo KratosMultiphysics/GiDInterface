@@ -22,7 +22,21 @@ proc DEM::write::getDEMMaterialsDict { } {
     }
     
     # Loop over the material relations, which is a new menu in the tree linking each possible pair of materials
+    set material_relations_node_list [DEM::write::GetMaterialRelationsNodeList]
     set material_relations_list [list ]
+
+    foreach mat_rel_node $material_relations_node_list {
+        set mat_rel [dict create ]
+        set mat_a [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_A'\]"]]
+        set mat_B [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_B'\]"]]
+        dict set mat_rel material_names_list [list $mat_a $mat_b]
+        foreach param [$mat_rel_node selectNodes "./value"] {
+            set param_name [$param @n]
+            if {$param_name ni [list MATERIAL_A MATERIAL_B]} {}
+
+        }
+        lappend materials_relations_list $mat_rel
+    }
     
     
     set assignation_table_list [list ]
@@ -99,4 +113,17 @@ proc DEM::write::GetMaterialsNodeList { } {
         lappend materials $mat
     }
     return $materials
+}
+
+proc DEM::write::GetMaterialRelationsNodeList { } {
+    # Dem needs more material information than default
+    set material_relations [list ]
+
+    set root [customlib::GetBaseRoot]
+
+    set material_relations_xp "[spdAux::getRoute DEMMaterialRelations]/blockdata\[@n='material_relation'\]"
+    foreach mat_rel_node [[customlib::GetBaseRoot] selectNodes "$material_relations_xp/value"] {
+        lappend material_relations $mat_rel_node
+    }
+    return $material_relations
 }
