@@ -5,8 +5,8 @@
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
 	</value>
 
-	<value n="ConstitutiveLaw" pn="Constitutive law" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]"  state="normal" help="Select a constitutive law">
-	</value>
+	<!-- <value n="ConstitutiveLaw" pn="Constitutive law" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]" state="normal" help="Select a constitutive law">
+	</value> -->
 
 	<value n="Material" pn="Material" state="disabled" help="Choose a material from the database" v="DEM-DefaultMaterial" values="[GetMaterialsList]">
 		<edit_command n="Edit materials" pn="Edit materials" icon="refresh.png" proc='EditDatabaseList'/>
@@ -18,7 +18,7 @@
 	<value n="AdvancedMeshingFeaturesAlgorithmType" pn="Algorithm type" v="FEMtoDEM" values="FEMtoDEM,2Dto3D" help="FEMtoDEM: use this algorithm to convert an original FEM mesh (composed of hexaedra, tetrahedra, cuadrilaterals, triangles, lines or points) into spheres located at the nodes, at the centroids of the elements or at both. 2D to 3D: use this algorithm if you want to convert a surface meshed with circles into a mesh of spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="FEMtoDEM" pn="FEM to DEM criterion type" v="AttheNodes" values="AttheNodes,AttheCentroid,AtBothNodesAndCentroids" help="" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="Diameter" pn="Diameter (m)" v="1.0" help="Average diameter of the spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
-	<value n="ProbabilityDistribution" pn="Probability distribution" v="NormalDistribution" values="NormalDistribution,LogDistribution"  help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+	<value n="ProbabilityDistribution" pn="Probability distribution" v="NormalDistribution" values="NormalDistribution,LogDistribution" help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="StandardDeviation" pn="Standard deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 
 	<dynamicnode command="spdAux::injectPartInputs" args=""/>

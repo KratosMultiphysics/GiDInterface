@@ -12,7 +12,7 @@ proc DEM::write::getDEMMaterialsDict { } {
     set assignation_table_list [list ]
     
     
-    dict set global_dict "materials" $materials_list
+    dict set global_dict "materials" [dict get $materials_list properties]
     dict set global_dict "material_relations" $material_relations_list
     dict set global_dict "material_assignation_table" $assignation_table_list
     
