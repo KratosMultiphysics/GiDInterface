@@ -3,7 +3,23 @@ proc DEM::write::getDEMMaterialsDict { } {
     # Loop over parts, inlets and walls to list the materials to print. For each material used print: DENSITY, YOUNG_MODULUS, POISSON_RATIO
     # print COMPUTE_WEAR as false always, too (temporal fix)
     # While looping, create the assignation_table_list
-    set materials_list [DEM::write::GetMaterialsList]
+    set materials_node_list [DEM::write::GetMaterialsNodeList]
+
+    set materials_list [list ]
+    set processed_mats [list ]
+    foreach mat_node $materials_node_list {
+        set mat_name [write::getValueByNode $mat_node]
+        if {$mat_name ni $processed_mats} {
+            set mat [dict create]
+            dict set mat material_name $mat_name
+            set material_xp "[spdAux::getRoute [GetAttribute materials_un]]/blockdata\[@name='$mat_name'\]"
+            foreach param [[customlib::GetBaseRoot] selectNodes "$material_xp/value"] {
+                dict set mat properties [$param @n] [write::getValueByNode $param]
+            }
+            lappend materials_list $mat
+            lappend processed_mats $mat_name
+        }
+    }
     
     # Loop over the material relations, which is a new menu in the tree linking each possible pair of materials
     set material_relations_list [list ]
@@ -12,7 +28,7 @@ proc DEM::write::getDEMMaterialsDict { } {
     set assignation_table_list [list ]
     
     
-    dict set global_dict "materials" [dict get $materials_list properties]
+    dict set global_dict "materials" $materials_list
     dict set global_dict "material_relations" $material_relations_list
     dict set global_dict "material_assignation_table" $assignation_table_list
     
@@ -73,35 +89,14 @@ proc DEM::write::getDEMMaterialsDict { } {
 #}
 
 
-proc DEM::write::GetMaterialsList { } {
+proc DEM::write::GetMaterialsNodeList { } {
     # Dem needs more material information than default
-    set old_properties_exclusion_list $write::properties_exclusion_list
-    set write::properties_exclusion_list [list "APPID" "Element"]
-    
-    # Trick to use the common function, since DEM is the only app with materials inside conditions
-    # First we get material information used in Parts
-    set parts_un [GetAttribute parts_un]
-    set orig_parts_un $parts_un
-    write::processMaterials
-    set parts_material_dict [write::getPropertiesList $parts_un]
-    
-    # Then we get material information used in Conditions
-    write::SetConfigurationAttribute parts_un [GetAttribute conditions_un]
-    write::processMaterials
-    set conditions_material_dict [write::getPropertiesList [GetAttribute conditions_un]]
+    set materials [list ]
 
-    # And finally we get the material information used in Nodal conditions
-    write::SetConfigurationAttribute parts_un [GetAttribute nodal_conditions_un]
-    write::processMaterials
-    set nodal_conditions_material_dict [write::getPropertiesList [GetAttribute nodal_conditions_un]]
+    set root [customlib::GetBaseRoot]
 
-    # Restore original variables
-    write::SetConfigurationAttribute parts_un $orig_parts_un
-    set write::properties_exclusion_list $old_properties_exclusion_list
-    
-    # Return the join of the 3 material dicts
-    return $parts_material_dict
-    set materials [dict merge $parts_material_dict $conditions_material_dict $nodal_conditions_material_dict]
-    W $materials
+    foreach mat [$root selectNodes "//value\[@n='material'\]"] {
+        lappend materials $mat
+    }
     return $materials
 }

@@ -62,6 +62,25 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                         dict set mat_dict $group $name $value
                     }
                 }
+            } else {
+                set s1 ""
+                set matvalueNode [$gNode selectNodes $xp2]
+                if {$matvalueNode ne ""} {
+                    set real_material_name [write::getValueByNode $matvalueNode "force"]
+                    set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
+                    set matNode [$root selectNodes $xp3]
+                    set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                }
+                foreach valueNode $s1 {
+                    write::forceUpdateNode $valueNode
+                    set name [$valueNode getAttribute n]
+                    set state [get_domnode_attribute $valueNode state]
+                    if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
+                        # All the introduced values are translated to 'm' and 'kg' with the help of this function
+                        set value [gid_groups_conds::convert_value_to_default $valueNode]
+                        dict set mat_dict $group $name $value
+                    }
+                }
             }
         }
     }
@@ -140,26 +159,26 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
             set constitutive_law_id ""
             if {[dict exists $mat_dict $group ConstitutiveLaw ]} {set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]}
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
-            if {$constitutive_law ne ""} {
-                set variables_dict [dict create]
-                foreach prop [dict keys [dict get $mat_dict $group] ] {
-                    if {$prop ni $exclusionList} {
-                        dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
-                    }
+            
+            set variables_dict [dict create]
+            foreach prop [dict keys [dict get $mat_dict $group] ] {
+                if {$prop ni $exclusionList} {
+                    dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
                 }
-                set material_dict [dict create]
-
-                if {$write_claw_name eq "True"} {
-                    set constitutive_law_name [$constitutive_law getKratosName]
-                    dict set material_dict constitutive_law [dict create name $constitutive_law_name]
-                }
-                dict set material_dict Variables $variables_list
-                dict set material_dict Tables dictnull
-
-                dict set prop_dict Material $material_dict
-
-                lappend props $prop_dict
             }
+            set material_dict [dict create]
+
+            if {$constitutive_law ne "" && $write_claw_name eq "True"} {
+                set constitutive_law_name [$constitutive_law getKratosName]
+                dict set material_dict constitutive_law [dict create name $constitutive_law_name]
+            }
+            dict set material_dict Variables $variables_list
+            dict set material_dict Tables dictnull
+
+            dict set prop_dict Material $material_dict
+
+            lappend props $prop_dict
+            
         }
     }
 
