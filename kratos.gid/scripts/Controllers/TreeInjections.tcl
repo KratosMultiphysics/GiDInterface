@@ -376,7 +376,13 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
 
             }
             "combo" {
-                append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
+                if {[$param getAttribute "combotype"] eq "material"} {
+                    append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>" 
+                } elseif {[$param getAttribute "combotype"] eq "constitutive_law"} {
+                    append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
+                } else {
+                    append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
+                }
             }
             "bool" {
                 append node [_GetBooleanParameterString $param $inName $pn $v $state $help $show_in_window $base]
@@ -387,9 +393,6 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
             }
             "integer" {
                 append node "<value n='$inName' pn='$pn' v='$v' $has_units  help='$help' string_is='integer'  show_in_window='$show_in_window'/>"
-            }
-            "material" {
-                append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>"
             }
             default {
                 append node [_GetDoubleParameterString $param $inName $pn $v $state $help $show_in_window $has_units]
@@ -508,6 +511,29 @@ proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set processeds [list ]
     spdAux::injectLocalAxesButton $basenode
     foreach obj [concat [Model::GetElements] [Model::GetConstitutiveLaws]] {
+        set inputs [$obj getInputs]
+        foreach {inName in} $inputs {
+            if {$inName ni $processeds} {
+                lappend processeds $inName
+                set forcedParams [list state {[PartParamState]} ]
+                if {[$in getActualize]} { lappend forcedParams base $obj }
+                set node [GetParameterValueString $in $forcedParams $obj]
+
+                $base appendXML $node
+                set orig [$base lastChild]
+                set new [$orig cloneNode -deep]
+                $orig delete
+                $base insertBefore $new $basenode
+            }
+        }
+    }
+    $basenode delete
+}
+proc spdAux::injectPartElementInputs { basenode {inputs ""} } {
+    set base [$basenode parent]
+    set processeds [list ]
+    spdAux::injectLocalAxesButton $basenode
+    foreach obj [Model::GetElements] {
         set inputs [$obj getInputs]
         foreach {inName in} $inputs {
             if {$inName ni $processeds} {
