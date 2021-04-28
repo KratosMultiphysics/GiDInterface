@@ -44,6 +44,7 @@ proc DEM::xml::CustomTree { args } {
 
     # customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     # spdAux::parseRoutes
+    spdAux::processDynamicNodes [customlib::GetBaseRoot]
 }
 
 proc DEM::xml::ProcGetElements { domNode args } {
@@ -107,7 +108,7 @@ proc DEM::xml::injectMaterialRelations { basenode args } {
         set icon [$mat getAttribute icon]
         if {$icon eq ""} {set icon material-relation-16}
         set inputs [$mat getInputs]
-        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='$icon' help='Material definition'  morebutton='0'>"
+        set matnode "<blockdata n='material' name='$matname' sequence='1' editable_name='unique' icon='$icon' help='Material definition'  morebutton='0'  open_window='0'>"
         foreach {inName in} $inputs {
             set node [spdAux::GetParameterValueString $in [list base $mat state [$in getAttribute state]] $mat]
             append matnode $node
