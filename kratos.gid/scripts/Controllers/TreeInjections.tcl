@@ -446,10 +446,14 @@ proc spdAux::_GetComboParameterString {param inName pn v state help show_in_wind
     set node ""
 
     set values [$param getValues]
-    set pvalues [spdAux::_StringifyPValues $values [$param getPValues]]
+    if {[string range [$param getPValues] 0 1] ne "\{\["} {
+        set pvalues [spdAux::_StringifyPValues $values [$param getPValues]]
+    } {
+        set pvalues [lindex [$param getPValues] 0]
+    }
     set values [join [$param getValues] ","]
     append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
-    if {[llength [$param getPValues]]} {
+    if {[llength $pvalues]} {
         append node " dict='$pvalues' "
     }
     if {[$param getActualize]} {
