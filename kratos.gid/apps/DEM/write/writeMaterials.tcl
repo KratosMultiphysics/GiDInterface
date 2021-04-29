@@ -28,18 +28,35 @@ proc DEM::write::getDEMMaterialsDict { } {
     foreach mat_rel_node $material_relations_node_list {
         set mat_rel [dict create ]
         set mat_a [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_A'\]"]]
-        set mat_B [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_B'\]"]]
+        set mat_b [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_B'\]"]]
         dict set mat_rel material_names_list [list $mat_a $mat_b]
         foreach param [$mat_rel_node selectNodes "./value"] {
             set param_name [$param @n]
-            if {$param_name ni [list MATERIAL_A MATERIAL_B]} {}
-
+            if {$param_name eq "ConstitutiveLaw"} {set param_name "DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME"}
+            if {$param_name ni [list MATERIAL_A MATERIAL_B]} {
+                dict set mat_rel properties $param_name [write::getValueByNode $param]
+            }
         }
-        lappend materials_relations_list $mat_rel
+        lappend material_relations_list $mat_rel
     }
     
     
     set assignation_table_list [list ]
+    set gnodes [[customlib::GetBaseRoot] selectNodes "//condition/group"]
+    WV gnodes
+    foreach gnode $gnodes {
+        set mat_child [$gnode selectNodes "value\[@n='material'\]"]
+        WV mat_child
+        if {$mat_child ne ""} {
+            set mat_name [write::getValueByNode $mat_child]
+            set group_name [write::GetWriteGroupName [$gnode @n]]
+            set cond_name [[$gnode parent] @n]
+            WV cond_name
+            WV group_name
+            set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
+            lappend assignation_table_list [list $submodelpart_id $mat_name]
+        }
+    }
     
     
     dict set global_dict "materials" $materials_list
@@ -122,7 +139,7 @@ proc DEM::write::GetMaterialRelationsNodeList { } {
     set root [customlib::GetBaseRoot]
 
     set material_relations_xp "[spdAux::getRoute DEMMaterialRelations]/blockdata\[@n='material_relation'\]"
-    foreach mat_rel_node [[customlib::GetBaseRoot] selectNodes "$material_relations_xp/value"] {
+    foreach mat_rel_node [[customlib::GetBaseRoot] selectNodes $material_relations_xp] {
         lappend material_relations $mat_rel_node
     }
     return $material_relations

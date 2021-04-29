@@ -72,11 +72,6 @@ proc DEM::write::writeModelPartEvent { } {
     WriteMDPAClusters
     write::CloseFile
 
-    # Materials
-    set materials [DEM::write::getDEMMaterialsDict]
-    write::OpenFile [GetAttribute materials_file]
-    write::WriteJSON $materials
-    write::CloseFile
 }
 
 proc DEM::write::writeCustomFilesEvent { } {
@@ -85,6 +80,13 @@ proc DEM::write::writeCustomFilesEvent { } {
 
     write::RenameFileInModel $orig_name "MainKratos.py"
     write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
+
+    
+    # Materials
+    set materials [DEM::write::getDEMMaterialsDict]
+    write::OpenFile [GetAttribute materials_file]
+    write::WriteJSON $materials
+    write::CloseFile
 }
 
 # Attributes block
