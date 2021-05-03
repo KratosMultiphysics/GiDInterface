@@ -75,4 +75,12 @@ proc ::EmbeddedFluid::AfterMeshGeneration {fail} {
     GiD_Set MeshType $oldMeshType
 }
 
+proc ::EmbeddedFluid::CustomToolbarItems { } {
+    Kratos::ToolbarAddItem "ImportMesh" "Import.png" [list -np- EmbeddedFluid::xml::ImportMeshWindow] [= "Import embedded mesh"]
+    Kratos::ToolbarAddItem "Move" "move.png" [list -np- CopyMove Move] [= "Move the geometry/mesh"]
+    Kratos::ToolbarAddItem "Box" "box.png" [list -np- EmbeddedFluid::xml::BoundingBox::CreateWindow] [= "Generate the bounding box"]
+    
+    
+}
+
 ::EmbeddedFluid::Init
