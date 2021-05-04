@@ -14,7 +14,7 @@ proc DEM::write::getDEMMaterialsDict { } {
             dict set mat material_name $mat_name
             set material_xp "[spdAux::getRoute [GetAttribute materials_un]]/blockdata\[@name='$mat_name'\]"
             foreach param [[customlib::GetBaseRoot] selectNodes "$material_xp/value"] {
-                dict set mat properties [$param @n] [write::getValueByNode $param]
+                dict set mat Variables [$param @n] [write::getValueByNode $param]
             }
             lappend materials_list $mat
             lappend processed_mats $mat_name
@@ -34,7 +34,7 @@ proc DEM::write::getDEMMaterialsDict { } {
             set param_name [$param @n]
             if {$param_name eq "ConstitutiveLaw"} {set param_name "DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME"}
             if {$param_name ni [list MATERIAL_A MATERIAL_B]} {
-                dict set mat_rel properties $param_name [write::getValueByNode $param]
+                dict set mat_rel Variables $param_name [write::getValueByNode $param]
             }
         }
         lappend material_relations_list $mat_rel
@@ -43,16 +43,12 @@ proc DEM::write::getDEMMaterialsDict { } {
     # Submodelpart - material assignation
     set assignation_table_list [list ]
     set gnodes [[customlib::GetBaseRoot] selectNodes "//condition/group"]
-    WV gnodes
     foreach gnode $gnodes {
         set mat_child [$gnode selectNodes "value\[@n='Material'\]"]
-        WV mat_child
         if {$mat_child ne ""} {
             set mat_name [write::getValueByNode $mat_child]
             set group_name [write::GetWriteGroupName [$gnode @n]]
             set cond_name [[$gnode parent] @n]
-            WV cond_name
-            WV group_name
             set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
             lappend assignation_table_list [list $submodelpart_id $mat_name]
         }
