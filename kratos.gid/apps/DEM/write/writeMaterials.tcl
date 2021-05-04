@@ -126,7 +126,7 @@ proc DEM::write::GetMaterialsNodeList { } {
 
     set root [customlib::GetBaseRoot]
 
-    foreach mat [$root selectNodes "//value\[@n='material'\]"] {
+    foreach mat [$root selectNodes "//value\[@n='Material'\]"] {
         lappend materials $mat
     }
     return $materials
