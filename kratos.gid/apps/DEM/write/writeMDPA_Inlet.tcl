@@ -82,17 +82,15 @@ proc DEM::write::GetUsedClusters { } {
 
 proc DEM::write::writeInletMeshes { } {
     variable inletProperties
+
+	set condition_name Inlet
     foreach groupid [dict keys $inletProperties ] {
 		set what nodal
-		if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
-			set mid [expr [llength [dict keys $::write::submodelparts]] +1]
-			set good_name [write::transformGroupName $groupid]
-			set mid "Inlet_${good_name}"
-			dict set ::write::submodelparts [list Inlet ${groupid}] $mid
+		if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
+            set mid [write::AddSubmodelpart $condition_name $groupid]
 			set gdict [dict create]
 			set f "%10i\n"
 			set f [subst $f]
-			set group_real_name [write::GetWriteGroupName $groupid]
 			dict set gdict $group_real_name $f
 			write::WriteString "Begin SubModelPart $mid // Group $groupid // Subtree Inlet"
 			write::WriteString "    Begin SubModelPartData"
@@ -311,17 +309,17 @@ proc DEM::write::DefineInletConditions {inletProperties groupid mid contains_clu
 
 proc DEM::write::writeInletMeshes2D { } {
     variable inletProperties
+	
+	set condition_name Inlet2D
+
     foreach groupid [dict keys $inletProperties ] {
 		set what nodal
-		if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
-			set mid [expr [llength [dict keys $::write::submodelparts]] +1]
-			set good_name [write::transformGroupName $groupid]
-			set mid "Inlet_${good_name}"
-			dict set ::write::submodelparts [list Inlet ${groupid}] $mid
+		if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
+            set mid [write::AddSubmodelpart $condition_name $groupid]
+			set group_real_name [write::GetWriteGroupName $groupid]
 			set gdict [dict create]
 			set f "%10i\n"
 			set f [subst $f]
-			set group_real_name [write::GetWriteGroupName $groupid]
 			dict set gdict $group_real_name $f
 			write::WriteString "Begin SubModelPart $mid // Group $groupid // Subtree Inlet"
 			write::WriteString "    Begin SubModelPartData"
@@ -584,11 +582,8 @@ proc DEM::write::writeInletMeshes-old { } {
     variable inletProperties
     foreach groupid [dict keys $inletProperties ] {
 	set what nodal
-	if {![dict exists $::write::submodelparts [list Inlet ${groupid}]]} {
-	    set mid [expr [llength [dict keys $::write::submodelparts]] +1]
-	    set good_name [write::transformGroupName $groupid]
-	    set mid "Inlet_${good_name}"
-	    dict set ::write::submodelparts [list Inlet ${groupid}] $mid
+	if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
+		set mid [write::AddSubmodelpart $cond $group]
 	    set gdict [dict create]
 	    set f "%10i\n"
 	    set f [subst $f]
