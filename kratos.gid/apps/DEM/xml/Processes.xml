@@ -128,7 +128,7 @@
           <parameter n="DefineTopBot" parent="true" pn="Set wall as" v="Pressure plate" type="combo" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
         </parameter>
         
-        <parameter n="material" pn="Material" v="" type="combo" combotype="material" help="material"/>
+        <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="material"/>
       </parameter>
     </inputs>
   </Process>
@@ -394,7 +394,7 @@
         <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
         <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
 
-        <parameter n="material" pn="Material" v="" type="combo" combotype="material" help="material"/>
+        <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="material"/>
         <!-- exclude boundaries functionality seems not be implemented in wkcfdem.tcl -->
         <!-- <parameter id="ExcludeBoundaries" pid="Exclude boundaries" dv="Yes" ivalues="Yes,No" values="Yes,No" help="If active, the nodes on the boundary will not generate elements, only the inner nodes"/> -->
       </parameter>
@@ -457,7 +457,7 @@
         <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
         <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
         <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
-        <parameter n="material" pn="Material" v="" type="combo" combotype="material" help="material"/>
+        <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="material"/>
         <!-- exclude boundaries functionality seems not be implemented in wkcfdem.tcl -->
         <!-- <parameter id="ExcludeBoundaries" pid="Exclude boundaries" dv="Yes" ivalues="Yes,No" values="Yes,No" help="If active, the nodes on the boundary will not generate elements, only the inner nodes"/> -->
       </parameter>

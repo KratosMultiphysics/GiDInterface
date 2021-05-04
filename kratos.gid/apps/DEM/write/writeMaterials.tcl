@@ -40,12 +40,12 @@ proc DEM::write::getDEMMaterialsDict { } {
         lappend material_relations_list $mat_rel
     }
     
-    
+    # Submodelpart - material assignation
     set assignation_table_list [list ]
     set gnodes [[customlib::GetBaseRoot] selectNodes "//condition/group"]
     WV gnodes
     foreach gnode $gnodes {
-        set mat_child [$gnode selectNodes "value\[@n='material'\]"]
+        set mat_child [$gnode selectNodes "value\[@n='Material'\]"]
         WV mat_child
         if {$mat_child ne ""} {
             set mat_name [write::getValueByNode $mat_child]
