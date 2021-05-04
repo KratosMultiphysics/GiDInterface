@@ -147,13 +147,12 @@ proc DEM::write::writeSphereRadiusOnGroup { group } {
 }
 
 proc DEM::write::writeDEMConditionMeshes { } {
-    set i 0
     foreach {cond group_list} [GetSpheresGroupsListInConditions] {
-        if {$cond eq "DEM-VelocityBC" || $cond eq "DEM-VelocityBC2D"} {
+        if {$cond in [list "DEM-VelocityBC" "DEM-VelocityBC2D"]} {
             #set cnd [Model::getCondition $cond]
             foreach group $group_list {
-                incr i
-                write::WriteString "Begin SubModelPart $i // GUI DEM-VelocityBC - $cond - group identifier: $group"
+                set mid [write::AddSubmodelpart $cond $group]
+                write::WriteString "Begin SubModelPart $mid // GUI DEM-VelocityBC - $cond - group identifier: $group"
                 write::WriteString "  Begin SubModelPartData // DEM-VelocityBC. Group name: $group"
                 set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
                 set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
