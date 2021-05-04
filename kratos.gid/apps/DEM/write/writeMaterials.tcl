@@ -3,6 +3,7 @@ proc DEM::write::getDEMMaterialsDict { } {
     # TODO: Add material_ids_list in material_relations
     # TODO: Add SpheresPart RigidFacePart DEMInletPart in material_assignation_table
     # TODO: Remove properties in mdpas ? Check with MA. Probably remove material properties but check the process properties
+    # TODO: Check 2d dem fem wall is written twice, also as phantom
     
     # Loop over parts, inlets and walls to list the materials to print. For each material used print: DENSITY, YOUNG_MODULUS, POISSON_RATIO
     # print COMPUTE_WEAR as false always, too (temporal fix)
