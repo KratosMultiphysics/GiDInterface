@@ -60,11 +60,11 @@ proc DEM::write::WriteCustomDEMSmp { } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
         set group_id [$group @n]
-        set group_raw [write::GetWriteGroupName $group_id]
-        set good_name [write::transformGroupName $group_raw]
+        
         set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
         if {$destination_mdpa == "DEM"} {
-            write::WriteString  "Begin SubModelPart $good_name \/\/ Custom SubModelPart. Group name: $group_id"
+            set mid [write::AddSubmodelpart $cond $group_id]
+            write::WriteString  "Begin SubModelPart $mid \/\/ Custom SubModelPart. Group name: $group_id"
             write::WriteString  "Begin SubModelPartData"
             write::WriteString  "End SubModelPartData"
             write::WriteString  "Begin SubModelPartNodes"
@@ -148,7 +148,7 @@ proc DEM::write::writeSphereRadiusOnGroup { group } {
 
 proc DEM::write::writeDEMConditionMeshes { } {
     foreach {cond group_list} [GetSpheresGroupsListInConditions] {
-        if {$cond in [list "DEM-VelocityBC" "DEM-VelocityBC2D"]} {
+        if {$cond in {"DEM-VelocityBC" "DEM-VelocityBC2D"}} {
             #set cnd [Model::getCondition $cond]
             foreach group $group_list {
                 set mid [write::AddSubmodelpart $cond $group]
@@ -287,12 +287,12 @@ proc DEM::write::writeDEMConditionMeshes { } {
                 write::WriteString "End SubModelPart"
                 write::WriteString ""
             }
-        } elseif {$cond eq "DEM-VelocityIC" || $cond eq "DEM-VelocityIC2D"} {
+        } elseif {$cond in {"DEM-VelocityIC" "DEM-VelocityIC2D"}} {
             set rigid_body_motion 0
             #set cnd [Model::getCondition $cond]
             foreach group $group_list {
-                incr i
-                write::WriteString "Begin SubModelPart $i // GUI DEM-VelocityIC - $cond - group identifier: $group"
+                set mid [write::AddSubmodelpart $cond $group]
+                write::WriteString "Begin SubModelPart $mid // GUI DEM-VelocityIC - $cond - group identifier: $group"
                 write::WriteString "  Begin SubModelPartData // DEM-VelocityIC. Group name: $group"
                 set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
                 set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
@@ -342,10 +342,11 @@ proc DEM::write::writeDEMConditionMeshes { } {
                 write::WriteString "End SubModelPart"
                 write::WriteString ""
             }
-        } elseif {$cond eq "DEM-GraphCondition" || $cond eq "DEM-GraphCondition2D"} {
+        } elseif {$cond in {"DEM-GraphCondition" "DEM-GraphCondition2D"}} {
             foreach group $group_list {
-                incr i
-                write::WriteString "Begin SubModelPart $i // GUI DEM-GraphCondition - $cond - group identifier: $group"
+                
+                set mid [write::AddSubmodelpart $cond $group]
+                write::WriteString "Begin SubModelPart $mid // GUI DEM-GraphCondition - $cond - group identifier: $group"
                 write::WriteString "  Begin SubModelPartData // DEM-GraphCondition. Group name: $group"
                 set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
                 set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
