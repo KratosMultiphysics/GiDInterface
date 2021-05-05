@@ -3,7 +3,7 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeModelPartData
     
     # Material
-    set wall_properties [WriteRigidWallProperties]
+    set wall_properties [processRigidWallMaterials]
     set phantom_wall_properties [WritePhantomWallProperties]
     
     # Nodal coordinates (only for Walls <inefficient> )
@@ -25,65 +25,20 @@ proc DEM::write::WriteMDPAWalls { } {
     WriteWallCustomSmp
 }
 
+
+proc DEM::write::processRigidWallMaterials { } {
+    variable wallsProperties
+	set walls_xpath [DEM::write::GetRigidWallXPath]
+    set wallsProperties [write::processMaterials $walls_xpath]
+
+}
 proc DEM::write::WriteRigidWallProperties { } {
-    set wall_properties [dict create ]
-    set condition_name 'DEM-FEM-Wall'
-    set cnd [Model::getCondition $condition_name]
-    
-    if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
-    } else {    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = $condition_name\]/group"
-    }
-    
-    #set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall'\]/group"
-    set i $DEM::write::last_property_id
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        incr i
-        write::WriteString "Begin Properties $i"
-        #foreach {prop obj} [$cnd getAllInputs] {
-            #    if {$prop in $print_list} {
-                #        set v [write::getValueByNode [$group selectNodes "./value\[@n='$prop'\]"]]
-                #        write::WriteString "  $prop $v"
-                #    }
-            #}
-        set friction_value [write::getValueByNode [$group selectNodes "./value\[@n='friction_angle'\]"]]
-        set pi $MathUtils::PI
-        set propvalue [expr {tan($friction_value*$pi/180.0)}]
-        write::WriteString "  FRICTION $propvalue"
-        # write::WriteString "  FRICTION [write::getValueByNode [$group selectNodes "./value\[@n='friction_coeff'\]"]]"
-        write::WriteString "  WALL_COHESION [write::getValueByNode [$group selectNodes "./value\[@n='WallCohesion'\]"]]"
-        set compute_wear_bool [write::getValueByNode [$group selectNodes "./value\[@n='DEM_Wear'\]"]]
-        if {[write::isBooleanTrue $compute_wear_bool]} {
-            set compute_wear 1
-            set severiy_of_wear [write::getValueByNode [$group selectNodes "./value\[@n='K_Abrasion'\]"]]
-            set impact_wear_severity [write::getValueByNode [$group selectNodes "./value\[@n='K_Impact'\]"]]
-            set brinell_hardness [write::getValueByNode [$group selectNodes "./value\[@n='H_Brinell'\]"]]
-        } else {
-            set compute_wear 0
-            set severiy_of_wear 0.001
-            set impact_wear_severity 0.001
-            set brinell_hardness 200.0
-        }
-        set rigid_structure_bool [write::getValueByNode [$group selectNodes "./value\[@n='RigidPlane'\]"]]
-        if {[write::isBooleanTrue $rigid_structure_bool]} {
-            set young_modulus [write::getValueByNode [$group selectNodes "./value\[@n='YoungModulus'\]"]]
-            set poisson_ratio [write::getValueByNode [$group selectNodes "./value\[@n='PoissonRatio'\]"]]
-        } else {
-            set young_modulus 1e20
-            set poisson_ratio 0.25
-        }
-        write::WriteString "  COMPUTE_WEAR $compute_wear"
-        write::WriteString "  SEVERITY_OF_WEAR $severiy_of_wear"
-        write::WriteString "  IMPACT_WEAR_SEVERITY $impact_wear_severity"
-        write::WriteString "  BRINELL_HARDNESS $brinell_hardness"
-        write::WriteString "  YOUNG_MODULUS $young_modulus"
-        write::WriteString "  POISSON_RATIO $poisson_ratio"
         
-        write::WriteString "End Properties"
-        set groupid [$group @n]
-        dict set wall_properties $groupid $i
-        incr DEM::write::last_property_id
-    }
-    write::WriteString ""
+	write::WriteString "Begin Properties 0"
+	write::WriteString "End Properties"
+	write::WriteString ""
+
+    
     return $wall_properties
 }
 
@@ -193,14 +148,18 @@ proc DEM::write::GetWallsGroups { } {
     return $groups
 }
 
-proc DEM::write::GetRigidWallsGroups { } {
-    set groups [list ]
-	set condition_name "DEM-FEM-Wall"
+proc DEM::write::GetRigidWallXPath { } {
+    set condition_name "DEM-FEM-Wall"
     if {$::Model::SpatialDimension eq "2D"} {
 		set condition_name "DEM-FEM-Wall2D"
 	}
-	set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+	return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]/group"
+}
+
+proc DEM::write::GetRigidWallsGroups { } {
+    set groups [list ]
+	
+    foreach group [[customlib::GetBaseRoot] selectNodes [DEM::write::GetRigidWallXPath]] {
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
     }

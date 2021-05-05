@@ -1,6 +1,8 @@
 namespace eval DEM::write {
     variable writeAttributes
+    variable partsProperties
     variable inletProperties
+    variable wallsProperties
     variable last_property_id
     variable delete_previous_mdpa
     variable restore_ov
@@ -19,8 +21,15 @@ proc DEM::write::Init { } {
     SetAttribute materials_file "MaterialsDEM.json"
     SetAttribute main_script_file "KratosDEMAnalysis.py"
 
+    variable partsProperties
+    set partsProperties [dict create]
+
     variable inletProperties
     set inletProperties [dict create]
+
+    variable wallsProperties
+    set wallsProperties [dict create]
+
 
     variable last_property_id
     set last_property_id 0
@@ -53,6 +62,7 @@ proc DEM::write::writeModelPartEvent { } {
         catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[Kratos::GetModelName].mdpa"]}
     }
 
+    # MDPA Parts
     write::OpenFile "[Kratos::GetModelName]DEM.mdpa"
     WriteMDPAParts
     write::CloseFile
@@ -67,7 +77,7 @@ proc DEM::write::writeModelPartEvent { } {
     WriteMDPAWalls
     write::CloseFile
 
-    # MDPA Walls
+    # MDPA Clusters
     write::OpenFile "[Kratos::GetModelName]DEM_Clusters.mdpa"
     WriteMDPAClusters
     write::CloseFile

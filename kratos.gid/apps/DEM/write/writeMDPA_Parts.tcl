@@ -1,12 +1,11 @@
 proc DEM::write::WriteMDPAParts { } {
-    variable last_property_id
-    # Prepare properties
-    write::processMaterials "" $last_property_id
-    set last_property_id [expr $last_property_id + [dict size $::write::mat_dict]]
     # Headers
     write::writeModelPartData
+    
+    # Process properties
+    DEM::write::processPartMaterials
 
-    # Materials
+    # Write Materials
     writeMaterialsParts
     
 
@@ -110,7 +109,7 @@ proc DEM::write::GetDEMGroupsInitialC { } {
 
 proc DEM::write::GetDEMGroupsBoundayC { } {
     set groups [list ]
-	if {$::Model::SpatialDimension eq "2D"} { set xp4 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC2D'\]/group"
+        if {$::Model::SpatialDimension eq "2D"} { set xp4 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC2D'\]/group"
     } else {set xp4 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC'\]/group"}
     foreach group [[customlib::GetBaseRoot] selectNodes $xp4] {
         set groupid [$group @n]
@@ -121,7 +120,7 @@ proc DEM::write::GetDEMGroupsBoundayC { } {
 
 proc DEM::write::GetNodesForGraphs { } {
     set groups [list ]
-	if {$::Model::SpatialDimension eq "2D"} { set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition2D'\]/group"
+        if {$::Model::SpatialDimension eq "2D"} { set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition2D'\]/group"
     } else {set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition'\]/group"}
     foreach group [[customlib::GetBaseRoot] selectNodes $xp5] {
         set groupid [$group @n]
@@ -405,7 +404,7 @@ proc DEM::write::GetSpheresGroupsListInConditions { } {
 
 proc DEM::write::GetSpheresGroups { } {
     set groups [list ]
-	if {$::Model::SpatialDimension eq "2D"} { set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC2D'\]/group"
+        if {$::Model::SpatialDimension eq "2D"} { set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC2D'\]/group"
     } else {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC'\]/group"}
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
         set groupid [$group @n]
@@ -427,44 +426,18 @@ proc DEM::write::GetSpheresGroups { } {
 }
 
 
-proc DEM::write::writeMaterialsParts { } {
-    # if materials are written in json -> write property 0 empty and go away
-    if {[GetAttribute properties_location] eq "json"} {
-        write::WriteString "Begin Properties 0"
-        write::WriteString "End Properties"
-        write::WriteString ""
-        return
-    }
-
+proc DEM::write::processPartMaterials { } {
     variable partsProperties
-    #TODO: check this nonsense conditions/parts ??
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Parts'\]/group"
-    set partsProperties $::write::mat_dict
-    #set ::write::mat_dict [dict create]
-    #write::processMaterials $xp1
-    #set partsProperties $::write::mat_dict
-    #set ::write::mat_dict $old_mat_dict
-    # WV inletProperties
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME ConstitutiveLaw]
-    foreach group [dict keys $partsProperties] {
-        if { [dict get $partsProperties $group APPID] eq "DEM"} {
-            write::WriteString "Begin Properties [dict get $partsProperties $group MID]"
-            dict set partsProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
-            foreach {prop val} [dict get $partsProperties $group] {
-                if {$prop in $printable} {
-                    if {$prop eq "ConstitutiveLaw"} {
-                        write::WriteString "    DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME $val"
-                    } elseif {$prop eq "FRICTION"} {
-                        set propvalue [expr {tan($val)}]
-                        write::WriteString "    FRICTION $propvalue"
-                    } else {
-                        write::WriteString "    $prop $val"
-                    }
-                }
-            }
-            write::WriteString "End Properties\n"
-        }
-    }
+    write::getPropertiesList [GetAttribute parts_un] 0 SpheresPart
+    set partsProperties [write::getPropertiesList [GetAttribute parts_un] 0 SpheresPart]
+    WV partsProperties
+}
+
+proc DEM::write::writeMaterialsParts { } {
+    
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties"
+    write::WriteString ""
 }
 
 proc DEM::write::PrepareCustomMeshedParts { } {

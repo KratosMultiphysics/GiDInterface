@@ -1,6 +1,10 @@
 proc DEM::write::WriteMDPAInlet { } {
     # Headers
     write::writeModelPartData
+	# process materials
+	DEM::write::processInletMaterials
+
+	# Properties section
     writeMaterialsInlet
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
@@ -640,50 +644,17 @@ proc DEM::write::writeInletMeshes-old { } {
 }
 
 proc DEM::write::writeMaterialsInlet { } {
-	# if materials are written in json -> write property 1 empty and go away
-    if {[GetAttribute properties_location] eq "json"} {
-        write::WriteString "Begin Properties 0"
-        write::WriteString "End Properties"
-        write::WriteString ""
-    }
+    
+	write::WriteString "Begin Properties 0"
+	write::WriteString "End Properties"
+	write::WriteString ""
 
-    variable inletProperties
-    variable last_property_id
-    if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet2D'\]/group"
-    } else { set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Inlet'\]/group"
-    }
-    set old_mat_dict $::write::mat_dict
-    set ::write::mat_dict [dict create]
-    write::processMaterials $xp1 $DEM::write::last_property_id
-    set DEM::write::last_property_id [expr $last_property_id + [dict size $::write::mat_dict]]
-    set inletProperties $::write::mat_dict
-    set ::write::mat_dict $old_mat_dict
+}
 
-    set printable [list PARTICLE_DENSITY YOUNG_MODULUS POISSON_RATIO FRICTION PARTICLE_COHESION COEFFICIENT_OF_RESTITUTION PARTICLE_MATERIAL ROLLING_FRICTION ROLLING_FRICTION_WITH_WALLS PARTICLE_SPHERICITY DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME]
+proc DEM::write::processInletMaterials { } {
+	variable inletProperties
 
-    foreach group [dict keys $inletProperties] {
-		set DEM_D_law "DEM_D_Hertz_viscous_Coulomb"
-		if {$::Model::SpatialDimension eq "2D"} {
-			set DEM_D_law "${DEM_D_law}2D"
-		} 
-
-		dict set inletProperties $group DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME $DEM_D_law
-		dict set inletProperties $group DEM_CONTINUUM_CONSTITUTIVE_LAW_NAME DEMContinuumConstitutiveLaw
-		if {[dict exists $inletProperties $group FRICTION]} {
-			set val [dict get $inletProperties $group FRICTION]
-			dict set inletProperties $group $prop [expr {tan($val)}]
-		}
-    }
-	if {[GetAttribute properties_location] eq "mdpa"} {
-		foreach group [dict keys $inletProperties] {
-			write::WriteString "Begin Properties [dict get $inletProperties $group MID] // Inlet group: [write::GetWriteGroupName $group]"
-			
-			foreach {prop val} [dict get $inletProperties $group] {
-				if {$prop in $printable} {
-					write::WriteString "    $prop $val"
-				}
-			}
-			write::WriteString "End Properties\n"
-		}
-    }
+	set inlet_xpath [DEM::write::GetInletConditionXpath]
+    set inletProperties [write::processMaterials $inlet_xpath]
+	WV inletProperties
 }

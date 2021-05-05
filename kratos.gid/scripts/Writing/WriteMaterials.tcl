@@ -1,6 +1,9 @@
 
+# This function stores in mat dict all the processed materials, and returns the new ones
 proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     variable mat_dict
+
+    set new_mats [dict create ]
 
     set parts [GetConfigurationAttribute parts_un]
     set materials_un [GetConfigurationAttribute materials_un]
@@ -82,8 +85,10 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     }
                 }
             }
+            dict set new_mats $group [dict get $mat_dict $group]
         }
     }
+    return $new_mats
 }
 
 proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
