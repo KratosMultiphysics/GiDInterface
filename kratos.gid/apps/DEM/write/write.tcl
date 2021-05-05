@@ -11,7 +11,7 @@ proc DEM::write::Init { } {
     set writeAttributes [dict create]
     SetAttribute validApps [list "DEM"]
     SetAttribute writeCoordinatesByGroups 1
-    SetAttribute properties_location mdpa
+    SetAttribute properties_location json
     SetAttribute parts_un DEMParts
     SetAttribute materials_un DEMMaterials
     SetAttribute conditions_un DEMConditions

@@ -8,6 +8,7 @@ proc DEM::write::WriteMDPAParts { } {
 
     # Materials
     writeMaterialsParts
+    
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts
@@ -427,6 +428,14 @@ proc DEM::write::GetSpheresGroups { } {
 
 
 proc DEM::write::writeMaterialsParts { } {
+    # if materials are written in json -> write property 0 empty and go away
+    if {[GetAttribute properties_location] eq "json"} {
+        write::WriteString "Begin Properties 0"
+        write::WriteString "End Properties"
+        write::WriteString ""
+        return
+    }
+
     variable partsProperties
     #TODO: check this nonsense conditions/parts ??
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Parts'\]/group"
