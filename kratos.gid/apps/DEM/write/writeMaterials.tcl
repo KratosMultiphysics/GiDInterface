@@ -59,7 +59,8 @@ proc DEM::write::getDEMMaterialsDict { } {
             set group_name [write::GetWriteGroupName [$gnode @n]]
             set cond_name [[$gnode parent] @n]
             set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
-            lappend assignation_table_list [list $submodelpart_id $mat_name]
+            set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $group_name]
+            lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
         }
     }
     
@@ -123,6 +124,13 @@ proc DEM::write::getDEMMaterialsDict { } {
 #        ["RigidFacePart","mat2"]
 #    ]
 #}
+
+proc DEM::write::GetModelPartParentNameFromGroup {group} {
+    set model_part_parent SpheresPart
+    if {$group in [DEM::write::GetWallsGroups]} {set model_part_parent "RigidFacePart"}
+    if {$group in [DEM::write::GetInletGroups]} {set model_part_parent "DEMInletPart"}
+    return $model_part_parent
+}
 
 
 proc DEM::write::GetMaterialsNodeList { } {
