@@ -3,13 +3,15 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeModelPartData
     
     # Material
-    set wall_properties [processRigidWallMaterials]
-    set phantom_wall_properties [WritePhantomWallProperties]
+    set wall_properties [DEM::write::processRigidWallMaterials]
+    if {$::Model::SpatialDimension ne "2D"} {
+        set phantom_wall_properties [DEM::write::processPhantomWallMaterials]
+    }
     
     # Nodal coordinates (only for Walls <inefficient> )
-    write::writeNodalCoordinatesOnGroups [GetWallsGroups]
+    write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroups]
     if {$::Model::SpatialDimension ne "2D"} {
-        write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
+        write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroupsSmp]
     }
 
     # Nodal conditions and conditions
@@ -30,8 +32,14 @@ proc DEM::write::processRigidWallMaterials { } {
     variable wallsProperties
 	set walls_xpath [DEM::write::GetRigidWallXPath]
     set wallsProperties [write::processMaterials $walls_xpath]
-
 }
+
+proc DEM::write::processPhantomWallMaterials { } {
+    variable wallsProperties
+	set phantom_walls_xpath [DEM::write::GetPhantomWallXPath]
+    set phantomwallsProperties [write::processMaterials $phantom_walls_xpath]
+}
+
 proc DEM::write::WriteRigidWallProperties { } {
         
 	write::WriteString "Begin Properties 0"
@@ -153,13 +161,20 @@ proc DEM::write::GetRigidWallXPath { } {
     if {$::Model::SpatialDimension eq "2D"} {
 		set condition_name "DEM-FEM-Wall2D"
 	}
-	return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]/group"
+	return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
+}
+proc DEM::write::GetPhantomWallXPath { } {
+    set condition_name "Phantom-Wall"
+    if {$::Model::SpatialDimension eq "2D"} {
+		set condition_name "Phantom-Wall2D"
+	}
+	return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
 }
 
 proc DEM::write::GetRigidWallsGroups { } {
     set groups [list ]
 	
-    foreach group [[customlib::GetBaseRoot] selectNodes [DEM::write::GetRigidWallXPath]] {
+    foreach group [[customlib::GetBaseRoot] selectNodes "[DEM::write::GetRigidWallXPath]/group"] {
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
     }
@@ -168,9 +183,8 @@ proc DEM::write::GetRigidWallsGroups { } {
 
 proc DEM::write::GetPhantomWallsGroups { } {
     set groups [list ]
-    if {$::Model::SpatialDimension eq "2D"} {set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-FEM-Wall2D'\]/group"
-    } else { set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'Phantom-Wall'\]/group"}
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+    
+    foreach group [[customlib::GetBaseRoot] selectNodes "[DEM::write::GetPhantomWallXPath]/group"] {
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
     }
