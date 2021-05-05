@@ -8,11 +8,15 @@ proc DEM::write::WriteMDPAWalls { } {
     
     # Nodal coordinates (only for Walls <inefficient> )
     write::writeNodalCoordinatesOnGroups [GetWallsGroups]
-    write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
+    if {$::Model::SpatialDimension ne "2D"} {
+        write::writeNodalCoordinatesOnGroups [GetWallsGroupsSmp]
+    }
 
     # Nodal conditions and conditions
     writeConditions $wall_properties
-    writePhantomConditions $phantom_wall_properties
+    if {$::Model::SpatialDimension ne "2D"} {
+        writePhantomConditions $phantom_wall_properties
+    }
     
     # SubmodelParts
     writeWallConditionMeshes
@@ -281,8 +285,10 @@ proc DEM::write::writeWallConditionMeshes { } {
         writeWallConditionMesh $group "DEM-FEM-Wall"
     }
     
-    foreach group [GetPhantomWallsGroups] {
-        writeWallConditionMesh $group "Phantom-Wall"
+    if {$::Model::SpatialDimension ne "2D"} {
+        foreach group [GetPhantomWallsGroups] {
+            writeWallConditionMesh $group "Phantom-Wall"
+        }
     }
 }
 
