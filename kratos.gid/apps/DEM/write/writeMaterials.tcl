@@ -9,20 +9,23 @@ proc DEM::write::getDEMMaterialsDict { } {
     # print COMPUTE_WEAR as false always, too (temporal fix)
     # While looping, create the assignation_table_list
     set materials_node_list [DEM::write::GetMaterialsNodeList]
-
     set materials_list [list ]
-    set processed_mats [list ]
+    set processed_mats [dict create ]
+
+    set matid 0
     foreach mat_node $materials_node_list {
         set mat_name [write::getValueByNode $mat_node]
-        if {$mat_name ni $processed_mats} {
+        if {$mat_name ni [dict keys $processed_mats]} {
+            incr matid
             set mat [dict create]
             dict set mat material_name $mat_name
+            dict set mat material_id $matid
             set material_xp "[spdAux::getRoute [GetAttribute materials_un]]/blockdata\[@name='$mat_name'\]"
             foreach param [[customlib::GetBaseRoot] selectNodes "$material_xp/value"] {
                 dict set mat Variables [$param @n] [write::getValueByNode $param]
             }
             lappend materials_list $mat
-            lappend processed_mats $mat_name
+            dict set processed_mats $mat_name $matid
         }
     }
     
@@ -35,6 +38,7 @@ proc DEM::write::getDEMMaterialsDict { } {
         set mat_a [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_A'\]"]]
         set mat_b [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_B'\]"]]
         dict set mat_rel material_names_list [list $mat_a $mat_b]
+        dict set mat_rel material_ids_list [list [dict get $processed_mats $mat_a] [dict get $processed_mats $mat_b]]
         foreach param [$mat_rel_node selectNodes "./value"] {
             set param_name [$param @n]
             if {$param_name eq "ConstitutiveLaw"} {set param_name "DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME"}
