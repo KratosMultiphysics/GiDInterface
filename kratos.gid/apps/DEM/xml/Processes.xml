@@ -106,13 +106,14 @@
           <parameter n="fixed_wall" parent="LinearPeriodic" pn="Update velocity, not displacements" type="bool" v="false" help="If activated, the wall will not move and will just have an imposed velocity field" show_in_window="0"/>
         </parameter>
 
-        <!-- <parameter n="IsGhost" parent="true" pn="Is ghost wall" v="false" type="bool" show_in_window="0"/>
-        <parameter n="friction_angle" parent="true" pn="Friction angle" v="30.0" type="double" units="deg" unit_magnitude="Angle" help="" show_in_window="0"/>
+         <parameter n="IsGhost" parent="true" pn="Is ghost wall" v="false" type="bool" show_in_window="0"/>
+        
         <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
-        <parameter n="CohesiveWall" parent="true" pn="Cohesive Wall" v="false" type="bool" help="Specify if the wall presents a cohesive behaviour" show_in_window="0">
+        <!-- <parameter n="CohesiveWall" parent="true" pn="Cohesive Wall" v="false" type="bool" help="Specify if the wall presents a cohesive behaviour" show_in_window="0">
           <parameter n="WallCohesion" parent="true" pn="Wall cohesion" v="0.0" type="double" units="N/m^2" unit_magnitude="F/L^2" help="JKR or DMT energy surface" show_in_window="0"/>
-        </parameter>
-
+        </parameter> -->
+        <!--
+        <parameter n="friction_angle" parent="true" pn="Friction angle" v="30.0" type="double" units="deg" unit_magnitude="Angle" help="" show_in_window="0"/>
         <parameter n="DEM_Wear" parent="true" pn="Compute wear" v="false" type="bool" help="If activated, wear will be computed on this wall. It can increase computation time" show_in_window="0">
           <parameter n="K_Abrasion" parent="true" pn="Abrasion level" v="0.001" type="double" help="Archard abrasion K parameter" show_in_window="0"/>
           <parameter n="K_Impact" parent="true" pn="Impact level" v="0.001" type="double" help="Archard impact K parameter" show_in_window="0"/>
