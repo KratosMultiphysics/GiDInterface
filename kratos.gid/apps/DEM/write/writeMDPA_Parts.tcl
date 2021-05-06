@@ -379,9 +379,9 @@ proc DEM::write::GetSpheresGroups { } {
 
 proc DEM::write::processPartMaterials { } {
     variable partsProperties
+    # Materials for parts are already processed
     #W [write::processMaterials]
     set partsProperties [write::getPropertiesList [GetAttribute parts_un] 0 SpheresPart]
-    WV partsProperties
 }
 
 proc DEM::write::writeMaterialsParts { } {

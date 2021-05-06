@@ -3,7 +3,7 @@ proc DEM::write::WriteMDPAInlet { } {
     write::writeModelPartData
     
     # process materials
-    DEM::write::processInletMaterials
+    processInletMaterials
     
     # Properties section
     writeMaterialsInlet
@@ -332,6 +332,7 @@ proc DEM::write::writeInletMeshes2D { } {
         if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
             set mid [write::AddSubmodelpart $condition_name $groupid]
             set props [DEM::write::FindPropertiesBySubmodelpart $inletProperties $mid]
+            if {$props eq ""} {W "Error printing inlet $groupid"}
             set group_real_name [write::GetWriteGroupName $groupid]
             set gdict [dict create]
             set f "%10i\n"
@@ -602,5 +603,7 @@ proc DEM::write::writeMaterialsInlet { } {
 proc DEM::write::processInletMaterials { } {
     variable inletProperties
     set inlet_xpath [DEM::write::GetInletConditionXpath]
+    write::processMaterials $inlet_xpath/group
     set inletProperties [write::getPropertiesListByConditionXPath $inlet_xpath 0 DEMInletPart]
+
 }
