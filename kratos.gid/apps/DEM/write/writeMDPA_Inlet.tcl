@@ -72,14 +72,23 @@ proc DEM::write::GetUsedClusters { } {
     variable inletProperties
     set clusters_list [list ]
     set custom_clusters_list [list]
-    foreach groupid [dict keys $inletProperties ] {
-        if {[dict get $inletProperties $groupid InletElementType] in [list "Cluster2D" "Cluster3D"]} {
-            set inlet_element_type [dict get $inletProperties $groupid Variables ClusterType]
-            if { $inlet_element_type == "FromFile" } {
-                set cluster_full_path [dict get $inletProperties $groupid Variables ClusterFilename]
-                lappend custom_clusters_list $cluster_full_path
-            } else {
-                lappend clusters_list $inlet_element_type
+    set condition_name Inlet
+    if {$::Model::SpatialDimension eq "2D"} {
+        set condition_name Inlet2D
+    }
+
+    foreach groupid [DEM::write::GetInletGroups] {
+        if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
+            set mid [write::AddSubmodelpart $condition_name $groupid]
+            set props [DEM::write::FindPropertiesBySubmodelpart $inletProperties $mid]
+            if {[dict get $props Material Variables InletElementType] in [list "Cluster2D" "Cluster3D"]} {
+                set inlet_element_type [dict get $props Material Variables ClusterType]
+                if { $inlet_element_type == "FromFile" } {
+                    set cluster_full_path [dict get $props Material Variables ClusterFilename]
+                    lappend custom_clusters_list $cluster_full_path
+                } else {
+                    lappend clusters_list $inlet_element_type
+                }
             }
         }
     }
@@ -322,6 +331,7 @@ proc DEM::write::writeInletMeshes2D { } {
         set what nodal
         if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
             set mid [write::AddSubmodelpart $condition_name $groupid]
+            set props [DEM::write::FindPropertiesBySubmodelpart $inletProperties $mid]
             set group_real_name [write::GetWriteGroupName $groupid]
             set gdict [dict create]
             set f "%10i\n"
@@ -330,34 +340,34 @@ proc DEM::write::writeInletMeshes2D { } {
             write::WriteString "Begin SubModelPart $mid // Group $groupid // Subtree Inlet"
             write::WriteString "    Begin SubModelPartData"
             
-            set is_active [dict get $inletProperties $mid Variables SetActive]
+            set is_active [dict get $props Material Variables SetActive]
             if {$is_active=="No"} {
                 continue
             }
             
             if {[write::isBooleanTrue $is_active]} {
-                set motion_type [dict get $inletProperties $groupid Variables InletMotionType]
+                set motion_type [dict get $props Material Variables InletMotionType]
                 set TableNumber 0
                 set TableVelocityComponent 0
                 if {$motion_type == "FromATable"} {
                     set TableNumber $mid
-                    set TableVelocityComponent [dict get $inletProperties $groupid Variables TableVelocityComponent]
+                    set TableVelocityComponent [dict get $props Material Variables TableVelocityComponent]
                 }
                 if {$motion_type=="LinearPeriodic"} {
                     
                     # Linear velocity
-                    set velocity  [dict get $inletProperties $groupid Variables VelocityModulus]
-                    lassign [split [dict get $inletProperties $groupid Variables DirectionVector] ","] velocity_X velocity_Y
+                    set velocity  [dict get $props Material Variables VelocityModulus]
+                    lassign [split [dict get $props Material Variables DirectionVector] ","] velocity_X velocity_Y
                     lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y]] velocity_X velocity_Y
                     lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y] ] vx vy
                     write::WriteString "        LINEAR_VELOCITY \[3\] ($vx, $vy, 0.0)"
                     
                     
                     # Period
-                    set periodic  [dict get $inletProperties $groupid Variables LinearPeriodic]
+                    set periodic  [dict get $props Material Variables LinearPeriodic]
                     if {[write::isBooleanTrue $periodic]} {
                         #set period [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearPeriod'\]"]]
-                        set period  [dict get $inletProperties $groupid Variables LinearPeriod]
+                        set period  [dict get $props Material Variables LinearPeriod]
                     } else {
                         set period 0.0
                     }
@@ -365,18 +375,18 @@ proc DEM::write::writeInletMeshes2D { } {
                     
                     # Angular velocity
                     #set velocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
-                    set avelocity  [dict get $inletProperties $groupid Variables AngularVelocityModulus]
+                    set avelocity  [dict get $props Material Variables AngularVelocityModulus]
                     write::WriteString "        ANGULAR_VELOCITY \[3\] (0.0,0.0,$avelocity)"
                     
                     # Angular center of rotation
                     #lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotation'\]"]] oX oY oZ
-                    lassign [split [dict get $inletProperties $groupid Variables enterOfRotation] ","] oX oY
+                    lassign [split [dict get $props Material Variables enterOfRotation] ","] oX oY
                     write::WriteString "        ROTATION_CENTER \[3\] ($oX,$oY,0.0)"
                     
                     # Angular Period
-                    set angular_periodic [dict get $inletProperties $groupid Variables AngularPeriodic]
+                    set angular_periodic [dict get $props Material Variables AngularPeriodic]
                     if {[write::isBooleanTrue $angular_periodic]} {
-                        set angular_period [dict get $inletProperties $groupid Variables AngularPeriod]
+                        set angular_period [dict get $props Material Variables AngularPeriod]
                     } else {
                         set angular_period 0.0
                     }
@@ -399,10 +409,10 @@ proc DEM::write::writeInletMeshes2D { } {
                     # write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $end"
                     
                     
-                    set LinearStartTime [dict get $inletProperties $groupid Variables LinearStartTime]
-                    set LinearEndTime  [dict get $inletProperties $groupid Variables LinearEndTime]
-                    set AngularStartTime [dict get $inletProperties $groupid Variables AngularStartTime]
-                    set AngularEndTime  [dict get $inletProperties $groupid Variables AngularEndTime]
+                    set LinearStartTime [dict get $props Material Variables LinearStartTime]
+                    set LinearEndTime  [dict get $props Material Variables LinearEndTime]
+                    set AngularStartTime [dict get $props Material Variables AngularStartTime]
+                    set AngularEndTime  [dict get $props Material Variables AngularEndTime]
                     set rigid_body_motion 1
                     write::WriteString "        VELOCITY_START_TIME $LinearStartTime"
                     write::WriteString "        VELOCITY_STOP_TIME $LinearEndTime"
@@ -418,18 +428,18 @@ proc DEM::write::writeInletMeshes2D { } {
                 set contains_clusters 0
                 set random_orientation 0
                 
-                DefineInletConditions2D $inletProperties $groupid $mid $contains_clusters
+                DefineInletConditions2D $props $mid $contains_clusters
                 
-                set velocity_modulus [dict get $inletProperties $groupid Variables InVelocityModulus]
-                lassign [split [dict get $inletProperties $groupid Variables InDirectionVector] ","] velocity_X velocity_Y
+                set velocity_modulus [dict get $props Material Variables InVelocityModulus]
+                lassign [dict get $props Material Variables InDirectionVector] velocity_X velocity_Y
                 lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y]] velocity_X velocity_Y
                 lassign [MathUtils::ScalarByVectorProd $velocity_modulus [list $velocity_X $velocity_Y] ] vx vy
                 write::WriteString "        VELOCITY \[3\] ($vx, $vy, 0.0)"
                 
-                set max_deviation_angle [dict get $inletProperties $groupid Variables VelocityDeviation]
+                set max_deviation_angle [dict get $props Material Variables VelocityDeviation]
                 write::WriteString "        MAX_RAND_DEVIATION_ANGLE $max_deviation_angle"
                 
-                set type_of_measurement [dict get $inletProperties $groupid Variables TypeOfFlowMeasurement]
+                set type_of_measurement [dict get $props Material Variables TypeOfFlowMeasurement]
                 if {$type_of_measurement eq "Kilograms"} {
                     set mass_flow_option 1
                 } else {
@@ -437,7 +447,7 @@ proc DEM::write::writeInletMeshes2D { } {
                 }
                 
                 if {$mass_flow_option == 0} {
-                    set inlet_number_of_particles [dict get $inletProperties $groupid Variables NumberOfParticles]
+                    set inlet_number_of_particles [dict get $props Material Variables NumberOfParticles]
                     write::WriteString "        INLET_NUMBER_OF_PARTICLES $inlet_number_of_particles"
                 }
                 
@@ -445,18 +455,18 @@ proc DEM::write::writeInletMeshes2D { } {
                 
                 # search for tem id="InletLimitedVelocity" related to dense inlet in spreaddem
                 if {$mass_flow_option == 1} {
-                    set inlet_mass_flow [dict get $inletProperties $groupid Variables InletMassFlow]
+                    set inlet_mass_flow [dict get $props Material Variables InletMassFlow]
                     write::WriteString "        MASS_FLOW $inlet_mass_flow"
                 }
-                set inlet_start_time [dict get $inletProperties $groupid Variables InletStartTime]
+                set inlet_start_time [dict get $props Material Variables InletStartTime]
                 write::WriteString "        INLET_START_TIME $inlet_start_time"
-                set inlet_stop_time [dict get $inletProperties $groupid Variables InletStopTime]
+                set inlet_stop_time [dict get $props Material Variables InletStopTime]
                 write::WriteString "        INLET_STOP_TIME $inlet_stop_time"
-                set particle_diameter [dict get $inletProperties $groupid Variables ParticleDiameter]
+                set particle_diameter [dict get $props Material Variables ParticleDiameter]
                 write::WriteString "        RADIUS [expr {0.5 * $particle_diameter}]"
-                set probability_distribution [dict get $inletProperties $groupid Variables ProbabilityDistribution]
+                set probability_distribution [dict get $props Material Variables ProbabilityDistribution]
                 write::WriteString "        PROBABILITY_DISTRIBUTION $probability_distribution"
-                set standard_deviation [dict get $inletProperties $groupid Variables StandardDeviation]
+                set standard_deviation [dict get $props Material Variables StandardDeviation]
                 write::WriteString "        STANDARD_DEVIATION $standard_deviation"
                 
                 write::WriteString "    End SubModelPartData"
@@ -491,12 +501,12 @@ proc DEM::write::writeInletMeshes2D { } {
 }
 
 
-proc DEM::write::DefineInletConditions2D {inletProperties groupid mid contains_clusters} {
+proc DEM::write::DefineInletConditions2D {props mid contains_clusters} {
     
     set inlet_element_type CylinderPartDEMElement2D
     write::WriteString "        IDENTIFIER $mid"
-    write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties $groupid Variables InletElementType]"
-    write::WriteString "        ELEMENT_TYPE [dict get $inletProperties $groupid Variables InletElementType]"
+    write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $props Material Variables InletElementType]"
+    write::WriteString "        ELEMENT_TYPE [dict get $props Material Variables InletElementType]"
     write::WriteString "        CONTAINS_CLUSTERS 0"
     # Change to SphericSwimmingParticle3D in FLUIDDEM interface
 }
@@ -591,9 +601,6 @@ proc DEM::write::writeMaterialsInlet { } {
 
 proc DEM::write::processInletMaterials { } {
     variable inletProperties
-    
     set inlet_xpath [DEM::write::GetInletConditionXpath]
-    W [write::processMaterials $inlet_xpath/group]
     set inletProperties [write::getPropertiesListByConditionXPath $inlet_xpath 0 DEMInletPart]
-    WV inletProperties
 }

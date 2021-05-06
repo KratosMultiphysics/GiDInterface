@@ -160,4 +160,15 @@ proc DEM::write::Validate {} {
     return $err
 }
 
+proc DEM::write::FindPropertiesBySubmodelpart {props subid } {
+    
+    set result ""
+    foreach prop [dict get $props properties]  {
+        if { [dict get $prop model_part_name] eq $subid || [lindex [split [dict get $prop model_part_name] "."] end] eq $subid } {
+            set result $prop
+        }
+    }
+    return $result
+}
+
 DEM::write::Init
