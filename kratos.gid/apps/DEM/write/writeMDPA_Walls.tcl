@@ -291,10 +291,6 @@ proc DEM::write::writeWallConditionMesh { condition group props } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition'\]/group\[@n = '$group'\]"
     set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
     
-    W $condition
-    W $group
-    WV props
-    
     set is_active [dict get $props Material Variables SetActive]
     if {[write::isBooleanTrue $is_active]} {
         set motion_type [write::getValueByNode [$group_node selectNodes "./value\[@n='DEM-ImposedMotion'\]"]]
