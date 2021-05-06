@@ -3,9 +3,9 @@ proc DEM::write::WriteMDPAWalls { } {
     write::writeModelPartData
     
     # Material
-    set wall_properties [DEM::write::processRigidWallMaterials]
+    DEM::write::processRigidWallMaterials
     if {$::Model::SpatialDimension ne "2D"} {
-        set phantom_wall_properties [DEM::write::processPhantomWallMaterials]
+        DEM::write::processPhantomWallMaterials
     }
     
     # Nodal coordinates (only for Walls <inefficient> )
@@ -13,11 +13,11 @@ proc DEM::write::WriteMDPAWalls { } {
     if {$::Model::SpatialDimension ne "2D"} {
         write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroupsSmp]
     }
-
+    
     # Nodal conditions and conditions
-    writeConditions $wall_properties
+    writeConditions
     if {$::Model::SpatialDimension ne "2D"} {
-        writePhantomConditions $phantom_wall_properties
+        writePhantomConditions
     }
     
     # SubmodelParts
@@ -30,22 +30,24 @@ proc DEM::write::WriteMDPAWalls { } {
 
 proc DEM::write::processRigidWallMaterials { } {
     variable wallsProperties
-	set walls_xpath [DEM::write::GetRigidWallXPath]
+    set walls_xpath [DEM::write::GetRigidWallXPath]
+    write::processMaterials $walls_xpath/group
     set wallsProperties [write::getPropertiesListByConditionXPath $walls_xpath 0 RigidFacePart]
 }
 
 proc DEM::write::processPhantomWallMaterials { } {
     variable wallsProperties
-	set phantom_walls_xpath [DEM::write::GetPhantomWallXPath]
+    set phantom_walls_xpath [DEM::write::GetPhantomWallXPath]
+    write::processMaterials $phantom_walls_xpath/group
     set phantomwallsProperties [write::processMaterials $phantom_walls_xpath]
 }
 
 proc DEM::write::WriteRigidWallProperties { } {
-        
-	write::WriteString "Begin Properties 0"
-	write::WriteString "End Properties"
-	write::WriteString ""
-
+    
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties"
+    write::WriteString ""
+    
     
     return $wall_properties
 }
@@ -136,16 +138,14 @@ proc DEM::write::WriteWallCustomSmp { } {
 }
 
 
-proc DEM::write::writeConditions { wall_properties } {
-    if {$::Model::SpatialDimension eq "2D"} {write::writeConditionsByGiDId DEMConditions DEM-FEM-Wall2D $wall_properties
-    } else {write::writeConditionsByGiDId DEMConditions DEM-FEM-Wall $wall_properties
-    }
+proc DEM::write::writeConditions {  } {
+    variable wallsProperties
+    write::writeConditionsByGiDId DEMConditions [GetRigidWallConditionName] $wallsProperties
 }
 
 proc DEM::write::writePhantomConditions { wall_properties } {
-    if {$::Model::SpatialDimension eq "2D"} {write::writeConditionsByGiDId DEMConditions DEM-FEM-Wall2D $wall_properties
-    } else {write::writeConditionsByGiDId DEMConditions Phantom-Wall $wall_properties
-    }
+    variable phantomwallsProperties
+    write::writeConditionsByGiDId DEMConditions [GetPhantomWallConditionName] $phantomwallsProperties
 }
 
 proc DEM::write::GetWallsGroups { } {
@@ -156,24 +156,33 @@ proc DEM::write::GetWallsGroups { } {
     return $groups
 }
 
-proc DEM::write::GetRigidWallXPath { } {
+proc DEM::write::GetRigidWallConditionName {} {
     set condition_name "DEM-FEM-Wall"
     if {$::Model::SpatialDimension eq "2D"} {
-		set condition_name "DEM-FEM-Wall2D"
-	}
-	return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
+        set condition_name "DEM-FEM-Wall2D"
+    }
+    return $condition_name
 }
-proc DEM::write::GetPhantomWallXPath { } {
+proc DEM::write::GetPhantomWallConditionName {} {
     set condition_name "Phantom-Wall"
     if {$::Model::SpatialDimension eq "2D"} {
-		set condition_name "Phantom-Wall2D"
-	}
-	return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
+        set condition_name "Phantom-Wall2D"
+    }
+    return $condition_name
+}
+
+proc DEM::write::GetRigidWallXPath { } {
+    set condition_name [GetRigidWallConditionName]
+    return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
+}
+proc DEM::write::GetPhantomWallXPath { } {
+    set condition_name [GetPhantomWallConditionName]
+    return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
 }
 
 proc DEM::write::GetRigidWallsGroups { } {
     set groups [list ]
-	
+    
     foreach group [[customlib::GetBaseRoot] selectNodes "[DEM::write::GetRigidWallXPath]/group"] {
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
@@ -253,34 +262,40 @@ proc DEM::write::GetConditionsGroups { } {
 }
 
 proc DEM::write::writeWallConditionMeshes { } {
+    variable wallsProperties
+    variable phantomwallsProperties
     
+    set condition_name [GetRigidWallConditionName]
     foreach group [GetRigidWallsGroups] {
-        writeWallConditionMesh $group "DEM-FEM-Wall"
+        set mid [write::AddSubmodelpart $condition_name $group]
+        set props [DEM::write::FindPropertiesBySubmodelpart $wallsProperties $mid]
+        writeWallConditionMesh $condition_name $group $props
     }
     
     if {$::Model::SpatialDimension ne "2D"} {
+        set condition_name [GetPhantomWallConditionName]
         foreach group [GetPhantomWallsGroups] {
-            writeWallConditionMesh $group "Phantom-Wall"
+            set mid [write::AddSubmodelpart $condition_name $group]
+            set props [DEM::write::FindPropertiesBySubmodelpart $phantomwallsProperties $mid]
+            writeWallConditionMesh $condition_name $group $props
         }
     }
 }
 
-proc DEM::write::writeWallConditionMesh { group condition_type } {
+proc DEM::write::writeWallConditionMesh { condition group props } {
     
-    if {$::Model::SpatialDimension eq "2D"} {
-        set cond "DEM-FEM-Wall2D"
-    } else {
-        set cond $condition_type
-    }
+    set mid [write::AddSubmodelpart $condition $group]
     
-    set mid [write::AddSubmodelpart $cond $group]
-    
-    write::WriteString "Begin SubModelPart $mid // $cond - group identifier: $group"
-    write::WriteString "  Begin SubModelPartData // $cond. Group name: $group"
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$cond'\]/group\[@n = '$group'\]"
+    write::WriteString "Begin SubModelPart $mid // $condition - group identifier: $group"
+    write::WriteString "  Begin SubModelPartData // $condition. Group name: $group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition'\]/group\[@n = '$group'\]"
     set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
     
-    set is_active [write::getValueByNode [$group_node selectNodes "./value\[@n='SetActive'\]"]]
+    W $condition
+    W $group
+    WV props
+    
+    set is_active [dict get $props Material Variables SetActive]
     if {[write::isBooleanTrue $is_active]} {
         set motion_type [write::getValueByNode [$group_node selectNodes "./value\[@n='DEM-ImposedMotion'\]"]]
         if {$motion_type == "LinearPeriodic"} {
@@ -494,7 +509,7 @@ proc DEM::write::writeWallConditionMesh { group condition_type } {
         } else {
             write::WriteString "    IS_GHOST 0"
         }
-            write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
+        write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
         
         DefineFEMExtraConditions $group_node
         
