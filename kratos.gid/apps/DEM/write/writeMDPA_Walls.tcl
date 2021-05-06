@@ -31,7 +31,7 @@ proc DEM::write::WriteMDPAWalls { } {
 proc DEM::write::processRigidWallMaterials { } {
     variable wallsProperties
 	set walls_xpath [DEM::write::GetRigidWallXPath]
-    set wallsProperties [write::processMaterials $walls_xpath]
+    set wallsProperties [write::getPropertiesListByConditionXPath $walls_xpath 0 RigidFacePart]
 }
 
 proc DEM::write::processPhantomWallMaterials { } {
@@ -294,7 +294,8 @@ proc DEM::write::writeWallConditionMesh { group condition_type } {
             } else {
                 lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
                 lassign [MathUtils::ScalarByVectorProd $velocity [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
-                write::WriteString "    LINEAR_VELOCITY \[3\] ($vx, $vy, $vz)"}
+                write::WriteString "    LINEAR_VELOCITY \[3\] ($vx, $vy, $vz)"
+            }
             # set vX [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearVelocityX'\]"]]
             
             # Period

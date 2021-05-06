@@ -8,7 +8,6 @@ proc DEM::write::WriteMDPAParts { } {
     # Write Materials
     writeMaterialsParts
     
-
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnParts
     write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupNamesCustomSubmodelpart]
@@ -26,55 +25,12 @@ proc DEM::write::WriteMDPAParts { } {
 
     # SubmodelParts
     write::writePartSubModelPart
-
     writeDEMConditionMeshes
 
     # CustomSubmodelParts
     WriteCustomDEMSmp;
 }
 
-
-
-
-# TODO: Simulations do not run with this. Bad mdpa
-proc DEM::write::WriteCustomDEMSmp-simulation_does_not_run { } {
-    foreach group [GetDEMGroupsCustomSubmodelpart] {
-        set groupid [write::GetWriteGroupName [$group @n]]
-
-        # TODO: Missing write properties for Custom Submodelparts
-
-        # Nodes are previously printed
-        # Print elements and connectivities
-        set elem [write::getValueByNode [$group selectNodes ".//value\[@n='Element']"] ]
-        write::writeGroupElementConnectivities $group $elem
-
-        DEM::write::writeSphereRadiusOnGroup $group
-
-        write::writeGroupSubModelPart DEM-CustomSmp $groupid Elements
-    }
-}
-
-
-
-proc DEM::write::WriteCustomDEMSmp { } {
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set group_id [$group @n]
-        
-        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-        if {$destination_mdpa == "DEM"} {
-            set mid [write::AddSubmodelpart $cond $group_id]
-            write::WriteString  "Begin SubModelPart $mid \/\/ Custom SubModelPart. Group name: $group_id"
-            write::WriteString  "Begin SubModelPartData"
-            write::WriteString  "End SubModelPartData"
-            write::WriteString  "Begin SubModelPartNodes"
-            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group_id] [subst "%10i\n"]]
-            write::WriteString  "End SubModelPartNodes"
-            write::WriteString  "End SubModelPart"
-            write::WriteString  ""
-        }
-    }
-}
 
 proc DEM::write::GetDEMGroupNamesCustomSubmodelpart { } {
     set groups [list ]
@@ -276,7 +232,6 @@ proc DEM::write::writeDEMConditionMeshes { } {
                         write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
 
                     }
-
                 }
 
                 DefineDEMExtraConditions $group_node $group
@@ -428,7 +383,7 @@ proc DEM::write::GetSpheresGroups { } {
 
 proc DEM::write::processPartMaterials { } {
     variable partsProperties
-    write::getPropertiesList [GetAttribute parts_un] 0 SpheresPart
+    #W [write::processMaterials]
     set partsProperties [write::getPropertiesList [GetAttribute parts_un] 0 SpheresPart]
     WV partsProperties
 }
@@ -470,4 +425,25 @@ proc DEM::write::RestoreCustomMeshedParts { } {
         }
     }
     set restore_ov [dict create]
+}
+
+
+proc DEM::write::WriteCustomDEMSmp { } {
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set group_id [$group @n]
+        
+        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
+        if {$destination_mdpa == "DEM"} {
+            set mid [write::AddSubmodelpart $cond $group_id]
+            write::WriteString  "Begin SubModelPart $mid \/\/ Custom SubModelPart. Group name: $group_id"
+            write::WriteString  "Begin SubModelPartData"
+            write::WriteString  "End SubModelPartData"
+            write::WriteString  "Begin SubModelPartNodes"
+            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group_id] [subst "%10i\n"]]
+            write::WriteString  "End SubModelPartNodes"
+            write::WriteString  "End SubModelPart"
+            write::WriteString  ""
+        }
+    }
 }

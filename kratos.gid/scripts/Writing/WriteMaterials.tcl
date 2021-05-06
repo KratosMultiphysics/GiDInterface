@@ -19,15 +19,17 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : $last_assigned_id }]
     foreach gNode [$root selectNodes $xp1] {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
-        set group [$gNode getAttribute n]
+        set group_name [write::GetWriteGroupName [$gNode @n]]
+        set cond_name [[$gNode parent] @n]
+        set submodelpart_id [write:GetSubModelPartName $cond_name $group_name]
         
         set material_name "material $material_number"
-        if { ![dict exists $mat_dict $group] } {
+        if { ![dict exists $mat_dict $submodelpart_id] } {
             incr material_number
             set mid $material_number
 
-            dict set mat_dict $group MID $material_number
-            dict set mat_dict $group APPID $nodeApp
+            dict set mat_dict $submodelpart_id MID $material_number
+            dict set mat_dict $submodelpart_id APPID $nodeApp
 
             catch {
                 set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
@@ -62,7 +64,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
                         # All the introduced values are translated to 'm' and 'kg' with the help of this function
                         set value [gid_groups_conds::convert_value_to_default $valueNode]
-                        dict set mat_dict $group $name $value
+                        dict set mat_dict $submodelpart_id $name $value
                     }
                 }
             } else {
@@ -81,11 +83,11 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
                         # All the introduced values are translated to 'm' and 'kg' with the help of this function
                         set value [gid_groups_conds::convert_value_to_default $valueNode]
-                        dict set mat_dict $group $name $value
+                        dict set mat_dict $submodelpart_id $name $value
                     }
                 }
             }
-            dict set new_mats $group [dict get $mat_dict $group]
+            dict set new_mats $submodelpart_id [dict get $mat_dict $submodelpart_id]
         }
     }
     return $new_mats
@@ -135,7 +137,7 @@ proc write::writePropertiesJsonFile {{parts_un ""} {fname "materials.json"} {wri
     write::CloseFile
 }
 
-proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_name ""}} {
+proc write::getPropertiesListByConditionXPath {cnd_xpath {write_claw_name "True"} {model_part_name ""}} {
     variable mat_dict
     variable properties_exclusion_list
     set exclusionList $properties_exclusion_list
@@ -144,31 +146,33 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
 
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
-    #set root [customlib::GetBaseRoot]
-
-    set xp1 "[spdAux::getRoute $parts_un]/group"
-    if {[llength [$root selectNodes $xp1]] < 1} {
-        set xp1 "[spdAux::getRoute $parts_un]/condition/group"
-    }
-    foreach gNode [$root selectNodes $xp1] {
+    
+    # iterate over the groups of the conditions
+    foreach gNode [$root selectNodes "$cnd_xpath/group"] {
+        # Group name
         set group [get_domnode_attribute $gNode n]
+        # Condition name
         set cond_id [get_domnode_attribute [$gNode parent] n]
-        set sub_model_part [write::getSubModelPartId $cond_id $group]
-        if {$model_part_name ne ""} {set sub_model_part $model_part_name.$sub_model_part}
-        set sub_model_part [string trim $sub_model_part "."]
-        if { [dict exists $mat_dict $group] } {
-            set mid [dict get $mat_dict $group MID]
+        # We get the submodelpart name and the modelpart.submodelpart
+        set submodelpart_id [write:GetSubModelPartName $cond_id $group]
+        set submodelpart_fullname $submodelpart_id
+        if {$model_part_name ne ""} {set submodelpart_fullname $model_part_name.$submodelpart_id}
+        set submodelpart_id [string trim $submodelpart_id "."]
+        if { [dict exists $mat_dict $submodelpart_id] } {
+            set mid [dict get $mat_dict $submodelpart_id MID]
             set prop_dict [dict create]
-            dict set prop_dict "model_part_name" $sub_model_part
+            dict set prop_dict "model_part_name" $submodelpart_fullname
             dict set prop_dict "properties_id" $mid
             set constitutive_law_id ""
-            if {[dict exists $mat_dict $group ConstitutiveLaw ]} {set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]}
+            if {[dict exists $mat_dict $submodelpart_id ConstitutiveLaw ]} {
+                set constitutive_law_id [dict get $mat_dict $submodelpart_id ConstitutiveLaw]
+            }
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
             
             set variables_dict [dict create]
-            foreach prop [dict keys [dict get $mat_dict $group] ] {
+            foreach prop [dict keys [dict get $mat_dict $submodelpart_id] ] {
                 if {$prop ni $exclusionList} {
-                    dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
+                    dict set variables_list $prop [getFormattedValue [dict get $mat_dict $submodelpart_id $prop]]
                 }
             }
             set material_dict [dict create]
@@ -189,4 +193,16 @@ proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_nam
 
     dict set props_dict properties $props
     return $props_dict
+}
+
+proc write::getPropertiesList {unique_name {write_claw_name "True"} {model_part_name ""}} {
+
+    set doc $gid_groups_conds::doc
+    set root [$doc documentElement]
+
+    set xp1 "[spdAux::getRoute $unique_name]"
+    if {[llength [$root selectNodes $xp1/group]] < 1} {
+        set xp1 "[spdAux::getRoute $unique_name]/condition"
+    }
+    return [write::getPropertiesListByConditionXPath $xp1 $write_claw_name $model_part_name]
 }
