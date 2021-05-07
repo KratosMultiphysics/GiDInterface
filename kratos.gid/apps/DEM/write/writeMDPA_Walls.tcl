@@ -8,6 +8,9 @@ proc DEM::write::WriteMDPAWalls { } {
         DEM::write::processPhantomWallMaterials
     }
     
+    # Properties section
+    WriteRigidWallProperties
+    
     # Nodal coordinates (only for Walls <inefficient> )
     write::writeNodalCoordinatesOnGroups [DEM::write::GetWallsGroups]
     if {$::Model::SpatialDimension ne "2D"} {
@@ -47,9 +50,6 @@ proc DEM::write::WriteRigidWallProperties { } {
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     write::WriteString ""
-    
-    
-    return $wall_properties
 }
 
 proc DEM::write::WritePhantomWallProperties { } { 
