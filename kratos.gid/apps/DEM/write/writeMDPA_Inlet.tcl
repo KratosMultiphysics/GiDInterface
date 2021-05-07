@@ -100,17 +100,20 @@ proc DEM::write::writeInletMeshes { } {
     variable inletProperties
     
     set condition_name Inlet
-    foreach groupid [dict keys $inletProperties ] {
+    foreach groupid [DEM::write::GetInletGroups] {
         set what nodal
         if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
             set mid [write::AddSubmodelpart $condition_name $groupid]
+            set props [DEM::write::FindPropertiesBySubmodelpart $inletProperties $mid]
+            if {$props eq ""} {W "Error printing inlet $groupid"}
+            set group_real_name [write::GetWriteGroupName $groupid]
             set gdict [dict create]
             set f "%10i\n"
             set f [subst $f]
             dict set gdict $group_real_name $f
             write::WriteString "Begin SubModelPart $mid // Group $groupid // Subtree Inlet"
             write::WriteString "    Begin SubModelPartData"
-            
+            WV inletProperties
             set is_active [dict get $inletProperties $groupid Variables SetActive]
             if {$is_active=="No"} {
                 continue
@@ -135,16 +138,13 @@ proc DEM::write::writeInletMeshes { } {
                     
                     # Period
                     set periodic  [dict get $inletProperties $groupid Variables LinearPeriodic]
+                    set period 0.0
                     if {[write::isBooleanTrue $periodic]} {
-                        #set period [write::getValueByNode [$group_node selectNodes "./value\[@n='LinearPeriod'\]"]]
                         set period  [dict get $inletProperties $groupid Variables LinearPeriod]
-                    } else {
-                        set period 0.0
                     }
                     write::WriteString "        VELOCITY_PERIOD $period"
                     
                     # Angular velocity
-                    #set velocity [write::getValueByNode [$group_node selectNodes "./value\[@n='AngularVelocityModulus'\]"]]
                     set velocity  [dict get $inletProperties $groupid Variables AngularVelocityModulus]
                     lassign [split [dict get $inletProperties $groupid Variables AngularDirectionVector] ","] velocity_X velocity_Y velocity_Z
                     lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
@@ -153,7 +153,6 @@ proc DEM::write::writeInletMeshes { } {
                     
                     
                     # Angular center of rotation
-                    #lassign [write::getValueByNode [$group_node selectNodes "./value\[@n='CenterOfRotation'\]"]] oX oY oZ
                     lassign [split [dict get $inletProperties $groupid Variables CenterOfRotation] ","] oX oY oZ
                     write::WriteString "        ROTATION_CENTER \[3\] ($oX,$oY,$oZ)"
                     
@@ -165,24 +164,7 @@ proc DEM::write::writeInletMeshes { } {
                         set angular_period 0.0
                     }
                     write::WriteString "        ANGULAR_VELOCITY_PERIOD $angular_period"
-                    
-                    # # Interval
-                    # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
-                    # lassign [write::getInterval $interval] ini end
-                    # if {![string is double $ini]} {
-                        #     set ini [write::getValue DEMTimeParameters StartTime]
-                        # }
-                    # # write::WriteString "    ${cond}_START_TIME $ini"
-                    # write::WriteString "    VELOCITY_START_TIME $ini"
-                    # write::WriteString "    ANGULAR_VELOCITY_START_TIME $ini"
-                    # if {![string is double $end]} {
-                        #     set end [write::getValue DEMTimeParameters EndTime]
-                        # }
-                    # # write::WriteString "    ${cond}_STOP_TIME $end"
-                    # write::WriteString "    VELOCITY_STOP_TIME $end"
-                    # write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $end"
-                    
-                    
+
                     set LinearStartTime [dict get $inletProperties $groupid Variables LinearStartTime]
                     set LinearEndTime  [dict get $inletProperties $groupid Variables LinearEndTime]
                     set AngularStartTime [dict get $inletProperties $groupid Variables AngularStartTime]
@@ -392,23 +374,6 @@ proc DEM::write::writeInletMeshes2D { } {
                         set angular_period 0.0
                     }
                     write::WriteString "        ANGULAR_VELOCITY_PERIOD $angular_period"
-                    
-                    # # Interval
-                    # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
-                    # lassign [write::getInterval $interval] ini end
-                    # if {![string is double $ini]} {
-                        #     set ini [write::getValue DEMTimeParameters StartTime]
-                        # }
-                    # # write::WriteString "    ${cond}_START_TIME $ini"
-                    # write::WriteString "    VELOCITY_START_TIME $ini"
-                    # write::WriteString "    ANGULAR_VELOCITY_START_TIME $ini"
-                    # if {![string is double $end]} {
-                        #     set end [write::getValue DEMTimeParameters EndTime]
-                        # }
-                    # # write::WriteString "    ${cond}_STOP_TIME $end"
-                    # write::WriteString "    VELOCITY_STOP_TIME $end"
-                    # write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $end"
-                    
                     
                     set LinearStartTime [dict get $props Material Variables LinearStartTime]
                     set LinearEndTime  [dict get $props Material Variables LinearEndTime]

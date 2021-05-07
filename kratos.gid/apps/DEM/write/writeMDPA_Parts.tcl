@@ -431,7 +431,7 @@ proc DEM::write::WriteCustomDEMSmp { } {
         
         set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
         if {$destination_mdpa == "DEM"} {
-            set mid [write::AddSubmodelpart $cond $group_id]
+            set mid [write::AddSubmodelpart DEM-CustomSmp $group_id]
             write::WriteString  "Begin SubModelPart $mid \/\/ Custom SubModelPart. Group name: $group_id"
             write::WriteString  "Begin SubModelPartData"
             write::WriteString  "End SubModelPartData"
