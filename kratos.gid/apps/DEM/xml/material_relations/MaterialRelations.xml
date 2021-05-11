@@ -5,7 +5,9 @@
       <parameter n="MATERIAL_A" pn="Material A" v="" type="combo" combotype="material" help="First material"/>
       <parameter n="MATERIAL_B" pn="Material B" v="" type="combo" combotype="material" help="Second material"/>
       <parameter n="ConstitutiveLaw" pn="Constitutive law" type="combo" combotype="constitutive_law" values="[GetConstitutiveLaws]" pvalues="[GetAllConstitutiveLaws]" help="Select a constitutive law" />
-      <parameter n="FRICTION" pn="Friction angle" v="30.0" type="double" units="deg" unit_magnitude="Angle" help="Particle friction angle (for Coulombs friction)"/>
+      <parameter n="STATIC_FRICTION" pn="Static friction coefficient" v="0.5" type="double" units="" unit_magnitude="" help="(for Coulomb friction)"/>
+      <parameter n="DYNAMIC_FRICTION" pn="Dynamic friction coefficient" v="0.4" type="double" units="" unit_magnitude="" help="(for Coulomb friction)"/>
+      <parameter n="FRICTION_DECAY" pn="Friction decay parameter" v="500" type="double" units="" unit_magnitude="" help="it sets how fast the friction force goes from static to dynamic, considering the relative velocity at the contact point"/>
       <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help=""/>
       <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
       <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
