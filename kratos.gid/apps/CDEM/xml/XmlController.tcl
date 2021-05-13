@@ -15,7 +15,7 @@ proc CDEM::xml::Init { } {
     Model::getConditions Conditions.xml
     Model::getConditions "../../DEM/xml/Conditions.xml"
     Model::getConstitutiveLaws ConstitutiveLawsC.xml
-    Model::getMaterials MaterialsC.xml
+    Model::getMaterials "../../DEM/xml/Materials.xml"
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
 }
