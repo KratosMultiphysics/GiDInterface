@@ -43,7 +43,7 @@ proc ::DEM::examples::DrawGeometrySpheresDrop { } {
 proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
@@ -64,7 +64,7 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
     $inletNode setAttribute ov surface
-    set props [list material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
+    set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
     spdAux::SetValuesOnBaseNode $inletNode $props
 
 
@@ -72,7 +72,7 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     set DEMClusterInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMClusterInlet "ClusterInlet"]
     $inletNode setAttribute ov surface
-    set props [list material "DEM-DefaultMaterial" InletElementType "Cluster3D" ClusterType "Rock1Cluster3D" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,1.0"]
+    set props [list Material "DEM-DefaultMaterial" InletElementType "Cluster3D" ClusterType "Rock1Cluster3D" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,1.0"]
 
     spdAux::SetValuesOnBaseNode $inletNode $props
 
