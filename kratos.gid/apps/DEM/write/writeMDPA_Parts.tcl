@@ -82,8 +82,11 @@ proc DEM::write::GetDEMGroupsBoundaryC { } {
 
 proc DEM::write::GetNodesForGraphs { } {
     set groups [list ]
-    if {$::Model::SpatialDimension eq "2D"} { set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition2D'\]/group"
-    } else {set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition'\]/group"}
+    if {$::Model::SpatialDimension eq "2D"} { 
+        set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition2D'\]/group"
+    } else {
+        set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition'\]/group"
+    }
     foreach group [[customlib::GetBaseRoot] selectNodes $xp5] {
         set groupid [$group @n]
         lappend groups [write::GetWriteGroupName $groupid]
@@ -177,25 +180,6 @@ proc DEM::write::writeDEMConditionMeshes { } {
                         write::WriteString "    ANGULAR_VELOCITY_START_TIME $AngularStartTime"
                         write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $AngularEndTime"
                         write::WriteString "    RIGID_BODY_MOTION $rigid_body_motion"
-                        
-                        
-                        # # Interval
-                        # set interval [write::getValueByNode [$group_node selectNodes "./value\[@n='Interval'\]"]]
-                        # lassign [write::getInterval $interval] ini end
-                        # if {![string is double $ini]} {
-                            #     set ini [write::getValue DEMTimeParameters StartTime]
-                            # }
-                        # # write::WriteString "    ${cond}_START_TIME $ini"
-                        # write::WriteString "    VELOCITY_START_TIME $ini"
-                        # write::WriteString "    ANGULAR_VELOCITY_START_TIME $ini"
-                        # if {![string is double $end]} {
-                            #     set end [write::getValue DEMTimeParameters EndTime]
-                            # }
-                        # # write::WriteString "    ${cond}_STOP_TIME $end"
-                        # write::WriteString "    VELOCITY_STOP_TIME $end"
-                        # write::WriteString "    ANGULAR_VELOCITY_STOP_TIME $end"
-                        
-                        
                         
                     } elseif {$motion_type == "FixedDOFs"} {
                         set rigid_body_motion 0

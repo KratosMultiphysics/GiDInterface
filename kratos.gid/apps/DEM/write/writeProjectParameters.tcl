@@ -86,10 +86,10 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]
     set time_params [DEM::write::GetTimeSettings]
-        set MaxTimeStep [dict get $time_params DeltaTime]
+    set MaxTimeStep [dict get $time_params DeltaTime]
     # TODO: MAXTIMESTEP is get from General and it should be getting its value from DEM block
     dict set project_parameters_dict "MaxTimeStep"                          $MaxTimeStep
-        set FinalTime [dict get $time_params EndTime]
+    set FinalTime [dict get $time_params EndTime]
     dict set project_parameters_dict "FinalTime"                            $FinalTime
     # TODO: check for inconsistencies in DEMTIMEPARAMETERS  UN
     # dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
@@ -131,12 +131,6 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "PostParticleMoment"               [write::getValue PostPrint ParticleMoment]
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint EulerAngles]
     dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue PostPrint RollingResistanceMoment]
-    #dict set project_parameters_dict "PostNodalArea"                    [write::getValue PostPrint NodalArea]
-    #dict set project_parameters_dict "PostRHS"                          [write::getValue PostPrint Rhs]
-    #dict set project_parameters_dict "PostDampForces"                   [write::getValue PostPrint DampForces]
-    #dict set project_parameters_dict "PostAppliedForces"                [write::getValue PostPrint AppliedForces]
-    #dict set project_parameters_dict "PostGroupId"                      [write::getValue PostPrint GroupId]
-    #dict set project_parameters_dict "PostExportId"                     [write::getValue PostPrint ExportId]
     dict set project_parameters_dict "problem_name" [Kratos::GetModelName]
 
     return $project_parameters_dict

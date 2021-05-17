@@ -54,7 +54,7 @@ proc DEM::write::WriteRigidWallProperties { } {
 
 proc DEM::write::WritePhantomWallProperties { } {
     set wall_properties [dict create ]
-    set condition_name 'Phantom-Wall'
+    set condition_name "Phantom-Wall"
     set cnd [Model::getCondition $condition_name]
 
     set xp1 [DEM::write::GetPhantomWallXPath]
