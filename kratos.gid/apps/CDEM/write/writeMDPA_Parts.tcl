@@ -136,7 +136,6 @@ proc CDEM::write::writeMaterialsParts { } {
 						POISSON_RATIO \
 						FRICTION \
 						COEFFICIENT_OF_RESTITUTION \
-						PARTICLE_MATERIAL \
 						ROLLING_FRICTION \
 						ROLLING_FRICTION_WITH_WALLS \
 						CONTACT_SIGMA_MIN \

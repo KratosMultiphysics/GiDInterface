@@ -38,7 +38,7 @@ proc ::CDEM::examples::DrawGeometryContSpheres { } {
 proc ::CDEM::examples::AssignToTreeContSpheres { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEMCont-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
