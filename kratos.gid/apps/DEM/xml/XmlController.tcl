@@ -42,7 +42,13 @@ proc DEM::xml::CustomTree { args } {
     set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='AdvancedMeshingFeatures'\]"
     gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden ]
 
-    # customlib::ProcessIncludes $::Kratos::kratos_private(Path)
+    # Inlet 2D or 3D special parameters
+    set 3dinlet_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='Inlet'\]/value\[@n='InletElementType'\]"
+    gid_groups_conds::setAttributes $3dinlet_xpath [list values "SphericParticle3D,Cluster3D,SingleSphereCluster" ]
+    set 2dinlet_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='Inlet2D'\]/value\[@n='InletElementType'\]"
+    gid_groups_conds::setAttributes $2dinlet_xpath [list values "CylinderParticle2D" ]
+    
+
     # spdAux::parseRoutes
     spdAux::processDynamicNodes [customlib::GetBaseRoot]
 }

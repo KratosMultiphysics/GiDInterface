@@ -345,22 +345,6 @@
           <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Angular start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
           <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="1000" units="s" unit_magnitude="T" show_in_window="0"/>
 
-          <!-- Ready to activate fixed dofs on inlet when required. -->
-          <!-- <parameter n="Ax" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Velocity X">
-            <parameter n="Vx" parent="Constant" type="double" v="1.0" pn="   Value" help="X Velocity"/></parameter>
-          <parameter n="Ay" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity Y" values="No,Constant" pvalues="No,Constant" help="Fix Velocity Y">
-            <parameter n="Vy" parent="Constant" type="double" v="0.0" pn="   Value" help="Y Velocity"/></parameter>
-          <parameter n="Az" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity Z" values="No,Constant" pvalues="No,Constant" help="Fix Velocity Z">
-            <parameter n="Vz" parent="Constant" type="double" v="0.0" pn="   Value" help="Z Velocity"/></parameter>
-          <parameter n="Bx" parent="FixedDOFs" type="combo" v="No" pn="Fix Angular Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity X">
-            <parameter n="AVx" parent="Constant" type="double" v="0.0" pn="   Value" unit_magnitude="Angle/T" units="rad/s" help="X Angular Velocity"/></parameter>
-          <parameter n="By" parent="FixedDOFs" type="combo" v="No" pn="Fix Angular Velocity Y" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity Y">
-            <parameter n="AVy" parent="Constant" type="double" v="0.0" pn="   Value" unit_magnitude="Angle/T" units="rad/s" help="Y Angular Velocity"/></parameter>
-          <parameter n="Bz" parent="FixedDOFs" type="combo" v="No" pn="Fix Angular Velocity Z" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity Z">
-            <parameter n="AVz" parent="Constant" type="double" v="0.0" pn="   Value" unit_magnitude="Angle/T" units="rad/s" help="Z Angular Velocity"/></parameter>
-          <parameter n="VStart" parent="FixedDOFs" type="double" v="0.0" pn="Start time"/>
-          <parameter n="VEnd" parent="FixedDOFs" type="double" v="100.0" pn="End time" /> -->
-
           <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" type="file" v="velocities.dat" show_in_window="0"/>
           <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z" show_in_window="0"/>
         </parameter>
@@ -374,7 +358,7 @@
           <parameter n="InletMassFlow" parent="Kilograms" pn="Mass flow (kg/s)" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" show_in_window="0"/>
         </parameter>
 
-        <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="SphericParticle3D" values="SphericParticle3D,Cluster3D,SingleSphereCluster" pvalues="Sphere,Cluster,SingleSphereCluster" help="Type of particle to insert. Single particles, clusters or user defined cluster file." show_in_window="0">
+        <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="SphericParticle3D" values="SphericParticle3D,Cluster3D,SingleSphereCluster,CylinderParticle2D" pvalues="Sphere,Cluster,Single sphere cluster,Circle" help="Type of particle to insert. Single particles, clusters or user defined cluster file." show_in_window="0">
           <parameter n="Excentricity" parent="SingleSphereCluster" type="double" v="0.1" pn="Excentricity (%)" help="% of the radius" show_in_window="0"/>
           <parameter n="ProbabilityDistributionOfExcentricity" parent="SingleSphereCluster" type="combo" v="normal" pn="Probability Distribution of excentricity" values="normal,lognormal" help="Choose the probablility distribution of the diameter" show_in_window="0"/>
           <parameter n="StandardDeviationOfExcentricity" parent="SingleSphereCluster" type="double" v="0.1" pn="Standard Deviation of excentricity" help="Standard Deviation of the Diameter, assuming Normal Distribution. If 0.0 is chosen, a uniform diameter distribution will be created" show_in_window="0"/>
@@ -394,77 +378,10 @@
         <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
         <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
         <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
-
         <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="material"/>
-        <!-- exclude boundaries functionality seems not be implemented in wkcfdem.tcl -->
-        <!-- <parameter id="ExcludeBoundaries" pid="Exclude boundaries" dv="Yes" ivalues="Yes,No" values="Yes,No" help="If active, the nodes on the boundary will not generate elements, only the inner nodes"/> -->
       </parameter>
     </inputs>
   </Process>
-
-
-  <Process n="DEM-Inlet2D-Process" pn="" python_module="" kratos_module="KratosMultiphysics">
-    <inputs>
-      <parameter n="SetActive" type="bool" pn="Activate" v="true">
-        <parameter n="InletMotionType" pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable" pvalues="None,Linear/Periodic,From a table" show_in_window="0">
-          <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
-          <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-          <parameter n="LinearPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
-            <parameter n="LinearPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          </parameter>
-          <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Linear start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="LinearEndTime" parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
-
-          <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity modulus" type="double" v="0.0" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
-          <!-- <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="0.0,0.0,1.0" show_in_window="0" /> -->
-          <parameter n="CenterOfRotation" parent="LinearPeriodic" pn="Center of rotation(m)" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the rotation center. Linear velocity is imposed to this center" show_in_window="0"/>
-          <parameter n="AngularPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
-            <parameter n="AngularPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          </parameter>
-          <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Angular start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="1000.0" units="s" unit_magnitude="T" show_in_window="0"/>
-
-          <!-- Ready to activate fixed dofs on inlet when required. -->
-          <!-- <parameter n="Ax" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Velocity X">
-            <parameter n="Vx" parent="Constant" type="double" v="1.0" pn="   Value" help="X Velocity"/></parameter>
-          <parameter n="Ay" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity Y" values="No,Constant" pvalues="No,Constant" help="Fix Velocity Y">
-            <parameter n="Vy" parent="Constant" type="double" v="0.0" pn="   Value" help="Y Velocity"/></parameter>
-          <parameter n="Az" parent="FixedDOFs" type="combo" v="No" pn="Fix Velocity Z" values="No,Constant" pvalues="No,Constant" help="Fix Velocity Z">
-            <parameter n="Vz" parent="Constant" type="double" v="0.0" pn="   Value" help="Z Velocity"/></parameter>
-          <parameter n="Bx" parent="FixedDOFs" type="combo" v="No" pn="Fix Angular Velocity X" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity X">
-            <parameter n="AVx" parent="Constant" type="double" v="0.0" pn="   Value" unit_magnitude="Angle/T" units="rad/s" help="X Angular Velocity"/></parameter>
-          <parameter n="By" parent="FixedDOFs" type="combo" v="No" pn="Fix Angular Velocity Y" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity Y">
-            <parameter n="AVy" parent="Constant" type="double" v="0.0" pn="   Value" unit_magnitude="Angle/T" units="rad/s" help="Y Angular Velocity"/></parameter>
-          <parameter n="Bz" parent="FixedDOFs" type="combo" v="No" pn="Fix Angular Velocity Z" values="No,Constant" pvalues="No,Constant" help="Fix Angular Velocity Z">
-            <parameter n="AVz" parent="Constant" type="double" v="0.0" pn="   Value" unit_magnitude="Angle/T" units="rad/s" help="Z Angular Velocity"/></parameter>
-          <parameter n="VStart" parent="FixedDOFs" type="double" v="0.0" pn="Start time"/>
-          <parameter n="VEnd" parent="FixedDOFs" type="double" v="100.0" pn="End time" /> -->
-
-          <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" type="file" v="velocities.dat" show_in_window="0"/>
-          <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z" show_in_window="0"/>
-        </parameter>
-
-        <parameter n="InVelocityModulus" parent="true" pn="Inlet injection speed" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
-        <parameter n="InDirectionVector" parent="true" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-        <parameter n="VelocityDeviation" parent="true" pn="Max random velocity deviation (deg)" type="double" v="1.0" units="°" unit_magnitude="Angle" show_in_window="0"/>
-        <parameter n="TypeOfFlowMeasurement" parent="true" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second" show_in_window="0">
-          <parameter n="NumberOfParticles" parent="Particles" pn="Particles per second" type="double" v="200.0" show_in_window="0"/>
-          <parameter n="InletLimitedVelocity" parent="Kilograms" pn="Inlet injection speed limit (m/s)" type="double" v="2.0" help="Inlet injection speed limit (m/s)" show_in_window="0"/>
-          <parameter n="InletMassFlow" parent="Kilograms" pn="Mass flow (kg/s)" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" show_in_window="0"/>
-        </parameter>
-        <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="CylinderParticle2D" values="CylinderParticle2D" pvalues="Circle" show_in_window="0"/>
-        <parameter n="InletStartTime" parent="true" pn="Inlet start" type="double" v="0.0" units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
-        <parameter n="InletStopTime" parent="true" pn="Inlet stop" type="double" v="100.0" units="s" unit_magnitude="T" help="Inlet stop time" show_in_window="0"/>
-        <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
-        <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
-        <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
-        <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="material"/>
-        <!-- exclude boundaries functionality seems not be implemented in wkcfdem.tcl -->
-        <!-- <parameter id="ExcludeBoundaries" pid="Exclude boundaries" dv="Yes" ivalues="Yes,No" values="Yes,No" help="If active, the nodes on the boundary will not generate elements, only the inner nodes"/> -->
-      </parameter>
-    </inputs>
-  </Process>
-
 
   <Process n="DEM-GraphCondition2D-Process" pn=" " python_module=" " kratos_module="KratosMultiphysics">
     <inputs>
