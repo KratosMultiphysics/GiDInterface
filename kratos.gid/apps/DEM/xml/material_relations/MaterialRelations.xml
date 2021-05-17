@@ -14,5 +14,10 @@
 
     </inputs>
   </MaterialRelation>
+  <MaterialRelation n="DEM-DefaultMaterialRelation" pn="" help="">
+    <inputs>
+      <parameter n="NewParam" pn="NewParam" v="0.03" type="double" help="Rolling friction"/>
+    </inputs>
+  </MaterialRelation>
 
 </MaterialRelations>

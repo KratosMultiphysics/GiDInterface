@@ -31,7 +31,15 @@ proc Model::ParseMaterialRelations { doc } {
     
     set MatNodeList [$doc getElementsByTagName MaterialRelation]
     foreach MatNode $MatNodeList {
-        lappend MaterialRelations [ParseMatRelNode $MatNode]
+        set mat_rel [ParseMatRelNode $MatNode]
+        set ma [Model::getMaterialRelation [$mat_rel getName] ]
+        if {$ma eq ""} {
+            lappend MaterialRelations $mat_rel
+        } else {
+            foreach input [dict values [$mat_rel getInputs]] {
+                $ma addInputDone $input
+            }
+        }
     }
 }
 
@@ -79,7 +87,7 @@ proc Model::GetMaterialRelationNames {args} {
 
 proc Model::getMaterialRelation {mid} { 
 
-    foreach mat_rel [GetMaterialRelations]] {
+    foreach mat_rel [GetMaterialRelations] {
         if {[$mat_rel getName] eq $mid} { return $mat_rel}
     }
     return ""
