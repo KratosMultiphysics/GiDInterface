@@ -445,6 +445,7 @@ proc DEM::write::writeInletMeshes { } {
                     set inlet_mass_flow [dict get $props Material Variables InletMassFlow]
                     write::WriteString "        MASS_FLOW $inlet_mass_flow"
                 }
+
                 set inlet_start_time [dict get $props Material Variables InletStartTime]
                 write::WriteString "        INLET_START_TIME $inlet_start_time"
                 set inlet_stop_time [dict get $props Material Variables InletStopTime]
@@ -455,6 +456,28 @@ proc DEM::write::writeInletMeshes { } {
                 write::WriteString "        PROBABILITY_DISTRIBUTION $probability_distribution"
                 set standard_deviation [dict get $props Material Variables StandardDeviation]
                 write::WriteString "        STANDARD_DEVIATION $standard_deviation"
+                
+                if {[dict get $props Material Variables InletElementType] eq "Cluster3D"} {
+                    if {[dict get $props Material Variables ClusterType] eq "SingleSphereCluster3D"} {
+                        write::WriteString "        EXCENTRICITY [dict get $props Material Variables Excentricity]"
+                        write::WriteString "        EXCENTRICITY_PROBABILITY_DISTRIBUTION [dict get $props Material Variables ProbabilityDistributionOfExcentricity]"
+                        write::WriteString "        EXCENTRICITY_STANDARD_DEVIATION [dict get $props Material Variables StandardDeviationOfExcentricity]"
+                    }
+                }
+                
+                if {[dict get $props Material Variables InletElementType] eq "Cluster3D"} {
+                    if {[dict get $props Material Variables RandomOrientation] == "Yes"} {
+                        set random_orientation 1
+                    } else {
+                        set random_orientation 0
+                        set orientation_x [dict get $props Material Variables OrientationX]
+                        set orientation_y [dict get $props Material Variables OrientationY]
+                        set orientation_z [dict get $props Material Variables OrientationZ]
+                        set orientation_w [dict get $props Material Variables OrientationW]
+                        write::WriteString "        ORIENTATION \[4\] ($orientation_x, $orientation_y, $orientation_z, $orientation_w)"
+                    }
+                    write::WriteString "        RANDOM_ORIENTATION $random_orientation"
+                }
                 
                 write::WriteString "    End SubModelPartData"
                 # Write nodes
