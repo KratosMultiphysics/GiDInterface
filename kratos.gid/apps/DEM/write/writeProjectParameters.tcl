@@ -1,18 +1,8 @@
 
 # Project Parameters
 
-# proc ::DEM::write::getParametersEventtest { } {
-
-#     set project_parameters_dict [dict create]
-#     dict set project_parameters_dict [DEM::write::getParametersEvent1]
-#     dict set project_parameters_dict "PostBoundingBox"                  "SphericPartDEMElement3D"
-#     dict set project_parameters_dict "PostPoissonRatio"                  "false"
-#     return $project_parameters_dict
-# }
-
 proc DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
-
 
     set dimension [expr 3]
     if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]} 
@@ -34,11 +24,6 @@ proc DEM::write::getParametersDict { } {
     # dem_inlet_option
     set numinlets [llength [DEM::write::GetInletGroups]]
     set dem_inlet_option [? [expr $numinlets == 0] "true" "false"]
-    # if {$numinlets == 0} {
-    #     set dem_inlet_option "false"
-    # } else {
-    #     set dem_inlet_option "true"
-    # }
     dict set project_parameters_dict "dem_inlet_option"                     $dem_inlet_option
 
     # Gravity
@@ -90,19 +75,19 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 
     # Output timestep
-        set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
-        if {$output_criterion eq "Detail_priority"} {
-            set output_timestep [write::getValue DEMResults DEM-OTimeStepDetail]
-        } elseif {$output_criterion eq "Storage_priority"} {
-            set amount [write::getValue DEMResults DEM-OTimeStepStorage]
-            set OTimeStepStorage [expr (double($FinalTime)/$amount)]
-            set maxamount [expr ($FinalTime/$MaxTimeStep)]
-            if {$amount < $maxamount} {
-                set output_timestep $OTimeStepStorage
-            } else {
-                set output_timestep $MaxTimeStep
-            }
+    set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
+    if {$output_criterion eq "Detail_priority"} {
+        set output_timestep [write::getValue DEMResults DEM-OTimeStepDetail]
+    } elseif {$output_criterion eq "Storage_priority"} {
+        set amount [write::getValue DEMResults DEM-OTimeStepStorage]
+        set OTimeStepStorage [expr (double($FinalTime)/$amount)]
+        set maxamount [expr ($FinalTime/$MaxTimeStep)]
+        if {$amount < $maxamount} {
+            set output_timestep $OTimeStepStorage
+        } else {
+            set output_timestep $MaxTimeStep
         }
+    }
     dict set project_parameters_dict "OutputTimeStep"                   $output_timestep
     dict set project_parameters_dict "PostBoundingBox"                  [write::getValue Boundingbox PostBB]
     dict set project_parameters_dict "PostLocalContactForce"            [write::getValue BondElem LocalContactForce]
