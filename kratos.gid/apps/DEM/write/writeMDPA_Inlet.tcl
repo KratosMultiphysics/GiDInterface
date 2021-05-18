@@ -15,7 +15,6 @@ proc DEM::write::WriteMDPAInlet { } {
     
     writeInletMeshes
     
-    
     #Copy cluster files (.clu)
     copyClusterFiles
 }
@@ -75,13 +74,10 @@ proc DEM::write::GetUsedClusters { } {
     variable inletProperties
     set clusters_list [list ]
     set custom_clusters_list [list]
-    set condition_name Inlet
-    if {$::Model::SpatialDimension eq "2D"} {
-        set condition_name Inlet2D
-    }
+    set condition_name [DEM::write::GetInletConditionName]
 
     foreach groupid [DEM::write::GetInletGroups] {
-        if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
+        if {[write::getSubModelPartId $condition_name $groupid] ne 0} {
             set mid [write::AddSubmodelpart $condition_name $groupid]
             set props [DEM::write::FindPropertiesBySubmodelpart $inletProperties $mid]
             if {[dict get $props Material Variables InletElementType] in [list "Cluster2D" "Cluster3D"]} {
