@@ -270,3 +270,7 @@ proc Kratos::GetMeshBasicData { } {
     dict set result is_quadratic [expr [GiD_Info Project Quadratic] && ![GiD_Cartesian get iscartesian] ]
     return $result   
 }
+
+proc ? {question true_val false_val} {
+    return [expr $question ? $true_val : $false_val]
+}

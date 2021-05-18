@@ -14,8 +14,9 @@ proc DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
 
-    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]
-    } else {set dimension [expr 3]}
+    set dimension [expr 3]
+    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]} 
+
     dict set project_parameters_dict "Dimension"                            [expr $dimension]
     dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
     dict set project_parameters_dict "BoundingBoxOption"                    [write::getValue Boundingbox UseBB]
@@ -32,11 +33,12 @@ proc DEM::write::getParametersDict { } {
 
     # dem_inlet_option
     set numinlets [llength [DEM::write::GetInletGroups]]
-    if {$numinlets == 0} {
-        set dem_inlet_option "false"
-    } else {
-        set dem_inlet_option "true"
-    }
+    set dem_inlet_option [? [expr $numinlets == 0] "true" "false"]
+    # if {$numinlets == 0} {
+    #     set dem_inlet_option "false"
+    # } else {
+    #     set dem_inlet_option "true"
+    # }
     dict set project_parameters_dict "dem_inlet_option"                     $dem_inlet_option
 
     # Gravity
@@ -51,21 +53,7 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "CleanIndentationsOption"              [write::getValue AdvOptions CleanIndentations]
     set strategy_parameters_dict [dict create]
 
-    # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
-    set ElementType SphericPartDEMElement3D
-	if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
-	    set dem_strategy "sphere_strategy"
-	} elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
-	    set dem_strategy "continuum_sphere_strategy"
-	} elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
-	   set dem_strategy "thermal_sphere_strategy"
-	} elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
-	   set dem_strategy "thermal_continuum_sphere_strategy"
-	} elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
-	   set dem_strategy "thermal_continuum_sphere_strategy"
-	} elseif {$ElementType eq "IceContPartDEMElement3D"} {
-	   set dem_strategy "ice_continuum_sphere_strategy"
-	}
+    set dem_strategy [DEM::write::GetDemStrategyName]
 
     dict set strategy_parameters_dict "RemoveBallsInitiallyTouchingWalls"   [write::getValue AdvOptions RemoveParticlesInWalls]
     dict set strategy_parameters_dict "strategy"                            $dem_strategy
@@ -81,6 +69,9 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
+    
+    set used_elements [spdAux::GetUsedElements]
+    set ElementType [lindex $used_elements 0]
     dict set project_parameters_dict "ElementType"                          $ElementType
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
@@ -134,6 +125,27 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "problem_name" [Kratos::GetModelName]
 
     return $project_parameters_dict
+}
+
+proc DEM::write::GetDemStrategyName { } {
+    return sphere_strategy
+    # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
+    # set used_elements [spdAux::GetUsedElements]
+
+    # set ElementType [lindex used_elements 0]
+	# if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
+	#     set dem_strategy "sphere_strategy"
+	# } elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
+	#     set dem_strategy "continuum_sphere_strategy"
+	# } elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
+	#    set dem_strategy "thermal_sphere_strategy"
+	# } elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
+	#    set dem_strategy "thermal_continuum_sphere_strategy"
+	# } elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
+	#    set dem_strategy "thermal_continuum_sphere_strategy"
+	# } elseif {$ElementType eq "IceContPartDEMElement3D"} {
+	#    set dem_strategy "ice_continuum_sphere_strategy"
+	# }
 }
 
 proc DEM::write::GetTimeSettings { } {
