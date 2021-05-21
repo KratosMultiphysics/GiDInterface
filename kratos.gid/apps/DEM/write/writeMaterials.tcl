@@ -52,6 +52,12 @@ proc DEM::write::getDEMMaterialsDict { } {
     set gnodes [[customlib::GetBaseRoot] selectNodes "//condition/group"]
     foreach gnode $gnodes {
         set mat_child [$gnode selectNodes "value\[@n='Material'\]"]
+        set active_group_node [$gnode selectNodes "value\[@n='SetActive'\]"]
+        if {$active_group_node ne ""} {
+            if {[write::isBooleanFalse [write::getValueByNode $active_group_node]]} {
+                continue
+            }
+        }
         if {$mat_child ne ""} {
             set mat_name [write::getValueByNode $mat_child]
             set group_name [write::GetWriteGroupName [$gnode @n]]

@@ -485,6 +485,10 @@ proc write::getValueByNode { node {what noforce} } {
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
 }
+proc write::getValueByNodeChild { parent_node child_name {what noforce} } {
+    set node [$parent_node find n $child_name]
+    return [write::getValueByNode $node $what]
+}
 proc write::getValueByXPath { xpath { it "" }} {
     set root [customlib::GetBaseRoot]
     set node [$root selectNodes $xpath]

@@ -33,11 +33,16 @@ proc DEM::write::GetInletConditionXpath { } {
     return $xp1
 }
 
-proc DEM::write::GetInletGroups { } {
+# That can be all or active / All by default
+proc DEM::write::GetInletGroups { {that all}} {
     set groups [list ]
     
     foreach group [[customlib::GetBaseRoot] selectNodes [DEM::write::GetInletConditionXpath]/group] {
         set groupid [$group @n]
+        if {$that eq "active"} {
+            set active_inlet [write::getValueByNodeChild $group SetActive]
+            if {[write::isBooleanFalse $active_inlet]} {continue}
+        }
         lappend groups [write::GetWriteGroupName $groupid]
     }
     return $groups
@@ -127,6 +132,11 @@ proc DEM::write::writeInletMeshes { } {
             set mid [write::AddSubmodelpart $condition_name $groupid]
             set props [DEM::write::FindPropertiesBySubmodelpart $inletProperties $mid]
             if {$props eq ""} {W "Error printing inlet $groupid"}
+            set is_active [dict get $props Material Variables SetActive]
+            if {[write::isBooleanFalse $is_active]} {
+                continue
+            }
+
             set group_real_name [write::GetWriteGroupName $groupid]
             set gdict [dict create]
             set f "%10i\n"
@@ -135,10 +145,6 @@ proc DEM::write::writeInletMeshes { } {
             write::WriteString "Begin SubModelPart $mid // Group $groupid // Subtree Inlet"
             write::WriteString "    Begin SubModelPartData"
             
-            set is_active [dict get $props Material Variables SetActive]
-            if {$is_active=="No"} {
-                continue
-            }
             
             if {[write::isBooleanTrue $is_active]} {
                 set motion_type [dict get $props Material Variables InletMotionType]
