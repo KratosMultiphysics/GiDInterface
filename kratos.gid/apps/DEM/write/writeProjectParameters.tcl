@@ -22,8 +22,8 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "BoundingBoxMinZ"                      [write::getValue Boundingbox MinZ]
 
     # dem_inlet_option
-    set numinlets [llength [DEM::write::GetInletGroups]]
-    set dem_inlet_option [? [expr $numinlets == 0] "true" "false"]
+    set dem_inlet_option true
+    if {[llength [DEM::write::GetInletGroups]] == 0} {set dem_inlet_option false}
     dict set project_parameters_dict "dem_inlet_option"                     $dem_inlet_option
 
     # Gravity
@@ -117,7 +117,7 @@ proc DEM::write::GetDemStrategyName { } {
     # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
     # set used_elements [spdAux::GetUsedElements]
 
-    # set ElementType [lindex used_elements 0]
+    # set ElementType SphericPartDEMElement3D
 	# if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
 	#     set dem_strategy "sphere_strategy"
 	# } elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
