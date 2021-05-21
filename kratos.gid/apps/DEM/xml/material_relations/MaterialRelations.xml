@@ -4,7 +4,7 @@
     <inputs>
       <parameter n="MATERIAL_A" pn="Material A" v="" type="combo" combotype="material" help="First material"/>
       <parameter n="MATERIAL_B" pn="Material B" v="" type="combo" combotype="material" help="Second material"/>
-      <parameter n="ConstitutiveLaw" pn="Constitutive law" type="combo" combotype="constitutive_law" values="[GetConstitutiveLaws]" pvalues="[GetAllConstitutiveLaws]" help="Select a constitutive law" />
+      <parameter n="ConstitutiveLaw" pn="Discontinuum constitutive law" type="combo" combotype="constitutive_law" values="[GetConstitutiveLaws App DEM]" pvalues="[GetAllConstitutiveLaws]" help="Select a constitutive law" />
       <parameter n="STATIC_FRICTION" pn="Static friction coefficient" v="0.5" type="double" units="" unit_magnitude="" help="(for Coulomb friction)"/>
       <parameter n="DYNAMIC_FRICTION" pn="Dynamic friction coefficient" v="0.4" type="double" units="" unit_magnitude="" help="(for Coulomb friction)"/>
       <parameter n="FRICTION_DECAY" pn="Friction decay parameter" v="500" type="double" units="" unit_magnitude="" help="it sets how fast the friction force goes from static to dynamic, considering the relative velocity at the contact point"/>

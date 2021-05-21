@@ -1,4 +1,4 @@
-proc DEM::write::WriteMDPAParts { } {
+proc CDEM::write::WriteMDPAParts { } {
     variable last_property_id
 
     # Prepare properties
@@ -63,11 +63,11 @@ proc CDEM::write::GetDEMGroupsCustomSubmodelpart { } {
     set groups [list ]
     set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp2] {
-	set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-	if {$destination_mdpa == "DEM"} {
-	    set groupid [$group @n]
-	    lappend groups [write::GetWriteGroupName $groupid]
-	}
+        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
+        if {$destination_mdpa == "DEM"} {
+            set groupid [$group @n]
+            lappend groups [write::GetWriteGroupName $groupid]
+        }
     }
     return $groups
 }
@@ -76,12 +76,12 @@ proc CDEM::write::writeSphereRadius { } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute partscont_un]]/group"
     foreach group [$root selectNodes $xp1] {
-	set groupid [$group @n]
-	set grouppid [write::GetWriteGroupName $groupid]
-	write::WriteString "Begin NodalData RADIUS // GUI group identifier: $grouppid"
-	GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
-	write::WriteString "End NodalData"
-	write::WriteString ""
+        set groupid [$group @n]
+        set grouppid [write::GetWriteGroupName $groupid]
+        write::WriteString "Begin NodalData RADIUS // GUI group identifier: $grouppid"
+        GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
+        write::WriteString "End NodalData"
+        write::WriteString ""
     }
 }
 

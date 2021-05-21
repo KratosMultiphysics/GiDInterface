@@ -532,10 +532,9 @@ proc DEM::write::writeWallConditionMesh { condition group props } {
 
 proc DEM::write::DefineFEMExtraConditions {props} {
     set GraphPrint [dict get $props Material Variables GraphPrint]
-    if {$GraphPrint == "true"} {
+    set GraphPrintval 0
+    if {[write::isBooleanTrue $GraphPrint]} {
         set GraphPrintval 1
-    } else {
-        set GraphPrintval 0
-    }
+    } 
     write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
 }

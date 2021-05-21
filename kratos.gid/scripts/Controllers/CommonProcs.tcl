@@ -145,13 +145,16 @@ proc spdAux::SetNoneValue {domNode} {
 proc spdAux::ProcGetConstitutiveLaws { domNode args } {
     set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
     set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
-    #W "Const Laws que han pasado la criba: $Claws"
+    #WV Elementname
+    #W "Const Laws que han pasado la criba: $Claws $args"
     if {[llength $Claws] == 0} {
         set names [list "None"]
     } {
         set names [list ]
         foreach cl $Claws {
-            lappend names [$cl getName]
+            if {[$cl cumple {*}$args]} {
+                lappend names [$cl getName]
+            }
         }
     }
     set values [join $names ","]

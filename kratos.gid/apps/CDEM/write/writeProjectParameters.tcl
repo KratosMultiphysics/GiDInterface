@@ -4,24 +4,6 @@
 proc CDEM::write::getParametersDict { } {
     set project_parameters_dict [DEM::write::getParametersDict]
 
-    set ElementType SphericContPartDEMElement3D
-	if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
-	    set dem_strategy "sphere_strategy"
-	} elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
-	    set dem_strategy "continuum_sphere_strategy"
-	} elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
-	   set dem_strategy "thermal_sphere_strategy"
-	} elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
-	   set dem_strategy "thermal_continuum_sphere_strategy"
-	} elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
-	   set dem_strategy "thermal_continuum_sphere_strategy"
-	} elseif {$ElementType eq "IceContPartDEMElement3D"} {
-	   set dem_strategy "ice_continuum_sphere_strategy"
-	}
-
-    dict set project_parameters_dict "solver_settings" "strategy" $dem_strategy
-    dict set project_parameters_dict "ElementType" $ElementType
-
     dict set project_parameters_dict "DeltaOption"                          [write::getValue AdvOptions DeltaOption]
     dict set project_parameters_dict "SearchTolerance"                      [write::getValue AdvOptions TangencyAbsoluteTolerance]
     dict set project_parameters_dict "CoordinationNumber"                   [write::getValue AdvOptions TangencyCoordinationNumber]
@@ -51,6 +33,11 @@ proc CDEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
+
+proc DEM::write::GetDemStrategyName { } {
+    return continuum_sphere_strategy
+}
+
 proc CDEM::write::GetTimeSettings { } {
     return [DEM::write::GetTimeSettings]
 }
@@ -61,5 +48,6 @@ proc CDEM::write::GetGravity { } {
 
 proc CDEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
-    write::WriteJSON [CDEM::write::getParametersDict]
+    set cdem_parameters [CDEM::write::getParametersDict]
+    write::WriteJSON $cdem_parameters
 }
