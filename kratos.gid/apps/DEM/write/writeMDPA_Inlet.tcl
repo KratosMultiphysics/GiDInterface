@@ -116,8 +116,8 @@ proc DEM::write::DefineInletConditions {inletProperties mid contains_clusters} {
     }
     
     write::WriteString "        IDENTIFIER $mid"
-    write::WriteString "        INJECTOR_ELEMENT_TYPE [dict get $inletProperties Material Variables InletElementType]"
-    write::WriteString "        ELEMENT_TYPE [dict get $inletProperties Material Variables InletElementType]"
+    write::WriteString "        INJECTOR_ELEMENT_TYPE SphericParticle3D"
+    write::WriteString "        ELEMENT_TYPE $inlet_element_type"
     write::WriteString "        CONTAINS_CLUSTERS $contains_clusters"
 }
 
