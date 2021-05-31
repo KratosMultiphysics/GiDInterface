@@ -15,7 +15,7 @@ proc DEM::write::WriteMDPAParts { } {
     write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundaryC]
     write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
     
-    # Element connectivities (Groups on STParts)
+    # Element connectivities (Groups on Parts)
     PrepareCustomMeshedParts
     write::writeElementConnectivities
     RestoreCustomMeshedParts

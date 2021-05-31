@@ -2,8 +2,10 @@
 # Project Parameters
 
 proc CDEM::write::getParametersDict { } {
+    # Get the DEM original json and
     set project_parameters_dict [DEM::write::getParametersDict]
 
+    # Add advanced options
     dict set project_parameters_dict "DeltaOption"                          [write::getValue AdvOptions DeltaOption]
     dict set project_parameters_dict "SearchTolerance"                      [write::getValue AdvOptions TangencyAbsoluteTolerance]
     dict set project_parameters_dict "CoordinationNumber"                   [write::getValue AdvOptions TangencyCoordinationNumber]
@@ -13,6 +15,7 @@ proc CDEM::write::getParametersDict { } {
     dict set project_parameters_dict "ComputeStressTensorOption"            [write::getValue AdvOptions ComputeStressTensorOption]
     dict set project_parameters_dict "MaxAmplificationRatioOfSearchRadius"  1000
 
+    # Add material testing
     set material_test_parameters_dict [dict create]
     set material_analysis [write::getValue DEMTestMaterial Active]
     if {$material_analysis == "true"} {

@@ -509,7 +509,7 @@ proc DEM::write::writeWallConditionMesh { condition group props } {
         }
         write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
 
-        DefineFEMExtraConditions $props
+        DEM::write::DefineFEMExtraConditions $props
 
     }
     write::WriteString "  End SubModelPartData"

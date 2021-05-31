@@ -21,7 +21,7 @@ proc CDEM::xml::getUniqueName {name} {
 }
 
 proc CDEM::xml::CustomTree { args } {
-    DEM::xml::CustomTree args
+    DEM::xml::CustomTree {*}$args
 
     set root [customlib::GetBaseRoot]
     if {[$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n='AdvOptions'\]"] eq ""} {
