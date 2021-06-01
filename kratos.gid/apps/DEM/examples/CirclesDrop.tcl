@@ -15,16 +15,6 @@ proc ::DEM::examples::CirclesDrop {args} {
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
 
-    # MESH
-    # TODO: Remove this once the Granular mesher works fine with multiple surfaces
-    ## Remember the old mesher
-    set prev_mesher [GiD_Set CircleMesher]
-    ## Set RBall as circle mesher
-    GiD_Set CircleMesher 0
-    ## Mesh
-    MeshGenerationOKDo 1.0
-    ## Restore previous circle mesher preference
-    GiD_Set CircleMesher $prev_mesher
 }
 
 proc ::DEM::examples::DrawGeometryCirclesDrop { } {

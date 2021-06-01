@@ -122,10 +122,15 @@ proc DEM::write::DefineInletConditions {inletProperties mid contains_clusters} {
 }
 
 proc DEM::write::GetInletElementType {} {
-    return SphericParticle3D
+    set elem_name SphericParticle3D
+    if {$::Model::SpatialDimension eq "2D"} {
+        set elem_name CylinderParticle2D
+    }
+    return $elem_name
 }
+
 proc DEM::write::GetInjectorElementType {} {
-    return SphericParticle3D
+    return [DEM::write::GetInletElementType]
 }
 
 proc DEM::write::writeInletMeshes { } {

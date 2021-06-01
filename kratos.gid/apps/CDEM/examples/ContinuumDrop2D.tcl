@@ -15,8 +15,6 @@ proc ::CDEM::examples::ContinuumDrop2D {args} {
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
 
-    MeshGenerationOKDo 1.0
-
 }
 
 proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
