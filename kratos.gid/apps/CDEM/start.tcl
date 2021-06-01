@@ -40,7 +40,7 @@ proc ::CDEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
-    # uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
+    uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]
 }

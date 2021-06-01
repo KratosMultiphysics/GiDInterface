@@ -100,7 +100,7 @@ proc DEM::write::GetUsedClusters { } {
 }
 
 proc DEM::write::DefineInletConditions {inletProperties mid contains_clusters} {
-    set inlet_element_type SphericParticle3D
+    set inlet_element_type [DEM::write::GetInletElementType]
     if {[dict get $inletProperties Material Variables InletElementType] eq "Cluster3D"} {
         set contains_clusters 1
         if {[dict get $inletProperties Material Variables ClusterType] eq "FromFile"} {
@@ -116,9 +116,16 @@ proc DEM::write::DefineInletConditions {inletProperties mid contains_clusters} {
     }
     
     write::WriteString "        IDENTIFIER $mid"
-    write::WriteString "        INJECTOR_ELEMENT_TYPE SphericParticle3D"
+    write::WriteString "        INJECTOR_ELEMENT_TYPE [DEM::write::GetInjectorElementType]"
     write::WriteString "        ELEMENT_TYPE $inlet_element_type"
     write::WriteString "        CONTAINS_CLUSTERS $contains_clusters"
+}
+
+proc DEM::write::GetInletElementType {} {
+    return SphericParticle3D
+}
+proc DEM::write::GetInjectorElementType {} {
+    return SphericParticle3D
 }
 
 proc DEM::write::writeInletMeshes { } {
