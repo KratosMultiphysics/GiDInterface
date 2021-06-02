@@ -8,14 +8,10 @@ proc CDEM::xml::Init { } {
     variable dir
     Model::InitVariables dir $CDEM::dir
     Model::ForgetElements
-    Model::ForgetMaterials
-    Model::ForgetConstitutiveLaws
     Model::getElements ElementsC.xml
-    Model::ForgetConditions
     Model::getConditions Conditions.xml
-    Model::getConditions "../../DEM/xml/Conditions.xml"
     Model::getConstitutiveLaws ConstitutiveLawsC.xml
-    Model::getMaterials MaterialsC.xml
+    Model::getMaterialRelations MaterialRelations.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
 }
@@ -25,10 +21,21 @@ proc CDEM::xml::getUniqueName {name} {
 }
 
 proc CDEM::xml::CustomTree { args } {
-    DEM::xml::CustomTree args
+    DEM::xml::CustomTree {*}$args
+
+    set root [customlib::GetBaseRoot]
+    if {[$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n='AdvOptions'\]"] eq ""} {
+        gid_groups_conds::addF [spdAux::getRoute DEMStratSection] include [list n AdvOptions active 1 path {apps/CDEM/xml/AdvancedSettings.spd}]
+    }
+    if {[$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n='TestMaterial'\]"] eq ""} {
+        gid_groups_conds::addF [spdAux::getRoute DEMStratSection] include [list n TestMaterial active 1 path {apps/CDEM/xml/TestMaterial.spd}]
+    }
 
     gid_groups_conds::addF [spdAux::getRoute BondElem] value [list n TypeOfFailure pn "Type of failure" v No values {Yes,No} icon "black1" help "Displays different numbers for different types of failure. 2: tension. 4: shear or combination of stresses. 6: neighbour not found by search. 8: less bonds than minimum"]
     spdAux::SetValueOnTreeItem state {[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} Yes]} BondElem TypeOfFailure
+    
+    customlib::ProcessIncludes $::Kratos::kratos_private(Path)
+    spdAux::parseRoutes
 }
 
 proc CDEM::xml::ProcGetElements { domNode args } {

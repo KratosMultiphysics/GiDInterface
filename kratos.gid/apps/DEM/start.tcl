@@ -29,6 +29,8 @@ proc ::DEM::Init { } {
 
 proc ::DEM::LoadMyFiles { } {
     variable dir
+    
+    uplevel #0 [list source [file join $dir xml material_relations MaterialRelations.tcl]]
 
     uplevel #0 [list source [file join $dir xml XmlController.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
@@ -36,6 +38,7 @@ proc ::DEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Clusters.tcl]]
+    uplevel #0 [list source [file join $dir write writeMaterials.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     uplevel #0 [list source [file join $dir write write_utils.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]
@@ -46,6 +49,13 @@ proc ::DEM::GetAttribute {name} {
     set value ""
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
+}
+
+
+proc ::DEM::CustomToolbarItems { } {
+    variable dir
+    
+    Kratos::ToolbarAddItem "MaterialRelations" "material-relation.png" [list -np- DEM::xml::ShowMaterialRelationWindow] [= "Material relations"]
 }
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {

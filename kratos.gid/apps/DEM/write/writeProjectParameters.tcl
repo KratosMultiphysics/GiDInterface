@@ -1,21 +1,12 @@
 
 # Project Parameters
 
-# proc ::DEM::write::getParametersEventtest { } {
-
-#     set project_parameters_dict [dict create]
-#     dict set project_parameters_dict [DEM::write::getParametersEvent1]
-#     dict set project_parameters_dict "PostBoundingBox"                  "SphericPartDEMElement3D"
-#     dict set project_parameters_dict "PostPoissonRatio"                  "false"
-#     return $project_parameters_dict
-# }
-
 proc DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
+    set dimension [expr 3]
+    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]} 
 
-    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]
-    } else {set dimension [expr 3]}
     dict set project_parameters_dict "Dimension"                            [expr $dimension]
     dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
     dict set project_parameters_dict "BoundingBoxOption"                    [write::getValue Boundingbox UseBB]
@@ -31,12 +22,8 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "BoundingBoxMinZ"                      [write::getValue Boundingbox MinZ]
 
     # dem_inlet_option
-    set numinlets [llength [DEM::write::GetInletGroups]]
-    if {$numinlets == 0} {
-        set dem_inlet_option "false"
-    } else {
-        set dem_inlet_option "true"
-    }
+    set dem_inlet_option true
+    if {[llength [DEM::write::GetInletGroups]] == 0} {set dem_inlet_option false}
     dict set project_parameters_dict "dem_inlet_option"                     $dem_inlet_option
 
     # Gravity
@@ -51,24 +38,14 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "CleanIndentationsOption"              [write::getValue AdvOptions CleanIndentations]
     set strategy_parameters_dict [dict create]
 
-    # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
-    set ElementType SphericPartDEMElement3D
-	if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
-	    set dem_strategy "sphere_strategy"
-	} elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
-	    set dem_strategy "continuum_sphere_strategy"
-	} elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
-	   set dem_strategy "thermal_sphere_strategy"
-	} elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
-	   set dem_strategy "thermal_continuum_sphere_strategy"
-	} elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
-	   set dem_strategy "thermal_continuum_sphere_strategy"
-	} elseif {$ElementType eq "IceContPartDEMElement3D"} {
-	   set dem_strategy "ice_continuum_sphere_strategy"
-	}
+    set dem_strategy [DEM::write::GetDemStrategyName]
 
     dict set strategy_parameters_dict "RemoveBallsInitiallyTouchingWalls"   [write::getValue AdvOptions RemoveParticlesInWalls]
     dict set strategy_parameters_dict "strategy"                            $dem_strategy
+
+    set material_import_settings [dict create]
+    dict set material_import_settings "materials_filename" [GetAttribute materials_file]
+    dict set strategy_parameters_dict "material_import_settings" $material_import_settings
 
     dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
@@ -77,15 +54,18 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
+    
+    set used_elements [spdAux::GetUsedElements]
+    set ElementType [lindex $used_elements 0]
     dict set project_parameters_dict "ElementType"                          $ElementType
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]
     set time_params [DEM::write::GetTimeSettings]
-        set MaxTimeStep [dict get $time_params DeltaTime]
+    set MaxTimeStep [dict get $time_params DeltaTime]
     # TODO: MAXTIMESTEP is get from General and it should be getting its value from DEM block
     dict set project_parameters_dict "MaxTimeStep"                          $MaxTimeStep
-        set FinalTime [dict get $time_params EndTime]
+    set FinalTime [dict get $time_params EndTime]
     dict set project_parameters_dict "FinalTime"                            $FinalTime
     # TODO: check for inconsistencies in DEMTIMEPARAMETERS  UN
     # dict set project_parameters_dict "ControlTime"                          [write::getValue DEMTimeParameters ScreenInfoOutput]
@@ -95,19 +75,19 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
 
     # Output timestep
-        set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
-        if {$output_criterion eq "Detail_priority"} {
-            set output_timestep [write::getValue DEMResults DEM-OTimeStepDetail]
-        } elseif {$output_criterion eq "Storage_priority"} {
-            set amount [write::getValue DEMResults DEM-OTimeStepStorage]
-            set OTimeStepStorage [expr (double($FinalTime)/$amount)]
-            set maxamount [expr ($FinalTime/$MaxTimeStep)]
-            if {$amount < $maxamount} {
-                set output_timestep $OTimeStepStorage
-            } else {
-                set output_timestep $MaxTimeStep
-            }
+    set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
+    if {$output_criterion eq "Detail_priority"} {
+        set output_timestep [write::getValue DEMResults DEM-OTimeStepDetail]
+    } elseif {$output_criterion eq "Storage_priority"} {
+        set amount [write::getValue DEMResults DEM-OTimeStepStorage]
+        set OTimeStepStorage [expr (double($FinalTime)/$amount)]
+        set maxamount [expr ($FinalTime/$MaxTimeStep)]
+        if {$amount < $maxamount} {
+            set output_timestep $OTimeStepStorage
+        } else {
+            set output_timestep $MaxTimeStep
         }
+    }
     dict set project_parameters_dict "OutputTimeStep"                   $output_timestep
     dict set project_parameters_dict "PostBoundingBox"                  [write::getValue Boundingbox PostBB]
     dict set project_parameters_dict "PostLocalContactForce"            [write::getValue BondElem LocalContactForce]
@@ -127,15 +107,30 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "PostParticleMoment"               [write::getValue PostPrint ParticleMoment]
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint EulerAngles]
     dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue PostPrint RollingResistanceMoment]
-    #dict set project_parameters_dict "PostNodalArea"                    [write::getValue PostPrint NodalArea]
-    #dict set project_parameters_dict "PostRHS"                          [write::getValue PostPrint Rhs]
-    #dict set project_parameters_dict "PostDampForces"                   [write::getValue PostPrint DampForces]
-    #dict set project_parameters_dict "PostAppliedForces"                [write::getValue PostPrint AppliedForces]
-    #dict set project_parameters_dict "PostGroupId"                      [write::getValue PostPrint GroupId]
-    #dict set project_parameters_dict "PostExportId"                     [write::getValue PostPrint ExportId]
     dict set project_parameters_dict "problem_name" [Kratos::GetModelName]
 
     return $project_parameters_dict
+}
+
+proc DEM::write::GetDemStrategyName { } {
+    return sphere_strategy
+    # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
+    # set used_elements [spdAux::GetUsedElements]
+
+    # set ElementType SphericPartDEMElement3D
+	# if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
+	#     set dem_strategy "sphere_strategy"
+	# } elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
+	#     set dem_strategy "continuum_sphere_strategy"
+	# } elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
+	#    set dem_strategy "thermal_sphere_strategy"
+	# } elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
+	#    set dem_strategy "thermal_continuum_sphere_strategy"
+	# } elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
+	#    set dem_strategy "thermal_continuum_sphere_strategy"
+	# } elseif {$ElementType eq "IceContPartDEMElement3D"} {
+	#    set dem_strategy "ice_continuum_sphere_strategy"
+	# }
 }
 
 proc DEM::write::GetTimeSettings { } {
