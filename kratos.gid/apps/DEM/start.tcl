@@ -33,6 +33,7 @@ proc ::DEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir xml material_relations MaterialRelations.tcl]]
 
     uplevel #0 [list source [file join $dir xml XmlController.tcl]]
+    uplevel #0 [list source [file join $dir xml material_relations material_relations_window.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]

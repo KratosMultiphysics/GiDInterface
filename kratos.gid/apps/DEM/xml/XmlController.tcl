@@ -135,9 +135,6 @@ proc DEM::xml::MaterialRelationsValidation { } {
     return $err
 }
 
-proc DEM::xml::ShowMaterialRelationWindow { } {
-    
-}
 
 
 DEM::xml::Init
