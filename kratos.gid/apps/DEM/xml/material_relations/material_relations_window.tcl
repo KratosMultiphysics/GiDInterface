@@ -52,7 +52,7 @@ proc DEM::xml::ShowMaterialRelationWindow { } {
                 if {[dict exists $relations $ref_mat_name]} {
                     if {$check_mat_name in [dict get $relations $ref_mat_name]} {set exists 1}
                 }
-                if {$exists} {lappend row V} {lappend row O}
+                if {$exists} {lappend row OK} {lappend row MISSING}
             }
             $table insert "" end -id $ref_mat_name -text $ref_mat_name -values $row
         }
