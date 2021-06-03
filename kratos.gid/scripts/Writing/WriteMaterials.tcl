@@ -39,35 +39,40 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 set element_name [write::getValueByNode $element_node "force"]
             }
 
+            set processed 0
             set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
             if {$claw_node ne ""} {
                 set claw [write::getValueByNode $claw_node "force"]
-                set const_law [Model::getConstitutiveLaw $claw]
-                set output_type [$const_law getOutputMode]
-                if {$output_type eq "Parameters"} {
-                    set s1 [$gNode selectNodes ".//value"]
-                } else {
-                    set s1 ""
-                    set matvalueNode [$gNode selectNodes $xp2]
-                    if {$matvalueNode ne ""} {
-                        set real_material_name [write::getValueByNode $matvalueNode "force"]
-                        set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
-                        set matNode [$root selectNodes $xp3]
-                        set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                if {$claw ne "None"} {
+                    set processed 1
+                    set const_law [Model::getConstitutiveLaw $claw]
+                    set output_type [$const_law getOutputMode]
+                    if {$output_type eq "Parameters"} {
+                        set s1 [$gNode selectNodes ".//value"]
+                    } else {
+                        set s1 ""
+                        set matvalueNode [$gNode selectNodes $xp2]
+                        if {$matvalueNode ne ""} {
+                            set real_material_name [write::getValueByNode $matvalueNode "force"]
+                            set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
+                            set matNode [$root selectNodes $xp3]
+                            set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                        }
                     }
-                }
 
-                foreach valueNode $s1 {
-                    write::forceUpdateNode $valueNode
-                    set name [$valueNode getAttribute n]
-                    set state [get_domnode_attribute $valueNode state]
-                    if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
-                        # All the introduced values are translated to 'm' and 'kg' with the help of this function
-                        set value [gid_groups_conds::convert_value_to_default $valueNode]
-                        dict set mat_dict $submodelpart_id $name $value
+                    foreach valueNode $s1 {
+                        write::forceUpdateNode $valueNode
+                        set name [$valueNode getAttribute n]
+                        set state [get_domnode_attribute $valueNode state]
+                        if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
+                            # All the introduced values are translated to 'm' and 'kg' with the help of this function
+                            set value [gid_groups_conds::convert_value_to_default $valueNode]
+                            dict set mat_dict $submodelpart_id $name $value
+                        }
                     }
                 }
-            } else {
+            } 
+            if {!$processed} {
                 set s1 ""
                 set matvalueNode [$gNode selectNodes $xp2]
                 if {$matvalueNode ne ""} {
@@ -172,7 +177,7 @@ proc write::getPropertiesListByConditionXPath {cnd_xpath {write_claw_name "True"
             set variables_dict [dict create]
             foreach prop [dict keys [dict get $mat_dict $submodelpart_id] ] {
                 if {$prop ni $exclusionList} {
-                    dict set variables_list $prop [getFormattedValue [dict get $mat_dict $submodelpart_id $prop]]
+                    dict set variables_dict $prop [getFormattedValue [dict get $mat_dict $submodelpart_id $prop]]
                 }
             }
             set material_dict [dict create]
@@ -181,7 +186,7 @@ proc write::getPropertiesListByConditionXPath {cnd_xpath {write_claw_name "True"
                 set constitutive_law_name [$constitutive_law getKratosName]
                 dict set material_dict constitutive_law [dict create name $constitutive_law_name]
             }
-            dict set material_dict Variables $variables_list
+            dict set material_dict Variables $variables_dict
             dict set material_dict Tables dictnull
 
             dict set prop_dict Material $material_dict
