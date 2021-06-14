@@ -188,12 +188,13 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
+
     # Fluid Interface
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
 
     # Fluid Inlet
-    set function {0.1214*(1-cos(0.1*pi*t))*y*(1-y) if t<10 else 0.2428*y*(1-y)}
-    Fluid::xml::CreateNewInlet Inlet {new false name Total} true $function
+    Fluid::xml::CreateNewInlet Inlet {new true name interval1 ini 0 end 10.0} true "0.1214*(1-cos(0.1*pi*t))*y*(1-y)"
+    Fluid::xml::CreateNewInlet Inlet {new true name interval2 ini 10.0 end end} true "0.2428*y*(1-y)"
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
