@@ -82,7 +82,7 @@ proc Kratos::RegisterGiDEvents { } {
 
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
-    CreateWidgetsFromXml::ClearCachePreferences
+    if {[GidUtils::VersionCmp "15.0.0"] >=0 } {CreateWidgetsFromXml::ClearCachePreferences}
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
@@ -187,7 +187,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename]]
     }
     # Common controllers
-    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
+    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl Drawer.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
     }
     # Model class
@@ -303,6 +303,7 @@ proc Kratos::Event_EndProblemtype { } {
         # Clear private global variable
         unset -nocomplain ::Kratos::kratos_private
     }
+    Drawer::UnregisterAll
 }
 
 

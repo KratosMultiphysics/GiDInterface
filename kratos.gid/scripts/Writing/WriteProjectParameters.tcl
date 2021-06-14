@@ -1,27 +1,3 @@
-
-# proc write::dict2json {dictVal} {
-#     # XXX: Currently this API isn't symmetrical, as to create proper
-#     # XXX: JSON text requires type knowledge of the input data
-#     set json ""
-#     dict for {key val} $dictVal {
-#         # key must always be a string, val may be a number, string or
-#         # bare word (true|false|null)
-#         if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
-#             set val "\"$val\""
-#         }
-#         if {[isDict $val]} {
-#             set val [dict2json $val]
-#             set val "\[${val}\]"
-#         } else {
-#             set val \"$val\"
-#         }
-#         append json "\"$key\": $val," \n
-#     }
-#     if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
-#     return "\{${json}\}"
-# }
-
-
 package require json::write
 
 proc write::json2dict {JSONtext} {
@@ -506,7 +482,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
-    dict set resultDict folder_name                    "vtk_output"
+    dict set resultDict output_path                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
     dict set resultDict nodal_data_value_variables      [list ]

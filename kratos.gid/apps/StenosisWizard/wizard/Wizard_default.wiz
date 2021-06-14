@@ -8,13 +8,13 @@
         </Frame>
         <Frame  n="Data" position="left">
           <Item n="Type" pn="Stenosis type" v="Circular" type="combo" values="Circular,Spherical,Triangular,Polygonal" onchange="StenosisWizard::Wizard::GeometryTypeChange" />
-          <Item n="Length" pn="Length" v="100" type="double" />
+          <Item n="Length" pn="Length" v="200" type="double" />
           <Item n="Radius" pn="Radius" v="9.53" type="double" />
           <Item n="Z" pn="Z0" v="38.1" type="double" />
           <Item n="Delta" pn="Delta" v="3.18" type="double" />
           <Item n="SphRadius" pn="Sphere radius" v="50.8" type="double" />
           <Item n="Tpoly" pn="Tpoly" v="25.4" type="double" />
-          <Item n="Precision" pn="Divisions" v="50" type="double"/>
+          <Item n="Precision" pn="Curvature precision" v="50" type="double"/>
           <Item n="DrawButton" pn="Create geometry" type="button" v="StenosisWizard::Wizard::DrawGeometry" />
         </Frame>
       </Data>
@@ -49,15 +49,19 @@
         </Frame>
         <Frame n="Data" position="left">
           <Item n="Cuts" pn="Number of cuts" v="6" type="integer"/>
+          <Item n="ViewCuts" pn="Draw cuts" type="button" v="StenosisWizard::Wizard::DrawCuts" />
           <Item n="CentralMesh" pn="Central Mesh size" v="1" type="integer" />
           <Item n="MeshSize" pn="Mesh size" v="2" type="integer" />
           <Item n="InitialTime" pn="Initial time" v="0" type="integer" mxp="container[@un='FLTimeParameters']/value[@n='InitialTime']"/>
           <Item n="EndTime" pn="End time" v="10" type="integer" mxp="container[@un='FLTimeParameters']/value[@n='EndTime']"/>
           <Item n="DeltaTime" pn="Delta time" v="0.1" type="integer" mxp="container[@un='FLTimeParameters']/value[@n='DeltaTime']"/>
+          <Item n="Bending" pn="Bending angle" v="1.2" type="double" help="Bending after mesh"/>
+          <Item n="Bending_msg" v="Bending process is done after mesh" type="label" help="Bending after mesh"/>
+          <Item n="PreviewCurvature" pn="Preview curvature" type="button" v="StenosisWizard::Wizard::PreviewCurvature" />
         </Frame>
         <Frame position="left">
           <Item n="Save" pn="Save the model" type="button" v="StenosisWizard::Wizard::Save" />
-          <Item n="Mesh" pn="Mesh the geometry" type="button" v="StenosisWizard::Wizard::Mesh" />
+          <Item n="Mesh" pn="Mesh &amp; bend the geometry" type="button" v="StenosisWizard::Wizard::Mesh" />
           <Item n="Run" pn="Calculate" type="button" v="StenosisWizard::Wizard::Run" />
         </Frame>
       </Data>

@@ -12,6 +12,9 @@ proc PfemThermic::xml::Init { } {
 	
 	Model::ForgetNodalConditions
     Model::getNodalConditions NodalConditions.xml
+	
+	Model::ForgetConditions
+    Model::getConditions Conditions.xml
 }
 
 proc PfemThermic::xml::getUniqueName {name} {
@@ -28,6 +31,7 @@ proc PfemThermic::xml::CustomTree { args } {
 	foreach node [$root getElementsByTagName value]     { $node setAttribute icon data }
 	foreach node [$root getElementsByTagName container] { if {[$node hasAttribute solstratname]} {$node setAttribute icon folder} }
 	
+	#foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMTHERMIC_FreeSurfaceFlux]"]                                                 { $node setAttribute icon select }
 	foreach node [[$root parent] selectNodes "[spdAux::getRoute Intervals]/blockdata"]                                                         { $node setAttribute icon select }
 	foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ]                                              { $node setAttribute icon select }
     foreach node [[$root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ]          { $node setAttribute icon select }
@@ -64,12 +68,14 @@ proc PfemThermic::xml::CustomTree { args } {
 	spdAux::SetValueOnTreeItem v No  NodalResults PRESSURE_REACTION
 	spdAux::SetValueOnTreeItem v No  NodalResults DISPLACEMENT
 	spdAux::SetValueOnTreeItem v No  NodalResults DISPLACEMENT_REACTION
-	spdAux::SetValueOnTreeItem v No  NodalResults HeatFlux2D
+	
+	set heatSource_result_node [[$root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'HEAT_FLUX'\]"]
+	if { $heatSource_result_node ne "" } { $heatSource_result_node delete }
 	################################################
 	
 	ConvectionDiffusion::xml::CustomTree
 	
-	spdAux::SetValueOnTreeItem v      non_linear CNVDFFAnalysisType
+	spdAux::SetValueOnTreeItem v      linear     CNVDFFAnalysisType
 	spdAux::SetValueOnTreeItem values transient  CNVDFFSolStrat
 	spdAux::SetValueOnTreeItem state  disabled   CNVDFFSolStrat
 	spdAux::SetValueOnTreeItem v      No         CNVDFFStratParams line_search
@@ -85,14 +91,14 @@ proc PfemThermic::xml::ProcGetElementsValues {domNode args} {
     set elems [PfemFluid::xml::GetElements $domNode $args]
 	
     foreach elem $elems {
-        if {[$elem cumple $argums] && [$elem getName] ne "RigidLagrangianElement2D3N"} {
+        if {[$elem cumple $argums] && [$elem getName] ne "RigidLagrangianElement2D3N" && [$elem getName] ne "RigidLagrangianElement3D4N"} {
 			lappend names [$elem getName]
         }
     }
 	
     set values [join $names ","]
     
-    if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
+    if {[get_domnode_attribute $domNode v] eq ""}     {$domNode setAttribute v [lindex $names 0]}
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]}
     
     return $values

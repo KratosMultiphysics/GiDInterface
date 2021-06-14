@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
     
+	<!--Fluid conditions-->
+	
     <NodalConditionItem n              = "DISPLACEMENT"
 	                    pn             = "Displacement"
 						ProcessName    = "AssignVectorVariableProcess"
@@ -77,6 +79,7 @@
 						ov             = "[CheckGeometry 2]">
     </NodalConditionItem>
 	
+	<!--Thermal conditions (topology features work only if they are treated as Conditions)-->
 	
 	<NodalConditionItem n                        = "TEMPERATURE"
 	                    pn                       = "Temperature"
@@ -105,7 +108,7 @@
     </NodalConditionItem>
 	
 	
-	<NodalConditionItem n                        = "HeatFlux2D"
+	<!--<NodalConditionItem n                        = "HeatFlux2D"
 	                    pn                       = "External heat flux"
 						ProcessName              = "AssignScalarVariableProcess"
 						VariableName             = "FACE_HEAT_FLUX"
@@ -121,18 +124,20 @@
 						LocalSpaceDimension      = "1"
                         SkinConditions           = "True"
 						ElementType              = "Line"
-                        help                     = "Applies an external thermal load"
-						function                 = "1">
+						ov                       = "line"
+						function                 = "1"
+                        help                     = "Applies an external thermal load">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
         </DefaultValues>
-    </NodalConditionItem>
+    </NodalConditionItem>-->
+	
 	
 	<NodalConditionItem n                        = "HEAT_FLUX"
-	                    pn                       = "Heat source"
+	                    pn                       = "Internal heat source"
 						ProcessName              = "AssignScalarVariableProcess"
 						VariableName             = "HEAT_FLUX"
 						Interval                 = "Total"

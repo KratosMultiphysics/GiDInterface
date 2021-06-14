@@ -24,6 +24,7 @@
     </TopologyFeatures>
     <ConstitutiveLaw_FilterFeatures>
       <filter field="App" value="Fluid"/>
+      <filter field="ElementCompressibility" value="Incompressible"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
     <NodalConditions>
@@ -46,6 +47,7 @@
 
     <ConstitutiveLaw_FilterFeatures>
       <filter field="App" value="Fluid"/>
+      <filter field="ElementCompressibility" value="Incompressible"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->

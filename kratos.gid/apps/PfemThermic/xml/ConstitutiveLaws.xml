@@ -14,13 +14,13 @@
         <inputs>
             <parameter n="DENSITY"                      pn="Density"              unit_magnitude="Density"         units="kg/m^3"   v="1000"/>
             <parameter n="TEMPERATURE_vs_DENSITY"       pn="Density table"        type="tablefile"                                  v="- No file"/>
-            <parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
+            <parameter n="DYNAMIC_VISCOSITY"            pn="Dynamic viscosity"    unit_magnitude="P*T"             units="Pa*s"     v="1e-3"/>
+            <parameter n="TEMPERATURE_vs_VISCOSITY"     pn="Viscosity table"      type="tablefile"                                  v="- No file"/>
+			<parameter n="BULK_MODULUS"                 pn="Bulk modulus"         unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
+			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
             <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
             <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
             <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
-            <parameter n="DYNAMIC_VISCOSITY"            pn="Dynamic viscosity"    unit_magnitude="P*T"             units="Pa*s"     v="1e-3"/>
-            <parameter n="TEMPERATURE_vs_VISCOSITY"     pn="Viscosity table"      type="tablefile"                                  v="- No file"/>
-            <parameter n="BULK_MODULUS"                 pn="Bulk modulus"         unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
         </inputs>
         <outputs>
         </outputs>
@@ -38,13 +38,13 @@
         <inputs>
             <parameter n="DENSITY"                      pn="Density"              unit_magnitude="Density"         units="kg/m^3"   v="1000"/>
             <parameter n="TEMPERATURE_vs_DENSITY"       pn="Density table"        type="tablefile"                                  v="- No file"/>
-            <parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
+            <parameter n="DYNAMIC_VISCOSITY"            pn="Dynamic viscosity"    unit_magnitude="P*T"             units="Pa*s"     v="1e-3"/>
+            <parameter n="TEMPERATURE_vs_VISCOSITY"     pn="Viscosity table"      type="tablefile"                                  v="- No file"/>
+			<parameter n="BULK_MODULUS"                 pn="Bulk modulus"         unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
+			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
             <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
             <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
             <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
-            <parameter n="DYNAMIC_VISCOSITY"            pn="Dynamic viscosity"    unit_magnitude="P*T"             units="Pa*s"     v="1e-3"/>
-            <parameter n="TEMPERATURE_vs_VISCOSITY"     pn="Viscosity table"      type="tablefile"                                  v="- No file"/>
-            <parameter n="BULK_MODULUS"                 pn="Bulk modulus"         unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
         </inputs>
         <outputs>
         </outputs>
@@ -62,16 +62,17 @@
         <inputs>
             <parameter n="DENSITY"                      pn="Density"              unit_magnitude="Density"         units="kg/m^3"   v="1000"/>
             <parameter n="TEMPERATURE_vs_DENSITY"       pn="Density table"        type="tablefile"                                  v="- No file"/>
-            <parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
-            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
-            <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
-            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
             <parameter n="DYNAMIC_VISCOSITY"            pn="Dynamic viscosity"    unit_magnitude="P*T"             units="Pa*s"     v="1e-3"/>
             <parameter n="TEMPERATURE_vs_VISCOSITY"     pn="Viscosity table"      type="tablefile"                                  v="- No file"/>
             <parameter n="BULK_MODULUS"                 pn="Bulk modulus"         unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
-            <parameter n="FLOW_INDEX"                   pn="Flow index"           unit_magnitude=""                units=""         v="1"/>
+			<parameter n="FLOW_INDEX"                   pn="Flow index"           unit_magnitude=""                units=""         v="1"/>
             <parameter n="YIELD_SHEAR"                  pn="Yield shear"          unit_magnitude="P"               units="Pa"       v="100"/>
+			<parameter n="TEMPERATURE_vs_YIELDSHEAR"    pn="Yield shear table"    type="tablefile"                                  v="- No file"/>
             <parameter n="ADAPTIVE_EXPONENT"            pn="Adaptive exponent"    unit_magnitude=""                units="1/s"      v="1000" help="The higher is, the lower is the regularization."/>
+			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
+            <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
         </inputs>
         <outputs>
         </outputs>
@@ -89,16 +90,17 @@
         <inputs>
             <parameter n="DENSITY"                      pn="Density"              unit_magnitude="Density"         units="kg/m^3"   v="1000"/>
             <parameter n="TEMPERATURE_vs_DENSITY"       pn="Density table"        type="tablefile"                                  v="- No file"/>
-            <parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
-            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
-            <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
-            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
             <parameter n="DYNAMIC_VISCOSITY"            pn="Dynamic viscosity"    unit_magnitude="P*T"             units="Pa*s"     v="1e-3"/>
             <parameter n="TEMPERATURE_vs_VISCOSITY"     pn="Viscosity table"      type="tablefile"                                  v="- No file"/>
             <parameter n="BULK_MODULUS"                 pn="Bulk modulus"         unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
             <parameter n="FLOW_INDEX"                   pn="Flow index"           unit_magnitude=""                units=""         v="1"/>
             <parameter n="YIELD_SHEAR"                  pn="Yield shear"          unit_magnitude="P"               units="Pa"       v="100"/>
+			<parameter n="TEMPERATURE_vs_YIELDSHEAR"    pn="Yield shear table"    type="tablefile"                                  v="- No file"/>
             <parameter n="ADAPTIVE_EXPONENT"            pn="Adaptive exponent"    unit_magnitude=""                units="1/s"      v="1000"/>
+			<parameter n="CONDUCTIVITY"                 pn="Thermal conductivity" unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"  pn="Conductivity table"   type="tablefile"                                  v="- No file"/>
+            <parameter n="SPECIFIC_HEAT"                pn="Specific heat"        unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT" pn="Specific heat table"  type="tablefile"                                  v="- No file"/>
         </inputs>
         <outputs>
         </outputs>
@@ -117,7 +119,7 @@
         <inputs>
             <parameter n="DENSITY"                      pn="Density"              unit_magnitude="Density"         units="kg/m^3"   v="500"/>
 			<parameter n="TEMPERATURE_vs_DENSITY"       pn="Density table"        type="tablefile"                                  v="- No file"/>
-            <parameter n="YOUNG_MODULUS"                pn="Young modulus"        unit_magnitude="P"               units="Pa"       v="2.1e+07"/>
+			<parameter n="YOUNG_MODULUS"                pn="Young modulus"        unit_magnitude="P"               units="Pa"       v="2.1e+07"/>
 			<parameter n="TEMPERATURE_vs_YOUNG"         pn="Young modulus table"  type="tablefile"                                  v="- No file"/>
             <parameter n="POISSON_RATIO"                pn="Poisson ratio"        unit_magnitude=""                units=""         v="0.25"/>
 			<parameter n="TEMPERATURE_vs_POISSON"       pn="Poisson ratio table"  type="tablefile"                                  v="- No file"/>

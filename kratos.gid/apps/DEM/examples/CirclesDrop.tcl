@@ -15,16 +15,6 @@ proc ::DEM::examples::CirclesDrop {args} {
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
 
-    # MESH
-    # TODO: Remove this once the Granular mesher works fine with multiple surfaces
-    ## Remember the old mesher
-    set prev_mesher [GiD_Set CircleMesher]
-    ## Set RBall as circle mesher
-    GiD_Set CircleMesher 0
-    ## Mesh
-    MeshGenerationOKDo 1.0
-    ## Restore previous circle mesher preference
-    GiD_Set CircleMesher $prev_mesher
 }
 
 proc ::DEM::examples::DrawGeometryCirclesDrop { } {
@@ -53,7 +43,7 @@ proc ::DEM::examples::DrawGeometryCirclesDrop { } {
 proc ::DEM::examples::AssignToTreeCirclesDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
