@@ -175,12 +175,13 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
+    
     # Fluid Interface
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
-
+    
     # Fluid Inlet
-    set function {1.5*(0.5*(1-cos(0.5*pi*t))*1.0)*(4.0/0.1681)*y*(0.41-y) if t<2.0 else 1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)}
-    Fluid::xml::CreateNewInlet Inlet {new false name Total} true $function
+    Fluid::xml::CreateNewInlet Inlet {new true name interval1 ini 0 end 2.0} true "1.5*(0.5*(1-cos(0.5*pi*t))*1.0)*(4.0/0.1681)*y*(0.41-y)"
+    Fluid::xml::CreateNewInlet Inlet {new true name interval2 ini 2.0 end end} true "1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)"
     
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
