@@ -194,7 +194,7 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
 
     # Fluid Inlet
     Fluid::xml::CreateNewInlet Inlet {new true name interval1 ini 0 end 10.0} true "0.1214*(1-cos(0.1*pi*t))*y*(1-y)"
-    Fluid::xml::CreateNewInlet Inlet {new true name interval2 ini 10.0 end end} true "0.2428*y*(1-y)"
+    Fluid::xml::CreateNewInlet Inlet {new true name interval2 ini 10.0 end End} true "0.2428*y*(1-y)"
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
