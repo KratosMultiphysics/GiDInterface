@@ -16,6 +16,7 @@ proc Buoyancy::xml::Init { } {
     Model::ForgetMaterials
     Model::getMaterials Materials.xml
 
+    Model::ForgetSolvers
     Model::getSolvers "../../Common/xml/Solvers.xml"
     
     [Model::getCondition "Outlet2D"] setAttribute ElementType "Point,Line"

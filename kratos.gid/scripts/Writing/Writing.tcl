@@ -11,6 +11,7 @@ namespace eval write {
     variable current_configuration
     variable current_mdpa_indent_level
     variable formats_dict
+    variable properties_exclusion_list
 }
 
 proc write::Init { } {
@@ -38,6 +39,8 @@ proc write::Init { } {
     
     variable formats_dict
     set formats_dict [dict create]
+    variable properties_exclusion_list
+    set properties_exclusion_list [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -240,16 +243,6 @@ proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
     return $obj
 }
 
-proc write::getSubModelPartId {cid group} {
-    variable submodelparts
-
-    set find [list $cid ${group}]
-    if {[dict exists $submodelparts $find]} {
-        return [dict get $submodelparts [list $cid ${group}]]
-    } {
-        return 0
-    }
-}
 
 proc write::transformGroupName {groupid} {
     set new_parts [list ]
@@ -491,6 +484,10 @@ proc write::getValueByNode { node {what noforce} } {
         write::forceUpdateNode $node
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
+}
+proc write::getValueByNodeChild { parent_node child_name {what noforce} } {
+    set node [$parent_node find n $child_name]
+    return [write::getValueByNode $node $what]
 }
 proc write::getValueByXPath { xpath { it "" }} {
     set root [customlib::GetBaseRoot]

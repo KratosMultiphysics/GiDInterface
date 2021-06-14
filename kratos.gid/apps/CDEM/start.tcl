@@ -45,6 +45,10 @@ proc ::CDEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
 
+proc ::CDEM::CustomToolbarItems { } {
+    ::DEM::CustomToolbarItems
+}
+
 proc ::CDEM::BeforeMeshGeneration {elementsize} {
     ::DEM::BeforeMeshGeneration $elementsize
 }

@@ -18,7 +18,9 @@ proc Kratos::DestroyWindows { } {
     spdAux::DestroyWindows
     if {[info exists ::Kratos::kratos_private(UseWizard)] && $::Kratos::kratos_private(UseWizard)} {
         smart_wizard::DestroyWindow
+        catch {destroy $smart_wizard::wizwindow}
     }
+    catch {destroy $smart_wizard::wizwindow}
     ::Kratos::EndCreatePreprocessTBar
 }
 
@@ -267,4 +269,8 @@ proc Kratos::GetMeshBasicData { } {
     dict set result nodes [GiD_Info Mesh NumNodes] 
     dict set result is_quadratic [expr [GiD_Info Project Quadratic] && ![GiD_Cartesian get iscartesian] ]
     return $result   
+}
+
+proc ? {question true_val false_val} {
+    return [expr $question ? $true_val : $false_val]
 }

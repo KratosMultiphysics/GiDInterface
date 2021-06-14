@@ -12,7 +12,9 @@
       <filter field="App" value="CDEM"/>
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions></NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+    </inputs>
     <outputs></outputs>
   </ElementItem>
 
@@ -26,7 +28,9 @@
       <filter field="App" value="CDEM"/>
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions></NodalConditions>
-    <inputs></inputs>
+    <inputs>
+      <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+    </inputs>
     <outputs></outputs>
   </ElementItem>
 </ElementList>

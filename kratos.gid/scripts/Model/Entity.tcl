@@ -114,15 +114,16 @@ oo::class create Entity {
         #W "Cumplimos con los filtros: $args"
         set c 1
         if {$::Kratos::kratos_private(DevMode) ne "release"} {
-
+            # if our mode is debug, it's allowd
         } elseif {[my getAttribute "ProductionReady"] ne "" && [my getAttribute "ProductionReady"] ne "ProductionReady"} {
+            # if our mode is release, only release entities
             #W "[my getName] no paso - [my getAttribute "ProductionReady"] "
             return 0
         }
         if {$args ne ""} {
             foreach {k listfiltervalues} {*}$args {
                 set listfiltervalues [string map {, " "} $listfiltervalues]
-                #W "k: $k vs : $listfiltervalues"
+               # W "k: $k vs : $listfiltervalues"
                 set listattributesvalues [string map {, " "} [my getAttribute $k]]
                 #W "My value $listattributesvalues"
                 set b1 0
