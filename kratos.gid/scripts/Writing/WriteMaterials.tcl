@@ -21,7 +21,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
         set group_name [write::GetWriteGroupName [$gNode @n]]
         set cond_name [[$gNode parent] @n]
-        set submodelpart_id [write:GetSubModelPartName $cond_name $group_name]
+        set submodelpart_id [write::GetSubModelPartName $cond_name $group_name]
         
         set material_name "material $material_number"
         if { ![dict exists $mat_dict $submodelpart_id] } {
@@ -159,7 +159,7 @@ proc write::getPropertiesListByConditionXPath {cnd_xpath {write_claw_name "True"
         # Condition name
         set cond_id [get_domnode_attribute [$gNode parent] n]
         # We get the submodelpart name and the modelpart.submodelpart
-        set submodelpart_id [write:GetSubModelPartName $cond_id $group]
+        set submodelpart_id [write::GetSubModelPartName $cond_id $group]
         set submodelpart_fullname $submodelpart_id
         if {$model_part_name ne ""} {set submodelpart_fullname $model_part_name.$submodelpart_id}
         set submodelpart_id [string trim $submodelpart_id "."]

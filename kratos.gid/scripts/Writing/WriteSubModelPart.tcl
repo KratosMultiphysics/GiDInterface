@@ -161,7 +161,7 @@ proc write::GetSubModelPartFromCondition { base_UN condition_id } {
     return $submodelpart_list
 }
 
-proc write:GetSubModelPartName {condid group} {
+proc write::GetSubModelPartName {condid group} {
     set group_name [write::GetWriteGroupName $group]
     set good_name [write::transformGroupName $group_name]
     return "${condid}_${good_name}"
@@ -169,7 +169,7 @@ proc write:GetSubModelPartName {condid group} {
 
 proc write::AddSubmodelpart {condid group} {
     variable submodelparts
-    set mid [write:GetSubModelPartName $condid $group]
+    set mid [write::GetSubModelPartName $condid $group]
     set group_name [write::GetWriteGroupName $group]
     set good_name [write::transformGroupName $group_name]
     if {[write::getSubModelPartId $condid $group_name] eq 0} {
@@ -180,7 +180,8 @@ proc write::AddSubmodelpart {condid group} {
 
 proc write::getSubModelPartId {cid group} {
     variable submodelparts
-
+    W "$cid $group"
+    WV submodelparts
     set find [list $cid ${group}]
     if {[dict exists $submodelparts $find]} {
         return [dict get $submodelparts [list $cid ${group}]]
