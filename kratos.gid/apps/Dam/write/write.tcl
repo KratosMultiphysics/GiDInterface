@@ -357,10 +357,7 @@ proc Dam::write::writeThermalElements {} {
         set old_name_SubModelPart "Thermal_[lindex $ThermalGroups $i]"
         set new_name_SubModelPart [string map {" " "_"} $old_name_SubModelPart]
         dict set ThermalSubModelPartDict [lindex $ThermalGroups $i] SubModelPartName $new_name_SubModelPart
-
     }
-
-
 }
 
 proc Dam::write::writeThermalConnectivities {Group ElemType ElemName ConnectivityType ElementId ElementList} {
@@ -394,8 +391,7 @@ proc Dam::write::Quadrilateral2D4Connectivities { ElemId } {
 
     set ElementInfo [GiD_Mesh get element $ElemId]
     #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
-    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5]\
-        [lindex $ElementInfo 6]"
+    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5] [lindex $ElementInfo 6]"
 }
 
 proc Dam::write::Hexahedron3D8Connectivities { ElemId } {
