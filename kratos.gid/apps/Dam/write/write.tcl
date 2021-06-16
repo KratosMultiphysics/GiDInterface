@@ -326,10 +326,12 @@ proc Dam::write::writeThermalElements {} {
 
     set ThermalGroups [list]
 
-    set mat_dict [write::getMatDict]
-    foreach part_name [dict keys $mat_dict] {
-        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
-            lappend ThermalGroups $part_name
+    foreach node_part [GetDamPartGroupNodes] {
+        set element_id [write::getValueByNode [$node_part selectNodes "./value\[@n='Element'\]"] ]
+        set element [Model::getElement $element_id]
+        set element_type [$element getAttribute "ElementType"]
+        if {$element_type eq "Solid"} {
+            lappend ThermalGroups [$node_part @n]
         }
     }
 
@@ -451,6 +453,11 @@ proc Dam::write::getSubModelPartThermalNames { } {
     }
 
     return $submodelThermalPartsNames
+}
+
+proc Dam::write::GetDamPartGroupNodes { } {
+    set nodes [write::getPartsGroupsId node]
+    return $nodes
 }
 
 
