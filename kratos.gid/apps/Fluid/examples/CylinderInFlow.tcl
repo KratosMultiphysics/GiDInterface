@@ -23,7 +23,7 @@ proc Fluid::examples::DrawCylinderInFlowGeometry3D {args} {
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     GiD_Layers edit opaque Fluid 0
 
-    GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
+    GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
 proc Fluid::examples::DrawCylinderInFlowGeometry2D {args} {
     Kratos::ResetModel
@@ -155,8 +155,8 @@ proc Fluid::examples::TreeAssignationCylinderInFlow2D {args} {
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
+    # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]

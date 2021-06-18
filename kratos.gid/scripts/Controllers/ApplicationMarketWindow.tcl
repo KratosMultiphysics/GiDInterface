@@ -1,71 +1,4 @@
 
-proc spdAux::reactiveApp { } {
-    #W "Reactive"
-    variable initwind    
-    if { ![GidUtils::IsTkDisabled] } {
-        if { [winfo exists $initwind] } {
-            destroy $initwind
-        }
-    }
-    set root [customlib::GetBaseRoot]
-    set ::Model::SpatialDimension [[$root selectNodes "value\[@n='nDim'\]"] getAttribute v ]
-    set appname [[$root selectNodes "hiddenfield\[@n='activeapp'\]"] @v ]
-    
-    apps::setActiveApp $appname
-}
-
-proc spdAux::deactiveApp { appid } {
-    
-    set root [customlib::GetBaseRoot]
-    [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v ""
-    foreach elem [$root getElementsByTagName "appLink"] {
-        if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "1"} {
-            $elem setAttribute "active" 0
-            break
-        } 
-    }
-}
-proc spdAux::activeApp { appid } {
-    #W "Active $appid"
-    variable initwind
-    catch {
-        set root [customlib::GetBaseRoot]
-        [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v $appid
-        foreach elem [$root getElementsByTagName "appLink"] {
-            if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
-                $elem setAttribute "active" 1
-                set must_open_init_window 0
-            } else {
-                $elem setAttribute "active" 0
-            }
-        }
-    }
-    
-    set nd [$root selectNodes "value\[@n='nDim'\]"]
-    if {[$nd getAttribute v] ne "wait"} {
-        if {[$nd getAttribute v] ne "undefined"} {
-            set ::Model::SpatialDimension [$nd getAttribute v]
-            spdAux::SwitchDimAndCreateWindow $::Model::SpatialDimension
-            spdAux::TryRefreshTree
-        } {
-            ::spdAux::CreateDimensionWindow
-        }
-    }
-}
-
-proc spdAux::SetActiveAppFromDOM { } {
-    set activeapp_dom ""
-    set root [customlib::GetBaseRoot]
-    set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
-    if {$activeapp_node ne ""} {
-        set activeapp_dom [get_domnode_attribute $activeapp_node v]
-        if { $activeapp_dom != "" } {
-            apps::setActiveApp $activeapp_dom
-        }
-    }
-    return $activeapp_dom
-}
-
 proc spdAux::CreateWindow {} {
     variable initwind
     variable must_open_init_window
@@ -81,13 +14,14 @@ proc spdAux::CreateWindow {} {
     # If we have an active app, dont open this window
     if {[apps::getActiveApp] ne ""} {return ""}
     
+    
+    # Window creation
+    set w .gid.win_app_selection
+    set initwind $w
     # Close everything else
     gid_groups_conds::close_all_windows
     spdAux::DestroyInitWindow
-    if {[winfo exist .gid.win_example]} {destroy .gid.win_example}
-
-    # Window creation
-    set w .gid.win_example
+    if {[winfo exist $initwind]} {destroy $initwind}
     toplevel $w
     wm withdraw $w
     set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
@@ -96,10 +30,10 @@ proc spdAux::CreateWindow {} {
     wm transient $w .gid    
     
     InitWindow $w [_ "Kratos Multiphysics - Application market"] Kratos "" "" 1
-    set initwind $w
+    
     ttk::frame $w.top
-    # ttk::label $w.top.title_text -text [_ " Application market"]
-
+    spdAux::RegisterWindow $initwind
+    
     # List of applications -> by family
     ttk::labelframe $w.information -text " Applications " -relief ridge 
     
@@ -180,12 +114,11 @@ proc spdAux::DestroyInitWindow { } {
 }
 
 proc spdAux::CreateDimensionWindow { } {
-    #package require anigif 1.3
-    variable initwind
     variable must_open_dim_window
 
     if {$must_open_dim_window == 0} {return ""}
-
+    
+    spdAux::DestroyWindows
     set root [customlib::GetBaseRoot]
     
     set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
@@ -200,7 +133,7 @@ proc spdAux::CreateDimensionWindow { } {
         }
         set dir $::Kratos::kratos_private(Path)
         
-        set initwind .gid.win_example
+        set initwind .gid.win_dimension
         if { [ winfo exist $initwind]} {
             destroy $initwind
         }
@@ -217,6 +150,7 @@ proc spdAux::CreateDimensionWindow { } {
         
         InitWindow $w [_ "Kratos Multiphysics"] Kratos "" "" 1
         set initwind $w
+        spdAux::RegisterWindow $initwind
         ttk::frame $w.top
         ttk::label $w.top.title_text -text [_ " Dimension selection"]
         
@@ -251,9 +185,8 @@ proc spdAux::SetSpatialDimmension {ndim} {
 proc spdAux::SwitchDimAndCreateWindow { ndim } {
     variable TreeVisibility
     
-    
     SetSpatialDimmension $ndim
-    spdAux::DestroyWindow
+    spdAux::DestroyWindows
     
     processIncludes
     parseRoutes
@@ -273,4 +206,71 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
     }
     ::Kratos::CreatePreprocessModelTBar
     ::Kratos::UpdateMenus
+}
+
+
+proc spdAux::reactiveApp { } {
+    #W "Reactive"
+    variable initwind    
+    if { ![GidUtils::IsTkDisabled] } {
+        if { [winfo exists $initwind] } {
+            destroy $initwind
+        }
+    }
+    set root [customlib::GetBaseRoot]
+    set ::Model::SpatialDimension [[$root selectNodes "value\[@n='nDim'\]"] getAttribute v ]
+    set appname [[$root selectNodes "hiddenfield\[@n='activeapp'\]"] @v ]
+    
+    apps::setActiveApp $appname
+}
+
+proc spdAux::deactiveApp { appid } {
+    
+    set root [customlib::GetBaseRoot]
+    [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v ""
+    foreach elem [$root getElementsByTagName "appLink"] {
+        if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "1"} {
+            $elem setAttribute "active" 0
+            break
+        } 
+    }
+}
+proc spdAux::activeApp { appid } {
+    #W "Active $appid"
+    catch {
+        set root [customlib::GetBaseRoot]
+        [$root selectNodes "hiddenfield\[@n='activeapp'\]"] setAttribute v $appid
+        foreach elem [$root getElementsByTagName "appLink"] {
+            if {$appid eq [$elem getAttribute "appid"] && [$elem getAttribute "active"] eq "0"} {
+                $elem setAttribute "active" 1
+                set must_open_init_window 0
+            } else {
+                $elem setAttribute "active" 0
+            }
+        }
+    }
+    
+    set nd [$root selectNodes "value\[@n='nDim'\]"]
+    if {[$nd getAttribute v] ne "wait"} {
+        if {[$nd getAttribute v] ne "undefined"} {
+            set ::Model::SpatialDimension [$nd getAttribute v]
+            spdAux::SwitchDimAndCreateWindow $::Model::SpatialDimension
+            spdAux::TryRefreshTree
+        } {
+            ::spdAux::CreateDimensionWindow
+        }
+    }
+}
+
+proc spdAux::SetActiveAppFromDOM { } {
+    set activeapp_dom ""
+    set root [customlib::GetBaseRoot]
+    set activeapp_node [$root selectNodes "//hiddenfield\[@n='activeapp'\]"]
+    if {$activeapp_node ne ""} {
+        set activeapp_dom [get_domnode_attribute $activeapp_node v]
+        if { $activeapp_dom != "" } {
+            apps::setActiveApp $activeapp_dom
+        }
+    }
+    return $activeapp_dom
 }

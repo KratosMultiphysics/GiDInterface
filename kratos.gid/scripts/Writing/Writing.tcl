@@ -11,6 +11,7 @@ namespace eval write {
     variable current_configuration
     variable current_mdpa_indent_level
     variable formats_dict
+    variable properties_exclusion_list
 }
 
 proc write::Init { } {
@@ -38,6 +39,8 @@ proc write::Init { } {
     
     variable formats_dict
     set formats_dict [dict create]
+    variable properties_exclusion_list
+    set properties_exclusion_list [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -85,6 +88,7 @@ proc write::AddConfigurationAttribute {att val} {
 proc write::writeEvent { filename } {
     update ;#else appid is empty running in batch mode with window
     set time_monitor [GetConfigurationAttribute time_monitor]
+    Kratos::Log "Write start $filename"
     customlib::UpdateDocument
     SetConfigurationAttribute dir [file dirname $filename]
     SetConfigurationAttribute model_name [file rootname [file tail $filename]]
@@ -96,7 +100,7 @@ proc write::writeEvent { filename } {
         W [= "Wrong project name. Avoid boolean and numeric names."]
         return 1
     }
-    if {$time_monitor} {set inittime [clock seconds]}
+    set inittime [clock seconds]
     
     # Set write formats depending on the user's configuration
     InitWriteFormats
@@ -109,10 +113,12 @@ proc write::writeEvent { filename } {
     spdAux::ForceTreePreload
 
     #### Validate ####
+    Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
 
     #### MDPA Write ####
     if {$errcode eq 0} {
+        Kratos::Log "Write MDPA $appid"
         set errcode [writeAppMDPA $appid]
     }
     #### Project Parameters Write ####
@@ -120,6 +126,7 @@ proc write::writeEvent { filename } {
     set filename "ProjectParameters.json"
 
     if {$errcode eq 0} {
+        Kratos::Log "Write project parameters $appid"
         set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
     }
 
@@ -127,13 +134,16 @@ proc write::writeEvent { filename } {
     set wevent [$activeapp getWriteCustomEvent]
     set filename ""
     if {$errcode eq 0} {
+        Kratos::Log "Write custom event $appid"
         set errcode [write::singleFileEvent $filename $wevent "Custom file" 0]
     }
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
     if {$time_monitor}  {
-        set endtime [clock seconds]
-        set ttime [expr {$endtime-$inittime}]
-        W "Total time: [Duration $ttime]"
+        W "Total time: [Kratos::Duration $ttime]"
     }
+    
+    Kratos::Log "Write end $appid in [Kratos::Duration $ttime]"
     return $errcode
 }
 
@@ -233,16 +243,6 @@ proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
     return $obj
 }
 
-proc write::getSubModelPartId {cid group} {
-    variable submodelparts
-
-    set find [list $cid ${group}]
-    if {[dict exists $submodelparts $find]} {
-        return [dict get $submodelparts [list $cid ${group}]]
-    } {
-        return 0
-    }
-}
 
 proc write::transformGroupName {groupid} {
     set new_parts [list ]
@@ -251,7 +251,7 @@ proc write::transformGroupName {groupid} {
             lappend new_parts [string map [list $bad $good] $part]
         }
     }
-    return [join $new_parts /]
+    return [join $new_parts -]
 }
 
 # Warning! Indentation must be set before calling here!
@@ -473,20 +473,6 @@ proc write::WriteMPIbatFile {un} {
     GiD_File fclose $fd
 }
 
-proc write::Duration { int_time } {
-    set timeList [list]
-    foreach div {86400 3600 60 1} mod {0 24 60 60} name {day hr min sec} {
-        set n [expr {$int_time / $div}]
-        if {$mod > 0} {set n [expr {$n % $mod}]}
-        if {$n > 1} {
-            lappend timeList "$n ${name}s"
-        } elseif {$n == 1} {
-            lappend timeList "$n $name"
-        }
-    }
-    return [join $timeList]
-}
-
 proc write::forceUpdateNode {node} {
     catch {get_domnode_attribute $node dict}
     catch {get_domnode_attribute $node values}
@@ -498,6 +484,10 @@ proc write::getValueByNode { node {what noforce} } {
         write::forceUpdateNode $node
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
+}
+proc write::getValueByNodeChild { parent_node child_name {what noforce} } {
+    set node [$parent_node find n $child_name]
+    return [write::getValueByNode $node $what]
 }
 proc write::getValueByXPath { xpath { it "" }} {
     set root [customlib::GetBaseRoot]

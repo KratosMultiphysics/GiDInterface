@@ -15,25 +15,16 @@ proc ::Dam::Init { } {
     
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
-    LoadMyFiles
-    ::spdAux::CreateDimensionWindow
-    
+    LoadMyFiles    
 }
 
 proc ::Dam::LoadMyFiles { } {
     variable dir
     
-    uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
+    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]   
 }
-
-
-proc ::Dam::CustomToolbarItems { } {
-    variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Dam::examples::ThermoMechaDam] [= "Example\nThermo-mechanical Dam"]
-}
-
 
 ::Dam::Init

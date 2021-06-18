@@ -45,6 +45,10 @@ proc ::CDEM::LoadMyFiles { } {
     uplevel #0 [list source [file join $dir examples examples.tcl]]
 }
 
+proc ::CDEM::CustomToolbarItems { } {
+    ::DEM::CustomToolbarItems
+}
+
 proc ::CDEM::BeforeMeshGeneration {elementsize} {
     ::DEM::BeforeMeshGeneration $elementsize
 }
@@ -58,17 +62,6 @@ proc ::CDEM::GetAttribute {name} {
     set value ""
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
-}
-
-proc ::CDEM::CustomToolbarItems { } {
-    variable dir
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::CDEM::examples::ContinuumDrop2D] [= "Example2D\nRocks fall"]
-    }
-    if {$::Model::SpatialDimension eq "3D"} {
-        Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::CDEM::examples::ContSpheresDrop3D] [= "Example3D\nContinuum spheres drop"]
-    }
-    Kratos::ToolbarAddItem "Bulk grouping" [file join $dir images stone.png] [list -np- ::CDEM::xml::BulkGroup] [= "Plugin\nBulk grouping"]
 }
 
 proc ::CDEM::AfterSaveModel {filespd} {

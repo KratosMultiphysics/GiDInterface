@@ -158,13 +158,30 @@ proc Fluid::write::getNoSkinConditionMeshId {} {
     return $listOfNoSkinGroups
 }
 
+proc Fluid::write::GetUsedElements {} {
+    set root [customlib::GetBaseRoot]
+
+    # Get the fluid part
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set g $gNode
+        set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        if {$name ni $lista} {lappend lista $name}
+    }
+
+    return $lista
+}
+
 proc Fluid::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
-    set currentStrategyId [write::getValue FLSolStrat]
-    set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "ImplementedInPythonFile"]
+    set currentStrategyId [write::getValue FLSolStrat "" force]
+    set strategy [::Model::GetSolutionStrategy $currentStrategyId]
+    set strategy_write_name [$strategy getAttribute "ImplementedInPythonFile"]
+    set strategy_type [$strategy getAttribute "Type"]
     dict set solverSettingsDict solver_type $strategy_write_name
 
     # model import settings
@@ -192,7 +209,7 @@ proc Fluid::write::getSolverSettingsDict { } {
     dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
 
     # Time scheme settings
-    if {$currentStrategyId eq "Monolithic"} {
+    if {$strategy_type eq "monolithic"} {
         dict set solverSettingsDict time_scheme [write::getValue FLScheme]
     }
 
@@ -210,23 +227,41 @@ proc Fluid::write::getSolverSettingsDict { } {
     dict set solverSettingsDict time_stepping $timeSteppingDict
 
     # For monolithic schemes, set the formulation settings
-    if {$currentStrategyId eq "Monolithic"} {
+    if {$strategy_type eq "monolithic"} {
+        # Create formulation dictionary
         set formulationSettingsDict [dict create]
-        # Set element type
-        # TODO: get element type name from the xml -> Avoid Hardcoding
-        dict set formulationSettingsDict element_type "vms"
+
+        # Set formulation dictionary element type
+        set elements [Fluid::write::GetUsedElements]
+        if {[llength $elements] ne 1} {error "You must select 1 element"} {set element_name [lindex $elements 0]}
+        set element_type [Fluid::write::GetMonolithicElementTypeFromElementName $element_name]
+        dict set formulationSettingsDict element_type $element_type
+
         # Set OSS and remove oss_switch from the original dictionary
         # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
         if {[dict exists $solverSettingsDict oss_switch]} {
-            dict set formulationSettingsDict use_orthogonal_subscales [write::getStringBinaryFromValue [dict get $solverSettingsDict oss_switch]]
+            # Set the oss_switch only in those elements that support it
+            if {$element_type eq "qsvms" || $element_type eq "dvms"} {
+                dict set formulationSettingsDict use_orthogonal_subscales [write::getStringBinaryFromValue [dict get $solverSettingsDict oss_switch]]
+            }
+            # Always remove the oss_switch from the original dictionary
             dict unset solverSettingsDict oss_switch
         }
-        # Set dynamic tau and remove dynamic_tau from the original dictionary
+
+        # Set dynamic tau and remove it from the original dictionary
         dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
         dict unset solverSettingsDict dynamic_tau
+
         # Include the formulation settings in the solver settings dict
         dict set solverSettingsDict formulation $formulationSettingsDict
     }
 
     return $solverSettingsDict
+}
+
+proc Fluid::write::GetMonolithicElementTypeFromElementName {element_name} {
+    set element [Model::getElement $element_name]
+    if {![$element hasAttribute FormulationElementType]} {error "Your monolithic element $element_name need to define the FormulationElementType field"}
+    set formulation_element_type [$element getAttribute FormulationElementType]
+    return {*}$formulation_element_type
 }

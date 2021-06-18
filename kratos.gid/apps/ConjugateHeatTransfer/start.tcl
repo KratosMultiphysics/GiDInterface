@@ -45,23 +45,11 @@ proc ::ConjugateHeatTransfer::LoadMyFiles { } {
     }
 }
 
-proc ::ConjugateHeatTransfer::CustomToolbarItems { } {
-    variable dir
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::ConjugateHeatTransfer::examples::HeatedSquare] [= "Example\nSquare heat source"]
-        Kratos::ToolbarAddItem "ExampleCylinderCooling" "example.png" [list -np- ::ConjugateHeatTransfer::examples::CylinderCooling] [= "Example\nCylinder cooling (Re = 100 - Pr = 2)"]
-        Kratos::ToolbarAddItem "ExampleBFS" "example.png" [list -np- ::ConjugateHeatTransfer::examples::BFS] [= "Example\nBackward Facing Step (BFS)"]
-    }
-}
-
 proc ::ConjugateHeatTransfer::GetAttribute {name} {
     variable attributes
     set value ""
     if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
     return $value
-}
-proc ::ConjugateHeatTransfer::CustomMenus { } {
-    ConjugateHeatTransfer::examples::UpdateMenus
 }
 
 ::ConjugateHeatTransfer::Init

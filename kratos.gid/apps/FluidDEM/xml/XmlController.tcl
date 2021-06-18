@@ -8,11 +8,13 @@ proc FluidDEM::xml::Init { } {
     variable dir
     Model::InitVariables dir $FluidDEM::dir
 
-    Model::ForgetElement SphericPartDEMElement3D
+    Model::ForgetElements
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies [file join ".." ".." DEM xml "Strategies.xml"]
+    Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
-    Model::getSolutionStrategies Strategies.xml
 
     # Get the inlet condition
     set inlet_cnd [Model::getCondition "Inlet"]
@@ -25,11 +27,10 @@ proc FluidDEM::xml::Init { } {
     # Change the inlet injector element type
     set inlet_element_type_param [$inlet_process getInputPn InletElementType]
     if {$inlet_element_type_param ne ""} {
-	$inlet_element_type_param setValues "SphericSwimmingParticle3D"
-	$inlet_element_type_param setPValues "Spheres"
-	$inlet_element_type_param setDv "SphericSwimmingParticle3D"
+        $inlet_element_type_param setValues "SphericSwimmingParticle3D"
+        $inlet_element_type_param setPValues "Spheres"
+        $inlet_element_type_param setDv "SphericSwimmingParticle3D"
     }
-
 
     set element [::Model::getElement "SphericPartDEMElement3D"]
     $element addInputDone $parameter

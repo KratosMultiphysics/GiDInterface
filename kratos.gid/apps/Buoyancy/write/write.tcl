@@ -46,7 +46,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
 }
 proc Buoyancy::write::writeCustomFilesEvent { } {
     # Materials
-    Buoyancy::write::WriteMaterialsFile False
+    Buoyancy::write::WriteMaterialsFile True
 
     # Main python script
     set orig_name "MainKratos.py"

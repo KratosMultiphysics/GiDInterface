@@ -55,18 +55,6 @@ proc ::EmbeddedFluid::GetAttribute {name} {
     return $value
 }
 
-proc ::EmbeddedFluid::CustomToolbarItems { } {
-    Kratos::ToolbarAddItem "ImportMesh" "Import.png" [list -np- EmbeddedFluid::xml::ImportMeshWindow] [= "Import embedded mesh"]
-    Kratos::ToolbarAddItem "Move" "move.png" [list -np- CopyMove Move] [= "Move the geometry/mesh"]
-    Kratos::ToolbarAddItem "Box" "box.png" [list -np- EmbeddedFluid::xml::BoundingBox::CreateWindow] [= "Generate the bounding box"]
-    Kratos::ToolbarAddItem "Spacer" "" "" ""
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::EmbeddedFluid::examples::CylinderInFlow] [= "Example\nEmbedded cylinder test"]
-}
-
-proc ::EmbeddedFluid::CustomMenus { } {
-    EmbeddedFluid::examples::UpdateMenus
-}
-
 proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
     variable oldMeshType
     
@@ -85,6 +73,14 @@ proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
 proc ::EmbeddedFluid::AfterMeshGeneration {fail} {
     variable oldMeshType
     GiD_Set MeshType $oldMeshType
+}
+
+proc ::EmbeddedFluid::CustomToolbarItems { } {
+    Kratos::ToolbarAddItem "ImportMesh" "Import.png" [list -np- EmbeddedFluid::xml::ImportMeshWindow] [= "Import embedded mesh"]
+    Kratos::ToolbarAddItem "Move" "move.png" [list -np- CopyMove Move] [= "Move the geometry/mesh"]
+    Kratos::ToolbarAddItem "Box" "box.png" [list -np- EmbeddedFluid::xml::BoundingBox::CreateWindow] [= "Generate the bounding box"]
+    
+    
 }
 
 ::EmbeddedFluid::Init

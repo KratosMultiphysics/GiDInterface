@@ -37,8 +37,10 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
             if {$aux_cond ne ""} {set cond $aux_cond}
             set kname [$cond getTopologyKratosName $etype $nnodes]
             if {$kname ne ""} {
-                lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
-                dict set dictGroupsIterators $groupid [list $initial $final]
+                if {$nnodes >= 1} {
+                    lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
+                    dict set dictGroupsIterators $groupid [list $initial $final]
+                }
             } else {
                 # If kname eq "" => no topology feature match, condition written as nodal
                 if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
@@ -65,6 +67,7 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
         set obj [GiD_EntitiesGroups get $groupid nodes]
     } else {
         set formats [write::GetFormatDict $groupid 0 $nnodes]
+        #W "$groupid [GiD_Groups list $groupid]"
         set elems [GiD_WriteCalculationFile connectivities -return $formats]
         set obj [GetListsOfNodes $elems $nnodes 2]
     }

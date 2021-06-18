@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NodalConditionList>
+    
+	<!--Fluid conditions-->
+	
+    <NodalConditionItem n              = "DISPLACEMENT"
+	                    pn             = "Displacement"
+						ProcessName    = "AssignVectorVariableProcess"
+						VariableName   = "DISPLACEMENT" 
+		                analysis_type  = "Static,Quasi-static,Dynamic"
+						unit_magnitude = "L"
+						units          = "m"
+						App            = "PfemFluid"
+						state          = "CheckNodalConditionStatePFEM"
+						Interval       = "Total">
+    <symbol proc='gid_groups_conds::draw_symbol_image conditions/displacement.png' orientation='global'/>
+    <outputs>
+        <parameter n="DISPLACEMENT_REACTION" pn="Force Reaction" v="No"/>
+    </outputs>
+    </NodalConditionItem>
+	
+	
+    <NodalConditionItem n              = "ACCELERATION"
+	                    pn             = "Acceleration"
+						ProcessName    = "AssignVectorVariableProcess"
+						VariableName   = "ACCELERATION" 
+		                analysis_type  = "Dynamic"
+						unit_magnitude = "Acceleration"
+						units          = "m/s^2"
+						App            = "PfemFluid"
+						state          = "CheckNodalConditionStatePFEM"
+						Interval       = "Total">
+    </NodalConditionItem>
+	
+	
+	<NodalConditionItem n              = "VELOCITY"
+	                    pn             = "Velocity"
+						ProcessName    = "AssignVectorVariableProcess"
+						VariableName   = "VELOCITY"
+						analysis_type  = "Dynamic"
+						unit_magnitude = "Velocity"
+						units          = "m/s"
+						App            = "PfemFluid"
+						state          = "CheckNodalConditionStatePFEM"
+						Interval       = "Total">
+        <symbol proc='gid_groups_conds::draw_symbol_text velocity' orientation='global'/> 
+        <outputs>
+            <parameter n="VELOCITY_REACTION" pn="Velocity Reaction" v="No"/>
+        </outputs>
+    </NodalConditionItem>
+	
+	
+    <NodalConditionItem n              = "PRESSURE"
+	                    pn             = "Pressure"
+						ProcessName    = "AssignScalarVariableProcess"
+						VariableName   = "PRESSURE"
+						analysis_type  = "Static,Quasi-static,Dynamic"
+						unit_magnitude = "P"
+						units          = "Pa"
+						v              = "Yes"
+						App            = "PfemFluid"
+						state          = "CheckNodalConditionStatePFEM"
+						Interval       = "Total">
+        <outputs>
+            <parameter n="PRESSURE_REACTION" pn="Pressure Reaction" v="No"/>
+        </outputs>
+    </NodalConditionItem>
+	
+	
+    <NodalConditionItem n              = "INLET"
+	                    pn             = "Inlet"
+						ProcessName    = "AssignInletProcess"
+						VariableName   = "VELOCITY"
+						Interval       = "Total"
+						unit_magnitude = "Velocity"
+						units          = "m/s"
+						App            = "Pfem"
+						kratos_module  = "DelaunayMeshingApplication"
+						ov             = "[CheckGeometry 2]">
+    </NodalConditionItem>
+	
+	<!--Thermal conditions (topology features work only if they are treated as Conditions)-->
+	
+	<NodalConditionItem n                        = "TEMPERATURE"
+	                    pn                       = "Temperature"
+						ProcessName              = "AssignScalarVariableProcess"
+						VariableName             = "TEMPERATURE"
+						can_be_initial           = "true"
+						Interval                 = "Total"
+						unit_magnitude           = "Temp"
+						units                    = "K"
+						App                      = "ConvectionDiffusion"
+						ImplementedInApplication = "ConvectionDiffusionApplication"
+						ImplementedInFile        = ".cpp"
+                        MinimumKratosVersion     = "9000"
+						ProductionReady          = "ProductionReady"
+						WorkingSpaceDimension    = "2D"
+						LocalSpaceDimension      = "1"
+                        SkinConditions           = "True"
+						ElementType              = "Point,Line"
+                        help                     = "Imposes a fixed temperature">
+        <TopologyFeatures>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+        <DefaultValues>
+            <value n="constrained" v="1" state="hidden" />
+        </DefaultValues>
+    </NodalConditionItem>
+	
+	
+	<!--<NodalConditionItem n                        = "HeatFlux2D"
+	                    pn                       = "External heat flux"
+						ProcessName              = "AssignScalarVariableProcess"
+						VariableName             = "FACE_HEAT_FLUX"
+						Interval                 = "Total"
+						unit_magnitude           = "Power/L^2"
+						units                    = "W/m^2"
+						App                      = "ConvectionDiffusion"
+						ImplementedInApplication = "ConvectionDiffusionApplication"
+						ImplementedInFile        = ".cpp"
+						MinimumKratosVersion     = "9000"
+						ProductionReady          = "ProductionReady"
+						WorkingSpaceDimension    = "2D"
+						LocalSpaceDimension      = "1"
+                        SkinConditions           = "True"
+						ElementType              = "Line"
+						ov                       = "line"
+						function                 = "1"
+                        help                     = "Applies an external thermal load">
+        <TopologyFeatures>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+        <DefaultValues>
+            <value n="constrained" v="0" state="hidden" />
+        </DefaultValues>
+    </NodalConditionItem>-->
+	
+	
+	<NodalConditionItem n                        = "HEAT_FLUX"
+	                    pn                       = "Internal heat source"
+						ProcessName              = "AssignScalarVariableProcess"
+						VariableName             = "HEAT_FLUX"
+						Interval                 = "Total"
+						unit_magnitude           = "Power/L^3"
+						units                    = "W/m^3"
+						App                      = "ConvectionDiffusion"
+                        help                     = "Applies an internal thermal load">
+        <TopologyFeatures>
+        </TopologyFeatures>
+        <DefaultValues>
+            <value n="constrained" v="0" state="hidden" />
+        </DefaultValues>
+    </NodalConditionItem>
+	
+</NodalConditionList>

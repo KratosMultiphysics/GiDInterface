@@ -15,8 +15,6 @@ proc ::CDEM::examples::ContinuumDrop2D {args} {
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
 
-    MeshGenerationOKDo 1.0
-
 }
 
 proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
@@ -53,36 +51,36 @@ proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
 proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
-    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEMCont-DefaultMaterial' \]"]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7  ]
+    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts LowPart]
     $DEMPartsNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts MidPart]
     $DEMPartsNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts TopPart]
     $DEMPartsNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Sand]
     $DEMPartsNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # DEM FEM Walls

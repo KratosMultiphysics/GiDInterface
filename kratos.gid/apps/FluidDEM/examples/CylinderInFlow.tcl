@@ -157,7 +157,7 @@ proc FluidDEM::examples::TreeAssignationCylinderInFlow3D {args} {
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
+    set props [list ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
@@ -197,7 +197,7 @@ proc FluidDEM::examples::TreeAssignationCylinderInFlow3D {args} {
 proc ::FluidDEM::examples::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     foreach {prop val} $props {
         set propnode [$material_node selectNodes "./value\[@n = '$prop'\]"]

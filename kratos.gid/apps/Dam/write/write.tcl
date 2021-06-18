@@ -326,10 +326,12 @@ proc Dam::write::writeThermalElements {} {
 
     set ThermalGroups [list]
 
-    set mat_dict [write::getMatDict]
-    foreach part_name [dict keys $mat_dict] {
-        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
-            lappend ThermalGroups $part_name
+    foreach node_part [GetDamPartGroupNodes] {
+        set element_id [write::getValueByNode [$node_part selectNodes "./value\[@n='Element'\]"] ]
+        set element [Model::getElement $element_id]
+        set element_type [$element getAttribute "ElementType"]
+        if {$element_type eq "Solid"} {
+            lappend ThermalGroups [$node_part @n]
         }
     }
 
@@ -355,10 +357,7 @@ proc Dam::write::writeThermalElements {} {
         set old_name_SubModelPart "Thermal_[lindex $ThermalGroups $i]"
         set new_name_SubModelPart [string map {" " "_"} $old_name_SubModelPart]
         dict set ThermalSubModelPartDict [lindex $ThermalGroups $i] SubModelPartName $new_name_SubModelPart
-
     }
-
-
 }
 
 proc Dam::write::writeThermalConnectivities {Group ElemType ElemName ConnectivityType ElementId ElementList} {
@@ -392,8 +391,7 @@ proc Dam::write::Quadrilateral2D4Connectivities { ElemId } {
 
     set ElementInfo [GiD_Mesh get element $ElemId]
     #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
-    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5]\
-        [lindex $ElementInfo 6]"
+    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5] [lindex $ElementInfo 6]"
 }
 
 proc Dam::write::Hexahedron3D8Connectivities { ElemId } {
@@ -451,6 +449,11 @@ proc Dam::write::getSubModelPartThermalNames { } {
     }
 
     return $submodelThermalPartsNames
+}
+
+proc Dam::write::GetDamPartGroupNodes { } {
+    set nodes [write::getPartsGroupsId node]
+    return $nodes
 }
 
 

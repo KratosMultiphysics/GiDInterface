@@ -29,13 +29,17 @@ proc ::DEM::Init { } {
 
 proc ::DEM::LoadMyFiles { } {
     variable dir
+    
+    uplevel #0 [list source [file join $dir xml material_relations MaterialRelations.tcl]]
 
     uplevel #0 [list source [file join $dir xml XmlController.tcl]]
+    uplevel #0 [list source [file join $dir xml material_relations material_relations_window.tcl]]
     uplevel #0 [list source [file join $dir write write.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
     uplevel #0 [list source [file join $dir write writeMDPA_Clusters.tcl]]
+    uplevel #0 [list source [file join $dir write writeMaterials.tcl]]
     uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
     uplevel #0 [list source [file join $dir write write_utils.tcl]]
     uplevel #0 [list source [file join $dir examples examples.tcl]]
@@ -48,18 +52,11 @@ proc ::DEM::GetAttribute {name} {
     return $value
 }
 
+
 proc ::DEM::CustomToolbarItems { } {
     variable dir
-    if {$::Model::SpatialDimension eq "3D"} {
-        Kratos::ToolbarAddItem "Example3D" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example3D\nSpheres drop"]
-    }
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example2D" [file join $dir images drop.png] [list -np- ::DEM::examples::CirclesDrop] [= "Example2D\nCircles drop"]
-    }
-}
-
-proc ::DEM::CustomMenus { } {
-    DEM::examples::UpdateMenus
+    
+    Kratos::ToolbarAddItem "MaterialRelations" "material-relation.png" [list -np- DEM::xml::ShowMaterialRelationWindow] [= "Material relations"]
 }
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {

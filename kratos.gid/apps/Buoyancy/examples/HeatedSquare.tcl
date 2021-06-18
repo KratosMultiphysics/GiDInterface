@@ -23,7 +23,7 @@ proc Buoyancy::examples::DrawSquareGeometry3D {args} {
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
-    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape 
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape 
 }
 proc Buoyancy::examples::DrawSquareGeometry2D {args} {
     Kratos::ResetModel
@@ -133,7 +133,7 @@ proc Buoyancy::examples::TreeAssignation2D {args} {
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.2039 DYNAMIC_VISCOSITY 0.000587 CONDUCTIVITY 0.83052 SPECIFIC_HEAT 1004.84]
+    set props [list Element QSVMS$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.2039 DYNAMIC_VISCOSITY 0.000587 CONDUCTIVITY 0.83052 SPECIFIC_HEAT 1004.84]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]

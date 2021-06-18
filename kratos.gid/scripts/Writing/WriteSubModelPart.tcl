@@ -8,12 +8,9 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
     set mid ""
     set what [split $what "&"]
     set group [GetWriteGroupName $group]
-    if {![dict exists $submodelparts [list $cid ${group}]]} {
+    if {[write::getSubModelPartId $cid $group] eq 0} {
         # Add the submodelpart to the catalog
-        set good_name [write::transformGroupName $group]
-        set mid "${cid}_${good_name}"
-        dict set submodelparts [list $cid ${group}] $mid
-
+        set mid [write::AddSubmodelpart $cid $group]
         # Prepare the print formats
         incr ::write::current_mdpa_indent_level
         set s1 [mdpaIndent]
@@ -162,4 +159,31 @@ proc write::GetSubModelPartFromCondition { base_UN condition_id } {
         lappend submodelpart_list $submodelpart_id
     }
     return $submodelpart_list
+}
+
+proc write::GetSubModelPartName {condid group} {
+    set group_name [write::GetWriteGroupName $group]
+    set good_name [write::transformGroupName $group_name]
+    return "${condid}_${good_name}"
+}
+
+proc write::AddSubmodelpart {condid group} {
+    variable submodelparts
+    set mid [write::GetSubModelPartName $condid $group]
+    set group_name [write::GetWriteGroupName $group]
+    set good_name [write::transformGroupName $group_name]
+    if {[write::getSubModelPartId $condid $group_name] eq 0} {
+        dict set submodelparts [list $condid ${group_name}] $mid
+    }
+    return $mid
+}
+
+proc write::getSubModelPartId {cid group} {
+    variable submodelparts
+    set find [list $cid ${group}]
+    if {[dict exists $submodelparts $find]} {
+        return [dict get $submodelparts [list $cid ${group}]]
+    } {
+        return 0
+    }
 }

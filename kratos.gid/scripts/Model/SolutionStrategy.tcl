@@ -124,9 +124,10 @@ oo::class create SolStrat {
     }
     method cumple {args} {
         set c [next {*}$args]
-
+        # W "[my getName] $c"
         if {$c && ![write::isBooleanFalse [my getAttribute "NeedElements"]]} {
             set c 0
+            # W "[my getName] $c"
             foreach sc [my getSchemes] {
                 if [llength [Model::GetAvailableElements [my getName] [$sc getName]]] {
                     set c 1; break
@@ -361,7 +362,6 @@ proc Model::GetSchemesParams {args} {
 
 proc Model::GetAvailableElements {solutionStrategyId schemeId} {
     variable Elements
-    variable SolutionStrategies
     #W "GetAvailableElements ss $solutionStrategyId sch $schemeId"
     set cumplen [list ]
     set solst [Model::GetSolutionStrategy $solutionStrategyId]
@@ -387,7 +387,6 @@ proc Model::GetAvailableElements {solutionStrategyId schemeId} {
 
 proc Model::GetAvailableConditions {solutionStrategyId schemeId} {
     variable Conditions
-    variable SolutionStrategies
 
     set cumplen [list ]
     #W $solutionStrategyId

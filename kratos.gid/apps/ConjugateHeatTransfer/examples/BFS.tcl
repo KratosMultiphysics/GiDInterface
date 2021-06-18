@@ -22,7 +22,7 @@ proc ConjugateHeatTransfer::examples::DrawBFSGeometry3D {args} {
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
-    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
 
 proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
@@ -165,7 +165,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     # Fluid parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.001875 CONDUCTIVITY 1.0 SPECIFIC_HEAT 0.002640845]
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.0 DYNAMIC_VISCOSITY 0.001875 CONDUCTIVITY 1.0 SPECIFIC_HEAT 0.002640845]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     # Fluid boundary conditions

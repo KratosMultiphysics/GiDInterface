@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-  <container n="DEM" pn="DEM" icon="units" prefix="DEM" tree_state="open" open_window="0">
+  <container n="CDEM" pn="CDEM" icon="units" prefix="DEM" tree_state="open" open_window="0">
     <include n="StageInfo"        active="1" path="apps/DEM/xml/StageInfo.spd"/>
-    <include n="PartsCont"        active="1" path="apps/CDEM/xml/PartsCont.spd"   un="DEMParts"/>
+    <include n="PartsCont"        active="1" path="apps/DEM/xml/Parts.spd" />
     <include n="Conditions"       active="1" path="apps/DEM/xml/Conditions.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/CDEM/xml/SolutionStrategy.spd"/>
-    <include n="Results"          active="1" path="apps/DEM/xml/Results.spd"      un="DEMResults" />
-    <include n="materials"        active="1" path="apps/CDEM/xml/Materials.spd"/>
+    <include n="Results"          active="1" path="apps/DEM/xml/Results.spd" />
+    <include n="materials"        active="1" path="apps/DEM/xml/Materials.spd"/>
+    <include n="MaterialRelations"        active="1" path="apps/DEM/xml/material_relations/MaterialRelations.spd"/>
     <include n="Intervals"        active="1" path="apps/Common/xml/Intervals.spd"/>
   </container>
 
