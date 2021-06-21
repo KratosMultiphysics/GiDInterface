@@ -16,7 +16,10 @@ jobs:
   # This workflow contains a single job called "build"
   test:
     # The type of runner that the job will run on
-    runs-on: fjgarate/kratos-tester
+    runs-on: ubuntu-latest
+
+    container:
+      image: fjgarate/kratos-tester:latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
