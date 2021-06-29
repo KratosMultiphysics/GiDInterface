@@ -205,12 +205,12 @@ proc FluidDEM::write::GetNonNewtonianFluidDict { } {
     set power_law_k                 [write::getValue DEMFluidNonNewtonian power_law_k]
     set power_law_n                 [write::getValue DEMFluidNonNewtonian power_law_n]
 
-    dict set pnon_newtonian_fluid_dict "non_newtonian_option"         $non_newtonian_option
-    dict set pnon_newtonian_fluid_dict "power_law_k"                  $power_law_k
-    dict set pnon_newtonian_fluid_dict "power_law_n"                  $power_law_n
-    dict set pnon_newtonian_fluid_dict "yield_stress"                 $yield_stress
-    dict set pnon_newtonian_fluid_dict "regularization_coefficient"   $regularization_coefficient
-    dict set pnon_newtonian_fluid_dict "power_law_tol"                $power_law_tol
+    dict set non_newtonian_fluid_dict "non_newtonian_option"         $non_newtonian_option
+    dict set non_newtonian_fluid_dict "power_law_k"                  $power_law_k
+    dict set non_newtonian_fluid_dict "power_law_n"                  $power_law_n
+    dict set non_newtonian_fluid_dict "yield_stress"                 $yield_stress
+    dict set non_newtonian_fluid_dict "regularization_coefficient"   $regularization_coefficient
+    dict set non_newtonian_fluid_dict "power_law_tol"                $power_law_tol
 
     return $non_newtonian_fluid_dict
 }
