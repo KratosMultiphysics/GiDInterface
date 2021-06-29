@@ -49,23 +49,21 @@ proc DEM::write::getDEMMaterialsDict { } {
     
     # Submodelpart - material assignation
     set assignation_table_list [list ]
-    set gnodes [[customlib::GetBaseRoot] selectNodes "//condition/group"]
-    foreach gnode $gnodes {
-        set mat_child [$gnode selectNodes "value\[@n='Material'\]"]
+    foreach mnode $materials_node_list {
+        set gnode [$mnode parent]
         set active_group_node [$gnode selectNodes "value\[@n='SetActive'\]"]
         if {$active_group_node ne ""} {
             if {[write::isBooleanFalse [write::getValueByNode $active_group_node]]} {
                 continue
             }
         }
-        if {$mat_child ne ""} {
-            set mat_name [write::getValueByNode $mat_child]
-            set group_name [write::GetWriteGroupName [$gnode @n]]
-            set cond_name [[$gnode parent] @n]
-            set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
-            set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $group_name]
-            lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
-        }
+        set mat_name [write::getValueByNode $mnode]
+        set group_name [write::GetWriteGroupName [$gnode @n]]
+        set cond_name [[$gnode parent] @n]
+        set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
+        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $group_name]
+        lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
+        
     }
     
     
