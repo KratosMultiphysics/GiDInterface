@@ -403,9 +403,11 @@ proc spdAux::ProcPartParamState { domNode args } {
     set resp [::Model::CheckElemParamState $domNode]
     if {$resp eq "0"} {
         set id [$domNode getAttribute n]
-        set constLaw [get_domnode_attribute [[$domNode parent] selectNodes "./value\[@n='ConstitutiveLaw'\]"] v]
-        if {$constLaw eq ""} {return hidden}
-        set resp [Model::CheckConstLawParamState $constLaw $id]
+        set const_law ""
+        set const_law_node [[$domNode parent] selectNodes "./value\[@n='ConstitutiveLaw'\]"]
+        if {$const_law_node ne ""} {set const_law [get_domnode_attribute $const_law_node v]}
+        if {$const_law eq ""} {return hidden}
+        set resp [Model::CheckConstLawParamState $const_law $id]
     }
     
     #W "Calculando estado de [$domNode @pn] : $resp"
