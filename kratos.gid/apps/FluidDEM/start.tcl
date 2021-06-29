@@ -63,4 +63,8 @@ proc ::FluidDEM::AfterSaveModel {filespd} {
     ::DEM::AfterSaveModel $filespd
 }
 
+proc ::FluidDEM::CustomToolbarItems { } {
+    ::DEM::CustomToolbarItems
+}
+
 ::FluidDEM::Init
