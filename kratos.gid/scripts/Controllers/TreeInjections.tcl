@@ -266,9 +266,8 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
     }
 }
 
-proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
+proc spdAux::GetParameterValueString { param forcedParams base} {
     set node ""
-
     set inName [$param getName]
     set pn [$param getPublicName]
     set type [$param getType]
@@ -510,7 +509,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
 
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    set processeds [list ]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
     spdAux::injectLocalAxesButton $basenode
     foreach obj [concat [Model::GetElements] [Model::GetConstitutiveLaws]] {
         set inputs [$obj getInputs]
@@ -533,7 +532,7 @@ proc spdAux::injectPartInputs { basenode {inputs ""} } {
 }
 proc spdAux::injectConstitutiveLawsInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    set processeds [list ]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
     spdAux::injectLocalAxesButton $basenode
     foreach obj [Model::GetConstitutiveLaws] {
         set inputs [$obj getInputs]
@@ -556,7 +555,7 @@ proc spdAux::injectConstitutiveLawsInputs { basenode {inputs ""} } {
 }
 proc spdAux::injectPartElementInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    set processeds [list ]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
     spdAux::injectLocalAxesButton $basenode
     foreach obj [Model::GetElements] {
         set inputs [$obj getInputs]
@@ -565,7 +564,7 @@ proc spdAux::injectPartElementInputs { basenode {inputs ""} } {
                 lappend processeds $inName
                 set forcedParams [list state {[PartParamState]} ]
                 if {[$in getActualize]} { lappend forcedParams base $obj }
-                set node [GetParameterValueString $in $forcedParams $obj]
+                set node [spdAux::GetParameterValueString $in $forcedParams $obj]
 
                 $base appendXML $node
                 set orig [$base lastChild]
@@ -596,6 +595,14 @@ proc spdAux::injectMaterials { basenode args } {
         $base appendXML $matnode
     }
     $basenode delete
+}
+
+proc spdAux::getFromXQueryValue {obj} {
+    set ret [list ]
+    foreach pair $obj {
+        lappend ret [lindex $pair end]
+    }
+    return $ret
 }
 
 proc spdAux::injectLocalAxesButton { basenode } {
