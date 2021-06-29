@@ -4,7 +4,7 @@ proc DEM::xml::ShowMaterialRelationWindow { } {
     
 
     set materials [list ]
-    foreach mat_node [DEM::write::GetMaterialsNodeList] {
+    foreach mat_node [DEM::write::GetDEMUsedMaterialsNodeList] {
         set mat_name [write::getValueByNode $mat_node]
         if {$mat_name ni $materials} {
             lappend materials $mat_name

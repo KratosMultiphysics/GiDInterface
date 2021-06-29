@@ -6,7 +6,7 @@ proc DEM::write::getDEMMaterialsDict { } {
     # Loop over parts, inlets and walls to list the materials to print. For each material used print: DENSITY, YOUNG_MODULUS, POISSON_RATIO
     # print COMPUTE_WEAR as false always, too (temporal fix)
     # While looping, create the assignation_table_list
-    set materials_node_list [DEM::write::GetMaterialsNodeList]
+    set materials_node_list [DEM::write::GetDEMUsedMaterialsNodeList]
     set materials_list [list ]
     set processed_mats [dict create ]
 
@@ -84,13 +84,12 @@ proc DEM::write::GetModelPartParentNameFromGroup {group} {
 }
 
 
-proc DEM::write::GetMaterialsNodeList { } {
+proc DEM::write::GetDEMUsedMaterialsNodeList { } {
     # Dem needs more material information than default
     set materials [list ]
 
-    set root [customlib::GetBaseRoot]
-
-    foreach mat [$root selectNodes "//group/value\[@n='Material'\]"] {
+    set root [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute DEMROOT]]
+    foreach mat [$root selectNodes "descendant::group/value\[@n='Material'\]"] {
         lappend materials $mat
     }
     return $materials
