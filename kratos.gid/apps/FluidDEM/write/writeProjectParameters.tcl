@@ -68,7 +68,7 @@ proc FluidDEM::write::GetHydrodynamicPropertiesList { } {
     #set mat_dict [dict merge [write::getMatDict] $DEM::write::inletProperties]
     foreach property [dict keys $mat_dict] {
         if { [dict get $mat_dict $property APPID] eq "DEM"} {
-            if {"hydrodynamic_law" in [dict keys $mat_dict $property ]} {
+            if {"hydrodynamic_law" in [dict keys [dict get $mat_dict $property] ]} {
                 set properties_dict [dict create]
                 set law [dict get $hydrodynamic_laws_dict [dict get $mat_dict $property hydrodynamic_law]]
                 #WV law
