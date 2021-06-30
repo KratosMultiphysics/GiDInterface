@@ -35,16 +35,18 @@ proc DEM::write::getDEMMaterialsDict { } {
         set mat_rel [dict create ]
         set mat_a [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_A'\]"]]
         set mat_b [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_B'\]"]]
-        dict set mat_rel material_names_list [list $mat_a $mat_b]
-        dict set mat_rel material_ids_list [list [dict get $processed_mats $mat_a] [dict get $processed_mats $mat_b]]
-        foreach param [$mat_rel_node selectNodes "./value"] {
-            set param_name [$param @n]
-            if {$param_name eq "ConstitutiveLaw"} {set param_name "DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME"}
-            if {$param_name ni [list MATERIAL_A MATERIAL_B]} {
-                dict set mat_rel Variables $param_name [write::getValueByNode $param]
+        if {[dict exists $processed_mats $mat_a] && [dict exists $processed_mats $mat_b]} {
+            dict set mat_rel material_names_list [list $mat_a $mat_b]
+            dict set mat_rel material_ids_list [list [dict get $processed_mats $mat_a] [dict get $processed_mats $mat_b]]
+            foreach param [$mat_rel_node selectNodes "./value"] {
+                set param_name [$param @n]
+                if {$param_name eq "ConstitutiveLaw"} {set param_name "DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME"}
+                if {$param_name ni [list MATERIAL_A MATERIAL_B]} {
+                    dict set mat_rel Variables $param_name [write::getValueByNode $param]
+                }
             }
+            lappend material_relations_list $mat_rel
         }
-        lappend material_relations_list $mat_rel
     }
     
     # Submodelpart - material assignation
@@ -71,6 +73,8 @@ proc DEM::write::getDEMMaterialsDict { } {
     dict set global_dict "material_relations" $material_relations_list
     dict set global_dict "material_assignation_table" $assignation_table_list
     
+    ValidateMaterialRelations $materials_list $material_relations_list $assignation_table_list
+
     return $global_dict
 }
 
@@ -104,4 +108,16 @@ proc DEM::write::GetMaterialRelationsNodeList { } {
         lappend material_relations $mat_rel_node
     }
     return $material_relations
+}
+
+proc DEM::write::ValidateMaterialRelations {materials relations assignations} {
+    set material_relations [DEM::xml::GetMaterialRelationsTable]
+
+    foreach relation_ref [dict keys $material_relations] {
+        foreach relation_check [dict keys [dict get $material_relations $relation_ref]] {
+            if {![dict get $material_relations $relation_ref $relation_check]} {
+                W "Missing relation between $relation_ref and $relation_check"
+            }
+        }
+    }
 }
