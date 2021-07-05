@@ -10,7 +10,7 @@ import os
 
 # Import kratos core and applications
 import KratosMultiphysics
-import KratosMultiphysics.ExternalSolversApplication as KratosSolvers
+import KratosMultiphysics.LinearSolversApplication as KratosSolvers
 #import KratosMultiphysics.TrilinosApplication as TrilinosApplication
 import KratosMultiphysics.SolidMechanicsApplication as KratosSolid
 import KratosMultiphysics.DamApplication as KratosDam

@@ -10,9 +10,9 @@ from KratosMultiphysics import Model, Parameters
 import KratosMultiphysics.FluidDynamicsApplication
 import KratosMultiphysics.DEMApplication
 import KratosMultiphysics.SwimmingDEMApplication as SDEM
-import KratosMultiphysics.SolidMechanicsApplication
+# import KratosMultiphysics.SolidMechanicsApplication
 import KratosMultiphysics.PfemFluidDynamicsApplication
-import KratosMultiphysics.ExternalSolversApplication
+import KratosMultiphysics.LinearSolversApplication
 
 from KratosMultiphysics.SwimmingDEMApplication.swimming_DEM_PFEM_analysis import SDEMPFEMAnalysis
 

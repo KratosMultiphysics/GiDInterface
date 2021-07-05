@@ -1,5 +1,5 @@
 import KratosMultiphysics
-import KratosMultiphysics.ExternalSolversApplication
+import KratosMultiphysics.LinearSolversApplication
 import KratosMultiphysics.SolidMechanicsApplication
 import KratosMultiphysics.ConstitutiveModelsApplication
 import KratosMultiphysics.SolidMechanicsApplication.MainSolid as MainSolid
