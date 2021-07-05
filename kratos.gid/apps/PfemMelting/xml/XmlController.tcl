@@ -30,14 +30,15 @@ proc PfemMelting::xml::CustomTree { args } {
     #gid_groups_conds::addF [spdAux::getRoute BondElem] value [list n TypeOfFailure pn "Type of failure" v No values {Yes,No} icon "black1" help "Displays different numbers for different types of failure. 2: tension. 4: shear or combination of stresses. 6: neighbour not found by search. 8: less bonds than minimum"]
     #spdAux::SetValueOnTreeItem state {[getStateFromXPathValue {string(../value[@n='ContactMeshOption']/@v)} Yes]} BondElem TypeOfFailure
 
-    
-
     # Remove / hide Fluid conditions
     spdAux::SetValueOnTreeItem state hidden FLBC AutomaticInlet3D
     spdAux::SetValueOnTreeItem state hidden FLBC Outlet3D
     spdAux::SetValueOnTreeItem state hidden FLBC Slip3D
     spdAux::SetValueOnTreeItem state hidden FLBC VelocityConstraints3D
     spdAux::SetValueOnTreeItem pn "Fixed velocity boundary" FLBC NoSlip3D
+    spdAux::SetValueOnTreeItem state hidden CNVDFFBodyForce 
+    spdAux::SetValueOnTreeItem pn "Environment settings" PFEMMELTING__Boussinesq  
+    
 
     # Delete this lines when heat conditions are back!
     # spdAux::SetValueOnTreeItem state hidden CNVDFFBC HeatFlux3D

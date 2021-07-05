@@ -18,7 +18,7 @@
         <include n="Materials" active="0" path="apps/ConvectionDiffusion/xml/Materials.spd"/>
     </container>
 
-    <container n="Buoyancy" pn="Coupling" icon="app" prefix="Buoyancy_" tree_state="open" open_window="0">
+    <container n="Buoyancy" pn="General" icon="app" prefix="Buoyancy_" tree_state="open" open_window="0">
         <include n="SolutionStrategy" active="1" path="apps/Buoyancy/xml/SolutionStrategy.spd"/>
         <include n="Boussinesq" active="1" path="apps/Buoyancy/xml/Boussinesq.spd"/>
         <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
