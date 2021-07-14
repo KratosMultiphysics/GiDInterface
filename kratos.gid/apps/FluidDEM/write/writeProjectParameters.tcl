@@ -62,6 +62,7 @@ proc ::FluidDEM::write::getParametersDict { } {
 
 proc FluidDEM::write::GetHydrodynamicPropertiesList { } {
     set properties_list [list ]
+    set used_hydrodynamic_properties [list ]
 
     set hydrodynamic_laws_dict [GetHydrodynamicLawsDict]
     set mat_dict [write::getMatDict]
@@ -69,23 +70,27 @@ proc FluidDEM::write::GetHydrodynamicPropertiesList { } {
     foreach property [dict keys $mat_dict] {
         if { [dict get $mat_dict $property APPID] eq "DEM"} {
             if {"hydrodynamic_law" in [dict keys [dict get $mat_dict $property] ]} {
-                set properties_dict [dict create]
                 set law [dict get $hydrodynamic_laws_dict [dict get $mat_dict $property hydrodynamic_law]]
                 #WV law
-                set partgroup [write::getPartsSubModelPartId]
-                dict set properties_dict properties_id [dict get $mat_dict $property MID]
-                dict set properties_dict hydrodynamic_law_parameters                                         "name"                         [dict get $law hydrodynamic_law_name]
-                dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         [dict get $law buoyancy_parameters]
-                dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "name"                         [dict get $law inviscid_force_parameters]
-                dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   [dict get $law do_apply_faxen_corrections]
-                dict set properties_dict hydrodynamic_law_parameters drag_parameters                         "name"                         [dict get $law drag_parameters]
-                dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "name"                         [dict get $law history_force_parameters]
-                dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "quadrature_order"             [dict get $law quadrature_order]
-                dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "do_use_mae"                   [dict get $law do_use_mae]
-                dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "m"                            [dict get $law m]
-                dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "window_time_interval"         [dict get $law window_time_interval]
-                dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "type"                         [dict get $law type]
-                lappend properties_list $properties_dict
+                set law_name [dict get $law hydrodynamic_law_name]
+                if {$law_name ni $used_hydrodynamic_properties} {
+                    lappend used_hydrodynamic_properties $law_name
+                    set properties_dict [dict create]
+                    set partgroup [write::getPartsSubModelPartId]
+                    dict set properties_dict properties_id [dict get $mat_dict $property MID]
+                    dict set properties_dict hydrodynamic_law_parameters                                         "name"                         [dict get $law hydrodynamic_law_name]
+                    dict set properties_dict hydrodynamic_law_parameters buoyancy_parameters                     "name"                         [dict get $law buoyancy_parameters]
+                    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "name"                         [dict get $law inviscid_force_parameters]
+                    dict set properties_dict hydrodynamic_law_parameters inviscid_force_parameters               "do_apply_faxen_corrections"   [dict get $law do_apply_faxen_corrections]
+                    dict set properties_dict hydrodynamic_law_parameters drag_parameters                         "name"                         [dict get $law drag_parameters]
+                    dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "name"                         [dict get $law history_force_parameters]
+                    dict set properties_dict hydrodynamic_law_parameters history_force_parameters                "quadrature_order"             [dict get $law quadrature_order]
+                    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "do_use_mae"                   [dict get $law do_use_mae]
+                    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "m"                            [dict get $law m]
+                    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "window_time_interval"         [dict get $law window_time_interval]
+                    dict set properties_dict hydrodynamic_law_parameters history_force_parameters mae_parameters "type"                         [dict get $law type]
+                    lappend properties_list $properties_dict
+                }
             }
         }
     }
