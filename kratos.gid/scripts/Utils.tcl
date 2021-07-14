@@ -152,7 +152,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
@@ -179,11 +179,13 @@ proc Kratos::LoadEnvironment { } {
         set fp [open [Kratos::GetPreferencesFilePath] r]
         # Read the preferences
         set data [read $fp]
+        # W $data
         # Close the file
         close $fp
     }
     # Preferences are written in json format
     foreach {k v} [write::json2dict $data] {
+        # W "$k $v"
         # Foreach pair key value, restore it
         set kratos_private($k) $v
     }
@@ -273,4 +275,10 @@ proc Kratos::GetMeshBasicData { } {
 
 proc ? {question true_val false_val} {
     return [expr $question ? $true_val : $false_val]
+}
+
+
+proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {      
+    set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
+    return variable
 }
