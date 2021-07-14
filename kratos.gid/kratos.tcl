@@ -143,6 +143,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(echo_level) 0
     # indent in mdpa files  | 0 ASCII unindented | 1 ASCII indented pretty
     set kratos_private(mdpa_format) 1
+    # kratos debug env for VSCode debug
+    set kratos_private(debug_folder) ""
     # Version of the kratos executable
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
@@ -309,6 +311,7 @@ proc Kratos::RestoreVariables { } {
     # Restore GiD variables that kratos modified (maybe the mesher...)
     if {[info exists kratos_private(RestoreVars)]} {
         foreach {k v} $kratos_private(RestoreVars) {
+            # W "$k $v"
             set $k $v
         }
     }
