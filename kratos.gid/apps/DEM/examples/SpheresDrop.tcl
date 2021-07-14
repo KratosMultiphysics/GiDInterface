@@ -35,9 +35,9 @@ proc ::DEM::examples::DrawGeometrySpheresDrop { } {
 
     # Group assignation
     GiD_EntitiesGroups assign "Floor" surfaces 1
-    GiD_EntitiesGroups assign "Inlet" -also_lower_entities surfaces 2
-    GiD_EntitiesGroups assign "ClusterInlet" -also_lower_entities surfaces 3
-    GiD_EntitiesGroups assign "Body" -also_lower_entities volumes 1
+    GiD_EntitiesGroups assign "Inlet" surfaces 2
+    GiD_EntitiesGroups assign "ClusterInlet" surfaces 3
+    GiD_EntitiesGroups assign "Body" volumes 1
 }
 
 proc ::DEM::examples::AssignToTreeSpheresDrop { } {
