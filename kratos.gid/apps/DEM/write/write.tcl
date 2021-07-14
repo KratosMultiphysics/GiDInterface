@@ -94,7 +94,10 @@ proc DEM::write::writeCustomFilesEvent { } {
     write::RenameFileInModel $orig_name "MainKratos.py"
     write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
 
-    
+    DEM::write::writeMaterialsFile 
+}
+
+proc DEM::write::writeMaterialsFile {} {
     # Materials
     set materials [DEM::write::getDEMMaterialsDict]
     write::OpenFile [GetAttribute materials_file]

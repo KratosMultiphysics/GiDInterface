@@ -6,7 +6,7 @@ proc DEM::write::getDEMMaterialsDict { } {
     # Loop over parts, inlets and walls to list the materials to print. For each material used print: DENSITY, YOUNG_MODULUS, POISSON_RATIO
     # print COMPUTE_WEAR as false always, too (temporal fix)
     # While looping, create the assignation_table_list
-    set materials_node_list [DEM::write::GetMaterialsNodeList]
+    set materials_node_list [DEM::write::GetDEMUsedMaterialsNodeList]
     set materials_list [list ]
     set processed_mats [dict create ]
 
@@ -35,37 +35,37 @@ proc DEM::write::getDEMMaterialsDict { } {
         set mat_rel [dict create ]
         set mat_a [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_A'\]"]]
         set mat_b [write::getValueByNode [$mat_rel_node selectNodes "./value\[@n = 'MATERIAL_B'\]"]]
-        dict set mat_rel material_names_list [list $mat_a $mat_b]
-        dict set mat_rel material_ids_list [list [dict get $processed_mats $mat_a] [dict get $processed_mats $mat_b]]
-        foreach param [$mat_rel_node selectNodes "./value"] {
-            set param_name [$param @n]
-            if {$param_name eq "ConstitutiveLaw"} {set param_name "DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME"}
-            if {$param_name ni [list MATERIAL_A MATERIAL_B]} {
-                dict set mat_rel Variables $param_name [write::getValueByNode $param]
+        if {[dict exists $processed_mats $mat_a] && [dict exists $processed_mats $mat_b]} {
+            dict set mat_rel material_names_list [list $mat_a $mat_b]
+            dict set mat_rel material_ids_list [list [dict get $processed_mats $mat_a] [dict get $processed_mats $mat_b]]
+            foreach param [$mat_rel_node selectNodes "./value"] {
+                set param_name [$param @n]
+                if {$param_name eq "ConstitutiveLaw"} {set param_name "DEM_DISCONTINUUM_CONSTITUTIVE_LAW_NAME"}
+                if {$param_name ni [list MATERIAL_A MATERIAL_B]} {
+                    dict set mat_rel Variables $param_name [write::getValueByNode $param]
+                }
             }
+            lappend material_relations_list $mat_rel
         }
-        lappend material_relations_list $mat_rel
     }
     
     # Submodelpart - material assignation
     set assignation_table_list [list ]
-    set gnodes [[customlib::GetBaseRoot] selectNodes "//condition/group"]
-    foreach gnode $gnodes {
-        set mat_child [$gnode selectNodes "value\[@n='Material'\]"]
+    foreach mnode $materials_node_list {
+        set gnode [$mnode parent]
         set active_group_node [$gnode selectNodes "value\[@n='SetActive'\]"]
         if {$active_group_node ne ""} {
             if {[write::isBooleanFalse [write::getValueByNode $active_group_node]]} {
                 continue
             }
         }
-        if {$mat_child ne ""} {
-            set mat_name [write::getValueByNode $mat_child]
-            set group_name [write::GetWriteGroupName [$gnode @n]]
-            set cond_name [[$gnode parent] @n]
-            set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
-            set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $group_name]
-            lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
-        }
+        set mat_name [write::getValueByNode $mnode]
+        set group_name [write::GetWriteGroupName [$gnode @n]]
+        set cond_name [[$gnode parent] @n]
+        set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
+        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $group_name]
+        lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
+        
     }
     
     
@@ -73,6 +73,8 @@ proc DEM::write::getDEMMaterialsDict { } {
     dict set global_dict "material_relations" $material_relations_list
     dict set global_dict "material_assignation_table" $assignation_table_list
     
+    ValidateMaterialRelations $materials_list $material_relations_list $assignation_table_list
+
     return $global_dict
 }
 
@@ -84,13 +86,12 @@ proc DEM::write::GetModelPartParentNameFromGroup {group} {
 }
 
 
-proc DEM::write::GetMaterialsNodeList { } {
+proc DEM::write::GetDEMUsedMaterialsNodeList { } {
     # Dem needs more material information than default
     set materials [list ]
 
-    set root [customlib::GetBaseRoot]
-
-    foreach mat [$root selectNodes "//group/value\[@n='Material'\]"] {
+    set root [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute DEMROOT]]
+    foreach mat [$root selectNodes "descendant::group/value\[@n='Material'\]"] {
         lappend materials $mat
     }
     return $materials
@@ -107,4 +108,16 @@ proc DEM::write::GetMaterialRelationsNodeList { } {
         lappend material_relations $mat_rel_node
     }
     return $material_relations
+}
+
+proc DEM::write::ValidateMaterialRelations {materials relations assignations} {
+    set material_relations [DEM::xml::GetMaterialRelationsTable]
+
+    foreach relation_ref [dict keys $material_relations] {
+        foreach relation_check [dict keys [dict get $material_relations $relation_ref]] {
+            if {![dict get $material_relations $relation_ref $relation_check]} {
+                W "Missing relation between $relation_ref and $relation_check"
+            }
+        }
+    }
 }
