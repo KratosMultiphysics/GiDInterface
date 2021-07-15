@@ -277,6 +277,17 @@ proc ? {question true_val false_val} {
     return [expr $question ? $true_val : $false_val]
 }
 
+proc Kratos::OpenCaseIn {program} {
+    switch $program {
+        "VSCode" {
+            if {[GiD_Info Project ModelName] eq "UNNAMED"} {W "Save your model first"} {
+                catch {exec code -n [GidUtils::GetDirectoryModel]} msg
+            }
+        }
+        default {}
+    }
+}
+
 
 proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {      
     set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
