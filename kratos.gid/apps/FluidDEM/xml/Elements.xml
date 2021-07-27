@@ -14,11 +14,11 @@
     <NodalConditions></NodalConditions>
     <inputs>
       <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
-      </inputs>
+    </inputs>
     <outputs></outputs>
   </ElementItem>
 
-  <ElementItem n="QSVMSDEMcoupled3D" pn="QSVMS DEM coupled 3D" WriteName="qsvmsDEM" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to couple with solid particles"  FormulationElementType="qsvms">
+  <ElementItem n="QSVMSDEMcoupled3D" pn="QSVMS DEM coupled 3D" WriteName="qsvmsDEM" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to couple with solid particles" FormulationElementType="qsvms">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -34,12 +34,13 @@
       <NodalCondition n="PRESSURE"/>
     </NodalConditions>
     <inputs>
+      <parameter n="PERMEABILITY" pn="Permeability" v="10e89,10e89,10e89" type="inline_vector" />
     </inputs>
     <outputs>
       <parameter n="VORTICITY" pn="Vorticity" />
     </outputs>
   </ElementItem>
-  <ElementItem n="QSVMSDEMcoupled2D" pn="QSVMS DEM coupled 2D" WriteName="qsvmsDEM2D" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to coupled with solid particles"  FormulationElementType="qsvms">
+  <ElementItem n="QSVMSDEMcoupled2D" pn="QSVMS DEM coupled 2D" WriteName="qsvmsDEM2D" ImplementedInFile="qsvms_dem_coupled.cpp" ImplementedInApplication="SwimmingDEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a fluid element using the QSVMS formulation to coupled with solid particles" FormulationElementType="qsvms">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
