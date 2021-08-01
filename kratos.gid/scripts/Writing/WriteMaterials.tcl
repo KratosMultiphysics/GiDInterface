@@ -133,12 +133,18 @@ proc write::writeMaterials { {appid ""} {const_law_write_name ""}} {
     }
 }
 
-
-proc write::writePropertiesJsonFile {{parts_un ""} {fname "materials.json"} {write_claw_name "True"} {model_part_name ""}} {
+proc write::getPropertiesJson {{parts_un ""} {write_claw_name "True"} {model_part_name ""}} {
     if {$parts_un eq ""} {set parts_un [GetConfigurationAttribute parts_un]}
     set mats_json [getPropertiesList $parts_un $write_claw_name $model_part_name]
+    return $mats_json
+}
+
+proc write::writePropertiesJsonFile {{parts_un ""} {fname "materials.json"} {write_claw_name "True"} {model_part_name ""}} {
+    write::writePropertiesJsonFileDone $fname [write::getPropertiesJson $parts_un $write_claw_name $model_part_name]
+}
+proc write::writePropertiesJsonFileDone {fname json} {
     write::OpenFile $fname
-    write::WriteJSON $mats_json
+    write::WriteJSON $json
     write::CloseFile
 }
 
