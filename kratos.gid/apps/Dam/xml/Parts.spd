@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<condition n="Parts" pn="Parts" ov="[CheckGeometryStructural]" ovm="element" icon="shells16" help="Select your group" un="DamParts">
+<condition n="Parts" pn="Parts" ov="[CheckGeometryStructural]" icon="shells16" help="Select your group" un="DamParts">
 	<value n="Element" pn="Element" actualize_tree="1" v="" values="[GetElementsValues]" dict="[GetElementsDict]">
 		<dependencies node="../value[@n!='Material']" actualize="1"/>
 	</value>
