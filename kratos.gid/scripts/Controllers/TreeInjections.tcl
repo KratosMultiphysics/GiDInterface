@@ -379,7 +379,21 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
                 set cols [$param getAttribute "cols"]
                 set components ""
                 for {set i 0} {$i < [expr max($rows,$cols)]} {incr i} {lappend components $i}; set components [join $components ","]
-                append node "<value n='$inName' pn='$pn' v='$v' function='matrix_func,no_function' dimension_function_rows='$rows' dimension_function_cols='$cols' components_function='$components' help='$help'  state='$state' show_in_window='$show_in_window' />"
+                #append node "<value n='$inName' pn='$pn' v='$v' function='matrix_func,no_function' dimension_function_rows='$rows' dimension_function_cols='$cols' components_function='$components' help='$help'  state='$state' show_in_window='$show_in_window' />"
+                set value [split $v ","]
+                append node "<value n='$inName' pn='$pn' function='matrix_func,no_function' symmetric_function='0' has_diag='1' dimension_function_rows='$rows' dimension_function_cols='$cols' v='f(Matrix value for $pn)...' components_function='$components' help='$help' tree_state='open'>"
+                append node "    <function tree_state='open'>"
+                append node "        <functionVariable n='matrix_func' pn='Matrix value for $pn' tree_state='open'>"
+                for {set i 0} {$i < $rows} {incr i} {
+                    for {set j 0} {$j < $cols} {incr j} {
+                        set vi [lindex $value [expr ($i*$cols)+$j] ]
+                        append node "        <value n='value' pn='V$i,$j' v='$vi'/>"
+                    }
+                }
+                append node "        </functionVariable>"
+                append node "    </function>"
+                append node "</value>"
+
             }
             "combo" {
                 if {[$param getAttribute "combotype"] eq "material"} {
