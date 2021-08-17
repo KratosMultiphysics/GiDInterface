@@ -116,7 +116,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     spdAux::StartAsNewProject
 
     # Check dependencies
-    Kratos::CheckDependencies
+    # Kratos::CheckDependencies
 
     # Open the App selection window. It's delayed to wait if GiD calls the Event_LoadModelSPD (open a case instead of new)
     set activeapp_dom [spdAux::SetActiveAppFromDOM]
