@@ -59,6 +59,7 @@
       <NodalCondition n="PRESSURE"/>
     </NodalConditions>
     <inputs>
+      <parameter n="PERMEABILITY" pn="Permeability" v="1e+89,0.0,0.0,1e+89" type="matrix" rows="2" cols="2" />
     </inputs>
     <outputs>
       <parameter n="VORTICITY" pn="Vorticity" />

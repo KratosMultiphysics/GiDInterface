@@ -5,6 +5,7 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
 
     set new_mats [dict create ]
 
+    # Prepare paths
     set parts [GetConfigurationAttribute parts_un]
     set materials_un [GetConfigurationAttribute materials_un]
     set root [customlib::GetBaseRoot]
@@ -17,20 +18,29 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     }
     set xp2 ".//value\[@n='Material']"
     set material_number [expr {$last_assigned_id == -1 ? [llength [dict keys $mat_dict] ] : $last_assigned_id }]
+    
+    # Foreach group applied to parts
     foreach gNode [$root selectNodes $xp1] {
+        # Get the application. Important in Mixed apps (multiple inheritance).
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
+        # Get the write group name. Used as unique id due to intervals and child tricks.
         set group_name [write::GetWriteGroupName [$gNode @n]]
+        # This group nodes are (always) child of condition (by definition), so get the condition is easy.
         set cond_name [[$gNode parent] @n]
+        # Using the condition and the group name, we can get the submodelpart id. A submodelpart is always the joint of condition + group.
         set submodelpart_id [write::GetSubModelPartName $cond_name $group_name]
         
-        set material_name "material $material_number"
+        #set material_name "material $material_number".
         if { ![dict exists $mat_dict $submodelpart_id] } {
+            # increment the material number. In multi part apps, this material number is passed as variable, in order to keep the numeration.
             incr material_number
             set mid $material_number
 
+            # Init the dictionary with initial data.
             dict set mat_dict $submodelpart_id MID $material_number
             dict set mat_dict $submodelpart_id APPID $nodeApp
 
+            # Get the elements name. Even if it's not used in this section, it's important to call it, so dependencies are applied.
             catch {
                 set element_node [$gNode selectNodes ".//value\[@n = 'Element'\]"]
                 if {$element_node ne ""} {
@@ -39,40 +49,25 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 set element_name [write::getValueByNode $element_node "force"]
             }
 
-            set processed 0
+            # We have 2 ways to get the properties (output type): 
+            # A) Defined by all the values available below parts
+            # B) (By default) Defined also by the material parameters
+
+            # Get the constitutive law output type
+            set output_type Materials
             set claw_node [$gNode selectNodes ".//value\[@n = 'ConstitutiveLaw'\]"]
             if {$claw_node ne ""} {
                 set claw [write::getValueByNode $claw_node "force"]
                 if {$claw ne "None"} {
-                    set processed 1
                     set const_law [Model::getConstitutiveLaw $claw]
                     set output_type [$const_law getOutputMode]
-                    if {$output_type eq "Parameters"} {
-                        set s1 [$gNode selectNodes ".//value"]
-                    } else {
-                        set s1 ""
-                        set matvalueNode [$gNode selectNodes $xp2]
-                        if {$matvalueNode ne ""} {
-                            set real_material_name [write::getValueByNode $matvalueNode "force"]
-                            set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
-                            set matNode [$root selectNodes $xp3]
-                            set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
-                        }
-                    }
-
-                    foreach valueNode $s1 {
-                        write::forceUpdateNode $valueNode
-                        set name [$valueNode getAttribute n]
-                        set state [get_domnode_attribute $valueNode state]
-                        if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
-                            # All the introduced values are translated to 'm' and 'kg' with the help of this function
-                            set value [gid_groups_conds::convert_value_to_default $valueNode]
-                            dict set mat_dict $submodelpart_id $name $value
-                        }
-                    }
                 }
-            } 
-            if {!$processed} {
+            }
+            # Case A -> By parameters below parts
+            if {$output_type eq "Parameters"} {
+                set s1 [$gNode selectNodes ".//value"]
+            } else {
+            # Case B -> Include materials parameters
                 set s1 ""
                 set matvalueNode [$gNode selectNodes $xp2]
                 if {$matvalueNode ne ""} {
@@ -81,15 +76,20 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     set matNode [$root selectNodes $xp3]
                     set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
                 }
-                foreach valueNode $s1 {
-                    write::forceUpdateNode $valueNode
-                    set name [$valueNode getAttribute n]
-                    set state [get_domnode_attribute $valueNode state]
-                    if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
-                        # All the introduced values are translated to 'm' and 'kg' with the help of this function
-                        set value [gid_groups_conds::convert_value_to_default $valueNode]
-                        dict set mat_dict $submodelpart_id $name $value
-                    }
+            }
+
+            # Once we have all the 'value' nodes, lets get it's value and add them to the list
+            foreach valueNode $s1 {
+                # Force update, useful in combo with part dependencies
+                write::forceUpdateNode $valueNode
+                # name and state, useful for filtering
+                set name [$valueNode getAttribute n]
+                set state [get_domnode_attribute $valueNode state]
+                # hidden values and constitutive law are not included in properties
+                if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
+                    # All the introduced values are translated to 'm' and 'kg' with the help of this function
+                    set value [gid_groups_conds::convert_value_to_default $valueNode]
+                    dict set mat_dict $submodelpart_id $name $value
                 }
             }
             dict set new_mats $submodelpart_id [dict get $mat_dict $submodelpart_id]
