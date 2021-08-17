@@ -35,15 +35,15 @@ proc ::DEM::examples::DrawGeometrySpheresDrop { } {
 
     # Group assignation
     GiD_EntitiesGroups assign "Floor" surfaces 1
-    GiD_EntitiesGroups assign "Inlet" -also_lower_entities surfaces 2
-    GiD_EntitiesGroups assign "ClusterInlet" -also_lower_entities surfaces 3
-    GiD_EntitiesGroups assign "Body" -also_lower_entities volumes 1
+    GiD_EntitiesGroups assign "Inlet" surfaces 2
+    GiD_EntitiesGroups assign "ClusterInlet" surfaces 3
+    GiD_EntitiesGroups assign "Body" volumes 1
 }
 
 proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 

@@ -1,5 +1,5 @@
 import KratosMultiphysics
-import KratosMultiphysics.ExternalSolversApplication
+import KratosMultiphysics.LinearSolversApplication
 import KratosMultiphysics.DelaunayMeshingApplication
 import KratosMultiphysics.PfemApplication
 import KratosMultiphysics.ConstitutiveModelsApplication

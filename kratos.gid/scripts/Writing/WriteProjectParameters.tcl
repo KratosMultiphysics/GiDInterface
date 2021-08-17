@@ -1,30 +1,7 @@
-
-# proc write::dict2json {dictVal} {
-#     # XXX: Currently this API isn't symmetrical, as to create proper
-#     # XXX: JSON text requires type knowledge of the input data
-#     set json ""
-#     dict for {key val} $dictVal {
-#         # key must always be a string, val may be a number, string or
-#         # bare word (true|false|null)
-#         if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
-#             set val "\"$val\""
-#         }
-#         if {[isDict $val]} {
-#             set val [dict2json $val]
-#             set val "\[${val}\]"
-#         } else {
-#             set val \"$val\"
-#         }
-#         append json "\"$key\": $val," \n
-#     }
-#     if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
-#     return "\{${json}\}"
-# }
-
-
 package require json::write
+package require json
 
-proc write::json2dict {JSONtext} {
+proc write::json2dict_former {JSONtext} {
     string range [
         string trim [
             string trimleft [
@@ -32,6 +9,9 @@ proc write::json2dict {JSONtext} {
                 ] {\uFEFF}
             ]
         ] 1 end-1
+}
+proc write::json2dict {JSONtext} {
+    return [::json::json2dict $JSONtext]
 }
 
 proc write::tcl2json { value } {
@@ -80,9 +60,54 @@ proc write::tcl2json { value } {
         }
     }
 }
+proc write::tcl2jsonstrings { value } {
+    # Guess the type of the value; deep *UNSUPPORTED* magic!
+    # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
+    regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]}
+    switch $type {
+        string {
+            if {$value eq "null"} {return null}
+            if {$value eq "dictnull"} {return {{}}}
+            return [json::write string $value]
+        }
+        dict {
+            return [json::write object {*}[
+                    dict map {k v} $value {tcl2jsonstrings $v}]]
+        }
+        list {
+            return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]
+        }
+        int - double {
+            return [json::write string $value]
+        }
+        booleanString {
+            return [json::write string $value]
+            #return [expr {$value ? "true" : "false"}]
+        }
+        default {
+            # Some other type; do some guessing...
+            if {$value eq "null"} {
+                # Tcl has *no* null value at all; empty strings are semantically
+                # different and absent variables aren't values. So cheat!
+                return $value
+            } elseif {[string is integer -strict $value]} {
+                return [json::write string $value]
+            } elseif {[string is double -strict $value]} {
+                return [json::write string $value]
+            } elseif {[string is boolean -strict $value]} {
+                return [json::write string $value]
+            }
+            return [json::write string $value]
+        }
+    }
+}
 
 proc write::WriteJSON {processDict} {
     WriteString [write::tcl2json $processDict]
+}
+proc write::WriteJSONAsStringFields {processDict} {
+    WriteString [write::tcl2jsonstrings $processDict]
 }
 
 proc write::GetEmptyList { } {
@@ -506,7 +531,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
-    dict set resultDict folder_name                    "vtk_output"
+    dict set resultDict output_path                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
     dict set resultDict nodal_data_value_variables      [list ]

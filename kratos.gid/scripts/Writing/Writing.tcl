@@ -11,6 +11,7 @@ namespace eval write {
     variable current_configuration
     variable current_mdpa_indent_level
     variable formats_dict
+    variable properties_exclusion_list
 }
 
 proc write::Init { } {
@@ -38,6 +39,8 @@ proc write::Init { } {
     
     variable formats_dict
     set formats_dict [dict create]
+    variable properties_exclusion_list
+    set properties_exclusion_list [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -139,6 +142,9 @@ proc write::writeEvent { filename } {
     if {$time_monitor}  {
         W "Total time: [Kratos::Duration $ttime]"
     }
+
+    #### Debug files for VSCode ####
+    write::writeLaunchJSONFile
     
     Kratos::Log "Write end $appid in [Kratos::Duration $ttime]"
     return $errcode
@@ -240,16 +246,6 @@ proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
     return $obj
 }
 
-proc write::getSubModelPartId {cid group} {
-    variable submodelparts
-
-    set find [list $cid ${group}]
-    if {[dict exists $submodelparts $find]} {
-        return [dict get $submodelparts [list $cid ${group}]]
-    } {
-        return 0
-    }
-}
 
 proc write::transformGroupName {groupid} {
     set new_parts [list ]
@@ -492,6 +488,10 @@ proc write::getValueByNode { node {what noforce} } {
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
 }
+proc write::getValueByNodeChild { parent_node child_name {what noforce} } {
+    set node [$parent_node find n $child_name]
+    return [write::getValueByNode $node $what]
+}
 proc write::getValueByXPath { xpath { it "" }} {
     set root [customlib::GetBaseRoot]
     set node [$root selectNodes $xpath]
@@ -643,6 +643,28 @@ proc write::WriteAssignedValues {condNode} {
     }
     set ret [dict create value $valuesVector]
     return $ret
+}
+
+proc write::writeLaunchJSONFile { } {
+    # Check if developer
+    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+        set debug_folder $Kratos::kratos_private(debug_folder)
+
+        # Prepare JSON as dict
+        set json [dict create version "0.2.0"]
+        set n_omp "1"
+        set python_env [dict create OMP_NUM_THREADS $n_omp PYTHONPATH $debug_folder LD_LIBRARY_PATH [file join $debug_folder libs]]
+        set python_configuration [dict create name "python main" type python request launch program MainKratos.py console integratedTerminal env $python_env cwd [GetConfigurationAttribute dir]]
+        set cpp_configuration [dict create name "C++ Attach" type cppvsdbg request attach processId "\${command:pickProcess}"]
+        dict set json configurations [list $python_configuration $cpp_configuration]
+
+        # Print json
+        CloseFile
+        file mkdir [file join [GetConfigurationAttribute dir] .vscode]
+        OpenFile ".vscode/launch.json"
+        write::WriteJSONAsStringFields $json
+        CloseFile
+    }
 }
 
 

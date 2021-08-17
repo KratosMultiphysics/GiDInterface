@@ -8,3 +8,4 @@ kratos.gid/exec/*
 .vscode/
 
 custom_tools/*
+.DS_Store

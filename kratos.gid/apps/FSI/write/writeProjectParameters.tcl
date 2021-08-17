@@ -69,13 +69,21 @@ proc FSI::write::GetSolverSettingsDict { } {
 
     
     # structure interface
-    set structure_interfaces_list [write::GetSubModelPartFromCondition STLoads StructureInterface2D]
-    lappend structure_interfaces_list {*}[write::GetSubModelPartFromCondition STLoads StructureInterface3D]
+    set structure_interfaces_list [list ]
+    set structure_interfaces_list_raw [write::GetSubModelPartFromCondition STLoads StructureInterface2D]
+    lappend structure_interfaces_list_raw {*}[write::GetSubModelPartFromCondition STLoads StructureInterface3D]
+    foreach interface $structure_interfaces_list_raw {
+        lappend structure_interfaces_list [Structural::write::GetAttribute model_part_name].$interface
+    }
     dict set solver_settings_dict coupling_settings structure_interfaces_list $structure_interfaces_list
 
     # Fluid interface
     set fluid_interface_uniquename FluidNoSlipInterface$::Model::SpatialDimension
-    set fluid_interfaces_list [write::GetSubModelPartFromCondition FLBC $fluid_interface_uniquename]
+    set fluid_interfaces_list [list ]
+    set fluid_interfaces_list_raw [write::GetSubModelPartFromCondition FLBC $fluid_interface_uniquename]
+    foreach interface $structure_interfaces_list_raw {
+        lappend fluid_interfaces_list [Fluid::write::GetAttribute model_part_name].$interface
+    }
     dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
     
     # Change the input_filenames
@@ -140,12 +148,12 @@ proc FSI::write::GetMappingSettingsList { } {
     set structural_interface_name StructureInterface$::Model::SpatialDimension
     set structuralInterface [lindex [write::GetSubModelPartFromCondition STLoads $structural_interface_name] 0]
     foreach fluid_interface [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute FLBC]/condition\[@n = '$fluid_interface_name'\]/group" ] {
-	set map [dict create]
-	set mapper_face [write::getValueByNode [$fluid_interface selectNodes ".//value\[@n='mapper_face']"] ]
-	dict set map mapper_face $mapper_face
-	dict set map fluid_interface_submodelpart_name [write::getSubModelPartId $fluid_interface_name [get_domnode_attribute $fluid_interface n]]
-	dict set map structure_interface_submodelpart_name $structuralInterface
-	lappend mappingsList $map
+        set map [dict create]
+        set mapper_face [write::getValueByNode [$fluid_interface selectNodes ".//value\[@n='mapper_face']"] ]
+        dict set map mapper_face $mapper_face
+        dict set map fluid_interface_submodelpart_name [Fluid::write::GetAttribute model_part_name].[write::getSubModelPartId $fluid_interface_name [get_domnode_attribute $fluid_interface n]]
+        dict set map structure_interface_submodelpart_name [Structural::write::GetAttribute model_part_name].$structuralInterface
+        lappend mappingsList $map
     }
 
     return $mappingsList

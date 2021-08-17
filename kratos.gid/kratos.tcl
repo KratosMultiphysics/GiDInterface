@@ -82,7 +82,7 @@ proc Kratos::RegisterGiDEvents { } {
 
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
-    CreateWidgetsFromXml::ClearCachePreferences
+    if {[GidUtils::VersionCmp "15.0.0"] >=0 } {CreateWidgetsFromXml::ClearCachePreferences}
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
@@ -146,6 +146,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(echo_level) 0
     # indent in mdpa files  | 0 ASCII unindented | 1 ASCII indented pretty
     set kratos_private(mdpa_format) 1
+    # kratos debug env for VSCode debug
+    set kratos_private(debug_folder) ""
     # Version of the kratos executable
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
@@ -190,7 +192,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename]]
     }
     # Common controllers
-    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
+    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl Drawer.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
     }
     # Model class
@@ -306,6 +308,7 @@ proc Kratos::Event_EndProblemtype { } {
         # Clear private global variable
         unset -nocomplain ::Kratos::kratos_private
     }
+    Drawer::UnregisterAll
 }
 
 
@@ -315,6 +318,7 @@ proc Kratos::RestoreVariables { } {
     # Restore GiD variables that kratos modified (maybe the mesher...)
     if {[info exists kratos_private(RestoreVars)]} {
         foreach {k v} $kratos_private(RestoreVars) {
+            # W "$k $v"
             set $k $v
         }
     }

@@ -43,7 +43,7 @@ proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
     
     # Convection diffusion mdpa
     ConvectionDiffusion::write::Init
-    ConvectionDiffusion::write::SetCoordinatesByGroups 1
+    ConvectionDiffusion::write::SetAttribute writeCoordinatesByGroups 1
     write::writeAppMDPA ConvectionDiffusion
     write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute solid_mdpa_suffix].mdpa"
 }

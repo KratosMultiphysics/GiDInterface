@@ -149,7 +149,7 @@ proc PfemThermic::write::getPropertiesList {parts_un {write_claw_name "True"} {m
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
             if {$constitutive_law ne ""} {
                 set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
-				set tableList [list "TEMPERATURE_vs_DENSITY" "TEMPERATURE_vs_VISCOSITY" "TEMPERATURE_vs_YOUNG" "TEMPERATURE_vs_POISSON" "TEMPERATURE_vs_CONDUCTIVITY" "TEMPERATURE_vs_SPECIFIC_HEAT"]
+				set tableList [list "TEMPERATURE_vs_DENSITY" "TEMPERATURE_vs_VISCOSITY" "TEMPERATURE_vs_YIELDSHEAR" "TEMPERATURE_vs_YOUNG" "TEMPERATURE_vs_POISSON" "TEMPERATURE_vs_CONDUCTIVITY" "TEMPERATURE_vs_SPECIFIC_HEAT"]
                 set variables_dict [dict create]
 				set tables_dict [dict create]
                 foreach prop [dict keys [dict get $mat_dict $group] ] {
@@ -191,6 +191,8 @@ proc PfemThermic::write::GetTable { prop fileName } {
         dict set table output_variable "DENSITY"
     } elseif {$prop eq "TEMPERATURE_vs_VISCOSITY"} {
         dict set table output_variable "DYNAMIC_VISCOSITY"
+	} elseif {$prop eq "TEMPERATURE_vs_YIELDSHEAR"} {
+        dict set table output_variable "YIELD_SHEAR"
     } elseif {$prop eq "TEMPERATURE_vs_YOUNG"} {
         dict set table output_variable "YOUNG_MODULUS"
     } elseif {$prop eq "TEMPERATURE_vs_POISSON"} {

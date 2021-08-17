@@ -343,9 +343,12 @@ proc Dam::write::DefinitionDomains { } {
     set body_part_list [list ]
     set joint_part_list [list ]
     set mat_dict [write::getMatDict]
-    foreach part_name [dict keys $mat_dict] {
-        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
-            lappend body_part_list [write::getSubModelPartId Parts $part_name]
+    foreach node_part [GetDamPartGroupNodes] {
+        set element_id [write::getValueByNode [$node_part selectNodes "./value\[@n='Element'\]"] ]
+        set element [Model::getElement $element_id]
+        set element_type [$element getAttribute "ElementType"]
+        if {$element_type eq "Solid"} {
+            lappend body_part_list [write::getSubModelPartId Parts [$node_part @n]]
         }
     }
     dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]

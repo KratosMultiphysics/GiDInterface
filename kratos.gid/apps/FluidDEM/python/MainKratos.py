@@ -4,16 +4,15 @@
 # Some parts of the original fluid script have been kept practically untouched and are clearly marked.
 # Whenever a minor modification has been made on one of these parts, the corresponding line is indicated with a comment: # MOD.
 
-from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
 import warnings
 
 # Kratos
 from KratosMultiphysics import *
 
 try:
-    from KratosMultiphysics.ExternalSolversApplication import *
+    from KratosMultiphysics.LinearSolversApplication import *
 except ImportError:
-    warnings.warn('Package ExternalSolversApplication could not be loaded. Make sure to compile it if needed.', ImportWarning)
+    warnings.warn('Package LinearSolversApplication could not be loaded. Make sure to compile it if needed.', ImportWarning)
 
 from KratosMultiphysics.DEMApplication import *
 from KratosMultiphysics.FluidDynamicsApplication import *
