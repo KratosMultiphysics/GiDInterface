@@ -34,12 +34,7 @@
       <NodalCondition n="PRESSURE"/>
     </NodalConditions>
     <inputs>
-      <parameter n="PERMEABILITY_11" pn="Permeability A11" v="1e+89" type="double" />
-      <parameter n="PERMEABILITY_12" pn="Permeability A12" v="0.0" type="double" />
-      <parameter n="PERMEABILITY_13" pn="Permeability A13" v="0.0" type="double" />
-      <parameter n="PERMEABILITY_22" pn="Permeability A22" v="1e+89" type="double" />
-      <parameter n="PERMEABILITY_23" pn="Permeability A23" v="0.0" type="double" />
-      <parameter n="PERMEABILITY_33" pn="Permeability A33" v="1e+89" type="double" />
+      <parameter n="PERMEABILITY" pn="Permeability" v="1e+89,0.0,0.0,0.0,1e+89,0.0,0.0,0.0,1e+89" type="matrix" rows="3" cols="3" />
     </inputs>
     <outputs>
       <parameter n="VORTICITY" pn="Vorticity" />

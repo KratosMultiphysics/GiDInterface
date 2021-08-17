@@ -374,6 +374,13 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
                 }
 
             }
+            "matrix" {
+                set rows [$param getAttribute "rows"]
+                set cols [$param getAttribute "cols"]
+                set components ""
+                for {set i 0} {$i < [expr max($rows,$cols)]} {incr i} {lappend components $i}; set components [join $components ","]
+                append node "<value n='$inName' pn='$pn' v='$v' function='matrix_func,no_function' dimension_function_rows='$rows' dimension_function_cols='$cols' components_function='$components' help='$help'  state='$state' show_in_window='$show_in_window' />"
+            }
             "combo" {
                 if {[$param getAttribute "combotype"] eq "material"} {
                     append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>" 
