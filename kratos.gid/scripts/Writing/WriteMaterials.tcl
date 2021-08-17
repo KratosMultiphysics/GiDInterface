@@ -87,8 +87,22 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                 set state [get_domnode_attribute $valueNode state]
                 # hidden values and constitutive law are not included in properties
                 if {$state ne "hidden" || $name eq "ConstitutiveLaw"} {
-                    # All the introduced values are translated to 'm' and 'kg' with the help of this function
-                    set value [gid_groups_conds::convert_value_to_default $valueNode]
+                    if {[$valueNode hasAttribute type] && [$valueNode @type] eq "matrix"} {
+                        set value [list ]
+                        set M [gid_groups_conds::read_matrix_function $valueNode]
+                        for {set i 0} {$i < [$valueNode @dimension_function_rows]} {incr i} {
+                            set row [list ]
+                            set cols [$valueNode @dimension_function_cols]
+                            for {set j 0} {$j < $cols} {incr j} {
+                                lappend row [lindex $M [expr ($i*$cols)+$j]]
+                            }
+                            lappend value $row
+                        }
+                        W $value
+                    } else {
+                        # All the introduced values are translated to 'm' and 'kg' with the help of this function
+                        set value [gid_groups_conds::convert_value_to_default $valueNode]
+                    } 
                     dict set mat_dict $submodelpart_id $name $value
                 }
             }
