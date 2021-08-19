@@ -17,8 +17,10 @@ proc write::json2dict {JSONtext} {
 proc write::tcl2json { value } {
     # Guess the type of the value; deep *UNSUPPORTED* magic!
     # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
-    regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    # regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    set type [GidUtils::GetInternalRepresentation $value]
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2json $v}]]}
+    if {$type ne "dict" && [llength $value]>1} { set type list}
     switch $type {
         string {
             if {$value eq "false"} {return [expr "false"]}
@@ -454,7 +456,7 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     dict set outputConfigDict python_module gid_output_process
     dict set outputConfigDict kratos_module KratosMultiphysics
     dict set outputConfigDict process_name GiDOutputProcess
-    dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    # dict set outputConfigDict help "This process writes postprocessing files for GiD"
     dict set outputConfigDict Parameters $outputProcessParams
 
     return $outputConfigDict
@@ -510,7 +512,7 @@ proc write::GetDefaultVTKOutput { {appid ""} } {
     dict set outputConfigDictVtk python_module vtk_output_process
     dict set outputConfigDictVtk kratos_module KratosMultiphysics
     dict set outputConfigDictVtk process_name VtkOutputProcess
-    dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
+    #dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
     dict set outputConfigDictVtk Parameters [write::GetDefaultParametersOutputVTKDict $appid]
 
     return $outputConfigDictVtk

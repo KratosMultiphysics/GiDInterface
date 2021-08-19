@@ -94,11 +94,10 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                             set row [list ]
                             set cols [$valueNode @dimension_function_cols]
                             for {set j 0} {$j < $cols} {incr j} {
-                                lappend row [lindex $M [expr ($i*$cols)+$j]]
+                                lappend row [expr [lindex $M [expr ($i*$cols)+$j]]]
                             }
                             lappend value $row
                         }
-                        W $value
                     } else {
                         # All the introduced values are translated to 'm' and 'kg' with the help of this function
                         set value [gid_groups_conds::convert_value_to_default $valueNode]
