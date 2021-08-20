@@ -168,6 +168,23 @@ proc Kratos::RegisterEnvironment { } {
     }
 }
 
+proc Kratos::ReadJsonDict {file_path} {
+    set data ""
+    catch {
+        # Try to open the preferences file
+        set fp [open $file_path r]
+        # Read the preferences
+        set data [read $fp]
+        # W $data
+        # Close the file
+        close $fp
+    }
+    if {$data ne ""} {
+        set data [write::json2dict $data]
+    }
+    return $data
+}
+
 proc Kratos::LoadEnvironment { } {
     variable kratos_private
 
