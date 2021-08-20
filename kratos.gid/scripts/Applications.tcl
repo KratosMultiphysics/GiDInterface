@@ -290,8 +290,18 @@ oo::class create App {
 proc apps::ActivateApp_do {app_name} {
     # set ::Kratos::must_quit 0
     set dir [file join $::Kratos::kratos_private(Path) apps $app_name]
-    set fileName [file join $dir start.tcl]
-    apps::loadAppFile $fileName
+    set app_definition_file [file join $dir app.json]
+    if {[file exists $app_definition_file]} {
+        set props [Kratos::ReadJsonDict $app_definition_file]
+        foreach source_file [dict get $props script_files] {
+            set fileName [file join $dir $source_file]
+            apps::loadAppFile $fileName
+        }
+    } else {
+        set fileName [file join $dir start.tcl]
+        apps::loadAppFile $fileName
+    }
+    
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
         gid_groups_conds::add_images_dir [file join $dir images Black]
