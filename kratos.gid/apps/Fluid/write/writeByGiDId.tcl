@@ -1,11 +1,11 @@
-namespace eval Fluid::write {
+namespace eval ::Fluid::write {
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes
     variable FluidConditionMap
 }
 
-proc Fluid::write::Init { } {
+proc ::Fluid::write::Init { } {
     # Namespace variables inicialization
 
     InitConditionsMap
@@ -23,7 +23,7 @@ proc Fluid::write::Init { } {
 }
 
 # Events
-proc Fluid::write::writeModelPartEvent { } {
+proc ::Fluid::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -50,7 +50,7 @@ proc Fluid::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     #write::writeBasicSubmodelParts
 }
-proc Fluid::write::writeCustomFilesEvent { } {
+proc ::Fluid::write::writeCustomFilesEvent { } {
     # Materials file TODO -> Python script must read from here
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
 
@@ -60,7 +60,7 @@ proc Fluid::write::writeCustomFilesEvent { } {
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
-proc Fluid::write::Validate {} {
+proc ::Fluid::write::Validate {} {
     set err ""
     set root [customlib::GetBaseRoot]
 
@@ -78,19 +78,19 @@ proc Fluid::write::Validate {} {
 }
 
 # MDPA Blocks
-proc Fluid::write::writeProperties { } {
+proc ::Fluid::write::writeProperties { } {
     # Begin Properties
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     write::WriteString ""
 }
 
-proc Fluid::write::writeConditions { } {
+proc ::Fluid::write::writeConditions { } {
     writeBoundaryConditions
     writeDrags
 }
 
-proc Fluid::write::writeBoundaryConditions { } {
+proc ::Fluid::write::writeBoundaryConditions { } {
     set BCUN [GetAttribute conditions_un]
 
     # Write the conditions
@@ -98,20 +98,20 @@ proc Fluid::write::writeBoundaryConditions { } {
 
 }
 
-proc Fluid::write::writeDrags { } {
+proc ::Fluid::write::writeDrags { } {
     lappend ::Model::NodalConditions [::Model::NodalCondition new Drag]
     write::writeNodalConditions [GetAttribute drag_un]
     Model::ForgetNodalCondition Drag
 }
 
-proc Fluid::write::writeMeshes { } {
+proc ::Fluid::write::writeMeshes { } {
     write::writePartSubModelPart
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
     writeConditionsMesh
     #writeSkinMesh
 }
 
-proc Fluid::write::writeConditionsMesh { } {
+proc ::Fluid::write::writeConditionsMesh { } {
 
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
@@ -148,7 +148,7 @@ proc Fluid::write::writeConditionsMesh { } {
     }
 }
 
-# proc Fluid::write::writeSkinMesh { } {
+# proc ::Fluid::write::writeSkinMesh { } {
 #     variable FluidConditions
 
 #     set root [customlib::GetBaseRoot]
@@ -174,7 +174,7 @@ proc Fluid::write::writeConditionsMesh { } {
 #     ::write::writeGroupSubModelPart EXTRA $skinconfgroup "Conditions" $listiniend
 #  }
 
-# proc Fluid::write::CheckClosedVolume {} {
+# proc ::Fluid::write::CheckClosedVolume {} {
 #     variable BCUN
 #     set isclosed 1
 
@@ -207,36 +207,36 @@ proc Fluid::write::writeConditionsMesh { } {
 
 
 
-proc Fluid::write::GetAttribute {att} {
+proc ::Fluid::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc Fluid::write::GetAttributes {} {
+proc ::Fluid::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc Fluid::write::SetAttribute {att val} {
+proc ::Fluid::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc Fluid::write::AddAttribute {att val} {
+proc ::Fluid::write::AddAttribute {att val} {
     variable writeAttributes
     dict lappend writeAttributes $att $val
 }
 
-proc Fluid::write::AddAttributes {configuration} {
+proc ::Fluid::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc Fluid::write::AddValidApps {appid} {
+proc ::Fluid::write::AddValidApps {appid} {
     AddAttribute validApps $appid
 }
 
-proc Fluid::write::SetCoordinatesByGroups {value} {
+proc ::Fluid::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
 
