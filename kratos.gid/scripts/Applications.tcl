@@ -209,6 +209,8 @@ oo::class create App {
     variable prefix
     variable release
     variable is_tool
+
+    variable properties
     
     constructor {n} {
         variable name
@@ -221,6 +223,7 @@ oo::class create App {
         variable prefix
         variable public
         variable is_tool
+        variable properties
         
         set name $n
         set publicname $n
@@ -240,12 +243,11 @@ oo::class create App {
         set prefix ""
         set public 0
         set is_tool 0
+
+        set properties [dict create ]
     }
     
-    method activate { } {
-        variable name
-        apps::ActivateApp_do $name
-    }
+    method activate { } {apps::ActivateApp_do [self]}
     
     method getPrefix { } {variable prefix; return $prefix}
     method setPrefix { p } {variable prefix; set prefix $p}
@@ -283,21 +285,30 @@ oo::class create App {
     method setIsTool {v} {variable is_tool; set is_tool $v}
     method isTool { } {variable is_tool; return $is_tool}
     
-    method getKratosApplicationName { } {
-        return [set ::${name}::kratos_name]
-    }
+    method getKratosApplicationName { } {return [set ::${name}::kratos_name]}
+
+    method setProperties {props} {variable properties; set properties $props}
+    method getProperty {n} {variable properties; if {[dict exists $properties $n]} {return [dict get $properties $n]}}
+    method getProperties {} {variable properties; return $properties}
+    method getPermission {n} {variable properties; if {[dict exists $properties permissions $n]} {return [dict get $properties permissions $n]} }
+    method getUniqueName {n} {variable properties; if {[dict exists $properties unique_names $n]} {return [dict get $properties unique_names $n]} }
 }
-proc apps::ActivateApp_do {app_name} {
+proc apps::ActivateApp_do {app} {
     # set ::Kratos::must_quit 0
+    set app_name [$app getName]
     set dir [file join $::Kratos::kratos_private(Path) apps $app_name]
     set app_definition_file [file join $dir app.json]
     if {[file exists $app_definition_file]} {
         set props [Kratos::ReadJsonDict $app_definition_file]
+        $app setProperties $props
         foreach source_file [dict get $props script_files] {
             set fileName [file join $dir $source_file]
             apps::loadAppFile $fileName
         }
+        apps::ApplyAppPreferences $app
+        if {[dict exists $props start_script]} {eval [dict get $props start_script] $app}
     } else {
+        W "MISSING app.json file for app $app_name"
         set fileName [file join $dir start.tcl]
         apps::loadAppFile $fileName
     }
@@ -309,8 +320,10 @@ proc apps::ActivateApp_do {app_name} {
     gid_groups_conds::add_images_dir [file join $dir images]
 }
 
-proc apps::loadAppFile {fileName} {
-    uplevel 2 [list source $fileName]
+proc apps::ApplyAppPreferences {app} {
+    if {[write::isBooleanTrue [$app getPermission open_tree]]} {set spdAux::TreeVisibility 1}
 }
+
+proc apps::loadAppFile {fileName} {uplevel 2 [list source $fileName]}
 
 apps::Init
