@@ -134,10 +134,9 @@ proc spdAux::processAppIncludes { root } {
 }
 
 proc spdAux::CustomTreeCommon { } {
-    set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]
-    
-    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
-    if {!$AppUsesIntervals} {
+    set app_uses_intervals [[apps::getActiveApp] getPermission "intervals"]
+    if {$app_uses_intervals eq ""} {set app_uses_intervals 0}
+    if {!$app_uses_intervals} {
         if {[getRoute Intervals] ne ""} {
             catch {spdAux::SetValueOnTreeItem state hidden Intervals}
         }
