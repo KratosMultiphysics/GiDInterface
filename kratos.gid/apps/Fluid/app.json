@@ -11,16 +11,19 @@
     "script_files": [
         "start.tcl",
         "examples/examples.tcl",
+        "examples/CylinderInFlow.tcl",
+        "examples/HighRiseBuilding.tcl",
         "xml/xmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
+    "start_script":"::Fluid::Init",
     "requeriments":{
         "apps":[],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
-        "open_tree": "allow",
+        "open_tree": true,
         "show_toolbar": true,
         "intervals": true,
         "wizard": false
