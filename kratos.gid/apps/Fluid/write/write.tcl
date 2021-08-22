@@ -10,7 +10,6 @@ namespace eval ::Fluid::write {
 
 proc ::Fluid::write::Init { } {
     # Namespace variables inicialization
-
     SetAttribute parts_un [$Fluid::_app getUniqueName parts]
     SetAttribute nodal_conditions_un [$Fluid::_app getUniqueName nodal_conditions]
     SetAttribute conditions_un [$Fluid::_app getUniqueName conditions]
@@ -20,11 +19,12 @@ proc ::Fluid::write::Init { } {
     SetAttribute time_parameters_un [$Fluid::_app getUniqueName time_parameters]
     SetAttribute writeCoordinatesByGroups [$Fluid::_app getWriteProperty coordinates]
     SetAttribute validApps [list "Fluid"]
-    SetAttribute main_script_file "KratosFluid.py"
-    SetAttribute materials_file "FluidMaterials.json"
-    SetAttribute properties_location json
-    SetAttribute model_part_name "FluidModelPart"
-    SetAttribute output_model_part_name "fluid_computational_model_part"
+    SetAttribute main_script_file [$Fluid::_app getProperty main_launch_file]
+    SetAttribute materials_file [$Fluid::_app getWriteProperty materials_file]
+    SetAttribute properties_location [$Fluid::_app getWriteProperty properties_location]
+    SetAttribute model_part_name [$Fluid::_app getWriteProperty model_part_name]
+    SetAttribute output_model_part_name [$Fluid::_app getWriteProperty output_model_part_name]
+
     variable last_condition_iterator
     set last_condition_iterator 0
 }
@@ -45,7 +45,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
     writeProperties
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
@@ -63,6 +63,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
     # Clean
     unset ::Fluid::write::FluidConditionMap
 }
+
 proc ::Fluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     ::Fluid::write::WriteMaterialsFile
