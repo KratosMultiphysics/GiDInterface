@@ -40,6 +40,10 @@ proc Examples::LoadMyFiles { } {
     ResolveLinks
 }
 
+proc ::Examples::StartWindowEmpty {args} {
+    Examples::StartWindow
+}
+
 proc Examples::StartWindow { {filter ""} } {
     variable examples_window
     variable _canvas_scroll
