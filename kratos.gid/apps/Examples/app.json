@@ -1,0 +1,18 @@
+{
+    "id": "Examples",
+    "name": "Examples",
+    "prefix": "ST",
+    "themed": false,
+    "kratos_name": "StructuralMechanicsApplication",
+    "start_script":"::Examples::StartWindow",
+    "requeriments":{
+        "apps":[],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": false,
+        "show_toolbar": false,
+        "intervals": false,
+        "wizard": true
+    }
+}
