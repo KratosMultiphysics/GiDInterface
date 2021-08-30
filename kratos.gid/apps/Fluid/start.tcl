@@ -19,3 +19,4 @@ proc ::Fluid::Init { app } {
 
 proc ::Fluid::GetAttribute {name} {return [$::Fluid::_app getProperty $name]}
 proc ::Fluid::GetUniqueName {name} {return [$::Fluid::_app getUniqueName $name]}
+proc ::Fluid::GetWriteProperty {name} {return [$::Fluid::_app getWriteProperty $name]}

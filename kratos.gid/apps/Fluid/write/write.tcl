@@ -10,20 +10,20 @@ namespace eval ::Fluid::write {
 
 proc ::Fluid::write::Init { } {
     # Namespace variables inicialization
-    SetAttribute parts_un [$Fluid::_app getUniqueName parts]
-    SetAttribute nodal_conditions_un [$Fluid::_app getUniqueName nodal_conditions]
-    SetAttribute conditions_un [$Fluid::_app getUniqueName conditions]
-    SetAttribute materials_un [$Fluid::_app getUniqueName materials]
-    SetAttribute results_un [$Fluid::_app getUniqueName results]
-    SetAttribute drag_un [$Fluid::_app getUniqueName drag]
-    SetAttribute time_parameters_un [$Fluid::_app getUniqueName time_parameters]
-    SetAttribute writeCoordinatesByGroups [$Fluid::_app getWriteProperty coordinates]
+    SetAttribute parts_un [::Fluid::GetUniqueName parts]
+    SetAttribute nodal_conditions_un [::Fluid:::GetUniqueName nodal_conditions]
+    SetAttribute conditions_un [::Fluid::GetUniqueName conditions]
+    SetAttribute materials_un [::Fluid::GetUniqueName materials]
+    SetAttribute results_un [::Fluid::GetUniqueName results]
+    SetAttribute drag_un [::Fluid::GetUniqueName drag]
+    SetAttribute time_parameters_un [::Fluid::GetUniqueName time_parameters]
+    SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
     SetAttribute validApps [list "Fluid"]
-    SetAttribute main_script_file [$Fluid::_app getProperty main_launch_file]
-    SetAttribute materials_file [$Fluid::_app getWriteProperty materials_file]
-    SetAttribute properties_location [$Fluid::_app getWriteProperty properties_location]
-    SetAttribute model_part_name [$Fluid::_app getWriteProperty model_part_name]
-    SetAttribute output_model_part_name [$Fluid::_app getWriteProperty output_model_part_name]
+    SetAttribute main_script_file [::Fluid::GetAttribute main_launch_file]
+    SetAttribute materials_file [::Fluid::GetWriteProperty materials_file]
+    SetAttribute properties_location [::Fluid::GetWriteProperty properties_location]
+    SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
+    SetAttribute output_model_part_name [::Fluid::GetWriteProperty output_model_part_name]
 
     variable last_condition_iterator
     set last_condition_iterator 0

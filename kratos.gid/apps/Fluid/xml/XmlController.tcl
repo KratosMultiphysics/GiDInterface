@@ -26,7 +26,7 @@ proc ::Fluid::xml::getUniqueName {name} {
 proc ::Fluid::xml::CustomTree { args } {
     set root [customlib::GetBaseRoot]
 
-    set results_un [::Fluid::GetUniqueName "unique_names results"]
+    set results_un [::Fluid::GetUniqueName "results"]
 
     # Output control in output settings
     spdAux::SetValueOnTreeItem v time FLResults FileLabel
