@@ -172,7 +172,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
 
     CloseFile
     if {$needsOpen} {OpenFile $filename}
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         if {[catch {eval $wevent} errmsg options] } {
             W $::errorInfo
             set errcode 1
@@ -203,7 +203,7 @@ proc write::writeAppMDPA {appid} {
     CloseFile
     OpenFile $filename
 
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         eval $wevent
     } else {
         if { [catch {eval $wevent} fid] } {
@@ -647,7 +647,7 @@ proc write::WriteAssignedValues {condNode} {
 
 proc write::writeLaunchJSONFile { } {
     # Check if developer
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         set debug_folder $Kratos::kratos_private(debug_folder)
 
         # Prepare JSON as dict

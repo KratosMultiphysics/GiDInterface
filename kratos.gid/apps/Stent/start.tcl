@@ -32,7 +32,6 @@ proc ::Stent::Init { } {
     
     # Intervals 
     dict set attributes UseIntervals 1
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {dict set attributes UseIntervals 1}
     
     set kratos_name StructuralMechanicsApplication
     

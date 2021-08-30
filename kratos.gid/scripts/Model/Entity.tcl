@@ -113,8 +113,8 @@ oo::class create Entity {
     method cumple {args} {
         #W "Cumplimos con los filtros: $args"
         set c 1
-        if {$::Kratos::kratos_private(DevMode) ne "release"} {
-            # if our mode is debug, it's allowd
+        if {[Kratos::IsDeveloperMode]} {
+            # if our mode is debug, it's allowed
         } elseif {[my getAttribute "ProductionReady"] ne "" && [my getAttribute "ProductionReady"] ne "ProductionReady"} {
             # if our mode is release, only release entities
             #W "[my getName] no paso - [my getAttribute "ProductionReady"] "

@@ -314,3 +314,9 @@ proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {
     set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
     return variable
 }
+
+proc Kratos::IsDeveloperMode {} {
+    set is_dev 0
+    if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
+    return $is_dev
+}

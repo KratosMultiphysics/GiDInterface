@@ -18,7 +18,7 @@ proc ::Pfem::Init { } {
     set ::spdAux::TreeVisibility 1
     set attributes [dict create]
     dict set attributes UseIntervals 1
-    if {$::Kratos::kratos_private(DevMode) ne "dev"} {error [= "You need to change to Developer mode in the Kratos menu"] }
+    if {[Kratos::IsDeveloperMode]} {error [= "You need to change to Developer mode in the Kratos menu"] }
     dict set attributes UseRestart 1
     LoadMyFiles
 }

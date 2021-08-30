@@ -77,7 +77,7 @@ proc spdAux::CreateWindow {} {
     }
     
     # More button
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
         set img [gid_themes::GetImage $more_path Kratos]
         ttk::button $w.tools.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]

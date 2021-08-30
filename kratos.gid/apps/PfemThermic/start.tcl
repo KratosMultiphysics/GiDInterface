@@ -23,7 +23,7 @@ proc ::PfemThermic::Init { } {
 	apps::LoadAppById "PfemFluid"
     apps::LoadAppById "ConvectionDiffusion"
 	
-	if {$::Kratos::kratos_private(DevMode) ne "dev"} {error [= "You need to change to Developer mode in the Kratos menu"] }
+	if {[Kratos::IsDeveloperMode]} {error [= "You need to change to Developer mode in the Kratos menu"] }
 	
     set ::spdAux::TreeVisibility 1
     set ::Model::ValidSpatialDimensions [list 2D 3D]

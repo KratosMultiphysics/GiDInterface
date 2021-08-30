@@ -305,9 +305,11 @@ proc apps::ActivateApp_do {app} {
     if {[file exists $app_definition_file]} {
         set props [Kratos::ReadJsonDict $app_definition_file]
         $app setProperties $props
-        foreach source_file [dict get $props script_files] {
-            set fileName [file join $dir $source_file]
-            apps::loadAppFile $fileName
+        if {[dict exists $props script_files]} {
+            foreach source_file [dict get $props script_files] {
+                set fileName [file join $dir $source_file]
+                apps::loadAppFile $fileName
+            }
         }
         apps::ApplyAppPreferences $app
         if {[dict exists $props start_script]} {eval [dict get $props start_script] $app}
