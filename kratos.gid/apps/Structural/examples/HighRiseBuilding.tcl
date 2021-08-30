@@ -1,5 +1,8 @@
+namespace eval ::Structural::examples::HighRiseBuilding {
 
-proc ::Structural::examples::HighRiseBuilding {args} {
+}
+
+proc ::Structural::examples::HighRiseBuilding::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -7,10 +10,10 @@ proc ::Structural::examples::HighRiseBuilding {args} {
     }
 
     Kratos::ResetModel
-    DrawHighRiseBuildingGeometry$::Model::SpatialDimension
-    AssignGroupsHighRiseBuilding$::Model::SpatialDimension
-    AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
-    TreeAssignationHighRiseBuilding$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -18,7 +21,7 @@ proc ::Structural::examples::HighRiseBuilding {args} {
     GiD_Process 'Zoom Frame
 }
 
-proc Structural::examples::DrawHighRiseBuildingGeometry2D {args} {
+proc ::Structural::examples::HighRiseBuilding::DrawGeometry2D {args} {
     GiD_Layers create Structure
     GiD_Layers edit to_use Structure
 
@@ -43,7 +46,7 @@ proc Structural::examples::DrawHighRiseBuildingGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface {*}$structureLines escape escape
 }
 
-proc Structural::examples::AssignGroupsHighRiseBuilding2D {args} {
+proc ::Structural::examples::HighRiseBuilding::AssignGroups2D {args} {
     # Group creation
     GiD_Groups create Structure
     GiD_Groups create Ground
@@ -54,14 +57,14 @@ proc Structural::examples::AssignGroupsHighRiseBuilding2D {args} {
     GiD_EntitiesGroups assign InterfaceStructure lines {1 2 3}
 }
 
-proc Structural::examples::AssignHighRiseBuildingMeshSizes2D {args} {
+proc ::Structural::examples::HighRiseBuilding::AssignMeshSizes2D {args} {
     set structure_mesh_size 5.0
     GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure surfaces] escape
     GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure lines] escape escape escape escape
 }
 
 
-proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
+proc ::Structural::examples::HighRiseBuilding::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 

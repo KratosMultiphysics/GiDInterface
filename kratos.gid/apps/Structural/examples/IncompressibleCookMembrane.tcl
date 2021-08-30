@@ -1,5 +1,7 @@
+namespace eval ::Structural::examples::IncompressibleCookMembrane {
 
-proc ::Structural::examples::IncompressibleCookMembrane {args} {
+}
+proc ::Structural::examples::IncompressibleCookMembrane::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -7,10 +9,10 @@ proc ::Structural::examples::IncompressibleCookMembrane {args} {
     }
 
     Kratos::ResetModel
-    DrawIncompressibleCookMembraneGeometry$::Model::SpatialDimension
-    AssignGroupsIncompressibleCookMembrane$::Model::SpatialDimension
-    AssignIncompressibleCookMembraneMeshSizes$::Model::SpatialDimension
-    TreeAssignationIncompressibleCookMembrane$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -22,7 +24,7 @@ proc ::Structural::examples::IncompressibleCookMembrane {args} {
     GiD_Process 'Zoom Frame
 }
 
-proc Structural::examples::DrawIncompressibleCookMembraneGeometry2D {args} {
+proc ::Structural::examples::IncompressibleCookMembrane::DrawGeometry2D {args} {
     GiD_Layers create Structure
     GiD_Layers edit to_use Structure
 
@@ -47,15 +49,15 @@ proc Structural::examples::DrawIncompressibleCookMembraneGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface {*}$structureLines escape escape
 }
 
-proc Structural::examples::DrawIncompressibleCookMembraneGeometry3D {args} {
+proc ::Structural::examples::IncompressibleCookMembrane::DrawGeometry3D {args} {
     # Create layers and draw in plane geometry
-    DrawIncompressibleCookMembraneGeometry2D
+    DrawGeometry2D
 
     # Extrude the xy-plane geometry
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape Mescape
 }
 
-proc Structural::examples::AssignGroupsIncompressibleCookMembrane2D {args} {
+proc ::Structural::examples::IncompressibleCookMembrane::AssignGroups2D {args} {
     # Group creation
     GiD_Groups create Structure
     GiD_Groups create LeftEdge
@@ -66,7 +68,7 @@ proc Structural::examples::AssignGroupsIncompressibleCookMembrane2D {args} {
     GiD_EntitiesGroups assign RightEdge lines 2
 }
 
-proc Structural::examples::AssignGroupsIncompressibleCookMembrane3D {args} {
+proc ::Structural::examples::IncompressibleCookMembrane::AssignGroups3D {args} {
     # Group creation
     GiD_Groups create Structure
     GiD_Groups create LeftSurface
@@ -79,18 +81,18 @@ proc Structural::examples::AssignGroupsIncompressibleCookMembrane3D {args} {
     GiD_EntitiesGroups assign SideSurfaces surfaces {1 6}
 }
 
-proc Structural::examples::AssignIncompressibleCookMembraneMeshSizes2D {args} {
+proc ::Structural::examples::IncompressibleCookMembrane::AssignMeshSizes2D {args} {
     set edges_divisions 64
     GiD_Process Mescape Meshing Structured Surfaces 1 escape $edges_divisions 1 2 3 4 escape escape escape Mescape Meshing ElemType Quadrilateral 1 escape
 }
 
-proc Structural::examples::AssignIncompressibleCookMembraneMeshSizes3D {args} {
+proc ::Structural::examples::IncompressibleCookMembrane::AssignMeshSizes3D {args} {
     set side_edges_divisions 64
     set thickness_edges_divisions 1
     GiD_Process Mescape Meshing ElemType Hexahedra 1 escape Mescape Meshing Structured Volumes 1 escape $side_edges_divisions 1 3 5 7 2 6 escape $thickness_edges_divisions 11 escape escape escape escape escape escape
 }
 
-proc Structural::examples::TreeAssignationIncompressibleCookMembrane2D {args} {
+proc ::Structural::examples::IncompressibleCookMembrane::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -131,7 +133,7 @@ proc Structural::examples::TreeAssignationIncompressibleCookMembrane2D {args} {
     spdAux::RequestRefresh
 }
 
-proc Structural::examples::TreeAssignationIncompressibleCookMembrane3D {args} {
+proc ::Structural::examples::IncompressibleCookMembrane::TreeAssignation3D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 

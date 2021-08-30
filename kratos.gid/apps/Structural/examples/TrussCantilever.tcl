@@ -1,16 +1,18 @@
+namespace eval ::Structural::examples::TrussCantilever {
 
-proc ::Structural::examples::TrussCantilever {args} {
+}
+proc ::Structural::examples::TrussCantilever::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawTrussCantileverGeometry
-    AssignTrussCantileverMeshSizes
-    TreeAssignationTrussCantilever
+    DrawGeometry
+    AssignMeshSizes
+    TreeAssignation
 }
 
-proc Structural::examples::DrawTrussCantileverGeometry {args} {
+proc ::Structural::examples::TrussCantilever::DrawGeometry {args} {
     Kratos::ResetModel
     set structure_layer Structure
     GiD_Process Mescape 'Layers ChangeName Layer0 $structure_layer escape
@@ -57,12 +59,11 @@ proc Structural::examples::DrawTrussCantileverGeometry {args} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc Structural::examples::AssignTrussCantileverMeshSizes {args} {
+proc ::Structural::examples::TrussCantilever::AssignMeshSizes {args} {
     GiD_Process Mescape Meshing Structured Lines 1 {*}[GiD_EntitiesGroups get Structure lines] escape escape 
 }
 
-
-proc Structural::examples::TreeAssignationTrussCantilever {args} {
+proc ::Structural::examples::TrussCantilever::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
