@@ -199,12 +199,13 @@ proc Kratos::LoadEnvironment { } {
         # W $data
         # Close the file
         close $fp
-    }
-    # Preferences are written in json format
-    foreach {k v} [write::json2dict $data] {
-        # W "$k $v"
-        # Foreach pair key value, restore it
-        set kratos_private($k) $v
+        
+        # Preferences are written in json format
+        foreach {k v} [write::json2dict $data] {
+            # W "$k $v"
+            # Foreach pair key value, restore it
+            set kratos_private($k) $v
+        }
     }
 }
 
