@@ -1,11 +1,11 @@
-namespace eval Structural::write {
+namespace eval ::Structural::write {
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable writeAttributes
     variable ContactsDict
 }
 
-proc Structural::write::Init { } {
+proc ::Structural::write::Init { } {
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     set ConditionsDictGroupIterators [dict create]
@@ -17,24 +17,24 @@ proc Structural::write::Init { } {
     variable writeAttributes
     set writeAttributes [dict create]
     SetAttribute validApps [list "Structural"]
-    SetAttribute writeCoordinatesByGroups 0
-    SetAttribute properties_location json
-    SetAttribute parts_un STParts
-    SetAttribute time_parameters_un STTimeParameters
-    SetAttribute results_un STResults
-    SetAttribute materials_un STMaterials
-    SetAttribute initial_conditions_un STInitialConditions
-    SetAttribute nodal_conditions_un STNodalConditions
-    SetAttribute conditions_un STLoads
+    SetAttribute writeCoordinatesByGroups [::Structural::GetWriteProperty coordinates]
+    SetAttribute properties_location [::Structural::GetWriteProperty properties_location]
+    SetAttribute parts_un [::Structural::GetUniqueName parts]
+    SetAttribute time_parameters_un [::Structural::GetUniqueName time_parameters]
+    SetAttribute results_un [::Structural::GetUniqueName results]
+    SetAttribute materials_un [::Structural::GetUniqueName materials]
+    SetAttribute initial_conditions_un [::Structural::GetUniqueName initial_conditions]
+    SetAttribute nodal_conditions_un [::Structural::GetUniqueName nodal_conditions]
+    SetAttribute conditions_un [::Structural::GetUniqueName conditions]
     SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
-    SetAttribute materials_file "StructuralMaterials.json"
-    SetAttribute main_script_file "KratosStructural.py"
-    SetAttribute model_part_name "Structure"
+    SetAttribute materials_file [::Structural::GetWriteProperty materials_file]
+    SetAttribute main_script_file [::Structural::GetAttribute main_launch_file]
+    SetAttribute model_part_name [::Structural::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name ""
 }
 
 # MDPA Blocks
-proc Structural::write::writeModelPartEvent { } {
+proc ::Structural::write::writeModelPartEvent { } {
     variable ConditionsDictGroupIterators
     initLocalWriteConfiguration
     write::initWriteConfiguration [GetAttributes]
@@ -45,7 +45,7 @@ proc Structural::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
 
     # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Element connectivities (Groups on STParts)
     write::writeElementConnectivities
@@ -68,7 +68,7 @@ proc Structural::write::writeModelPartEvent { } {
 
 }
 
-proc Structural::write::writeConditions { } {
+proc ::Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
 
@@ -76,7 +76,7 @@ proc Structural::write::writeConditions { } {
     writeContactConditions $last_iter
 }
 
-proc Structural::write::writeMeshes { } {
+proc ::Structural::write::writeMeshes { } {
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart
     # Add them to this list
@@ -103,7 +103,7 @@ proc Structural::write::writeMeshes { } {
     writeContacts
 }
 
-proc Structural::write::writeContactConditions { last_iter } {
+proc ::Structural::write::writeContactConditions { last_iter } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
     set ov "line"
@@ -122,7 +122,7 @@ proc Structural::write::writeContactConditions { last_iter } {
     }
 }
 
-proc Structural::write::writeLoads { } {
+proc ::Structural::write::writeLoads { } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
@@ -138,7 +138,7 @@ proc Structural::write::writeLoads { } {
     }
 }
 
-proc Structural::write::writeContacts { } {
+proc ::Structural::write::writeContacts { } {
     variable ConditionsDictGroupIterators
     variable ContactsDict
 
@@ -179,14 +179,14 @@ proc Structural::write::writeContacts { } {
     }
 }
 
-proc Structural::write::writeCustomBlock { } {
+proc ::Structural::write::writeCustomBlock { } {
     write::WriteString "Begin Custom"
     write::WriteString "Custom write for Structural, any app can call me, so be careful!"
     write::WriteString "End Custom"
     write::WriteString ""
 }
 
-proc Structural::write::getLastConditionId { } {
+proc ::Structural::write::getLastConditionId { } {
     variable ConditionsDictGroupIterators
     set top 1
     if {$ConditionsDictGroupIterators ne ""} {
@@ -198,11 +198,11 @@ proc Structural::write::getLastConditionId { } {
 }
 
 # Custom files
-proc Structural::write::WriteMaterialsFile { } {
+proc ::Structural::write::WriteMaterialsFile { } {
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True [GetAttribute model_part_name]
 }
 
-proc Structural::write::GetUsedElements { {get "Objects"} } {
+proc ::Structural::write::GetUsedElements { {get "Objects"} } {
     set lista [list ]
     foreach gNode [Structural::write::GetPartsGroups] {
         set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
@@ -213,7 +213,7 @@ proc Structural::write::GetUsedElements { {get "Objects"} } {
     return $lista
 }
 
-proc Structural::write::GetPartsGroups { {get "Objects"} } {
+proc ::Structural::write::GetPartsGroups { {get "Objects"} } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set lista [list ]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
@@ -224,7 +224,7 @@ proc Structural::write::GetPartsGroups { {get "Objects"} } {
     return $lista
 }
 
-proc Structural::write::writeLocalAxes { } {
+proc ::Structural::write::writeLocalAxes { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
@@ -237,7 +237,7 @@ proc Structural::write::writeLocalAxes { } {
 }
 
 # This is the kind of code I hate
-proc Structural::write::writeHinges { } {
+proc ::Structural::write::writeHinges { } {
     
     # format for writing ids
     set id_f [dict get $write::formats_dict ID]
@@ -309,10 +309,10 @@ proc Structural::write::writeHinges { } {
     }
 }
 
-proc Structural::write::initLocalWriteConfiguration { } {
+proc ::Structural::write::initLocalWriteConfiguration { } {
 }
 
-proc Structural::write::usesContact { } {
+proc ::Structural::write::usesContact { } {
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'CONTACT'\]/group"]
 
     if {$result_node ne ""} {
@@ -323,7 +323,7 @@ proc Structural::write::usesContact { } {
 }
 
 # return 0 means ok; return [list 1 "Error message to be displayed"]
-proc Structural::write::writeValidateEvent { } {
+proc ::Structural::write::writeValidateEvent { } {
     set problem 0
     set problem_message [list ]
 
@@ -335,7 +335,7 @@ proc Structural::write::writeValidateEvent { } {
     return [list $problem $problem_message]
 }
 
-proc Structural::write::validateTrussMesh { } {
+proc ::Structural::write::validateTrussMesh { } {
     # Elements to be checked
     set truss_element_names [list "TrussLinearElement2D" "TrussElement2D" "TrussLinearElement3D" "TrussElement3D"]
     set error 0
@@ -368,7 +368,7 @@ proc Structural::write::validateTrussMesh { } {
     return [list $error $error_message]
 }
 
-proc Structural::write::ApplicationSpecificGetCondition {condition group etype nnodes} {
+proc ::Structural::write::ApplicationSpecificGetCondition {condition group etype nnodes} {
     # Prepare the return, if nothing to apply, return the same condition
     set ret $condition
 
@@ -399,7 +399,7 @@ proc Structural::write::ApplicationSpecificGetCondition {condition group etype n
     return $ret
 }
 
-proc Structural::write::GroupUsesSmallDisplacement {group used_small_disp_elements} {
+proc ::Structural::write::GroupUsesSmallDisplacement {group used_small_disp_elements} {
     set ret 0
     set group_nodes [GiD_EntitiesGroups get $group nodes]
 
@@ -413,7 +413,7 @@ proc Structural::write::GroupUsesSmallDisplacement {group used_small_disp_elemen
     return $ret
 }
 
-proc Structural::write::PrepareSubGroupsAssignChildEntitiesOnParents { } {
+proc ::Structural::write::PrepareSubGroupsAssignChildEntitiesOnParents { } {
     # list of groups sorted by lenght. so we always treat childs first and parents last
     set groups_list [lsort -command {apply {{a b} {expr {[string length $a] - [string length $b]}}}} [GiD_Groups list]]
     foreach group $groups_list {
@@ -428,8 +428,7 @@ proc Structural::write::PrepareSubGroupsAssignChildEntitiesOnParents { } {
     }
 }
 
-
-proc Structural::write::writeCustomFilesEvent { } {
+proc ::Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
 
     write::SetParallelismConfiguration
@@ -439,42 +438,40 @@ proc Structural::write::writeCustomFilesEvent { } {
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
-proc Structural::write::SetCoordinatesByGroups {value} {
+proc ::Structural::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
 
-proc Structural::write::GetAttribute {att} {
+proc ::Structural::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc Structural::write::GetAttributes {} {
+proc ::Structural::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc Structural::write::SetAttribute {att val} {
+proc ::Structural::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc Structural::write::AddAttribute {att val} {
+proc ::Structural::write::AddAttribute {att val} {
     variable writeAttributes
     dict append writeAttributes $att $val]
 }
 
-proc Structural::write::AddAttributes {configuration} {
+proc ::Structural::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc Structural::write::AddValidApps {appList} {
+proc ::Structural::write::AddValidApps {appList} {
     AddAttribute validApps $appList
 }
 
-proc Structural::write::ApplyConfiguration { } {
+proc ::Structural::write::ApplyConfiguration { } {
     variable writeAttributes
     write::SetConfigurationAttributes $writeAttributes
 }
-
-Structural::write::Init
