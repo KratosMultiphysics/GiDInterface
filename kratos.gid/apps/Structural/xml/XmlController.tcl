@@ -1,8 +1,8 @@
-namespace eval Structural::xml {
+namespace eval ::Structural::xml {
      variable dir
 }
 
-proc Structural::xml::Init { } {
+proc ::Structural::xml::Init { } {
     variable dir
     Model::InitVariables dir $Structural::dir
 
@@ -19,26 +19,24 @@ proc Structural::xml::Init { } {
     Model::getSolvers Solvers.xml
 }
 
-proc Structural::xml::getUniqueName {name} {
+proc ::Structural::xml::getUniqueName {name} {
     return ST$name
 }
 
-proc ::Structural::xml::MultiAppEvent {args} {
-
-}
-
-proc Structural::xml::CustomTree { args } {
+proc ::Structural::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden STResults CutPlanes
     spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem v 1 GiDOptions EchoLevel
 
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONDENSED_DOF_LIST_2D'\]"]
+    set nodal_results_node [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
+
+    set result_node [$nodal_results_node selectNodes "./value\[@n = 'CONDENSED_DOF_LIST_2D'\]"]
     if {$result_node ne "" } {$result_node delete}
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONDENSED_DOF_LIST'\]"]
+    set result_node [$nodal_results_node selectNodes "./value\[@n = 'CONDENSED_DOF_LIST'\]"]
     if {$result_node ne "" } {$result_node delete}
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT'\]"]
+    set result_node [$nodal_results_node selectNodes "./value\[@n = 'CONTACT'\]"]
     if {$result_node ne "" } {$result_node delete}
-    set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'CONTACT_SLAVE'\]"]
+    set result_node [$nodal_results_node selectNodes "./value\[@n = 'CONTACT_SLAVE'\]"]
     if {$result_node ne "" } {$result_node delete}
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'VOLUMETRIC_STRAIN'\]"]
     if {$result_node ne "" } {$result_node delete}
@@ -52,7 +50,7 @@ proc Structural::xml::CustomTree { args } {
     }
 }
 
-proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
+proc ::Structural::xml::ProcCheckGeometryStructural {domNode args} {
     set ret "line,surface"
     if {$::Model::SpatialDimension eq "3D"} {
         set ret "line,surface,volume"
@@ -60,7 +58,7 @@ proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     return $ret
 }
 
-proc Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
+proc ::Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
     set names ""
     set pnames ""
     set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
@@ -82,7 +80,7 @@ proc Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
     return $pnames
 }
 
-proc Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
+proc ::Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
     # Overwritten the base function to add Solution Type restrictions
     set parts_un STParts
     if {[spdAux::getRoute $parts_un] ne ""} {
@@ -103,7 +101,7 @@ proc Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
     } {return "normal"}
 }
 
-proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
+proc ::Structural::xml::ProcCheckGeometryStructural {domNode args} {
     set ret "surface"
     if {$::Model::SpatialDimension eq "3D"} {
         set ret "surface,volume"
@@ -112,7 +110,7 @@ proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
 }
 
 
-proc Structural::xml::UpdateParts {domNode args} {
+proc ::Structural::xml::UpdateParts {domNode args} {
     set current [lindex [$domNode selectNodes "./group"] end]
     set element_name [get_domnode_attribute [$current selectNodes "./value\[@n = 'Element'\]"] v]
     set element [Model::getElement $element_name]
@@ -122,7 +120,7 @@ proc Structural::xml::UpdateParts {domNode args} {
     }
 }
 
-proc Structural::xml::AddLocalAxesToBeamElement { current } {
+proc ::Structural::xml::AddLocalAxesToBeamElement { current } {
     # set y_axis_deviation [get_domnode_attribute [$current selectNodes "./value\[@n = 'LOCAL_AXIS_ROTATION'\]"] v]
     # W $y_axis_deviation
     set group [get_domnode_attribute $current n]
@@ -136,7 +134,7 @@ proc Structural::xml::AddLocalAxesToBeamElement { current } {
 
 
 ############# procs #################
-proc Structural::xml::ProcGetElementsStructural { domNode args } {
+proc ::Structural::xml::ProcGetElementsStructural { domNode args } {
     set nodeApp [spdAux::GetAppIdFromNode $domNode]
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
     set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
@@ -195,5 +193,3 @@ proc Structural::xml::ProcGetElementsStructural { domNode args } {
     #spdAux::RequestRefresh
     return $diction
 }
-
-Structural::xml::Init
