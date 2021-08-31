@@ -1,12 +1,12 @@
 {
-    "id": "Fluid Launcher",
-    "name": "Fluid",
+    "id": "DEM Launcher",
+    "name": "DEM",
     "script_files": [
         "start.tcl"
     ],
-    "start_script":"::FluidLauncher::Init",
+    "start_script":"::DemLauncher::Init",
     "requeriments":{
-        "apps":["Fluid","EmbeddedFluid", "PotentialFluid", "Buoyancy", "ConjugateHeatTransfer", "FluidDEM"],
+        "apps":["DEM", "DEMPFEM", "FluidDEM", "CDEM"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {

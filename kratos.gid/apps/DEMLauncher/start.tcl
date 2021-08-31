@@ -2,10 +2,10 @@ namespace eval ::DemLauncher {
     variable available_apps
 }
 
-proc ::DemLauncher::Init { } {
+proc ::DemLauncher::Init { app } {
     variable available_apps
 
-    set dir [apps::getMyDir "DemLauncher"]
+    # TODO: Get apps from json
     set available_apps [list DEM DEMPFEM FluidDEM CDEM]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
@@ -25,7 +25,6 @@ proc ::DemLauncher::AppSelectorWindow { } {
         # }
     } {
         [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
-        set dir $::Kratos::kratos_private(Path)
 
         set initwind .gid.win_dem_launcher
         spdAux::DestroyWindows
@@ -69,5 +68,3 @@ proc ::DemLauncher::ChangeAppTo {appid} {
     spdAux::SetSpatialDimmension undefined
     apps::setActiveApp $appid
 }
-
-::DemLauncher::Init

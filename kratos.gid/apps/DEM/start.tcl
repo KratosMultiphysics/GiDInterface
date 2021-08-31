@@ -5,7 +5,7 @@ namespace eval ::DEM {
     variable kratos_name
 }
 
-proc ::DEM::Init { } {
+proc ::DEM::Init { app } {
     # Variable initialization
     variable dir
     variable attributes
@@ -193,6 +193,3 @@ proc ::DEM::PatchMissingSpheresInGroup {filespd} {
         close $fp
     }
 }
-
-
-::DEM::Init
