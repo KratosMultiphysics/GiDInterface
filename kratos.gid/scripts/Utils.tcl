@@ -309,10 +309,11 @@ proc Kratos::OpenCaseIn {program} {
     }
 }
 
-
-proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {      
-    set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
-    return variable
+if { ![GidUtils::IsTkDisabled] } {
+    proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {      
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
+        return variable
+    }   
 }
 
 proc Kratos::IsDeveloperMode {} {

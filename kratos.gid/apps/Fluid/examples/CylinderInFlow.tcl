@@ -143,7 +143,7 @@ proc ::Fluid::examples::CylinderInFlow::AssignMeshSizes2D {args} {
 # Tree assign
 proc ::Fluid::examples::CylinderInFlow::TreeAssignation3D {args} {
     TreeAssignation2D
-    AddCuts
+    ::Fluid::examples::AddCuts
 }
 proc ::Fluid::examples::CylinderInFlow::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
