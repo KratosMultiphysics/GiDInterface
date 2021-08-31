@@ -11,6 +11,7 @@
     "script_files": [
         "start.tcl",
         "xml/XmlController.tcl",
+        "xml/material_relations/MaterialRelations.tcl",
         "xml/material_relations/material_relations_window.tcl",
         "write/write.tcl",
         "write/writeMDPA_Parts.tcl",
@@ -21,7 +22,8 @@
         "write/writeProjectParameters.tcl",
         "write/write_utils.tcl",
         "examples/examples.tcl",
-        "examples/SpheresDrop.tcl"
+        "examples/SpheresDrop.tcl",
+        "examples/CirclesDrop.tcl"
     ],
     "start_script": "::DEM::Init",
     "requeriments": {

@@ -1,5 +1,4 @@
 
-
 proc DEM::xml::ShowMaterialRelationWindow { } {
     
     set material_relations [GetMaterialRelationsTable]

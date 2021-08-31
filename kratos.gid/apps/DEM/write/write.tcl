@@ -13,14 +13,14 @@ proc DEM::write::Init { } {
     variable writeAttributes
     set writeAttributes [dict create]
     SetAttribute validApps [list "DEM"]
-    SetAttribute writeCoordinatesByGroups 1
-    SetAttribute properties_location json
-    SetAttribute parts_un DEMParts
-    SetAttribute materials_un DEMMaterials
-    SetAttribute conditions_un DEMConditions
-    SetAttribute nodal_conditions_un DEMNodalConditions
-    SetAttribute materials_file "MaterialsDEM.json"
-    SetAttribute main_script_file "KratosDEMAnalysis.py"
+    SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
+    SetAttribute properties_location [::Fluid::GetWriteProperty properties_location]
+    SetAttribute parts_un [::DEM::GetUniqueName parts]
+    SetAttribute materials_un [::DEM::GetUniqueName parts]
+    SetAttribute conditions_un [::DEM::GetUniqueName parts]
+    SetAttribute nodal_conditions_un [::DEM::GetUniqueName parts]
+    SetAttribute materials_file [::Fluid::GetWriteProperty materials_file]
+    SetAttribute main_script_file [::Fluid::GetAttribute main_launch_file]
 
     variable partsProperties
     set partsProperties [dict create]
@@ -174,4 +174,3 @@ proc DEM::write::FindPropertiesBySubmodelpart {props subid } {
     return $result
 }
 
-DEM::write::Init

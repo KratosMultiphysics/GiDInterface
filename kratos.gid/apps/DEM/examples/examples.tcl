@@ -1,14 +1,11 @@
-namespace eval DEM::examples {
+namespace eval ::DEM::examples {
 
 }
 
-proc DEM::examples::Init { } {
-    uplevel #0 [list source [file join $::DEM::dir examples SpheresDrop.tcl]]
-    uplevel #0 [list source [file join $::DEM::dir examples CirclesDrop.tcl]]
+proc ::DEM::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
-
-proc DEM::examples::UpdateMenus { } {
-
-}
-
-DEM::examples::Init

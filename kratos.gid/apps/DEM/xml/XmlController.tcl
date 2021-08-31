@@ -17,11 +17,7 @@ proc DEM::xml::Init { } {
 }
 
 proc DEM::xml::getUniqueName {name} {
-    return DEM$name
-}
-
-proc DEM::xml::MultiAppEvent {args} {
-
+    return [::DEM::GetAttribute prefix]$name
 }
 
 proc DEM::xml::CustomTree { args } {
@@ -134,7 +130,3 @@ proc DEM::xml::MaterialRelationsValidation { } {
 
     return $err
 }
-
-
-
-DEM::xml::Init
