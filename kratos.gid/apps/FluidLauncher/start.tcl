@@ -7,8 +7,6 @@ proc ::FluidLauncher::Init { app } {
 
     # TODO: Get apps from json
     set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM]
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 0
     
     ::FluidLauncher::FluidAppSelectorWindow
 }
