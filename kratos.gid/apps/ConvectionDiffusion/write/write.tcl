@@ -1,11 +1,11 @@
-namespace eval ConvectionDiffusion::write {
+namespace eval ::ConvectionDiffusion::write {
     # Namespace variables declaration
     variable ConvectionDiffusionConditions
     variable writeCoordinatesByGroups
     variable writeAttributes
 }
 
-proc ConvectionDiffusion::write::Init { } {
+proc ::ConvectionDiffusion::write::Init { } {
     # Namespace variables inicialization
     variable ConvectionDiffusionConditions
     set ConvectionDiffusionConditions(temp) 0
@@ -25,7 +25,7 @@ proc ConvectionDiffusion::write::Init { } {
 }
 
 # Events
-proc ConvectionDiffusion::write::writeModelPartEvent { } {
+proc ::ConvectionDiffusion::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -57,7 +57,7 @@ proc ConvectionDiffusion::write::writeModelPartEvent { } {
     
 }
 
-proc ConvectionDiffusion::write::writeCustomFilesEvent { } {
+proc ::ConvectionDiffusion::write::writeCustomFilesEvent { } {
     # Materials
     WriteMaterialsFile False
 
@@ -67,14 +67,14 @@ proc ConvectionDiffusion::write::writeCustomFilesEvent { } {
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
-proc ConvectionDiffusion::write::Validate {} {
+proc ::ConvectionDiffusion::write::Validate {} {
     set err ""    
     set root [customlib::GetBaseRoot]
 
     return $err
 }
 
-proc ConvectionDiffusion::write::getLastConditionId { } { 
+proc ::ConvectionDiffusion::write::getLastConditionId { } { 
     variable ConvectionDiffusionConditions
     set top 1
     # Kratos::PrintArray ConvectionDiffusionConditions
@@ -86,25 +86,25 @@ proc ConvectionDiffusion::write::getLastConditionId { } {
     return $top
 }
 
-proc ConvectionDiffusion::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
+proc ::ConvectionDiffusion::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law $model_part_name
 }
 
 # MDPA Blocks
-proc ConvectionDiffusion::write::writeProperties { } {
+proc ::ConvectionDiffusion::write::writeProperties { } {
     # Begin Properties
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     write::WriteString ""
 }
 
-proc ConvectionDiffusion::write::writeConditions { } {
+proc ::ConvectionDiffusion::write::writeConditions { } {
     writeBoundaryConditions
 }
 
-proc ConvectionDiffusion::write::writeBoundaryConditions { } {
+proc ::ConvectionDiffusion::write::writeBoundaryConditions { } {
     variable ConvectionDiffusionConditions
     set BCUN [GetAttribute conditions_un]
 
@@ -133,13 +133,13 @@ proc ConvectionDiffusion::write::writeBoundaryConditions { } {
     }
 }
 
-proc ConvectionDiffusion::write::writeMeshes { } {
+proc ::ConvectionDiffusion::write::writeMeshes { } {
     write::writePartSubModelPart
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
     writeConditionsMesh
 }
 
-proc ConvectionDiffusion::write::writeConditionsMesh { } {
+proc ::ConvectionDiffusion::write::writeConditionsMesh { } {
     variable ConvectionDiffusionConditions
     
     set root [customlib::GetBaseRoot]
@@ -181,37 +181,35 @@ proc ConvectionDiffusion::write::writeConditionsMesh { } {
     }
 }
 
-proc ConvectionDiffusion::write::GetAttribute {att} {
+proc ::ConvectionDiffusion::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc ConvectionDiffusion::write::GetAttributes {} {
+proc ::ConvectionDiffusion::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc ConvectionDiffusion::write::SetAttribute {att val} {
+proc ::ConvectionDiffusion::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc ConvectionDiffusion::write::AddAttribute {att val} {
+proc ::ConvectionDiffusion::write::AddAttribute {att val} {
     variable writeAttributes
     dict lappend writeAttributes $att $val
 }
 
-proc ConvectionDiffusion::write::AddAttributes {configuration} {
+proc ::ConvectionDiffusion::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc ConvectionDiffusion::write::AddValidApps {appid} {
+proc ::ConvectionDiffusion::write::AddValidApps {appid} {
     AddAttribute validApps $appid
 }
 
-proc ConvectionDiffusion::write::SetCoordinatesByGroups {value} {
+proc ::ConvectionDiffusion::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
-
-ConvectionDiffusion::write::Init
