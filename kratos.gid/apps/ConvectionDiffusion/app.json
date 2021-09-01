@@ -12,7 +12,7 @@
         "start.tcl",
         "examples/examples.tcl",
         "examples/HeatedSquare.tcl",
-        "xml/xmlController.tcl",
+        "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],

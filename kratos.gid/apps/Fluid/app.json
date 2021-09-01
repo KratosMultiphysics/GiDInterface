@@ -13,7 +13,7 @@
         "examples/examples.tcl",
         "examples/CylinderInFlow.tcl",
         "examples/HighRiseBuilding.tcl",
-        "xml/xmlController.tcl",
+        "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],

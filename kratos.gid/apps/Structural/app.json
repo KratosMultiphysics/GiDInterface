@@ -15,7 +15,7 @@
         "examples/TrussCantilever.tcl",
         "examples/HighRiseBuilding.tcl",
         "examples/IncompressibleCookMembrane.tcl",
-        "xml/xmlController.tcl",
+        "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl",
         "postprocess/formfinding.tcl"
