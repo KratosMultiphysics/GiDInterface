@@ -11,7 +11,7 @@ proc ::FSI::examples::HighRiseBuilding::Init {args} {
     Kratos::ResetModel
 
     DrawGeometry
-    AssignGroups
+    AssignGroups$::Model::SpatialDimension
     AssignMeshSizes
     TreeAssignation
 
@@ -64,8 +64,8 @@ proc ::FSI::examples::HighRiseBuilding::AssignGroups3D {args} {
 }
 
 proc ::FSI::examples::HighRiseBuilding::AssignMeshSizes {args} {
-    Fluid::examples::AssignMeshSizes$::Model::SpatialDimension
-    Structural::examples::AssignMeshSizes$::Model::SpatialDimension
+    ::Fluid::examples::HighRiseBuilding::AssignMeshSizes$::Model::SpatialDimension
+    ::Structural::examples::HighRiseBuilding::AssignMeshSizes$::Model::SpatialDimension
 }
 
 proc ::FSI::examples::HighRiseBuilding::TreeAssignation {args} {
