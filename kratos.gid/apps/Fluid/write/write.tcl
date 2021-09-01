@@ -17,6 +17,7 @@ proc ::Fluid::write::Init { } {
     SetAttribute results_un [::Fluid::GetUniqueName results]
     SetAttribute drag_un [::Fluid::GetUniqueName drag]
     SetAttribute time_parameters_un [::Fluid::GetUniqueName time_parameters]
+    
     SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_script_file [::Fluid::GetAttribute main_launch_file]

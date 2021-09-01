@@ -11,17 +11,18 @@ proc ::ConvectionDiffusion::write::Init { } {
     set ConvectionDiffusionConditions(temp) 0
     unset ConvectionDiffusionConditions(temp)
 
-    SetAttribute parts_un CNVDFFParts
-    SetAttribute nodal_conditions_un CNVDFFNodalConditions
-    SetAttribute conditions_un CNVDFFBC
-    SetAttribute materials_un FLMaterials
-    SetAttribute writeCoordinatesByGroups 0
+    SetAttribute parts_un [::ConvectionDiffusion::GetUniqueName parts]
+    SetAttribute nodal_conditions_un [::ConvectionDiffusion::GetUniqueName nodal_conditions]
+    SetAttribute conditions_un [::ConvectionDiffusion::GetUniqueName conditions]
+    SetAttribute materials_un [::ConvectionDiffusion::GetUniqueName materials]
+
+    SetAttribute writeCoordinatesByGroups [::ConvectionDiffusion::GetWriteProperty coordinates]
     SetAttribute validApps [list "ConvectionDiffusion"]
-    SetAttribute main_script_file "KratosConvectionDiffusion.py"
-    SetAttribute materials_file "ConvectionDiffusionMaterials.json"
-    SetAttribute properties_location json
-    SetAttribute model_part_name ThermalModelPart
-    SetAttribute output_model_part_name "thermal_computing_domain"
+    SetAttribute main_script_file [::ConvectionDiffusion::GetAttribute main_launch_file]
+    SetAttribute materials_file [::ConvectionDiffusion::GetWriteProperty materials_file]
+    SetAttribute properties_location [::ConvectionDiffusion::GetWriteProperty properties_location]
+    SetAttribute model_part_name [::ConvectionDiffusion::GetWriteProperty model_part_name]
+    SetAttribute output_model_part_name [::ConvectionDiffusion::GetWriteProperty output_model_part_name]
 }
 
 # Events
@@ -41,7 +42,7 @@ proc ::ConvectionDiffusion::write::writeModelPartEvent { } {
     # write::writeMaterials [GetAttribute validApps]
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Element connectivities (Groups on CNVDFFParts)
     write::writeElementConnectivities
