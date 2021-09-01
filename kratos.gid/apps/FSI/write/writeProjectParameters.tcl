@@ -1,5 +1,5 @@
 # Project Parameters
-proc FSI::write::getParametersDict { } {
+proc ::FSI::write::getParametersDict { } {
     # Init the Fluid and Structural dicts
     InitExternalProjectParameters
 
@@ -24,19 +24,19 @@ proc FSI::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc FSI::write::writeParametersEvent { } {
+proc ::FSI::write::writeParametersEvent { } {
    set projectParametersDict [getParametersDict]
    write::SetParallelismConfiguration
    write::WriteJSON $projectParametersDict
 }
 
-proc FSI::write::GetProblemDataDict { } {
+proc ::FSI::write::GetProblemDataDict { } {
     # Copy the section from the Fluid, who owns the time parameters of the model
     set problem_data_dict [dict get $FSI::write::fluid_project_parameters problem_data]
     return $problem_data_dict
 }
 
-proc FSI::write::GetSolverSettingsDict { } {
+proc ::FSI::write::GetSolverSettingsDict { } {
     variable mdpa_names
 
     set solver_settings_dict [dict create]
@@ -99,7 +99,7 @@ proc FSI::write::GetSolverSettingsDict { } {
 
 }
 
-proc FSI::write::GetProcessesDict { } {
+proc ::FSI::write::GetProcessesDict { } {
     set processes_dict [dict create]
     
     # Fluid
@@ -115,7 +115,7 @@ proc FSI::write::GetProcessesDict { } {
     return $processes_dict
 }
 
-proc FSI::write::GetOutputProcessesDict { } {
+proc ::FSI::write::GetOutputProcessesDict { } {
     set output_processes_dict [dict create]
     set gid_output_list [list ]
 
@@ -133,7 +133,7 @@ proc FSI::write::GetOutputProcessesDict { } {
     return $output_processes_dict
 }
 
-proc FSI::write::UpdateUniqueNames { appid } {
+proc ::FSI::write::UpdateUniqueNames { appid } {
     set unList [list "Results"]
     foreach un $unList {
 	 set current_un [apps::getAppUniqueName $appid $un]
@@ -141,7 +141,7 @@ proc FSI::write::UpdateUniqueNames { appid } {
     }
 }
 
-proc FSI::write::GetMappingSettingsList { } {
+proc ::FSI::write::GetMappingSettingsList { } {
     set mappingsList [list ]
 
     set fluid_interface_name FluidNoSlipInterface$::Model::SpatialDimension
@@ -159,7 +159,7 @@ proc FSI::write::GetMappingSettingsList { } {
     return $mappingsList
 }
 
-proc FSI::write::InitExternalProjectParameters { } {
+proc ::FSI::write::InitExternalProjectParameters { } {
     # Fluid section
     UpdateUniqueNames Fluid
     apps::setActiveAppSoft Fluid

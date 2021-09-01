@@ -1,16 +1,19 @@
+namespace eval ::FSI::examples::MokChannelFlexibleWall {
 
-proc ::FSI::examples::MokChannelFlexibleWall {args} {
+}
+
+proc ::FSI::examples::MokChannelFlexibleWall::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawMokChannelFlexibleWallGeometry
-    AssignMokChannelFlexibleWallMeshSizes$::Model::SpatialDimension
-    TreeAssignationMokChannelFlexibleWall
+    DrawGeometry
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation
 }
 
-proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
+proc ::FSI::examples::MokChannelFlexibleWall::DrawGeometry {args} {
     Kratos::ResetModel
     GiD_Process Mescape 'Layers ChangeName Layer0 Fluid escape
 
@@ -137,7 +140,7 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes2D {args} {
+proc ::FSI::examples::MokChannelFlexibleWall::AssignMeshSizes2D {args} {
     set long_side_divisions 100
     set short_side_divisions 4
     set outlet_element_size 0.01
@@ -154,7 +157,7 @@ proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes2D {args} {
     GiD_Process Mescape Meshing ElemType Triangle [GiD_EntitiesGroups get Fluid surfaces] escape escape
 }
 
-proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes3D {args} {
+proc ::FSI::examples::MokChannelFlexibleWall::AssignMeshSizes3D {args} {
     set long_side_divisions 100
     set short_side_divisions 4
     set outlet_element_size 0.01
@@ -175,7 +178,7 @@ proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes3D {args} {
     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_element_size [GiD_EntitiesGroups get Fluid volumes] escape escape
 }
 
-proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
+proc ::FSI::examples::MokChannelFlexibleWall::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 

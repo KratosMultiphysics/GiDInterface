@@ -1,16 +1,19 @@
+namespace eval ::FSI::examples::HighRiseBuilding {
 
-proc FSI::examples::HighRiseBuilding {args} {
+}
+
+proc ::FSI::examples::HighRiseBuilding::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-
     Kratos::ResetModel
-    DrawHighRiseBuildingGeometry
-    AssignGroupsHighRiseBuilding$::Model::SpatialDimension
-    AssignHighRiseBuildingMeshSizes
-    TreeAssignationHighRiseBuilding
+
+    DrawGeometry
+    AssignGroups
+    AssignMeshSizes
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -18,12 +21,12 @@ proc FSI::examples::HighRiseBuilding {args} {
     GiD_Process 'Zoom Frame
 }
 
-proc FSI::examples::DrawHighRiseBuildingGeometry {args} {
-    Fluid::examples::DrawHighRiseBuildingGeometry$::Model::SpatialDimension
-    Structural::examples::DrawHighRiseBuildingGeometry$::Model::SpatialDimension
+proc ::FSI::examples::HighRiseBuilding::DrawGeometry {args} {
+    Fluid::examples::HighRiseBuilding::DrawGeometry$::Model::SpatialDimension
+    Structural::examples::HighRiseBuilding::DrawGeometry$::Model::SpatialDimension
 }
 
-proc FSI::examples::AssignGroupsHighRiseBuilding2D {args} {
+proc ::FSI::examples::HighRiseBuilding::AssignGroups2D {args} {
     # Fluid group creation
     GiD_Groups create Fluid
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -56,16 +59,16 @@ proc FSI::examples::AssignGroupsHighRiseBuilding2D {args} {
     GiD_EntitiesGroups assign InterfaceStructure lines {9 10 11}
 }
 
-proc FSI::examples::AssignGroupsHighRiseBuilding3D {args} {
+proc ::FSI::examples::HighRiseBuilding::AssignGroups3D {args} {
     # To be implemented
 }
 
-proc FSI::examples::AssignHighRiseBuildingMeshSizes {args} {
-    Fluid::examples::AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
-    Structural::examples::AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
+proc ::FSI::examples::HighRiseBuilding::AssignMeshSizes {args} {
+    Fluid::examples::AssignMeshSizes$::Model::SpatialDimension
+    Structural::examples::AssignMeshSizes$::Model::SpatialDimension
 }
 
-proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
+proc ::FSI::examples::HighRiseBuilding::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 

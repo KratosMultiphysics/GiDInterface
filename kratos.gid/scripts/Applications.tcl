@@ -285,7 +285,7 @@ oo::class create App {
     method setIsTool {v} {variable is_tool; set is_tool $v}
     method isTool { } {variable is_tool; return $is_tool}
     
-    method getKratosApplicationName { } {return [set ::${name}::kratos_name]}
+    method getKratosApplicationName { } {return [::${name}::GetAttribute kratos_name]}
 
     method setProperties {props} {variable properties; set properties $props}
     method getProperty {n} {variable properties; if {[dict exists $properties $n]} {return [dict get $properties $n]}}
@@ -330,6 +330,6 @@ proc apps::ApplyAppPreferences {app} {
     if {[write::isBooleanTrue [$app getPermission open_tree]]} {set spdAux::TreeVisibility 1}
 }
 
-proc apps::loadAppFile {fileName} {uplevel 2 [list source $fileName]}
+proc apps::loadAppFile {fileName} {uplevel #0 [list source $fileName]}
 
 apps::Init

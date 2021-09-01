@@ -1,5 +1,8 @@
+namespace eval ::FSI::examples::TurekBenchmark {
 
-proc ::FSI::examples::TurekBenchmark {args} {
+}
+
+proc ::FSI::examples::TurekBenchmark::Init {args} {
     # At this moment we do only support 2D for this test
     if {$::Model::SpatialDimension eq "2D"} {
         if {![Kratos::IsModelEmpty]} {
@@ -8,21 +11,21 @@ proc ::FSI::examples::TurekBenchmark {args} {
             if { $retval == "cancel" } { return }
         }
         # Set up geometry and groups
-        DrawTurekBenchmarkFluidGeometry
-        DrawTurekBenchmarkStructureGeometry
+        DrawGeometryFluid
+        DrawGeometryStructure
         # Generated geometry frame zoom
         GiD_Process 'Layers On Fluid escape
         GiD_Process 'Layers On Structure escape
         GiD_Process 'Zoom Frame
         GiD_Process 'Render Flat escape
         # Assign mesh sizes
-        AssignTurekBenchmarkMeshSizes$::Model::SpatialDimension
+        AssignMeshSizes$::Model::SpatialDimension
         # Assign tree values
-        TreeAssignationTurekBenchmark
+        TreeAssignation
     }
 }
 
-proc FSI::examples::DrawTurekBenchmarkFluidGeometry {args} {
+proc ::FSI::examples::TurekBenchmark::DrawGeometryFluid {args} {
     Kratos::ResetModel
 
     # Set fluid domain geometry
@@ -74,7 +77,7 @@ proc FSI::examples::DrawTurekBenchmarkFluidGeometry {args} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc FSI::examples::DrawTurekBenchmarkStructureGeometry {args} {
+proc ::FSI::examples::TurekBenchmark::DrawGeometryStructure {args} {
 
     # Set structure domain geometry
     if {$::Model::SpatialDimension eq "2D"} {
@@ -115,7 +118,7 @@ proc FSI::examples::DrawTurekBenchmarkStructureGeometry {args} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
+proc ::FSI::examples::TurekBenchmark::AssignMeshSizes2D {args} {
     # Structure and fluid mesh settings
     set str_flag_tail_divisions 15
     set str_flag_long_sides_divisions 175
@@ -141,7 +144,7 @@ proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_domain_element_size 1 escape escape
 }
 
-# proc FSI::examples::AssignTurekBenchmarkMeshSizes3D {args} {
+# proc ::FSI::examples::TurekBenchmark::AssignTurekBenchmarkMeshSizes3D {args} {
 #     set long_side_divisions 100
 #     set short_side_divisions 4
 #     set outlet_element_size 0.01
@@ -161,7 +164,7 @@ proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
 #     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_element_size [GiD_EntitiesGroups get Fluid volumes] escape escape
 # }
 
-proc FSI::examples::TreeAssignationTurekBenchmark {args} {
+proc ::FSI::examples::TurekBenchmark::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
