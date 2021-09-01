@@ -1,7 +1,7 @@
 
 # Project Parameters
 
-proc DEM::write::getParametersDict { } {
+proc ::DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
     set dimension [expr 3]
@@ -112,7 +112,7 @@ proc DEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
-proc DEM::write::GetDemStrategyName { } {
+proc ::DEM::write::GetDemStrategyName { } {
     return sphere_strategy
     # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
     # set used_elements [spdAux::GetUsedElements]
@@ -133,14 +133,14 @@ proc DEM::write::GetDemStrategyName { } {
 	# }
 }
 
-proc DEM::write::GetTimeSettings { } {
+proc ::DEM::write::GetTimeSettings { } {
     set result [dict create]
     dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
     dict set result EndTime [write::getValue DEMTimeParameters EndTime]
     return $result
 }
 
-proc DEM::write::GetGravity { } {
+proc ::DEM::write::GetGravity { } {
     set gravity_value [write::getValue DEMGravity GravityValue]
     set gravity_X [write::getValue DEMGravity Cx]
     set gravity_Y [write::getValue DEMGravity Cy]
@@ -153,7 +153,7 @@ proc DEM::write::GetGravity { } {
     return [list $gx $gy $gz]
 }
 
-proc DEM::write::writeParametersEvent { } {
+proc ::DEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
     write::WriteJSON [getParametersDict]
 }

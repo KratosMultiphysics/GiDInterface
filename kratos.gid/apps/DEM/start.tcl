@@ -10,11 +10,12 @@ proc ::DEM::Init { app } {
     variable dir
 
     set _app $app
+    set dir [apps::getMyDir "DEM"]
 
     GiD_Set CalcWithoutMesh 1
 
-    DEM::xml::Init
-    DEM::write::Init
+    ::DEM::xml::Init
+    ::DEM::write::Init
 }
 
 proc ::DEM::GetAttribute {name} {return [$::DEM::_app getProperty $name]}

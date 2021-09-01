@@ -1,5 +1,5 @@
 
-proc DEM::xml::ShowMaterialRelationWindow { } {
+proc ::DEM::xml::ShowMaterialRelationWindow { } {
     
     set material_relations [GetMaterialRelationsTable]
     set materials [dict keys $material_relations]
@@ -34,7 +34,7 @@ proc DEM::xml::ShowMaterialRelationWindow { } {
     }
 }
 
-proc DEM::xml::GetMaterialRelationsTable {} {
+proc ::DEM::xml::GetMaterialRelationsTable {} {
     set material_relations [dict create]
 
     set materials [list ]
