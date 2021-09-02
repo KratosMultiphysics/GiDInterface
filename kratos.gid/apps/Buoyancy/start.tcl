@@ -1,59 +1,26 @@
 namespace eval ::Buoyancy {
     # Variable declaration
-    variable id
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
+    variable _app
 }
 
-proc ::Buoyancy::Init { } {
+proc ::Buoyancy::Init { app } {
     # Variable initialization
-    variable id
     variable dir
-    variable prefix
-    variable kratos_name
-    variable attributes
-
-    set id "Buoyancy"
-    
-    set kratos_name Buoyancyapplication
+    variable _app
     
     #W "Sourced FSI"
     set dir [apps::getMyDir "Buoyancy"]
-    set prefix Buoyancy_
+    set _app $app
     
     apps::LoadAppById "Fluid"
     apps::LoadAppById "ConvectionDiffusion"
-    
-    # Intervals 
-    dict set attributes UseIntervals 1
 
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
+    ::Buoyancy::xml::Init
+    ::Buoyancy::write::Init
     
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
-    LoadMyFiles
-    #::spdAux::CreateDimensionWindow
 }
 
-proc ::Buoyancy::LoadMyFiles { } {
-    variable id
-    variable dir
-    
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    if {[apps::getActiveAppId] eq $id} {
-        uplevel #0 [list source [file join $dir examples examples.tcl]]
-    }
-}
-
-proc ::Buoyancy::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
-}
-
-::Buoyancy::Init
+proc ::Buoyancy::GetAttribute {name} {return [$::Buoyancy::_app getProperty $name]}
+proc ::Buoyancy::GetUniqueName {name} {return [$::Buoyancy::_app getUniqueName $name]}
+proc ::Buoyancy::GetWriteProperty {name} {return [$::Buoyancy::_app getWriteProperty $name]}
