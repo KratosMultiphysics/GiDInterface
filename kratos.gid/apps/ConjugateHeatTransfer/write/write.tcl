@@ -1,4 +1,4 @@
-namespace eval ConjugateHeatTransfer::write {
+namespace eval ::ConjugateHeatTransfer::write {
     # Namespace variables declaration
     variable ConjugateHeatTransferConditions
     variable writeCoordinatesByGroups
@@ -7,13 +7,13 @@ namespace eval ConjugateHeatTransfer::write {
     variable solid_domain_solver_settings
 }
 
-proc ConjugateHeatTransfer::write::Init { } {
+proc ::ConjugateHeatTransfer::write::Init { } {
     # Namespace variables initialization
     variable ConjugateHeatTransferConditions
     set ConjugateHeatTransferConditions(temp) 0
     unset ConjugateHeatTransferConditions(temp)
 
-    SetAttribute main_script_file "MainKratos.py"
+    SetAttribute main_script_file "KratosConjugateHeatTransfer.py"
     #SetAttribute materials_file "ConjugateHeatTransferMaterials.json"
     SetAttribute properties_location json
     SetAttribute model_part_name ThermalModelPart
@@ -28,7 +28,7 @@ proc ConjugateHeatTransfer::write::Init { } {
 }
 
 # Events
-proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
+proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -48,7 +48,7 @@ proc ConjugateHeatTransfer::write::writeModelPartEvent { } {
     write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute solid_mdpa_suffix].mdpa"
 }
 
-proc ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
+proc ::ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
     # Materials
     WriteMaterialsFile
 
@@ -58,7 +58,7 @@ proc ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
-proc ConjugateHeatTransfer::write::Validate {} {
+proc ::ConjugateHeatTransfer::write::Validate {} {
     set err ""    
     set root [customlib::GetBaseRoot]
 
@@ -66,54 +66,52 @@ proc ConjugateHeatTransfer::write::Validate {} {
 }
 
 
-proc ConjugateHeatTransfer::write::PrepareBuoyancy { } {
+proc ::ConjugateHeatTransfer::write::PrepareBuoyancy { } {
     Buoyancy::write::Init
     Fluid::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
     Fluid::write::SetAttribute thermal_initial_cnd_un Buoyancy_CNVDFFNodalConditions
     Fluid::write::SetCoordinatesByGroups 1
 }
 
-proc ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
+proc ::ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
     Buoyancy::write::WriteMaterialsFile $write_const_law $include_modelpart_name
     # ConvectionDiffusion::write::WriteMaterialsFile $write_const_law $include_modelpart_name
     ConvectionDiffusion::write::WriteMaterialsFile False $include_modelpart_name
 }
 
-proc Buoyancy::write::GetModelPartName { } {
-    return FluidThermalModelPart
-}
+# proc ::Buoyancy::write::GetModelPartName { } {
+#     return FluidThermalModelPart
+# }
 
-proc ConjugateHeatTransfer::write::GetAttribute {att} {
+proc ::ConjugateHeatTransfer::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc ConjugateHeatTransfer::write::GetAttributes {} {
+proc ::ConjugateHeatTransfer::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc ConjugateHeatTransfer::write::SetAttribute {att val} {
+proc ::ConjugateHeatTransfer::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc ConjugateHeatTransfer::write::AddAttribute {att val} {
+proc ::ConjugateHeatTransfer::write::AddAttribute {att val} {
     variable writeAttributes
     dict lappend writeAttributes $att $val
 }
 
-proc ConjugateHeatTransfer::write::AddAttributes {configuration} {
+proc ::ConjugateHeatTransfer::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc ConjugateHeatTransfer::write::AddValidApps {appid} {
+proc ::ConjugateHeatTransfer::write::AddValidApps {appid} {
     AddAttribute validApps $appid
 }
 
-proc ConjugateHeatTransfer::write::SetCoordinatesByGroups {value} {
+proc ::ConjugateHeatTransfer::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
-
-ConjugateHeatTransfer::write::Init

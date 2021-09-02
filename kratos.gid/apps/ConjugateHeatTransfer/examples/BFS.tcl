@@ -1,13 +1,16 @@
+namespace eval ConjugateHeatTransfer::examples::BFS {
 
-proc ::ConjugateHeatTransfer::examples::BFS {args} {
+}
+
+proc ::ConjugateHeatTransfer::examples::BFS::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawBFSGeometry$::Model::SpatialDimension
-    AssignBFSGroups$::Model::SpatialDimension
-    TreeAssignationBFS$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +20,7 @@ proc ::ConjugateHeatTransfer::examples::BFS {args} {
 
 
 # Draw Geometry
-proc ConjugateHeatTransfer::examples::DrawBFSGeometry3D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::DrawGeometry3D {args} {
     # DrawSquareGeometry2D
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
@@ -25,7 +28,7 @@ proc ConjugateHeatTransfer::examples::DrawBFSGeometry3D {args} {
     # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
 
-proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers create HeatSource
@@ -72,7 +75,7 @@ proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
 
 
 # Group assign
-proc ConjugateHeatTransfer::examples::AssignBFSGroups2D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::AssignGroups2D {args} {
     # Create the groups for the fluid
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -123,7 +126,7 @@ proc ConjugateHeatTransfer::examples::AssignBFSGroups2D {args} {
     GiD_Groups edit color Heating_Bottom_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Heating_Bottom_Wall lines 9
 }
-proc ConjugateHeatTransfer::examples::AssignBFSGroups3D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::AssignGroups3D {args} {
     # Create the groups
     # GiD_Groups create Fluid
     # GiD_Groups edit color Fluid "#26d1a8ff"
@@ -147,11 +150,11 @@ proc ConjugateHeatTransfer::examples::AssignBFSGroups3D {args} {
 }
 
 # Tree assign
-proc ConjugateHeatTransfer::examples::TreeAssignationBFS3D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::TreeAssignation3D {args} {
     # TreeAssignationCylinderInFlow2D
     # AddCuts
 }
-proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 

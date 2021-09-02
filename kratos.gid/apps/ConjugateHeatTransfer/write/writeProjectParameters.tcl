@@ -20,16 +20,15 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     dict set projectParametersDict processes [ConjugateHeatTransfer::write::GetProcessList]
 
     return $projectParametersDict
-
 }
 
-proc ConjugateHeatTransfer::write::writeParametersEvent { } {
+proc ::ConjugateHeatTransfer::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
 
-proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
+proc ::ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set solver_settings_dict [dict create]
     dict set solver_settings_dict solver_type "conjugate_heat_transfer"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
@@ -68,7 +67,7 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     return $solver_settings_dict
 }
 
-proc ConjugateHeatTransfer::write::GetProcessList { } {
+proc ::ConjugateHeatTransfer::write::GetProcessList { } {
     set processes [dict create]
 
     # Get and add fluid processes
@@ -104,7 +103,7 @@ proc write::GetDefaultOutputProcessDict { {appid ""} } {
     return $outputProcessesDict
 }
 
-proc ConjugateHeatTransfer::write::GetOutputProcessesList { } {
+proc ::ConjugateHeatTransfer::write::GetOutputProcessesList { } {
     set output_process [dict create]
     
     set need_gid [write::getValue EnableGiDOutput]
@@ -154,22 +153,22 @@ proc ConjugateHeatTransfer::write::GetOutputProcessesList { } {
     return $output_process
 }
 
-proc ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
+proc ::ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     # Buoyancy section
     apps::setActiveAppSoft Buoyancy
     write::initWriteConfiguration [Buoyancy::write::GetAttributes]
-    ConvectionDiffusion::write::SetAttribute nodal_conditions_un Buoyancy_CNVDFFNodalConditions
-    ConvectionDiffusion::write::SetAttribute conditions_un Buoyancy_CNVDFFBC
-    ConvectionDiffusion::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
-    ConvectionDiffusion::write::SetAttribute model_part_name FluidThermalModelPart
+    ::ConvectionDiffusion::write::SetAttribute nodal_conditions_un Buoyancy_CNVDFFNodalConditions
+    ::ConvectionDiffusion::write::SetAttribute conditions_un Buoyancy_CNVDFFBC
+    ::ConvectionDiffusion::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
+    ::ConvectionDiffusion::write::SetAttribute model_part_name FluidThermalModelPart
     set ConjugateHeatTransfer::write::fluid_domain_solver_settings [Buoyancy::write::getParametersDict]
 
     # Heating section
     apps::setActiveAppSoft ConvectionDiffusion
-    ConvectionDiffusion::write::SetAttribute nodal_conditions_un CNVDFFNodalConditions
-    ConvectionDiffusion::write::SetAttribute conditions_un CNVDFFBC
-    ConvectionDiffusion::write::SetAttribute model_part_name ThermalModelPart
-    ConvectionDiffusion::write::SetAttribute thermal_bc_un CNVDFFBC
+    ::ConvectionDiffusion::write::SetAttribute nodal_conditions_un CNVDFFNodalConditions
+    ::ConvectionDiffusion::write::SetAttribute conditions_un CNVDFFBC
+    ::ConvectionDiffusion::write::SetAttribute model_part_name ThermalModelPart
+    ::ConvectionDiffusion::write::SetAttribute thermal_bc_un CNVDFFBC
     write::initWriteConfiguration [ConvectionDiffusion::write::GetAttributes]
     set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
 

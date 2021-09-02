@@ -1,15 +1,18 @@
+namespace eval ConjugateHeatTransfer::examples::CylinderCooling {
 
-proc ::ConjugateHeatTransfer::examples::CylinderCooling {args} {
+}
+
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
 
-    DrawCylinderCoolingGeometry$::Model::SpatialDimension
-    CylinderCoolingAssignGroups$::Model::SpatialDimension
-    CylinderCoolingTreeAssignation$::Model::SpatialDimension
-    CylinderCoolingAssignMeshSizes$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -19,7 +22,7 @@ proc ::ConjugateHeatTransfer::examples::CylinderCooling {args} {
 
 
 # Draw Geometry
-proc ConjugateHeatTransfer::examples::DrawCylinderCoolingGeometry2D {args} {
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers create Cylinder
@@ -63,12 +66,12 @@ proc ConjugateHeatTransfer::examples::DrawCylinderCoolingGeometry2D {args} {
     GiD_Process Mescape Geometry Create Object CirclePNR $circle_center_x $circle_center_y $circle_center_z 0.0 0.0 1.0 $center_radius escape
 }
 
-proc ConjugateHeatTransfer::examples::DrawCylinderCoolingGeometry3D {args} {
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::DrawGeometry3D {args} {
     # To be implemented
 }
 
 # Groups assign
-proc ConjugateHeatTransfer::examples::CylinderCoolingAssignGroups2D {args} {
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::AssignGroups2D {args} {
     # Create the groups for the fluid
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -104,12 +107,12 @@ proc ConjugateHeatTransfer::examples::CylinderCoolingAssignGroups2D {args} {
     GiD_EntitiesGroups assign Solid_Interface lines 6
 }
 
-proc ConjugateHeatTransfer::examples::CylinderCoolingAssignGroups3D {args} {
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::AssignGroups3D {args} {
     # To be implemented
 }
 
 # Tree assign
-proc ConjugateHeatTransfer::examples::CylinderCoolingTreeAssignation2D {args} {
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -211,12 +214,12 @@ proc ConjugateHeatTransfer::examples::CylinderCoolingTreeAssignation2D {args} {
     spdAux::RequestRefresh
 }
 
-proc ConjugateHeatTransfer::examples::CylinderCoolingTreeAssignation3D {args} {
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::TreeAssignation3D {args} {
     # TODO: To be implemented
 }
 
 # Assign mesh settings and sizes
-proc ConjugateHeatTransfer::examples::CylinderCoolingAssignMeshSizes2D {args} {
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::AssignMeshSizes2D {args} {
     # Assign centered structured triangular mesh in the solid cylinder
     GiD_Process Mescape Meshing ElemType Triangle 2 escape escape
     GiD_Process MEscape Meshing CenterStruct Assign 0.0 0.5 10 110 2 escape escape
@@ -231,6 +234,6 @@ proc ConjugateHeatTransfer::examples::CylinderCoolingAssignMeshSizes2D {args} {
     GiD_Process Mescape Meshing Structured Lines 120 6 escape escape
 }
 
-proc ConjugateHeatTransfer::examples::CylinderCoolingAssignMeshSizes3D {args} {
+proc ::ConjugateHeatTransfer::examples::CylinderCooling::AssignMeshSizes3D {args} {
     # To be implemented
 }
