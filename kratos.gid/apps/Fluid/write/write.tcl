@@ -71,8 +71,8 @@ proc ::Fluid::write::writeCustomFilesEvent { } {
 
     # Main python script
     set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "MainKratos.py"
+    write::CopyFileIntoModel $orig_name
+    write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
 }
 
 # Custom files
