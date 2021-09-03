@@ -19,3 +19,7 @@ proc ::ConjugateHeatTransfer::Init { app } {
     ::ConjugateHeatTransfer::write::Init
 
 }
+
+proc ::ConjugateHeatTransfer::GetAttribute {name} {return [$::ConjugateHeatTransfer::_app getProperty $name]}
+proc ::ConjugateHeatTransfer::GetUniqueName {name} {return [$::ConjugateHeatTransfer::_app getUniqueName $name]}
+proc ::ConjugateHeatTransfer::GetWriteProperty {name} {return [$::ConjugateHeatTransfer::_app getWriteProperty $name]}

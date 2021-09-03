@@ -51,9 +51,8 @@ proc ::ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
 
     # Main python script
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "MainKratos.py"
+    write::CopyFileIntoModel [GetAttribute main_script_file]
+    write::RenameFileInModel [file tail [GetAttribute main_script_file]] "MainKratos.py"
 }
 
 proc ::ConjugateHeatTransfer::write::Validate {} {
