@@ -1,4 +1,5 @@
-namespace eval ::Fluid::write {
+namespace eval ::Kratos::Fluid::write {
+    namespace path ::Kratos::Fluid
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes
@@ -6,32 +7,32 @@ namespace eval ::Fluid::write {
     # after regular conditions are written, we need this number in order to print the custom submodelpart conditions
     # only if are applied over things that are not in the skin
     variable last_condition_iterator
-}
 
-proc ::Fluid::write::Init { } {
+
+proc Init { } {
     # Namespace variables inicialization
-    SetAttribute parts_un [::Fluid::GetUniqueName parts]
-    SetAttribute nodal_conditions_un [::Fluid:::GetUniqueName nodal_conditions]
-    SetAttribute conditions_un [::Fluid::GetUniqueName conditions]
-    SetAttribute materials_un [::Fluid::GetUniqueName materials]
-    SetAttribute results_un [::Fluid::GetUniqueName results]
-    SetAttribute drag_un [::Fluid::GetUniqueName drag]
-    SetAttribute time_parameters_un [::Fluid::GetUniqueName time_parameters]
+    SetAttribute parts_un [GetUniqueName parts]
+    SetAttribute nodal_conditions_un [GetUniqueName nodal_conditions]
+    SetAttribute conditions_un [GetUniqueName conditions]
+    SetAttribute materials_un [GetUniqueName materials]
+    SetAttribute results_un [GetUniqueName results]
+    SetAttribute drag_un [GetUniqueName drag]
+    SetAttribute time_parameters_un [GetUniqueName time_parameters]
     
-    SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
+    SetAttribute writeCoordinatesByGroups [GetWriteProperty coordinates]
     SetAttribute validApps [list "Fluid"]
-    SetAttribute main_script_file [::Fluid::GetAttribute main_launch_file]
-    SetAttribute materials_file [::Fluid::GetWriteProperty materials_file]
-    SetAttribute properties_location [::Fluid::GetWriteProperty properties_location]
-    SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
-    SetAttribute output_model_part_name [::Fluid::GetWriteProperty output_model_part_name]
+    SetAttribute main_script_file [GetAttribute main_launch_file]
+    SetAttribute materials_file [GetWriteProperty materials_file]
+    SetAttribute properties_location [GetWriteProperty properties_location]
+    SetAttribute model_part_name [GetWriteProperty model_part_name]
+    SetAttribute output_model_part_name [GetWriteProperty output_model_part_name]
 
     variable last_condition_iterator
     set last_condition_iterator 0
 }
 
 # MDPA write event
-proc ::Fluid::write::writeModelPartEvent { } {
+proc writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -56,18 +57,18 @@ proc ::Fluid::write::writeModelPartEvent { } {
 
     # Custom SubmodelParts
     variable last_condition_iterator
-    write::writeBasicSubmodelPartsByUniqueId  $Fluid::write::FluidConditionMap $last_condition_iterator
+    write::writeBasicSubmodelPartsByUniqueId  $FluidConditionMap $last_condition_iterator
     
     # SubmodelParts
     writeMeshes
 
     # Clean
-    unset ::Fluid::write::FluidConditionMap
+    unset FluidConditionMap
 }
 
-proc ::Fluid::write::writeCustomFilesEvent { } {
+proc writeCustomFilesEvent { } {
     # Write the fluid materials json file
-    ::Fluid::write::WriteMaterialsFile
+    WriteMaterialsFile
 
     # Main python script
     set orig_name [GetAttribute main_script_file]
@@ -76,13 +77,13 @@ proc ::Fluid::write::writeCustomFilesEvent { } {
 }
 
 # Custom files
-proc ::Fluid::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
+proc WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law $model_part_name
 }
 
-proc ::Fluid::write::Validate {} {
+proc Validate {} {
     set err ""
     set root [customlib::GetBaseRoot]
 
@@ -100,23 +101,23 @@ proc ::Fluid::write::Validate {} {
 }
 
 # MDPA Blocks
-proc ::Fluid::write::writeProperties { } {
+proc writeProperties { } {
     # Begin Properties
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     write::WriteString ""
 }
 
-proc ::Fluid::write::writeConditions { } {
+proc writeConditions { } {
     writeBoundaryConditions
     writeDrags
 }
 
-proc ::Fluid::write::getFluidModelPartFilename { } {
+proc getFluidModelPartFilename { } {
     return [Kratos::GetModelName]
 }
 
-proc ::Fluid::write::writeBoundaryConditions { } {
+proc writeBoundaryConditions { } {
     variable FluidConditionMap
     variable last_condition_iterator
 
@@ -148,26 +149,26 @@ proc ::Fluid::write::writeBoundaryConditions { } {
         set kname LineCondition2D2N
         set nnodes 2
     }
-    set last_condition_iterator [write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $::Fluid::write::FluidConditionMap]
+    set last_condition_iterator [write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $FluidConditionMap]
 
     # Clean
     GiD_Groups delete $skin_group_name
 }
 
-proc ::Fluid::write::writeDrags { } {
+proc writeDrags { } {
     lappend ::Model::NodalConditions [::Model::NodalCondition new Drag]
     write::writeNodalConditions [GetAttribute drag_un]
     Model::ForgetNodalCondition Drag
 }
 
-proc ::Fluid::write::writeMeshes { } {
+proc writeMeshes { } {
     write::writePartSubModelPart
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
     writeConditionsMesh
     #writeSkinMesh
 }
 
-proc ::Fluid::write::writeConditionsMesh { } {
+proc writeConditionsMesh { } {
 
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
@@ -188,7 +189,7 @@ proc ::Fluid::write::writeConditionsMesh { } {
             if {![$cond hasTopologyFeatures]} {
                 ::write::writeGroupSubModelPart $condid $groupid "Nodes"
             } else {
-                ::write::writeGroupSubModelPartByUniqueId $condid $groupid $Fluid::write::FluidConditionMap "Conditions"
+                ::write::writeGroupSubModelPartByUniqueId $condid $groupid $FluidConditionMap "Conditions"
             }
         }
     }
@@ -200,11 +201,11 @@ proc ::Fluid::write::writeConditionsMesh { } {
             set groupid [get_domnode_attribute $group n]
             dict set groups_dict $groupid what "Conditions"
         }
-        write::writeConditionGroupedSubmodelPartsByUniqueId $condid $groups_dict $Fluid::write::FluidConditionMap
+        write::writeConditionGroupedSubmodelPartsByUniqueId $condid $groups_dict $FluidConditionMap
     }
 }
 
-proc ::Fluid::write::InitConditionsMap { {map "" } } {
+proc InitConditionsMap { {map "" } } {
 
     variable FluidConditionMap
     if {$map eq ""} {
@@ -213,43 +214,44 @@ proc ::Fluid::write::InitConditionsMap { {map "" } } {
         set FluidConditionMap $map
     }
 }
-proc ::Fluid::write::FreeConditionsMap { } {
+proc FreeConditionsMap { } {
 
     variable FluidConditionMap
     unset FluidConditionMap
 }
 
-proc ::Fluid::write::GetAttribute {att} {
+proc GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc ::Fluid::write::GetAttributes {} {
+proc GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc ::Fluid::write::SetAttribute {att val} {
+proc SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc ::Fluid::write::AddAttribute {att val} {
+proc AddAttribute {att val} {
     variable writeAttributes
     dict lappend writeAttributes $att $val
 }
 
-proc ::Fluid::write::AddAttributes {configuration} {
+proc AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc ::Fluid::write::AddValidApps {appid} {
+proc AddValidApps {appid} {
     AddAttribute validApps $appid
 }
 
-proc ::Fluid::write::SetCoordinatesByGroups {value} {
+proc SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
 
 
+}
