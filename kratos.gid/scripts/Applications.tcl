@@ -312,7 +312,10 @@ proc apps::ActivateApp_do {app} {
             }
         }
         apps::ApplyAppPreferences $app
+        
+        if {[dict exists $props permissions wizard]} {if {[write::isBooleanTrue [dict get $props permissions wizard]]} { Kratos::LoadWizardFiles }}
         if {[dict exists $props start_script]} {eval [dict get $props start_script] $app}
+        if {[dict exists $props dimensions]} { set ::Model::ValidSpatialDimensions [dict get $props dimensions] }
     } else {
         W "MISSING app.json file for app $app_name"
         set fileName [file join $dir start.tcl]

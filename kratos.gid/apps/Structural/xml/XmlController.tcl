@@ -20,7 +20,7 @@ proc ::Structural::xml::Init { } {
 }
 
 proc ::Structural::xml::getUniqueName {name} {
-    return ST$name
+    return [::Structural::GetAttribute prefix]$name
 }
 
 proc ::Structural::xml::CustomTree { args } {

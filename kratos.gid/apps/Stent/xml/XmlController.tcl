@@ -1,10 +1,8 @@
 namespace eval Stent::xml {
-     variable dir
 }
 
 proc Stent::xml::Init { } {
-    variable dir
-    Model::InitVariables dir $Stent::dir
+    Model::InitVariables dir $::Stent::dir
     
     # Import our elements
     Model::ForgetElements
@@ -14,7 +12,7 @@ proc Stent::xml::Init { } {
 }
 
 proc Stent::xml::getUniqueName {name} {
-    return ST$name
+    return [::Stent::GetAttribute prefix]$name
 }
 
 
@@ -23,7 +21,7 @@ proc Stent::xml::CustomTree { args } {
     Structural::xml::CustomTree {*}$args
 }
 
-
+namespace eval Structural::xml {}
 proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     set ret "line"
     return $ret
@@ -33,4 +31,3 @@ proc Stent::xml::UpdateParts {domNode args} {
     Structural::xml::UpdateParts $domNode {*}$args
 }
 
-Stent::xml::Init

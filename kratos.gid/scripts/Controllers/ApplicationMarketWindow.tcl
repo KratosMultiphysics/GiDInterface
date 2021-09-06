@@ -208,7 +208,6 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
     ::Kratos::UpdateMenus
 }
 
-
 proc spdAux::reactiveApp { } {
     #W "Reactive"
     variable initwind    
@@ -235,6 +234,7 @@ proc spdAux::deactiveApp { appid } {
         } 
     }
 }
+
 proc spdAux::activeApp { appid } {
     #W "Active $appid"
     catch {

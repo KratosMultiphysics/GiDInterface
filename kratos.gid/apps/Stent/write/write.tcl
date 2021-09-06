@@ -1,26 +1,15 @@
-namespace eval Stent::write {
-}
+namespace eval Stent::write { }
 
-proc Stent::write::Init { } {
-    #Structural::write::Init
-}
+proc Stent::write::Init { } { }
 
 # MDPA Blocks
-proc Stent::write::writeModelPartEvent { } {
-    Structural::write::writeModelPartEvent
-}
+proc Stent::write::writeModelPartEvent { } {Structural::write::writeModelPartEvent}
+
+# Materials
+proc Stent::write::WriteMaterialsFile { } {Structural::write::WriteMaterialsFile}
 
 # Custom files
-proc Stent::write::WriteMaterialsFile { } {
-     Structural::write::WriteMaterialsFile
-}
+proc Stent::write::writeCustomFilesEvent { } {Structural::write::writeCustomFilesEvent}
 
-proc Stent::write::writeCustomFilesEvent { } {
-    Structural::write::writeCustomFilesEvent
-}
-proc Stent::write::writeParametersEvent { } {
-    Structural::write::writeParametersEvent
-    
-}
-
-Stent::write::Init
+# Project parameters
+proc Stent::write::writeParametersEvent { } {Structural::write::writeParametersEvent}
