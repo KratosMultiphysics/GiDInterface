@@ -1,77 +1,46 @@
 namespace eval ::StenosisWizard {
     # Variable declaration
     variable dir
-    variable kratos_name
-    variable attributes
-    variable must_open_wizard_window
+    variable _app
 }
 
-proc ::StenosisWizard::Init { } {
+proc ::StenosisWizard::Init { app } {
     # Variable initialization
     variable dir
-    variable kratos_name
-    variable attributes
-    variable must_open_wizard_window
+    variable _app $app
     
     set  must_open_wizard_window 1
     
     # Init Working directory
     set dir [apps::getMyDir "StenosisWizard"]
-    # We'll work on 3D space
-    spdAux::SetSpatialDimmension "3D"
+    
     # Load Fluid App
     apps::LoadAppById "Fluid"
     
     spdAux::processIncludes
     
-    set kratos_name $::Fluid::kratos_name
-    # Don't open the tree
-    set ::spdAux::TreeVisibility 0
-
-    dict set attributes UseIntervals 1
-    
-    # Enable the Wizard Module
-    Kratos::LoadWizardFiles
-    LoadMyFiles
-}
-
-proc ::StenosisWizard::LoadMyFiles { } {
-    variable dir
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
     smart_wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]
-    uplevel #0 [list source [file join $dir wizard Wizard_Steps.tcl]]
     smart_wizard::ImportWizardData
+
     
+    StenosisWizard::xml::Init
+    StenosisWizard::write::Init
     
     # Init the Wizard Window
     after 600 [::StenosisWizard::StartWizardWindow]
 }
-
 
 proc ::StenosisWizard::StartWizardWindow { } {
     variable dir
     gid_groups_conds::close_all_windows
     
     smart_wizard::Init
-    uplevel #0 [list source [file join $dir wizard Wizard_Steps.tcl]]
     smart_wizard::SetWizardNamespace "::StenosisWizard::Wizard"
     smart_wizard::SetWizardWindowName ".gid.activewizard"
     smart_wizard::SetWizardImageDirectory [file join $dir images]
     smart_wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]
     smart_wizard::ImportWizardData
-    variable must_open_wizard_window
-
-    if {$must_open_wizard_window} {smart_wizard::CreateWindow }
-}
-proc ::StenosisWizard::CustomToolbarItems { } {
-    return "-1"    
-}
-proc ::StenosisWizard::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
+    smart_wizard::CreateWindow 
 }
 
-::StenosisWizard::Init
+proc ::StenosisWizard::GetAttribute {name} {return [$::StenosisWizard::_app getProperty $name]}
