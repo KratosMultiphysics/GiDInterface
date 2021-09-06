@@ -17,7 +17,7 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::Kratos::Fluid::Init",
+    "start_script":"::Fluid::Init",
     "requeriments":{
         "apps":[],
         "minimum_gid_version":"15.1.3d"

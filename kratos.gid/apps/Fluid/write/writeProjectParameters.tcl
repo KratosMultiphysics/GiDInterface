@@ -1,5 +1,5 @@
 # Project Parameters
-proc ::Kratos::Fluid::write::getParametersDict { } {
+proc ::Fluid::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
     # Problem data
@@ -25,13 +25,13 @@ proc ::Kratos::Fluid::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc ::Kratos::Fluid::write::writeParametersEvent { } {
+proc ::Fluid::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
 
-proc ::Kratos::Fluid::write::getAuxiliarProcessList {} {
+proc ::Fluid::write::getAuxiliarProcessList {} {
     set process_list [list ]
 
     foreach process [getDragProcessList] {lappend process_list $process}
@@ -39,7 +39,7 @@ proc ::Kratos::Fluid::write::getAuxiliarProcessList {} {
     return $process_list
 }
 
-proc ::Kratos::Fluid::write::getDragProcessList {} {
+proc ::Fluid::write::getDragProcessList {} {
     set root [customlib::GetBaseRoot]
 
     set process_list [list ]
@@ -73,7 +73,7 @@ proc ::Kratos::Fluid::write::getDragProcessList {} {
 }
 
 # Gravity SubModelParts and Process collection
-proc ::Kratos::Fluid::write::getGravityProcessDict {} {
+proc ::Fluid::write::getGravityProcessDict {} {
     set root [customlib::GetBaseRoot]
 
     set value [write::getValue FLGravity GravityValue]
@@ -98,7 +98,7 @@ proc ::Kratos::Fluid::write::getGravityProcessDict {} {
 }
 
 # Skin SubModelParts ids
-proc ::Kratos::Fluid::write::getBoundaryConditionMeshId {} {
+proc ::Fluid::write::getBoundaryConditionMeshId {} {
     set root [customlib::GetBaseRoot]
     set listOfBCGroups [list ]
     set xp1 "[spdAux::getRoute [::Fluid::GetUniqueName conditions]]/condition/group"
@@ -126,7 +126,7 @@ proc ::Kratos::Fluid::write::getBoundaryConditionMeshId {} {
 }
 
 # No-skin SubModelParts ids
-proc ::Kratos::Fluid::write::getNoSkinConditionMeshId {} {
+proc ::Fluid::write::getNoSkinConditionMeshId {} {
     set root [customlib::GetBaseRoot]
     set listOfNoSkinGroups [list ]
 
@@ -158,7 +158,7 @@ proc ::Kratos::Fluid::write::getNoSkinConditionMeshId {} {
     return $listOfNoSkinGroups
 }
 
-proc ::Kratos::Fluid::write::GetUsedElements {} {
+proc ::Fluid::write::GetUsedElements {} {
     set root [customlib::GetBaseRoot]
 
     # Get the fluid part
@@ -173,7 +173,7 @@ proc ::Kratos::Fluid::write::GetUsedElements {} {
     return $lista
 }
 
-proc ::Kratos::Fluid::write::getSolverSettingsDict { } {
+proc ::Fluid::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
@@ -259,7 +259,7 @@ proc ::Kratos::Fluid::write::getSolverSettingsDict { } {
     return $solverSettingsDict
 }
 
-proc ::Kratos::Fluid::write::GetMonolithicElementTypeFromElementName {element_name} {
+proc ::Fluid::write::GetMonolithicElementTypeFromElementName {element_name} {
     set element [Model::getElement $element_name]
     if {![$element hasAttribute FormulationElementType]} {error "Your monolithic element $element_name need to define the FormulationElementType field"}
     set formulation_element_type [$element getAttribute FormulationElementType]
