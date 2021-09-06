@@ -25,31 +25,7 @@ proc PotentialFluid::write::Init { } {
 proc PotentialFluid::write::writeModelPartEvent { } {
     # Add the PotentialFluid to the Fluid valid applications list
     Fluid::write::AddValidApps "PotentialFluid"
-
-    # Validation
-    Fluid::write::InitConditionsMap
-
-    set err [Fluid::write::Validate]
-    if {$err ne ""} {error $err}
-
-    # Init data
-    write::initWriteConfiguration [GetAttributes]
-
-    # Headers
-    write::writeModelPartData
-    Fluid::write::writeProperties
-
-    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
-
-    # Element connectivities (groups in FLParts)
-    write::writeElementConnectivities
-
-    # Nodal conditions and conditions
-    Fluid::write::writeConditions
-
-    # SubmodelParts
-    Fluid::write::writeMeshes
+    Fluid::write::writeModelPartEvent
 }
 
 proc PotentialFluid::write::writeCustomFilesEvent { } {
