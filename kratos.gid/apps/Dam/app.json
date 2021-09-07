@@ -32,7 +32,7 @@
         "parts": "DamParts",
         "nodal_conditions": "DamNodalConditions",
         "conditions": "DamLoads",
-        "thermal_conditions_un": "DamThermalLoads",
+        "thermal_conditions": "DamThermalLoads",
         "materials": "DamMaterials",
         "results": "Results",
         "time_parameters": "DamTimeParameters"
