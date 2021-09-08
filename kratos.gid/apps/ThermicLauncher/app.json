@@ -6,7 +6,7 @@
     ],
     "start_script":"::ThermicLauncher::Init",
     "requeriments":{
-        "apps":["ConvectionDiffusion", "Buoyancy", "ConjugateHeatTransfer"],
+        "apps_exist":["ConvectionDiffusion", "Buoyancy", "ConjugateHeatTransfer"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {

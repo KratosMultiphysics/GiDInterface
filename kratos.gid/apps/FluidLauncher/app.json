@@ -6,7 +6,7 @@
     ],
     "start_script":"::FluidLauncher::Init",
     "requeriments":{
-        "apps":["Fluid","EmbeddedFluid", "PotentialFluid", "Buoyancy", "ConjugateHeatTransfer", "FluidDEM"],
+        "apps_exist":["Fluid","EmbeddedFluid", "PotentialFluid", "Buoyancy", "ConjugateHeatTransfer", "FluidDEM"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
