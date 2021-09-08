@@ -9,8 +9,6 @@ proc ::PotentialFluid::Init { app } {
     variable dir
     variable _app
 
-    apps::LoadAppById "Fluid"
-
     set dir [apps::getMyDir "PotentialFluid"]
     set _app $app
     

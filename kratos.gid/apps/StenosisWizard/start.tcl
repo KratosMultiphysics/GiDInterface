@@ -13,10 +13,7 @@ proc ::StenosisWizard::Init { app } {
     
     # Init Working directory
     set dir [apps::getMyDir "StenosisWizard"]
-    
-    # Load Fluid App
-    apps::LoadAppById "Fluid"
-    
+        
     spdAux::processIncludes
     
     smart_wizard::LoadWizardDoc [file join $dir wizard Wizard_default.wiz]

@@ -13,8 +13,6 @@ proc ::ConjugateHeatTransfer::Init { app } {
     set _app $app
     set dir [apps::getMyDir "ConjugateHeatTransfer"]
 
-    apps::LoadAppById "Buoyancy"
-
     ::ConjugateHeatTransfer::xml::Init
     ::ConjugateHeatTransfer::write::Init
 

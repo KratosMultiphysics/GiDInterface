@@ -20,7 +20,7 @@
     ],
     "start_script":"::FSI::Init",
     "requeriments":{
-        "apps":[],
+        "apps":["Fluid", "Structural"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {

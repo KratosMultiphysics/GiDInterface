@@ -13,9 +13,6 @@ proc ::Buoyancy::Init { app } {
     set dir [apps::getMyDir "Buoyancy"]
     set _app $app
     
-    apps::LoadAppById "Fluid"
-    apps::LoadAppById "ConvectionDiffusion"
-
     ::Buoyancy::xml::Init
     ::Buoyancy::write::Init
     

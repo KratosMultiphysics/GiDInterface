@@ -15,7 +15,7 @@
     ],
     "start_script":"::StenosisWizard::Init",
     "requeriments":{
-        "apps":[],
+        "apps":["Fluid"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {

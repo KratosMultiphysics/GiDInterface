@@ -10,14 +10,11 @@ proc ::EmbeddedFluid::Init { app } {
     variable _app
     set _app $app
 
-    apps::LoadAppById "Fluid"
-
     set dir [apps::getMyDir "EmbeddedFluid"]
 
     Kratos::AddRestoreVar "::GidPriv(DuplicateEntities)"
     set ::GidPriv(DuplicateEntities) 1
 
-    
     ::EmbeddedFluid::xml::Init
     ::EmbeddedFluid::xml::BoundingBox::Init
     ::EmbeddedFluid::write::Init

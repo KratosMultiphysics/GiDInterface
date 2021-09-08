@@ -305,6 +305,15 @@ proc apps::ActivateApp_do {app} {
     if {[file exists $app_definition_file]} {
         set props [Kratos::ReadJsonDict $app_definition_file]
         $app setProperties $props
+
+        # Load app dependences
+        if {[dict exists $props requeriments apps]} {
+            foreach app_id [dict get $props requeriments apps] {
+                apps::LoadAppById $app_id
+            }
+        }
+
+        # Then load the app files, so we can overwrite functions loaded in dependences
         if {[dict exists $props script_files]} {
             foreach source_file [dict get $props script_files] {
                 set fileName [file join $dir $source_file]

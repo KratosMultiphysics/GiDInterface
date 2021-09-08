@@ -10,7 +10,6 @@ proc ::MPM::Init { app } {
     variable _app
     set _app $app
 
-    apps::LoadAppById "Structural"
     set dir [apps::getMyDir "MPM"]
     Kratos::AddRestoreVar "::GidPriv(DuplicateEntities)"
     set ::GidPriv(DuplicateEntities) 1

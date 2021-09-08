@@ -11,10 +11,7 @@ proc ::Stent::Init { app } {
 
     set dir [apps::getMyDir "Stent"]
     set _app $app
-    
-    # Load Fluid App
-    apps::LoadAppById "Structural"
-    
+        
     spdAux::processIncludes
     
     smart_wizard::LoadWizardDoc [file join $dir wizard StentGeometry_default.wiz]

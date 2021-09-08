@@ -25,7 +25,7 @@ proc EmbeddedFluid::xml::Init { } {
 proc EmbeddedFluid::xml::MultiAppEvent {args} {
     if {$args eq "init"} {
         spdAux::parseRoutes
-        spdAux::ConvertAllUniqueNames FL [::EmbeddedFluid::GetAttribute prefix]
+        spdAux::ConvertAllUniqueNames [::Fluid::GetAttribute prefix] [::EmbeddedFluid::GetAttribute prefix]
     }
 }
 

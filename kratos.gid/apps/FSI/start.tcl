@@ -11,10 +11,7 @@ proc ::FSI::Init { app } {
 
     set _app $app
     set dir [apps::getMyDir "FSI"]
-    
-    apps::LoadAppById "Structural"
-    apps::LoadAppById "Fluid"
-    
+        
     ::FSI::xml::Init
     ::FSI::write::Init
 }
