@@ -15,7 +15,7 @@ proc PfemFluid::xml::Init { } {
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
     Model::getNodalConditions NodalConditions.xml
-    Model::getSolvers "../../Pfem/xml/Solvers.xml"
+    Model::getSolvers Solvers.xml
     
     Model::ForgetNodalCondition "CONTACT"
 }
