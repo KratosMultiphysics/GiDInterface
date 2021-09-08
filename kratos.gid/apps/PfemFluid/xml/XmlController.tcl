@@ -1,15 +1,13 @@
 namespace eval PfemFluid::xml {
-    variable dir
     variable bodyNodalCondition
 }
 
 proc PfemFluid::xml::Init { } {
-    variable dir
     variable bodyNodalCondition
     
     set bodyNodalCondition [list ]
     
-    Model::InitVariables dir $PfemFluid::dir
+    Model::InitVariables dir $::PfemFluid::dir
     
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -51,7 +49,6 @@ proc PfemFluid::xml::CustomTree { args } {
     foreach node [$app_root getElementsByTagName container ] { if {[$node hasAttribute solstratname]} {$node setAttribute icon folder } }
     #TODO: (for JG) the previous icons should be changed automatically looking at the strategies.xml
 
-    
     #intervals
     spdAux::SetValueOnTreeItem icon sheets Intervals
     foreach node [[$app_root parent] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
@@ -592,5 +589,3 @@ proc PfemFluid::xml::ProcCheckStateBoundingBox3Dimension {domNode args} {
     }
     if {$state} {return "normal"} else {return "hidden"}
 }
-
-PfemFluid::xml::Init

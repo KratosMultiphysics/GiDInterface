@@ -1,13 +1,11 @@
-namespace eval PfemFluid::examples {
+namespace eval ::PfemFluid::examples {
 
 }
 
-proc PfemFluid::examples::Init { } {
-    uplevel #0 [list source [file join $::PfemFluid::dir examples WaterDamBreak.tcl]]
-    uplevel #0 [list source [file join $::PfemFluid::dir examples DamBreakFSI.tcl]]
+proc ::PfemFluid::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
-
-proc PfemFluid::examples::UpdateMenus { } {
-}
-
-PfemFluid::examples::Init

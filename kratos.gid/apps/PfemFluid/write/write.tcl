@@ -14,9 +14,14 @@ proc PfemFluid::write::Init { } {
     variable Names
     set Names [dict create DeltaTime DeltaTime]
 
-    SetAttribute properties_location json
-    SetAttribute model_part_name "PfemFluidModelPart"
-    SetAttribute materials_file "PFEMFluidMaterials.json"
+
+    SetAttribute materials_un [::PfemFluid::GetUniqueName materials]
+    SetAttribute nodal_conditions_un [::PfemFluid::GetUniqueName nodal_conditions]
+    
+    SetAttribute main_script_file [::PfemFluid::GetAttribute main_launch_file]
+    SetAttribute materials_file [::PfemFluid::GetWriteProperty materials_file]
+    SetAttribute properties_location [::PfemFluid::GetWriteProperty properties_location]
+    SetAttribute model_part_name [::PfemFluid::GetWriteProperty model_part_name]
 }
 
 
@@ -27,7 +32,7 @@ proc PfemFluid::write::writeModelPartEvent { } {
 
     set parts_un_list [GetPartsUN]
     foreach part_un $parts_un_list {
-        write::initWriteData $part_un "PFEMFLUID_Materials"
+        write::initWriteData $part_un [GetAttribute materials_un]
     }
 
     write::writeModelPartData
@@ -37,7 +42,7 @@ proc PfemFluid::write::writeModelPartEvent { } {
 
     write::writeNodalCoordinates
     foreach part_un $parts_un_list {
-        write::initWriteData $part_un "PFEMFLUID_Materials"
+        write::initWriteData $part_un [GetAttribute materials_un]
         write::writeElementConnectivities
     }
     PfemFluid::write::writeMeshes
@@ -46,11 +51,11 @@ proc PfemFluid::write::writeModelPartEvent { } {
 proc PfemFluid::write::writeMeshes { } {
 
     foreach part_un [GetPartsUN] {
-        write::initWriteData $part_un "PFEMFLUID_Materials"
+        write::initWriteData $part_un [GetAttribute materials_un]
         write::writePartSubModelPart
     }
     # Solo Malla , no en conditions
-    writeNodalConditions "PFEMFLUID_NodalConditions"
+    writeNodalConditions [GetAttribute nodal_conditions_un]
 
 }
 
@@ -100,10 +105,11 @@ proc PfemFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     PfemFluid::write::WriteMaterialsFile
 
-    write::CopyFileIntoModel "python/RunPFEM.py"
-    write::RenameFileInModel "RunPFEM.py" "MainKratos.py"
+    # Main python script
+    set orig_name [GetAttribute main_script_file]
+    write::CopyFileIntoModel $orig_name
+    write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
 
-    #write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
 }
 
 proc PfemFluid::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
@@ -125,8 +131,6 @@ proc PfemFluid::write::writePropertiesJsonFile { {fname "materials.json"} {write
     write::WriteJSON $mats_json
     write::CloseFile
 }
-
-
 
 proc PfemFluid::write::GetAttribute {att} {
     variable writeAttributes
@@ -152,6 +156,3 @@ proc PfemFluid::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
-
-
-PfemFluid::write::Init

@@ -2,7 +2,7 @@ namespace eval ::PfemLauncher {
     variable available_apps
 }
 
-proc ::PfemLauncher::Init { } {
+proc ::PfemLauncher::Init { app } {
     variable available_apps
 
     set available_apps [list PfemFluid DEMPFEM PfemThermic]
@@ -66,5 +66,3 @@ proc ::PfemLauncher::ChangeAppTo {appid} {
     spdAux::SetSpatialDimmension undefined
     apps::setActiveApp $appid
 }
-
-::PfemLauncher::Init
