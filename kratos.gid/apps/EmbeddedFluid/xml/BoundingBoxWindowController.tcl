@@ -199,4 +199,3 @@ proc EmbeddedFluid::xml::BoundingBox::GetCurrentBox { } {
     return {*}$modelbox
 }
 
-EmbeddedFluid::xml::BoundingBox::Init

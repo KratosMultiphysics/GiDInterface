@@ -1,0 +1,43 @@
+{
+    "id": "EmbeddedFluid",
+    "name": "EmbeddedFluid",
+    "prefix": "EMBFL",
+    "themed": false,
+    "kratos_name": "FluidDynamicsApplication",
+    "dimensions": [
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/CylinderInFlow.tcl",
+        "xml/XmlController.tcl",
+        "xml/BoundingBoxWindowController.tcl",
+        "xml/ImportWindowController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::EmbeddedFluid::Init",
+    "requeriments":{
+        "apps":[],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "materials": "EMBFLMaterials"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "FluidMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "FluidModelPart",
+        "output_model_part_name": "fluid_computational_model_part"
+    },
+    "main_launch_file": "python/KratosFluid.py",
+    "examples": "examples/examples.xml"
+}

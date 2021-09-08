@@ -61,6 +61,9 @@ proc ::Fluid::write::writeModelPartEvent { } {
     # SubmodelParts
     writeMeshes
 
+    # Write custom blocks at the end of the file
+    writeCustomBlocks
+
     # Clean
     unset ::Fluid::write::FluidConditionMap
 }
@@ -202,6 +205,11 @@ proc ::Fluid::write::writeConditionsMesh { } {
         }
         write::writeConditionGroupedSubmodelPartsByUniqueId $condid $groups_dict $Fluid::write::FluidConditionMap
     }
+}
+
+# Overwrite this function to print something at the end of the mdpa
+proc ::Fluid::write::writeCustomBlocks { } {
+
 }
 
 proc ::Fluid::write::InitConditionsMap { {map "" } } {

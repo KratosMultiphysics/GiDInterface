@@ -1,18 +1,15 @@
 namespace eval EmbeddedFluid::xml {
     # Namespace variables declaration
-    variable dir
     variable lastImportMeshSize
     variable export_dir
-
 }
 
 proc EmbeddedFluid::xml::Init { } {
     # Namespace variables inicialization
-    variable dir
     variable lastImportMeshSize
     set lastImportMeshSize 0
     Model::DestroyEverything
-    Model::InitVariables dir $EmbeddedFluid::dir
+    Model::InitVariables dir $::EmbeddedFluid::dir
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements "../../Fluid/xml/Elements.xml"
@@ -25,16 +22,15 @@ proc EmbeddedFluid::xml::Init { } {
     Model::getSolvers "../../Common/xml/Solvers.xml"
 }
 
-
 proc EmbeddedFluid::xml::MultiAppEvent {args} {
     if {$args eq "init"} {
         spdAux::parseRoutes
-        spdAux::ConvertAllUniqueNames FL ${::EmbeddedFluid::prefix}
+        spdAux::ConvertAllUniqueNames FL [::EmbeddedFluid::GetAttribute prefix]
     }
 }
 
 proc EmbeddedFluid::xml::getUniqueName {name} {
-    return ${::EmbeddedFluid::prefix}${name}
+    return [::EmbeddedFluid::GetAttribute prefix]${name}
 }
 
 proc EmbeddedFluid::xml::CustomTree { args } {
@@ -66,7 +62,4 @@ proc EmbeddedFluid::xml::CustomTree { args } {
     #spdAux::SetValueOnTreeItem v MN EMBFLScheme
     #spdAux::SetValueOnTreeItem values MN EMBFLScheme
     #spdAux::SetValueOnTreeItem dict "MN,Monolitic generic scheme" EMBFLScheme
-
 }
-
-EmbeddedFluid::xml::Init
