@@ -1,4 +1,7 @@
-proc ::PfemThermic::examples::ThermicSloshing {args} {
+namespace eval PfemThermic::examples::ThermicSloshing {
+
+}
+proc ::PfemThermic::examples::ThermicSloshing::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -6,9 +9,9 @@ proc ::PfemThermic::examples::ThermicSloshing {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicSloshingGeometry
-    AssignGroupsThermicSloshingGeometry
-    TreeAssignationThermicSloshing
+    DrawGeometry
+    AssignGroups
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +20,7 @@ proc ::PfemThermic::examples::ThermicSloshing {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicSloshingGeometry {args} {
+proc PfemThermic::examples::ThermicSloshing::DrawGeometry {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
@@ -48,7 +51,7 @@ proc PfemThermic::examples::DrawThermicSloshingGeometry {args} {
 }
 
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicSloshingGeometry {args} {
+proc PfemThermic::examples::ThermicSloshing::AssignGroups {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -60,7 +63,7 @@ proc PfemThermic::examples::AssignGroupsThermicSloshingGeometry {args} {
 }
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicSloshing {args} {
+proc PfemThermic::examples::ThermicSloshing::TreeAssignation {args} {
     # Physics
 	spdAux::SetValueOnTreeItem v "Fluids" PFEMFLUID_DomainType
 	
@@ -122,12 +125,4 @@ proc PfemThermic::examples::TreeAssignationThermicSloshing {args} {
 	# Others
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
-}
-
-proc PfemThermic::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

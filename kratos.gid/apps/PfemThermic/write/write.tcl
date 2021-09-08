@@ -218,5 +218,3 @@ proc PfemThermic::write::GetTable { prop fileName } {
 	
 	return $table
 }
-
-PfemThermic::write::Init

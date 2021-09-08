@@ -7,8 +7,8 @@ namespace eval ::PfemFluid {
 proc ::PfemFluid::Init { app } {
     # Variable initialization
     variable dir
-    variable _app
     set dir [apps::getMyDir "PfemFluid"]
+    variable _app
     set _app $app
 
     PfemFluid::xml::Init

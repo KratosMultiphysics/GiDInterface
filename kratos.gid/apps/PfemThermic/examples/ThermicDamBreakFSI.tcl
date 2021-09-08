@@ -1,4 +1,7 @@
-proc ::PfemThermic::examples::ThermicDamBreakFSI {args} {
+namespace eval PfemThermic::examples::ThermicDamBreakFSI {
+
+}
+proc ::PfemThermic::examples::ThermicDamBreakFSI::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -6,9 +9,9 @@ proc ::PfemThermic::examples::ThermicDamBreakFSI {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicDamBreakFSIGeometry
-    AssignGroupsThermicDamBreakFSIGeometry
-    TreeAssignationThermicDamBreakFSI
+    DrawGeometry
+    AssignGroups
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +20,7 @@ proc ::PfemThermic::examples::ThermicDamBreakFSI {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicDamBreakFSIGeometry {args} {
+proc PfemThermic::examples::ThermicDamBreakFSI::DrawGeometry {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
@@ -57,7 +60,7 @@ proc PfemThermic::examples::DrawThermicDamBreakFSIGeometry {args} {
 }
 
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicDamBreakFSIGeometry {args} {
+proc PfemThermic::examples::ThermicDamBreakFSI::AssignGroups {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -77,7 +80,7 @@ proc PfemThermic::examples::AssignGroupsThermicDamBreakFSIGeometry {args} {
 }
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicDamBreakFSI {args} {
+proc PfemThermic::examples::ThermicDamBreakFSI::TreeAssignation {args} {
     # Physics
     gid_groups_conds::setAttributesF [spdAux::getRoute PFEMFLUID_DomainType] {v FSI}
     
@@ -161,12 +164,4 @@ proc PfemThermic::examples::TreeAssignationThermicDamBreakFSI {args} {
 	# Others
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
-}
-
-proc PfemThermic::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

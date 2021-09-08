@@ -1,4 +1,7 @@
-proc ::PfemThermic::examples::ThermicCubeDrop {args} {
+namespace eval PfemThermic::examples::ThermicCubeDrop {
+
+}
+proc ::PfemThermic::examples::ThermicCubeDrop::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -6,9 +9,9 @@ proc ::PfemThermic::examples::ThermicCubeDrop {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicCubeDropGeometry
-    AssignGroupsThermicCubeDropGeometry
-    TreeAssignationThermicCubeDrop
+    DrawGeometry
+    AssignGroups
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +20,7 @@ proc ::PfemThermic::examples::ThermicCubeDrop {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicCubeDropGeometry {args} {
+proc PfemThermic::examples::ThermicCubeDrop::DrawGeometry {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
@@ -57,7 +60,7 @@ proc PfemThermic::examples::DrawThermicCubeDropGeometry {args} {
 }
 
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicCubeDropGeometry {args} {
+proc PfemThermic::examples::ThermicCubeDrop::AssignGroups {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -76,7 +79,7 @@ proc PfemThermic::examples::AssignGroupsThermicCubeDropGeometry {args} {
 }
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicCubeDrop {args} {
+proc PfemThermic::examples::ThermicCubeDrop::TreeAssignation {args} {
     # Physics
     gid_groups_conds::setAttributesF [spdAux::getRoute PFEMFLUID_DomainType] {v FSI}
     
@@ -160,12 +163,4 @@ proc PfemThermic::examples::TreeAssignationThermicCubeDrop {args} {
 	# Others
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
-}
-
-proc PfemThermic::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

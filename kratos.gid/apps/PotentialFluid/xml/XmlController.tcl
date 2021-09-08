@@ -26,7 +26,7 @@ proc PotentialFluid::xml::Init { } {
 proc PotentialFluid::xml::MultiAppEvent {args} {
    if {$args eq "init"} {
      spdAux::parseRoutes
-     spdAux::ConvertAllUniqueNames FL [::PotentialFluid::GetAttribute prefix]
+     spdAux::ConvertAllUniqueNames [::Fluid::GetAttribute prefix] [::PotentialFluid::GetAttribute prefix]
    }
 }
 
