@@ -62,20 +62,6 @@ proc PfemFluid::write::writeMeshes { } {
 
 proc PfemFluid::write::writeNodalConditions { keyword } {
     write::writeNodalConditions $keyword
-    return ""
-
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $keyword]/container/blockdata"
-    set groups [$root selectNodes $xp1]
-    foreach group $groups {
-        set cid [[$group parent] @n]
-        set groupid [$group @name]
-        set groupid [write::GetWriteGroupName $groupid]
-        # Aqui hay que gestionar la escritura de los bodies
-        # Una opcion es crear un megagrupo temporal con esa informacion, mandar a pintar, y luego borrar el grupo.
-        # Otra opcion es no escribir el submodelpart. Ya tienen las parts y el project parameters tiene el conformado de los bodies
-        ::write::writeGroupSubModelPart $cid $groupid "nodal"
-    }
 }
 
 proc PfemFluid::write::GetPartsUN { } {

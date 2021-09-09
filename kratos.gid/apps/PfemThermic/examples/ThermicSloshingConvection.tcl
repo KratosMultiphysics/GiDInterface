@@ -1,7 +1,7 @@
 namespace eval PfemThermic::examples::ThermicSloshingConvection::ThermicSloshing {
 
 }
-proc ::PfemThermic::examples::ThermicSloshingConvection {args} {
+proc ::PfemThermic::examples::ThermicSloshingConvection::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
