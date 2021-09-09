@@ -14,6 +14,8 @@ proc CDEM::xml::Init { } {
     Model::getMaterialRelations MaterialRelations.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
+
+    ApplyPatches
 }
 
 proc CDEM::xml::getUniqueName {name} {
@@ -63,6 +65,14 @@ proc CDEM::xml::MultiAppEvent {args} {
         spdAux::parseRoutes
         spdAux::ConvertAllUniqueNames DEM ${::CDEM::prefix}
     }
+}
+
+proc CDEM::xml::ApplyPatches { } {
+    if {[spdAux::getRoute DEMROOT] eq ""} {
+        [[customlib::GetBaseRoot] selectNodes "container\[@n='CDEM'\]"] setAttribute un DEMROOT
+        spdAux::parseRoutes
+    }
+    
 }
 
 CDEM::xml::Init
