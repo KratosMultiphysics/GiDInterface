@@ -1,12 +1,10 @@
-namespace eval FluidDEM::examples {
+namespace eval ::FluidDEM::examples {
 
 }
-
-proc FluidDEM::examples::Init { } {
-    uplevel #0 [list source [file join $::FluidDEM::dir examples CylinderInFlow.tcl]]
+proc ::FluidDEM::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
-
-proc FluidDEM::examples::UpdateMenus { } {
-}
-
-FluidDEM::examples::Init

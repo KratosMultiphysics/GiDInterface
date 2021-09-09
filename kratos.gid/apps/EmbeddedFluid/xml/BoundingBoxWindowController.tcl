@@ -7,6 +7,9 @@ namespace eval EmbeddedFluid::xml::BoundingBox {
 }
 
 proc EmbeddedFluid::xml::BoundingBox::Init {} {
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
     package require wcb
     variable winpath
     set winpath ".gid.bboxwindow"

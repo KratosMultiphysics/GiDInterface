@@ -1,47 +1,19 @@
 namespace eval ::FluidDEM {
     # Variable declaration
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
+    variable _app
 }
 
-proc ::FluidDEM::Init { } {
+proc ::FluidDEM::Init { app } {
     # Variable initialization
     variable dir
-    variable prefix
-    variable kratos_name
-    variable attributes
+    variable _app
 
-    set attributes [dict create]
-    set kratos_name FluidDEMapplication
-
+    set _app $app
     set dir [apps::getMyDir "FluidDEM"]
-    set prefix FluidDEM_
 
-    set ::spdAux::TreeVisibility 0
-
-    apps::LoadAppById "DEM"
-    apps::LoadAppById "Fluid"
-
-    # Intervals
-    dict set attributes UseIntervals 1
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-
-    set ::Model::ValidSpatialDimensions [list 3D]
-    LoadMyFiles
-    # ::spdAux::CreateDimensionWindow
-}
-
-proc ::FluidDEM::LoadMyFiles { } {
-    variable dir
-
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
+    FluidDEM::xml::Init
+    FluidDEM::write::Init
 }
 
 proc ::FluidDEM::BeforeMeshGeneration {elementsize} {
@@ -52,13 +24,6 @@ proc ::FluidDEM::AfterMeshGeneration { fail } {
     ::DEM::AfterMeshGeneration fail
 }
 
-proc ::FluidDEM::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
-}
-
 proc ::FluidDEM::AfterSaveModel {filespd} {
     ::DEM::AfterSaveModel $filespd
 }
@@ -67,4 +32,3 @@ proc ::FluidDEM::CustomToolbarItems { } {
     ::DEM::CustomToolbarItems
 }
 
-::FluidDEM::Init

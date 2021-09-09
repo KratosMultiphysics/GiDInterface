@@ -4,22 +4,20 @@ namespace eval ::FluidDEM::write {
 }
 
 proc ::FluidDEM::write::Init { } {
-
     variable fluid_project_parameters
-    variable dem_project_parameters
-    variable general_project_parameters
     set fluid_project_parameters [dict create]
+    variable dem_project_parameters
     set dem_project_parameters [dict create]
+    variable general_project_parameters
     set general_project_parameters [dict create]
-    SetAttribute main_script_file "MainKratos.py"
 
+    SetAttribute main_script_file "MainKratos.py"
 }
 
 # Events
 proc FluidDEM::write::writeModelPartEvent { } {
-
     set filename [Kratos::GetModelName]
-
+    
     Fluid::write::Init
     Fluid::write::InitConditionsMap
     Fluid::write::SetCoordinatesByGroups 1
@@ -29,8 +27,8 @@ proc FluidDEM::write::writeModelPartEvent { } {
     DEM::write::Init
     set DEM::write::delete_previous_mdpa 0
     write::writeAppMDPA DEM
-
 }
+
 proc FluidDEM::write::writeCustomFilesEvent { } {
     SetAttribute main_script_file "MainKratos.py"
     set orig_name [GetAttribute main_script_file]
@@ -67,4 +65,3 @@ proc Fluid::write::getFluidModelPartFilename { } {
     return [Kratos::GetModelName]Fluid
 }
 
-FluidDEM::write::Init

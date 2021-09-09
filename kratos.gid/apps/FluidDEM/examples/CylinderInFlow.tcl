@@ -1,15 +1,18 @@
+namespace eval ::FluidDEM::examples::CylinderInFlow {
+    namespace path ::FluidDEM::examples
+}
 
-proc ::FluidDEM::examples::CylinderInFlow {args} {
+proc ::FluidDEM::examples::CylinderInFlow::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
 
-    DrawCylinderInFlowGeometry$::Model::SpatialDimension
-    AssignGroupsCylinderInFlow$::Model::SpatialDimension
-    AssignCylinderInFlowMeshSizes$::Model::SpatialDimension
-    TreeAssignationCylinderInFlow$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
     AssignToTree
 
     GiD_Process 'Redraw
@@ -24,8 +27,8 @@ proc ::FluidDEM::examples::CylinderInFlow {args} {
 
 
 # Draw Geometry
-proc FluidDEM::examples::DrawCylinderInFlowGeometry3D {args} {
-    DrawCylinderInFlowGeometry2D
+proc ::FluidDEM::examples::DrawGeometry3D {args} {
+    DrawGeometry2D
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     GiD_Layers edit opaque Fluid 0
 
@@ -45,7 +48,7 @@ proc FluidDEM::examples::DrawCylinderInFlowGeometry3D {args} {
     GiD_Process 'Rotate Angle 0 0 'rotate scr y -45 'rotate scr x 45 escape
 }
 
-proc FluidDEM::examples::DrawCylinderInFlowGeometry2D {args} {
+proc ::FluidDEM::examples::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
@@ -86,10 +89,8 @@ proc FluidDEM::examples::DrawCylinderInFlowGeometry2D {args} {
 
 }
 
-
 # Group assign
-
-proc FluidDEM::examples::AssignGroupsCylinderInFlow3D {args} {
+proc ::FluidDEM::examples::AssignGroups3D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -122,7 +123,7 @@ proc FluidDEM::examples::AssignGroupsCylinderInFlow3D {args} {
 }
 
 # Mesh sizes
-proc FluidDEM::examples::AssignCylinderInFlowMeshSizes3D {args} {
+proc ::FluidDEM::examples::AssignMeshSizes3D {args} {
     set cylinder_mesh_size 0.1
     set walls_mesh_size 0.1
     set fluid_mesh_size 0.1
@@ -139,11 +140,8 @@ proc FluidDEM::examples::AssignCylinderInFlowMeshSizes3D {args} {
 
 }
 
-
-
 # Tree assign
-
-proc FluidDEM::examples::TreeAssignationCylinderInFlow3D {args} {
+proc ::FluidDEM::examples::TreeAssignation3D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -251,8 +249,6 @@ proc ::FluidDEM::examples::AssignToTree { } {
         }
     }
 
-
-
     # General data
     # Time parameters
     set change_list [list EndTime 20 DeltaTime 1e-5 DEMDeltaTime 1e-6 NeighbourSearchFrequency 20]
@@ -269,11 +265,4 @@ proc ::FluidDEM::examples::AssignToTree { } {
     spdAux::RequestRefresh
 }
 
-proc FluidDEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
-}
 

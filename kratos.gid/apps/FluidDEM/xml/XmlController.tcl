@@ -1,12 +1,13 @@
-namespace eval FluidDEM::xml {
+namespace eval ::FluidDEM::xml {
     # Namespace variables declaration
+    namespace path ::FluidDEM
     variable dir
 }
 
-proc FluidDEM::xml::Init { } {
+proc ::FluidDEM::xml::Init { } {
     # Namespace variables initialization
     variable dir
-    Model::InitVariables dir $FluidDEM::dir
+    Model::InitVariables dir $::FluidDEM::dir
 
     Model::ForgetElements
     Model::ForgetSolutionStrategies
@@ -37,13 +38,13 @@ proc FluidDEM::xml::Init { } {
     spdAux::parseRoutes
 }
 
-proc FluidDEM::xml::getUniqueName {name} {
+proc ::FluidDEM::xml::getUniqueName {name} {
     return ${::FluidDEM::prefix}${name}
 }
 
-proc FluidDEM::xml::CustomTree { args } {
-    DEM::xml::CustomTree
-    Fluid::xml::CustomTree
+proc ::FluidDEM::xml::CustomTree { args } {
+    ::DEM::xml::CustomTree
+    ::Fluid::xml::CustomTree
     spdAux::parseRoutes
     set root [customlib::GetBaseRoot]
 
@@ -88,7 +89,7 @@ proc FluidDEM::xml::CustomTree { args } {
 
 }
 
-proc FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
+proc ::FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
     set names [list ]
     set dem_hydrodynamic_law_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "DEMFluidHydrodynamicLaw"]/blockdata"]
     foreach hydro_law $dem_hydrodynamic_law_nodes {
@@ -101,5 +102,3 @@ proc FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
     return $values
 }
-
-FluidDEM::xml::Init
