@@ -1,4 +1,5 @@
-namespace eval FSI::write {
+namespace eval ::FSI::write {
+    namespace path ::FSI
     variable fluid_project_parameters
     variable structure_project_parameters
     variable mdpa_names
@@ -12,8 +13,6 @@ proc ::FSI::write::Init { } {
     
     variable mdpa_names
     set mdpa_names [dict create ]
-    
-    SetAttribute main_script_file [::FSI::GetAttribute main_launch_file]
 }
 
 # Events
@@ -38,4 +37,5 @@ proc ::FSI::write::writeModelPartEvent { } {
 proc ::FSI::write::writeCustomFilesEvent { } {
     Fluid::write::WriteMaterialsFile
     Structural::write::WriteMaterialsFile
+    write::SetConfigurationAttribute main_script_file [GetAttribute main_launch_file]
 }

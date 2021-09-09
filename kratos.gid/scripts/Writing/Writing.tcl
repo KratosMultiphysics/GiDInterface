@@ -116,9 +116,6 @@ proc write::writeEvent { filename } {
     Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
 
-    #### Copy main script file ####
-    CopyMainScriptFile
-
     #### MDPA Write ####
     if {$errcode eq 0} {
         Kratos::Log "Write MDPA $appid"
@@ -144,6 +141,12 @@ proc write::writeEvent { filename } {
     set ttime [expr {$endtime-$inittime}]
     if {$time_monitor}  {
         W "Total time: [Kratos::Duration $ttime]"
+    }
+    
+    #### Copy main script file ####
+    if {$errcode eq 0} {
+        Kratos::Log "Write custom event $appid"
+        set errcode [CopyMainScriptFile]
     }
 
     #### Debug files for VSCode ####
@@ -671,11 +674,17 @@ proc write::writeLaunchJSONFile { } {
 }
 
 proc write::CopyMainScriptFile { } {
-    
+    set errcode 0
     # Main python script
-    set orig_name [write::GetConfigurationAttribute main_script_file]
-    write::CopyFileIntoModel $orig_name
-    write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+    if {[catch {
+            set orig_name [write::GetConfigurationAttribute main_script_file]
+            write::CopyFileIntoModel $orig_name
+            write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+        } fid] } {
+        W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
+        return errcode 1
+    }
+    return $errcode
 }
 
 write::Init
