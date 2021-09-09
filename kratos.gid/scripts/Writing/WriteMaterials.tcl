@@ -80,6 +80,8 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
                     set xp3 "[spdAux::getRoute $materials_un]/blockdata\[@n='material' and @name='$real_material_name']"
                     set matNode [$root selectNodes $xp3]
                     set s1 [join [list [$gNode selectNodes ".//value"] [$matNode selectNodes ".//value"]]]
+                } else {
+                    set s1 [$gNode selectNodes ".//value"]
                 }
                 foreach valueNode $s1 {
                     write::forceUpdateNode $valueNode
