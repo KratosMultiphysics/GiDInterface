@@ -7,4 +7,5 @@
         <value n="Meshtype" v="Current" pn="Select mesh type" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" values="Current,Predefined" icon="black1"/>
         <value n="Specimenlength" v="0.30" pn="Length" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
         <value n="Specimendiameter" v="0.15" pn="Diameter" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
+        <value n="AxisPerpendicularToPlates" v="Y" pn="Axis perpendicular to plates" state="disabled" update_proc="spdAux::RequestRefresh" icon="black1"/>
 </container>
