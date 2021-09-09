@@ -68,9 +68,11 @@ proc CDEM::xml::MultiAppEvent {args} {
 }
 
 proc CDEM::xml::ApplyPatches { } {
+    catch {
     if {[spdAux::getRoute DEMROOT] eq ""} {
         [[customlib::GetBaseRoot] selectNodes "container\[@n='CDEM'\]"] setAttribute un DEMROOT
         spdAux::parseRoutes
+    }
     }
     
 }
