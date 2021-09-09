@@ -25,7 +25,7 @@ proc PfemThermic::write::writeModelPartEvent { } {
     foreach part_un $parts_un_list {
         write::initWriteData $part_un [PfemFluid::write::GetAttribute materials_un]
     }
-    W $::write::mat_dict
+    
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
