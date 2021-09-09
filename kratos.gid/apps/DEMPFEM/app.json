@@ -1,25 +1,23 @@
 {
-    "id": "MPM",
-    "name": "MPM",
-    "prefix": "MPM",
+    "id": "DEMPFEM",
+    "name": "DEM PFEM",
+    "prefix": "DEMPFEM_",
     "themed": false,
-    "kratos_name": "ParticleMechanicsApplication",
+    "kratos_name": "DEMPFEMapplication",
     "dimensions": [
-        "2D",
-        "2Da",
         "3D"
     ],
     "script_files": [
         "start.tcl",
         "examples/examples.tcl",
-        "examples/FallingSandBall.tcl",
+        "examples/InnerSphere.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::MPM::Init",
+    "start_script":"::DEMPFEM::Init",
     "requeriments":{
-        "apps":["Structural"],
+        "apps":["DEM", "PfemFluid"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
@@ -28,16 +26,8 @@
         "intervals": true,
         "wizard": false
     },
-    "unique_names": {
-        "parts": "MPMParts",
-        "nodal_conditions": "MPMNodalConditions",
-        "conditions": "MPMLoads"
-    },
     "write": {
-        "coordinates": "all",
-        "materials_file": "ParticleMaterials.json",
-        "properties_location": "json",
-        "model_part_name": "Background_Grid"
+        "coordinates": "groups"
     },
     "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"

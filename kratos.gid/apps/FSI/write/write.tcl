@@ -12,6 +12,8 @@ proc ::FSI::write::Init { } {
     
     variable mdpa_names
     set mdpa_names [dict create ]
+    
+    SetAttribute main_script_file [::FSI::GetAttribute main_launch_file]
 }
 
 # Events
@@ -36,7 +38,4 @@ proc ::FSI::write::writeModelPartEvent { } {
 proc ::FSI::write::writeCustomFilesEvent { } {
     Fluid::write::WriteMaterialsFile
     Structural::write::WriteMaterialsFile
-    
-    write::CopyFileIntoModel "python/KratosFSI.py"
-    write::RenameFileInModel "KratosFSI.py" "MainKratos.py"
 }

@@ -90,12 +90,6 @@ proc PfemFluid::write::GetPartsUN { } {
 proc PfemFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     PfemFluid::write::WriteMaterialsFile
-
-    # Main python script
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel $orig_name
-    write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
-
 }
 
 proc PfemFluid::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {

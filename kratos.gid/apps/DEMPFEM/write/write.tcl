@@ -3,7 +3,7 @@ namespace eval ::DEMPFEM::write {
 
 proc ::DEMPFEM::write::Init { } {    
     
-    SetAttribute main_script_file "MainKratos.py"
+    SetAttribute main_script_file [GetAttribute main_script_file]
 
 }
 
@@ -16,16 +16,6 @@ proc DEMPFEM::write::writeModelPartEvent { } {
     DEM::write::Init
     set DEM::write::delete_previous_mdpa 0
     DEM::write::writeModelPartEvent
-    
-}
-proc DEMPFEM::write::writeCustomFilesEvent { } {
-    SetAttribute main_script_file "MainKratos.py"
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    
-}
-
-proc DEMPFEM::write::WriteMaterialsFile { } {
     
 }
 

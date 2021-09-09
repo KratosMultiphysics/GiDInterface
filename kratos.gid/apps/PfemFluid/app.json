@@ -41,6 +41,6 @@
         "model_part_name": "PfemFluidModelPart",
         "output_model_part_name": "fluid_computational_model_part"
     },
-    "main_launch_file": "python/RunPFEM.py",
+    "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"
 }

@@ -1,22 +1,21 @@
-namespace eval DEMPFEM::xml {
+namespace eval ::DEMPFEM::xml {
     # Namespace variables declaration
-    variable dir
+    namespace path ::DEMPFEM
 }
 
-proc DEMPFEM::xml::Init { } {
+proc ::DEMPFEM::xml::Init { } {
     # Namespace variables initialization
-    variable dir
-    Model::InitVariables dir $DEMPFEM::dir
+    Model::InitVariables dir $::DEMPFEM::dir
 
     Model::ForgetElement SphericPartDEMElement3D
     Model::getElements Elements.xml
 }
 
-proc DEMPFEM::xml::getUniqueName {name} {
+proc ::DEMPFEM::xml::getUniqueName {name} {
     return ${::DEMPFEM::prefix}${name}
 }
 
-proc DEMPFEM::xml::CustomTree { args } {
+proc ::DEMPFEM::xml::CustomTree { args } {
     DEM::xml::CustomTree
     PfemFluid::xml::CustomTree
     spdAux::SetValueOnTreeItem values Fluid PFEMFLUID_DomainType
@@ -27,7 +26,4 @@ proc DEMPFEM::xml::CustomTree { args } {
 	if { $result_node ne "" } {$result_node delete}
     set result_node [$root selectNodes "[spdAux::getRoute DEMStratSection]/container\[@n = 'DEMGravity'\]"]
 	if { $result_node ne "" } {$result_node delete}
-    
 }
-
-DEMPFEM::xml::Init

@@ -84,5 +84,11 @@
 		return [PfemFluid::xml::ProcCheckNodalConditionStatePFEM $domNode $args]
 		]]>
 	</proc>
+	
+	<proc n='GetDEMPartsOvWhat' args='args'>
+		<![CDATA[
+            return [DEM::xml::ProcGetDEMPartsOvWhat $domNode $args]
+            ]]>
+	</proc>
 
 </container>

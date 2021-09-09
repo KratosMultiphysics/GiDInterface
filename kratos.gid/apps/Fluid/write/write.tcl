@@ -71,11 +71,6 @@ proc ::Fluid::write::writeModelPartEvent { } {
 proc ::Fluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     ::Fluid::write::WriteMaterialsFile
-
-    # Main python script
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel $orig_name
-    write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
 }
 
 # Custom files

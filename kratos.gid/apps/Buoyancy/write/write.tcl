@@ -51,9 +51,6 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
 proc ::Buoyancy::write::writeCustomFilesEvent { } {
     # Materials
     Buoyancy::write::WriteMaterialsFile True
-
-    # Main python script
-    write::CopyFileIntoModel [file join "python" "MainKratos.py" ]
 }
 
 proc ::Buoyancy::write::Validate {} {

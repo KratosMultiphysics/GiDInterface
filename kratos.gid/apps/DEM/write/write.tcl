@@ -88,12 +88,7 @@ proc ::DEM::write::writeModelPartEvent { } {
 }
 
 proc ::DEM::write::writeCustomFilesEvent { } {
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-
-    write::RenameFileInModel $orig_name "MainKratos.py"
     write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
-
     DEM::write::writeMaterialsFile 
 }
 

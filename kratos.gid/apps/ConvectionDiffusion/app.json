@@ -40,6 +40,6 @@
         "model_part_name": "ThermalModelPart",
         "output_model_part_name": "thermal_computing_domain"
     },
-    "main_launch_file": "KratosConvectionDiffusion.py",
+    "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"
 }

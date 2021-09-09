@@ -106,7 +106,6 @@ proc PfemThermic::write::writeModelPartEvent { } {
 # Custom files event
 proc PfemThermic::write::writeCustomFilesEvent { } {
     PfemThermic::write::writePropertiesJsonFile "PFEMThermicMaterials.json" True [PfemFluid::write::GetAttribute model_part_name]
-    write::CopyFileIntoModel [file join "python" "MainKratos.py"]
 }
 
 # Write material file

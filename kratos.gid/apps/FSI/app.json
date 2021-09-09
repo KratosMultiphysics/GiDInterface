@@ -45,6 +45,6 @@
         "properties_location": "json",
         "model_part_name": "Structure"
     },
-    "main_launch_file": "KratosStructural.py",
+    "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"
 }

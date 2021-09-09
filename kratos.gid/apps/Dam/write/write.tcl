@@ -35,13 +35,6 @@ proc ::Dam::write::Init { } {
     SetAttribute model_part_name [::Dam::GetWriteProperty model_part_name]
 }
 
-proc ::Dam::write::writeCustomFilesEvent { } {
-    # Main python script
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel $orig_name
-    write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
-}
-
 # MDPA Blocks
 proc ::Dam::write::writeModelPartEvent { } {
     # Init data

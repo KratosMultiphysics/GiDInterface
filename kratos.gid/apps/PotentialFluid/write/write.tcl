@@ -32,9 +32,6 @@ proc PotentialFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     set materials_model_part_name [GetAttribute model_part_name]
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False $materials_model_part_name
-
-    write::CopyFileIntoModel "python/KratosPotentialFluid.py"
-    write::RenameFileInModel "KratosPotentialFluid.py" "MainKratos.py"
 }
 
 

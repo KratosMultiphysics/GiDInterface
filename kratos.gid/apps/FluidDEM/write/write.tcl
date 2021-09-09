@@ -11,7 +11,7 @@ proc ::FluidDEM::write::Init { } {
     variable general_project_parameters
     set general_project_parameters [dict create]
 
-    SetAttribute main_script_file "MainKratos.py"
+    SetAttribute main_script_file [::FluidDEM::GetAttribute main_launch_file]
 }
 
 # Events
@@ -30,9 +30,6 @@ proc FluidDEM::write::writeModelPartEvent { } {
 }
 
 proc FluidDEM::write::writeCustomFilesEvent { } {
-    SetAttribute main_script_file "MainKratos.py"
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
     FluidDEM::write::WriteMaterialsFile
 }
 

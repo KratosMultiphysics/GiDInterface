@@ -61,11 +61,6 @@ proc ::ConvectionDiffusion::write::writeModelPartEvent { } {
 proc ::ConvectionDiffusion::write::writeCustomFilesEvent { } {
     # Materials
     WriteMaterialsFile False
-
-    # Main python script
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
 proc ::ConvectionDiffusion::write::Validate {} {

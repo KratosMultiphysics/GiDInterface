@@ -49,10 +49,6 @@ proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
 proc ::ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
     # Materials
     WriteMaterialsFile
-
-    # Main python script
-    write::CopyFileIntoModel [GetAttribute main_script_file]
-    write::RenameFileInModel [file tail [GetAttribute main_script_file]] "MainKratos.py"
 }
 
 proc ::ConjugateHeatTransfer::write::Validate {} {

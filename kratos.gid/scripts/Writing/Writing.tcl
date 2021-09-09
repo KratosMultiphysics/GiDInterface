@@ -116,6 +116,9 @@ proc write::writeEvent { filename } {
     Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
 
+    #### Copy main script file ####
+    CopyMainScriptFile
+
     #### MDPA Write ####
     if {$errcode eq 0} {
         Kratos::Log "Write MDPA $appid"
@@ -667,5 +670,12 @@ proc write::writeLaunchJSONFile { } {
     }
 }
 
+proc write::CopyMainScriptFile { } {
+    
+    # Main python script
+    set orig_name [write::GetConfigurationAttribute main_script_file]
+    write::CopyFileIntoModel $orig_name
+    write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+}
 
 write::Init
