@@ -13,7 +13,7 @@ proc ::ConjugateHeatTransfer::write::Init { } {
     set ConjugateHeatTransferConditions(temp) 0
     unset ConjugateHeatTransferConditions(temp)
 
-    SetAttribute main_script_file [::ConjugateHeatTransfer::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::ConjugateHeatTransfer::GetAttribute main_launch_file]
     SetAttribute properties_location [::ConjugateHeatTransfer::GetWriteProperty properties_location]
     SetAttribute model_part_name [::ConjugateHeatTransfer::GetWriteProperty model_part_name]
 
@@ -49,6 +49,7 @@ proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
 proc ::ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
     # Materials
     WriteMaterialsFile
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc ::ConjugateHeatTransfer::write::Validate {} {

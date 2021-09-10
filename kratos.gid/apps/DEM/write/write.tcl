@@ -20,7 +20,7 @@ proc ::DEM::write::Init { } {
     SetAttribute conditions_un [::DEM::GetUniqueName conditions]
     SetAttribute nodal_conditions_un [::DEM::GetUniqueName nodal_conditions]
     SetAttribute materials_file [::DEM::GetWriteProperty materials_file]
-    SetAttribute main_script_file [::DEM::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::DEM::GetAttribute main_launch_file]
 
     variable partsProperties
     set partsProperties [dict create]
@@ -90,6 +90,7 @@ proc ::DEM::write::writeModelPartEvent { } {
 proc ::DEM::write::writeCustomFilesEvent { } {
     write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
     DEM::write::writeMaterialsFile 
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc ::DEM::write::writeMaterialsFile {} {

@@ -14,7 +14,7 @@ proc EmbeddedFluid::write::Init { } {
 
     SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
     SetAttribute validApps [list "Fluid" "EmbeddedFluid"]
-    SetAttribute main_script_file [::Fluid::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::Fluid::GetAttribute main_launch_file]
     SetAttribute materials_file [::Fluid::GetWriteProperty materials_file]
     SetAttribute properties_location [::Fluid::GetWriteProperty properties_location]
     SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
@@ -27,7 +27,6 @@ proc EmbeddedFluid::write::writeModelPartEvent { } {
 }
 
 # Overwrite this function to print something at the end of the mdpa
-namespace eval ::Fluid::write:: {}
 proc ::Fluid::write::writeCustomBlocks { } {
     EmbeddedFluid::write::writeDistances
 }
@@ -54,6 +53,7 @@ proc EmbeddedFluid::write::writeDistances { } {
 
 proc EmbeddedFluid::write::writeCustomFilesEvent { } {
     Fluid::write::writeCustomFilesEvent
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc EmbeddedFluid::write::GetAttribute {att} {

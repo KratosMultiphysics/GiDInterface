@@ -28,7 +28,7 @@ proc ::Structural::write::Init { } {
     SetAttribute conditions_un [::Structural::GetUniqueName conditions]
     SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file [::Structural::GetWriteProperty materials_file]
-    SetAttribute main_script_file [::Structural::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::Structural::GetAttribute main_launch_file]
     SetAttribute model_part_name [::Structural::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name ""
 }
@@ -432,6 +432,8 @@ proc ::Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
 
     write::SetParallelismConfiguration
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+
 }
 
 proc ::Structural::write::SetCoordinatesByGroups {value} {

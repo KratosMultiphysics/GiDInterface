@@ -51,6 +51,7 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
 proc ::Buoyancy::write::writeCustomFilesEvent { } {
     # Materials
     Buoyancy::write::WriteMaterialsFile True
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc ::Buoyancy::write::Validate {} {

@@ -677,7 +677,7 @@ proc write::CopyMainScriptFile { } {
     set errcode 0
     # Main python script
     if {[catch {
-            set orig_name [write::GetConfigurationAttribute main_script_file]
+            set orig_name [write::GetConfigurationAttribute main_launch_file]
             write::CopyFileIntoModel $orig_name
             write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
         } fid] } {

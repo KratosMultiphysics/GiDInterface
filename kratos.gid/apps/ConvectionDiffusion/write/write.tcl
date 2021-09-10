@@ -18,7 +18,7 @@ proc ::ConvectionDiffusion::write::Init { } {
 
     SetAttribute writeCoordinatesByGroups [::ConvectionDiffusion::GetWriteProperty coordinates]
     SetAttribute validApps [list "ConvectionDiffusion"]
-    SetAttribute main_script_file [::ConvectionDiffusion::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::ConvectionDiffusion::GetAttribute main_launch_file]
     SetAttribute materials_file [::ConvectionDiffusion::GetWriteProperty materials_file]
     SetAttribute properties_location [::ConvectionDiffusion::GetWriteProperty properties_location]
     SetAttribute model_part_name [::ConvectionDiffusion::GetWriteProperty model_part_name]
@@ -61,6 +61,7 @@ proc ::ConvectionDiffusion::write::writeModelPartEvent { } {
 proc ::ConvectionDiffusion::write::writeCustomFilesEvent { } {
     # Materials
     WriteMaterialsFile False
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc ::ConvectionDiffusion::write::Validate {} {

@@ -106,6 +106,7 @@ proc PfemThermic::write::writeModelPartEvent { } {
 # Custom files event
 proc PfemThermic::write::writeCustomFilesEvent { } {
     PfemThermic::write::writePropertiesJsonFile "PFEMThermicMaterials.json" True [PfemFluid::write::GetAttribute model_part_name]
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 # Write material file

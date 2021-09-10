@@ -3,7 +3,7 @@ namespace eval ::DEMPFEM::write {
 
 proc ::DEMPFEM::write::Init { } {    
     
-    SetAttribute main_script_file [GetAttribute main_script_file]
+    SetAttribute main_launch_file [GetAttribute main_launch_file]
 
 }
 
@@ -17,6 +17,10 @@ proc DEMPFEM::write::writeModelPartEvent { } {
     set DEM::write::delete_previous_mdpa 0
     DEM::write::writeModelPartEvent
     
+}
+
+proc ::DEMPFEM::write::writeCustomFilesEvent { } {
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc DEMPFEM::write::SetAttribute {att val} {

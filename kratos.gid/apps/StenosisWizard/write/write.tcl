@@ -8,8 +8,8 @@ proc StenosisWizard::write::Init { } {
 
 
 proc StenosisWizard::write::writeCustomFilesEvent { } {
-    ::Fluid::write::SetAttribute main_script_file [StenosisWizard::GetAttribute main_launch_file]
     ::Fluid::write::writeCustomFilesEvent
+    ::Fluid::write::SetAttribute main_launch_file [StenosisWizard::GetAttribute main_launch_file]
 }
 
 # MDPA Blocks

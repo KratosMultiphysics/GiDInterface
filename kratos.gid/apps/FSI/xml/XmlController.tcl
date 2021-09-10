@@ -1,4 +1,5 @@
-namespace eval FSI::xml {
+namespace eval ::FSI::xml {
+    namespace path ::FSI
     # Namespace variables declaration
     variable dir
 }

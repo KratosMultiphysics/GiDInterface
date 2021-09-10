@@ -37,5 +37,5 @@ proc ::FSI::write::writeModelPartEvent { } {
 proc ::FSI::write::writeCustomFilesEvent { } {
     Fluid::write::WriteMaterialsFile
     Structural::write::WriteMaterialsFile
-    write::SetConfigurationAttribute main_script_file [GetAttribute main_launch_file]
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }

@@ -18,7 +18,7 @@ proc PfemFluid::write::Init { } {
     SetAttribute materials_un [::PfemFluid::GetUniqueName materials]
     SetAttribute nodal_conditions_un [::PfemFluid::GetUniqueName nodal_conditions]
     
-    SetAttribute main_script_file [::PfemFluid::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::PfemFluid::GetAttribute main_launch_file]
     SetAttribute materials_file [::PfemFluid::GetWriteProperty materials_file]
     SetAttribute properties_location [::PfemFluid::GetWriteProperty properties_location]
     SetAttribute model_part_name [::PfemFluid::GetWriteProperty model_part_name]
@@ -90,6 +90,7 @@ proc PfemFluid::write::GetPartsUN { } {
 proc PfemFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     PfemFluid::write::WriteMaterialsFile
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc PfemFluid::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {

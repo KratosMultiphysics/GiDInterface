@@ -13,7 +13,7 @@ proc MPM::write::Init { } {
     SetAttribute conditions_un [::MPM::GetUniqueName conditions]
     
     SetAttribute writeCoordinatesByGroups [::MPM::GetWriteProperty coordinates]
-    SetAttribute main_script_file [::MPM::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::MPM::GetAttribute main_launch_file]
     SetAttribute materials_file [::MPM::GetWriteProperty materials_file]
     SetAttribute properties_location [::MPM::GetWriteProperty properties_location]
     SetAttribute model_part_name [::MPM::GetWriteProperty model_part_name]
@@ -156,6 +156,7 @@ proc MPM::write::writeLoads { } {
 proc MPM::write::writeCustomFilesEvent { } {
     # Materials file
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True Initial_MPM_Material
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 

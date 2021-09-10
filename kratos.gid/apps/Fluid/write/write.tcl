@@ -20,7 +20,7 @@ proc ::Fluid::write::Init { } {
     
     SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
     SetAttribute validApps [list "Fluid"]
-    SetAttribute main_script_file [::Fluid::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::Fluid::GetAttribute main_launch_file]
     SetAttribute materials_file [::Fluid::GetWriteProperty materials_file]
     SetAttribute properties_location [::Fluid::GetWriteProperty properties_location]
     SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
@@ -71,6 +71,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
 proc ::Fluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     ::Fluid::write::WriteMaterialsFile
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 # Custom files

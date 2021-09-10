@@ -30,7 +30,7 @@ proc ::Dam::write::Init { } {
 
     SetAttribute writeCoordinatesByGroups [::Dam::GetWriteProperty coordinates]
     SetAttribute validApps [list "Dam"]
-    SetAttribute main_script_file [::Dam::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::Dam::GetAttribute main_launch_file]
     SetAttribute properties_location [::Dam::GetWriteProperty properties_location]
     SetAttribute model_part_name [::Dam::GetWriteProperty model_part_name]
 }
@@ -110,8 +110,6 @@ proc ::Dam::write::writeMeshes { } {
     writeLoads [GetAttribute thermal_conditions_un]
     writeLoads [GetAttribute nodal_conditions_un]
 }
-
-
 
 proc ::Dam::write::writeNodalConditions { keyword } {
     variable TableDict
@@ -278,7 +276,6 @@ proc ::Dam::write::GetPrinTables {} {
     return $listaTablas
 }
 
-
 proc ::Dam::write::GetPrinTables_dev { } {
 
     set root [customlib::GetBaseRoot]
@@ -314,7 +311,6 @@ proc ::Dam::write::GetPrinTables_dev { } {
     }
     return $listaTablas2
 }
-
 
 #-------------------------------------------------------------------------------
 
@@ -403,7 +399,6 @@ proc ::Dam::write::Hexahedron3D8Connectivities { ElemId } {
 
 #-------------------------------------------------------------------------------
 
-
 proc ::Dam::write::ThermalSubModelPart { } {
 
     variable ThermalSubModelPartDict
@@ -452,6 +447,10 @@ proc ::Dam::write::GetDamPartGroupNodes { } {
     return $nodes
 }
 
+
+proc ::Dam::write::writeCustomFilesEvent { } {
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+}
 
 proc ::Dam::write::GetAttribute {att} {
     variable writeAttributes

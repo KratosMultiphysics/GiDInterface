@@ -11,7 +11,7 @@ proc ::FluidDEM::write::Init { } {
     variable general_project_parameters
     set general_project_parameters [dict create]
 
-    SetAttribute main_script_file [::FluidDEM::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::FluidDEM::GetAttribute main_launch_file]
 }
 
 # Events
@@ -31,6 +31,8 @@ proc FluidDEM::write::writeModelPartEvent { } {
 
 proc FluidDEM::write::writeCustomFilesEvent { } {
     FluidDEM::write::WriteMaterialsFile
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+
 }
 
 proc FluidDEM::write::WriteMaterialsFile { } {

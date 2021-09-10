@@ -17,6 +17,7 @@ proc CDEM::write::writeModelPartEvent { } {
 
 proc CDEM::write::writeCustomFilesEvent { } {
     DEM::write::writeCustomFilesEvent
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 # Attributes block

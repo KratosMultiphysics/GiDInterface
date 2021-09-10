@@ -16,7 +16,7 @@ proc ::Fluid::write::Init { } {
     SetAttribute drag_un FLDrags
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid"]
-    SetAttribute main_script_file "KratosFluid.py"
+    SetAttribute main_launch_file "KratosFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location json
     FreeConditionsMap
@@ -55,7 +55,7 @@ proc ::Fluid::write::writeCustomFilesEvent { } {
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
 
     # Main python script
-    set orig_name [GetAttribute main_script_file]
+    set orig_name [GetAttribute main_launch_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
