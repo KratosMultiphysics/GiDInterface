@@ -13,6 +13,7 @@
 	<appLink n="Structural" public="1" pn="Structural" active="0" appid="Structural" prefix="ST"/>
 	<appLink n="FluidLauncher" public="1" pn="Fluid" active="0" appid="FluidLauncher" prefix="FLL"/>
 	<appLink n="Fluid" public="0" pn="Fluid" active="0" appid="Fluid" prefix="FL"/>
+	<appLink n="CompressibleFluid" public="0" pn="Compressible Fluid" active="0" appid="CompressibleFluid" prefix="COMPF"/>
 	<appLink n="EmbeddedFluid" public="0" pn="Embedded fluid" active="0" appid="EmbeddedFluid" prefix="EMBFL"/>
 	<appLink n="PotentialFluid" public="0" pn="Potential fluid" active="0" appid="PotentialFluid" prefix="PTFL"/>
 	<appLink n="Buoyancy" public="0" pn="Buoyancy" active="0" appid="Buoyancy" prefix="Buoyancy_"/>
