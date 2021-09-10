@@ -1,12 +1,11 @@
-namespace eval CDEM::xml {
+namespace eval ::CDEM::xml {
     # Namespace variables declaration
-    variable dir
+    namespace path ::CDEM
 }
 
-proc CDEM::xml::Init { } {
+proc ::CDEM::xml::Init { } {
     # Namespace variables initialization
-    variable dir
-    Model::InitVariables dir $CDEM::dir
+    Model::InitVariables dir $::CDEM::dir
     Model::ForgetElements
     Model::getElements ElementsC.xml
     Model::getConditions Conditions.xml
@@ -18,11 +17,11 @@ proc CDEM::xml::Init { } {
     ApplyPatches
 }
 
-proc CDEM::xml::getUniqueName {name} {
-    return ${::CDEM::prefix}${name}
+proc ::CDEM::xml::getUniqueName {name} {
+    return [::CDEM::GetAttribute prefix]${name}
 }
 
-proc CDEM::xml::CustomTree { args } {
+proc ::CDEM::xml::CustomTree { args } {
     DEM::xml::CustomTree {*}$args
 
     set root [customlib::GetBaseRoot]
@@ -40,7 +39,7 @@ proc CDEM::xml::CustomTree { args } {
     spdAux::parseRoutes
 }
 
-proc CDEM::xml::ProcGetElements { domNode args } {
+proc ::CDEM::xml::ProcGetElements { domNode args } {
     set elems [Model::GetElements]
     set names [list ]
     set pnames [list ]
@@ -60,21 +59,18 @@ proc CDEM::xml::ProcGetElements { domNode args } {
     return $diction
 }
 
-proc CDEM::xml::MultiAppEvent {args} {
+proc ::CDEM::xml::MultiAppEvent {args} {
     if {$args eq "init"} {
         spdAux::parseRoutes
-        spdAux::ConvertAllUniqueNames DEM ${::CDEM::prefix}
+        spdAux::ConvertAllUniqueNames DEM [::CDEM::GetAttribute prefix]
     }
 }
 
-proc CDEM::xml::ApplyPatches { } {
+proc ::CDEM::xml::ApplyPatches { } {
     catch {
-    if {[spdAux::getRoute DEMROOT] eq ""} {
-        [[customlib::GetBaseRoot] selectNodes "container\[@n='CDEM'\]"] setAttribute un DEMROOT
-        spdAux::parseRoutes
+        if {[spdAux::getRoute DEMROOT] eq ""} {
+            [[customlib::GetBaseRoot] selectNodes "container\[@n='CDEM'\]"] setAttribute un DEMROOT
+            spdAux::parseRoutes
+        }
     }
-    }
-    
 }
-
-CDEM::xml::Init

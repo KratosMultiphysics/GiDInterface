@@ -1,20 +1,24 @@
-proc ::CDEM::examples::ContSpheresDrop3D {args} {
+namespace eval CDEM::examples::ContSpheresDrop3D {
+
+}
+
+proc ::CDEM::examples::ContSpheresDrop3D::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometryContSpheres
-    AssignToTreeContSpheres
-    AssignMeshSizeContSpheres
+    DrawGeometry
+    AssignToTree
+    AssignMeshSize
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
-proc ::CDEM::examples::DrawGeometryContSpheres { } {
+proc ::CDEM::examples::ContSpheresDrop3D::DrawGeometry { } {
     Kratos::ResetModel
 
     # Draw floor surface
@@ -35,7 +39,7 @@ proc ::CDEM::examples::DrawGeometryContSpheres { } {
     GiD_EntitiesGroups assign "Body" -also_lower_entities volumes 1
 }
 
-proc ::CDEM::examples::AssignToTreeContSpheres { } {
+proc ::CDEM::examples::ContSpheresDrop3D::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 ]
@@ -105,17 +109,8 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
     spdAux::RequestRefresh
 }
 
-proc ::CDEM::::examples::AssignMeshSizeContSpheres { } {
+proc ::CDEM::::examples::ContSpheresDrop3D::AssignMeshSize { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape
-}
-
-
-proc DEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

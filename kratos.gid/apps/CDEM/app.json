@@ -1,0 +1,36 @@
+{
+    "id": "CDEM",
+    "name": "CDEM",
+    "prefix": "CDEM_",
+    "themed": false,
+    "kratos_name": "DEMapplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/ContinuumDrop2D.tcl",
+        "examples/ContSpheresDrop3D.tcl",
+        "write/write.tcl",
+        "write/writeMDPA_Parts.tcl",
+        "write/writeMDPA_Walls.tcl",
+        "write/writeMDPA_Inlet.tcl",
+        "write/writeProjectParameters.tcl",
+        "xml/XmlController.tcl"
+    ],
+    "start_script":"::CDEM::Init",
+    "requeriments":{
+        "apps":["DEM"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

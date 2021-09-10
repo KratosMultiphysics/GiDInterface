@@ -56,7 +56,6 @@ proc ::Buoyancy::write::writeCustomFilesEvent { } {
 
 proc ::Buoyancy::write::Validate {} {
     set err ""
-
     return $err
 }
 

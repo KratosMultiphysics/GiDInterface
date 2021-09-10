@@ -7,7 +7,7 @@ namespace eval ::CDEM::write {
 
 proc ::CDEM::write::Init { } {
     DEM::write::Init
-    SetAttribute partscont_un DEMParts
+    SetAttribute partscont_un [::DEM::GetUniqueName parts]
 }
 
 # Events
@@ -36,5 +36,3 @@ proc CDEM::write::AddAttributes {configuration} {
 proc CDEM::write::AddValidApps {appid} {
     DEM::write::AddAttribute validApps $appid
 }
-
-CDEM::write::Init
