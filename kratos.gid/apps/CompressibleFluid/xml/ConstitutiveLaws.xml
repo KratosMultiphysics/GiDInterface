@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--Newtonian constitutive laws-->
-	<CLaw n="Newtonian2DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="2D">
+	<CLaw n="Newtonian2DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="CompressibleFluid" ElementCompressibility="Compressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="2D">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
-            <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/>
-        </inputs>
+            <parameter n="DENSITY"             pn="Density"             unit_magnitue="M/L^3"        units="kg/m^3"   v="1.225"  help="Set the Density"             />
+            <parameter n="DYNAMIC_VISCOSITY"   pn="Dynamic viscosity"   unit_magnitue="M/(L*T)"      units="kg/(m*s)" v="2e-5"   help="Set the Dynamic viscosity"   />
+            <parameter n="CONDUCTIVITY"        pn="Conductivity"        unit_magnitue="M*L/T^3/Temp" units="W/m/K"    v="0.024"  help="Set the Conductivity"        />
+            <parameter n="SPECIFIC_HEAT"       pn="Specific_heat"       unit_magnitue="L^2/Temp/T^2" units="J/K/kg"   v="722.14" help="Set the Specific_heat"       />
+            <parameter n="HEAT_CAPACITY_RATIO" pn="Heat capacity ratio" unit_magnitue=""             units=""         v="1.4"    help="Set the Heat capacity ratio" />
+       </inputs>
         <outputs>
         </outputs>
     </CLaw>
 
-	<CLaw n="Newtonian3DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
+	<CLaw n="Newtonian3DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="CompressibleFluid" ElementCompressibility="Compressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
         <inputs>
-            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
-            <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/>
+            <parameter n="DENSITY"             pn="Density"             unit_magnitue="M/L^3"        units="kg/m^3"   v="1.225"  help="Set the Density"             />
+            <parameter n="DYNAMIC_VISCOSITY"   pn="Dynamic viscosity"   unit_magnitue="M/(L*T)"      units="kg/(m*s)" v="2e-5"   help="Set the Dynamic viscosity"   />
+            <parameter n="CONDUCTIVITY"        pn="Conductivity"        unit_magnitue="M*L/T^3/Temp" units="W/m/K"    v="0.024"  help="Set the Conductivity"        />
+            <parameter n="SPECIFIC_HEAT"       pn="Specific_heat"       unit_magnitue="L^2/Temp/T^2" units="J/K/kg"   v="722.14" help="Set the Specific_heat"       />
+            <parameter n="HEAT_CAPACITY_RATIO" pn="Heat capacity ratio" unit_magnitue=""             units=""         v="1.4"    help="Set the Heat capacity ratio" />
         </inputs>
         <outputs>
         </outputs>
