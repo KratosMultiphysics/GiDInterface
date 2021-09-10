@@ -59,13 +59,6 @@ proc ::CDEM::xml::ProcGetElements { domNode args } {
     return $diction
 }
 
-proc ::CDEM::xml::MultiAppEvent {args} {
-    if {$args eq "init"} {
-        spdAux::parseRoutes
-        spdAux::ConvertAllUniqueNames DEM [::CDEM::GetAttribute prefix]
-    }
-}
-
 proc ::CDEM::xml::ApplyPatches { } {
     catch {
         if {[spdAux::getRoute DEMROOT] eq ""} {

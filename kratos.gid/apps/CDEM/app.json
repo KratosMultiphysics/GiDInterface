@@ -1,7 +1,7 @@
 {
     "id": "CDEM",
     "name": "CDEM",
-    "prefix": "CDEM_",
+    "prefix": "DEM",
     "themed": false,
     "kratos_name": "DEMapplication",
     "dimensions": [
@@ -18,7 +18,8 @@
         "write/writeMDPA_Walls.tcl",
         "write/writeMDPA_Inlet.tcl",
         "write/writeProjectParameters.tcl",
-        "xml/XmlController.tcl"
+        "xml/XmlController.tcl",
+        "xml/BulkGroup.tcl"
     ],
     "start_script":"::CDEM::Init",
     "requeriments":{
