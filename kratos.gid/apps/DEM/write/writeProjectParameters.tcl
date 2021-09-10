@@ -103,6 +103,7 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "PostTotalForces"                  [write::getValue PostPrint TotalForces]
     dict set project_parameters_dict "PostPressure"                     [write::getValue PostPrint Pressure]
     dict set project_parameters_dict "PostShearStress"                  [write::getValue PostPrint ShearStress]
+    dict set project_parameters_dict "PostSkinSphere"                  [write::getValue PostPrint SkinSphere]
     dict set project_parameters_dict "PostNonDimensionalVolumeWear"     [write::getValue PostPrint Wear]
     dict set project_parameters_dict "PostParticleMoment"               [write::getValue PostPrint ParticleMoment]
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint EulerAngles]
