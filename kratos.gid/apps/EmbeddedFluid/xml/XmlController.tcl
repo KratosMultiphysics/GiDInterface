@@ -8,18 +8,11 @@ proc EmbeddedFluid::xml::Init { } {
     # Namespace variables inicialization
     variable lastImportMeshSize
     set lastImportMeshSize 0
-    Model::DestroyEverything
+
     Model::InitVariables dir $::EmbeddedFluid::dir
 
+    Model::ForgetSolutionStrategies
     Model::getSolutionStrategies Strategies.xml
-    Model::getElements "../../Fluid/xml/Elements.xml"
-    Model::getMaterials Materials.xml
-    Model::getNodalConditions "../../Fluid/xml/NodalConditions.xml"
-    Model::getConstitutiveLaws "../../Fluid/xml/ConstitutiveLaws.xml"
-    Model::getProcesses "../../Common/xml/Processes.xml"
-    Model::getProcesses "../../Fluid/xml/Processes.xml"
-    Model::getConditions "../../Fluid/xml/Conditions.xml"
-    Model::getSolvers "../../Common/xml/Solvers.xml"
 }
 
 proc EmbeddedFluid::xml::MultiAppEvent {args} {

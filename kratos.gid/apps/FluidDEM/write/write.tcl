@@ -1,4 +1,5 @@
 namespace eval ::FluidDEM::write {
+    namespace path ::FluidDEM
     variable fluid_project_parameters
     variable dem_project_parameters
 }
@@ -10,8 +11,6 @@ proc ::FluidDEM::write::Init { } {
     set dem_project_parameters [dict create]
     variable general_project_parameters
     set general_project_parameters [dict create]
-
-    SetAttribute main_launch_file [::FluidDEM::GetAttribute main_launch_file]
 }
 
 # Events

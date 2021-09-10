@@ -29,19 +29,8 @@
         "intervals": true,
         "wizard": false
     },
-    "unique_names": {
-        "parts": "STParts",
-        "initial_conditions": "STInitialConditions",
-        "nodal_conditions": "STNodalConditions",
-        "conditions": "STLoads",
-        "time_parameters": "STTimeParameters",
-        "results": "STResults",
-        "materials": "STMaterials"
-        
-    },
     "write": {
-        "coordinates": "all",
-        "materials_file": "BuoyancyMaterials.json",
+        "coordinates": "groups",
         "properties_location": "json",
         "model_part_name": "ThermalModelPart"
     },

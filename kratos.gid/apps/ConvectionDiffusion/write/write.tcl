@@ -38,9 +38,6 @@ proc ::ConvectionDiffusion::write::writeModelPartEvent { } {
     write::writeModelPartData
     writeProperties
 
-    # Materials (write materials in *.mdpa)
-    # write::writeMaterials [GetAttribute validApps]
-
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
@@ -86,6 +83,9 @@ proc ::ConvectionDiffusion::write::getLastConditionId { } {
 proc ::ConvectionDiffusion::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
+    W [GetAttribute parts_un] 
+    W [GetAttribute materials_file] 
+    W $include_modelpart_name
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law $model_part_name
 }
 

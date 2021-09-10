@@ -2,6 +2,10 @@ namespace eval ::DEM {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::DEM::Init { app } {
@@ -17,12 +21,6 @@ proc ::DEM::Init { app } {
     ::DEM::xml::Init
     ::DEM::write::Init
 }
-
-proc ::DEM::GetAttribute {name} {return [$::DEM::_app getProperty $name]}
-proc ::DEM::GetUniqueName {name} {return [$::DEM::_app getUniqueName $name]}
-proc ::DEM::GetWriteProperty {name} {return [$::DEM::_app getWriteProperty $name]}
-
-
 
 proc ::DEM::CustomToolbarItems { } {
     variable dir

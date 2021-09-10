@@ -2,6 +2,10 @@ namespace eval ::EmbeddedFluid {
     # Variable declaration
     variable dir
     variable _app
+    
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::EmbeddedFluid::Init { app } {
@@ -18,7 +22,6 @@ proc ::EmbeddedFluid::Init { app } {
     ::EmbeddedFluid::xml::Init
     ::EmbeddedFluid::xml::BoundingBox::Init
     ::EmbeddedFluid::write::Init
-
 }
 
 proc ::EmbeddedFluid::BeforeMeshGeneration {elementsize} {
@@ -48,7 +51,3 @@ proc ::EmbeddedFluid::CustomToolbarItems { } {
     # Create the bounding box
     Kratos::ToolbarAddItem "Box" "box.png" [list -np- EmbeddedFluid::xml::BoundingBox::CreateWindow] [= "Generate the bounding box"]
 }
-
-proc ::EmbeddedFluid::GetAttribute {name} {return [$::EmbeddedFluid::_app getProperty $name]}
-proc ::EmbeddedFluid::GetUniqueName {name} {return [$::EmbeddedFluid::_app getUniqueName $name]}
-proc ::EmbeddedFluid::GetWriteProperty {name} {return [$::EmbeddedFluid::_app getWriteProperty $name]}

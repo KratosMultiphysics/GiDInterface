@@ -2,6 +2,10 @@ namespace eval ::CDEM {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::CDEM::Init { app } {
@@ -31,7 +35,3 @@ proc ::CDEM::AfterMeshGeneration {fail} {
 proc ::CDEM::AfterSaveModel {filespd} {
     ::DEM::AfterSaveModel $filespd
 }
-
-proc ::CDEM::GetAttribute {name} {return [$::CDEM::_app getProperty $name]}
-proc ::CDEM::GetUniqueName {name} {return [$::CDEM::_app getUniqueName $name]}
-proc ::CDEM::GetWriteProperty {name} {return [$::CDEM::_app getWriteProperty $name]}

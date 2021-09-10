@@ -2,6 +2,10 @@ namespace eval ::Dam {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::Dam::Init { app } {
@@ -15,7 +19,3 @@ proc ::Dam::Init { app } {
     ::Dam::xml::Init
     ::Dam::write::Init
 }
-
-proc ::Dam::GetAttribute {name} {return [$::Dam::_app getProperty $name]}
-proc ::Dam::GetUniqueName {name} {return [$::Dam::_app getUniqueName $name]}
-proc ::Dam::GetWriteProperty {name} {return [$::Dam::_app getWriteProperty $name]}

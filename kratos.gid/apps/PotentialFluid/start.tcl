@@ -2,6 +2,10 @@ namespace eval ::PotentialFluid {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::PotentialFluid::Init { app } {
@@ -18,7 +22,3 @@ proc ::PotentialFluid::Init { app } {
     PotentialFluid::write::Init
 
 }
-
-proc ::PotentialFluid::GetAttribute {name} {return [$::PotentialFluid::_app getProperty $name]}
-proc ::PotentialFluid::GetUniqueName {name} {return [$::PotentialFluid::_app getUniqueName $name]}
-proc ::PotentialFluid::GetWriteProperty {name} {return [$::PotentialFluid::_app getWriteProperty $name]}

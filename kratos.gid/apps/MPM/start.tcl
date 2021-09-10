@@ -2,6 +2,10 @@ namespace eval ::MPM {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::MPM::Init { app } {
@@ -18,7 +22,3 @@ proc ::MPM::Init { app } {
     ::MPM::xml::Init
     ::MPM::write::Init
 }
-
-proc ::MPM::GetAttribute {name} {return [$::MPM::_app getProperty $name]}
-proc ::MPM::GetUniqueName {name} {return [$::MPM::_app getUniqueName $name]}
-proc ::MPM::GetWriteProperty {name} {return [$::MPM::_app getWriteProperty $name]}

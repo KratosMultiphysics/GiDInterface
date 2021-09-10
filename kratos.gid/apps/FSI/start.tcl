@@ -2,6 +2,10 @@ namespace eval ::FSI {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::FSI::Init { app } {
@@ -15,7 +19,3 @@ proc ::FSI::Init { app } {
     ::FSI::xml::Init
     ::FSI::write::Init
 }
-
-proc ::FSI::GetAttribute {name} {return [$::FSI::_app getProperty $name]}
-proc ::FSI::GetUniqueName {name} {return [$::FSI::_app getUniqueName $name]}
-proc ::FSI::GetWriteProperty {name} {return [$::FSI::_app getWriteProperty $name]}

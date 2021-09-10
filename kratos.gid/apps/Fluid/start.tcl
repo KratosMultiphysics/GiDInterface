@@ -2,6 +2,10 @@ namespace eval ::Fluid {
     # Variable declaration
     variable _app
     variable dir
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::Fluid::Init { app } {
@@ -16,7 +20,3 @@ proc ::Fluid::Init { app } {
     ::Fluid::xml::Init
     ::Fluid::write::Init
 }
-
-proc ::Fluid::GetAttribute {name} {return [$::Fluid::_app getProperty $name]}
-proc ::Fluid::GetUniqueName {name} {return [$::Fluid::_app getUniqueName $name]}
-proc ::Fluid::GetWriteProperty {name} {return [$::Fluid::_app getWriteProperty $name]}

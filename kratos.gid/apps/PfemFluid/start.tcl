@@ -2,6 +2,10 @@ namespace eval ::PfemFluid {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::PfemFluid::Init { app } {
@@ -33,6 +37,3 @@ proc ::PfemFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
 }
 
-proc ::PfemFluid::GetAttribute {name} {return [$::PfemFluid::_app getProperty $name]}
-proc ::PfemFluid::GetUniqueName {name} {return [$::PfemFluid::_app getUniqueName $name]}
-proc ::PfemFluid::GetWriteProperty {name} {return [$::PfemFluid::_app getWriteProperty $name]}

@@ -17,6 +17,8 @@ proc ::ConjugateHeatTransfer::write::Init { } {
     SetAttribute properties_location [::ConjugateHeatTransfer::GetWriteProperty properties_location]
     SetAttribute model_part_name [::ConjugateHeatTransfer::GetWriteProperty model_part_name]
 
+    SetAttribute coordinates [::ConjugateHeatTransfer::GetWriteProperty coordinates]
+
     SetAttribute fluid_mdpa_suffix Fluid
     SetAttribute solid_mdpa_suffix Solid
 
@@ -41,7 +43,7 @@ proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
     
     # Convection diffusion mdpa
     ConvectionDiffusion::write::Init
-    ConvectionDiffusion::write::SetAttribute writeCoordinatesByGroups 1
+    ConvectionDiffusion::write::SetAttribute writeCoordinatesByGroups [GetAttribute coordinates]
     write::writeAppMDPA ConvectionDiffusion
     write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute solid_mdpa_suffix].mdpa"
 }
@@ -64,18 +66,14 @@ proc ::ConjugateHeatTransfer::write::PrepareBuoyancy { } {
     Buoyancy::write::Init
     Fluid::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
     Fluid::write::SetAttribute thermal_initial_cnd_un Buoyancy_CNVDFFNodalConditions
-    Fluid::write::SetCoordinatesByGroups 1
+    Fluid::write::SetCoordinatesByGroups [GetAttribute coordinates]
 }
 
 proc ::ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
     Buoyancy::write::WriteMaterialsFile $write_const_law $include_modelpart_name
-    # ConvectionDiffusion::write::WriteMaterialsFile $write_const_law $include_modelpart_name
     ConvectionDiffusion::write::WriteMaterialsFile False $include_modelpart_name
 }
 
-# proc ::Buoyancy::write::GetModelPartName { } {
-#     return FluidThermalModelPart
-# }
 
 proc ::ConjugateHeatTransfer::write::GetAttribute {att} {
     variable writeAttributes

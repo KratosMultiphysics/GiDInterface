@@ -4,21 +4,8 @@ namespace eval EmbeddedFluid::write {
 
 proc EmbeddedFluid::write::Init { } {
     # Namespace variables inicialization        
-    SetAttribute parts_un [::Fluid::GetUniqueName parts]
-    SetAttribute nodal_conditions_un [::Fluid:::GetUniqueName nodal_conditions]
-    SetAttribute conditions_un [::Fluid::GetUniqueName conditions]
-    SetAttribute materials_un [::EmbeddedFluid::GetUniqueName materials]
-    SetAttribute results_un [::Fluid::GetUniqueName results]
-    SetAttribute drag_un [::Fluid::GetUniqueName drag]
-    SetAttribute time_parameters_un [::Fluid::GetUniqueName time_parameters]
-
-    SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
-    SetAttribute validApps [list "Fluid" "EmbeddedFluid"]
-    SetAttribute main_launch_file [::Fluid::GetAttribute main_launch_file]
-    SetAttribute materials_file [::Fluid::GetWriteProperty materials_file]
-    SetAttribute properties_location [::Fluid::GetWriteProperty properties_location]
-    SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
-    SetAttribute output_model_part_name [::Fluid::GetWriteProperty output_model_part_name]
+    variable writeAttributes
+    set writeAttributes [::Fluid::write::GetAttributes]
 }
 
 # Events

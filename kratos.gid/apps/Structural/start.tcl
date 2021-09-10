@@ -2,6 +2,10 @@ namespace eval ::Structural {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::Structural::Init { app } {
@@ -14,12 +18,6 @@ proc ::Structural::Init { app } {
     ::Structural::xml::Init
     ::Structural::write::Init
 }
-
-
-
-proc ::Structural::GetAttribute {name} {return [$::Structural::_app getProperty $name]}
-proc ::Structural::GetUniqueName {name} {return [$::Structural::_app getUniqueName $name]}
-proc ::Structural::GetWriteProperty {name} {return [$::Structural::_app getWriteProperty $name]}
 
 # Create the old-gid condition relation_line_geo_mesh to link geometry and mesh entities. 
 # Topic: Local axes, beams

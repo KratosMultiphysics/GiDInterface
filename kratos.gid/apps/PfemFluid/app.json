@@ -38,8 +38,7 @@
         "coordinates": "all",
         "materials_file": "PFEMFluidMaterials.json",
         "properties_location": "json",
-        "model_part_name": "PfemFluidModelPart",
-        "output_model_part_name": "fluid_computational_model_part"
+        "model_part_name": "PfemFluidModelPart"
     },
     "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"

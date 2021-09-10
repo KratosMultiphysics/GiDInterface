@@ -2,6 +2,10 @@ namespace eval ::PfemThermic {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::PfemThermic::Init { app } {
@@ -30,7 +34,3 @@ proc ::PfemThermic::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Stop"                 [file join $img_dir "cancelProcess.png"]   {Utilities CancelProcess}                          [= "Cancel process"]
     Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow         [apps::getActiveAppId]]                            [= "Examples window"]
 }
-
-proc ::PfemThermic::GetAttribute {name} {return [$::PfemThermic::_app getProperty $name]}
-proc ::PfemThermic::GetUniqueName {name} {return [$::PfemThermic::_app getUniqueName $name]}
-proc ::PfemThermic::GetWriteProperty {name} {return [$::PfemThermic::_app getWriteProperty $name]}

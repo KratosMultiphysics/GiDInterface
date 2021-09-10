@@ -2,6 +2,10 @@ namespace eval ::ConvectionDiffusion {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::ConvectionDiffusion::Init { app } {
@@ -16,7 +20,3 @@ proc ::ConvectionDiffusion::Init { app } {
     ::ConvectionDiffusion::xml::Init
     ::ConvectionDiffusion::write::Init
 }
-
-proc ::ConvectionDiffusion::GetAttribute {name} {return [$::ConvectionDiffusion::_app getProperty $name]}
-proc ::ConvectionDiffusion::GetUniqueName {name} {return [$::ConvectionDiffusion::_app getUniqueName $name]}
-proc ::ConvectionDiffusion::GetWriteProperty {name} {return [$::ConvectionDiffusion::_app getWriteProperty $name]}

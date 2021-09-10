@@ -16,9 +16,11 @@ proc ::Structural::write::Init { } {
 
     variable writeAttributes
     set writeAttributes [dict create]
+    
     SetAttribute validApps [list "Structural"]
     SetAttribute writeCoordinatesByGroups [::Structural::GetWriteProperty coordinates]
     SetAttribute properties_location [::Structural::GetWriteProperty properties_location]
+
     SetAttribute parts_un [::Structural::GetUniqueName parts]
     SetAttribute time_parameters_un [::Structural::GetUniqueName time_parameters]
     SetAttribute results_un [::Structural::GetUniqueName results]
@@ -26,11 +28,11 @@ proc ::Structural::write::Init { } {
     SetAttribute initial_conditions_un [::Structural::GetUniqueName initial_conditions]
     SetAttribute nodal_conditions_un [::Structural::GetUniqueName nodal_conditions]
     SetAttribute conditions_un [::Structural::GetUniqueName conditions]
+
     SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
     SetAttribute materials_file [::Structural::GetWriteProperty materials_file]
     SetAttribute main_launch_file [::Structural::GetAttribute main_launch_file]
     SetAttribute model_part_name [::Structural::GetWriteProperty model_part_name]
-    SetAttribute output_model_part_name ""
 }
 
 # MDPA Blocks

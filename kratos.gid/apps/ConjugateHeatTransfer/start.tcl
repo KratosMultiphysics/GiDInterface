@@ -2,6 +2,10 @@ namespace eval ::ConjugateHeatTransfer {
     # Variable declaration
     variable dir
     variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::ConjugateHeatTransfer::Init { app } {
@@ -17,7 +21,3 @@ proc ::ConjugateHeatTransfer::Init { app } {
     ::ConjugateHeatTransfer::write::Init
 
 }
-
-proc ::ConjugateHeatTransfer::GetAttribute {name} {return [$::ConjugateHeatTransfer::_app getProperty $name]}
-proc ::ConjugateHeatTransfer::GetUniqueName {name} {return [$::ConjugateHeatTransfer::_app getUniqueName $name]}
-proc ::ConjugateHeatTransfer::GetWriteProperty {name} {return [$::ConjugateHeatTransfer::_app getWriteProperty $name]}

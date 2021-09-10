@@ -2,6 +2,10 @@ namespace eval ::Stent {
     # Variable declaration
     variable dir
     variable app_id
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
 proc ::Stent::Init { app } {

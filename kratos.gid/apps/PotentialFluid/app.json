@@ -40,9 +40,7 @@
     "write": {
         "coordinates": "all",
         "materials_file": "FluidMaterials.json",
-        "properties_location": "json",
-        "model_part_name": "FluidModelPart",
-        "output_model_part_name": "fluid_computational_model_part"
+        "properties_location": "json"
     },
     "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"
