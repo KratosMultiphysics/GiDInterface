@@ -60,6 +60,8 @@ proc ::Buoyancy::write::Validate {} {
 }
 
 proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_modelpart_name True} } {
+    # Note: This will generate 2 quasi identical files for materials. The difference is the model_part_name
+
     # Write fluid material file 
     Fluid::write::WriteMaterialsFile $write_const_law $include_modelpart_name
 
