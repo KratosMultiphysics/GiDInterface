@@ -45,7 +45,8 @@
         "coordinates": "all",
         "materials_file": "StructuralMaterials.json",
         "properties_location": "json",
-        "model_part_name": "Structure"
+        "model_part_name": "Structure",
+        "output_model_part_name": ""
     },
     "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"

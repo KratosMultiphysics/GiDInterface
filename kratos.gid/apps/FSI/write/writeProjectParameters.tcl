@@ -81,7 +81,7 @@ proc ::FSI::write::GetSolverSettingsDict { } {
     set fluid_interface_uniquename FluidNoSlipInterface$::Model::SpatialDimension
     set fluid_interfaces_list [list ]
     set fluid_interfaces_list_raw [write::GetSubModelPartFromCondition FLBC $fluid_interface_uniquename]
-    foreach interface $structure_interfaces_list_raw {
+    foreach interface $fluid_interfaces_list_raw {
         lappend fluid_interfaces_list [Fluid::write::GetAttribute model_part_name].$interface
     }
     dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
@@ -136,8 +136,8 @@ proc ::FSI::write::GetOutputProcessesDict { } {
 proc ::FSI::write::UpdateUniqueNames { appid } {
     set unList [list "Results"]
     foreach un $unList {
-	 set current_un [apps::getAppUniqueName $appid $un]
-	 spdAux::setRoute $un [spdAux::getRoute $current_un]
+        set current_un [apps::getAppUniqueName $appid $un]
+        spdAux::setRoute $un [spdAux::getRoute $current_un]
     }
 }
 
@@ -172,7 +172,6 @@ proc ::FSI::write::InitExternalProjectParameters { } {
     Structural::write::SetAttribute time_parameters_un FLTimeParameters
     write::initWriteConfiguration [Structural::write::GetAttributes]
     set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
-
     
     apps::setActiveAppSoft FSI
 }

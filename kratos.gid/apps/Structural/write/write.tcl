@@ -35,6 +35,7 @@ proc ::Structural::write::Init { } {
     SetAttribute materials_file [::Structural::GetWriteProperty materials_file]
     SetAttribute main_launch_file [::Structural::GetAttribute main_launch_file]
     SetAttribute model_part_name [::Structural::GetWriteProperty model_part_name]
+    SetAttribute output_model_part_name [::Structural::GetWriteProperty output_model_part_name]
 }
 
 # MDPA Blocks
