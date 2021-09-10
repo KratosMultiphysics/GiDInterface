@@ -1,5 +1,6 @@
 namespace eval ::DEM::examples::CirclesDrop {
     namespace path ::DEM::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::DEM::examples::CirclesDrop::Init {args} {

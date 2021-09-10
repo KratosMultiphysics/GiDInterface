@@ -1,5 +1,6 @@
 namespace eval ::Fluid::examples {
     namespace path ::Fluid
+    Kratos::AddNamespace [namespace current]
 }
 
 # Common functions for all examples that uses Fluid App

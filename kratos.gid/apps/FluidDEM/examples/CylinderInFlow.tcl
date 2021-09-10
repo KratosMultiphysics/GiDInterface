@@ -1,5 +1,6 @@
 namespace eval ::FluidDEM::examples::CylinderInFlow {
     namespace path ::FluidDEM::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::FluidDEM::examples::CylinderInFlow::Init {args} {

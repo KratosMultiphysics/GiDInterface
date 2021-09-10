@@ -1,5 +1,7 @@
 namespace eval ::EmbeddedFluid::examples::CylinderInFlow {
     namespace path ::EmbeddedFluid::examples
+    Kratos::AddNamespace [namespace current]
+    
     variable CylinderInFlow_Data
 }
 

@@ -1,5 +1,6 @@
 namespace eval ::CDEM::examples::ContSpheresDrop3D {
     namespace path ::CDEM::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::CDEM::examples::ContSpheresDrop3D::Init {args} {

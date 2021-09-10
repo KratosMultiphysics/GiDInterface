@@ -1,5 +1,6 @@
 namespace eval ::PfemFluid::examples {
     namespace path ::PfemFluid
+    Kratos::AddNamespace [namespace current]
 
 }
 

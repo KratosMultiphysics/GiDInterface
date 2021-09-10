@@ -1,6 +1,8 @@
 namespace eval ::CDEM::write {
     
     namespace path ::CDEM
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
     variable inletProperties
     variable last_property_id

@@ -1,5 +1,7 @@
 namespace eval ::Dam::write {
     namespace path ::Dam
+    Kratos::AddNamespace [namespace current]
+    
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable TableDict

@@ -1,5 +1,6 @@
 namespace eval ::CDEM::examples {
     namespace path ::CDEM
+    Kratos::AddNamespace [namespace current]
 
 }
 

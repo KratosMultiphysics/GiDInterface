@@ -1,5 +1,6 @@
 namespace eval ::Dam::examples::ThermoMechaDam2D {
     namespace path ::Dam::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 

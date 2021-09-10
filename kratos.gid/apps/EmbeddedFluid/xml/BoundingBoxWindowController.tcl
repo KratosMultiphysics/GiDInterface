@@ -2,6 +2,7 @@
 
 namespace eval ::EmbeddedFluid::xml::BoundingBox {
     namespace path ::EmbeddedFluid::xml
+    Kratos::AddNamespace [namespace current]
 
     variable winpath
     variable box

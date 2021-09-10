@@ -1,5 +1,6 @@
 namespace eval ::EmbeddedFluid::xml {
     namespace path ::EmbeddedFluid
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
     variable lastImportMeshSize
     variable export_dir

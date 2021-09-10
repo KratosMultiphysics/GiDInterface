@@ -1,5 +1,6 @@
 namespace eval ::PfemThermic::examples {
     namespace path ::PfemThermic
+    Kratos::AddNamespace [namespace current]
 
 }
 proc ::PfemThermic::examples::ErasePreviousIntervals { } {

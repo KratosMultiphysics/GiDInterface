@@ -1,5 +1,6 @@
 namespace eval ::PfemThermic::examples::ThermicSloshing {
     namespace path ::PfemThermic::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 proc ::PfemThermic::examples::ThermicSloshing::Init {args} {

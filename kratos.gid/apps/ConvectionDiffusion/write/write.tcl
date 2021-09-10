@@ -1,5 +1,6 @@
 namespace eval ::ConvectionDiffusion::write {
     namespace path ::ConvectionDiffusion
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
     variable ConvectionDiffusionConditions
     variable writeCoordinatesByGroups

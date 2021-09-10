@@ -1,5 +1,7 @@
 namespace eval ::FSI::write {
     namespace path ::FSI
+    Kratos::AddNamespace [namespace current]
+    
     variable fluid_project_parameters
     variable structure_project_parameters
     variable mdpa_names

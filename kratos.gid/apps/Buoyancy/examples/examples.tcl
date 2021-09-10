@@ -1,5 +1,6 @@
 namespace eval ::Buoyancy::examples {
-namespace path ::Buoyancy
+    namespace path ::Buoyancy
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::Buoyancy::examples::ErasePreviousIntervals { } {

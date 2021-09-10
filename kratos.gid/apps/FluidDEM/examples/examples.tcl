@@ -1,5 +1,6 @@
 namespace eval ::FluidDEM::examples {
     namespace path ::Fluid
+    Kratos::AddNamespace [namespace current]
 
 }
 proc ::FluidDEM::examples::ErasePreviousIntervals { } {

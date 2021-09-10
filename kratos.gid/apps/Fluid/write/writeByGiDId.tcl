@@ -1,5 +1,7 @@
 namespace eval ::Fluid::write {
     namespace path ::Fluid
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes

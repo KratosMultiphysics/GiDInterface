@@ -1,5 +1,6 @@
 namespace eval ::Structural::write {
     namespace path ::Structural
+    Kratos::AddNamespace [namespace current]
 
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup

@@ -1,5 +1,7 @@
 namespace eval ::PotentialFluid::write {
     namespace path ::PotentialFluid
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
     variable FluidConditionMap
 }

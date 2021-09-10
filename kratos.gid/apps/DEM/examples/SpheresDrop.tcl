@@ -1,5 +1,6 @@
 namespace eval ::DEM::examples::SpheresDrop {
     namespace path ::DEM::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 

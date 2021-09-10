@@ -1,5 +1,6 @@
 namespace eval ::PotentialFluid::examples {
     namespace path ::PotentialFluid
+    Kratos::AddNamespace [namespace current]
 
 }
 

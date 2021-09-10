@@ -1,5 +1,6 @@
 namespace eval ::Structural::examples {
     namespace path ::Structural
+    Kratos::AddNamespace [namespace current]
 
 }
 

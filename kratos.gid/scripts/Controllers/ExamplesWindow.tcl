@@ -1,4 +1,6 @@
 namespace eval ::Examples {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
     variable doc

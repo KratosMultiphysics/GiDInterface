@@ -1,5 +1,7 @@
 namespace eval ::DEM::xml {
     namespace path ::DEM
+    Kratos::AddNamespace [namespace current]
+    
     variable dir
 }
 

@@ -1,5 +1,6 @@
 namespace eval ::Stent::xml {
     namespace path ::Stent
+    Kratos::AddNamespace [namespace current]
 }
 
 proc Stent::xml::Init { } {

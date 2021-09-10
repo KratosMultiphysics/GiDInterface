@@ -1,5 +1,6 @@
 namespace eval ::Structural::examples::TrussCantilever {
     namespace path ::Structural::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 proc ::Structural::examples::TrussCantilever::Init {args} {

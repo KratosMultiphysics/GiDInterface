@@ -1,5 +1,6 @@
 namespace eval ::Buoyancy::xml {
     namespace path ::Buoyancy
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
     variable dir
 }

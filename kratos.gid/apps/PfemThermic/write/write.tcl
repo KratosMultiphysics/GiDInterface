@@ -1,5 +1,6 @@
 namespace eval ::PfemThermic::write {
     namespace path ::PfemThermic
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::PfemThermic::write::Init { } {

@@ -1,4 +1,7 @@
-namespace eval Stent::write { }
+namespace eval ::Stent::write {
+    namespace path ::Stent
+    Kratos::AddNamespace [namespace current]
+ }
 
 proc Stent::write::Init { } { }
 

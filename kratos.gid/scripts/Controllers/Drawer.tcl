@@ -1,4 +1,6 @@
 namespace eval ::Drawer {
+    Kratos::AddNamespace [namespace current]
+    
     variable registered_procs
     variable vars
 }

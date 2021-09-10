@@ -1,6 +1,7 @@
 namespace eval ::DEMPFEM::xml {
     # Namespace variables declaration
     namespace path ::DEMPFEM
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::DEMPFEM::xml::Init { } {

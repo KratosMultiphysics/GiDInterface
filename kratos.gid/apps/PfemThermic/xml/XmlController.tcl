@@ -1,5 +1,6 @@
 namespace eval ::PfemThermic::xml {
     namespace path ::PfemThermic
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
 }
 

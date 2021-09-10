@@ -1,5 +1,6 @@
 namespace eval ::StenosisWizard::write {
     namespace path ::StenosisWizard
+    Kratos::AddNamespace [namespace current]
 
 }
 

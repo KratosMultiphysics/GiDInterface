@@ -1,5 +1,6 @@
 namespace eval ::ConvectionDiffusion::examples::HeatedSquare {
     namespace path ::ConvectionDiffusion::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 

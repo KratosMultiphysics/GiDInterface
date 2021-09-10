@@ -1,5 +1,6 @@
 namespace eval ::ConvectionDiffusion::xml {
     namespace path ::ConvectionDiffusion
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
 }
 

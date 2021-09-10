@@ -1,4 +1,6 @@
 namespace eval ::ThermicLauncher {
+    Kratos::AddNamespace [namespace current]
+    
     variable available_apps
 }
 

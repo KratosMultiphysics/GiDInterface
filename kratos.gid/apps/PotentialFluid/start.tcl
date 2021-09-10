@@ -1,4 +1,6 @@
 namespace eval ::PotentialFluid {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
     variable _app

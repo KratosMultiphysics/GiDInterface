@@ -1,5 +1,7 @@
 namespace eval ::Fluid::xml {
     namespace path ::Fluid
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     variable dir
 }

@@ -1,5 +1,6 @@
 namespace eval ::ConjugateHeatTransfer::xml {
     namespace path ::ConjugateHeatTransfer
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
     variable dir
 }

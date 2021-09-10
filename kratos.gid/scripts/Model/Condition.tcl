@@ -4,6 +4,8 @@
 ##################################################################################
 
 namespace eval ::Model {
+    Kratos::AddNamespace [namespace current]
+    
 catch {Condition destroy}
 oo::class create Condition {
     superclass Entity

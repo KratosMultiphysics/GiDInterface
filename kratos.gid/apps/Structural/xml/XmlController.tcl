@@ -1,5 +1,6 @@
 namespace eval ::Structural::xml {
     namespace path ::Structural
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::Structural::xml::Init { } {

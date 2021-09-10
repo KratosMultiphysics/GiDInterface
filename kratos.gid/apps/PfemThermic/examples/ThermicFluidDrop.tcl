@@ -1,5 +1,6 @@
 namespace eval ::PfemThermic::examples::ThermicFluidDrop {
     namespace path ::PfemThermic::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 proc ::PfemThermic::examples::ThermicFluidDrop::Init {args} {

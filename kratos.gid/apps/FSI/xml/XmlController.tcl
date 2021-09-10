@@ -1,5 +1,7 @@
 namespace eval ::FSI::xml {
     namespace path ::FSI
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     variable dir
 }

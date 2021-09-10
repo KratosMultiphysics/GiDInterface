@@ -1,5 +1,6 @@
 namespace eval ::ConjugateHeatTransfer::examples::HeatedSquare {
     namespace path ::ConjugateHeatTransfer::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::ConjugateHeatTransfer::examples::HeatedSquare::Init {args} {

@@ -1,5 +1,6 @@
 namespace eval ::Buoyancy::examples::HeatedSquare {
     namespace path ::Buoyancy::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::Buoyancy::examples::HeatedSquare::Init {args} {

@@ -1,5 +1,6 @@
 namespace eval ::MPM::examples {
     namespace path ::MPM
+    Kratos::AddNamespace [namespace current]
 
 }
 

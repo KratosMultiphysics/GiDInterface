@@ -1,6 +1,7 @@
 
 namespace eval ::Structural::Formfinding {
     namespace path ::Structural
+    Kratos::AddNamespace [namespace current]
     
 }
 

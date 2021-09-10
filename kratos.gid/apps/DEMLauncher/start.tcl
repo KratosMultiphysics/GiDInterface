@@ -1,4 +1,6 @@
 namespace eval ::DemLauncher {
+    Kratos::AddNamespace [namespace current]
+    
     variable available_apps
 }
 

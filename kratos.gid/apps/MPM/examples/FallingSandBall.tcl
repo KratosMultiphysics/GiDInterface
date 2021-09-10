@@ -1,5 +1,6 @@
 namespace eval ::MPM::examples::FallingSandBall {
     namespace path ::MPM::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 proc ::MPM::examples::FallingSandBall::Init {args} {

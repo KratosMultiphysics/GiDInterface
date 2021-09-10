@@ -1,5 +1,6 @@
 namespace eval ::ConjugateHeatTransfer::examples::BFS {
     namespace path ::ConjugateHeatTransfer::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 

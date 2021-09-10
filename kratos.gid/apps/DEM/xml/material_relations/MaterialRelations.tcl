@@ -4,6 +4,8 @@
 ##################################################################################
 
 namespace eval ::Model {
+    Kratos::AddNamespace [namespace current]
+    
 catch {MaterialRelation destroy}
 oo::class create MaterialRelation {
     superclass Entity

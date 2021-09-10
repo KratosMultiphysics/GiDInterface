@@ -1,5 +1,6 @@
 namespace eval ::ConjugateHeatTransfer::write {
     namespace path ::ConjugateHeatTransfer
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
     variable ConjugateHeatTransferConditions
     variable writeCoordinatesByGroups

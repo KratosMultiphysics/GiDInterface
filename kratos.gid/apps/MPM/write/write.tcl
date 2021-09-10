@@ -1,5 +1,7 @@
 namespace eval MPM::write {
     namespace path ::MPM
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
     variable ConditionsDictGroupIterators
 }
@@ -159,7 +161,6 @@ proc MPM::write::writeCustomFilesEvent { } {
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True Initial_MPM_Material
     write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
-
 
 proc MPM::write::UpdateMaterials { } {
     set matdict [write::getMatDict]

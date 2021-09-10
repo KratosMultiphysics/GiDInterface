@@ -1,4 +1,6 @@
 namespace eval ::EmbeddedFluid {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
     variable _app

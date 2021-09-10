@@ -1,5 +1,7 @@
 namespace eval ::PfemLauncher {
     namespace path ::PfemFluid
+    Kratos::AddNamespace [namespace current]
+    
     variable available_apps
 }
 

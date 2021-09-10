@@ -1,5 +1,6 @@
 namespace eval ::Structural::examples::IncompressibleCookMembrane {
     namespace path ::Structural::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 proc ::Structural::examples::IncompressibleCookMembrane::Init {args} {

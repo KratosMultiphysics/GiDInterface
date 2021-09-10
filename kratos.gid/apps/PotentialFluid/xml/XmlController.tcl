@@ -1,5 +1,7 @@
 namespace eval ::PotentialFluid::xml {
     namespace path ::PotentialFluid
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     variable lastImportMeshSize
     variable export_dir

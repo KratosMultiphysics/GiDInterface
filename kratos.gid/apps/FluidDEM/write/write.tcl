@@ -1,5 +1,6 @@
 namespace eval ::FluidDEM::write {
     namespace path ::FluidDEM
+    Kratos::AddNamespace [namespace current]
     
     variable fluid_project_parameters
     variable dem_project_parameters

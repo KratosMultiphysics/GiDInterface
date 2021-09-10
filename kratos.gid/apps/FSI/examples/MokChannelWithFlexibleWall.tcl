@@ -1,5 +1,6 @@
 namespace eval ::FSI::examples::MokChannelFlexibleWall {
     namespace path ::FSI::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 

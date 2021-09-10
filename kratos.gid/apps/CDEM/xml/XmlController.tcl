@@ -1,6 +1,7 @@
 namespace eval ::CDEM::xml {
     # Namespace variables declaration
     namespace path ::CDEM
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::CDEM::xml::Init { } {

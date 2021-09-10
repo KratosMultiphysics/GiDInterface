@@ -1,5 +1,7 @@
 namespace eval ::Stent::Wizard {
     namespace path ::Stent
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     
     variable curr_win

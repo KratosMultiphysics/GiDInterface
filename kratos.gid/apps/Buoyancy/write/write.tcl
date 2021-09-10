@@ -1,5 +1,7 @@
 namespace eval ::Buoyancy::write {
     namespace path ::Buoyancy::write
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
 }
 

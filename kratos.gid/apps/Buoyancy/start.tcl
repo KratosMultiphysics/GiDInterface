@@ -2,6 +2,7 @@ namespace eval ::Buoyancy {
     # Variable declaration
     variable dir
     variable _app
+    Kratos::AddNamespace [namespace current]
 
     proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
     proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}

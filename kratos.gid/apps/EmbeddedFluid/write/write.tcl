@@ -1,5 +1,7 @@
 namespace eval ::EmbeddedFluid::write {
     namespace path ::EmbeddedFluid
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
 }
 

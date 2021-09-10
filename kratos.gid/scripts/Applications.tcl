@@ -4,6 +4,8 @@
 ##################################################################################
 
 namespace eval ::apps {
+    Kratos::AddNamespace [namespace current]
+    
     variable activeApp
     variable appList
 }

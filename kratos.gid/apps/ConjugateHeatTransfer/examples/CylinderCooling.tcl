@@ -1,5 +1,6 @@
 namespace eval ::ConjugateHeatTransfer::examples::CylinderCooling {
     namespace path ::ConjugateHeatTransfer::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 

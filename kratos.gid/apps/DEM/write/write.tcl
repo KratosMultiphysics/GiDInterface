@@ -1,5 +1,7 @@
 namespace eval ::DEM::write {
     namespace path ::DEM
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
     variable partsProperties
     variable inletProperties

@@ -1,6 +1,8 @@
 
 namespace eval ::StenosisWizard::Wizard {
     namespace path ::StenosisWizard
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     variable curr_win
     variable ogl_cuts

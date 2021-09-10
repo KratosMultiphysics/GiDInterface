@@ -5,6 +5,8 @@
 ##################################################################################
 
 namespace eval ::write {
+    Kratos::AddNamespace [namespace current]
+    
     variable mat_dict
     variable submodelparts
     variable MDPA_loop_control

@@ -1,5 +1,6 @@
 namespace eval ::StenosisWizard::xml {
     namespace path ::StenosisWizard
+    Kratos::AddNamespace [namespace current]
 }
 
 proc StenosisWizard::xml::Init { } {

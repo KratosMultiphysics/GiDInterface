@@ -1,5 +1,6 @@
 namespace eval ::PfemThermic::examples::ThermicConvection {
     namespace path ::PfemThermic::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 proc ::PfemThermic::examples::ThermicConvection::Init {args} {

@@ -4,8 +4,9 @@
 ##################################################################################
 
 namespace eval ::spdAux {
+    Kratos::AddNamespace [namespace current]
+
     # Namespace variables declaration
-    
     variable uniqueNames
     variable initwind
     

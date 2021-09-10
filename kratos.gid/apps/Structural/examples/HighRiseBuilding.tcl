@@ -1,5 +1,6 @@
 namespace eval ::Structural::examples::HighRiseBuilding {
     namespace path ::Structural::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 

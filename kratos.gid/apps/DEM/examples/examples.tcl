@@ -1,5 +1,6 @@
 namespace eval ::DEM::examples {
     namespace path ::DEM
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::DEM::examples::ErasePreviousIntervals { } {

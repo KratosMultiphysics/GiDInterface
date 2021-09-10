@@ -1,5 +1,6 @@
 namespace eval ::PfemFluid::examples::WaterDamBreak  {
     namespace path ::PfemFluid::examples
+    Kratos::AddNamespace [namespace current]
 
 }
 

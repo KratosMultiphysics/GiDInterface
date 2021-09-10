@@ -1,5 +1,7 @@
 namespace eval ::PfemFluid::xml {
     namespace path ::PfemFluid
+    Kratos::AddNamespace [namespace current]
+    
     variable bodyNodalCondition
 }
 

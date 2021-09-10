@@ -1,5 +1,6 @@
 namespace eval ::Fluid::examples::HighRiseBuilding {
     namespace path ::Fluid::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::Fluid::examples::HighRiseBuilding::Init {args} {

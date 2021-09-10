@@ -1,5 +1,6 @@
 namespace eval ::DEMPFEM::examples {
     namespace path ::DEMPFEM
+    Kratos::AddNamespace [namespace current]
 
 }
 

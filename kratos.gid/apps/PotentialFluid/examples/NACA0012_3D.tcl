@@ -1,5 +1,6 @@
 namespace eval ::PotentialFluid::examples::NACA0012_3D {
-namespace path ::PotentialFluid::examples
+    namespace path ::PotentialFluid::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::PotentialFluid::examples::NACA0012_3D::Init {args} {

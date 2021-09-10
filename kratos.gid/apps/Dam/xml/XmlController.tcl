@@ -1,5 +1,6 @@
 namespace eval ::Dam::xml {
     namespace path ::Dam
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::Dam::xml::Init { } {

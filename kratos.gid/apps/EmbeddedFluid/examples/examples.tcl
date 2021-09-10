@@ -1,5 +1,6 @@
 namespace eval ::EmbeddedFluid::examples {
     namespace path ::EmbeddedFluid
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::EmbeddedFluid::examples::ErasePreviousIntervals { } {

@@ -1,6 +1,7 @@
 
 namespace eval ::Fluid::examples::CylinderInFlow {
     namespace path ::Fluid::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::Fluid::examples::CylinderInFlow::Init {args} {

@@ -1,5 +1,6 @@
 namespace eval ::CDEM::examples::ContinuumDrop2D {
     namespace path ::CDEM::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::CDEM::examples::ContinuumDrop2D::Init {args} {

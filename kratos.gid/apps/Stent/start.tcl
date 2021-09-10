@@ -1,4 +1,6 @@
 namespace eval ::Stent {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
     variable app_id

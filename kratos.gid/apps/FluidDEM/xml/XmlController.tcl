@@ -1,6 +1,7 @@
 namespace eval ::FluidDEM::xml {
     # Namespace variables declaration
     namespace path ::FluidDEM
+    Kratos::AddNamespace [namespace current]
     variable dir
 }
 

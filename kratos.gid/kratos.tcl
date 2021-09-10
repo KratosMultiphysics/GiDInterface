@@ -10,6 +10,7 @@ namespace eval ::Kratos {
     variable must_exist_calc_data
 
     variable tmp_init_mesh_time
+    variable namespaces
 }
 
 # Hard minimum GiD Version is 14
@@ -168,6 +169,9 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(ProjectIsNew) 1
     # Variables from the problemtype definition (kratos.xml)
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+
+    variable namespaces
+    set namespaces [list ]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -300,8 +304,12 @@ proc Kratos::Event_EndProblemtype { } {
 
         # Clear private global variable
         unset -nocomplain ::Kratos::kratos_private
+
     }
     Drawer::UnregisterAll
+    
+    # Clear namespaces
+    Kratos::DestroyNamespaces
 }
 
 
@@ -551,4 +559,19 @@ proc Kratos::Quicktest {example_app example_dim example_cmd} {
 
     # And close the windows
     Kratos::DestroyWindows
+}
+
+proc Kratos::AddNamespace { namespace_name } {
+    variable namespaces
+    lappend namespaces $namespace_name
+
+}
+
+proc Kratos::DestroyNamespaces { } {
+    variable namespaces
+
+    foreach name $namespaces {
+        catch {namespace delete $name}
+    }
+    uplevel #0 [list namespace delete ::Kratos]
 }

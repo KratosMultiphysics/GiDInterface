@@ -1,5 +1,6 @@
 namespace eval ::DEMPFEM::write {
     namespace path ::DEMPFEM
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::DEMPFEM::write::Init { } {    

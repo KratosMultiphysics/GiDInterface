@@ -1,5 +1,6 @@
 namespace eval ::DEMPFEM::examples::InnerSphere {
     namespace path ::DEMPFEM::examples
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::DEMPFEM::examples::InnerSphere::Init {args} {

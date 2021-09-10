@@ -1,4 +1,6 @@
 namespace eval ::FluidLauncher {
+    Kratos::AddNamespace [namespace current]
+    
     variable available_apps
 }
 
