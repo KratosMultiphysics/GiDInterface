@@ -1,4 +1,5 @@
-namespace eval ConjugateHeatTransfer::xml {
+namespace eval ::ConjugateHeatTransfer::xml {
+    namespace path ::ConjugateHeatTransfer
     # Namespace variables declaration
     variable dir
 }

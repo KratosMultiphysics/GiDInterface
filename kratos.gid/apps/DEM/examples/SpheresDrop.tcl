@@ -1,6 +1,8 @@
 namespace eval ::DEM::examples::SpheresDrop {
+    namespace path ::DEM::examples
 
 }
+
 proc ::DEM::examples::SpheresDrop::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"

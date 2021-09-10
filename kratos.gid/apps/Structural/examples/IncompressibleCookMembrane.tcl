@@ -1,4 +1,5 @@
 namespace eval ::Structural::examples::IncompressibleCookMembrane {
+    namespace path ::Structural::examples
 
 }
 proc ::Structural::examples::IncompressibleCookMembrane::Init {args} {

@@ -1,4 +1,5 @@
-namespace eval CDEM::examples {
+namespace eval ::CDEM::examples {
+    namespace path ::CDEM
 
 }
 

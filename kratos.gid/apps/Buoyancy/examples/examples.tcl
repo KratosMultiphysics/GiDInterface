@@ -1,5 +1,5 @@
-namespace eval Buoyancy::examples {
-
+namespace eval ::Buoyancy::examples {
+namespace path ::Buoyancy
 }
 
 proc ::Buoyancy::examples::ErasePreviousIntervals { } {

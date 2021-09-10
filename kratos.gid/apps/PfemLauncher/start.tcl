@@ -1,4 +1,5 @@
 namespace eval ::PfemLauncher {
+    namespace path ::PfemFluid
     variable available_apps
 }
 

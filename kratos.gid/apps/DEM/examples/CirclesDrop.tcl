@@ -1,6 +1,7 @@
 namespace eval ::DEM::examples::CirclesDrop {
-
+    namespace path ::DEM::examples
 }
+
 proc ::DEM::examples::CirclesDrop::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"

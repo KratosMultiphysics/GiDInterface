@@ -1,4 +1,5 @@
-namespace eval PfemThermic::xml {
+namespace eval ::PfemThermic::xml {
+    namespace path ::PfemThermic
     # Namespace variables declaration
 }
 

@@ -1,5 +1,6 @@
 
-namespace eval StenosisWizard::Wizard {
+namespace eval ::StenosisWizard::Wizard {
+    namespace path ::StenosisWizard
     # Namespace variables declaration
     variable curr_win
     variable ogl_cuts

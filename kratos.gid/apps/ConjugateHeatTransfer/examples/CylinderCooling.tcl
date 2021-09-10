@@ -1,4 +1,5 @@
-namespace eval ConjugateHeatTransfer::examples::CylinderCooling {
+namespace eval ::ConjugateHeatTransfer::examples::CylinderCooling {
+    namespace path ::ConjugateHeatTransfer::examples
 
 }
 

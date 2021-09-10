@@ -1,4 +1,5 @@
 namespace eval ::Buoyancy::write {
+    namespace path ::Buoyancy::write
     variable writeAttributes
 }
 

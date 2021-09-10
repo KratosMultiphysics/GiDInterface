@@ -1,4 +1,5 @@
 namespace eval ::Buoyancy::xml {
+    namespace path ::Buoyancy
     # Namespace variables declaration
     variable dir
 }

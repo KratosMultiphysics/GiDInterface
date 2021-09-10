@@ -1,4 +1,5 @@
 namespace eval MPM::write {
+    namespace path ::MPM
     variable writeAttributes
     variable ConditionsDictGroupIterators
 }
@@ -105,7 +106,7 @@ proc MPM::write::writeGridConnectivities { } {
 proc MPM::write::writeConditions { } {
 
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] ]
 }
 
 proc MPM::write::writeSubmodelparts { type } {

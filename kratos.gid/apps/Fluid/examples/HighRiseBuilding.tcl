@@ -1,4 +1,5 @@
 namespace eval ::Fluid::examples::HighRiseBuilding {
+    namespace path ::Fluid::examples
 }
 
 proc ::Fluid::examples::HighRiseBuilding::Init {args} {

@@ -1,4 +1,5 @@
 namespace eval ::MPM::examples::FallingSandBall {
+    namespace path ::MPM::examples
 
 }
 proc ::MPM::examples::FallingSandBall::Init {args} {

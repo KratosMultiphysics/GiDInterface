@@ -1,4 +1,5 @@
-namespace eval Stent::xml {
+namespace eval ::Stent::xml {
+    namespace path ::Stent
 }
 
 proc Stent::xml::Init { } {
@@ -21,7 +22,6 @@ proc Stent::xml::CustomTree { args } {
     Structural::xml::CustomTree {*}$args
 }
 
-namespace eval Structural::xml {}
 proc Structural::xml::ProcCheckGeometryStructural {domNode args} {
     set ret "line"
     return $ret

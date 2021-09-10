@@ -1,4 +1,5 @@
 namespace eval ::Fluid::write {
+    namespace path ::Fluid
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes

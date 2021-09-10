@@ -1,4 +1,5 @@
 namespace eval ::PfemFluid::examples {
+    namespace path ::PfemFluid
 
 }
 

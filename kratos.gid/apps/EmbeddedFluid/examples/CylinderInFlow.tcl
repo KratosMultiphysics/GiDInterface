@@ -1,4 +1,4 @@
-namespace eval EmbeddedFluid::examples::CylinderInFlow {
+namespace eval ::EmbeddedFluid::examples::CylinderInFlow {
     namespace path ::EmbeddedFluid::examples
     variable CylinderInFlow_Data
 }

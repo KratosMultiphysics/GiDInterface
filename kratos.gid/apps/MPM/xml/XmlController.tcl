@@ -1,4 +1,5 @@
 namespace eval MPM::xml {
+    namespace path ::MPM
 
 }
 

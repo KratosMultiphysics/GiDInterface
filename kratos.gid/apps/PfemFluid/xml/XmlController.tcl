@@ -1,4 +1,5 @@
-namespace eval PfemFluid::xml {
+namespace eval ::PfemFluid::xml {
+    namespace path ::PfemFluid
     variable bodyNodalCondition
 }
 

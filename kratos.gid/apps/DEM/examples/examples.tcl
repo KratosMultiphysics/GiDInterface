@@ -1,5 +1,5 @@
 namespace eval ::DEM::examples {
-
+    namespace path ::DEM
 }
 
 proc ::DEM::examples::ErasePreviousIntervals { } {

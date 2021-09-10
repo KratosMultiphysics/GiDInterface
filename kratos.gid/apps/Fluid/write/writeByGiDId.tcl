@@ -1,4 +1,5 @@
 namespace eval ::Fluid::write {
+    namespace path ::Fluid
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes
@@ -94,7 +95,7 @@ proc ::Fluid::write::writeBoundaryConditions { } {
     set BCUN [GetAttribute conditions_un]
 
     # Write the conditions
-    write::writeConditionsByGiDId $BCUN
+    ::write::writeConditionsByGiDId $BCUN
 
 }
 

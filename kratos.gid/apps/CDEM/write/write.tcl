@@ -1,4 +1,6 @@
 namespace eval ::CDEM::write {
+    
+    namespace path ::CDEM
     variable writeAttributes
     variable inletProperties
     variable last_property_id

@@ -1,4 +1,5 @@
 namespace eval ::Fluid::xml {
+    namespace path ::Fluid
     # Namespace variables declaration
     variable dir
 }

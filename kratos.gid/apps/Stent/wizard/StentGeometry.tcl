@@ -1,4 +1,5 @@
-namespace eval Stent::Wizard {
+namespace eval ::Stent::Wizard {
+    namespace path ::Stent
     # Namespace variables declaration
     
     variable curr_win

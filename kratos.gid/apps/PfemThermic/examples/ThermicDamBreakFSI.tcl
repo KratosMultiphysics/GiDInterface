@@ -1,4 +1,5 @@
-namespace eval PfemThermic::examples::ThermicDamBreakFSI {
+namespace eval ::PfemThermic::examples::ThermicDamBreakFSI {
+    namespace path ::PfemThermic::examples
 
 }
 proc ::PfemThermic::examples::ThermicDamBreakFSI::Init {args} {

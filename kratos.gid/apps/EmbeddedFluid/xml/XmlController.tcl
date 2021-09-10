@@ -1,4 +1,5 @@
-namespace eval EmbeddedFluid::xml {
+namespace eval ::EmbeddedFluid::xml {
+    namespace path ::EmbeddedFluid
     # Namespace variables declaration
     variable lastImportMeshSize
     variable export_dir

@@ -1,4 +1,5 @@
 namespace eval ::Dam::xml {
+    namespace path ::Dam
 }
 
 proc ::Dam::xml::Init { } {

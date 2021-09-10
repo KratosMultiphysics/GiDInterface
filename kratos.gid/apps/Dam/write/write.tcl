@@ -1,4 +1,5 @@
 namespace eval ::Dam::write {
+    namespace path ::Dam
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable TableDict
@@ -79,17 +80,17 @@ proc ::Dam::write::UpdateMaterials { } {
 
 proc ::Dam::write::writeConditions { } {
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un]]
+    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un]]
     set pairs [lsort -increasing -index end [dict values $ConditionsDictGroupIterators] ]
     set index [lindex [lindex [lsort -integer -index 0 $pairs] end] end]
     if {$index eq ""} {
         set index 0
     }
 
-    set ThermalConditionGroups [write::writeConditions [GetAttribute thermal_conditions_un] $index]
+    set ThermalConditionGroups [::write::writeConditions [GetAttribute thermal_conditions_un] $index]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $ThermalConditionGroups]
 
-    set SelfweightConditionGroups [write::writeConditions "DamSelfweight" $index]
+    set SelfweightConditionGroups [::write::writeConditions "DamSelfweight" $index]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $SelfweightConditionGroups]
 }
 

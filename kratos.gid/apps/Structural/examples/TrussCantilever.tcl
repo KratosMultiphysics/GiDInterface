@@ -1,4 +1,5 @@
 namespace eval ::Structural::examples::TrussCantilever {
+    namespace path ::Structural::examples
 
 }
 proc ::Structural::examples::TrussCantilever::Init {args} {

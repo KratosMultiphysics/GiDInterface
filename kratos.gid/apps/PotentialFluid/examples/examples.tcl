@@ -1,4 +1,5 @@
 namespace eval ::PotentialFluid::examples {
+    namespace path ::PotentialFluid
 
 }
 

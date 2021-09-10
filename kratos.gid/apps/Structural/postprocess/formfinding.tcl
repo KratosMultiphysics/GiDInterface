@@ -1,6 +1,6 @@
 
 namespace eval ::Structural::Formfinding {
-    # Variable declaration
+    namespace path ::Structural
     
 }
 

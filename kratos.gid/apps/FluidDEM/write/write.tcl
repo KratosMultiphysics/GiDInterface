@@ -1,5 +1,6 @@
 namespace eval ::FluidDEM::write {
     namespace path ::FluidDEM
+    
     variable fluid_project_parameters
     variable dem_project_parameters
 }

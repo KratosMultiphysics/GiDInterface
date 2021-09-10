@@ -1,5 +1,5 @@
-namespace eval ConjugateHeatTransfer::examples::HeatedSquare {
-
+namespace eval ::ConjugateHeatTransfer::examples::HeatedSquare {
+    namespace path ::ConjugateHeatTransfer::examples
 }
 
 proc ::ConjugateHeatTransfer::examples::HeatedSquare::Init {args} {

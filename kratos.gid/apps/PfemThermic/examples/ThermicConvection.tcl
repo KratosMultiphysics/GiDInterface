@@ -1,4 +1,5 @@
-namespace eval PfemThermic::examples::ThermicConvection {
+namespace eval ::PfemThermic::examples::ThermicConvection {
+    namespace path ::PfemThermic::examples
 
 }
 proc ::PfemThermic::examples::ThermicConvection::Init {args} {

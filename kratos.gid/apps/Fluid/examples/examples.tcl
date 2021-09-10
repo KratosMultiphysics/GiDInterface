@@ -1,4 +1,5 @@
 namespace eval ::Fluid::examples {
+    namespace path ::Fluid
 }
 
 # Common functions for all examples that uses Fluid App

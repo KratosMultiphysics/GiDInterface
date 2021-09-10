@@ -1,4 +1,5 @@
-namespace eval PotentialFluid::xml {
+namespace eval ::PotentialFluid::xml {
+    namespace path ::PotentialFluid
     # Namespace variables declaration
     variable lastImportMeshSize
     variable export_dir

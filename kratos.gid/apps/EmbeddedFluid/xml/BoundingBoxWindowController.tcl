@@ -1,6 +1,8 @@
 
 
-namespace eval EmbeddedFluid::xml::BoundingBox {
+namespace eval ::EmbeddedFluid::xml::BoundingBox {
+    namespace path ::EmbeddedFluid::xml
+
     variable winpath
     variable box
     variable boxname

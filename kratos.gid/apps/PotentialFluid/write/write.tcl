@@ -1,9 +1,10 @@
-namespace eval PotentialFluid::write {
+namespace eval ::PotentialFluid::write {
+    namespace path ::PotentialFluid
     variable writeAttributes
     variable FluidConditionMap
 }
 
-proc PotentialFluid::write::Init { } {
+proc ::PotentialFluid::write::Init { } {
     # Namespace variables inicialization
     variable writeAttributes
     set writeAttributes [::Fluid::write::GetAttributes]

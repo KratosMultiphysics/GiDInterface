@@ -138,12 +138,12 @@ proc ::DEM::write::WriteWallCustomSmp { } {
 
 proc ::DEM::write::writeConditions {  } {
     variable wallsProperties
-    write::writeConditionsByGiDId DEMConditions [GetRigidWallConditionName] $wallsProperties
+    ::write::writeConditionsByGiDId DEMConditions [GetRigidWallConditionName] $wallsProperties
 }
 
 proc ::DEM::write::writePhantomConditions {  } {
     variable phantomwallsProperties
-    write::writeConditionsByGiDId DEMConditions [GetPhantomWallConditionName] $phantomwallsProperties
+    ::write::writeConditionsByGiDId DEMConditions [GetPhantomWallConditionName] $phantomwallsProperties
 }
 
 proc ::DEM::write::GetWallsGroups { } {

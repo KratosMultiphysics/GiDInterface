@@ -1,4 +1,5 @@
 namespace eval ::ConjugateHeatTransfer::write {
+    namespace path ::ConjugateHeatTransfer
     # Namespace variables declaration
     variable ConjugateHeatTransferConditions
     variable writeCoordinatesByGroups

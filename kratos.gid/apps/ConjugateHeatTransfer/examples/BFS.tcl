@@ -1,4 +1,5 @@
-namespace eval ConjugateHeatTransfer::examples::BFS {
+namespace eval ::ConjugateHeatTransfer::examples::BFS {
+    namespace path ::ConjugateHeatTransfer::examples
 
 }
 

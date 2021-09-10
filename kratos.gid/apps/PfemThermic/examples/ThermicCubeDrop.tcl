@@ -1,4 +1,5 @@
-namespace eval PfemThermic::examples::ThermicCubeDrop {
+namespace eval ::PfemThermic::examples::ThermicCubeDrop {
+    namespace path ::PfemThermic::examples
 
 }
 proc ::PfemThermic::examples::ThermicCubeDrop::Init {args} {

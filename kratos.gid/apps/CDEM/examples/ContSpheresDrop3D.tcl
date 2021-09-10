@@ -1,5 +1,5 @@
-namespace eval CDEM::examples::ContSpheresDrop3D {
-
+namespace eval ::CDEM::examples::ContSpheresDrop3D {
+    namespace path ::CDEM::examples
 }
 
 proc ::CDEM::examples::ContSpheresDrop3D::Init {args} {

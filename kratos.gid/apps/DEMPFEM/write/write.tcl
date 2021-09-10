@@ -1,4 +1,5 @@
 namespace eval ::DEMPFEM::write {
+    namespace path ::DEMPFEM
 }
 
 proc ::DEMPFEM::write::Init { } {    

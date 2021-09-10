@@ -1,4 +1,5 @@
-namespace eval StenosisWizard::write {
+namespace eval ::StenosisWizard::write {
+    namespace path ::StenosisWizard
 
 }
 

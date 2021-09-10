@@ -1,4 +1,5 @@
-namespace eval PfemFluid::write {
+namespace eval ::PfemFluid::write {
+    namespace path ::PfemFluid
     variable writeAttributes
     variable remesh_domains_dict
     variable bodies_list

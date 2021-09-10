@@ -1,4 +1,5 @@
 namespace eval ::FluidDEM::examples {
+    namespace path ::Fluid
 
 }
 proc ::FluidDEM::examples::ErasePreviousIntervals { } {

@@ -1,4 +1,5 @@
 namespace eval ::FSI::examples::MokChannelFlexibleWall {
+    namespace path ::FSI::examples
 
 }
 

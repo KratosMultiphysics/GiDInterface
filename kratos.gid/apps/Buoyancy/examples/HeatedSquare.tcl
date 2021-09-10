@@ -1,5 +1,5 @@
-namespace eval Buoyancy::examples::HeatedSquare {
-
+namespace eval ::Buoyancy::examples::HeatedSquare {
+    namespace path ::Buoyancy::examples
 }
 
 proc ::Buoyancy::examples::HeatedSquare::Init {args} {

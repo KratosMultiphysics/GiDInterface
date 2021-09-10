@@ -1,10 +1,9 @@
 namespace eval ::Structural::xml {
-     variable dir
+    namespace path ::Structural
 }
 
 proc ::Structural::xml::Init { } {
-    variable dir
-    Model::InitVariables dir $Structural::dir
+    Model::InitVariables dir $::Structural::dir
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml

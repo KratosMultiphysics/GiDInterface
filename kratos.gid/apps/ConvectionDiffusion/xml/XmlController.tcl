@@ -1,4 +1,5 @@
 namespace eval ::ConvectionDiffusion::xml {
+    namespace path ::ConvectionDiffusion
     # Namespace variables declaration
 }
 

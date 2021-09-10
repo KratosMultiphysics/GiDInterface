@@ -1,4 +1,5 @@
 namespace eval ::FSI::examples::TurekBenchmark {
+    namespace path ::FSI::examples
 
 }
 

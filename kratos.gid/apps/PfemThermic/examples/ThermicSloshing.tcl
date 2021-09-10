@@ -1,4 +1,5 @@
-namespace eval PfemThermic::examples::ThermicSloshing {
+namespace eval ::PfemThermic::examples::ThermicSloshing {
+    namespace path ::PfemThermic::examples
 
 }
 proc ::PfemThermic::examples::ThermicSloshing::Init {args} {

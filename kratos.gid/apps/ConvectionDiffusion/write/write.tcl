@@ -1,4 +1,5 @@
 namespace eval ::ConvectionDiffusion::write {
+    namespace path ::ConvectionDiffusion
     # Namespace variables declaration
     variable ConvectionDiffusionConditions
     variable writeCoordinatesByGroups
@@ -106,7 +107,7 @@ proc ::ConvectionDiffusion::write::writeBoundaryConditions { } {
     set BCUN [GetAttribute conditions_un]
 
     # Write the conditions
-    set dict_group_intervals [write::writeConditions $BCUN]
+    set dict_group_intervals [::write::writeConditions $BCUN]
 
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"

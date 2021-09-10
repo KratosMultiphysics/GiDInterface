@@ -3,7 +3,7 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval Model {
+namespace eval ::Model {
 catch {Entity destroy}
 oo::class create Entity {
     variable name

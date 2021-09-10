@@ -1,4 +1,5 @@
 namespace eval ::MPM::examples {
+    namespace path ::MPM
 
 }
 

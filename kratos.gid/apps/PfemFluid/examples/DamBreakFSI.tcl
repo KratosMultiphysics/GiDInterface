@@ -1,4 +1,5 @@
 namespace eval ::PfemFluid::examples::DamBreakFSI  {
+    namespace path ::PfemFluid::examples
 
 }
 

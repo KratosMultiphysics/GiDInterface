@@ -3,7 +3,7 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval Kratos {
+namespace eval ::Kratos {
     variable kratos_private
 
     variable must_write_calc_data

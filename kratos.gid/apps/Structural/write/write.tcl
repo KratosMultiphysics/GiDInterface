@@ -1,4 +1,6 @@
 namespace eval ::Structural::write {
+    namespace path ::Structural
+
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable writeAttributes
@@ -72,7 +74,7 @@ proc ::Structural::write::writeModelPartEvent { } {
 
 proc ::Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] ]
 
     set last_iter [Structural::write::getLastConditionId]
     writeContactConditions $last_iter

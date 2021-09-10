@@ -4,7 +4,7 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval write {
+namespace eval ::write {
     variable mat_dict
     variable submodelparts
     variable MDPA_loop_control

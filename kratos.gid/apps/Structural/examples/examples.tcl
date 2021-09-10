@@ -1,4 +1,5 @@
 namespace eval ::Structural::examples {
+    namespace path ::Structural
 
 }
 

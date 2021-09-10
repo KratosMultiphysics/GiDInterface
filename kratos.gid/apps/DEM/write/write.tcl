@@ -1,4 +1,5 @@
 namespace eval ::DEM::write {
+    namespace path ::DEM
     variable writeAttributes
     variable partsProperties
     variable inletProperties

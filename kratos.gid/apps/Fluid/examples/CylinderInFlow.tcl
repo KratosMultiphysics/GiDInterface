@@ -1,5 +1,6 @@
 
 namespace eval ::Fluid::examples::CylinderInFlow {
+    namespace path ::Fluid::examples
 }
 
 proc ::Fluid::examples::CylinderInFlow::Init {args} {

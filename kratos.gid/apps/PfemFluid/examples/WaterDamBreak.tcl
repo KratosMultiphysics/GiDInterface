@@ -1,4 +1,5 @@
 namespace eval ::PfemFluid::examples::WaterDamBreak  {
+    namespace path ::PfemFluid::examples
 
 }
 

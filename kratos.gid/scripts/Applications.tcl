@@ -3,7 +3,7 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval apps {
+namespace eval ::apps {
     variable activeApp
     variable appList
 }

@@ -1,4 +1,5 @@
 namespace eval ::PfemThermic::write {
+    namespace path ::PfemThermic
 }
 
 proc ::PfemThermic::write::Init { } {

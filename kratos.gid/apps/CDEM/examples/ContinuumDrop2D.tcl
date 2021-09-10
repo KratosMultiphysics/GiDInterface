@@ -1,5 +1,5 @@
-namespace eval CDEM::examples::ContinuumDrop2D {
-
+namespace eval ::CDEM::examples::ContinuumDrop2D {
+    namespace path ::CDEM::examples
 }
 
 proc ::CDEM::examples::ContinuumDrop2D::Init {args} {

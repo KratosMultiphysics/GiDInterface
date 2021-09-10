@@ -1,4 +1,5 @@
 namespace eval ::DEM::xml {
+    namespace path ::DEM
     variable dir
 }
 

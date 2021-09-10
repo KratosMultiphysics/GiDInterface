@@ -1,4 +1,4 @@
-namespace eval Drawer {
+namespace eval ::Drawer {
     variable registered_procs
     variable vars
 }

@@ -1,4 +1,5 @@
 namespace eval ::FSI::examples::HighRiseBuilding {
+    namespace path ::FSI::examples
 
 }
 

@@ -1,4 +1,5 @@
-namespace eval EmbeddedFluid::write {
+namespace eval ::EmbeddedFluid::write {
+    namespace path ::EmbeddedFluid
     variable writeAttributes
 }
 

@@ -1,4 +1,5 @@
 namespace eval ::DEMPFEM::examples {
+    namespace path ::DEMPFEM
 
 }
 
