@@ -1,49 +1,25 @@
 namespace eval ::PfemThermic {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::PfemThermic::Init { } {
+proc ::PfemThermic::Init { app } {
     # Variable initialization
     variable dir
-    variable prefix
-    variable kratos_name
-    variable attributes
-	
 	set dir [apps::getMyDir "PfemThermic"]
-    set prefix PFEMTHERMIC_
-	set kratos_name PfemThermicDynamicsApplication
-    set attributes [dict create]
-	dict set attributes UseIntervals 1
-	dict set attributes UseRestart 1
+    
+    variable _app
+	set _app $app
 
-	apps::LoadAppById "PfemFluid"
-    apps::LoadAppById "ConvectionDiffusion"
-	
-	if {$::Kratos::kratos_private(DevMode) ne "dev"} {error [= "You need to change to Developer mode in the Kratos menu"] }
-	
-    set ::spdAux::TreeVisibility 1
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
-
-    LoadMyFiles
-}
-
-proc ::PfemThermic::LoadMyFiles { } {
-    variable dir
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-}
-
-proc ::PfemThermic::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
+    PfemThermic::xml::Init
+    PfemThermic::write::Init
 }
 
 proc ::PfemThermic::CustomToolbarItems { } {
@@ -60,5 +36,3 @@ proc ::PfemThermic::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Stop"                 [file join $img_dir "cancelProcess.png"]   {Utilities CancelProcess}                          [= "Cancel process"]
     Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow         [apps::getActiveAppId]]                            [= "Examples window"]
 }
-
-::PfemThermic::Init

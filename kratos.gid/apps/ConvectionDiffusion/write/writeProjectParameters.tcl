@@ -32,7 +32,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc ConvectionDiffusion::write::GetProblemDataDict { } {
+proc ::ConvectionDiffusion::write::GetProblemDataDict { } {
 
     # First section -> Problem data
     set problem_data_dict [dict create]
@@ -67,14 +67,14 @@ proc ConvectionDiffusion::write::GetProblemDataDict { } {
     return $problem_data_dict
 }
 
-proc ConvectionDiffusion::write::writeParametersEvent { } {
+proc ::ConvectionDiffusion::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
 
 # Body force SubModelParts and Process collection
-proc ConvectionDiffusion::write::getBodyForceProcessDictList {} {
+proc ::ConvectionDiffusion::write::getBodyForceProcessDictList {} {
     set ret [list ]
 
     set model_part_name [GetAttribute model_part_name]
@@ -97,7 +97,7 @@ proc ConvectionDiffusion::write::getBodyForceProcessDictList {} {
     return $ret
 }
 
-proc ConvectionDiffusion::write::GetSolverSettingsDict {} {
+proc ::ConvectionDiffusion::write::GetSolverSettingsDict {} {
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue CNVDFFSolStrat]
     set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]

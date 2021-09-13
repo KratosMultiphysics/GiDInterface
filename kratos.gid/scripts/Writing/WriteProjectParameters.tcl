@@ -388,7 +388,7 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
             append parent $par "."
         }
     } else {
-         append parent $forced_parent "."
+        append parent $forced_parent "."
     }
     append result $parent $child_name
     return [string trim $result "."]

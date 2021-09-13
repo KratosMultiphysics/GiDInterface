@@ -19,9 +19,8 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict non_newtonian_fluid [FluidDEM::write::GetNonNewtonianFluidDict]
 
     # Problem data  - calling directly GetDefaultProblemDataDict should be enough
-    dict set project_parameters_dict problem_data [write::GetDefaultProblemDataDict $Fluid::app_id]
+    dict set project_parameters_dict problem_data [write::GetDefaultProblemDataDict [::Fluid::GetAttribute id]]
 
-    #set do_print_results_option [write::getValue FluidDEM_GeneralParameters PrintResults]
     dict set project_parameters_dict "do_print_results_option" true
 
     # coupling FDEMCoupling
@@ -43,7 +42,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     dict set project_parameters_dict properties [FluidDEM::write::GetHydrodynamicPropertiesList]
     
     # output configuration  #TODO to be checked/modified by GCasas
-    dict set project_parameters_dict sdem_output_processes [write::GetDefaultOutputProcessDict $Fluid::app_id]
+    dict set project_parameters_dict sdem_output_processes [write::GetDefaultOutputProcessDict [::Fluid::GetAttribute id]]
     FluidDEM::write::InitExternalProjectParameters
     dict set project_parameters_dict dem_parameters $FluidDEM::write::dem_project_parameters
     dict set project_parameters_dict dem_parameters "solver_settings" "strategy" "swimming_sphere_strategy"

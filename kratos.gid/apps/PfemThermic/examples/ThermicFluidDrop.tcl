@@ -1,4 +1,9 @@
-proc ::PfemThermic::examples::ThermicFluidDrop {args} {
+namespace eval ::PfemThermic::examples::ThermicFluidDrop {
+    namespace path ::PfemThermic::examples
+    Kratos::AddNamespace [namespace current]
+
+}
+proc ::PfemThermic::examples::ThermicFluidDrop::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -6,9 +11,9 @@ proc ::PfemThermic::examples::ThermicFluidDrop {args} {
     }
 
     Kratos::ResetModel
-    DrawThermicFluidDropGeometry
-    AssignGroupsThermicFluidDropGeometry
-    TreeAssignationThermicFluidDrop
+    DrawGeometry
+    AssignGroups
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +22,7 @@ proc ::PfemThermic::examples::ThermicFluidDrop {args} {
 }
 
 # Draw Geometry
-proc PfemThermic::examples::DrawThermicFluidDropGeometry {args} {
+proc PfemThermic::examples::ThermicFluidDrop::DrawGeometry {args} {
     ## Layer ##
 	set layer PfemThermic
     GiD_Layers create $layer
@@ -49,7 +54,7 @@ proc PfemThermic::examples::DrawThermicFluidDropGeometry {args} {
 }
 
 # Group assign
-proc PfemThermic::examples::AssignGroupsThermicFluidDropGeometry {args} {
+proc PfemThermic::examples::ThermicFluidDrop::AssignGroups {args} {
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -64,7 +69,7 @@ proc PfemThermic::examples::AssignGroupsThermicFluidDropGeometry {args} {
 }
 
 # Tree assign
-proc PfemThermic::examples::TreeAssignationThermicFluidDrop {args} {
+proc PfemThermic::examples::ThermicFluidDrop::TreeAssignation {args} {
     # Physics
     gid_groups_conds::setAttributesF [spdAux::getRoute PFEMFLUID_DomainType] {v FSI}
     
@@ -135,12 +140,4 @@ proc PfemThermic::examples::TreeAssignationThermicFluidDrop {args} {
 	# Others
 	spdAux::SetValueOnTreeItem values transient CNVDFFSolStrat
     spdAux::RequestRefresh
-}
-
-proc PfemThermic::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

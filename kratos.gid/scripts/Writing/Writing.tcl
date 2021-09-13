@@ -4,7 +4,9 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval write {
+namespace eval ::write {
+    Kratos::AddNamespace [namespace current]
+    
     variable mat_dict
     variable submodelparts
     variable MDPA_loop_control
@@ -142,6 +144,12 @@ proc write::writeEvent { filename } {
     if {$time_monitor}  {
         W "Total time: [Kratos::Duration $ttime]"
     }
+    
+    #### Copy main script file ####
+    if {$errcode eq 0} {
+        Kratos::Log "Write custom event $appid"
+        set errcode [CopyMainScriptFile]
+    }
 
     #### Debug files for VSCode ####
     write::writeLaunchJSONFile
@@ -172,7 +180,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
 
     CloseFile
     if {$needsOpen} {OpenFile $filename}
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         if {[catch {eval $wevent} errmsg options] } {
             W $::errorInfo
             set errcode 1
@@ -203,7 +211,7 @@ proc write::writeAppMDPA {appid} {
     CloseFile
     OpenFile $filename
 
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         eval $wevent
     } else {
         if { [catch {eval $wevent} fid] } {
@@ -647,7 +655,7 @@ proc write::WriteAssignedValues {condNode} {
 
 proc write::writeLaunchJSONFile { } {
     # Check if developer
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         set debug_folder $Kratos::kratos_private(debug_folder)
 
         # Prepare JSON as dict
@@ -667,5 +675,18 @@ proc write::writeLaunchJSONFile { } {
     }
 }
 
+proc write::CopyMainScriptFile { } {
+    set errcode 0
+    # Main python script
+    if {[catch {
+            set orig_name [write::GetConfigurationAttribute main_launch_file]
+            write::CopyFileIntoModel $orig_name
+            write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+        } fid] } {
+        W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
+        return errcode 1
+    }
+    return $errcode
+}
 
 write::Init

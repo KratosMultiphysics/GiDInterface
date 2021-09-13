@@ -3,9 +3,10 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval spdAux {
+namespace eval ::spdAux {
+    Kratos::AddNamespace [namespace current]
+
     # Namespace variables declaration
-    
     variable uniqueNames
     variable initwind
     
@@ -76,7 +77,7 @@ proc spdAux::TryRefreshTree { } {
         }
         set ::spdAux::refreshTreeTurn 0
     }
-    after 750 {spdAux::TryRefreshTree}
+    after 750 {catch {spdAux::TryRefreshTree}}
 }
 
 proc spdAux::OpenTree { } {
@@ -91,7 +92,7 @@ proc spdAux::OpenTree { } {
 proc spdAux::EndRefreshTree { } {
     variable refreshTreeTurn
     set refreshTreeTurn 0
-    after cancel {spdAux::TryRefreshTree}
+    after cancel {catch {spdAux::TryRefreshTree}}
 }
 
 # Includes
@@ -134,10 +135,9 @@ proc spdAux::processAppIncludes { root } {
 }
 
 proc spdAux::CustomTreeCommon { } {
-    set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]
-    
-    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
-    if {!$AppUsesIntervals} {
+    set app_uses_intervals [[apps::getActiveApp] getPermission "intervals"]
+    if {$app_uses_intervals eq ""} {set app_uses_intervals 0}
+    if {!$app_uses_intervals} {
         if {[getRoute Intervals] ne ""} {
             catch {spdAux::SetValueOnTreeItem state hidden Intervals}
         }

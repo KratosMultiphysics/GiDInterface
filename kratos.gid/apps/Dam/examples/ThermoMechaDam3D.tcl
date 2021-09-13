@@ -1,21 +1,26 @@
+namespace eval ::Dam::examples::ThermoMechaDam3D {
+    namespace path ::Dam::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::Dam::examples::ThermoMechaDam3D {args} {
+}
+
+proc ::Dam::examples::ThermoMechaDam3D::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
-    DrawDamGeometry3D
-    AssignGroupsDam3D
-    AssignDamMeshSizes3D
-    TreeAssignationDam3D
+    DrawGeometry
+    AssignGroups
+    AssignMeshSizes
+    TreeAssignation
     
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
-proc Dam::examples::DrawDamGeometry3D {args} {
+proc ::Dam::examples::ThermoMechaDam3D::DrawGeometry {args} {
     
     Kratos::ResetModel
     GiD_Layers create Ground
@@ -64,7 +69,7 @@ proc Dam::examples::DrawDamGeometry3D {args} {
     
 }
 
-proc Dam::examples::AssignGroupsDam3D {args} {
+proc ::Dam::examples::ThermoMechaDam3D::AssignGroups {args} {
     
     # Create the groups
     GiD_Groups create Dam
@@ -90,7 +95,7 @@ proc Dam::examples::AssignGroupsDam3D {args} {
     
 }
 
-proc Dam::examples::AssignDamMeshSizes3D {args} {
+proc ::Dam::examples::ThermoMechaDam3D::AssignMeshSizes {args} {
     
     set dam_mesh_size 2
     GiD_Process Mescape Meshing AssignSizes volumes $dam_mesh_size [GiD_EntitiesGroups get Dam volumes] escape escape
@@ -99,7 +104,7 @@ proc Dam::examples::AssignDamMeshSizes3D {args} {
 }
 
 # Tree assign
-proc Dam::examples::TreeAssignationDam3D {args} {
+proc ::Dam::examples::ThermoMechaDam3D::TreeAssignation {args} {
     
     set nd 3D
     set root [customlib::GetBaseRoot]

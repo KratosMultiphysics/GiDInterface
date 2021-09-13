@@ -35,7 +35,6 @@ proc CDEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
-
 proc DEM::write::GetDemStrategyName { } {
     return continuum_sphere_strategy
 }
