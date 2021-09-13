@@ -14,7 +14,7 @@ proc ::CompressibleFluid::Init { app } {
     variable dir
 
     set _app $app
-    set dir [apps::getMyDir "Fluid"]
+    set dir [apps::getMyDir "CompressibleFluid"]
     
     # XML init event
     ::CompressibleFluid::xml::Init
