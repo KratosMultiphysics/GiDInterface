@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
-  <ElementItem n="FractionalStep2D" pn="Fractional Step 2D" ImplementedInFile="fractional_step.cpp" ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a Fractional Step Element">
+  <ElementItem n="CompressibleNavierStokes2D"
+               pn="Compressible Navier-Stokes 2D"
+               ImplementedInFile="compressible_navier_stokes_explicit.cpp"
+               ImplementedInApplication="FluidDynamicsApplication"
+               MinimumKratosVersion="9000"
+               ProductionReady="ProductionReady"
+               WorkingSpaceDimension="2D"
+               LocalSpaceDimension="2"
+               RequiresLocalAxes="False"
+               LargeDeformation="False"
+               MainDofsVariables="MOMENTUM"
+               ElementType="CompressibleFluid"
+               help="This element implements a Compressible Navier Stokes element">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -9,14 +21,14 @@
     <!-- here we add the block of features which we require from the constitutive law-->
 
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="Fluid"/>
-      <filter field="ElementCompressibility" value="Incompressible"/>
+      <filter field="App" value="CompressibleFluid"/>
     </ConstitutiveLaw_FilterFeatures>
 
     <!--define list of NodalConditions-->
     <NodalConditions>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="DENSITY"/>
+      <NodalCondition n="MOMENTUM"/>
+      <NodalCondition n="TOTAL_ENERGY"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -24,250 +36,4 @@
       <parameter n="VORTICITY" pn="Vorticity" />
     </outputs>
   </ElementItem>
-
-
-  <ElementItem n="FractionalStep3D" pn="Fractional Step 3D" ImplementedInFile="fractional_step.cpp" ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a Fractional Step Element">
-
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
-    </TopologyFeatures>
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="Fluid"/>
-      <filter field="ElementCompressibility" value="Incompressible"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <!--define list of NodalConditions-->
-    <NodalConditions>
-      <NodalCondition n="VELOCITY"/>
-      <NodalCondition n="PRESSURE"/>
-    </NodalConditions>
-    <inputs>
-    </inputs>
-    <outputs>
-      <parameter n="VORTICITY" pn="Vorticity" />
-    </outputs>
-  </ElementItem>
-
-    <ElementItem n="QSVMS2D" pn="Quasi-static VMS" ImplementedInFile="qs_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="qsvms"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
-        LargeDeformation="False" ElementType="Fluid" help="This element implements a quasi-static Variational MultiScale (VMS) monolithic element">
-        <!--here we could add a list of all of the possible geometries-->
-        <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
-        </TopologyFeatures>
-        <!-- here we add the block of features which we require from the constitutive law-->
-
-        <ConstitutiveLaw_FilterFeatures>
-            <filter field="App" value="Fluid"/>
-            <filter field="ElementCompressibility" value="Incompressible"/>
-        </ConstitutiveLaw_FilterFeatures>
-
-        <!--define list of NodalConditions-->
-        <NodalConditions>
-            <NodalCondition n="VELOCITY"/>
-            <NodalCondition n="PRESSURE"/>
-        </NodalConditions>
-
-        <inputs>
-        </inputs>
-
-        <outputs>
-        </outputs>
-    </ElementItem>
-
-    <ElementItem n="QSVMS3D" pn="Quasi-static VMS" ImplementedInFile="qs_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="qsvms"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
-        LargeDeformation="False" ElementType="Fluid" help="This element implements a quasi-static Variational MultiScale (VMS) monolithic element">
-        <!--here we could add a list of all of the possible geometries-->
-        <TopologyFeatures>
-            <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
-            <item GeometryType="Hexahedra" nodes="8" KratosName="Element3D8N"/>
-        </TopologyFeatures>
-        <!-- here we add the block of features which we require from the constitutive law-->
-
-        <ConstitutiveLaw_FilterFeatures>
-            <filter field="App" value="Fluid"/>
-            <filter field="ElementCompressibility" value="Incompressible"/>
-        </ConstitutiveLaw_FilterFeatures>
-
-        <!--define list of NodalConditions-->
-        <NodalConditions>
-            <NodalCondition n="VELOCITY"/>
-            <NodalCondition n="PRESSURE"/>
-        </NodalConditions>
-
-        <inputs>
-        </inputs>
-
-        <outputs>
-        </outputs>
-    </ElementItem>
-
-    <ElementItem n="DVMS2D" pn="Dynamic VMS" ImplementedInFile="d_vms.cpp" ImplementedInApplication="FluidDynamicsApplication"  FormulationElementType="dvms"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
-        LargeDeformation="False" ElementType="Fluid" help="This element implements a dynamic Variational MultiScale (VMS) monolithic element">
-        <!--here we could add a list of all of the possible geometries-->
-        <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
-        </TopologyFeatures>
-        <!-- here we add the block of features which we require from the constitutive law-->
-
-        <ConstitutiveLaw_FilterFeatures>
-            <filter field="App" value="Fluid"/>
-            <filter field="ElementCompressibility" value="Incompressible"/>
-        </ConstitutiveLaw_FilterFeatures>
-
-        <!--define list of NodalConditions-->
-        <NodalConditions>
-            <NodalCondition n="VELOCITY"/>
-            <NodalCondition n="PRESSURE"/>
-        </NodalConditions>
-
-        <inputs>
-        </inputs>
-
-        <outputs>
-        </outputs>
-    </ElementItem>
-
-    <ElementItem n="DVMS3D" pn="Dynamic VMS" ImplementedInFile="d_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="dvms"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
-        LargeDeformation="False" ElementType="Fluid" help="This element implements a dynamic Variational MultiScale (VMS) monolithic element">
-        <!--here we could add a list of all of the possible geometries-->
-        <TopologyFeatures>
-            <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
-            <item GeometryType="Hexahedra" nodes="8" KratosName="Element3D8N"/>
-        </TopologyFeatures>
-        <!-- here we add the block of features which we require from the constitutive law-->
-
-        <ConstitutiveLaw_FilterFeatures>
-            <filter field="App" value="Fluid"/>
-            <filter field="ElementCompressibility" value="Incompressible"/>
-        </ConstitutiveLaw_FilterFeatures>
-
-        <!--define list of NodalConditions-->
-        <NodalConditions>
-            <NodalCondition n="VELOCITY"/>
-            <NodalCondition n="PRESSURE"/>
-        </NodalConditions>
-
-        <inputs>
-        </inputs>
-
-        <outputs>
-        </outputs>
-    </ElementItem>
-
-    <ElementItem n="FIC2D" pn="FIC" ImplementedInFile="fic.cpp" ImplementedInApplication="FluidDynamicsApplication"  FormulationElementType="fic"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
-        LargeDeformation="False" ElementType="Fluid" help="This element implements a Finite Increment Calculus (FIC) stabilization monolithic element">
-        <!--here we could add a list of all of the possible geometries-->
-        <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="Element2D4N"/>
-        </TopologyFeatures>
-        <!-- here we add the block of features which we require from the constitutive law-->
-
-        <ConstitutiveLaw_FilterFeatures>
-            <filter field="App" value="Fluid"/>
-            <filter field="ElementCompressibility" value="Incompressible"/>
-        </ConstitutiveLaw_FilterFeatures>
-
-        <!--define list of NodalConditions-->
-        <NodalConditions>
-            <NodalCondition n="VELOCITY"/>
-            <NodalCondition n="PRESSURE"/>
-        </NodalConditions>
-
-        <inputs>
-        </inputs>
-
-        <outputs>
-        </outputs>
-    </ElementItem>
-
-    <ElementItem n="FIC3D" pn="FIC" ImplementedInFile="fic.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="fic"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
-        LargeDeformation="False" ElementType="Fluid" help="This element implements a Finite Increment Calculus (FIC) stabilization monolithic element">
-        <!--here we could add a list of all of the possible geometries-->
-        <TopologyFeatures>
-            <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
-            <item GeometryType="Hexahedra" nodes="8" KratosName="Element3D8N"/>
-        </TopologyFeatures>
-        <!-- here we add the block of features which we require from the constitutive law-->
-
-        <ConstitutiveLaw_FilterFeatures>
-            <filter field="App" value="Fluid"/>
-            <filter field="ElementCompressibility" value="Incompressible"/>
-        </ConstitutiveLaw_FilterFeatures>
-
-        <!--define list of NodalConditions-->
-        <NodalConditions>
-            <NodalCondition n="VELOCITY"/>
-            <NodalCondition n="PRESSURE"/>
-        </NodalConditions>
-
-        <inputs>
-        </inputs>
-
-        <outputs>
-        </outputs>
-    </ElementItem>
-
-    <ElementItem n="WeaklyCompressible2D" pn="Weakly compressible" ImplementedInFile="weakly_compressible_navier_stokes.cpp" ImplementedInApplication="FluidDynamicsApplication"  FormulationElementType="weakly_compressible"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
-        LargeDeformation="False" ElementType="Fluid" help="This element implements a VMS stabilized weakly compressible Navier-Stokes monolithic formulation">
-        <!--here we could add a list of all of the possible geometries-->
-        <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
-        </TopologyFeatures>
-        <!-- here we add the block of features which we require from the constitutive law-->
-
-        <ConstitutiveLaw_FilterFeatures>
-            <filter field="App" value="Fluid"/>
-            <filter field="ElementCompressibility" value="WeaklyCompressible"/>
-        </ConstitutiveLaw_FilterFeatures>
-
-        <!--define list of NodalConditions-->
-        <NodalConditions>
-            <NodalCondition n="VELOCITY"/>
-            <NodalCondition n="PRESSURE"/>
-        </NodalConditions>
-
-        <inputs>
-        </inputs>
-
-        <outputs>
-        </outputs>
-    </ElementItem>
-
-    <ElementItem n="WeaklyCompressible3D" pn="Weakly compressible" ImplementedInFile="weakly_compressible_navier_stokes.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="weakly_compressible"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
-        LargeDeformation="False" ElementType="Fluid" help="This element implements a VMS stabilized weakly compressible Navier-Stokes monolithic formulation">
-        <!--here we could add a list of all of the possible geometries-->
-        <TopologyFeatures>
-            <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
-        </TopologyFeatures>
-        <!-- here we add the block of features which we require from the constitutive law-->
-
-        <ConstitutiveLaw_FilterFeatures>
-            <filter field="App" value="Fluid"/>
-            <filter field="ElementCompressibility" value="WeaklyCompressible"/>
-        </ConstitutiveLaw_FilterFeatures>
-
-        <!--define list of NodalConditions-->
-        <NodalConditions>
-            <NodalCondition n="VELOCITY"/>
-            <NodalCondition n="PRESSURE"/>
-        </NodalConditions>
-
-        <inputs>
-        </inputs>
-
-        <outputs>
-        </outputs>
-    </ElementItem>
-
 </ElementList>
