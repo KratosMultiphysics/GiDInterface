@@ -77,7 +77,7 @@ proc spdAux::TryRefreshTree { } {
         }
         set ::spdAux::refreshTreeTurn 0
     }
-    after 750 {spdAux::TryRefreshTree}
+    after 750 {catch {spdAux::TryRefreshTree}}
 }
 
 proc spdAux::OpenTree { } {
@@ -92,7 +92,7 @@ proc spdAux::OpenTree { } {
 proc spdAux::EndRefreshTree { } {
     variable refreshTreeTurn
     set refreshTreeTurn 0
-    after cancel {spdAux::TryRefreshTree}
+    after cancel {catch {spdAux::TryRefreshTree}}
 }
 
 # Includes

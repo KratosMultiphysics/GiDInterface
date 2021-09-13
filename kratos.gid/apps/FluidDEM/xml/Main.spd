@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<container n="FluidDEM" icon="ImageFileBrowser" pn="FluidDEM" prefix="FluidDEM_" tree_state="open" open_window="0">
+<container n="FluidDEM" icon="ImageFileBrowser" pn="FluidDEM" prefix="DEM" tree_state="open" open_window="0">
   <container n="Fluid" pn="Fluid"    icon="app" prefix="FL" tree_state="open" open_window="0">
     <include n="AnalysisType"        active="1" path="apps/Fluid/xml/AnalysisType.spd"/>
     <include n="FluidParts"          active="1" path="apps/Fluid/xml/Parts.spd"/>
@@ -25,7 +25,7 @@
     <include n="hydrodynamic_laws" active="1" path="apps/FluidDEM/xml/HydrodynamicLaws.spd"/>
   </container>
 
-  <container n="FluidDEM"       pn="General parameters"  icon="prdata16" prefix="FluidDEM_" un="FluidDEM_GeneralParameters" tree_state="open" open_window="0">
+  <container n="FluidDEM"       pn="General parameters"  icon="prdata16" tree_state="open" open_window="0">
     <include n="TimeParameters" active="1" icon="black1" state="normal"   path="apps/FluidDEM/xml/TimeParameters.spd"/>
     <include n="Intervals"         active="1" path="apps/Common/xml/Intervals.spd"/>
     <include n="Gravity"        active="1" icon="black1" un="DEMGravity,FLGravity" path="apps/DEM/xml/Gravity.spd"/>

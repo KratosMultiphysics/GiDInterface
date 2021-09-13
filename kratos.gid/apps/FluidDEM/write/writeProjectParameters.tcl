@@ -21,7 +21,6 @@ proc ::FluidDEM::write::getParametersDict { } {
     # Problem data  - calling directly GetDefaultProblemDataDict should be enough
     dict set project_parameters_dict problem_data [write::GetDefaultProblemDataDict [::Fluid::GetAttribute id]]
 
-    #set do_print_results_option [write::getValue FluidDEM_GeneralParameters PrintResults]
     dict set project_parameters_dict "do_print_results_option" true
 
     # coupling FDEMCoupling

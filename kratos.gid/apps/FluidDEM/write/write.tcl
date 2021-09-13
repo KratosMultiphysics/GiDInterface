@@ -17,6 +17,7 @@ proc ::FluidDEM::write::Init { } {
 
 # Events
 proc FluidDEM::write::writeModelPartEvent { } {
+    Validate
     set filename [Kratos::GetModelName]
     
     Fluid::write::Init
@@ -28,6 +29,10 @@ proc FluidDEM::write::writeModelPartEvent { } {
     DEM::write::Init
     set DEM::write::delete_previous_mdpa 0
     write::writeAppMDPA DEM
+}
+
+proc FluidDEM::write::Validate { } {
+    if {[GiD_Info mesh] eq 0} {[error "Model not meshed"]}
 }
 
 proc FluidDEM::write::writeCustomFilesEvent { } {
