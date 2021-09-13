@@ -1,6 +1,8 @@
-namespace eval PotentialFluid::xml {
+namespace eval ::PotentialFluid::xml {
+    namespace path ::PotentialFluid
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
-    variable dir
     variable lastImportMeshSize
     variable export_dir
 
@@ -8,9 +10,8 @@ namespace eval PotentialFluid::xml {
 
 proc PotentialFluid::xml::Init { } {
     # Namespace variables inicialization
-    variable dir
     Model::DestroyEverything
-    Model::InitVariables dir $PotentialFluid::dir
+    Model::InitVariables dir [apps::getMyDir "PotentialFluid"]
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -28,12 +29,12 @@ proc PotentialFluid::xml::Init { } {
 proc PotentialFluid::xml::MultiAppEvent {args} {
    if {$args eq "init"} {
      spdAux::parseRoutes
-     spdAux::ConvertAllUniqueNames FL ${::PotentialFluid::prefix}
+     spdAux::ConvertAllUniqueNames [::Fluid::GetAttribute prefix] [::PotentialFluid::GetAttribute prefix]
    }
 }
 
 proc PotentialFluid::xml::getUniqueName {name} {
-    return ${::PotentialFluid::prefix}${name}
+    return [::PotentialFluid::GetAttribute prefix]${name}
 }
 
 proc PotentialFluid::xml::CustomTree { args } {
@@ -51,4 +52,3 @@ proc spdAux::injectConditions { basenode args} {
     $basenode delete
 }
 
-PotentialFluid::xml::Init

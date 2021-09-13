@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Fluid">
-    <Example id="PotentialNACA00122D" app="PotentialFluid" logo="NACA0012.png" name="NACA 0012 2D" dim="2D" cmd="::PotentialFluid::examples::NACA0012"/>
-    <Example id="PotentialNACA00123D" app="PotentialFluid" logo="NACA0012.png" name="NACA 0012 3D" dim="3D" cmd="::PotentialFluid::examples::NACA0012"/>
+    <Example id="PotentialNACA0012_2D" app="PotentialFluid" logo="NACA0012.png" name="NACA 0012 2D" dim="2D" cmd="::PotentialFluid::examples::NACA0012_2D::Init"/>
+    <Example id="PotentialNACA0012_3D" app="PotentialFluid" logo="NACA0012.png" name="NACA 0012 3D" dim="3D" cmd="::PotentialFluid::examples::NACA0012_3D::Init"/>
 </Group>

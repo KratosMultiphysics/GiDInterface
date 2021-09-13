@@ -1,4 +1,7 @@
 namespace eval MPM::write {
+    namespace path ::MPM
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
     variable ConditionsDictGroupIterators
 }
@@ -7,17 +10,16 @@ proc MPM::write::Init { } {
     # Namespace variables inicialization
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [dict create]
-    SetAttribute parts_un MPMParts
-    SetAttribute nodal_conditions_un MPMNodalConditions
-    SetAttribute conditions_un MPMLoads
-    SetAttribute properties_location json 
-    # SetAttribute conditions_un FLBC
-    # SetAttribute materials_un EMBFLMaterials
-    # SetAttribute writeCoordinatesByGroups 0
-    # SetAttribute validApps [list "MPM"]
-    SetAttribute main_script_file "KratosParticle.py"
-    SetAttribute materials_file "ParticleMaterials.json"
-    SetAttribute model_part_name "Background_Grid"
+
+    SetAttribute parts_un [::MPM::GetUniqueName parts]
+    SetAttribute nodal_conditions_un [::MPM:::GetUniqueName nodal_conditions]
+    SetAttribute conditions_un [::MPM::GetUniqueName conditions]
+    
+    SetAttribute writeCoordinatesByGroups [::MPM::GetWriteProperty coordinates]
+    SetAttribute main_launch_file [::MPM::GetAttribute main_launch_file]
+    SetAttribute materials_file [::MPM::GetWriteProperty materials_file]
+    SetAttribute properties_location [::MPM::GetWriteProperty properties_location]
+    SetAttribute model_part_name [::MPM::GetWriteProperty model_part_name]
 }
 
 # Events
@@ -106,8 +108,9 @@ proc MPM::write::writeGridConnectivities { } {
 proc MPM::write::writeConditions { } {
 
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] ]
 }
+
 proc MPM::write::writeSubmodelparts { type } {
 
     set grid_elements [list GRID2D GRID3D]
@@ -154,17 +157,10 @@ proc MPM::write::writeLoads { } {
 }
 
 proc MPM::write::writeCustomFilesEvent { } {
-    # write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
-
     # Materials file
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True Initial_MPM_Material
-    
-    # Main python script
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "MainKratos.py"
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
-
 
 proc MPM::write::UpdateMaterials { } {
     set matdict [write::getMatDict]
@@ -196,5 +192,3 @@ proc MPM::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
-
-MPM::write::Init

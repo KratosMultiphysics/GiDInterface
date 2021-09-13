@@ -1,5 +1,10 @@
+namespace eval ::PfemFluid::examples::WaterDamBreak  {
+    namespace path ::PfemFluid::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::PfemFluid::examples::WaterDamBreak {args} {
+}
+
+proc ::PfemFluid::examples::WaterDamBreak::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -7,10 +12,9 @@ proc ::PfemFluid::examples::WaterDamBreak {args} {
     }
 
     Kratos::ResetModel
-    DrawWaterDamBreakGeometry$::Model::SpatialDimension
-    AssignGroupsWaterDamBreakGeometry$::Model::SpatialDimension
-    # AssignWaterDamBreakMeshSizes$::Model::SpatialDimension
-    TreeAssignationWaterDamBreak$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroupsGeometry$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -20,11 +24,11 @@ proc ::PfemFluid::examples::WaterDamBreak {args} {
 
 
 # Draw Geometry
-proc PfemFluid::examples::DrawWaterDamBreakGeometry3D {args} {
+proc PfemFluid::examples::WaterDamBreak::DrawGeometry3D {args} {
     # To be implemented
 }
 
-proc PfemFluid::examples::DrawWaterDamBreakGeometry2D {args} {
+proc PfemFluid::examples::WaterDamBreak::DrawGeometry2D {args} {
     set layer PfemFluid
     GiD_Layers create $layer
     GiD_Layers edit to_use $layer
@@ -51,10 +55,8 @@ proc PfemFluid::examples::DrawWaterDamBreakGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface 2 3 4 1 escape escape
 }
 
-
-
 # Group assign
-proc PfemFluid::examples::AssignGroupsWaterDamBreakGeometry2D {args} {
+proc PfemFluid::examples::WaterDamBreak::AssignGroups2D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -65,17 +67,17 @@ proc PfemFluid::examples::AssignGroupsWaterDamBreakGeometry2D {args} {
     GiD_EntitiesGroups assign Rigid_Walls lines {1 4 5 6 7 8 9 10 11 12}
 
 }
-proc PfemFluid::examples::AssignGroupsWaterDamBreakGeometry3D {args} {
+proc PfemFluid::examples::WaterDamBreak::AssignGroups3D {args} {
     # To be implemented
 }
 
 # Tree assign
-proc PfemFluid::examples::TreeAssignationWaterDamBreak3D {args} {
+proc PfemFluid::examples::WaterDamBreak::TreeAssignation3D {args} {
     # To be implemented
 }
 
-proc PfemFluid::examples::TreeAssignationWaterDamBreak2D {args} {
-# ONLY ASSIGN VELOCITY X Y EQUAL TO 0 TO THE RIGID LINES (SEE ABOVE)
+proc PfemFluid::examples::WaterDamBreak::TreeAssignation2D {args} {
+    # ONLY ASSIGN VELOCITY X Y EQUAL TO 0 TO THE RIGID LINES (SEE ABOVE)
     # Fluid Parts
     set bodies_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='Body1'\]"
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
@@ -101,12 +103,4 @@ proc PfemFluid::examples::TreeAssignationWaterDamBreak2D {args} {
     set fixVelocity "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition\[@n='VELOCITY'\]"
     set fixVelocityNode [customlib::AddConditionGroupOnXPath $fixVelocity "Rigid_Walls//Total"]
     $fixVelocityNode setAttribute ov line
-}
-
-proc PfemFluid::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

@@ -1,0 +1,53 @@
+{
+    "id": "Structural",
+    "name": "Structural",
+    "prefix": "ST",
+    "themed": false,
+    "kratos_name": "StructuralMechanicsApplication",
+    "dimensions": [
+        "2D",
+        "2Da",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/TrussCantilever.tcl",
+        "examples/HighRiseBuilding.tcl",
+        "examples/IncompressibleCookMembrane.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl",
+        "postprocess/formfinding.tcl"
+    ],
+    "start_script":"::Structural::Init",
+    "requeriments":{
+        "apps":[],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "STParts",
+        "initial_conditions": "STInitialConditions",
+        "nodal_conditions": "STNodalConditions",
+        "conditions": "STLoads",
+        "time_parameters": "STTimeParameters",
+        "results": "STResults",
+        "materials": "STMaterials"
+        
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "StructuralMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "Structure",
+        "output_model_part_name": ""
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

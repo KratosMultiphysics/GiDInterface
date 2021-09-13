@@ -1,4 +1,4 @@
-proc DEM::write::WriteMDPAWalls { } {
+proc ::DEM::write::WriteMDPAWalls { } {
     # Headers
     write::writeModelPartData
 
@@ -31,28 +31,28 @@ proc DEM::write::WriteMDPAWalls { } {
 }
 
 
-proc DEM::write::processRigidWallMaterials { } {
+proc ::DEM::write::processRigidWallMaterials { } {
     variable wallsProperties
     set walls_xpath [DEM::write::GetRigidWallXPath]
     write::processMaterials $walls_xpath/group
     set wallsProperties [write::getPropertiesListByConditionXPath $walls_xpath 0 RigidFacePart]
 }
 
-proc DEM::write::processPhantomWallMaterials { } {
+proc ::DEM::write::processPhantomWallMaterials { } {
     variable wallsProperties
     set phantom_walls_xpath [DEM::write::GetPhantomWallXPath]
     write::processMaterials $phantom_walls_xpath/group
     set phantomwallsProperties [write::processMaterials $phantom_walls_xpath]
 }
 
-proc DEM::write::WriteRigidWallProperties { } {
+proc ::DEM::write::WriteRigidWallProperties { } {
 
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     write::WriteString ""
 }
 
-proc DEM::write::WritePhantomWallProperties { } {
+proc ::DEM::write::WritePhantomWallProperties { } {
     set wall_properties [dict create ]
     set condition_name "Phantom-Wall"
     set cnd [Model::getCondition $condition_name]
@@ -113,7 +113,7 @@ proc DEM::write::WritePhantomWallProperties { } {
 }
 
 
-proc DEM::write::WriteWallCustomSmp { } {
+proc ::DEM::write::WriteWallCustomSmp { } {
     set condition_name "DEM-CustomSmp"
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
 
@@ -136,17 +136,17 @@ proc DEM::write::WriteWallCustomSmp { } {
 }
 
 
-proc DEM::write::writeConditions {  } {
+proc ::DEM::write::writeConditions {  } {
     variable wallsProperties
-    write::writeConditionsByGiDId DEMConditions [GetRigidWallConditionName] $wallsProperties
+    ::write::writeConditionsByGiDId DEMConditions [GetRigidWallConditionName] $wallsProperties
 }
 
-proc DEM::write::writePhantomConditions {  } {
+proc ::DEM::write::writePhantomConditions {  } {
     variable phantomwallsProperties
-    write::writeConditionsByGiDId DEMConditions [GetPhantomWallConditionName] $phantomwallsProperties
+    ::write::writeConditionsByGiDId DEMConditions [GetPhantomWallConditionName] $phantomwallsProperties
 }
 
-proc DEM::write::GetWallsGroups { } {
+proc ::DEM::write::GetWallsGroups { } {
     set groups [list ]
     set groups_rigid [GetRigidWallsGroups]
     set groups_phantom [GetPhantomWallsGroups]
@@ -154,14 +154,14 @@ proc DEM::write::GetWallsGroups { } {
     return $groups
 }
 
-proc DEM::write::GetRigidWallConditionName {} {
+proc ::DEM::write::GetRigidWallConditionName {} {
     set condition_name "DEM-FEM-Wall"
     if {$::Model::SpatialDimension eq "2D"} {
         set condition_name "DEM-FEM-Wall2D"
     }
     return $condition_name
 }
-proc DEM::write::GetPhantomWallConditionName {} {
+proc ::DEM::write::GetPhantomWallConditionName {} {
     set condition_name "Phantom-Wall"
     if {$::Model::SpatialDimension eq "2D"} {
         set condition_name "Phantom-Wall2D"
@@ -169,16 +169,16 @@ proc DEM::write::GetPhantomWallConditionName {} {
     return $condition_name
 }
 
-proc DEM::write::GetRigidWallXPath { } {
+proc ::DEM::write::GetRigidWallXPath { } {
     set condition_name [GetRigidWallConditionName]
     return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
 }
-proc DEM::write::GetPhantomWallXPath { } {
+proc ::DEM::write::GetPhantomWallXPath { } {
     set condition_name [GetPhantomWallConditionName]
     return "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
 }
 
-proc DEM::write::GetRigidWallsGroups { } {
+proc ::DEM::write::GetRigidWallsGroups { } {
     set groups [list ]
 
     foreach group [[customlib::GetBaseRoot] selectNodes "[DEM::write::GetRigidWallXPath]/group"] {
@@ -188,7 +188,7 @@ proc DEM::write::GetRigidWallsGroups { } {
     return $groups
 }
 
-proc DEM::write::GetPhantomWallsGroups { } {
+proc ::DEM::write::GetPhantomWallsGroups { } {
     set groups [list ]
 
     foreach group [[customlib::GetBaseRoot] selectNodes "[DEM::write::GetPhantomWallXPath]/group"] {
@@ -198,7 +198,7 @@ proc DEM::write::GetPhantomWallsGroups { } {
     return $groups
 }
 
-proc DEM::write::GetWallsGroupsSmp { } {
+proc ::DEM::write::GetWallsGroupsSmp { } {
     set groups [list ]
     set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp2] {
@@ -212,7 +212,7 @@ proc DEM::write::GetWallsGroupsSmp { } {
 }
 
 ## TODO: UNDER REVISION, UNUSED PROC
-proc DEM::write::GetWallsGroupsListInConditions { } {
+proc ::DEM::write::GetWallsGroupsListInConditions { } {
     set conds_groups_dict [dict create ]
     set groups [list ]
 
@@ -249,7 +249,7 @@ proc DEM::write::GetWallsGroupsListInConditions { } {
 
 
 ## TODO: UNDER REVISION, UNUSED PROC
-proc DEM::write::GetConditionsGroups { } {
+proc ::DEM::write::GetConditionsGroups { } {
     set groups [list ]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
@@ -259,7 +259,7 @@ proc DEM::write::GetConditionsGroups { } {
     return $groups
 }
 
-proc DEM::write::writeWallConditionMeshes { } {
+proc ::DEM::write::writeWallConditionMeshes { } {
     variable wallsProperties
     variable phantomwallsProperties
 
@@ -280,7 +280,7 @@ proc DEM::write::writeWallConditionMeshes { } {
     }
 }
 
-proc DEM::write::writeWallConditionMesh { condition group props } {
+proc ::DEM::write::writeWallConditionMesh { condition group props } {
 
     set mid [write::AddSubmodelpart $condition $group]
 
@@ -530,7 +530,7 @@ proc DEM::write::writeWallConditionMesh { condition group props } {
     write::WriteString ""
 }
 
-proc DEM::write::DefineFEMExtraConditions {props} {
+proc ::DEM::write::DefineFEMExtraConditions {props} {
     set GraphPrint [dict get $props Material Variables GraphPrint]
     set GraphPrintval 0
     if {[write::isBooleanTrue $GraphPrint]} {

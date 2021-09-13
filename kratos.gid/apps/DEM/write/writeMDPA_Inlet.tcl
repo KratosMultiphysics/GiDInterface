@@ -1,4 +1,4 @@
-proc DEM::write::WriteMDPAInlet { } {
+proc ::DEM::write::WriteMDPAInlet { } {
     # Headers
     write::writeModelPartData
     
@@ -19,7 +19,7 @@ proc DEM::write::WriteMDPAInlet { } {
     copyClusterFiles
 }
 
-proc DEM::write::GetInletConditionName { } {
+proc ::DEM::write::GetInletConditionName { } {
     set condition_name Inlet
     if {$::Model::SpatialDimension eq "2D"} {
         set condition_name Inlet2D
@@ -27,14 +27,14 @@ proc DEM::write::GetInletConditionName { } {
     return $condition_name
 }
 
-proc DEM::write::GetInletConditionXpath { } {
+proc ::DEM::write::GetInletConditionXpath { } {
     set condition_name [GetInletConditionName]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
     return $xp1
 }
 
 # That can be all or active / All by default
-proc DEM::write::GetInletGroups { {that all}} {
+proc ::DEM::write::GetInletGroups { {that all}} {
     set groups [list ]
     
     foreach group [[customlib::GetBaseRoot] selectNodes [DEM::write::GetInletConditionXpath]/group] {
@@ -49,7 +49,7 @@ proc DEM::write::GetInletGroups { {that all}} {
 }
 
 
-proc DEM::write::copyClusterFiles { } {
+proc ::DEM::write::copyClusterFiles { } {
     
     set dir [write::GetConfigurationAttribute dir]
     set src_dir $::Kratos::kratos_private(Path)
@@ -75,7 +75,7 @@ proc DEM::write::copyClusterFiles { } {
     }
 }
 
-proc DEM::write::GetUsedClusters { } {
+proc ::DEM::write::GetUsedClusters { } {
     variable inletProperties
     set clusters_list [list ]
     set custom_clusters_list [list]
@@ -99,7 +99,7 @@ proc DEM::write::GetUsedClusters { } {
     return [list $clusters_list $custom_clusters_list]
 }
 
-proc DEM::write::DefineInletConditions {inletProperties mid contains_clusters} {
+proc ::DEM::write::DefineInletConditions {inletProperties mid contains_clusters} {
     set inlet_element_type [DEM::write::GetInletElementType]
     if {[dict get $inletProperties Material Variables InletElementType] eq "Cluster3D"} {
         set contains_clusters 1
@@ -121,7 +121,7 @@ proc DEM::write::DefineInletConditions {inletProperties mid contains_clusters} {
     write::WriteString "        CONTAINS_CLUSTERS $contains_clusters"
 }
 
-proc DEM::write::GetInletElementType {} {
+proc ::DEM::write::GetInletElementType {} {
     set elem_name SphericParticle3D
     if {$::Model::SpatialDimension eq "2D"} {
         set elem_name CylinderParticle2D
@@ -129,11 +129,11 @@ proc DEM::write::GetInletElementType {} {
     return $elem_name
 }
 
-proc DEM::write::GetInjectorElementType {} {
+proc ::DEM::write::GetInjectorElementType {} {
     return [DEM::write::GetInletElementType]
 }
 
-proc DEM::write::writeInletMeshes { } {
+proc ::DEM::write::writeInletMeshes { } {
     variable inletProperties
     
     set condition_name [DEM::write::GetInletConditionName]
@@ -329,7 +329,7 @@ proc DEM::write::writeInletMeshes { } {
     }
 }
 
-proc DEM::write::GetClusterFileNameAndReplaceInletElementType {inlet_element_type} {
+proc ::DEM::write::GetClusterFileNameAndReplaceInletElementType {inlet_element_type} {
     if {$inlet_element_type eq "LineCluster3D"} {
         set inlet_element_type "Cluster3D"
         set cluster_file_name "linecluster3D.clu"
@@ -409,7 +409,7 @@ proc DEM::write::GetClusterFileNameAndReplaceInletElementType {inlet_element_typ
     return [list $inlet_element_type $cluster_file_name]
 }
 
-proc DEM::write::writeMaterialsInlet { } {
+proc ::DEM::write::writeMaterialsInlet { } {
     
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
@@ -417,7 +417,7 @@ proc DEM::write::writeMaterialsInlet { } {
     
 }
 
-proc DEM::write::processInletMaterials { } {
+proc ::DEM::write::processInletMaterials { } {
     variable inletProperties
     set inlet_xpath [DEM::write::GetInletConditionXpath]
     write::processMaterials $inlet_xpath/group

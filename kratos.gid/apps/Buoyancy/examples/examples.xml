@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Thermic" name="Thermic examples">
-    <Example id="BuoyancyHeatedSquare2D" app="Buoyancy" logo="HeatedSquare2D.png" name="Buoyancy heated\nsquare 2D" dim="2D" cmd="::Buoyancy::examples::HeatedSquare"/>
+    <Example id="BuoyancyHeatedSquare2D" app="Buoyancy" logo="HeatedSquare2D.png" name="Buoyancy heated\nsquare 2D" dim="2D" cmd="::Buoyancy::examples::HeatedSquare::Init"/>
 </Group>

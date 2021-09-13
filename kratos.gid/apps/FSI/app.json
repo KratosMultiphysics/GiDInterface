@@ -1,0 +1,50 @@
+{
+    "id": "FSI",
+    "name": "Fluid Strucure Interaction",
+    "prefix": "FSI",
+    "themed": false,
+    "kratos_name": "FSIapplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/MokChannelWithFlexibleWall.tcl",
+        "examples/TurekBenchmark.tcl",
+        "examples/HighRiseBuilding.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::FSI::Init",
+    "requeriments":{
+        "apps":["Fluid", "Structural"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "STParts",
+        "initial_conditions": "STInitialConditions",
+        "nodal_conditions": "STNodalConditions",
+        "conditions": "STLoads",
+        "time_parameters": "STTimeParameters",
+        "results": "STResults",
+        "materials": "STMaterials"
+        
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "StructuralMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "Structure"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

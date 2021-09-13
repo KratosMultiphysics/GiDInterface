@@ -1,4 +1,6 @@
 namespace eval ::Examples {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
     variable doc
@@ -38,6 +40,10 @@ proc Examples::LoadMyFiles { } {
     set doc [dom parse -channel $xmlfd]
     close $xmlfd
     ResolveLinks
+}
+
+proc ::Examples::StartWindowEmpty {args} {
+    Examples::StartWindow
 }
 
 proc Examples::StartWindow { {filter ""} } {

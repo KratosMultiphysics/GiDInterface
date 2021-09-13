@@ -1,13 +1,14 @@
 namespace eval ::ThermicLauncher {
+    Kratos::AddNamespace [namespace current]
+    
     variable available_apps
 }
 
-proc ::ThermicLauncher::Init { } {
+proc ::ThermicLauncher::Init { app } {
     variable available_apps
 
+    # TODO: Get apps from json
     set available_apps [list ConvectionDiffusion Buoyancy ConjugateHeatTransfer]
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 0
     
     ::ThermicLauncher::AppSelectorWindow
 }
@@ -67,5 +68,3 @@ proc ::ThermicLauncher::ChangeAppTo {appid} {
     spdAux::SetSpatialDimmension undefined
     apps::setActiveApp $appid
 }
-
-::ThermicLauncher::Init

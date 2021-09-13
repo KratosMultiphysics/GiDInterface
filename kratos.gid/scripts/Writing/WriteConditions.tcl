@@ -1,5 +1,5 @@
 
-proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
+proc ::write::writeConditions { baseUN {iter 0} {cond_id ""}} {
     set dictGroupsIterators [dict create]
 
     set root [customlib::GetBaseRoot]
@@ -24,7 +24,7 @@ proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
     return $dictGroupsIterators
 }
 
-proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
+proc ::write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
     set groupid [get_domnode_attribute $groupNode n]
     set groupid [GetWriteGroupName $groupid]
     if {![dict exists $dictGroupsIterators $groupid]} {
@@ -52,7 +52,7 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
     return $dictGroupsIterators
 }
 
-proc write::writeGroupCondition {groupid kname nnodes iter} {
+proc ::write::writeGroupCondition {groupid kname nnodes iter} {
     set obj [list ]
 
     # Print header
@@ -90,7 +90,7 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
     return [list $initial $final]
 }
 
-proc write::writeNodalConditions { un } {
+proc ::write::writeNodalConditions { un } {
 
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $un]/condition/group"
@@ -109,7 +109,7 @@ proc write::writeNodalConditions { un } {
     }
 }
 
-proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
+proc ::write::writeConditionGroupedSubmodelParts {cid groups_dict} {
     set s [mdpaIndent]
     WriteString "${s}Begin SubModelPart $cid // Condition $cid"
 

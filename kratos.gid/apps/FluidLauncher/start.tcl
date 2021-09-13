@@ -1,13 +1,14 @@
 namespace eval ::FluidLauncher {
+    Kratos::AddNamespace [namespace current]
+    
     variable available_apps
 }
 
-proc ::FluidLauncher::Init { } {
+proc ::FluidLauncher::Init { app } {
     variable available_apps
 
+    # TODO: Get apps from json
     set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM]
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 0
     
     ::FluidLauncher::FluidAppSelectorWindow
 }
@@ -72,5 +73,3 @@ proc ::FluidLauncher::ChangeAppTo {appid} {
     spdAux::SetSpatialDimmension undefined
     apps::setActiveApp $appid
 }
-
-::FluidLauncher::Init

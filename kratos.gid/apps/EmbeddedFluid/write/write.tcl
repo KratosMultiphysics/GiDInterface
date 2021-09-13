@@ -1,42 +1,24 @@
-namespace eval EmbeddedFluid::write {
+namespace eval ::EmbeddedFluid::write {
+    namespace path ::EmbeddedFluid
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
 }
 
 proc EmbeddedFluid::write::Init { } {
-    # Namespace variables inicialization
-    SetAttribute parts_un FLParts
-    SetAttribute nodal_conditions_un FLNodalConditions
-    SetAttribute conditions_un FLBC
-    SetAttribute materials_un EMBFLMaterials
-    SetAttribute results_un FLResults
-    SetAttribute time_parameters_un FLTimeParameters
-    SetAttribute writeCoordinatesByGroups 0
-    SetAttribute validApps [list "Fluid" "EmbeddedFluid"]
-    SetAttribute main_script_file "KratosFluid.py"
-    SetAttribute model_part_name "FluidModelPart"
-    SetAttribute materials_file "FluidMaterials.json"
-    SetAttribute properties_location json
+    # Namespace variables inicialization        
+    variable writeAttributes
+    set writeAttributes [::Fluid::write::GetAttributes]
 }
 
 # Events
 proc EmbeddedFluid::write::writeModelPartEvent { } {
-    # Fluid::write::AddValidApps "EmbeddedFluid"
-    set err [Fluid::write::Validate]
-    if {$err ne ""} {error $err}
-
-    Fluid::write::InitConditionsMap
-    write::initWriteConfiguration [GetAttributes]
-    write::writeModelPartData
-    Fluid::write::writeProperties
-    write::writeNodalCoordinatesOnParts
-    write::writeElementConnectivities
-    Fluid::write::writeConditions
-    Fluid::write::writeMeshes
-    writeDistances
-    Fluid::write::FreeConditionsMap
+    Fluid::write::writeModelPartEvent
 }
-proc EmbeddedFluid::write::writeCustomFilesEvent { } {
-    Fluid::write::writeCustomFilesEvent
+
+# Overwrite this function to print something at the end of the mdpa
+proc ::Fluid::write::writeCustomBlocks { } {
+    EmbeddedFluid::write::writeDistances
 }
 
 proc EmbeddedFluid::write::writeDistances { } {
@@ -59,6 +41,11 @@ proc EmbeddedFluid::write::writeDistances { } {
     }
 }
 
+proc EmbeddedFluid::write::writeCustomFilesEvent { } {
+    Fluid::write::writeCustomFilesEvent
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+}
+
 proc EmbeddedFluid::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
@@ -73,5 +60,3 @@ proc EmbeddedFluid::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
-
-EmbeddedFluid::write::Init
