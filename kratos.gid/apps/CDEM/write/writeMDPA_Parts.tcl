@@ -1,4 +1,5 @@
-proc CDEM::write::WriteMDPAParts { } {
+# Overwrite DEM function
+proc DEM::write::WriteMDPAParts { } {
     # Headers
     write::writeModelPartData
 
@@ -32,7 +33,7 @@ proc CDEM::write::WriteMDPAParts { } {
 	DEM::write::writeDEMConditionMeshes
 
     # CustomSubmodelParts
-    CDEM::write::WriteCustomDEMSmp
+    DEM::write::WriteCustomDEMSmp
 }
 
 proc CDEM::write::writeCohesiveGroups { } {

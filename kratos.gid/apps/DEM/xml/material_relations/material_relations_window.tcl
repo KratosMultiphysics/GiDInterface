@@ -4,20 +4,19 @@ proc DEM::xml::ShowMaterialRelationWindow { } {
     
     set material_relations [GetMaterialRelationsTable]
     set materials [dict keys $material_relations]
-    if {[llength $materials]>0} {
-        # window name
-        set w .gid.windowmatrel
-        
-        if {[winfo exist $w]} {destroy $w}
-        toplevel $w
-        wm withdraw $w
-        set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
-        set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-        wm geom $w +$x+$y
-        wm transient $w .gid    
-        InitWindow $w [_ "Kratos Multiphysics - DEM - Material Relations"] Kratos "" "" 1
-
+    # window name
+    set w .gid.windowmatrel
     
+    if {[winfo exist $w]} {destroy $w}
+    toplevel $w
+    wm withdraw $w
+    set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
+    set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
+    wm geom $w +$x+$y
+    wm transient $w .gid    
+    InitWindow $w [_ "Kratos Multiphysics - DEM - Material Relations"] Kratos "" "" 1
+
+    if {[llength $materials]>0} {
         set table $w.tree
         ttk::treeview $table -columns $materials -displaycolumns $materials
         foreach header $materials {
@@ -32,6 +31,10 @@ proc DEM::xml::ShowMaterialRelationWindow { } {
             }
             $table insert "" end -id $relation_ref -text $relation_ref -values $row
         }
+    } else {
+        set table $w.warn
+        ttk::label $table -text "No materials have been used yet"
+        pack $table
     }
 }
 
