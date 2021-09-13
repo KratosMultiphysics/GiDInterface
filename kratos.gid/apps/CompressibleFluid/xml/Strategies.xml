@@ -7,7 +7,7 @@
 		Type="CompressibleExplicitNS"
 		ImplementedInFile="navier_stokes_compressible_explicit_solver.py"
 		ImplementedInApplication="FluidDynamicsApplication"
-		ImplementedInPythonFile="NavierStokesCompressibleExplicitSolver"
+		ImplementedInPythonFile="CompressibleExplicit"
 		MinimumKratosVersion="9000"
 		App="CompressibleFluid"
 		ProductionReady="ProductionReady"
