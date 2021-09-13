@@ -1,14 +1,10 @@
 namespace eval ::Fluid::xml {
     namespace path ::Fluid
     Kratos::AddNamespace [namespace current]
-    
-    # Namespace variables declaration
-    variable dir
 }
 
 proc ::Fluid::xml::Init { } {
     # Namespace variables inicialization
-    variable dir
     Model::InitVariables dir $::Fluid::dir
     
     Model::getSolutionStrategies Strategies.xml

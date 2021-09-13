@@ -1,11 +1,10 @@
 namespace eval CompressibleFluid::xml {
-    # Namespace variables declaration
-    variable dir
+    namespace path ::Fluid
+    Kratos::AddNamespace [namespace current]
 }
 
 proc CompressibleFluid::xml::Init { } {
     # Namespace variables inicialization
-    variable dir
     Model::InitVariables dir $CompressibleFluid::dir
     
     Model::getSolutionStrategies Strategies.xml
@@ -21,7 +20,7 @@ proc CompressibleFluid::xml::Init { } {
 }
 
 proc CompressibleFluid::xml::getUniqueName {name} {
-    return ${::CompressibleFluid::prefix}${name}
+    return [::CompressibleFluid::GetAttribute prefix]${name}
 }
 
 proc CompressibleFluid::xml::CustomTree { args } {
@@ -44,9 +43,7 @@ proc CompressibleFluid::xml::CustomTree { args } {
     if {[$root selectNodes "$xpath/container\[@n='OnNodes'\]"] ne ""} {
         gid_groups_conds::addF "$xpath/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
     }
-
 }
-
 
 proc CompressibleFluid::xml::ProcHideIfElement { domNode list_elements } {
     set element [lindex [CompressibleFluid::write::GetUsedElements] 0]
