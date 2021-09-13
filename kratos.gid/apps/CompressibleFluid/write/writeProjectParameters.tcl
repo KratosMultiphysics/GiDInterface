@@ -216,6 +216,8 @@ proc CompressibleFluid::write::getSolverSettingsDict { } {
         dict set timeSteppingDict "CFL_number" [write::getValue CFTimeParameters CFL_Number]
         dict set timeSteppingDict "minimum_delta_time" [write::getValue CFTimeParameters MinimumDeltaTime]
         dict set timeSteppingDict "maximum_delta_time" [write::getValue CFTimeParameters MaximumDeltaTime]
+        dict set timeSteppingDict "Viscous_Fourier_number" [write::getValue CFTimeParameters Viscous_Fourier_number]
+        dict set timeSteppingDict "Thermal_Fourier_number" [write::getValue CFTimeParameters Thermal_Fourier_number]
     } else {
         dict set timeSteppingDict "time_step" [write::getValue CFTimeParameters DeltaTime]
     }
