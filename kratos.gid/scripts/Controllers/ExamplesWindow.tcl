@@ -123,20 +123,21 @@ proc Examples::PrintGroups { } {
         foreach example_id [dict keys [dict get $group examples]] {
             set example [dict get $group examples $example_id]
             if {[IsAproved $example $group_name $filter]} {
+                set inner_id "$group_id*$example_id"
                 set example_name [subst -nocommands -novariables [dict get $example name]]
                 set example_logo [dict get $example logo]
                 set example_dim [dict get $example dim]
                 set example_app [dict get $example app]
                 set example_cmd [dict get $example cmd]
                 set img [Examples::getImgFrom $example_app $example_logo]
-                ttk::button $buttons_frame.img$example_id -image $img -command [list Examples::LaunchExample $example_app $example_dim $example_cmd ]
+                ttk::button $buttons_frame.img~$inner_id -image $img -command [list Examples::LaunchExample $example_app $example_dim $example_cmd ]
                 ttk::label $buttons_frame.title$example_id -text $example_app -font {bold}
                 ttk::label $buttons_frame.text$example_id -text $example_name
-                grid $buttons_frame.img$example_id -column $col -row $row
+                grid $buttons_frame.img~$inner_id -column $col -row $row
                 grid $buttons_frame.title$example_id -column $col -row [expr $row +1]
                 grid $buttons_frame.text$example_id -column $col -row [expr $row +2]
                 
-                bind $buttons_frame.img$example_id <Enter> {::Examples::PlaceInformationWindowByPath %W}
+                bind $buttons_frame.img~$inner_id <Enter> {::Examples::PlaceInformationWindowByPath %W}
                 
                 incr col
                 if {$col >= 4} {set col 0; incr row; incr row; incr row}
@@ -158,9 +159,13 @@ proc Examples::PrintGroups { } {
 }
 
 proc Examples::PlaceInformationWindowByPath {win_path} {
-    set example_id [string trimleft $win_path .gid.examples_window.center.c.fcenter.title_textFluid.buttonframe.img]
-    set example [::Examples::getExampleById $example_id]
+    variable examples_window
+    variable groups_of_examples
+    set inner_id [lindex [split $win_path "~"] end]
+    lassign [split $inner_id "*"] example_group example_id
+    set example [dict get $groups_of_examples $example_group examples $example_id]
     if {$example ne ""} {
+        $examples_window.info configure -text "Information: [dict get $example name]"
         set description [dict get $example description]
         set ::Examples::info_main_window_text $description
     }
