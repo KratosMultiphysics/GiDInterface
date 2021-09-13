@@ -1,7 +1,7 @@
 {
     "id": "FluidDEM",
     "name": "Swimming DEM",
-    "prefix": "FluidDEM_",
+    "prefix": "DEM",
     "themed": false,
     "kratos_name": "FluidDEMapplication",
     "dimensions": [
