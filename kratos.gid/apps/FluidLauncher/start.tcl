@@ -8,7 +8,7 @@ proc ::FluidLauncher::Init { app } {
     variable available_apps
 
     # TODO: Get apps from json
-    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM]
+    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM CompressibleFluid]
     
     ::FluidLauncher::FluidAppSelectorWindow
 }

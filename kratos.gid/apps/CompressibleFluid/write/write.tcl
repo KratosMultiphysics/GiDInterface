@@ -249,5 +249,3 @@ proc CompressibleFluid::write::AddValidApps {appid} {
 proc CompressibleFluid::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
-
-CompressibleFluid::write::Init

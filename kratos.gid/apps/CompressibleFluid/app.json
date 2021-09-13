@@ -10,14 +10,11 @@
     ],
     "script_files": [
         "start.tcl",
-        "examples/examples.tcl",
-        "examples/CylinderInFlow.tcl",
-        "examples/HighRiseBuilding.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::Fluid::Init",
+    "start_script":"::CompressibleFluid::Init",
     "requeriments":{
         "apps":[],
         "minimum_gid_version":"15.1.3d"

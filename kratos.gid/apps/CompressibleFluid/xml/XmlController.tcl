@@ -1,11 +1,11 @@
 namespace eval CompressibleFluid::xml {
-    namespace path ::Fluid
+    namespace path ::CompressibleFluid
     Kratos::AddNamespace [namespace current]
 }
 
 proc CompressibleFluid::xml::Init { } {
     # Namespace variables inicialization
-    Model::InitVariables dir $CompressibleFluid::dir
+    Model::InitVariables dir $::CompressibleFluid::dir
     
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -49,5 +49,3 @@ proc CompressibleFluid::xml::ProcHideIfElement { domNode list_elements } {
     set element [lindex [CompressibleFluid::write::GetUsedElements] 0]
     if {$element in $list_elements} {return hidden} {return normal}
 }
-
-CompressibleFluid::xml::Init
