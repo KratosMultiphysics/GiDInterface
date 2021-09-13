@@ -14,5 +14,6 @@
         "show_toolbar": true,
         "intervals": false,
         "wizard": false
-    }
+    },
+    "description": "Thermal applications \n-Convection diffusion\n-Buoyancy\n-Conjugate heat transfer"
 }

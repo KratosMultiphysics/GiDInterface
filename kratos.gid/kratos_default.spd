@@ -19,7 +19,6 @@
 	<appLink n="FSI" public="1" pn="FSI" active="0" appid="FSI" prefix="FSI"/>
 	<appLink n="Dam" public="1" pn="Dam" active="0" appid="Dam" prefix="Dam"/>
 	<appLink n="PfemLauncher" public="1" pn="Pfem" active="0" appid="PfemLauncher" prefix="PFEMLauncher_"/>
-	<appLink n="Pfem" public="0" pn="Pfem" active="0" appid="Pfem" prefix="PFEM_"/>
 	<appLink n="PfemFluid" public="0" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
 	<appLink n="PfemThermic" public="0" pn="Pfem Thermic" active="0" appid="PfemThermic" prefix="PFEMTHERMIC_"/>
 	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard" is_tool="1"/>
