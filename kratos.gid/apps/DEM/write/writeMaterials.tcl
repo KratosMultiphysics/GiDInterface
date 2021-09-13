@@ -1,4 +1,4 @@
-proc DEM::write::getDEMMaterialsDict { } {
+proc ::DEM::write::getDEMMaterialsDict { } {
     # TODO: Remove properties in mdpas ? Check with MA. Probably remove material properties but check the process properties
     # TODO: Check 2d dem fem wall is written twice, also as phantom
     # TODO: Materials have more properties than expected. Write from properties variables, not from xml
@@ -78,7 +78,7 @@ proc DEM::write::getDEMMaterialsDict { } {
     return $global_dict
 }
 
-proc DEM::write::GetModelPartParentNameFromGroup {group} {
+proc ::DEM::write::GetModelPartParentNameFromGroup {group} {
     set model_part_parent SpheresPart
     if {$group in [DEM::write::GetWallsGroups]} {set model_part_parent "RigidFacePart"}
     if {$group in [DEM::write::GetInletGroups]} {set model_part_parent "DEMInletPart"}
@@ -86,7 +86,7 @@ proc DEM::write::GetModelPartParentNameFromGroup {group} {
 }
 
 
-proc DEM::write::GetDEMUsedMaterialsNodeList { } {
+proc ::DEM::write::GetDEMUsedMaterialsNodeList { } {
     # Dem needs more material information than default
     set materials [list ]
 
@@ -97,7 +97,7 @@ proc DEM::write::GetDEMUsedMaterialsNodeList { } {
     return $materials
 }
 
-proc DEM::write::GetMaterialRelationsNodeList { } {
+proc ::DEM::write::GetMaterialRelationsNodeList { } {
     # Dem needs more material information than default
     set material_relations [list ]
 
@@ -110,7 +110,7 @@ proc DEM::write::GetMaterialRelationsNodeList { } {
     return $material_relations
 }
 
-proc DEM::write::ValidateMaterialRelations {materials relations assignations} {
+proc ::DEM::write::ValidateMaterialRelations {materials relations assignations} {
     set material_relations [DEM::xml::GetMaterialRelationsTable]
 
     foreach relation_ref [dict keys $material_relations] {

@@ -1,0 +1,45 @@
+{
+    "id": "PfemFluid",
+    "name": "Pfem Fluid",
+    "prefix": "PFEMFLUID_",
+    "themed": true,
+    "kratos_name": "PfemFluidDynamicsApplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/DamBreakFSI.tcl",
+        "examples/WaterDamBreak.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::PfemFluid::Init",
+    "requeriments":{
+        "apps":[],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "nodal_conditions": "PFEMFLUID_NodalConditions",
+        "materials": "PFEMFLUID_Materials",
+        "results": "Results",
+        "time_parameters": "PFEMFLUID_TimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "PFEMFluidMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "PfemFluidModelPart"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

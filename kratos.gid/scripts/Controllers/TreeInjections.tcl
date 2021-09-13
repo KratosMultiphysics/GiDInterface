@@ -193,8 +193,8 @@ proc spdAux::injectConditions { basenode args} {
 
 proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } {
     set conds [$basenode parent]
-    set AppUsesIntervals [apps::ExecuteOnApp [GetAppIdFromNode $conds] GetAttribute UseIntervals]
-    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
+    set app_uses_intervals [[apps::getAppById [GetAppIdFromNode $conds]] getPermission "intervals"]
+    if {$app_uses_intervals eq ""} {set app_uses_intervals 0}
     set initial_conds_flag 0
     if {$args ne "{}" && $args ne ""} {
         if {[dict exists {*}$args can_be_initial]} {
@@ -253,7 +253,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
             append node [GetParameterValueString $in $forcedParams $cnd]
         }
         set CondUsesIntervals [$cnd getAttribute "Interval"]
-        if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
+        if {$app_uses_intervals && $CondUsesIntervals ne "False"} {
             set state normal
             if {$initial_conds_flag} {
                 set CondUsesIntervals Initial

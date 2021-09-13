@@ -168,6 +168,23 @@ proc Kratos::RegisterEnvironment { } {
     }
 }
 
+proc Kratos::ReadJsonDict {file_path} {
+    set data ""
+    catch {
+        # Try to open the preferences file
+        set fp [open $file_path r]
+        # Read the preferences
+        set data [read $fp]
+        # W $data
+        # Close the file
+        close $fp
+    }
+    if {$data ne ""} {
+        set data [write::json2dict $data]
+    }
+    return $data
+}
+
 proc Kratos::LoadEnvironment { } {
     variable kratos_private
 
@@ -182,12 +199,13 @@ proc Kratos::LoadEnvironment { } {
         # W $data
         # Close the file
         close $fp
-    }
-    # Preferences are written in json format
-    foreach {k v} [write::json2dict $data] {
-        # W "$k $v"
-        # Foreach pair key value, restore it
-        set kratos_private($k) $v
+        
+        # Preferences are written in json format
+        foreach {k v} [write::json2dict $data] {
+            # W "$k $v"
+            # Foreach pair key value, restore it
+            set kratos_private($k) $v
+        }
     }
 }
 
@@ -291,8 +309,15 @@ proc Kratos::OpenCaseIn {program} {
     }
 }
 
+if { ![GidUtils::IsTkDisabled] } {
+    proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {      
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
+        return variable
+    }   
+}
 
-proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {      
-    set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
-    return variable
+proc Kratos::IsDeveloperMode {} {
+    set is_dev 0
+    if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
+    return $is_dev
 }

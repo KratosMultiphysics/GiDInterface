@@ -100,7 +100,6 @@ proc ::MPM::write::getParametersDict { } {
     dict unset project_parameters_dict solver_settings rayleigh_alpha
     dict unset project_parameters_dict solver_settings rayleigh_beta
 
-
     return $project_parameters_dict
 }
 proc ::MPM::write::writeParametersEvent { } {

@@ -1,51 +1,22 @@
 namespace eval ::CompressibleFluid {
+    Kratos::AddNamespace [namespace current]
     # Variable declaration
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
-    variable app_id
-}
-
-proc ::CompressibleFluid::Init { } {
-    # Variable initialization
-    variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
-    variable app_id
     
-    set app_id CompressibleFluid
-
-    set kratos_name "FluidDynamicsApplication"
-    set dir [apps::getMyDir "CompressibleFluid"]
-    set attributes [dict create]
-
-    set prefix CF
-    set ::Model::ValidSpatialDimensions [list 2D]
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-
-    dict set attributes UseIntervals 1
-
-    LoadMyFiles
-    #::spdAux::CreateDimensionWindow
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::CompressibleFluid::LoadMyFiles { } {
+proc ::CompressibleFluid::Init { app } {
+    # Variable initialization
+    variable _app
     variable dir
 
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
+    set _app $app
+    set dir [apps::getMyDir "Fluid"]
+    
+    # XML init event
+    ::CompressibleFluid::xml::Init
+    ::CompressibleFluid::write::Init
 }
-
-proc ::CompressibleFluid::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
-}
-
-::CompressibleFluid::Init

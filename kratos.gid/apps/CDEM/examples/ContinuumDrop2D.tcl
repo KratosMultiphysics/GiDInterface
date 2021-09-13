@@ -1,14 +1,18 @@
+namespace eval ::CDEM::examples::ContinuumDrop2D {
+    namespace path ::CDEM::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::CDEM::examples::ContinuumDrop2D {args} {
+proc ::CDEM::examples::ContinuumDrop2D::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometryContinuumDrop
-    AssignToTreeContinuumDrop
-    AssignMeshSizeContinuumDrop
+    DrawGeometry
+    AssignToTree
+    AssignMeshSize
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,7 +21,7 @@ proc ::CDEM::examples::ContinuumDrop2D {args} {
 
 }
 
-proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
+proc ::CDEM::examples::ContinuumDrop2D::DrawGeometry { } {
     Kratos::ResetModel
 
     GiD_Groups create "Box"
@@ -48,7 +52,7 @@ proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
 }
 
 
-proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
+proc ::CDEM::examples::ContinuumDrop2D::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
     set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7  ]
@@ -119,17 +123,8 @@ proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
     spdAux::RequestRefresh
 }
 
-proc ::CDEM::examples::AssignMeshSizeContinuumDrop { } {
+proc ::CDEM::examples::ContinuumDrop2D::AssignMeshSize { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.6 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.6 1:end escape escape escape
-}
-
-
-proc ::CDEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

@@ -1,12 +1,12 @@
-namespace eval StenosisWizard::xml {
-     variable dir
+namespace eval ::StenosisWizard::xml {
+    namespace path ::StenosisWizard
+    Kratos::AddNamespace [namespace current]
 }
 
 proc StenosisWizard::xml::Init { } {
-  variable dir
-  Model::InitVariables dir $StenosisWizard::dir
+    Model::InitVariables dir $::StenosisWizard::dir
 
-  spdAux::processIncludes
+    spdAux::processIncludes
 }
 
 proc StenosisWizard::xml::CustomTree {args} {
@@ -16,14 +16,12 @@ proc StenosisWizard::xml::CustomTree {args} {
 }
 
 proc StenosisWizard::xml::getUniqueName {name} {
-    return StenWiz$name
+    return [::StenosisWizard::GetAttribute prefix]$name
 }
 
 proc ::StenosisWizard::xml::MultiAppEvent {args} {
-   if {$args eq "init"} {
-     spdAux::parseRoutes
-     spdAux::ConvertAllUniqueNames FL StenWiz
-   }
+    if {$args eq "init"} {
+        spdAux::parseRoutes
+        spdAux::ConvertAllUniqueNames FL StenWiz
+    }
 }
-
-StenosisWizard::xml::Init

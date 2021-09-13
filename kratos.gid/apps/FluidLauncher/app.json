@@ -1,0 +1,18 @@
+{
+    "id": "Fluid Launcher",
+    "name": "Fluid",
+    "script_files": [
+        "start.tcl"
+    ],
+    "start_script":"::FluidLauncher::Init",
+    "requeriments":{
+        "apps_exist":["Fluid","EmbeddedFluid", "PotentialFluid", "Buoyancy", "ConjugateHeatTransfer", "FluidDEM", "CompressibleFluid"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": false,
+        "show_toolbar": true,
+        "intervals": false,
+        "wizard": false
+    }
+}

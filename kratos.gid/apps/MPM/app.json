@@ -1,0 +1,44 @@
+{
+    "id": "MPM",
+    "name": "MPM",
+    "prefix": "MPM",
+    "themed": false,
+    "kratos_name": "ParticleMechanicsApplication",
+    "dimensions": [
+        "2D",
+        "2Da",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/FallingSandBall.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::MPM::Init",
+    "requeriments":{
+        "apps":["Structural"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "MPMParts",
+        "nodal_conditions": "MPMNodalConditions",
+        "conditions": "MPMLoads"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "ParticleMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "Background_Grid"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

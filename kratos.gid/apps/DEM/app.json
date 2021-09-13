@@ -1,0 +1,52 @@
+{
+    "id": "DEM",
+    "name": "DEM",
+    "prefix": "DEM",
+    "themed": false,
+    "kratos_name": "DEMApplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "xml/material_relations/MaterialRelations.tcl",
+        "xml/material_relations/material_relations_window.tcl",
+        "write/write.tcl",
+        "write/writeMDPA_Parts.tcl",
+        "write/writeMDPA_Inlet.tcl",
+        "write/writeMDPA_Walls.tcl",
+        "write/writeMDPA_Clusters.tcl",
+        "write/writeMaterials.tcl",
+        "write/writeProjectParameters.tcl",
+        "write/write_utils.tcl",
+        "examples/examples.tcl",
+        "examples/SpheresDrop.tcl",
+        "examples/CirclesDrop.tcl"
+    ],
+    "start_script": "::DEM::Init",
+    "requeriments": {
+        "apps": [],
+        "minimum_gid_version": "15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "DEMParts",
+        "nodal_conditions": "DEMNodalConditions",
+        "conditions": "DEMConditions",
+        "materials": "DEMMaterials"
+    },
+    "write": {
+        "coordinates": "groups",
+        "materials_file": "MaterialsDEM.json",
+        "properties_location": "json"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}
