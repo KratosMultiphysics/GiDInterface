@@ -5,10 +5,11 @@
                       pn="Momentum" 
                       ProcessName="AssignVectorVariableProcess" 
                       VariableName="MOMENTUM" 
-                      Interval="False" 
+                      Interval="Initial" 
                       unit_magnitude="M/T/L^2" 
                       units="kg/(s*m^2)" 
-                      App="CompressibleFluid" 
+                      App="CompressibleFluid"
+                      can_be_initial="true"
                       ImplementedInApplication="FluidDynamicsApplication">
     <DefaultValues>
       <value n="constrained" v="0,0,0" state="hidden" />
@@ -19,10 +20,11 @@
                       pn="Density" 
                       ProcessName="AssignScalarVariableProcess" 
                       VariableName="DENSITY" 
-                      Interval="False" 
+                      Interval="Initial" 
                       unit_magnitude="M/L^3" 
                       units="kg/m^3" 
-                      App="CompressibleFluid" 
+                      App="CompressibleFluid"
+                      can_be_initial="true"
                       ImplementedInApplication="FluidDynamicsApplication">
     <DefaultValues>
       <value n="constrained" v="0" state="hidden" />
@@ -33,10 +35,11 @@
                       pn="Total energy" 
                       ProcessName="AssignScalarVariableProcess" 
                       VariableName="TOTAL_ENERGY" 
-                      Interval="False" 
+                      Interval="Initial" 
                       unit_magnitude="Energy/L^3" 
                       units="J/m^3" 
-                      App="CompressibleFluid" 
+                      App="CompressibleFluid"
+                      can_be_initial="true"
                       ImplementedInApplication="FluidDynamicsApplication">
     <DefaultValues>
       <value n="constrained" v="0" state="hidden" />
@@ -50,7 +53,8 @@
                       Interval="False" 
                       unit_magnitude="Pa" 
                       units="Pressure" 
-                      App="CompressibleFluid" 
+                      App="CompressibleFluid"
+                      can_be_initial="false"
                       ImplementedInApplication="FluidDynamicsApplication">
     <DefaultValues>
       <value n="constrained" v="0" state="hidden" />
@@ -64,7 +68,8 @@
                       Interval="False" 
                       unit_magnitude="Pa" 
                       units="Temperature" 
-                      App="CompressibleFluid" 
+                      App="CompressibleFluid"
+                      can_be_initial="false"
                       ImplementedInApplication="FluidDynamicsApplication">
     <DefaultValues>
       <value n="constrained" v="0" state="hidden" />
@@ -78,7 +83,8 @@
                       Interval="False" 
                       unit_magnitude="L/T" 
                       units="m/s" 
-                      App="CompressibleFluid" 
+                      App="CompressibleFluid"
+                      can_be_initial="false"
                       ImplementedInApplication="FluidDynamicsApplication">
     <DefaultValues>
       <value n="constrained" v="0,0,0" state="hidden" />
