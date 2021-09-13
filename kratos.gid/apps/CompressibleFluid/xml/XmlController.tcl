@@ -28,11 +28,11 @@ proc CompressibleFluid::xml::CustomTree { args } {
     set root [customlib::GetBaseRoot]
 
     # Output control in output settings
-    spdAux::SetValueOnTreeItem v time CF_Results FileLabel
-    spdAux::SetValueOnTreeItem v time CF_Results OutputControlType
+    spdAux::SetValueOnTreeItem v time CFResults FileLabel
+    spdAux::SetValueOnTreeItem v time CFResults OutputControlType
 
     # Drag in output settings
-    set xpath "[spdAux::getRoute CF_Results]/container\[@n='GiDOutput'\]"
+    set xpath "[spdAux::getRoute CFResults]/container\[@n='GiDOutput'\]"
     if {[$root selectNodes "$xpath/condition\[@n='Drag'\]"] eq ""} {
         gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
     }

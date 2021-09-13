@@ -21,7 +21,7 @@ proc ::CompressibleFluid::Init { } {
     set dir [apps::getMyDir "CompressibleFluid"]
     set attributes [dict create]
 
-    set prefix CF_
+    set prefix CF
     set ::Model::ValidSpatialDimensions [list 2D 3D]
 
     # Allow to open the tree
