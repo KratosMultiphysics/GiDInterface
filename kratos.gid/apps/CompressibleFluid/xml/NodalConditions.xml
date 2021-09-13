@@ -72,7 +72,7 @@
   </NodalConditionItem>
 
   <NodalConditionItem n="VELOCITY" 
-                      pn="vELOCITY" 
+                      pn="Velocity" 
                       ProcessName="AssignVectorVariableProcess" 
                       VariableName="VELOCITY" 
                       Interval="False" 
