@@ -40,7 +40,7 @@
         "model_part_name": "FluidModelPart",
         "output_model_part_name": "fluid_computational_model_part"
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "python/KratosFluid.py",
     "examples": "",
     "description": ""
 }
