@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="DEM" name="DEM examples">
-    <Example id="DEMDrop2D" app="DEM" logo="CirclesDrop.png" name="DEM circles drop 2D" dim="2D" cmd="::DEM::examples::CirclesDrop::Init"/>
-    <Example id="DEMDrop3D" app="DEM" logo="SpheresDrop.png" name="DEM spheres drop 3D" dim="3D" cmd="::DEM::examples::SpheresDrop::Init"/>
+    <Example id="DEMDrop2D" app="DEM" logo="CirclesDrop.png" name="DEM circles drop 2D" dim="2D" cmd="::DEM::examples::CirclesDrop::Init">
+        <Description></Description>
+    </Example>
+    <Example id="DEMDrop3D" app="DEM" logo="SpheresDrop.png" name="DEM spheres drop 3D" dim="3D" cmd="::DEM::examples::SpheresDrop::Init">
+        <Description></Description>
+    </Example>
 </Group>

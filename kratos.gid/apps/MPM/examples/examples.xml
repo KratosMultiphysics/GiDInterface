@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="MPM" name="MPM examples">
-    <Example id="FallingSandBall" app="MPM" logo="FallingSandBall.png" name="Falling sand ball 2D" dim="2D" cmd="::MPM::examples::FallingSandBall::Init"/>
+    <Example id="FallingSandBall" app="MPM" logo="FallingSandBall.png" name="Falling sand ball 2D" dim="2D" cmd="::MPM::examples::FallingSandBall::Init">
+        <Description></Description>
+    </Example>
 </Group>

@@ -10,6 +10,8 @@ namespace eval ::Examples {
 
     variable _canvas_scroll
     variable _canvas_scroll_w
+
+    variable info_main_window_text
 }
 
 proc Examples::Init { } {
@@ -77,13 +79,19 @@ proc Examples::StartWindow { {filter ""} } {
     set _canvas_scroll $fcenter
     set _canvas_scroll_w $examples_window.center
     AddToScrolledCanvas $examples_window.center $fcenter
-    grid $examples_window.center -sticky nsew
+    grid $examples_window.center -row 0 -column 0 -sticky nsew
 
     set Examples::filter_entry $filter
     set filter_txt [ttk::label $fcenter.filter_text -text [_ "Search an example:"]]
     set filter_ent [ttk::entry $fcenter.filter_entry -textvariable Examples::filter_entry]
     set filter_btn [ttk::button $fcenter.filter_button -text "Filter" -command [list Examples::PrintGroups]]
     grid $filter_txt $filter_ent $filter_btn -sticky ew
+
+    # Information panel
+    ttk::labelframe $examples_window.info -text " Information " -relief ridge 
+    ttk::label $examples_window.info.text -textvariable Examples::info_main_window_text
+    grid $examples_window.info.text 
+    grid $examples_window.info -sticky ew
 
     set groups [GetGroupsFromXML]
 
@@ -128,6 +136,8 @@ proc Examples::PrintGroups { } {
                 grid $buttons_frame.title$example_id -column $col -row [expr $row +1]
                 grid $buttons_frame.text$example_id -column $col -row [expr $row +2]
                 
+                bind $buttons_frame.img$example_id <Enter> {::Examples::PlaceInformationWindowByPath %W}
+                
                 incr col
                 if {$col >= 4} {set col 0; incr row; incr row; incr row}
             }
@@ -145,6 +155,26 @@ proc Examples::PrintGroups { } {
     update
     
     ResizeScrolledCanvas $_canvas_scroll_w
+}
+
+proc Examples::PlaceInformationWindowByPath {win_path} {
+    set example_id [string trimleft $win_path .gid.examples_window.center.c.fcenter.title_textFluid.buttonframe.img]
+    set example [::Examples::getExampleById $example_id]
+    if {$example ne ""} {
+        set description [dict get $example description]
+        set ::Examples::info_main_window_text $description
+    }
+}
+
+proc Examples::getExampleById {example_id} {
+    variable groups_of_examples
+
+    foreach group_id [dict keys $groups_of_examples] {
+        set group [dict get $groups_of_examples $group_id]
+        foreach example [dict keys [dict get $group examples]] {
+            if {$example_id eq $example} {return [dict get $group examples $example]}
+        }
+    }
 }
 
 proc Examples::IsAproved {example group filter} { 
@@ -181,6 +211,7 @@ proc Examples::GetGroupsFromXML {} {
             dict set groups_of_examples $group_id examples $example_id dim [$example @dim]
             dict set groups_of_examples $group_id examples $example_id app [$example @app]
             dict set groups_of_examples $group_id examples $example_id cmd [$example @cmd]
+            dict set groups_of_examples $group_id examples $example_id description [[$example getElementsByTagName "Description"] text]
         }
     }
 }
