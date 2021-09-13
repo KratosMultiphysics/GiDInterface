@@ -1,5 +1,9 @@
+namespace eval CompressibleFluid::examples::HighRiseBuilding {
+    namespace path ::CompressibleFluid::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::CompressibleFluid::examples::HighRiseBuilding {args} {
+proc ::CompressibleFluid::examples::HighRiseBuilding::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -7,10 +11,10 @@ proc ::CompressibleFluid::examples::HighRiseBuilding {args} {
     }
 
     Kratos::ResetModel
-    DrawHighRiseBuildingGeometry$::Model::SpatialDimension
-    AssignGroupsHighRiseBuilding$::Model::SpatialDimension
-    AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
-    TreeAssignationHighRiseBuilding$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -20,11 +24,11 @@ proc ::CompressibleFluid::examples::HighRiseBuilding {args} {
 
 
 # Draw Geometry
-proc CompressibleFluid::examples::DrawHighRiseBuildingGeometry3D {args} {
+proc CompressibleFluid::examples::HighRiseBuilding::DrawGeometry3D {args} {
     # To be implemented
 }
 
-proc CompressibleFluid::examples::DrawHighRiseBuildingGeometry2D {args} {
+proc CompressibleFluid::examples::HighRiseBuilding::DrawGeometry2D {args} {
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
 
@@ -51,7 +55,7 @@ proc CompressibleFluid::examples::DrawHighRiseBuildingGeometry2D {args} {
 
 
 # Group assign
-proc CompressibleFluid::examples::AssignGroupsHighRiseBuilding2D {args} {
+proc CompressibleFluid::examples::HighRiseBuilding::AssignGroups2D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -77,17 +81,17 @@ proc CompressibleFluid::examples::AssignGroupsHighRiseBuilding2D {args} {
     GiD_Groups edit color InterfaceFluid "#3b3b3bff"
     GiD_EntitiesGroups assign InterfaceFluid lines {2 3 4}
 }
-proc CompressibleFluid::examples::AssignGroupsHighRiseBuilding3D {args} {
+proc CompressibleFluid::examples::HighRiseBuilding::AssignGroups3D {args} {
     # To be implemented
 }
 
 
 # Mesh sizes
-proc CompressibleFluid::examples::AssignHighRiseBuildingMeshSizes3D {args} {
+proc CompressibleFluid::examples::AssignMeshSizes3D {args} {
     # To be implemented
 }
 
-proc CompressibleFluid::examples::AssignHighRiseBuildingMeshSizes2D {args} {
+proc CompressibleFluid::examples::HighRiseBuilding::AssignMeshSizes2D {args} {
     set fluid_mesh_size 30.0
     set walls_mesh_size 30.0
     set building_mesh_size 3.0
@@ -102,11 +106,11 @@ proc CompressibleFluid::examples::AssignHighRiseBuildingMeshSizes2D {args} {
 
 
 # Tree assign
-proc CompressibleFluid::examples::TreeAssignationHighRiseBuilding3D {args} {
+proc CompressibleFluid::examples::HighRiseBuilding::TreeAssignation3D {args} {
     # To be implemented
 }
 
-proc CompressibleFluid::examples::TreeAssignationHighRiseBuilding2D {args} {
+proc CompressibleFluid::examples::HighRiseBuilding::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -157,12 +161,4 @@ proc CompressibleFluid::examples::TreeAssignationHighRiseBuilding2D {args} {
     spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
-}
-
-proc CompressibleFluid::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

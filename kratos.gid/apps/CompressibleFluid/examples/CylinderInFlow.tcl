@@ -1,14 +1,18 @@
+namespace eval CompressibleFluid::examples::CylinderInFlow {
+    namespace path ::CompressibleFluid::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::CompressibleFluid::examples::CylinderInFlow {args} {
+proc ::CompressibleFluid::examples::CylinderInFlow::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawCylinderInFlowGeometry$::Model::SpatialDimension
-    AssignGroupsCylinderInFlow$::Model::SpatialDimension
-    AssignCylinderInFlowMeshSizes$::Model::SpatialDimension
-    TreeAssignationCylinderInFlow$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -18,14 +22,15 @@ proc ::CompressibleFluid::examples::CylinderInFlow {args} {
 
 
 # Draw Geometry
-proc CompressibleFluid::examples::DrawCylinderInFlowGeometry3D {args} {
-    DrawCylinderInFlowGeometry2D
+proc CompressibleFluid::examples::CylinderInFlow::DrawGeometry3D {args} {
+    DrawGeometry2D
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     GiD_Layers edit opaque Fluid 0
 
     GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
-proc CompressibleFluid::examples::DrawCylinderInFlowGeometry2D {args} {
+
+proc CompressibleFluid::examples::CylinderInFlow::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
@@ -66,9 +71,8 @@ proc CompressibleFluid::examples::DrawCylinderInFlowGeometry2D {args} {
 
 }
 
-
 # Group assign
-proc CompressibleFluid::examples::AssignGroupsCylinderInFlow2D {args} {
+proc CompressibleFluid::examples::CylinderInFlow::AssignGroups2D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -90,7 +94,8 @@ proc CompressibleFluid::examples::AssignGroupsCylinderInFlow2D {args} {
     GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
     GiD_EntitiesGroups assign No_Slip_Cylinder lines 5
 }
-proc CompressibleFluid::examples::AssignGroupsCylinderInFlow3D {args} {
+
+proc CompressibleFluid::examples::CylinderInFlow::AssignGroups3D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -113,9 +118,8 @@ proc CompressibleFluid::examples::AssignGroupsCylinderInFlow3D {args} {
     GiD_EntitiesGroups assign No_Slip_Cylinder surfaces 6
 }
 
-
 # Mesh sizes
-proc CompressibleFluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
+proc CompressibleFluid::examples::CylinderInFlow::AssignMeshSizes3D {args} {
     set cylinder_mesh_size 0.005
     set walls_mesh_size 0.05
     set fluid_mesh_size 0.05
@@ -127,7 +131,7 @@ proc CompressibleFluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_mesh_size [GiD_EntitiesGroups get Fluid volumes] escape escape
     Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
-proc CompressibleFluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
+proc CompressibleFluid::examples::CylinderInFlow::AssignMeshSizes2D {args} {
     set cylinder_mesh_size 0.005
     set fluid_mesh_size 0.05
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
@@ -136,13 +140,12 @@ proc CompressibleFluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
     Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
-
 # Tree assign
-proc CompressibleFluid::examples::TreeAssignationCylinderInFlow3D {args} {
-    TreeAssignationCylinderInFlow2D
+proc CompressibleFluid::examples::CylinderInFlow::TreeAssignation3D {args} {
+    TreeAssignation2D
     AddCuts
 }
-proc CompressibleFluid::examples::TreeAssignationCylinderInFlow2D {args} {
+proc CompressibleFluid::examples::CylinderInFlow::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -195,17 +198,3 @@ proc CompressibleFluid::examples::TreeAssignationCylinderInFlow2D {args} {
     spdAux::RequestRefresh
 }
 
-proc CompressibleFluid::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
-}
-
-proc CompressibleFluid::examples::AddCuts { } {
-    # Cuts
-    set results "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
-    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
-    [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
-}
