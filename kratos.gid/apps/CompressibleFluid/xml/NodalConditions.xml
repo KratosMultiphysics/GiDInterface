@@ -1,17 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
 
-  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignVectorVariableProcess" VariableName="VELOCITY" Interval="False" unit_magnitude="Velocity" units="m/s" App="Fluid" ImplementedInApplication="FluidDynamicsApplication">
-
+  <NodalConditionItem n="MOMENTUM" 
+                      pn="Momentum" 
+                      ProcessName="AssignVectorVariableProcess" 
+                      VariableName="MOMENTUM" 
+                      Interval="False" 
+                      unit_magnitude="M/T/L^2" 
+                      units="kg/(s*m^2)" 
+                      App="CompressibleFluid" 
+                      ImplementedInApplication="FluidDynamicsApplication">
     <DefaultValues>
       <value n="constrained" v="0,0,0" state="hidden" />
     </DefaultValues>
   </NodalConditionItem>
 
-  <NodalConditionItem n="PRESSURE" pn="Pressure" ProcessName="AssignScalarVariableProcess" VariableName="PRESSURE" Interval="False" unit_magnitude="P" units="Pa" App="Fluid" ImplementedInApplication="FluidDynamicsApplication">
-
+  <NodalConditionItem n="DENSITY" 
+                      pn="Density" 
+                      ProcessName="AssignScalarVariableProcess" 
+                      VariableName="DENSITY" 
+                      Interval="False" 
+                      unit_magnitude="M/L^3" 
+                      units="kg/m^3" 
+                      App="CompressibleFluid" 
+                      ImplementedInApplication="FluidDynamicsApplication">
     <DefaultValues>
       <value n="constrained" v="0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
+
+  <NodalConditionItem n="TOTAL_ENERGY" 
+                      pn="Total energy" 
+                      ProcessName="AssignScalarVariableProcess" 
+                      VariableName="TOTAL_ENERGY" 
+                      Interval="False" 
+                      unit_magnitude="Energy/M^3" 
+                      units="J/m^3" 
+                      App="CompressibleFluid" 
+                      ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
+
+  <NodalConditionItem n="PRESSURE" 
+                      pn="Pressure" 
+                      ProcessName="AssignScalarVariableProcess" 
+                      VariableName="PRESSURE" 
+                      Interval="False" 
+                      unit_magnitude="Pa" 
+                      units="Pressure" 
+                      App="CompressibleFluid" 
+                      ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
+
+  <NodalConditionItem n="TEMPERATURE" 
+                      pn="Temperature" 
+                      ProcessName="AssignScalarVariableProcess" 
+                      VariableName="TEMPERATURE" 
+                      Interval="False" 
+                      unit_magnitude="Pa" 
+                      units="Temperature" 
+                      App="CompressibleFluid" 
+                      ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
+
+  <NodalConditionItem n="VELOCITY" 
+                      pn="vELOCITY" 
+                      ProcessName="AssignVectorVariableProcess" 
+                      VariableName="VELOCITY" 
+                      Interval="False" 
+                      unit_magnitude="L/T" 
+                      units="m/s" 
+                      App="CompressibleFluid" 
+                      ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0,0,0" state="hidden" />
     </DefaultValues>
   </NodalConditionItem>
 

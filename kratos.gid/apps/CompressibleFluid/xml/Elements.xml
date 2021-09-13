@@ -29,11 +29,13 @@
       <NodalCondition n="DENSITY"/>
       <NodalCondition n="MOMENTUM"/>
       <NodalCondition n="TOTAL_ENERGY"/>
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="TEMPERATURE"/>
+      <NodalCondition n="VELOCITY"/>
     </NodalConditions>
     <inputs>
     </inputs>
     <outputs>
-      <parameter n="VORTICITY" pn="Vorticity" />
     </outputs>
   </ElementItem>
 </ElementList>
