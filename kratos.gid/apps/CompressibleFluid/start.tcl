@@ -22,7 +22,7 @@ proc ::CompressibleFluid::Init { } {
     set attributes [dict create]
 
     set prefix CF
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
+    set ::Model::ValidSpatialDimensions [list 2D]
 
     # Allow to open the tree
     set ::spdAux::TreeVisibility 1
