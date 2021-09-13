@@ -15,9 +15,11 @@
 		<value n="StartTime" pn="Start time" v="0.0" help=""/>
 		<value n="EndTime" pn="End time" v="1" help=""/>
 		<value n="AutomaticDeltaTime" pn="Automatic delta time" un="CFAutomaticDeltaTime" v="No" values="Yes,No" help=""/>
-		<value n="DeltaTime" pn="Delta time" v="0.01" help="User-defined time step" state="[checkStateByUniqueName CFAutomaticDeltaTime No]"/>
-		<value n="CFLNumber" pn="CFL number" v="1" help="Desired CFL number for automatic time step computation" state="[checkStateByUniqueName CFAutomaticDeltaTime Yes]"/>
-		<value n="MinimumDeltaTime" pn="Minimum delta time" v="1e-8" help="Minimum delta time allowed" state="[checkStateByUniqueName CFAutomaticDeltaTime Yes]"/>
-		<value n="MaximumDeltaTime" pn="Maximum delta time" v="1e-3" help="Maximum delta time allowed" state="[checkStateByUniqueName CFAutomaticDeltaTime Yes]"/>
+		<value n="DeltaTime"              pn="Delta time"                     v="0.01" help="User-defined time step"                  state="[checkStateByUniqueName CFAutomaticDeltaTime No]"/>
+		<value n="CFL_Number"             pn="Maximum CFL number"             v="1.0"  help="Maximum Courant–Friedrichs–Lewy allowed" state="[checkStateByUniqueName CFAutomaticDeltaTime Yes]"/>
+		<value n="Viscous_Fourier_number" pn="Maximum viscous Fourier number" v="1.0"  help="Maximum viscous Fourier number allowed"  state="[checkStateByUniqueName CFAutomaticDeltaTime Yes]"/>
+		<value n="Thermal_Fourier_number" pn="Maximum thermal Fourier number" v="1.0"  help="Maximum thermal Fourier number allowed"  state="[checkStateByUniqueName CFAutomaticDeltaTime Yes]"/>
+		<value n="MinimumDeltaTime"       pn="Minimum delta time"             v="1e-8" help="Minimum delta time allowed"              state="[checkStateByUniqueName CFAutomaticDeltaTime Yes]"/>
+		<value n="MaximumDeltaTime"       pn="Maximum delta time"             v="1e-3" help="Maximum delta time allowed"              state="[checkStateByUniqueName CFAutomaticDeltaTime Yes]"/>
 	</container>
 </container>
