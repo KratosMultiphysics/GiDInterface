@@ -63,7 +63,7 @@
                  VariableName="TOTAL_ENERGY" 
                  Interval="Total"
                  units="J/m^3"
-                 unit_magnitude="Energy/M^3">
+                 unit_magnitude="Energy/L^3">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>

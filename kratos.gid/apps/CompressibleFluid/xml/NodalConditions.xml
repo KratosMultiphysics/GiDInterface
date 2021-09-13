@@ -34,7 +34,7 @@
                       ProcessName="AssignScalarVariableProcess" 
                       VariableName="TOTAL_ENERGY" 
                       Interval="False" 
-                      unit_magnitude="Energy/M^3" 
+                      unit_magnitude="Energy/L^3" 
                       units="J/m^3" 
                       App="CompressibleFluid" 
                       ImplementedInApplication="FluidDynamicsApplication">
