@@ -17,7 +17,7 @@
 		<parameter_list>
 			<parameter n="echo_level"        pn="Echo level"               type="combo"  v="0"     values="0,1,2,3" help=""/>
 			<parameter n="compute_reactions" pn="Compute reactions"        type="bool"   v="false" help=""/>
-			<parameter n="shock_capturing"   pn="Shock captuting"          type="double" v="1.0"   help=""/>
+			<parameter n="shock_capturing"   pn="Shock captuting"          type="bool"   v="true"   help=""/>
 			<parameter n="use_oss"           pn="Use orthogonal subscales" type="bool"   v="false" help=""/>
 		</parameter_list>
 
