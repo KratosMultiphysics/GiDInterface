@@ -3,17 +3,17 @@
   <ConditionItem n="Slip2D" 
                  pn="Slip" 
                  ImplementedInFile=".cpp" 
-                 Interval="False" 
                  ImplementedInApplication="CompressibleFluidApplication" 
                  MinimumKratosVersion="9000" 
                  ProductionReady="ProductionReady" 
                  WorkingSpaceDimension="2D" 
                  LocalSpaceDimension="1" 
                  SkinConditions="True" 
-                 App="CompressibleFluid" 
                  ElementType="Line" 
                  ProcessName="ApplySlipProcess" 
-                 help=""
+                 help="Choose non-slip (normal momentum = 0) boundary conditions"
+                 App="CompressibleFluid" 
+                 Interval="False" 
                  GroupBy="Condition">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
@@ -31,14 +31,16 @@
                  ProductionReady="ProductionReady" 
                  WorkingSpaceDimension="2D" 
                  LocalSpaceDimension="1" 
-                 SkinConditions="False" 
+                 SkinConditions="True" 
                  ElementType="Line" 
                  ProcessName="AssignScalarVariableProcess" 
-                 help="Chose a density to enforce at the boundary"
+                 help="Choose a density to enforce at the boundary"
                  App="CompressibleFluid" 
                  VariableName="DENSITY" 
-                 Interval="Total" 
-                 unit_magnitude="M/L^3">
+                 Interval="Total"
+                 units="kg/m^3"
+                 unit_magnitude="M/L^3"
+                 GroupBy="Condition">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -55,15 +57,16 @@
                  ProductionReady="ProductionReady" 
                  WorkingSpaceDimension="2D" 
                  LocalSpaceDimension="1" 
-                 SkinConditions="False" 
+                 SkinConditions="True" 
                  ElementType="Line" 
                  ProcessName="AssignScalarVariableProcess" 
-                 help="Chose a density to enforce at the boundary"
+                 help="Choose a density to enforce at the boundary"
                  App="CompressibleFluid" 
                  VariableName="TOTAL_ENERGY" 
                  Interval="Total"
                  units="J/m^3"
-                 unit_magnitude="Energy/L^3">
+                 unit_magnitude="Energy/L^3"
+                 GroupBy="Condition">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -80,7 +83,7 @@
                  ProductionReady="ProductionReady" 
                  WorkingSpaceDimension="2D" 
                  LocalSpaceDimension="2" 
-                 SkinConditions="False" 
+                 SkinConditions="True" 
                  ElementType="Line" 
                  App="CompressibleFluid" 
                  ProcessName="AssignVectorVariableProcess" 
@@ -88,8 +91,11 @@
                  Interval="Total"
                  VariableName="MOMENTUM" 
                  units="kg/(m^2*s)"
-                 unit_magnitude="M/T/L^2">
-    <TopologyFeatures></TopologyFeatures>
+                 unit_magnitude="M/T/L^2"
+                 GroupBy="Condition">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+    </TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>
     <outputs></outputs>
