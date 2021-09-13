@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Group id="CompressibleFluid" name="Compressible Fluid examples">
-    <Example id="HighRiseBuilding2D" app="CompressibleFluid" logo="HighRiseBuilding2D.png" name="High rise building 2D" dim="2D" cmd="::CompressibleFluid::examples::HighRiseBuilding"/>
-    <Example id="CylinderInFlow2D" app="CompressibleFluid" logo="CylinderInFlow2D.png" name="Cylinder in flow 2D" dim="2D" cmd="::CompressibleFluid::examples::CylinderInFlow"/>
-    <Example id="CylinderInFlow3D" app="CompressibleFluid" logo="CylinderInFlow3D.png" name="Cylinder in flow 3D" dim="3D" cmd="::CompressibleFluid::examples::CylinderInFlow"/>
-</Group>
