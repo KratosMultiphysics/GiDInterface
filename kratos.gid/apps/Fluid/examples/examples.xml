@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Fluid" name="Fluid examples">
-    <Example id="HighRiseBuilding2D" app="Fluid" logo="HighRiseBuilding2D.png" name="High rise building 2D" dim="2D" cmd="::Fluid::examples::HighRiseBuilding::Init"/>
+    <Example id="HighRiseBuilding2D" app="Fluid" logo="HighRiseBuilding2D.png" name="High rise building 2D" dim="2D" cmd="::Fluid::examples::HighRiseBuilding::Init">
+        <Description></Description>
+    </Example>
     <Example id="CylinderInFlow2D" app="Fluid" logo="CylinderInFlow2D.png" name="Cylinder in flow 2D" dim="2D" cmd="::Fluid::examples::CylinderInFlow::Init"/>
     <Example id="CylinderInFlow3D" app="Fluid" logo="CylinderInFlow3D.png" name="Cylinder in flow 3D" dim="3D" cmd="::Fluid::examples::CylinderInFlow::Init"/>
 </Group>
