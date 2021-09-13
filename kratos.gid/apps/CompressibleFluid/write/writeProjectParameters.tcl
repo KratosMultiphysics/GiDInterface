@@ -197,7 +197,7 @@ proc CompressibleFluid::write::getSolverSettingsDict { } {
     dict set solverSettingsDict material_import_settings $materialsDict
 
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict CF_SolStrat CF_Scheme CF_StratParams] ]
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict CompressibleFluid] ]
 
     # Parts
     dict set solverSettingsDict volume_model_part_name {*}[write::getPartsSubModelPartId]
@@ -207,11 +207,6 @@ proc CompressibleFluid::write::getSolverSettingsDict { } {
 
     # No skin parts
     dict set solverSettingsDict no_skin_parts [getNoSkinConditionMeshId]
-
-    # Time scheme settings
-    if {$strategy_type eq "monolithic"} {
-        dict set solverSettingsDict time_scheme [write::getValue CF_Scheme]
-    }
 
     # Time stepping settings
     set timeSteppingDict [dict create]
@@ -225,36 +220,6 @@ proc CompressibleFluid::write::getSolverSettingsDict { } {
         dict set timeSteppingDict "time_step" [write::getValue CF_TimeParameters DeltaTime]
     }
     dict set solverSettingsDict time_stepping $timeSteppingDict
-
-    # For monolithic schemes, set the formulation settings
-    if {$strategy_type eq "monolithic"} {
-        # Create formulation dictionary
-        set formulationSettingsDict [dict create]
-
-        # Set formulation dictionary element type
-        set elements [CompressibleFluid::write::GetUsedElements]
-        if {[llength $elements] ne 1} {error "You must select 1 element"} {set element_name [lindex $elements 0]}
-        set element_type [CompressibleFluid::write::GetMonolithicElementTypeFromElementName $element_name]
-        dict set formulationSettingsDict element_type $element_type
-
-        # Set OSS and remove oss_switch from the original dictionary
-        # It is important to check that there is oss_switch, otherwise the derived apps (e.g. embedded) might crash
-        if {[dict exists $solverSettingsDict oss_switch]} {
-            # Set the oss_switch only in those elements that support it
-            if {$element_type eq "qsvms" || $element_type eq "dvms"} {
-                dict set formulationSettingsDict use_orthogonal_subscales [write::getStringBinaryFromValue [dict get $solverSettingsDict oss_switch]]
-            }
-            # Always remove the oss_switch from the original dictionary
-            dict unset solverSettingsDict oss_switch
-        }
-
-        # Set dynamic tau and remove it from the original dictionary
-        dict set formulationSettingsDict dynamic_tau [dict get $solverSettingsDict dynamic_tau]
-        dict unset solverSettingsDict dynamic_tau
-
-        # Include the formulation settings in the solver settings dict
-        dict set solverSettingsDict formulation $formulationSettingsDict
-    }
 
     return $solverSettingsDict
 }
