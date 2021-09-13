@@ -76,10 +76,10 @@ proc CompressibleFluid::write::getDragProcessList {} {
 proc CompressibleFluid::write::getGravityProcessDict {} {
     set root [customlib::GetBaseRoot]
 
-    set value [write::getValue FLGravity GravityValue]
-    set cx [write::getValue FLGravity Cx]
-    set cy [write::getValue FLGravity Cy]
-    set cz [write::getValue FLGravity Cz]
+    set value [write::getValue CF_Gravity GravityValue]
+    set cx [write::getValue CF_Gravity Cx]
+    set cy [write::getValue CF_Gravity Cy]
+    set cz [write::getValue CF_Gravity Cz]
     #W "Gravity $value on \[$cx , $cy , $cz\]"
     set pdict [dict create]
     dict set pdict "python_module" "assign_vector_by_direction_process"
@@ -178,7 +178,7 @@ proc CompressibleFluid::write::getSolverSettingsDict { } {
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set solverSettingsDict domain_size $nDim
-    set currentStrategyId [write::getValue FLSolStrat "" force]
+    set currentStrategyId [write::getValue CF_SolStrat "" force]
     set strategy [::Model::GetSolutionStrategy $currentStrategyId]
     set strategy_write_name [$strategy getAttribute "ImplementedInPythonFile"]
     set strategy_type [$strategy getAttribute "Type"]
@@ -196,7 +196,7 @@ proc CompressibleFluid::write::getSolverSettingsDict { } {
     dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
 
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict FLSolStrat FLScheme FLStratParams] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict CF_SolStrat CF_Scheme CF_StratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Fluid] ]
 
     # Parts
@@ -210,19 +210,19 @@ proc CompressibleFluid::write::getSolverSettingsDict { } {
 
     # Time scheme settings
     if {$strategy_type eq "monolithic"} {
-        dict set solverSettingsDict time_scheme [write::getValue FLScheme]
+        dict set solverSettingsDict time_scheme [write::getValue CF_Scheme]
     }
 
     # Time stepping settings
     set timeSteppingDict [dict create]
-    set automaticDeltaTime [write::getValue FLTimeParameters AutomaticDeltaTime]
+    set automaticDeltaTime [write::getValue CF_TimeParameters AutomaticDeltaTime]
     dict set timeSteppingDict automatic_time_step $automaticDeltaTime
     if {$automaticDeltaTime eq "Yes"} {
-        dict set timeSteppingDict "CFL_number" [write::getValue FLTimeParameters CFLNumber]
-        dict set timeSteppingDict "minimum_delta_time" [write::getValue FLTimeParameters MinimumDeltaTime]
-        dict set timeSteppingDict "maximum_delta_time" [write::getValue FLTimeParameters MaximumDeltaTime]
+        dict set timeSteppingDict "CFL_number" [write::getValue CF_TimeParameters CFL_Number]
+        dict set timeSteppingDict "minimum_delta_time" [write::getValue CF_TimeParameters MinimumDeltaTime]
+        dict set timeSteppingDict "maximum_delta_time" [write::getValue CF_TimeParameters MaximumDeltaTime]
     } else {
-        dict set timeSteppingDict "time_step" [write::getValue FLTimeParameters DeltaTime]
+        dict set timeSteppingDict "time_step" [write::getValue CF_TimeParameters DeltaTime]
     }
     dict set solverSettingsDict time_stepping $timeSteppingDict
 

@@ -11,13 +11,13 @@ namespace eval CompressibleFluid::write {
 proc CompressibleFluid::write::Init { } {
     # Namespace variables inicialization
 
-    SetAttribute parts_un FLParts
-    SetAttribute nodal_conditions_un FLNodalConditions
-    SetAttribute conditions_un FLBC
-    SetAttribute materials_un FLMaterials
-    SetAttribute results_un FLResults
-    SetAttribute drag_un FLDrags
-    SetAttribute time_parameters_un FLTimeParameters
+    SetAttribute parts_un CF_Parts
+    SetAttribute nodal_conditions_un CF_NodalConditions
+    SetAttribute conditions_un CF_BC
+    SetAttribute materials_un CF_Materials
+    SetAttribute results_un CF_Results
+    SetAttribute drag_un CF_Drags
+    SetAttribute time_parameters_un CF_TimeParameters
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_script_file "KratosFluid.py"
@@ -47,7 +47,7 @@ proc CompressibleFluid::write::writeModelPartEvent { } {
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
-    # Element connectivities (Groups on FLParts)
+    # Element connectivities (Groups on CF_Parts)
     write::writeElementConnectivities
 
     # Nodal conditions and conditions

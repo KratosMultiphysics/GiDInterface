@@ -15,13 +15,13 @@ proc ::CompressibleFluid::Init { } {
     variable kratos_name
     variable app_id
     
-    set app_id Fluid
+    set app_id CompressibleFluid
 
     set kratos_name "FluidDynamicsApplication"
     set dir [apps::getMyDir "CompressibleFluid"]
     set attributes [dict create]
 
-    set prefix COMPF
+    set prefix CF_
     set ::Model::ValidSpatialDimensions [list 2D 3D]
 
     # Allow to open the tree
