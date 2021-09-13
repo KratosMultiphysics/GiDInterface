@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Groups>
     <Group id="FSI" name="Fluid structure interaction examples">
-        <Example id="FSIMokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall::Init"/>
-        <Example id="FSIMokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall::Init"/>
-        <Example id="FSITurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark::Init"/>
-        <Example id="FSIHighRiseBuilding2D" app="FSI" logo="HighRiseBuilding.png" name="High rise building 2D" dim="2D" cmd="::FSI::examples::HighRiseBuilding::Init"/>
+        <Example id="FSIMokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall::Init">
+        <Description></Description>
+    </Example>
+        <Example id="FSIMokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall::Init">
+        <Description></Description>
+    </Example>
+        <Example id="FSITurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark::Init">
+        <Description></Description>
+    </Example>
+        <Example id="FSIHighRiseBuilding2D" app="FSI" logo="HighRiseBuilding.png" name="High rise building 2D" dim="2D" cmd="::FSI::examples::HighRiseBuilding::Init">
+        <Description></Description>
+    </Example>
     </Group>
     <Group id="Fluid">
-        <Example id="FluidMokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall::Init"/>
-        <Example id="FluidMokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall::Init"/>
-        <Example id="FluidTurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark::Init"/>
-        <Example id="FSIHighRiseBuilding2D" app="FSI" logo="HighRiseBuilding.png" name="High rise building 2D" dim="2D" cmd="::FSI::examples::HighRiseBuilding::Init"/>
+        <Example id="FluidMokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall::Init">
+        <Description></Description>
+    </Example>
+        <Example id="FluidMokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall::Init">
+        <Description></Description>
+    </Example>
+        <Example id="FluidTurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark::Init">
+        <Description></Description>
+    </Example>
+        <Example id="FSIHighRiseBuilding2D" app="FSI" logo="HighRiseBuilding.png" name="High rise building 2D" dim="2D" cmd="::FSI::examples::HighRiseBuilding::Init">
+        <Description></Description>
+    </Example>
     </Group>
     <Group id="Structural">
-        <Example id="StructuralMokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall::Init"/>
-        <Example id="StructuralMokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall::Init"/>
-        <Example id="StructuralTurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark::Init"/>
-        <Example id="FSIHighRiseBuilding2D" app="FSI" logo="HighRiseBuilding.png" name="High rise building 2D" dim="2D" cmd="::FSI::examples::HighRiseBuilding::Init"/>
+        <Example id="StructuralMokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall::Init">
+        <Description></Description>
+    </Example>
+        <Example id="StructuralMokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall::Init">
+        <Description></Description>
+    </Example>
+        <Example id="StructuralTurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark::Init">
+        <Description></Description>
+    </Example>
+        <Example id="FSIHighRiseBuilding2D" app="FSI" logo="HighRiseBuilding.png" name="High rise building 2D" dim="2D" cmd="::FSI::examples::HighRiseBuilding::Init">
+        <Description></Description>
+    </Example>
     </Group>
 </Groups>

@@ -247,6 +247,7 @@ oo::class create App {
         set is_tool 0
 
         set properties [dict create ]
+        apps::LoadAppProperties [self]
     }
     
     method activate { } {apps::ActivateApp_do [self]}
@@ -299,38 +300,39 @@ oo::class create App {
     method getWriteProperty {n} {variable properties; if {[dict exists $properties write $n]} {return [dict get $properties write $n]} }
     method getWriteProperties {} {variable properties; return [dict get $properties write} 
 }
-proc apps::ActivateApp_do {app} {
-    # set ::Kratos::must_quit 0
-    set app_name [$app getName]
-    set dir [file join $::Kratos::kratos_private(Path) apps $app_name]
+
+proc apps::LoadAppProperties {app} {
+    set dir [file join $::Kratos::kratos_private(Path) apps [$app getName]]
     set app_definition_file [file join $dir app.json]
     if {[file exists $app_definition_file]} {
         set props [Kratos::ReadJsonDict $app_definition_file]
         $app setProperties $props
-
-        # Load app dependences
-        if {[dict exists $props requeriments apps]} {
-            foreach app_id [dict get $props requeriments apps] {
-                apps::LoadAppById $app_id
-            }
-        }
-
-        # Then load the app files, so we can overwrite functions loaded in dependences
-        if {[dict exists $props script_files]} {
-            foreach source_file [dict get $props script_files] {
-                set fileName [file join $dir $source_file]
-                apps::loadAppFile $fileName
-            }
-        }
-        
-        if {[dict exists $props permissions wizard]} {if {[write::isBooleanTrue [dict get $props permissions wizard]]} { Kratos::LoadWizardFiles }}
-        if {[dict exists $props start_script]} {eval [dict get $props start_script] $app}
-        apps::ApplyAppPreferences $app
     } else {
-        W "MISSING app.json file for app $app_name"
-        set fileName [file join $dir start.tcl]
-        apps::loadAppFile $fileName
+        W "MISSING app.json file for app [$app getName]"
     }
+}
+
+proc apps::ActivateApp_do {app} {
+    set dir [file join $::Kratos::kratos_private(Path) apps [$app getName]]
+    # Load app dependences
+    if {[dict exists [$app getProperty requeriments] apps]} {
+        foreach app_id [dict get [$app getProperty requeriments] apps] {
+            apps::LoadAppById $app_id
+        }
+    }
+
+    # Then load the app files, so we can overwrite functions loaded in dependences
+    if {[$app getProperty script_files] ne ""} {
+        foreach source_file [$app getProperty script_files] {
+            set fileName [file join $dir $source_file]
+            apps::loadAppFile $fileName
+        }
+    }
+    
+    if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }
+    if {[$app getProperty start_script] ne ""} {eval [$app getProperty start_script] $app}
+    apps::ApplyAppPreferences $app
+    
     
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
