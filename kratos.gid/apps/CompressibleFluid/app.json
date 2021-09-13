@@ -5,8 +5,7 @@
     "themed": false,
     "kratos_name": "FluidDynamicsApplication",
     "dimensions": [
-        "2D",
-        "3D"
+        "2D"
     ],
     "script_files": [
         "start.tcl",
