@@ -86,8 +86,8 @@
                  help="Chose a momentum to enforce at the boundary" 
                  Interval="Total"
                  VariableName="MOMENTUM" 
-                 units="kg/s/m^2" 
-                 unit_magnitude="m/t/l^2">
+                 units="kg/(s*m^2)" 
+                 unit_magnitude="M/T/L^2">
     <TopologyFeatures></TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>
