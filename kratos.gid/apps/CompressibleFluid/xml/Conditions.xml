@@ -86,7 +86,7 @@
                  SkinConditions="True" 
                  ElementType="Line" 
                  App="CompressibleFluid" 
-                 ProcessName="AssignVectorVariableToConditionProcess" 
+                 ProcessName="AssignVectorVariableProcess" 
                  help="Choose a momentum to enforce at the boundary" 
                  Interval="Total"
                  VariableName="MOMENTUM" 

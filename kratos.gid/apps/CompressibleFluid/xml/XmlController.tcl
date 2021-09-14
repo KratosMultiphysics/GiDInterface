@@ -7,15 +7,18 @@ proc ::CompressibleFluid::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $::CompressibleFluid::dir
     
+    set FluidXML  "$::Fluid::dir/xml"
+    set CommonXML "../../Common/xml"
+    
     Model::getSolutionStrategies Strategies.xml
-    Model::getElements Elements.xml
-    Model::getMaterials Materials.xml
-    Model::getNodalConditions NodalConditions.xml
-    Model::getConstitutiveLaws ConstitutiveLaws.xml
-    Model::getProcesses "../../Common/xml/Processes.xml"
-    Model::getProcesses Processes.xml
-    Model::getConditions Conditions.xml
-    Model::getSolvers "../../Common/xml/Solvers.xml"
+    Model::getElements           Elements.xml
+    Model::getMaterials          Materials.xml
+    Model::getNodalConditions    NodalConditions.xml
+    Model::getConstitutiveLaws   ConstitutiveLaws.xml
+    Model::getProcesses          "$CommonXML/Processes.xml"
+    Model::getProcesses          "$FluidXML/Processes.xml"
+    Model::getConditions         Conditions.xml
+    Model::getSolvers            "$CommonXML/Solvers.xml"
 }
 
 proc ::CompressibleFluid::xml::getUniqueName {name} {

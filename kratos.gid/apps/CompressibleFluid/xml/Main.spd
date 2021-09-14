@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
   <container n="CompressibleFluid" pn="Compressible Fluid" icon="app" prefix="CF" tree_state="open" open_window="0">
-    <include n="AnalysisType" active="1" path="apps/CompressibleFluid/xml/AnalysisType.spd"/>
-    <include n="Parts" active="1" path="apps/CompressibleFluid/xml/Parts.spd"/>
-    <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
-    <include n="InitialConditions" active="1" path="apps/CompressibleFluid/xml/InitialConditions.spd"/>
-    <include n="BoundaryConditions" active="1" path="apps/CompressibleFluid/xml/BoundaryConditions.spd"/>
-    <include n="SolutionStrategy" active="1" path="apps/CompressibleFluid/xml/SolutionStrategy.spd"/>
-    <include n="Results" active="1" un="CFResults" path="apps/Common/xml/Results.spd"/>
-    <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
-    <include n="Materials" active="1" path="apps/CompressibleFluid/xml/Materials.spd"/>
+    <include n="AnalysisType"        active="1" path="apps/CompressibleFluid/xml/AnalysisType.spd"      />
+    <include n="Parts"               active="1" path="apps/CompressibleFluid/xml/Parts.spd"                         />
+    <include n="Intervals"           active="1" path="apps/Common/xml/Intervals.spd"                    />
+    <include n="InitialConditions"   active="1" path="apps/CompressibleFluid/xml/InitialConditions.spd" />
+    <include n="BoundaryConditions"  active="1" path="apps/CompressibleFluid/xml/BoundaryConditions.spd"/>
+    <include n="SolutionStrategy"    active="1" path="apps/CompressibleFluid/xml/SolutionStrategy.spd"  />
+    <include n="Results"             active="1" path="apps/Common/xml/Results.spd"                       un="CFResults"/>
+    <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"          />
+    <include n="Materials"           active="1" path="apps/CompressibleFluid/xml/Materials.spd"         />
   </container>

@@ -13,10 +13,12 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::CompressibleFluid::Init",
-    "requeriments":{
-        "apps":[],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::CompressibleFluid::Init",
+    "requeriments": {
+        "apps": [
+            "Fluid"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
