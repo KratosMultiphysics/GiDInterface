@@ -3,7 +3,7 @@ namespace eval CompressibleFluid::xml {
     Kratos::AddNamespace [namespace current]
 }
 
-proc CompressibleFluid::xml::Init { } {
+proc ::CompressibleFluid::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $::CompressibleFluid::dir
     
@@ -16,15 +16,16 @@ proc CompressibleFluid::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
-
 }
 
-proc CompressibleFluid::xml::getUniqueName {name} {
+proc ::CompressibleFluid::xml::getUniqueName {name} {
     return [::CompressibleFluid::GetAttribute prefix]${name}
 }
 
-proc CompressibleFluid::xml::CustomTree { args } {
+proc ::CompressibleFluid::xml::CustomTree { args } {
     set root [customlib::GetBaseRoot]
+
+    set results_un [::CompressibleFluid::GetUniqueName "results"]
 
     # Output control in output settings
     spdAux::SetValueOnTreeItem v time CFResults FileLabel
@@ -45,7 +46,7 @@ proc CompressibleFluid::xml::CustomTree { args } {
     }
 }
 
-proc CompressibleFluid::xml::ProcHideIfElement { domNode list_elements } {
+proc ::CompressibleFluid::xml::ProcHideIfElement { domNode list_elements } {
     set element [lindex [CompressibleFluid::write::GetUsedElements] 0]
     if {$element in $list_elements} {return hidden} {return normal}
 }

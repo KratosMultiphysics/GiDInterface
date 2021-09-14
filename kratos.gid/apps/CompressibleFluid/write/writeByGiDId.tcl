@@ -5,7 +5,7 @@ namespace eval CompressibleFluid::write {
     variable FluidConditionMap
 }
 
-proc CompressibleFluid::write::Init { } {
+proc ::CompressibleFluid::write::Init { } {
     # Namespace variables inicialization
 
     InitConditionsMap
@@ -15,15 +15,15 @@ proc CompressibleFluid::write::Init { } {
     SetAttribute materials_un CFMaterials
     SetAttribute drag_un CFDrags
     SetAttribute writeCoordinatesByGroups 0
-    SetAttribute validApps [list "Fluid"]
-    SetAttribute main_script_file "KratosFluid.py"
+    SetAttribute validApps [list "CompressibleFluid"]
+    SetAttribute main_launch_file "KratosFluid.py"
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location json
     FreeConditionsMap
 }
 
 # Events
-proc CompressibleFluid::write::writeModelPartEvent { } {
+proc ::CompressibleFluid::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -50,17 +50,17 @@ proc CompressibleFluid::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     #write::writeBasicSubmodelParts
 }
-proc CompressibleFluid::write::writeCustomFilesEvent { } {
+proc ::CompressibleFluid::write::writeCustomFilesEvent { } {
     # Materials file TODO -> Python script must read from here
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
 
     # Main python script
-    set orig_name [GetAttribute main_script_file]
+    set orig_name [GetAttribute main_launch_file]
     write::CopyFileIntoModel [file join "python" $orig_name ]
     write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
-proc CompressibleFluid::write::Validate {} {
+proc ::CompressibleFluid::write::Validate {} {
     set err ""
     set root [customlib::GetBaseRoot]
 
@@ -78,40 +78,40 @@ proc CompressibleFluid::write::Validate {} {
 }
 
 # MDPA Blocks
-proc CompressibleFluid::write::writeProperties { } {
+proc ::CompressibleFluid::write::writeProperties { } {
     # Begin Properties
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     write::WriteString ""
 }
 
-proc CompressibleFluid::write::writeConditions { } {
+proc ::CompressibleFluid::write::writeConditions { } {
     writeBoundaryConditions
     writeDrags
 }
 
-proc CompressibleFluid::write::writeBoundaryConditions { } {
+proc ::CompressibleFluid::write::writeBoundaryConditions { } {
     set BCUN [GetAttribute conditions_un]
 
     # Write the conditions
-    write::writeConditionsByGiDId $BCUN
+    ::write::writeConditionsByGiDId $BCUN
 
 }
 
-proc CompressibleFluid::write::writeDrags { } {
+proc ::CompressibleFluid::write::writeDrags { } {
     lappend ::Model::NodalConditions [::Model::NodalCondition new Drag]
     write::writeNodalConditions [GetAttribute drag_un]
     Model::ForgetNodalCondition Drag
 }
 
-proc CompressibleFluid::write::writeMeshes { } {
+proc ::CompressibleFluid::write::writeMeshes { } {
     write::writePartSubModelPart
     write::writeNodalConditions [GetAttribute nodal_conditions_un]
     writeConditionsMesh
     #writeSkinMesh
 }
 
-proc CompressibleFluid::write::writeConditionsMesh { } {
+proc ::CompressibleFluid::write::writeConditionsMesh { } {
 
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
@@ -148,7 +148,7 @@ proc CompressibleFluid::write::writeConditionsMesh { } {
     }
 }
 
-# proc CompressibleFluid::write::writeSkinMesh { } {
+# proc ::CompressibleFluid::write::writeSkinMesh { } {
 #     variable FluidConditions
 
 #     set root [customlib::GetBaseRoot]
@@ -174,7 +174,7 @@ proc CompressibleFluid::write::writeConditionsMesh { } {
 #     ::write::writeGroupSubModelPart EXTRA $skinconfgroup "Conditions" $listiniend
 #  }
 
-# proc CompressibleFluid::write::CheckClosedVolume {} {
+# proc ::CompressibleFluid::write::CheckClosedVolume {} {
 #     variable BCUN
 #     set isclosed 1
 
@@ -207,36 +207,36 @@ proc CompressibleFluid::write::writeConditionsMesh { } {
 
 
 
-proc CompressibleFluid::write::GetAttribute {att} {
+proc ::CompressibleFluid::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc CompressibleFluid::write::GetAttributes {} {
+proc ::CompressibleFluid::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc CompressibleFluid::write::SetAttribute {att val} {
+proc ::CompressibleFluid::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc CompressibleFluid::write::AddAttribute {att val} {
+proc ::CompressibleFluid::write::AddAttribute {att val} {
     variable writeAttributes
     dict lappend writeAttributes $att $val
 }
 
-proc CompressibleFluid::write::AddAttributes {configuration} {
+proc ::CompressibleFluid::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc CompressibleFluid::write::AddValidApps {appid} {
+proc ::CompressibleFluid::write::AddValidApps {appid} {
     AddAttribute validApps $appid
 }
 
-proc CompressibleFluid::write::SetCoordinatesByGroups {value} {
+proc ::CompressibleFluid::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
 

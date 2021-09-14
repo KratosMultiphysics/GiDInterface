@@ -3,10 +3,10 @@ proc ::CompressibleFluid::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
     # Problem data
-    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict $CompressibleFluid::app_id]
+    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict [::CompressibleFluid::GetAttribute id]]
 
     # output configuration
-    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $CompressibleFluid::app_id]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict [::CompressibleFluid::GetAttribute id]]
 
     # Solver settings
     set solver_settings_dict [CompressibleFluid::write::getSolverSettingsDict]
@@ -15,8 +15,8 @@ proc ::CompressibleFluid::write::getParametersDict { } {
 
     # Boundary conditions processes
     set processesDict [dict create]
-    dict set processesDict initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    dict set processesDict boundary_conditions_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    dict set processesDict initial_conditions_process_list [write::getConditionsParametersDict [::CompressibleFluid::GetUniqueName nodal_conditions] "Nodal"]
+    dict set processesDict boundary_conditions_process_list [write::getConditionsParametersDict [::CompressibleFluid::GetUniqueName conditions]]
     dict set processesDict gravity [list [getGravityProcessDict] ]
     dict set processesDict auxiliar_process_list [getAuxiliarProcessList]
 
@@ -25,13 +25,13 @@ proc ::CompressibleFluid::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc CompressibleFluid::write::writeParametersEvent { } {
+proc ::CompressibleFluid::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
 
-proc CompressibleFluid::write::getAuxiliarProcessList {} {
+proc ::CompressibleFluid::write::getAuxiliarProcessList {} {
     set process_list [list ]
 
     foreach process [getDragProcessList] {lappend process_list $process}
@@ -39,11 +39,11 @@ proc CompressibleFluid::write::getAuxiliarProcessList {} {
     return $process_list
 }
 
-proc CompressibleFluid::write::getDragProcessList {} {
+proc ::CompressibleFluid::write::getDragProcessList {} {
     set root [customlib::GetBaseRoot]
 
     set process_list [list ]
-    set xp1 "[spdAux::getRoute [GetAttribute drag_un]]/group"
+    set xp1 "[spdAux::getRoute [::CompressibleFluid::GetUniqueName drag]]/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
@@ -73,7 +73,7 @@ proc CompressibleFluid::write::getDragProcessList {} {
 }
 
 # Gravity SubModelParts and Process collection
-proc CompressibleFluid::write::getGravityProcessDict {} {
+proc ::CompressibleFluid::write::getGravityProcessDict {} {
     set root [customlib::GetBaseRoot]
 
     set value [write::getValue CFGravity GravityValue]
@@ -98,10 +98,10 @@ proc CompressibleFluid::write::getGravityProcessDict {} {
 }
 
 # Skin SubModelParts ids
-proc CompressibleFluid::write::getBoundaryConditionMeshId {} {
+proc ::CompressibleFluid::write::getBoundaryConditionMeshId {} {
     set root [customlib::GetBaseRoot]
     set listOfBCGroups [list ]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+    set xp1 "[spdAux::getRoute [::CompressibleFluid::GetUniqueName conditions]]/condition/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
@@ -126,12 +126,12 @@ proc CompressibleFluid::write::getBoundaryConditionMeshId {} {
 }
 
 # No-skin SubModelParts ids
-proc CompressibleFluid::write::getNoSkinConditionMeshId {} {
+proc ::CompressibleFluid::write::getNoSkinConditionMeshId {} {
     set root [customlib::GetBaseRoot]
     set listOfNoSkinGroups [list ]
 
     # Append drag processes model parts names
-    set xp1 "[spdAux::getRoute [GetAttribute drag_un]]/group"
+    set xp1 "[spdAux::getRoute [::CompressibleFluid::GetUniqueName drag]]/group"
     set dragGroups [$root selectNodes $xp1]
     foreach dragGroup $dragGroups {
         set groupName [$dragGroup @n]
@@ -158,7 +158,7 @@ proc CompressibleFluid::write::getNoSkinConditionMeshId {} {
     return $listOfNoSkinGroups
 }
 
-proc CompressibleFluid::write::GetUsedElements {} {
+proc ::CompressibleFluid::write::GetUsedElements {} {
     set root [customlib::GetBaseRoot]
 
     # Get the fluid part
@@ -173,7 +173,7 @@ proc CompressibleFluid::write::GetUsedElements {} {
     return $lista
 }
 
-proc CompressibleFluid::write::getSolverSettingsDict { } {
+proc ::CompressibleFluid::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     set nDim [expr [string range [write::getValue nDim] 0 0]]
@@ -226,7 +226,7 @@ proc CompressibleFluid::write::getSolverSettingsDict { } {
     return $solverSettingsDict
 }
 
-proc CompressibleFluid::write::GetMonolithicElementTypeFromElementName {element_name} {
+proc ::CompressibleFluid::write::GetMonolithicElementTypeFromElementName {element_name} {
     set element [Model::getElement $element_name]
     if {![$element hasAttribute FormulationElementType]} {error "Your monolithic element $element_name need to define the FormulationElementType field"}
     set formulation_element_type [$element getAttribute FormulationElementType]

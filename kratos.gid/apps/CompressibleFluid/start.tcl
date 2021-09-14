@@ -1,6 +1,8 @@
 namespace eval ::CompressibleFluid {
     Kratos::AddNamespace [namespace current]
+
     # Variable declaration
+    variable _app
     variable dir
     
     proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
