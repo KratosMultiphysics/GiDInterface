@@ -25,10 +25,31 @@ class FluidDynamicsAnalysisWithFlush(FluidDynamicsAnalysis):
                 sys.stdout.flush()
                 self.last_flush = now
 
+def CleanUpProjectParameters(parameters):
+    # Unconstraining initial conditions
+    initial_processes = parameters["processes"]["initial_conditions_process_list"]
+    for process in initial_processes:
+        params = process["Parameters"]
+        if params["constrained"].IsArray():
+            params["value"][2].SetDouble(0.0)
+
+            for i in range(3):
+                params["constrained"][i].SetBool(False)
+    
+    # Unconstraining Z-axis in boundary conditions
+    boundary_processes = parameters["processes"]["boundary_conditions_process_list"]
+    for process in boundary_processes:
+        params = process["Parameters"]
+        if params["constrained"].IsArray():
+            params["value"][2].SetDouble(0.0)
+            params["constrained"][2].SetBool(False)
+
 if __name__ == "__main__":
 
     with open("ProjectParameters.json", 'r') as parameter_file:
         parameters = KratosMultiphysics.Parameters(parameter_file.read())
+
+    CleanUpProjectParameters(parameters)
 
     global_model = KratosMultiphysics.Model()
     simulation = FluidDynamicsAnalysisWithFlush(global_model, parameters)
