@@ -13,8 +13,7 @@
                  ProcessName="ApplySlipProcess" 
                  help="Choose non-slip (normal momentum = 0) boundary conditions"
                  App="CompressibleFluid" 
-                 Interval="False" 
-                 GroupBy="Condition">
+                 Interval="False" >
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -39,8 +38,7 @@
                  VariableName="DENSITY" 
                  Interval="Total"
                  units="kg/m^3"
-                 unit_magnitude="M/L^3"
-                 GroupBy="Condition">
+                 unit_magnitude="M/L^3">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -65,8 +63,7 @@
                  VariableName="TOTAL_ENERGY" 
                  Interval="Total"
                  units="J/m^3"
-                 unit_magnitude="Energy/L^3"
-                 GroupBy="Condition">
+                 unit_magnitude="Energy/L^3">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -91,8 +88,7 @@
                  Interval="Total"
                  VariableName="MOMENTUM" 
                  units="kg/(m^2*s)"
-                 unit_magnitude="M/T/L^2"
-                 GroupBy="Condition">
+                 unit_magnitude="M/T/L^2">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
