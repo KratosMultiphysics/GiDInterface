@@ -58,3 +58,6 @@ if __name__ == "__main__":
     global_model = KratosMultiphysics.Model()
     simulation = FluidDynamicsAnalysisWithFlush(global_model, parameters)
     simulation.Run()
+
+    with open("ProjectParameters_as_executed.json", "w+") as f:
+        f.write(parameters.PrettyPrintJsonString())
