@@ -9,16 +9,19 @@ proc ::CompressibleFluid::write::Init { } {
     # Namespace variables inicialization
 
     InitConditionsMap
-    SetAttribute parts_un CFParts
-    SetAttribute nodal_conditions_un CFNodalConditions
-    SetAttribute conditions_un CFBC
-    SetAttribute materials_un CFMaterials
-    SetAttribute drag_un CFDrags
-    SetAttribute writeCoordinatesByGroups 0
+    
+    SetAttribute parts_un                 [::CompressibleFluid::GetUniqueName parts]
+    SetAttribute nodal_conditions_un      [::CompressibleFluid::GetUniqueName nodal_conditions]
+    SetAttribute conditions_un            [::CompressibleFluid::GetUniqueName conditions]
+    SetAttribute materials_un             [::CompressibleFluid::GetUniqueName materials]
+    
     SetAttribute validApps [list "CompressibleFluid"]
-    SetAttribute main_launch_file "KratosFluid.py"
-    SetAttribute materials_file "FluidMaterials.json"
-    SetAttribute properties_location json
+
+    SetAttribute writeCoordinatesByGroups [::CompressibleFluid::GetWriteProperty coordinates]
+    SetAttribute main_launch_file         [::CompressibleFluid::GetAttribute main_launch_file]
+    SetAttribute materials_file           [::CompressibleFluid::GetWriteProperty materials_file]
+    SetAttribute properties_location      [::CompressibleFluid::GetWriteProperty properties_location]
+    
     FreeConditionsMap
 }
 
