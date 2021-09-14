@@ -13,8 +13,14 @@ proc ::CompressibleFluid::xml::Init { } {
     Model::getSolutionStrategies Strategies.xml
     Model::getElements           Elements.xml
     Model::getMaterials          Materials.xml
+
+    Model::ForgetNodalConditions
     Model::getNodalConditions    NodalConditions.xml
+    Model::getNodalConditions    "$FluidXML/NodalConditions.xml"
+    
+    Model::ForgetConstitutiveLaws
     Model::getConstitutiveLaws   ConstitutiveLaws.xml
+    
     Model::getProcesses          "$CommonXML/Processes.xml"
     Model::getProcesses          "$FluidXML/Processes.xml"
     Model::getConditions         Conditions.xml

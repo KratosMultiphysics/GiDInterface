@@ -3,6 +3,5 @@
     <value n="FreeSurface" pn="Free Surface" un="CFFreeSurface" v="No" values="Yes,No" help="Analysis type" state="hidden"/>
     <value n="SolStrat" pn="Solution Strategy" un="CFSolStrat" v="" values="" dict="[GetSolutionStrategies App CompressibleFluid]" actualize_tree="1"/>
     <value n="Scheme" pn="Scheme" un="CFScheme" v="" values="" dict="[GetSchemes]" actualize_tree="1" />
-
 </container>
     
