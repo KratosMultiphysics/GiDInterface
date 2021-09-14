@@ -30,7 +30,6 @@
         "conditions": "CFBC",
         "materials": "CFMaterials",
         "results": "CFResults",
-        "drag": "CFDrags",
         "time_parameters": "CFTimeParameters"
     },
     "write": {
