@@ -25,12 +25,16 @@ class FluidDynamicsAnalysisWithFlush(FluidDynamicsAnalysis):
                 sys.stdout.flush()
                 self.last_flush = now
 
+def HasConstrainedArray(params):
+    return params.Has("constrained") \
+        and params["constrained"].IsArray()
+
 def CleanUpProjectParameters(parameters):
     # Unconstraining initial conditions
     initial_processes = parameters["processes"]["initial_conditions_process_list"]
     for process in initial_processes:
         params = process["Parameters"]
-        if params["constrained"].IsArray():
+        if HasConstrainedArray(params):
             params["value"][2].SetDouble(0.0)
 
             for i in range(3):
@@ -40,7 +44,7 @@ def CleanUpProjectParameters(parameters):
     boundary_processes = parameters["processes"]["boundary_conditions_process_list"]
     for process in boundary_processes:
         params = process["Parameters"]
-        if params["constrained"].IsArray():
+        if HasConstrainedArray(params):
             params["value"][2].SetDouble(0.0)
             params["constrained"][2].SetBool(False)
 
