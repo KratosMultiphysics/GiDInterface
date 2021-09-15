@@ -32,6 +32,10 @@
       <NodalCondition n="PRESSURE"/>
       <NodalCondition n="TEMPERATURE"/>
       <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="MACH"/>
+      <NodalCondition n="ARTIFICIAL_CONDUCTIVITY"/>
+      <NodalCondition n="ARTIFICIAL_BULK_VISCOSITY"/>
+      <NodalCondition n="ARTIFICIAL_DYNAMIC_VISCOSITY"/>
     </NodalConditions>
     <inputs>
     </inputs>
