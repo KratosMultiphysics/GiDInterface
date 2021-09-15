@@ -15,6 +15,7 @@ proc ::CompressibleFluid::xml::Init { } {
     Model::getMaterials          Materials.xml
 
     Model::ForgetNodalConditions
+    Model::getNodalConditions    "$FluidXML/NodalConditions.xml"
     Model::getNodalConditions    NodalConditions.xml
     
     Model::ForgetConstitutiveLaws
