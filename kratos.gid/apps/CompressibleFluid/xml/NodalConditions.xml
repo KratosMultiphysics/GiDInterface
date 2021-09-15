@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
 
-  <NodalConditionItem n="MOMENTUM" 
-                      pn="Momentum" 
-                      ProcessName="AssignVectorVariableProcess" 
-                      VariableName="MOMENTUM" 
-                      Interval="Initial" 
-                      unit_magnitude="M/T/L^2" 
-                      units="kg/(s*m^2)" 
+  <NodalConditionItem n="MOMENTUM"
+                      pn="Momentum"
+                      ProcessName="AssignVectorVariableProcess"
+                      VariableName="MOMENTUM"
+                      Interval="Initial"
+                      unit_magnitude="M/T/L^2"
+                      units="kg/(s*m^2)"
                       App="CompressibleFluid"
                       can_be_initial="true"
                       ImplementedInApplication="FluidDynamicsApplication">
@@ -16,13 +16,13 @@
     </DefaultValues>
   </NodalConditionItem>
 
-  <NodalConditionItem n="DENSITY" 
-                      pn="Density" 
-                      ProcessName="AssignScalarVariableProcess" 
-                      VariableName="DENSITY" 
-                      Interval="Initial" 
-                      unit_magnitude="M/L^3" 
-                      units="kg/m^3" 
+  <NodalConditionItem n="DENSITY"
+                      pn="Density"
+                      ProcessName="AssignScalarVariableProcess"
+                      VariableName="DENSITY"
+                      Interval="Initial"
+                      unit_magnitude="M/L^3"
+                      units="kg/m^3"
                       App="CompressibleFluid"
                       can_be_initial="true"
                       ImplementedInApplication="FluidDynamicsApplication">
@@ -31,13 +31,13 @@
     </DefaultValues>
   </NodalConditionItem>
 
-  <NodalConditionItem n="TOTAL_ENERGY" 
-                      pn="Total energy" 
-                      ProcessName="AssignScalarVariableProcess" 
-                      VariableName="TOTAL_ENERGY" 
-                      Interval="Initial" 
-                      unit_magnitude="Energy/L^3" 
-                      units="J/m^3" 
+  <NodalConditionItem n="TOTAL_ENERGY"
+                      pn="Total energy"
+                      ProcessName="AssignScalarVariableProcess"
+                      VariableName="TOTAL_ENERGY"
+                      Interval="Initial"
+                      unit_magnitude="Energy/L^3"
+                      units="J/m^3"
                       App="CompressibleFluid"
                       can_be_initial="true"
                       ImplementedInApplication="FluidDynamicsApplication">
@@ -46,13 +46,13 @@
     </DefaultValues>
   </NodalConditionItem>
 
-  <NodalConditionItem n="TEMPERATURE" 
-                      pn="Temperature" 
-                      ProcessName="AssignScalarVariableProcess" 
-                      VariableName="TEMPERATURE" 
-                      Interval="False" 
-                      unit_magnitude="Pa" 
-                      units="Temperature" 
+  <NodalConditionItem n="TEMPERATURE"
+                      pn="Temperature"
+                      ProcessName="AssignScalarVariableProcess"
+                      VariableName="TEMPERATURE"
+                      Interval="False"
+                      unit_magnitude="Pa"
+                      units="Temperature"
                       App="CompressibleFluid"
                       can_be_initial="false"
                       ImplementedInApplication="FluidDynamicsApplication">
