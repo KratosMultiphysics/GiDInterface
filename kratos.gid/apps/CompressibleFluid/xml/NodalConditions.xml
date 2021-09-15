@@ -46,7 +46,38 @@
     </DefaultValues>
   </NodalConditionItem>
 
+   <NodalConditionItem n="VELOCITY"
+                       is_historical="False"
+                       pn="Velocity"
+                       ProcessName="AssignVectorVariableProcess"
+                       VariableName="VELOCITY"
+                       Interval="False"
+                       unit_magnitude="Velocity"
+                       units="m/s"
+                       App="Fluid"
+                       ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0,0,0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
+
+  <NodalConditionItem n="PRESSURE"
+                       is_historical="False"
+                       pn="Pressure"
+                       ProcessName="AssignScalarVariableProcess"
+                       VariableName="PRESSURE"
+                       Interval="False"
+                       unit_magnitude="P"
+                       units="Pa"
+                       App="Fluid"
+                       ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
+
   <NodalConditionItem n="TEMPERATURE"
+                      is_historical="False"
                       pn="Temperature"
                       ProcessName="AssignScalarVariableProcess"
                       VariableName="TEMPERATURE"
@@ -62,6 +93,7 @@
   </NodalConditionItem>
 
   <NodalConditionItem n="MACH"
+                      is_historical="False"
                       pn="Mach number"
                       ProcessName="AssignScalarVariableProcess"
                       VariableName="MACH"
@@ -76,6 +108,7 @@
   </NodalConditionItem>
 
   <NodalConditionItem n="SOUND_VELOCITY"
+                      is_historical="False"
                       pn="Sound velocity"
                       ProcessName="AssignScalarVariableProcess"
                       VariableName="SOUND_VELOCITY"
@@ -91,6 +124,7 @@
   </NodalConditionItem>
 
   <NodalConditionItem n="ARTIFICIAL_CONDUCTIVITY"
+                      is_historical="False"
                       pn="Artificial conductivity"
                       ProcessName="AssignScalarVariableProcess"
                       VariableName="ARTIFICIAL_CONDUCTIVITY"
@@ -106,6 +140,7 @@
   </NodalConditionItem>
 
   <NodalConditionItem n="ARTIFICIAL_BULK_VISCOSITY"
+                      is_historical="False"
                       pn="Artificial bulk viscosity"
                       ProcessName="AssignScalarVariableProcess"
                       VariableName="ARTIFICIAL_BULK_VISCOSITY"
@@ -121,6 +156,7 @@
   </NodalConditionItem>
 
   <NodalConditionItem n="ARTIFICIAL_DYNAMIC_VISCOSITY"
+                      is_historical="False"
                       pn="Artificial dynamic viscosity"
                       ProcessName="AssignScalarVariableProcess"
                       VariableName="SOUND_VELOCITY"

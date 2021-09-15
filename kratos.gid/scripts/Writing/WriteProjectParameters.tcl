@@ -489,11 +489,15 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
 
     set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='CutPlanes'\]"
     dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
+    
     set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
     dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]
+    
+    set gid_nodes_nh_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodesNonHistorical'\]"
+    dict set resultDict nodal_nonhistorical_results [GetResultsByXPathList $gid_nodes_nh_xpath]
+
     set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnElement'\]"
     dict set resultDict gauss_point_results [GetResultsByXPathList $gid_elements_xpath]
-    dict set resultDict nodal_nonhistorical_results [list ]
 
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [GetEmptyList]
@@ -534,7 +538,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict output_path                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
-    dict set resultDict nodal_data_value_variables      [list ]
+    dict set resultDict nodal_data_value_variables      [GetResultsList $results_UN OnNodesNonHistorical]
     dict set resultDict element_data_value_variables    [list ]
     dict set resultDict condition_data_value_variables  [list ]
     dict set resultDict gauss_point_variables_extrapolated_to_nodes   [GetResultsList $results_UN OnElement]

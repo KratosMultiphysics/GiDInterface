@@ -647,6 +647,13 @@ proc spdAux::injectNodalConditionsOutputs { basenode args} {
     set args {*}$args
     return [spdAux::injectNodalConditionsOutputs_do $basenode $args]
 }
+
+proc spdAux::injectNodalConditionsOutputsNonhistorical { basenode args} {
+    set args {*}$args
+    return [spdAux::injectNodalConditionsOutputsNonhistorical_do $basenode $args]
+}
+
+
 proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
     set base [$basenode parent]
     set args {*}$args
@@ -657,6 +664,12 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
         set nodal_conditions [::Model::GetNodalConditions $args]
     }
     foreach nc $nodal_conditions {
+
+        if {[$nc getAttribute is_historical] eq "False"} {
+            # Variables are historical by default for backwards compatibility purposes
+            continue
+        }
+
         set n [$nc getName]
         set pn [$nc getPublicName]
         set v [$nc getAttribute v]
@@ -677,6 +690,44 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
     }
     $basenode delete
 }
+
+proc spdAux::injectNodalConditionsOutputsNonhistorical_do { basenode args} {
+    set base [$basenode parent]
+    set args {*}$args
+
+    if {$args eq ""} {
+        set nodal_conditions [::Model::getAllNodalConditions]
+    } {
+        set nodal_conditions [::Model::GetNodalConditions $args]
+    }
+    foreach nc $nodal_conditions {
+
+        if {[$nc getAttribute is_historical] ne "False"} {
+            # Variables are historical by default for backwards compatibility purposes
+            continue
+        }
+
+        set n [$nc getName]
+        set pn [$nc getPublicName]
+        set v [$nc getAttribute v]
+        if {$v eq ""} {set v "Yes"}
+
+        set state [$nc getAttribute state]
+        if {$state eq ""} {set state "CheckNodalConditionState"}
+        set node "<value n='$n' pn='$pn' v='$v' values='Yes,No' state='\[$state $n\]'/>"
+        $base appendXML $node
+        foreach {n1 output} [$nc getOutputs] {
+            set nout [$output getName]
+            set pn [$output getPublicName]
+            set v [$output getAttribute v]
+            if {$v eq ""} {set v "Yes"}
+            set node "<value n='$nout' pn='$pn' v='$v' values='Yes,No' state='\[CheckNodalConditionOutputState $n\]'/>"
+            $base appendXML $node
+        }
+    }
+    $basenode delete
+}
+
 
 proc spdAux::GetBooleanForTree {raw} {
     set goodList [list "Yes" "1" "yes" "ok" "YES" "Ok" "True" "TRUE" "true"]
