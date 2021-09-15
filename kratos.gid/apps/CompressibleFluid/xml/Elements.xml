@@ -37,6 +37,8 @@
       <NodalCondition n="ARTIFICIAL_CONDUCTIVITY"/>
       <NodalCondition n="ARTIFICIAL_BULK_VISCOSITY"/>
       <NodalCondition n="ARTIFICIAL_DYNAMIC_VISCOSITY"/>
+      <NodalCondition n="SHOCK_SENSOR"/>
+      <NodalCondition n="THERMAL_SENSOR"/>
     </NodalConditions>
     <inputs>
     </inputs>

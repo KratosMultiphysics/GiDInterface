@@ -128,8 +128,8 @@
                       is_historical="False"
                       pn="Artificial dynamic viscosity"
                       ProcessName="AssignScalarVariableProcess"
-                      VariableName="SOUND_VELOCITY"
-                      ARTIFICIAL_DYNAMIC_VISCOSITY="False"
+                      VariableName="ARTIFICIAL_DYNAMIC_VISCOSITY"
+                      Interval="False"
                       unit_magnitude="M/(L*T)"
                       units="Pa*s"
                       App="CompressibleFluid"
@@ -140,5 +140,36 @@
     </DefaultValues>
   </NodalConditionItem>
 
+  <NodalConditionItem n="SHOCK_SENSOR"
+                      is_historical="False"
+                      pn="Shock sensor"
+                      ProcessName="AssignScalarVariableProcess"
+                      VariableName="SHOCK_SENSOR"
+                      Interval="False"
+                      unit_magnitude=""
+                      units="Pa*s"
+                      App="CompressibleFluid"
+                      can_be_initial="false"
+                      ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
+
+  <NodalConditionItem n="THERMAL_SENSOR"
+                      is_historical="False"
+                      pn="Thermal sensor"
+                      ProcessName="AssignScalarVariableProcess"
+                      VariableName="THERMAL_SENSOR"
+                      Interval="False"
+                      unit_magnitude=""
+                      units="Pa*s"
+                      App="CompressibleFluid"
+                      can_be_initial="false"
+                      ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
 
 </NodalConditionList>
