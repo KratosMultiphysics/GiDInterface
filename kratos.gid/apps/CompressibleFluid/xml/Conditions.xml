@@ -11,9 +11,31 @@
                  SkinConditions="True" 
                  ElementType="Line" 
                  ProcessName="ApplySlipProcess" 
-                 help="Choose non-slip (normal momentum = 0) boundary conditions"
+                 help="Choose slip (normal momentum = 0) boundary conditions"
                  App="CompressibleFluid" 
                  Interval="False" >
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+    </TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+  <ConditionItem n="NoSlip2D"
+                 pn="Non-slip"
+                 ImplementedInFile=".cpp"
+                 Interval="False"
+                 ImplementedInApplication="FluidApplication"
+                 MinimumKratosVersion="9000"
+                 ProductionReady="ProductionReady"
+                 WorkingSpaceDimension="2D"
+                 LocalSpaceDimension="1"
+                 SkinConditions="True"
+                 App="CompressibleFluid"
+                 ElementType="Line"
+                 ProcessName="ApplyNoSlipProcess"
+                 help="Choose non-slip (momentum = 0) boundary conditions">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
