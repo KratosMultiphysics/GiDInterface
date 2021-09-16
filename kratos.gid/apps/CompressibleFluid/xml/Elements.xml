@@ -37,12 +37,12 @@
       <NodalCondition n="ARTIFICIAL_CONDUCTIVITY"/>
       <NodalCondition n="ARTIFICIAL_BULK_VISCOSITY"/>
       <NodalCondition n="ARTIFICIAL_DYNAMIC_VISCOSITY"/>
-      <NodalCondition n="SHOCK_SENSOR"/>
-      <NodalCondition n="THERMAL_SENSOR"/>
     </NodalConditions>
     <inputs>
     </inputs>
     <outputs>
+      <parameter n="SHOCK_SENSOR" pn="Shock sensor" v="true" />
+      <parameter n="THERMAL_SENSOR" pn="Thermal sensor" v="true" />
     </outputs>
   </ElementItem>
 </ElementList>
