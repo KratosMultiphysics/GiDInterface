@@ -30,5 +30,6 @@
     "write": {
     },
     "main_launch_file": "python/PfemMeltingAnalysisLauncher.py",
-    "examples": ""
+    "examples": "",
+    "description":""
 }
