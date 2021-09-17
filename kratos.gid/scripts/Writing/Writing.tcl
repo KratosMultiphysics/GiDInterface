@@ -683,7 +683,7 @@ proc write::CopyMainScriptFile { } {
             write::CopyFileIntoModel $orig_name
             write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
         } fid] } {
-        W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
+        W "Problem Writing Main launch script \nEvent $fid \nEnd problems"
         return errcode 1
     }
     return $errcode

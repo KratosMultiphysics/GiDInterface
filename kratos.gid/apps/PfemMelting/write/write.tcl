@@ -10,7 +10,6 @@ namespace eval ::PfemMelting::write {
 
 proc ::PfemMelting::write::Init { } {
     Buoyancy::write::Init
-    SetAttribute main_launch_file [::PfemMelting::GetAttribute main_launch_file]
 }
 
 # Events
@@ -20,6 +19,7 @@ proc PfemMelting::write::writeModelPartEvent { } {
 
 proc PfemMelting::write::writeCustomFilesEvent { } {
     Buoyancy::write::writeCustomFilesEvent
+    write::SetConfigurationAttribute main_launch_file [::PfemMelting::GetAttribute main_launch_file]
 }
 
 # Attributes block
