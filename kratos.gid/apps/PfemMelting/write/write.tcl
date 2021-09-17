@@ -10,7 +10,7 @@ namespace eval ::PfemMelting::write {
 
 proc ::PfemMelting::write::Init { } {
     Buoyancy::write::Init
-    SetAttribute main_script_file [::PfemMelting::GetAttribute main_launch_file]
+    SetAttribute main_launch_file [::PfemMelting::GetAttribute main_launch_file]
 }
 
 # Events
