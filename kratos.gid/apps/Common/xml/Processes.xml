@@ -44,7 +44,7 @@
 		</inputs>
 	</Process>
 
-	<Process n="AssignVectorVariableToConditionProcess" pn="Assign a vector variable over a condition " python_module="assign_vector_variable_to_condition_process" kratos_module="KratosMultiphysics" help="This process sets a scalar variable value over a condition">
+	<Process n="AssignVectorVariableToConditionProcess" pn="Assign a vector variable over a condition " python_module="assign_vector_variable_to_conditions_process" kratos_module="KratosMultiphysics" help="This process sets a scalar variable value over a condition">
 		<inputs>
 			<parameter n="constrained" pn="Imposed" type="vector" vectorType="bool" v="1,1,1" />
 			<parameter n="value" pn="Value" type="vector" vectorType="double" function="1" v="0.0,0.0,0.0" has_units="1"/>

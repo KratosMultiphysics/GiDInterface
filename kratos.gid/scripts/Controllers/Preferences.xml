@@ -18,6 +18,7 @@
             <option value='1' label='1'/>
             <option value='2' label='2'/>
         </combobox>
+        <entrywithbutton name="debug_folder" label="Debug path" variable="debug_folder" buttonimage="folder.png" variablemanager='Kratos::ManagePreferences' buttonfunction="OpenBrowserForDirectory" help='Path to the kratos debug folder. This is placed in the launch.json file for debugging' />
     </labelframe>
 </group>
 

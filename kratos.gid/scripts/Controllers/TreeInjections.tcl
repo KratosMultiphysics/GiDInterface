@@ -193,8 +193,8 @@ proc spdAux::injectConditions { basenode args} {
 
 proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } {
     set conds [$basenode parent]
-    set AppUsesIntervals [apps::ExecuteOnApp [GetAppIdFromNode $conds] GetAttribute UseIntervals]
-    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
+    set app_uses_intervals [[apps::getAppById [GetAppIdFromNode $conds]] getPermission "intervals"]
+    if {$app_uses_intervals eq ""} {set app_uses_intervals 0}
     set initial_conds_flag 0
     if {$args ne "{}" && $args ne ""} {
         if {[dict exists {*}$args can_be_initial]} {
@@ -253,7 +253,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
             append node [GetParameterValueString $in $forcedParams $cnd]
         }
         set CondUsesIntervals [$cnd getAttribute "Interval"]
-        if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
+        if {$app_uses_intervals && $CondUsesIntervals ne "False"} {
             set state normal
             if {$initial_conds_flag} {
                 set CondUsesIntervals Initial
@@ -266,9 +266,8 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
     }
 }
 
-proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
+proc spdAux::GetParameterValueString { param forcedParams base} {
     set node ""
-
     set inName [$param getName]
     set pn [$param getPublicName]
     set type [$param getType]
@@ -376,7 +375,14 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
 
             }
             "combo" {
-                append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
+                if {[$param getAttribute "combotype"] eq "material"} {
+                    append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>" 
+                } elseif {[$param getAttribute "combotype"] eq "constitutive_law"} {
+                    append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
+                    append node "<dynamicnode command='spdAux::injectConstitutiveLawsInputs' args='' />" 
+                } else {
+                    append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
+                }
             }
             "bool" {
                 append node [_GetBooleanParameterString $param $inName $pn $v $state $help $show_in_window $base]
@@ -443,10 +449,14 @@ proc spdAux::_GetComboParameterString {param inName pn v state help show_in_wind
     set node ""
 
     set values [$param getValues]
-    set pvalues [spdAux::_StringifyPValues $values [$param getPValues]]
+    if {[string range [$param getPValues] 0 1] ne "\{\["} {
+        set pvalues [spdAux::_StringifyPValues $values [$param getPValues]]
+    } {
+        set pvalues [lindex [$param getPValues] 0]
+    }
     set values [join [$param getValues] ","]
     append node "<value n='$inName' pn='$pn' v='$v' values='$values'"
-    if {[llength [$param getPValues]]} {
+    if {[llength $pvalues]} {
         append node " dict='$pvalues' "
     }
     if {[$param getActualize]} {
@@ -496,9 +506,10 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
     }
     return $ret
 }
+
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    set processeds [list ]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
     spdAux::injectLocalAxesButton $basenode
     foreach obj [concat [Model::GetElements] [Model::GetConstitutiveLaws]] {
         set inputs [$obj getInputs]
@@ -508,6 +519,52 @@ proc spdAux::injectPartInputs { basenode {inputs ""} } {
                 set forcedParams [list state {[PartParamState]} ]
                 if {[$in getActualize]} { lappend forcedParams base $obj }
                 set node [GetParameterValueString $in $forcedParams $obj]
+
+                $base appendXML $node
+                set orig [$base lastChild]
+                set new [$orig cloneNode -deep]
+                $orig delete
+                $base insertBefore $new $basenode
+            }
+        }
+    }
+    $basenode delete
+}
+proc spdAux::injectConstitutiveLawsInputs { basenode {inputs ""} } {
+    set base [$basenode parent]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
+    spdAux::injectLocalAxesButton $basenode
+    foreach obj [Model::GetConstitutiveLaws] {
+        set inputs [$obj getInputs]
+        foreach {inName in} $inputs {
+            if {$inName ni $processeds} {
+                lappend processeds $inName
+                set forcedParams [list state {[PartParamState]} ]
+                if {[$in getActualize]} { lappend forcedParams base $obj }
+                set node [GetParameterValueString $in $forcedParams $obj]
+
+                $base appendXML $node
+                set orig [$base lastChild]
+                set new [$orig cloneNode -deep]
+                $orig delete
+                $base insertBefore $new $basenode
+            }
+        }
+    }
+    $basenode delete
+}
+proc spdAux::injectPartElementInputs { basenode {inputs ""} } {
+    set base [$basenode parent]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
+    spdAux::injectLocalAxesButton $basenode
+    foreach obj [Model::GetElements] {
+        set inputs [$obj getInputs]
+        foreach {inName in} $inputs {
+            if {$inName ni $processeds} {
+                lappend processeds $inName
+                set forcedParams [list state {[PartParamState]} ]
+                if {[$in getActualize]} { lappend forcedParams base $obj }
+                set node [spdAux::GetParameterValueString $in $forcedParams $obj]
 
                 $base appendXML $node
                 set orig [$base lastChild]
@@ -538,6 +595,14 @@ proc spdAux::injectMaterials { basenode args } {
         $base appendXML $matnode
     }
     $basenode delete
+}
+
+proc spdAux::getFromXQueryValue {obj} {
+    set ret [list ]
+    foreach pair $obj {
+        lappend ret [lindex $pair end]
+    }
+    return $ret
 }
 
 proc spdAux::injectLocalAxesButton { basenode } {

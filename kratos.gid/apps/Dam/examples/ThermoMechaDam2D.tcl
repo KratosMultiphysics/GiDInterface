@@ -1,17 +1,22 @@
+namespace eval ::Dam::examples::ThermoMechaDam2D {
+    namespace path ::Dam::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::Dam::examples::ThermoMechaDam2D {args} {
+}
+
+proc ::Dam::examples::ThermoMechaDam2D::Init {args} {
     
-    DrawDamGeometry2D
-    AssignGroupsDam2D
-    AssignDamMeshSizes2D
-    TreeAssignationDam2D
+    DrawGeometry
+    AssignGroups
+    AssignMeshSizes
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
-proc Dam::examples::DrawDamGeometry2D {args} {
+proc ::Dam::examples::ThermoMechaDam2D::DrawGeometry {args} {
     
     Kratos::ResetModel
     GiD_Layers create Dam
@@ -69,7 +74,7 @@ proc Dam::examples::DrawDamGeometry2D {args} {
         
 }
 
-proc Dam::examples::AssignGroupsDam2D {args} {
+proc ::Dam::examples::ThermoMechaDam2D::AssignGroups {args} {
     
     # Create the groups
     GiD_Groups create Dam
@@ -110,7 +115,7 @@ proc Dam::examples::AssignGroupsDam2D {args} {
 
 }
 
-proc Dam::examples::AssignDamMeshSizes2D {args} {
+proc ::Dam::examples::ThermoMechaDam2D::AssignMeshSizes {args} {
 	
     set dam_mesh_size 0.25
     GiD_Process Mescape Meshing AssignSizes Surfaces $dam_mesh_size [GiD_EntitiesGroups get Dam surfaces] escape escape
@@ -119,7 +124,7 @@ proc Dam::examples::AssignDamMeshSizes2D {args} {
 }
 
 # Tree assign
-proc Dam::examples::TreeAssignationDam2D {args} {
+proc ::Dam::examples::ThermoMechaDam2D::TreeAssignation {args} {
 
 	set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]

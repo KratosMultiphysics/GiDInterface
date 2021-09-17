@@ -1,4 +1,7 @@
-namespace eval Dam::write {
+namespace eval ::Dam::write {
+    namespace path ::Dam
+    Kratos::AddNamespace [namespace current]
+    
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable TableDict
@@ -9,7 +12,7 @@ namespace eval Dam::write {
     variable number_tables
 }
 
-proc Dam::write::Init { } {
+proc ::Dam::write::Init { } {
     # Namespace variables inicialization
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
@@ -20,27 +23,23 @@ proc Dam::write::Init { } {
     catch {unset TableDict}
     set TableDict [dict create]
 
-    SetAttribute parts_un DamParts
-    SetAttribute nodal_conditions_un DamNodalConditions
-    SetAttribute conditions_un DamLoads
-    SetAttribute thermal_conditions_un DamThermalLoads
-    SetAttribute materials_un DamMaterials
-    SetAttribute results_un Results
-    SetAttribute time_parameters_un DamTimeParameters
-    SetAttribute writeCoordinatesByGroups 0
-    SetAttribute validApps [list "Dam"]
-    SetAttribute main_script_file "MainKratosDam.py"
-    SetAttribute properties_location mdpa
-    SetAttribute model_part_name "MainModelPart"
-}
+    SetAttribute parts_un [::Dam::GetUniqueName parts]
+    SetAttribute nodal_conditions_un [::Dam::GetUniqueName nodal_conditions]
+    SetAttribute conditions_un [::Dam::GetUniqueName conditions]
+    SetAttribute thermal_conditions_un [::Dam::GetUniqueName thermal_conditions]
+    SetAttribute materials_un [::Dam::GetUniqueName materials]
+    SetAttribute results_un [::Dam::GetUniqueName results]
+    SetAttribute time_parameters_un [::Dam::GetUniqueName time_parameters]
 
-proc Dam::write::writeCustomFilesEvent { } {
-    write::CopyFileIntoModel "python/MainKratosDam.py"
-    write::RenameFileInModel "MainKratosDam.py" "MainKratos.py"
+    SetAttribute writeCoordinatesByGroups [::Dam::GetWriteProperty coordinates]
+    SetAttribute validApps [list "Dam"]
+    SetAttribute main_launch_file [::Dam::GetAttribute main_launch_file]
+    SetAttribute properties_location [::Dam::GetWriteProperty properties_location]
+    SetAttribute model_part_name [::Dam::GetWriteProperty model_part_name]
 }
 
 # MDPA Blocks
-proc Dam::write::writeModelPartEvent { } {
+proc ::Dam::write::writeModelPartEvent { } {
     # Init data
     write::initWriteConfiguration [GetAttributes]
 
@@ -64,7 +63,7 @@ proc Dam::write::writeModelPartEvent { } {
     Dam::write::writeMeshes
 }
 
-proc Dam::write::UpdateMaterials { } {
+proc ::Dam::write::UpdateMaterials { } {
     set matdict [write::getMatDict]
     foreach {mat props} $matdict {
         set constlaw [dict get $props ConstitutiveLaw]
@@ -81,23 +80,23 @@ proc Dam::write::UpdateMaterials { } {
     write::setMatDict $matdict
 }
 
-proc Dam::write::writeConditions { } {
+proc ::Dam::write::writeConditions { } {
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions "DamLoads"]
+    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un]]
     set pairs [lsort -increasing -index end [dict values $ConditionsDictGroupIterators] ]
     set index [lindex [lindex [lsort -integer -index 0 $pairs] end] end]
     if {$index eq ""} {
         set index 0
     }
 
-    set ThermalConditionGroups [write::writeConditions "DamThermalLoads" $index]
+    set ThermalConditionGroups [::write::writeConditions [GetAttribute thermal_conditions_un] $index]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $ThermalConditionGroups]
 
-    set SelfweightConditionGroups [write::writeConditions "DamSelfweight" $index]
+    set SelfweightConditionGroups [::write::writeConditions "DamSelfweight" $index]
     set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $SelfweightConditionGroups]
 }
 
-proc Dam::write::writeMeshes { } {
+proc ::Dam::write::writeMeshes { } {
 
     write::writePartSubModelPart
 
@@ -107,17 +106,15 @@ proc Dam::write::writeMeshes { } {
     }
 
     # Solo Malla , no en conditions
-    writeNodalConditions "DamNodalConditions"
+    writeNodalConditions [GetAttribute nodal_conditions_un]
 
     # A Condition y a meshes-> salvo lo que no tenga topologia
-    writeLoads "DamLoads"
-    writeLoads "DamThermalLoads"
-    writeLoads "DamSelfweight"
+    writeLoads [GetAttribute conditions_un]
+    writeLoads [GetAttribute thermal_conditions_un]
+    writeLoads [GetAttribute nodal_conditions_un]
 }
 
-
-
-proc Dam::write::writeNodalConditions { keyword } {
+proc ::Dam::write::writeNodalConditions { keyword } {
     variable TableDict
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $keyword]/condition/group"
@@ -141,7 +138,7 @@ proc Dam::write::writeNodalConditions { keyword } {
     }
 }
 
-proc Dam::write::writeLoads { baseUN } {
+proc ::Dam::write::writeLoads { baseUN } {
     variable TableDict
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
@@ -165,7 +162,7 @@ proc Dam::write::writeLoads { baseUN } {
     }
 }
 
-proc Dam::write::getVariableNameList {un {condition_type "Condition"}} {
+proc ::Dam::write::getVariableNameList {un {condition_type "Condition"}} {
     set xp1 "[spdAux::getRoute $un]/condition/group"
     set groups [[customlib::GetBaseRoot] selectNodes $xp1]
 
@@ -187,7 +184,7 @@ proc Dam::write::getVariableNameList {un {condition_type "Condition"}} {
     return $variable_list
 }
 
-proc Dam::write::GetTableidFromFileid { filename } {
+proc ::Dam::write::GetTableidFromFileid { filename } {
     variable TableDict
     foreach condid [dict keys $TableDict] {
         foreach groupid [dict keys [dict get $TableDict $condid]] {
@@ -201,7 +198,7 @@ proc Dam::write::GetTableidFromFileid { filename } {
     return 0
 }
 
-proc Dam::write::writeTables { } {
+proc ::Dam::write::writeTables { } {
     variable TableDict
     set printed_tables [list ]
     foreach table [GetPrinTables] {
@@ -224,7 +221,7 @@ proc Dam::write::writeTables { } {
     }
 }
 
-proc Dam::write::writeTables_dev { } {
+proc ::Dam::write::writeTables_dev { } {
 
     set printed_tables [list ]
     foreach table [GetPrinTables_dev] {
@@ -246,14 +243,14 @@ proc Dam::write::writeTables_dev { } {
 }
 
 
-proc Dam::write::GetPrinTables {} {
+proc ::Dam::write::GetPrinTables {} {
 
     set root [customlib::GetBaseRoot]
     FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]
     set listaTablas [list ]
     set listaFiles [list ]
     set num 0
-    set origins [list "DamLoads" "DamThermalLoads" "DamNodalConditions" "DamSelfweight"]
+    set origins [list [GetAttribute conditions_un] [GetAttribute thermal_conditions_un] [GetAttribute nodal_conditions_un] "DamSelfweight"]
     foreach unique_name $origins {
         set xpathCond "[spdAux::getRoute $unique_name]/condition/group/value\[@type='tablefile'\]"
         foreach node [$root selectNodes $xpathCond] {
@@ -282,8 +279,7 @@ proc Dam::write::GetPrinTables {} {
     return $listaTablas
 }
 
-
-proc Dam::write::GetPrinTables_dev { } {
+proc ::Dam::write::GetPrinTables_dev { } {
 
     set root [customlib::GetBaseRoot]
     FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]
@@ -319,17 +315,18 @@ proc Dam::write::GetPrinTables_dev { } {
     return $listaTablas2
 }
 
-
 #-------------------------------------------------------------------------------
 
-proc Dam::write::writeThermalElements {} {
+proc ::Dam::write::writeThermalElements {} {
 
     set ThermalGroups [list]
 
-    set mat_dict [write::getMatDict]
-    foreach part_name [dict keys $mat_dict] {
-        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
-            lappend ThermalGroups $part_name
+    foreach node_part [GetDamPartGroupNodes] {
+        set element_id [write::getValueByNode [$node_part selectNodes "./value\[@n='Element'\]"] ]
+        set element [Model::getElement $element_id]
+        set element_type [$element getAttribute "ElementType"]
+        if {$element_type eq "Solid"} {
+            lappend ThermalGroups [$node_part @n]
         }
     }
 
@@ -355,13 +352,10 @@ proc Dam::write::writeThermalElements {} {
         set old_name_SubModelPart "Thermal_[lindex $ThermalGroups $i]"
         set new_name_SubModelPart [string map {" " "_"} $old_name_SubModelPart]
         dict set ThermalSubModelPartDict [lindex $ThermalGroups $i] SubModelPartName $new_name_SubModelPart
-
     }
-
-
 }
 
-proc Dam::write::writeThermalConnectivities {Group ElemType ElemName ConnectivityType ElementId ElementList} {
+proc ::Dam::write::writeThermalConnectivities {Group ElemType ElemName ConnectivityType ElementId ElementList} {
     set Entities [GiD_EntitiesGroups get $Group elements -element_type $ElemType]
     if {[llength $Entities] > 0} {
         upvar $ElementId MyElementId
@@ -378,7 +372,7 @@ proc Dam::write::writeThermalConnectivities {Group ElemType ElemName Connectivit
     }
 }
 
-proc Dam::write::Triangle2D3Connectivities { ElemId } {
+proc ::Dam::write::Triangle2D3Connectivities { ElemId } {
 
     set ElementInfo [GiD_Mesh get element $ElemId]
     #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
@@ -386,17 +380,16 @@ proc Dam::write::Triangle2D3Connectivities { ElemId } {
 }
 
 
-proc Dam::write::Quadrilateral2D4Connectivities { ElemId } {
+proc ::Dam::write::Quadrilateral2D4Connectivities { ElemId } {
 
     #Note: It is the same for the Tethrahedron3D4
 
     set ElementInfo [GiD_Mesh get element $ElemId]
     #ElementInfo: <layer> <elemtype> <NumNodes> <N1> <N2> ...
-    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5]\
-        [lindex $ElementInfo 6]"
+    return "[lindex $ElementInfo 3] [lindex $ElementInfo 4] [lindex $ElementInfo 5] [lindex $ElementInfo 6]"
 }
 
-proc Dam::write::Hexahedron3D8Connectivities { ElemId } {
+proc ::Dam::write::Hexahedron3D8Connectivities { ElemId } {
 
     #It is the same for Quadrilateral2D8
 
@@ -409,8 +402,7 @@ proc Dam::write::Hexahedron3D8Connectivities { ElemId } {
 
 #-------------------------------------------------------------------------------
 
-
-proc Dam::write::ThermalSubModelPart { } {
+proc ::Dam::write::ThermalSubModelPart { } {
 
     variable ThermalSubModelPartDict
 
@@ -441,7 +433,7 @@ proc Dam::write::ThermalSubModelPart { } {
 
 #-------------------------------------------------------------------------------
 
-proc Dam::write::getSubModelPartThermalNames { } {
+proc ::Dam::write::getSubModelPartThermalNames { } {
 
     set submodelThermalPartsNames [list]
 
@@ -453,31 +445,38 @@ proc Dam::write::getSubModelPartThermalNames { } {
     return $submodelThermalPartsNames
 }
 
+proc ::Dam::write::GetDamPartGroupNodes { } {
+    set nodes [write::getPartsGroupsId node]
+    return $nodes
+}
 
-proc Dam::write::GetAttribute {att} {
+
+proc ::Dam::write::writeCustomFilesEvent { } {
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+}
+
+proc ::Dam::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc Dam::write::GetAttributes {} {
+proc ::Dam::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc Dam::write::SetAttribute {att val} {
+proc ::Dam::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc Dam::write::AddAttribute {att val} {
+proc ::Dam::write::AddAttribute {att val} {
     variable writeAttributes
     dict lappend writeAttributes $att $val
 }
 
-proc Dam::write::AddAttributes {configuration} {
+proc ::Dam::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-
-Dam::write::Init

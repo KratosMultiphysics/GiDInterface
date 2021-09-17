@@ -1,0 +1,49 @@
+{
+    "id": "PfemThermic",
+    "name": "Pfem Thermic",
+    "prefix": "PFEMTHERMIC_",
+    "themed": true,
+    "kratos_name": "PfemThermicDynamicsApplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/ThermicSloshing.tcl",
+        "examples/ThermicConvection.tcl",
+        "examples/ThermicSloshingConvection.tcl",
+        "examples/ThermicDamBreakFSI.tcl",
+        "examples/ThermicCubeDrop.tcl",
+        "examples/ThermicFluidDrop.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::PfemThermic::Init",
+    "requeriments":{
+        "apps":["PfemFluid", "ConvectionDiffusion"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "nodal_conditions": "PFEMFLUID_NodalConditions",
+        "materials": "PFEMFLUID_Materials",
+        "results": "Results",
+        "time_parameters": "PFEMFLUID_TimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "PFEMFluidMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "PfemFluidModelPart"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

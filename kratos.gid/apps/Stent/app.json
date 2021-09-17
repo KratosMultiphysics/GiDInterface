@@ -1,0 +1,30 @@
+{
+    "id": "Stent",
+    "name": "Stent",
+    "prefix": "ST",
+    "themed": false,
+    "kratos_name": "StructuralMechanicsApplication",
+    "dimensions": [
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "wizard/StentGeometry.tcl"
+    ],
+    "start_script": "::Stent::Init",
+    "requeriments": {
+        "apps": [
+            "Structural"
+        ],
+        "minimum_gid_version": "15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": true
+    },
+    "main_launch_file": "../Structural/python/MainKratos.py"
+}

@@ -18,7 +18,9 @@ proc Kratos::DestroyWindows { } {
     spdAux::DestroyWindows
     if {[info exists ::Kratos::kratos_private(UseWizard)] && $::Kratos::kratos_private(UseWizard)} {
         smart_wizard::DestroyWindow
+        catch {destroy $smart_wizard::wizwindow}
     }
+    catch {destroy $smart_wizard::wizwindow}
     ::Kratos::EndCreatePreprocessTBar
 }
 
@@ -150,7 +152,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
@@ -166,6 +168,23 @@ proc Kratos::RegisterEnvironment { } {
     }
 }
 
+proc Kratos::ReadJsonDict {file_path} {
+    set data ""
+    catch {
+        # Try to open the preferences file
+        set fp [open $file_path r]
+        # Read the preferences
+        set data [read $fp]
+        # W $data
+        # Close the file
+        close $fp
+    }
+    if {$data ne ""} {
+        set data [write::json2dict $data]
+    }
+    return $data
+}
+
 proc Kratos::LoadEnvironment { } {
     variable kratos_private
 
@@ -177,13 +196,16 @@ proc Kratos::LoadEnvironment { } {
         set fp [open [Kratos::GetPreferencesFilePath] r]
         # Read the preferences
         set data [read $fp]
+        # W $data
         # Close the file
         close $fp
-    }
-    # Preferences are written in json format
-    foreach {k v} [write::json2dict $data] {
-        # Foreach pair key value, restore it
-        set kratos_private($k) $v
+        
+        # Preferences are written in json format
+        foreach {k v} [write::json2dict $data] {
+            # W "$k $v"
+            # Foreach pair key value, restore it
+            set kratos_private($k) $v
+        }
     }
 }
 
@@ -267,4 +289,35 @@ proc Kratos::GetMeshBasicData { } {
     dict set result nodes [GiD_Info Mesh NumNodes] 
     dict set result is_quadratic [expr [GiD_Info Project Quadratic] && ![GiD_Cartesian get iscartesian] ]
     return $result   
+}
+
+proc ? {question true_val false_val} {
+    return [expr $question ? $true_val : $false_val]
+}
+
+proc Kratos::OpenCaseIn {program} {
+    switch $program {
+        "VSCode" {
+            if {[GiD_Info Project ModelName] eq "UNNAMED"} {W "Save your model first"} {
+                catch {exec code -n [GidUtils::GetDirectoryModel]} msg
+                if {$msg eq {couldn't execute "code": no such file or directory}} {
+                    W "Install Visual Studio Code and add it to your PATH"
+                }
+            }
+        }
+        default {}
+    }
+}
+
+if { ![GidUtils::IsTkDisabled] } {
+    proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {      
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
+        return variable
+    }   
+}
+
+proc Kratos::IsDeveloperMode {} {
+    set is_dev 0
+    if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
+    return $is_dev
 }

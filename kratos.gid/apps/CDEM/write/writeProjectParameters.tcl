@@ -2,26 +2,10 @@
 # Project Parameters
 
 proc CDEM::write::getParametersDict { } {
+    # Get the DEM original json and
     set project_parameters_dict [DEM::write::getParametersDict]
 
-    set ElementType SphericContPartDEMElement3D
-	if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
-	    set dem_strategy "sphere_strategy"
-	} elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
-	    set dem_strategy "continuum_sphere_strategy"
-	} elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
-	   set dem_strategy "thermal_sphere_strategy"
-	} elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
-	   set dem_strategy "thermal_continuum_sphere_strategy"
-	} elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
-	   set dem_strategy "thermal_continuum_sphere_strategy"
-	} elseif {$ElementType eq "IceContPartDEMElement3D"} {
-	   set dem_strategy "ice_continuum_sphere_strategy"
-	}
-
-    dict set project_parameters_dict "solver_settings" "strategy" $dem_strategy
-    dict set project_parameters_dict "ElementType" $ElementType
-
+    # Add advanced options
     dict set project_parameters_dict "DeltaOption"                          [write::getValue AdvOptions DeltaOption]
     dict set project_parameters_dict "SearchTolerance"                      [write::getValue AdvOptions TangencyAbsoluteTolerance]
     dict set project_parameters_dict "CoordinationNumber"                   [write::getValue AdvOptions TangencyCoordinationNumber]
@@ -31,13 +15,13 @@ proc CDEM::write::getParametersDict { } {
     dict set project_parameters_dict "ComputeStressTensorOption"            [write::getValue AdvOptions ComputeStressTensorOption]
     dict set project_parameters_dict "MaxAmplificationRatioOfSearchRadius"  1000
 
+    # Add material testing
     set material_test_parameters_dict [dict create]
     set material_analysis [write::getValue DEMTestMaterial Active]
     if {$material_analysis == "true"} {
         dict set material_test_parameters_dict "TestType"           [write::getValue DEMTestMaterial TestType]
         dict set material_test_parameters_dict "ConfinementPressure" [write::getValue DEMTestMaterial ConfinementPressure]
         dict set material_test_parameters_dict "LoadingVelocity"       [write::getValue DEMTestMaterial LoadVelocity]
-        dict set material_test_parameters_dict "MeshType"           [write::getValue DEMTestMaterial Meshtype]
         dict set material_test_parameters_dict "SpecimenLength"     [write::getValue DEMTestMaterial Specimenlength]
         dict set material_test_parameters_dict "SpecimenDiameter"   [write::getValue DEMTestMaterial Specimendiameter]
         set SpecimenDiameter                                        [write::getValue DEMTestMaterial Specimendiameter]
@@ -51,6 +35,10 @@ proc CDEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
+proc DEM::write::GetDemStrategyName { } {
+    return continuum_sphere_strategy
+}
+
 proc CDEM::write::GetTimeSettings { } {
     return [DEM::write::GetTimeSettings]
 }
@@ -61,5 +49,6 @@ proc CDEM::write::GetGravity { } {
 
 proc CDEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
-    write::WriteJSON [CDEM::write::getParametersDict]
+    set cdem_parameters [CDEM::write::getParametersDict]
+    write::WriteJSON $cdem_parameters
 }

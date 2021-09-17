@@ -35,7 +35,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="Inlet2D" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEM-Inlet2D-Process" help="Assign particle injection conditions" VariableName="INLET">
+  <ConditionItem n="Inlet2D" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -76,7 +76,7 @@
 
   <ConditionItem n="DEM-GraphCondition2D" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
     <TopologyFeatures>
-    <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>

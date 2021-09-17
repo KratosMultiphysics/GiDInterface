@@ -1,9 +1,11 @@
 namespace eval ::DEMPFEM::write {
+    namespace path ::DEMPFEM
+    Kratos::AddNamespace [namespace current]
 }
 
 proc ::DEMPFEM::write::Init { } {    
     
-    SetAttribute main_script_file "MainKratos.py"
+    SetAttribute main_launch_file [GetAttribute main_launch_file]
 
 }
 
@@ -18,15 +20,9 @@ proc DEMPFEM::write::writeModelPartEvent { } {
     DEM::write::writeModelPartEvent
     
 }
-proc DEMPFEM::write::writeCustomFilesEvent { } {
-    SetAttribute main_script_file "MainKratos.py"
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    
-}
 
-proc DEMPFEM::write::WriteMaterialsFile { } {
-    
+proc ::DEMPFEM::write::writeCustomFilesEvent { } {
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc DEMPFEM::write::SetAttribute {att val} {

@@ -1,13 +1,20 @@
-namespace eval Fluid::examples {
-
+namespace eval ::Fluid::examples {
+    namespace path ::Fluid
+    Kratos::AddNamespace [namespace current]
 }
 
-proc Fluid::examples::Init { } {
-    uplevel #0 [list source [file join $::Fluid::dir examples CylinderInFlow.tcl]]
-    uplevel #0 [list source [file join $::Fluid::dir examples HighRiseBuilding.tcl]]
+# Common functions for all examples that uses Fluid App
+proc ::Fluid::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
 
-proc Fluid::examples::UpdateMenus { } {
+proc ::Fluid::examples::AddCuts { } {
+    # Cuts
+    set results "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
+    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
+    [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }
-
-Fluid::examples::Init

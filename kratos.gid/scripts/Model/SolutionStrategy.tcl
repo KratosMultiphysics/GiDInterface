@@ -3,7 +3,7 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval Model {
+namespace eval ::Model {
 # Clase Solution Strategey
 catch {Scheme destroy}
 oo::class create Scheme {

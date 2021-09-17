@@ -4,13 +4,16 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval write {
+namespace eval ::write {
+    Kratos::AddNamespace [namespace current]
+    
     variable mat_dict
     variable submodelparts
     variable MDPA_loop_control
     variable current_configuration
     variable current_mdpa_indent_level
     variable formats_dict
+    variable properties_exclusion_list
 }
 
 proc write::Init { } {
@@ -38,6 +41,8 @@ proc write::Init { } {
     
     variable formats_dict
     set formats_dict [dict create]
+    variable properties_exclusion_list
+    set properties_exclusion_list [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -140,6 +145,15 @@ proc write::writeEvent { filename } {
         W "Total time: [Kratos::Duration $ttime]"
     }
     
+    #### Copy main script file ####
+    if {$errcode eq 0} {
+        Kratos::Log "Write custom event $appid"
+        set errcode [CopyMainScriptFile]
+    }
+
+    #### Debug files for VSCode ####
+    write::writeLaunchJSONFile
+    
     Kratos::Log "Write end $appid in [Kratos::Duration $ttime]"
     return $errcode
 }
@@ -166,7 +180,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
 
     CloseFile
     if {$needsOpen} {OpenFile $filename}
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         if {[catch {eval $wevent} errmsg options] } {
             W $::errorInfo
             set errcode 1
@@ -197,7 +211,7 @@ proc write::writeAppMDPA {appid} {
     CloseFile
     OpenFile $filename
 
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         eval $wevent
     } else {
         if { [catch {eval $wevent} fid] } {
@@ -240,16 +254,6 @@ proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
     return $obj
 }
 
-proc write::getSubModelPartId {cid group} {
-    variable submodelparts
-
-    set find [list $cid ${group}]
-    if {[dict exists $submodelparts $find]} {
-        return [dict get $submodelparts [list $cid ${group}]]
-    } {
-        return 0
-    }
-}
 
 proc write::transformGroupName {groupid} {
     set new_parts [list ]
@@ -492,6 +496,10 @@ proc write::getValueByNode { node {what noforce} } {
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
 }
+proc write::getValueByNodeChild { parent_node child_name {what noforce} } {
+    set node [$parent_node find n $child_name]
+    return [write::getValueByNode $node $what]
+}
 proc write::getValueByXPath { xpath { it "" }} {
     set root [customlib::GetBaseRoot]
     set node [$root selectNodes $xpath]
@@ -645,5 +653,40 @@ proc write::WriteAssignedValues {condNode} {
     return $ret
 }
 
+proc write::writeLaunchJSONFile { } {
+    # Check if developer
+    if {[Kratos::IsDeveloperMode]} {
+        set debug_folder $Kratos::kratos_private(debug_folder)
+
+        # Prepare JSON as dict
+        set json [dict create version "0.2.0"]
+        set n_omp "1"
+        set python_env [dict create OMP_NUM_THREADS $n_omp PYTHONPATH $debug_folder LD_LIBRARY_PATH [file join $debug_folder libs]]
+        set python_configuration [dict create name "python main" type python request launch program MainKratos.py console integratedTerminal env $python_env cwd [GetConfigurationAttribute dir]]
+        set cpp_configuration [dict create name "C++ Attach" type cppvsdbg request attach processId "\${command:pickProcess}"]
+        dict set json configurations [list $python_configuration $cpp_configuration]
+
+        # Print json
+        CloseFile
+        file mkdir [file join [GetConfigurationAttribute dir] .vscode]
+        OpenFile ".vscode/launch.json"
+        write::WriteJSONAsStringFields $json
+        CloseFile
+    }
+}
+
+proc write::CopyMainScriptFile { } {
+    set errcode 0
+    # Main python script
+    if {[catch {
+            set orig_name [write::GetConfigurationAttribute main_launch_file]
+            write::CopyFileIntoModel $orig_name
+            write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+        } fid] } {
+        W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
+        return errcode 1
+    }
+    return $errcode
+}
 
 write::Init

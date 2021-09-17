@@ -28,6 +28,9 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                 "mdpa_format" {
                     set ret 1
                 }
+                "debug_folder" {
+                    set ret ""
+                }
             }
         }
     }

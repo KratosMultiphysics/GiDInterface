@@ -1,21 +1,26 @@
+namespace eval ::DEM::examples::SpheresDrop {
+    namespace path ::DEM::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::DEM::examples::SpheresDrop {args} {
+}
+
+proc ::DEM::examples::SpheresDrop::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometrySpheresDrop
-    AssignToTreeSpheresDrop
-    AssignMeshSizeSpheresDrop
+    DrawGeometry
+    AssignToTree
+    AssignMeshSize
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
-proc ::DEM::examples::DrawGeometrySpheresDrop { } {
+proc ::DEM::examples::SpheresDrop::DrawGeometry { } {
     Kratos::ResetModel
 
     # Draw floor surface
@@ -35,15 +40,15 @@ proc ::DEM::examples::DrawGeometrySpheresDrop { } {
 
     # Group assignation
     GiD_EntitiesGroups assign "Floor" surfaces 1
-    GiD_EntitiesGroups assign "Inlet" -also_lower_entities surfaces 2
-    GiD_EntitiesGroups assign "ClusterInlet" -also_lower_entities surfaces 3
-    GiD_EntitiesGroups assign "Body" -also_lower_entities volumes 1
+    GiD_EntitiesGroups assign "Inlet" surfaces 2
+    GiD_EntitiesGroups assign "ClusterInlet" surfaces 3
+    GiD_EntitiesGroups assign "Body" volumes 1
 }
 
-proc ::DEM::examples::AssignToTreeSpheresDrop { } {
+proc ::DEM::examples::SpheresDrop::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
@@ -90,17 +95,9 @@ proc ::DEM::examples::AssignToTreeSpheresDrop { } {
     spdAux::RequestRefresh
 }
 
-proc DEM::examples::AssignMeshSizeSpheresDrop { } {
+proc ::DEM::examples::SpheresDrop::AssignMeshSize { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape
 }
 
-
-proc DEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
-}

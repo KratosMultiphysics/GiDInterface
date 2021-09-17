@@ -1,0 +1,19 @@
+{
+    "id": "Thermic Launcher",
+    "name": "Thermic",
+    "script_files": [
+        "start.tcl"
+    ],
+    "start_script":"::ThermicLauncher::Init",
+    "requeriments":{
+        "apps_exist":["ConvectionDiffusion", "Buoyancy", "ConjugateHeatTransfer"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": false,
+        "show_toolbar": true,
+        "intervals": false,
+        "wizard": false
+    },
+    "description": "Thermal applications \n-Convection diffusion\n-Buoyancy\n-Conjugate heat transfer"
+}

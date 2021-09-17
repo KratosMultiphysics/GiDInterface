@@ -3,13 +3,14 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval Kratos {
+namespace eval ::Kratos {
     variable kratos_private
 
     variable must_write_calc_data
     variable must_exist_calc_data
 
     variable tmp_init_mesh_time
+    variable namespaces
 }
 
 # Hard minimum GiD Version is 14
@@ -143,6 +144,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(echo_level) 0
     # indent in mdpa files  | 0 ASCII unindented | 1 ASCII indented pretty
     set kratos_private(mdpa_format) 1
+    # kratos debug env for VSCode debug
+    set kratos_private(debug_folder) ""
     # Version of the kratos executable
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
@@ -166,6 +169,9 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(ProjectIsNew) 1
     # Variables from the problemtype definition (kratos.xml)
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+
+    variable namespaces
+    set namespaces [list ]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -187,7 +193,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename]]
     }
     # Common controllers
-    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
+    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl Drawer.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
     }
     # Model class
@@ -298,7 +304,12 @@ proc Kratos::Event_EndProblemtype { } {
 
         # Clear private global variable
         unset -nocomplain ::Kratos::kratos_private
+
     }
+    Drawer::UnregisterAll
+    
+    # Clear namespaces
+    Kratos::DestroyNamespaces
 }
 
 
@@ -308,6 +319,7 @@ proc Kratos::RestoreVariables { } {
     # Restore GiD variables that kratos modified (maybe the mesher...)
     if {[info exists kratos_private(RestoreVars)]} {
         foreach {k v} $kratos_private(RestoreVars) {
+            # W "$k $v"
             set $k $v
         }
     }
@@ -547,4 +559,19 @@ proc Kratos::Quicktest {example_app example_dim example_cmd} {
 
     # And close the windows
     Kratos::DestroyWindows
+}
+
+proc Kratos::AddNamespace { namespace_name } {
+    variable namespaces
+    lappend namespaces $namespace_name
+
+}
+
+proc Kratos::DestroyNamespaces { } {
+    variable namespaces
+
+    foreach name $namespaces {
+        catch {namespace delete $name}
+    }
+    uplevel #0 [list namespace delete ::Kratos]
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="SolStrat" pn="Fluid Solver Settings" un="PFEMFLUID_StratSection" icon="settings" help="Set linear and non-linear solvers" open_window="0">
-    
-    <container n              = "AnalysisType"
+
+	<container n              = "AnalysisType"
 	           pn             = "Analysis type"
 			   icon           = "select"
 			   un             = "PFEMFLUID_AnalysisType"
@@ -9,8 +9,8 @@
 			   actualize_tree = "1"
 			   state          = "normal"
 			   open_window    = "0">
-			   
-        <value n              = "SolutionType"
+
+		<value n              = "SolutionType"
 		       pn             = "Solution type"
 			   icon           = "data"
 			   un             = "PFEMFLUID_SolutionType"
@@ -19,8 +19,8 @@
 			   help           = "Solution type"
 			   actualize_tree = "1"
 			   state          = "[SolutionTypeState]"/>
-			   
-        <value n              = "SolStratCombo"
+
+		<value n              = "SolStratCombo"
 		       pn             = "Solving strategy"
 			   icon           = "data"
 			   un             = "PFEMFLUID_SolStrat"
@@ -30,8 +30,8 @@
 			   dict           = "[GetSolutionStrategiesPFEM]"
 			   actualize_tree = "1"
 			   state          = "[DisableIfUniqueName PFEMFLUID_SolutionType Static]"/>
-			   
-        <value n              = "Scheme"
+
+		<value n              = "Scheme"
 		       pn             = "Scheme"
 			   icon           = "data"
 			   un             = "PFEMFLUID_Scheme"
@@ -40,18 +40,18 @@
 			   dict           = "[GetSchemes]"
 			   state          = "hidden"
 			   actualize_tree = "1"/>
-    </container>
-	
-    <container n           = "StratParams"
+	</container>
+
+	<container n           = "StratParams"
 	           pn          = "Non-linear solver settings"
 			   help        = "Set non-linear solver parameters"
 			   un          = "PFEMFLUID_StratParams"
 			   icon        = "select"
 			   state       = "normal"
 			   open_window = "0">
-        <dynamicnode command="spdAux::injectSolStratParams" args=""/>
-    </container>
-	
-    <dynamicnode command="spdAux::injectSolvers" args=""/>
-	
+		<dynamicnode command="spdAux::injectSolStratParams" args=""/>
+	</container>
+
+	<dynamicnode command="spdAux::injectSolvers" args=""/>
+
 </container>

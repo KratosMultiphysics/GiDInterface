@@ -1,42 +1,24 @@
 namespace eval ::PfemFluid {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
-    variable attributes
-    variable kratos_name
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::PfemFluid::Init { } {
+proc ::PfemFluid::Init { app } {
     # Variable initialization
     variable dir
-    variable attributes
-    variable kratos_name
-    set kratos_name PfemFluidDynamicsApplication
-    
     set dir [apps::getMyDir "PfemFluid"]
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-    set attributes [dict create]
-    dict set attributes UseIntervals 1
-    if {$::Kratos::kratos_private(DevMode) ne "dev"} {error [= "You need to change to Developer mode in the Kratos menu"] }
-    dict set attributes UseRestart 1
-    LoadMyFiles
-}
+    variable _app
+    set _app $app
 
-proc ::PfemFluid::LoadMyFiles { } {
-    variable dir
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-}
-
-
-proc ::PfemFluid::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
+    PfemFluid::xml::Init
+    PfemFluid::write::Init
 }
 
 proc ::PfemFluid::CustomToolbarItems { } {
@@ -57,4 +39,3 @@ proc ::PfemFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "SpacerApp" "" "" ""
 }
 
-::PfemFluid::Init
