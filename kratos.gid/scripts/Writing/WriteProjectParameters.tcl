@@ -545,9 +545,9 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
 proc write::GetDefaultRestartDict { } {
 
     set restartDict [dict create]
-    dict set restartDict SaveRestart False
+    dict set restartDict SaveRestart false
     dict set restartDict RestartFrequency 0
-    dict set restartDict LoadRestart False
+    dict set restartDict LoadRestart false
     dict set restartDict Restart_Step 0
     return $restartDict
 }

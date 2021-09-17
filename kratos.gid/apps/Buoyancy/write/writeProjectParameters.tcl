@@ -9,7 +9,7 @@ proc ::Buoyancy::write::getParametersDict { } {
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
 
     # restart options
-    dict set projectParametersDict restart_options [Buoyancy::write::GetRestart_Dict]
+    dict set projectParametersDict restart_options [::write::GetDefaultRestartDict]
 
     # solver settings
     dict set projectParametersDict solver_settings [Buoyancy::write::GetSolverSettings_Dict]
@@ -52,14 +52,6 @@ proc ::Buoyancy::write::GetProblemData_Dict { } {
     # dict set problemDataDict model_part_name "ThermalModelPart"
 }
 
-proc ::Buoyancy::write::GetRestart_Dict { } {
-
-    set restartDict [dict create]
-    dict set restartDict SaveRestart False
-    dict set restartDict RestartFrequency 0
-    dict set restartDict LoadRestart False
-    dict set restartDict Restart_Step 0
-}
 
 proc ::Buoyancy::write::GetSolverSettings_Dict { } {
     set settings [dict create]

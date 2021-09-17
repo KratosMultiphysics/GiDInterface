@@ -23,11 +23,11 @@ proc ::PfemMelting::Init { app } {
 }
 
 proc ::PfemMelting::BeforeMeshGeneration {elementsize} {
-    ::Buoyancy::BeforeMeshGeneration $elementsize
+    if {[info exists ::Buoyancy::BeforeMeshGeneration]} {::Buoyancy::BeforeMeshGeneration $elementsize}
 }
 
 proc ::PfemMelting::AfterMeshGeneration {fail} {
-    ::Buoyancy::AfterMeshGeneration $fail
+    if {[info exists ::Buoyancy::AfterMeshGeneration]} {::Buoyancy::AfterMeshGeneration $fail}
 }
 
 proc ::PfemMelting::AfterSaveModel {filespd} {

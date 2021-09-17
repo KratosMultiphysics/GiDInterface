@@ -26,8 +26,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set restartDict RestartFrequency 0
     dict set restartDict LoadRestart False
     dict set restartDict Restart_Step 0
-    dict set projectParametersDict restart_options $restartDict
-
+    dict set projectParametersDict restart_options [::write::GetDefaultRestartDict]
 
     return $projectParametersDict
 }

@@ -14,7 +14,7 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     dict set projectParametersDict output_processes [ConjugateHeatTransfer::write::GetOutputProcessesList]
 
     # Restart options
-    dict set projectParametersDict restart_options [write::GetDefaultRestartDict]
+    dict set projectParametersDict restart_options [::write::GetDefaultRestartDict]
 
     # processes
     dict set projectParametersDict processes [ConjugateHeatTransfer::write::GetProcessList]
