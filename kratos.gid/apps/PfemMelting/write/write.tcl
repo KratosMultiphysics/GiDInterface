@@ -1,4 +1,7 @@
 namespace eval ::PfemMelting::write {
+    namespace path ::PfemMelting
+    Kratos::AddNamespace [namespace current]
+
     variable writeAttributes
     variable inletProperties
     variable last_property_id
@@ -7,7 +10,7 @@ namespace eval ::PfemMelting::write {
 
 proc ::PfemMelting::write::Init { } {
     Buoyancy::write::Init
-    SetAttribute main_script_file "PfemMeltingAnalysisLauncher.py"
+    SetAttribute main_script_file [::PfemMelting::GetAttribute main_launch_file]
 }
 
 # Events
@@ -36,5 +39,3 @@ proc PfemMelting::write::AddAttributes {configuration} {
 proc PfemMelting::write::AddValidApps {appid} {
     Buoyancy::write::AddAttribute validApps $appid
 }
-
-PfemMelting::write::Init

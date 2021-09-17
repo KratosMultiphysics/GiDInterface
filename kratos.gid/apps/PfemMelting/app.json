@@ -1,0 +1,34 @@
+{
+    "id": "PfemMelting",
+    "name": "Pfem Melting",
+    "prefix": "PFEMMELTING_",
+    "themed": true,
+    "kratos_name": "PfemMelting",
+    "dimensions": [
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeMDPA_Parts.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::PfemMelting::Init",
+    "requeriments":{
+        "apps":["Buoyancy"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+    },
+    "write": {
+    },
+    "main_launch_file": "python/PfemMeltingAnalysisLauncher.py",
+    "examples": ""
+}

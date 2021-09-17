@@ -1,47 +1,25 @@
 namespace eval ::PfemMelting {
+    Kratos::AddNamespace [namespace current]
+
     # Variable declaration
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
+    variable _app
+    
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::PfemMelting::Init { } {
+proc ::PfemMelting::Init { app } {
     # Variable initialization
     variable dir
-    variable prefix
-    variable kratos_name
-    variable attributes
-
-    set attributes [dict create]
-    set kratos_name PfemMelting
+    variable _app
 
     set dir [apps::getMyDir "PfemMelting"]
-    set prefix PFEMMELTING_
-    set ::spdAux::TreeVisibility 0
+    set _app $app
 
-    apps::LoadAppById "Buoyancy"
-
-    # Intervals
-    dict set attributes UseIntervals 1
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-    
-    #TODO: dimensions?
-    set ::Model::ValidSpatialDimensions [list 3D] 
-
-    LoadMyFiles
-}
-
-proc ::PfemMelting::LoadMyFiles { } {
-    variable dir
-
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    #uplevel #0 [list source [file join $dir examples examples.tcl]]
+    PfemMelting::xml::Init
+    PfemMelting::write::Init
 }
 
 proc ::PfemMelting::BeforeMeshGeneration {elementsize} {
@@ -52,15 +30,7 @@ proc ::PfemMelting::AfterMeshGeneration {fail} {
     ::Buoyancy::AfterMeshGeneration $fail
 }
 
-proc ::PfemMelting::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
-}
-
 proc ::PfemMelting::AfterSaveModel {filespd} {
-    ::Buoyancy::AfterSaveModel $filespd
+    if {[info exists ::Buoyancy::AfterSaveModel]} {::Buoyancy::AfterSaveModel $filespd}
 }
 
-::PfemMelting::Init
