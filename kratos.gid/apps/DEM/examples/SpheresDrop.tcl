@@ -64,7 +64,7 @@ proc ::DEM::examples::SpheresDrop::AssignToTree { } {
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
     set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
-    
+
     # Inlet
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
