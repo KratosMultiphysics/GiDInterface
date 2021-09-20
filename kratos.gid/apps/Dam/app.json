@@ -26,7 +26,8 @@
         "open_tree": true,
         "show_toolbar": true,
         "intervals": true,
-        "wizard": false
+        "wizard": false,
+        "import_files":true
     },
     "unique_names": {
         "parts": "DamParts",
