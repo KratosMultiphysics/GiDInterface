@@ -436,35 +436,6 @@ proc spdAux::GetAppliedGroups { {root ""} } {
     }
     return [lsort -unique $group_list]
 }
-
-proc spdAux::LoadModelFiles { {root "" }} {
-    if {$root eq ""} {
-        set root [customlib::GetBaseRoot]
-        customlib::UpdateDocument
-    }
-    foreach elem [$root getElementsByTagName "file"] {
-        FileSelector::AddFile [$elem @n]
-    }
-}
-
-proc spdAux::SaveModelFile { fileid } {
-    customlib::UpdateDocument
-    FileSelector::AddFile $fileid
-    gid_groups_conds::addF {container[@n='files']} file [list n ${fileid}]
-}
-
-proc spdAux::AddFile { domNode } {
-    FileSelector::InitWindow "spdAux::UpdateFileField" $domNode
-}
-
-proc spdAux::UpdateFileField { fileid domNode} {
-    if {$fileid ne ""} {
-        $domNode setAttribute v $fileid
-        spdAux::SaveModelFile $fileid
-        RequestRefresh 
-    }
-}
-
 proc spdAux::RegisterWindow {window_name} {
     variable list_of_windows
     lappend list_of_windows $window_name
