@@ -1,16 +1,13 @@
 package provide gid_pt_file_manager 1.0
 
 # Usage:
-#     FileSelector::InitWindow W
-#     FileSelector::InitWindow puts
-#     W $::FileSelector::files_to_model
-#     puts W $::FileSelector::files_to_model
-#     FileSelector::CopyFilesIntoModel {E:\TEMP\aaaa}
+    # set FileSelector::callback_after_new_file "PFEM::xml::SaveModelFile"
+    # set FileSelector::callback_view_file "PFEM::xml::ViewFile"
+    # set FileSelector::callback_delete_file "PFEM::xml::DeleteFile"
+    # FileSelector::InitFileHandler
 
 namespace eval ::FileSelector {
 
-    # Kratos modifications on package
-    Kratos::AddNamespace [namespace current]
 
     variable selected_file
     variable save_to_model
@@ -24,7 +21,7 @@ namespace eval ::FileSelector {
     variable callback_delete_file
 }
 
-proc FileSelector::Start {} {
+proc ::FileSelector::Start {} {
     variable selected_file
     set selected_file ""
         
@@ -42,7 +39,7 @@ proc FileSelector::Start {} {
 FileSelector::Start
 
 # PUBLIC FUNCTIONS
-proc FileSelector::InitFileHandler {  } {
+proc ::FileSelector::InitFileHandler {  } {
     
     variable w_list
     catch {destroy $w_list}
@@ -106,9 +103,8 @@ proc FileSelector::InitFileHandler {  } {
     FileSelector::FillFileList
 }
 
-
 # what can be: current or window
-proc FileSelector::DeleteFile { } {
+proc ::FileSelector::DeleteFile { } {
     variable w_list
     variable files_list
     
@@ -126,7 +122,7 @@ proc FileSelector::DeleteFile { } {
     $callback_delete_file $fil
 }
 
-proc FileSelector::ViewFile { } {
+proc ::FileSelector::ViewFile { } {
     variable w_list
     
     set wbase $w_list
@@ -140,7 +136,7 @@ proc FileSelector::ViewFile { } {
     $callback_view_file $fil
 }
 
-proc FileSelector::FillFileList { } {
+proc ::FileSelector::FillFileList { } {
     variable w_list
     variable files_list
     if { [GidUtils::AreWindowsDisabled] } {
@@ -156,13 +152,13 @@ proc FileSelector::FillFileList { } {
     }
 }
 
-proc FileSelector::InitWindow {} {
+proc ::FileSelector::InitWindow {} {
     set ::FileSelector::selected_file ""
     set ::FileSelector::save_to_model 0
     FileSelector::_OpenFileSelector
 }
 
-proc FileSelector::FinishWindow {result} {
+proc ::FileSelector::FinishWindow {result} {
     variable result_proc_name
     variable result_proc_args
     
@@ -193,7 +189,7 @@ proc FileSelector::FinishWindow {result} {
     
 }
 
-proc FileSelector::CopyFilesIntoModel { dir } {
+proc ::FileSelector::CopyFilesIntoModel { dir } {
     variable files_to_model
     # variable files_list
     foreach f $files_to_model {
@@ -204,11 +200,11 @@ proc FileSelector::CopyFilesIntoModel { dir } {
     set files_to_model [list ]
 }
 
-proc FileSelector::GetAllFiles { } {
+proc ::FileSelector::GetAllFiles { } {
     variable files_list
     return $files_list
 }
-proc FileSelector::AddFile { fileid } {
+proc ::FileSelector::AddFile { fileid } {
     variable files_list
     
     if {$fileid ne "" && $fileid ni $files_list} {
@@ -216,13 +212,13 @@ proc FileSelector::AddFile { fileid } {
     }
 }
 
-proc FileSelector::ClearFileList { } {
+proc ::FileSelector::ClearFileList { } {
     variable files_list
     set files_list [list ]
 }
 
 # PRIVATE FUNCTIONS
-proc FileSelector::_OpenFileSelector { } {
+proc ::FileSelector::_OpenFileSelector { } {
     variable w
     ::InitWindow $w [_ "Select a file"] PreFileSelectorWindowGeom FileSelector
     if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
