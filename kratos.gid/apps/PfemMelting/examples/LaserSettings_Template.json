@@ -1,0 +1,26 @@
+{
+    "laser_settings" : {
+        "model_part_name" : "FluidModelPart.Parts_Parts_Auto1",
+        "laser_profile":{
+            "shape": "flat",
+            "radius": 0.0005,
+            "power": 5.0
+        },
+        "direction": [0.0, 0.0, -1.0],
+        "path": [
+            {
+                "time": 0.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            {
+                "time": 1.0,
+                "x": 1.0,
+                "y": 1.0,
+                "z": 0.0
+            }
+        ]
+    }
+}
+
