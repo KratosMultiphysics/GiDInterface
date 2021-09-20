@@ -329,6 +329,7 @@ proc apps::ActivateApp_do {app} {
         }
     }
     
+    if {[write::isBooleanTrue [$app getPermission import_files]]} { Kratos::LoadImportFiles }
     if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }
     if {[$app getProperty start_script] ne ""} {eval [$app getProperty start_script] $app}
     apps::ApplyAppPreferences $app
