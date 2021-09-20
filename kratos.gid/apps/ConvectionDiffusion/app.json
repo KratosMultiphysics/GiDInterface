@@ -38,7 +38,7 @@
         "materials_file": "ConvectionDiffusionMaterials.json",
         "properties_location": "json",
         "model_part_name": "ThermalModelPart",
-        "output_model_part_name": "thermal_computing_domain"
+        "output_model_part_name": ""
     },
     "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"
