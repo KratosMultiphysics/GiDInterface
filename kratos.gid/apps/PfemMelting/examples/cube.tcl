@@ -69,15 +69,20 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     set props [list Element QSVMS3D ConstitutiveLaw Newtonian3DLaw]
     spdAux::SetValuesOnBaseNode $fluid_node $props
 
-    # Laser
+    # Laser file into model
     set laser_filename "LaserSettings_Template.json"
     set laser_filename_origin [file join $PfemMelting::dir examples $laser_filename]
-    
     set laser_filename [::FileSelector::_ProcessFile $laser_filename_origin]
     ::spdAux::SaveModelFile $laser_filename
+    # Laser condition
     variable group_bottom
     set laser_xpath [spdAux::getRoute [::ConvectionDiffusion::GetUniqueName conditions]]
     set laser_node [customlib::AddConditionGroupOnXPath "$laser_xpath/condition\[@n='LaserPath'\]" $group_bottom]
     set props [list laser_path $laser_filename]
     spdAux::SetValuesOnBaseNode $laser_node $props
+
+    # Set ambient temperature
+    set parameters [list ambient_temperature 293.16 gravity "0.0,0.0,-9.81"]
+    set boussinesq_temperature_xpath [spdAux::getRoute [::PfemMelting::xml::getUniqueName Boussinesq]]
+    spdAux::SetValuesOnBasePath $boussinesq_temperature_xpath $parameters
 }
