@@ -9,8 +9,8 @@
       <parameter n="ARRHENIUS_COEFFICIENT" pn="Arrhenius coefficient" v="0.0" unit_magnitude="1/T" units="1/s"/>
       <parameter n="ACTIVATION_ENERGY" pn="Activation energy" v="0.0" unit_magnitude="Energy/Amount_of_substance" units="J/mol"/>
       <parameter n="HEAT_OF_VAPORIZATION" pn="Heat of vaporization" v="0.0" unit_magnitude="Energy/M" units="J/kg"/>
-      <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
-      <parameter n="CONVECTIVE_HEAT_TRANSFER_COEFFICIENT" pn="Convective heat transfer coefficient" v="4.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/>
+      <!-- <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
+      <parameter n="CONVECTIVE_HEAT_TRANSFER_COEFFICIENT" pn="Convective heat transfer coefficient" v="4.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/> -->
     </inputs>
   </Material>
   <Material n="Water" MaterialType="Fluid" help="Water physical properties">
@@ -22,8 +22,8 @@
       <parameter n="ARRHENIUS_COEFFICIENT" pn="Arrhenius coefficient" v="0.0" unit_magnitude="1/T" units="1/s"/>
       <parameter n="ACTIVATION_ENERGY" pn="Activation energy" v="0.0" unit_magnitude="Energy/Amount_of_substance" units="J/mol"/>
       <parameter n="HEAT_OF_VAPORIZATION" pn="Heat of vaporization" v="0.0" unit_magnitude="Energy/M" units="J/kg"/>
-      <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
-      <parameter n="CONVECTIVE_HEAT_TRANSFER_COEFFICIENT" pn="Convective heat transfer coefficient" v="4.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/>
+      <!-- <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
+      <parameter n="CONVECTIVE_HEAT_TRANSFER_COEFFICIENT" pn="Convective heat transfer coefficient" v="4.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/> -->
     </inputs>
   </Material>
 </Materials>
