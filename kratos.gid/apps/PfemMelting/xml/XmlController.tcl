@@ -11,7 +11,7 @@ proc PfemMelting::xml::Init { } {
     # Model::getElements ElementsC.xml
     Model::ForgetCondition HeatFlux3D
     Model::ForgetCondition ImposedTemperature3D
-    # Model::getConditions Conditions.xml
+    Model::getConditions Conditions.xml
     Model::ForgetConstitutiveLaws
     Model::getConstitutiveLaws ConstitutiveLaws.xml
     Model::ForgetMaterials
