@@ -164,14 +164,11 @@ proc ::FileSelector::FinishWindow {result} {
     
     if {$result} {
         variable save_to_model
-        variable files_to_model
         variable selected_file
         variable files_list
         
         if {$save_to_model} {
-            lappend files_to_model $selected_file
-            set selected_file [file join . [file tail $selected_file] ]
-            
+            set selected_file [::FileSelector::_ProcessFile $selected_file]
         }
         variable callback_after_new_file
         if {$callback_after_new_file ne ""} {$callback_after_new_file $selected_file}
@@ -218,6 +215,13 @@ proc ::FileSelector::ClearFileList { } {
 }
 
 # PRIVATE FUNCTIONS
+proc ::FileSelector::_ProcessFile {mfile} {
+    variable files_to_model
+    lappend files_to_model $mfile
+    set selected_file [file join . [file tail $mfile] ]
+    return $selected_file
+}
+
 proc ::FileSelector::_OpenFileSelector { } {
     variable w
     ::InitWindow $w [_ "Select a file"] PreFileSelectorWindowGeom FileSelector
