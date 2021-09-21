@@ -296,7 +296,7 @@ oo::class create App {
     method getPermission {n} {variable properties; if {[dict exists $properties permissions $n]} {return [dict get $properties permissions $n]} }
     method getPermissions {} {variable properties; return [dict get $properties permissions]} 
     method getUniqueName {n} {variable properties; if {[dict exists $properties unique_names $n]} {return [dict get $properties unique_names $n]} }
-    method getUniqueNames {} {variable properties; return [dict get $properties unique_names} 
+    method getUniqueNames {} {variable properties; return [dict get $properties unique_names]} 
     method getWriteProperty {n} {variable properties; if {[dict exists $properties write $n]} {return [dict get $properties write $n]} }
     method getWriteProperties {} {variable properties; return [dict get $properties write} 
 }
