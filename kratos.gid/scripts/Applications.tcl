@@ -328,6 +328,7 @@ proc apps::ActivateApp_do {app} {
             apps::loadAppFile $fileName
         }
     }
+    set ::apps::activeApp $app
     
     if {[write::isBooleanTrue [$app getPermission import_files]]} { Kratos::LoadImportFiles }
     if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }

@@ -40,6 +40,8 @@ proc ::Buoyancy::xml::getUniqueName {name} {
 proc ::Buoyancy::xml::CustomTree { args } {
     spdAux::parseRoutes
 
+    set prev_active_app [apps::getActiveApp]
+
     apps::setActiveAppSoft Fluid
     Fluid::xml::CustomTree
 
@@ -54,4 +56,6 @@ proc ::Buoyancy::xml::CustomTree { args } {
     
     # Hide Fluid gravity -> Boussinesq
     spdAux::SetValueOnTreeItem state hidden FLGravity
+
+    apps::setActiveAppSoft $prev_active_app
 }
