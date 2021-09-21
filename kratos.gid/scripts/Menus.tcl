@@ -41,9 +41,12 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
     Kratos::ToolbarAddItem "Run" "run.png" {Utilities Calculate} [= "Run the simulation"]
     Kratos::ToolbarAddItem "Output" "output.png" [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" "stop.png" {Utilities CancelProcess} [= "Cancel process"]
-    Kratos::ToolbarAddItem "SpacerApp" "" "" ""
+    Kratos::ToolbarAddItem "SpacerApp1" "" "" ""
+    if {[info exists kratos_private(UseFiles)] && $kratos_private(UseFiles) == 1} {
+        Kratos::ToolbarAddItem "Files" "files.png" [list -np- spdAux::LaunchFileWindow] [= "File handler window"]   
+    }
     Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]   
-    Kratos::ToolbarAddItem "SpacerApp" "" "" ""
+    Kratos::ToolbarAddItem "SpacerApp2" "" "" ""
     
     set app_items_toolbar [apps::ExecuteOnCurrentApp CustomToolbarItems]
     if {$app_items_toolbar < 1} {
