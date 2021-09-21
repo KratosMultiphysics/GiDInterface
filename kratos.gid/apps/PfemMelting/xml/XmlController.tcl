@@ -9,7 +9,8 @@ proc PfemMelting::xml::Init { } {
     Model::InitVariables dir $::PfemMelting::dir
     #Model::ForgetElements
     # Model::getElements ElementsC.xml
-    #Model::ForgetConditions
+    Model::ForgetCondition HeatFlux3D
+    Model::ForgetCondition ImposedTemperature3D
     # Model::getConditions Conditions.xml
     Model::ForgetConstitutiveLaws
     Model::getConstitutiveLaws ConstitutiveLaws.xml
@@ -35,6 +36,8 @@ proc PfemMelting::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden CNVDFFBodyForce 
     spdAux::SetValueOnTreeItem pn "Environment settings" PFEMMELTING__Boussinesq  
     
+    spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
+    spdAux::SetValueOnTreeItem state disabled GiDOptions GiDMultiFileFlag
 
     # Delete this lines when heat conditions are back!
     # spdAux::SetValueOnTreeItem state hidden CNVDFFBC HeatFlux3D

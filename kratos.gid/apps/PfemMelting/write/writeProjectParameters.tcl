@@ -8,6 +8,8 @@ proc ::PfemMelting::write::getParametersDict { } {
     # Move fluid material settings
     dict set project_parameters_dict problem_data material_settings [dict get $project_parameters_dict solver_settings fluid_solver_settings material_import_settings]
     dict unset project_parameters_dict solver_settings fluid_solver_settings material_import_settings
+    # Add InitialTemperature process using Parts submodelpart
+    # Copy Ambient temperature to the processes
 
     return $project_parameters_dict
 }
