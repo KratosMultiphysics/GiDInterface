@@ -9,6 +9,7 @@
     <link path="apps/Buoyancy/examples/examples.xml"/>
     <link path="apps/ConjugateHeatTransfer/examples/examples.xml"/>
     <link path="apps/ConvectionDiffusion/examples/examples.xml"/>
+    <link path="apps/PfemMelting/examples/examples.xml"/>
     <!-- DEM -->
     <link path="apps/DEM/examples/examples.xml"/>
     <link path="apps/CDEM/examples/examples.xml"/>

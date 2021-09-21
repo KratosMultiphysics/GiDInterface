@@ -12,7 +12,9 @@
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeMDPA_Parts.tcl",
-        "write/writeProjectParameters.tcl"
+        "write/writeProjectParameters.tcl",
+        "examples/examples.tcl",
+        "examples/cube.tcl"
     ],
     "start_script":"::PfemMelting::Init",
     "requeriments":{

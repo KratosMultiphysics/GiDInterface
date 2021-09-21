@@ -40,7 +40,7 @@ proc ::Buoyancy::xml::getUniqueName {name} {
 proc ::Buoyancy::xml::CustomTree { args } {
     spdAux::parseRoutes
 
-    set prev_active_app [apps::getActiveApp]
+    set prev_active_app [[apps::getActiveApp] getName]
 
     apps::setActiveAppSoft Fluid
     Fluid::xml::CustomTree
