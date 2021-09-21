@@ -34,7 +34,7 @@ proc PfemMelting::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden FLBC VelocityConstraints3D
     spdAux::SetValueOnTreeItem pn "Fixed velocity boundary" FLBC NoSlip3D
     spdAux::SetValueOnTreeItem state hidden CNVDFFBodyForce 
-    spdAux::SetValueOnTreeItem pn "Environment settings" PFEMMELTING__Boussinesq  
+    spdAux::SetValueOnTreeItem pn "Environment settings" [getUniqueName Boussinesq]
     
     spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem state disabled GiDOptions GiDMultiFileFlag
@@ -48,6 +48,6 @@ proc PfemMelting::xml::CustomTree { args } {
 proc PfemMelting::xml::MultiAppEvent {args} {
     if {$args eq "init"} {
         spdAux::parseRoutes
-        spdAux::ConvertAllUniqueNames Buoyancy [::PfemMelting::GetAttribute prefix]
+        spdAux::ConvertAllUniqueNames [::Buoyancy::GetAttribute prefix] [::PfemMelting::GetAttribute prefix]
     }
 }

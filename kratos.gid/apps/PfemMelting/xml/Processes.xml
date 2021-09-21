@@ -2,6 +2,7 @@
 <ProcessList>
   <Process n="Laser-Path-Process" pn="Define bonded domains" python_module=" " kratos_module="KratosMultiphysics" >
     <inputs>
+        <parameter n="laser_path" pn="Laser path filename" type="file" v=""/>
     </inputs>
   </Process>
 </ProcessList>

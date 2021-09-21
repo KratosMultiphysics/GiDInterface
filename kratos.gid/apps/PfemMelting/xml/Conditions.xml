@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
 
-    <ConditionItem n="LaserPath" pn="Laser" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication"
+    <ConditionItem n="LaserPath" pn="Laser" ImplementedInFile=".cpp" ImplementedInApplication="ConvectionDiffusionApplication"
                    MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2"
-                   SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="PfemMelting" ElementType="Surface" ProcessName="AssignScalarVariableProcess"
-                   help="Applies an external thermal load" function="0" Intervals="0">
+                   SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="PfemMelting" ElementType="Surface" ProcessName="Laser-Path-Process"
+                   help="Applies an external thermal load" function="0" Interval="False" >
         <TopologyFeatures>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>

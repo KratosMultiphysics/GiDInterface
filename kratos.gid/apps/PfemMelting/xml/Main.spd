@@ -12,7 +12,7 @@
     <container n="ConvectionDiffusion" pn="Thermal" icon="app" prefix="CNVDFF" tree_state="open" open_window="0">
         <include n="StageInfo" active="1" path="apps/ConvectionDiffusion/xml/StageInfo.spd"  state="hidden"/>
         <include n="BoundaryConditions" active="1" path="apps/ConvectionDiffusion/xml/BoundaryConditions.spd"/>
-        <include n="Laser" active="1" path="apps/PfemMelting/xml/Laser.spd"/>
+        <!-- <include n="Laser" active="1" path="apps/PfemMelting/xml/Laser.spd"/> -->
         <include n="SolutionStrategy" active="1" path="apps/Buoyancy/xml/SolutionStrategyConvectionDiffusion.spd"/>
         <include n="Materials" active="0" path="apps/ConvectionDiffusion/xml/Materials.spd"/>
     </container>
