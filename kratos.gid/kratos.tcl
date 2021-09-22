@@ -310,6 +310,8 @@ proc Kratos::Event_EndProblemtype { } {
 
     }
     Drawer::UnregisterAll
+
+    apps::ExecuteOnCurrentApp EndEvent
     
     # Clear namespaces
     Kratos::DestroyNamespaces

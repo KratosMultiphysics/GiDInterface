@@ -10,16 +10,19 @@ namespace eval ::PfemMelting::LaserTracker {
 
     variable steps_set
     set steps_set [list ]
+
 }
 
 proc ::PfemMelting::LaserTracker::Start { } {
     variable status
-    if {$status} {set status 0;TurnOff} {set status 1;TurnOn}
+    if {$status} {TurnOff} {TurnOn}
     GiD_Process 'Redraw
 }
 
 
 proc ::PfemMelting::LaserTracker::TurnOn { } {
+    variable status
+    set status 1
     variable functions
     variable steps_set
     set steps_set [list ]
@@ -88,10 +91,16 @@ proc ::PfemMelting::LaserTracker::MyRedrawProcedure { } {
 
 proc ::PfemMelting::LaserTracker::TurnOff { } {
     variable functions
+    variable status
+    set status 0
 
     foreach function $functions {
         catch {GiD_OpenGL unregister $function}
     }
 
     set functions [list ]
+}
+
+proc ::PfemMelting::EndEvent {} {
+    ::PfemMelting::LaserTracker::TurnOff
 }
