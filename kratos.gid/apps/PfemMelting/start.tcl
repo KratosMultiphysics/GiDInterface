@@ -34,3 +34,8 @@ proc ::PfemMelting::AfterSaveModel {filespd} {
     if {[info exists ::Buoyancy::AfterSaveModel]} {::Buoyancy::AfterSaveModel $filespd}
 }
 
+proc ::PfemMelting::CustomToolbarItems { } {
+    variable dir
+    
+    Kratos::ToolbarAddItem "LaserTracker" "laser-gun-icon.png" [list -np- ::PfemMelting::LaserTracker::Start] [= "Laser tracker"]
+}

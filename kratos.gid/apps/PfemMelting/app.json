@@ -14,7 +14,8 @@
         "write/writeMDPA_Parts.tcl",
         "write/writeProjectParameters.tcl",
         "examples/examples.tcl",
-        "examples/cube.tcl"
+        "examples/cube.tcl",
+        "scripts/laser_tracker.tcl"
     ],
     "start_script":"::PfemMelting::Init",
     "requeriments":{
