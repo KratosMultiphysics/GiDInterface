@@ -1,0 +1,48 @@
+{
+    "id": "DAM",
+    "name": "DAM",
+    "prefix": "Dam",
+    "themed": false,
+    "kratos_name": "DamApplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/ThermoMechaDam2D.tcl",
+        "examples/ThermoMechaDam3D.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::Dam::Init",
+    "requeriments":{
+        "apps":[],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "DamParts",
+        "nodal_conditions": "DamNodalConditions",
+        "conditions": "DamLoads",
+        "thermal_conditions": "DamThermalLoads",
+        "materials": "DamMaterials",
+        "results": "Results",
+        "time_parameters": "DamTimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "FluidMaterials.json",
+        "properties_location": "mdpa",
+        "model_part_name": "MainModelPart"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

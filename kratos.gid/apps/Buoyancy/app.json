@@ -1,0 +1,37 @@
+{
+    "id": "Buoyancy",
+    "name": "Buoyancy",
+    "prefix": "Buoyancy_",
+    "themed": false,
+    "kratos_name": "Buoyancyapplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/HeatedSquare.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::Buoyancy::Init",
+    "requeriments":{
+        "apps":["Fluid", "ConvectionDiffusion"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "write": {
+        "coordinates": "all",
+        "properties_location": "json",
+        "model_part_name": "ThermalModelPart"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

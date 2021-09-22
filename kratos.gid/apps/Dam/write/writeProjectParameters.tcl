@@ -1,6 +1,6 @@
 ### Project Parameters
 
-proc Dam::write::getParametersDict { } {
+proc ::Dam::write::getParametersDict { } {
 
     variable number_tables
     set number_tables 0
@@ -41,7 +41,7 @@ proc Dam::write::getParametersDict { } {
 }
 
 # This process is the responsible of writing files
-proc Dam::write::writeParametersEvent { } {
+proc ::Dam::write::writeParametersEvent { } {
 
     set projectParametersDict [Dam::write::getParametersDict]
     write::WriteJSON $projectParametersDict
@@ -57,7 +57,7 @@ proc Dam::write::writeParametersEvent { } {
     }
 }
 
-proc Dam::write::GetProblemDataDict { } {
+proc ::Dam::write::GetProblemDataDict { } {
     ### Create section
     set problemDataDict [dict create]
     set damTypeofProblem [write::getValue DamTypeofProblem]
@@ -106,7 +106,7 @@ proc Dam::write::GetProblemDataDict { } {
     return $problemDataDict
 }
 
-proc Dam::write::GetSolverSettingsDict { } {
+proc ::Dam::write::GetSolverSettingsDict { } {
     set solversettingsDict [dict create]
 
     set damTypeofProblem [write::getValue DamTypeofProblem]
@@ -336,16 +336,19 @@ proc Dam::write::GetSolverSettingsDict { } {
 }
 
 # This process returns a dict of domains according input parameters in the solvers
-proc Dam::write::DefinitionDomains { } {
+proc ::Dam::write::DefinitionDomains { } {
 
     ### Boundary conditions processes
     set domainsDict [dict create]
     set body_part_list [list ]
     set joint_part_list [list ]
     set mat_dict [write::getMatDict]
-    foreach part_name [dict keys $mat_dict] {
-        if {[[Model::getElement [dict get $mat_dict $part_name Element]] getAttribute "ElementType"] eq "Solid"} {
-            lappend body_part_list [write::getSubModelPartId Parts $part_name]
+    foreach node_part [GetDamPartGroupNodes] {
+        set element_id [write::getValueByNode [$node_part selectNodes "./value\[@n='Element'\]"] ]
+        set element [Model::getElement $element_id]
+        set element_type [$element getAttribute "ElementType"]
+        if {$element_type eq "Solid"} {
+            lappend body_part_list [write::getSubModelPartId Parts [$node_part @n]]
         }
     }
     dict set domainsDict problem_domain_sub_model_part_list [write::getSubModelPartNames "DamParts"]
@@ -368,7 +371,7 @@ proc Dam::write::DefinitionDomains { } {
 
 
 # This process assign a number for the different tables instead of names (this is for matching with .mdpa)
-proc Dam::write::ChangeFileNameforTableid { processList } {
+proc ::Dam::write::ChangeFileNameforTableid { processList } {
 
     # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
     variable number_tables
@@ -414,7 +417,7 @@ proc Dam::write::ChangeFileNameforTableid { processList } {
 
 
 # This process is used to define new list of Output configuratino parameters
-proc Dam::write::GetOutputDict { {appid ""} } {
+proc ::Dam::write::GetOutputDict { {appid ""} } {
 
     set outputDict [dict create]
     set resultDict [dict create]
@@ -458,7 +461,7 @@ proc Dam::write::GetOutputDict { {appid ""} } {
 
 
 # This process is used for checking if the user is interested on streamlines
-proc Dam::write::StremalinesUtility {} {
+proc ::Dam::write::StremalinesUtility {} {
 
     set nodalList [write::GetResultsList NodalResults]
     if {[lsearch $nodalList Vi_POSITIVE] >= 0 || [lsearch $nodalList Viii_POSITIVE] >= 0} {
@@ -470,7 +473,7 @@ proc Dam::write::StremalinesUtility {} {
 }
 
 # appid Dam solStratUN DamSolStrat problem_base_UN DamMechanicalData
-proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {problem_base_UN ""}} {
+proc ::Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {problem_base_UN ""}} {
 
     #W "Params -> $appid $solStratUN $problem_base_UN"
     set solstratName [write::getValue $solStratUN]
@@ -523,7 +526,7 @@ proc Dam::write::getSolversParametersDict { {appid "Dam"} {solStratUN ""} {probl
 }
 
 # This process write the construction in process in case is selected
-proc Dam::write::GetConstructionDomainProcessDict { } {
+proc ::Dam::write::GetConstructionDomainProcessDict { } {
 
     set construction_dict [dict create]
     set data_basenode [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute "DamConstructionProcess"]]
@@ -581,7 +584,7 @@ proc Dam::write::GetConstructionDomainProcessDict { } {
 }
 
 # This process write the transfer results process in case is selected
-proc Dam::write::GetTransferResultsDict { } {
+proc ::Dam::write::GetTransferResultsDict { } {
     set transfer_results_dict [dict create]
     set consider_save_intermediate_variables [write::getValue DamSaveResults SaveIntermediateResults]
     if {$consider_save_intermediate_variables eq "Yes"} {
@@ -696,7 +699,7 @@ proc Dam::write::GetTransferResultsDict { } {
 
 
 # This process writes a dictionary for creating new projectparameters exclusively for solving selfweight problem
-proc Dam::write::getParametersSelfWeight { } {
+proc ::Dam::write::getParametersSelfWeight { } {
 
     set projectParametersDictSelfWeight [dict create]
     set solversettingsDict [dict create]
@@ -747,7 +750,7 @@ proc Dam::write::getParametersSelfWeight { } {
 }
 
 # Predefined solver values for selfweight problem
-proc Dam::write::predefinedParametersSelfWeight { } {
+proc ::Dam::write::predefinedParametersSelfWeight { } {
 
     set solverSelfParametersDict [dict create]
     dict set solverSelfParametersDict solution_type "Quasi-Static"
@@ -782,7 +785,7 @@ proc Dam::write::predefinedParametersSelfWeight { } {
 }
 
 # This process filters Nodal constraints for selfweight problem
-proc Dam::write::filteringConstraints { processList} {
+proc ::Dam::write::filteringConstraints { processList} {
 
     set returnList [list ]
     foreach nodalProcess $processList {
@@ -794,7 +797,7 @@ proc Dam::write::filteringConstraints { processList} {
     return $returnList
 }
 
-proc Dam::write::DevicesOutput { } {
+proc ::Dam::write::DevicesOutput { } {
 
     set output_state [write::getValue DamOutputState]
     set lista [list ]
@@ -851,7 +854,7 @@ proc Dam::write::DevicesOutput { } {
 
 }
 
-proc Dam::write::TemperaturebyDevices { } {
+proc ::Dam::write::TemperaturebyDevices { } {
 
     # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
     variable number_tables

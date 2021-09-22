@@ -1,18 +1,22 @@
-namespace eval FluidDEM::xml {
+namespace eval ::FluidDEM::xml {
     # Namespace variables declaration
+    namespace path ::FluidDEM
+    Kratos::AddNamespace [namespace current]
     variable dir
 }
 
-proc FluidDEM::xml::Init { } {
+proc ::FluidDEM::xml::Init { } {
     # Namespace variables initialization
     variable dir
-    Model::InitVariables dir $FluidDEM::dir
+    Model::InitVariables dir $::FluidDEM::dir
 
-    Model::ForgetElement SphericPartDEMElement3D
+    Model::ForgetElements
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies [file join ".." ".." DEM xml "Strategies.xml"]
+    Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
-    Model::getSolutionStrategies Strategies.xml
 
     # Get the inlet condition
     set inlet_cnd [Model::getCondition "Inlet"]
@@ -25,24 +29,23 @@ proc FluidDEM::xml::Init { } {
     # Change the inlet injector element type
     set inlet_element_type_param [$inlet_process getInputPn InletElementType]
     if {$inlet_element_type_param ne ""} {
-	$inlet_element_type_param setValues "SphericSwimmingParticle3D"
-	$inlet_element_type_param setPValues "Spheres"
-	$inlet_element_type_param setDv "SphericSwimmingParticle3D"
+        $inlet_element_type_param setValues "SphericSwimmingParticle3D"
+        $inlet_element_type_param setPValues "Spheres"
+        $inlet_element_type_param setDv "SphericSwimmingParticle3D"
     }
-
 
     set element [::Model::getElement "SphericPartDEMElement3D"]
     $element addInputDone $parameter
     spdAux::parseRoutes
 }
 
-proc FluidDEM::xml::getUniqueName {name} {
+proc ::FluidDEM::xml::getUniqueName {name} {
     return ${::FluidDEM::prefix}${name}
 }
 
-proc FluidDEM::xml::CustomTree { args } {
-    DEM::xml::CustomTree
-    Fluid::xml::CustomTree
+proc ::FluidDEM::xml::CustomTree { args } {
+    ::DEM::xml::CustomTree
+    ::Fluid::xml::CustomTree
     spdAux::parseRoutes
     set root [customlib::GetBaseRoot]
 
@@ -61,11 +64,6 @@ proc FluidDEM::xml::CustomTree { args } {
 
 
     spdAux::SetValueOnTreeItem state hidden DEMResults
-    # spdAux::SetValueOnTreeItem state hidden DEMGraphs
-    # spdAux::SetValueOnTreeItem state hidden DEMResults DEM-OTimeStepType
-    # spdAux::SetValueOnTreeItem state hidden DEMResults DEM-OTimeStepDetail
-    # spdAux::SetValueOnTreeItem state hidden DEMResults GiDOptions
-    # spdAux::SetValueOnTreeItem state hidden DEMResults PartElem
 
     spdAux::SetValueOnTreeItem state normal FLParts Element
     spdAux::SetValueOnTreeItem dict {[GetElements ElementType "Fluid"]} FLParts Element
@@ -92,7 +90,7 @@ proc FluidDEM::xml::CustomTree { args } {
 
 }
 
-proc FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
+proc ::FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
     set names [list ]
     set dem_hydrodynamic_law_nodes [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute "DEMFluidHydrodynamicLaw"]/blockdata"]
     foreach hydro_law $dem_hydrodynamic_law_nodes {
@@ -105,5 +103,3 @@ proc FluidDEM::xml::ProcGetHydrodynamicLaws {domNode args} {
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
     return $values
 }
-
-FluidDEM::xml::Init

@@ -1,11 +1,16 @@
+namespace eval ::ConvectionDiffusion::examples::HeatedSquare {
+    namespace path ::ConvectionDiffusion::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::ConvectionDiffusion::examples::HeatedSquare {args} {
+}
+
+proc ::ConvectionDiffusion::examples::HeatedSquare::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawSquareGeometry$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
     AssignGroups$::Model::SpatialDimension
     TreeAssignation$::Model::SpatialDimension
 
@@ -17,15 +22,15 @@ proc ::ConvectionDiffusion::examples::HeatedSquare {args} {
 
 
 # Draw Geometry
-proc ConvectionDiffusion::examples::DrawSquareGeometry3D {args} {
+proc ::ConvectionDiffusion::examples::HeatedSquare::DrawGeometry3D {args} {
     # DrawSquareGeometry2D
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
-    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
 
-proc ConvectionDiffusion::examples::DrawSquareGeometry2D {args} {
+proc ::ConvectionDiffusion::examples::HeatedSquare::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
@@ -54,7 +59,7 @@ proc ConvectionDiffusion::examples::DrawSquareGeometry2D {args} {
 
 
 # Group assign
-proc ConvectionDiffusion::examples::AssignGroups2D {args} {
+proc ::ConvectionDiffusion::examples::HeatedSquare::AssignGroups2D {args} {
     # Create the groups
     GiD_Groups create Body
     GiD_Groups edit color Body "#26d1a8ff"
@@ -77,7 +82,7 @@ proc ConvectionDiffusion::examples::AssignGroups2D {args} {
     GiD_EntitiesGroups assign Bottom_Wall lines 4
 
 }
-proc ConvectionDiffusion::examples::AssignGroups3D {args} {
+proc ::ConvectionDiffusion::examples::HeatedSquare::AssignGroups3D {args} {
     # Create the groups
     # GiD_Groups create Fluid
     # GiD_Groups edit color Fluid "#26d1a8ff"
@@ -101,11 +106,11 @@ proc ConvectionDiffusion::examples::AssignGroups3D {args} {
 }
 
 # Tree assign
-proc ConvectionDiffusion::examples::TreeAssignation3D {args} {
+proc ::ConvectionDiffusion::examples::HeatedSquare::TreeAssignation3D {args} {
     # TreeAssignationCylinderInFlow2D
     # AddCuts
 }
-proc ConvectionDiffusion::examples::TreeAssignation2D {args} {
+proc ::ConvectionDiffusion::examples::HeatedSquare::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 

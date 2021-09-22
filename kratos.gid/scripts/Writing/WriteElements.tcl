@@ -20,8 +20,9 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
     set write_properties_in mdpa
     if {[GetConfigurationAttribute properties_location] ne ""} {set write_properties_in [GetConfigurationAttribute properties_location]}
     set group [get_domnode_attribute $gNode n]
-    if { [dict exists $mat_dict $group] && $write_properties_in eq "mdpa"} {
-        set mid [dict get $mat_dict $group MID]
+    set submodelpart [write::GetSubModelPartName Parts $group]
+    if { [dict exists $mat_dict $submodelpart] && $write_properties_in eq "mdpa"} {
+        set mid [dict get $mat_dict $submodelpart MID]
     } else {
         set mid 0
     }

@@ -1,12 +1,12 @@
-namespace eval ConvectionDiffusion::xml {
+namespace eval ::ConvectionDiffusion::xml {
+    namespace path ::ConvectionDiffusion
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
-    variable dir
 }
 
-proc ConvectionDiffusion::xml::Init { } {
+proc ::ConvectionDiffusion::xml::Init { } {
     # Namespace variables inicialization
-    variable dir
-    Model::InitVariables dir $ConvectionDiffusion::dir
+    Model::InitVariables dir $::ConvectionDiffusion::dir
     
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -19,11 +19,11 @@ proc ConvectionDiffusion::xml::Init { } {
     Model::getSolvers "../../Common/xml/Solvers.xml"
 }
 
-proc ConvectionDiffusion::xml::getUniqueName {name} {
-    return ${::ConvectionDiffusion::prefix}${name}
+proc ::ConvectionDiffusion::xml::getUniqueName {name} {
+    return [::ConvectionDiffusion::GetAttribute prefix]${name}
 }
 
-proc ConvectionDiffusion::xml::CustomTree { args } {
+proc ::ConvectionDiffusion::xml::CustomTree { args } {
     set root [customlib::GetBaseRoot]
 
     # Output control in output settings
@@ -42,5 +42,3 @@ proc ConvectionDiffusion::xml::CustomTree { args } {
     # Make line_search appear only with non-linear strategy
     [$root selectNodes "[spdAux::getRoute CNVDFFStratParams]/value\[@n='line_search'\]"] setAttribute state "\[checkStateByUniqueName CNVDFFAnalysisType non_linear\]"
 }
-
-ConvectionDiffusion::xml::Init

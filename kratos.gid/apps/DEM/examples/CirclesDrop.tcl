@@ -1,33 +1,27 @@
+namespace eval ::DEM::examples::CirclesDrop {
+    namespace path ::DEM::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::DEM::examples::CirclesDrop {args} {
+proc ::DEM::examples::CirclesDrop::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometryCirclesDrop
-    AssignToTreeCirclesDrop
-    AssignMeshSizeCirclesDrop
+    DrawGeometry
+    AssignToTree
+    AssignMeshSize
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
 
-    # MESH
-    # TODO: Remove this once the Granular mesher works fine with multiple surfaces
-    ## Remember the old mesher
-    set prev_mesher [GiD_Set CircleMesher]
-    ## Set RBall as circle mesher
-    GiD_Set CircleMesher 0
-    ## Mesh
-    MeshGenerationOKDo 1.0
-    ## Restore previous circle mesher preference
-    GiD_Set CircleMesher $prev_mesher
 }
 
-proc ::DEM::examples::DrawGeometryCirclesDrop { } {
+proc ::DEM::examples::CirclesDrop::DrawGeometry { } {
     Kratos::ResetModel
 
     GiD_Groups create "Box"
@@ -50,10 +44,10 @@ proc ::DEM::examples::DrawGeometryCirclesDrop { } {
 }
 
 
-proc ::DEM::examples::AssignToTreeCirclesDrop { } {
+proc ::DEM::examples::CirclesDrop::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
@@ -86,15 +80,7 @@ proc ::DEM::examples::AssignToTreeCirclesDrop { } {
     spdAux::RequestRefresh
 }
 
-proc ::DEM::examples::AssignMeshSizeCirclesDrop { } {
+proc ::DEM::examples::CirclesDrop::AssignMeshSize { } {
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.6 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.6 1:end escape escape escape
-}
-
-proc ::DEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

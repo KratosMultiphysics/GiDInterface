@@ -1,5 +1,5 @@
 # Project Parameters
-proc FSI::write::getParametersDict { } {
+proc ::FSI::write::getParametersDict { } {
     # Init the Fluid and Structural dicts
     InitExternalProjectParameters
 
@@ -24,19 +24,19 @@ proc FSI::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc FSI::write::writeParametersEvent { } {
+proc ::FSI::write::writeParametersEvent { } {
    set projectParametersDict [getParametersDict]
    write::SetParallelismConfiguration
    write::WriteJSON $projectParametersDict
 }
 
-proc FSI::write::GetProblemDataDict { } {
+proc ::FSI::write::GetProblemDataDict { } {
     # Copy the section from the Fluid, who owns the time parameters of the model
     set problem_data_dict [dict get $FSI::write::fluid_project_parameters problem_data]
     return $problem_data_dict
 }
 
-proc FSI::write::GetSolverSettingsDict { } {
+proc ::FSI::write::GetSolverSettingsDict { } {
     variable mdpa_names
 
     set solver_settings_dict [dict create]
@@ -69,13 +69,21 @@ proc FSI::write::GetSolverSettingsDict { } {
 
     
     # structure interface
-    set structure_interfaces_list [write::GetSubModelPartFromCondition STLoads StructureInterface2D]
-    lappend structure_interfaces_list {*}[write::GetSubModelPartFromCondition STLoads StructureInterface3D]
+    set structure_interfaces_list [list ]
+    set structure_interfaces_list_raw [write::GetSubModelPartFromCondition STLoads StructureInterface2D]
+    lappend structure_interfaces_list_raw {*}[write::GetSubModelPartFromCondition STLoads StructureInterface3D]
+    foreach interface $structure_interfaces_list_raw {
+        lappend structure_interfaces_list [Structural::write::GetAttribute model_part_name].$interface
+    }
     dict set solver_settings_dict coupling_settings structure_interfaces_list $structure_interfaces_list
 
     # Fluid interface
     set fluid_interface_uniquename FluidNoSlipInterface$::Model::SpatialDimension
-    set fluid_interfaces_list [write::GetSubModelPartFromCondition FLBC $fluid_interface_uniquename]
+    set fluid_interfaces_list [list ]
+    set fluid_interfaces_list_raw [write::GetSubModelPartFromCondition FLBC $fluid_interface_uniquename]
+    foreach interface $fluid_interfaces_list_raw {
+        lappend fluid_interfaces_list [Fluid::write::GetAttribute model_part_name].$interface
+    }
     dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
     
     # Change the input_filenames
@@ -91,7 +99,7 @@ proc FSI::write::GetSolverSettingsDict { } {
 
 }
 
-proc FSI::write::GetProcessesDict { } {
+proc ::FSI::write::GetProcessesDict { } {
     set processes_dict [dict create]
     
     # Fluid
@@ -107,7 +115,7 @@ proc FSI::write::GetProcessesDict { } {
     return $processes_dict
 }
 
-proc FSI::write::GetOutputProcessesDict { } {
+proc ::FSI::write::GetOutputProcessesDict { } {
     set output_processes_dict [dict create]
     set gid_output_list [list ]
 
@@ -125,33 +133,33 @@ proc FSI::write::GetOutputProcessesDict { } {
     return $output_processes_dict
 }
 
-proc FSI::write::UpdateUniqueNames { appid } {
+proc ::FSI::write::UpdateUniqueNames { appid } {
     set unList [list "Results"]
     foreach un $unList {
-	 set current_un [apps::getAppUniqueName $appid $un]
-	 spdAux::setRoute $un [spdAux::getRoute $current_un]
+        set current_un [apps::getAppUniqueName $appid $un]
+        spdAux::setRoute $un [spdAux::getRoute $current_un]
     }
 }
 
-proc FSI::write::GetMappingSettingsList { } {
+proc ::FSI::write::GetMappingSettingsList { } {
     set mappingsList [list ]
 
     set fluid_interface_name FluidNoSlipInterface$::Model::SpatialDimension
     set structural_interface_name StructureInterface$::Model::SpatialDimension
     set structuralInterface [lindex [write::GetSubModelPartFromCondition STLoads $structural_interface_name] 0]
     foreach fluid_interface [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute FLBC]/condition\[@n = '$fluid_interface_name'\]/group" ] {
-	set map [dict create]
-	set mapper_face [write::getValueByNode [$fluid_interface selectNodes ".//value\[@n='mapper_face']"] ]
-	dict set map mapper_face $mapper_face
-	dict set map fluid_interface_submodelpart_name [write::getSubModelPartId $fluid_interface_name [get_domnode_attribute $fluid_interface n]]
-	dict set map structure_interface_submodelpart_name $structuralInterface
-	lappend mappingsList $map
+        set map [dict create]
+        set mapper_face [write::getValueByNode [$fluid_interface selectNodes ".//value\[@n='mapper_face']"] ]
+        dict set map mapper_face $mapper_face
+        dict set map fluid_interface_submodelpart_name [Fluid::write::GetAttribute model_part_name].[write::getSubModelPartId $fluid_interface_name [get_domnode_attribute $fluid_interface n]]
+        dict set map structure_interface_submodelpart_name [Structural::write::GetAttribute model_part_name].$structuralInterface
+        lappend mappingsList $map
     }
 
     return $mappingsList
 }
 
-proc FSI::write::InitExternalProjectParameters { } {
+proc ::FSI::write::InitExternalProjectParameters { } {
     # Fluid section
     UpdateUniqueNames Fluid
     apps::setActiveAppSoft Fluid
@@ -164,7 +172,6 @@ proc FSI::write::InitExternalProjectParameters { } {
     Structural::write::SetAttribute time_parameters_un FLTimeParameters
     write::initWriteConfiguration [Structural::write::GetAttributes]
     set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
-
     
     apps::setActiveAppSoft FSI
 }

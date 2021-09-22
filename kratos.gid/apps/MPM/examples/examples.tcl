@@ -1,15 +1,13 @@
-namespace eval MPM::examples {
+namespace eval ::MPM::examples {
+    namespace path ::MPM
+    Kratos::AddNamespace [namespace current]
 
 }
 
-proc MPM::examples::Init { } {
-    uplevel #0 [list source [file join $::MPM::dir examples FallingSandBall.tcl]]
+proc ::MPM::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
-
-proc MPM::examples::UpdateMenus { } {
-    GiDMenu::InsertOption "Kratos" [list "---"] 7 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Falling sand ball" ] 7 PRE [list ::MPM::examples::FallingSandBall] "" "" insertafter =
-    GiDMenu::UpdateMenus
-}
-
-MPM::examples::Init

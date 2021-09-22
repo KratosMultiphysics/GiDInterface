@@ -3,11 +3,14 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval Kratos {
+namespace eval ::Kratos {
     variable kratos_private
 
     variable must_write_calc_data
     variable must_exist_calc_data
+
+    variable tmp_init_mesh_time
+    variable namespaces
 }
 
 # Hard minimum GiD Version is 14
@@ -80,6 +83,7 @@ proc Kratos::RegisterGiDEvents { } {
 
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
+    if {[GidUtils::VersionCmp "15.0.0"] >=0 } {CreateWidgetsFromXml::ClearCachePreferences}
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
@@ -140,6 +144,16 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(echo_level) 0
     # indent in mdpa files  | 0 ASCII unindented | 1 ASCII indented pretty
     set kratos_private(mdpa_format) 1
+    # kratos debug env for VSCode debug
+    set kratos_private(debug_folder) ""
+    # Version of the kratos executable
+    set kratos_private(exec_version) "dev"
+    # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
+    set Kratos::kratos_private(allow_logs) 1
+    # git hash of the problemtype
+    set Kratos::kratos_private(problemtype_git_hash) 0    
+    # Place were the logs will be placed
+    set Kratos::kratos_private(model_log_folder) ""
 
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
@@ -155,6 +169,9 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(ProjectIsNew) 1
     # Variables from the problemtype definition (kratos.xml)
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+
+    variable namespaces
+    set namespaces [list ]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -176,7 +193,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename]]
     }
     # Common controllers
-    foreach filename {ApplicationMarketWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl} {
+    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl Drawer.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
     }
     # Model class
@@ -190,6 +207,10 @@ proc Kratos::LoadCommonScripts { } {
 }
 
 proc Kratos::Event_LoadModelSPD { filespd } {
+    after 1 [list Kratos::LoadModelSPD $filespd]
+}
+
+proc Kratos::LoadModelSPD { filespd } {
     variable kratos_private
 
     # Event called if a model exists, so close all the windows while tree isn't loaded
@@ -214,6 +235,8 @@ proc Kratos::Event_LoadModelSPD { filespd } {
     set old_doc [gid_groups_conds::open_XML_file_gzip $filespd]
     set old_root [$old_doc documentElement]
     set old_versionData [$old_root @version]
+    set version_data [dict create model_version $old_versionData ]
+    Kratos::Log "Load model -> [write::tcl2json $version_data]"
 
     # Compare the version number
     if { [package vcompare $versionPT $old_versionData] != 0 } {
@@ -244,15 +267,23 @@ proc Kratos::Event_LoadModelSPD { filespd } {
 
         # Open the tree
         spdAux::OpenTree
+
+        after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]}
     }
+
 }
 
 proc Kratos::Event_EndProblemtype { } {
+    Kratos::Log "End session"
     # New event system need an unregister
     if {[GidUtils::VersionCmp "14.1.4d"] >= 0 } {
         GiD_UnRegisterEvents PROBLEMTYPE Kratos
+        GiD_UnRegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
     }
     if {[array exists ::Kratos::kratos_private]} {
+        # Close the log and moves them to the folder
+        Kratos::FlushLog 
+
         # Restore GiD variables that were modified by kratos and must be restored (maybe mesher)
         Kratos::RestoreVariables
 
@@ -273,7 +304,12 @@ proc Kratos::Event_EndProblemtype { } {
 
         # Clear private global variable
         unset -nocomplain ::Kratos::kratos_private
+
     }
+    Drawer::UnregisterAll
+    
+    # Clear namespaces
+    Kratos::DestroyNamespaces
 }
 
 
@@ -283,6 +319,7 @@ proc Kratos::RestoreVariables { } {
     # Restore GiD variables that kratos modified (maybe the mesher...)
     if {[info exists kratos_private(RestoreVars)]} {
         foreach {k v} $kratos_private(RestoreVars) {
+            # W "$k $v"
             set $k $v
         }
     }
@@ -359,8 +396,10 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
 
 proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     # Prepare things before meshing
-
-
+    variable tmp_init_mesh_time
+    set inittime [clock seconds]
+    set tmp_init_mesh_time $inittime
+    Kratos::Log "Mesh BeforeMeshGeneration start"
     GiD_Process Mescape Meshing MeshCriteria NoMesh Lines 1:end escape escape escape
     GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces 1:end escape escape escape
     GiD_Process Mescape Meshing MeshCriteria NoMesh Volumes 1:end escape escape escape
@@ -373,6 +412,9 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     }
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    Kratos::Log "Mesh BeforeMeshGeneration end in [Duration $ttime]"
     return $ret
 }
 
@@ -382,8 +424,14 @@ proc Kratos::Event_MeshProgress { total_percent partial_percents_0 partial_perce
 }
 
 proc Kratos::Event_AfterMeshGeneration {fail} {
+    variable tmp_init_mesh_time
     # Maybe the current application needs to do some extra job
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$tmp_init_mesh_time}]
+    Kratos::Log "Mesh end process in [Duration $ttime]"
+    set mesh_data [Kratos::GetMeshBasicData]
+    Kratos::Log "Mesh data -> [write::tcl2json $mesh_data]"
 }
 
 proc Kratos::Event_AfterRenameGroup { oldname newname } {
@@ -484,7 +532,13 @@ proc Kratos::Event_SaveModelSPD { filespd } {
 
     # Let the current app implement it's Save event
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd
+
+    # Log it
+    set Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]
+    Kratos::Log "Save model [file tail $filespd ]"
+
 }
+
 
 proc Kratos::Event_ChangedLanguage  { newlan } {
     Kratos::UpdateMenus
@@ -505,4 +559,19 @@ proc Kratos::Quicktest {example_app example_dim example_cmd} {
 
     # And close the windows
     Kratos::DestroyWindows
+}
+
+proc Kratos::AddNamespace { namespace_name } {
+    variable namespaces
+    lappend namespaces $namespace_name
+
+}
+
+proc Kratos::DestroyNamespaces { } {
+    variable namespaces
+
+    foreach name $namespaces {
+        catch {namespace delete $name}
+    }
+    uplevel #0 [list namespace delete ::Kratos]
 }

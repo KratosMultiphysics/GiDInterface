@@ -1,65 +1,33 @@
 namespace eval ::DEM {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
-    variable attributes
-    variable kratos_name
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::DEM::Init { } {
+proc ::DEM::Init { app } {
     # Variable initialization
+    variable _app
     variable dir
-    variable attributes
-    variable kratos_name
 
+    set _app $app
     set dir [apps::getMyDir "DEM"]
-    set attributes [dict create]
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-    dict set attributes UseIntervals 1
-
-    set kratos_name DEMApplication
-
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
 
     GiD_Set CalcWithoutMesh 1
 
-    LoadMyFiles
-}
-
-proc ::DEM::LoadMyFiles { } {
-    variable dir
-
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
-    uplevel #0 [list source [file join $dir write writeMDPA_Inlet.tcl]]
-    uplevel #0 [list source [file join $dir write writeMDPA_Walls.tcl]]
-    uplevel #0 [list source [file join $dir write writeMDPA_Clusters.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $dir write write_utils.tcl]]
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
-}
-
-proc ::DEM::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
+    ::DEM::xml::Init
+    ::DEM::write::Init
 }
 
 proc ::DEM::CustomToolbarItems { } {
     variable dir
-    if {$::Model::SpatialDimension eq "3D"} {
-        Kratos::ToolbarAddItem "Example3D" [file join $dir images drop.png] [list -np- ::DEM::examples::SpheresDrop] [= "Example3D\nSpheres drop"]
-    }
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example2D" [file join $dir images drop.png] [list -np- ::DEM::examples::CirclesDrop] [= "Example2D\nCircles drop"]
-    }
-}
-
-proc ::DEM::CustomMenus { } {
-    DEM::examples::UpdateMenus
+    
+    Kratos::ToolbarAddItem "MaterialRelations" "material-relation.png" [list -np- DEM::xml::ShowMaterialRelationWindow] [= "Material relations"]
 }
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {
@@ -196,6 +164,3 @@ proc ::DEM::PatchMissingSpheresInGroup {filespd} {
         close $fp
     }
 }
-
-
-::DEM::Init

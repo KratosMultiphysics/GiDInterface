@@ -1,0 +1,45 @@
+{
+    "id": "ConvectionDiffusion",
+    "name": "Convection Diffusion",
+    "prefix": "CNVDFF",
+    "themed": false,
+    "kratos_name": "ConvectionDiffusionApplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/HeatedSquare.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::ConvectionDiffusion::Init",
+    "requeriments":{
+        "apps":[],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "CNVDFFParts",
+        "nodal_conditions": "CNVDFFNodalConditions",
+        "conditions": "CNVDFFBC",
+        "materials": "CNVDFFMaterials"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "ConvectionDiffusionMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "ThermalModelPart",
+        "output_model_part_name": ""
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

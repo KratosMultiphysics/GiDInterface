@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- -*- coding: utf-8;-*- -->
-<Examples version="1.0">
-    <!-- <Group id="Solid" name="Solid examples">
-        <Example id="CircularTank3D" app="Solid" logo="CircularTank3D.png" name="Circular tank 3D" dim="3D" cmd="::Solid::examples::CircularTank"/>
-        <Example id="CircularTank2Da" app="Solid" logo="CircularTank2Da.png" name="Circular tank 2D\naxisymmetric" dim="2Da" cmd="::Solid::examples::CircularTank"/>
-        <Example id="DynamicBeam" app="Solid" logo="DynamicBeam.png" name="Dynamic beam" dim="3D" cmd="::Solid::examples::DynamicBeam"/>
-        <Example id="EccentricColumn" app="Solid" logo="EccentricColumn.png" name="Eccentric column" dim="3D" cmd="::Solid::examples::EccentricColumn"/>
-        <Example id="DynamicRod3D" app="Solid" logo="DynamicRod3D.png" name="Dynamic rod 3D" dim="3D" cmd="::Solid::examples::DynamicRod"/>
-        <Example id="DynamicRod2D" app="Solid" logo="DynamicRod2D.png" name="Dynamic rod 2D" dim="2D" cmd="::Solid::examples::DynamicRod"/>
-        <Example id="NotchedBeam" app="Solid" logo="NotchedBeam.png" name="NotchedBeam" dim="2D" cmd="::Solid::examples::NotchedBeam"/>
-    </Group> -->
-    <Group id="Fluid" name="Fluid examples">
-        <Example id="CylinderInFlow2D" app="Fluid" logo="CylinderInFlow2D.png" name="Cylinder in flow 2D" dim="2D" cmd="::Fluid::examples::CylinderInFlow"/>
-        <Example id="CylinderInFlow3D" app="Fluid" logo="CylinderInFlow3D.png" name="Cylinder in flow 3D" dim="3D" cmd="::Fluid::examples::CylinderInFlow"/>
-        <Example id="EmbeddedCylinderInFlow3D" app="EmbeddedFluid" logo="EmbeddedCylinderInFlow3D.png" name="Cylinder in flow 3D\nEmbedded" dim="3D" cmd="::EmbeddedFluid::examples::CylinderInFlow"/>
-    </Group>
-    <Group id="Structural" name="Structural examples">
-        <Example id="TrussCantilever2D" app="Structural" logo="TrussCantilever2D.png" name="Truss cantilever 2D" dim="2D" cmd="::Structural::examples::TrussCantilever"/>
-        <Example id="TrussCantilever3D" app="Structural" logo="TrussCantilever3D.png" name="Truss cantilever 3D" dim="3D" cmd="::Structural::examples::TrussCantilever"/>
-    </Group>
-    <Group id="FSI" name="Fluid structure interaction examples">
-        <Example id="MokChannelWithFlexibleWall2D" app="FSI" logo="MokChannelWithFlexibleWall2D.png" name="Mok channel with\nflexible wall 2D" dim="2D" cmd="::FSI::examples::MokChannelFlexibleWall"/>
-        <Example id="MokChannelWithFlexibleWall3D" app="FSI" logo="MokChannelWithFlexibleWall3D.png" name="Mok channel with\nflexible wall 3D" dim="3D" cmd="::FSI::examples::MokChannelFlexibleWall"/>
-        <Example id="TurekBenchmark2D" app="FSI" logo="TurekBenchmark2D.png" name="Turek benchmark 2D" dim="2D" cmd="::FSI::examples::TurekBenchmark"/>
-    </Group>
-</Examples>
+<examples version="1.0">
+    <!-- Main -->
+    <link path="apps/Fluid/examples/examples.xml"/>
+    <link path="apps/Structural/examples/examples.xml"/>
+    <link path="apps/FSI/examples/examples.xml"/>
+    <!-- Thermic -->
+    <link path="apps/Buoyancy/examples/examples.xml"/>
+    <link path="apps/ConjugateHeatTransfer/examples/examples.xml"/>
+    <link path="apps/ConvectionDiffusion/examples/examples.xml"/>
+    <!-- DEM -->
+    <link path="apps/DEM/examples/examples.xml"/>
+    <link path="apps/CDEM/examples/examples.xml"/>
+    <link path="apps/DEMPFEM/examples/examples.xml"/>
+    <link path="apps/FluidDEM/examples/examples.xml"/>
+    <link path="apps/Dam/examples/examples.xml"/>
+    <!-- More -->
+    <link path="apps/PotentialFluid/examples/examples.xml"/>
+    <link path="apps/EmbeddedFluid/examples/examples.xml"/>
+    <link path="apps/MPM/examples/examples.xml"/>
+    <link path="apps/PfemFluid/examples/examples.xml"/>
+	<link path="apps/PfemThermic/examples/examples.xml"/>
+</examples>

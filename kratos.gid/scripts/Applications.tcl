@@ -3,7 +3,9 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval apps {
+namespace eval ::apps {
+    Kratos::AddNamespace [namespace current]
+    
     variable activeApp
     variable appList
 }
@@ -209,6 +211,8 @@ oo::class create App {
     variable prefix
     variable release
     variable is_tool
+
+    variable properties
     
     constructor {n} {
         variable name
@@ -221,6 +225,7 @@ oo::class create App {
         variable prefix
         variable public
         variable is_tool
+        variable properties
         
         set name $n
         set publicname $n
@@ -240,12 +245,12 @@ oo::class create App {
         set prefix ""
         set public 0
         set is_tool 0
+
+        set properties [dict create ]
+        apps::LoadAppProperties [self]
     }
     
-    method activate { } {
-        variable name
-        apps::ActivateApp_do $name
-    }
+    method activate { } {apps::ActivateApp_do [self]}
     
     method getPrefix { } {variable prefix; return $prefix}
     method setPrefix { p } {variable prefix; set prefix $p}
@@ -283,15 +288,52 @@ oo::class create App {
     method setIsTool {v} {variable is_tool; set is_tool $v}
     method isTool { } {variable is_tool; return $is_tool}
     
-    method getKratosApplicationName { } {
-        return [set ::${name}::kratos_name]
+    method getKratosApplicationName { } {return [::${name}::GetAttribute kratos_name]}
+
+    method setProperties {props} {variable properties; set properties $props}
+    method getProperty {n} {variable properties; if {[dict exists $properties $n]} {return [dict get $properties $n]}}
+    method getProperties {} {variable properties; return $properties}
+    method getPermission {n} {variable properties; if {[dict exists $properties permissions $n]} {return [dict get $properties permissions $n]} }
+    method getPermissions {} {variable properties; return [dict get $properties permissions]} 
+    method getUniqueName {n} {variable properties; if {[dict exists $properties unique_names $n]} {return [dict get $properties unique_names $n]} }
+    method getUniqueNames {} {variable properties; return [dict get $properties unique_names} 
+    method getWriteProperty {n} {variable properties; if {[dict exists $properties write $n]} {return [dict get $properties write $n]} }
+    method getWriteProperties {} {variable properties; return [dict get $properties write} 
+}
+
+proc apps::LoadAppProperties {app} {
+    set dir [file join $::Kratos::kratos_private(Path) apps [$app getName]]
+    set app_definition_file [file join $dir app.json]
+    if {[file exists $app_definition_file]} {
+        set props [Kratos::ReadJsonDict $app_definition_file]
+        $app setProperties $props
+    } else {
+        W "MISSING app.json file for app [$app getName]"
     }
 }
-proc apps::ActivateApp_do {app_name} {
-    # set ::Kratos::must_quit 0
-    set dir [file join $::Kratos::kratos_private(Path) apps $app_name]
-    set fileName [file join $dir start.tcl]
-    apps::loadAppFile $fileName
+
+proc apps::ActivateApp_do {app} {
+    set dir [file join $::Kratos::kratos_private(Path) apps [$app getName]]
+    # Load app dependences
+    if {[dict exists [$app getProperty requeriments] apps]} {
+        foreach app_id [dict get [$app getProperty requeriments] apps] {
+            apps::LoadAppById $app_id
+        }
+    }
+
+    # Then load the app files, so we can overwrite functions loaded in dependences
+    if {[$app getProperty script_files] ne ""} {
+        foreach source_file [$app getProperty script_files] {
+            set fileName [file join $dir $source_file]
+            apps::loadAppFile $fileName
+        }
+    }
+    
+    if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }
+    if {[$app getProperty start_script] ne ""} {eval [$app getProperty start_script] $app}
+    apps::ApplyAppPreferences $app
+    
+    
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
         gid_groups_conds::add_images_dir [file join $dir images Black]
@@ -299,8 +341,11 @@ proc apps::ActivateApp_do {app_name} {
     gid_groups_conds::add_images_dir [file join $dir images]
 }
 
-proc apps::loadAppFile {fileName} {
-    uplevel 2 [list source $fileName]
+proc apps::ApplyAppPreferences {app} {
+    if {[write::isBooleanTrue [$app getPermission open_tree]]} {set spdAux::TreeVisibility 1} {set spdAux::TreeVisibility 0}
+    if {[$app getProperty dimensions] ne ""} { set ::Model::ValidSpatialDimensions [$app getProperty dimensions] }
 }
+
+proc apps::loadAppFile {fileName} {uplevel #0 [list source $fileName]}
 
 apps::Init

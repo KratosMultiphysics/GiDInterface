@@ -67,4 +67,3 @@ proc EmbeddedFluid::xml::MoreImportOptions { f } {
     return EmbeddedFluid::xml::export_dir
 }
 
-EmbeddedFluid::xml::Init
