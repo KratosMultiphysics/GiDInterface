@@ -4,6 +4,9 @@
     "prefix": "SW",
     "themed": false,
     "kratos_name": "ShallowWaterApplication",
+    "dimensions": [
+        "2D"
+    ],
     "script_files": [
         "start.tcl",
         "xml/XmlController.tcl"
