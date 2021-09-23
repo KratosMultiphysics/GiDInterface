@@ -1,10 +1,10 @@
-namespace eval ::Shallow::xml {
-    namespace path ::Shallow
+namespace eval ::ShallowWater::xml {
+    namespace path ::ShallowWater
     Kratos::AddNamespace [namespace current]
 }
 
-proc ::Shallow::xml::Init {} {
-    Model::InitVariables dir $::Shallow::dir
+proc ::ShallowWater::xml::Init {} {
+    Model::InitVariables dir $::ShallowWater::dir
 
     Model::getElements "../../Common/xml/Elements.xml"
     Model::getConditions Conditions.xml
@@ -14,11 +14,11 @@ proc ::Shallow::xml::Init {} {
     Model::getSolvers "../../Common/xml/Solvers.xml"
 }
 
-proc ::Shallow::xml::getUniqueName {name} {
-    return [::Shallow::GetAttribute prefix]${name}
+proc ::ShallowWater::xml::getUniqueName {name} {
+    return [::ShallowWater::GetAttribute prefix]${name}
 }
 
-# proc ::Shallow::xml::CustomTree {args} {
+# proc ::ShallowWater::xml::CustomTree {args} {
     # spdAux::SetValueOnTreeItem state normal FLGravity
     # spdAux::SetValueOnTreeItem state normal FLTimeParameters
 # }

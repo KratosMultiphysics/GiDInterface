@@ -1,4 +1,4 @@
-namespace eval ::Shallow {
+namespace eval ::ShallowWater {
     Kratos::AddNamespace [namespace current]
     
     # Variable declaration
@@ -10,13 +10,13 @@ namespace eval ::Shallow {
     proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::Shallow::Init {app} {
+proc ::ShallowWater::Init {app} {
     # Variable initialization
     variable _app
     variable dir
     set _app $app
-    set dir [apps::getMyDir "Shallow"]
+    set dir [apps::getMyDir "ShallowWater"]
 
-    ::Shallow::xml::Init
-    # ::Shallow::write::Init
+    ::ShallowWater::xml::Init
+    # ::ShallowWater::write::Init
 }

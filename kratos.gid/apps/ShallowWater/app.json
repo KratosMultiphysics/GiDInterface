@@ -1,5 +1,5 @@
 {
-    "id": "Shallow",
+    "id": "ShallowWater",
     "name": "Shallow water",
     "prefix": "SW",
     "themed": false,
@@ -8,7 +8,7 @@
         "start.tcl",
         "xml/XmlController.tcl"
     ],
-    "start_script":"::Shallow::Init",
+    "start_script":"::ShallowWater::Init",
     "requirements":{},
     "permissions": {
         "open_tree": true,
