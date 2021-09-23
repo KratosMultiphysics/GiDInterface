@@ -7,13 +7,14 @@ The interface of Kratos with [GiD](http://www.gidhome.com).
 If you need the latest release, launch your GiD, navigate to Data > Problemtype > Internet retrieve and download Kratos there. Available for Linux. Windows, and macOS. If you need the developer version, you are on the right place
 
 ## First steps
-* Install the latest GiD developer version -> [Developer version](http://www.gidhome.com/download/developer-versions)
-* Navigate to GiD's problemtype folder and delete previous kratos.gid
-* Create there a link to our [kratos.gid](./kratos.gid/)
-* Navigate to kratos.gid/exec/
-* Create there a symbolic link to the kratos installation folder (where runkratos is located)
-  * Unix : `ln -s ~/Kratos Kratos` or maybe `ln -s ~/Kratos/bin/Release Kratos` if that's the destination folder
-  * Windows : `mklink /J Kratos C:\kratos` or maybe `mklink /J Kratos C:\kratos\bin\Release` (choose actual Kratos installation folder)
+* 1- Clone this repository, or install a [release](https://github.com/KratosMultiphysics/GiDInterface/releases)
+* 2- Install the latest GiD developer version -> [Developer version](http://www.gidhome.com/download/developer-versions)
+* 3- Navigate to GiD's problemtype folder and delete previous kratos.gid
+    * Create there a link to our [kratos.gid](./kratos.gid/) downloaded in step 1
+* 4- Navigate to kratos.gid/exec/
+    * Create there a symbolic link to the kratos installation folder (where runkratos is located)
+      * Unix : `ln -s ~/Kratos Kratos` or maybe `ln -s ~/Kratos/bin/Release Kratos` if that's the destination folder
+      * Windows : `mklink /J Kratos C:\kratos` or maybe `mklink /J Kratos C:\kratos\bin\Release` (choose actual Kratos installation folder)
 
 ## Usage
 * Run GiD
