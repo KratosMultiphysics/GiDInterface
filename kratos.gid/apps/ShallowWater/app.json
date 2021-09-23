@@ -1,0 +1,35 @@
+{
+    "id": "Shallow",
+    "name": "ShallowWater",
+    "prefix": "SW",
+    "themed": false,
+    "kratos_name": "ShallowWaterApplication",
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl"
+    ],
+    "start_script":"::ShallowWater::Init",
+    "requirements":{},
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "FLParts",
+        "topography_data": "SWTopographicData",
+        "initial_conditions": "SWInitialConditions",
+        "conditions": "SWConditions",
+        "gravity": "SWGravity",
+        "time_parameters": "SWTimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "TopographicMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "main_model_part",
+        "output_model_part_name": "main_model_part"
+    },
+    "main_launch_file": "python/MainKratos.py"
+}
