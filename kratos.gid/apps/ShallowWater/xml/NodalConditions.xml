@@ -7,8 +7,13 @@
         App="ShallowWater"
         Type="Initial"
         ImplementedInApplication="ShallowWaterApplication">
-        <TopologyFeatures>
-            <item GeometryType="Point" nodes="1" KratosName="Node"/>
-        </TopologyFeatures>
+    </NodalConditionItem>
+    <NodalConditionItem
+        n="Topography"
+        pn="Topography"
+        ProcessName="SetTopographyProcess"
+        App="ShallowWater"
+        Type="Topographic"
+        ImplementedInApplication="ShallowWaterApplication">
     </NodalConditionItem>
 </NodalConditionList>
