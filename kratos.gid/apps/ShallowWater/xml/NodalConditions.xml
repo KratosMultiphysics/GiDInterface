@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
-    <NodalConditionItem n="InitialWaterLevel" pn="Initial water level" ProcessName="InitialWaterLevelProcess" App="ShallowWater" ImplementedInApplication="ShallowWaterApplication">
+    <NodalConditionItem
+        n="InitialWaterLevel"
+        pn="Initial water level"
+        ProcessName="InitialWaterLevelProcess"
+        App="ShallowWater"
+        Type="Initial"
+        ImplementedInApplication="ShallowWaterApplication">
         <TopologyFeatures>
             <item GeometryType="Point" nodes="1" KratosName="Node"/>
         </TopologyFeatures>

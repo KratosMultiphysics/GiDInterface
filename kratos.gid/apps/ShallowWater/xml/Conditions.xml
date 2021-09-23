@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
-    <ConditionItem n="ImposedFlowRate" pn="Imposed flow rate" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" Type="BoundaryCondition" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="MOMENTUM" App="ShallowWater" ElementType="Line" ProcessName="AssignVectorVariableProcess" help="" units="m^2/s" unit_magnitude="Flow_rate">
+    <ConditionItem 
+        n="ImposedFlowRate"
+        pn="Imposed flow rate"
+        Interval="Total"
+        ImplementedInApplication="ShallowWaterApplication"
+        App="ShallowWater"
+        Type="BoundaryCondition"
+        ElementType="Line"
+        WorkingSpaceDimension="2D"
+        LocalSpaceDimension="1"
+        SkinConditions="True"
+        VariableName="MOMENTUM"
+        ProcessName="AssignVectorVariableProcess"
+        help=""
+        units="m^2/s"
+        unit_magnitude="Flow_rate">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
@@ -9,16 +24,22 @@
         <outputs></outputs>
     </ConditionItem>
 
-    <ConditionItem n="ImposedFreeSurface" pn="Imposed free surface" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" Type="BoundaryCondition" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="HEIGHT" App="ShallowWater" ElementType="Line" ProcessName="AssignScalarVariableProcess" help="" units="m" unit_magnitude="Height">
-        <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
-        </TopologyFeatures>
-        <DegreesOfFreedom></DegreesOfFreedom>
-        <inputs></inputs>
-        <outputs></outputs>
-    </ConditionItem>
-
-    <ConditionItem n="Slip" pn="Slip" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="ShallowWaterApplication" MinimumKratosVersion="9000" Type="BoundaryCondition" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="" App="ShallowWater" ElementType="Line" ProcessName="ApplySlipProcess" help="" units="" unit_magnitude="">
+    <ConditionItem
+        n="ImposedFreeSurface"
+        pn="Imposed free surface"
+        Interval="Total"
+        ImplementedInApplication="ShallowWaterApplication"
+        App="ShallowWater"
+        Type="BoundaryCondition"
+        ElementType="Line"
+        WorkingSpaceDimension="2D"
+        LocalSpaceDimension="1"
+        SkinConditions="True"
+        VariableName="HEIGHT"
+        ProcessName="AssignScalarVariableProcess"
+        help=""
+        units="m"
+        unit_magnitude="Height">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>

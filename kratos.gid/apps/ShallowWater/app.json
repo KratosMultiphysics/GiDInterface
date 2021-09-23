@@ -1,6 +1,6 @@
 {
     "id": "Shallow",
-    "name": "ShallowWater",
+    "name": "Shallow water",
     "prefix": "SW",
     "themed": false,
     "kratos_name": "ShallowWaterApplication",
@@ -8,7 +8,7 @@
         "start.tcl",
         "xml/XmlController.tcl"
     ],
-    "start_script":"::ShallowWater::Init",
+    "start_script":"::Shallow::Init",
     "requirements":{},
     "permissions": {
         "open_tree": true,
@@ -17,7 +17,7 @@
         "wizard": false
     },
     "unique_names": {
-        "parts": "FLParts",
+        "parts": "SWParts",
         "topography_data": "SWTopographicData",
         "initial_conditions": "SWInitialConditions",
         "conditions": "SWConditions",
