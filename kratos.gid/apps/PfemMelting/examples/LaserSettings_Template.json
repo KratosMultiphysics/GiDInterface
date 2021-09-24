@@ -1,11 +1,15 @@
 {
-    "laser_settings" : {
-        "laser_profile":{
+    "laser_settings": {
+        "laser_profile": {
             "shape": "flat",
             "radius": 0.0005,
             "power": 5.0
         },
-        "direction": [0.0, 0.0, -1.0],
+        "direction": [
+            0.0,
+            0.0,
+            -1.0
+        ],
         "path": [
             {
                 "time": 0.0,
@@ -22,4 +26,3 @@
         ]
     }
 }
-

@@ -209,9 +209,9 @@ proc ::Dam::write::writeTables { } {
             lappend printed_tables $tableid
             write::WriteString "Begin Table $tableid TIME VALUE"
             if {[string index $fileid 0] eq "."} {
-                set modelname [GiD_Info project ModelName]
+                set modelname [GidUtils::GetDirectoryModel]
                 set filename [string range $fileid 2 end]
-                set fileid [file join "$modelname.gid" $filename]
+                set fileid [file join $modelname $filename]
             }
             set data [GidUtils::ReadFile $fileid]
             write::WriteString [string map {; { }} $data]
@@ -230,9 +230,9 @@ proc ::Dam::write::writeTables_dev { } {
             lappend printed_tables $tableid
             write::WriteString "Begin Table $tableid TIME VALUE"
             if {[string index $fileid 0] eq "."} {
-                set modelname [GiD_Info project ModelName]
+                set modelname [GidUtils::GetDirectoryModel]
                 set filename [string range $fileid 2 end]
-                set fileid [file join "$modelname.gid" $filename]
+                set fileid [file join $modelname $filename]
             }
             set data [GidUtils::ReadFile $fileid]
             write::WriteString [string map {; { }} $data]
@@ -246,7 +246,7 @@ proc ::Dam::write::writeTables_dev { } {
 proc ::Dam::write::GetPrinTables {} {
 
     set root [customlib::GetBaseRoot]
-    FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]
+    FileSelector::CopyFilesIntoModel [GidUtils::GetDirectoryModel]
     set listaTablas [list ]
     set listaFiles [list ]
     set num 0
@@ -282,7 +282,7 @@ proc ::Dam::write::GetPrinTables {} {
 proc ::Dam::write::GetPrinTables_dev { } {
 
     set root [customlib::GetBaseRoot]
-    FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]
+    FileSelector::CopyFilesIntoModel [GidUtils::GetDirectoryModel]
     set listaTablas2 [list ]
     set listaFiles2 [list ]
     set num [llength [GetPrinTables]]

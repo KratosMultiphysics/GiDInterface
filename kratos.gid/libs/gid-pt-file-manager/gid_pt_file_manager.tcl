@@ -191,8 +191,9 @@ proc ::FileSelector::CopyFilesIntoModel { dir } {
     # variable files_list
     foreach f $files_to_model {
         # set files_list [lsearch -all -inline -not -exact $files_list $f]
+        if {![file exists $dir]} {file mkdir $dir }
         file copy -force $f $dir
-        #lappend files_list [file join $dir $f]
+        if {![file exists [file join $dir [file tail $f]]]} {W "Caution -> file [file tail $f] not copied into $dir"}
     }
     set files_to_model [list ]
 }

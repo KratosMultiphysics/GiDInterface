@@ -271,7 +271,7 @@ proc Kratos::LoadModelSPD { filespd } {
         # Open the tree
         spdAux::OpenTree
 
-        after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]}
+        after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GidUtils::GetDirectoryModel] Logs]}
     }
 
 }
@@ -497,12 +497,12 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
         # Model must be saved
-        if {[GiD_Info Project Modelname] eq "UNNAMED"} {
-            error "Save your model first"
-        } {
+        # if {[GiD_Info Project Modelname] eq "UNNAMED"} {
+        #     error "Save your model first"
+        # } {
             # Prepare the filename
-            set filename [file join [GiD_Info Project Modelname].gid [Kratos::GetModelName]]
-        }
+            set filename [file join [GidUtils::GetDirectoryModel] [Kratos::GetModelName]]
+        #}
     }
     # The calculation process may need the files of the file selector entries inside the model folder
     FileSelector::CopyFilesIntoModel [file dirname $filename]
@@ -546,7 +546,7 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd
 
     # Log it
-    set Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]
+    set Kratos::kratos_private(model_log_folder) [file join [GidUtils::GetDirectoryModel] Logs]
     Kratos::Log "Save model [file tail $filespd ]"
 
 }

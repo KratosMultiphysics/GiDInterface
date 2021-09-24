@@ -298,12 +298,11 @@ proc ? {question true_val false_val} {
 proc Kratos::OpenCaseIn {program} {
     switch $program {
         "VSCode" {
-            if {[GiD_Info Project ModelName] eq "UNNAMED"} {W "Save your model first"} {
-                catch {exec code -n [GidUtils::GetDirectoryModel]} msg
-                if {$msg eq {couldn't execute "code": no such file or directory}} {
-                    W "Install Visual Studio Code and add it to your PATH"
-                }
+            catch {exec code -n [GidUtils::GetDirectoryModel]} msg
+            if {$msg eq {couldn't execute "code": no such file or directory}} {
+                W "Install Visual Studio Code and add it to your PATH"
             }
+            
         }
         default {}
     }

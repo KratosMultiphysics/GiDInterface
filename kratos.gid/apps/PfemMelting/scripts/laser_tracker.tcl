@@ -19,7 +19,6 @@ proc ::PfemMelting::LaserTracker::Start { } {
     GiD_Process 'Redraw
 }
 
-
 proc ::PfemMelting::LaserTracker::TurnOn { } {
     variable status
     set status 1
@@ -32,7 +31,8 @@ proc ::PfemMelting::LaserTracker::TurnOn { } {
     foreach path_node $paths {
         set coordinates [list ]
         set path [write::getValueByNode $path_node]
-        set fullpath [file join [GiD_Info Project ModelName].gid $path]
+        set fullpath [file join [GidUtils::GetDirectoryModel] $path]
+        if {![file exists $fullpath]} {error "file $fullpath not found"} 
         set laser_dict [Kratos::ReadJsonDict $fullpath]
         set steps [dict get $laser_dict laser_settings]
         lappend steps_set $steps

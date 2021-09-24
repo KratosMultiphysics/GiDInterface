@@ -1,10 +1,10 @@
 
 # Handle file input
 proc ::spdAux::LaunchFileWindow { } {
-    if {[GiD_Info Project Modelname] eq "UNNAMED"} {
-        MessageBoxOk [_ "Model error"] [_ "Save your model first"] error
-        return
-    }
+    # if {[GiD_Info Project Modelname] eq "UNNAMED"} {
+    #     MessageBoxOk [_ "Model error"] [_ "Save your model first"] error
+    #     return
+    # }
     set FileSelector::callback_after_new_file "::spdAux::SaveModelFile"
     set FileSelector::callback_view_file "::spdAux::ViewFile"
     set FileSelector::callback_delete_file "::spdAux::DeleteFile"
@@ -12,7 +12,7 @@ proc ::spdAux::LaunchFileWindow { } {
 }
 
 proc ::spdAux::ViewFile {file_id} {
-    exec {*}[auto_execok start] "" [file join [file nativename [GiD_Info Project ModelName].gid] $file_id]
+    exec {*}[auto_execok start] "" [file join [GidUtils::GetDirectoryModel] $file_id]
 }
 
 proc ::spdAux::LoadModelFiles { {root "" }} {
@@ -34,7 +34,7 @@ proc ::spdAux::SaveModelFile { fileid } {
     FileSelector::AddFile $fileid
     gid_groups_conds::addF {container[@n='files']} file [list n ${fileid}]
     customlib::UpdateDocument
-    FileSelector::CopyFilesIntoModel [file nativename [GiD_Info Project ModelName] ].gid
+    FileSelector::CopyFilesIntoModel [GidUtils::GetDirectoryModel]
 }
 
 proc ::spdAux::ProcGetFilesValues { domNode } {

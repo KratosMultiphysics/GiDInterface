@@ -9,7 +9,7 @@ namespace eval ::Structural::Formfinding {
 proc ::Structural::Formfinding::CopyFormfinding {} {
     #delete formfinding folder if it exists
     # set script_file [file nativename [GiD_Info project modelname].gid]
-    set script_folder [GiD_Info project modelname].gid
+    set script_folder [GidUtils::GetDirectoryModel]
     set folder_name [Kratos::GetModelName].gid
     set new_folder [file join $script_folder $folder_name]
     file delete -force $new_folder
