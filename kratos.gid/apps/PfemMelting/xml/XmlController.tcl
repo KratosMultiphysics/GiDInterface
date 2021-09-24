@@ -38,6 +38,8 @@ proc PfemMelting::xml::CustomTree { args } {
     
     spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem state disabled GiDOptions GiDMultiFileFlag
+    
+    gid_groups_conds::setAttributes "[spdAux::getRoute [::ConvectionDiffusion::GetUniqueName conditions]]/condition/value\[@n='ambient_temperature'\]" {state hidden}
 
     # Delete this lines when heat conditions are back!
     # spdAux::SetValueOnTreeItem state hidden CNVDFFBC HeatFlux3D
