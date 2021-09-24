@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="SolutionStrat" pn="Solution" un="SWSolutionParameters" icon="solution" help="Solution Strategy" open_window="0">
+<container n="SolutionStrat" pn="Solution" un="SWSolutionParameters" icon="solver" help="Solution Strategy" open_window="0">
 	<!-- include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/ -->
 	<dynamicnode command="spdAux::injectSolvers" args=""/>
-	<container n="StratParams" pn="Strategy parameters" un="SWStratParams" icon="groupsTreeNew.gif" state="normal" open_window="0">
+	<container n="StratParams" pn="Strategy parameters" un="SWStratParams" icon="prdata16.gif" state="normal" open_window="0">
 		<dynamicnode command="spdAux::injectSolStratParams" args=""/>
 	</container>
 	<container n="Gravity" pn="Gravity" un="SWGravity" help="It is always in the vertical direction, positive down." open_window="0" icon="gravity_vector">
