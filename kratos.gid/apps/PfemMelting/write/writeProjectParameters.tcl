@@ -26,7 +26,7 @@ proc ::PfemMelting::write::getParametersDict { } {
     dict set project_parameters_dict solver_settings fluid_solver_settings alpha 0.0
     dict set project_parameters_dict solver_settings fluid_solver_settings move_mesh_strategy 2
 
-    W $project_parameters_dict
+    dict set project_parameters_dict solver_settings solver_type ThermallyCoupledPfem2
 
     return $project_parameters_dict
 }

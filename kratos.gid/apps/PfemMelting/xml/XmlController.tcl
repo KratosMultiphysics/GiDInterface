@@ -41,10 +41,6 @@ proc PfemMelting::xml::CustomTree { args } {
     
     gid_groups_conds::setAttributes "[spdAux::getRoute [::ConvectionDiffusion::GetUniqueName conditions]]/condition/value\[@n='ambient_temperature'\]" {state hidden}
 
-    # Delete this lines when heat conditions are back!
-    # spdAux::SetValueOnTreeItem state hidden CNVDFFBC HeatFlux3D
-    # spdAux::SetValueOnTreeItem state hidden CNVDFFBC ImposedTemperature3D
-    # spdAux::SetValueOnTreeItem state hidden CNVDFFBC ThermalFace3D
 }
 
 proc PfemMelting::xml::MultiAppEvent {args} {
