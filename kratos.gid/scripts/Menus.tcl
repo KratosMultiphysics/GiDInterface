@@ -128,7 +128,8 @@ proc Kratos::ChangeMenus { } {
     set pos -1
     if {$kratos_private(DevMode) eq "dev"} {set tomode "release mode";set fromode "developer mode"}
     GiDMenu::InsertOption "Kratos" [list "Kratos data" ] [incr pos] PRE [list gid_groups_conds::open_conditions menu] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "Local axes window" ] [incr pos] PRE [list gid_groups_conds::local_axes_window] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Applications..."] [incr pos] PRE [list spdAux::CreateWindow] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Local axes window" ] [incr pos] PRE [list gid_groups_conds::local_axes_window] "" "" replace =    
     GiDMenu::InsertOption "Kratos" [list "View spd file" ] [incr pos] PRE [list spdAux::ViewDoc] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Open case in VS Code" ] [incr pos] PRE [list Kratos::OpenCaseIn VSCode] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
