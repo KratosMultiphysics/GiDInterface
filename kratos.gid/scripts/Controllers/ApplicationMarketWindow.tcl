@@ -19,7 +19,7 @@ proc spdAux::CreateWindow {} {
     if {$must_open_init_window == 0} {return ""}
 
     # If we have an active app, dont open this window
-    if {[apps::getActiveApp] ne ""} {return ""}
+    #if {[apps::getActiveApp] ne ""} {return ""}
     
     
     # Window creation
