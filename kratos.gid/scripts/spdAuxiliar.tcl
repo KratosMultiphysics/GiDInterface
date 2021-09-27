@@ -41,7 +41,9 @@ proc spdAux::Init { } {
     set refreshTreeTurn 0
     set TreeVisibility 0
     set GroupsEdited [dict create]
-    set must_open_init_window 1
+    if { ![info exists must_open_init_window] } {
+        set must_open_init_window 1
+    }    
     set must_open_dim_window 1
     
     set list_of_windows [list ]
