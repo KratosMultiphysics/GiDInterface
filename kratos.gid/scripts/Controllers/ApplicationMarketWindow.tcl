@@ -204,6 +204,7 @@ proc spdAux::SetSpatialDimmension {ndim} {
     set nd [$root selectNodes "value\[@n='nDim'\]"]
     
     $nd setAttribute v $::Model::SpatialDimension
+    set ::GidPriv(kratos,dimension) $ndim
 }
 
 proc spdAux::SwitchDimAndCreateWindow { ndim } {
@@ -259,7 +260,8 @@ proc spdAux::deactiveApp { appid } {
     }
 }
 
-proc spdAux::activeApp { appid } {
+#ndim: "", "2D" or "3D"
+proc spdAux::activeApp { appid {ndim ""}} {
     #W "Active $appid"
     catch {
         set root [customlib::GetBaseRoot]
@@ -274,15 +276,20 @@ proc spdAux::activeApp { appid } {
         }
     }
     
-    set nd [$root selectNodes "value\[@n='nDim'\]"]
-    if {[$nd getAttribute v] ne "wait"} {
-        if {[$nd getAttribute v] ne "undefined"} {
-            set ::Model::SpatialDimension [$nd getAttribute v]
-            spdAux::SwitchDimAndCreateWindow $::Model::SpatialDimension
-            spdAux::TryRefreshTree
-        } {
-            ::spdAux::CreateDimensionWindow
+    if { $ndim == "" } {
+        set nd [$root selectNodes "value\[@n='nDim'\]"]
+        if {[$nd getAttribute v] ne "wait"} {
+            if {[$nd getAttribute v] ne "undefined"} {
+                set ::Model::SpatialDimension [$nd getAttribute v]
+                spdAux::SwitchDimAndCreateWindow $::Model::SpatialDimension
+                spdAux::TryRefreshTree
+            } {
+                ::spdAux::CreateDimensionWindow
+            }
         }
+    } else {        
+        spdAux::SwitchDimAndCreateWindow $ndim
+        spdAux::TryRefreshTree        
     }
 }
 

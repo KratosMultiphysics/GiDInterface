@@ -23,7 +23,8 @@ proc apps::ClearActiveApp {} {
     set activeApp ""
 }
 
-proc apps::setActiveApp {appid} {
+#ndim: "", "2D" or "3D"
+proc apps::setActiveApp {appid {ndim ""}} {
     variable activeApp
     variable appList
     
@@ -35,7 +36,9 @@ proc apps::setActiveApp {appid} {
             break
         }
     }
-    spdAux::activeApp $appid
+    spdAux::activeApp $appid $ndim
+    set ::GidPriv(kratos,application) $appid
+    set ::GidPriv(kratos,dimension) $ndim
 }
 
 proc apps::getActiveApp { } {
