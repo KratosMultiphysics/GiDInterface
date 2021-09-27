@@ -78,10 +78,13 @@ proc apps::getAppById { id } {
 
 proc apps::NewApp {appid publicname prefix} {
     variable appList
-    set ap [App new $appid]
-    $ap setPublicName $publicname
-    $ap setPrefix $prefix
-    lappend appList $ap
+    set ap [apps::getAppById $appid]
+    if { $ap == "" } {
+        set ap [App new $appid]
+        $ap setPublicName $publicname
+        $ap setPrefix $prefix
+        lappend appList $ap
+    }
     return $ap
 }
 
