@@ -119,8 +119,24 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Open the App selection window. It's delayed to wait if GiD calls the Event_LoadModelSPD (open a case instead of new)
     set activeapp_dom [spdAux::SetActiveAppFromDOM]
     if { $activeapp_dom == "" } {
-        #open a window to allow the user select the app
-        after 500 [list spdAux::CreateWindow]
+        if { [info exists ::GidPriv(kratos,application)] } {
+            #compulsory to allow Files->New reload the current application without interactive ask
+            #compulsory for Undo, all commands must be repeated exact without user interaction
+            #compulsory to allow use kratos from batch file with GUI
+            #use ::GidPriv instead a Kratos::kratos_private because 
+            # can be set before load kratos and must exists after unload kratos for its reload
+            set application $::GidPriv(kratos,application)
+            set ndim ""
+            if { [info exists ::GidPriv(kratos,dimension)] } {
+                set ndim $::GidPriv(kratos,dimension)
+            }
+            apps::setActiveAppSoft $application
+            apps::setActiveApp $application $ndim
+        } else {
+            #open a window to allow the user select the app
+            after 500 [list spdAux::CreateWindow]
+        }
+        
     }
 }
 
