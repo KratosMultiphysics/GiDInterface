@@ -505,7 +505,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         #}
     }
     # The calculation process may need the files of the file selector entries inside the model folder
-    FileSelector::CopyFilesIntoModel [file dirname $filename]
+    catch {FileSelector::CopyFilesIntoModel [file dirname $filename]}
 
     # Start the write configuration clean
     write::Init
@@ -540,7 +540,7 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     Kratos::RegisterEnvironment
 
     # User files (in file selectors) copied into the model (if required)
-    FileSelector::CopyFilesIntoModel [file dirname $filespd]
+    catch {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
 
     # Let the current app implement it's Save event
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd
