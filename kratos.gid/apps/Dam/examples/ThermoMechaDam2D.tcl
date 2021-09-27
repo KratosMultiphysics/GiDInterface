@@ -168,7 +168,6 @@ proc ::Dam::examples::ThermoMechaDam2D::TreeAssignation {args} {
 		set props_uniform [list is_fixed 1 value 10.0 ]
         spdAux::SetValuesOnBaseNode $uniformnode $props_uniform
 	
-	
 	# Thermal Load Conditions
 	
 		# Thermal Parameters 1
@@ -190,7 +189,6 @@ proc ::Dam::examples::ThermoMechaDam2D::TreeAssignation {args} {
 		set props_hydro [list Modify 0 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Spe_weight 10000 Water_level 20.0]
 		spdAux::SetValuesOnBaseNode $hydronode $props_hydro
         
-		
 	# Solution
 	spdAux::SetValueOnTreeItem v "Days" DamTimeScale
 
@@ -200,7 +198,4 @@ proc ::Dam::examples::ThermoMechaDam2D::TreeAssignation {args} {
     spdAux::SetValuesOnBasePath $nodal_path $results
 
     spdAux::RequestRefresh
-
-
 }
-

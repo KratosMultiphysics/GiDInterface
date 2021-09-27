@@ -258,8 +258,7 @@ proc ::Dam::write::GetPrinTables {} {
             set valueid [get_domnode_attribute $node n]
             set groupid [get_domnode_attribute [$node parent] n]
             set condid [get_domnode_attribute [[$node parent] parent] n]
-            #W $condid
-            if {$fileid ni [list "" "- No file"]} {
+            if {$fileid ni [list "" "- No file - (add files using File handler toolbar)"]} {
                 if {$fileid ni $listaFiles} {
                     lappend listaFiles $fileid
                     incr num
