@@ -96,6 +96,19 @@ proc ::ShallowWater::write::Validate {} {
     return $err
 }
 
+
+proc ::ShallowWater::write::writeCustomFilesEvent { } {
+    # Write the fluid materials json file
+    ::ShallowWater::write::WriteMaterialsFile
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+}
+# Custom files
+proc ::ShallowWater::write::WriteMaterialsFile { {write_const_law False} {include_modelpart_name True} } {
+    set model_part_name ""
+    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law $model_part_name
+}
+
 proc ::ShallowWater::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]

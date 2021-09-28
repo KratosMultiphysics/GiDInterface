@@ -1,12 +1,12 @@
 # Project Parameters
-proc ::Structural::write::getParametersDict { } {
+proc ::ShallowWater::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
     # Set the problem data section
     dict set projectParametersDict problem_data [ShallowWater::write::GetProblemDataDict]
 
     # Solver settings
-    dict set projectParametersDict solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
+    # dict set projectParametersDict solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
 
     set processes [dict create]
     # Boundary conditions processes
