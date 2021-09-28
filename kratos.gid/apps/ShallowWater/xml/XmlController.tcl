@@ -26,4 +26,8 @@ proc ::ShallowWater::xml::CustomTree {args} {
 
     # Register the outputs from topography data
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'MOMENTUM'\]" [list state normal]
+    gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'VELOCITY'\]" [list state normal]
+    gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'HEIGHT'\]" [list state normal]
+    gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'TOPOGRAPHY'\]" [list state normal]
+    gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'FREE_SURFACE_ELEVATION'\]" [list state normal]
 }

@@ -19,7 +19,7 @@
 
 	<Process n="TopographyProcess" pn="Topography process" python_module="set_topography_process" kratos_module="KratosMultiphysics.ShallowWaterApplication" help="">
 		<inputs>
-            <parameter n="value" pn="Value" type="double" function="1" v="0.0" has_units="1"/>
+            <parameter n="value" pn="Value" type="double" function="1" v="z" has_units="1"/>
 		</inputs>
 	</Process>
 
