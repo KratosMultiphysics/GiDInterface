@@ -11,7 +11,7 @@
 		<inputs>
             <parameter n="variable_name" pn="Variable name" type="combo" values="HEIGHT,FREE_SURFACE_ELEVATION" v="HEIGHT" />
 			<parameter n="constrained" pn="Constrained" type="bool" v="0" />
-            <parameter n="value" pn="Value" type="string" v="" />
+            <parameter n="value" pn="Value" function="1" v="0.0" has_units="1"/>
 			<parameter n="set_minimum_height" pn="Set minimum height" type="bool" v="1" />
             <parameter n="minimum_height_value" pn="Minimum height values" type="double" v="1e-3" />
 		</inputs>
@@ -19,14 +19,14 @@
 
 	<Process n="TopographyProcess" pn="Topography process" python_module="set_topography_process" kratos_module="KratosMultiphysics.ShallowWaterApplication" help="">
 		<inputs>
-            <parameter n="value" pn="Value" type="string" v="z" />
+            <parameter n="value" pn="Value" type="double" function="1" v="0.0" has_units="1"/>
 		</inputs>
 	</Process>
 
 	<Process n="ApplyConstantScalarValueProcess" pn="Apply constant scalar value process" python_module="process_factory" kratos_module="KratosMultiphysics" process_name="ApplyConstantScalarValueProcess" help="">
 		<inputs>
             <parameter n="variable_name" pn="Variable name" type="combo" values="" v="" />
-            <parameter n="value" pn="Value" type="string" v="" />
+            <parameter n="value" pn="Value" function="1" v="0.0" has_units="1"/>
             <parameter n="is_fixed" pn="Constrained" type="bool" v="0" />
 		</inputs>
 	</Process>

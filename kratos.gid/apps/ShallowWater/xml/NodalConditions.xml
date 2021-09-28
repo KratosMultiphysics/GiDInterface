@@ -17,5 +17,9 @@
         Type="TopographicData"
         ImplementedInApplication="ShallowWaterApplication"
         Interval="False">
+        <outputs>
+
+            <parameter n="MOMENTUM" pn="Momentum" v="Yes"/>
+        </outputs>
     </NodalConditionItem>
 </NodalConditionList>

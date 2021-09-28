@@ -15,13 +15,14 @@
         ProcessName="AssignVectorVariableProcess"
         help=""
         units="m^2/s"
-        unit_magnitude="Flow_rate">
+        unit_magnitude="L^2/T">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
-        <outputs></outputs>
+        <outputs>
+        </outputs>
     </ConditionItem>
 
     <ConditionItem
@@ -39,12 +40,13 @@
         ProcessName="AssignScalarVariableProcess"
         help=""
         units="m"
-        unit_magnitude="Height">
+        unit_magnitude="L">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
-        <outputs></outputs>
+        <outputs>
+        </outputs>
     </ConditionItem>
 </ConditionList>
