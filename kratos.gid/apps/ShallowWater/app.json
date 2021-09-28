@@ -21,6 +21,7 @@
     },
     "unique_names": {
         "parts": "SWParts",
+        "materials": "SWMaterials",
         "topography_data": "SWTopographicData",
         "initial_conditions": "SWInitialConditions",
         "conditions": "SWConditions",
@@ -29,7 +30,7 @@
     },
     "write": {
         "coordinates": "all",
-        "materials_file": "TopographicMaterials.json",
+        "materials_file": "TopographyMaterials.json",
         "properties_location": "json",
         "model_part_name": "main_model_part",
         "output_model_part_name": "main_model_part"

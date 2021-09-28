@@ -8,6 +8,7 @@ proc ::ShallowWater::xml::Init {} {
 
     Model::getElements "../../Common/xml/Elements.xml"
     Model::getConditions Conditions.xml
+    Model::getMaterials Materials.xml
     Model::getNodalConditions NodalConditions.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
