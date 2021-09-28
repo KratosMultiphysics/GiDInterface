@@ -8,7 +8,7 @@ proc ::FluidLauncher::Init { app } {
     variable available_apps
 
     # TODO: Get apps from json
-    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM]
+    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM ShallowWater]
     
     ::FluidLauncher::FluidAppSelectorWindow
 }
@@ -50,7 +50,7 @@ proc ::FluidLauncher::FluidAppSelectorWindow { } {
         ttk::frame $w.applications  -relief ridge
         set r 0
         set c 0
-        set max_cols 3
+        set max_cols 4
         foreach app $available_apps {
             set img [::apps::getImgFrom $app]
             set app_publicname [[::apps::getAppById $app] getPublicName]
