@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <condition n="ShallowWaterParts" pn="Parts"  ov="[CheckGeometry 1]" icon="land" help="Select the parts of the domain." un="SWParts">
-	<value n="Element" pn="Element" v="" dict="[GetElements]" actualize="1" values="">
+	<value n="Element" pn="Element" v="GENERIC_ELEMENT"  actualize="1" state="disabled">
 		<dependencies node="../value[@n!='Material']" actualize="1"/>
 	</value>
 	<value n="Material" pn="Material" state="disabled" help="Choose a material from the database" v="Air" values="[GetMaterialsList]">

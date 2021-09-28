@@ -16,10 +16,10 @@ proc ::ShallowWater::xml::Init {} {
 }
 
 proc ::ShallowWater::xml::getUniqueName {name} {
-    return [::ShallowWater::GetAttribute prefix]${name}
+    return [GetAttribute prefix]${name}
 }
 
-# proc ::ShallowWater::xml::CustomTree {args} {
-    # spdAux::SetValueOnTreeItem state normal FLGravity
-    # spdAux::SetValueOnTreeItem state normal FLTimeParameters
-# }
+proc ::ShallowWater::xml::CustomTree {args} {
+    gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName topography_data]]/condition" [list state normal]
+    gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName initial_conditions]]/condition" [list state normal]
+}

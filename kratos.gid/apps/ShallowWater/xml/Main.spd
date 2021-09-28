@@ -7,5 +7,6 @@
     <include n="SolutionStrategy" active="1" path="apps/ShallowWater/xml/SolutionStrategy.spd"/>
     <include n="Results" active="1" path="apps/Common/xml/Results.spd"/>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
+    <include n="Intervals"        active="1" path="apps/Common/xml/Intervals.spd"/>
     <include n="Materials" active="1" path="apps/ShallowWater/xml/Materials.spd"/>
 </container>

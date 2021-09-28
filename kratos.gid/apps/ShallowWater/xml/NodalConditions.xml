@@ -6,14 +6,16 @@
         ProcessName="InitialWaterLevelProcess"
         App="ShallowWater"
         Type="Initial"
-        ImplementedInApplication="ShallowWaterApplication">
+        ImplementedInApplication="ShallowWaterApplication"
+        Interval="Initial">
     </NodalConditionItem>
     <NodalConditionItem
         n="Topography"
         pn="Topography"
-        ProcessName="SetTopographyProcess"
+        ProcessName="TopographyProcess"
         App="ShallowWater"
-        Type="Topographic"
-        ImplementedInApplication="ShallowWaterApplication">
+        Type="TopographicData"
+        ImplementedInApplication="ShallowWaterApplication"
+        Interval="False">
     </NodalConditionItem>
 </NodalConditionList>
