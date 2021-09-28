@@ -24,8 +24,6 @@ proc ::ShallowWater::write::Init { } {
     SetAttribute model_part_name [GetWriteProperty model_part_name]
 }
 
-
-# MDPA write event
 proc ::ShallowWater::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
@@ -36,7 +34,9 @@ proc ::ShallowWater::write::writeModelPartEvent { } {
 
     # Headers
     ::write::writeModelPartData
-    writeProperties
+    ::write::WriteString "Begin Properties 0"
+    ::write::WriteString "End Properties"
+    ::write::WriteString ""
 
     # Nodal Coordinates
     ::write::writeNodalCoordinates
@@ -44,11 +44,16 @@ proc ::ShallowWater::write::writeModelPartEvent { } {
     # Element connectivities
     ::write::writeElementConnectivities
 
-    # Conditions
-    ::ShallowWater::write::writeConditions
+    # Conditions connectivities
+    writeConditions
 
     # SubmodelParts
-    ShallowWater::write::writeSubModelParts
+    writeSubModelParts
+}
+
+proc ::ShallowWater::write::Validate {} {
+    set err ""
+    return $err
 }
 
 proc ::ShallowWater::write::writeConditions { } {
@@ -57,12 +62,9 @@ proc ::ShallowWater::write::writeConditions { } {
 }
 
 proc ::ShallowWater::write::writeSubModelParts {} {
-
-    write::writePartSubModelPart
-    
-    write::writeNodalConditions [GetAttribute nodal_conditions_un]
-    write::writeNodalConditions [GetAttribute initial_conditions_un]
-
+    ::write::writePartSubModelPart
+    ::write::writeNodalConditions [GetAttribute nodal_conditions_un]
+    ::write::writeNodalConditions [GetAttribute initial_conditions_un]
     WriteConditionsSubModelParts
 }
 
@@ -81,32 +83,9 @@ proc ::ShallowWater::write::WriteConditionsSubModelParts { } {
     }
 }
 
-# MDPA Blocks
-proc ::ShallowWater::write::writeProperties { } {
-    # Begin Properties
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-    write::WriteString ""
-}
-
-
-proc ::ShallowWater::write::Validate {} {
-    set err ""
-    
-    return $err
-}
-
-
 proc ::ShallowWater::write::writeCustomFilesEvent { } {
-    # Write the fluid materials json file
-    ::ShallowWater::write::WriteMaterialsFile
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] false [GetAttribute model_part_name]
     write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
-}
-# Custom files
-proc ::ShallowWater::write::WriteMaterialsFile { {write_const_law False} {include_modelpart_name True} } {
-    set model_part_name ""
-    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law $model_part_name
 }
 
 proc ::ShallowWater::write::GetAttribute {att} {
