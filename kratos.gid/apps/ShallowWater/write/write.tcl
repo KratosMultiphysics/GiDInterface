@@ -15,7 +15,7 @@ proc ::ShallowWater::write::Init { } {
     SetAttribute parts_un [GetUniqueName parts]
     SetAttribute materials_un [GetUniqueName materials]
     SetAttribute initial_conditions_un [GetUniqueName initial_conditions]
-    SetAttribute nodal_conditions_un [GetUniqueName topography_data]
+    SetAttribute topography_data_un [GetUniqueName topography_data]
     SetAttribute conditions_un [GetUniqueName conditions]
 
     SetAttribute main_launch_file [ShallowWater::GetAttribute main_launch_file]
@@ -63,7 +63,7 @@ proc ::ShallowWater::write::writeConditions { } {
 
 proc ::ShallowWater::write::writeSubModelParts {} {
     ::write::writePartSubModelPart
-    ::write::writeNodalConditions [GetAttribute nodal_conditions_un]
+    ::write::writeNodalConditions [GetAttribute topography_data_un]
     ::write::writeNodalConditions [GetAttribute initial_conditions_un]
     WriteConditionsSubModelParts
 }

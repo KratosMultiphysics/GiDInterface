@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="SolutionStrat" pn="Solution" un="SWSolutionParameters" icon="solver" help="Solution Strategy" open_window="0">
+<container n="SolutionStrat" pn="Solution" un="SWSolutionStrat" icon="solver" help="Solution Strategy" open_window="0">
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
 	<!-- <dynamicnode command="spdAux::injectSolvers" args=""/> -->
 	<!-- <container n="StratParams" pn="Strategy parameters" un="SWStratParams" icon="prdata16.gif" state="normal" open_window="0">
@@ -11,10 +11,10 @@
 	<container n="TimeParameters" pn="Time parameters" un="SWTimeParameters" help="Time parameters" open_window="0" icon="time4">
 		<value n="StartTime" pn="Start time" v="0.0" help=""/>
 		<value n="EndTime" pn="End time" v="1.0" help=""/>
-		<value n="AutomaticDeltaTime" pn="Automatic delta time" un="SWAutomaticDeltaTime" v="No" values="Yes,No" type="bool" help=""/>
-		<value n="DeltaTime" pn="Delta time" v="0.01" help="User-defined time step" state="[checkStateByUniqueName SWAutomaticDeltaTime 0]"/>
-		<value n="CFLNumber" pn="CFL number" v="1" help="Desired CFL number for automatic time step computation" state="[checkStateByUniqueName SWAutomaticDeltaTime 1]"/>
-		<value n="MinimumDeltaTime" pn="Minimum delta time" v="0.0001" help="" state="[checkStateByUniqueName SWAutomaticDeltaTime 1]"/>
-		<value n="MaximumDeltaTime" pn="Maximum delta time" v="1.0" help="" state="[checkStateByUniqueName SWAutomaticDeltaTime 1]"/>
+		<value n="AutomaticDeltaTime" pn="Automatic delta time" un="SWAutomaticDeltaTime" v="Yes" values="Yes,No" type="bool" help=""/>
+		<value n="DeltaTime" pn="Delta time" v="0.01" help="User-defined time step" state="[checkStateByUniqueName SWAutomaticDeltaTime No]"/>
+		<value n="CFLNumber" pn="CFL number" v="1" help="Desired CFL number for automatic time step computation" state="[checkStateByUniqueName SWAutomaticDeltaTime Yes]"/>
+		<value n="MinimumDeltaTime" pn="Minimum delta time" v="0.0001" help="" state="[checkStateByUniqueName SWAutomaticDeltaTime Yes]"/>
+		<value n="MaximumDeltaTime" pn="Maximum delta time" v="1.0" help="" state="[checkStateByUniqueName SWAutomaticDeltaTime Yes]"/>
 	</container>
 </container>
