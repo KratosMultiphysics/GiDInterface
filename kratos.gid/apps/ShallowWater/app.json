@@ -10,7 +10,8 @@
     "script_files": [
         "start.tcl",
         "xml/XmlController.tcl",
-        "write/write.tcl"
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
     ],
     "start_script":"::ShallowWater::Init",
     "requirements":{},
