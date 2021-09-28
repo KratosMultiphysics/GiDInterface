@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<condition n="ShallowWaterParts" pn="Parts"  ov="[CheckGeometry 1]" ovm="node,element" icon="land" help="Select your group" un="SWParts">
+<condition n="ShallowWaterParts" pn="Parts"  ov="[CheckGeometry 1]" icon="land" help="Select the parts of the domain." un="SWParts">
+	<value n="Element" pn="Element" v="" dict="[GetElements]" actualize="1" values="">
+		<dependencies node="../value[@n!='Material']" actualize="1"/>
+	</value>
+	<value n="Material" pn="Material" state="disabled" help="Choose a material from the database" v="Air" values="[GetMaterialsList]">
+		<edit_command n="Edit materials" pn="Edit materials" icon="refresh.png" proc='EditDatabaseList'/>
+	</value>
+	<dynamicnode command="spdAux::injectPartInputs" args=""/>
 </condition>
+
