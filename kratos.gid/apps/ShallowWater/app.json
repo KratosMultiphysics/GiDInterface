@@ -9,7 +9,8 @@
     ],
     "script_files": [
         "start.tcl",
-        "xml/XmlController.tcl"
+        "xml/XmlController.tcl",
+        "write/write.tcl"
     ],
     "start_script":"::ShallowWater::Init",
     "requirements":{},

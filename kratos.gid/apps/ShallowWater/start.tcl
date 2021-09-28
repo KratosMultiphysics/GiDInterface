@@ -18,5 +18,5 @@ proc ::ShallowWater::Init {app} {
     set dir [apps::getMyDir "ShallowWater"]
 
     ::ShallowWater::xml::Init
-    # ::ShallowWater::write::Init
+    ::ShallowWater::write::Init
 }
