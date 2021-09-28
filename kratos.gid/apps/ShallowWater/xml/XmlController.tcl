@@ -20,8 +20,10 @@ proc ::ShallowWater::xml::getUniqueName {name} {
 }
 
 proc ::ShallowWater::xml::CustomTree {args} {
+    # Set the nodal conditions active
     gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName topography_data]]/condition" [list state normal]
     gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName initial_conditions]]/condition" [list state normal]
 
+    # Register the outputs from topography data
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'MOMENTUM'\]" [list state normal]
 }
