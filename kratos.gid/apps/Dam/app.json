@@ -20,7 +20,7 @@
     "start_script":"::Dam::Init",
     "requeriments":{
         "apps":[],
-        "minimum_gid_version":"15.1.3d"
+        "minimum_gid_version":"15.1.4d"
     },
     "permissions": {
         "open_tree": true,
