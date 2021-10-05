@@ -36,10 +36,14 @@ proc ::ShallowWater::write::GetProblemDataDict { } {
     set paralleltype [write::getValue ParallelType]
     dict set problem_data_dict parallel_type $paralleltype
 
-    # Time step
+    # Time settings
     set timeSteppingDict [dict create]
     dict set problem_data_dict start_time [write::getValue SWTimeParameters StartTime]
     dict set problem_data_dict end_time [write::getValue SWTimeParameters EndTime]
+
+    # Write the echo level in the problem data section
+    set echo_level [write::getValue Results EchoLevel]
+    dict set problem_data_dict echo_level $echo_level
     
     return $problem_data_dict
 }

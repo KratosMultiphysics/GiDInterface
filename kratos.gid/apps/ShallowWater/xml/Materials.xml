@@ -2,12 +2,12 @@
 <Materials>
   <Material n="Concrete" MaterialType="Bottom_friction" help="Bottom friction" icon="material16">
     <inputs>
-        <parameter n="MANNING_COEFFICIENT" pn="Manning roughness coefficient" v="0.009" unit_magnitude="T/L^0.333" units="s/m^0.333"/>
+        <parameter n="MANNING" pn="Manning roughness coefficient" v="0.009" unit_magnitude="T/L^0.333" units="s/m^0.333"/>
     </inputs>
   </Material>
   <Material n="Grass" MaterialType="Bottom_friction" help="Bottom friction" icon="material16">
     <inputs>
-        <parameter n="MANNING_COEFFICIENT" pn="Manning roughness coefficient" v="0.032" unit_magnitude="T/L^0.333" units="s/m^0.333"/>
+        <parameter n="MANNING" pn="Manning roughness coefficient" v="0.032" unit_magnitude="T/L^0.333" units="s/m^0.333"/>
     </inputs>
   </Material>
 </Materials>
