@@ -44,7 +44,7 @@ proc ::ShallowWater::write::GetProblemDataDict { } {
     # Write the echo level in the problem data section
     set echo_level [write::getValue Results EchoLevel]
     dict set problem_data_dict echo_level $echo_level
-    
+
     return $problem_data_dict
 }
 
