@@ -38,5 +38,5 @@
         "output_model_part_name": "main_model_part"
     },
     "main_launch_file": "python/MainKratos.py",
-    "description": "this appli"
+    "description": "Tools for the simulation of free surface flows under the shallow water assumptions."
 }
