@@ -53,7 +53,7 @@ proc ::ShallowWater::examples::DamBreak::AssignGroups {args} {
 
     GiD_Groups create Walls
     GiD_Groups edit color Walls "#3b3b3bff"
-    GiD_EntitiesGroups assign Walls lines 1 3
+    GiD_EntitiesGroups assign Walls lines [list 1 3]
 
     GiD_Groups create Left
     GiD_Groups edit color Left "#3b3b3bff"
@@ -69,39 +69,37 @@ proc ::ShallowWater::examples::DamBreak::TreeAssignation {args} {
     # Parts
     set parts [spdAux::getRoute "SWParts"]
     set part_node [customlib::AddConditionGroupOnXPath $parts Body]
-    set props [list Element Element2D Material Concrete MANNING 0.01]
+    set props [list Element GENERIC_ELEMENT Material Concrete]
     spdAux::SetValuesOnBaseNode $part_node $props
 
     # Nodal Conditions
-    set nodal_conditions [spdAux::getRoute "SWBenchmarks"]
-    set benchmark_cond "$nodal_conditions/condition\[@n='DamBreakBenchmark'\]"
-    GiD_Groups create "Body//Benchmark"                         ### Creo que no hace falta
-    GiD_Groups edit state "Body//Benchmark" hidden              ### Creo que no hace falta
-    spdAux::AddIntervalGroup Body "Body//Benchmark"             ### Creo que no hace falta
-    set benchmark_node [customlib::AddConditionGroupOnXPath $thermalnodcond Body]
-    $benchmark_node setAttribute ov surface
-    set props [list value 303.15 Interval Initial]        ### Con los valores por defecto de Kratos ya va bien
-    spdAux::SetValuesOnBaseNode $thermalnodNode $props
+    # set nodal_conditions [spdAux::getRoute "SWBenchmarks"]
+    # set benchmark_cond "$nodal_conditions/condition\[@n='DamBreakBenchmark'\]"
+    # set benchmark_node [customlib::AddConditionGroupOnXPath $thermalnodcond Body]
+    # $benchmark_node setAttribute ov surface
+    # set props [list value 303.15]        ### Con los valores por defecto de Kratos ya va bien
+    # spdAux::SetValuesOnBaseNode $thermalnodNode $props
 
     # Conditions
     set boundary_conditions [spdAux::getRoute "SWConditions"]
     set flow_rate_cond "$boundary_conditions/condition\[@n='ImposedFlowRate'\]"
-    set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond Walls]
+    spdAux::AddIntervalGroup Walls "Walls//Total"
+    set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond "Walls//Total"]
     $flow_rate_node setAttribute ov line
-    set props [list value 303.15 Interval Total]         ### que es esto?  ASIGNAR: Y impuesto, X libre
+    set props [list value_component_X 303.15 selector_component_Y Not Interval Total] 
     spdAux::SetValuesOnBaseNode $flow_rate_node $props
 
-    set flow_rate_cond "$boundary_conditions/condition\[@n='ImposedFlowRate'\]"
-    set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond Right]
-    $flow_rate_node setAttribute ov line
-    set props [list value 303.15 Interval Total]         ### que es esto?  ASIGNAR: X impuesto, Y libre
-    spdAux::SetValuesOnBaseNode $flow_rate_node $props
+    # set flow_rate_cond "$boundary_conditions/condition\[@n='ImposedFlowRate'\]"
+    # set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond Right]
+    # $flow_rate_node setAttribute ov line
+    # set props [list value 303.15 Interval Total]         ### que es esto?  ASIGNAR: X impuesto, Y libre
+    # spdAux::SetValuesOnBaseNode $flow_rate_node $props
 
-    set flow_rate_cond "$boundary_conditions/condition\[@n='ImposedFlowRate'\]"
-    set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond Left]
-    $flow_rate_node setAttribute ov line
-    set props [list value 303.15 Interval Total]         ### que es esto?  ASIGNAR: Y impuesto, X libre
-    spdAux::SetValuesOnBaseNode $flow_rate_node $props
+    # set flow_rate_cond "$boundary_conditions/condition\[@n='ImposedFlowRate'\]"
+    # set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond Left]
+    # $flow_rate_node setAttribute ov line
+    # set props [list value 303.15 Interval Total]         ### que es esto?  ASIGNAR: Y impuesto, X libre
+    # spdAux::SetValuesOnBaseNode $flow_rate_node $props
 
     # Refresh
     spdAux::RequestRefresh

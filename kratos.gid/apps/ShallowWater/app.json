@@ -11,7 +11,9 @@
         "start.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
-        "write/writeProjectParameters.tcl"
+        "write/writeProjectParameters.tcl",
+        "examples/examples.tcl",
+        "examples/DamBreak.tcl"
     ],
     "start_script":"::ShallowWater::Init",
     "requirements":{},
