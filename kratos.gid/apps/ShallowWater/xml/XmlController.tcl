@@ -30,4 +30,7 @@ proc ::ShallowWater::xml::CustomTree {args} {
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'VELOCITY'\]" [list state normal]
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'HEIGHT'\]" [list state normal]
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'FREE_SURFACE_ELEVATION'\]" [list state normal]
+
+    # 
+    gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName conditions]]/condition\[@n = 'ImposedFlowRate'\]/value\[@n = 'selector_component_Z'\]" [list v Not]
 }
