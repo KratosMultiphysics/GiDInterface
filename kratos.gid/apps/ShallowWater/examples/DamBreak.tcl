@@ -69,7 +69,7 @@ proc ::ShallowWater::examples::DamBreak::TreeAssignation {args} {
     # Parts
     set parts [spdAux::getRoute "SWParts"]
     set part_node [customlib::AddConditionGroupOnXPath $parts Body]
-    set props [list Element Element2D Material Concrete]
+    set props [list Element GENERIC_ELEMENT Material Concrete]
     spdAux::SetValuesOnBaseNode $part_node $props
 
     # Nodal Conditions
