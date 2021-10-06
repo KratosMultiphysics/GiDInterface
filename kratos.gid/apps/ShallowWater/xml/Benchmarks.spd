@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<container n="Benchmarks" pn="Benchmarks" un="SWBenchmarks" icon="topography" open_window="1">
-    <dynamicnode command="spdAux::injectNodalConditions" args="App ShallowWater Type Benchmark"/>
-</container>

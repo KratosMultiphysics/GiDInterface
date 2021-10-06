@@ -25,15 +25,4 @@
             <parameter n="TOPOGRAPHY" pn="Topography" v="Yes"/>
         </outputs>
     </NodalConditionItem>
-    <NodalConditionItem
-        n="DamBreakBenchmark"
-        pn="Dam Break benchmark"
-        ProcessName="DamBreakBenchmark"
-        App="ShallowWater"
-        Type="Benchmark"
-        ImplementedInApplication="ShallowWaterApplication"
-        Interval="False">
-        <outputs>
-        </outputs>
-    </NodalConditionItem>
 </NodalConditionList>

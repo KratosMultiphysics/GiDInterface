@@ -21,7 +21,6 @@ proc ::ShallowWater::xml::getUniqueName {name} {
 
 proc ::ShallowWater::xml::CustomTree {args} {
     # Set the nodal conditions active
-    gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName benchmarks]]/condition" [list state normal]
     gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName topography_data]]/condition" [list state normal]
     gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName initial_conditions]]/condition" [list state normal]
 
@@ -31,6 +30,6 @@ proc ::ShallowWater::xml::CustomTree {args} {
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'HEIGHT'\]" [list state normal]
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'FREE_SURFACE_ELEVATION'\]" [list state normal]
 
-    # 
+    # Set the default value for the Z component in the boundary conditions
     gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName conditions]]/condition\[@n = 'ImposedFlowRate'\]/value\[@n = 'selector_component_Z'\]" [list v Not]
 }

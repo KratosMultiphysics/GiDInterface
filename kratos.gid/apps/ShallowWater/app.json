@@ -26,7 +26,6 @@
     "unique_names": {
         "parts": "SWParts",
         "materials": "SWMaterials",
-        "benchmarks": "SWBenchmarks",
         "topography_data": "SWTopographicData",
         "initial_conditions": "SWInitialConditions",
         "conditions": "SWConditions",

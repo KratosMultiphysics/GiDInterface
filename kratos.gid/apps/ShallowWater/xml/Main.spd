@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="ShallowWater" pn="Shallow Water" icon="app" prefix="SW" tree_state="open" open_window="0">
     <include n="Parts" active="1" path="apps/ShallowWater/xml/Parts.spd"/>
-    <include n="Benchmarks" active="0" path="apps/ShallowWater/xml/Benchmarks.spd"/>
     <include n="TopographicData" active="1" path="apps/ShallowWater/xml/TopographicData.spd"/>
     <include n="InitialConditions" active="1" path="apps/ShallowWater/xml/InitialConditions.spd"/>
     <include n="BoundaryConditions" active="1" path="apps/ShallowWater/xml/BoundaryConditions.spd"/>
