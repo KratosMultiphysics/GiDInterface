@@ -52,18 +52,57 @@ proc ::ShallowWater::examples::DamBreak::AssignGroups {args} {
     GiD_EntitiesGroups assign Body surfaces 1
 
     GiD_Groups create Walls
-    GiD_Groups edit color Left_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Left_Wall lines 1 3
+    GiD_Groups edit color Walls "#3b3b3bff"
+    GiD_EntitiesGroups assign Walls lines 1 3
 
     GiD_Groups create Left
-    GiD_Groups edit color Top_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Top_Wall lines 4
+    GiD_Groups edit color Left "#3b3b3bff"
+    GiD_EntitiesGroups assign Left lines 4
 
     GiD_Groups create Right
-    GiD_Groups edit color Right_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Right_Wall lines 2
+    GiD_Groups edit color Right "#3b3b3bff"
+    GiD_EntitiesGroups assign Right lines 2
 }
 
 proc ::ShallowWater::examples::DamBreak::TreeAssignation {args} {
 
+    # Parts
+    set parts [spdAux::getRoute "SWParts"]
+    set part_node [customlib::AddConditionGroupOnXPath $parts Body]
+    set props [list Element Element2D Material Concrete MANNING 0.01]
+    spdAux::SetValuesOnBaseNode $part_node $props
+
+    # Nodal Conditions
+    set nodal_conditions [spdAux::getRoute "SWBenchmarks"]
+    set benchmark_cond "$nodal_conditions/condition\[@n='DamBreakBenchmark'\]"
+    GiD_Groups create "Body//Benchmark"                         ### Creo que no hace falta
+    GiD_Groups edit state "Body//Benchmark" hidden              ### Creo que no hace falta
+    spdAux::AddIntervalGroup Body "Body//Benchmark"             ### Creo que no hace falta
+    set benchmark_node [customlib::AddConditionGroupOnXPath $thermalnodcond Body]
+    $benchmark_node setAttribute ov surface
+    set props [list value 303.15 Interval Initial]        ### Con los valores por defecto de Kratos ya va bien
+    spdAux::SetValuesOnBaseNode $thermalnodNode $props
+
+    # Conditions
+    set boundary_conditions [spdAux::getRoute "SWConditions"]
+    set flow_rate_cond "$boundary_conditions/condition\[@n='ImposedFlowRate'\]"
+    set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond Walls]
+    $flow_rate_node setAttribute ov line
+    set props [list value 303.15 Interval Total]         ### que es esto?  ASIGNAR: Y impuesto, X libre
+    spdAux::SetValuesOnBaseNode $flow_rate_node $props
+
+    set flow_rate_cond "$boundary_conditions/condition\[@n='ImposedFlowRate'\]"
+    set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond Right]
+    $flow_rate_node setAttribute ov line
+    set props [list value 303.15 Interval Total]         ### que es esto?  ASIGNAR: X impuesto, Y libre
+    spdAux::SetValuesOnBaseNode $flow_rate_node $props
+
+    set flow_rate_cond "$boundary_conditions/condition\[@n='ImposedFlowRate'\]"
+    set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond Left]
+    $flow_rate_node setAttribute ov line
+    set props [list value 303.15 Interval Total]         ### que es esto?  ASIGNAR: Y impuesto, X libre
+    spdAux::SetValuesOnBaseNode $flow_rate_node $props
+
+    # Refresh
+    spdAux::RequestRefresh
 }

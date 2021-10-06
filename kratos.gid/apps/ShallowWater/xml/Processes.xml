@@ -31,4 +31,12 @@
 		</inputs>
 	</Process>
 
+	<Process n="DamBreakBenchmark" pn="Dam break benchmark" python_module="dam_break_benchmark" kratos_module="KratosMultiphysics.ShallowWaterApplication.benchmarks" help="">
+		<inputs>
+            <parameter n="left_height" pn="Left height" v="1.0" />
+            <parameter n="right_height" pn="Right height" v="1.0" />
+            <parameter n="dam_position" pn="Dam position" v="1.0" />
+		</inputs>
+	</Process>
+
 </ProcessList>
