@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group id="ShallowWater" name="Shallow water examples">
+    <Example id="DamBreak" app="ShallowWater" logo="more.png" name="Dam break" dim="2D" cmd="::ShallowWater::examples::DamBreak::Init">
+        <Description></Description>
+    </Example>
+</Group>
