@@ -91,9 +91,7 @@ proc ::Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true nam
             W "Warning - Couldn't find property Inlet $prop"
         }
     }
-    
 }
-
 
 proc ::Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
     

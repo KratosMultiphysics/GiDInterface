@@ -10,6 +10,15 @@
         Interval="Initial">
     </NodalConditionItem>
     <NodalConditionItem
+        n="InitialPerturbation"
+        pn="Initial perturbation"
+        ProcessName="InitialPerturbationProcess"
+        App="ShallowWater"
+        Type="Initial"
+        ImplementedInApplication="ShallowWaterApplication"
+        Interval="Initial">
+    </NodalConditionItem>
+    <NodalConditionItem
         n="Topography"
         pn="Topography"
         ProcessName="TopographyProcess"
