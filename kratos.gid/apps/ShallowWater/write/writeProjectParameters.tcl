@@ -71,6 +71,7 @@ proc ::ShallowWater::write::GetSolverSettingsDict { } {
 
     # Time stepping settings
     set timeSteppingDict [dict create]
+    dict set timeSteppingDict automatic_time_step [write::getValue SWAutomaticDeltaTime]
     if {[write::getValue SWAutomaticDeltaTime] eq "Yes"} {
         dict set timeSteppingDict courant_number [write::getValue SWTimeParameters CFLNumber]
         dict set timeSteppingDict maximum_delta_time [write::getValue SWTimeParameters MaximumDeltaTime]
