@@ -70,7 +70,7 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     spdAux::SetValuesOnBaseNode $fluid_node $props
 
     # Laser file into model
-    set laser_filename "LaserSettings_Template.json"
+    set laser_filename "LaserSettings.json"
     set laser_filename_origin [file join $PfemMelting::dir examples $laser_filename]
     set laser_filename [::FileSelector::_ProcessFile $laser_filename_origin]
     ::spdAux::SaveModelFile $laser_filename
