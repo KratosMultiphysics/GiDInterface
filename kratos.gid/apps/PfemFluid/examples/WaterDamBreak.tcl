@@ -13,7 +13,7 @@ proc ::PfemFluid::examples::WaterDamBreak::Init {args} {
 
     Kratos::ResetModel
     DrawGeometry$::Model::SpatialDimension
-    AssignGroupsGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
     TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw

@@ -253,7 +253,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
             append node [GetParameterValueString $in $forcedParams $cnd]
         }
         set CondUsesIntervals [$cnd getAttribute "Interval"]
-        if {$app_uses_intervals && $CondUsesIntervals ne "False"} {
+        if {$app_uses_intervals && ![write::isBooleanFalse $CondUsesIntervals]} {
             set state normal
             if {$initial_conds_flag} {
                 set CondUsesIntervals Initial
