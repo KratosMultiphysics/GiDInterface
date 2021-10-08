@@ -127,20 +127,30 @@ proc ::ShallowWater::examples::DamBreak::TreeAssignation {args} {
     spdAux::AddIntervalGroup Walls "Walls//Total"
     set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond "Walls//Total"]
     $flow_rate_node setAttribute ov line
-    set props [list selector_component_X Not value_component_Y 0.0 Interval Total] 
+    set props [list selector_component_X Not value_component_Y 0.0 selector_component_Z Not Interval Total] 
     spdAux::SetValuesOnBaseNode $flow_rate_node $props
 
     spdAux::AddIntervalGroup Right "Right//Total"
     set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond "Right//Total"]
     $flow_rate_node setAttribute ov line
-    set props [list value_component_X 0.0 selector_component_Y Not Interval Total] 
+    set props [list value_component_X 0.0 selector_component_Y Not selector_component_Z Not Interval Total] 
     spdAux::SetValuesOnBaseNode $flow_rate_node $props
 
     spdAux::AddIntervalGroup Left "Left//Total"
     set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond "Left//Total"]
     $flow_rate_node setAttribute ov line
-    set props [list value_component_X 0.0 selector_component_Y Not Interval Total] 
+    set props [list value_component_X 0.0 selector_component_Y Not selector_component_Z Not Interval Total] 
     spdAux::SetValuesOnBaseNode $flow_rate_node $props
+
+    # Time parameters
+    set parameters [list EndTime 2.0]
+    set xpath [spdAux::getRoute "SWTimeParameters"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
+
+    # Output
+    set parameters [list OutputControlType time OutputDeltaTime 0.1]
+    set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Refresh
     spdAux::RequestRefresh

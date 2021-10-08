@@ -77,7 +77,7 @@ proc ::ShallowWater::examples::HydraulicJump::TreeAssignation {args} {
     set topography_cond "$topography_conditions/condition\[@n='Topography'\]"
     set topography_node [customlib::AddConditionGroupOnXPath $topography_cond Channel]
     $topography_node setAttribute ov surface
-    set props [list ByFunction 1 function_value "3*x"]
+    set props [list ByFunction 1 function_value "2.45135310e-07*x**4 -4.82230477e-05*x**3 +2.54997185e-03*x**2 -4.57311854e-02*x +2.73225488e+00"]
     spdAux::SetValuesOnBaseNode $topography_node $props
 
     # Initial conditions
@@ -86,7 +86,7 @@ proc ::ShallowWater::examples::HydraulicJump::TreeAssignation {args} {
     spdAux::AddIntervalGroup Channel "Channel//Initial"
     set initial_node [customlib::AddConditionGroupOnXPath $initial_cond "Channel//Initial"]
     $initial_node setAttribute ov surface
-    set props [list variable_name FREE_SURFACE_ELEVATION value 2.0 Interval Initial set_minimum_height 1 minimum_height_value 1] 
+    set props [list variable_name FREE_SURFACE_ELEVATION value 2.8 Interval Initial set_minimum_height 1 minimum_height_value 1] 
     spdAux::SetValuesOnBaseNode $initial_node $props
 
     # Conditions
@@ -97,20 +97,30 @@ proc ::ShallowWater::examples::HydraulicJump::TreeAssignation {args} {
     spdAux::AddIntervalGroup Walls "Walls//Total"
     set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond "Walls//Total"]
     $flow_rate_node setAttribute ov line
-    set props [list selector_component_X Not value_component_Y 0.0 Interval Total] 
+    set props [list selector_component_X Not value_component_Y 0.0 selector_component_Z Not Interval Total] 
     spdAux::SetValuesOnBaseNode $flow_rate_node $props
 
     spdAux::AddIntervalGroup Upstream "Upstream//Total"
     set flow_rate_node [customlib::AddConditionGroupOnXPath $flow_rate_cond "Upstream//Total"]
     $flow_rate_node setAttribute ov line
-    set props [list value_component_X 2.0 selector_component_Y 0.0 Interval Total] 
+    set props [list value_component_X 2.0 selector_component_Y 0.0 selector_component_Z Not Interval Total] 
     spdAux::SetValuesOnBaseNode $flow_rate_node $props
 
     spdAux::AddIntervalGroup Downstream "Downstream//Total"
     set free_surface_node [customlib::AddConditionGroupOnXPath $water_height_cond "Downstream//Total"]
     $free_surface_node setAttribute ov line
-    set props [list value 2.0 Interval Total] 
+    set props [list value 2.8 Interval Total] 
     spdAux::SetValuesOnBaseNode $free_surface_node $props
+
+    # Time parameters
+    set parameters [list EndTime 50.0]
+    set xpath [spdAux::getRoute "SWTimeParameters"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
+
+    # Output
+    set parameters [list OutputControlType time OutputDeltaTime 1.0]
+    set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Refresh
     spdAux::RequestRefresh
