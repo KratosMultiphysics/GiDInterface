@@ -77,7 +77,7 @@ proc ::ShallowWater::examples::HydraulicJump::TreeAssignation {args} {
     set topography_cond "$topography_conditions/condition\[@n='Topography'\]"
     set topography_node [customlib::AddConditionGroupOnXPath $topography_cond Channel]
     $topography_node setAttribute ov surface
-    set props [list ByFunction 1 function_value "2.45135310e-07*x**4 -4.82230477e-05*x**3 +2.54997185e-03*x**2 -4.57311854e-02*x +2.73225488e+00"]
+    set props [list ByFunction Yes function_value "2.45135310e-07*x**4 -4.82230477e-05*x**3 +2.54997185e-03*x**2 -4.57311854e-02*x +2.73225488e+00"]
     spdAux::SetValuesOnBaseNode $topography_node $props
 
     # Initial conditions
