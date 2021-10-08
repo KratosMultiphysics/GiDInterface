@@ -60,7 +60,7 @@ proc ::ShallowWater::examples::DamBreak::DrawGeometry {args} {
     GiD_Process Mescape Geometry Create NurbsSurface {*}$geom_lines_right escape escape
 
     ## Remove the duplicated line
-    GiD_Process Mescape Utilities Collapse model Yes 
+    GiD_Process Mescape Utilities Collapse model Yes
 }
 
 proc ::ShallowWater::examples::DamBreak::AssignGroups {args} {

@@ -13,7 +13,8 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl",
         "examples/examples.tcl",
-        "examples/DamBreak.tcl"
+        "examples/DamBreak.tcl",
+        "examples/HydraulicJump.tcl"
     ],
     "start_script":"::ShallowWater::Init",
     "requirements":{},

@@ -3,7 +3,7 @@
     <Example id="DamBreak" app="ShallowWater" logo="dam_break.png" name="Dam break" dim="2D" cmd="::ShallowWater::examples::DamBreak::Init">
         <Description></Description>
     </Example>
-    <Example id="HydraulicJump" app="ShallowWater" logo="jump.png" name="Hydraulic jump" dim="2D" cmd="::ShallowWater::examples::DamBreak::Init">
+    <Example id="HydraulicJump" app="ShallowWater" logo="jump.png" name="Hydraulic jump" dim="2D" cmd="::ShallowWater::examples::HydraulicJump::Init">
         <Description></Description>
     </Example>
     <Example id="Waves" app="ShallowWater" logo="waves.png" name="Waves" dim="2D" cmd="::ShallowWater::examples::DamBreak::Init">
