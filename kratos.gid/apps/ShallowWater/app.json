@@ -1,0 +1,45 @@
+{
+    "id": "ShallowWater",
+    "name": "Shallow water",
+    "prefix": "SW",
+    "themed": false,
+    "kratos_name": "ShallowWaterApplication",
+    "dimensions": [
+        "2D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl",
+        "examples/examples.tcl",
+        "examples/DamBreak.tcl",
+        "examples/HydraulicJump.tcl"
+    ],
+    "start_script":"::ShallowWater::Init",
+    "requirements":{},
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "SWParts",
+        "materials": "SWMaterials",
+        "topography_data": "SWTopographicData",
+        "initial_conditions": "SWInitialConditions",
+        "conditions": "SWConditions",
+        "gravity": "SWGravity",
+        "time_parameters": "SWTimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "TopographyMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "main_model_part",
+        "output_model_part_name": "main_model_part"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "description": "Tools for the simulation of free surface flows under the shallow water assumptions."
+}

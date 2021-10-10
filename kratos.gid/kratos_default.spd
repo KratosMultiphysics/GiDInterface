@@ -30,6 +30,7 @@
 	<appLink n="MPM" public="1" pn="MPM" active="0" appid="MPM" prefix="MPM"/>
 	<appLink n="DEMPFEM" public="0" pn="DEM+PFEM" active="0" appid="DEMPFEM" prefix="DEMPFEM"/>
 	<appLink n="CDEM" public="0" pn="Cohesive DEM" active="0" appid="CDEM" prefix="CDEM"/>
+	<appLink n="ShallowWater" public="1" pn="Shallow water" active="0" appid="ShallowWater" prefix="SW"/>
 	<appLink n="Examples" public="1" pn="Examples" active="0" appid="Examples" prefix="EXA_" is_tool="1"/>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">
 		<value n='units_mesh' pn='Mesh units' unit_mesh_definition="1"/>
