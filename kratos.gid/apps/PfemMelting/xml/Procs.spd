@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="procs" pn="procs" includeContainer="No">    
+<container n="procs" pn="procs" includeContainer="No">
 
-	<proc n='MaxGroups' args='args'>
+	<proc n='AfterApplyParts' args='args'>
 		<![CDATA[
-		set childs [$domNode getElementsByTagName group]
-		if {[llength $childs] > 1} {
-			foreach group [lrange $childs 1 end] {$group delete}
-			gid_groups_conds::actualize_conditions_window
-			error "You can only set one part"
-		}
-	  ]]>
+			Fluid::xml::ProcAfterApplyParts $domNode
+		]]>
 	</proc>
-	
+
 	<proc n='HideIfElement' args='args'>
 		<![CDATA[
-		return [Fluid::xml::ProcHideIfElement $domNode {*}$args]
-	  ]]>
+			return [Fluid::xml::ProcHideIfElement $domNode {*}$args]
+		]]>
 	</proc>
 </container>

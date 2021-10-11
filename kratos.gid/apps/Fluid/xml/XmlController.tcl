@@ -112,3 +112,13 @@ proc ::Fluid::xml::ProcHideIfElement { domNode list_elements } {
     set element [lindex [Fluid::write::GetUsedElements] 0]
     if {$element in $list_elements} {return hidden} {return normal}
 }
+
+proc Fluid::xml::ProcAfterApplyParts {domNode} {
+    # In fluid app, only 1 group can be assigned in parts
+    set childs [$domNode getElementsByTagName group]
+    if {[llength $childs] > 1} {
+        foreach group [lrange $childs 1 end] {$group delete}
+        gid_groups_conds::actualize_conditions_window
+        error "You can only set one part"
+    }
+}
