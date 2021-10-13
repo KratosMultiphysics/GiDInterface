@@ -3,9 +3,7 @@ namespace eval ::PfemMelting::write {
     Kratos::AddNamespace [namespace current]
 
     variable writeAttributes
-    variable inletProperties
-    variable last_property_id
-    variable delete_previous_mdpa
+    variable custom_body_submodelpart
 }
 
 proc ::PfemMelting::write::Init { } {
@@ -14,7 +12,10 @@ proc ::PfemMelting::write::Init { } {
 
 # Events
 proc PfemMelting::write::writeModelPartEvent { } {
+    variable custom_body_submodelpart
+
     Buoyancy::write::writeModelPartEvent
+    set custom_body_submodelpart [::write::writeGroupSubModelPart Custom [write::getPartsGroupsId] "Nodes"]
 }
 
 proc PfemMelting::write::writeCustomFilesEvent { } {
