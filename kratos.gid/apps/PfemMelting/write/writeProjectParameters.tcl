@@ -33,9 +33,10 @@ proc ::PfemMelting::write::getParametersDict { } {
 }
 
 proc ::PfemMelting::write::GetAmbientTemperatureProcesses { ambient_temperature } {
+    variable custom_body_submodelpart
+
     # TODO: When no sea puente: Create in 
-    set fluid_part "ThermalModelPart.TEMPERATURE_Parts_Auto1"
-    set params [dict create model_part_name $fluid_part variable_name TEMPERATURE constrained false value $ambient_temperature interval [list [expr 0.0] [expr 0.0]]]
+    set params [dict create model_part_name [Buoyancy::GetWriteProperty model_part_name].$custom_body_submodelpart variable_name TEMPERATURE constrained false value $ambient_temperature interval [list [expr 0.0] [expr 0.0]]]
     set ambient_dict [dict create python_module assign_scalar_variable_process kratos_module KratosMultiphysics Parameters $params]
 }
 
