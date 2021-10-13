@@ -49,3 +49,7 @@ proc PfemMelting::xml::MultiAppEvent {args} {
         spdAux::ConvertAllUniqueNames [::Buoyancy::GetAttribute prefix] [::PfemMelting::GetAttribute prefix]
     }
 }
+
+proc PfemMelting::xml::ProcAfterApplyParts { domNode } {
+    Fluid::xml::ProcAfterApplyParts $domNode
+}

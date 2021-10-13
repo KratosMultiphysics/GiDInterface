@@ -3,7 +3,7 @@
 
 	<proc n='AfterApplyParts' args='args'>
 		<![CDATA[
-			Fluid::xml::ProcAfterApplyParts $domNode
+			PfemMelting::xml::ProcAfterApplyParts $domNode
 		]]>
 	</proc>
 
