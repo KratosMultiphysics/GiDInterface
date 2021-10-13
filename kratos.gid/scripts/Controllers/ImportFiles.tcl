@@ -51,7 +51,7 @@ proc ::spdAux::DeleteFile { fileid } {
 
     set used_nodes [[customlib::GetBaseRoot] selectNodes "//value\[@type = 'file' and @v = '$fileid'\]"]
     foreach used_node $used_nodes {
-        W "Warning: Deleted file $fileid was used in [[$used_node parent] @pn] > [$used_node @pn]"
+        W "Warning: Deleted file $fileid was used in [[$used_node parent] @n] > [$used_node @n]"
     }
 
     set file_node [[customlib::GetBaseRoot] selectNodes "//file\[@n = '$fileid'\]"]

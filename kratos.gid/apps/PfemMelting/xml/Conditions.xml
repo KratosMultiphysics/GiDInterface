@@ -2,8 +2,8 @@
 <ConditionList>
 
     <ConditionItem n="LaserPath" pn="Laser" ImplementedInFile=".cpp" ImplementedInApplication="ConvectionDiffusionApplication"
-                   MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2"
-                   SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="PfemMelting" ElementType="Surface" ProcessName="Laser-Path-Process"
+                   MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3"
+                   SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="PfemMelting" ElementType="Volume" ProcessName="Laser-Path-Process"
                    help="Applies an external thermal load" function="0" Interval="False" >
         <TopologyFeatures>
         </TopologyFeatures>

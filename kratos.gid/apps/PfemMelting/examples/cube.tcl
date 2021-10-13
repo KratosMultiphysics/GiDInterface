@@ -76,9 +76,8 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     ::spdAux::SaveModelFile $laser_filename
 
     # Laser condition
-    variable group_bottom
     set laser_xpath [spdAux::getRoute [::ConvectionDiffusion::GetUniqueName conditions]]
-    set laser_node [customlib::AddConditionGroupOnXPath "$laser_xpath/condition\[@n='LaserPath'\]" $group_bottom]
+    set laser_node [customlib::AddConditionGroupOnXPath "$laser_xpath/condition\[@n='LaserPath'\]" $group_body]
     set props [list laser_path $laser_filename]
     spdAux::SetValuesOnBaseNode $laser_node $props
 
