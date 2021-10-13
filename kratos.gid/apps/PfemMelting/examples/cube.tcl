@@ -74,6 +74,7 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     set laser_filename_origin [file join $PfemMelting::dir examples $laser_filename]
     set laser_filename [::FileSelector::_ProcessFile $laser_filename_origin]
     ::spdAux::SaveModelFile $laser_filename
+
     # Laser condition
     variable group_bottom
     set laser_xpath [spdAux::getRoute [::ConvectionDiffusion::GetUniqueName conditions]]
@@ -85,4 +86,9 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     set parameters [list ambient_temperature 293.16 gravity "0.0,0.0,-9.81"]
     set boussinesq_temperature_xpath [spdAux::getRoute [::PfemMelting::xml::getUniqueName Boussinesq]]
     spdAux::SetValuesOnBasePath $boussinesq_temperature_xpath $parameters
+
+    # Fix Velocity Constraints
+    set xpath [spdAux::getRoute [::Fluid::GetUniqueName conditions]]
+    customlib::AddConditionGroupOnXPath "$xpath/condition\[@n='NoSlip3D'\]" skin
+
 }
