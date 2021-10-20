@@ -6,6 +6,7 @@ namespace eval ::ShallowWater::xml {
 proc ::ShallowWater::xml::Init {} {
     Model::InitVariables dir $::ShallowWater::dir
 
+    Model::getSolutionStrategies Strategies.xml
     Model::getElements "../../Common/xml/Elements.xml"
     Model::getConditions Conditions.xml
     Model::getMaterials Materials.xml

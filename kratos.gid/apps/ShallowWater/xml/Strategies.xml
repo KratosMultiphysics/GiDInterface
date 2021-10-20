@@ -4,8 +4,7 @@
         pn="Stabilized shallow water solver"
 		ImplementedInFile="stabilized_shallow_water_solver.py"
 		ImplementedInApplication="ShallowWaterApplication"
-		ImplementedInPythonFile="stabilized_shallow_water_solver"
-		MinimumKratosVersion="9000"
+		ImplementedInPythonFile="StabilizedShallowWaterSolver"
         App="ShallowWater"
 		help="">
 
@@ -15,6 +14,7 @@
             <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
         </parameter_list>
 
+		<!-- linear solver settings -->
         <linearSolvers>
             <linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
                 <filterFeatures>
@@ -25,6 +25,7 @@
             </linearSolverItem>
         </linearSolvers>
 
+		<!-- scheme settings -->
         <schemes>
             <scheme n="bdf" pn="Backward differenctiation formula" help="">
                 <parameter_list>

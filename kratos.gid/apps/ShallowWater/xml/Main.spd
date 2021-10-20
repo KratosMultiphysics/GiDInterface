@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="ShallowWater" pn="Shallow Water" icon="app" prefix="SW" tree_state="open" open_window="0">
+    <include n="AnalysisType" active="1" path="apps/ShallowWater/xml/AnalysisType.spd"/>
     <include n="Parts" active="1" path="apps/ShallowWater/xml/Parts.spd"/>
     <include n="TopographicData" active="1" path="apps/ShallowWater/xml/TopographicData.spd"/>
     <include n="InitialConditions" active="1" path="apps/ShallowWater/xml/InitialConditions.spd"/>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="AnalysisType" pn="Analysis Type" help="Analysis information" icon="analysis" state="normal" open_window="0">
-    <value n="SolStrat" pn="Solution Strategy" un="FLSolStrat" v="" values="" dict="[GetSolutionStrategies App Fluid]" actualize_tree="1"/>
-    <value n="Scheme" pn="Scheme" un="FLScheme" v="" values="" dict="[GetSchemes]" actualize_tree="1" />
-
+<container n="AnalysisType" pn="Analysis type" help="Psysics and analysis information" icon="analysis" state="normal" open_window="0">
+    <value n="AnalysisType" pn="Analysis type" un="SWAnalysisType" v="shallow_water" values="waves,shallow_water" dict="waves,Waves propagation,shallow_water,Shallow water flow" help="Analysis type"/>
+    <value n="SolStrat" pn="Solution Strategy" un="SWSolStrat" v="" values="" dict="[GetSolutionStrategies App ShallowWater]" actualize_tree="1"/>
+    <value n="Scheme" pn="Scheme" un="SWScheme" v="" values="" dict="[GetSchemes]" actualize_tree="1"/>
 </container>
-    
