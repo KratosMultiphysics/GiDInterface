@@ -3,8 +3,6 @@
     <StrategyItem n="stabilized_shallow_water_solver"
         pn="Stabilized shallow water solver"
 		ImplementedInFile="stabilized_shallow_water_solver.py"
-		ImplementedInApplication="ShallowWaterApplication"
-		ImplementedInPythonFile="StabilizedShallowWaterSolver"
         App="ShallowWater"
 		help="">
 
