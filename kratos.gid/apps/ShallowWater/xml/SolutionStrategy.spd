@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="SolutionStrat" pn="Solution" un="SWSolutionStrat" icon="solver" help="Solution Strategy" open_window="0">
 
-
 	<!-- Parallelism -->
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
 
@@ -28,4 +27,5 @@
 		<value n="MinimumDeltaTime" pn="Minimum delta time" v="0.0001" help="" state="[checkStateByUniqueName SWAutomaticDeltaTime Yes]"/>
 		<value n="MaximumDeltaTime" pn="Maximum delta time" v="1.0" help="" state="[checkStateByUniqueName SWAutomaticDeltaTime Yes]"/>
 	</container>
+
 </container>

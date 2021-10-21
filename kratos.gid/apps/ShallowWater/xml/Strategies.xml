@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
-    <StrategyItem n="stabilized_shallow_water_solver"
-        pn="Shallow water"
+    <StrategyItem n="shallow_flow"
+        pn="Shallow water flow"
+        App="ShallowWater"
+        NeedElements="false"
 		ImplementedInFile="stabilized_shallow_water_solver.py"
-        App="ShallowWater" NeedElements="false"
 		help="">
 
         <!-- list of options to be filled -->
         <parameter_list>
             <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
             <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
+            <parameter n="stabilization_factor" pn="Stabilization factor" type="int" v="0.01" help=""/>
+            <parameter n="shock_capturing_type" pn="Shock capturing type" type="combo" values="residual_viscosity,gradient_jump,flux_correction" v="residual_viscosity" help=""/>
+            <parameter n="shock_capturing_factor" pn="Shock capturing factor" type="int" v="0.01" help=""/>
         </parameter_list>
 
 		<!-- linear solver settings -->
@@ -18,8 +22,6 @@
                 <filterFeatures>
                     <filter field="SolverType" value="Standard"/>
                 </filterFeatures>
-                <defaults>
-                </defaults>
             </linearSolverItem>
         </linearSolvers>
 
@@ -27,24 +29,25 @@
         <schemes>
             <scheme n="bdf" pn="Backward differenctiation formula" help=""  NeedElements="false">
                 <parameter_list>
-                    <parameter n="order" pn="Order" type="int" v="2" help=""/>
+                    <parameter n="order" pn="BDF order" type="int" v="2" help=""/>
                 </parameter_list>
-                <element_filters>
-                </element_filters>
             </scheme>
         </schemes>
 
     </StrategyItem>
+
     <StrategyItem n="waves"
-        pn="waves"
+        pn="Waves propagation"
+        App="ShallowWater"
+        NeedElements="false"
 		ImplementedInFile="stabilized_shallow_water_solver.py"
-        App="ShallowWater" NeedElements="false"
 		help="">
 
         <!-- list of options to be filled -->
         <parameter_list>
             <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
             <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
+            <parameter n="stabilization_factor" pn="Stabilization factor" type="int" v="0.01" help=""/>
         </parameter_list>
 
 		<!-- linear solver settings -->
@@ -53,8 +56,6 @@
                 <filterFeatures>
                     <filter field="SolverType" value="Standard"/>
                 </filterFeatures>
-                <defaults>
-                </defaults>
             </linearSolverItem>
         </linearSolvers>
 
@@ -62,10 +63,12 @@
         <schemes>
             <scheme n="bdf" pn="Backward differenctiation formula" help=""  NeedElements="false">
                 <parameter_list>
-                    <parameter n="order" pn="Order" type="int" v="2" help=""/>
+                    <parameter n="order" pn="BDF order" type="int" v="2" help=""/>
                 </parameter_list>
-                <element_filters>
-                </element_filters>
+            </scheme>
+            <scheme n="cn" pn="Crank Nicolson" help=""  NeedElements="false">
+                <parameter_list>
+                </parameter_list>
             </scheme>
         </schemes>
 
