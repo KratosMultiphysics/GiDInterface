@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="SolutionStrat" pn="Solution" un="SWSolutionStrat" icon="solver" help="Solution Strategy" open_window="0">
+<container n="SolutionStrat" pn="Solution" un="SWStrategyParams" icon="solver" help="Solution Strategy" open_window="0">
 
 	<!-- Parallelism -->
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>

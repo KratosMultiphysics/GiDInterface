@@ -18,10 +18,12 @@
 
 		<!-- linear solver settings -->
         <linearSolvers>
-            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+            <linearSolverItem n="linear_solver_settings" pn="Linear Solver">
                 <filterFeatures>
                     <filter field="SolverType" value="Standard"/>
                 </filterFeatures>
+                <defaults>
+                </defaults>
             </linearSolverItem>
         </linearSolvers>
 
@@ -31,6 +33,8 @@
                 <parameter_list>
                     <parameter n="order" pn="BDF order" type="int" v="2" help=""/>
                 </parameter_list>
+                <element_filters>
+                </element_filters>
             </scheme>
         </schemes>
 
@@ -52,23 +56,29 @@
 
 		<!-- linear solver settings -->
         <linearSolvers>
-            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+            <linearSolverItem n="linear_solver_settings" pn="Linear Solver">
                 <filterFeatures>
                     <filter field="SolverType" value="Standard"/>
                 </filterFeatures>
+                <defaults>
+                </defaults>
             </linearSolverItem>
         </linearSolvers>
 
 		<!-- scheme settings -->
         <schemes>
-            <scheme n="bdf" pn="Backward differenctiation formula" help=""  NeedElements="false">
+            <scheme n="bdf" pn="Backward differenctiation formula" help="" NeedElements="false">
                 <parameter_list>
                     <parameter n="order" pn="BDF order" type="int" v="2" help=""/>
                 </parameter_list>
+                <element_filters>
+                </element_filters>
             </scheme>
-            <scheme n="cn" pn="Crank Nicolson" help=""  NeedElements="false">
+            <scheme n="cn" pn="Crank Nicolson" help="" NeedElements="false">
                 <parameter_list>
                 </parameter_list>
+                <element_filters>
+                </element_filters>
             </scheme>
         </schemes>
 

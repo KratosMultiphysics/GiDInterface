@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="Physics" pn="Physics" help="Psysics and analysis information" icon="analysis" state="normal" open_window="0">
-        <value n="SolStrat" pn="Solution type" un="SWSolStrat" v="" values="" dict="[GetSolutionStrategies App ShallowWater]" actualize_tree="1"/>
+<container n="Physics" pn="Physics" help="Physics and analysis information" icon="analysis" state="normal" open_window="0">
+        <value n="SolStrat" pn="Solution type" un="SWSolutionStrat" v="" values="" dict="[GetSolutionStrategies App ShallowWater]" actualize_tree="1"/>
         <value n="Scheme" pn="Scheme" un="SWScheme" v="" values="" dict="[GetSchemes]" actualize_tree="1"/>
 </container>
