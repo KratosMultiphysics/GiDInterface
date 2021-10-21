@@ -54,6 +54,7 @@ proc ::ShallowWater::write::GetSolverSettingsDict { } {
     dict set solverSettingsDict solver_type "stabilized_shallow_water_solver"
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     dict set solverSettingsDict domain_size 2
+    dict set solverSettingsDict gravity 9.81
 
     # Model import settings
     set modelImportDict [dict create]

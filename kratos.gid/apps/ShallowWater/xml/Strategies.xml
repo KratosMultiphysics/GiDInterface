@@ -10,9 +10,9 @@
         <parameter_list>
             <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
             <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
-            <parameter n="stabilization_factor" pn="Stabilization factor" type="int" v="0.01" help=""/>
+            <parameter n="stabilization_factor" pn="Stabilization factor" type="double" v="0.01" help=""/>
             <parameter n="shock_capturing_type" pn="Shock capturing type" type="combo" values="residual_viscosity,gradient_jump,flux_correction" v="residual_viscosity" help=""/>
-            <parameter n="shock_capturing_factor" pn="Shock capturing factor" type="int" v="0.01" help=""/>
+            <parameter n="shock_capturing_factor" pn="Shock capturing factor" type="double" v="0.5" help=""/>
         </parameter_list>
 
 		<!-- linear solver settings -->
@@ -49,7 +49,7 @@
         <parameter_list>
             <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
             <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
-            <parameter n="stabilization_factor" pn="Stabilization factor" type="int" v="0.01" help=""/>
+            <parameter n="stabilization_factor" pn="Stabilization factor" type="double" v="0.01" help=""/>
         </parameter_list>
 
 		<!-- linear solver settings -->
