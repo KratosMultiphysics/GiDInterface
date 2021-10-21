@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
-    <StrategyItem n="shallow_flow"
+    <StrategyItem n="stabilized_shallow_water_solver"
         pn="Shallow water flow"
         App="ShallowWater"
         NeedElements="false"
-		ImplementedInFile="stabilized_shallow_water_solver.py"
 		help="">
 
         <!-- list of options to be filled -->
@@ -40,11 +39,10 @@
 
     </StrategyItem>
 
-    <StrategyItem n="waves"
+    <StrategyItem n="wave_solver"
         pn="Waves propagation"
         App="ShallowWater"
         NeedElements="false"
-		ImplementedInFile="stabilized_shallow_water_solver.py"
 		help="">
 
         <!-- list of options to be filled -->
