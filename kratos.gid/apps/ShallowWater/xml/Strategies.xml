@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
     <StrategyItem n="stabilized_shallow_water_solver"
-        pn="Stabilized shallow water solver"
+        pn="Shallow water"
 		ImplementedInFile="stabilized_shallow_water_solver.py"
-        App="ShallowWater"
+        App="ShallowWater" NeedElements="false"
 		help="">
 
         <!-- list of options to be filled -->
@@ -25,7 +25,42 @@
 
 		<!-- scheme settings -->
         <schemes>
-            <scheme n="bdf" pn="Backward differenctiation formula" help="">
+            <scheme n="bdf" pn="Backward differenctiation formula" help=""  NeedElements="false">
+                <parameter_list>
+                    <parameter n="order" pn="Order" type="int" v="2" help=""/>
+                </parameter_list>
+                <element_filters>
+                </element_filters>
+            </scheme>
+        </schemes>
+
+    </StrategyItem>
+    <StrategyItem n="waves"
+        pn="waves"
+		ImplementedInFile="stabilized_shallow_water_solver.py"
+        App="ShallowWater" NeedElements="false"
+		help="">
+
+        <!-- list of options to be filled -->
+        <parameter_list>
+            <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
+            <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
+        </parameter_list>
+
+		<!-- linear solver settings -->
+        <linearSolvers>
+            <linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+                <filterFeatures>
+                    <filter field="SolverType" value="Standard"/>
+                </filterFeatures>
+                <defaults>
+                </defaults>
+            </linearSolverItem>
+        </linearSolvers>
+
+		<!-- scheme settings -->
+        <schemes>
+            <scheme n="bdf" pn="Backward differenctiation formula" help=""  NeedElements="false">
                 <parameter_list>
                     <parameter n="order" pn="Order" type="int" v="2" help=""/>
                 </parameter_list>

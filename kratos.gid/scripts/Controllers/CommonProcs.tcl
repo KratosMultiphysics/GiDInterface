@@ -81,7 +81,7 @@ proc spdAux::ProcGetSolutionStrategies {domNode args} {
     set pnames [list ]
     # W $args
     set sols [::Model::GetSolutionStrategies {*}$args]
-    # W $Sols
+    # W $sols
     foreach ss $sols {
         lappend names [$ss getName]
         lappend pnames [$ss getName]
