@@ -101,14 +101,8 @@ proc spdAux::ProcGetSchemes {domNode args} {
     set nodeApp [GetAppIdFromNode $domNode]
     # W $nodeApp
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
-    set sol_stat_path [spdAux::getRoute $sol_stratUN]
     
-    #if {[get_domnode_attribute [$domNode selectNodes $sol_stat_path] v] eq ""} {
-        #W "entra"
-        get_domnode_attribute [$domNode selectNodes $sol_stat_path] dict
-        get_domnode_attribute [$domNode selectNodes $sol_stat_path] values
-        #}
-    set solStratName [::write::getValue $sol_stratUN]
+    set solStratName [::write::getValue $sol_stratUN "" force]
     if {$solStratName eq "" } {error "No solution strategy"}
     #W "Unique name: $sol_stratUN - Nombre $solStratName"
     set schemes [::Model::GetAvailableSchemes $solStratName {*}$args]

@@ -68,7 +68,7 @@ proc ::ShallowWater::write::GetSolverSettingsDict { } {
     dict set solverSettingsDict material_import_settings $materialsDict
 
     # Strategy, scheme and linear solver settings
-    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict SWSolutionStrat SWScheme SWStrategyParams] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict SWSolStrat SWScheme SWStrategyParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict ShallowWater] ]
 
     # Time stepping settings
