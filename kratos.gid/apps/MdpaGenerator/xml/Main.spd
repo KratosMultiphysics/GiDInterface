@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
   <container n="MdpaGenerator" pn="MdpaGenerator" icon="app" prefix="MDPAGen_" tree_state="open" open_window="0">
+    <container n="WriteOptions" pn="Write options"  tree_state="open">
+    </container>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
   </container>
