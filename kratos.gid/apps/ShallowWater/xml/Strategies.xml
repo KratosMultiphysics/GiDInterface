@@ -30,7 +30,7 @@
         <schemes>
             <scheme n="bdf" pn="Backward differenctiation formula" help=""  NeedElements="false">
                 <parameter_list>
-                    <parameter n="order" pn="BDF order" type="int" v="2" help=""/>
+                    <parameter n="time_integration_order" pn="BDF order" type="int" v="2" help=""/>
                 </parameter_list>
                 <element_filters>
                 </element_filters>
@@ -67,7 +67,7 @@
         <schemes>
             <scheme n="bdf" pn="Backward differenctiation formula" help="" NeedElements="false">
                 <parameter_list>
-                    <parameter n="order" pn="BDF order" type="int" v="2" help=""/>
+                    <parameter n="time_integration_order" pn="BDF order" type="int" v="2" help=""/>
                 </parameter_list>
                 <element_filters>
                 </element_filters>
