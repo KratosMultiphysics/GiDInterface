@@ -1,0 +1,22 @@
+{
+    "id": "MdpaGenerator",
+    "name": "Mdpa Generator",
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl"
+    ],
+    "dimensions": [
+        "3D"
+    ],
+    "start_script":"::MdpaGenerator::Init",
+    "requeriments":{
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": false,
+        "wizard": false
+    },
+    "description": "MDPA generator \n-Useful tool to generate modelparts"
+}
