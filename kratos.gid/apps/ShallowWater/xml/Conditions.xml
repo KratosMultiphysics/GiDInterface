@@ -3,6 +3,7 @@
     <ConditionItem 
         n="ImposedFlowRate"
         pn="Imposed flow rate"
+        state="[checkStateByUniqueName SWSolStrat stabilized_shallow_water_solver]"
         Interval="Total"
         App="ShallowWater"
         Type="BoundaryCondition"
@@ -12,6 +13,24 @@
         help=""
         units="m^2/s"
         unit_magnitude="L^2/T">
+        <TopologyFeatures>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+    </ConditionItem>
+
+    <ConditionItem 
+        n="ImposedVelocity"
+        pn="Imposed velocity"
+        state="[checkStateByUniqueName SWSolStrat wave_solver]"
+        Interval="Total"
+        App="ShallowWater"
+        Type="BoundaryCondition"
+        ElementType="Line"
+        VariableName="VELOCITY"
+        ProcessName="AssignVectorVariableProcess"
+        help=""
+        units="m/s"
+        unit_magnitude="L/T">
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
