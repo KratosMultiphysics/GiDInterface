@@ -4,7 +4,6 @@
         n="ImposedFlowRate"
         pn="Imposed flow rate"
         Interval="Total"
-        ImplementedInApplication="ShallowWaterApplication"
         App="ShallowWater"
         Type="BoundaryCondition"
         ElementType="Line"
@@ -16,17 +15,12 @@
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
-        <DegreesOfFreedom></DegreesOfFreedom>
-        <inputs></inputs>
-        <outputs>
-        </outputs>
     </ConditionItem>
 
     <ConditionItem
         n="ImposedFreeSurface"
         pn="Imposed free surface"
         Interval="Total"
-        ImplementedInApplication="ShallowWaterApplication"
         App="ShallowWater"
         Type="BoundaryCondition"
         ElementType="Line"
@@ -38,9 +32,5 @@
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
-        <DegreesOfFreedom></DegreesOfFreedom>
-        <inputs></inputs>
-        <outputs>
-        </outputs>
     </ConditionItem>
 </ConditionList>
