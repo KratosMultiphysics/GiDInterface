@@ -13,8 +13,8 @@
 	</container>
 
 	<!-- Gravity -->
-	<container n="Gravity" pn="Gravity" un="SWGravity" help="It is always in the vertical direction, positive down." open_window="0" icon="gravity_vector">
-		<value n="GravityValue" pn="Gravity value" v="9.81" help="Gravity value" unit_magnitude="Acceleration" units="m/s^2" />
+	<container n="Gravity" pn="Gravity" help="It is always in the vertical direction, positive down." open_window="0" icon="gravity_vector">
+		<value n="GravityValue" pn="Gravity value" un="SWGravity" v="9.81" help="Gravity value" unit_magnitude="Acceleration" units="m/s^2" />
 	</container>
 
 	<!-- Time paremeters -->

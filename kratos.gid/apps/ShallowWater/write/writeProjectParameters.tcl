@@ -51,10 +51,10 @@ proc ::ShallowWater::write::GetProblemDataDict { } {
 proc ::ShallowWater::write::GetSolverSettingsDict { } {
     # General data
     set solverSettingsDict [dict create]
-    dict set solverSettingsDict solver_type "stabilized_shallow_water_solver"
+    dict set solverSettingsDict solver_type [write::getValue SWSolStrat]
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     dict set solverSettingsDict domain_size 2
-    dict set solverSettingsDict gravity 9.81
+    dict set solverSettingsDict gravity [write::getValue SWGravity]
 
     # Model import settings
     set modelImportDict [dict create]
