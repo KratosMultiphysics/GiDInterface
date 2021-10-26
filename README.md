@@ -16,6 +16,9 @@ If you need the latest release, launch your GiD, navigate to Data > Problemtype 
       * Unix : `ln -s ~/Kratos Kratos` or maybe `ln -s ~/Kratos/bin/Release Kratos` if that's the destination folder
       * Windows : `mklink /J Kratos C:\kratos` or maybe `mklink /J Kratos C:\kratos\bin\Release` (choose actual Kratos installation folder)
 
+### More information on this video
+https://studio.youtube.com/video/zZq7ypDdudo/edit
+
 ## Usage
 * Run GiD
 * Go to: Data / Problem type / kratos

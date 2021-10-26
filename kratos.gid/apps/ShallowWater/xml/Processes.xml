@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+
+	<Process n="ApplySlipProcess" pn="slip process" python_module="apply_slip_process" kratos_module="KratosMultiphysics.ShallowWaterApplication" help="">
+		<inputs>
+		</inputs>
+	</Process>
+
+	<Process n="InitialWaterLevelProcess" pn="water level process" python_module="set_initial_water_level_process" kratos_module="KratosMultiphysics.ShallowWaterApplication" help="">
+		<inputs>
+            <parameter n="variable_name" pn="Variable name" type="combo" values="HEIGHT,FREE_SURFACE_ELEVATION" v="HEIGHT"/>
+            <parameter n="value" pn="Value" function="1" fv="z" v="0.0" has_units="1"/>
+			<parameter n="set_minimum_height" pn="Set minimum height" type="bool" v="1"/>
+            <parameter n="minimum_height_value" pn="Minimum height value" type="double" v="1e-3"/>
+		</inputs>
+	</Process>
+
+	<Process n="InitialPerturbationProcess" pn="perturbation process" python_module="set_initial_perturbation_process" kratos_module="KratosMultiphysics.ShallowWaterApplication" help="">
+		<inputs>
+            <parameter n="variable_name" pn="Variable name" type="combo" values="HEIGHT,FREE_SURFACE_ELEVATION" v="HEIGHT"/>
+            <parameter n="maximum_perturbation_value" pn="Maximum value" type="double" v="1.0" has_units="0"/>
+			<parameter n="distance_of_influence" pn="Distance of influence" type="double" v="1.0"/>
+            <parameter n="default_value" pn="Default value" type="double" v="0.0"/>
+            <parameter n="source_type" pn="Source type" type="combo" values="coordinates,model part" v="coordinates"/>
+            <parameter n="source_coordinates" pn="Coordinates" type="vector" v="0.0,0.0,0.0"/>
+		</inputs>
+	</Process>
+
+	<Process n="TopographyProcess" pn="topography process" python_module="set_topography_process" kratos_module="KratosMultiphysics.ShallowWaterApplication" help="">
+		<inputs>
+            <parameter n="value" pn="Value" type="double" function="1" v="0.0" fv="z" has_units="1"/>
+		</inputs>
+	</Process>
+
+	<Process n="ApplyConstantScalarValueProcess" pn="scalar process" python_module="process_factory" kratos_module="KratosMultiphysics" process_name="ApplyConstantScalarValueProcess" help="">
+		<inputs>
+            <parameter n="variable_name" pn="Variable name" type="combo" values="" v="" />
+            <parameter n="value" pn="Value" function="1" v="0.0" has_units="1"/>
+            <parameter n="is_fixed" pn="Constrained" type="bool" v="0" />
+		</inputs>
+	</Process>
+
+</ProcessList>
