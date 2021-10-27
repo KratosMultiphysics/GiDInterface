@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-  <container n="MdpaGenerator" pn="MdpaGenerator" icon="app" prefix="MDPAGen_" tree_state="open" open_window="0">
-    <container n="WriteOptions" pn="Write options"  tree_state="open">
-    </container>
-    <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
+<container n="MdpaGenerator" pn="MdpaGenerator" icon="app" prefix="MDPAGen_" tree_state="open" open_window="0">
+  <container n="WriteOptions" pn="Write options" tree_state="open">
+    <value n="condition_write_mode" pn="Condition mode" v='unique' values="unique,repeat,gid-id" dict="unique,Unique ids,repeat,Repeat,gid-id,GiD ids"
+    help="Ids policy for conditions applied over the same entity more than one time."/>
   </container>
+  <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
+</container>
