@@ -5,7 +5,7 @@ proc ::DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
     set dimension [expr 3]
-    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]} 
+    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]}
 
     dict set project_parameters_dict "Dimension"                            [expr $dimension]
     dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
@@ -48,13 +48,26 @@ proc ::DEM::write::getParametersDict { } {
     dict set strategy_parameters_dict "material_import_settings" $material_import_settings
 
     dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
+
+    set processes [dict create]
+    # Boundary conditions processes
+    #dict set processes initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    #dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+
+    dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
+    dict set processes constraints_process_list [DEM::write::getForceProcessDictList]
+
+    dict set projectParametersDict processes $processes
+
+
+
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
     dict set project_parameters_dict "RollingFrictionOption"                [write::getValue AdvOptions RollingFriction]
     dict set project_parameters_dict "GlobalDamping"                        [write::getValue AdvOptions GlobalDamping]
     dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
-    
+
     set used_elements [spdAux::GetUsedElements]
     set ElementType [lindex $used_elements 0]
     dict set project_parameters_dict "ElementType"                          $ElementType
@@ -112,6 +125,67 @@ proc ::DEM::write::getParametersDict { } {
 
     return $project_parameters_dict
 }
+
+
+# Kinematics SubModelParts
+proc ::DEM::write::getKinematicsProcessDictList {} {
+    set ret [list ]
+    set model_part_name [GetAttribute model_part_name]
+    foreach partgroup [write::getPartsSubModelPartId] {
+        set value [write::getValue gidtree ForceValue]
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_kinematic_constraints_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        #dict set pdict "process_name" "AssignScalarVariableProcess"
+        set params [dict create]
+        dict set params "model_part_name" $model_part_name.${partgroup}
+        set vsettings [dict create]
+        dict set settings "constrained" false
+        dict set settings "value" $value
+        dict set settings "table" null
+        dict set params "velocity_constraints_settings" $vsettings
+        set asettings [dict create]
+        dict set settings "constrained" false
+        dict set settings "value" $value
+        dict set settings "table" null
+        dict set params "angular_velocity_constraints_settings" $asettings
+        dict set params "interval" $interval
+        dict set pdict "Parameters" $params
+
+        lappend ret $pdict
+    }
+    return $ret
+}
+
+
+# Force and moments SubModelParts
+proc ::DEM::write::getForceProcessDictList {} {
+    set ret [list ]
+    set model_part_name [GetAttribute model_part_name]
+    foreach partgroup [write::getPartsSubModelPartId] {
+        set value [write::getValue gidtree ForceValue]
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_forces_and_moments_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        set params [dict create]
+        dict set params "model_part_name" $model_part_name.${partgroup}
+        set fsettings [dict create]
+        dict set settings "value" $value
+        dict set settings "table" null
+        dict set params "force_settings" $fsettings
+        set msettings [dict create]
+        dict set settings "value" $value
+        dict set settings "table" null
+        dict set params "moment_settings" $msettings
+        dict set params "interval" $interval
+        dict set pdict "Parameters" $params
+
+        lappend ret $pdict
+    }
+    return $ret
+}
+
+
 
 proc ::DEM::write::GetDemStrategyName { } {
     return sphere_strategy
