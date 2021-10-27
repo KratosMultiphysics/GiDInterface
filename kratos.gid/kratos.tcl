@@ -471,8 +471,8 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     if {!$run} {
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
     }
-    set app_run_brake [apps::ExecuteOnCurrentApp BeforeRunCalculation]
-    if {$app_run_brake}
+    set app_run_brake [apps::ExecuteOnCurrentApp BreakRunCalculation]
+    if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {

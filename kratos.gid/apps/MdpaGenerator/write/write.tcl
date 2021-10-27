@@ -41,7 +41,14 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
 
     # Custom SubmodelParts
     variable last_condition_iterator
-    write::writeBasicSubmodelPartsByUniqueId  $MdpaGenerator::write::ConditionMap $last_condition_iterator
+    set conditions_mode [write::getValue SMP_write_options condition_write_mode]
+    switch $conditions_mode {
+        "unique" {}
+        "repeat" {}
+        "gid-id" {}
+        default {}
+    }
+    write::writeBasicSubmodelPartsByUniqueId $MdpaGenerator::write::ConditionMap $last_condition_iterator
 
     # Clean
     unset ::MdpaGenerator::write::ConditionMap

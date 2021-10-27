@@ -19,3 +19,7 @@ proc ::MdpaGenerator::Init { app } {
     ::MdpaGenerator::xml::Init
     ::MdpaGenerator::write::Init
 }
+
+proc ::MdpaGenerator::BreakRunCalculation {} {
+    return true
+}
