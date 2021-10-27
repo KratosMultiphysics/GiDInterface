@@ -40,15 +40,16 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
     write::writeNodalCoordinates
 
     # Custom SubmodelParts
-    variable last_condition_iterator
     set conditions_mode [write::getValue SMP_write_options condition_write_mode]
+    variable last_condition_iterator
+    set last_condition_iterator [expr [write::getValue SMP_write_options conditions_start_id] -1]
     switch $conditions_mode {
-        "unique" {}
-        "repeat" {}
+        "unique" {write::writeBasicSubmodelPartsByUniqueId $MdpaGenerator::write::ConditionMap $last_condition_iterator}
+        "repeat" {write::writeBasicSubmodelParts $last_condition_iterator}
         "gid-id" {}
         default {}
     }
-    write::writeBasicSubmodelPartsByUniqueId $MdpaGenerator::write::ConditionMap $last_condition_iterator
+    
 
     # Clean
     unset ::MdpaGenerator::write::ConditionMap
