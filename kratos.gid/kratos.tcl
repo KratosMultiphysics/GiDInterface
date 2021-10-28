@@ -151,7 +151,7 @@ proc Kratos::InitGlobalVariables {dir} {
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
     set Kratos::kratos_private(allow_logs) 1
     # git hash of the problemtype
-    set Kratos::kratos_private(problemtype_git_hash) 0    
+    set Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
     set Kratos::kratos_private(model_log_folder) ""
 
@@ -282,7 +282,7 @@ proc Kratos::Event_EndProblemtype { } {
     }
     if {[array exists ::Kratos::kratos_private]} {
         # Close the log and moves them to the folder
-        Kratos::FlushLog 
+        Kratos::FlushLog
 
         # Restore GiD variables that were modified by kratos and must be restored (maybe mesher)
         Kratos::RestoreVariables
@@ -307,7 +307,7 @@ proc Kratos::Event_EndProblemtype { } {
 
     }
     Drawer::UnregisterAll
-    
+
     # Clear namespaces
     Kratos::DestroyNamespaces
 }
@@ -471,6 +471,8 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     if {!$run} {
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
     }
+    set app_run_brake [apps::ExecuteOnCurrentApp BreakRunCalculation]
+    if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {

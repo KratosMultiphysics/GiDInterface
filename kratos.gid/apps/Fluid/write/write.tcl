@@ -1,7 +1,7 @@
 namespace eval ::Fluid::write {
     namespace path ::Fluid
     Kratos::AddNamespace [namespace current]
-    
+
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes
@@ -20,7 +20,7 @@ proc ::Fluid::write::Init { } {
     SetAttribute results_un [::Fluid::GetUniqueName results]
     SetAttribute drag_un [::Fluid::GetUniqueName drag]
     SetAttribute time_parameters_un [::Fluid::GetUniqueName time_parameters]
-    
+
     SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_launch_file [::Fluid::GetAttribute main_launch_file]
@@ -59,8 +59,8 @@ proc ::Fluid::write::writeModelPartEvent { } {
 
     # Custom SubmodelParts
     variable last_condition_iterator
-    write::writeBasicSubmodelPartsByUniqueId  $Fluid::write::FluidConditionMap $last_condition_iterator
-    
+    write::writeBasicSubmodelPartsByUniqueId $Fluid::write::FluidConditionMap $last_condition_iterator
+
     # SubmodelParts
     writeMeshes
 
