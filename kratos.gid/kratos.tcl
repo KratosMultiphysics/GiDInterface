@@ -181,6 +181,9 @@ proc Kratos::LoadCommonScripts { } {
     if { [lsearch -exact $::auto_path [file join $kratos_private(Path) scripts]] == -1 } {
         lappend ::auto_path [file join $kratos_private(Path) scripts]
     }
+    if { [lsearch -exact $::auto_path [file join $kratos_private(Path) libs]] == -1 } {
+        lappend ::auto_path [file join $kratos_private(Path) libs]
+    }
 
     # Writing common scripts
     foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
@@ -193,7 +196,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts $filename]]
     }
     # Common controllers
-    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl Drawer.tcl} {
+    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl Drawer.tcl ImportFiles.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
     }
     # Model class
@@ -201,7 +204,7 @@ proc Kratos::LoadCommonScripts { } {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Model $filename]]
     }
     # Libs
-    foreach filename {SimpleXMLViewer.tcl FileManager.tcl } {
+    foreach filename {SimpleXMLViewer.tcl} {
         uplevel #0 [list source [file join $kratos_private(Path) libs $filename]]
     }
 }
@@ -341,6 +344,13 @@ proc Kratos::LoadWizardFiles { } {
     # Load the wizard package
     set kratos_private(UseWizard) 1
     package require gid_smart_wizard
+    Kratos::UpdateMenus
+}
+proc Kratos::LoadImportFiles { } {
+    variable kratos_private
+    # Load the wizard package
+    set kratos_private(UseFiles) 1
+    package require gid_pt_file_manager
     Kratos::UpdateMenus
 }
 

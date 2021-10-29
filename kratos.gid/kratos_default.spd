@@ -317,7 +317,7 @@
 		</proc>
 		<proc n='GetFilesValues' args='args'>
 			<![CDATA[
-				return [spdAux::ProcGetFilesValues]
+				return [spdAux::ProcGetFilesValues $domNode]
 			]]>
 		</proc>
 

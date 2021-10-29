@@ -549,13 +549,6 @@ proc spdAux::ProcShowInMode { domNode args } {
     }
 }
 
-proc spdAux::ProcGetFilesValues { } {
-    lappend listilla "- No file"
-    lappend listilla {*}[FileSelector::GetAllFiles]
-    lappend listilla "- Add new file"
-    return [join $listilla ","]
-}
-
 proc spdAux::ProcGetIntervals {domNode args} {
     set lista [::spdAux::getIntervals]
     if {$lista eq ""} {$domNode setAttribute state "hidden"; spdAux::RequestRefresh}
