@@ -29,9 +29,7 @@
         "materials": "SWMaterials",
         "topography_data": "SWTopographicData",
         "initial_conditions": "SWInitialConditions",
-        "conditions": "SWConditions",
-        "gravity": "SWGravity",
-        "time_parameters": "SWTimeParameters"
+        "conditions": "SWConditions"
     },
     "write": {
         "coordinates": "all",
