@@ -1,7 +1,7 @@
 namespace eval ::Dam::write {
     namespace path ::Dam
     Kratos::AddNamespace [namespace current]
-    
+
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable TableDict
@@ -246,7 +246,7 @@ proc ::Dam::write::writeTables_dev { } {
 proc ::Dam::write::GetPrinTables {} {
 
     set root [customlib::GetBaseRoot]
-    FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]
+    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]}
     set listaTablas [list ]
     set listaFiles [list ]
     set num 0
@@ -282,7 +282,7 @@ proc ::Dam::write::GetPrinTables {} {
 proc ::Dam::write::GetPrinTables_dev { } {
 
     set root [customlib::GetBaseRoot]
-    FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]
+    if {$Kratos::kratos_private(UseFiles) eq 1}{FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]}
     set listaTablas2 [list ]
     set listaFiles2 [list ]
     set num [llength [GetPrinTables]]
