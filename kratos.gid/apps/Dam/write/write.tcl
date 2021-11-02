@@ -258,8 +258,8 @@ proc ::Dam::write::GetPrinTables {} {
             set valueid [get_domnode_attribute $node n]
             set groupid [get_domnode_attribute [$node parent] n]
             set condid [get_domnode_attribute [[$node parent] parent] n]
-            #W $condid
-            if {$fileid ni [list "" "- No file"]} {
+            # W $fileid
+            if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
                 if {$fileid ni $listaFiles} {
                     lappend listaFiles $fileid
                     incr num
@@ -296,7 +296,7 @@ proc ::Dam::write::GetPrinTables_dev { } {
         set node_table_device [$root selectNodes $table_device]
         set fileid [write::getValueByNode $node_table_device]
 
-        if {$fileid ni [list "" "- No file"]} {
+        if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
             if {$fileid ni $listaFiles2} {
                 lappend listaFiles2 $fileid
                 incr num

@@ -6,7 +6,7 @@ namespace eval ::PfemThermic::write {
 proc ::PfemThermic::write::Init { } {
     PfemFluid::write::Init
     ConvectionDiffusion::write::Init
-    
+
     PfemFluid::write::SetAttribute materials_file PFEMThermicMaterials.json
     ConvectionDiffusion::write::SetAttribute materials_file PFEMThermicMaterials.json
 }
@@ -20,14 +20,14 @@ proc PfemThermic::write::writeModelPartEvent { } {
     variable FluxConditions
     set FluxConditions(temp) 0
     unset FluxConditions(temp)
-    
+
     # Write geometries (adapted from PfemFluid::write::writeModelPartEvent)
     write::initWriteConfiguration [PfemFluid::write::GetAttributes]
     set parts_un_list [PfemFluid::write::GetPartsUN]
     foreach part_un $parts_un_list {
         write::initWriteData $part_un [PfemFluid::write::GetAttribute materials_un]
     }
-    
+
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
@@ -36,7 +36,7 @@ proc PfemThermic::write::writeModelPartEvent { } {
         write::initWriteData $part_un "PFEMFLUID_Materials"
         write::writeElementConnectivities
     }
-    
+
     # Write flux conditions (adapted from write::writeConditions)
     set iter 0
     foreach group [$root selectNodes $xp1] {
@@ -53,7 +53,7 @@ proc PfemThermic::write::writeModelPartEvent { } {
             incr iter -1
         }
     }
-    
+
     # Fill FluxConditions (adapted from ConvectionDiffusion::write::writeBoundaryConditions)
     foreach group [$root selectNodes $xp1] {
         set condid [[$group parent] @n]
@@ -66,13 +66,13 @@ proc PfemThermic::write::writeModelPartEvent { } {
             set FluxConditions($groupid,SkinCondition) 1
         }
     }
-    
+
     # Write submodelparts (adapted from PfemFluid::write::writeMeshes)
     foreach part_un $parts_un_list {
         write::initWriteData $part_un "PFEMFLUID_Materials"
         write::writePartSubModelPart
     }
-    
+
     # Write submodel parts with flux conditions (adapted from PfemFluid::write::writeNodalConditions and ConvectionDiffusion::write::writeConditionsMesh)
     foreach group [$root selectNodes $xp1] {
         set condid [[$group parent] @n]
@@ -92,7 +92,7 @@ proc PfemThermic::write::writeModelPartEvent { } {
             if {[Model::getCondition $condid] ne ""} {
                 set groupid [$group @n]
                 set groupid [write::GetWriteGroupName $groupid]
-                
+
                 if {$condid ne "HeatFlux2D" && $condid ne "HeatFlux3D" && $condid ne "ThermalFace2D" && $condid ne "ThermalFace3D"} {
                     ::write::writeGroupSubModelPart $condid $groupid "Nodes"
                 } else {
@@ -132,7 +132,7 @@ proc PfemThermic::write::getPropertiesList {parts_un {write_claw_name "True"} {m
     set props [list]
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
-    
+
     set xp1 "[spdAux::getRoute $parts_un]/group"
     if {[llength [$root selectNodes $xp1]] < 1} {
         set xp1 "[spdAux::getRoute $parts_un]/condition/group"
@@ -167,27 +167,27 @@ proc PfemThermic::write::getPropertiesList {parts_un {write_claw_name "True"} {m
                     }
                     if {$prop in $tableList} {
                         set fileName [write::getFormattedValue [dict get $mat_dict $submodelpart_id $prop]]
-                        if {$fileName ne "- No file"} {
+                        if {$fileName ni [list "" "- No file" $::spdAux::no_file_string]} {
                             dict set tables_dict $prop [PfemThermic::write::GetTable $prop $fileName]
                         }
                     }
                 }
                 set material_dict [dict create]
-                
+
                 if {$write_claw_name eq "True"} {
                     set constitutive_law_name [$constitutive_law getKratosName]
                     dict set material_dict constitutive_law [dict create name $constitutive_law_name]
                 }
-                
+
                 dict set material_dict Variables $variables_list
-                dict set material_dict Tables $tables_dict                                
+                dict set material_dict Tables $tables_dict
                 dict set prop_dict Material $material_dict
-                
+
                 lappend props $prop_dict
             }
         }
     }
-    
+
     dict set props_dict properties $props
     return $props_dict
 }
@@ -195,7 +195,7 @@ proc PfemThermic::write::getPropertiesList {parts_un {write_claw_name "True"} {m
 proc PfemThermic::write::GetTable { prop fileName } {
     set table [dict create]
     dict set table input_variable "TEMPERATURE"
-    
+
     if {$prop eq "TEMPERATURE_vs_DENSITY"} {
         dict set table output_variable "DENSITY"
     } elseif {$prop eq "TEMPERATURE_vs_VISCOSITY"} {
@@ -211,11 +211,11 @@ proc PfemThermic::write::GetTable { prop fileName } {
     } elseif {$prop eq "TEMPERATURE_vs_SPECIFIC_HEAT"} {
         dict set table output_variable "SPECIFIC_HEAT"
     }
-    
+
     set fp [open $fileName r]
     set file_data [read $fp]
     close $fp
-    
+
     set points {}
     set data [split $file_data "\n"]
     foreach line $data {
@@ -224,6 +224,6 @@ proc PfemThermic::write::GetTable { prop fileName } {
         }
     }
     dict set table data $points
-    
+
     return $table
 }
