@@ -8,7 +8,7 @@
     <inputs>
 		    <parameter n="is_fixed" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
         <parameter n="value" pn="Value" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Value_Table" pn="Value table filename" type="vector" vectorType="tablefile" v=""/>
+        <parameter n="Value_Table" pn="Value table filename" type="tablefile" v=""/>
     </inputs>
   </Process>
 
