@@ -282,7 +282,7 @@ proc ::Dam::write::GetPrinTables {} {
 proc ::Dam::write::GetPrinTables_dev { } {
 
     set root [customlib::GetBaseRoot]
-    if {$Kratos::kratos_private(UseFiles) eq 1}{FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]}
+    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]}
     set listaTablas2 [list ]
     set listaFiles2 [list ]
     set num [llength [GetPrinTables]]
