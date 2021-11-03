@@ -40,7 +40,7 @@ proc ::spdAux::SaveModelFile { fileid } {
 proc ::spdAux::ProcGetFilesValues { domNode } {
     customlib::UpdateDocument
     spdAux::LoadModelFiles
-    lappend listilla "- No file - (add files using File handler toolbar)"
+    lappend listilla $::spdAux::no_file_string
     lappend listilla {*}[FileSelector::GetAllFiles]
     if {[get_domnode_attribute $domNode v] ni $listilla} {$domNode setAttribute v [lindex $listilla 0]}
     return [join $listilla ","]
@@ -59,10 +59,15 @@ proc ::spdAux::DeleteFile { fileid } {
     RequestRefresh
 }
 
-proc spdAux::UpdateFileField { fileid domNode} {
+proc ::spdAux::UpdateFileField { fileid domNode} {
     if {$fileid ne ""} {
         $domNode setAttribute v $fileid
         spdAux::SaveModelFile $fileid
-        RequestRefresh 
+        RequestRefresh
     }
+}
+
+namespace eval ::spdAux {
+    variable no_file_string
+    set no_file_string "- No file - (add files using File handler toolbar)"
 }

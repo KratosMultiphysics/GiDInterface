@@ -167,6 +167,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(UseWizard) 0
     # Project New 1/0
     set kratos_private(ProjectIsNew) 1
+    # Is using files modules
+    set kratos_private(UseFiles) 0
     # Variables from the problemtype definition (kratos.xml)
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
 
@@ -505,7 +507,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         }
     }
     # The calculation process may need the files of the file selector entries inside the model folder
-    FileSelector::CopyFilesIntoModel [file dirname $filename]
+    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filename]}
 
     # Start the write configuration clean
     write::Init
@@ -540,7 +542,7 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     Kratos::RegisterEnvironment
 
     # User files (in file selectors) copied into the model (if required)
-    FileSelector::CopyFilesIntoModel [file dirname $filespd]
+    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
 
     # Let the current app implement it's Save event
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd
