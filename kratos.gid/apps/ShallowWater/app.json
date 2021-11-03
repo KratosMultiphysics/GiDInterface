@@ -16,8 +16,10 @@
         "examples/DamBreak.tcl",
         "examples/HydraulicJump.tcl"
     ],
-    "start_script":"::ShallowWater::Init",
-    "requirements":{},
+    "start_script": "::ShallowWater::Init",
+    "requirements": {
+        "minimum_gid_version": "15.1.2d"
+    },
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
