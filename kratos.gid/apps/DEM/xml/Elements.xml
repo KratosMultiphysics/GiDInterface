@@ -38,8 +38,8 @@
   <ElementItem n="FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="FEM" help="">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementElement2D3N"/>
-      <item GeometryType="Triangle" nodes="6" KratosName="SmallDisplacementElement2D6N"/>
+      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -64,8 +64,8 @@
   <ElementItem n="Ghost-FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Ghost-FEM" help="">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementElement2D3N"/>
-      <item GeometryType="Triangle" nodes="6" KratosName="SmallDisplacementElement2D6N"/>
+      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -80,7 +80,7 @@
       <parameter n="ORIENTATION" pn="Orientation" v="1.0"/>
     </inputs>
     <outputs>
-      <parameter n="Mass" pn="Mass" v="1.0" />
+      <parameter n="Mass" pn="Mass1" v="1.0" />
       <parameter n="center" pn="Center of rotation" v="1.0" />
       <parameter n="Inertia" pn="Inertia" v="1.0" />
       <parameter n="Orientation" pn="Orientation" v="1.0"/>

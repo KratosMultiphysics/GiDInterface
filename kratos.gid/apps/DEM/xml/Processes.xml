@@ -3,12 +3,16 @@
 
 <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
 
-<Process n="FEMKinematics-Process" pn="Impose Conditions" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+<Process n="FEMKinematics-Process" pn="Impose kinematics" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
     <inputs>
       <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
-        <parameter n="Constrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+        <parameter n="LConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
         <parameter n="LVelocity" parent="true" pn="Velocity" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-        <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+        <parameter n="LTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+        <parameter n="fixed_wall" parent="true" pn="Update velocity, not displacements" type="bool" v="false" help="If activated, the wall will not move and will just have an imposed velocity field" show_in_window="0"/>
+        <parameter n="AConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+        <parameter n="AVelocity" parent="true" pn="Angular Velocity" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+        <parameter n="ATable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
         <parameter n="fixed_wall" parent="true" pn="Update velocity, not displacements" type="bool" v="false" help="If activated, the wall will not move and will just have an imposed velocity field" show_in_window="0"/>
         <parameter n="IsGhost" parent="true" pn="Is ghost wall" v="false" type="bool" show_in_window="0"/>
         <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
@@ -20,12 +24,42 @@
   </Process>
 
 
-  <Process n="DEMKinematics-Process" pn="Impose Conditions" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+  <Process n="DEMKinematics-Process" pn="Impose kinematics" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
-      <parameter n="Constrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="LConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
       <parameter n="LVelocity" parent="true" pn="Velocity" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-      <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+      <parameter n="LTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+      <parameter n="AConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="AVelocity" parent="true" pn="Angular Velocity" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+      <parameter n="ATable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+    </parameter>
+    </inputs>
+  </Process>
+
+
+  <Process n="DEMForce-Process" pn="Impose loads" python_module="apply_forces_and_moments_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+    <inputs>
+    <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
+      <parameter n="FConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="Forces" parent="true" pn="Forces" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+      <parameter n="FTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+      <parameter n="MConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="Moments" parent="true" pn="Moments" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+      <parameter n="MTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+    </parameter>
+    </inputs>
+  </Process>
+
+  <Process n="FEMForce-Process" pn="Impose loads" python_module="apply_forces_and_moments_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+    <inputs>
+    <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
+      <parameter n="FConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="Forces" parent="true" pn="Forces" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+      <parameter n="FTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+      <parameter n="MConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="Moments" parent="true" pn="Moments" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+      <parameter n="MTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
     </parameter>
     </inputs>
   </Process>

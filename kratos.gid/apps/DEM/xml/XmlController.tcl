@@ -1,7 +1,7 @@
 namespace eval ::DEM::xml {
     namespace path ::DEM
     Kratos::AddNamespace [namespace current]
-    
+
     variable dir
 }
 
@@ -11,12 +11,14 @@ proc ::DEM::xml::Init { } {
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
-    Model::getConstitutiveLaws ConstitutiveLaws.xml
     Model::getMaterials Materials.xml
+    Model::getNodalConditions NodalConditions.xml
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getMaterialRelations "material_relations/MaterialRelations.xml"
+
 }
 
 proc ::DEM::xml::getUniqueName {name} {
@@ -46,7 +48,7 @@ proc ::DEM::xml::CustomTree { args } {
     gid_groups_conds::setAttributes $3dinlet_xpath [list values "SphericParticle3D,Cluster3D,SingleSphereCluster" ]
     set 2dinlet_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='Inlet2D'\]/value\[@n='InletElementType'\]"
     gid_groups_conds::setAttributes $2dinlet_xpath [list values "CylinderParticle2D" ]
-    
+
 
     # spdAux::parseRoutes
     spdAux::processDynamicNodes [customlib::GetBaseRoot]
@@ -104,7 +106,7 @@ proc ::DEM::xml::InertiaType { args } {
 }
 
 proc ::DEM::xml::injectMaterialRelations { basenode args } {
-    
+
     set base [$basenode parent]
     set materials_relations [Model::GetMaterialRelations {*}$args]
     foreach mat $materials_relations {

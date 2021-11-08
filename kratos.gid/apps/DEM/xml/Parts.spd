@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- <condition n="DEMParts" pn="Define particle groups" ov="[GetDEMPartsOvWhat]" icon="shells16" help="Each group of particles must be defined here. Particles with different properties must be assigned to different groups." un="DEMParts">
-	<value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements ElementType DEM]" help="Select an element" state="hidden">
-		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
-	</value>
-	<dynamicnode command="spdAux::injectPartElementInputs" args=""/>
+
+<container  n="Parts" pn="Parts" un="Parts" icon="shells16" >
+	<dynamicnode command="spdAux::injectPartsByElementType" args="ImplementedInApplication DEMApplication"/>
 	<value n="AdvancedMeshingFeatures" pn="Advanced meshing features" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
 		<dependencies node="../value[@n!='Material']" actualize="1"/>
 	</value>
@@ -14,9 +12,4 @@
 	<value n="Diameter" pn="Diameter (m)" v="1.0" help="Average diameter of the spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="ProbabilityDistribution" pn="Probability distribution" v="NormalDistribution" values="NormalDistribution,LogDistribution" help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
 	<value n="StandardDeviation" pn="Standard deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
-</condition> -->
-
-
-<container  n="Parts" pn="Parts" un="Parts" icon="shells16" >
-	<dynamicnode command="spdAux::injectPartsByElementType" args="ImplementedInApplication DEMApplication"/>
 </container>
