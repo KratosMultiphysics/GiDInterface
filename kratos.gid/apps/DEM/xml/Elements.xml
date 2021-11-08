@@ -34,4 +34,57 @@
     <outputs></outputs>
   </ElementItem>
 
+
+  <ElementItem n="FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="FEM" help="">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementElement2D3N"/>
+      <item GeometryType="Triangle" nodes="6" KratosName="SmallDisplacementElement2D6N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="DEM"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions></NodalConditions>
+    <inputs>
+    <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+      <parameter n="MASS" pn="Mass" v="1.0" />
+      <parameter n="CENTER" pn="Center of rotation" type="inline_vector" v="0.0,0.0,1.0" />
+      <parameter n="INERTIA" pn="Inertia" type="inline_vector" v="0.0,0.0,1.0" />
+      <parameter n="ORIENTATION" pn="Orientation" type="inline_vector" v="0.0,0.0,1.0"/>
+    </inputs>
+    <outputs>
+      <parameter n="MASS" pn="Mass111" v="1.0" />
+      <parameter n="CENTER" pn="Center of rotation" type="inline_vector" v="0.0,0.0,1.0" />
+      <parameter n="INERTIA" pn="Inertia" type="inline_vector" v="0.0,0.0,1.0" />
+      <parameter n="ORIENTATION" pn="Orientation" type="inline_vector" v="0.0,0.0,1.0"/>
+    </outputs>
+  </ElementItem>
+
+  <ElementItem n="Ghost-FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Ghost-FEM" help="">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementElement2D3N"/>
+      <item GeometryType="Triangle" nodes="6" KratosName="SmallDisplacementElement2D6N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="DEM"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions></NodalConditions>
+    <inputs>
+    <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+      <parameter n="MASS" pn="Mass" v="1.0" />
+      <parameter n="CENTER" pn="Center of rotation" v="1.0" />
+      <parameter n="INERTIA" pn="Inertia" v="1.0" />
+      <parameter n="ORIENTATION" pn="Orientation" v="1.0"/>
+    </inputs>
+    <outputs>
+      <parameter n="Mass" pn="Mass" v="1.0" />
+      <parameter n="center" pn="Center of rotation" v="1.0" />
+      <parameter n="Inertia" pn="Inertia" v="1.0" />
+      <parameter n="Orientation" pn="Orientation" v="1.0"/>
+    </outputs>
+  </ElementItem>
+
 </ElementList>
