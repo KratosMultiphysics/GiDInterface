@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<container n="General" pn="General settings" icon="gravity" un="PFEMMELTING_General" >
-	<value n="ambient_temperature" pn="Ambient temperature" v="293.15" units="K" unit_magnitude="Temp" />
-</container>

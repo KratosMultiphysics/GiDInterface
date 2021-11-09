@@ -3,40 +3,53 @@ namespace eval ::PfemMelting::write {
     Kratos::AddNamespace [namespace current]
 
     variable writeAttributes
-    variable custom_body_submodelpart
+
 }
 
 proc ::PfemMelting::write::Init { } {
-    # Buoyancy::write::Init
+    SetAttribute parts_un [::PfemMelting::GetUniqueName parts]
+    SetAttribute conditions_un [::PfemMelting::GetUniqueName conditions]
+    SetAttribute materials_un [::PfemMelting::GetUniqueName materials]
+    SetAttribute results_un [::PfemMelting::GetUniqueName results]
 }
 
 # Events
-proc PfemMelting::write::writeModelPartEvent { } {
-    variable custom_body_submodelpart
+proc ::PfemMelting::write::writeModelPartEvent { } {
+    # Init data
+    write::initWriteConfiguration [GetAttributes]
 
-    Buoyancy::write::writeModelPartEvent
-    set custom_body_submodelpart [::write::writeGroupSubModelPart Custom [write::getPartsGroupsId] "Nodes"]
+    # Headers
+    write::writeModelPartData
+
+    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
+    write::writeNodalCoordinates
+
+    # Element connectivities (Groups on FLParts)
+    write::writeElementConnectivities
+
+
 }
 
-proc PfemMelting::write::writeCustomFilesEvent { } {
-    Buoyancy::write::writeCustomFilesEvent
+proc ::PfemMelting::write::writeCustomFilesEvent { } {
     write::SetConfigurationAttribute main_launch_file [::PfemMelting::GetAttribute main_launch_file]
 }
 
 # Attributes block
-proc PfemMelting::write::GetAttribute {att} {
-    return [Buoyancy::write::GetAttribute $att]
+proc ::PfemMelting::write::GetAttribute {att} {
+    variable writeAttributes
+    return [dict get $writeAttributes $att]
 }
 
-proc PfemMelting::write::SetAttribute {att val} {
+proc ::PfemMelting::write::GetAttributes {} {
+    variable writeAttributes
+    return $writeAttributes
+}
+
+proc ::PfemMelting::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
-
-proc PfemMelting::write::AddAttributes {configuration} {
-    Buoyancy::write::AddAttributes $configuration
-}
-
-proc PfemMelting::write::AddValidApps {appid} {
-    Buoyancy::write::AddAttribute validApps $appid
+proc ::PfemMelting::write::AddAttributes {configuration} {
+    variable writeAttributes
+    set writeAttributes [dict merge $writeAttributes $configuration]
 }

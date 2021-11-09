@@ -80,12 +80,13 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     spdAux::SetFieldOnPath $laser_xpath v $laser_filename
 
     # Set ambient temperature
-    set parameters [list ambient_temperature 293.16 ]
-    set temperature_xpath [spdAux::getRoute [PfemMelting::GetUniqueName general]]
-    spdAux::SetValuesOnBasePath $temperature_xpath $parameters
+    set temperature_xpath [spdAux::getRoute [PfemMelting::GetUniqueName ambient_temperature]]
+    spdAux::SetFieldOnPath $temperature_xpath v 293.16
 
     # Fix Velocity Constraints
     set xpath [spdAux::getRoute [PfemMelting::GetUniqueName conditions]]
     customlib::AddConditionGroupOnXPath "$xpath/condition\[@n='VelocityConstraints3D'\]" floor
+
+    # TODO: Set gravity -Z
 
 }

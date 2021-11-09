@@ -16,28 +16,28 @@
         "examples/cube.tcl",
         "scripts/laser_tracker.tcl"
     ],
-    "start_script":"::PfemMelting::Init",
-    "requeriments":{
-        "apps":[],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::PfemMelting::Init",
+    "requeriments": {
+        "apps": [],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
         "intervals": false,
         "wizard": false,
-        "import_files":true
+        "import_files": true
     },
     "unique_names": {
         "conditions": "BC",
-        "parts":"PFEMMELTING_Parts",
+        "parts": "PFEMMELTING_Parts",
         "laser": "PFEMMELTING_Laser",
-        "general": "PFEMMELTING_General"
+        "ambient_temperature": "PFEMMELTING_AmbientTemperature",
+        "materials": "PFEMMELTING_Materials",
+        "results": "Results"
     },
-    "write": {
-
-    },
+    "write": {},
     "main_launch_file": "python/PfemMeltingAnalysisLauncher.py",
     "examples": "",
-    "description":""
+    "description": ""
 }
