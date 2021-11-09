@@ -151,7 +151,7 @@ proc Kratos::InitGlobalVariables {dir} {
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
     set Kratos::kratos_private(allow_logs) 1
     # git hash of the problemtype
-    set Kratos::kratos_private(problemtype_git_hash) 0    
+    set Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
     set Kratos::kratos_private(model_log_folder) ""
 
@@ -167,6 +167,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(UseWizard) 0
     # Project New 1/0
     set kratos_private(ProjectIsNew) 1
+    # Is using files modules
+    set kratos_private(UseFiles) 0
     # Variables from the problemtype definition (kratos.xml)
     array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
 
@@ -285,7 +287,7 @@ proc Kratos::Event_EndProblemtype { } {
     }
     if {[array exists ::Kratos::kratos_private]} {
         # Close the log and moves them to the folder
-        Kratos::FlushLog 
+        Kratos::FlushLog
 
         # Restore GiD variables that were modified by kratos and must be restored (maybe mesher)
         Kratos::RestoreVariables
@@ -312,7 +314,7 @@ proc Kratos::Event_EndProblemtype { } {
     Drawer::UnregisterAll
 
     apps::ExecuteOnCurrentApp EndEvent
-    
+
     # Clear namespaces
     Kratos::DestroyNamespaces
 }
@@ -483,6 +485,8 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     if {!$run} {
         return [list "-cancel-" [= "You have selected MPI parallelism system.\nInput files have been written.\nRun the MPILauncher.sh script" ]]
     }
+    set app_run_brake [apps::ExecuteOnCurrentApp BreakRunCalculation]
+    if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
@@ -505,7 +509,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         #}
     }
     # The calculation process may need the files of the file selector entries inside the model folder
-    catch {FileSelector::CopyFilesIntoModel [file dirname $filename]}
+    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filename]}
 
     # Start the write configuration clean
     write::Init
@@ -540,7 +544,7 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     Kratos::RegisterEnvironment
 
     # User files (in file selectors) copied into the model (if required)
-    catch {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
+    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
 
     # Let the current app implement it's Save event
     apps::ExecuteOnCurrentApp AfterSaveModel $filespd

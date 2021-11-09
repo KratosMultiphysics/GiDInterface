@@ -6,7 +6,7 @@
 
 namespace eval ::write {
     Kratos::AddNamespace [namespace current]
-    
+
     variable mat_dict
     variable submodelparts
     variable MDPA_loop_control
@@ -38,7 +38,7 @@ proc write::Init { } {
 
     set current_mdpa_indent_level 0
 
-    
+
     variable formats_dict
     set formats_dict [dict create]
     variable properties_exclusion_list
@@ -103,7 +103,7 @@ proc write::writeEvent { filename } {
         return 1
     }
     set inittime [clock seconds]
-    
+
     # Set write formats depending on the user's configuration
     InitWriteFormats
 
@@ -144,7 +144,7 @@ proc write::writeEvent { filename } {
     if {$time_monitor}  {
         W "Total time: [Kratos::Duration $ttime]"
     }
-    
+
     #### Copy main script file ####
     if {$errcode eq 0} {
         Kratos::Log "Write custom event $appid"
@@ -153,7 +153,7 @@ proc write::writeEvent { filename } {
 
     #### Debug files for VSCode ####
     write::writeLaunchJSONFile
-    
+
     Kratos::Log "Write end $appid in [Kratos::Duration $ttime]"
     return $errcode
 }
@@ -680,8 +680,10 @@ proc write::CopyMainScriptFile { } {
     # Main python script
     if {[catch {
             set orig_name [write::GetConfigurationAttribute main_launch_file]
-            write::CopyFileIntoModel $orig_name
-            write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+            if {$orig_name ne ""} {
+                write::CopyFileIntoModel $orig_name
+                write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+            }
         } fid] } {
         W "Problem Writing Main launch script \nEvent $fid \nEnd problems"
         return errcode 1

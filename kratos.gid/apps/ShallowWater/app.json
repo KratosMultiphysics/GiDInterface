@@ -16,8 +16,11 @@
         "examples/DamBreak.tcl",
         "examples/HydraulicJump.tcl"
     ],
-    "start_script":"::ShallowWater::Init",
-    "requirements":{},
+    "start_script": "::ShallowWater::Init",
+    "requeriments":{
+        "apps":[],
+        "minimum_gid_version":"15.1.3d"
+    },
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
@@ -29,9 +32,7 @@
         "materials": "SWMaterials",
         "topography_data": "SWTopographicData",
         "initial_conditions": "SWInitialConditions",
-        "conditions": "SWConditions",
-        "gravity": "SWGravity",
-        "time_parameters": "SWTimeParameters"
+        "conditions": "SWConditions"
     },
     "write": {
         "coordinates": "all",

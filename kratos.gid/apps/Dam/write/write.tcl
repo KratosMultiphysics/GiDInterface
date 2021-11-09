@@ -1,7 +1,7 @@
 namespace eval ::Dam::write {
     namespace path ::Dam
     Kratos::AddNamespace [namespace current]
-    
+
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable TableDict
@@ -246,7 +246,7 @@ proc ::Dam::write::writeTables_dev { } {
 proc ::Dam::write::GetPrinTables {} {
 
     set root [customlib::GetBaseRoot]
-    FileSelector::CopyFilesIntoModel [GidUtils::GetDirectoryModel]
+    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]}
     set listaTablas [list ]
     set listaFiles [list ]
     set num 0
@@ -258,7 +258,8 @@ proc ::Dam::write::GetPrinTables {} {
             set valueid [get_domnode_attribute $node n]
             set groupid [get_domnode_attribute [$node parent] n]
             set condid [get_domnode_attribute [[$node parent] parent] n]
-            if {$fileid ni [list "" "- No file - (add files using File handler toolbar)"]} {
+            # W $fileid
+            if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
                 if {$fileid ni $listaFiles} {
                     lappend listaFiles $fileid
                     incr num
@@ -281,7 +282,7 @@ proc ::Dam::write::GetPrinTables {} {
 proc ::Dam::write::GetPrinTables_dev { } {
 
     set root [customlib::GetBaseRoot]
-    FileSelector::CopyFilesIntoModel [GidUtils::GetDirectoryModel]
+    if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]}
     set listaTablas2 [list ]
     set listaFiles2 [list ]
     set num [llength [GetPrinTables]]
@@ -295,7 +296,7 @@ proc ::Dam::write::GetPrinTables_dev { } {
         set node_table_device [$root selectNodes $table_device]
         set fileid [write::getValueByNode $node_table_device]
 
-        if {$fileid ni [list "" "- No file"]} {
+        if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
             if {$fileid ni $listaFiles2} {
                 lappend listaFiles2 $fileid
                 incr num
