@@ -55,19 +55,19 @@ proc PfemMelting::examples::Cube::AssignGroups {args} {
     GiD_Groups edit color top "#e0210fff"
     GiD_EntitiesGroups assign top surface 6
 
-    GiD_Groups create skin
-    GiD_Groups edit color skin "#e0210fff"
-    GiD_EntitiesGroups assign skin surface {1 2 3 4 5 6}
+    # GiD_Groups create skin
+    # GiD_Groups edit color skin "#e0210fff"
+    # GiD_EntitiesGroups assign skin surface {1 2 3 4 5 6}
 
 }
 
 proc PfemMelting::examples::Cube::TreeAssignation {args} {
-    # Fluid parts
+    #  parts
     variable group_body
-    set fluid_parts_xpath [spdAux::getRoute [::Fluid::GetUniqueName parts]]
-    set fluid_node [customlib::AddConditionGroupOnXPath $fluid_parts_xpath $group_body]
-    set props [list Element QSVMS3D ConstitutiveLaw Newtonian3DLaw]
-    spdAux::SetValuesOnBaseNode $fluid_node $props
+    set parts_xpath [spdAux::getRoute [PfemMelting::GetUniqueName parts]]
+    set part_node [customlib::AddConditionGroupOnXPath $parts_xpath $group_body]
+    set props [list Material polymer1]
+    spdAux::SetValuesOnBaseNode $part_node $props
 
     # Laser file into model
     set laser_filename "LaserSettings.json"
@@ -76,18 +76,16 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     ::spdAux::SaveModelFile $laser_filename
 
     # Laser condition
-    set laser_xpath [spdAux::getRoute [::ConvectionDiffusion::GetUniqueName conditions]]
-    set laser_node [customlib::AddConditionGroupOnXPath "$laser_xpath/condition\[@n='LaserPath'\]" $group_body]
-    set props [list laser_path $laser_filename]
-    spdAux::SetValuesOnBaseNode $laser_node $props
+    set laser_xpath "[spdAux::getRoute [PfemMelting::GetUniqueName laser]]/blockdata\[@n='laser1'\]/value\[@n='laser_path'\]"
+    spdAux::SetFieldOnPath $laser_xpath v $laser_filename
 
     # Set ambient temperature
-    set parameters [list ambient_temperature 293.16 gravity "0.0,0.0,-9.81"]
-    set boussinesq_temperature_xpath [spdAux::getRoute [::PfemMelting::xml::getUniqueName Boussinesq]]
-    spdAux::SetValuesOnBasePath $boussinesq_temperature_xpath $parameters
+    set parameters [list ambient_temperature 293.16 ]
+    set temperature_xpath [spdAux::getRoute [PfemMelting::GetUniqueName general]]
+    spdAux::SetValuesOnBasePath $temperature_xpath $parameters
 
     # Fix Velocity Constraints
-    set xpath [spdAux::getRoute [::Fluid::GetUniqueName conditions]]
-    customlib::AddConditionGroupOnXPath "$xpath/condition\[@n='NoSlip3D'\]" skin
+    set xpath [spdAux::getRoute [PfemMelting::GetUniqueName conditions]]
+    customlib::AddConditionGroupOnXPath "$xpath/condition\[@n='VelocityConstraints3D'\]" floor
 
 }

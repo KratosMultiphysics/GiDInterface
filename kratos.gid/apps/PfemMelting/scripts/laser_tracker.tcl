@@ -76,7 +76,8 @@ proc ::PfemMelting::LaserTracker::MyRedrawProcedure { } {
                 set z4 [expr $z - (10.0*$dz)]
 
                 GiD_OpenGL draw -color "0.69841 0.190464 0.69841"
-                #GiD_OpenGL draw -linewidth 3.0
+                # TODO: This changes gid lines but is ignored by my quads... just the oposite I expect. Ask @Miguel
+                # GiD_OpenGL draw -linewidth 3.0
                 GiD_OpenGL draw -begin quads
                 GiD_OpenGL draw -vertex [list $x1 $y1 $z1]
                 GiD_OpenGL draw -vertex [list $x2 $y2 $z2]

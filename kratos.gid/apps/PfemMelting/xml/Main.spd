@@ -6,7 +6,7 @@
     <include n="BoundaryConditions" active="1" path="apps/Common/xml/BoundaryConditions.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/PfemMelting/xml/SolutionStrategy.spd"/>
     <include n="Laser" active="1" path="apps/PfemMelting/xml/Laser.spd"/>
-    <include n="General" pn="General parameters" path="apps/Buoyancy/xml/Boussinesq.spd" />
+    <include n="General" pn="General parameters" path="apps/PfemMelting/xml/General.spd" />
     <include n="Results" active="1" un="Results,FLResults" path="apps/Common/xml/Results.spd" />
 </container>
 
