@@ -1,56 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProcessList>
 
-<parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-
-<Process n="FEMKinematics-Process" pn="Impose kinematics" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
-    <inputs>
-      <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
-        <parameter n="LConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
-        <parameter n="LVelocity" parent="true" pn="Velocity" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-        <parameter n="LTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
-        <parameter n="fixed_wall" parent="true" pn="Update velocity, not displacements" type="bool" v="false" help="If activated, the wall will not move and will just have an imposed velocity field" show_in_window="0"/>
-        <parameter n="AConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
-        <parameter n="AVelocity" parent="true" pn="Angular Velocity" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-        <parameter n="ATable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
-        <parameter n="fixed_wall" parent="true" pn="Update velocity, not displacements" type="bool" v="false" help="If activated, the wall will not move and will just have an imposed velocity field" show_in_window="0"/>
-        <parameter n="IsGhost" parent="true" pn="Is ghost wall" v="false" type="bool" show_in_window="0"/>
-        <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
-        <parameter n="MaterialTest" parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
-          <parameter n="DefineTopBot" parent="true" pn="Set wall as" v="Pressure plate" type="combo" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
-        </parameter>
-      </parameter>
-    </inputs>
-  </Process>
-
-
-  <Process n="DEMKinematics-Process" pn="Impose kinematics" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+  <!-- kinematics -->
+  <Process n="FEMVelocity-Process" pn="Impose kinematics" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
-      <parameter n="LConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
-      <parameter n="LVelocity" parent="true" pn="Velocity" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-      <parameter n="LTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
-      <parameter n="AConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
-      <parameter n="AVelocity" parent="true" pn="Angular Velocity" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-      <parameter n="ATable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+      <parameter n="Constrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="component" pn="Velocity" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
+      <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+      <parameter n="fixed_wall" parent="true" pn="Do not update displacements" type="bool" v="false" help="If activated, the wall will not update its position but will have an imposed velocity field" show_in_window="0"/>
+      <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
+      <parameter n="MaterialTest" parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
+        <parameter n="DefineTopBot" parent="true" pn="Set wall as" v="Pressure plate" type="combo" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
+      </parameter>
     </parameter>
     </inputs>
   </Process>
 
 
+  <Process n="FEMAngular-Process" pn="Impose kinematics" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
+    <inputs>
+    <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
+      <parameter n="Constrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="component" pn="Angular Velocity" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
+      <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+      <parameter n="fixed_wall" parent="true" pn="Do not update displacements" type="bool" v="false" help="If activated, the wall will not update its position but will have an imposed velocity field" show_in_window="0"/>
+      <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
+      <parameter n="MaterialTest" parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
+        <parameter n="DefineTopBot" parent="true" pn="Set wall as" v="Pressure plate" type="combo" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
+      </parameter>
+    </parameter>
+    </inputs>
+  </Process>
+
+
+  <Process n="DEMVelocity-Process" pn="Impose kinematics" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
+    <inputs>
+    <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
+      <parameter n="Constrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="component" pn="Velocity" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
+      <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+    </parameter>
+    </inputs>
+  </Process>
+
+  <Process n="DEMAngular-Process" pn="Impose kinematics" python_module="apply_kinematic_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+    <inputs>
+    <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
+      <parameter n="Constrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="component" pn="Angular Velocity" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
+      <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+    </parameter>
+    </inputs>
+  </Process>
+
+  <!-- Loads -->
   <Process n="DEMForce-Process" pn="Impose loads" python_module="apply_forces_and_moments_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
-      <parameter n="FConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
-      <parameter n="Forces" parent="true" pn="Forces" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-      <parameter n="FTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
-      <parameter n="MConstrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
-      <parameter n="Moments" parent="true" pn="Moments" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-      <parameter n="MTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+      <parameter n="Constrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="component" pn="Force" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
+      <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
     </parameter>
     </inputs>
   </Process>
 
+  <Process n="DEMTorque-Process" pn="Impose moments" python_module="apply_forces_and_moments_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+    <inputs>
+    <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
+      <parameter n="Constrains" parent="true" pn="Constrains" type="inline_vector" v="true,true,true" show_in_window="0"/>
+      <parameter n="component" pn="Moment" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
+      <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
+    </parameter>
+    </inputs>
+  </Process>
+
+
+
+
+  <!-- No need. Are the same as dem -->
   <Process n="FEMForce-Process" pn="Impose loads" python_module="apply_forces_and_moments_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
@@ -63,6 +91,10 @@
     </parameter>
     </inputs>
   </Process>
+
+
+
+
 
 
 
@@ -483,4 +515,69 @@
       </parameter>
     </inputs>
   </Process>
+
+
+
+
+
+
+
+
+
+
+  <!--Kratos base process -->
+	<Process n="PythonProcess" pn="Base Python process" python_module="python_process" kratos_module="KratosMultiphysics" help="Python processes empty base class which does nothing">
+		<inputs>
+		</inputs>
+	</Process>
+
+	<!--Processes for nodes -->
+	<Process n="AssignScalarVariableProcess" pn="Assign scalar variable process" python_module="assign_scalar_variable_process" kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable">
+		<inputs>
+			<parameter n="constrained" pn="Imposed" type="bool" v="1" />
+			<parameter n="value" pn="Value" type="double" function="1" v="0.0" has_units="1"/>
+		</inputs>
+	</Process>
+
+	<Process n="AssignVectorVariableProcess" pn="Assign vector variable process" python_module="assign_vector_variable_process" kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable" write_command="write::ProcessVectorFunctionComponents">
+		<inputs>
+			<parameter n="component" pn="Component" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
+		</inputs>
+	</Process>
+
+	<Process n="AssignAutomaticDirectionVectorProcess" pn="Assign automatic direction vector process" python_module="assign_vector_by_direction_process" kratos_module="KratosMultiphysics" help="">
+		<inputs>
+			<parameter n="modulus" pn="Value" type="double" v="1.0" function="1" has_units="1"/>
+			<parameter n="direction" pn="Normal direction" type="combo" values="automatic_inwards_normal,automatic_outwards_normal" pvalues="Inwards,Outwards" v="automatic_inwards_normal" help=""/>
+		</inputs>
+	</Process>
+
+	<Process n="AssignVectorByDirectionProcess" pn="Assign vector by direction process" python_module="assign_vector_by_direction_process" kratos_module="KratosMultiphysics" help="This process sets a vector variable value over a condition according to a given modulus an direction" check="DirectorVectorNonZero direction">
+		<inputs>
+			<parameter n="constrained" pn="Constrained" type="bool" v="0" values="0,1" has_units="0"/>
+			<parameter n="modulus" pn="Value" type="double" v="1.0" function="1" has_units="1"/>
+			<parameter n="direction" pn="Direction" type="vector" vectorType="double" v="0.0,0.0,0.0" help=""/>
+		</inputs>
+	</Process>
+
+	<!--Processes for conditions -->
+	<Process n="AssignScalarVariableToConditionProcess" pn="Apply a scalar value over a condition" python_module="assign_scalar_variable_to_conditions_process" kratos_module="KratosMultiphysics" help="This process sets a scalar variable value over a condition">
+		<inputs>
+			<parameter n="value" pn="Value" type="double" v="0.0" function="1" has_units="1"/>
+		</inputs>
+	</Process>
+
+	<Process n="AssignVectorVariableToConditionProcess" pn="Assign a vector variable over a condition " python_module="assign_vector_variable_to_conditions_process" kratos_module="KratosMultiphysics" help="This process sets a scalar variable value over a condition">
+		<inputs>
+			<parameter n="constrained" pn="Imposed" type="vector" vectorType="bool" v="1,1,1" />
+			<parameter n="value" pn="Value" type="vector" vectorType="double" function="1" v="0.0,0.0,0.0" has_units="1"/>
+		</inputs>
+	</Process>
+
+	<Process n="AssignVectorByDirectionToConditionProcess" pn="Assign a vector value on a condition" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" help="This process sets a vector variable value over a condition according to a given modulus an direction" check="DirectorVectorNonZero direction">
+		<inputs>
+			<parameter n="modulus" pn="Modulus" type="double" v="1.0" function="1" has_units="1"/>
+			<parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" />
+		</inputs>
+	</Process>
 </ProcessList>
