@@ -7,7 +7,7 @@ namespace eval ::PfemMelting::write {
 }
 
 proc ::PfemMelting::write::Init { } {
-    Buoyancy::write::Init
+    # Buoyancy::write::Init
 }
 
 # Events

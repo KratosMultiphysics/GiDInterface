@@ -4,7 +4,7 @@ namespace eval ::PfemMelting {
     # Variable declaration
     variable dir
     variable _app
-    
+
     proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
     proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
     proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
@@ -22,20 +22,20 @@ proc ::PfemMelting::Init { app } {
     PfemMelting::write::Init
 }
 
-proc ::PfemMelting::BeforeMeshGeneration {elementsize} {
-    if {[info exists ::Buoyancy::BeforeMeshGeneration]} {::Buoyancy::BeforeMeshGeneration $elementsize}
-}
+# proc ::PfemMelting::BeforeMeshGeneration {elementsize} {
+#     if {[info exists ::Buoyancy::BeforeMeshGeneration]} {::Buoyancy::BeforeMeshGeneration $elementsize}
+# }
 
-proc ::PfemMelting::AfterMeshGeneration {fail} {
-    if {[info exists ::Buoyancy::AfterMeshGeneration]} {::Buoyancy::AfterMeshGeneration $fail}
-}
+# proc ::PfemMelting::AfterMeshGeneration {fail} {
+#     if {[info exists ::Buoyancy::AfterMeshGeneration]} {::Buoyancy::AfterMeshGeneration $fail}
+# }
 
-proc ::PfemMelting::AfterSaveModel {filespd} {
-    if {[info exists ::Buoyancy::AfterSaveModel]} {::Buoyancy::AfterSaveModel $filespd}
-}
+# proc ::PfemMelting::AfterSaveModel {filespd} {
+#     if {[info exists ::Buoyancy::AfterSaveModel]} {::Buoyancy::AfterSaveModel $filespd}
+# }
 
 proc ::PfemMelting::CustomToolbarItems { } {
     variable dir
-    
+
     Kratos::ToolbarAddItem "LaserTracker" "laser-gun-icon.png" [list -np- ::PfemMelting::LaserTracker::Start] [= "Laser tracker"]
 }
