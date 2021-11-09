@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="Laser" pn="Laser" icon="units">
+<container n="Laser" pn="Laser" icon="laser16">
+    <blockdata n="laser1" pn="Laser" name="Laser Path 1" sequence="1" icon="laser16" editable_name="unique" sequence_type="non_void_disabled" help="Laser">
+        <value n='laser_path' pn='Laser path file' v='' values='[GetFilesValues]' update_proc='AddFile' type='file'/>
+	</blockdata>
 </container>
