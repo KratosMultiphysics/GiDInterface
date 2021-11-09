@@ -3,17 +3,7 @@
 
 
 	<!-- MONOLITHIC STRATEGY -->
-	<StrategyItem
-		n="Monolithic"
-		pn="Navier Stokes - Monolithic"
-		Type="monolithic"
-		ImplementedInFile="navier_stokes_solver_vmsmonolithic.py"
-		ImplementedInApplication="FluidDynamicsApplication"
-		ImplementedInPythonFile="Monolithic"
-		MinimumKratosVersion="8500"
-		App="Fluid"
-		ProductionReady="ProductionReady"
-		help="Incompressible Navier-Stokes equations monolithic strategy.">
+	<StrategyItem n="Monolithic" pn="Navier Stokes - Monolithic" Type="monolithic" ImplementedInFile="navier_stokes_solver_vmsmonolithic.py" ImplementedInApplication="FluidDynamicsApplication" ImplementedInPythonFile="Monolithic" MinimumKratosVersion="8500" App="Fluid" ProductionReady="ProductionReady" help="Incompressible Navier-Stokes equations monolithic strategy.">
 
 		<!-- list of options to be filled -->
 		<parameter_list>
@@ -30,7 +20,7 @@
 
 		<!-- linear solver settings -->
 		<linearSolvers>
-			<linearSolverItem n="linear_solver_settings" pn="Linear Solver" >
+			<linearSolverItem n="linear_solver_settings" pn="Linear Solver">
 				<filterFeatures>
 					<filter field="SolverType" value="Standard"/>
 				</filterFeatures>
@@ -42,33 +32,23 @@
 		<!-- scheme settings -->
 		<schemes>
 			<scheme n="bossak" pn="Bossak" help="Bossak scheme for CFD problems." ProductionReady="ProductionReady">
-                <parameter_list></parameter_list>
-                <element_filters>
-                    <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D"/>
-                </element_filters>
-            </scheme>
+				<parameter_list></parameter_list>
+				<element_filters>
+					<filter field="FormulationElementType" value="qsvms,dvms,fic"/>
+				</element_filters>
+			</scheme>
 			<scheme n="bdf2" pn="BDF2" help="2nd order Backward Differenctiation Formula (BDF2) scheme for CFD problems." ProductionReady="ProductionReady">
-                <parameter_list></parameter_list>
-                <element_filters>
-                    <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D,WeaklyCompressible2D,WeaklyCompressible3D"/>
-                </element_filters>
-            </scheme>
+				<parameter_list></parameter_list>
+				<element_filters>
+					<!-- <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D,WeaklyCompressible2D,WeaklyCompressible3D"/> -->
+				</element_filters>
+			</scheme>
 		</schemes>
 	</StrategyItem>
 
 
 	<!-- FRACTIONAL STEP STRATEGY -->
-	<StrategyItem
-		n="FractionalStep"
-		pn="Navier Stokes - Fractional Step"
-		Type="fractional_step"
-		ImplementedInFile="navier_stokes_solver_fractionalstep.py"
-		ImplementedInApplication="FluidDynamicsApplication"
-		ImplementedInPythonFile="FractionalStep"
-		MinimumKratosVersion="8500"
-		App="Fluid"
-		ProductionReady="ProductionReady"
-		help="Incompressible Navier-Stokes equations fractional step strategy.">
+	<StrategyItem n="FractionalStep" pn="Navier Stokes - Fractional Step" Type="fractional_step" ImplementedInFile="navier_stokes_solver_fractionalstep.py" ImplementedInApplication="FluidDynamicsApplication" ImplementedInPythonFile="FractionalStep" MinimumKratosVersion="8500" App="Fluid" ProductionReady="ProductionReady" help="Incompressible Navier-Stokes equations fractional step strategy.">
 
 		<!-- list of options to be filled -->
 		<parameter_list>
@@ -93,7 +73,7 @@
 				</defaults>
 			</linearSolverItem>
 
-			<linearSolverItem n="pressure_linear_solver_settings" pn="Pressure linear solver" >
+			<linearSolverItem n="pressure_linear_solver_settings" pn="Pressure linear solver">
 				<filterFeatures>
 					<filter field="SolverType" value="Standard"/>
 				</filterFeatures>

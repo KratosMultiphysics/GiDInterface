@@ -9,10 +9,10 @@ namespace eval ::spdAux {
     # Namespace variables declaration
     variable uniqueNames
     variable initwind
-    
+
     variable currentexternalfile
     variable refreshTreeTurn
-    
+
     variable TreeVisibility
     variable GroupsEdited
 
@@ -33,7 +33,7 @@ proc spdAux::Init { } {
     variable must_open_init_window
     variable must_open_dim_window
     variable list_of_windows
-    
+
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
     set initwind ""
@@ -43,7 +43,7 @@ proc spdAux::Init { } {
     set GroupsEdited [dict create]
     set must_open_init_window 1
     set must_open_dim_window 1
-    
+
     set list_of_windows [list ]
 }
 
@@ -71,7 +71,7 @@ proc spdAux::TryRefreshTree { } {
             set ::spdAux::refreshTreeTurn 0
             gid_groups_conds::actualize_conditions_window
             gid_groups_conds::actualize_conditions_window
-            
+
             gid_groups_conds::check_dependencies
             focus -force $foc
         }
@@ -142,21 +142,24 @@ proc spdAux::CustomTreeCommon { } {
             catch {spdAux::SetValueOnTreeItem state hidden Intervals}
         }
     }
-    
+
 }
 
 # FORCEPS
 proc spdAux::ForceTreePreload { } {
-    foreach node [[customlib::GetBaseRoot] getElementsByTagName value] { 
+    foreach node [[customlib::GetBaseRoot] getElementsByTagName value] {
         if {[$node hasAttribute "values"] } {
             get_domnode_attribute $node values
+        }
+        if {[$node hasAttribute "dict"] } {
+            write::getValueByNode $node force
         }
     }
 }
 
 # No workea
 proc spdAux::ForceExtremeLoad { } {
-    
+
     set root [customlib::GetBaseRoot]
     foreach contNode [$root getElementsByTagName "container"] {
         W "Opening $contNode [$contNode  @n]"
@@ -181,7 +184,7 @@ proc spdAux::DestroyWindows {} {
     variable list_of_windows
     foreach window $list_of_windows {
         if {[winfo exists $window]} {
-            destroy $window    
+            destroy $window
         }
     }
     set list_of_windows [list ]
@@ -202,7 +205,7 @@ proc spdAux::setRoute {name route} {
     set uniqueNames [dict set uniqueNames $name $route]
     set uniqueNames [dict remove $uniqueNames dummy]
     #W "Add $name $route"
-    # 
+    #
     # set root [customlib::GetBaseRoot]
     # W "checking [[$root selectNodes $route] asXML]"
 }
@@ -230,7 +233,7 @@ proc spdAux::parseRecurse { root } {
 
 proc spdAux::ExploreAllRoutes { } {
     variable uniqueNames
-    
+
     set root [customlib::GetBaseRoot]
     W [dict keys $uniqueNames]
     foreach routeName [dict keys $uniqueNames] {
@@ -239,7 +242,7 @@ proc spdAux::ExploreAllRoutes { } {
         set node [$root selectNodes $route]
         W "Node $node"
     }
-    
+
 }
 
 proc spdAux::GetAppIdFromNode {domNode} {
@@ -255,16 +258,16 @@ proc spdAux::GetAppIdFromNode {domNode} {
 
 # Dependencies
 proc spdAux::insertDependencies { baseNode originUN } {
-    
+
     set root [customlib::GetBaseRoot]
-    
+
     set originxpath [$baseNode toXPath]
     set insertxpath [getRoute $originUN]
     set insertonnode [$root selectNodes $insertxpath]
     # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
     $insertonnode setAttribute "actualize" 1
     $insertonnode setAttribute "actualize_tree" 1
-    
+
     ## Aun no soy capaz de insertar y que funcione
     #set ready 1
     #foreach c [$insertonnode getElementsByTagName "dependencies"] {
@@ -280,10 +283,10 @@ proc spdAux::insertDependencies { baseNode originUN } {
         #}
 }
 proc spdAux::insertDependenciesSoft { originxpath relativepath n attn attv} {
-    
+
     set root [customlib::GetBaseRoot]
     set insertonnode [$root selectNodes $originxpath]
-    
+
     # Aun no soy capaz de insertar y que funcione
     set ready 1
     foreach c [$insertonnode getElementsByTagName "dependencies"] {
@@ -304,7 +307,7 @@ proc spdAux::CheckSolverEntryState {domNode} {
     set mySolStrat [get_domnode_attribute $domNode solstratname]
     set ret [expr [string compare $currentSolStrat $mySolStrat] == 0]
     if {$ret} {
-        set st [::Model::GetSolutionStrategy $mySolStrat] 
+        set st [::Model::GetSolutionStrategy $mySolStrat]
         foreach se [$st getSolversEntries] {
             if {[get_domnode_attribute $domNode n] == [$se getName]} {
                 set filter [$se getAttribute filter]
@@ -318,7 +321,7 @@ proc spdAux::CheckSolverEntryState {domNode} {
             }
         }
     }
-    
+
     return $ret
 }
 
@@ -336,7 +339,7 @@ proc spdAux::ViewDoc {} {
 proc spdAux::ConvertAllUniqueNames {oldPrefix newPrefix} {
     variable uniqueNames
     set root [customlib::GetBaseRoot]
-    
+
     foreach routeName [dict keys $uniqueNames] {
         if {[string first $oldPrefix $routeName] eq 0} {
             set route [getRoute $routeName]
@@ -349,7 +352,7 @@ proc spdAux::ConvertAllUniqueNames {oldPrefix newPrefix} {
             }
         }
     }
-    
+
     spdAux::parseRoutes
 }
 
@@ -384,7 +387,7 @@ proc spdAux::GetUsedElements {{alt_un ""}} {
 proc spdAux::LoadIntervalGroups { {root ""} } {
     customlib::UpdateDocument
     variable GroupsEdited
-    
+
     if {$root eq "" } {
         set root [customlib::GetBaseRoot]
     }
@@ -423,7 +426,7 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
 
 proc spdAux::GetAppliedGroups { {root ""} } {
     customlib::UpdateDocument
-    
+
     if {$root eq "" } {
         set root [customlib::GetBaseRoot]
     }
