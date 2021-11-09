@@ -38,6 +38,7 @@ proc ::spdAux::SaveModelFile { fileid } {
 }
 
 proc ::spdAux::ProcGetFilesValues { domNode } {
+    Kratos::LoadImportFiles
     customlib::UpdateDocument
     spdAux::LoadModelFiles
     lappend listilla $::spdAux::no_file_string
