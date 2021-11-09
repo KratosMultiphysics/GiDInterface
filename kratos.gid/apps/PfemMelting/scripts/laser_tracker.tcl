@@ -26,22 +26,22 @@ proc ::PfemMelting::LaserTracker::TurnOn { } {
     variable steps_set
     set steps_set [list ]
 
-    set laser_cond_xpath "[spdAux::getRoute [ConvectionDiffusion::GetUniqueName conditions]]/condition\[@n='LaserPath'\]"
-    set paths [[customlib::GetBaseRoot] selectNodes "$laser_cond_xpath/group/value\[@n='laser_path'\]"]
+    set laser_cond_xpath "[spdAux::getRoute PFEMMELTING_Laser]"
+    set paths [[customlib::GetBaseRoot] selectNodes "$laser_cond_xpath/blockdata/value\[@n='laser_path'\]"]
     foreach path_node $paths {
         set coordinates [list ]
         set path [write::getValueByNode $path_node]
         set fullpath [file join [GidUtils::GetDirectoryModel] $path]
-        if {![file exists $fullpath]} {error "file $fullpath not found"} 
+        if {![file exists $fullpath]} {error "file $fullpath not found"}
         set laser_dict [Kratos::ReadJsonDict $fullpath]
         set steps [dict get $laser_dict laser_settings]
         lappend steps_set $steps
         set id [GiD_OpenGL register ::PfemMelting::LaserTracker::MyRedrawProcedure]
         lappend functions $id
-    } 
+    }
 }
 
-proc ::PfemMelting::LaserTracker::MyRedrawProcedure { } { 
+proc ::PfemMelting::LaserTracker::MyRedrawProcedure { } {
     variable steps_set
 
     foreach path $steps_set {
@@ -55,7 +55,7 @@ proc ::PfemMelting::LaserTracker::MyRedrawProcedure { } {
                 set y [dict get $step y]
                 set z [dict get $step z]
                 lappend coordinates [list $x $y $z]
-                
+
                 set x1 [expr $x + (0.0*$dx)]
                 set y1 [expr $y + (0.0*$dy)]
                 set z1 [expr $z + (0.0*$dz)]
