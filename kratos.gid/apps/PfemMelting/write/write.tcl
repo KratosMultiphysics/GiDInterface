@@ -27,7 +27,13 @@ proc ::PfemMelting::write::writeModelPartEvent { } {
     # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
 
-
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set groupid [$group @n]
+        set groupid [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        ::write::writeGroupSubModelPart $condid $groupid "Nodes"
+    }
 }
 
 proc ::PfemMelting::write::writeCustomFilesEvent { } {
