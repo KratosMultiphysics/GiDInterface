@@ -24,13 +24,15 @@
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
-        "intervals": true,
+        "intervals": false,
         "wizard": false,
         "import_files":true
     },
     "unique_names": {
+        "conditions": "BC"
     },
     "write": {
+
     },
     "main_launch_file": "python/PfemMeltingAnalysisLauncher.py",
     "examples": "",

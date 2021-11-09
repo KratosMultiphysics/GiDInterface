@@ -10,10 +10,10 @@ proc PfemMelting::xml::Init { } {
 
     Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
     Model::getElements Elements.xml
-    # Model::getConditions Conditions.xml
+    Model::getConditions Conditions.xml
     Model::getConstitutiveLaws ConstitutiveLaws.xml
     Model::getMaterials Materials.xml
-    # Model::getProcesses "../../Common/xml/Processes.xml"
+    Model::getProcesses "../../Common/xml/Processes.xml"
     # Model::getProcesses Processes.xml
 
     Model::getSolvers "../../Common/xml/Solvers.xml"
@@ -24,7 +24,10 @@ proc PfemMelting::xml::getUniqueName {name} {
 }
 
 proc PfemMelting::xml::CustomTree { args } {
-    # spdAux::SetValueOnTreeItem pn "Environment settings" [getUniqueName Boussinesq]
+    set xp1 "[spdAux::getRoute [GetUniqueName conditions]]/condition\[@n='VelocityConstraints3D'\]/value\[@n = 'Interval'\]"
+    spdAux::SetFieldOnPath $xp1 v Total
+    spdAux::SetFieldOnPath $xp1 values Total
+    # spdAux::SetFieldOnPath $xp1 state hidden
 
     spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem state disabled GiDOptions GiDMultiFileFlag

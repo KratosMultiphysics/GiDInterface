@@ -20,6 +20,10 @@ proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
     }
 }
 
+proc spdAux::SetFieldOnPath {path field value} {
+    gid_groups_conds::setAttributes $path [list $field $value]
+}
+
 proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
     return [spdAux::SetValuesOnBaseNode [[customlib::GetBaseRoot] selectNodes $base_path] $prop_value_pairs]
 }

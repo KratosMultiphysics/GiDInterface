@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+  <ConditionItem n="VelocityConstraints3D" pn="Velocity constraints" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" App="Fluid" WorkingSpaceDimension="3D" LocalSpaceDimension="3" SkinConditions="False" ElementType="Surface" ProcessName="AssignVectorVariableProcess" VariableName="VELOCITY" help="" units="m/s" unit_magnitude="Velocity">
+    <TopologyFeatures></TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+</ConditionList>
