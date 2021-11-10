@@ -3,7 +3,7 @@ proc ::FluidDEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
     # # Gravity
-    dict set project_parameters_dict gravity_parameters [FluidDEM::write::GetGravityDict]
+    dict set project_parameters_dict gravity_parameters [write::GetGravityByModuleDirection DEMGravity]
 
     # Time_stepping
     set automatic_time_step [write::getValue FDEMTimeParameters AutomaticDeltaTime]
@@ -37,17 +37,17 @@ proc ::FluidDEM::write::getParametersDict { } {
     # nodal results
     dict set project_parameters_dict dem_nodal_results [FluidDEM::write::GetDEMNodalResultsDict]
     dict set project_parameters_dict fluid_nodal_results [FluidDEM::write::GetFluidNodalResultsDict]
-    
+
     # Hydrodynamic Properties
     dict set project_parameters_dict properties [FluidDEM::write::GetHydrodynamicPropertiesList]
-    
+
     # output configuration  #TODO to be checked/modified by GCasas
     dict set project_parameters_dict sdem_output_processes [write::GetDefaultOutputProcessDict [::Fluid::GetAttribute id]]
     FluidDEM::write::InitExternalProjectParameters
     dict set project_parameters_dict dem_parameters $FluidDEM::write::dem_project_parameters
     dict set project_parameters_dict dem_parameters "solver_settings" "strategy" "swimming_sphere_strategy"
     dict set project_parameters_dict fluid_parameters $FluidDEM::write::fluid_project_parameters
-    
+
     # Update the fluid element
     set element_name {*}[FluidDEM::write::GetCurrentFluidElementName]
     dict set project_parameters_dict fluid_parameters solver_settings formulation element_type $element_name
@@ -217,23 +217,6 @@ proc FluidDEM::write::GetNonNewtonianFluidDict { } {
     dict set non_newtonian_fluid_dict "power_law_tol"                $power_law_tol
 
     return $non_newtonian_fluid_dict
-}
-
-proc ::FluidDEM::write::GetGravityDict { } {
-    set gravity_dict [dict create ]
-
-    # modulus
-    set gravity_value [write::getValue DEMGravity GravityValue]
-    dict set gravity_dict "modulus" $gravity_value
-
-    # normalized direction
-    set gravity_X [write::getValue DEMGravity Cx]
-    set gravity_Y [write::getValue DEMGravity Cy]
-    set gravity_Z [write::getValue DEMGravity Cz]
-    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
-    dict set gravity_dict "direction" [list $gravity_X $gravity_Y $gravity_Z]
-
-    return $gravity_dict
 }
 
 proc FluidDEM::write::GetCouplingDict { } {

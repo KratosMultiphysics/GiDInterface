@@ -5,7 +5,7 @@ proc ::DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
     set dimension [expr 3]
-    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]} 
+    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]}
 
     dict set project_parameters_dict "Dimension"                            [expr $dimension]
     dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
@@ -27,7 +27,7 @@ proc ::DEM::write::getParametersDict { } {
     dict set project_parameters_dict "dem_inlet_option"                     $dem_inlet_option
 
     # Gravity
-    lassign [DEM::write::GetGravity] gx gy gz
+    lassign [write::GetGravityByModuleDirection DEMGravity] gx gy gz
     # Add data to the parameters_dict
     dict set project_parameters_dict "GravityX"                             $gx
     dict set project_parameters_dict "GravityY"                             $gy
@@ -54,7 +54,7 @@ proc ::DEM::write::getParametersDict { } {
     dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
-    
+
     set used_elements [spdAux::GetUsedElements]
     set ElementType [lindex $used_elements 0]
     dict set project_parameters_dict "ElementType"                          $ElementType
@@ -139,19 +139,6 @@ proc ::DEM::write::GetTimeSettings { } {
     dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
     dict set result EndTime [write::getValue DEMTimeParameters EndTime]
     return $result
-}
-
-proc ::DEM::write::GetGravity { } {
-    set gravity_value [write::getValue DEMGravity GravityValue]
-    set gravity_X [write::getValue DEMGravity Cx]
-    set gravity_Y [write::getValue DEMGravity Cy]
-    set gravity_Z [write::getValue DEMGravity Cz]
-    # Normalize director vector
-    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
-    # Get value by components
-    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
-
-    return [list $gx $gy $gz]
 }
 
 proc ::DEM::write::writeParametersEvent { } {

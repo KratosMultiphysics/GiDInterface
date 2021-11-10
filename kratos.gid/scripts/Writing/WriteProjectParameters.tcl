@@ -258,7 +258,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set processWriteCommand [$process getAttribute write_command]
-            
+
             dict set processDict process_name $processName
 
             if {$processWriteCommand eq ""} {
@@ -268,7 +268,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
                 foreach {inputName in_obj} $process_parameters {
                     dict set processDict Parameters $inputName [write::GetInputValue $group $in_obj]
                 }
-                
+
             } else {
                 set processDict [$processWriteCommand $group $condition $process]
             }
@@ -550,4 +550,18 @@ proc write::GetDefaultRestartDict { } {
     dict set restartDict LoadRestart false
     dict set restartDict Restart_Step 0
     return $restartDict
+}
+
+
+proc write::GetGravityByModuleDirection { gravity_un } {
+    set gravity_value [write::getValue $gravity_un GravityValue]
+    set gravity_X [write::getValue $gravity_un Cx]
+    set gravity_Y [write::getValue $gravity_un Cy]
+    set gravity_Z [write::getValue $gravity_un Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+
+    return [list $gx $gy $gz]
 }
