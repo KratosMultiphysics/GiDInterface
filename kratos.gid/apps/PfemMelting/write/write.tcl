@@ -11,6 +11,7 @@ proc ::PfemMelting::write::Init { } {
     SetAttribute conditions_un [::PfemMelting::GetUniqueName conditions]
     SetAttribute materials_un [::PfemMelting::GetUniqueName materials]
     SetAttribute results_un [::PfemMelting::GetUniqueName results]
+    SetAttribute time_parameters_un [::PfemMelting::GetUniqueName time_parameters]
 }
 
 # Events
