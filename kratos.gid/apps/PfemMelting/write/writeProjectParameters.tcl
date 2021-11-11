@@ -7,6 +7,7 @@ proc ::PfemMelting::write::getParametersDict { } {
     dict set project_parameters_dict restart_options [write::GetDefaultRestartDict]
     dict set project_parameters_dict solver_settings [Getsolver_settings_dict]
     dict set project_parameters_dict processes [write::getConditionsParametersDict BC]
+    dict lappend project_parameters_dict processes {*}[getLaserProcesses]
 
     return $project_parameters_dict
 }
@@ -136,6 +137,20 @@ proc ::PfemMelting::write::GetSolverSettingsThermicDict { } {
     dict set solver_settings_dict transient_parameters $formulationSettingsDict
 
     return $solver_settings_dict
+}
+
+proc ::PfemMelting::write::getLaserProcesses { } {
+    set laser_process_list [list ]
+    set lasers [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [::PfemMelting::GetUniqueName laser]]/blockdata/value\[@n='laser_path'\]"]
+    foreach laser $lasers {
+        set laser_process_dict [dict create]
+        dict set laser_process_dict python_module apply_laser_process
+        dict set laser_process_dict kratos_module KratosMultiphysics.PfemMelting
+        dict set laser_process_dict Parameters model_part_name [GetAttribute model_part_name]
+        dict set laser_process_dict Parameters filename [write::getValueByNode $laser]
+        lappend laser_process_list $laser_process_dict
+    }
+    return $laser_process_list
 }
 
 proc ::PfemMelting::write::writeParametersEvent { } {
