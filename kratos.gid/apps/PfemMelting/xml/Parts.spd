@@ -4,6 +4,9 @@
 	<value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements]" help="Select an element" state="hidden">
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
 	</value>
-	<dynamicnode command="spdAux::injectPartInputs" args=""/>
+	<value n="ConstitutiveLaw" pn="Material type" v="" actualize_tree="1" values="[GetConstitutiveLaws]" dict="[GetAllConstitutiveLaws]"  state="hidden">
+		<dependencies node="../value[@n!='Material']" actualize="1"/>
+	</value>
+	<dynamicnode command="spdAux::injectPartElementInputs" args=""/>
 
 </condition>

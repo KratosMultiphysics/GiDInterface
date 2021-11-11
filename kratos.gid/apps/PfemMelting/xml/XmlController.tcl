@@ -8,7 +8,7 @@ proc PfemMelting::xml::Init { } {
     # Namespace variables initialization
     Model::InitVariables dir $::PfemMelting::dir
 
-    Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
+    Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
     Model::getConditions Conditions.xml
     Model::getConstitutiveLaws ConstitutiveLaws.xml

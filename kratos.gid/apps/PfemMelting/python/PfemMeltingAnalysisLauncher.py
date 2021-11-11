@@ -9,16 +9,16 @@ import sys
 import time
 
 class PfemMeltingAnalysisWithFlush(PfemMeltingAnalysis):
-    
+
     def __init__(self,model,project_parameters,flush_frequency=10.0):
         super(PfemMeltingAnalysisWithFlush,self).__init__(model,project_parameters)
-        
+
         self.flush_frequency = flush_frequency
         self.last_flush = time.time()
 
     def FinalizeSolutionStep(self):
         super(PfemMeltingAnalysisWithFlush,self).FinalizeSolutionStep()
-        
+
         if self.parallel_type == "OpenMP":
             now = time.time()
             if now - self.last_flush > self.flush_frequency:
@@ -26,10 +26,11 @@ class PfemMeltingAnalysisWithFlush(PfemMeltingAnalysis):
                 self.last_flush = now
 
 if __name__ == "__main__":
-     
+
     with open("ProjectParameters.json",'r') as parameter_file:
         parameters = KratosMultiphysics.Parameters(parameter_file.read())
 
     model = KratosMultiphysics.Model()
     simulation = PfemMeltingAnalysisWithFlush(model,parameters)
     simulation.Run()
+    
