@@ -48,7 +48,6 @@ proc PfemThermic::write::GetThermicSolverSettingsDict { } {
 	dict set thermicSolverSettingsDict analysis_type             [write::getValue CNVDFFAnalysisType]
 	dict set thermicSolverSettingsDict time_integration_method   "implicit"
 	dict set thermicSolverSettingsDict model_part_name           [ConvectionDiffusion::write::GetAttribute model_part_name]
-	dict set thermicSolverSettingsDict computing_model_part_name "thermal_computing_domain"
     dict set thermicSolverSettingsDict domain_size               [expr [string range [write::getValue nDim] 0 0]]
 	dict set thermicSolverSettingsDict reform_dofs_at_each_step  "true"
 	
