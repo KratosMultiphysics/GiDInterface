@@ -14,6 +14,7 @@ proc ::PfemMelting::write::Init { } {
     SetAttribute time_parameters_un [::PfemMelting::GetUniqueName time_parameters]
 
     SetAttribute model_part_name [::PfemMelting::GetWriteProperty model_part_name]
+    SetAttribute properties_location [::PfemMelting::GetWriteProperty properties_location]
     SetAttribute materials_file [::PfemMelting::GetWriteProperty materials_file]
 }
 

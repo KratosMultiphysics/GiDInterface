@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
-    <CLaw n="Newtonian3DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
+    <CLaw n="Newtonian3DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D" OutputMode="Materials">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
             <!-- <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/> -->
