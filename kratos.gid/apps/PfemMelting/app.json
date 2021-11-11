@@ -37,7 +37,11 @@
         "results": "Results",
         "time_parameters": "TimeParameters"
     },
-    "write": {},
+    "write": {
+        "model_part_name": "ModelPart",
+        "materials_file": "Materials.json",
+        "properties_location": "json"
+    },
     "main_launch_file": "python/PfemMeltingAnalysisLauncher.py",
     "examples": "",
     "description": ""

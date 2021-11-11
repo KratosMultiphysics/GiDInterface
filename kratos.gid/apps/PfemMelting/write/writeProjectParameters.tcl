@@ -14,9 +14,9 @@ proc ::PfemMelting::write::getParametersDict { } {
 proc ::PfemMelting::write::GetProblemDataDict { } {
     set problem_data_dict [write::GetDefaultProblemDataDict]
     dict set problem_data_dict domain_size 3
-    dict set problem_data_dict material_settings material_filename MateralCharacterization.json
+    dict set problem_data_dict material_settings material_filename [GetAttribute materials_file]
     dict set problem_data_dict environment_settings gravity [write::GetGravityByModuleDirection Gravity]
-    dict set problem_data_dict environment_settings ambient_temperature 293.15
+    dict set problem_data_dict environment_settings ambient_temperature [write::getValue [::PfemMelting::GetUniqueName ambient_temperature]]
     return $problem_data_dict
 }
 
@@ -36,7 +36,7 @@ proc ::PfemMelting::write::Getsolver_settings_dict { } {
 proc ::PfemMelting::write::GetSolverSettingsFluidDict { } {
     set solver_settings_dict [dict create ]
 
-    dict set solver_settings_dict model_part_name ModelPart
+    dict set solver_settings_dict model_part_name [GetAttribute model_part_name]
     dict set solver_settings_dict domain_size 3
     dict set solver_settings_dict solver_type Monolithic
 
@@ -50,7 +50,7 @@ proc ::PfemMelting::write::GetSolverSettingsFluidDict { } {
 
     # Skin parts
     dict set solver_settings_dict skin_parts [list "NoSlip3D_No_Slip_Auto1"]
-    dict set solver_settings_dict volume_model_part_name ModelPart
+    dict set solver_settings_dict volume_model_part_name [GetAttribute model_part_name]
     # dict set solver_settings_dict
 
 
@@ -90,7 +90,7 @@ proc ::PfemMelting::write::GetSolverSettingsFluidDict { } {
 proc ::PfemMelting::write::GetSolverSettingsThermicDict { } {
     set solver_settings_dict [dict create ]
 
-    dict set solver_settings_dict model_part_name ModelPart
+    dict set solver_settings_dict model_part_name [GetAttribute model_part_name]
     dict set solver_settings_dict domain_size 3
     dict set solver_settings_dict solver_type transient
     dict set solver_settings_dict analysis_type non_linear
@@ -107,7 +107,7 @@ proc ::PfemMelting::write::GetSolverSettingsThermicDict { } {
 
     foreach key [list relative_velocity_tolerance absolute_velocity_tolerance relative_pressure_tolerance absolute_pressure_tolerance] { if {[dict exists $solver_settings_dict $key]} {dict unset solver_settings_dict $key} }
 
-    dict set solver_settings_dict problem_domain_sub_model_part_list [list ModelPart]
+    dict set solver_settings_dict problem_domain_sub_model_part_list [list [GetAttribute model_part_name]]
 
     # Time stepping settings
     set timeSteppingDict [dict create]

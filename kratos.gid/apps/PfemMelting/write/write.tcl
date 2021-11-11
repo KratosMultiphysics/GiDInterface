@@ -12,6 +12,9 @@ proc ::PfemMelting::write::Init { } {
     SetAttribute materials_un [::PfemMelting::GetUniqueName materials]
     SetAttribute results_un [::PfemMelting::GetUniqueName results]
     SetAttribute time_parameters_un [::PfemMelting::GetUniqueName time_parameters]
+
+    SetAttribute model_part_name [::PfemMelting::GetWriteProperty model_part_name]
+    SetAttribute materials_file [::PfemMelting::GetWriteProperty materials_file]
 }
 
 # Events
@@ -38,6 +41,7 @@ proc ::PfemMelting::write::writeModelPartEvent { } {
 }
 
 proc ::PfemMelting::write::writeCustomFilesEvent { } {
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] true [GetAttribute model_part_name]
     write::SetConfigurationAttribute main_launch_file [::PfemMelting::GetAttribute main_launch_file]
 }
 
