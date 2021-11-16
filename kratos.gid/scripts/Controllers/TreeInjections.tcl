@@ -234,7 +234,11 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
             set state [$cnd getAttribute state]
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
-        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
+        set allow_group_creation ""
+        if {[$cnd getAttribute Groups] ne ""} {
+            set allow_group_creation "allow_group_creation='0' groups_list='\[[$cnd getAttribute Groups]\]'"
+        }
+        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check' $allow_group_creation>"
         set symbol_data [$cnd getSymbol]
         if { [llength $symbol_data] } {
             set txt "<symbol"
