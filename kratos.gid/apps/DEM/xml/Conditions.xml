@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
   <!-- DEM kinematics -->
-  <ConditionItem n="DEMVelocity" pn="Velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign linear velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true">
+  <ConditionItem n="DEMVelocity" pn="Velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign linear velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true" Groups="GetPartsGroupsList">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs></inputs>
