@@ -126,49 +126,84 @@ proc ::DEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
-
-# Kinematics SubModelParts
+# testing
 proc ::DEM::write::getKinematicsProcessDictList {} {
-    set ret [list ]
-    set model_part_name [GetAttribute model_part_name]
-    foreach partgroup [write::getPartsSubModelPartId] {
-        set value [write::getValue gidtree ForceValue]
+    set root [customlib::GetBaseRoot]
+
+    set process_list [list ]
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEMVelocity'\]/group"
+    # set xp1 "[spdAux::getRoute [::DEM::GetUniqueName drag]]/group"
+    set groups [$root selectNodes $xp1]
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
+
+        # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write_drag_output_file'\]"]]]
+        # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print_drag_to_screen'\]"]]]
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+
         set pdict [dict create]
-        dict set pdict "python_module" "apply_kinematic_constraints_process"
-        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
-        #dict set pdict "process_name" "AssignScalarVariableProcess"
+        dict set pdict "python_module" "compute_body_fitted_drag_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
+        dict set pdict "process_name" "ComputeBodyFittedDragProcess"
         set params [dict create]
-        dict set params "model_part_name" $model_part_name.${partgroup}
-        set vsettings [dict create]
-        dict set settings "constrained" false
-        dict set settings "value" $value
-        dict set settings "table" null
-        dict set params "velocity_constraints_settings" $vsettings
-        set asettings [dict create]
-        dict set settings "constrained" false
-        dict set settings "value" $value
-        dict set settings "table" null
-        dict set params "angular_velocity_constraints_settings" $asettings
-        dict set params "interval" $interval
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        dict set params "write_drag_output_file" $write_output
+        dict set params "print_drag_to_screen" $print_screen
+        dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
 
-        lappend ret $pdict
+        lappend process_list $pdict
     }
-    return $ret
+
+    return $process_list
 }
+
+
+# Kinematics SubModelParts
+# proc ::DEM::write::getKinematicsProcessDictList {} {
+#     set ret [list ]
+#     # set model_part_name [GetAttribute model_part_name]
+#     foreach partgroup [write::getPartsSubModelPartId] {
+#         set value [write::getValue gidtree ForceValue]
+#         set pdict [dict create]
+#         dict set pdict "python_module" "apply_kinematic_constraints_process"
+#         dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+#         #dict set pdict "process_name" "AssignScalarVariableProcess"
+#         set params [dict create]
+#         # dict set params "model_part_name" $model_part_name.${partgroup}
+#         set vsettings [dict create]
+#         dict set settings "constrained" false
+#         dict set settings "value" $value
+#         dict set settings "table" null
+#         dict set params "velocity_constraints_settings" $vsettings
+#         set asettings [dict create]
+#         dict set settings "constrained" false
+#         dict set settings "value" $value
+#         dict set settings "table" null
+#         dict set params "angular_velocity_constraints_settings" $asettings
+#         dict set params "interval" $interval
+#         dict set pdict "Parameters" $params
+
+#         lappend ret $pdict
+#     }
+#     return $ret
+# }
 
 
 # Force and moments SubModelParts
 proc ::DEM::write::getForceProcessDictList {} {
     set ret [list ]
-    set model_part_name [GetAttribute model_part_name]
+    # set model_part_name [GetAttribute model_part_name]
     foreach partgroup [write::getPartsSubModelPartId] {
         set value [write::getValue gidtree ForceValue]
         set pdict [dict create]
         dict set pdict "python_module" "apply_forces_and_moments_process"
         dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
         set params [dict create]
-        dict set params "model_part_name" $model_part_name.${partgroup}
+        # dict set params "model_part_name" $model_part_name.${partgroup}
         set fsettings [dict create]
         dict set settings "value" $value
         dict set settings "table" null
