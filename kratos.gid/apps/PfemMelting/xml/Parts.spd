@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<condition n="Parts" pn="Define particle groups" ov="[CheckGeometry 1]" icon="shells16" un="PFEMMELTING_Parts">
+<condition n="Parts" pn="Define melting object volume" ov="[CheckGeometry 1]" icon="shells16" un="PFEMMELTING_Parts">
 	<value n="Element" pn="Element" actualize="1" values="" v="" dict="[GetElements]" help="Select an element" state="hidden">
 		<dependencies node="../value[@n = 'ConstitutiveLaw']" actualize="1" />
 	</value>

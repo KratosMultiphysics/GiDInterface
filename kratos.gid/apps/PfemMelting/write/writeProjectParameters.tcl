@@ -14,7 +14,7 @@ proc ::PfemMelting::write::getParametersDict { } {
 
 proc ::PfemMelting::write::GetProblemDataDict { } {
     set problem_data_dict [write::GetDefaultProblemDataDict]
-    dict set problem_data_dict domain_size 3
+    dict set problem_data_dict domain_size [expr 3*1]
     dict set problem_data_dict material_settings material_filename [GetAttribute materials_file]
     dict set problem_data_dict environment_settings gravity [write::GetGravityByModuleDirection Gravity]
     dict set problem_data_dict environment_settings ambient_temperature [write::getValue [::PfemMelting::GetUniqueName ambient_temperature]]
@@ -25,7 +25,7 @@ proc ::PfemMelting::write::Getsolver_settings_dict { } {
     set solver_settings_dict [dict create ]
 
     dict set solver_settings_dict solver_type ThermallyCoupledPfem2
-    dict set solver_settings_dict domain_size 3
+    dict set solver_settings_dict domain_size [expr 3]
     dict set solver_settings_dict echo_level 0
 
     dict set solver_settings_dict fluid_solver_settings [GetSolverSettingsFluidDict]

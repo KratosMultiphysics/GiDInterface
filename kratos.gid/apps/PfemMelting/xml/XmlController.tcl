@@ -32,6 +32,11 @@ proc PfemMelting::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem state disabled GiDOptions GiDMultiFileFlag
 
+
+    spdAux::SetValueOnTreeItem v 9.81 Gravity GravityValue
+    spdAux::SetValueOnTreeItem v 0 Gravity Cy
+    spdAux::SetValueOnTreeItem v -1.0 Gravity Cz
+
 }
 
 proc PfemMelting::xml::ProcAfterApplyParts { domNode } {
