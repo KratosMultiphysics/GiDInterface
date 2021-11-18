@@ -18,7 +18,8 @@ proc ::PfemMelting::write::GetProblemDataDict { } {
     dict set problem_data_dict material_settings material_filename [GetAttribute materials_file]
     dict set problem_data_dict environment_settings gravity [write::GetGravityByModuleDirection Gravity]
     dict set problem_data_dict environment_settings ambient_temperature [write::getValue [::PfemMelting::GetUniqueName ambient_temperature]]
-    dict set problem_data_dict mesh_settings mesh_size 0.02
+    dict set problem_data_dict mesh_element_size [GiD_Info Project LastElementSize]
+
     return $problem_data_dict
 }
 
