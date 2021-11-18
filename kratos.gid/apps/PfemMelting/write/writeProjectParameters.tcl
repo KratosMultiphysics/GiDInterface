@@ -18,6 +18,7 @@ proc ::PfemMelting::write::GetProblemDataDict { } {
     dict set problem_data_dict material_settings material_filename [GetAttribute materials_file]
     dict set problem_data_dict environment_settings gravity [write::GetGravityByModuleDirection Gravity]
     dict set problem_data_dict environment_settings ambient_temperature [write::getValue [::PfemMelting::GetUniqueName ambient_temperature]]
+    dict set problem_data_dict mesh_settings mesh_size 0.02
     return $problem_data_dict
 }
 
@@ -99,7 +100,7 @@ proc ::PfemMelting::write::GetSolverSettingsThermicDict { } {
     # model import settings
     dict set solver_settings_dict model_import_settings input_type "mdpa"
     dict set solver_settings_dict model_import_settings input_filename [Kratos::GetModelName]
-    dict set solver_settings_dict material_import_settings materials_filename material.json
+    dict set solver_settings_dict material_import_settings materials_filename [GetAttribute materials_file]
 
     dict set solver_settings_dict time_integration_method implicit
 

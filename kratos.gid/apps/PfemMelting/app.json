@@ -39,7 +39,7 @@
     },
     "write": {
         "model_part_name": "ModelPart",
-        "materials_file": "Materials.json",
+        "materials_file": "materials.json",
         "properties_location": "json"
     },
     "main_launch_file": "python/PfemMeltingAnalysisLauncher.py",
