@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
   <!-- DEM kinematics -->
-  <ConditionItem n="DEMVelocity" pn="Velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEMVelocity-Process" Type="Load" unit_magnitude="Velocity" units="m/s" help="Assign linear velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true" Groups="GetPartsGroupsList">
+  <ConditionItem n="DEMVelocity" pn="Velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign linear velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true" Type="BC" Groups="GetPartsGroupsList">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEMAngular" pn="Angular velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEMAngular-Process" unit_magnitude="Angle/T" units="rad/s" help="Assign angular velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true">
+  <ConditionItem n="DEMAngular" pn="Angular velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEMAngular-Process" unit_magnitude="Angle/T" units="rad/s" help="Assign angular velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true" Type="BC" Groups="GetPartsGroupsList">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs></inputs>
@@ -16,14 +16,14 @@
   </ConditionItem>
 
   <!-- DEM 2D kinematics -->
-  <ConditionItem n="DEMVelocity2D" pn="Velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign linear velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true">
+  <ConditionItem n="DEMVelocity2D" pn="Velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign linear velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true" Type="BC" Groups="GetPartsGroupsList">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEMAngular2D" pn="Angular velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEMAngular-Process" unit_magnitude="Angle/T" units="rad/s" help="Assign angular velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true">
+  <ConditionItem n="DEMAngular2D" pn="Angular velocity over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEMAngular-Process" unit_magnitude="Angle/T" units="rad/s" help="Assign angular velocity for each group containing particles" VariableName="SPHERE" Interval="Total" can_be_initial="true" Type="BC" Groups="GetPartsGroupsList">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs></inputs>
@@ -31,7 +31,7 @@
   </ConditionItem>
 
   <!-- FEM kinematics -->
-  <ConditionItem n="FEMVelocity" pn="Velocity over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="FEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true">
+  <ConditionItem n="FEMVelocity" pn="Velocity over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="FEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true" Type="BC" Groups="GetPartsGroupsList">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
       <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
@@ -40,7 +40,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="FEMAngular" pn="Angular velocity over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="FEMAngular-Process" unit_magnitude="Angle/T" units="rad/s" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true">
+  <ConditionItem n="FEMAngular" pn="Angular velocity over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="FEMAngular-Process" unit_magnitude="Angle/T" units="rad/s" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true" Type="BC" Groups="GetPartsGroupsList">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
       <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
@@ -50,7 +50,7 @@
   </ConditionItem>
 
   <!-- FEM 2D kinematics -->
-  <ConditionItem n="FEMVelocity2D" pn="Velocity over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="FEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true">
+  <ConditionItem n="FEMVelocity2D" pn="Velocity over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="FEMVelocity-Process" unit_magnitude="Velocity" units="m/s" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true" Type="BC" Groups="GetPartsGroupsList">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
     </TopologyFeatures>
@@ -58,7 +58,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="FEMAngular2D" pn="Angular velocity over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="FEMAngular-Process" nit_magnitude="Angle/T" units="rad/s" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true">
+  <ConditionItem n="FEMAngular2D" pn="Angular velocity over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Line" ProcessName="FEMAngular-Process" nit_magnitude="Angle/T" units="rad/s" help="Assign kinematic conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true" Type="BC" Groups="GetPartsGroupsList">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
     </TopologyFeatures>
@@ -66,13 +66,49 @@
     <outputs></outputs>
   </ConditionItem>
 
+
+
+
+  <ConditionItem n="DEMForce" pn="Force over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEMForce-Process" unit_magnitude="F" units="N" help="Assign force conditions for each group containing particles" VariableName="SPHERE" Interval="Total" Type="Load" can_be_initial="true">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+  <ConditionItem n="DEMTorque" pn="Moment over particles" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEMTorque-Process" units="N*m" unit_magnitude="F*L" help="Assign torque conditions for each group containing particles" VariableName="SPHERE" Interval="Total" Type="Load" can_be_initial="true">
+    <TopologyFeatures>
+    </TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+
+<!-- OVER FEM -->
+  <ConditionItem n="FEMForce" pn="Force over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="DEMForce-Process" unit_magnitude="Force" units="N" help="Assign force conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true" Type="Load">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
+    </TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+  <ConditionItem n="FEMTorque" pn="Moment over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="DEMTorque-Process" units="N*m" unit_magnitude="F*L" help="Assign torque conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true" Type="Load">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
+    </TopologyFeatures>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
 
 
 
 
 
   <!-- legacy -->
-  <ConditionItem n="Inlet" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET">
+  <ConditionItem n="Inlet" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET" Type="BC">
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
       <item GeometryType="Triangle" nodes="6" KratosName="WallCondition3D6N"/>
@@ -81,7 +117,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="Inlet2D" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET">
+  <ConditionItem n="Inlet2D" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET" Type="BC">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -89,14 +125,14 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-GraphCondition" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
+  <ConditionItem n="DEM-GraphCondition" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH" Type="BC">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-GraphCondition2D" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH">
+  <ConditionItem n="DEM-GraphCondition2D" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH" Type="BC">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
@@ -104,7 +140,7 @@
     <outputs></outputs>
   </ConditionItem>
 
-  <ConditionItem n="DEM-CustomSmp" pn="Define custom submodelparts" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="CustomSMP-Process" help="Elements defined as custom must be previously defined as Parts. Please make sure material properties for the selected elements has already been defined." VariableName="SUBMP">
+  <ConditionItem n="DEM-CustomSmp" pn="Define custom submodelparts" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="CustomSMP-Process" help="Elements defined as custom must be previously defined as Parts. Please make sure material properties for the selected elements has already been defined." VariableName="SUBMP" Type="BC">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>
