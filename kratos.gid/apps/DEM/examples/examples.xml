@@ -6,4 +6,7 @@
     <Example id="DEMDrop3D" app="DEM" logo="SpheresDrop.png" name="DEM spheres drop 3D" dim="3D" cmd="::DEM::examples::SpheresDrop::Init">
         <Description></Description>
     </Example>
+    <Example id="DEMDrop3DTest" app="DEM" logo="SpheresDrop.png" name="Test new interface" dim="3D" cmd="::DEM::examples::SpheresDropForTest::Init">
+        <Description></Description>
+    </Example>
 </Group>
