@@ -116,7 +116,7 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     # set xpath [spdAux::getRoute DEMTimeParameters]
     # spdAux::SetValuesOnBasePath $xpath $change_list
 
-    # spdAux::RequestRefresh
+    spdAux::RequestRefresh
 }
 
 proc ::DEM::examples::SpheresDropForTest::AssignMeshSize { } {
