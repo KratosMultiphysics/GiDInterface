@@ -76,25 +76,30 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     spdAux::SetValuesOnBaseNode $FloorBCNode $props
 
 
-
-
-
-
-
-
-
-    # set DEMConditions [spdAux::getRoute "DEMConditions"]
-    # # DEM FEM Walls
-    # set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
-    # set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
-    # $wallsNode setAttribute ov surface
-
     # # Inlet
     # set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     # set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
     # $inletNode setAttribute ov surface
     # set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
     # spdAux::SetValuesOnBaseNode $inletNode $props
+
+
+     # InletPart
+    set FEMParts_inlet [spdAux::getRoute "Parts"]/condition\[@n='Parts_FEM'\]
+    set FEMParts_inletNode [customlib::AddConditionGroupOnXPath $FEMParts_inlet Inlet]
+    $FEMParts_inletNode setAttribute ov surface
+    set props [list Material "DEM-DefaultMaterial"]
+    spdAux::SetValuesOnBaseNode $FEMParts_inletNode $props
+
+
+    # BC over floor
+    set Inlet {container[@n='DEM']/container[@n='Boundary Conditions']/condition[@n='Inlet']}
+    #Velocity over walls is the name on the tree (pn)
+    set InletBCNode [customlib::AddConditionGroupOnXPath $Inlet Inlet]
+    $InletBCNode setAttribute ov surface
+    set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
+    spdAux::SetValuesOnBaseNode $InletBCNode $props
+
 
 
     # # ClusterInlet
