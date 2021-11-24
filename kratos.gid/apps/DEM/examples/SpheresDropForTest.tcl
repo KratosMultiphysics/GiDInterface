@@ -13,11 +13,11 @@ proc ::DEM::examples::SpheresDropForTest::Init {args} {
 
     DrawGeometry
     AssignToTree
-    #AssignMeshSize
+    AssignMeshSize
 
-    #GiD_Process 'Redraw
-    #GidUtils::UpdateWindow GROUPS
-    #GidUtils::UpdateWindow LAYER
+    GiD_Process 'Redraw
+    GidUtils::UpdateWindow GROUPS
+    GidUtils::UpdateWindow LAYER
 }
 
 proc ::DEM::examples::SpheresDropForTest::DrawGeometry { } {
@@ -125,6 +125,7 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
 }
 
 proc ::DEM::examples::SpheresDropForTest::AssignMeshSize { } {
+    GiD_Process Mescape Meshing ElemType Sphere Volumes 1 escape
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape
