@@ -39,8 +39,8 @@
     },
     "unique_names": {
         "parts": "DEMParts",
-        "nodal_conditions": "DEMNodalConditions",
-        "conditions": "DEMConditions",
+        "init_conditions": "InitialConditions",
+        "conditions": "BoundaryConditions",
         "materials": "DEMMaterials"
     },
     "write": {
