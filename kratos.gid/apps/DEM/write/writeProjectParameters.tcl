@@ -129,10 +129,8 @@ proc ::DEM::write::getParametersDict { } {
 # testing
 proc ::DEM::write::getKinematicsProcessDictList {} {
     set root [customlib::GetBaseRoot]
-
     set process_list [list ]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEMVelocity'\]/group"
-    # set xp1 "[spdAux::getRoute [::DEM::GetUniqueName drag]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'FEMVelocity'\]/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
