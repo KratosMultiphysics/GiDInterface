@@ -78,13 +78,7 @@ proc write::writeBasicSubmodelPartsByUniqueId {ConditionMap iter {un "GenericSub
 
 proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap {print_again_repeated 0}} {
     set obj [list ]
-    WV groupid
-    WV kname 
-    WV nnodes 
-    WV iter 
-    WV ConditionMap 
-    WV print_again_repeated 0
-    
+
     # Print header
     set s [mdpaIndent]
     WriteString "${s}Begin Conditions $kname// GUI group identifier: $groupid"
@@ -109,7 +103,7 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
         set cndid 0
         set new 0
         if {$nnodes != 1} {
-            set eid [lindex $elems $i]
+            set eid [objarray get $elems $i]
             set cndid [objarray get $ConditionMap $eid]
         }
         if {$cndid == 0} {
