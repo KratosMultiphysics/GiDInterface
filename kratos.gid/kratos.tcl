@@ -154,6 +154,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
     set Kratos::kratos_private(model_log_folder) ""
+    # Check exec/launch.json
+    set Kratos::kratos_private(launch_configuration) "local"
 
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
@@ -485,6 +487,11 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     }
     set app_run_brake [apps::ExecuteOnCurrentApp BreakRunCalculation]
     if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
+
+    if {[info exists Kratos::kratos_private(launch_configuration)]} {
+        set launch_type $Kratos::kratos_private(launch_configuration)
+        W $launch_type
+    }
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
