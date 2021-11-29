@@ -169,8 +169,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
         set StratParamsUN [apps::getCurrentUniqueName StratParams]
     }
 
-    set solstratName [write::getValue $solStratUN]
-    set schemeName [write::getValue $schemeUN]
+    set solstratName [write::getValue $solStratUN "" force]
+    set schemeName [write::getValue $schemeUN "" force]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
 
@@ -258,7 +258,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set processWriteCommand [$process getAttribute write_command]
-            
+
             dict set processDict process_name $processName
 
             if {$processWriteCommand eq ""} {
@@ -268,7 +268,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
                 foreach {inputName in_obj} $process_parameters {
                     dict set processDict Parameters $inputName [write::GetInputValue $group $in_obj]
                 }
-                
+
             } else {
                 set processDict [$processWriteCommand $group $condition $process]
             }
