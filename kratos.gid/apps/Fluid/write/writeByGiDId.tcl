@@ -1,7 +1,7 @@
 namespace eval ::Fluid::write {
     namespace path ::Fluid
     Kratos::AddNamespace [namespace current]
-    
+
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes
@@ -19,7 +19,7 @@ proc ::Fluid::write::Init { } {
     SetAttribute drag_un FLDrags
     SetAttribute writeCoordinatesByGroups 0
     SetAttribute validApps [list "Fluid"]
-    SetAttribute main_launch_file "KratosFluid.py"
+    SetAttribute main_launch_file "../../exec/MainKratos.py"
     SetAttribute materials_file "FluidMaterials.json"
     SetAttribute properties_location json
     FreeConditionsMap

@@ -37,6 +37,6 @@
         "materials_file": "FluidMaterials.json",
         "properties_location": "json"
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
 }
