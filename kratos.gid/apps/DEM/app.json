@@ -38,9 +38,9 @@
         "wizard": false
     },
     "unique_names": {
-        "parts": "Parts",
-        "init_conditions": "InitialConditions",
-        "conditions": "BoundaryConditions",
+        "parts": "DEMParts",
+        "init_conditions": "DEMInitialConditions",
+        "conditions": "DEMConditions",
         "materials": "DEMMaterials"
     },
     "write": {

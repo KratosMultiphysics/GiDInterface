@@ -52,13 +52,11 @@ proc ::DEM::write::getParametersDict { } {
     set processes [dict create]
     # Boundary conditions processes
     #dict set processes initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    #dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    # dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
     dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
     dict set processes constraints_process_list [DEM::write::getForceProcessDictList]
-
     dict set projectParametersDict processes $processes
-
 
 
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
@@ -128,9 +126,16 @@ proc ::DEM::write::getParametersDict { } {
 
 # testing
 proc ::DEM::write::getKinematicsProcessDictList {} {
+
     set root [customlib::GetBaseRoot]
     set process_list [list ]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'FEMVelocity'\]/group"
+    set xp1         [spdAux::getRoute "DEMConditions"]/condition\[@n='FEMVelocity'\]/group
+
+    set xp2         [spdAux::getRoute [GetUniqueName conditions]]/condition\[@n='FEMVelocity'\]/group
+
+    set xp3         [spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='FEMVelocity'\]/group
+
+
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]

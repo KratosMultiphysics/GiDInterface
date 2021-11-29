@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<container  n="Parts" pn="Parts" un="Parts" icon="shells16" >
+<container  n="Parts" pn="Parts" un="DEMParts" icon="shells16" >
 	<dynamicnode command="spdAux::injectPartsByElementType" args="ImplementedInApplication DEMApplication"/>
 </container>
