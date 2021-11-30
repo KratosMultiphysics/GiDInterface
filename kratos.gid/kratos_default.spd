@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- -*- coding: utf-8; mode: SGML -*- -->
-<Kratos_data version='8.1.1'>
+<Kratos_data version='9.0.0'>
 	<style show_menubutton_about='0' show_menubutton_search='1'></style>
 	<groups/>
 	<units></units>
@@ -179,9 +179,9 @@
 			if { $dict eq "" } {
 					foreach node [[$domNode parent] selectNodes value|container/value] {
 						dict set dict [$node @n] [get_domnode_attribute $node v]
-						dict set dict_units [$node @n] [get_domnode_attribute $node units]   
-					}       
-				}    
+						dict set dict_units [$node @n] [get_domnode_attribute $node units]
+					}
+				}
 				spdAux::ProcEditDatabaseList $domNode $dict $dict_units $boundary_conds $args
 				#return [spdAux::ProcEdit_database_list $domNode {*}$args]
 			]]>
@@ -331,9 +331,9 @@
 				if { $dict eq "" } {
 					foreach node [[$domNode parent] selectNodes value|container/value] {
 						dict set dict [$node @n] [get_domnode_attribute $node v]
-						dict set dict_units [$node @n] [get_domnode_attribute $node units]   
-					}       
-				}    
+						dict set dict_units [$node @n] [get_domnode_attribute $node units]
+					}
+				}
 				spdAux::ProcEditDatabaseList $domNode $dict $dict_units $boundary_conds $args
 			]]>
 		</proc>
