@@ -6,8 +6,9 @@ proc ::PfemMelting::write::getParametersDict { } {
     dict set project_parameters_dict output_processes  [write::GetDefaultOutputProcessDict]
     dict set project_parameters_dict restart_options [write::GetDefaultRestartDict]
     dict set project_parameters_dict solver_settings [Getsolver_settings_dict]
-    dict set project_parameters_dict processes [write::getConditionsParametersDict BC]
-    dict lappend project_parameters_dict processes {*}[getLaserProcesses]
+    set process_list [getLaserProcesses]
+    lappend process_list {*}[write::getConditionsParametersDict BC]
+    dict set project_parameters_dict processes constraints_process_list $process_list
 
     return $project_parameters_dict
 }
@@ -52,7 +53,7 @@ proc ::PfemMelting::write::GetSolverSettingsFluidDict { } {
     foreach key [list convergence_criterion line_search solution_relative_tolerance solution_absolute_tolerance residual_relative_tolerance residual_absolute_tolerance max_iteration] { if {[dict exists $solver_settings_dict $key]} {dict unset solver_settings_dict $key} }
 
     # Skin parts
-    dict set solver_settings_dict skin_parts [list "NoSlip3D_No_Slip_Auto1"]
+    # dict set solver_settings_dict skin_parts [list ]
     dict set solver_settings_dict volume_model_part_name [GetAttribute model_part_name]
     # dict set solver_settings_dict
 
@@ -93,7 +94,7 @@ proc ::PfemMelting::write::GetSolverSettingsFluidDict { } {
 proc ::PfemMelting::write::GetSolverSettingsThermicDict { } {
     set solver_settings_dict [dict create ]
 
-    dict set solver_settings_dict model_part_name [GetAttribute model_part_name]
+    dict set solver_settings_dict model_part_name thermal_[GetAttribute model_part_name]
     dict set solver_settings_dict domain_size 3
     dict set solver_settings_dict solver_type transient
     dict set solver_settings_dict analysis_type non_linear
@@ -110,7 +111,7 @@ proc ::PfemMelting::write::GetSolverSettingsThermicDict { } {
 
     foreach key [list relative_velocity_tolerance absolute_velocity_tolerance relative_pressure_tolerance absolute_pressure_tolerance] { if {[dict exists $solver_settings_dict $key]} {dict unset solver_settings_dict $key} }
 
-    dict set solver_settings_dict problem_domain_sub_model_part_list [list [GetAttribute model_part_name]]
+    dict set solver_settings_dict problem_domain_sub_model_part_list [list thermal_[GetAttribute model_part_name]]
 
     # Time stepping settings
     set timeSteppingDict [dict create]
@@ -147,7 +148,7 @@ proc ::PfemMelting::write::getLaserProcesses { } {
     foreach laser $lasers {
         set laser_process_dict [dict create]
         dict set laser_process_dict python_module apply_laser_process
-        dict set laser_process_dict kratos_module KratosMultiphysics.PfemMelting
+        dict set laser_process_dict kratos_module KratosMultiphysics.PfemMeltingApplication
         dict set laser_process_dict Parameters model_part_name [GetAttribute model_part_name]
         dict set laser_process_dict Parameters filename [write::getValueByNode $laser]
         lappend laser_process_list $laser_process_dict

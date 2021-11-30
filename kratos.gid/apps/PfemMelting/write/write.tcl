@@ -42,7 +42,14 @@ proc ::PfemMelting::write::writeModelPartEvent { } {
 }
 
 proc ::PfemMelting::write::writeCustomFilesEvent { } {
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] true [GetAttribute model_part_name]
+    set mats_json [dict create ]
+    foreach mat [dict get [write::getPropertiesList [GetAttribute parts_un] True [GetAttribute model_part_name]] properties] {
+        dict set mat model_part_name ModelPart
+        dict lappend mats_json properties $mat
+    }
+    write::OpenFile [GetAttribute materials_file]
+    write::WriteJSON $mats_json
+    write::CloseFile
     write::SetConfigurationAttribute main_launch_file [::PfemMelting::GetAttribute main_launch_file]
 }
 
