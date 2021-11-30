@@ -2,7 +2,7 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/36d3d305c87e4bb398bc87ea2e3b890e)](https://www.codacy.com/gh/KratosMultiphysics/GiDInterface/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=KratosMultiphysics/GiDInterface&amp;utm_campaign=Badge_Grade)
 
-The interface of Kratos with [GiD](http://www.gidhome.com). 
+The interface of Kratos with [GiD](http://www.gidhome.com).
 
 If you need the latest release, launch your GiD, navigate to Data > Problemtype > Internet retrieve and download Kratos there. Available for Linux. Windows, and macOS. If you need the developer version, you are on the right place
 
@@ -17,7 +17,7 @@ If you need the latest release, launch your GiD, navigate to Data > Problemtype 
       * Windows : `mklink /J Kratos C:\kratos` or maybe `mklink /J Kratos C:\kratos\bin\Release` (choose actual Kratos installation folder)
 
 ### More information on this video
-https://studio.youtube.com/video/zZq7ypDdudo/edit
+https://www.youtube.com/watch?v=zZq7ypDdudo
 
 ## Usage
 * Run GiD
