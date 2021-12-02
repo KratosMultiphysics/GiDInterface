@@ -4,7 +4,10 @@
     "prefix": "Buoyancy_",
     "themed": false,
     "kratos_name": "Buoyancyapplication",
-    "python_packages": [],
+    "python_packages": [
+        "KratosFluidDynamicsApplication",
+        "KratosConvectionDiffusionApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
