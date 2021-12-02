@@ -4,6 +4,7 @@
     "prefix": "Buoyancy_",
     "themed": false,
     "kratos_name": "Buoyancyapplication",
+    "python_packages": [],
     "dimensions": [
         "2D",
         "3D"
@@ -16,10 +17,13 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::Buoyancy::Init",
-    "requeriments":{
-        "apps":["Fluid", "ConvectionDiffusion"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::Buoyancy::Init",
+    "requeriments": {
+        "apps": [
+            "Fluid",
+            "ConvectionDiffusion"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,

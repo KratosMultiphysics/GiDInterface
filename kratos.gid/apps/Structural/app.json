@@ -4,6 +4,10 @@
     "prefix": "ST",
     "themed": false,
     "kratos_name": "StructuralMechanicsApplication",
+    "python_packages": [
+        "KratosStructuralMechanicsApplication",
+        "KratosContactStructuralMechanicsApplication"
+    ],
     "dimensions": [
         "2D",
         "2Da",
