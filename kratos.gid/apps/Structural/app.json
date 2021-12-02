@@ -20,17 +20,17 @@
         "write/writeProjectParameters.tcl",
         "postprocess/formfinding.tcl"
     ],
-    "start_script":"::Structural::Init",
-    "requeriments":{
-        "apps":[],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::Structural::Init",
+    "requeriments": {
+        "apps": [],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
         "intervals": true,
         "wizard": false,
-        "import_files":true
+        "import_files": true
     },
     "unique_names": {
         "parts": "STParts",
@@ -40,7 +40,6 @@
         "time_parameters": "STTimeParameters",
         "results": "STResults",
         "materials": "STMaterials"
-        
     },
     "write": {
         "coordinates": "all",
