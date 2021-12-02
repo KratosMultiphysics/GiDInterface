@@ -141,43 +141,7 @@
   </ConditionItem>
 
 
-
-
-  <!-- legacy from here onwards-->
-
-  <!-- <ConditionItem n="Inlet" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface,Volume" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET" Type="BC">
-    <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="WallCondition3D3N"/>
-      <item GeometryType="Triangle" nodes="6" KratosName="WallCondition3D6N"/>
-    </TopologyFeatures>
-    <inputs></inputs>
-    <outputs></outputs>
-  </ConditionItem>
-
-  <ConditionItem n="Inlet2D" pn="Particle injectors" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line,Surface" ProcessName="DEM-Inlet-Process" help="Assign particle injection conditions" VariableName="INLET" Type="BC">
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
-    </TopologyFeatures>
-    <inputs></inputs>
-    <outputs></outputs>
-  </ConditionItem> -->
-
-  <!-- <ConditionItem n="DEM-GraphCondition" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Point,Line,Surface" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH" Type="BC">
-    <TopologyFeatures>
-    </TopologyFeatures>
-    <inputs></inputs>
-    <outputs></outputs>
-  </ConditionItem>
-
-  <ConditionItem n="DEM-GraphCondition2D" pn="Generate graphs using particles" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" ElementType="Point,Line" ProcessName="DEM-GraphCondition-Process" help=" " VariableName="SPHEREGH" Type="BC">
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
-    </TopologyFeatures>
-    <inputs></inputs>
-    <outputs></outputs>
-  </ConditionItem> -->
-
-  <ConditionItem n="DEM-CustomSmp" pn="Define custom submodelparts" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="CustomSMP-Process" help="Elements defined as custom must be previously defined as Parts. Please make sure material properties for the selected elements has already been defined." VariableName="SUBMP" Type="BC">
+  <ConditionItem n="DEM-CustomSmp" pn="Define custom submodelparts" Interval="False" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ProcessName="CustomSMP-Process" help="Elements defined as custom must be previously defined as Parts. Please make sure material properties for the selected elements has already been defined." VariableName="SUBMP" Type="custom">
     <TopologyFeatures></TopologyFeatures>
     <inputs></inputs>
     <outputs></outputs>

@@ -94,9 +94,6 @@
 
 
 
-
-
-
 <!-- Updated Inlet -->
   <Process n="DEM-InletUpdated-Process" pn="" python_module="" kratos_module="KratosMultiphysics">
     <inputs>
@@ -135,85 +132,6 @@
     </inputs>
   </Process>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- legacy  -->
-  <Process n="DEM-Inlet-Process" pn="" python_module="" kratos_module="KratosMultiphysics">
-    <inputs>
-      <parameter n="SetActive" type="bool" pn="Activate" v="true">
-        <parameter n="InletMotionType" pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable" pvalues="None,Linear/Periodic,From a table" show_in_window="0">
-          <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
-          <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-          <parameter n="LinearPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
-            <parameter n="LinearPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          </parameter>
-          <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Linear Start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="LinearEndTime" parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
-
-          <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity modulus" type="double" v="0.0" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
-          <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-          <parameter n="CenterOfRotation" parent="LinearPeriodic" pn="Center of rotation(m)" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the rotation center. Linear velocity is imposed to this center" show_in_window="0"/>
-          <parameter n="AngularPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
-            <parameter n="AngularPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          </parameter>
-          <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Angular start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
-          <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="1000" units="s" unit_magnitude="T" show_in_window="0"/>
-
-          <parameter n="VelocitiesFilename" pn="Filename" parent="FromATable" type="file" v="velocities.dat" show_in_window="0"/>
-          <parameter n="TableVelocityComponent" pn="Velocity Component" parent="FromATable" type="combo" v="0" values="0,1,2" pvalues="X,Y,Z" show_in_window="0"/>
-        </parameter>
-
-        <parameter n="InVelocityModulus" parent="true" pn="Inlet injection speed" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
-        <parameter n="InDirectionVector" parent="true" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-        <parameter n="VelocityDeviation" parent="true" pn="Max random velocity deviation (deg)" type="double" v="1.0" units="°" unit_magnitude="Angle" show_in_window="0"/>
-        <parameter n="TypeOfFlowMeasurement" parent="true" pn="Flow measurement" type="combo" v="Particles" values="Particles,Kilograms" pvalues="Particles per second,Kilograms per second" show_in_window="0">
-          <parameter n="NumberOfParticles" parent="Particles" pn="Particles per second" type="double" v="200.0" show_in_window="0"/>
-          <parameter n="InletLimitedVelocity" parent="Kilograms" pn="Inlet injection speed limit (m/s)" type="double" v="2.0" help="Inlet injection speed limit (m/s)" show_in_window="0"/>
-          <parameter n="InletMassFlow" parent="Kilograms" pn="Mass flow (kg/s)" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" show_in_window="0"/>
-        </parameter>
-
-        <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="SphericParticle3D" values="SphericParticle3D,Cluster3D,SingleSphereCluster,CylinderParticle2D" pvalues="Sphere,Cluster,Single sphere cluster,Circle" help="Type of particle to insert. Single particles, clusters or user defined cluster file." show_in_window="0">
-          <parameter n="Excentricity" parent="SingleSphereCluster" type="double" v="0.1" pn="Excentricity (%)" help="% of the radius" show_in_window="0"/>
-          <parameter n="ProbabilityDistributionOfExcentricity" parent="SingleSphereCluster" type="combo" v="normal" pn="Probability Distribution of excentricity" values="normal,lognormal" help="Choose the probablility distribution of the diameter" show_in_window="0"/>
-          <parameter n="StandardDeviationOfExcentricity" parent="SingleSphereCluster" type="double" v="0.1" pn="Standard Deviation of excentricity" help="Standard Deviation of the Diameter, assuming Normal Distribution. If 0.0 is chosen, a uniform diameter distribution will be created" show_in_window="0"/>
-          <parameter n="ClusterType" pn="Cluster Type" parent="Cluster3D" type="combo" v="FromFile" values="FromFile,Rock1Cluster3D,Rock2Cluster3D,Ballast1Cluster3D,Ballast1Cluster3Dred,Ballast2Cluster3D,Ballast2Cluster3Dred,Ballast3Cluster3D,Ballast3Cluster3Dred,Ballast4Cluster3D,Ballast4Cluster3Dred,Ballast5Cluster3D,Ballast2Cluster5Dred,Ballast6Cluster3D,Ballast6Cluster3Dred,LineCluster3D,RingCluster3D,SoyBeanCluster3D,SoyBean3Cluster3D,CornKernelCluster3D,CornKernel3Cluster3D,Wheat5Cluster3D,CapsuleCluster3D" help="Choose the shape of the particle or cluster of particles" show_in_window="0">
-            <parameter n="ClusterFilename" pn="Cluster file" parent="FromFile" type="file" v="custom.clu" show_in_window="0"/>
-          </parameter>
-          <parameter n="RandomOrientation" pn="Random Orientation" parent="Cluster3D" type="combo" v="Yes" values="Yes,No" help="Random Orientation" show_in_window="0">
-            <parameter n="OrientationX" pn="Orientation X" parent="No" v="0.0" type="combo" help="First parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationY" pn="Orientation Y" parent="No" v="0.0" type="double" help="Second parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationZ" pn="Orientation Z" parent="No" v="0.0" type="double" help="Third parameter of the imaginary part of the orientation quaternion" show_in_window="0"/>
-            <parameter n="OrientationW" pn="Orientation W" parent="No" v="1.0" type="double" help="Real part of the orientation quaternion" show_in_window="0"/>
-          </parameter>
-        </parameter>
-
-        <parameter n="InletStartTime" parent="true" pn="Inlet start" type="double" v="0.0" units="s" unit_magnitude="T" help="Inlet start time" show_in_window="0"/>
-        <parameter n="InletStopTime" parent="true" pn="Inlet stop" type="double" v="100.0" units="s" unit_magnitude="T" help="Inlet stop time" show_in_window="0"/>
-        <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
-        <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
-        <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
-        <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="material"/>
-      </parameter>
-    </inputs>
-  </Process>
-
-  <Process n="DEM-GraphCondition2D-Process" pn=" " python_module=" " kratos_module="KratosMultiphysics">
-    <inputs>
-      <parameter n="GraphPrint" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
-    </inputs>
-  </Process>
-
   <Process n="DEM-GraphCondition-Process" pn=" " python_module=" " kratos_module="KratosMultiphysics">
     <inputs>
       <parameter n="GraphPrint" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
@@ -223,13 +141,13 @@
   <Process n="CustomSMP-Process" pn="Define custom submodelparts" python_module="assign_vector_by_direction_to_condition_process" kratos_module="KratosMultiphysics" check="DirectorVectorNonZero direction">
     <inputs>
       <parameter n="WhatMdpa" pn="Destination mdpa" type="combo" v="DEM" values="DEM,DEM-Inlet,FEM" help="Decide what mpda file you want this SubModelPart to be added to"/>
-      <parameter n="Element" pn="Element" type="combo" help=""/>
-      <parameter n="AdvancedMeshingFeatures" pn="AdvancedMeshingFeatures" type="combo" v="0" values="1,0" help="" />
     </inputs>
   </Process>
 
 
-  <!--Kratos base process -->
+
+
+  <!--Kratos base processes references -->
 	<Process n="PythonProcess" pn="Base Python process" python_module="python_process" kratos_module="KratosMultiphysics" help="Python processes empty base class which does nothing">
 		<inputs>
 		</inputs>
