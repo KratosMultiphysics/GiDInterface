@@ -31,8 +31,17 @@ proc ::MPM::write::getParametersDict { } {
         dict set project_parameters_dict solver_settings axis_symmetric_flag true
     }
 
+    
     # Pressure dofs
-    dict set project_parameters_dict solver_settings pressure_dofs false
+    set check_list [list "UpdatedLagrangianUP2D"]
+    foreach elem $check_list {
+        if {$elem in [Structural::write::GetUsedElements Name]} {
+            dict set project_parameters_dict solver_settings pressure_dofs true
+            break
+        } else {
+            dict set project_parameters_dict solver_settings pressure_dofs false
+        }
+    }
 
     # Rotation dofs
     dict unset project_parameters_dict solver_settings rotation_dofs
