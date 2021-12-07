@@ -98,11 +98,12 @@ proc ::MPM::write::getParametersDict { } {
     dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
     dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
     dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
-    dict set body_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results [list MP_VELOCITY MP_DISPLACEMENT]
+    #dict set body_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results [list MP_VELOCITY MP_DISPLACEMENT MP_PRESSURE]
     dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
     dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
     dict unset project_parameters_dict output_processes gid_output
     dict unset project_parameters_dict output_processes vtk_output
+    
 
     # REMOVE RAYLEIGH
     dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
