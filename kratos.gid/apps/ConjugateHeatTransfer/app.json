@@ -4,6 +4,10 @@
     "prefix": "CHT",
     "themed": false,
     "kratos_name": "ConvectionDiffusionApplication",
+    "python_packages": [
+        "KratosConvectionDiffusionApplication",
+        "KratosFluidDynamicsApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
@@ -18,10 +22,12 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::ConjugateHeatTransfer::Init",
-    "requeriments":{
-        "apps":["Buoyancy"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::ConjugateHeatTransfer::Init",
+    "requeriments": {
+        "apps": [
+            "Buoyancy"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
