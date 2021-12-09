@@ -86,25 +86,10 @@ proc ::MPM::write::getParametersDict { } {
     dict set gravity_dict Parameters $gravity_parameters_dict
     dict set project_parameters_dict processes gravity [list $gravity_dict]
 
-    # Output configuration
-    set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
-    set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
-    dict set body_output_configuration_dict python_module particle_gid_output_process
-    dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
-    dict set body_output_configuration_dict process_name ParticleMPMGiDOutputProcess
-    dict set body_output_configuration_dict Parameters model_part_name MPM_Material
-    dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
-    dict set body_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings model_import_settings input_filename]
-    dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
-    dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
-    dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
-    #dict set body_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results [list MP_VELOCITY MP_DISPLACEMENT MP_PRESSURE]
-    dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
-    dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
-    dict unset project_parameters_dict output_processes gid_output
-    dict unset project_parameters_dict output_processes vtk_output
+    # Output processes
+    dict set project_parameters_dict output_processes [MPM::write::GetOutputProcessesList]
     
-
+    
     # REMOVE RAYLEIGH
     dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
     dict unset project_parameters_dict solver_settings rayleigh_alpha
@@ -112,7 +97,81 @@ proc ::MPM::write::getParametersDict { } {
 
     return $project_parameters_dict
 }
+
+proc ::MPM::write::GetOutputProcessesList { } {
+      set output_process [dict create]
+    
+      set project_parameters_dict [Structural::write::getParametersDict]
+      # Change the model part name
+      dict set project_parameters_dict solver_settings model_part_name MPM_Material
+
+      # create grid_import_settings
+      set grid_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
+      dict append grid_import_settings_dict input_filename _Grid
+      dict set project_parameters_dict solver_settings grid_model_import_settings $grid_import_settings_dict
+
+      # add _Body to model_import_settings
+      set model_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
+      dict append model_import_settings_dict input_filename _Body
+      dict set project_parameters_dict solver_settings model_import_settings $model_import_settings_dict
+    
+      set need_gid [write::getValue EnableGiDOutput]
+      if {[write::isBooleanTrue $need_gid]} {
+
+         set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
+         set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
+         dict set body_output_configuration_dict python_module particle_gid_output_process
+         dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
+         dict set body_output_configuration_dict process_name ParticleMPMGiDOutputProcess
+         dict set body_output_configuration_dict Parameters model_part_name MPM_Material
+         dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
+         dict set body_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings model_import_settings input_filename]
+         dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
+         dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
+         dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
+
+         dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
+         dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
+         dict unset project_parameters_dict output_processes gid_output
+         
+         # Append the fluid and solid output processes to the output processes list
+         lappend gid_output_processes_list $body_output_configuration_dict
+         lappend gid_output_processes_list $grid_output_configuration_dict
+         dict set output_process gid_output_processes $gid_output_processes_list
+    
+      }
+     
+     set need_vtk [write::getValue EnableVtkOutput]
+     if {[write::isBooleanTrue $need_vtk]} {
+#     # Set a different output_name for the fluid and solid domains
+#         set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes vtk_output] 0]
+#         set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes vtk_output] 0]
+# 
+#         set solid_nodal_variables [dict get $solid_output Parameters nodal_solution_step_data_variables]
+#         set valid_list [list ]
+#         foreach solid_nodal_variable $solid_nodal_variables {
+#             if {$solid_nodal_variable in [list "TEMPERATURE"]} {
+#                 lappend valid_list $solid_nodal_variable
+#             }
+#         }
+#         dict set solid_output Parameters nodal_solution_step_data_variables $valid_list
+# 
+#         # Append the fluid and solid output processes to the output processes list
+#         lappend vtk_output_processes_list $fluid_output
+#         lappend vtk_output_processes_list $solid_output
+#         dict set output_process vtk_output_processes $vtk_output_processes_list
+     }
+
+    return $output_process
+}
+
+
+
+
 proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 }
+
+
+
 
