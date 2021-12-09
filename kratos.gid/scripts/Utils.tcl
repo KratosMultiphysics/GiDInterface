@@ -340,7 +340,6 @@ proc Kratos::pythonVersion {{pythonExecutable "python"}} {
     return 0
 }
 
-
 proc Kratos::GetLaunchConfigurationFile { } {
     set new_dir [file join $::env(HOME) .kratos_multiphysics]
     set file [file join $new_dir launch_configuration.json]
@@ -358,4 +357,14 @@ proc Kratos::LoadLaunchModes { } {
         set source [file join $::Kratos::kratos_private(Path) exec launch.json]
         file copy -force $source $file
     }
+
+    # Load configurations
+    Kratos::LoadConfigurationFile $file
+}
+
+proc Kratos::LoadConfigurationFile {config_file} {
+    if {[file exists $config_file] == 0} { error "Configuration file not found: $config_file" }
+
+    set dic [Kratos::ReadJsonDict $config_file]
+    set ::Kratos::kratos_private(configurations) [dict get $dic configurations]
 }

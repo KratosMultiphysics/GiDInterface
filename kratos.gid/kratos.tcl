@@ -107,11 +107,11 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Problemtype libraries as CustomLib
     Kratos::LoadProblemtypeLibraries
 
-    # Load the Kratos problemtype global and user environment (stored preferences)
-    Kratos::LoadEnvironment
-
     # Load launch modes
     Kratos::LoadLaunchModes
+
+    # Load the Kratos problemtype global and user environment (stored preferences)
+    Kratos::LoadEnvironment
 
     # Customize GiD menus to add the Kratos entry
     Kratos::UpdateMenus
@@ -158,7 +158,8 @@ proc Kratos::InitGlobalVariables {dir} {
     # Place were the logs will be placed
     set Kratos::kratos_private(model_log_folder) ""
     # Check exec/launch.json
-    set Kratos::kratos_private(launch_configuration) "local"
+    set Kratos::kratos_private(configurations) [list ]
+    set Kratos::kratos_private(launch_configuration) ""
 
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
