@@ -380,3 +380,16 @@ proc Kratos::SetDefaultLaunchMode { } {
     }
     if {$curr_mode ni $modes} {set Kratos::kratos_private(launch_configuration) $first}
 }
+
+proc Kratos::ExecuteLaunchByMode {launch_mode} {
+    set bat_file ""
+    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
+    foreach mode $::Kratos::kratos_private(configurations) {
+        set mode_name [dict get $mode name]
+        if {$mode_name eq $launch_mode} {
+            set bat [dict get $mode script]
+            set bat_file [file join exec $bat.$os.bat]
+        }
+    }
+    return $bat_file
+}

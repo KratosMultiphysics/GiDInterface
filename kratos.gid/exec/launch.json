@@ -2,20 +2,19 @@
     "configurations": [
         {
             "name": "Launch via pip",
-            "runtimeExecutable": "python.exe"
+            "script": "global_pip"
         },
         {
             "name": "Launch via pip with local packages",
-            "runtimeExecutable": "python.exe"
+            "script": "local_pip"
         },
         {
             "name": "Launch local compiled version",
-            "kratos_path": "E:/Deploy_Kratos",
-            "runtimeExecutable": "python.exe"
+            "script": "compiled"
         },
         {
             "name": "Docker",
-            "image": ""
+            "script": ""
         }
     ]
 }
