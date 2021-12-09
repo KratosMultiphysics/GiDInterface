@@ -214,14 +214,14 @@ proc Kratos::LoadEnvironment { } {
 proc Kratos::LogInitialData { } {
 
     # Get the exec version
-    Kratos::GetExecVersion
+    #Kratos::GetExecVersion
     Kratos::GetProblemtypeGitTag
 
     set initial_data [dict create]
     dict set initial_data gid_version [GiD_Info gidversion]
     dict set initial_data problemtype_git_hash $Kratos::kratos_private(problemtype_git_hash)
     dict set initial_data problemtype_version $Kratos::kratos_private(Version)
-    dict set initial_data executable_version $Kratos::kratos_private(exec_version)
+    # dict set initial_data executable_version $Kratos::kratos_private(exec_version)
     dict set initial_data current_platform $::tcl_platform(platform)
 
     Kratos::Log [write::tcl2json $initial_data]
@@ -320,76 +320,4 @@ proc Kratos::IsDeveloperMode {} {
     set is_dev 0
     if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
     return $is_dev
-}
-
-proc Kratos::InstallAllPythonDependencies { } {
-    # Check if python is installed
-    if {[pythonVersion] < 0} {error "Python not installed on this system. Please install python 3"}
-
-    # Check if pip is installed
-
-    # Install pip packages
-}
-
-proc Kratos::pythonVersion {{pythonExecutable "python"}} {
-    # Tricky point: Python 2.7 writes version info to stderr!
-    set info [exec $pythonExecutable --version 2>@1]
-    if {[regexp {^Python ([\d.]+)$} $info --> version]} {
-        return $version
-    }
-    return 0
-}
-
-proc Kratos::GetLaunchConfigurationFile { } {
-    set new_dir [file join $::env(HOME) .kratos_multiphysics]
-    set file [file join $new_dir launch_configuration.json]
-    return [list $new_dir $file]
-}
-
-proc Kratos::LoadLaunchModes { } {
-    # Get location of launch config script
-    lassign [Kratos::GetLaunchConfigurationFile] new_dir file
-
-    # If it does not exist, copy it from exec
-    if {[file exists $new_dir] == 0} {file mkdir $new_dir}
-    if {[file exists $file] == 0} {
-        ::GidUtils::SetWarnLine "Loading launch mode"
-        set source [file join $::Kratos::kratos_private(Path) exec launch.json]
-        file copy -force $source $file
-    }
-
-    # Load configurations
-    Kratos::LoadConfigurationFile $file
-}
-
-proc Kratos::LoadConfigurationFile {config_file} {
-    if {[file exists $config_file] == 0} { error "Configuration file not found: $config_file" }
-
-    set dic [Kratos::ReadJsonDict $config_file]
-    set ::Kratos::kratos_private(configurations) [dict get $dic configurations]
-}
-
-proc Kratos::SetDefaultLaunchMode { } {
-    set curr_mode $Kratos::kratos_private(launch_configuration)
-    set modes [list ]
-    set first ""
-    foreach mode $::Kratos::kratos_private(configurations) {
-        set mode_name [dict get $mode name]
-        lappend modes $mode_name
-        if {$first eq ""} {set first $mode_name}
-    }
-    if {$curr_mode ni $modes} {set Kratos::kratos_private(launch_configuration) $first}
-}
-
-proc Kratos::ExecuteLaunchByMode {launch_mode} {
-    set bat_file ""
-    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
-    foreach mode $::Kratos::kratos_private(configurations) {
-        set mode_name [dict get $mode name]
-        if {$mode_name eq $launch_mode} {
-            set bat [dict get $mode script]
-            set bat_file [file join exec $bat.$os.bat]
-        }
-    }
-    return $bat_file
 }
