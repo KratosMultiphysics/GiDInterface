@@ -4,10 +4,14 @@ namespace eval MPM::xml {
 
 }
 
+
+
 proc MPM::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $::MPM::dir
 
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies Strategies.xml
     # Import our elements
     Model::ForgetElements
     Model::getElements Elements.xml
@@ -43,6 +47,27 @@ proc MPM::xml::Init { } {
 
 }
 
+proc ::MPM::xml::ProcGetSolutionStrategiesMPM { domNode args } {
+    set names ""
+    set pnames ""
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
+    set Sols [::Model::GetSolutionStrategies [list "SolutionType" $solutionType] ]
+    set ids [list ]
+    foreach ss $Sols {
+        lappend ids [$ss getName]
+        append names [$ss getName] ","
+        append pnames [$ss getName] "," [$ss getPublicName] ","
+    }
+    set names [string range $names 0 end-1]
+    set pnames [string range $pnames 0 end-1]
+
+    $domNode setAttribute values $names
+    set dv [lindex $ids 0]
+    if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv}
+    if {[$domNode getAttribute v] ni $ids} {$domNode setAttribute v $dv}
+    #spdAux::RequestRefresh
+    return $pnames
+}
 
 proc MPM::xml::MultiAppEvent {args} {
    if {$args eq "init"} {

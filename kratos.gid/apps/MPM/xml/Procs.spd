@@ -19,9 +19,9 @@
 		]]>
 	</proc>
 
-	<proc n='GetSolutionStrategiesStructural' args='args'>
+	<proc n='GetSolutionStrategiesMPM' args='args'>
 	  <![CDATA[
-	  return [Structural::xml::ProcGetSolutionStrategiesSolid $domNode $args]
+	  return [MPM::xml::ProcGetSolutionStrategiesMPM $domNode $args]
 	  ]]>
 	</proc>
 		  		
