@@ -21,12 +21,6 @@
                 </filterFeatures>
                 <defaults></defaults>
             </linearSolverItem>
-            <linearSolverItem n="eigensolver_settings" pn="Eigen Solver" help="Only for Eigensolver" filter="STSoluType eigen_value">
-                <filterFeatures>
-                    <filter field="SolverType" value="eigen_value"/>
-                </filterFeatures>
-                <defaults></defaults>
-            </linearSolverItem>
         </linearSolvers>
         <schemes>
             <scheme n="newmark" pn="Newmark" help="Newmark scheme for dynamic problems." ProductionReady="ProductionReady">
@@ -59,11 +53,17 @@
                     <filter field="ImplementedInApplication" value="ParticleMechanicsApplication"/>
                 </element_filters>
             </scheme>
+            <scheme n="forward_euler" pn="Forward Euler" help="Forward Euler scheme" ProductionReady="ProductionReady">
+                <parameter_list></parameter_list>
+                <element_filters>
+                    <filter field="ImplementedInApplication" value="ParticleMechanicsApplication"/>
+                </element_filters>
+            </scheme>
         </schemes>
     </StrategyItem>
 
 
-    <StrategyItem n="static" pn="Static" SolutionType="Static Quasi-static" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
+    <StrategyItem n="static" pn="Static" SolutionType="Static Quasi-static" ImplementedInFile="mpm_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="mpm_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
         <parameter_list>
             <parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
