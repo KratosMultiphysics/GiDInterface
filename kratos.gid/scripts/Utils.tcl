@@ -339,3 +339,23 @@ proc Kratos::pythonVersion {{pythonExecutable "python"}} {
     }
     return 0
 }
+
+
+proc Kratos::GetLaunchConfigurationFile { } {
+    set new_dir [file join $::env(HOME) .kratos_multiphysics]
+    set file [file join $new_dir launch_configuration.json]
+    return [list $new_dir $file]
+}
+
+proc Kratos::LoadLaunchModes { } {
+    # Get location of launch config script
+    lassign [Kratos::GetLaunchConfigurationFile] new_dir file
+
+    # If it does not exist, copy it from exec
+    if {[file exists $new_dir] == 0} {file mkdir $new_dir}
+    if {[file exists $file] == 0} {
+        ::GidUtils::SetWarnLine "Loading launch mode"
+        set source [file join $::Kratos::kratos_private(Path) exec launch.json]
+        file copy -force $source $file
+    }
+}

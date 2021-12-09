@@ -110,6 +110,9 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Load the Kratos problemtype global and user environment (stored preferences)
     Kratos::LoadEnvironment
 
+    # Load launch modes
+    Kratos::LoadLaunchModes
+
     # Customize GiD menus to add the Kratos entry
     Kratos::UpdateMenus
 
