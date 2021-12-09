@@ -68,7 +68,7 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
 
 
     # BC over floor
-    set FloorBC {container[@n='DEM']/container[@n='Boundary Conditions']/condition[@n='FEMVelocity']}
+    set FloorBC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='FEMVelocity']}
     #Velocity over walls is the name on the tree (pn)
     set FloorBCNode [customlib::AddConditionGroupOnXPath $FloorBC Floor]
     $FloorBCNode setAttribute ov surface
@@ -84,7 +84,7 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     spdAux::SetValuesOnBaseNode $FEMParts_inletNode $props
 
     # BC over Inlet
-    set InletBC {container[@n='DEM']/container[@n='Boundary Conditions']/condition[@n='FEMVelocity']}
+    set InletBC {container[@n='DEM']/container[@n='InitialConditions']/condition[@n='FEMVelocity']}
     #Velocity over walls is the name on the tree (pn)
     set InletBCNode [customlib::AddConditionGroupOnXPath $InletBC Inlet-bc]
     $InletBCNode setAttribute ov surface
