@@ -152,7 +152,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format debug_folder]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
@@ -367,4 +367,16 @@ proc Kratos::LoadConfigurationFile {config_file} {
 
     set dic [Kratos::ReadJsonDict $config_file]
     set ::Kratos::kratos_private(configurations) [dict get $dic configurations]
+}
+
+proc Kratos::SetDefaultLaunchMode { } {
+    set curr_mode $Kratos::kratos_private(launch_configuration)
+    set modes [list ]
+    set first ""
+    foreach mode $::Kratos::kratos_private(configurations) {
+        set mode_name [dict get $mode name]
+        lappend modes $mode_name
+        if {$first eq ""} {set first $mode_name}
+    }
+    if {$curr_mode ni $modes} {set Kratos::kratos_private(launch_configuration) $first}
 }

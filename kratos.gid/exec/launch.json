@@ -1,23 +1,20 @@
 {
     "configurations": [
         {
-            "id": "pip",
             "name": "Launch via pip",
             "runtimeExecutable": "python.exe"
         },
         {
-            "id": "localpip",
             "name": "Launch via pip with local packages",
             "runtimeExecutable": "python.exe"
         },
         {
-            "id": "local",
             "name": "Launch local compiled version",
             "kratos_path": "E:/Deploy_Kratos",
             "runtimeExecutable": "python.exe"
         },
         {
-            "id": "docker",
+            "name": "Docker",
             "image": ""
         }
     ]
