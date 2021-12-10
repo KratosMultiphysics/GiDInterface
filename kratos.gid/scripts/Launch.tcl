@@ -2,32 +2,64 @@
 proc Kratos::InstallAllPythonDependencies { } {
 
     if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
-
-    # Check if python is installed
-    if {[pythonVersion] <= 0} {
+    set dir [lindex [Kratos::GetLaunchConfigurationFile] 0]
+    if {$os eq "win"} {set py "python"} {set py "python3"}
+    # Check if python is installed. minimum 3.5, best 3.9
+    set python_version [pythonVersion $py]
+    if { $python_version <= 0 || [GidUtils::TwoVersionsCmp $python_version "3.9.0"] <0 } {
         if {$os eq "win"} {
             package require gid_cross_platform
-            gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python.win.bat ] [lindex [Kratos::GetLaunchConfigurationFile] 0]
+            gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.win.bat ] $dir
         } {
             exec "sudo apt-get install python3.9"
         }
     }
 
-    # Check if pip is installed
-    # W [exec python -m pip --version]
-
-    # Install pip packages
+    set missing_packages [Kratos::GetMissingPipPackages]
+    ::GidUtils::SetWarnLine "Installing pip packages $missing_packages"
+    if {[llength $missing_packages] > 0} {
+        exec pyw -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
+    }
 }
 
 proc Kratos::pythonVersion {{pythonExecutable "python"}} {
     # Tricky point: Python 2.7 writes version info to stderr!
+    set ver 0
     catch {
         set info [exec $pythonExecutable --version 2>@1]
         if {[regexp {^Python ([\d.]+)$} $info --> version]} {
-            return $version
+            set ver $version
         }
     }
-    return 0
+    return $ver
+}
+
+proc Kratos::pipVersion { } {
+    set ver 0
+    catch {
+        set info [exec pyw -m pip --version 2>@1]
+        if {[regexp {^pip ([\d.]+)*} $info --> version]} {
+            set ver $version
+        }
+    }
+    return $ver
+}
+
+proc Kratos::GetMissingPipPackages { } {
+    set missing_packages [list ]
+    set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
+    KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralApplication KratosMeshMovingApplication \
+    KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication]
+
+    set pip_packages_installed [list ]
+    set pip_packages_installed_raw [exec pyw -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    foreach package $pip_packages_installed_raw {
+        lappend pip_packages_installed [lindex [split $package "=="] 0]
+    }
+    foreach required_package $pip_packages_required {
+        if {$required_package ni $pip_packages_installed} {lappend missing_packages $required_package}
+    }
+    return $missing_packages
 }
 
 
@@ -44,8 +76,9 @@ proc Kratos::CheckDependencies { } {
         if {[string equal $reply "cancel"]} {
 
         }
-    }
+    } else {
 
+    }
 }
 
 proc Kratos::GetLaunchConfigurationFile { } {
