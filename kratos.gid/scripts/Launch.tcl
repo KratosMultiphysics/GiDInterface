@@ -5,14 +5,16 @@ proc Kratos::InstallAllPythonDependencies { } {
 
     # Check if python is installed
     if {[pythonVersion] <= 0} {
-        if {os eq "win"} {
-            VisitWeb "https://www.microsoft.com/es-es/p/python-39/9p7qfqmjrfp7"
+        if {$os eq "win"} {
+            package require gid_cross_platform
+            gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python.win.bat ] [lindex [Kratos::GetLaunchConfigurationFile] 0]
         } {
             exec "sudo apt-get install python3.9"
         }
     }
 
     # Check if pip is installed
+    # W [exec python -m pip --version]
 
     # Install pip packages
 }
@@ -30,7 +32,19 @@ proc Kratos::pythonVersion {{pythonExecutable "python"}} {
 
 
 proc Kratos::CheckDependencies { } {
-    if {[pythonVersion] <= 0} {error "Python not installed on this system. Please install python 3 manually or click on menu Kratos > Install dependencies"}
+    if {[pythonVersion] <= 0} {
+        set msgBox_type yesno
+        #  -do_not_ask_again 1 -do_not_ask_again_key "kratos_install_python"
+        set reply [tk_messageBox -icon warning -type $msgBox_type -parent .gid \
+                -message "Python 3 not installed on this system. Do you want Kratos to install it?" \
+                -title [_ "Missing python"]]
+        if {[string equal $reply "yes"]} {
+            Kratos::InstallAllPythonDependencies
+        }
+        if {[string equal $reply "cancel"]} {
+
+        }
+    }
 
 }
 
