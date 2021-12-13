@@ -15,11 +15,16 @@ proc Kratos::InstallAllPythonDependencies { } {
         }
     }
 
+    if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
     set missing_packages [Kratos::GetMissingPipPackages]
     ::GidUtils::SetWarnLine "Installing pip packages $missing_packages"
     if {[llength $missing_packages] > 0} {
-        exec pyw -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
+        exec $pip -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
     }
+}
+
+proc Kratos::InstallPip { } {
+    W ""
 }
 
 proc Kratos::pythonVersion {{pythonExecutable "python"}} {
@@ -35,9 +40,12 @@ proc Kratos::pythonVersion {{pythonExecutable "python"}} {
 }
 
 proc Kratos::pipVersion { } {
+
+    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
+    if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
     set ver 0
     catch {
-        set info [exec pyw -m pip --version 2>@1]
+        set info [exec $pip -m pip --version 2>@1]
         if {[regexp {^pip ([\d.]+)*} $info --> version]} {
             set ver $version
         }
@@ -51,8 +59,10 @@ proc Kratos::GetMissingPipPackages { } {
     KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralApplication KratosMeshMovingApplication \
     KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication]
 
+    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
+    if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
     set pip_packages_installed [list ]
-    set pip_packages_installed_raw [exec pyw -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed_raw [exec $pip -m pip list --format=freeze --disable-pip-version-check 2>@1]
     foreach package $pip_packages_installed_raw {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
     }
@@ -67,7 +77,9 @@ proc Kratos::CheckDependencies { } {
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }
-    set py_version [Kratos::pythonVersion]
+    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
+    if {$os eq "win"} {set py "python"} {set py "python3"}
+    set py_version [Kratos::pythonVersion $py]
     if {$py_version <= 0} {
         set msgBox_type yesno
         #  -do_not_ask_again 1 -do_not_ask_again_key "kratos_install_python"
@@ -81,6 +93,12 @@ proc Kratos::CheckDependencies { } {
 
         }
     }
+    set pip_version [Kratos::pipVersion]
+    if {$pip_version <= 0} {
+        error "pip is not installed on your system."
+    }
+
+    
     set missing_packages [Kratos::GetMissingPipPackages]
     if {[llength $missing_packages] > 0} {
         set msgBox_type yesno
