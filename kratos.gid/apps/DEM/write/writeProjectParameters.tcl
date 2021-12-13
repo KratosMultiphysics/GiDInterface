@@ -51,12 +51,11 @@ proc ::DEM::write::getParametersDict { } {
 
     set processes [dict create]
     # Boundary conditions processes
-    #dict set processes initial_conditions_process_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
     # dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
     dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
-    dict set processes constraints_process_list [DEM::write::getForceProcessDictList]
-    dict set projectParametersDict processes $processes
+    # dict set processes constraints_process_list [DEM::write::getForceProcessDictList]
+    dict set project_parameters_dict processes $processes
 
 
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
@@ -129,12 +128,12 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
 
     set root [customlib::GetBaseRoot]
     set process_list [list ]
-    set xp1         [spdAux::getRoute "DEMConditions"]/condition\[@n='FEMVelocity'\]/group
 
-    set xp2         [spdAux::getRoute [GetUniqueName conditions]]/condition\[@n='FEMVelocity'\]/group
+    # set xp1         [spdAux::getRoute "DEMConditions"]/condition\[@n='FEMVelocity'\]/group
 
-    set xp3         [spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='FEMVelocity'\]/group
+    # set xp2         [spdAux::getRoute [GetUniqueName conditions]]/condition\[@n='FEMVelocity'\]/group
 
+    set xp1         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='FEMVelocity'\]/group"
 
     set groups [$root selectNodes $xp1]
     foreach group $groups {
@@ -148,14 +147,24 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
 
         set pdict [dict create]
-        dict set pdict "python_module" "compute_body_fitted_drag_process"
-        dict set pdict "kratos_module" "KratosMultiphysics.FluidDynamicsApplication"
-        dict set pdict "process_name" "ComputeBodyFittedDragProcess"
+        dict set pdict "python_module" "apply_velocity_constraints_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        #dict set pdict "process_name" "ComputeProcess"
         set params [dict create]
+
         dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
-        dict set params "write_drag_output_file" $write_output
-        dict set params "print_drag_to_screen" $print_screen
+
+        set subparams [dict create]
+
+        # dict set subparams "constrained" [write::getConstrains $values]
+        # dict set subparams "value" [write::getValues $values]
+        # dict set subparams "table" [write::getTable $values]
+        dict set subparams "constrained" "test.27492"
+
+        dict set pdict "velocity_constraints_settings" $subparams
+
         dict set params "interval" [write::getInterval $interval_name]
+
         dict set pdict "Parameters" $params
 
         lappend process_list $pdict
