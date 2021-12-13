@@ -64,7 +64,11 @@ proc Kratos::GetMissingPipPackages { } {
 
 
 proc Kratos::CheckDependencies { } {
-    if {[pythonVersion] <= 0} {
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
+    set py_version [Kratos::pythonVersion]
+    if {$py_version <= 0} {
         set msgBox_type yesno
         #  -do_not_ask_again 1 -do_not_ask_again_key "kratos_install_python"
         set reply [tk_messageBox -icon warning -type $msgBox_type -parent .gid \
@@ -76,8 +80,20 @@ proc Kratos::CheckDependencies { } {
         if {[string equal $reply "cancel"]} {
 
         }
-    } else {
+    }
+    set missing_packages [Kratos::GetMissingPipPackages]
+    if {[llength $missing_packages] > 0} {
+        set msgBox_type yesno
+        #  -do_not_ask_again 1 -do_not_ask_again_key "kratos_install_python"
+        set reply [tk_messageBox -icon warning -type $msgBox_type -parent .gid \
+                -message "Python $py_version is installed, but there are some missing packages. Do you want Kratos to install them? \n\nPackages to be installed: \n$missing_packages" \
+                -title [_ "Missing python packages"]]
+        if {[string equal $reply "yes"]} {
+            Kratos::InstallAllPythonDependencies
+        }
+        if {[string equal $reply "cancel"]} {
 
+        }
     }
 }
 
@@ -87,13 +103,13 @@ proc Kratos::GetLaunchConfigurationFile { } {
     return [list $new_dir $file]
 }
 
-proc Kratos::LoadLaunchModes { } {
+proc Kratos::LoadLaunchModes { {force 0} } {
     # Get location of launch config script
     lassign [Kratos::GetLaunchConfigurationFile] new_dir file
 
     # If it does not exist, copy it from exec
     if {[file exists $new_dir] == 0} {file mkdir $new_dir}
-    if {[file exists $file] == 0} {
+    if {[file exists $file] == 0 || $force} {
         ::GidUtils::SetWarnLine "Loading launch mode"
         set source [file join $::Kratos::kratos_private(Path) exec launch.json]
         file copy -force $source $file

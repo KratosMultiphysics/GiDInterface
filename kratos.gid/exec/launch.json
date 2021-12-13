@@ -2,7 +2,7 @@
     "configurations": [
         {
             "name": "Launch via pip",
-            "script": "global_pip"
+            "script": "pip"
         },
         {
             "name": "Launch via pip with local packages",
