@@ -5,7 +5,7 @@
     "themed": false,
     "kratos_name": "FSIApplication",
     "python_packages": [
-        "KratosStructuralApplication",
+        "KratosStructuralMechanicsApplication",
         "KratosFluidDynamicsApplication",
         "KratosFSIApplication",
         "KratosMeshMovingApplication",

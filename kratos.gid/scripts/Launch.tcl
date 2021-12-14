@@ -7,12 +7,18 @@ proc Kratos::InstallAllPythonDependencies { } {
     # Check if python is installed. minimum 3.5, best 3.9
     set python_version [pythonVersion $py]
     if { $python_version <= 0 || [GidUtils::TwoVersionsCmp $python_version "3.9.0"] <0 } {
+        ::GidUtils::SetWarnLine "Installing python"
+        package require gid_cross_platform
         if {$os eq "win"} {
-            package require gid_cross_platform
             gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.win.bat ] $dir
         } {
-            exec "sudo apt-get install python3.9"
+            gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.unix.sh ]
         }
+    }
+
+    if {$os ne "win"} {
+        ::GidUtils::SetWarnLine "Installing python dependencies"
+        gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.unix.sh ]
     }
 
     if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
@@ -56,7 +62,7 @@ proc Kratos::pipVersion { } {
 proc Kratos::GetMissingPipPackages { } {
     set missing_packages [list ]
     set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
-    KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralApplication KratosMeshMovingApplication \
+    KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
     KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication]
 
     if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
