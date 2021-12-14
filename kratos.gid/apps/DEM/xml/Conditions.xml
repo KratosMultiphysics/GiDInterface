@@ -85,7 +85,7 @@
 
 
 <!-- OVER FEM -->
-  <ConditionItem n="FEMForce" pn="Force over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="DEMForce-Process" unit_magnitude="Force" units="N" help="Assign force conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true" Type="Load">
+  <ConditionItem n="FEMForce" pn="Force over walls" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" ElementType="Line,Surface" ProcessName="DEMForce-Process" unit_magnitude="F" units="N" help="Assign force conditions for each group containing finite elements" VariableName="WALL" Interval="Total" can_be_initial="true" Type="Load">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
       <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>

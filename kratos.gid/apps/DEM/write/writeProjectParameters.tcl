@@ -55,7 +55,7 @@ proc ::DEM::write::getParametersDict { } {
     # dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
     #dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
-    dict set processes force_process_list [DEM::write::getForceProcessDictList]
+    dict set processes loads_process_list [DEM::write::getForceProcessDictList]
     # lappend processes $processes_f
 
     dict set project_parameters_dict processes $processes
@@ -288,8 +288,6 @@ proc ::DEM::write::getForceProcessDictList {} {
         dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
         set subparams [dict create]
 
-        # dict set subparams "constrained" [write::getConstrains $values]
-        dict set subparams "constrained" "\[false, false, false\]"
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
         dict set pdict "force_settings" $subparams
@@ -317,8 +315,6 @@ proc ::DEM::write::getForceProcessDictList {} {
         dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
         set subparams [dict create]
 
-        # dict set subparams "constrained" [write::getConstrains $values]
-        dict set subparams "constrained" "\[false, false, false\]"
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
@@ -345,9 +341,6 @@ proc ::DEM::write::getForceProcessDictList {} {
 
         dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
         set subparams [dict create]
-
-        # dict set subparams "constrained" [write::getConstrains $values]
-        dict set subparams "constrained" "\[false, false, false\]"
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
@@ -375,8 +368,6 @@ proc ::DEM::write::getForceProcessDictList {} {
         dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
         set subparams [dict create]
 
-        # dict set subparams "constrained" [write::getConstrains $values]
-        dict set subparams "constrained" "\[false, false, false\]"
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
