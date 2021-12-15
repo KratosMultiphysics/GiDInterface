@@ -27,6 +27,8 @@ proc Kratos::InstallAllPythonDependencies { } {
     if {[llength $missing_packages] > 0} {
         exec $pip -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
     }
+    exec $pip -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$Kratos::pip_packages_required
+    ::GidUtils::SetWarnLine "Packages updated"
 }
 
 proc Kratos::InstallPip { } {
@@ -60,10 +62,9 @@ proc Kratos::pipVersion { } {
 }
 
 proc Kratos::GetMissingPipPackages { } {
+    variable pip_packages_required
     set missing_packages [list ]
-    set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
-    KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
-    KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication]
+
 
     if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
     if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
