@@ -4,6 +4,9 @@
     "prefix": "DEM",
     "themed": false,
     "kratos_name": "DEMApplication",
+    "python_packages": [
+        "KratosDEMApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"

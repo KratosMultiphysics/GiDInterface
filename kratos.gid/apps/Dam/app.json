@@ -4,6 +4,9 @@
     "prefix": "Dam",
     "themed": false,
     "kratos_name": "DamApplication",
+    "python_packages": [
+        "KratosDamApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
