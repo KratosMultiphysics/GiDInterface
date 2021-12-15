@@ -1,5 +1,6 @@
 
 proc Kratos::InstallAllPythonDependencies { } {
+    package require gid_cross_platform
 
     if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
     set dir [lindex [Kratos::GetLaunchConfigurationFile] 0]
@@ -8,7 +9,6 @@ proc Kratos::InstallAllPythonDependencies { } {
     set python_version [pythonVersion $py]
     if { $python_version <= 0 || [GidUtils::TwoVersionsCmp $python_version "3.9.0"] <0 } {
         ::GidUtils::SetWarnLine "Installing python"
-        package require gid_cross_platform
         if {$os eq "win"} {
             gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.win.bat ] $dir
         } {
