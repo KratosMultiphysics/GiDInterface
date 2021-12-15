@@ -101,7 +101,7 @@ proc Kratos::CheckDependencies { } {
     }
     set pip_version [Kratos::pipVersion]
     if {$pip_version <= 0} {
-        WarnWin "pip is not installed on your system. Please install it in your system."
+        WarnWin "pip is not installed on your system. Please install it."
     } else {
         set missing_packages [Kratos::GetMissingPipPackages]
         if {[llength $missing_packages] > 0} {
