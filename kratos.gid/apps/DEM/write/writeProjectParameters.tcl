@@ -54,7 +54,7 @@ proc ::DEM::write::getParametersDict { } {
     # Boundary conditions processes
     # dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
-    #dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
+    dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
     dict set processes loads_process_list [DEM::write::getForceProcessDictList]
     # lappend processes $processes_f
 
@@ -146,21 +146,23 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]
         # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print'\]"]]]
         set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+
         set pdict [dict create]
         dict set pdict "python_module" "apply_velocity_constraints_process"
         dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
-        #dict set pdict "process_name" "ComputeProcess"
+
         set params [dict create]
-
         dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
-        set subparams [dict create]
 
+        set subparams [dict create]
         # dict set subparams "constrained" [write::getConstrains $values]
         dict set subparams "constrained" "\[false, false, false\]"
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
-        dict set pdict "velocity_constraints_settings" $subparams
+
+        dict set params "velocity_constraints_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
+
         dict set pdict "Parameters" $params
 
         lappend process_list $pdict
@@ -189,7 +191,7 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
-        dict set pdict "velocity_constraints_settings" $subparams
+        dict set params "velocity_constraints_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
 
@@ -218,7 +220,7 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
-        dict set pdict "angular_velocity_constraints_settings" $subparams
+        dict set params "angular_velocity_constraints_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
 
@@ -247,7 +249,7 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
-        dict set pdict "angular_velocity_constraints_settings" $subparams
+        dict set params "angular_velocity_constraints_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
 
@@ -290,7 +292,7 @@ proc ::DEM::write::getForceProcessDictList {} {
 
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
-        dict set pdict "force_settings" $subparams
+        dict set params "force_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
 
@@ -318,7 +320,7 @@ proc ::DEM::write::getForceProcessDictList {} {
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
-        dict set pdict "force_settings" $subparams
+        dict set params "force_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
 
@@ -344,7 +346,7 @@ proc ::DEM::write::getForceProcessDictList {} {
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
-        dict set pdict "moment_settings" $subparams
+        dict set params "moment_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
 
@@ -371,7 +373,7 @@ proc ::DEM::write::getForceProcessDictList {} {
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" "\[null, null, null\]"
 
-        dict set pdict "moment_settings" $subparams
+        dict set params "moment_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
 
