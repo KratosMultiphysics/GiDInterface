@@ -74,7 +74,8 @@ proc Kratos::GetMissingPipPackages { } {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
     }
     foreach required_package $pip_packages_required {
-        if {$required_package ni $pip_packages_installed} {lappend missing_packages $required_package}
+        set required_package_name [lindex [split $required_package "=="] 0]
+        if {$required_package_name ni $pip_packages_installed} {lappend missing_packages $required_package}
     }
     return $missing_packages
 }
@@ -133,7 +134,7 @@ proc Kratos::CheckDependenciesLocalPipMode {} {
 
 }
 proc Kratos::CheckDependenciesLocalMode {} {
-    W "local"
+    
 }
 proc Kratos::CheckDependenciesDockerMode {} {
 
