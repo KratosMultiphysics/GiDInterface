@@ -81,6 +81,15 @@ proc Kratos::GetMissingPipPackages { } {
 
 
 proc Kratos::CheckDependencies { } {
+    set curr_mode [Kratos::GetLaunchMode]
+    # W $curr_mode
+    if {[dict exists $curr_mode dependency_check]} {
+        set deps [dict get $curr_mode dependency_check]
+        $deps
+    }
+}
+
+proc Kratos::CheckDependenciesPipMode {} {
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }
@@ -119,6 +128,15 @@ proc Kratos::CheckDependencies { } {
             }
         }
     }
+}
+proc Kratos::CheckDependenciesLocalPipMode {} {
+
+}
+proc Kratos::CheckDependenciesLocalMode {} {
+    W "local"
+}
+proc Kratos::CheckDependenciesDockerMode {} {
+
 }
 
 proc Kratos::GetLaunchConfigurationFile { } {
@@ -165,12 +183,23 @@ proc Kratos::SetDefaultLaunchMode { } {
 proc Kratos::ExecuteLaunchByMode {launch_mode} {
     set bat_file ""
     if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
+    set mode [Kratos::GetLaunchMode $launch_mode]
+    if {$mode ne ""} {
+        set bat [dict get $mode script]
+        set bat_file [file join exec $bat.$os.bat]
+    }
+
+    return $bat_file
+}
+
+proc Kratos::GetLaunchMode { {launch_mode "current"} } {
+    set curr_mode ""
+    if {$launch_mode eq "current"} {set launch_mode $Kratos::kratos_private(launch_configuration)}
     foreach mode $::Kratos::kratos_private(configurations) {
         set mode_name [dict get $mode name]
         if {$mode_name eq $launch_mode} {
-            set bat [dict get $mode script]
-            set bat_file [file join exec $bat.$os.bat]
+            set curr_mode $mode
         }
     }
-    return $bat_file
+    return $curr_mode
 }

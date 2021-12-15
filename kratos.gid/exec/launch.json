@@ -2,19 +2,25 @@
     "configurations": [
         {
             "name": "Launch via pip",
-            "script": "pip"
+            "script": "pip",
+            "pip_packages": "KratosMultiphysics-all",
+            "dependency_check": "Kratos::CheckDependenciesPipMode"
         },
         {
             "name": "Launch via pip with local packages",
-            "script": "local_pip"
+            "script": "local_pip",
+            "pip_packages": "exec/packages/**.whl",
+            "dependency_check": "Kratos::CheckDependenciesLocalPipMode"
         },
         {
             "name": "Launch local compiled version",
-            "script": "compiled"
+            "script": "compiled",
+            "dependency_check": "Kratos::CheckDependenciesLocalMode"
         },
         {
             "name": "Docker",
-            "script": ""
+            "script": "",
+            "dependency_check": "Kratos::CheckDependenciesDockerMode"
         }
     ]
 }

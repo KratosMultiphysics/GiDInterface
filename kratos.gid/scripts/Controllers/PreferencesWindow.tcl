@@ -12,6 +12,7 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
         "SetValue" {
             set ::Kratos::kratos_private($name) $value
             if {$name eq "allow_logs"} {Kratos::InitLog}
+            if {$name eq "launch_configuration"} {Kratos::CheckDependencies}
         }
         "GetDefaultValue" {
             # same as GetValue
