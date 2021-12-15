@@ -6,7 +6,7 @@
     ],
     "start_script":"::DemLauncher::Init",
     "requeriments":{
-        "apps_exist":["DEM", "DEMPFEM", "FluidDEM", "CDEM"],
+        "apps_exist":["DEM", "FluidDEM", "CDEM"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {

@@ -1,6 +1,6 @@
 namespace eval ::DemLauncher {
     Kratos::AddNamespace [namespace current]
-    
+
     variable available_apps
 }
 
@@ -8,7 +8,7 @@ proc ::DemLauncher::Init { app } {
     variable available_apps
 
     # TODO: Get apps from json
-    set available_apps [list DEM DEMPFEM FluidDEM CDEM]
+    set available_apps [list DEM FluidDEM CDEM]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
 
@@ -66,7 +66,7 @@ proc ::DemLauncher::AppSelectorWindow { } {
 
         # Information panel
         set spdAux::info_main_window_text ""
-        ttk::labelframe $w.info -text " Information " -relief ridge 
+        ttk::labelframe $w.info -text " Information " -relief ridge
         ttk::label $w.info.text -textvariable spdAux::info_main_window_text
         grid $w.info.text
         grid $w.info -sticky we

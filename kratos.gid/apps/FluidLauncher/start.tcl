@@ -1,6 +1,6 @@
 namespace eval ::FluidLauncher {
     Kratos::AddNamespace [namespace current]
-    
+
     variable available_apps
 }
 
@@ -8,14 +8,14 @@ proc ::FluidLauncher::Init { app } {
     variable available_apps
 
     # TODO: Get apps from json
-    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM]
-    
+    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer]
+
     ::FluidLauncher::FluidAppSelectorWindow
 }
 
 proc ::FluidLauncher::FluidAppSelectorWindow { } {
     variable available_apps
-    
+
     set root [customlib::GetBaseRoot]
     set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
     if { $nd ne "undefined" } {
@@ -69,7 +69,7 @@ proc ::FluidLauncher::FluidAppSelectorWindow { } {
 
         # Information panel
         set spdAux::info_main_window_text ""
-        ttk::labelframe $w.info -text " Information " -relief ridge 
+        ttk::labelframe $w.info -text " Information " -relief ridge
         ttk::label $w.info.text -textvariable spdAux::info_main_window_text
         grid $w.info.text
         grid $w.info -sticky we
