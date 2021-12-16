@@ -104,6 +104,7 @@ proc Kratos::CheckDependenciesPipMode {} {
                 -message "Python 3 not installed on this system. Do you want Kratos to install it?" \
                 -title [_ "Missing python"]]
         if {[string equal $reply "yes"]} {
+            WarnWin "You may need to restart gid when the python install process finishes. Install the updates in menu 'Kratos' > 'Install python and update dependencies'"
             Kratos::InstallAllPythonDependencies
         }
         if {[string equal $reply "cancel"]} {
@@ -134,7 +135,7 @@ proc Kratos::CheckDependenciesLocalPipMode {} {
 
 }
 proc Kratos::CheckDependenciesLocalMode {} {
-    
+
 }
 proc Kratos::CheckDependenciesDockerMode {} {
 
