@@ -36,6 +36,9 @@ proc PfemMelting::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v 9.81 Gravity GravityValue
     spdAux::SetValueOnTreeItem v 0 Gravity Cy
     spdAux::SetValueOnTreeItem v -1.0 Gravity Cz
+    foreach res [list "VELOCITY" "PRESSURE" "TEMPERATURE" "FACE_HEAT_FLUX" "BODY_FORCE" "ARRHENIUS_COEFFICIENT" "VISCOSITY" "CONDUCTIVITY" "SPECIFIC_HEAT" "IS_STRUCTURE" "IS_FREE_SURFACE" ] {
+        gid_groups_conds::addF "[spdAux::getRoute NodalResults]" value [list n $res pn $res v Yes values "Yes,No"]
+    }
 
 }
 

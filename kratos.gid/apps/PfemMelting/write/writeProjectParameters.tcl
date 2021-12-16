@@ -3,7 +3,7 @@ proc ::PfemMelting::write::getParametersDict { } {
     set project_parameters_dict [dict create ]
 
     dict set project_parameters_dict problem_data [GetProblemDataDict]
-    dict set project_parameters_dict output_processes  [write::GetDefaultOutputProcessDict]
+    dict set project_parameters_dict output_processes [write::GetDefaultOutputProcessDict]
     dict set project_parameters_dict restart_options [write::GetDefaultRestartDict]
     dict set project_parameters_dict solver_settings [Getsolver_settings_dict]
     set process_list [getLaserProcesses]
@@ -53,7 +53,7 @@ proc ::PfemMelting::write::GetSolverSettingsFluidDict { } {
     foreach key [list convergence_criterion line_search solution_relative_tolerance solution_absolute_tolerance residual_relative_tolerance residual_absolute_tolerance max_iteration] { if {[dict exists $solver_settings_dict $key]} {dict unset solver_settings_dict $key} }
 
     # Skin parts
-    # dict set solver_settings_dict skin_parts [list ]
+    dict set solver_settings_dict skin_parts [list ]
     dict set solver_settings_dict volume_model_part_name [GetAttribute model_part_name]
     # dict set solver_settings_dict
 
