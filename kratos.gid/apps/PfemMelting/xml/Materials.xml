@@ -3,7 +3,6 @@
   <Material n="Polymer 1" MaterialType="Melting" help="Physical properties">
     <inputs>
       <parameter n="DENSITY" pn="Density" v="1.225" unit_magnitude="Density" units="kg/m^3"/>
-      <!-- <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="1.002e-3" unit_magnitude="M/(L*T)" units="kg/(m*s)"/> -->
       <parameter n="CONDUCTIVITY" pn="Thermal conductivity" v="0.024" unit_magnitude="Power/(L*Temp)" units="W/(m*K)"/>
       <parameter n="SPECIFIC_HEAT" pn="Specific heat" v="1012.0" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)"/>
       <parameter n="ARRHENIUS_COEFFICIENT" pn="Arrhenius coefficient" v="0.0" unit_magnitude="1/T" units="1/s"/>
@@ -11,12 +10,12 @@
       <parameter n="HEAT_OF_VAPORIZATION" pn="Heat of vaporization" v="0.0" unit_magnitude="Energy/M" units="J/kg"/>
       <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
       <parameter n="CONVECTION_COEFFICIENT" pn="Convective heat transfer coefficient" v="4.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/>
+      <parameter n="Temperature_Viscosity" pn="Temperature-Viscosity filename" type="tablefile" v=""/>
     </inputs>
   </Material>
   <Material n="Polymer 2" MaterialType="Melting" help="Physical properties">
     <inputs>
       <parameter n="DENSITY" pn="Density" v="1000" unit_magnitude="Density" units="kg/m^3"/>
-      <!-- <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="1.002e-3" unit_magnitude="M/(L*T)" units="kg/(m*s)"/> -->
       <parameter n="CONDUCTIVITY" pn="Thermal conductivity" v="0.58" unit_magnitude="Power/(L*Temp)" units="W/(m*K)"/>
       <parameter n="SPECIFIC_HEAT" pn="Specific heat" v="4181.3" unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)"/>
       <parameter n="ARRHENIUS_COEFFICIENT" pn="Arrhenius coefficient" v="0.0" unit_magnitude="1/T" units="1/s"/>
@@ -24,6 +23,7 @@
       <parameter n="HEAT_OF_VAPORIZATION" pn="Heat of vaporization" v="0.0" unit_magnitude="Energy/M" units="J/kg"/>
       <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
       <parameter n="CONVECTION_COEFFICIENT" pn="Convective heat transfer coefficient" v="4.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/>
+      <parameter n="Temperature_Viscosity" pn="Temperature-Viscosity filename" type="tablefile" v=""/>
     </inputs>
   </Material>
 </Materials>

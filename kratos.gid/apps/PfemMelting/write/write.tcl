@@ -45,6 +45,26 @@ proc ::PfemMelting::write::writeCustomFilesEvent { } {
     set mats_json [dict create ]
     foreach mat [dict get [write::getPropertiesList [GetAttribute parts_un] True [GetAttribute model_part_name]] properties] {
         dict set mat model_part_name ModelPart
+
+        set file [dict get $mat Material Variables Temperature_Viscosity]
+        dict unset mat Material Variables Temperature_Viscosity
+        dict set mat Material Variables DYNAMIC_VISCOSITY 1000000
+
+        set values [list ]
+        set f [open [file join [GidUtils::GetDirectoryModel] $file] r]
+        while {[gets $f line] > 0} {
+            lassign [split $line ,] k v
+            lappend values [list [expr $k] [expr $v]]
+
+        }
+        close $f
+
+        set table [dict create ]
+        dict set table Table1 input_variable TEMPERATURE
+        dict set table Table1 output_variable DYNAMIC_VISCOSITY
+        dict set table Table1 data $values
+
+        dict set mat Material Tables $table
         dict lappend mats_json properties $mat
     }
     write::OpenFile [GetAttribute materials_file]

@@ -76,7 +76,7 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     ::spdAux::SaveModelFile $laser_filename
 
     # Laser condition
-    set laser_xpath "[spdAux::getRoute [PfemMelting::GetUniqueName laser]]/blockdata\[@n='laser1'\]/value\[@n='laser_path'\]"
+    set laser_xpath "[spdAux::getRoute [PfemMelting::GetUniqueName laser]]/blockdata\[@name='Laser Path 1'\]/value\[@n='laser_path'\]"
     spdAux::SetFieldOnPath $laser_xpath v $laser_filename
 
     # Set ambient temperature
@@ -87,6 +87,13 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     set xpath [spdAux::getRoute [PfemMelting::GetUniqueName conditions]]
     customlib::AddConditionGroupOnXPath "$xpath/condition\[@n='VelocityConstraints3D'\]" floor
 
-    # TODO: Set gravity -Z
+    # Temperature file into model
+    set temp_filename "temperature_dynamicviscosity.csv"
+    set temp_filename_origin [file join $PfemMelting::dir examples $temp_filename]
+    set temp_filename [::FileSelector::_ProcessFile $temp_filename_origin]
+    ::spdAux::SaveModelFile $temp_filename
+
+    set temp_xpath "[spdAux::getRoute [PfemMelting::GetUniqueName materials]]/blockdata\[@name='Polymer 1'\]/value\[@n='Temperature_Viscosity'\]"
+    spdAux::SetFieldOnPath $temp_xpath v $temp_filename
 
 }
