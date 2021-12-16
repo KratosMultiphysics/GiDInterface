@@ -162,6 +162,22 @@ proc ::DEM::write::GetRigidWallConditionName {} {
     return $condition_name
 }
 
+proc ::DEM::write::GetFEMVelocityConditionName {} {
+    set condition_name "FEMVelocity"
+    if {$::Model::SpatialDimension eq "2D"} {
+        set condition_name "FEMVelocity2D"
+    }
+    return $condition_name
+}
+
+proc ::DEM::write::GetFEMAngularConditionName {} {
+    set condition_name "FEMAngular"
+    if {$::Model::SpatialDimension eq "2D"} {
+        set condition_name "FEMAngular2D"
+    }
+    return $condition_name
+}
+
 # proc ::DEM::write::GetRigidWallConditionName {} {
 #     set condition_name "DEM-FEM-Wall"
 #     if {$::Model::SpatialDimension eq "2D"} {
