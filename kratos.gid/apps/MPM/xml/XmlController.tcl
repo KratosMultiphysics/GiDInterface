@@ -10,11 +10,13 @@ proc MPM::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $::MPM::dir
 
-    Model::ForgetSolutionStrategies
-    Model::getSolutionStrategies Strategies.xml
+
     # Import our elements
     Model::ForgetElements
     Model::getElements Elements.xml
+    
+   Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies Strategies.xml
 
     # Modify the schemes so more elements are filtered
     foreach strategy $::Model::SolutionStrategies {
