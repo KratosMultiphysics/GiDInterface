@@ -255,5 +255,45 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
+  
+  
+   <CLaw n="DispNewtonianFluidPlaneStrain2DLaw" pn="Newtonian Fluid (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+      <parameter n="BULK_MODULUS" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2e6" />
+      <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="0.01"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+  
+   <CLaw n="DispNewtonianFluid3DLaw" pn="Newtonian Fluid (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 3D Plane Strain" Dimension="3D" ProductionReady="ProductionReady" App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+      <parameter n="BULK_MODULUS" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2e6" />
+      <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="0.01"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+  
+  
+    <CLaw n="DispNewtonianFluidPlaneStrainUP2DLaw" pn="Newtonian Fluid (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+      <parameter n="BULK_MODULUS" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2e6" />
+      <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="0.01"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+  
+   <CLaw n="DispNewtonianFluidUP3DLaw" pn="Newtonian Fluid (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 3D Plane Strain" Dimension="3D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
+    <inputs>
+      <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+      <parameter n="BULK_MODULUS" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2e6" />
+      <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="0.01"/>
+    </inputs>
+    <outputs></outputs>
+  </CLaw>
+  
+  
 
 </ConstitutiveLaws>
