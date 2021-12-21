@@ -6,7 +6,7 @@
             <parameter n="rayleigh_alpha" pn="Rayleigh alpha" type="double" v="0.0"  help=""/>
             <parameter n="rayleigh_beta" pn="Rayleigh beta" type="double" v="0.0"  help=""/>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
-            <parameter n="stabilization" pn="Stabilization method" type="combo" v="No" values="No,PPP,ASGS,OSGS" pvalues="No,Polynomial Pressure Projection,Variational MultiScales ASGS,Variational MultiScales OSGS" help="To choose stabilization method"/>       
+            <parameter n="stabilization" pn="Stabilization method" type="combo" v="None" values="None,PPP,ASGS,OSGS" pvalues="None,Polynomial Pressure Projection,Variational MultiScales ASGS,Variational MultiScales OSGS" help="To choose stabilization method"/>       
             <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,And_criterion,or_criterion"
                        pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
                 <parameter n="displacement_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="displacement_criterion,and_criterion,or_criterion" help="Relative displacement tolerance employed in the nonlinear iteration"/>
@@ -39,7 +39,7 @@
             <parameter n="rayleigh_alpha" pn="Rayleigh alpha" type="double" v="0.0"  help=""/>
             <parameter n="rayleigh_beta" pn="Rayleigh beta" type="double" v="0.0"  help=""/>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
-            <parameter n="stabilization" pn="Stabilization method" type="combo" v="No" values="No,PPP,ASGS,OSGS" pvalues="No,Polynomial Pressure Projection,Variational MultiScales ASGS,Variational MultiScales OSGS" help="To choose stabilization method"/>       
+            <parameter n="stabilization" pn="Stabilization method" type="combo" v="None" values="None,PPP,ASGS,OSGS" pvalues="None,Polynomial Pressure Projection,Variational MultiScales ASGS,Variational MultiScales OSGS" help="To choose stabilization method"/>       
             <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,And_criterion,or_criterion"
                        pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
                 <parameter n="displacement_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="displacement_criterion,and_criterion,or_criterion" help="Relative displacement tolerance employed in the nonlinear iteration"/>
@@ -69,7 +69,7 @@
         <parameter_list>
             <parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
-            <parameter n="stabilization" pn="Stabilization method" type="combo" v="No" values="No,PPP,ASGS,OSGS" pvalues="No,Polynomial Pressure Projection,Variational MultiScales ASGS,Variational MultiScales OSGS" help="To choose stabilization method"/>         
+            <parameter n="stabilization" pn="Stabilization method" type="combo" v="None" values="None,PPP,ASGS,OSGS" pvalues="None,Polynomial Pressure Projection,Variational MultiScales ASGS,Variational MultiScales OSGS" help="To choose stabilization method"/>         
             <parameter n="convergence_criterion" pn="Convergence criterion" type="combo" v="residual_criterion" values ="residual_criterion,displacement_criterion,and_criterion,or_criterion"
                        pvalues ="Residual criterion,Displacement criterion,And criterion,Or criterion" help="These are the available convergence criteria for the nonlinear iteration">
                 <parameter n="displacement_relative_tolerance" pn="Displacement relative tolerance" type="double" v="1e-4" parent="displacement_criterion,and_criterion,or_criterion" help="Relative displacement tolerance employed in the nonlinear iteration"/>

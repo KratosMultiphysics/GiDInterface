@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container  n="Parts" pn="Parts" un="STParts,MPMParts" icon="shells16" >
+<container  n="Parts" pn="Parts" un="MPMParts" icon="shells16" >
 	<dynamicnode command="spdAux::injectPartsByElementType" args="ImplementedInApplication ParticleMechanicsApplication"/>
 </container>
