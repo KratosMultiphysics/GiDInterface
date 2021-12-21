@@ -4,6 +4,9 @@
     "prefix": "FL",
     "themed": false,
     "kratos_name": "FluidDynamicsApplication",
+    "python_packages": [
+        "KratosFluidDynamicsApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
@@ -17,10 +20,10 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::Fluid::Init",
-    "requeriments":{
-        "apps":[],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::Fluid::Init",
+    "requeriments": {
+        "apps": [],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,

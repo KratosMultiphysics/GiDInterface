@@ -4,6 +4,9 @@
     "prefix": "CNVDFF",
     "themed": false,
     "kratos_name": "ConvectionDiffusionApplication",
+    "python_packages": [
+        "KratosConvectionDiffusionApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
