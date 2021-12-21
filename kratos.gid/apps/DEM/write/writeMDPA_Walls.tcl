@@ -312,22 +312,15 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
 
     write::WriteString "Begin SubModelPart $mid // $condition - group identifier: $group"
     write::WriteString "  Begin SubModelPartData // $condition. Group name: $group"
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition'\]/group\[@n = '$group'\]"
-
+    # set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition'\]/group\[@n = '$group'\]"
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n = 'FEM'\]/group\[@n = '$group'\]"
-
-    set root [customlib::GetBaseRoot]
-    set group [$root selectNodes $xp1]
-    set test [write::getValueByNode [$group selectNodes "./value\[@n='MASS'\]"]]
-    W test
-
 
     set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
 
     set is_active [dict get $props Material Variables SetActive]
     set is_active 0
-    set mass [write::getValueByNode [$group_node selectNodes "./value\[@n='MASS'\]"]]
-    write::WriteString "    RIGID_BODY_MASS $mass"
+    # set mass [write::getValueByNode [$group_node selectNodes "./value\[@n='MASS'\]"]]
+    # write::WriteString "    RIGID_BODY_MASS $mass"
 
 
     if {[write::isBooleanTrue $is_active]} {

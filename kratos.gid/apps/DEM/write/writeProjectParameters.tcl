@@ -56,7 +56,6 @@ proc ::DEM::write::getParametersDict { } {
 
     dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
     dict set processes loads_process_list [DEM::write::getForceProcessDictList]
-    # lappend processes $processes_f
 
     dict set project_parameters_dict processes $processes
 
@@ -267,10 +266,10 @@ proc ::DEM::write::getForceProcessDictList {} {
     set root [customlib::GetBaseRoot]
     set process_list [list ]
 
-    set xp1         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='FEMForce'\]/group"
-    set xp2         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='DEMForce'\]/group"
-    set xp3         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='DEMTorque'\]/group"
-    set xp4         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='DEMTorque'\]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute loads_un]]/condition\[@n='FEMForce'\]/group"
+    set xp2 "[spdAux::getRoute [GetAttribute loads_un]]/condition\[@n='DEMForce'\]/group"
+    set xp3 "[spdAux::getRoute [GetAttribute loads_un]]/condition\[@n='DEMTorque'\]/group"
+    set xp4 "[spdAux::getRoute [GetAttribute loads_un]]/condition\[@n='DEMTorque'\]/group"
 
     set groups [$root selectNodes $xp1]
     foreach group $groups {

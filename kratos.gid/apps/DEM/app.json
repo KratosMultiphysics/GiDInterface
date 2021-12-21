@@ -41,6 +41,7 @@
         "parts": "DEMParts",
         "init_conditions": "DEMInitialConditions",
         "conditions": "DEMConditions",
+        "loads": "DEMFEMLoads",
         "materials": "DEMMaterials"
     },
     "write": {
