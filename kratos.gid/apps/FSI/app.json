@@ -3,7 +3,14 @@
     "name": "Fluid Strucure Interaction",
     "prefix": "FSI",
     "themed": false,
-    "kratos_name": "FSIapplication",
+    "kratos_name": "FSIApplication",
+    "python_packages": [
+        "KratosStructuralMechanicsApplication",
+        "KratosFluidDynamicsApplication",
+        "KratosFSIApplication",
+        "KratosMeshMovingApplication",
+        "KratosMappingApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
@@ -18,10 +25,13 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::FSI::Init",
-    "requeriments":{
-        "apps":["Fluid", "Structural"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::FSI::Init",
+    "requeriments": {
+        "apps": [
+            "Fluid",
+            "Structural"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
@@ -37,7 +47,6 @@
         "time_parameters": "STTimeParameters",
         "results": "STResults",
         "materials": "STMaterials"
-
     },
     "write": {
         "coordinates": "all",

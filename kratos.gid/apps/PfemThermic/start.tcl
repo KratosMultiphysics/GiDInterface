@@ -1,6 +1,6 @@
 namespace eval ::PfemThermic {
     Kratos::AddNamespace [namespace current]
-    
+
     # Variable declaration
     variable dir
     variable _app
@@ -14,7 +14,7 @@ proc ::PfemThermic::Init { app } {
     # Variable initialization
     variable dir
 	set dir [apps::getMyDir "PfemThermic"]
-    
+
     variable _app
 	set _app $app
 
@@ -35,4 +35,8 @@ proc ::PfemThermic::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Output"               [file join $img_dir "view.png"]            [list -np- PWViewOutput]                           [= "View process info"]
     Kratos::ToolbarAddItem "Stop"                 [file join $img_dir "cancelProcess.png"]   {Utilities CancelProcess}                          [= "Cancel process"]
     Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow         [apps::getActiveAppId]]                            [= "Examples window"]
+    Kratos::ToolbarAddItem "SpacerApp1" "" "" ""
+    if {[info exists Kratos::kratos_private(UseFiles)] && $Kratos::kratos_private(UseFiles) == 1} {
+        Kratos::ToolbarAddItem "Files" "files.png" [list -np- spdAux::LaunchFileWindow] [= "File handler window"]
+    }
 }
