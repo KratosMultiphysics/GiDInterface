@@ -187,11 +187,11 @@ proc Kratos::InitGlobalVariables {dir} {
     set namespaces [list ]
 
     variable pip_packages_required
-    # set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
-    # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
-    # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
-    # KratosFSIApplication]
-    set pip_packages_required KratosMultiphysics-all==9.0.2
+    set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
+    KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
+    KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
+    KratosFSIApplication==9.0.3]
+    #set pip_packages_required KratosMultiphysics-all==9.0.2
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -509,6 +509,7 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
 proc Kratos::Event_SelectGIDBatFile { dir basename } {
     if {[info exists Kratos::kratos_private(launch_configuration)]} {
         set launch_mode $Kratos::kratos_private(launch_configuration)
+        ::GidUtils::SetWarnLine "Launch mode: $launch_mode"
         return [Kratos::ExecuteLaunchByMode $launch_mode]
     }
 }
