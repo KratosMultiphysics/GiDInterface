@@ -21,8 +21,10 @@ proc ::DEM::xml::Init { } {
 }
 
 proc ::DEM::xml::ProcGetPartsGroupsList {domNode args} {
-    return [list a b]
+    return [GiD_Groups list]
 }
+
+
 
 proc ::DEM::xml::getUniqueName {name} {
     return [::DEM::GetAttribute prefix]$name

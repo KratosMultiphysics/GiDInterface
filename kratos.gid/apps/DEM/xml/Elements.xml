@@ -47,7 +47,7 @@
   </ElementItem>
 
 
-  <ElementItem n="FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="FEM" help="">
+  <ElementItem n="FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="FEM" help="" WriteAsBlock="Conditions">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
@@ -69,7 +69,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="Ghost-FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Ghost-FEM" help="">
+  <ElementItem n="Ghost-FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Ghost-FEM" help=""  WriteAsBlock="Conditions">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>

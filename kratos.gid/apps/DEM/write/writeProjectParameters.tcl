@@ -383,26 +383,26 @@ proc ::DEM::write::getForceProcessDictList {} {
     return $process_list
 }
 
-proc ::DEM::write::writeWallConditionMeshes { } {
-    variable wallsProperties
-    variable phantomwallsProperties
+# proc ::DEM::write::writeWallConditionMeshes { } {
+#     variable wallsProperties
+#     variable phantomwallsProperties
 
-    set condition_name [GetRigidWallConditionName]
-    foreach group [GetRigidWallsGroups] {
-        set mid [write::AddSubmodelpart $condition_name $group]
-        set props [DEM::write::FindPropertiesBySubmodelpart $wallsProperties $mid]
-        writeWallConditionMesh $condition_name $group $props
-    }
+#     set condition_name [GetRigidWallConditionName]
+#     foreach group [GetRigidWallsGroups] {
+#         set mid [write::AddSubmodelpart $condition_name $group]
+#         set props [DEM::write::FindPropertiesBySubmodelpart $wallsProperties $mid]
+#         writeWallConditionMesh $condition_name $group $props
+#     }
 
-    if {$::Model::SpatialDimension ne "2D"} {
-        set condition_name [GetPhantomWallConditionName]
-        foreach group [GetPhantomWallsGroups] {
-            set mid [write::AddSubmodelpart $condition_name $group]
-            set props [DEM::write::FindPropertiesBySubmodelpart $phantomwallsProperties $mid]
-            writeWallConditionMesh $condition_name $group $props
-        }
-    }
-}
+#     if {$::Model::SpatialDimension ne "2D"} {
+#         set condition_name [GetPhantomWallConditionName]
+#         foreach group [GetPhantomWallsGroups] {
+#             set mid [write::AddSubmodelpart $condition_name $group]
+#             set props [DEM::write::FindPropertiesBySubmodelpart $phantomwallsProperties $mid]
+#             writeWallConditionMesh $condition_name $group $props
+#         }
+#     }
+# }
 
 proc ::DEM::write::GetDemStrategyName { } {
     return sphere_strategy
