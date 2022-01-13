@@ -51,9 +51,10 @@ proc ::ShallowWater::write::GetProblemDataDict { } {
 proc ::ShallowWater::write::GetSolverSettingsDict { } {
     # General data
     set solverSettingsDict [dict create]
-    dict set solverSettingsDict solver_type "stabilized_shallow_water_solver"
+    dict set solverSettingsDict solver_type [write::getValue SWSolStrat]
     dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
     dict set solverSettingsDict domain_size 2
+    dict set solverSettingsDict gravity [write::getValue SWGravity]
 
     # Model import settings
     set modelImportDict [dict create]
@@ -66,8 +67,9 @@ proc ::ShallowWater::write::GetSolverSettingsDict { } {
     dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
 
-    # set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict SWSolutionStrat SWScheme SWStratParams]]
-    # set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict ShallowWater]]
+    # Strategy, scheme and linear solver settings
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict SWSolStrat SWScheme SWStrategyParams] ]
+    set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict ShallowWater] ]
 
     # Time stepping settings
     set timeSteppingDict [dict create]

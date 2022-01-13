@@ -6,6 +6,7 @@ namespace eval ::ShallowWater::xml {
 proc ::ShallowWater::xml::Init {} {
     Model::InitVariables dir $::ShallowWater::dir
 
+    Model::getSolutionStrategies Strategies.xml
     Model::getElements "../../Common/xml/Elements.xml"
     Model::getConditions Conditions.xml
     Model::getMaterials Materials.xml
@@ -21,8 +22,8 @@ proc ::ShallowWater::xml::getUniqueName {name} {
 
 proc ::ShallowWater::xml::CustomTree {args} {
     # Set the nodal conditions active
-    gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName topography_data]]/condition" [list state normal]
-    gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName initial_conditions]]/condition" [list state normal]
+    gid_groups_conds::setAttributes "[spdAux::getRoute SWTopographicData]/condition" [list state normal]
+    gid_groups_conds::setAttributes "[spdAux::getRoute SWInitialConditions]/condition" [list state normal]
 
     # Register the primary outputs from topography data
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'MOMENTUM'\]" [list state normal]
@@ -31,5 +32,5 @@ proc ::ShallowWater::xml::CustomTree {args} {
     gid_groups_conds::setAttributes "[spdAux::getRoute NodalResults]/value\[@n = 'FREE_SURFACE_ELEVATION'\]" [list state normal]
 
     # Set the default value for the Z component in the boundary conditions
-    gid_groups_conds::setAttributes "[spdAux::getRoute [GetUniqueName conditions]]/condition\[@n = 'ImposedFlowRate'\]/value\[@n = 'selector_component_Z'\]" [list v Not]
+    gid_groups_conds::setAttributes "[spdAux::getRoute SWConditions]/condition\[@n = 'ImposedFlowRate'\]/value\[@n = 'selector_component_Z'\]" [list v Not]
 }

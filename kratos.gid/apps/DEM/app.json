@@ -4,6 +4,9 @@
     "prefix": "DEM",
     "themed": false,
     "kratos_name": "DEMApplication",
+    "python_packages": [
+        "KratosDEMApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
@@ -35,7 +38,8 @@
         "open_tree": true,
         "show_toolbar": true,
         "intervals": true,
-        "wizard": false
+        "wizard": false,
+        "import_files": true
     },
     "unique_names": {
         "parts": "DEMParts",
