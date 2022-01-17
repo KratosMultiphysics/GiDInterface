@@ -125,6 +125,10 @@ proc ::DEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
+proc DEM::write::getSubModelPartId {cid group} {
+    return $cid$group
+}
+
 proc ::DEM::write::getKinematicsProcessDictList {} {
 
     set root [customlib::GetBaseRoot]
@@ -138,9 +142,9 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
     set groups [$root selectNodes $xp1]
     foreach group $groups {
         set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
+        set submodelpart [DEM::write::getSubModelPartId $cid $groupName]
+        # I want it to be FEMVelocity-Floor
 
         # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]
         # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print'\]"]]]
@@ -155,10 +159,18 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
 
         set subparams [dict create]
         # dict set subparams "constrained" [write::getConstrains $values]
-        dict set subparams "constrained" "\[false, false, false\]"
+        # proc write::ProcessVectorFunctionComponents { groupNode condition process}
 
+        set constrains [write::getValueByNode [$group selectNodes "./value\[@n='Constrains'\]"]]
+        # set value [write::getValueByNode [$group selectNodes "./value\[@n='component'\]"]]
+        set table [write::getValueByNode [$group selectNodes "./value\[@n='Table'\]"]]
+
+        dict set subparams "constrained" $constrains
+        # dict set subparams "value" $value
+        dict set subparams "table" $table
+        # dict set subparams "constrained" "\[false, false, false\]"
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
-        dict set subparams "table" "\[null, null, null\]"
+        # dict set subparams "table" "\[null, null, null\]"
 
         dict set params "velocity_constraints_settings" $subparams
         dict set params "interval" [write::getInterval $interval_name]
@@ -167,6 +179,28 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
 
         lappend process_list $pdict
     }
+
+
+    # solo referencia
+    # proc write::ProcessVectorFunctionComponents { groupNode condition process} {
+    # set processDict [write::GetProcessHeader $groupNode $process $condition]
+    # set val [write::GetInputValue $groupNode [$process getInputPn component]]
+    # foreach i $val {
+    #     if {$i == "null"} {
+    #         lappend constrained false
+    #         lappend value null
+    #     } {
+    #         lappend constrained true
+    #         lappend value $i
+    #     }
+    # }
+
+    # dict set processDict Parameters constrained $constrained
+    # dict set processDict Parameters value $value
+
+    # return $processDict
+    #   }
+
 
 
     set groups [$root selectNodes $xp2]
