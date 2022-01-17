@@ -8,12 +8,10 @@
       <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangian2D4N"/>
     </TopologyFeatures>
         <!-- here we add the block of features which we require from the constitutive law-->
-
     <ConstitutiveLaw_FilterFeatures>
       <filter field="App" value="MPM"/>
       <filter field="FormulationType" value="Irreducible"/>
     </ConstitutiveLaw_FilterFeatures>
-
     <!--define list of NodalConditions-->
     <NodalConditions>
       <NodalCondition n="DISPLACEMENT"/>
@@ -33,8 +31,6 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-  
-  
    <!--updated lagrangian mixed UP-->
   <ElementItem n="UpdatedLagrangianUP2D" pn="Updated lagrangian mixed UP" ov="surface" ImplementedInFile="updated_lagrangian_UP.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Material_domain" help="Updated Lagrangian mixed formulation UP 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -66,8 +62,6 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-  
-
   <ElementItem n="UpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Material_domain" help="Updated Lagrangian 2D axis-symmetric element for large deformation kinematics consist of a material point and connectivity nodes" AnalysisType="non_linear,linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -98,7 +92,6 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-
   <ElementItem n="UpdatedLagrangian3D" pn="Updated lagrangian" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear,linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -128,7 +121,6 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-  
    <ElementItem n="UpdatedLagrangianUP3D" pn="Updated lagrangian mixed UP" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -158,7 +150,6 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-
   <!--background grid-->
   <ElementItem n="GRID2D" pn="Background Grid" ov="surface" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Grid" help="2D Background element required for the computation of material point method." AnalysisType="non_linear,linear">
     <!--here we could add a list of all of the possible geometries-->
@@ -179,7 +170,6 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
-
   <ElementItem n="GRID2D" pn="Background Grid" ov="surface" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Grid" help="2D axis-symmetric Background element required for the computation of material point method." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -199,7 +189,6 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
-
   <ElementItem n="GRID3D" pn="Background Grid" ov="volume" ImplementedInApplication="ParticleMechanicsApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Grid" help="3D Background element required for the computation of material point method." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -219,5 +208,4 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
-
 </ElementList>

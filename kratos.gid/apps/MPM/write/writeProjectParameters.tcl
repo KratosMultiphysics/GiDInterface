@@ -35,7 +35,7 @@ proc ::MPM::write::getParametersDict { } {
     # Pressure dofs
     set check_list [list "UpdatedLagrangianUP2D"]
     foreach elem $check_list {
-        if {$elem in [Structural::write::GetUsedElements Name]} {
+        if {$elem in [MPM::write::GetUsedElements Name]} {
             dict set project_parameters_dict solver_settings pressure_dofs true
             break
         } else {
