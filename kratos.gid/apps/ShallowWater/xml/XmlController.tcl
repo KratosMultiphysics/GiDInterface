@@ -33,4 +33,5 @@ proc ::ShallowWater::xml::CustomTree {args} {
 
     # Set the default value for the Z component in the boundary conditions
     gid_groups_conds::setAttributes "[spdAux::getRoute SWConditions]/condition\[@n = 'ImposedFlowRate'\]/value\[@n = 'selector_component_Z'\]" [list v Not]
+    gid_groups_conds::setAttributes "[spdAux::getRoute SWConditions]/condition\[@n = 'ImposedVelocity'\]/value\[@n = 'selector_component_Z'\]" [list v Not]
 }
