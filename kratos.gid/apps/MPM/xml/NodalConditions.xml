@@ -4,6 +4,7 @@
 		      analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="Structural" state="CheckNodalConditionStateStructural" Interval="Total">
     <outputs>
       <parameter n="REACTION" pn="Reaction" v="Yes"/>
+      <parameter n="PRESSURE" pn="Pressure" v="No"/>
     </outputs>
   </NodalConditionItem>
   
