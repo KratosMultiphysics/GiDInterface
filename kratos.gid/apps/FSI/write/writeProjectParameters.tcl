@@ -5,6 +5,9 @@ proc ::FSI::write::getParametersDict { } {
 
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.FSIApplication.fsi_analysis"
+
     # Problem data
     set problem_data_dict [GetProblemDataDict]
     dict set projectParametersDict problem_data $problem_data_dict
@@ -12,7 +15,7 @@ proc ::FSI::write::getParametersDict { } {
     # Solver settings
     set solver_settings_dict [GetSolverSettingsDict]
     dict set projectParametersDict solver_settings $solver_settings_dict
-    
+
     # Processes settings
     set processes_dict [GetProcessesDict]
     dict set projectParametersDict processes $processes_dict
@@ -62,12 +65,12 @@ proc ::FSI::write::GetSolverSettingsDict { } {
     # coupling settings
 
     # Mapper settings
-    dict set solver_settings_dict coupling_settings [write::getSolutionStrategyParametersDict] 
+    dict set solver_settings_dict coupling_settings [write::getSolutionStrategyParametersDict]
     dict set solver_settings_dict coupling_settings mapper_settings [GetMappingSettingsList]
 
     dict set solver_settings_dict coupling_settings coupling_strategy_settings [dict get [write::getSolversParametersDict FSI] coupling_strategy]
 
-    
+
     # structure interface
     set structure_interfaces_list [list ]
     set structure_interfaces_list_raw [write::GetSubModelPartFromCondition STLoads StructureInterface2D]
@@ -85,7 +88,7 @@ proc ::FSI::write::GetSolverSettingsDict { } {
         lappend fluid_interfaces_list [Fluid::write::GetAttribute model_part_name].$interface
     }
     dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
-    
+
     # Change the input_filenames
     dict set solver_settings_dict structure_solver_settings model_import_settings input_filename [dict get $mdpa_names Structural]
     dict set solver_settings_dict fluid_solver_settings model_import_settings input_filename [dict get $mdpa_names Fluid]
@@ -95,24 +98,31 @@ proc ::FSI::write::GetSolverSettingsDict { } {
     # set nodalresults [dict get $gid_output Parameters postprocess_parameters result_file_configuration nodal_results]
     # lappend nodalresults "MESH_DISPLACEMENT"
     # dict set gid_output Parameters postprocess_parameters result_file_configuration nodal_results $nodalresults
- 
 
 }
 
 proc ::FSI::write::GetProcessesDict { } {
     set processes_dict [dict create]
-    
+
     # Fluid
     dict set processes_dict fluid_initial_conditions_process_list [dict get $FSI::write::fluid_project_parameters processes initial_conditions_process_list]
-    dict set processes_dict fluid_boundary_conditions_process_list [dict get $FSI::write::fluid_project_parameters processes boundary_conditions_process_list]
+    dict set processes_dict fluid_boundary_conditions_process_list [GetNonDeprecatedProcessList [dict get $FSI::write::fluid_project_parameters processes boundary_conditions_process_list]]
     dict set processes_dict fluid_gravity [dict get $FSI::write::fluid_project_parameters processes gravity]
     dict set processes_dict fluid_auxiliar_process_list [dict get $FSI::write::fluid_project_parameters processes auxiliar_process_list]
-    
+
     # Structure
     dict set processes_dict structure_constraints_process_list [dict get $FSI::write::structure_project_parameters processes constraints_process_list]
-    dict set processes_dict structure_loads_process_list [dict get $FSI::write::structure_project_parameters processes loads_process_list]
+    dict set processes_dict structure_loads_process_list [GetNonDeprecatedProcessList [dict get $FSI::write::structure_project_parameters processes loads_process_list]]
 
     return $processes_dict
+}
+
+proc ::FSI::write::GetNonDeprecatedProcessList { original_process_list } {
+    set list [list ]
+    foreach process $original_process_list {
+        if {[dict get $process python_module] ne "python_process"} {lappend list $process}
+    }
+    return $list
 }
 
 proc ::FSI::write::GetOutputProcessesDict { } {
@@ -128,7 +138,7 @@ proc ::FSI::write::GetOutputProcessesDict { } {
     # Append the fluid and structure output processes to the output processes dictionary
     lappend gid_output_list $structure_output
     lappend gid_output_list $fluid_output
-    
+
     dict set output_processes_dict gid_output $gid_output_list
     return $output_processes_dict
 }
@@ -172,6 +182,6 @@ proc ::FSI::write::InitExternalProjectParameters { } {
     Structural::write::SetAttribute time_parameters_un FLTimeParameters
     write::initWriteConfiguration [Structural::write::GetAttributes]
     set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
-    
+
     apps::setActiveAppSoft FSI
 }

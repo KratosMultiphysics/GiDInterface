@@ -4,6 +4,7 @@
 # Kratos execution folder
 kratos.gid/exec/Kratos*
 # !kratos.gid/exec/README.md
+!kratos.gid/exec/MainKratos.py
 *.orig
 .vscode/
 
