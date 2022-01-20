@@ -29,14 +29,14 @@ proc ::DEM::write::WriteMDPAWalls { } {
 
 proc ::DEM::write::processRigidWallMaterials { } {
     variable wallsProperties
-    
+
     write::processMaterials "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]/group"
     set wallsProperties [write::getPropertiesListByConditionXPath "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]" 0 RigidFacePart]
 }
 
 proc ::DEM::write::WriteRigidWallProperties { } {
-
-    write::WriteString "Begin Properties 0"
+    # Legacy proc. Current properties are located in the Materials.json file
+    write::WriteString "Begin Properties 0 // Check materials.json"
     write::WriteString "End Properties"
     write::WriteString ""
 }
@@ -70,15 +70,11 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
     write::WriteString "Begin SubModelPart $mid // $condition - group identifier: $group"
     write::WriteString "  Begin SubModelPartData // $condition. Group name: $group"
     if {$props ne ""} {
-	# set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition'\]/group\[@n = '$group'\]"
 	set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n = 'Parts_FEM'\]/group\[@n = '$group'\]"
-
 	set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
-
-
 	write::WriteString "    RIGID_BODY_OPTION 1"
-	#TODO: read from parts-FEM-Mass, inertia, etc..
-	set mass [dict get $props Material Variables MASS] 
+
+	set mass [dict get $props Material Variables MASS]
 	write::WriteString "    RIGID_BODY_MASS $mass"
 
 	lassign [dict get $props Material Variables CENTER] cX cY cZ
@@ -94,7 +90,7 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
 	    write::WriteString "    RIGID_BODY_INERTIAS \[3\] ($iX,$iY,$iZ)"
 	}
 
-	lassign [dict get $props Material Variables ORIENTATION] oX oY oZ 
+	lassign [dict get $props Material Variables ORIENTATION] oX oY oZ
 	write::WriteString "    ORIENTATION \[4\] ($oX,$oY,$oZ, 0.0)"
 
 	write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
@@ -119,7 +115,7 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
 }
 
 proc ::DEM::write::DefineFEMExtraConditions {props} {
-    return 
+    return
     set GraphPrint [dict get $props Material Variables GraphPrint]
     set GraphPrintval 0
     if {[write::isBooleanTrue $GraphPrint]} {

@@ -158,7 +158,6 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
 
         set subparams [dict create]
-        # dict set subparams "constrained" [write::getConstrains $values]
         # proc write::ProcessVectorFunctionComponents { groupNode condition process}
 
         set constrains [write::getValueByNode [$group selectNodes "./value\[@n='Constrains'\]"]]
@@ -167,12 +166,46 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
 
         dict set subparams "constrained" $constrains
         # dict set subparams "value" $value
-        dict set subparams "table" $table
-        # dict set subparams "constrained" "\[false, false, false\]"
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
-        # dict set subparams "table" "\[null, null, null\]"
+        dict set subparams "table" $table
 
         dict set params "velocity_constraints_settings" $subparams
+        dict set params "interval" [write::getInterval $interval_name]
+
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+    }
+
+    #same goes for conditions applied on DEM xp2 xp4
+
+    set groups [$root selectNodes $xp3]
+    foreach group $groups {
+        set groupName [$group @n]
+        set cid [[$group parent] @n]
+        set submodelpart [DEM::write::getSubModelPartId $cid $groupName]
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_angular_velocity_constraints_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+
+        set params [dict create]
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+
+        set subparams [dict create]
+        # proc write::ProcessVectorFunctionComponents { groupNode condition process}
+
+        set constrains [write::getValueByNode [$group selectNodes "./value\[@n='Constrains'\]"]]
+        # set value [write::getValueByNode [$group selectNodes "./value\[@n='component'\]"]]
+        set table [write::getValueByNode [$group selectNodes "./value\[@n='Table'\]"]]
+
+        dict set subparams "constrained" $constrains
+        # dict set subparams "value" $value
+        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
+        dict set subparams "table" $table
+
+        dict set params "velocity_constraints_settings" $subparams
+
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
         dict set params "interval" [write::getInterval $interval_name]
 
         dict set pdict "Parameters" $params
@@ -200,95 +233,6 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
 
     # return $processDict
     #   }
-
-
-
-    set groups [$root selectNodes $xp2]
-    foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
-
-        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
-
-        set pdict [dict create]
-        dict set pdict "python_module" "apply_velocity_constraints_process"
-        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
-        set params [dict create]
-
-        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
-        set subparams [dict create]
-
-        # dict set subparams "constrained" [write::getConstrains $values]
-        dict set subparams "constrained" "\[false, false, false\]"
-        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
-        dict set subparams "table" "\[null, null, null\]"
-
-        dict set params "velocity_constraints_settings" $subparams
-        dict set params "interval" [write::getInterval $interval_name]
-        dict set pdict "Parameters" $params
-
-        lappend process_list $pdict
-    }
-
-    set groups [$root selectNodes $xp3]
-    foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
-
-        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
-
-        set pdict [dict create]
-        dict set pdict "python_module" "apply_angular_velocity_constraints_process"
-        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
-        set params [dict create]
-
-        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
-        set subparams [dict create]
-
-        # dict set subparams "constrained" [write::getConstrains $values]
-        dict set subparams "constrained" "\[false, false, false\]"
-        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
-        dict set subparams "table" "\[null, null, null\]"
-
-        dict set params "angular_velocity_constraints_settings" $subparams
-        dict set params "interval" [write::getInterval $interval_name]
-        dict set pdict "Parameters" $params
-
-        lappend process_list $pdict
-    }
-
-    set groups [$root selectNodes $xp4]
-    foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
-
-        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
-
-        set pdict [dict create]
-        dict set pdict "python_module" "apply_angular_velocity_constraints_process"
-        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
-        set params [dict create]
-
-        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
-        set subparams [dict create]
-
-        # dict set subparams "constrained" [write::getConstrains $values]
-        dict set subparams "constrained" "\[false, false, false\]"
-        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
-        dict set subparams "table" "\[null, null, null\]"
-
-        dict set params "angular_velocity_constraints_settings" $subparams
-        dict set params "interval" [write::getInterval $interval_name]
-        dict set pdict "Parameters" $params
-
-        lappend process_list $pdict
-    }
 
     return $process_list
 }

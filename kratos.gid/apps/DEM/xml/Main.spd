@@ -3,7 +3,7 @@
     <include n="StageInfo"            active="1" path="apps/DEM/xml/StageInfo.spd"/>
     <include n="Parts"                active="1" path="apps/DEM/xml/Parts.spd"/>
     <!-- <include n="ConditionsOLD"        active="1" path="apps/DEM/xml/Conditions.spd"/> -->
-    <include n="Initial Conditions"   active="1" path="apps/DEM/xml/InitialConditions.spd"/>
+    <!-- <include n="Initial Conditions"   active="1" path="apps/DEM/xml/InitialConditions.spd"/> -->
     <include n="Boundary Conditions"  active="1" path="apps/DEM/xml/BoundaryConditions.spd"/>
     <include n="Loads"                active="1" path="apps/DEM/xml/Loads.spd"/>
     <include n="Particle Injectors"   active="1" path="apps/DEM/xml/InjectorConditions.spd"/>

@@ -72,7 +72,7 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     #Velocity over walls is the name on the tree (pn)
     set FloorBCNode [customlib::AddConditionGroupOnXPath $FloorBC Floor]
     $FloorBCNode setAttribute ov surface
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+    set props [list selector_component_X ByValue value_component_X 1.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     spdAux::SetValuesOnBaseNode $FloorBCNode $props
 
 
@@ -84,11 +84,11 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     spdAux::SetValuesOnBaseNode $FEMParts_inletNode $props
 
     # BC over Inlet
-    set InletBC {container[@n='DEM']/container[@n='InitialConditions']/condition[@n='FEMVelocity']}
+    set InletBC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='FEMVelocity']}
     #Velocity over walls is the name on the tree (pn)
     set InletBCNode [customlib::AddConditionGroupOnXPath $InletBC Inlet]
     $InletBCNode setAttribute ov surface
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+    set props [list selector_component_X ByValue value_component_X 2.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     spdAux::SetValuesOnBaseNode $InletBCNode $props
 
     # Inlet
