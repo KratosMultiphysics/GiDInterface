@@ -1,8 +1,8 @@
 
-proc Kratos::Quicktest {example_app example_dim example_cmd} {
-    apps::setActiveApp Examples
-    ::Examples::LaunchExample $example_app $example_dim $example_cmd
-}
+# proc Kratos::Quicktest {example_app example_dim example_cmd} {
+#     apps::setActiveApp Examples
+#     ::Examples::LaunchExample $example_app $example_dim $example_cmd
+# }
 
 proc Kratos::ForceRun { } {
     # validated by escolano@cimne.upc.edu
