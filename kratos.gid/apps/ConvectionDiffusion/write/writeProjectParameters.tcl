@@ -1,7 +1,10 @@
 # Project Parameters
 proc ::ConvectionDiffusion::write::getParametersDict { } {
-    
+
     set projectParametersDict [dict create]
+
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis"
 
     # Set the problem data section
     dict set projectParametersDict problem_data [ConvectionDiffusion::write::GetProblemDataDict]
@@ -15,7 +18,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
     # dict set processes fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
     dict set processes list_other_processes [ConvectionDiffusion::write::getBodyForceProcessDictList]
-    
+
     dict set projectParametersDict processes $processes
     # Output configuration
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
@@ -77,7 +80,7 @@ proc ::ConvectionDiffusion::write::getBodyForceProcessDictList {} {
     set ret [list ]
 
     set model_part_name [GetAttribute model_part_name]
-    
+
     foreach partgroup [write::getPartsSubModelPartId] {
         set value [write::getValue CNVDFFBodyForce BodyForceValue]
         set pdict [dict create]
