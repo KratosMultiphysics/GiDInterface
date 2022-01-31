@@ -48,6 +48,18 @@ proc ::DEM::write::getParametersDict { } {
     dict set strategy_parameters_dict "material_import_settings" $material_import_settings
 
     dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
+
+    set processes [dict create]
+
+    # Boundary conditions processes
+    # dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+
+    dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
+    dict set processes loads_process_list [DEM::write::getForceProcessDictList]
+
+    dict set project_parameters_dict processes $processes
+
+
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
     dict set project_parameters_dict "RollingFrictionOption"                [write::getValue AdvOptions RollingFriction]
     dict set project_parameters_dict "GlobalDamping"                        [write::getValue AdvOptions GlobalDamping]
@@ -112,6 +124,263 @@ proc ::DEM::write::getParametersDict { } {
 
     return $project_parameters_dict
 }
+
+proc DEM::write::getSubModelPartId {cid group} {
+    return $cid$group
+}
+
+proc ::DEM::write::getKinematicsProcessDictList {} {
+
+    set root [customlib::GetBaseRoot]
+    set process_list [list ]
+
+    set xp1         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='FEMVelocity'\]/group"
+    set xp2         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='DEMVelocity'\]/group"
+    set xp3         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='FEMAngular'\]/group"
+    set xp4         "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n='DEMAngular'\]/group"
+
+    set groups [$root selectNodes $xp1]
+    foreach group $groups {
+        set groupName [$group @n]
+        set cid [[$group parent] @n]
+        set submodelpart [DEM::write::getSubModelPartId $cid $groupName]
+        # I want it to be FEMVelocity-Floor
+
+        # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]
+        # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print'\]"]]]
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_velocity_constraints_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+
+        set params [dict create]
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+
+        set subparams [dict create]
+        # proc write::ProcessVectorFunctionComponents { groupNode condition process}
+
+        set constrains [write::getValueByNode [$group selectNodes "./value\[@n='Constrains'\]"]]
+        # set value [write::getValueByNode [$group selectNodes "./value\[@n='component'\]"]]
+        set table [write::getValueByNode [$group selectNodes "./value\[@n='Table'\]"]]
+
+        dict set subparams "constrained" $constrains
+        # dict set subparams "value" $value
+        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
+        dict set subparams "table" $table
+
+        dict set params "velocity_constraints_settings" $subparams
+        dict set params "interval" [write::getInterval $interval_name]
+
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+    }
+
+    #same goes for conditions applied on DEM xp2 xp4
+
+    set groups [$root selectNodes $xp3]
+    foreach group $groups {
+        set groupName [$group @n]
+        set cid [[$group parent] @n]
+        set submodelpart [DEM::write::getSubModelPartId $cid $groupName]
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_angular_velocity_constraints_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+
+        set params [dict create]
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+
+        set subparams [dict create]
+        # proc write::ProcessVectorFunctionComponents { groupNode condition process}
+
+        set constrains [write::getValueByNode [$group selectNodes "./value\[@n='Constrains'\]"]]
+        # set value [write::getValueByNode [$group selectNodes "./value\[@n='component'\]"]]
+        set table [write::getValueByNode [$group selectNodes "./value\[@n='Table'\]"]]
+
+        dict set subparams "constrained" $constrains
+        # dict set subparams "value" $value
+        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
+        dict set subparams "table" $table
+
+        dict set params "velocity_constraints_settings" $subparams
+
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+        dict set params "interval" [write::getInterval $interval_name]
+
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+    }
+
+
+    # solo referencia
+    # proc write::ProcessVectorFunctionComponents { groupNode condition process} {
+    # set processDict [write::GetProcessHeader $groupNode $process $condition]
+    # set val [write::GetInputValue $groupNode [$process getInputPn component]]
+    # foreach i $val {
+    #     if {$i == "null"} {
+    #         lappend constrained false
+    #         lappend value null
+    #     } {
+    #         lappend constrained true
+    #         lappend value $i
+    #     }
+    # }
+
+    # dict set processDict Parameters constrained $constrained
+    # dict set processDict Parameters value $value
+
+    # return $processDict
+    #   }
+
+    return $process_list
+}
+
+
+
+proc ::DEM::write::getForceProcessDictList {} {
+
+    set root [customlib::GetBaseRoot]
+    set process_list [list ]
+
+    set xp1 "[spdAux::getRoute [GetAttribute loads_un]]/condition\[@n='FEMForce'\]/group"
+    set xp2 "[spdAux::getRoute [GetAttribute loads_un]]/condition\[@n='DEMForce'\]/group"
+    set xp3 "[spdAux::getRoute [GetAttribute loads_un]]/condition\[@n='DEMTorque'\]/group"
+    set xp4 "[spdAux::getRoute [GetAttribute loads_un]]/condition\[@n='DEMTorque'\]/group"
+
+    set groups [$root selectNodes $xp1]
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
+
+        # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]
+        # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print'\]"]]]
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_forces_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        #dict set pdict "process_name" "ComputeProcess"
+        set params [dict create]
+
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        set subparams [dict create]
+
+        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
+        dict set subparams "table" "\[null, null, null\]"
+        dict set params "force_settings" $subparams
+        dict set params "interval" [write::getInterval $interval_name]
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+    }
+
+
+    set groups [$root selectNodes $xp2]
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
+
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_forces_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        set params [dict create]
+
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        set subparams [dict create]
+
+        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
+        dict set subparams "table" "\[null, null, null\]"
+
+        dict set params "force_settings" $subparams
+        dict set params "interval" [write::getInterval $interval_name]
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+    }
+
+    set groups [$root selectNodes $xp3]
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
+
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_moments_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        set params [dict create]
+
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        set subparams [dict create]
+        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
+        dict set subparams "table" "\[null, null, null\]"
+
+        dict set params "moment_settings" $subparams
+        dict set params "interval" [write::getInterval $interval_name]
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+    }
+
+    set groups [$root selectNodes $xp4]
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
+
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_moments_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        set params [dict create]
+
+        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        set subparams [dict create]
+
+        dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
+        dict set subparams "table" "\[null, null, null\]"
+
+        dict set params "moment_settings" $subparams
+        dict set params "interval" [write::getInterval $interval_name]
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+    }
+
+    return $process_list
+}
+
+# proc ::DEM::write::writeWallConditionMeshes { } {
+#     variable wallsProperties
+#     variable phantomwallsProperties
+
+#     set condition_name [GetRigidWallConditionName]
+#     foreach group [GetRigidWallsGroups] {
+#         set mid [write::AddSubmodelpart $condition_name $group]
+#         set props [DEM::write::FindPropertiesBySubmodelpart $wallsProperties $mid]
+#         writeWallConditionMesh $condition_name $group $props
+#     }
+
+#     if {$::Model::SpatialDimension ne "2D"} {
+#         set condition_name [GetPhantomWallConditionName]
+#         foreach group [GetPhantomWallsGroups] {
+#             set mid [write::AddSubmodelpart $condition_name $group]
+#             set props [DEM::write::FindPropertiesBySubmodelpart $phantomwallsProperties $mid]
+#             writeWallConditionMesh $condition_name $group $props
+#         }
+#     }
+# }
 
 proc ::DEM::write::GetDemStrategyName { } {
     return sphere_strategy

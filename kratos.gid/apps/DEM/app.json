@@ -26,6 +26,7 @@
         "write/write_utils.tcl",
         "examples/examples.tcl",
         "examples/SpheresDrop.tcl",
+        "examples/SpheresDropForTest.tcl",
         "examples/CirclesDrop.tcl"
     ],
     "start_script": "::DEM::Init",
@@ -42,8 +43,9 @@
     },
     "unique_names": {
         "parts": "DEMParts",
-        "nodal_conditions": "DEMNodalConditions",
+        "init_conditions": "DEMInitialConditions",
         "conditions": "DEMConditions",
+        "loads": "DEMFEMLoads",
         "materials": "DEMMaterials"
     },
     "write": {

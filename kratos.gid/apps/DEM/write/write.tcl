@@ -1,7 +1,7 @@
 namespace eval ::DEM::write {
     namespace path ::DEM
     Kratos::AddNamespace [namespace current]
-    
+
     variable writeAttributes
     variable partsProperties
     variable inletProperties
@@ -20,8 +20,9 @@ proc ::DEM::write::Init { } {
     SetAttribute properties_location [::DEM::GetWriteProperty properties_location]
     SetAttribute parts_un [::DEM::GetUniqueName parts]
     SetAttribute materials_un [::DEM::GetUniqueName materials]
+    SetAttribute init_conditions_un [::DEM::GetUniqueName init_conditions]
     SetAttribute conditions_un [::DEM::GetUniqueName conditions]
-    SetAttribute nodal_conditions_un [::DEM::GetUniqueName nodal_conditions]
+    SetAttribute loads_un [::DEM::GetUniqueName loads]
     SetAttribute materials_file [::DEM::GetWriteProperty materials_file]
     SetAttribute main_launch_file [::DEM::GetAttribute main_launch_file]
 
@@ -92,7 +93,7 @@ proc ::DEM::write::writeModelPartEvent { } {
 
 proc ::DEM::write::writeCustomFilesEvent { } {
     write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
-    DEM::write::writeMaterialsFile 
+    DEM::write::writeMaterialsFile
     write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
@@ -163,7 +164,7 @@ proc ::DEM::write::Validate {} {
 }
 
 proc ::DEM::write::FindPropertiesBySubmodelpart {props subid } {
-    
+
     set result ""
     foreach prop [dict get $props properties]  {
         if { [dict get $prop model_part_name] eq $subid || [lindex [split [dict get $prop model_part_name] "."] end] eq $subid } {

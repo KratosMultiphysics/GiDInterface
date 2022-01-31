@@ -15,6 +15,11 @@
                 return [DEM::xml::ProcGetDEMPartsOvWhat $domNode $args]
                 ]]>
 		</proc>
+		<proc n='GetPartsGroupsList' args='args'>
+     <![CDATA[
+    return [DEM::xml::ProcGetPartsGroupsList $domNode $args]
+    ]]>
+</proc>
 </container>
 
 

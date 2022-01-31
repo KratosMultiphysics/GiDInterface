@@ -2,7 +2,7 @@ proc ::DEM::write::getDEMMaterialsDict { } {
     # TODO: Remove properties in mdpas ? Check with MA. Probably remove material properties but check the process properties
     # TODO: Check 2d dem fem wall is written twice, also as phantom
     # TODO: Materials have more properties than expected. Write from properties variables, not from xml
-    
+
     # Loop over parts, inlets and walls to list the materials to print. For each material used print: DENSITY, YOUNG_MODULUS, POISSON_RATIO
     # print COMPUTE_WEAR as false always, too (temporal fix)
     # While looping, create the assignation_table_list
@@ -26,7 +26,7 @@ proc ::DEM::write::getDEMMaterialsDict { } {
             dict set processed_mats $mat_name $matid
         }
     }
-    
+
     # Loop over the material relations, which is a new menu in the tree linking each possible pair of materials
     set material_relations_node_list [DEM::write::GetMaterialRelationsNodeList]
     set material_relations_list [list ]
@@ -48,7 +48,7 @@ proc ::DEM::write::getDEMMaterialsDict { } {
             lappend material_relations_list $mat_rel
         }
     }
-    
+
     # Submodelpart - material assignation
     set assignation_table_list [list ]
     foreach mnode $materials_node_list {
@@ -65,14 +65,14 @@ proc ::DEM::write::getDEMMaterialsDict { } {
         set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
         set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $group_name]
         lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
-        
+
     }
-    
-    
+
+
     dict set global_dict "materials" $materials_list
     dict set global_dict "material_relations" $material_relations_list
     dict set global_dict "material_assignation_table" $assignation_table_list
-    
+
     ValidateMaterialRelations $materials_list $material_relations_list $assignation_table_list
 
     return $global_dict
@@ -80,8 +80,9 @@ proc ::DEM::write::getDEMMaterialsDict { } {
 
 proc ::DEM::write::GetModelPartParentNameFromGroup {group} {
     set model_part_parent SpheresPart
-    if {$group in [DEM::write::GetWallsGroups]} {set model_part_parent "RigidFacePart"}
-    if {$group in [DEM::write::GetInletGroups]} {set model_part_parent "DEMInletPart"}
+    # if {$group in [DEM::write::GetWallsGroups]} {set model_part_parent "RigidFacePart"}
+    if {$group in "Parts_FEM"} {set model_part_parent "RigidFacePart"}
+    # if {$group in [DEM::write::GetInletGroups]} {set model_part_parent "DEMInletPart"}
     return $model_part_parent
 }
 

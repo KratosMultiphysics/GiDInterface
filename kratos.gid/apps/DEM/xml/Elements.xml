@@ -14,6 +14,18 @@
     <NodalConditions></NodalConditions>
     <inputs>
       <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+      <parameter n="AdvancedMeshingFeatures" pn="Advanced meshing features" type="combo" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
+		    <dependencies node="../value[@n!='Material']" actualize="1"/>
+      </parameter>
+
+      <!-- No se ocultan las opciones aunque selecciones Advanced meshing features NO -->
+      <parameter n="AdvancedMeshingFeaturesAlgorithmType" pn="Algorithm type" type="combo" v="FEMtoDEM" values="FEMtoDEM,2Dto3D" help="FEMtoDEM: use this algorithm to convert an original FEM mesh (composed of hexaedra, tetrahedra, cuadrilaterals, triangles, lines or points) into spheres located at the nodes, at the centroids of the elements or at both. 2D to 3D: use this algorithm if you want to convert a surface meshed with circles into a mesh of spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+      <parameter n="FEMtoDEM" pn="FEM to DEM criterion type" v="AttheNodes" type="combo" values="AttheNodes,AttheCentroid,AtBothNodesAndCentroids" help="" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+      <parameter n="Diameter" pn="Diameter (m)" v="1.0" help="Average diameter of the spheres" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+      <parameter n="ProbabilityDistribution" pn="Probability distribution" v="NormalDistribution" type="combo" values="NormalDistribution,LogDistribution" help="Normal and logarithmic distributions are allowed when using FEMtoDEM" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+      <parameter n="StandardDeviation" pn="Standard deviation" v="0.1" help="Standard deviation for the distribution" state="[getStateFromXPathValue {string(../value[@n='AdvancedMeshingFeatures']/@v)} Yes]"/>
+
+
     </inputs>
     <outputs></outputs>
   </ElementItem>
@@ -32,6 +44,51 @@
       <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
     </inputs>
     <outputs></outputs>
+  </ElementItem>
+
+
+  <ElementItem n="FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="FEM" help="" WriteAsBlock="Conditions">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="DEM"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions></NodalConditions>
+    <inputs>
+    <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+    <parameter n="MASS" pn="Mass" v="1.0" units="kg" unit_magnitude="M"/>
+    <parameter n="CENTER" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
+    <parameter n="INERTIA" pn="Inertia" type="inline_vector" v="0.0,0.0,1.0" units="kg*m^2" unit_magnitude="M*L^2"/>
+    <parameter n="ORIENTATION" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector and magnitude in rad)"/>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ElementItem>
+
+  <ElementItem n="Ghost-FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Ghost-FEM" help=""  WriteAsBlock="Conditions">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="DEM"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions></NodalConditions>
+    <inputs>
+    <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+    <parameter n="MASS" pn="Mass" v="1.0" />
+    <parameter n="CENTER" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
+    <parameter n="INERTIA" pn="Inertia" type="inline_vector" v="0.0,0.0,1.0" />
+    <parameter n="ORIENTATION" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector and magnitude in rad)"/>
+    </inputs>
+    <outputs>
+    </outputs>
   </ElementItem>
 
 </ElementList>

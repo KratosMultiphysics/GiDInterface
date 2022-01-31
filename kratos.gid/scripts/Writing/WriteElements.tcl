@@ -31,10 +31,12 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
     if {$nnodes ne ""} {
         if {$etype ne "none"} {
             set elem [::Model::getElement $kelemtype]
+            set block_name [$elem getAttribute WriteAsBlock]
+            if {$block_name eq ""} {set block_name Elements}
             set topology [$elem getTopologyFeature $etype $nnodes]
             if {$topology ne ""} {
                 set kratos_element_type [$topology getKratosName]
-                write::writeGroupElementConnectivitiesFor $kratos_element_type $nnodes $group $mid
+                write::writeGroupElementConnectivitiesFor $kratos_element_type $nnodes $group $mid $block_name
             } else {
                 error [= "Element $kelemtype $etype ($nnodes nodes) not available for $ov entities on group $group"]
             }
@@ -45,13 +47,13 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
         error [= "You have not assigned a proper entity to group $group"]
     }
 }
-proc write::writeGroupElementConnectivitiesFor { kratos_element_type nnodes group mid } {
+proc write::writeGroupElementConnectivitiesFor { kratos_element_type nnodes group mid block_name} {
     set s [mdpaIndent]
-    WriteString "${s}Begin Elements $kratos_element_type// GUI group identifier: $group"
+    WriteString "${s}Begin $block_name $kratos_element_type// GUI group identifier: $group"
     incr ::write::current_mdpa_indent_level
     set formats [GetFormatDict $group $mid $nnodes]
     GiD_WriteCalculationFile connectivities $formats
     incr ::write::current_mdpa_indent_level -1
-    WriteString "${s}End Elements"
+    WriteString "${s}End $block_name"
     WriteString ""
 }
