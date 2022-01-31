@@ -2,7 +2,7 @@
     "laser_settings": {
         "laser_profile": {
             "shape": "flat",
-            "radius": 0.0005,
+            "radius": 0.002,
             "power": 5.0
         },
         "direction": [
@@ -18,9 +18,15 @@
                 "z": 0.0
             },
             {
+                "time": 0.5,
+                "x": 0.02,
+                "y": 0.02,
+                "z": 0.0
+            },
+            {
                 "time": 1.0,
-                "x": 0.03,
-                "y": 0.03,
+                "x": 0.02,
+                "y": 0.0,
                 "z": 0.0
             }
         ]

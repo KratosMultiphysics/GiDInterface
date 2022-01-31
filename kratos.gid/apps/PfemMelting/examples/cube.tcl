@@ -31,7 +31,7 @@ proc PfemMelting::examples::Cube::DrawGeometry {args} {
     GiD_Layers edit to_use $layer
 
     # Create a prism 10x10x1
-    GiD_Process Mescape Geometry Create Object Prism 4 0.0 0.0 0.0 0.0 0.0 1.0 0.07071067811865475 0.05 Mescape
+    GiD_Process Mescape Geometry Create Object Prism 4 0.0 0.0 0.0 0.0 0.0 1.0 0.03535533905 0.005 Mescape
 
 }
 
