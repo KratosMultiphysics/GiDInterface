@@ -20,7 +20,7 @@ proc ::DEM::write::Init { } {
     SetAttribute properties_location [::DEM::GetWriteProperty properties_location]
     SetAttribute parts_un [::DEM::GetUniqueName parts]
     SetAttribute materials_un [::DEM::GetUniqueName materials]
-    SetAttribute init_conditions_un [::DEM::GetUniqueName init_conditions]
+    # SetAttribute init_conditions_un [::DEM::GetUniqueName init_conditions]
     SetAttribute conditions_un [::DEM::GetUniqueName conditions]
     SetAttribute loads_un [::DEM::GetUniqueName loads]
     SetAttribute materials_file [::DEM::GetWriteProperty materials_file]

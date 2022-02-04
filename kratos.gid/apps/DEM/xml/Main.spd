@@ -6,7 +6,7 @@
     <!-- <include n="Initial Conditions"   active="1" path="apps/DEM/xml/InitialConditions.spd"/> -->
     <include n="Boundary Conditions"  active="1" path="apps/DEM/xml/BoundaryConditions.spd"/>
     <include n="Loads"                active="1" path="apps/DEM/xml/Loads.spd"/>
-    <include n="Particle Injectors"   active="1" path="apps/DEM/xml/InjectorConditions.spd"/>
+    <include n="Injectors"            active="1" path="apps/DEM/xml/InjectorConditions.spd"/>
     <include n="Custom Graph"         active="1" path="apps/DEM/xml/CustomGraph.spd"/>
     <include n="Custom Submodelparts" active="1" path="apps/DEM/xml/CustomSmp.spd"/>
     <include n="SolutionStrategy"     active="1" path="apps/DEM/xml/SolutionStrategy.spd"/>

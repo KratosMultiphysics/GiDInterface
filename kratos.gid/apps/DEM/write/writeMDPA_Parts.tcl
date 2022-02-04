@@ -2,10 +2,11 @@ proc ::DEM::write::WriteMDPAParts { } {
     # Headers
     write::writeModelPartData
 
-    # Process properties
+    # Process DEM materials
     DEM::write::processPartMaterials
 
-    # Write Materials
+    # Write Properties into mdpa
+    #TODO: This is legacy, no Properties are being written here.
     writeMaterialsParts
 
     # Nodal coordinates (only for DEM Parts <inefficient> )

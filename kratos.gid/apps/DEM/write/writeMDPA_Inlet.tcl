@@ -10,39 +10,40 @@ proc ::DEM::write::WriteMDPAInlet { } {
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
     write::writeNodalCoordinatesOnGroups [GetInletGroups]
+    # writeInletConditionMeshes
 
     # SubmodelParts
 
     writeInletMeshes
+
 
     #Copy cluster files (.clu)
     copyClusterFiles
 }
 
 proc ::DEM::write::GetInletConditionName { } {
-    set condition_name Inlet
+    set condition_name Parts_Inlet-FEM
     if {$::Model::SpatialDimension eq "2D"} {
-        set condition_name Inlet2D
+        set condition_name DEMInlet2D
     }
     return $condition_name
 }
 
 proc ::DEM::write::GetInletConditionXpath { } {
     set condition_name [GetInletConditionName]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition_name'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n = '$condition_name'\]"
     return $xp1
 }
 
 # That can be all or active / All by default
 proc ::DEM::write::GetInletGroups { {that all}} {
     set groups [list ]
-
     foreach group [[customlib::GetBaseRoot] selectNodes [DEM::write::GetInletConditionXpath]/group] {
         set groupid [$group @n]
-        if {$that eq "active"} {
-            set active_inlet [write::getValueByNodeChild $group SetActive]
-            if {[write::isBooleanFalse $active_inlet]} {continue}
-        }
+        # if {$that eq "active"} {
+        #     set active_inlet [write::getValueByNodeChild $group SetActive]
+        #     if {[write::isBooleanFalse $active_inlet]} {continue}
+        # }
         lappend groups [write::GetWriteGroupName $groupid]
     }
     return $groups
@@ -132,6 +133,25 @@ proc ::DEM::write::GetInletElementType {} {
 proc ::DEM::write::GetInjectorElementType {} {
     return [DEM::write::GetInletElementType]
 }
+
+
+proc ::DEM::write::GetInletPartGroupNodes { } {
+    return [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_Inlet-FEM'\]/group"]
+}
+
+
+proc ::DEM::write::writeInletConditionMeshes { } {
+    variable inletProperties
+
+    foreach group_node [::DEM::write::GetInletPartGroupNodes] {
+        set group [$group_node @n]
+        set mid [write::AddSubmodelpart Parts_Inlet-FEM $group]
+        set props [DEM::write::FindPropertiesBySubmodelpart $wallsProperties $mid]
+        writeWallConditionMesh Parts_Inlet-FEM $group $props
+    }
+}
+
+
 
 proc ::DEM::write::writeInletMeshes { } {
     variable inletProperties

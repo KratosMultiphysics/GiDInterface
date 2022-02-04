@@ -46,6 +46,7 @@
         "init_conditions": "DEMInitialConditions",
         "conditions": "DEMConditions",
         "loads": "DEMFEMLoads",
+        "inlet": "DEMInlet",
         "materials": "DEMMaterials"
     },
     "write": {

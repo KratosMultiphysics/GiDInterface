@@ -2,10 +2,11 @@ proc ::DEM::write::WriteMDPAWalls { } {
     # Headers
     write::writeModelPartData
 
-    # Material
+    # Process FEM materials
     DEM::write::processRigidWallMaterials
 
-    # Properties section
+    # Write Properties into mdpa
+    #TODO: This is legacy, no Properties are being written here.
     WriteRigidWallProperties
 
     # Nodal coordinates (only for Walls <inefficient> )
@@ -28,9 +29,12 @@ proc ::DEM::write::WriteMDPAWalls { } {
 }
 
 proc ::DEM::write::processRigidWallMaterials { } {
-    variable wallsProperties
+
 
     write::processMaterials "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]/group"
+
+    # It defines the associated properties of the corresponding Part (mass, inertia,..).
+    variable wallsProperties
     set wallsProperties [write::getPropertiesListByConditionXPath "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]" 0 RigidFacePart]
 }
 

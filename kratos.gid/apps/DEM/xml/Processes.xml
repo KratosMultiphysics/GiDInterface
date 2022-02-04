@@ -95,9 +95,34 @@
 
 
 <!-- Updated Inlet -->
-  <Process n="DEM-InletUpdated-Process" pn="" python_module="" kratos_module="KratosMultiphysics">
+  <Process n="DEM-InletUpdated-Process" pn="Inlet" python_module="" kratos_module="KratosMultiphysics">
     <inputs>
+
+
       <parameter n="SetActive" type="bool" pn="Activate" v="true">
+
+
+        <!-- begin - this block will be removed once inlet is migrated as process -->
+        <parameter n="InletMotionType" pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable" pvalues="None,Linear/Periodic,From a table" show_in_window="0">
+          <parameter n="VelocityModulus" parent="LinearPeriodic" pn="Velocity modulus" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
+          <parameter n="DirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+          <parameter n="LinearPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
+            <parameter n="LinearPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          </parameter>
+          <parameter n="LinearStartTime" parent="LinearPeriodic" pn="Linear Start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="LinearEndTime" parent="LinearPeriodic" pn="Linear end time" type="double" v="100.0" units="s" unit_magnitude="T" show_in_window="0"/>
+
+          <parameter n="AngularVelocityModulus" parent="LinearPeriodic" pn="Angular velocity modulus" type="double" v="0.0" units="rad/s" unit_magnitude="Angle/T" show_in_window="0"/>
+          <parameter n="AngularDirectionVector" parent="LinearPeriodic" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
+          <parameter n="CenterOfRotation" parent="LinearPeriodic" pn="Center of rotation(m)" type="inline_vector" v="0.0,0.0,0.0" help="Components of the position of the rotation center. Linear velocity is imposed to this center" show_in_window="0"/>
+          <parameter n="AngularPeriodic" parent="LinearPeriodic" pn="Periodic" type="bool" v="false" help="active: the imposed velocity values are the maximum of an harmonic oscillation with the given period" show_in_window="0">
+            <parameter n="AngularPeriod" parent="true" pn="Period" type="double" v="5.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          </parameter>
+          <parameter n="AngularStartTime" parent="LinearPeriodic" pn="Angular start time" type="double" v="0.0" units="s" unit_magnitude="T" show_in_window="0"/>
+          <parameter n="AngularEndTime" parent="LinearPeriodic" pn="Angular end time" type="double" v="1000" units="s" unit_magnitude="T" show_in_window="0"/>
+        </parameter>
+        <!-- end - this block will be removed once inlet is migrated as process -->
+
         <parameter n="InVelocityModulus" parent="true" pn="Inlet injection speed" type="double" v="1.0" units="m/s" unit_magnitude="Velocity" show_in_window="0"/>
         <parameter n="InDirectionVector" parent="true" pn="Direction vector" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
         <parameter n="VelocityDeviation" parent="true" pn="Max random velocity deviation (deg)" type="double" v="1.0" units="°" unit_magnitude="Angle" show_in_window="0"/>

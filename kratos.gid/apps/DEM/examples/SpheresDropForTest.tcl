@@ -75,24 +75,23 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     set props [list selector_component_X ByValue value_component_X 1.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     spdAux::SetValuesOnBaseNode $FloorBCNode $props
 
-
     # InletPart
-    set FEMParts_inlet [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_FEM'\]
+    set FEMParts_inlet [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_Inlet-FEM'\]
     set FEMParts_inletNode [customlib::AddConditionGroupOnXPath $FEMParts_inlet Inlet]
     $FEMParts_inletNode setAttribute ov surface
     set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $FEMParts_inletNode $props
 
     # BC over Inlet
-    set InletBC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='FEMVelocity']}
-    #Velocity over walls is the name on the tree (pn)
-    set InletBCNode [customlib::AddConditionGroupOnXPath $InletBC Inlet]
-    $InletBCNode setAttribute ov surface
-    set props [list selector_component_X ByValue value_component_X 2.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-    spdAux::SetValuesOnBaseNode $InletBCNode $props
+    # set InletBC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='FEMVelocity']}
+    # #Velocity over walls is the name on the tree (pn)
+    # set InletBCNode [customlib::AddConditionGroupOnXPath $InletBC Inlet]
+    # $InletBCNode setAttribute ov surface
+    # set props [list selector_component_X ByValue value_component_X 2.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+    # spdAux::SetValuesOnBaseNode $InletBCNode $props
 
     # Inlet
-    set InletVars {container[@n='DEM']/container[@n='Particle Injectors']/condition[@n='DEMInlet']}
+    set InletVars {container[@n='DEM']/container[@n='Injectors']/condition[@n='DEMInlet']}
     set InletVarsNode [customlib::AddConditionGroupOnXPath $InletVars Inlet]
     $InletVarsNode setAttribute ov surface
     set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
