@@ -258,7 +258,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set processWriteCommand [$process getAttribute write_command]
-            
+
             dict set processDict process_name $processName
 
             if {$processWriteCommand eq ""} {
@@ -268,7 +268,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
                 foreach {inputName in_obj} $process_parameters {
                     dict set processDict Parameters $inputName [write::GetInputValue $group $in_obj]
                 }
-                
+
             } else {
                 set processDict [$processWriteCommand $group $condition $process]
             }
@@ -447,8 +447,10 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     # Setup GiD-Output
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
-    dict set outputProcessParams output_name $model_name
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputGiDDict $appid]
+    set folder_name [dict get $outputProcessParams postprocess_parameters folder_name]
+    dict unset outputProcessParams postprocess_parameters folder_name
+    dict set outputProcessParams output_name [file join $folder_name $model_name]
 
     set outputConfigDict [dict create]
     dict set outputConfigDict python_module gid_output_process
@@ -497,6 +499,8 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
 
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [GetEmptyList]
+
+    dict set outputDict folder_name [getValueByXPath $gid_options_xpath FolderName]
     return $outputDict
 }
 

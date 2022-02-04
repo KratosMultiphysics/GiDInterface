@@ -14,6 +14,7 @@
             <dependencies value="Yes" node="../container" att1="state" v1="normal"/>
         </value>
         <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess options" open_window="1" icon="options">
+            <value n="FolderName" pn="Folder name" v="gid_output" help="This folder will be created to store the GiD results" />
             <value n="FileLabel" pn="File Label" v="step" values="time,step" dict="time,Time,step,Step" help=""/>
             <value n="OutputControlType" pn="Units used for output frequency" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
                 <dependencies node="../value" actualize="1"/>
@@ -23,7 +24,6 @@
             <value n="BodyOutput" pn="Body output" v="Yes" values="Yes,No" help="The interior of the volume is printed" state="[ShowInMode Developer]"/>
             <value n="NodeOutput" pn="Node output" v="No" values="Yes,No" help="The nodes are printed as a separate layer" state="[ShowInMode Developer]"/>
             <value n="SkinOutput" pn="Skin output" v="No" values="Yes,No" help="" state="[ShowInMode Developer]"/>
-
             <value n="GiDPostMode" pn="Result format" v="GiD_PostBinary" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped" help="GiD result file format" />
             <value n="GiDWriteMeshFlag" pn="Write deformed mesh" v="WriteDeformed" values="WriteDeformed,WriteUndeformed" dict="WriteDeformed,Write deformed,WriteUndeformed, Write undeformed" help="Write the GiD deformed or undeformed mesh"/>
             <value n="GiDWriteConditionsFlag" pn="Write conditions" v="WriteConditions" values="WriteConditions,WriteElementsOnly,WriteConditionsOnly" dict="WriteConditions,Write conditions,WriteElementsOnly,Write elements only,WriteConditionsOnly,Write conditions only" help="Write the conditions or only element to the GiD result file"/>
