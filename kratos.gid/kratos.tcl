@@ -75,6 +75,7 @@ proc Kratos::RegisterGiDEvents { } {
     # Save
     GiD_RegisterEvent GiD_Event_BeforeSaveGIDProject Kratos::Event_BeforeSaveGIDProject PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_SaveModelSPD Kratos::Event_SaveModelSPD PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_AfterSaveAsGIDProject Kratos::Event_AfterSaveAsGIDProject PROBLEMTYPE Kratos
 
     # Extra
     GiD_RegisterEvent GiD_Event_ChangedLanguage Kratos::Event_ChangedLanguage PROBLEMTYPE Kratos
@@ -571,6 +572,7 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     Kratos::RegisterEnvironment
 
     # User files (in file selectors) copied into the model (if required)
+    W $Kratos::kratos_private(UseFiles)
     if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
 
     # Let the current app implement it's Save event
@@ -580,6 +582,14 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     set Kratos::kratos_private(model_log_folder) [file join [GidUtils::GetDirectoryModel] Logs]
     Kratos::Log "Save model [file tail $filespd ]"
 
+}
+
+proc Kratos::Event_AfterSaveAsGIDProject {old_modelname new_modelname } {
+    if {$Kratos::kratos_private(UseFiles) eq 1} {
+        foreach file [::FileSelector::GetAllFiles] {
+            file copy -force [file join ${old_modelname}.gid $file] [file join ${new_modelname}.gid $file]
+        }
+    }
 }
 
 
