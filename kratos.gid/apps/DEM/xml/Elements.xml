@@ -64,28 +64,7 @@
     <parameter n="CENTER" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
     <parameter n="INERTIA" pn="Inertia" type="inline_vector" v="0.0,0.0,1.0" units="kg*m^2" unit_magnitude="M*L^2"/>
     <parameter n="ORIENTATION" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector and magnitude in rad)"/>
-    </inputs>
-    <outputs>
-    </outputs>
-  </ElementItem>
-
-  <ElementItem n="Ghost-FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Ghost-FEM" help=""  WriteAsBlock="Conditions">
-    <!--here we could add a list of all of the possible geometries-->
-    <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
-      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
-    </TopologyFeatures>
-    <!-- here we add the block of features which we require from the constitutive law-->
-    <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="DEM"/>
-    </ConstitutiveLaw_FilterFeatures>
-    <NodalConditions></NodalConditions>
-    <inputs>
-    <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
-    <parameter n="MASS" pn="Mass" v="1.0" />
-    <parameter n="CENTER" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
-    <parameter n="INERTIA" pn="Inertia" type="inline_vector" v="0.0,0.0,1.0" />
-    <parameter n="ORIENTATION" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector and magnitude in rad)"/>
+    <parameter n="IsGhost" pn="Is ghost" type="bool" v="false" help="Set the group as ghost"/>
     </inputs>
     <outputs>
     </outputs>

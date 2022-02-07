@@ -97,10 +97,7 @@
 <!-- Updated Inlet -->
   <Process n="DEM-InletUpdated-Process" pn="Inlet" python_module="" kratos_module="KratosMultiphysics">
     <inputs>
-
-
       <parameter n="SetActive" type="bool" pn="Activate" v="true">
-
 
         <!-- begin - this block will be removed once inlet is migrated as process -->
         <parameter n="InletMotionType" pn="Motion type" parent="true" type="combo" v="None" values="None,LinearPeriodic,FromATable" pvalues="None,Linear/Periodic,From a table" show_in_window="0">
@@ -152,7 +149,6 @@
         <parameter n="ParticleDiameter" parent="true" pn="Diameter" type="double" v="1.0" units="m" unit_magnitude="L" show_in_window="0"/>
         <parameter n="ProbabilityDistribution" parent="true" pn="Probability distribution" type="combo" v="normal" values="normal,lognormal" show_in_window="0"/>
         <parameter n="StandardDeviation" parent="true" pn="Standard deviation" type="double" v="0.0" units="m" unit_magnitude="L" show_in_window="0"/>
-        <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="material"/>
       </parameter>
     </inputs>
   </Process>
