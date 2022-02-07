@@ -572,7 +572,6 @@ proc Kratos::Event_SaveModelSPD { filespd } {
     Kratos::RegisterEnvironment
 
     # User files (in file selectors) copied into the model (if required)
-    W $Kratos::kratos_private(UseFiles)
     if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file dirname $filespd]}
 
     # Let the current app implement it's Save event
@@ -587,7 +586,12 @@ proc Kratos::Event_SaveModelSPD { filespd } {
 proc Kratos::Event_AfterSaveAsGIDProject {old_modelname new_modelname } {
     if {$Kratos::kratos_private(UseFiles) eq 1} {
         foreach file [::FileSelector::GetAllFiles] {
-            file copy -force [file join ${old_modelname}.gid $file] [file join ${new_modelname}.gid $file]
+            if {[file exists [file join ${old_modelname}.gid $file]]} {
+                file copy -force [file join ${old_modelname}.gid $file] [file join ${new_modelname}.gid $file]
+            }
+            if {![file exists [file join ${new_modelname}.gid $file]]} {
+                ::GidUtils::SetWarnLine "File not copied: [file join ${old_modelname}.gid $file]"
+            }
         }
     }
 }
