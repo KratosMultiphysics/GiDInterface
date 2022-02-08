@@ -16,15 +16,15 @@ proc ::Structural::write::getOldParametersDict { } {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
-        
+
         # Time stepping settings for static
         dict set timeSteppingDict "time_step" $time_step
 
     } {
-        set time_step_intervals [write::GetTimeStepIntervals]
+        set time_step_table [write::GetTimeStepIntervals]
 
         # Time stepping settings for dynamic
-        dict set timeSteppingDict "time_step_intervals" $time_step_intervals
+        dict set timeSteppingDict "time_step_table" $time_step_table
     }
 
     # Add section to document
