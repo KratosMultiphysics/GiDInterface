@@ -3,7 +3,9 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval Model {
+namespace eval ::Model {
+    Kratos::AddNamespace [namespace current]
+    
 catch {MaterialRelation destroy}
 oo::class create MaterialRelation {
     superclass Entity
@@ -26,13 +28,13 @@ oo::class create MaterialRelation {
 }
 
 
-proc Model::ParseMaterialRelations { doc } {
+proc ::Model::ParseMaterialRelations { doc } {
     variable MaterialRelations
     
     set MatNodeList [$doc getElementsByTagName MaterialRelation]
     foreach MatNode $MatNodeList {
         set mat_rel [ParseMatRelNode $MatNode]
-        set ma [Model::getMaterialRelation [$mat_rel getName] ]
+        set ma [::Model::getMaterialRelation [$mat_rel getName] ]
         if {$ma eq ""} {
             lappend MaterialRelations $mat_rel
         } else {
@@ -43,7 +45,7 @@ proc Model::ParseMaterialRelations { doc } {
     }
 }
 
-proc Model::ParseMatRelNode { node } {
+proc ::Model::ParseMatRelNode { node } {
     set name [$node getAttribute n]
     
     set mat [::Model::MaterialRelation new $name]
@@ -60,13 +62,13 @@ proc Model::ParseMatRelNode { node } {
     return $mat
 }
 
-proc Model::getMaterialRelations { MaterialRelationsFileName } {
+proc ::Model::getMaterialRelations { MaterialRelationsFileName } {
     variable dir
     dom parse [tDOM::xmlReadFile [file join $dir xml $MaterialRelationsFileName]] doc
     ParseMaterialRelations $doc
 }
 
-proc Model::GetMaterialRelations {args} { 
+proc ::Model::GetMaterialRelations {args} { 
     variable MaterialRelations
     # W "Get materials $args"
     set cumplen [list ]
@@ -77,7 +79,8 @@ proc Model::GetMaterialRelations {args} {
     # W "Good materials $cumplen"
     return $cumplen
 }
-proc Model::GetMaterialRelationNames {args} { 
+
+proc ::Model::GetMaterialRelationNames {args} { 
     set material_relations [list ]
     foreach mat [GetMaterialRelations {*}$args] {
         lappend material_relations [$mat getName]
@@ -85,7 +88,7 @@ proc Model::GetMaterialRelationNames {args} {
     return $material_relations
 }
 
-proc Model::getMaterialRelation {mid} { 
+proc ::Model::getMaterialRelation {mid} { 
 
     foreach mat_rel [GetMaterialRelations] {
         if {[$mat_rel getName] eq $mid} { return $mat_rel}
@@ -94,12 +97,12 @@ proc Model::getMaterialRelation {mid} {
 }
 
 
-proc Model::ForgetMaterialRelations { } {
+proc ::Model::ForgetMaterialRelations { } {
     variable MaterialRelations
     set MaterialRelations [list ]
 }
 
-proc Model::ForgetMaterialRelation { mid } {
+proc ::Model::ForgetMaterialRelation { mid } {
     variable MaterialRelations
     set MaterialRelations2 [list ]
     foreach material_relation $MaterialRelations {

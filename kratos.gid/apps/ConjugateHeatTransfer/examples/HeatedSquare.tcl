@@ -1,13 +1,17 @@
+namespace eval ::ConjugateHeatTransfer::examples::HeatedSquare {
+    namespace path ::ConjugateHeatTransfer::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::ConjugateHeatTransfer::examples::HeatedSquare {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawSquareGeometry$::Model::SpatialDimension
-    HeatedSquareAssignGroups$::Model::SpatialDimension
-    HeatedSquareTreeAssignation$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -15,9 +19,8 @@ proc ::ConjugateHeatTransfer::examples::HeatedSquare {args} {
     GiD_Process 'Zoom Frame
 }
 
-
 # Draw Geometry
-proc ConjugateHeatTransfer::examples::DrawSquareGeometry3D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::DrawGeometry3D {args} {
     # DrawSquareGeometry2D
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
@@ -25,7 +28,7 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry3D {args} {
     # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
 
-proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers create HeatSource
@@ -72,7 +75,7 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
 
 
 # Group assign
-proc ConjugateHeatTransfer::examples::HeatedSquareAssignGroups2D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::AssignGroups2D {args} {
     # Create the groups for the fluid
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -119,7 +122,7 @@ proc ConjugateHeatTransfer::examples::HeatedSquareAssignGroups2D {args} {
     GiD_Groups edit color Heating_Left_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Heating_Left_Wall lines 8
 }
-proc ConjugateHeatTransfer::examples::HeatedSquareAssignGroups3D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::AssignGroups3D {args} {
     # Create the groups
     # GiD_Groups create Fluid
     # GiD_Groups edit color Fluid "#26d1a8ff"
@@ -143,11 +146,11 @@ proc ConjugateHeatTransfer::examples::HeatedSquareAssignGroups3D {args} {
 }
 
 # Tree assign
-proc ConjugateHeatTransfer::examples::HeatedSquareTreeAssignation3D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::TreeAssignation3D {args} {
     # TreeAssignationCylinderInFlow2D
     # AddCuts
 }
-proc ConjugateHeatTransfer::examples::HeatedSquareTreeAssignation2D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 

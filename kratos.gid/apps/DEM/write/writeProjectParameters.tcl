@@ -1,11 +1,11 @@
 
 # Project Parameters
 
-proc DEM::write::getParametersDict { } {
+proc ::DEM::write::getParametersDict { } {
     set project_parameters_dict [dict create]
 
     set dimension [expr 3]
-    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]} 
+    if {$::Model::SpatialDimension eq "2D"} {set dimension [expr 2]}
 
     dict set project_parameters_dict "Dimension"                            [expr $dimension]
     dict set project_parameters_dict "PeriodicDomainOption"                 [write::getValue Boundingbox PeriodicDomain]
@@ -54,10 +54,8 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
-    
-    set used_elements [spdAux::GetUsedElements]
-    set ElementType [lindex $used_elements 0]
-    dict set project_parameters_dict "ElementType"                          $ElementType
+
+    dict set project_parameters_dict "ElementType"                          [GetElementType]
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]
@@ -103,6 +101,7 @@ proc DEM::write::getParametersDict { } {
     dict set project_parameters_dict "PostTotalForces"                  [write::getValue PostPrint TotalForces]
     dict set project_parameters_dict "PostPressure"                     [write::getValue PostPrint Pressure]
     dict set project_parameters_dict "PostShearStress"                  [write::getValue PostPrint ShearStress]
+    dict set project_parameters_dict "PostSkinSphere"                  [write::getValue PostPrint SkinSphere]
     dict set project_parameters_dict "PostNonDimensionalVolumeWear"     [write::getValue PostPrint Wear]
     dict set project_parameters_dict "PostParticleMoment"               [write::getValue PostPrint ParticleMoment]
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint EulerAngles]
@@ -112,7 +111,13 @@ proc DEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
-proc DEM::write::GetDemStrategyName { } {
+proc ::DEM::write::GetElementType { } {
+    set used_elements [spdAux::GetUsedElements]
+    set element_type [lindex $used_elements 0]
+    return $element_type
+}
+
+proc ::DEM::write::GetDemStrategyName { } {
     return sphere_strategy
     # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
     # set used_elements [spdAux::GetUsedElements]
@@ -133,14 +138,14 @@ proc DEM::write::GetDemStrategyName { } {
 	# }
 }
 
-proc DEM::write::GetTimeSettings { } {
+proc ::DEM::write::GetTimeSettings { } {
     set result [dict create]
     dict set result DeltaTime [write::getValue DEMTimeParameters DeltaTime]
     dict set result EndTime [write::getValue DEMTimeParameters EndTime]
     return $result
 }
 
-proc DEM::write::GetGravity { } {
+proc ::DEM::write::GetGravity { } {
     set gravity_value [write::getValue DEMGravity GravityValue]
     set gravity_X [write::getValue DEMGravity Cx]
     set gravity_Y [write::getValue DEMGravity Cy]
@@ -153,7 +158,7 @@ proc DEM::write::GetGravity { } {
     return [list $gx $gy $gz]
 }
 
-proc DEM::write::writeParametersEvent { } {
+proc ::DEM::write::writeParametersEvent { } {
     write::SetParallelismConfiguration
     write::WriteJSON [getParametersDict]
 }

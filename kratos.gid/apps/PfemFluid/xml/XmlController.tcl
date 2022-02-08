@@ -1,24 +1,25 @@
-namespace eval PfemFluid::xml {
-    variable dir
+namespace eval ::PfemFluid::xml {
+    namespace path ::PfemFluid
+    Kratos::AddNamespace [namespace current]
+
     variable bodyNodalCondition
 }
 
 proc PfemFluid::xml::Init { } {
-    variable dir
     variable bodyNodalCondition
-    
+
     set bodyNodalCondition [list ]
-    
-    Model::InitVariables dir $PfemFluid::dir
-    
+
+    Model::InitVariables dir $::PfemFluid::dir
+
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
     Model::getConstitutiveLaws ConstitutiveLaws.xml
     Model::getProcesses "../../Common/xml/Processes.xml"
     Model::getProcesses Processes.xml
     Model::getNodalConditions NodalConditions.xml
-    Model::getSolvers "../../Pfem/xml/Solvers.xml"
-    
+    Model::getSolvers Solvers.xml
+
     Model::ForgetNodalCondition "CONTACT"
 }
 
@@ -36,8 +37,8 @@ proc PfemFluid::xml::MultiAppEvent {args} {
 proc PfemFluid::xml::CustomTree { args } {
     #HOW TO USE THIS FUNCTION:
     #spdAux::SetValueOnTreeItem arg1 arg2 arg3 (arg4)
-    #arg1: attribute_to_modify 
-    #arg2: value_of_the_attribute 
+    #arg1: attribute_to_modify
+    #arg2: value_of_the_attribute
     #arg3: unique_name_of_the_node  ('unique name is defined by the attribute un=)
     #arg4 (optional): name_of_the_child_we_want_to_modify  ('name'is defined by the attribute n=)
 
@@ -51,50 +52,49 @@ proc PfemFluid::xml::CustomTree { args } {
     foreach node [$app_root getElementsByTagName container ] { if {[$node hasAttribute solstratname]} {$node setAttribute icon folder } }
     #TODO: (for JG) the previous icons should be changed automatically looking at the strategies.xml
 
-    
     #intervals
     spdAux::SetValueOnTreeItem icon sheets Intervals
     foreach node [[$app_root parent] selectNodes "[spdAux::getRoute Intervals]/blockdata"] {
         $node setAttribute icon select
-    }        
-    
+    }
+
     #conditions
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEMFLUID_NodalConditions VELOCITY
     spdAux::SetValueOnTreeItem state \[CheckNodalConditionStatePFEM\] PFEMFLUID_NodalConditions PRESSURE
 
-    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_NodalConditions]/condition" ] {
         $node setAttribute icon select
 	    $node setAttribute groups_icon groupCreated
     }
 
     #loads
     if {[spdAux::getRoute PFEMFLUID_Loads] ne ""} {
-        spdAux::SetValueOnTreeItem icon setLoad PFEMFLUID_Loads 
-        foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] { 
+        spdAux::SetValueOnTreeItem icon setLoad PFEMFLUID_Loads
+        foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Loads]/condition" ] {
             $node setAttribute icon select
             $node setAttribute groups_icon groupCreated
         }
     }
 
     #materials
-    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_Materials]/blockdata" ] {
         $node setAttribute icon select
     }
-    
+
     #solver settings
-    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'linear_solver_settings'\]" ] {
         $node setAttribute icon select
     }
 
-    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'velocity_linear_solver_settings'\]" ] {
         $node setAttribute icon select
-    }   
+    }
 
-    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] { 
+    foreach node [[$app_root parent] selectNodes "[spdAux::getRoute PFEMFLUID_StratSection]/container\[@n = 'pressure_linear_solver_settings'\]" ] {
         $node setAttribute icon select
-    }   
+    }
 
-    
+
     #units
     [[$app_root parent] selectNodes "/Kratos_data/blockdata\[@n = 'units'\]"] setAttribute icon setUnits
 
@@ -104,22 +104,22 @@ proc PfemFluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT
     spdAux::SetValueOnTreeItem v No NodalResults VELOCITY_REACTION
     spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT_REACTION
-    
+
     set inlet_result_node [[$app_root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
     if {$inlet_result_node ne "" } {$inlet_result_node delete}
 
     #restart
-    spdAux::SetValueOnTreeItem icon doRestart Restart     
-    spdAux::SetValueOnTreeItem icon select Restart RestartOptions
-    
+    # spdAux::SetValueOnTreeItem icon doRestart Restart
+    # spdAux::SetValueOnTreeItem icon select Restart RestartOptions
+
     # 3D gravity
     if {$Model::SpatialDimension eq "3D"} {
         catch {
-            spdAux::SetValueOnTreeItem v -9.81 PFEMFLUID_Gravity Cy  
-            spdAux::SetValueOnTreeItem v 0.0 PFEMFLUID_Gravity Cz  
+            spdAux::SetValueOnTreeItem v -9.81 PFEMFLUID_Gravity Cy
+            spdAux::SetValueOnTreeItem v 0.0 PFEMFLUID_Gravity Cz
         }
     }
-    
+
 }
 
 proc PfemFluid::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
@@ -154,7 +154,7 @@ proc PfemFluid::xml::ProcGetElementsDict {domNode args} {
     set pnames ""
     foreach elem $elems {
         if {[$elem cumple $argums]} {
-            lappend pnames [$elem getName] 
+            lappend pnames [$elem getName]
             lappend pnames [$elem getPublicName]
         }
     }
@@ -166,7 +166,7 @@ proc PfemFluid::xml::ProcGetElementsValues {domNode args} {
     set names [list ]
     set blockNode [PfemFluid::xml::FindMyBlocknode $domNode]
     set BodyType [get_domnode_attribute [$blockNode selectNodes "value\[@n='BodyType'\]"] v]
-    
+
     set argums [list ElementType $BodyType]
     set elems [PfemFluid::xml::GetElements $domNode $args]
     foreach elem $elems {
@@ -175,17 +175,17 @@ proc PfemFluid::xml::ProcGetElementsValues {domNode args} {
         }
     }
     set values [join $names ","]
-    
+
     if {[get_domnode_attribute $domNode v] eq ""} {$domNode setAttribute v [lindex $names 0]}
     if {[get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]}
-    
+
     return $values
 }
 
 proc PfemFluid::xml::ProcGetConstitutiveLaws {domNode args} {
     set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
     set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
-	
+
     if {[llength $Claws] == 0} {
         set names [list "None"]
     } {
@@ -194,27 +194,27 @@ proc PfemFluid::xml::ProcGetConstitutiveLaws {domNode args} {
 		    lappend names [$cl getName]
         }
     }
-	
+
     set values [join $names ","]
-	
+
     if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $names} {$domNode setAttribute v [lindex $names 0]; spdAux::RequestRefresh}
-    
+
     return $values
 }
 
 proc PfemFluid::xml::GetElements {domNode args} {
-    
+
     set nodeApp [spdAux::GetAppIdFromNode $domNode]
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
     set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
-    
+
     get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
     get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
-    
+
     set solStratName [::write::getValue $sol_stratUN]
     set schemeName [write::getValue $schemeUN]
     set elems [::Model::GetAvailableElements $solStratName $schemeName]
-    
+
     return $elems
 }
 
@@ -226,7 +226,7 @@ proc PfemFluid::xml::FindMyBlocknode {domNode} {
             set ret $domNode
             break
         } else {
-            set domNode [$domNode parent]     
+            set domNode [$domNode parent]
         }
     }
     return $ret
@@ -250,7 +250,7 @@ proc PfemFluid::xml::ProcGetContactDomains {domNode args} {
     foreach contact_domain [[$domNode selectNodes $basepath] childNodes] {
         lappend values [get_domnode_attribute $contact_domain name]
     }
-    
+
     if {[get_domnode_attribute $domNode v] eq "" || [get_domnode_attribute $domNode v] ni $values} {
         $domNode setAttribute v [lindex $values 0]
     }
@@ -264,11 +264,11 @@ proc PfemFluid::xml::ProcSolutionTypeState {domNode args} {
     if {$domain_type_route ne ""} {
         set domain_type_node [$domNode selectNodes $domain_type_route]
         set domain_type_value [get_domnode_attribute $domain_type_node v]
-        
-        $domNode setAttribute values Dynamic 
+
+        $domNode setAttribute values Dynamic
         $domNode setAttribute v Dynamic
         set state disabled
-        
+
     }
     return $state
 }
@@ -280,7 +280,7 @@ proc PfemFluid::xml::ProcGetBodyTypeValues {domNode args} {
     if {$domain_type_route ne ""} {
         set domain_type_node [$domNode selectNodes $domain_type_route]
         set domain_type_value [get_domnode_attribute $domain_type_node v]
-        
+
         if {$domain_type_value eq "Fluids"} {
             set values "Fluid,Rigid"
         }
@@ -305,7 +305,7 @@ proc PfemFluid::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
     if {$domainType eq "Solids"} {set filter "Solid"}
     if {$domainType eq "Fluids"} {set filter "Pfem"}
     if {$domainType eq "FSI"} {set filter "Pfem"}
-    
+
     foreach ss $Sols {
         if {[$ss getAttribute "App"] in $filter} {
             lappend names [$ss getName]
@@ -313,13 +313,13 @@ proc PfemFluid::xml::ProcGetSolutionStrategiesPFEM {domNode args} {
             lappend pnames [$ss getPublicName]
         }
     }
-    
+
     $domNode setAttribute values [join $names ","]
     set dv [lindex $names 0]
     #W "dv $dv"
     if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
     if {[$domNode getAttribute v] ni $names} {$domNode setAttribute v $dv; spdAux::RequestRefresh}
-    
+
     return [join $pnames ","]
 }
 
@@ -394,11 +394,11 @@ proc PfemFluid::xml::ProcGetRigidBodiesValues {domNode args} {
     set bodies [list ]
     foreach body_node [$root selectNodes $xp1] {
         foreach subnode [$body_node childNodes] {
-            if { [$subnode getAttribute n] eq "BodyType" } { 
+            if { [$subnode getAttribute n] eq "BodyType" } {
                 if { [$subnode getAttribute v] eq "Rigid"  || [$subnode getAttribute v] eq "Interface"} {
                     lappend bodies [$body_node @name]
                     break
-                }                    
+                }
             }
         }
     }
@@ -440,7 +440,7 @@ proc PfemFluid::xml::GetConditionsAndGroups { cnd_UN } {
 
 proc PfemFluid::xml::getBodyNodalConditionById { id } {
     variable bodyNodalCondition
-    
+
     foreach cnd $bodyNodalCondition {
         if {[$cnd getName] eq $id} {
             return $cnd
@@ -451,7 +451,7 @@ proc PfemFluid::xml::getBodyNodalConditionById { id } {
 proc PfemFluid::xml::getBodyNodalConditions { filename } {
     variable bodyNodalCondition
     dom parse [tDOM::xmlReadFile [file join $PfemFluid::dir xml $filename]] doc
-    
+
     set NCList [$doc getElementsByTagName NodalConditionItem]
     foreach Node $NCList {
         lappend bodyNodalCondition [::Model::ParseNodalConditionsNode $Node]
@@ -468,7 +468,7 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
     set conds [$basenode parent]
     set AppUsesIntervals [::PfemFluid::GetAttribute UseIntervals]
     if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
-    
+
     foreach cnd $cond_list {
         set n [$cnd getName]
         set pn [$cnd getPublicName]
@@ -486,7 +486,7 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
         set contNode [gid_groups_conds::addF [$conds toXPath] container [list n $n pn ${pn}s help $help]]
         set blockNode [gid_groups_conds::addF [$contNode toXPath] blockdata [list n $n pn $pn help $help icon shells16 update_proc $check name "$pn 1" sequence 1 editable_name unique sequence_type non_void_disabled]]
         set block_path [$blockNode toXPath]
-        set inputs [$process getInputs] 
+        set inputs [$process getInputs]
         foreach {inName in} $inputs {
             set pn [$in getPublicName]
             set type [$in getType]
@@ -497,7 +497,7 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
             foreach key [$cnd getDefaults $inName] {
                 set $key [$cnd getDefault $inName $key]
             }
-            
+
             set has_units [$in getAttribute "has_units"]
             if {$has_units ne ""} { set has_units "units='$units'  unit_magnitude='$um'"}
             if {$type eq "vector"} {
@@ -516,7 +516,7 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
                             set val [expr [$in getAttribute "enabled"] ? "Yes" : "No"]
                             if {$i eq "Z"} { set val "No" }
                             set valNode [gid_groups_conds::addF $block_path value [list n Enabled_$i pn "$i component" v No values "Yes,No" help "Enables the $i ${inName}" actualize_tree 1 {*}$zstate]]
-                            
+
                             gid_groups_conds::addF [$valNode toXPath] dependencies [list value No node $nodev att1 state v1 hidden]
                             gid_groups_conds::addF [$valNode toXPath] dependencies [list value Yes node $nodev att1 state v1 normal]
                             if {[$in getAttribute "function"] eq "1"} {
@@ -540,7 +540,7 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
                         gid_groups_conds::addF $block_path value [list n ${inName}$i wn [concat $n "_$i"] pn "$i ${pn}" v $v1 state hidden]
                     }
                 }
-                
+
             } elseif { $type eq "combo" } {
                 set values [join [$in getValues] ","]
                 gid_groups_conds::addF $block_path value [list n $inName pn $pn v $v1 values $values state $state help $help]
@@ -554,7 +554,7 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
                     set fname "function_$inName"
                     set nodev "../value\[@n='$inName'\]"
                     set nodef "../value\[@n='$fname'\]"
-                    
+
                     set valNode [gid_groups_conds::addF $block_path value [list n ByFunction pn "by function -> f(x,y,z,t)" v No values "Yes,No" actualize_tree 1]]
                     gid_groups_conds::addF [$valNode toXPath] dependencies [list value No node $nodev att1 state v1 normal]
                     gid_groups_conds::addF [$valNode toXPath] dependencies [list value Yes node $nodev att1 state v1 hidden]
@@ -566,7 +566,7 @@ proc PfemFluid::xml::_injectCondsToTree {basenode cond_list {cond_type "normal"}
                 gid_groups_conds::addF $block_path value [list n $inName pn $pn v $v units $units unit_magnitude $um help $help]
             }
         }
-        
+
         set CondUsesIntervals [$cnd getAttribute "Interval"]
         if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
             gid_groups_conds::addF $block_path value [list n Interval pn "Time interval" v $CondUsesIntervals values {[getIntervals]} help $help]
@@ -583,7 +583,7 @@ proc PfemFluid::xml::ProcCheckStateBoundingBox3Dimension {domNode args} {
     set checkvalue [split [lindex $arglist 1] ","]
     set pst [$domNode selectNodes $xpath]
     #W "xpath $xpath checkvalue $checkvalue pst $pst"
-    if {$pst in $checkvalue} { set state 1} 
+    if {$pst in $checkvalue} { set state 1}
     if {$state} {
 
         set checkdim "3D"
@@ -592,5 +592,3 @@ proc PfemFluid::xml::ProcCheckStateBoundingBox3Dimension {domNode args} {
     }
     if {$state} {return "normal"} else {return "hidden"}
 }
-
-PfemFluid::xml::Init

@@ -9,6 +9,9 @@ proc PfemFluid::write::getNewParametersDict { } {
     PfemFluid::write::CalculateMyVariables
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.PfemFluidDynamicsApplication.pfem_fluid_dynamics_analysis"
+
     ##### Problem data #####
     # Create section
     set problemDataDict [GetPFEM_ProblemDataDict]
@@ -121,7 +124,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict PFEMFLUID_SolStrat PFEMFLUID_Scheme PFEMFLUID_StratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict PfemFluid] ]
-	
+
 	# Body parts list
     set bodies_parts_list [list ]
     foreach body $bodies_list {
@@ -130,7 +133,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
             lappend bodies_parts_list $part
         }
     }
-	
+
 	# Constitutive laws
 	set constitutive_list [list]
     foreach parts_un [PfemFluid::write::GetPartsUN] {
@@ -140,11 +143,11 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
             lappend constitutive_list [get_domnode_attribute $gNode v]
         }
     }
-	
+
     dict set solverSettingsDict bodies_list $bodies_list
     dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
 	dict set solverSettingsDict constitutive_laws_list $constitutive_list
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
+    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] "PFEMFLUID_Loads"]
 
     set materialsDict [dict create]
     dict set materialsDict materials_filename [GetAttribute materials_file]
@@ -280,7 +283,7 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { free_surface_heat_flux free_sur
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
     dict set paramsDict update_conditions_on_free_surface [PfemFluid::write::GetUpdateConditionsOnFreeSurface $free_surface_heat_flux $free_surface_thermal_face]
-	
+
     set meshing_domains_list [list ]
     foreach body $bodies_list {
         set bodyDict [dict create ]

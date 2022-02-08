@@ -22,7 +22,7 @@ proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
 proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
     return [spdAux::SetValuesOnBaseNode [[customlib::GetBaseRoot] selectNodes $base_path] $prop_value_pairs]
-} 
+}
 
 proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
     if {$base_path eq ""} {error "Empty $base_path"}
@@ -193,8 +193,8 @@ proc spdAux::injectConditions { basenode args} {
 
 proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } {
     set conds [$basenode parent]
-    set AppUsesIntervals [apps::ExecuteOnApp [GetAppIdFromNode $conds] GetAttribute UseIntervals]
-    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
+    set app_uses_intervals [[apps::getAppById [GetAppIdFromNode $conds]] getPermission "intervals"]
+    if {$app_uses_intervals eq ""} {set app_uses_intervals 0}
     set initial_conds_flag 0
     if {$args ne "{}" && $args ne ""} {
         if {[dict exists {*}$args can_be_initial]} {
@@ -234,7 +234,11 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
             set state [$cnd getAttribute state]
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
-        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
+        set allow_group_creation ""
+        if {[$cnd getAttribute Groups] ne ""} {
+            set allow_group_creation "allow_group_creation='0' groups_list='\[[$cnd getAttribute Groups]\]'"
+        }
+        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check' $allow_group_creation>"
         set symbol_data [$cnd getSymbol]
         if { [llength $symbol_data] } {
             set txt "<symbol"
@@ -253,7 +257,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
             append node [GetParameterValueString $in $forcedParams $cnd]
         }
         set CondUsesIntervals [$cnd getAttribute "Interval"]
-        if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
+        if {$app_uses_intervals && ![write::isBooleanFalse $CondUsesIntervals]} {
             set state normal
             if {$initial_conds_flag} {
                 set CondUsesIntervals Initial
@@ -344,7 +348,7 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
                         set nodev "../value\[@n='$vname'\]"
                         if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"; set state "\[CheckDimension 3D\]"} {set zstate ""}
                         if {[$param getAttribute "function"] eq "1"} {
-                            set values "ByFunction,ByValue,Not" 
+                            set values "ByFunction,ByValue,Not"
                             set pvalues "By function,By value,Not set"
                             set selector_name "selector_${inName}_${i}"
 
@@ -365,7 +369,7 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
                             append node "<value n='$fname' pn='Function $i (x,y,z,t)' v='$vfX' help='$help'  $zstate /> "
                         }
                         if { $vector_type eq "file" || $vector_type eq "tablefile" } {
-                            if {[set $v] eq ""} {set $v "- No file"}
+                            if {[set $v] eq ""} {set $v $::spdAux::no_file_string}
                             append node "<value n='$vname' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type' show_in_window='$show_in_window'/>"
                         } else {
                             append node "<value n='$vname' wn='[concat $n "_$i"]' pn='Value $i' v='[set $v]' $has_units help='$help'  $zstate  show_in_window='$show_in_window'/>"
@@ -397,10 +401,10 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
             }
             "combo" {
                 if {[$param getAttribute "combotype"] eq "material"} {
-                    append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>" 
+                    append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>"
                 } elseif {[$param getAttribute "combotype"] eq "constitutive_law"} {
                     append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
-                    append node "<dynamicnode command='spdAux::injectConstitutiveLawsInputs' args='' />" 
+                    append node "<dynamicnode command='spdAux::injectConstitutiveLawsInputs' args='' />"
                 } else {
                     append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
                 }
@@ -507,7 +511,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
         }
     }
     set ret ""
-    
+
     foreach {name values} $dep_list {
         set ins ""
         set out ""
@@ -935,7 +939,7 @@ proc spdAux::ClearCutPlanes { {cut_planes_un CutPlanes} } {
         if {$first != true} {
             $plane delete
         } {set first false}
-        
+
     }
 
 }
@@ -976,7 +980,7 @@ proc spdAux::injectPartsByElementType {domNode args} {
         $orig delete
         $base insertBefore $new $domNode
     }
-    
+
     $domNode delete
     customlib::UpdateDocument
     spdAux::processDynamicNodes $base

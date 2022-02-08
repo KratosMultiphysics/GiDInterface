@@ -1,0 +1,47 @@
+{
+    "id": "PotentialFluid",
+    "name": "PotentialFluid",
+    "prefix": "PTFL",
+    "themed": false,
+    "kratos_name": "CompressiblePotentialFlowApplication",
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/NACA0012_2D.tcl",
+        "examples/NACA0012_3D.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::PotentialFluid::Init",
+    "requeriments":{
+        "apps":["Fluid"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": false,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "FLParts",
+        "nodal_conditions": "FLNodalConditions",
+        "conditions": "FLBC",
+        "materials": "FLMaterials",
+        "results": "FLResults",
+        "drag": "FLDrags",
+        "time_parameters": "FLTimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "FluidMaterials.json",
+        "properties_location": "json"
+    },
+    "main_launch_file": "../../exec/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

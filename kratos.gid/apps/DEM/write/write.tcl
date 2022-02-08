@@ -1,4 +1,7 @@
-namespace eval DEM::write {
+namespace eval ::DEM::write {
+    namespace path ::DEM
+    Kratos::AddNamespace [namespace current]
+
     variable writeAttributes
     variable partsProperties
     variable inletProperties
@@ -9,18 +12,18 @@ namespace eval DEM::write {
     variable restore_ov
 }
 
-proc DEM::write::Init { } {
+proc ::DEM::write::Init { } {
     variable writeAttributes
     set writeAttributes [dict create]
     SetAttribute validApps [list "DEM"]
-    SetAttribute writeCoordinatesByGroups 1
-    SetAttribute properties_location json
-    SetAttribute parts_un DEMParts
-    SetAttribute materials_un DEMMaterials
-    SetAttribute conditions_un DEMConditions
-    SetAttribute nodal_conditions_un DEMNodalConditions
-    SetAttribute materials_file "MaterialsDEM.json"
-    SetAttribute main_script_file "KratosDEMAnalysis.py"
+    SetAttribute writeCoordinatesByGroups [::DEM::GetWriteProperty coordinates]
+    SetAttribute properties_location [::DEM::GetWriteProperty properties_location]
+    SetAttribute parts_un [::DEM::GetUniqueName parts]
+    SetAttribute materials_un [::DEM::GetUniqueName materials]
+    SetAttribute conditions_un [::DEM::GetUniqueName conditions]
+    SetAttribute nodal_conditions_un [::DEM::GetUniqueName nodal_conditions]
+    SetAttribute materials_file [::DEM::GetWriteProperty materials_file]
+    SetAttribute main_launch_file [::DEM::GetAttribute main_launch_file]
 
     variable partsProperties
     set partsProperties [dict create]
@@ -45,7 +48,7 @@ proc DEM::write::Init { } {
 }
 
 # MDPA Blocks
-proc DEM::write::writeModelPartEvent { } {
+proc ::DEM::write::writeModelPartEvent { } {
 
     # Validation
     set err [Validate]
@@ -87,17 +90,13 @@ proc DEM::write::writeModelPartEvent { } {
 
 }
 
-proc DEM::write::writeCustomFilesEvent { } {
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-
-    write::RenameFileInModel $orig_name "MainKratos.py"
+proc ::DEM::write::writeCustomFilesEvent { } {
     write::RenameFileInModel "ProjectParameters.json" "ProjectParametersDEM.json"
-
-    DEM::write::writeMaterialsFile 
+    DEM::write::writeMaterialsFile
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
-proc DEM::write::writeMaterialsFile {} {
+proc ::DEM::write::writeMaterialsFile {} {
     # Materials
     set materials [DEM::write::getDEMMaterialsDict]
     write::OpenFile [GetAttribute materials_file]
@@ -106,46 +105,46 @@ proc DEM::write::writeMaterialsFile {} {
 }
 
 # Attributes block
-proc DEM::write::GetAttribute {att} {
+proc ::DEM::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc DEM::write::GetAttributes {} {
+proc ::DEM::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc DEM::write::SetAttribute {att val} {
+proc ::DEM::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc DEM::write::AddAttribute {att val} {
+proc ::DEM::write::AddAttribute {att val} {
     variable writeAttributes
     dict append writeAttributes $att $val]
 }
 
-proc DEM::write::AddAttributes {configuration} {
+proc ::DEM::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
 # MultiApp events
-proc DEM::write::AddValidApps {appList} {
+proc ::DEM::write::AddValidApps {appList} {
     AddAttribute validApps $appList
 }
 
-proc DEM::write::SetCoordinatesByGroups {value} {
+proc ::DEM::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
 
-proc DEM::write::ApplyConfiguration { } {
+proc ::DEM::write::ApplyConfiguration { } {
     variable writeAttributes
     write::SetConfigurationAttributes $writeAttributes
 }
 
-proc DEM::write::Validate {} {
+proc ::DEM::write::Validate {} {
     set err ""
     set root [customlib::GetBaseRoot]
 
@@ -163,15 +162,16 @@ proc DEM::write::Validate {} {
     return $err
 }
 
-proc DEM::write::FindPropertiesBySubmodelpart {props subid } {
-    
+proc ::DEM::write::FindPropertiesBySubmodelpart {props subid } {
+
     set result ""
+    if {$props eq ""} {W "Check materials in $subid"}
     foreach prop [dict get $props properties]  {
         if { [dict get $prop model_part_name] eq $subid || [lindex [split [dict get $prop model_part_name] "."] end] eq $subid } {
             set result $prop
         }
     }
+
     return $result
 }
 
-DEM::write::Init

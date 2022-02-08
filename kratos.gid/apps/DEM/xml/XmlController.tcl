@@ -1,10 +1,13 @@
-namespace eval DEM::xml {
+namespace eval ::DEM::xml {
+    namespace path ::DEM
+    Kratos::AddNamespace [namespace current]
+    
     variable dir
 }
 
-proc DEM::xml::Init { } {
+proc ::DEM::xml::Init { } {
     variable dir
-    Model::InitVariables dir $DEM::dir
+    Model::InitVariables dir $::DEM::dir
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -16,15 +19,11 @@ proc DEM::xml::Init { } {
     Model::getMaterialRelations "material_relations/MaterialRelations.xml"
 }
 
-proc DEM::xml::getUniqueName {name} {
-    return DEM$name
+proc ::DEM::xml::getUniqueName {name} {
+    return [::DEM::GetAttribute prefix]$name
 }
 
-proc DEM::xml::MultiAppEvent {args} {
-
-}
-
-proc DEM::xml::CustomTree { args } {
+proc ::DEM::xml::CustomTree { args } {
     set root [customlib::GetBaseRoot]
     spdAux::SetValueOnTreeItem values OpenMP ParallelType
     spdAux::SetValueOnTreeItem state hidden DEMTimeParameters StartTime
@@ -53,7 +52,7 @@ proc DEM::xml::CustomTree { args } {
     spdAux::processDynamicNodes [customlib::GetBaseRoot]
 }
 
-proc DEM::xml::ProcGetElements { domNode args } {
+proc ::DEM::xml::ProcGetElements { domNode args } {
     set elems [Model::GetElements]
     set names [list ]
     set pnames [list ]
@@ -74,7 +73,7 @@ proc DEM::xml::ProcGetElements { domNode args } {
     return $diction
 }
 
-proc DEM::xml::ProcGetStateBoundingBoxParams { domNode args } {
+proc ::DEM::xml::ProcGetStateBoundingBoxParams { domNode args } {
 
     set bounding_box_active [write::getValue Boundingbox UseBB ]
     set bounding_box_automatic [write::getValue Boundingbox AutomaticBB ]
@@ -86,7 +85,7 @@ proc DEM::xml::ProcGetStateBoundingBoxParams { domNode args } {
     return $ret
 }
 
-proc DEM::xml::ProcGetDEMPartsOvWhat { domNode args } {
+proc ::DEM::xml::ProcGetDEMPartsOvWhat { domNode args } {
     if {$::Model::SpatialDimension eq "2D"} {
         return "point,line,surface"
     } else {
@@ -95,7 +94,7 @@ proc DEM::xml::ProcGetDEMPartsOvWhat { domNode args } {
 }
 
 
-proc DEM::xml::InertiaType { args } {
+proc ::DEM::xml::InertiaType { args } {
     set ret inline_vector
     if {$::Model::SpatialDimension eq "2D"} {
         set ret double
@@ -104,7 +103,7 @@ proc DEM::xml::InertiaType { args } {
     return $ret
 }
 
-proc DEM::xml::injectMaterialRelations { basenode args } {
+proc ::DEM::xml::injectMaterialRelations { basenode args } {
     
     set base [$basenode parent]
     set materials_relations [Model::GetMaterialRelations {*}$args]
@@ -126,7 +125,7 @@ proc DEM::xml::injectMaterialRelations { basenode args } {
 
 }
 
-proc DEM::xml::MaterialRelationsValidation { } {
+proc ::DEM::xml::MaterialRelationsValidation { } {
     set err ""
     # Get Used Materials
 
@@ -134,7 +133,3 @@ proc DEM::xml::MaterialRelationsValidation { } {
 
     return $err
 }
-
-
-
-DEM::xml::Init

@@ -1,23 +1,23 @@
 namespace eval ::FluidDEM::write {
+    namespace path ::FluidDEM
+    Kratos::AddNamespace [namespace current]
+
     variable fluid_project_parameters
     variable dem_project_parameters
 }
 
 proc ::FluidDEM::write::Init { } {
-
     variable fluid_project_parameters
-    variable dem_project_parameters
-    variable general_project_parameters
     set fluid_project_parameters [dict create]
+    variable dem_project_parameters
     set dem_project_parameters [dict create]
+    variable general_project_parameters
     set general_project_parameters [dict create]
-    SetAttribute main_script_file "MainKratos.py"
-
 }
 
 # Events
 proc FluidDEM::write::writeModelPartEvent { } {
-
+    Validate
     set filename [Kratos::GetModelName]
 
     Fluid::write::Init
@@ -29,13 +29,24 @@ proc FluidDEM::write::writeModelPartEvent { } {
     DEM::write::Init
     set DEM::write::delete_previous_mdpa 0
     write::writeAppMDPA DEM
-
 }
+
+proc FluidDEM::write::Validate { } {
+    if {[GiD_Info mesh] eq 0} {[error "Model not meshed"]}
+}
+
 proc FluidDEM::write::writeCustomFilesEvent { } {
-    SetAttribute main_script_file "MainKratos.py"
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
     FluidDEM::write::WriteMaterialsFile
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+}
+
+# Overwritten to add CylinderContinuumParticle
+proc DEM::write::GetInletElementType {} {
+    set elem_name SphericSwimmingParticle3D
+    if {$::Model::SpatialDimension eq "2D"} {
+        set elem_name SphericSwimmingParticle2D
+    }
+    return $elem_name
 }
 
 proc FluidDEM::write::WriteMaterialsFile { } {

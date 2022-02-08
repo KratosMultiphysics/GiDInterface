@@ -1,0 +1,34 @@
+{
+    "id": "DEMPFEM",
+    "name": "DEM PFEM",
+    "prefix": "DEMPFEM_",
+    "themed": false,
+    "kratos_name": "DEMPFEMapplication",
+    "dimensions": [
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/InnerSphere.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script":"::DEMPFEM::Init",
+    "requeriments":{
+        "apps":["DEM", "PfemFluid"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "write": {
+        "coordinates": "groups"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

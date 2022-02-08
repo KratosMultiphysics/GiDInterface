@@ -81,7 +81,7 @@ proc spdAux::ProcGetSolutionStrategies {domNode args} {
     set pnames [list ]
     # W $args
     set sols [::Model::GetSolutionStrategies {*}$args]
-    # W $Sols
+    # W $sols
     foreach ss $sols {
         lappend names [$ss getName]
         lappend pnames [$ss getName]
@@ -101,14 +101,8 @@ proc spdAux::ProcGetSchemes {domNode args} {
     set nodeApp [GetAppIdFromNode $domNode]
     # W $nodeApp
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
-    set sol_stat_path [spdAux::getRoute $sol_stratUN]
     
-    #if {[get_domnode_attribute [$domNode selectNodes $sol_stat_path] v] eq ""} {
-        #W "entra"
-        get_domnode_attribute [$domNode selectNodes $sol_stat_path] dict
-        get_domnode_attribute [$domNode selectNodes $sol_stat_path] values
-        #}
-    set solStratName [::write::getValue $sol_stratUN]
+    set solStratName [::write::getValue $sol_stratUN "" force]
     if {$solStratName eq "" } {error "No solution strategy"}
     #W "Unique name: $sol_stratUN - Nombre $solStratName"
     set schemes [::Model::GetAvailableSchemes $solStratName {*}$args]
@@ -548,19 +542,11 @@ proc spdAux::ProcDirectorVectorNonZero { domNode args } {
 proc spdAux::ProcShowInMode { domNode args } {
     set kw [lindex $args 0]
     if {$kw ni [list "Release" "Developer"]} {return "hidden"}
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         if {$kw eq "Developer"} {return "normal"} {return "hidden"}
-    }
-    if {$::Kratos::kratos_private(DevMode) eq "release"} {
+    } else {
         if {$kw eq "Developer"} {return "hidden"} {return "normal"}
     }
-}
-
-proc spdAux::ProcGetFilesValues { } {
-    lappend listilla "- No file"
-    lappend listilla {*}[FileSelector::GetAllFiles]
-    lappend listilla "- Add new file"
-    return [join $listilla ","]
 }
 
 proc spdAux::ProcGetIntervals {domNode args} {
