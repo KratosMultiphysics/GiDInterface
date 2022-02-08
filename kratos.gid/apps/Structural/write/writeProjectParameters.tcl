@@ -221,6 +221,9 @@ proc ::Structural::write::getParametersDict { } {
     # Get the base dictionary for the project parameters
     set project_parameters_dict [getOldParametersDict]
 
+    # Analysis stage field
+    dict set project_parameters_dict analysis_stage "KratosMultiphysics.StructuralMechanicsApplication.structural_mechanics_analysis"
+
     # If using any element with the attribute RotationDofs set to true
     dict set project_parameters_dict solver_settings rotation_dofs [UsingSpecificDofElements RotationDofs]
     dict set project_parameters_dict solver_settings volumetric_strain_dofs [UsingSpecificDofElements VolumetricStrainDofs]

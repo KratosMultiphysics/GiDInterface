@@ -4,6 +4,9 @@
     "prefix": "FL",
     "themed": false,
     "kratos_name": "FluidDynamicsApplication",
+    "python_packages": [
+        "KratosFluidDynamicsApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
@@ -17,10 +20,10 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::Fluid::Init",
-    "requeriments":{
-        "apps":[],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::Fluid::Init",
+    "requeriments": {
+        "apps": [],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
@@ -44,7 +47,7 @@
         "model_part_name": "FluidModelPart",
         "output_model_part_name": "fluid_computational_model_part"
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml",
     "description": ""
 }

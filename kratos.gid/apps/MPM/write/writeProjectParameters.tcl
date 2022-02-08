@@ -2,6 +2,9 @@
 proc ::MPM::write::getParametersDict { } {
     set project_parameters_dict [Structural::write::getParametersDict]
 
+    # Analysis stage field
+    dict set project_parameters_dict analysis_stage "KratosMultiphysics.ParticleMechanicsApplication.particle_mechanics_analysis"
+
     # Quasi-static must be written as Quasi-static...
     set solutiontype [write::getValue STSoluType]
     dict set project_parameters_dict solver_settings solver_type $solutiontype
@@ -105,4 +108,3 @@ proc ::MPM::write::getParametersDict { } {
 proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 }
-
