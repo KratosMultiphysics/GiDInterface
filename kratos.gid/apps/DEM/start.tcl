@@ -26,7 +26,7 @@ proc ::DEM::Init { app } {
 
 proc ::DEM::CustomToolbarItems { } {
     variable dir
-    
+
     Kratos::ToolbarAddItem "MaterialRelations" "material-relation.png" [list -np- DEM::xml::ShowMaterialRelationWindow] [= "Material relations"]
 }
 
