@@ -160,11 +160,11 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         set subparams [dict create]
         # proc write::ProcessVectorFunctionComponents { groupNode condition process}
 
-        set constrains [write::getValueByNode [$group selectNodes "./value\[@n='Constrains'\]"]]
+        set constraints [write::getValueByNode [$group selectNodes "./value\[@n='Constraints'\]"]]
         # set value [write::getValueByNode [$group selectNodes "./value\[@n='component'\]"]]
         set table [write::getValueByNode [$group selectNodes "./value\[@n='Table'\]"]]
 
-        dict set subparams "constrained" $constrains
+        dict set subparams "constrained" $constraints
         # dict set subparams "value" $value
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" $table
@@ -194,11 +194,11 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         set subparams [dict create]
         # proc write::ProcessVectorFunctionComponents { groupNode condition process}
 
-        set constrains [write::getValueByNode [$group selectNodes "./value\[@n='Constrains'\]"]]
+        set constraints [write::getValueByNode [$group selectNodes "./value\[@n='Constraints'\]"]]
         # set value [write::getValueByNode [$group selectNodes "./value\[@n='component'\]"]]
         set table [write::getValueByNode [$group selectNodes "./value\[@n='Table'\]"]]
 
-        dict set subparams "constrained" $constrains
+        dict set subparams "constrained" $constraints
         # dict set subparams "value" $value
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
         dict set subparams "table" $table
