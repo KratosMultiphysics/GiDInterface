@@ -89,6 +89,8 @@ proc FluidDEM::write::writeFluidModifiedMaterials {fluid_materials_json} {
             dict unset property Material Variables PERMEABILITY_22; dict unset property Material Variables PERMEABILITY_23
             dict unset property Material Variables PERMEABILITY_33
             dict set property Material Variables PERMEABILITY [list $permeability_1 $permeability_2 $permeability_3]
+            
+            if {[dict exists $property Material Variables value]} {dict unset property Material Variables value}
         }
         dict lappend new_json properties $property
     }
