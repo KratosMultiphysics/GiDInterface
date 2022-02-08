@@ -31,18 +31,22 @@ proc ::DEM::examples::SpheresDropForTest::DrawGeometry { } {
     GiD_Process Mescape Geometry Create Object Rectangle -2 -2 6 2 2 6 escape
     # Draw the volume meshed with spheres
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape
+    GiD_Process Mescape Geometry Create Object Sphere -3 -2 2 1 escape escape
 
     # Group creation
     GiD_Groups create "Floor"
-    GiD_Groups create "Inlet"
+    # GiD_Groups create "Inlet"
+    GiD_Groups create "Top"
     #GiD_Groups create "ClusterInlet"
-    GiD_Groups create "Body"
+    GiD_Groups create "Object_1"
+    GiD_Groups create "Object_2"
 
     # Group assignation
     GiD_EntitiesGroups assign "Floor" surfaces 1
-    GiD_EntitiesGroups assign "Inlet" surfaces 2
+    GiD_EntitiesGroups assign "Top" surfaces 2
     #GiD_EntitiesGroups assign "ClusterInlet" surfaces 3
-    GiD_EntitiesGroups assign "Body" volumes 1
+    GiD_EntitiesGroups assign "Object_1" volumes 1
+    GiD_EntitiesGroups assign "Object_2" volumes 2
 }
 
 proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
@@ -52,20 +56,35 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
-    # DParts
+    ####### DParts
     set DEMParts [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_DEM'\]
-    set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Body]
+    set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Object_1]
     $DEMPartsNode setAttribute ov volume
     set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
-    # WallParts
+    set DEMParts [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_DEM'\]
+    set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Object_2]
+    $DEMPartsNode setAttribute ov volume
+    set props [list Material "DEM-DefaultMaterial"]
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props
+
+
+    # BC over particles
+    set object_BC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='DEMVelocity']}
+    #Velocity over walls is the name on the tree (pn)
+    set object_BCNode [customlib::AddConditionGroupOnXPath $object_BC Object_1]
+    $object_BCNode setAttribute ov surface
+    set props [list Constraints true,true,true selector_component_X ByValue value_component_X 1.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+    spdAux::SetValuesOnBaseNode $object_BCNode $props
+
+
+    ###### WallParts
     set FEMParts_floor [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_FEM'\]
     set FEMParts_floorNode [customlib::AddConditionGroupOnXPath $FEMParts_floor Floor]
     $FEMParts_floorNode setAttribute ov surface
     set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $FEMParts_floorNode $props
-
 
     # BC over floor
     set FloorBC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='FEMVelocity']}
@@ -75,12 +94,29 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     set props [list selector_component_X ByValue value_component_X 1.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     spdAux::SetValuesOnBaseNode $FloorBCNode $props
 
-    # InletPart
-    set FEMParts_inlet [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_Inlet-FEM'\]
-    set FEMParts_inletNode [customlib::AddConditionGroupOnXPath $FEMParts_inlet Inlet]
-    $FEMParts_inletNode setAttribute ov surface
+
+    set FEMParts_top [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_FEM'\]
+    set FEMParts_topNode [customlib::AddConditionGroupOnXPath $FEMParts_top Top]
+    $FEMParts_topNode setAttribute ov surface
     set props [list Material "DEM-DefaultMaterial"]
-    spdAux::SetValuesOnBaseNode $FEMParts_inletNode $props
+    spdAux::SetValuesOnBaseNode $FEMParts_topNode $props
+
+    # BC over top
+    set topBC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='FEMVelocity']}
+    set topBCNode [customlib::AddConditionGroupOnXPath $topBC Top]
+    $topBCNode setAttribute ov surface
+    set props [list Constraints false,true,true selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 2.0 selector_component_Z ByValue value_component_Z 2.0 Interval Total]
+    spdAux::SetValuesOnBaseNode $topBCNode $props
+
+
+
+
+    # # InletPart  - No inlets de moment
+    # set FEMParts_inlet [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_Inlet-FEM'\]
+    # set FEMParts_inletNode [customlib::AddConditionGroupOnXPath $FEMParts_inlet Inlet]
+    # $FEMParts_inletNode setAttribute ov surface
+    # set props [list Material "DEM-DefaultMaterial"]
+    # spdAux::SetValuesOnBaseNode $FEMParts_inletNode $props
 
     # BC over Inlet
     # set InletBC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='FEMVelocity']}
@@ -90,12 +126,12 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     # set props [list selector_component_X ByValue value_component_X 2.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
     # spdAux::SetValuesOnBaseNode $InletBCNode $props
 
-    # Inlet
-    set InletVars {container[@n='DEM']/container[@n='Injectors']/condition[@n='DEMInlet']}
-    set InletVarsNode [customlib::AddConditionGroupOnXPath $InletVars Inlet]
-    $InletVarsNode setAttribute ov surface
-    set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
-    spdAux::SetValuesOnBaseNode $InletVarsNode $props
+    # # Inlet
+    # set InletVars {container[@n='DEM']/container[@n='Injectors']/condition[@n='DEMInlet']}
+    # set InletVarsNode [customlib::AddConditionGroupOnXPath $InletVars Inlet]
+    # $InletVarsNode setAttribute ov surface
+    # set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
+    # spdAux::SetValuesOnBaseNode $InletVarsNode $props
 
 
 
@@ -109,7 +145,7 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
 
     # # DEM custom submodelpart
     # set custom_dem "$DEMConditions/condition\[@n='DEM-CustomSmp'\]"
-    # set customNode [customlib::AddConditionGroupOnXPath $custom_dem Body]
+    # set customNode [customlib::AddConditionGroupOnXPath $custom_dem Object_1]
     # $customNode setAttribute ov volume
 
     # # General data
