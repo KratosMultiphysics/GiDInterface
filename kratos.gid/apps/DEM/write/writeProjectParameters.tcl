@@ -67,9 +67,7 @@ proc ::DEM::write::getParametersDict { } {
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
 
-    set used_elements [spdAux::GetUsedElements]
-    set ElementType [lindex $used_elements 0]
-    dict set project_parameters_dict "ElementType"                          $ElementType
+    dict set project_parameters_dict "ElementType"                          [GetElementType]
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]
@@ -381,6 +379,12 @@ proc ::DEM::write::getForceProcessDictList {} {
 #         }
 #     }
 # }
+
+proc ::DEM::write::GetElementType { } {
+    set used_elements [spdAux::GetUsedElements]
+    set element_type [lindex $used_elements 0]
+    return $element_type
+}
 
 proc ::DEM::write::GetDemStrategyName { } {
     return sphere_strategy

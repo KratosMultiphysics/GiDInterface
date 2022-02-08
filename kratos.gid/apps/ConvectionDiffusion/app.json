@@ -43,6 +43,6 @@
         "model_part_name": "ThermalModelPart",
         "output_model_part_name": ""
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
 }

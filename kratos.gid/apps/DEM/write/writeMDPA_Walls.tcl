@@ -29,8 +29,6 @@ proc ::DEM::write::WriteMDPAWalls { } {
 }
 
 proc ::DEM::write::processRigidWallMaterials { } {
-
-
     write::processMaterials "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]/group"
 
     # It defines the associated properties of the corresponding Part (mass, inertia,..).
@@ -123,7 +121,7 @@ proc ::DEM::write::DefineFEMExtraConditions {props} {
     set GraphPrint [dict get $props Material Variables GraphPrint]
     set GraphPrintval 0
     if {[write::isBooleanTrue $GraphPrint]} {
-	set GraphPrintval 1
+        set GraphPrintval 1
     }
     write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
 }

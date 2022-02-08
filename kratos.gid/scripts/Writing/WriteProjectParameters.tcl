@@ -122,14 +122,14 @@ proc write::GetCutPlanesList { {cut_planes_UN CutPlanes} } {
 }
 
 proc write::GetCutPlanesByXPathList { xpath } {
-
+    
     set root [customlib::GetBaseRoot]
-
+    
     set list_of_planes [list ]
-
+    
     set xp1 "$xpath/blockdata"
     set planes [$root selectNodes $xp1]
-
+    
     foreach plane $planes {
         set pdict [dict create]
         set points [split [get_domnode_attribute [$plane firstChild] v] ","]
@@ -169,11 +169,11 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
         set StratParamsUN [apps::getCurrentUniqueName StratParams]
     }
 
-    set solstratName [write::getValue $solStratUN]
-    set schemeName [write::getValue $schemeUN]
+    set solstratName [write::getValue $solStratUN "" force]
+    set schemeName [write::getValue $schemeUN "" force]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
-
+    
     set solverSettingsDict [dict create]
     foreach {n in} [$sol getInputs] {
         dict set solverSettingsDict $n [write::getValue $StratParamsUN $n force]
@@ -223,11 +223,11 @@ proc write::getSolversParametersDict { {appid ""} } {
 }
 
 proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
-
+    
     set root [customlib::GetBaseRoot]
     set bcCondsList [list ]
     set grouped_conditions [list ]
-
+    
     set xp1 "[spdAux::getRoute $un]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
@@ -260,10 +260,10 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set processWriteCommand [$process getAttribute write_command]
             
             dict set processDict process_name $processName
-
+            
             if {$processWriteCommand eq ""} {
                 set processDict [write::GetProcessHeader $group $process $condition $groupId]
-
+                
                 set process_parameters [$process getInputs]
                 foreach {inputName in_obj} $process_parameters {
                     dict set processDict Parameters $inputName [write::GetInputValue $group $in_obj]
@@ -275,27 +275,27 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             lappend bcCondsList $processDict
         }
     }
-
+    
     foreach cid $grouped_conditions {
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
         } {
             set condition [::Model::getNodalConditionbyId $cid]
         }
-
+        
         set processName [$condition getProcessName]
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
         dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
-
+        
         set process_attributes [$process getAttributes]
         set process_parameters [$process getInputs]
-
+        
         dict set process_attributes process_name [dict get $process_attributes n]
         dict unset process_attributes n
         dict unset process_attributes pn
-
+        
         set processDict [dict merge $processDict $process_attributes]
         if {[$condition hasAttribute VariableName]} {
             set variable_name [$condition getAttribute VariableName]
@@ -309,15 +309,15 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
 }
 
 proc write::GetResultsList { un {cnd ""} } {
-
+    
     if {$cnd eq ""} {set xp1 [spdAux::getRoute $un]} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]"}
     return [GetResultsByXPathList $xp1]
 }
 
 proc write::GetResultsByXPathList { xpath } {
-
+    
     set root [customlib::GetBaseRoot]
-
+    
     set result [list ]
     set xp1 "$xpath/value"
     set resultxml [$root selectNodes $xp1]
@@ -335,10 +335,10 @@ proc write::GetResultsByXPathList { xpath } {
 proc write::getAllMaterialParametersDict {matname} {
     set root [customlib::GetBaseRoot]
     set md [dict create]
-
+    
     set xp3 [spdAux::getRoute [GetConfigurationAttribute materials_un]]
     append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $matname]
-
+    
     set props [$root selectNodes $xp3]
     foreach prop $props {
         dict set md [$prop @n] [get_domnode_attribute $prop v]
@@ -348,7 +348,7 @@ proc write::getAllMaterialParametersDict {matname} {
 
 proc write::getIntervalsDict { { un "Intervals" } {appid "" } } {
     set root [customlib::GetBaseRoot]
-
+    
     set intervalsDict [dict create]
     set xp3 "[spdAux::getRoute $un]/blockdata\[@n='Interval'\]"
     if {$xp3 ne ""} {
@@ -395,27 +395,27 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
 }
 
 proc write::GetDefaultProblemDataDict { {appid ""} } {
-
+    
     # Get the results unique name. appid parameter is usefull for multiple inheritance app with more than 1 results section
     if {$appid eq ""} {set results_UN Results } {set results_UN [GetConfigurationAttribute results_un]}
-
+    
     # Problem name
     set problem_data_dict [dict create]
     set model_name [Kratos::GetModelName]
     dict set problem_data_dict problem_name $model_name
-
+    
     # Parallelization
     set paralleltype [write::getValue ParallelType]
     dict set problem_data_dict "parallel_type" $paralleltype
-
+    
     # Write the echo level in the problem data section
     set echo_level [write::getValue $results_UN EchoLevel]
     dict set problem_data_dict echo_level $echo_level
-
+    
     # Time Parameters
     dict set problem_data_dict start_time [write::getValue [GetConfigurationAttribute time_parameters_un] StartTime]
     dict set problem_data_dict end_time [write::getValue [GetConfigurationAttribute time_parameters_un] EndTime]
-
+    
     return $problem_data_dict
 }
 
@@ -426,44 +426,46 @@ proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     if {[write::isBooleanTrue $need_gid]}  {
         lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
     }
-
+    
     set vtk_output_process_list [list ]
     set need_vtk [write::getValue EnableVtkOutput]
     if {[write::isBooleanTrue $need_vtk]}  {
         lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
     }
-
+    
     set outputProcessesDict [dict create]
     dict set outputProcessesDict gid_output $gid_output_process_list
     dict set outputProcessesDict vtk_output $vtk_output_process_list
-
+    
     return $outputProcessesDict
 }
 
 proc write::GetDefaultGiDOutput { {appid ""} } {
     # prepare params
     set model_name [Kratos::GetModelName]
-
+    
     # Setup GiD-Output
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
-    dict set outputProcessParams output_name $model_name
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputGiDDict $appid]
-
+    set folder_name [dict get $outputProcessParams postprocess_parameters folder_name]
+    dict unset outputProcessParams postprocess_parameters folder_name
+    dict set outputProcessParams output_name [file join $folder_name $model_name]
+    
     set outputConfigDict [dict create]
     dict set outputConfigDict python_module gid_output_process
     dict set outputConfigDict kratos_module KratosMultiphysics
     dict set outputConfigDict process_name GiDOutputProcess
     dict set outputConfigDict help "This process writes postprocessing files for GiD"
     dict set outputConfigDict Parameters $outputProcessParams
-
+    
     return $outputConfigDict
 }
 
 proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     set outputDict [dict create]
     set resultDict [dict create]
-
+    
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
     if {$gid_options_xpath eq ""} {set gid_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"}
     set GiDPostDict [dict create]
@@ -472,7 +474,7 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     dict set GiDPostDict WriteConditionsFlag        [getValueByXPath $gid_options_xpath GiDWriteConditionsFlag]
     dict set GiDPostDict MultiFileFlag              [getValueByXPath $gid_options_xpath GiDMultiFileFlag]
     dict set resultDict gidpost_flags $GiDPostDict
-
+    
     dict set resultDict file_label                 [getValueByXPath $gid_options_xpath FileLabel]
     set outputCT [getValueByXPath $gid_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
@@ -482,11 +484,11 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
         set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]
     }
     dict set resultDict output_interval $frequency
-
+    
     dict set resultDict body_output [getValueByXPath $gid_options_xpath BodyOutput]
     dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
     dict set resultDict skin_output [getValueByXPath $gid_options_xpath SkinOutput]
-
+    
     set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='CutPlanes'\]"
     dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
     set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
@@ -494,17 +496,19 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnElement'\]"
     dict set resultDict gauss_point_results [GetResultsByXPathList $gid_elements_xpath]
     dict set resultDict nodal_nonhistorical_results [list ]
-
+    
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [GetEmptyList]
+    
+    dict set outputDict folder_name [getValueByXPath $gid_options_xpath FolderName]
     return $outputDict
 }
 
 proc write::GetDefaultVTKOutput { {appid ""} } {
-
+    
     # prepare params
     set model_name [Kratos::GetModelName]
-
+    
     # Setup Vtk-Output
     set outputConfigDictVtk [dict create]
     dict set outputConfigDictVtk python_module vtk_output_process
@@ -512,17 +516,17 @@ proc write::GetDefaultVTKOutput { {appid ""} } {
     dict set outputConfigDictVtk process_name VtkOutputProcess
     dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
     dict set outputConfigDictVtk Parameters [write::GetDefaultParametersOutputVTKDict $appid]
-
+    
     return $outputConfigDictVtk
 }
 
 proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     set resultDict [dict create]
     dict set resultDict model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
-
+    
     if {$appid eq ""} {set results_UN Results } {set results_UN [apps::getAppUniqueName $appid Results]}
     set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
-
+    
     # manually selecting step, otherwise Paraview won't group the results
     set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
@@ -538,16 +542,40 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict element_data_value_variables    [list ]
     dict set resultDict condition_data_value_variables  [list ]
     dict set resultDict gauss_point_variables_extrapolated_to_nodes   [GetResultsList $results_UN OnElement]
-
+    
     return $resultDict
 }
 
 proc write::GetDefaultRestartDict { } {
-
+    
     set restartDict [dict create]
     dict set restartDict SaveRestart False
     dict set restartDict RestartFrequency 0
     dict set restartDict LoadRestart False
     dict set restartDict Restart_Step 0
     return $restartDict
+}
+
+proc write::GetTimeStepIntervals { {time_parameters_un ""} } {
+    if {$time_parameters_un eq ""} {set time_parameters_un [GetConfigurationAttribute time_parameters_un]}
+    set root [customlib::GetBaseRoot]
+    
+    set xp "[spdAux::getRoute $time_parameters_un]/container\[@n = 'TimeStep'\]/blockdata"
+    set time_step_interval_nodes [$root selectNodes $xp]
+    
+    # If the app is still working on fixed Delta time
+    if {[llength $time_step_interval_nodes] eq 0} {return [write::getValue $time_parameters_un DeltaTime]}
+    
+    # If it works with interval delta time
+    set time_step_intervals_list [list ]
+    foreach time_step_interval_node $time_step_interval_nodes {
+        set time_step_interval_start_time [write::getValueByNode [$time_step_interval_node find n StartTime]]
+        set time_step_interval_delta_time [write::getValueByNode [$time_step_interval_node find n DeltaTime]]
+        
+        set key_value [list $time_step_interval_start_time $time_step_interval_delta_time]
+        lappend time_step_intervals_list $key_value
+    }
+    
+    set time_step_intervals_list [lsort -real -index 0 $time_step_intervals_list]
+    return $time_step_intervals_list
 }

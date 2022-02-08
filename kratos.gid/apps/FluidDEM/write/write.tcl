@@ -38,7 +38,15 @@ proc FluidDEM::write::Validate { } {
 proc FluidDEM::write::writeCustomFilesEvent { } {
     FluidDEM::write::WriteMaterialsFile
     write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+}
 
+# Overwritten to add CylinderContinuumParticle
+proc DEM::write::GetInletElementType {} {
+    set elem_name SphericSwimmingParticle3D
+    if {$::Model::SpatialDimension eq "2D"} {
+        set elem_name SphericSwimmingParticle2D
+    }
+    return $elem_name
 }
 
 proc FluidDEM::write::WriteMaterialsFile { } {
