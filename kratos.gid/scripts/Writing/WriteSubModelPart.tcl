@@ -2,16 +2,15 @@
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable submodelparts
+    variable formats_dict
 
+    set id_f [dict get $formats_dict ID]
     set mid ""
     set what [split $what "&"]
     set group [GetWriteGroupName $group]
-    if {![dict exists $submodelparts [list $cid ${group}]]} {
+    if {[write::getSubModelPartId $cid $group] eq 0} {
         # Add the submodelpart to the catalog
-        set good_name [write::transformGroupName $group]
-        set mid "${cid}_${good_name}"
-        dict set submodelparts [list $cid ${group}] $mid
-
+        set mid [write::AddSubmodelpart $cid $group]
         # Prepare the print formats
         incr ::write::current_mdpa_indent_level
         set s1 [mdpaIndent]
@@ -19,7 +18,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         incr ::write::current_mdpa_indent_level 2
         set s2 [mdpaIndent]
         set gdict [dict create]
-        set f "${s2}%5i\n"
+        set f "${s2}$id_f\n"
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
@@ -51,7 +50,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
                 #W $iniend
                 foreach {ini end} $iniend {
                     for {set i $ini} {$i<=$end} {incr i} {
-                        WriteString "${s2}[format %5d $i]"
+                        WriteString "${s2}[format $id_f $i]"
                     }
                 }
             }
@@ -86,15 +85,17 @@ proc write::_writeConditionsForBasicSubmodelParts {un cond_iter} {
     Model::getConditions "../../Common/xml/Conditions.xml"
     set conditions_dict [dict create ]
     set elements_list [list ]
+    set generic_condition_name GENERIC_CONDITION3D
+    if {$::Model::SpatialDimension ne "3D"} {set generic_condition_name GENERIC_CONDITION2D}
     foreach group $groups {
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
         if {$needConds} {
-            set iters [write::writeGroupNodeCondition $conditions_dict $group "GENERIC_CONDITION" [incr cond_iter]]
+            set iters [write::writeGroupNodeCondition $conditions_dict $group $generic_condition_name [incr cond_iter]]
             set conditions_dict [dict merge $conditions_dict $iters]
             set cond_iter [lindex $iters end end]
         }
     }
-    Model::ForgetCondition GENERIC_CONDITIONS
+    Model::ForgetCondition $generic_condition_name
     return $conditions_dict
 }
 
@@ -133,7 +134,7 @@ proc write::getSubModelPartNames { args } {
         set groupName [$group @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || $cid eq "Parts"} {
+        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || [string first Parts $cid] >= 0 } {
             set gname [::write::getSubModelPartId $cid $groupName]
             if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
         }
@@ -158,4 +159,31 @@ proc write::GetSubModelPartFromCondition { base_UN condition_id } {
         lappend submodelpart_list $submodelpart_id
     }
     return $submodelpart_list
+}
+
+proc write::GetSubModelPartName {condid group} {
+    set group_name [write::GetWriteGroupName $group]
+    set good_name [write::transformGroupName $group_name]
+    return "${condid}_${good_name}"
+}
+
+proc write::AddSubmodelpart {condid group} {
+    variable submodelparts
+    set mid [write::GetSubModelPartName $condid $group]
+    set group_name [write::GetWriteGroupName $group]
+    set good_name [write::transformGroupName $group_name]
+    if {[write::getSubModelPartId $condid $group_name] eq 0} {
+        dict set submodelparts [list $condid ${group_name}] $mid
+    }
+    return $mid
+}
+
+proc write::getSubModelPartId {cid group} {
+    variable submodelparts
+    set find [list $cid ${group}]
+    if {[dict exists $submodelparts $find]} {
+        return [dict get $submodelparts [list $cid ${group}]]
+    } {
+        return 0
+    }
 }

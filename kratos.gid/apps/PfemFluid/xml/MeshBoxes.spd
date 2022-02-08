@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>	
+<container n="MeshBoxes" pn="Mesh Boxes" un="PFEMFLUID_StratSection" icon="dmsettings" help="Set Bounding and refining boxes" open_window="0">
+  <container n="BoundingBox" pn="Bounding Box" un="PFEMFLUID_BoundingBox" icon="select" help="Bounding Box" actualize_tree="1" state="[HideIfUniqueName PFEMFLUID_DomainType Solids]" open_window="0">
+    <value n="UseBoundingBox" pn="Bounding box" type="bool" values="true,false" v="false" icon="data" />
+    <value n="MaxX" pn="Max X" icon="data" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Max X"/>
+    <value n="MinX" pn="Min X" icon="data" v="-10" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Min X"/>
+    <value n="MaxY" pn="Max Y" icon="data" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Max Y"/>
+    <value n="MinY" pn="Min Y" icon="data" v="-10" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Min Y"/>
+    <value n="MaxZ" pn="Max Z" icon="data" v="10"  state="[CheckStateBoundingBox3Dimension {string(../value[@n='UseBoundingBox']/@v)} true]" help="Max Z"/>
+    <value n="MinZ" pn="Min Z" icon="data" v="-10" state="[CheckStateBoundingBox3Dimension {string(../value[@n='UseBoundingBox']/@v)} true]" help="Min Z"/>
+    <value n="StartTime" pn="Start Time" v="0.0" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Time at which the bounding box gets active."/>
+    <value n="StopTime" pn="Stop Time" v="1000.0" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Time at which the bounding box stops acting."/>
+	</container>	
+  <container n="RefiningBox" pn="Refining Box" un="PFEMFLUID_RefiningBox" icon="select" help="Refining Box" actualize_tree="1" state="[HideIfUniqueName PFEMFLUID_DomainType Solids]" open_window="0">
+    <value n="UseRefiningBox" pn="Refining box" type="bool" values="true,false" v="false" icon="data" />
+    <value n="RefinedMeshSize" pn="Mesh size" icon="data" v="0.01"  state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Mesh size of refined zone"/>
+    <value n="MaxX" pn="Max X" icon="data" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Max X"/>
+    <value n="MinX" pn="Min X" icon="data" v="-10" state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Min X"/>
+    <value n="MaxY" pn="Max Y" icon="data" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Max Y"/>
+    <value n="MinY" pn="Min Y" icon="data" v="-10" state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Min Y"/>
+    <value n="MaxZ" pn="Max Z" icon="data" v="10"  state="[CheckStateBoundingBox3Dimension {string(../value[@n='UseRefiningBox']/@v)} true]" help="Max Z"/>
+    <value n="MinZ" pn="Min Z" icon="data" v="-10" state="[CheckStateBoundingBox3Dimension {string(../value[@n='UseRefiningBox']/@v)} true]" help="Min Z"/>
+    <value n="StartTime" pn="Start Time" v="0.0" state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Time at which the bounding box gets active."/>
+    <value n="StopTime" pn="Stop Time" v="1000.0" state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Time at which the bounding box stops acting."/>
+	</container>	
+</container>
+
+
+
+  

@@ -1,71 +1,45 @@
 namespace eval ::Structural {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
-    variable attributes
-    variable kratos_name
-    variable app_id
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::Structural::Init { } {
+proc ::Structural::Init { app } {
     # Variable initialization
     variable dir
-    variable attributes
-    variable kratos_name
-    variable app_id
-
-    set app_id Structural
-    
     set dir [apps::getMyDir "Structural"]
-    set attributes [dict create]
-    
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-    
-    # Intervals 
-    dict set attributes UseIntervals 1
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {dict set attributes UseIntervals 1}
-    
-    set kratos_name StructuralMechanicsApplication
-    
-    LoadMyFiles
+    variable _app
+    set _app $app
+
+    ::Structural::xml::Init
+    ::Structural::write::Init
 }
 
-proc ::Structural::LoadMyFiles { } {
-    variable dir
-    
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
-    uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $dir postprocess formfinding.tcl]]
-}
-
-proc ::Structural::CustomToolbarItems { } {
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::TrussCantilever] [= "Example\nTruss cantilever"]   
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Structural::examples::HighRiseBuilding] [= "Example\nHigh-rise building"]   
-    }
-}
-
-proc ::Structural::CustomMenus { } {
-    Structural::examples::UpdateMenus
-
-    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Formfinding - Update geometry" ] end POST [list ::Structural::Formfinding::UpdateGeometry] "" "" insert =
-    GiDMenu::UpdateMenus
-}
-
-proc ::Structural::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
-}
-
-proc ::Structural::BeforeMeshGeneration { size } { 
+# Create the old-gid condition relation_line_geo_mesh to link geometry and mesh entities. 
+# Topic: Local axes, beams
+# TODO: remove this when GiD creates this relation automatically
+proc ::Structural::BeforeMeshGeneration { size } {
     foreach group [GiD_Groups list] {
         GiD_AssignData condition relation_line_geo_mesh Lines {0} [GiD_EntitiesGroups get $group lines]
     }
 }
 
-::Structural::Init
+# Some conditions applied over small displacement parts must change the topology name... una chufa
+proc ::Structural::ApplicationSpecificGetCondition {condition group etype nnodes} {
+    return [Structural::write::ApplicationSpecificGetCondition $condition $group $etype $nnodes]
+}
+
+# Add formfinding button in Kratos menu in postprocess
+proc ::Structural::CustomMenus { } {
+    Structural::examples::UpdateMenus
+
+    GiDMenu::InsertOption "Kratos" [list "---"] 8 POST "" "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "Formfinding - Update geometry" ] end POST [list ::Structural::Formfinding::UpdateGeometry] "" "" insert =
+    GiDMenu::UpdateMenus
+}

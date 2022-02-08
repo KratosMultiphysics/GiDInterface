@@ -5,11 +5,6 @@
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500.0" type="double"  help="Density of the material (not bulk density)"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e5" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
-      <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.2" type="double" help="Particle friction angle (for Coulombs friction)"/>
-      <parameter n="PARTICLE_MATERIAL" pn="Color" v="1" type="integer"/>
-      <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
-      <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.0" type="double" help="Particle sphericity"/>
     </inputs>
   </Material>
@@ -19,11 +14,6 @@
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1250.0" type="double"  help="Density of the material (not bulk density)"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e7" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
-      <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.5" type="double" help="Particle friction angle (for Coulombs friction)"/>
-      <parameter n="PARTICLE_MATERIAL" pn="Color" v="2" type="integer"/>
-      <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
-      <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.8324" type="double" help="Particle sphericity"/>
 	  </inputs>
   </Material>
@@ -32,11 +22,6 @@
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1309.0" type="double"  help="Density of the material (not bulk density)"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e7" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
-      <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.5" type="double" help="Particle friction angle (for Coulombs friction)"/>
-      <parameter n="PARTICLE_MATERIAL" pn="Color" v="2" type="integer"/>
-      <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
-      <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.6770" type="double" help="Particle sphericity"/>
     </inputs>
   </Material>
@@ -45,11 +30,6 @@
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1300.0" type="double"  help="Density of the material (not bulk density)"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e7" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
-      <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.25" type="double" help="Particle friction angle (for Coulombs friction)"/>
-      <parameter n="PARTICLE_MATERIAL" pn="Color" v="3" type="integer"/>
-      <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
-      <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
     </inputs>
   </Material>
@@ -58,11 +38,6 @@
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500.0" type="double"  help="Density of the material (not bulk density)"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e9" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
-      <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.1" type="double" help="Particle friction angle (for Coulombs friction)"/>
-      <parameter n="PARTICLE_MATERIAL" pn="Color" v="4" type="integer"/>
-      <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
-      <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
     </inputs>
   </Material>
@@ -71,11 +46,6 @@
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500.0" type="double"  help="Density of the material (not bulk density)"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0e9" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
-      <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.1" type="double" help="Particle friction angle (for Coulombs friction)"/>
-      <parameter n="PARTICLE_MATERIAL" pn="Color" v="5" type="integer"/>
-      <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
-      <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="0.70" type="double" help="Particle sphericity"/>
     </inputs>
   </Material>
@@ -84,11 +54,6 @@
       <parameter n="PARTICLE_DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2700.0" type="double"  help="Density of the material (not bulk density)"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="5.1e9" type="double"  help="The Youngs Modulus of the material (not bulk stiffness)"/>
       <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.18" type="double" help="The Poissons Ratio of the material (not bulk Ratio)"/>
-      <parameter n="FRICTION" pn="Coefficient of friction" v="1.0" type="double" help="Particle friction coefficient (for Coulombs friction)"/>
-      <parameter n="COEFFICIENT_OF_RESTITUTION" pn="Coefficient of restitution" v="0.4" type="double" help="Particle friction angle (for Coulombs friction)"/>
-      <parameter n="PARTICLE_MATERIAL" pn="Color" v="6" type="integer"/>
-      <parameter n="ROLLING_FRICTION" pn="Rolling friction" v="0.01" type="double" help="Rolling friction"/>
-      <parameter n="ROLLING_FRICTION_WITH_WALLS" pn="Rolling friction With Walls" v="0.01" type="double" help="Rolling friction with walls"/>
       <parameter n="PARTICLE_SPHERICITY" pn="Sphericity" v="1.00" type="double" help="Particle sphericity"/>
     </inputs>
   </Material>

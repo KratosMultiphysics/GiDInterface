@@ -1,11 +1,14 @@
-namespace eval Structural::write {
+namespace eval ::Structural::write {
+    namespace path ::Structural
+    Kratos::AddNamespace [namespace current]
+
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     variable writeAttributes
     variable ContactsDict
 }
 
-proc Structural::write::Init { } {
+proc ::Structural::write::Init { } {
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     set ConditionsDictGroupIterators [dict create]
@@ -16,25 +19,28 @@ proc Structural::write::Init { } {
 
     variable writeAttributes
     set writeAttributes [dict create]
+    
     SetAttribute validApps [list "Structural"]
-    SetAttribute writeCoordinatesByGroups 0
-    SetAttribute properties_location json
-    SetAttribute parts_un STParts
-    SetAttribute time_parameters_un STTimeParameters
-    SetAttribute results_un STResults
-    SetAttribute materials_un STMaterials
-    SetAttribute initial_conditions_un STInitialConditions
-    SetAttribute nodal_conditions_un STNodalConditions
-    SetAttribute conditions_un STLoads
+    SetAttribute writeCoordinatesByGroups [::Structural::GetWriteProperty coordinates]
+    SetAttribute properties_location [::Structural::GetWriteProperty properties_location]
+
+    SetAttribute parts_un [::Structural::GetUniqueName parts]
+    SetAttribute time_parameters_un [::Structural::GetUniqueName time_parameters]
+    SetAttribute results_un [::Structural::GetUniqueName results]
+    SetAttribute materials_un [::Structural::GetUniqueName materials]
+    SetAttribute initial_conditions_un [::Structural::GetUniqueName initial_conditions]
+    SetAttribute nodal_conditions_un [::Structural::GetUniqueName nodal_conditions]
+    SetAttribute conditions_un [::Structural::GetUniqueName conditions]
+
     SetAttribute nodal_conditions_no_submodelpart [list CONDENSED_DOF_LIST CONDENSED_DOF_LIST_2D CONTACT CONTACT_SLAVE]
-    SetAttribute materials_file "StructuralMaterials.json"
-    SetAttribute main_script_file "KratosStructural.py"
-    SetAttribute model_part_name "Structure"
-    SetAttribute output_model_part_name ""
+    SetAttribute materials_file [::Structural::GetWriteProperty materials_file]
+    SetAttribute main_launch_file [::Structural::GetAttribute main_launch_file]
+    SetAttribute model_part_name [::Structural::GetWriteProperty model_part_name]
+    SetAttribute output_model_part_name [::Structural::GetWriteProperty output_model_part_name]
 }
 
 # MDPA Blocks
-proc Structural::write::writeModelPartEvent { } {
+proc ::Structural::write::writeModelPartEvent { } {
     variable ConditionsDictGroupIterators
     initLocalWriteConfiguration
     write::initWriteConfiguration [GetAttributes]
@@ -45,7 +51,7 @@ proc Structural::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
 
     # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Element connectivities (Groups on STParts)
     write::writeElementConnectivities
@@ -68,15 +74,15 @@ proc Structural::write::writeModelPartEvent { } {
 
 }
 
-proc Structural::write::writeConditions { } {
+proc ::Structural::write::writeConditions { } {
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] ]
 
     set last_iter [Structural::write::getLastConditionId]
     writeContactConditions $last_iter
 }
 
-proc Structural::write::writeMeshes { } {
+proc ::Structural::write::writeMeshes { } {
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart
     # Add them to this list
@@ -103,7 +109,7 @@ proc Structural::write::writeMeshes { } {
     writeContacts
 }
 
-proc Structural::write::writeContactConditions { last_iter } {
+proc ::Structural::write::writeContactConditions { last_iter } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
     set ov "line"
@@ -122,7 +128,7 @@ proc Structural::write::writeContactConditions { last_iter } {
     }
 }
 
-proc Structural::write::writeLoads { } {
+proc ::Structural::write::writeLoads { } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
@@ -138,7 +144,7 @@ proc Structural::write::writeLoads { } {
     }
 }
 
-proc Structural::write::writeContacts { } {
+proc ::Structural::write::writeContacts { } {
     variable ConditionsDictGroupIterators
     variable ContactsDict
 
@@ -151,7 +157,7 @@ proc Structural::write::writeContacts { } {
         foreach slave_group [$root selectNodes $xp_slave] {
             if {$slave_group ne ""} {
                 set slave_groupid_raw [$slave_group @n]
-                set slave_group_pair_id [get_domnode_attribute [$slave_group selectNodes "./value\[@n='pair'\]"] v]
+                set slave_group_pair_id [write::getValueByNode [$slave_group selectNodes "./value\[@n='pair'\]"] ]
                 set slave_groupid [write::GetWriteGroupName $slave_groupid_raw]
                 set prev [list ]
                 if {[dict exists $ContactsDict Slaves $slave_group_pair_id]} {set prev [dict get $ContactsDict Slaves $slave_group_pair_id]}
@@ -165,7 +171,7 @@ proc Structural::write::writeContacts { } {
             if {$master_group ne ""} {
                 set master_groupid_raw [$master_group @n]
                 set master_groupid [write::GetWriteGroupName $master_groupid_raw]
-                set master_group_pair_id [get_domnode_attribute [$master_group selectNodes "./value\[@n='pair'\]"] v]
+                set master_group_pair_id [write::getValueByNode [$master_group selectNodes "./value\[@n='pair'\]"] ]
                 set prev [list ]
                 if {[dict exists $ContactsDict Masters $master_group_pair_id]} {
                     set prev [dict get $ContactsDict Masters $master_group_pair_id]
@@ -179,14 +185,14 @@ proc Structural::write::writeContacts { } {
     }
 }
 
-proc Structural::write::writeCustomBlock { } {
+proc ::Structural::write::writeCustomBlock { } {
     write::WriteString "Begin Custom"
     write::WriteString "Custom write for Structural, any app can call me, so be careful!"
     write::WriteString "End Custom"
     write::WriteString ""
 }
 
-proc Structural::write::getLastConditionId { } {
+proc ::Structural::write::getLastConditionId { } {
     variable ConditionsDictGroupIterators
     set top 1
     if {$ConditionsDictGroupIterators ne ""} {
@@ -198,15 +204,14 @@ proc Structural::write::getLastConditionId { } {
 }
 
 # Custom files
-proc Structural::write::WriteMaterialsFile { } {
+proc ::Structural::write::WriteMaterialsFile { } {
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True [GetAttribute model_part_name]
 }
 
-proc Structural::write::GetUsedElements { {get "Objects"} } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
+proc ::Structural::write::GetUsedElements { {get "Objects"} } {
     set lista [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
+    foreach gNode [Structural::write::GetPartsGroups] {
+        set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
         set e [Model::getElement $elem_name]
         if {$get eq "Name"} { set e [$e getName] }
         lappend lista $e
@@ -214,10 +219,21 @@ proc Structural::write::GetUsedElements { {get "Objects"} } {
     return $lista
 }
 
-proc Structural::write::writeLocalAxes { } {
+proc ::Structural::write::GetPartsGroups { {get "Objects"} } {
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set g $gNode
+        if {$get eq "Name"} { set g [$g getName] }
+        lappend lista $g
+    }
+    return $lista
+}
+
+proc ::Structural::write::writeLocalAxes { } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set elem_name [get_domnode_attribute [$gNode selectNodes ".//value\[@n='Element']"] v]
+        set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
         set e [Model::getElement $elem_name]
         if {[write::isBooleanTrue [$e getAttribute "RequiresLocalAxes"]]} {
             set group [$gNode @n]
@@ -227,7 +243,10 @@ proc Structural::write::writeLocalAxes { } {
 }
 
 # This is the kind of code I hate
-proc Structural::write::writeHinges { } {
+proc ::Structural::write::writeHinges { } {
+    
+    # format for writing ids
+    set id_f [dict get $write::formats_dict ID]
 
     # Preprocess old_conditions. Each mesh linear element remembers the origin line in geometry
     set match_dict [dict create]
@@ -254,25 +273,25 @@ proc Structural::write::writeHinges { } {
             set first_list [list ]
             set last_list [list ]
             if {$::Model::SpatialDimension eq "3D"} {
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementZ']"] v]]} {lappend first_list 2}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentX']"] v]]} {lappend first_list 3}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentY']"] v]]} {lappend first_list 4}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 5}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 6}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 7}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementZ']"] v]]} {lappend last_list 8}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentX']"] v]]} {lappend last_list 9}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentY']"] v]]} {lappend last_list 10}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 11}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] ]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] ]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementZ']"] ]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstMomentX']"] ]]} {lappend first_list 3}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstMomentY']"] ]]} {lappend first_list 4}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] ]]} {lappend first_list 5}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] ]]} {lappend last_list 6}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] ]]} {lappend last_list 7}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementZ']"] ]]} {lappend last_list 8}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondMomentX']"] ]]} {lappend last_list 9}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondMomentY']"] ]]} {lappend last_list 10}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] ]]} {lappend last_list 11}
             } else {
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] v]]} {lappend first_list 0}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] v]]} {lappend first_list 1}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] v]]} {lappend first_list 2}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] v]]} {lappend last_list 3}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] v]]} {lappend last_list 4}
-                if {[write::isBooleanTrue [get_domnode_attribute [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] v]]} {lappend last_list 5}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementX']"] ]]} {lappend first_list 0}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstDisplacementY']"] ]]} {lappend first_list 1}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='FirstMomentZ']"] ]]} {lappend first_list 2}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementX']"] ]]} {lappend last_list 3}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondDisplacementY']"] ]]} {lappend last_list 4}
+                if {[write::isBooleanTrue [write::getValueByNode [$gNode selectNodes ".//value\[@n='SecondMomentZ']"] ]]} {lappend last_list 5}
             }
 
             # Write Left and Rigth end of each geometrical bar
@@ -282,11 +301,11 @@ proc Structural::write::writeHinges { } {
                 set end [::tcl::mathfunc::max {*}$linear_elements]
                 if {[llength $first_list] > 0} {
                     set value [join $first_list ,]
-                    write::WriteString [format "%5d \[%d\] (%s)" $first [llength $first_list] $value]
+                    write::WriteString [format "$id_f \[%d\] (%s)" $first [llength $first_list] $value]
                 }
                 if {[llength $last_list] > 0} {
                     set value [join $last_list ,]
-                    write::WriteString [format "%5d \[%d\] (%s)" $end [llength $last_list] $value]
+                    write::WriteString [format "$id_f \[%d\] (%s)" $end [llength $last_list] $value]
                 }
             }
             # Write the tail
@@ -296,10 +315,10 @@ proc Structural::write::writeHinges { } {
     }
 }
 
-proc Structural::write::initLocalWriteConfiguration { } {
+proc ::Structural::write::initLocalWriteConfiguration { } {
 }
 
-proc Structural::write::usesContact { } {
+proc ::Structural::write::usesContact { } {
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute STNodalConditions]/condition\[@n = 'CONTACT'\]/group"]
 
     if {$result_node ne ""} {
@@ -310,7 +329,7 @@ proc Structural::write::usesContact { } {
 }
 
 # return 0 means ok; return [list 1 "Error message to be displayed"]
-proc Structural::write::writeValidateEvent { } {
+proc ::Structural::write::writeValidateEvent { } {
     set problem 0
     set problem_message [list ]
 
@@ -322,7 +341,7 @@ proc Structural::write::writeValidateEvent { } {
     return [list $problem $problem_message]
 }
 
-proc Structural::write::validateTrussMesh { } {
+proc ::Structural::write::validateTrussMesh { } {
     # Elements to be checked
     set truss_element_names [list "TrussLinearElement2D" "TrussElement2D" "TrussLinearElement3D" "TrussElement3D"]
     set error 0
@@ -355,53 +374,108 @@ proc Structural::write::validateTrussMesh { } {
     return [list $error $error_message]
 }
 
+proc ::Structural::write::ApplicationSpecificGetCondition {condition group etype nnodes} {
+    # Prepare the return, if nothing to apply, return the same condition
+    set ret $condition
 
-proc Structural::write::writeCustomFilesEvent { } {
+    # Some conditions applied over small displacement parts must change the topology name
+
+    # Check if any of the used elements is in the list of Small displacements
+    set used_elements [Structural::write::GetUsedElements]
+    set small_disp_elements [Model::GetElements {LargeDeformation False}]
+    set used_small_disp_elements [list]
+
+    foreach elem $used_elements {
+        if {$elem in $small_disp_elements} {
+            lappend used_small_disp_elements $elem
+        }
+    }
+    # used_small_disp_elements contains the used elements which LargeDeformation attribute is set to false
+    if {[llength $used_small_disp_elements] > 0} {
+        if {[Structural::write::GroupUsesSmallDisplacement $group $used_small_disp_elements]} {
+            set new_cond [Model::Clone $condition]
+            set topology [$new_cond getTopologyFeature $etype $nnodes]
+            if {$topology ne "" && [$topology hasAttribute KratosNameSmallDisplacement]} {
+                set new_kname [$topology getAttribute KratosNameSmallDisplacement]
+                if {$new_kname ne ""} {$topology setKratosName $new_kname}
+                set ret $new_cond
+            }
+        }
+    }
+    return $ret
+}
+
+proc ::Structural::write::GroupUsesSmallDisplacement {group used_small_disp_elements} {
+    set ret 0
+    set group_nodes [GiD_EntitiesGroups get $group nodes]
+
+    foreach part_group_small_disp [Structural::write::GetPartsGroups] {
+        set elem_name [write::getValueByNode [$part_group_small_disp selectNodes ".//value\[@n='Element']"] ]
+        set elem [Model::getElement $elem_name]
+        if {$elem in $used_small_disp_elements} {
+            if {[objarray length [objarray intersection -sorted $group_nodes [GiD_EntitiesGroups get [$part_group_small_disp @n] nodes] ] ] > 0} {set ret 1; break}
+        }
+    }
+    return $ret
+}
+
+proc ::Structural::write::PrepareSubGroupsAssignChildEntitiesOnParents { } {
+    # list of groups sorted by lenght. so we always treat childs first and parents last
+    set groups_list [lsort -command {apply {{a b} {expr {[string length $a] - [string length $b]}}}} [GiD_Groups list]]
+    foreach group $groups_list {
+        set parent [GiD_Groups get parent $group]
+        if {$parent ne ""} {
+            foreach elem [GiD_Groups get allowed_types $parent] {
+                if {$elem ni [list "edges" "faces"]} {
+                    GiD_EntitiesGroups assign $parent $elem [GiD_EntitiesGroups get $group $elem]
+                }
+            }
+        }
+    }
+}
+
+proc ::Structural::write::writeCustomFilesEvent { } {
     WriteMaterialsFile
 
     write::SetParallelismConfiguration
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "MainKratos.py"
 }
 
-proc Structural::write::SetCoordinatesByGroups {value} {
+proc ::Structural::write::SetCoordinatesByGroups {value} {
     SetAttribute writeCoordinatesByGroups $value
 }
 
-proc Structural::write::GetAttribute {att} {
+proc ::Structural::write::GetAttribute {att} {
     variable writeAttributes
     return [dict get $writeAttributes $att]
 }
 
-proc Structural::write::GetAttributes {} {
+proc ::Structural::write::GetAttributes {} {
     variable writeAttributes
     return $writeAttributes
 }
 
-proc Structural::write::SetAttribute {att val} {
+proc ::Structural::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
 
-proc Structural::write::AddAttribute {att val} {
+proc ::Structural::write::AddAttribute {att val} {
     variable writeAttributes
     dict append writeAttributes $att $val]
 }
 
-proc Structural::write::AddAttributes {configuration} {
+proc ::Structural::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc Structural::write::AddValidApps {appList} {
+proc ::Structural::write::AddValidApps {appList} {
     AddAttribute validApps $appList
 }
 
-proc Structural::write::ApplyConfiguration { } {
+proc ::Structural::write::ApplyConfiguration { } {
     variable writeAttributes
     write::SetConfigurationAttributes $writeAttributes
 }
-
-Structural::write::Init

@@ -7,9 +7,8 @@
         </inputs>
     </solver>
 
-    <solver n="ExternalSolversApplication.super_lu" pn="SuperLU" SolverType="Standard" Parallelism="OpenMP">
+    <solver n="LinearSolversApplication.sparse_lu" pn="SparseLU" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
-            <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>
     </solver>
 
@@ -17,16 +16,7 @@
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="200" help=""/>
             <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
-			<parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="None,DiagonalPreconditioner,ILU0Preconditioner" v="None" help=""/>
-			<parameter n="scaling" pn="Scaling" type="bool" v="False" help=""/>
-        </inputs>
-    </solver>
-
-    <solver n="ExternalSolversApplication.gmres" pn="GMRES" SolverType="Standard" Parallelism="OpenMP">
-        <inputs>
-            <parameter n="max_iteration" pn="Max iterations" type="integer" v="200" help=""/>
-            <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
-			<parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="None,DiagonalPreconditioner,ILU0Preconditioner" v="None" help=""/>
+			<parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="none,diagonal,ilu,ilu0" v="None" help=""/>
 			<parameter n="scaling" pn="Scaling" type="bool" v="False" help=""/>
         </inputs>
     </solver>
@@ -35,7 +25,7 @@
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="200" help=""/>
             <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
-            <parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="None,DiagonalPreconditioner,ILU0Preconditioner" v="None" help=""/>
+            <parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="none,diagonal,ilu,ilu0" v="None" help=""/>
             <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
         </inputs>
     </solver>
@@ -61,7 +51,7 @@
         <inputs>
 			<parameter n="max_iteration" pn="Max iterations" type="integer" v="200" help=""/>
 			<parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-7" help=""/>
-			<parameter n="preconditioner_type" pn="Preconditioner type" type="combo" values="None,DiagonalPreconditioner,ILU0,ILUT,ICC,AmesosPreconditioner" pvalues="None,Diagonal,ILU0,ILUT,ICC,Amesos" v="None"  help=""/>
+			<parameter n="preconditioner_type" pn="Preconditioner type" type="combo" values="none,diagonal,ilu0,ilut,ICC,amesos" pvalues="None,Diagonal,ILU0,ILUT,ICC,Amesos" v="None"  help=""/>
 			<parameter n="overlap_level" pn="Overlap level" type="integer" v="1"  help=""/>
 			<parameter n="gmres_krylov_space_dimension" pn="krylovDimension" type="integer" v="100" help=""/>
 			<parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>

@@ -1,15 +1,19 @@
-namespace eval CDEM::examples {
+namespace eval ::CDEM::examples {
+    namespace path ::CDEM
+    Kratos::AddNamespace [namespace current]
 
-}
-
-proc CDEM::examples::Init { } {
-    uplevel #0 [list source [file join $::CDEM::dir examples ContinuumDrop.tcl]]
 }
 
 proc CDEM::examples::UpdateMenus { } {
     GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Stone block and sand" ] 8 PRE [list ::CDEM::examples::ContinuumDrop] "" "" insertafter =
+    GiDMenu::InsertOption "Kratos" [list "Bulk groups" ] 8 PRE [list ::CDEM::xml::BulkGroup] "" "" insertafter =
     GiDMenu::UpdateMenus
 }
 
-CDEM::examples::Init
+proc ::CDEM::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
+}

@@ -1,16 +1,21 @@
+namespace eval ::FSI::examples::HighRiseBuilding {
+    namespace path ::FSI::examples
+    Kratos::AddNamespace [namespace current]
 
-proc FSI::examples::HighRiseBuilding {args} {
+}
+
+proc ::FSI::examples::HighRiseBuilding::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-
     Kratos::ResetModel
-    DrawHighRiseBuildingGeometry
-    AssignGroupsHighRiseBuilding$::Model::SpatialDimension
-    AssignHighRiseBuildingMeshSizes
-    TreeAssignationHighRiseBuilding
+
+    DrawGeometry
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -18,12 +23,12 @@ proc FSI::examples::HighRiseBuilding {args} {
     GiD_Process 'Zoom Frame
 }
 
-proc FSI::examples::DrawHighRiseBuildingGeometry {args} {
-    Fluid::examples::DrawHighRiseBuildingGeometry$::Model::SpatialDimension
-    Structural::examples::DrawHighRiseBuildingGeometry$::Model::SpatialDimension
+proc ::FSI::examples::HighRiseBuilding::DrawGeometry {args} {
+    Fluid::examples::HighRiseBuilding::DrawGeometry$::Model::SpatialDimension
+    Structural::examples::HighRiseBuilding::DrawGeometry$::Model::SpatialDimension
 }
 
-proc FSI::examples::AssignGroupsHighRiseBuilding2D {args} {
+proc ::FSI::examples::HighRiseBuilding::AssignGroups2D {args} {
     # Fluid group creation
     GiD_Groups create Fluid
     GiD_EntitiesGroups assign Fluid surfaces 1
@@ -56,16 +61,16 @@ proc FSI::examples::AssignGroupsHighRiseBuilding2D {args} {
     GiD_EntitiesGroups assign InterfaceStructure lines {9 10 11}
 }
 
-proc FSI::examples::AssignGroupsHighRiseBuilding3D {args} {
+proc ::FSI::examples::HighRiseBuilding::AssignGroups3D {args} {
     # To be implemented
 }
 
-proc FSI::examples::AssignHighRiseBuildingMeshSizes {args} {
-    Fluid::examples::AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
-    Structural::examples::AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
+proc ::FSI::examples::HighRiseBuilding::AssignMeshSizes {args} {
+    ::Fluid::examples::HighRiseBuilding::AssignMeshSizes$::Model::SpatialDimension
+    ::Structural::examples::HighRiseBuilding::AssignMeshSizes$::Model::SpatialDimension
 }
 
-proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
+proc ::FSI::examples::HighRiseBuilding::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -76,17 +81,10 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
 
     # Fluid Parts
-    set fluidParts {container[@n='FSI']/container[@n='Fluid']/condition[@n='Parts']}
+    set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.225 DYNAMIC_VISCOSITY 1.846e-5]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
 
@@ -99,14 +97,7 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
     set props [list value 0.0]
-    foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $outletNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Top_Wall] setAttribute ov $condtype
@@ -124,59 +115,39 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement "FluidALEMeshBC//Total"]
         $fluidDisplacementNode setAttribute ov line
         set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-        foreach {prop val} $props {
-             set propnode [$fluidDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-             if {$propnode ne "" } {
-                  $propnode setAttribute v $val
-             } else {
-                W "Warning - Couldn't find property ALEMeshDisplacementBC2D $prop"
-             }
-        }
+        
+        spdAux::SetValuesOnBaseNode $fluidDisplacementNode $props
     }
 
     # Time parameters
-    set time_parameters [list EndTime 40.0 DeltaTime 0.05]
-    set time_params_path [spdAux::getRoute "FLTimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list EndTime 40.0 DeltaTime 0.05]
+    set xpath [spdAux::getRoute "FLTimeParameters"]
+    
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Output
-    set params [list OutputControlType time OutputDeltaTime 1.0]
-    set path "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {n v} $params {
-        [$root selectNodes "$path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list OutputControlType time OutputDeltaTime 1.0]
+    set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
+    
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Fluid domain strategy settings
-    set str_change_list [list relative_velocity_tolerance "1e-8" absolute_velocity_tolerance "1e-10" relative_pressure_tolerance "1e-8" absolute_pressure_tolerance "1e-10" maximum_iterations "20"]
+    set parameters [list relative_velocity_tolerance "1e-8" absolute_velocity_tolerance "1e-10" relative_pressure_tolerance "1e-8" absolute_pressure_tolerance "1e-10" maximum_iterations "20"]
     set xpath [spdAux::getRoute FLStratParams]
-    foreach {name value} $str_change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check high-rise building script"
-        }
-    }
+    
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Structural
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='FSI']/container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
+    
+    set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Solid'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov surface
     set constLawNameStruc "LinearElasticPlaneStress2DLaw"
     set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc DENSITY 7850 YOUNG_MODULUS 206.9e9 POISSON_RATIO 0.29 THICKNESS 0.1]
-    foreach {prop val} $props {
-         set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
     GiD_Groups clone Ground Total
@@ -187,85 +158,41 @@ proc FSI::examples::TreeAssignationHighRiseBuilding {args} {
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement Ground]
     $structDisplacementNode setAttribute ov line
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Structure domain time parameters
-    set change_list [list EndTime 40.0 DeltaTime 0.05]
+    set parameters [list EndTime 40.0 DeltaTime 0.05]
     set xpath [spdAux::getRoute STTimeParameters]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check Truss example script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Structural Interface
     customlib::AddConditionGroupOnXPath "container\[@n='FSI'\]/container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='StructureInterface$nd'\]" InterfaceStructure
 
     # Structure domain output parameters
-    set change_list [list OutputControlType time OutputDeltaTime 1.0]
+    set parameters [list OutputControlType time OutputDeltaTime 1.0]
     set xpath "[spdAux::getRoute STResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check high-rise building script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Structure Bossak scheme setting
     spdAux::SetValueOnTreeItem v "bossak" STScheme
 
     # Structure domain strategy settings
-    set str_change_list [list echo_level 0 residual_relative_tolerance "1e-8" residual_absolute_tolerance "1e-10" max_iteration "20"]
+    set parameters [list echo_level 0 residual_relative_tolerance "1e-8" residual_absolute_tolerance "1e-10" max_iteration "20"]
     set xpath [spdAux::getRoute STStratParams]
-    foreach {name value} $str_change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check high-rise building script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Coupling settings
-    set parallelization_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set parallelization_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $parallelization_parameters {
-        [$root selectNodes "$parallelization_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set xpath [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
-    set change_list [list nl_tol "1e-8" nl_max_it 25]
+    set parameters [list nl_tol "1e-8" nl_max_it 25]
     set xpath [spdAux::getRoute FSIStratParams]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check high-rise building script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
-    set change_list [list Solver Relaxation]
+    set parameters [list Solver Relaxation]
     set xpath [spdAux::getRoute FSIPartitionedcoupling_strategy]
-    foreach {name value} $change_list {
-        set node [$root selectNodes "$xpath/value\[@n = '$name'\]"]
-        if {$node ne ""} {
-            $node setAttribute v $value
-        } else {
-            W "Couldn't find $name - Check high-rise building script"
-        }
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
 }

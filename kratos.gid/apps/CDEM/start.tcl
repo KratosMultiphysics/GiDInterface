@@ -1,45 +1,28 @@
 namespace eval ::CDEM {
+    Kratos::AddNamespace [namespace current]
     # Variable declaration
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::CDEM::Init { } {
+proc ::CDEM::Init { app } {
     # Variable initialization
     variable dir
-    variable prefix
-    variable kratos_name
-    variable attributes
-
-    set attributes [dict create]
-    set kratos_name DEMapplication
-
     set dir [apps::getMyDir "CDEM"]
-    set prefix CDEM_
-    set ::spdAux::TreeVisibility 0
+    variable _app
+    set _app $app
+    
+    CDEM::xml::Init
+    CDEM::write::Init
 
-    apps::LoadAppById "DEM"
-
-    # Intervals
-    dict set attributes UseIntervals 1
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
-
-    LoadMyFiles
 }
 
-proc ::CDEM::LoadMyFiles { } {
-    variable dir
-
-    uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeMDPA_Parts.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
+proc ::CDEM::CustomToolbarItems { } {
+    ::DEM::CustomToolbarItems
 }
 
 proc ::CDEM::BeforeMeshGeneration {elementsize} {
@@ -50,18 +33,6 @@ proc ::CDEM::AfterMeshGeneration {fail} {
     ::DEM::AfterMeshGeneration $fail
 }
 
-proc ::CDEM::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
+proc ::CDEM::AfterSaveModel {filespd} {
+    ::DEM::AfterSaveModel $filespd
 }
-
-proc ::CDEM::CustomToolbarItems { } {
-    variable dir
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" [file join $dir images drop.png] [list -np- ::CDEM::examples::ContinuumDrop] [= "Example\nRocks fall"]
-    }
-}
-
-::CDEM::Init

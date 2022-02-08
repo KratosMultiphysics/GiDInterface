@@ -11,9 +11,9 @@
   
   <!-- list of options to be filled -->
   <parameter_list>
-    <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="7" help=""/>  
-    <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-5" help=""/>  
-    <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-5" help=""/>  
+    <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="10" help=""/>  
+    <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-4" help=""/>  
+    <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-4" help=""/>  
     <parameter n="echo_level" pn="Echo level" type="int" v="1" help=""/>  
   </parameter_list>
   
@@ -46,7 +46,7 @@
       <parameter_list>
       </parameter_list>
       <element_filters>
-	<filter field="kratos_module" value="PfemFluidDynamicsApplication,ContactMechanicsApplication"/>
+	<filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
       </element_filters>
       </scheme> -->
   </schemes>
@@ -63,9 +63,9 @@
   
   <!-- list of options to be filled -->
   <parameter_list>
-    <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="7" help=""/>  
-    <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-5" help=""/>  
-    <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-5" help=""/>  
+    <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="10" help=""/>  
+    <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-4" help=""/>  
+    <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-4" help=""/>  
     <parameter n="echo_level" pn="Echo level" type="int" v="1" help=""/>  
   </parameter_list>
   
@@ -98,7 +98,7 @@
       <parameter_list>
       </parameter_list>
       <element_filters>
-	<filter field="kratos_module" value="PfemFluidDynamicsApplication,ContactMechanicsApplication"/>
+	<filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
       </element_filters>
       </scheme> -->
   </schemes>
@@ -115,9 +115,9 @@
   
   <!-- list of options to be filled -->
   <parameter_list>
-    <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="7" help=""/>  
-    <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-5" help=""/>  
-    <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-5" help=""/>  
+    <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="10" help=""/>  
+    <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-4" help=""/>  
+    <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-4" help=""/>  
     <parameter n="echo_level" pn="Echo level" type="int" v="1" help=""/>  
   </parameter_list>
   
@@ -150,7 +150,7 @@
       <parameter_list>
       </parameter_list>
       <element_filters>
-	<filter field="kratos_module" value="PfemFluidDynamicsApplication,ContactMechanicsApplication"/>
+	<filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
       </element_filters>
       </scheme> -->
   </schemes>

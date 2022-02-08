@@ -4,6 +4,9 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
 
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis"
+
     # Set the problem data section
     dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict]
 
@@ -20,16 +23,15 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     dict set projectParametersDict processes [ConjugateHeatTransfer::write::GetProcessList]
 
     return $projectParametersDict
-
 }
 
-proc ConjugateHeatTransfer::write::writeParametersEvent { } {
+proc ::ConjugateHeatTransfer::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
 
-proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
+proc ::ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set solver_settings_dict [dict create]
     dict set solver_settings_dict solver_type "conjugate_heat_transfer"
     set nDim [expr [string range [write::getValue nDim] 0 0]]
@@ -53,8 +55,10 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     dict set solver_settings_dict solid_domain_solver_settings thermal_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
 
     # Coupling settings
-    set solid_interfaces_list [write::GetSubModelPartFromCondition CNVDFFBC SolidThermalInterface$::Model::SpatialDimension]
-    set fluid_interfaces_list [write::GetSubModelPartFromCondition Buoyancy_CNVDFFBC FluidThermalInterface$::Model::SpatialDimension]
+    set solid_interfaces_list_raw [write::GetSubModelPartFromCondition CNVDFFBC SolidThermalInterface$::Model::SpatialDimension]
+    set fluid_interfaces_list_raw [write::GetSubModelPartFromCondition Buoyancy_CNVDFFBC FluidThermalInterface$::Model::SpatialDimension]
+    foreach solid_interface $solid_interfaces_list_raw {lappend solid_interfaces_list [join [list ThermalModelPart $solid_interface] "."]}
+    foreach fluid_interface $fluid_interfaces_list_raw {lappend fluid_interfaces_list [join [list FluidModelPart $fluid_interface] "."]}
 
     set coupling_settings [dict create]
     dict set coupling_settings max_iteration [write::getValue CHTGeneralParameters max_iteration]
@@ -66,7 +70,7 @@ proc ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     return $solver_settings_dict
 }
 
-proc ConjugateHeatTransfer::write::GetProcessList { } {
+proc ::ConjugateHeatTransfer::write::GetProcessList { } {
     set processes [dict create]
 
     # Get and add fluid processes
@@ -79,49 +83,95 @@ proc ConjugateHeatTransfer::write::GetProcessList { } {
 
     return $processes
 }
-proc ConjugateHeatTransfer::write::GetOutputProcessesList { } {
-    set output_process [dict create]
-    set gid_output_list [list]
 
-    # Set a different output_name for the fluid and solid domains
-    set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0]
-    dict set fluid_output Parameters output_name "[dict get $fluid_output Parameters output_name]_fluid"
-    set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0]
-    dict set solid_output Parameters output_name "[dict get $solid_output Parameters output_name]_solid"
 
-    set solid_nodal_variables [dict get $solid_output Parameters postprocess_parameters result_file_configuration nodal_results]
-    set valid_list [list ]
-    foreach solid_nodal_variable $solid_nodal_variables {
-        if {$solid_nodal_variable in [list "TEMPERATURE"]} {
-            lappend valid_list $solid_nodal_variable
-        }
+proc write::GetDefaultOutputProcessDict { {appid ""} } {
+    # Output process must be placed inside json lists
+    set gid_output_process_list [list ]
+    set need_gid [write::getValue EnableGiDOutput]
+    if {[write::isBooleanTrue $need_gid]}  {
+        lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
     }
-    dict set solid_output Parameters postprocess_parameters result_file_configuration nodal_results $valid_list
 
-    # Append the fluid and solid output processes to the output processes list
-    lappend gid_output_processes_list $fluid_output
-    lappend gid_output_processes_list $solid_output
-    dict set output_process gid_output_processes $gid_output_processes_list
+    set vtk_output_process_list [list ]
+    set need_vtk [write::getValue EnableVtkOutput]
+    if {[write::isBooleanTrue $need_vtk]} {
+        lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
+    }
+
+    set outputProcessesDict [dict create]
+    dict set outputProcessesDict gid_output $gid_output_process_list
+    dict set outputProcessesDict vtk_output $vtk_output_process_list
+
+    return $outputProcessesDict
+}
+
+proc ::ConjugateHeatTransfer::write::GetOutputProcessesList { } {
+    set output_process [dict create]
+
+    set need_gid [write::getValue EnableGiDOutput]
+    if {[write::isBooleanTrue $need_gid]} {
+        # Set a different output_name for the fluid and solid domains
+        set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes gid_output] 0]
+        dict set fluid_output Parameters output_name "[dict get $fluid_output Parameters output_name]_fluid"
+        set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes gid_output] 0]
+        dict set solid_output Parameters output_name "[dict get $solid_output Parameters output_name]_solid"
+
+        set solid_nodal_variables [dict get $solid_output Parameters postprocess_parameters result_file_configuration nodal_results]
+        set valid_list [list ]
+        foreach solid_nodal_variable $solid_nodal_variables {
+            if {$solid_nodal_variable in [list "TEMPERATURE"]} {
+                lappend valid_list $solid_nodal_variable
+            }
+        }
+        dict set solid_output Parameters postprocess_parameters result_file_configuration nodal_results $valid_list
+
+        # Append the fluid and solid output processes to the output processes list
+        lappend gid_output_processes_list $fluid_output
+        lappend gid_output_processes_list $solid_output
+        dict set output_process gid_output_processes $gid_output_processes_list
+    }
+
+    set need_vtk [write::getValue EnableVtkOutput]
+    if {[write::isBooleanTrue $need_vtk]} {
+    # Set a different output_name for the fluid and solid domains
+        set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes vtk_output] 0]
+        set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes vtk_output] 0]
+
+        set solid_nodal_variables [dict get $solid_output Parameters nodal_solution_step_data_variables]
+        set valid_list [list ]
+        foreach solid_nodal_variable $solid_nodal_variables {
+            if {$solid_nodal_variable in [list "TEMPERATURE"]} {
+                lappend valid_list $solid_nodal_variable
+            }
+        }
+        dict set solid_output Parameters nodal_solution_step_data_variables $valid_list
+
+        # Append the fluid and solid output processes to the output processes list
+        lappend vtk_output_processes_list $fluid_output
+        lappend vtk_output_processes_list $solid_output
+        dict set output_process vtk_output_processes $vtk_output_processes_list
+    }
 
     return $output_process
 }
 
-proc ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
+proc ::ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     # Buoyancy section
     apps::setActiveAppSoft Buoyancy
     write::initWriteConfiguration [Buoyancy::write::GetAttributes]
-    ConvectionDiffusion::write::SetAttribute nodal_conditions_un Buoyancy_CNVDFFNodalConditions
-    ConvectionDiffusion::write::SetAttribute conditions_un Buoyancy_CNVDFFBC
-    ConvectionDiffusion::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
-    ConvectionDiffusion::write::SetAttribute model_part_name FluidThermalModelPart
+    ::ConvectionDiffusion::write::SetAttribute nodal_conditions_un Buoyancy_CNVDFFNodalConditions
+    ::ConvectionDiffusion::write::SetAttribute conditions_un Buoyancy_CNVDFFBC
+    ::ConvectionDiffusion::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
+    ::ConvectionDiffusion::write::SetAttribute model_part_name FluidThermalModelPart
     set ConjugateHeatTransfer::write::fluid_domain_solver_settings [Buoyancy::write::getParametersDict]
 
     # Heating section
     apps::setActiveAppSoft ConvectionDiffusion
-    ConvectionDiffusion::write::SetAttribute nodal_conditions_un CNVDFFNodalConditions
-    ConvectionDiffusion::write::SetAttribute conditions_un CNVDFFBC
-    ConvectionDiffusion::write::SetAttribute model_part_name ThermalModelPart
-    ConvectionDiffusion::write::SetAttribute thermal_bc_un CNVDFFBC
+    ::ConvectionDiffusion::write::SetAttribute nodal_conditions_un CNVDFFNodalConditions
+    ::ConvectionDiffusion::write::SetAttribute conditions_un CNVDFFBC
+    ::ConvectionDiffusion::write::SetAttribute model_part_name ThermalModelPart
+    ::ConvectionDiffusion::write::SetAttribute thermal_bc_un CNVDFFBC
     write::initWriteConfiguration [ConvectionDiffusion::write::GetAttributes]
     set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
 

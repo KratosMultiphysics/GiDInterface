@@ -2,6 +2,9 @@
 proc ::MPM::write::getParametersDict { } {
     set project_parameters_dict [Structural::write::getParametersDict]
 
+    # Analysis stage field
+    dict set project_parameters_dict analysis_stage "KratosMultiphysics.ParticleMechanicsApplication.particle_mechanics_analysis"
+
     # Quasi-static must be written as Quasi-static...
     set solutiontype [write::getValue STSoluType]
     dict set project_parameters_dict solver_settings solver_type $solutiontype
@@ -40,9 +43,13 @@ proc ::MPM::write::getParametersDict { } {
     # Line search
     dict unset project_parameters_dict solver_settings line_search
 
+    # Volumetric strain dofs
+    dict unset project_parameters_dict solver_settings volumetric_strain_dofs
+
     # Add the solver information
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict MPM] ]
+    dict lappend solverSettingsDict auxiliary_variables_list RAYLEIGH_ALPHA
     dict set project_parameters_dict solver_settings $solverSettingsDict
 
     # Move slip to constraints
@@ -85,14 +92,19 @@ proc ::MPM::write::getParametersDict { } {
     dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
     dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
     dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
+    dict set body_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results [list MP_VELOCITY MP_DISPLACEMENT]
     dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
     dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
     dict unset project_parameters_dict output_processes gid_output
     dict unset project_parameters_dict output_processes vtk_output
+
+    # REMOVE RAYLEIGH
+    dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
+    dict unset project_parameters_dict solver_settings rayleigh_alpha
+    dict unset project_parameters_dict solver_settings rayleigh_beta
 
     return $project_parameters_dict
 }
 proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 }
-

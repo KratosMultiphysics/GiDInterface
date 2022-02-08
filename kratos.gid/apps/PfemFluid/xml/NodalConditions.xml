@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
+<NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorVariableProcess" VariableName="DISPLACEMENT" 
+		      analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="PfemFluid" state="CheckNodalConditionStatePFEM" Interval="Total">
+    <symbol proc='gid_groups_conds::draw_symbol_image conditions/displacement.png' orientation='global'/>
+    <outputs>
+      <parameter n="DISPLACEMENT_REACTION" pn="Force Reaction" v="No"/>
+    </outputs>
+  </NodalConditionItem>
+
+  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignVectorVariableProcess" VariableName="VELOCITY"
+		      analysis_type="Dynamic" unit_magnitude="Velocity" units="m/s" App="PfemFluid" state="CheckNodalConditionStatePFEM" Interval="Total">
+    <symbol proc='gid_groups_conds::draw_symbol_text velocity' orientation='global'/> 
+    <outputs>
+      <parameter n="VELOCITY_REACTION" pn="Velocity Reaction" v="No"/>
+    </outputs>
+  </NodalConditionItem>
+
+  <NodalConditionItem  n="ACCELERATION" pn="Acceleration" ProcessName="AssignVectorVariableProcess" VariableName="ACCELERATION" 
+		       analysis_type="Dynamic" unit_magnitude="Acceleration" units="m/s^2" App="PfemFluid" state="CheckNodalConditionStatePFEM" Interval="Total">
+  </NodalConditionItem>
+
+  <NodalConditionItem  n="PRESSURE" pn="Pressure" ProcessName="AssignScalarVariableProcess" VariableName="PRESSURE" 
+		       analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="P"  units="Pa" v="Yes" App="PfemFluid" state="CheckNodalConditionStatePFEM" Interval="Total">
+    <outputs>
+      <parameter n="PRESSURE_REACTION" pn="Pressure Reaction" v="No"/>
+    </outputs>
+  </NodalConditionItem>
   <NodalConditionItem n="INLET" pn="Inlet" ProcessName="AssignInletProcess" VariableName="VELOCITY" Interval="Total"
 		      unit_magnitude="Velocity" units="m/s" App="Pfem" kratos_module="DelaunayMeshingApplication" ov="[CheckGeometry 2]">
   </NodalConditionItem>

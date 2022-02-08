@@ -1,5 +1,10 @@
+namespace eval ::Structural::examples::HighRiseBuilding {
+    namespace path ::Structural::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::Structural::examples::HighRiseBuilding {args} {
+}
+
+proc ::Structural::examples::HighRiseBuilding::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -7,10 +12,10 @@ proc ::Structural::examples::HighRiseBuilding {args} {
     }
 
     Kratos::ResetModel
-    DrawHighRiseBuildingGeometry$::Model::SpatialDimension
-    AssignGroupsHighRiseBuilding$::Model::SpatialDimension
-    AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
-    TreeAssignationHighRiseBuilding$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -18,7 +23,7 @@ proc ::Structural::examples::HighRiseBuilding {args} {
     GiD_Process 'Zoom Frame
 }
 
-proc Structural::examples::DrawHighRiseBuildingGeometry2D {args} {
+proc ::Structural::examples::HighRiseBuilding::DrawGeometry2D {args} {
     GiD_Layers create Structure
     GiD_Layers edit to_use Structure
 
@@ -43,7 +48,7 @@ proc Structural::examples::DrawHighRiseBuildingGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface {*}$structureLines escape escape
 }
 
-proc Structural::examples::AssignGroupsHighRiseBuilding2D {args} {
+proc ::Structural::examples::HighRiseBuilding::AssignGroups2D {args} {
     # Group creation
     GiD_Groups create Structure
     GiD_Groups create Ground
@@ -54,14 +59,14 @@ proc Structural::examples::AssignGroupsHighRiseBuilding2D {args} {
     GiD_EntitiesGroups assign InterfaceStructure lines {1 2 3}
 }
 
-proc Structural::examples::AssignHighRiseBuildingMeshSizes2D {args} {
+proc ::Structural::examples::HighRiseBuilding::AssignMeshSizes2D {args} {
     set structure_mesh_size 5.0
     GiD_Process Mescape Meshing ElemType Quadrilateral [GiD_EntitiesGroups get Structure surfaces] escape
     GiD_Process Mescape Meshing Structured Surfaces Size {*}[GiD_EntitiesGroups get Structure surfaces] escape $structure_mesh_size {*}[GiD_EntitiesGroups get InterfaceStructure lines] escape escape escape escape
 }
 
 
-proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
+proc ::Structural::examples::HighRiseBuilding::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -69,19 +74,12 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     gid_groups_conds::setAttributesF {container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    set structParts {container[@n='Structural']/container[@n='Parts']/condition[@n='Parts_Solid']}
+    set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Solid'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov surface
     set constLawNameStruc "LinearElasticPlaneStress2DLaw"
     set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc DENSITY 7850 YOUNG_MODULUS 206.9e9 POISSON_RATIO 0.29 THICKNESS 0.1]
-    foreach {prop val} $props {
-         set propnode [$structPartsNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
     GiD_Groups clone Ground Total
@@ -91,16 +89,8 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     set structDisplacement {container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement "Ground//Total"]
     $structDisplacementNode setAttribute ov line
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z Not Interval Total]
-    #set props [list constrained Yes ByFunction No value 0.0]
-    foreach {prop val} $props {
-         set propnode [$structDisplacementNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue selector_component_Z Not Interval Total]
+    spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Point load
     GiD_Groups clone InterfaceStructure Total
@@ -111,19 +101,11 @@ proc Structural::examples::TreeAssignationHighRiseBuilding2D {args} {
     set LoadNode [customlib::AddConditionGroupOnXPath $structLoad "InterfaceStructure//Total"]
     $LoadNode setAttribute ov line
     set props [list ByFunction No modulus 50 value_direction_X 1 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$LoadNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Structure $prop"
-         }
-    }
+    spdAux::SetValuesOnBaseNode $LoadNode $props
 
     # Structure domain time parameters
     [$root selectNodes "[spdAux::getRoute STTimeParameters]/value\[@n = 'EndTime'\]"] setAttribute v 25.0
     [$root selectNodes "[spdAux::getRoute STTimeParameters]/container\[@n = 'TimeStep'\]/blockdata\[1\]/value\[@n = 'DeltaTime'\]"] setAttribute v 0.05
-       
-
+     
     spdAux::RequestRefresh
 }

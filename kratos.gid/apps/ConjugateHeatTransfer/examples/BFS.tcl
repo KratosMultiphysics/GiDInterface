@@ -1,13 +1,18 @@
+namespace eval ::ConjugateHeatTransfer::examples::BFS {
+    namespace path ::ConjugateHeatTransfer::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::ConjugateHeatTransfer::examples::BFS {args} {
+}
+
+proc ::ConjugateHeatTransfer::examples::BFS::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawBFSGeometry$::Model::SpatialDimension
-    AssignBFSGroups$::Model::SpatialDimension
-    TreeAssignationBFS$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -17,15 +22,15 @@ proc ::ConjugateHeatTransfer::examples::BFS {args} {
 
 
 # Draw Geometry
-proc ConjugateHeatTransfer::examples::DrawBFSGeometry3D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::DrawGeometry3D {args} {
     # DrawSquareGeometry2D
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
-    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
 
-proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers create HeatSource
@@ -72,7 +77,7 @@ proc ConjugateHeatTransfer::examples::DrawBFSGeometry2D {args} {
 
 
 # Group assign
-proc ConjugateHeatTransfer::examples::AssignBFSGroups2D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::AssignGroups2D {args} {
     # Create the groups for the fluid
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -123,7 +128,7 @@ proc ConjugateHeatTransfer::examples::AssignBFSGroups2D {args} {
     GiD_Groups edit color Heating_Bottom_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Heating_Bottom_Wall lines 9
 }
-proc ConjugateHeatTransfer::examples::AssignBFSGroups3D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::AssignGroups3D {args} {
     # Create the groups
     # GiD_Groups create Fluid
     # GiD_Groups edit color Fluid "#26d1a8ff"
@@ -147,11 +152,11 @@ proc ConjugateHeatTransfer::examples::AssignBFSGroups3D {args} {
 }
 
 # Tree assign
-proc ConjugateHeatTransfer::examples::TreeAssignationBFS3D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::TreeAssignation3D {args} {
     # TreeAssignationCylinderInFlow2D
     # AddCuts
 }
-proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
+proc ::ConjugateHeatTransfer::examples::BFS::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -165,15 +170,8 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     # Fluid parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.001875 CONDUCTIVITY 1.0 SPECIFIC_HEAT 0.002640845]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian2DLaw DENSITY 1.0 DYNAMIC_VISCOSITY 0.001875 CONDUCTIVITY 1.0 SPECIFIC_HEAT 0.002640845]
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     # Fluid boundary conditions
     set fluid_conditions [spdAux::getRoute "FLBC"]
@@ -197,14 +195,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set fluid_thermal_node [customlib::AddConditionGroupOnXPath $fluid_imposed_temperature Fluid_Left_Top_Wall]
     $fluid_thermal_node setAttribute ov $cond_type
     set props [list constrained True Interval Total value 273.15]
-    foreach {prop val} $props {
-         set propnode [$fluid_thermal_node selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property ImposedTemperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluid_thermal_node $props
 
     # Fluid thermal interface
     set fluid_thermal_interface_path "$fluid_thermal_boundary_conditions_xpath/condition\[@n='FluidThermalInterface$nd'\]"
@@ -220,34 +211,18 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set thermic_fluid_temperature_node [customlib::AddConditionGroupOnXPath $thermic_fluid_temperature "Fluid//Initial"]
     $thermic_fluid_temperature_node setAttribute ov $body_type
     set props [list Interval Initial value 273.15]
-    foreach {prop val} $props {
-         set propnode [$thermic_fluid_temperature_node selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Fluid Temperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $thermic_fluid_temperature_node $props
 
     # Fluid Boussinesq settings
     set fluid_boussinesq_settings_xpath [spdAux::getRoute "Buoyancy_Boussinesq"]
     set fluid_boussinesq_params [list gravity "0.0,0.0,0.0" ambient_temperature 273.15]
-    foreach {field value} $fluid_boussinesq_params {
-        [$root selectNodes "$fluid_boussinesq_settings_xpath/value\[@n = '$field'\]"] setAttribute v $value
-    }
+    spdAux::SetValuesOnBasePath $fluid_boussinesq_settings_xpath $fluid_boussinesq_params
 
     # Solid parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Heating]
     set props [list Element EulerianConvDiff$nd DENSITY 0.0 CONDUCTIVITY 10 SPECIFIC_HEAT 0.0]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Heating $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     # Solid thermal initial conditions
     set thermalNodalConditions [spdAux::getRoute "CNVDFFNodalConditions"]
@@ -258,14 +233,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set thermalnodNode [customlib::AddConditionGroupOnXPath $thermalnodcond "Heating//Initial"]
     $thermalnodNode setAttribute ov $body_type
     set props [list Interval Initial value 273.15]
-    foreach {prop val} $props {
-         set propnode [$thermalnodNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Temperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $thermalnodNode $props
 
     # Solid thermal boundary conditions
     set thermalConditions [spdAux::getRoute "CNVDFFBC"]
@@ -273,14 +241,7 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     set thermalNode [customlib::AddConditionGroupOnXPath $thermalcond Heating_Bottom_Wall]
     $thermalNode setAttribute ov $cond_type
     set props [list constrained True value 274.15 Interval Total]
-    foreach {prop val} $props {
-         set propnode [$thermalNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property ImposedTemperature $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $thermalNode $props
 
     set thermalcond "$thermalConditions/condition\[@n='SolidThermalInterface$nd'\]"
     set thermal_interface [customlib::AddConditionGroupOnXPath $thermalcond Heating_Top_Wall]
@@ -289,30 +250,22 @@ proc ConjugateHeatTransfer::examples::TreeAssignationBFS2D {args} {
     # Time parameters
     set time_parameters [list EndTime 500 DeltaTime 2.5]
     set time_params_path [spdAux::getRoute "TimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $time_params_path $time_parameters
 
     # Output
-    set time_parameters [list OutputControlType step OutputDeltaStep 1]
+    set parameters [list OutputControlType step OutputDeltaStep 1]
     set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Parallelism
     set parallelism_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
     set parallelism_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $parallelism_parameters {
-        [$root selectNodes "$parallelism_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $parallelism_params_path $parallelism_parameters
 
     # Coupling settings
     set coupling_settings [list max_iteration 25 temperature_relative_tolerance 1e-6]
     set coupling_settings_path [spdAux::getRoute "CHTGeneralParameters"]
-    foreach {n v} $coupling_settings {
-        [$root selectNodes "$coupling_settings_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $coupling_settings_path $coupling_settings
 
     spdAux::RequestRefresh
 }

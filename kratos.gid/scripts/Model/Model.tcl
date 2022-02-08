@@ -3,7 +3,7 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval Model {
+namespace eval ::Model {
     variable SpatialDimension
     variable ValidSpatialDimensions
     variable SolutionStrategies
@@ -30,9 +30,7 @@ proc Model::Init { } {
     variable ConstitutiveLaws
     variable Solvers
     variable Processes
-    
-    #set dir $::Kratos::kratos_private(Path)
-    
+        
     set SolutionStrategies [list ]
     set Elements [list ]
     set Materials [list ]
@@ -53,70 +51,42 @@ proc Model::InitVariables {varName varValue} {
 }
 
 proc Model::getSolutionStrategies { SolutionStrategyFileName } {
-    #variable SolutionStrategies
     variable dir
-    
-    #set SolutionStrategies [list ]
     dom parse [tDOM::xmlReadFile [file join $dir xml $SolutionStrategyFileName]] doc
-    
     ParseSolutionStrategies $doc
 }
 
 proc Model::getElements { ElementsFileName } {
-    #variable Elements
     variable dir
-    
-    #set Elements [list ]
     dom parse [tDOM::xmlReadFile [file join $dir xml $ElementsFileName]] doc
-    
     ParseElements $doc
 }
 proc Model::getConditions { ConditionsFileName } {
-    #variable Conditions
     variable dir
-    
-    #set Conditions [list ]
     dom parse [tDOM::xmlReadFile [file join $dir xml $ConditionsFileName]] doc
-    
     ParseConditions $doc
 }
 proc Model::getNodalConditions { NodalConditionsFileName } {
-    #variable NodalConditions
     variable dir
-    
-    #set Conditions [list ]
     dom parse [tDOM::xmlReadFile [file join $dir xml $NodalConditionsFileName]] doc
-    #W [$doc asXML]
     ParseNodalConditions $doc
 }
 
 proc Model::getConstitutiveLaws { ConstitutiveLawsFileName } {
-    #variable ConstitutiveLaws
     variable dir
-    
-    #set ConstitutiveLaws [list ]
     dom parse [tDOM::xmlReadFile [file join $dir xml $ConstitutiveLawsFileName]] doc
-    
     ParseConstitutiveLaws $doc
 }
 
 proc Model::getSolvers { SolversFileName } {
-    #variable Solvers
     variable dir
-    
-    #set Solvers [list ]
     dom parse [tDOM::xmlReadFile [file join $dir xml $SolversFileName]] doc
-    
     ParseSolvers $doc
 }
 
 proc Model::getProcesses { ProcessesFileName } {
-    #variable Processes
     variable dir
-    
-    #set Processes [list ]
     dom parse [tDOM::xmlReadFile [file join $dir xml $ProcessesFileName]] doc
-    
     ParseProcesses $doc
 }
 proc Model::getMaterials { MaterialsFileName } {
@@ -127,6 +97,11 @@ proc Model::getMaterials { MaterialsFileName } {
 
 proc Model::DestroyEverything { } {
     Init
+}
+
+proc Model::Clone {orig} {
+    set new [oo::copy ::$orig]
+    return $new
 }
 
 Model::Init

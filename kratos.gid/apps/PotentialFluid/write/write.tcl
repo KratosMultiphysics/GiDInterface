@@ -1,64 +1,30 @@
-namespace eval PotentialFluid::write {
+namespace eval ::PotentialFluid::write {
+    namespace path ::PotentialFluid
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
     variable FluidConditionMap
 }
 
-proc PotentialFluid::write::Init { } {
+proc ::PotentialFluid::write::Init { } {
     # Namespace variables inicialization
-    SetAttribute parts_un FLParts
-    SetAttribute nodal_conditions_un FLNodalConditions
-    SetAttribute conditions_un FLBC
-    SetAttribute materials_un PTFLMaterials
-    SetAttribute results_un Results
-    SetAttribute drag_un FLDrags
-    SetAttribute time_parameters_un FLTimeParameters
-    SetAttribute writeCoordinatesByGroups 0
+    variable writeAttributes
+    set writeAttributes [::Fluid::write::GetAttributes]
     SetAttribute validApps [list "Fluid" "PotentialFluid"]
-    SetAttribute main_script_file "KratosPotentialFluid.py"
-    SetAttribute materials_file "FluidMaterials.json"
-    SetAttribute properties_location json
-    SetAttribute output_model_part_name "fluid_computational_model_part"
 }
 
 # Events
 proc PotentialFluid::write::writeModelPartEvent { } {
     # Add the PotentialFluid to the Fluid valid applications list
     Fluid::write::AddValidApps "PotentialFluid"
-
-    # Validation
-    Fluid::write::InitConditionsMap
-
-    set err [Fluid::write::Validate]
-    if {$err ne ""} {error $err}
-
-    # Init data
-    write::initWriteConfiguration [GetAttributes]
-
-    # Headers
-    write::writeModelPartData
-    Fluid::write::writeProperties
-
-    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
-
-    # Element connectivities (groups in FLParts)
-    write::writeElementConnectivities
-
-    # Nodal conditions and conditions
-    Fluid::write::writeConditions
-
-    # SubmodelParts
-    Fluid::write::writeMeshes
+    Fluid::write::writeModelPartEvent
 }
 
 proc PotentialFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file]
-
-    write::CopyFileIntoModel "python/KratosPotentialFluid.py"
-    write::RenameFileInModel "KratosPotentialFluid.py" "MainKratos.py"
+    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] False [GetAttribute model_part_name]
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
-
 
 proc PotentialFluid::write::GetAttribute {att} {
     variable writeAttributes
