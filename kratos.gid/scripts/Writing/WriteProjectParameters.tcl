@@ -168,9 +168,9 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
     if {$StratParamsUN eq ""} {
         set StratParamsUN [apps::getCurrentUniqueName StratParams]
     }
-    
-    set solstratName [write::getValue $solStratUN]
-    set schemeName [write::getValue $schemeUN]
+
+    set solstratName [write::getValue $solStratUN "" force]
+    set schemeName [write::getValue $schemeUN "" force]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
     
