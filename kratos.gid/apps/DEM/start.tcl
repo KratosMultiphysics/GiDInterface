@@ -1,6 +1,6 @@
 namespace eval ::DEM {
     Kratos::AddNamespace [namespace current]
-    
+
     # Variable declaration
     variable dir
     variable _app
@@ -32,7 +32,7 @@ proc ::DEM::CustomToolbarItems { } {
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute DEMParts]/group"
+    set xp1 "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_DEM'\]/group"
     foreach group [concat [$root selectNodes $xp1] [DEM::write::GetDEMGroupsCustomSubmodelpart]] {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
