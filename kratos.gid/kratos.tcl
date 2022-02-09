@@ -523,6 +523,7 @@ proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
 }
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
+    # W "Kratos::WriteCalculationFilesEvent"
     # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
         # Model must be saved
