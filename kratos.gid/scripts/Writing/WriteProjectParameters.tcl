@@ -23,6 +23,11 @@ proc write::tcl2json { value } {
     #if {$type ne "dict" && [llength $value]>1 && [string index $value 0] eq "\{"} { W "$value as list"; set type list}
     #if {$type eq "exprcode"} {set type list; W "$type -> $value"}
     switch $type {
+        string {
+            if {$value eq "null"} {return null}
+            if {$value eq "dictnull"} {return {{}}}
+            return [json::write string $value]
+        }
         dict {
             return [json::write object {*}[
                     dict map {k v} $value {tcl2json $v}]]
