@@ -80,16 +80,27 @@ proc Fluid::write::getFluidModelPartFilename { } {
 
 proc FluidDEM::write::writeFluidModifiedMaterials {fluid_materials_json} {
     set new_json [dict create]
+
     foreach property [dict get $fluid_materials_json properties] {
-        if {[dict exists $property Material Variables PERMEABILITY_11]} {
-            set permeability_1 [list [dict get $property Material Variables PERMEABILITY_11] [dict get $property Material Variables PERMEABILITY_12] [dict get $property Material Variables PERMEABILITY_13]]
-            set permeability_2 [list [dict get $property Material Variables PERMEABILITY_12] [dict get $property Material Variables PERMEABILITY_22] [dict get $property Material Variables PERMEABILITY_23]]
-            set permeability_3 [list [dict get $property Material Variables PERMEABILITY_13] [dict get $property Material Variables PERMEABILITY_23] [dict get $property Material Variables PERMEABILITY_33]]
+        if {[dict exists $property Material Variables PERMEABILITY]} {
+            set permeability [dict get $property Material Variables PERMEABILITY]
+
+            set p11 [expr [lindex $permeability 0 0]]
+            set p12 [expr [lindex $permeability 0 1]]
+            set p13 [expr [lindex $permeability 0 2]]
+            set p21 [expr [lindex $permeability 1 0]]
+            set p22 [expr [lindex $permeability 1 1]]
+            set p23 [expr [lindex $permeability 1 2]]
+            set p31 [expr [lindex $permeability 2 0]]
+            set p32 [expr [lindex $permeability 2 1]]
+            set p33 [expr [lindex $permeability 2 2]]
+            set permeability_1 [list $p11 $p12 $p13]
+            set permeability_2 [list $p21 $p22 $p23]
+            set permeability_3 [list $p31 $p32 $p33]
             dict unset property Material Variables PERMEABILITY_11; dict unset property Material Variables PERMEABILITY_12; dict unset property Material Variables PERMEABILITY_13
             dict unset property Material Variables PERMEABILITY_22; dict unset property Material Variables PERMEABILITY_23
             dict unset property Material Variables PERMEABILITY_33
             dict set property Material Variables PERMEABILITY [list $permeability_1 $permeability_2 $permeability_3]
-            
             if {[dict exists $property Material Variables value]} {dict unset property Material Variables value}
         }
         dict lappend new_json properties $property

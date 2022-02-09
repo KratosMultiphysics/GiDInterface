@@ -162,7 +162,7 @@ proc Kratos::RegisterEnvironment { } {
 
         if {[llength [dict keys $preferences]] > 0} {
             set fp [open [Kratos::GetPreferencesFilePath] w]
-            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
+            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $preferences}
             close $fp
         }
     }

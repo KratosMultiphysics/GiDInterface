@@ -20,15 +20,9 @@ proc write::tcl2json { value } {
     # regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
     set type [GidUtils::GetInternalRepresentation $value]
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2json $v}]]}
-    # if {$type ne "dict" && [llength $value]>1} { set type list}
+    #if {$type ne "dict" && [llength $value]>1 && [string index $value 0] eq "\{"} { W "$value as list"; set type list}
+    #if {$type eq "exprcode"} {set type list; W "$type -> $value"}
     switch $type {
-        string {
-            if {$value eq "false"} {return [expr "false"]}
-            if {$value eq "true"} {return [expr "true"]}
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
-            return [json::write string $value]
-        }
         dict {
             return [json::write object {*}[
                     dict map {k v} $value {tcl2json $v}]]
@@ -57,11 +51,14 @@ proc write::tcl2json { value } {
                 return [expr {$value}]
             } elseif {[string is boolean -strict $value]} {
                 return [expr {$value ? "true" : "false"}]
+            } elseif {[string index $value 0] eq "\{"} {
+                return [json::write array {*}[lmap v $value {tcl2json $v}]]
             }
             return [json::write string $value]
         }
     }
 }
+
 proc write::tcl2jsonstrings { value } {
     # Guess the type of the value; deep *UNSUPPORTED* magic!
     # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
