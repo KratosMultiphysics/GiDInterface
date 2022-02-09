@@ -60,15 +60,16 @@
     <NodalConditions></NodalConditions>
     <inputs>
     <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
-    <parameter n="MASS" pn="Mass" v="1.0" units="kg" unit_magnitude="M"/>
-    <parameter n="CENTER" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
-    <parameter n="INERTIA" pn="Inertia" type="inline_vector" v="0.0,0.0,1.0" units="kg*m^2" unit_magnitude="M*L^2"/>
-    <parameter n="ORIENTATION" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector and magnitude in rad)"/>
-    <parameter n="IsGhost" pn="Is ghost" type="bool" v="false" help="Set the group as ghost"/>
+    <parameter n="InputMass" pn="Mass" v="1.0" units="kg" unit_magnitude="M"/>
+    <parameter n="InputCenter" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
+    <parameter n="InputInertia" pn="Inertia" type="inline_vector" v="0.0,0.0,1.0" units="kg*m^2" unit_magnitude="M*L^2"/>
+    <parameter n="InputOrientation" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector and magnitude in rad)"/>
+    <parameter n="InputGhost" pn="Is ghost" type="bool" v="false" help="Set the group as ghost"/>
     </inputs>
     <outputs>
     </outputs>
   </ElementItem>
+
 
   <ElementItem n="Inlet-FEM" pn="Inlet element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Inlet-FEM" help="" WriteAsBlock="Conditions">
     <TopologyFeatures>

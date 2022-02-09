@@ -76,14 +76,14 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
 	set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
 	write::WriteString "    RIGID_BODY_OPTION 1"
 
-	set mass [dict get $props Material Variables MASS]
+	set mass [dict get $props Material Variables InputMass]
 	write::WriteString "    RIGID_BODY_MASS $mass"
 
-	lassign [dict get $props Material Variables CENTER] cX cY cZ
+	lassign [dict get $props Material Variables InputCenter] cX cY cZ
 	if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    RIGID_BODY_CENTER_OF_ROTATION \[3\] ($cX,$cY,0.0)"
 	} else {write::WriteString "    RIGID_BODY_CENTER_OF_ROTATION \[3\] ($cX,$cY,$cZ)"}
 
-	set inertias [dict get $props Material Variables INERTIA]
+	set inertias [dict get $props Material Variables InputInertia]
 	if {$::Model::SpatialDimension eq "2D"} {
 	    set iX $inertias
 	    write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,$iX)"
@@ -92,10 +92,14 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
 	    write::WriteString "    RIGID_BODY_INERTIAS \[3\] ($iX,$iY,$iZ)"
 	}
 
-	lassign [dict get $props Material Variables ORIENTATION] oX oY oZ
+	lassign [dict get $props Material Variables InputOrientation] oX oY oZ
 	write::WriteString "    ORIENTATION \[4\] ($oX,$oY,$oZ, 0.0)"
 
 	write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
+
+    set ghost [dict get $props Material Variables InputGhost]
+	write::WriteString "    IS_GHOST $ghost"
+
 	DEM::write::DefineFEMExtraConditions $props
     } else {W "Error - Properties empty for submodelpart $condition $group"}
     write::WriteString "  End SubModelPartData"

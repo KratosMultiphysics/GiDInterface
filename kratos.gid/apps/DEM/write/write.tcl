@@ -74,10 +74,10 @@ proc ::DEM::write::writeModelPartEvent { } {
     WriteMDPAParts
     write::CloseFile
 
-    # MDPA Inlet
-    write::OpenFile "[Kratos::GetModelName]DEM_Inlet.mdpa"
-    WriteMDPAInlet
-    write::CloseFile
+    # MDPA Inlet - de momento offline
+    # write::OpenFile "[Kratos::GetModelName]DEM_Inlet.mdpa"
+    # WriteMDPAInlet
+    # write::CloseFile
 
     # MDPA Walls
     write::OpenFile "[Kratos::GetModelName]DEM_FEM_boundary.mdpa"

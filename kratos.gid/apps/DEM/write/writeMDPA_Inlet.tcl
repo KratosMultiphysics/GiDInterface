@@ -160,6 +160,7 @@ proc ::DEM::write::writeInletMeshes { } {
 
     foreach groupid [DEM::write::GetInletGroups] {
         set what nodal
+        #TODO: revisar ese eq 0 en el submodelpartID del inlet
         if {[write::getSubModelPartId $condition_name $groupid] eq 0} {
             set mid [write::AddSubmodelpart $condition_name $groupid]
             set props [DEM::write::FindPropertiesBySubmodelpart $inletProperties $mid]

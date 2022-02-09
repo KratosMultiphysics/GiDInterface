@@ -163,4 +163,3 @@ proc ::DEM::examples::SpheresDropForTest::AssignMeshSize { } {
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape
 }
-
