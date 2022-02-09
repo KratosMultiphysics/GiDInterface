@@ -10,7 +10,13 @@ proc ::DEM::write::WriteMDPAParts { } {
     writeMaterialsParts
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
-    WriteNodalCoordinatesParts
+    # WriteNodalCoordinatesParts
+
+    # Nodal coordinates (only for Walls <inefficient> )
+    set dem_groups_list [list]
+    foreach group_node [::DEM::write::GetDEMPartGroupNodes] {lappend dem_groups_list [$group_node @n]}
+
+    write::writeNodalCoordinatesOnGroups $dem_groups_list
 
     # Element connectivities (Groups on Parts)
     PrepareCustomMeshedParts
@@ -27,6 +33,11 @@ proc ::DEM::write::WriteMDPAParts { } {
     # CustomSubmodelParts
     WriteCustomDEMSmp
 }
+
+proc ::DEM::write::GetDEMPartGroupNodes { } {
+    return [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"]
+}
+
 
 proc ::DEM::write::WriteNodalCoordinatesParts { } {
     write::writeNodalCoordinatesOnParts
@@ -100,7 +111,8 @@ proc ::DEM::write::GetNodesForGraphs { } {
 
 proc ::DEM::write::writeSphereRadius { } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    # set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
     foreach group [$root selectNodes $xp1] {
         DEM::write::writeSphereRadiusOnGroup $group
     }
