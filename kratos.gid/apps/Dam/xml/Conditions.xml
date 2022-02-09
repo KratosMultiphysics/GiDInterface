@@ -5,7 +5,7 @@
 
   <!---  Conditions: YOUNG VARIABLE -->
   <ConditionItem n="YoungModulus3D" pn="Young Modulus Calibration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical"
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Calibration"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Volume" ProcessName="ImposeInputTableNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
     help="Application of variable young modulus in the nodes">
@@ -20,7 +20,7 @@
   </ConditionItem>
 
  <ConditionItem n="YoungModulus2D" pn="Young Modulus Calibration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical"
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Calibration"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Surface" ProcessName="ImposeInputTableNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
     help="Application of variable young modulus in the nodes">

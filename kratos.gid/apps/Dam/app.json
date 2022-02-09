@@ -47,6 +47,6 @@
         "properties_location": "mdpa",
         "model_part_name": "MainModelPart"
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
 }
