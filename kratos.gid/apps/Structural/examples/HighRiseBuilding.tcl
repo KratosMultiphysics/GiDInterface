@@ -104,9 +104,8 @@ proc ::Structural::examples::HighRiseBuilding::TreeAssignation2D {args} {
     spdAux::SetValuesOnBaseNode $LoadNode $props
 
     # Structure domain time parameters
-    set parameters [list EndTime 25.0 DeltaTime 0.05]
-    set xpath [spdAux::getRoute STTimeParameters]
-    spdAux::SetValuesOnBasePath $xpath $parameters
-
+    [$root selectNodes "[spdAux::getRoute STTimeParameters]/value\[@n = 'EndTime'\]"] setAttribute v 25.0
+    [$root selectNodes "[spdAux::getRoute STTimeParameters]/container\[@n = 'TimeStep'\]/blockdata\[1\]/value\[@n = 'DeltaTime'\]"] setAttribute v 0.05
+     
     spdAux::RequestRefresh
 }

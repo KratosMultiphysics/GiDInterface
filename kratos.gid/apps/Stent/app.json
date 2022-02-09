@@ -26,5 +26,5 @@
         "intervals": true,
         "wizard": true
     },
-    "main_launch_file": "../Structural/python/MainKratos.py"
+    "main_launch_file": "../../exec/MainKratos.py"
 }

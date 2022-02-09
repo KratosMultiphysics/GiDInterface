@@ -6,6 +6,9 @@ proc ::ShallowWater::write::writeParametersEvent { } {
 proc ::ShallowWater::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.ShallowWaterApplication.shallow_water_analysis"
+
     # Set the problem data section
     dict set projectParametersDict problem_data [GetProblemDataDict]
 

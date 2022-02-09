@@ -1,8 +1,8 @@
 
-proc Kratos::Quicktest {example_app example_dim example_cmd} {
-    apps::setActiveApp Examples
-    ::Examples::LaunchExample $example_app $example_dim $example_cmd
-}
+# proc Kratos::Quicktest {example_app example_dim example_cmd} {
+#     apps::setActiveApp Examples
+#     ::Examples::LaunchExample $example_app $example_dim $example_cmd
+# }
 
 proc Kratos::ForceRun { } {
     # validated by escolano@cimne.upc.edu
@@ -162,7 +162,7 @@ proc Kratos::RegisterEnvironment { } {
 
         if {[llength [dict keys $preferences]] > 0} {
             set fp [open [Kratos::GetPreferencesFilePath] w]
-            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
+            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $preferences}
             close $fp
         }
     }
@@ -199,7 +199,7 @@ proc Kratos::LoadEnvironment { } {
         # W $data
         # Close the file
         close $fp
-
+        
         # Preferences are written in json format
         foreach {k v} [write::json2dict $data] {
             # W "$k $v"
@@ -321,3 +321,4 @@ proc Kratos::IsDeveloperMode {} {
     if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
     return $is_dev
 }
+
