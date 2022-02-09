@@ -118,11 +118,26 @@ proc write::writeEvent { filename } {
     Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
 
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Validate time: [Kratos::Duration $ttime]"
+    }
+
     #### MDPA Write ####
     if {$errcode eq 0} {
         Kratos::Log "Write MDPA $appid"
         set errcode [writeAppMDPA $appid]
     }
+
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "MDPA time: [Kratos::Duration $ttime]"
+    }
+
     #### Project Parameters Write ####
     set wevent [$activeapp getWriteParametersEvent]
     set filename "ProjectParameters.json"
@@ -130,6 +145,12 @@ proc write::writeEvent { filename } {
     if {$errcode eq 0} {
         Kratos::Log "Write project parameters $appid"
         set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
+    }
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Parameters time: [Kratos::Duration $ttime]"
     }
 
     #### Custom files block ####
