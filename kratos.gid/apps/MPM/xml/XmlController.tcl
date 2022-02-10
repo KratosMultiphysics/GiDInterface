@@ -1,13 +1,12 @@
 namespace eval MPM::xml {
-    # Namespace variables declaration
-    variable dir
+    namespace path ::MPM
+    Kratos::AddNamespace [namespace current]
 
 }
 
 proc MPM::xml::Init { } {
     # Namespace variables inicialization
-    variable dir
-    Model::InitVariables dir $MPM::dir
+    Model::InitVariables dir $::MPM::dir
 
     # Import our elements
     Model::ForgetElements
@@ -48,12 +47,12 @@ proc MPM::xml::Init { } {
 proc MPM::xml::MultiAppEvent {args} {
    if {$args eq "init"} {
      spdAux::parseRoutes
-     spdAux::ConvertAllUniqueNames ST ${::MPM::prefix}
+     spdAux::ConvertAllUniqueNames ST MPM
    }
 }
 
 proc MPM::xml::getUniqueName {name} {
-    return ${::MPM::prefix}${name}
+    return MPM${name}
 }
 
 proc MPM::xml::CustomTree { args } {
@@ -61,7 +60,7 @@ proc MPM::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v "time" Results OutputControlType
     spdAux::SetValueOnTreeItem values "time" Results OutputControlType
     spdAux::SetValueOnTreeItem v No NodalResults PARTITION_INDEX
-    spdAux::SetValueOnTreeItem v "ExternalSolversApplication.super_lu" MPMimplicitlinear_solver_settings Solver
+    spdAux::SetValueOnTreeItem v "LinearSolversApplication.sparse_lu" MPMimplicitlinear_solver_settings Solver
 }
 
 
@@ -72,5 +71,3 @@ proc MPM::xml::ProcCheckGeometry {domNode args} {
     }
     return $ret
 }
-
-MPM::xml::Init

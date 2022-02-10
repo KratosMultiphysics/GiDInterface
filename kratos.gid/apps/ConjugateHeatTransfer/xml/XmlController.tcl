@@ -1,4 +1,6 @@
-namespace eval ConjugateHeatTransfer::xml {
+namespace eval ::ConjugateHeatTransfer::xml {
+    namespace path ::ConjugateHeatTransfer
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
     variable dir
 }
@@ -8,16 +10,13 @@ proc ConjugateHeatTransfer::xml::Init { } {
     variable dir
     Model::InitVariables dir $ConjugateHeatTransfer::dir
 
-    Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
-
     Model::getMaterials "../../ConvectionDiffusion/xml/Materials.xml"
-
     Model::getConstitutiveLaws "../../ConvectionDiffusion/xml/ConstitutiveLaws.xml"
 }
 
 proc ConjugateHeatTransfer::xml::getUniqueName {name} {
-    return ${::ConjugateHeatTransfer::prefix}${name}
+    return [::ConjugateHeatTransfer::GetAttribute prefix]${name}
 }
 
 proc ::ConjugateHeatTransfer::xml::MultiAppEvent {args} {
@@ -45,5 +44,3 @@ proc ConjugateHeatTransfer::xml::CustomTree { args } {
     set result_node [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute CNVDFFBC]/condition\[@n = 'FluidThermalInterface3D'\]"]
     if {$result_node ne "" } {$result_node delete}
 }
-
-ConjugateHeatTransfer::xml::Init

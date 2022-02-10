@@ -3,9 +3,9 @@
 <Infoproblemtype version="1.0">
   <Program>
     <Name>Kratos</Name>
-    <Version>7.1.6</Version>
+    <Version>9.0.1</Version>
     <ExecutableVersion></ExecutableVersion>
-    <CheckMinimumGiDVersion>14.1.2d</CheckMinimumGiDVersion>
+    <CheckMinimumGiDVersion>15.1.3d</CheckMinimumGiDVersion>
     <CustomLibAutomatic>0</CustomLibAutomatic>
     <CustomLibNativeGroups>1</CustomLibNativeGroups>
     <ImageFileBrowser>images/ImageFileBrowser.gif</ImageFileBrowser>
@@ -44,51 +44,6 @@ Kratos is OPEN SOURCE. The main code and program structure is available and aime
 Kratos is FREE because is devoted mainly to developers, researchers and students and, therefore, is the most fruitful way to share knowledge and built a robust numerical methods laboratory adapted to their users' needs. Free because you have the freedom to modify and distribute the software. The one thing you're not able to do with free software is take away other people's freedom. Please, read the license for more detailed information.
 
     </Description>
-    <NewsInVersion version="6.0.0" date="2018-06-05"> 
-      * What is new? 
-        * Solid: 
-          - New examples
-        * Structural:
-          - Hinges
-          - Eigen analysis
-    </NewsInVersion>
-    <NewsInVersion version="5.2.3" date="2017-12-27"> 
-      * What is new? 
-        * Bug fix
-    </NewsInVersion>
-    <NewsInVersion version="5.2.2" date="2017-12-20"> 
-      * What is new? 
-        * Removed Dam Application due to Copyright issues
-    </NewsInVersion>
-    <NewsInVersion version="5.2.1" date="2017-12-01"> 
-      * What is new? 
-        * FSI: 
-          - Bug correction in the update utilities
-          - Removed deprecated Python FSI solvers
-        * Fixed display version number
-    </NewsInVersion>
-    <NewsInVersion version="5.2.0" date="2017-12-01"> 
-      * What is new? 
-        * Several bug fixes in core and applications: 
-          - Better MPI portability (Linux) 
-          - More consistence support of json configuration file 
-        * Structural Mechanic: 
-          - Linear and nonlinear beam element (for small and large displacement) 
-          - Linear and nonlinear truss element (for small and large displacement) 
-          - Initial support for beam orientation 
-          - Truss element now available 
-          - New Hyperelastic Law 
-          - Corrections in the Updated Lagrangian Element 
-          - Membrane and shells of both 3 and 4 nodes now available
-        * Fluid Dynamics: 
-          - Several improvements under the hood for the Embedded CFD solver 
-          - New monolithic version of the embedded solver based on Ausas shape functions 
-          - New slip model for embedded CFD 
-        * FSI: 
-          - Improved precision of the solvers 
-        * Added Dam application
-        * New GUI 
-      </NewsInVersion>
 
   </Program>
 </Infoproblemtype>

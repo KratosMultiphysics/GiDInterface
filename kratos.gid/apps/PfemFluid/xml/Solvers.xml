@@ -4,15 +4,12 @@
         <inputs>
         </inputs>
     </solver>
-    
-    <solver n="ExternalSolversApplication.super_lu" pn="SuperLU" SolverType="Standard">
+
+    <solver n="LinearSolversApplication.sparse_lu" pn="SparseLU" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
-            <parameter n="scaling" pn="Scaling" type="bool" v="False"  help=""/>
-<!--
-            <parameter n="verbosity" pn="Verbosity" type="combo" values="0,1,2,3" v="0" help=""/>
--->
         </inputs>
     </solver>
+
     <solver n="cg" pn="Conjugate Gradients" SolverType="Standard">
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="5000" help=""/>
@@ -24,17 +21,7 @@
 -->
         </inputs>
     </solver>
-    <solver n="ExternalSolversApplication.gmres" pn="GMRES" SolverType="Standard">
-        <inputs>
-            <parameter n="max_iteration" pn="Max iterations" type="integer" v="5000" help=""/>
-            <parameter n="tolerance" pn="Tolerance" type="integer"  v="1e-9" help=""/>
-			<parameter n="preconditioner_type" pn="Preconditioner" type="combo" values="none,diagonal,ilu0" v="ilu0" help=""/>
-			<parameter n="scaling" pn="Scaling" type="bool" v="False" help=""/>
-<!--
-            <parameter n="verbosity" pn="Verbosity" type="combo" values="0,1,2,3" v="0" help=""/>
--->
-        </inputs>
-    </solver>
+
     <solver n="bicgstab" pn="BiCGStab" SolverType="Standard">
         <inputs>
             <parameter n="max_iteration" pn="Max iterations" type="integer" v="5000" help=""/>

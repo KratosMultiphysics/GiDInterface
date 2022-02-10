@@ -1,39 +1,22 @@
 namespace eval ::Dam {
+    Kratos::AddNamespace [namespace current]
     # Variable declaration
     variable dir
-    variable kratos_name
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::Dam::Init { } {
+proc ::Dam::Init { app } {
     # Variable initialization
     variable dir
-    variable kratos_name
-    set kratos_name "DamApplication"
+    variable _app
     
-    set dir [apps::getMyDir "Dam"]
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
-    
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-    LoadMyFiles
-    ::spdAux::CreateDimensionWindow
-    
+    set dir [apps::getMyDir "Dam"] 
+    set _app $app
+
+    ::Dam::xml::Init
+    ::Dam::write::Init
 }
-
-proc ::Dam::LoadMyFiles { } {
-    variable dir
-    
-    uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $dir examples examples.tcl]]   
-}
-
-
-proc ::Dam::CustomToolbarItems { } {
-    variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Dam::examples::ThermoMechaDam] [= "Example\nThermo-mechanical Dam"]
-}
-
-
-::Dam::Init

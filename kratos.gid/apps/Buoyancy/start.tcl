@@ -1,64 +1,24 @@
 namespace eval ::Buoyancy {
     # Variable declaration
-    variable id
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
+    variable _app
+    Kratos::AddNamespace [namespace current]
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::Buoyancy::Init { } {
+proc ::Buoyancy::Init { app } {
     # Variable initialization
-    variable id
     variable dir
-    variable prefix
-    variable kratos_name
-    variable attributes
-
-    set id "Buoyancy"
-    
-    set kratos_name Buoyancyapplication
+    variable _app
     
     #W "Sourced FSI"
     set dir [apps::getMyDir "Buoyancy"]
-    set prefix Buoyancy_
+    set _app $app
     
-    apps::LoadAppById "Fluid"
-    apps::LoadAppById "ConvectionDiffusion"
+    ::Buoyancy::xml::Init
+    ::Buoyancy::write::Init
     
-    # Intervals 
-    dict set attributes UseIntervals 1
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-    
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
-    LoadMyFiles
-    #::spdAux::CreateDimensionWindow
 }
-
-proc ::Buoyancy::LoadMyFiles { } {
-    variable id
-    variable dir
-    
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    if {[apps::getActiveAppId] eq $id} {
-        uplevel #0 [list source [file join $dir examples examples.tcl]]
-    }
-}
-
-proc ::Buoyancy::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
-}
-
-proc ::Buoyancy::CustomToolbarItems { } {
-    variable dir
-    Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Buoyancy::examples::HeatedSquare] [= "Example\nBuoyancy driven cavity flow (Ra = 1e6 - Pr = 0.71)"]   
-}
-
-::Buoyancy::Init

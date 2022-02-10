@@ -1,4 +1,7 @@
-namespace eval PfemFluid::write {
+namespace eval ::PfemFluid::write {
+    namespace path ::PfemFluid
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
     variable remesh_domains_dict
     variable bodies_list
@@ -13,10 +16,15 @@ proc PfemFluid::write::Init { } {
     set bodies_list [list ]
     variable Names
     set Names [dict create DeltaTime DeltaTime]
+
+
+    SetAttribute materials_un [::PfemFluid::GetUniqueName materials]
+    SetAttribute nodal_conditions_un [::PfemFluid::GetUniqueName nodal_conditions]
     
-    SetAttribute properties_location json
-    SetAttribute model_part_name "PfemFluidModelPart"
-    SetAttribute materials_file "PFEMFluidMaterials.json"
+    SetAttribute main_launch_file [::PfemFluid::GetAttribute main_launch_file]
+    SetAttribute materials_file [::PfemFluid::GetWriteProperty materials_file]
+    SetAttribute properties_location [::PfemFluid::GetWriteProperty properties_location]
+    SetAttribute model_part_name [::PfemFluid::GetWriteProperty model_part_name]
 }
 
 
@@ -24,53 +32,39 @@ proc PfemFluid::write::Init { } {
 proc PfemFluid::write::writeModelPartEvent { } {
     # Init data
     write::initWriteConfiguration [GetAttributes]
-    
+
     set parts_un_list [GetPartsUN]
     foreach part_un $parts_un_list {
-        write::initWriteData $part_un "PFEMFLUID_Materials"
+        write::initWriteData $part_un [GetAttribute materials_un]
     }
-    
+
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
     # write::writeMaterials "PfemFluid"
-    
+
     write::writeNodalCoordinates
     foreach part_un $parts_un_list {
-        write::initWriteData $part_un "PFEMFLUID_Materials"
+        write::initWriteData $part_un [GetAttribute materials_un]
         write::writeElementConnectivities
     }
     PfemFluid::write::writeMeshes
 }
 
 proc PfemFluid::write::writeMeshes { } {
-    
+
     foreach part_un [GetPartsUN] {
-        write::initWriteData $part_un "PFEMFLUID_Materials"
+        write::initWriteData $part_un [GetAttribute materials_un]
         write::writePartSubModelPart
     }
     # Solo Malla , no en conditions
-    writeNodalConditions "PFEMFLUID_NodalConditions"
-    
+    writeNodalConditions [GetAttribute nodal_conditions_un]
+
 }
 
 
 proc PfemFluid::write::writeNodalConditions { keyword } {
-    write::writeNodalConditions $keyword
-    return ""
-    
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $keyword]/container/blockdata"
-    set groups [$root selectNodes $xp1]
-    foreach group $groups {
-        set cid [[$group parent] @n]
-        set groupid [$group @name]
-        set groupid [write::GetWriteGroupName $groupid]
-        # Aqui hay que gestionar la escritura de los bodies
-        # Una opcion es crear un megagrupo temporal con esa informacion, mandar a pintar, y luego borrar el grupo.
-        # Otra opcion es no escribir el submodelpart. Ya tienen las parts y el project parameters tiene el conformado de los bodies
-        ::write::writeGroupSubModelPart $cid $groupid "nodal"
-    }
+    ::write::writeNodalConditions $keyword
 }
 
 proc PfemFluid::write::GetPartsUN { } {
@@ -98,12 +92,8 @@ proc PfemFluid::write::GetPartsUN { } {
 # Custom files (Copy python scripts, write materials file...)
 proc PfemFluid::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
-    PfemFluid::write::WriteMaterialsFile False
-    
-    write::CopyFileIntoModel "python/RunPFEM.py"
-    write::RenameFileInModel "RunPFEM.py" "MainKratos.py"
-    
-    #write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
+    PfemFluid::write::WriteMaterialsFile
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc PfemFluid::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
@@ -125,8 +115,6 @@ proc PfemFluid::write::writePropertiesJsonFile { {fname "materials.json"} {write
     write::WriteJSON $mats_json
     write::CloseFile
 }
-
-
 
 proc PfemFluid::write::GetAttribute {att} {
     variable writeAttributes
@@ -152,6 +140,3 @@ proc PfemFluid::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
-
-
-PfemFluid::write::Init

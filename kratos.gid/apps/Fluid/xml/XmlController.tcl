@@ -1,12 +1,15 @@
-namespace eval Fluid::xml {
+namespace eval ::Fluid::xml {
+    namespace path ::Fluid
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     variable dir
 }
 
-proc Fluid::xml::Init { } {
+proc ::Fluid::xml::Init { } {
     # Namespace variables inicialization
     variable dir
-    Model::InitVariables dir $Fluid::dir
+    Model::InitVariables dir $::Fluid::dir
     
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -17,15 +20,16 @@ proc Fluid::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
-
 }
 
-proc Fluid::xml::getUniqueName {name} {
-    return ${::Fluid::prefix}${name}
+proc ::Fluid::xml::getUniqueName {name} {
+    return [::Fluid::GetAttribute prefix]${name}
 }
 
-proc Fluid::xml::CustomTree { args } {
+proc ::Fluid::xml::CustomTree { args } {
     set root [customlib::GetBaseRoot]
+
+    set results_un [::Fluid::GetUniqueName "results"]
 
     # Output control in output settings
     spdAux::SetValueOnTreeItem v time FLResults FileLabel
@@ -47,11 +51,14 @@ proc Fluid::xml::CustomTree { args } {
     
     # TODO: remove when Non newtonian is implemented for 2d
     if {$::Model::SpatialDimension eq "2D"} { Model::ForgetConstitutiveLaw HerschelBulkley }
+
+    # Hide dynamic_tau on some elements
+    spdAux::SetValueOnTreeItem state "\[HideIfElement {DVMS2D DVMS3D}\]" FLStratParams dynamic_tau
 }
 
 # Usage 
 # Fluid::xml::CreateNewInlet Inlet {new false name Total} true "6*y*(1-y)"
-proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name inlet1 ini 0 end "End"}} {uses_formula false} {value 10.0} {direction automatic_inwards_normal} {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
+proc ::Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name inlet1 ini 0 end "End"}} {uses_formula false} {value 10.0} {direction automatic_inwards_normal} {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
     # Fluid Inlet
     set nd $::Model::SpatialDimension
     set condtype line
@@ -84,11 +91,9 @@ proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name 
             W "Warning - Couldn't find property Inlet $prop"
         }
     }
-    
 }
 
-
-proc Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
+proc ::Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
     
     set nd $::Model::SpatialDimension
     set fluidConditions [spdAux::getRoute $fluid_conditions_UN]
@@ -103,4 +108,7 @@ proc Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_c
     }
 }
 
-Fluid::xml::Init
+proc ::Fluid::xml::ProcHideIfElement { domNode list_elements } {
+    set element [lindex [Fluid::write::GetUsedElements] 0]
+    if {$element in $list_elements} {return hidden} {return normal}
+}

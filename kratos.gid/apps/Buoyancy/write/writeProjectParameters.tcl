@@ -2,6 +2,9 @@
 proc ::Buoyancy::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis"
+
     # problem data
     dict set projectParametersDict problem_data [::Buoyancy::write::GetProblemData_Dict]
 
@@ -20,13 +23,13 @@ proc ::Buoyancy::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc Buoyancy::write::writeParametersEvent { } {
+proc ::Buoyancy::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
 
-proc Buoyancy::write::GetProblemData_Dict { } {
+proc ::Buoyancy::write::GetProblemData_Dict { } {
     set problemDataDict [dict create ]
 
     # problem name
@@ -52,7 +55,7 @@ proc Buoyancy::write::GetProblemData_Dict { } {
     # dict set problemDataDict model_part_name "ThermalModelPart"
 }
 
-proc Buoyancy::write::GetRestart_Dict { } {
+proc ::Buoyancy::write::GetRestart_Dict { } {
 
     set restartDict [dict create]
     dict set restartDict SaveRestart False
@@ -61,7 +64,7 @@ proc Buoyancy::write::GetRestart_Dict { } {
     dict set restartDict Restart_Step 0
 }
 
-proc Buoyancy::write::GetSolverSettings_Dict { } {
+proc ::Buoyancy::write::GetSolverSettings_Dict { } {
     set settings [dict create]
 
     dict set settings solver_type "ThermallyCoupled"
@@ -93,7 +96,7 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
     return $settings
 }
 
-proc Buoyancy::write::GetProcesses_Dict { } {
+proc ::Buoyancy::write::GetProcesses_Dict { } {
     set constraints_process_list [list ]
     write::SetConfigurationAttributes [Fluid::write::GetAttributes]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute conditions_un] ]
@@ -105,7 +108,7 @@ proc Buoyancy::write::GetProcesses_Dict { } {
     return [dict create "constraints_process_list" $constraints_process_list]
 }
 
-proc Buoyancy::write::GetBoussinesqProcess { } {
+proc ::Buoyancy::write::GetBoussinesqProcess { } {
     set process [dict create]
     dict set process python_module apply_boussinesq_force_process
     dict set process kratos_module KratosMultiphysics.FluidDynamicsApplication

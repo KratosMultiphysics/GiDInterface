@@ -8,12 +8,9 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
     set mid ""
     set what [split $what "&"]
     set group [GetWriteGroupName $group]
-    if {![dict exists $submodelparts [list $cid ${group}]]} {
+    if {[write::getSubModelPartId $cid $group] eq 0} {
         # Add the submodelpart to the catalog
-        set good_name [write::transformGroupName $group]
-        set mid "${cid}_${good_name}"
-        dict set submodelparts [list $cid ${group}] $mid
-
+        set mid [write::AddSubmodelpart $cid $group]
         # Prepare the print formats
         incr ::write::current_mdpa_indent_level
         set s1 [mdpaIndent]
@@ -163,88 +160,29 @@ proc write::GetSubModelPartFromCondition { base_UN condition_id } {
     return $submodelpart_list
 }
 
-proc write::writeConditionGroupedSubmodelPartsByUniqueId {cid groups_dict conditions_map} {
-    set s [mdpaIndent]
-    WriteString "${s}Begin SubModelPart $cid // Condition $cid"
-
-    incr ::write::current_mdpa_indent_level
-    set s1 [mdpaIndent]
-    WriteString "${s1}Begin SubModelPartNodes"
-    WriteString "${s1}End SubModelPartNodes"
-    WriteString "${s1}Begin SubModelPartElements"
-    WriteString "${s1}End SubModelPartElements"
-    WriteString "${s1}Begin SubModelPartConditions"
-    WriteString "${s1}End SubModelPartConditions"
-
-    foreach group [dict keys $groups_dict] {
-        if {[dict exists $groups_dict $group what]} {set what [dict get $groups_dict $group what]} else {set what ""}
-        if {[dict exists $groups_dict $group tableid_list]} {set tableid_list [dict get $groups_dict $group tableid_list]} else {set tableid_list ""}
-        write::writeGroupSubModelPartByUniqueId $cid $group $conditions_map $what $tableid_list
-    }
-
-    incr ::write::current_mdpa_indent_level -1
-    WriteString "${s}End SubModelPart"
+proc write::GetSubModelPartName {condid group} {
+    set group_name [write::GetWriteGroupName $group]
+    set good_name [write::transformGroupName $group_name]
+    return "${condid}_${good_name}"
 }
 
-# what can be: nodal, Elements, Conditions or Elements&Conditions
-proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "Elements"} {tableid_list ""} } {
+proc write::AddSubmodelpart {condid group} {
     variable submodelparts
-    variable formats_dict
-
-    set id_f [dict get $formats_dict ID]
-
-    set mid ""
-    set what [split $what "&"]
-    set group [GetWriteGroupName $group]
-    if {![dict exists $submodelparts [list $cid ${group}]]} {
-        # Add the submodelpart to the catalog
-        set good_name [write::transformGroupName $group]
-        set mid "${cid}_${good_name}"
-        dict set submodelparts [list $cid ${group}] $mid
-
-        # Prepare the print formats
-        incr ::write::current_mdpa_indent_level
-        set s1 [mdpaIndent]
-        incr ::write::current_mdpa_indent_level -1
-        incr ::write::current_mdpa_indent_level 2
-        set s2 [mdpaIndent]
-        set gdict [dict create]
-        set f "${s2}$id_f\n"
-        set f [subst $f]
-        dict set gdict $group $f
-        incr ::write::current_mdpa_indent_level -2
-
-        # Print header
-        set s [mdpaIndent]
-        WriteString "${s}Begin SubModelPart $mid // Group $group // Subtree $cid"
-        # Print tables
-        if {$tableid_list ne ""} {
-            set s1 [mdpaIndent]
-            WriteString "${s1}Begin SubModelPartTables"
-            foreach tableid $tableid_list {
-                WriteString "${s2}$tableid"
-            }
-            WriteString "${s1}End SubModelPartTables"
-        }
-        WriteString "${s1}Begin SubModelPartNodes"
-        GiD_WriteCalculationFile nodes -sorted $gdict
-        WriteString "${s1}End SubModelPartNodes"
-        WriteString "${s1}Begin SubModelPartElements"
-        if {"Elements" in $what} {
-            GiD_WriteCalculationFile elements -sorted $gdict
-        }
-        WriteString "${s1}End SubModelPartElements"
-        WriteString "${s1}Begin SubModelPartConditions"
-        if {"Conditions" in $what} {
-            set elems [GiD_WriteCalculationFile elements -sorted -return $gdict]
-            for {set i 0} {$i <[llength $elems]} {incr i} {
-                set eid [objarray get $ConditionsMap [lindex $elems $i]]
-                WriteString "${s2}[format $id_f $eid]"
-            }
-        }
-        WriteString "${s1}End SubModelPartConditions"
-        WriteString "${s}End SubModelPart"
+    set mid [write::GetSubModelPartName $condid $group]
+    set group_name [write::GetWriteGroupName $group]
+    set good_name [write::transformGroupName $group_name]
+    if {[write::getSubModelPartId $condid $group_name] eq 0} {
+        dict set submodelparts [list $condid ${group_name}] $mid
     }
     return $mid
 }
 
+proc write::getSubModelPartId {cid group} {
+    variable submodelparts
+    set find [list $cid ${group}]
+    if {[dict exists $submodelparts $find]} {
+        return [dict get $submodelparts [list $cid ${group}]]
+    } {
+        return 0
+    }
+}

@@ -9,6 +9,9 @@ proc PfemFluid::write::getNewParametersDict { } {
     PfemFluid::write::CalculateMyVariables
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.PfemFluidDynamicsApplication.pfem_fluid_dynamics_analysis"
+
     ##### Problem data #####
     # Create section
     set problemDataDict [GetPFEM_ProblemDataDict]
@@ -20,7 +23,7 @@ proc PfemFluid::write::getNewParametersDict { } {
     dict set projectParametersDict solver_settings $solverSettingsDict
 
     ##### problem_process_list
-    set problemProcessList [GetPFEM_ProblemProcessList]
+    set problemProcessList [GetPFEM_ProblemProcessList "[]" "[]"]
     dict set projectParametersDict problem_process_list $problemProcessList
 
     set processList [GetPFEM_ProcessList]
@@ -34,9 +37,10 @@ proc PfemFluid::write::getNewParametersDict { } {
     # dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
     set xpath [spdAux::getRoute Results]
     dict set projectParametersDict output_configuration [write::GetDefaultOutputGiDDict PfemFluid $xpath]
+    dict unset projectParametersDict output_configuration folder_name
     dict set projectParametersDict output_configuration result_file_configuration nodal_results [write::GetResultsByXPathList [spdAux::getRoute NodalResults]]
     dict set projectParametersDict output_configuration result_file_configuration gauss_point_results [write::GetResultsList ElementResults]
-    
+
 
     return $projectParametersDict
 }
@@ -93,7 +97,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
 
     # Time stepping settings
     set timeSteppingDict [dict create]
-    
+
     set automaticDeltaTime [write::getValue PFEMFLUID_TimeParameters UseAutomaticDeltaTime]
     if {$automaticDeltaTime eq "Yes"} {
         dict set timeSteppingDict automatic_time_step "true"
@@ -122,6 +126,7 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict PFEMFLUID_SolStrat PFEMFLUID_Scheme PFEMFLUID_StratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict PfemFluid] ]
 
+	# Body parts list
     set bodies_parts_list [list ]
     foreach body $bodies_list {
         set body_parts [dict get $body parts_list]
@@ -130,9 +135,20 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
         }
     }
 
+	# Constitutive laws
+	set constitutive_list [list]
+    foreach parts_un [PfemFluid::write::GetPartsUN] {
+        set parts_path [spdAux::getRoute $parts_un]
+        set xp1 "$parts_path/group/value\[@n='ConstitutiveLaw'\]"
+        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+            lappend constitutive_list [get_domnode_attribute $gNode v]
+        }
+    }
+
     dict set solverSettingsDict bodies_list $bodies_list
     dict set solverSettingsDict problem_domain_sub_model_part_list $bodies_parts_list
-    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames "PFEMFLUID_NodalConditions" "PFEMFLUID_Loads"]
+	dict set solverSettingsDict constitutive_laws_list $constitutive_list
+    dict set solverSettingsDict processes_sub_model_part_list [write::getSubModelPartNames [GetAttribute nodal_conditions_un] "PFEMFLUID_Loads"]
 
     set materialsDict [dict create]
     dict set materialsDict materials_filename [GetAttribute materials_file]
@@ -146,10 +162,10 @@ proc PfemFluid::write::GetPFEM_OutputProcessList { } {
     # lappend resultList [write::GetRestartProcess Restart]
     return $resultList
 }
-proc PfemFluid::write::GetPFEM_ProblemProcessList { } {
+proc PfemFluid::write::GetPFEM_ProblemProcessList { free_surface_heat_flux free_surface_thermal_face } {
     set resultList [list ]
     set problemtype [write::getValue PFEMFLUID_DomainType]
-    lappend resultList [GetPFEM_FluidRemeshDict]
+    lappend resultList [GetPFEM_FluidRemeshDict $free_surface_heat_flux $free_surface_thermal_face]
     return $resultList
 }
 
@@ -162,7 +178,7 @@ proc PfemFluid::write::GetPFEM_ProcessList { } {
 
     ##### loads_process_list
     dict set resultList loads_process_list [write::getConditionsParametersDict PFEMFLUID_Loads]
-    
+
     dict set resultList auxiliar_process_list []
 
     return $resultList
@@ -209,20 +225,13 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
         dict set bodyDict "python_module" "meshing_domain"
         dict set bodyDict "model_part_name" $body_name
         dict set bodyDict "alpha_shape" 2.4
-        dict set bodyDict "offset_factor" 0.0
         set remesh [write::getStringBinaryFromValue [PfemFluid::write::GetRemeshProperty $body_name "Remesh"]]
         set refine [write::getStringBinaryFromValue [PfemFluid::write::GetRemeshProperty $body_name "Refine"]]
         set meshing_strategyDict [dict create ]
         dict set meshing_strategyDict "python_module" "meshing_strategy"
-        dict set meshing_strategyDict "meshing_frequency" 0
         dict set meshing_strategyDict "remesh" $remesh
         dict set meshing_strategyDict "refine" $refine
-        dict set meshing_strategyDict "reconnect" false
         dict set meshing_strategyDict "transfer" false
-        dict set meshing_strategyDict "constrained" false
-        dict set meshing_strategyDict "mesh_smoothing" false
-        dict set meshing_strategyDict "variables_smoothing" false
-        dict set meshing_strategyDict "elemental_variables_to_smooth" [list "DETERMINANT_F" ]
         set nDim $::Model::SpatialDimension
         if {$nDim eq "3D"} {
             dict set meshing_strategyDict "reference_element_type" "Element3D4N"
@@ -232,7 +241,6 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
             dict set meshing_strategyDict "reference_condition_type" "CompositeCondition2D2N"
         }
         dict set bodyDict meshing_strategy $meshing_strategyDict
-
 
         set spatial_bounding_boxDict [dict create ]
         dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
@@ -251,45 +259,6 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
         dict set spatial_refining_boxDict "lower_point"      [PfemFluid::write::GetLowerPointRefiningBox]
         dict set bodyDict spatial_refining_box $spatial_refining_boxDict
 
-        set refining_parametersDict [dict create ]
-        dict set refining_parametersDict "critical_size" 0.0
-        dict set refining_parametersDict "threshold_variable" "PLASTIC_STRAIN"
-        dict set refining_parametersDict "reference_threshold" 0.0
-        dict set refining_parametersDict "error_variable" "NORM_ISOCHORIC_STRESS"
-        dict set refining_parametersDict "reference_error" 0.0
-        dict set refining_parametersDict "add_nodes" true
-        dict set refining_parametersDict "insert_nodes" false
-
-        set remove_nodesDict [dict create]
-        dict set remove_nodesDict "apply_removal" false
-        dict set remove_nodesDict "on_distance" false
-        dict set remove_nodesDict "on_threshold" false
-        dict set remove_nodesDict "on_error" false
-        dict set refining_parametersDict remove_nodes $remove_nodesDict
-
-        set remove_boundaryDict [dict create]
-        dict set remove_boundaryDict "apply_removal" false
-        dict set remove_boundaryDict "on_distance" false
-        dict set remove_boundaryDict "on_threshold" false
-        dict set remove_boundaryDict "on_error" false
-        dict set refining_parametersDict remove_boundary $remove_boundaryDict
-
-        set refine_elementsDict [dict create]
-        dict set refine_elementsDict "apply_refinement" false
-        dict set refine_elementsDict "on_distance" false
-        dict set refine_elementsDict "on_threshold" false
-        dict set refine_elementsDict "on_error" false
-        dict set refining_parametersDict refine_elements $refine_elementsDict
-
-        set refine_boundaryDict [dict create]
-        dict set refine_boundaryDict "apply_refinement" false
-        dict set refine_boundaryDict "on_distance" false
-        dict set refine_boundaryDict "on_threshold" false
-        dict set refine_boundaryDict "on_error" false
-        dict set refining_parametersDict refine_boundary $refine_boundaryDict
-
-        dict set bodyDict refining_parameters $refining_parametersDict
-
         lappend meshing_domains_list $bodyDict
     }
     dict set paramsDict meshing_domains $meshing_domains_list
@@ -299,7 +268,7 @@ proc PfemFluid::write::GetPFEM_RemeshDict { } {
 
 
 
-proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
+proc PfemFluid::write::GetPFEM_FluidRemeshDict { free_surface_heat_flux free_surface_thermal_face } {
     variable bodies_list
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
@@ -314,6 +283,8 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
     dict set paramsDict "meshing_control_type" "step"
     dict set paramsDict "meshing_frequency" 1.0
     dict set paramsDict "meshing_before_output" true
+    dict set paramsDict update_conditions_on_free_surface [PfemFluid::write::GetUpdateConditionsOnFreeSurface $free_surface_heat_flux $free_surface_thermal_face]
+
     set meshing_domains_list [list ]
     foreach body $bodies_list {
         set bodyDict [dict create ]
@@ -326,20 +297,13 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
         } else {
             dict set bodyDict "alpha_shape" 1.25
         }
-        dict set bodyDict "offset_factor" 0.0
         set remesh [write::getStringBinaryFromValue [PfemFluid::write::GetRemeshProperty $body_name "Remesh"]]
         set refine [write::getStringBinaryFromValue [PfemFluid::write::GetRemeshProperty $body_name "Refine"]]
         set meshing_strategyDict [dict create ]
         dict set meshing_strategyDict "python_module" "fluid_meshing_strategy"
-        dict set meshing_strategyDict "meshing_frequency" 0
         dict set meshing_strategyDict "remesh" $remesh
         dict set meshing_strategyDict "refine" $refine
-        dict set meshing_strategyDict "reconnect" false
         dict set meshing_strategyDict "transfer" false
-        dict set meshing_strategyDict "constrained" false
-        dict set meshing_strategyDict "mesh_smoothing" false
-        dict set meshing_strategyDict "variables_smoothing" false
-        dict set meshing_strategyDict "elemental_variables_to_smooth" [list "DETERMINANT_F" ]
         if {$nDim eq "3D"} {
             dict set meshing_strategyDict "reference_element_type" "TwoStepUpdatedLagrangianVPFluidElement3D"
             dict set meshing_strategyDict "reference_condition_type" "CompositeCondition3D3N"
@@ -368,50 +332,47 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { } {
         dict set spatial_refining_boxDict "lower_point"      [PfemFluid::write::GetLowerPointRefiningBox]
         dict set bodyDict spatial_refining_box $spatial_refining_boxDict
 
-        set refining_parametersDict [dict create ]
-        dict set refining_parametersDict "critical_size" 0.0
-        dict set refining_parametersDict "threshold_variable" "PLASTIC_STRAIN"
-        dict set refining_parametersDict "reference_threshold" 0.0
-        dict set refining_parametersDict "error_variable" "NORM_ISOCHORIC_STRESS"
-        dict set refining_parametersDict "reference_error" 0.0
-        dict set refining_parametersDict "add_nodes" false
-        dict set refining_parametersDict "insert_nodes" true
-
-        set remove_nodesDict [dict create]
-        dict set remove_nodesDict "apply_removal" true
-        dict set remove_nodesDict "on_distance" true
-        dict set remove_nodesDict "on_threshold" false
-        dict set remove_nodesDict "on_error" false
-        dict set refining_parametersDict remove_nodes $remove_nodesDict
-
-        set remove_boundaryDict [dict create]
-        dict set remove_boundaryDict "apply_removal" false
-        dict set remove_boundaryDict "on_distance" false
-        dict set remove_boundaryDict "on_threshold" false
-        dict set remove_boundaryDict "on_error" false
-        dict set refining_parametersDict remove_boundary $remove_boundaryDict
-
-        set refine_elementsDict [dict create]
-        dict set refine_elementsDict "apply_refinement" true
-        dict set refine_elementsDict "on_distance" true
-        dict set refine_elementsDict "on_threshold" false
-        dict set refine_elementsDict "on_error" false
-        dict set refining_parametersDict refine_elements $refine_elementsDict
-
-        set refine_boundaryDict [dict create]
-        dict set refine_boundaryDict "apply_refinement" false
-        dict set refine_boundaryDict "on_distance" false
-        dict set refine_boundaryDict "on_threshold" false
-        dict set refine_boundaryDict "on_error" false
-        dict set refining_parametersDict refine_boundary $refine_boundaryDict
-
-        dict set bodyDict refining_parameters $refining_parametersDict
-
         lappend meshing_domains_list $bodyDict
     }
     dict set paramsDict meshing_domains $meshing_domains_list
     dict set resultDict Parameters $paramsDict
     return $resultDict
+}
+
+proc PfemFluid::write::GetUpdateConditionsOnFreeSurface { free_surface_heat_flux free_surface_thermal_face } {
+	set updateConditionsDict [dict create]
+	if {$free_surface_heat_flux eq "[]" && $free_surface_thermal_face eq "[]"} {
+		dict set updateConditionsDict "update_conditions" false
+	} else {
+		set free_part_name_list [list ]
+		set condition_type_list [list ]
+		set nDim $::Model::SpatialDimension
+		set nDim [expr [string range [write::getValue nDim] 0 0] ]
+		if {$free_surface_heat_flux ne "[]"} {
+			foreach part $free_surface_heat_flux {
+				lappend free_part_name_list $part
+			}
+			if {$nDim == 2} {
+				lappend condition_type_list "LineCondition2D2N"
+			} else {
+				lappend condition_type_list "SurfaceCondition3D3N"
+			}
+		}
+		if {$free_surface_thermal_face ne "[]"} {
+			foreach part $free_surface_thermal_face {
+				lappend free_part_name_list $part
+			}
+			if {$nDim == 2} {
+				lappend condition_type_list "LineCondition2D2N"
+			} else {
+				lappend condition_type_list "SurfaceCondition3D3N"
+			}
+		}
+		dict set updateConditionsDict "update_conditions"        true
+		dict set updateConditionsDict "sub_model_part_list"      $free_part_name_list
+		dict set updateConditionsDict "reference_condition_list" $condition_type_list
+    }
+    return $updateConditionsDict
 }
 
 proc PfemFluid::write::GetRemeshProperty { body_name property } {
