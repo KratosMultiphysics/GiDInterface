@@ -54,8 +54,14 @@ proc ::DEM::xml::CustomTree { args } {
     set 2dinlet_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='Inlet2D'\]/value\[@n='InletElementType'\]"
     gid_groups_conds::setAttributes $2dinlet_xpath [list values "CylinderParticle2D" ]
 
-
-    # spdAux::parseRoutes
+    # set new unique names for parts groups
+    set parts_path "[spdAux::getRoute DEMParts]/condition"
+    foreach part_type [[customlib::GetBaseRoot] selectNodes $parts_path] {
+        set part_type_name [$part_type @n]
+        $part_type setAttribute un DEMParts_$part_type_name
+    }
+    spdAux::parseRoutes
+    
     spdAux::processDynamicNodes [customlib::GetBaseRoot]
 }
 
