@@ -458,8 +458,8 @@
   <ElementItem n="PrestressedMembraneElement" pn="Membrane prestressed" ov="surface" ImplementedInFile="prestress_membrane_element.cpp" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" help="This element it implements a membrane structural model" RotationDofs="False" ElementType="Membrane" AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="PreStressMembraneElement3D3N"/>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="PreStressMembraneElement3D4N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="MembraneElement3D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="MembraneElement3D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -478,10 +478,9 @@
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
       <parameter n="PRESTRESS_VECTOR" pn="Membrane prestress" type="inline_vector" v="0,0,0"/>
       <parameter n="PROJECTION_TYPE_COMBO" pn="Projection type" type="combo" v="rotational" values="rotational,planar,file">
-        <parameter n="PRESTRESS_AXIS_GLOBAL" pn="Projection direction" type="inline_vector" v="0,0,0" parent="rotational"/>
-        <parameter n="PRESTRESS_AXIS_1_GLOBAL" pn="Projection direction 1" type="inline_vector" v="0,0,0" parent="planar"/>
+        <parameter n="PRESTRESS_AXIS_1_GLOBAL" pn="Projection direction 1" type="inline_vector" v="0,0,0" parent="rotational,planar"/>
         <parameter n="PRESTRESS_AXIS_2_GLOBAL" pn="Projection direction 2" type="inline_vector" v="0,0,0" parent="planar"/>
-        <parameter n="PROJECTION_TYPE_FILEPATH" pn="Projection file" type="tablefile" parent="file" v="- No file"/>
+        <parameter n="PROJECTION_TYPE_FILEPATH" pn="Projection file" type="tablefile" parent="file" v="- No file - (add files using File handler toolbar)"/>
       </parameter>
     </inputs>
     <outputs>

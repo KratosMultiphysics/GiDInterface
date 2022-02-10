@@ -1,19 +1,12 @@
-namespace eval DEM::examples {
-
+namespace eval ::DEM::examples {
+    namespace path ::DEM
+    Kratos::AddNamespace [namespace current]
 }
 
-proc DEM::examples::Init { } {
-    uplevel #0 [list source [file join $::DEM::dir examples SpheresDrop.tcl]]
-    uplevel #0 [list source [file join $::DEM::dir examples CirclesDrop.tcl]]
-}
-
-proc DEM::examples::UpdateMenus { } {
-    if {$::Model::SpatialDimension eq "3D"} {
-        GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-        GiDMenu::InsertOption "Kratos" [list "Spheres drop" ] 8 PRE [list ::DEM::examples::SpheresDrop] "" "" insertafter =
-        GiDMenu::InsertOption "Kratos" [list "Circles drop" ] 8 PRE [list ::DEM::examples::CirclesDrop] "" "" insertafter =
+proc ::DEM::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
     }
-    GiDMenu::UpdateMenus
 }
-
-DEM::examples::Init

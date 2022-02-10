@@ -210,7 +210,7 @@
 
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="Type" value="SimplifiedInterfaceStress,SimplifiedInterfaceStrain"/>
+      <filter field="Type" value="SimplifiedInterface"/>
       <filter field="Dimension" value="2D"/>
       <filter field="StrainSize" value="3"/>
     </ConstitutiveLaw_FilterFeatures>

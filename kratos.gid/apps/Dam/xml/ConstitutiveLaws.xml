@@ -77,13 +77,28 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="SimplifiedBilinear3DLaw" pn="Simplified Bilinear Cohesive 3D" ProductionReady="ProductionReady" Type="SimplifiedInterface3D" behaviour="Elastic"
+    <CLaw n="JointCohesionDriven3DLaw" pn="Joint Cohesion Driven" ProductionReady="ProductionReady" Type="SimplifiedInterface3D" behaviour="Elastic"
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
-	  help="Simplified Bilinear Cohesive law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
+	  help="Simplified joint cohesion driven law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.6"/>
+            <parameter n="COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="1e6"/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
+    <CLaw n="JointStressDriven3DLaw" pn="Joint Stress Driven" ProductionReady="ProductionReady" Type="SimplifiedInterface3D" behaviour="Elastic"
+    StrainSize="6"  AnalysisType="Linear,Non-Linear"
+	  help="Simplified joint stress driven law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.4"/>
             <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress" unit_magnitude="P" units="Pa" v="20e06"/>
             <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress" unit_magnitude="P" units="Pa" v="2e06"/>
             <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.7"/>
@@ -238,30 +253,29 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="SimplifiedBilinear2DPlaneStrain" pn="Simplified Bilinear Cohesive Plane Strain" ProductionReady="ProductionReady" Type="SimplifiedInterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
-          help="Simplified Bilinear Cohesive law for Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
+    <CLaw n="JointCohesionDriven2DLaw" pn="Joint Cohesion Driven" ProductionReady="ProductionReady" Type="SimplifiedInterface" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
+          help="Simplified joint cohesion driven law for problems in 2D" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress" unit_magnitude="P" units="Pa" v="20e06"/>
-            <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress" unit_magnitude="P" units="Pa" v="2e06"/>
-            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.7"/>
-
+            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.6"/>
+            <parameter n="COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="1e6"/>
+            <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
         </inputs>
         <outputs>
         </outputs>
     </CLaw>
 
-    <CLaw n="SimplifiedBilinear2DPlaneStress" pn="Simplified Bilinear Cohesive Plane Stress" ProductionReady="ProductionReady" Type="SimplifiedInterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
-          help="Simplified Bilinear Cohesive law for Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
+    <CLaw n="JointStressDriven2DLaw" pn="Joint Stress Driven" ProductionReady="ProductionReady" Type="SimplifiedInterface" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
+          help="Simplified joint stress driven law for problems in 2D" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.83"/>
             <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress" unit_magnitude="P" units="Pa" v="20e06"/>
             <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress" unit_magnitude="P" units="Pa" v="2e06"/>
-            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.7"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
         </inputs>
         <outputs>

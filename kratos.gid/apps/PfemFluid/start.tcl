@@ -1,42 +1,24 @@
 namespace eval ::PfemFluid {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
-    variable attributes
-    variable kratos_name
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::PfemFluid::Init { } {
+proc ::PfemFluid::Init { app } {
     # Variable initialization
     variable dir
-    variable attributes
-    variable kratos_name
-    set kratos_name PfemFluidDynamicsApplication
-    
     set dir [apps::getMyDir "PfemFluid"]
-    set ::Model::ValidSpatialDimensions [list 2D 3D]
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-    set attributes [dict create]
-    dict set attributes UseIntervals 1
-    if {$::Kratos::kratos_private(DevMode) ne "dev"} {error [= "You need to change to Developer mode in the Kratos menu"] }
-    dict set attributes UseRestart 1
-    LoadMyFiles
-}
+    variable _app
+    set _app $app
 
-proc ::PfemFluid::LoadMyFiles { } {
-    variable dir
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-}
-
-
-proc ::PfemFluid::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
+    PfemFluid::xml::Init
+    PfemFluid::write::Init
 }
 
 proc ::PfemFluid::CustomToolbarItems { } {
@@ -52,15 +34,8 @@ proc ::PfemFluid::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "Run" [file join $img_dir "runSimulation.png"] {Utilities Calculate} [= "Run the simulation"]
     Kratos::ToolbarAddItem "Output" [file join $img_dir "view.png"] [list -np- PWViewOutput] [= "View process info"]
     Kratos::ToolbarAddItem "Stop" [file join $img_dir "cancelProcess.png"] {Utilities CancelProcess} [= "Cancel process"]
-    Kratos::ToolbarAddItem "SpacerApp" "" "" ""
     Kratos::ToolbarAddItem "Spacer" "" "" ""
-    Kratos::ToolbarAddItem "Example" [file join $img_dir "exampleFluid.png"] [list -np- ::PfemFluid::examples::WaterDamBreak] [= "Example\nWater dam break"]
-    Kratos::ToolbarAddItem "Example" [file join $img_dir "exampleFsi.png"] [list -np- ::PfemFluid::examples::DamBreakFSI] [= "Example\nDam break FSI"]
-
-    # Solo para JG
-    if {[GiD_Info problemtypepath] eq "E:/PROYECTOS/Kratos/interfaces/GiD/kratos.gid"} {
-        Kratos::ToolbarAddItem "Conditions" "list.png" [list -np- PfemFluid::xml::StartSortingWindow] [= "Sort the conditions"]
-    }
+    Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]   
+    Kratos::ToolbarAddItem "SpacerApp" "" "" ""
 }
 
-::PfemFluid::Init

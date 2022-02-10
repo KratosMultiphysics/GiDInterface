@@ -1,5 +1,5 @@
 # utility for advanced meshing features in DEM
-proc DEM::write::Elements_Substitution {} {
+proc ::DEM::write::Elements_Substitution {} {
 
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
@@ -236,7 +236,7 @@ proc DEM::write::Elements_Substitution {} {
     return $fail
 }
 
-proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
+proc ::DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
 
     set mesh_elements [GiD_EntitiesGroups get $cgroupid all_mesh]
     set real_mesh_elements [lindex $mesh_elements 1]
@@ -279,7 +279,7 @@ proc DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
     return [array get is_external_element]
 }
 
-proc DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
+proc ::DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
     set elem_types [list line triangle quadrilateral tetrahedra hexahedra]
     foreach elem_type $elem_types {
         if {[GiD_EntitiesGroups get $cgroupid elements -count -element_type $elem_type] > 0} {
@@ -288,7 +288,7 @@ proc DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
     }
 }
 
-proc DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes {final_list_of_isolated_nodes} {
+proc ::DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes {final_list_of_isolated_nodes} {
 
     # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE nodes
     # # GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
@@ -304,7 +304,7 @@ proc DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes {final_list_of_iso
     }
 }
 
-proc DEM::write::NormalDistribution {mean standard_deviation min_rad max_rad} {
+proc ::DEM::write::NormalDistribution {mean standard_deviation min_rad max_rad} {
     if {$standard_deviation} {
         set max_iterations 1000 ; #set a maximun number of iterations to avoid an infinite loop
         for {set i 0} {$i < $max_iterations} {incr i} {
@@ -321,7 +321,7 @@ proc DEM::write::NormalDistribution {mean standard_deviation min_rad max_rad} {
     return $mean
 }
 
-proc DEM::write::LognormalDistribution {mean standard_deviation min_rad max_rad} {
+proc ::DEM::write::LognormalDistribution {mean standard_deviation min_rad max_rad} {
     if {$standard_deviation} {
         set log_min [expr log($min_rad)]
         set log_max [expr log($max_rad)]
@@ -332,7 +332,7 @@ proc DEM::write::LognormalDistribution {mean standard_deviation min_rad max_rad}
     return $mean
 }
 
-proc DEM::write::Destroy_Skin_Sphere_Group {what_dempack_package} {
+proc ::DEM::write::Destroy_Skin_Sphere_Group {what_dempack_package} {
     if {$what_dempack_package eq "G-DEMPack"} {
         if [GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE] {
             GiD_Groups delete SKIN_SPHERE_DO_NOT_DELETE
@@ -343,7 +343,7 @@ proc DEM::write::Destroy_Skin_Sphere_Group {what_dempack_package} {
     }
 }
 
-proc DEM::write::GetNodeHigherentities {node_id} {
+proc ::DEM::write::GetNodeHigherentities {node_id} {
     set node_data [GiD_Info list_entities nodes $node_id]
     if {![regexp {HigherEntity: ([0-9]+)} $node_data dummy higherentity]} {
         set higherentity 9999; #the node does not exist, return > 0 to not delete it
@@ -351,7 +351,7 @@ proc DEM::write::GetNodeHigherentities {node_id} {
     return $higherentity
 }
 
-proc DEM::write::GetElementCenter {element_id} {
+proc ::DEM::write::GetElementCenter {element_id} {
     set element_data [GiD_Mesh get element $element_id]
     set num_nodes [lindex $element_data 2]
     set node_ids [lrange $element_data 3 2+$num_nodes]
@@ -363,7 +363,7 @@ proc DEM::write::GetElementCenter {element_id} {
     return [MathUtils::ScalarByVectorProd [expr {1.0/$num_nodes}] $sum]
 }
 
-proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
+proc ::DEM::write::BeforeMeshGenerationUtils {elementsize} {
 
     # Align the normal
     DEM::write::AlignSurfNormals Outwards
@@ -412,7 +412,7 @@ proc DEM::write::BeforeMeshGenerationUtils {elementsize} {
 
 }
 
-proc DEM::write::AlignSurfNormals {direction} {
+proc ::DEM::write::AlignSurfNormals {direction} {
     # ABSTRACT: Makes all of boundary surfaces' normals point inwards or outwards
     # Arguments
     # direction => Direction option ["Inwards"|"Outwards"]
@@ -456,7 +456,7 @@ proc DEM::write::AlignSurfNormals {direction} {
     }
 }
 
-proc DEM::write::CleanAutomaticConditionGroupGiD {args {fieldvalue ""}} {
+proc ::DEM::write::CleanAutomaticConditionGroupGiD {args {fieldvalue ""}} {
     if {![GiD_Groups exists $fieldvalue]} {
         GiD_Groups create $fieldvalue
     }
@@ -469,7 +469,7 @@ proc DEM::write::CleanAutomaticConditionGroupGiD {args {fieldvalue ""}} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
+proc ::DEM::write::FindBoundariesOfNonSphericElements {entity} {
     # ABSTRACT: Return a list containing all boundaries entities
     # Arguments
     # entity => Entity to be processed
@@ -514,7 +514,7 @@ proc DEM::write::FindBoundariesOfNonSphericElements {entity} {
     return $boundarylist
 }
 
-proc DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
+proc ::DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
     # ABSTRACT: Return a list containing all boundaries entities
     # Arguments
     # entity => surface
@@ -545,12 +545,13 @@ proc DEM::write::FindAllSurfacesOfNonSphericElements {entity} {
     return $boundarylist
 }
 
-proc DEM::write::AssignGeometricalEntitiesToSkinSphere2D {} {
+proc ::DEM::write::AssignGeometricalEntitiesToSkinSphere2D {} {
 
     set list_of_points [GiD_Geometry list point 1:end]
     set list_of_lines [GiD_Geometry list line 1:end]
     if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
 	    GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
+        GiD_Groups edit state SKIN_SPHERE_DO_NOT_DELETE hidden
     }
 
     set points_to_add_to_skin_circles [list]
@@ -563,13 +564,14 @@ proc DEM::write::AssignGeometricalEntitiesToSkinSphere2D {} {
 }
 
 
-proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
+proc ::DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
 
     set list_of_points [GiD_Geometry list point 1:end]
     set list_of_lines [GiD_Geometry list line 1:end]
     set list_of_surfaces [GiD_Geometry list surface 1:end]
     if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
         GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
+        GiD_Groups edit state SKIN_SPHERE_DO_NOT_DELETE hidden
     }
 
     set points_to_add_to_skin_spheres [list]
@@ -599,7 +601,7 @@ proc DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE all_geometry $total_skin_sphere_list
 }
 
-proc DEM::write::GetSurfaceTypeList {surfacelist} {
+proc ::DEM::write::GetSurfaceTypeList {surfacelist} {
 
     set tetrasurf [list]
     set hexasurf [list]
@@ -628,7 +630,7 @@ proc DEM::write::GetSurfaceTypeList {surfacelist} {
     return [list $tetrasurf $hexasurf]
 }
 
-proc DEM::write::AssignConditionToGroupGID {entity elist groupid} {
+proc ::DEM::write::AssignConditionToGroupGID {entity elist groupid} {
     # Need New GiD_group adaptation
     if {![GiD_Groups exists $groupid]} {
         GiD_Groups create $groupid
@@ -638,7 +640,7 @@ proc DEM::write::AssignConditionToGroupGID {entity elist groupid} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc DEM::write::AssignSpecialBoundaries {entitylist} {
+proc ::DEM::write::AssignSpecialBoundaries {entitylist} {
     #set DEMApplication "No"
     #catch {set DEMApplication [::xmlutils::setXml {GeneralApplicationData//c.ApplicationTypes//i.DEM} dv]}
     #if {$DEMApplication eq "Yes"} {
@@ -673,7 +675,7 @@ proc DEM::write::AssignSpecialBoundaries {entitylist} {
         #}
 }
 
-proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
+proc ::DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
     foreach group [$root selectNodes $xp1] {
@@ -687,7 +689,7 @@ proc DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     }
 }
 
-proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
+proc ::DEM::write::ForceTheMeshingOfDEMInletGroups {} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet'\]/group"
     foreach group [$root selectNodes $xp1] {
@@ -701,7 +703,7 @@ proc DEM::write::ForceTheMeshingOfDEMInletGroups {} {
     }
 }
 
-proc DEM::write::FindBoundariesOfCircularElements {entity} {
+proc ::DEM::write::FindBoundariesOfCircularElements {entity} {
 
 
     set root [customlib::GetBaseRoot]
@@ -750,7 +752,7 @@ proc DEM::write::FindBoundariesOfCircularElements {entity} {
 
 
 
-proc DEM::write::FindBoundariesOfSphericElements {entity} {
+proc ::DEM::write::FindBoundariesOfSphericElements {entity} {
 
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"

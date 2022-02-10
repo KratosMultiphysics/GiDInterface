@@ -6,6 +6,7 @@
 	<StrategyItem
 		n="Monolithic"
 		pn="Navier Stokes - Monolithic"
+		Type="monolithic"
 		ImplementedInFile="navier_stokes_solver_vmsmonolithic.py"
 		ImplementedInApplication="FluidDynamicsApplication"
 		ImplementedInPythonFile="Monolithic"
@@ -40,13 +41,18 @@
 
 		<!-- scheme settings -->
 		<schemes>
-			<scheme n="MN" pn="Monolitic generic scheme" help="FilterElements" ProductionReady="ProductionReady">
-				<parameter_list>
-				</parameter_list>
-				<element_filters>
-					<filter field="n" value="Monolithic2D,Monolithic3D"/>
-				</element_filters>
-			</scheme>
+			<scheme n="bossak" pn="Bossak" help="Bossak scheme for CFD problems." ProductionReady="ProductionReady">
+                <parameter_list></parameter_list>
+                <element_filters>
+                    <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D"/>
+                </element_filters>
+            </scheme>
+			<scheme n="bdf2" pn="BDF2" help="2nd order Backward Differenctiation Formula (BDF2) scheme for CFD problems." ProductionReady="ProductionReady">
+                <parameter_list></parameter_list>
+                <element_filters>
+                    <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D,WeaklyCompressible2D,WeaklyCompressible3D"/>
+                </element_filters>
+            </scheme>
 		</schemes>
 	</StrategyItem>
 
@@ -55,6 +61,7 @@
 	<StrategyItem
 		n="FractionalStep"
 		pn="Navier Stokes - Fractional Step"
+		Type="fractional_step"
 		ImplementedInFile="navier_stokes_solver_fractionalstep.py"
 		ImplementedInApplication="FluidDynamicsApplication"
 		ImplementedInPythonFile="FractionalStep"
@@ -67,7 +74,7 @@
 		<parameter_list>
 			<parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
 			<parameter n="compute_reactions" pn="Compute reactions" type="bool" v="false" help=""/>
-			<parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="1.0" help=""/>
+			<parameter n="dynamic_tau" pn="Dynamic tau" type="double" v="1.0" help="" />
 			<parameter n="predictor_corrector" pn="Predictor corrector" un="FLFracStepPredictorCorrector" type="bool" v="False" help="">
 				<parameter n="pressure_tolerance" pn="Pressure tolerance" type="double" v="1e-3" help="" parent="Yes"/>
 				<parameter n="maximum_pressure_iterations" pn="Maximum pressure iterations" type="integer" v="4" help="" parent="Yes"/>

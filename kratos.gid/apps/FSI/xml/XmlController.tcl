@@ -1,12 +1,15 @@
-namespace eval FSI::xml {
+namespace eval ::FSI::xml {
+    namespace path ::FSI
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     variable dir
 }
 
-proc FSI::xml::Init { } {
+proc ::FSI::xml::Init { } {
     # Namespace variables initialization
     variable dir
-    Model::InitVariables dir $FSI::dir
+    Model::InitVariables dir $::FSI::dir
 
     Model::ForgetSolutionStrategies
     Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
@@ -21,18 +24,18 @@ proc FSI::xml::Init { } {
     Model::getSolvers Coupling_solvers.xml
 }
 
-proc FSI::xml::getUniqueName {name} {
-    return ${::FSI::prefix}${name}
+proc ::FSI::xml::getUniqueName {name} {
+    return [::FSI::GetAttribute prefix]${name}
 }
 
 proc ::FSI::xml::MultiAppEvent {args} {
    if {$args eq "init"} {
-        ::Structural::xml::MultiAppEvent init
+        catch {::Structural::xml::MultiAppEvent init}
    }
 }
 
 
-proc FSI::xml::CustomTree { args } {
+proc ::FSI::xml::CustomTree { args } {
     FSI::write::UpdateUniqueNames Fluid
     apps::setActiveAppSoft Fluid
     Fluid::xml::CustomTree
@@ -50,7 +53,6 @@ proc FSI::xml::CustomTree { args } {
 
     # Remove Eigen
     #spdAux::SetValueOnTreeItem values "Static,Quasi-static,Dynamic,formfinding" STSoluType
-
 
     # Disable MPI parallelism until it is fully tested
     #spdAux::SetValueOnTreeItem values "OpenMP" ParallelType
@@ -83,5 +85,3 @@ proc spdAux::injectElementOutputs {basenode args} {
     }
     return [spdAux::injectElementOutputs_do $basenode $args]
 }
-
-FSI::xml::Init

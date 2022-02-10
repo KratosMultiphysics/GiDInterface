@@ -5,7 +5,7 @@
 
   <!---  Conditions: YOUNG VARIABLE -->
   <ConditionItem n="YoungModulus3D" pn="Young Modulus Calibration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical"
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Calibration"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Volume" ProcessName="ImposeInputTableNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
     help="Application of variable young modulus in the nodes">
@@ -20,7 +20,7 @@
   </ConditionItem>
 
  <ConditionItem n="YoungModulus2D" pn="Young Modulus Calibration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical"
-	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Calibration"
+	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Surface" ProcessName="ImposeInputTableNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
     help="Application of variable young modulus in the nodes">
@@ -415,7 +415,7 @@
   </ConditionItem>
 
    <!---  Conditions: NORMAL PRESSURE LOADS -->
-    <ConditionItem n="LinePressure2D" pn="Normal Load" ImplementedInFile="apply_scalar_on_conditions_processs"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical"
+    <!-- <ConditionItem n="LinePressure2D" pn="Normal Load" ImplementedInFile="apply_scalar_on_conditions_processs"  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady" TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyLoadScalarTableProcess" help="Normal pressure on lines, oriented pointing against the line outer normal"
@@ -446,7 +446,7 @@
     </inputs>
     <outputs>
     </outputs>
-  </ConditionItem>
+  </ConditionItem> -->
 
 
    <!---  Conditions: HYDROSTATIC PRESSURE LOADS -->

@@ -1,30 +1,7 @@
-
-# proc write::dict2json {dictVal} {
-#     # XXX: Currently this API isn't symmetrical, as to create proper
-#     # XXX: JSON text requires type knowledge of the input data
-#     set json ""
-#     dict for {key val} $dictVal {
-#         # key must always be a string, val may be a number, string or
-#         # bare word (true|false|null)
-#         if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
-#             set val "\"$val\""
-#         }
-#         if {[isDict $val]} {
-#             set val [dict2json $val]
-#             set val "\[${val}\]"
-#         } else {
-#             set val \"$val\"
-#         }
-#         append json "\"$key\": $val," \n
-#     }
-#     if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
-#     return "\{${json}\}"
-# }
-
-
 package require json::write
+package require json
 
-proc write::json2dict {JSONtext} {
+proc write::json2dict_former {JSONtext} {
     string range [
         string trim [
             string trimleft [
@@ -33,16 +10,20 @@ proc write::json2dict {JSONtext} {
             ]
         ] 1 end-1
 }
+proc write::json2dict {JSONtext} {
+    return [::json::json2dict $JSONtext]
+}
 
 proc write::tcl2json { value } {
     # Guess the type of the value; deep *UNSUPPORTED* magic!
     # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
-    regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    # regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    set type [GidUtils::GetInternalRepresentation $value]
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2json $v}]]}
+    #if {$type ne "dict" && [llength $value]>1 && [string index $value 0] eq "\{"} { W "$value as list"; set type list}
+    #if {$type eq "exprcode"} {set type list; W "$type -> $value"}
     switch $type {
         string {
-            if {$value eq "false"} {return [expr "false"]}
-            if {$value eq "true"} {return [expr "true"]}
             if {$value eq "null"} {return null}
             if {$value eq "dictnull"} {return {{}}}
             return [json::write string $value]
@@ -75,6 +56,51 @@ proc write::tcl2json { value } {
                 return [expr {$value}]
             } elseif {[string is boolean -strict $value]} {
                 return [expr {$value ? "true" : "false"}]
+            } elseif {[string index $value 0] eq "\{"} {
+                return [json::write array {*}[lmap v $value {tcl2json $v}]]
+            }
+            return [json::write string $value]
+        }
+    }
+}
+
+proc write::tcl2jsonstrings { value } {
+    # Guess the type of the value; deep *UNSUPPORTED* magic!
+    # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
+    regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]}
+    switch $type {
+        string {
+            if {$value eq "null"} {return null}
+            if {$value eq "dictnull"} {return {{}}}
+            return [json::write string $value]
+        }
+        dict {
+            return [json::write object {*}[
+                    dict map {k v} $value {tcl2jsonstrings $v}]]
+        }
+        list {
+            return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]
+        }
+        int - double {
+            return [json::write string $value]
+        }
+        booleanString {
+            return [json::write string $value]
+            #return [expr {$value ? "true" : "false"}]
+        }
+        default {
+            # Some other type; do some guessing...
+            if {$value eq "null"} {
+                # Tcl has *no* null value at all; empty strings are semantically
+                # different and absent variables aren't values. So cheat!
+                return $value
+            } elseif {[string is integer -strict $value]} {
+                return [json::write string $value]
+            } elseif {[string is double -strict $value]} {
+                return [json::write string $value]
+            } elseif {[string is boolean -strict $value]} {
+                return [json::write string $value]
             }
             return [json::write string $value]
         }
@@ -83,6 +109,9 @@ proc write::tcl2json { value } {
 
 proc write::WriteJSON {processDict} {
     WriteString [write::tcl2json $processDict]
+}
+proc write::WriteJSONAsStringFields {processDict} {
+    WriteString [write::tcl2jsonstrings $processDict]
 }
 
 proc write::GetEmptyList { } {
@@ -144,8 +173,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
         set StratParamsUN [apps::getCurrentUniqueName StratParams]
     }
 
-    set solstratName [write::getValue $solStratUN]
-    set schemeName [write::getValue $schemeUN]
+    set solstratName [write::getValue $solStratUN "" force]
+    set schemeName [write::getValue $schemeUN "" force]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
 
@@ -233,7 +262,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
             set processWriteCommand [$process getAttribute write_command]
-            
+
             dict set processDict process_name $processName
 
             if {$processWriteCommand eq ""} {
@@ -243,7 +272,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
                 foreach {inputName in_obj} $process_parameters {
                     dict set processDict Parameters $inputName [write::GetInputValue $group $in_obj]
                 }
-                
+
             } else {
                 set processDict [$processWriteCommand $group $condition $process]
             }
@@ -363,7 +392,7 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
             append parent $par "."
         }
     } else {
-         append parent $forced_parent "."
+        append parent $forced_parent "."
     }
     append result $parent $child_name
     return [string trim $result "."]
@@ -422,14 +451,16 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     # Setup GiD-Output
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
-    dict set outputProcessParams output_name $model_name
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputGiDDict $appid]
+    set folder_name [dict get $outputProcessParams postprocess_parameters folder_name]
+    dict unset outputProcessParams postprocess_parameters folder_name
+    dict set outputProcessParams output_name [file join $folder_name $model_name]
 
     set outputConfigDict [dict create]
     dict set outputConfigDict python_module gid_output_process
     dict set outputConfigDict kratos_module KratosMultiphysics
     dict set outputConfigDict process_name GiDOutputProcess
-    dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    # dict set outputConfigDict help "This process writes postprocessing files for GiD"
     dict set outputConfigDict Parameters $outputProcessParams
 
     return $outputConfigDict
@@ -451,8 +482,12 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     dict set resultDict file_label                 [getValueByXPath $gid_options_xpath FileLabel]
     set outputCT [getValueByXPath $gid_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
-    if {$outputCT eq "time"} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]}
-    dict set resultDict output_frequency $frequency
+    if {$outputCT eq "time"} {
+        set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]
+    } {
+        set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]
+    }
+    dict set resultDict output_interval $frequency
 
     dict set resultDict body_output [getValueByXPath $gid_options_xpath BodyOutput]
     dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
@@ -468,6 +503,8 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
 
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [GetEmptyList]
+
+    dict set outputDict folder_name [getValueByXPath $gid_options_xpath FolderName]
     return $outputDict
 }
 
@@ -481,7 +518,7 @@ proc write::GetDefaultVTKOutput { {appid ""} } {
     dict set outputConfigDictVtk python_module vtk_output_process
     dict set outputConfigDictVtk kratos_module KratosMultiphysics
     dict set outputConfigDictVtk process_name VtkOutputProcess
-    dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
+    #dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
     dict set outputConfigDictVtk Parameters [write::GetDefaultParametersOutputVTKDict $appid]
 
     return $outputConfigDictVtk
@@ -498,11 +535,11 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
     if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
-    dict set resultDict output_frequency               $frequency
+    dict set resultDict output_interval               $frequency
     dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
-    dict set resultDict folder_name                    "vtk_output"
+    dict set resultDict output_path                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
     dict set resultDict nodal_data_value_variables      [list ]
@@ -521,4 +558,28 @@ proc write::GetDefaultRestartDict { } {
     dict set restartDict LoadRestart False
     dict set restartDict Restart_Step 0
     return $restartDict
+}
+
+proc write::GetTimeStepIntervals { {time_parameters_un ""} } {
+    if {$time_parameters_un eq ""} {set time_parameters_un [GetConfigurationAttribute time_parameters_un]}
+    set root [customlib::GetBaseRoot]
+
+    set xp "[spdAux::getRoute $time_parameters_un]/container\[@n = 'TimeStep'\]/blockdata"
+    set time_step_interval_nodes [$root selectNodes $xp]
+
+    # If the app is still working on fixed Delta time
+    if {[llength $time_step_interval_nodes] eq 0} {return [write::getValue $time_parameters_un DeltaTime]}
+
+    # If it works with interval delta time
+    set time_step_intervals_list [list ]
+    foreach time_step_interval_node $time_step_interval_nodes {
+        set time_step_interval_start_time [write::getValueByNode [$time_step_interval_node find n StartTime]]
+        set time_step_interval_delta_time [write::getValueByNode [$time_step_interval_node find n DeltaTime]]
+
+        set key_value [list $time_step_interval_start_time $time_step_interval_delta_time]
+        lappend time_step_intervals_list $key_value
+    }
+
+    set time_step_intervals_list [lsort -real -index 0 $time_step_intervals_list]
+    return $time_step_intervals_list
 }

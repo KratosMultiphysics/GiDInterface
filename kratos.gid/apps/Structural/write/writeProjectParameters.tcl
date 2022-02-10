@@ -1,22 +1,32 @@
 # Project Parameters
 
-proc Structural::write::getOldParametersDict { } {
+proc ::Structural::write::getOldParametersDict { } {
     set model_part_name [GetAttribute model_part_name]
     set projectParametersDict [dict create]
 
     # Problem data
     # Create section
-    set problemDataDict [write::GetDefaultProblemDataDict $Structural::app_id]
+    set problemDataDict [write::GetDefaultProblemDataDict [::Structural::GetAttribute id]]
 
     set solutiontype [write::getValue STSoluType]
+
     # Time Parameters
+    set timeSteppingDict [dict create]
     if {$solutiontype eq "Static" || $solutiontype eq "eigen_value"} {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
+
+        # Time stepping settings for static
+        dict set timeSteppingDict "time_step" $time_step
+
     } {
-        set time_step [write::getValue STTimeParameters DeltaTime]
+        set time_step_table [write::GetTimeStepIntervals]
+
+        # Time stepping settings for dynamic
+        dict set timeSteppingDict "time_step_table" $time_step_table
     }
+
     # Add section to document
     dict set projectParametersDict problem_data $problemDataDict
 
@@ -50,6 +60,8 @@ proc Structural::write::getOldParametersDict { } {
     # TODO: Use default
     # Solution strategy
     set solverSettingsDict [dict create]
+    # Time stepping
+    dict set solverSettingsDict time_stepping $timeSteppingDict
     set currentStrategyId [write::getValue STSolStrat]
     # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
     set solver_type_name $solutiontype
@@ -75,11 +87,6 @@ proc Structural::write::getOldParametersDict { } {
     set materialsDict [dict create]
     dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
-
-    # Time stepping settings
-    set timeSteppingDict [dict create]
-    dict set timeSteppingDict "time_step" $time_step
-    dict set solverSettingsDict time_stepping $timeSteppingDict
 
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict STSolStrat STScheme STStratParams] ]
@@ -145,7 +152,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict processes $processesDict
 
     # GiD output configuration
-    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Structural::app_id]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict [::Structural::GetAttribute id]]
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
@@ -163,7 +170,7 @@ proc Structural::write::getOldParametersDict { } {
     return $projectParametersDict
 }
 
-proc Structural::write::GetContactConditionsDict { } {
+proc ::Structural::write::GetContactConditionsDict { } {
     variable ContactsDict
     set root [customlib::GetBaseRoot]
 
@@ -211,17 +218,18 @@ proc Structural::write::GetContactConditionsDict { } {
     return $contacts
 }
 
-
-proc Structural::write::writeParametersEvent { } {
+proc ::Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 
 }
 
-
 # Project Parameters
-proc Structural::write::getParametersDict { } {
+proc ::Structural::write::getParametersDict { } {
     # Get the base dictionary for the project parameters
     set project_parameters_dict [getOldParametersDict]
+
+    # Analysis stage field
+    dict set project_parameters_dict analysis_stage "KratosMultiphysics.StructuralMechanicsApplication.structural_mechanics_analysis"
 
     # If using any element with the attribute RotationDofs set to true
     dict set project_parameters_dict solver_settings rotation_dofs [UsingSpecificDofElements RotationDofs]
@@ -234,11 +242,11 @@ proc Structural::write::getParametersDict { } {
 
     return $project_parameters_dict
 }
-proc Structural::write::writeParametersEvent { } {
+proc ::Structural::write::writeParametersEvent { } {
     write::WriteJSON [::Structural::write::getParametersDict]
 }
 
-proc Structural::write::UsingSpecificDofElements { SpecificDof } {
+proc ::Structural::write::UsingSpecificDofElements { SpecificDof } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
@@ -252,7 +260,7 @@ proc Structural::write::UsingSpecificDofElements { SpecificDof } {
     return $bool
 }
 
-proc Structural::write::UsingFileInPrestressedMembrane { } {
+proc ::Structural::write::UsingFileInPrestressedMembrane { } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]

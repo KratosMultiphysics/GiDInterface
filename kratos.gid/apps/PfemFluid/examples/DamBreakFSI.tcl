@@ -1,5 +1,10 @@
+namespace eval ::PfemFluid::examples::DamBreakFSI  {
+    namespace path ::PfemFluid::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::PfemFluid::examples::DamBreakFSI {args} {
+}
+
+proc ::PfemFluid::examples::DamBreakFSI::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -7,10 +12,10 @@ proc ::PfemFluid::examples::DamBreakFSI {args} {
     }
 
     Kratos::ResetModel
-    DrawDamBreakFSIGeometry$::Model::SpatialDimension
-    AssignGroupsDamBreakFSIGeometry$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
     # AssignDamBreakFSIMeshSizes$::Model::SpatialDimension
-    TreeAssignationDamBreakFSI$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -20,11 +25,11 @@ proc ::PfemFluid::examples::DamBreakFSI {args} {
 
 
 # Draw Geometry
-proc PfemFluid::examples::DrawDamBreakFSIGeometry3D {args} {
+proc PfemFluid::examples::DamBreakFSI::DrawGeometry3D {args} {
     # To be implemented
 }
 
-proc PfemFluid::examples::DrawDamBreakFSIGeometry2D {args} {
+proc PfemFluid::examples::DamBreakFSI::DrawGeometry2D {args} {
     set layer PfemFluid
     GiD_Layers create $layer
     GiD_Layers edit to_use $layer
@@ -68,14 +73,14 @@ proc PfemFluid::examples::DrawDamBreakFSIGeometry2D {args} {
 
 
 # Group assign
-proc PfemFluid::examples::AssignGroupsDamBreakFSIGeometry2D {args} {
+proc PfemFluid::examples::DamBreakFSI::AssignGroups2D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
 
     GiD_Groups create Solid
-    GiD_Groups edit color Solid "#26d1a8ff"
+    GiD_Groups edit color Solid "#3b3b3bff"
     GiD_EntitiesGroups assign Solid surfaces 2
 
     GiD_Groups create Interface
@@ -83,20 +88,20 @@ proc PfemFluid::examples::AssignGroupsDamBreakFSIGeometry2D {args} {
     GiD_EntitiesGroups assign Interface lines {5 6 7}
 
     GiD_Groups create Rigid_Walls
-    GiD_Groups edit color Rigid_Walls "#e0210fff"
+    GiD_Groups edit color Rigid_Walls "#42eb71ff"
     GiD_EntitiesGroups assign Rigid_Walls lines {1 4 9 10 11 12 13}
 
 }
-proc PfemFluid::examples::AssignGroupsDamBreakFSIGeometry3D {args} {
+proc PfemFluid::examples::DamBreakFSI::AssignGroups3D {args} {
     # To be implemented
 }
 
 # Tree assign
-proc PfemFluid::examples::TreeAssignationDamBreakFSI3D {args} {
+proc PfemFluid::examples::DamBreakFSI::TreeAssignation3D {args} {
     # To be implemented
 }
 
-proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
+proc PfemFluid::examples::DamBreakFSI::TreeAssignation2D {args} {
 
     gid_groups_conds::setAttributesF [spdAux::getRoute PFEMFLUID_DomainType] {v FSI}
 
@@ -109,7 +114,7 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[3\]" {name SolidBody}
     
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[4\]" {name RigidInterfaceBody}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[4\]" {name InterfaceBody}
 
     gid_groups_conds::copyNode $bodies_xpath [spdAux::getRoute PFEMFLUID_Bodies]
     gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@n='Body'\]\[5\]" {name RigidWallsBody}
@@ -132,9 +137,9 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
     spdAux::SetValuesOnBaseNode $solidNode $props
    
     # Rigid Parts
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/value\[@n='BodyType'\]" {v Rigid}
-    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
-    set interface_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='RigidInterfaceBody'\]/condition\[@n='Parts'\]"
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='InterfaceBody'\]/value\[@n='BodyType'\]" {v Interface}
+    gid_groups_conds::setAttributesF "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='InterfaceBody'\]/value\[@n='MeshingStrategy'\]" {v "No remesh"}
+    set interface_part_xpath "[spdAux::getRoute PFEMFLUID_Bodies]/blockdata\[@name='InterfaceBody'\]/condition\[@n='Parts'\]"
     set interfaceNode [customlib::AddConditionGroupOnXPath $interface_part_xpath Interface]
     $interfaceNode setAttribute ov line
    
@@ -156,10 +161,3 @@ proc PfemFluid::examples::TreeAssignationDamBreakFSI2D {args} {
 
 }
 
-proc PfemFluid::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
-}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="AdvOptions" un="AdvOptions" pn="Advanced settings" help="Extra settings for particle problems" icon="solver">
+        <value n="DeltaOption" type="bool" pn="Bond creation method" values="Absolute,Coordination_Number" v="Absolute" icon="black1" help="Absolute method: create bonds between particles closer than a fixed a distance value. Coordination number method: The program will iterate until an average number of contacts per particle is achieved."/>
+        <value n="TangencyAbsoluteTolerance" v="0.0001" pn="Tangency tolerance value" icon="black1" help="Fixed a distance value" state="[getStateFromXPathValue {string(../value[@n='DeltaOption']/@v)} Absolute]" update_proc="spdAux::RequestRefresh" />
+        <value n="TangencyCoordinationNumber" v="10" pn="Coordination number" icon="black1" help="Average number of expected bonds." state="[getStateFromXPathValue {string(../value[@n='DeltaOption']/@v)} Coordination_Number]" update_proc="spdAux::RequestRefresh" />
+        <value n="PoissonEffect" type="bool" pn="Poisson effect" values="true,false" v="false" icon="black1" help="Activate to accurately simulate Poisson deformations"/>
+        <value n="ShearStrainParallelToBondEffect" type="bool" pn="Shear strain parallel effect" values="true,false" v="false" icon="black1" help="Activate to consider strain caused by shear"/>
+        <value n="ComputeStressTensorOption" type="bool" pn="Compute stress tensor" values="true,false" v="false" icon="black1" help="Activate to calculate the stress tensor on particles"/>
+        <value n="CleanIndentations" type="bool" pn="Clean initial indentations:particles" values="true,false" v="false" icon="black1" help="Activate to avoid instability caused by initially indented particles"/>
+        <value n="RemoveParticlesInWalls" type="bool" pn="Clean initial indentations:walls" values="true,false" v="false" icon="black1" help="Activate to avoid instability caused by initially indented particles against finite elements"/>
+        <value n="CalculateRotations" type="bool" pn="Calculate rotations" values="true,false" v="true" icon="black1" help="Activate to consider torques and rotations on the particles. This option will slightly increase computation times."/>
+        <value n="RollingFriction" type="bool" pn="Rolling friction" values="true,false" v="false" icon="black1" help="Activate to consider the rolling friction parameter set in the properties. Otherwise it will be ignored."/>
+        <value n="VirtualMassCoef" v="1.0" pn="Virtual mass coefficient" icon="black1" help="Alterate particle mass set in the simulation"/>
+        <value n="GlobalDamping" v="0.0" pn="Global damping" icon="black1" help="Choose the value for the damping. Set it to 1.0 for maximum energy dissipation."/>
+        <value n="AmplifiedSearchRadius" v="1.1" pn="AmplifiedSearchRadius" icon="black1" state="hidden" />
+        <!-- <value n="NeighbourSearchAcceptedGap" v="1.0" pn="NeighbourSearchAcceptedGap" icon="black1"/> -->
+        <value n="SearchTolerance" v="0.001" pn="Search tolerance" icon="black1" help="Minimum tolerance to avoid initial overlaps"/>
+</container>
