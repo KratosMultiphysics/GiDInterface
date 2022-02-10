@@ -67,7 +67,7 @@ proc ::DEM::write::getParametersDict { } {
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
 
-    dict set project_parameters_dict "ElementType"                          [GetElementType]
+    # dict set project_parameters_dict "ElementType"                          [GetElementType]
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]

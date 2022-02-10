@@ -20,7 +20,10 @@ proc ::DEM::write::WriteMDPAParts { } {
 
     # Element connectivities (Groups on Parts)
     PrepareCustomMeshedParts
+    set previous_parts_un [write::GetConfigurationAttribute parts_un]
+    write::SetConfigurationAttribute parts_un DEMParts_Parts_DEM
     write::writeElementConnectivities
+    write::SetConfigurationAttribute parts_un $previous_parts_un
     RestoreCustomMeshedParts
 
     # Element radius
