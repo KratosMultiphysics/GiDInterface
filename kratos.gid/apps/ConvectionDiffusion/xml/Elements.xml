@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
-  
+
     <!-- 2D convection-diffusion element -->
-    <ElementItem n="EulerianConvDiff2D" pn="Convection-diffusion 2D" ImplementedInFile="eulerian_conv_diff.cpp" ImplementedInApplication="ConvectionDiffusionApplication" 
-                 MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" 
+    <ElementItem n="EulerianConvDiff2D" pn="Convection-diffusion 2D" ImplementedInFile="eulerian_conv_diff.cpp" ImplementedInApplication="ConvectionDiffusionApplication"
+                 MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2"
                  RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="TEMPERATURE" ElementType="ConvectionDiffusion" help="This element implements a convection-diffusion formulation.">
 
         <!--here we could add a list of all of the possible geometries-->
@@ -28,8 +28,8 @@
     </ElementItem>
 
     <!-- 3D convection-diffusion element -->
-    <ElementItem n="EulerianConvDiff3D" pn="Convection-diffusion 3D" ImplementedInFile="eulerian_conv_diff.cpp" ImplementedInApplication="ConvectionDiffusionApplication" 
-                MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" 
+    <ElementItem n="EulerianConvDiff3D" pn="Convection-diffusion 3D" ImplementedInFile="eulerian_conv_diff.cpp" ImplementedInApplication="ConvectionDiffusionApplication"
+                MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3"
                 RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="TEMPERATURE" ElementType="ConvectionDiffusion" help="This element implements a convection-diffusion formulation.">
 
         <!--here we could add a list of all of the possible geometries-->
