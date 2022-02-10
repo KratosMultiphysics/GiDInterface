@@ -18,12 +18,9 @@ proc ::DEM::write::WriteMDPAParts { } {
 
     write::writeNodalCoordinatesOnGroups $dem_groups_list
 
-    # Element connectivities (Groups on Parts)
+    # Element connectivities (Groups on DEM Parts only)
     PrepareCustomMeshedParts
-    set previous_parts_un [write::GetConfigurationAttribute parts_un]
-    write::SetConfigurationAttribute parts_un DEMParts_Parts_DEM
-    write::writeElementConnectivities
-    write::SetConfigurationAttribute parts_un $previous_parts_un
+    write::writeElementConnectivities DEMParts_Parts_DEM
     RestoreCustomMeshedParts
 
     # Element radius
