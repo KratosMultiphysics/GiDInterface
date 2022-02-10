@@ -12,7 +12,7 @@
 		ImplementedInPythonFile="MonolithicDEM"
 		MinimumKratosVersion="8500"
 		App="Fluid"
-		ProductionReady="ProductionReady"
+
 		help="Incompressible Navier-Stokes equations monolithic strategy for fluid-particle interaction.">
 
 		<!-- list of options to be filled -->
@@ -41,7 +41,7 @@
 
 		<!-- scheme settings -->
 		<schemes>
-			<scheme n="MNDEM" pn="Monolitic generic scheme for DEM coupling" help="FilterElements" ProductionReady="ProductionReady">
+			<scheme n="MNDEM" pn="Monolitic generic scheme for DEM coupling" help="FilterElements" >
 				<parameter_list>
 				</parameter_list>
 				<element_filters>

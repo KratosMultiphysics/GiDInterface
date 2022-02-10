@@ -3,7 +3,7 @@
 
   <!--small displacements elements-->
   <ElementItem n="SmallDisplacementElement2D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
-	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Solid" help="" TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Modal-Analysis">
 
@@ -44,7 +44,7 @@
   </ElementItem>
 
   <ElementItem n="SmallDisplacementElement3D" pn="Small displacements" ImplementedInFile="small_displacement_thermo_mechanic_element.cpp"
-	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Solid" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical,Modal-Analysis">
 
@@ -87,7 +87,7 @@
 
   <!--joint elements-->
   <ElementItem n="SmallDisplacementInterfaceElement3D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
-	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
@@ -124,7 +124,7 @@
   </ElementItem>
 
   <ElementItem n="SmallDisplacementSimplifiedInterfaceElement3D" pn="Simplified Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
-	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="SimplifiedJoint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
@@ -161,7 +161,7 @@
   </ElementItem>
 
   <ElementItem n="SmallDisplacementInterfaceElement2D" pn="Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
-	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Joint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 
@@ -199,7 +199,7 @@
   </ElementItem>
 
   <ElementItem n="SmallDisplacementSimplifiedInterfaceElement2D" pn="Simplified Joint Element" ImplementedInFile="small_displacement_interface_element.cpp"
-	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="DamApplication" MinimumKratosVersion="13000"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="SimplifiedJoint" help=""  TypeofProblem="Mechanical,Thermo-Mechanical,UP_Mechanical,UP_Thermo-Mechanical">
 

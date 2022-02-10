@@ -5,7 +5,7 @@
 		ImplementedInApplication="FluidDynamicsApplication"
 		ImplementedInPythonFile="potential_flow"
 		MinimumKratosVersion="8500" App="Fluid"
-		ProductionReady="ProductionReady"
+
 		help="">
 
     <!-- list of options to be filled -->
@@ -25,7 +25,7 @@
     </linearSolvers>
 
 	  <schemes>
-	    <scheme n="MN" pn="Monolitic generic scheme" help="FilterElements" ProductionReady="ProductionReady">
+	    <scheme n="MN" pn="Monolitic generic scheme" help="FilterElements" >
 	      <parameter_list>
 		    </parameter_list>
   		  <element_filters>

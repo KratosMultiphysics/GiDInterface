@@ -26,6 +26,8 @@ proc write::tcl2json { value } {
         string {
             if {$value eq "null"} {return null}
             if {$value eq "dictnull"} {return {{}}}
+            if {[isBooleanFalse $value]} {return [expr "false"]}
+            if {[isBooleanTrue $value]} {return [expr "true"]}
             return [json::write string $value]
         }
         dict {
