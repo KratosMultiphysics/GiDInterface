@@ -1,5 +1,10 @@
 
-proc ::Chimera::examples::ChimeraCross {args} {
+namespace eval ::Chimera::examples::ChimeraCross {
+    namespace path ::Chimera::examples
+    Kratos::AddNamespace [namespace current]
+}
+
+proc ::Chimera::examples::ChimeraCross::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -7,10 +12,10 @@ proc ::Chimera::examples::ChimeraCross {args} {
     }
     Kratos::ResetModel
 
-    DrawChimeraCrossGeometry$::Model::SpatialDimension
-    AssignGroupsChimeraCross$::Model::SpatialDimension
-    AssignChimeraCrossMeshSizes$::Model::SpatialDimension
-    TreeAssignationChimeraCross$::Model::SpatialDimension
+    DrawGeometry
+    AssignGroups
+    AssignMeshSizes
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -18,18 +23,7 @@ proc ::Chimera::examples::ChimeraCross {args} {
     GiD_Process 'Zoom Frame
 }
 
-
-# Draw Geometry
-proc ::Chimera::examples::DrawChimeraCrossGeometry3D {args} {
-    DrawChimeraCrossGeometry2D
-    GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
-    GiD_Layers edit opaque Background 0
-    GiD_Layers edit opaque Patch 0
-
-    GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
-}
-
-proc ::Chimera::examples::DrawChimeraCrossGeometry2D {args} {
+proc ::Chimera::examples::ChimeraCross::DrawGeometry {args} {
     # Background mesh geometry creation
     GiD_Layers create Background
     GiD_Layers edit to_use Background
@@ -95,7 +89,7 @@ proc ::Chimera::examples::DrawChimeraCrossGeometry2D {args} {
 }
 
 # Group assign
-proc ::Chimera::examples::AssignGroupsChimeraCross2D {args} {
+proc ::Chimera::examples::ChimeraCross::AssignGroups {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -126,12 +120,8 @@ proc ::Chimera::examples::AssignGroupsChimeraCross2D {args} {
     GiD_EntitiesGroups assign No_Slip_Cross lines {9 10 11 12 13 14 15 16 17 18 19 20}
 }
 
-proc ::Chimera::examples::AssignGroupsChimeraCross3D {args} {
-    # TO BE IMPLEMENTED
-}
-
 # Mesh sizes
-proc ::Chimera::examples::AssignChimeraCrossMeshSizes2D {args} {
+proc ::Chimera::examples::ChimeraCross::AssignMeshSizes {args} {
     set cross_mesh_size 0.05
     set surface_mesh_size 0.2
     GiD_Process Mescape Meshing AssignSizes Lines $cross_mesh_size {*}[GiD_EntitiesGroups get No_Slip_Cross lines] escape escape
@@ -140,12 +130,8 @@ proc ::Chimera::examples::AssignChimeraCrossMeshSizes2D {args} {
     Kratos::Event_BeforeMeshGeneration $surface_mesh_size
 }
 
-proc ::Chimera::examples::AssignChimeraCrossMeshSizes3D {args} {
-    # TO BE IMPLEMENTED
-}
-
 # Tree assign
-proc ::Chimera::examples::TreeAssignationChimeraCross2D {args} {
+proc ::Chimera::examples::ChimeraCross::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -227,24 +213,4 @@ proc ::Chimera::examples::TreeAssignationChimeraCross2D {args} {
     }
 
     spdAux::RequestRefresh
-}
-
-proc ::Chimera::examples::TreeAssignationChimeraCross3D {args} {
-    TreeAssignationChimeraCross2D
-    AddCuts
-}
-
-proc ::Chimera::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
-}
-
-proc ::Chimera::examples::AddCuts { } {
-    # Cuts
-    set results "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]"
-    set cp [[customlib::GetBaseRoot] selectNodes "$results/container\[@n = 'CutPlanes'\]/blockdata\[@name = 'CutPlane'\]"]
-    [$cp selectNodes "./value\[@n = 'point'\]"] setAttribute v "0.0,0.5,0.0"
 }

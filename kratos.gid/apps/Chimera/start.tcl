@@ -1,79 +1,24 @@
 namespace eval ::Chimera {
+    Kratos::AddNamespace [namespace current]
     # Variable declaration
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
+proc ::Chimera::Init { app } {
 
-proc ::Chimera::Init { } {
     # Variable initialization
+    variable _app
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
 
-    apps::LoadAppById "Fluid"
-    set kratos_name $::Fluid::kratos_name
+    set _app $app
     set dir [apps::getMyDir "Chimera"]
 
-    set ::Model::ValidSpatialDimensions [list 2D]
-    spdAux::SetSpatialDimmension "2D"
-    spdAux::processIncludes
-
-    set attributes [dict create]
-
-    set prefix Chim
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-
-    dict set attributes UseIntervals 1
-
-    LoadMyFiles
+    # XML init event
+    ::Chimera::xml::Init
+    ::Chimera::write::Init
 }
 
-proc ::Chimera::LoadMyFiles { } {
-    variable dir
-
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
-    uplevel #0 [list source [file join $dir xml GetFromXML.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-}
-
-proc ::Chimera::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
-}
-
-proc ::Chimera::CustomToolbarItems { } {
-    variable dir
-    if {$::Model::SpatialDimension eq "2D"} {
-        Kratos::ToolbarAddItem "Example" "example.png" [list -np- ::Chimera::examples::ChimeraCross] [= "Example\nCross section flow"]
-    }
-}
-
-# proc ::Chimera::BeforeMeshGeneration {elementsize} {
-#     variable oldMeshType
-
-#     set project_path [GiD_Info project modelname]
-#     if {$project_path ne "UNNAMED"} {
-#         catch {file delete -force [file join [write::GetConfigurationAttribute dir] "[Kratos::GetModelName].post.res"]}
-#         # Set Octree
-#         set oldMeshType [GiD_Set MeshType]
-#         ::GiD_Set MeshType 2
-#     } else {
-#         after 500 {WarnWin "You need to save the project before meshing"}
-#         return "-cancel-"
-#     }
-# }
-
-# proc ::Chimera::AfterMeshGeneration {fail} {
-#     variable oldMeshType
-#     GiD_Set MeshType $oldMeshType
-# }
-
-::Chimera::Init

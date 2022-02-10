@@ -1,0 +1,51 @@
+{
+    "id": "Chimera",
+    "name": "Chimera",
+    "prefix": "Chim",
+    "themed": false,
+    "kratos_name": "FluidDynamicsApplication",
+    "python_packages": [
+        ""
+    ],
+    "dimensions": [
+        "2D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/ChimeraCross.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script": "::Chimera::Init",
+    "requeriments": {
+        "apps": ["Fluid"],
+        "minimum_gid_version": "15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "FLParts",
+        "nodal_conditions": "FLNodalConditions",
+        "conditions": "FLBC",
+        "materials": "FLMaterials",
+        "results": "FLResults",
+        "drag": "FLDrags",
+        "time_parameters": "FLTimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "FluidMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "FluidModelPart",
+        "output_model_part_name": "fluid_computational_model_part"
+    },
+    "main_launch_file": "../../exec/MainKratos.py",
+    "examples": "examples/examples.xml",
+    "description": ""
+}
