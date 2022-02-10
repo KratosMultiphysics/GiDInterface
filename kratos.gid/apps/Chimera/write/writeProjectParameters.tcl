@@ -2,7 +2,7 @@
 proc ::Chimera::write::getParametersDict { } {
     set param_dict [Fluid::write::getParametersDict]
 
-    # Check https://github.com/KratosMultiphysics/Kratos/blob/ChimeraApplication-development_2.0/applications/ChimeraApplication/tests/flow_over_cross_monolithic/flow_over_cross_monolithic.json 
+    # Check https://github.com/KratosMultiphysics/Kratos/blob/ChimeraApplication-development_2.0/applications/ChimeraApplication/tests/flow_over_cross_monolithic/flow_over_cross_monolithic.json
     # in branch ChimeraApplication-development_2.0
 
     set bound_condid ChimeraInternalBoundary${Model::SpatialDimension}
@@ -14,17 +14,17 @@ proc ::Chimera::write::getParametersDict { } {
 
     # Chimera parts
     #set chimera_parts_dict [dict create ]
-    set chimera_parts_list [list ]
+    set chimera_parts_list [GetBackgroundPatch]
     foreach patch_xml [Chimera::write::GetPatchParts] {
         set patch_name [write::GetWriteGroupName [$patch_xml @n]]
         set patch_name_write [write::transformGroupName $patch_name]
         set overlap_distance [write::getValueByXPath "[$patch_xml toXPath]/value\[@n = 'overlap_distance'\]"]
         set patch_dict [dict create ]
-        dict set patch_dict model_part_name FluidModelPart.${patch_name_write}
+        dict set patch_dict model_part_name FluidModelPart.Patch_${patch_name_write}
         dict set patch_dict overlap_distance $overlap_distance
         dict set patch_dict model_import_settings input_type mdpa
         dict set patch_dict model_import_settings input_filename ${patch_name_write}
-        
+
         # Internal boundaries
         set internal_parts_for_chimera_list [list ]
         foreach internal_boundary [Chimera::write::GetInternalBoundaries $patch_name name] {
@@ -40,7 +40,27 @@ proc ::Chimera::write::getParametersDict { } {
     dict set chimera_settings_dict chimera_parts $chimera_parts_list
 
     dict set param_dict solver_settings chimera_settings $chimera_settings_dict
+
+    dict set param_dict solver_settings model_import_settings input_type chimera
+    dict set param_dict solver_settings model_import_settings input_filename ""
+
     return $param_dict
+}
+
+proc Chimera::write::GetBackgroundPatch { } {
+    set patch_dict [dict create ]
+    dict set patch_dict model_part_name FluidModelPart
+    # dict set patch_dict overlap_distance $overlap_distance
+    dict set patch_dict model_import_settings input_type mdpa
+    dict set patch_dict model_import_settings input_filename [file tail [GiD_Info Project ModelName]]
+
+    # Internal boundaries
+    dict set patch_dict internal_parts_for_chimera [list FluidModelPart]
+
+    set patch_list [list ]
+    lappend patch_list $patch_dict
+    lappend chimera_parts_list $patch_list
+    return $chimera_parts_list
 }
 
 proc Chimera::write::writeParametersEvent { } {

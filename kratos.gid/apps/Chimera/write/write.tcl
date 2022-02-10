@@ -1,6 +1,6 @@
 namespace eval Chimera::write {
     variable writeAttributes
-    
+
     variable ConditionMap
 }
 
@@ -8,10 +8,11 @@ proc Chimera::write::Init { } {
     # Namespace variables inicialization
     variable writeAttributes
     set writeAttributes [Fluid::write::GetAttributes]
-    
+
     SetAttribute chim_parts_un ChimParts
     SetAttribute writeCoordinatesByGroups 1
     SetAttribute validApps [list "Fluid" "Chimera"]
+    SetAttribute main_launch_file [::Chimera::GetAttribute main_launch_file]
 }
 
 # Events
@@ -20,12 +21,12 @@ proc Chimera::write::writeModelPartEvent { } {
     Fluid::write::writeModelPartEvent
     write::CloseFile
 
-    
+
     InitConditionsMap
-    
+
     # Write the patches as independent mdpa
     Chimera::write::writePatches
-    
+
     # Clean
     unset Chimera::write::ConditionMap
 }
@@ -39,11 +40,13 @@ proc Chimera::write::writePatches { } {
         set patch_name [write::GetWriteGroupName $group_id]
         # New file for each patch
         write::OpenFile [write::transformGroupName ${patch_name}].mdpa
+        # Properties 0
+        ::Fluid::write::writeProperties
         # Nodes
         write::writeNodalCoordinatesOnGroups [list $group_id]
-        # Elements 
+        # Elements
         write::writeGroupElementConnectivities $patch ChimeraPatch$Model::SpatialDimension
-        # Internal patch boundary Conditions 
+        # Internal patch boundary Conditions
         set internal_boundaries_list [Chimera::write::GetInternalBoundaries $patch_name]
         foreach internal_boundary_group $internal_boundaries_list {
             set iter [write::writeGroupNodeConditionByUniqueId $internal_boundary_group $condid $iter $Chimera::write::ConditionMap]
@@ -82,13 +85,13 @@ proc Chimera::write::GetInternalBoundaries { {patch_group_id ""} {what "xml"}  }
     }
     set name ChimeraInternalBoundary${Model::SpatialDimension}
     set un [GetAttribute conditions_un]
-    set xp "[spdAux::getRoute $un]/condition\[@n = '$name'\]/group" 
-    
+    set xp "[spdAux::getRoute $un]/condition\[@n = '$name'\]/group"
+
     set internal_boundaries_list [list ]
     set root [customlib::GetBaseRoot]
     foreach cnd_group [$root selectNodes $xp] {
         set cnd_group_name [get_domnode_attribute $cnd_group n]
-        
+
         if {$what eq "xml"} {
             set gr $cnd_group
         } else {
@@ -108,7 +111,7 @@ proc Chimera::write::GetInternalBoundaries { {patch_group_id ""} {what "xml"}  }
             # foreach group $affected_groups {
             #     if {$group ni $part_names} {
             #         if {$group ni $patch_names} {
-            #             if 
+            #             if
             #         }
             #     }
             # }
@@ -120,9 +123,7 @@ proc Chimera::write::GetInternalBoundaries { {patch_group_id ""} {what "xml"}  }
 proc Chimera::write::writeCustomFilesEvent { } {
     # Write the fluid materials json file
     Fluid::write::WriteMaterialsFile
-
-    write::CopyFileIntoModel "python/KratosChimera.py"
-    write::RenameFileInModel "KratosChimera.py" "MainKratos.py"
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 proc Chimera::write::InitConditionsMap { {map "" } } {
@@ -156,5 +157,3 @@ proc Chimera::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
-
-Chimera::write::Init
