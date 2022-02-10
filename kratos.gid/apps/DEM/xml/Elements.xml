@@ -47,7 +47,7 @@
   </ElementItem>
 
 
-  <ElementItem n="FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="FEM" help="" WriteAsBlock="Conditions">
+  <ElementItem n="FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" ElementType="FEM" help="" WriteAsBlock="Conditions">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
@@ -71,7 +71,7 @@
   </ElementItem>
 
 
-  <ElementItem n="Inlet-FEM" pn="Inlet element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="Inlet-FEM" help="" WriteAsBlock="Conditions">
+  <ElementItem n="Inlet-FEM" pn="Inlet element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" ElementType="Inlet-FEM" help="" WriteAsBlock="Conditions">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
       <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
