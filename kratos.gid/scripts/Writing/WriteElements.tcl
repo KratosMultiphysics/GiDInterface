@@ -1,6 +1,10 @@
 
-proc write::writeElementConnectivities { } {
-    set parts [GetConfigurationAttribute parts_un]
+proc write::writeElementConnectivities { {default_parts_un "" } } {
+    if {$default_parts_un eq ""} {
+        set parts [GetConfigurationAttribute parts_un]
+    } else {
+        set parts $default_parts_un
+    }
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts]/group"
