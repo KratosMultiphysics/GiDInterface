@@ -6,6 +6,7 @@ namespace eval ::DEM::write {
     variable partsProperties
     variable inletProperties
     variable wallsProperties
+    variable DEMProperties
     variable phantomwallsProperties
     variable last_property_id
     variable delete_previous_mdpa
@@ -34,6 +35,9 @@ proc ::DEM::write::Init { } {
 
     variable wallsProperties
     set wallsProperties [dict create]
+
+    variable DEMProperties
+    set DEMProperties [dict create]
 
     variable phantomwallsProperties
     set phantomwallsProperties [dict create]

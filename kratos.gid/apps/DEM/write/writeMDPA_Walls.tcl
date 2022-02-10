@@ -73,6 +73,7 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
     write::WriteString "  Begin SubModelPartData // $condition. Group name: $group"
     if {$props ne ""} {
 	set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n = 'Parts_FEM'\]/group\[@n = '$group'\]"
+    #TODO do we need this group node?
 	set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
 	write::WriteString "    RIGID_BODY_OPTION 1"
 

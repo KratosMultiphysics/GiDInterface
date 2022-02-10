@@ -3,7 +3,7 @@ proc ::DEM::write::WriteMDPAParts { } {
     write::writeModelPartData
 
     # Process DEM materials
-    DEM::write::processPartMaterials
+    DEM::write::processDEMMaterials
 
     # Write Properties into mdpa
     #TODO: This is legacy, no Properties are being written here.
@@ -27,11 +27,55 @@ proc ::DEM::write::WriteMDPAParts { } {
     writeSphereRadius
 
     # SubmodelParts
-    write::writePartSubModelPart
+    # write::writePartSubModelPart
     writeDEMConditionMeshes
 
     # CustomSubmodelParts
     WriteCustomDEMSmp
+}
+
+
+proc ::DEM::write::processDEMMaterials { } {
+    write::processMaterials "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
+
+    variable DEMProperties
+    set DEMProperties [write::getPropertiesListByConditionXPath "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]" 0 SpheresPart]
+}
+
+proc ::DEM::write::writeDEMConditionMeshes { } {
+    variable DEMProperties
+
+    foreach group_node [::DEM::write::GetDEMPartGroupNodes] {
+        set group [$group_node @n]
+        set mid [write::AddSubmodelpart Parts_DEM $group]
+        set props [DEM::write::FindPropertiesBySubmodelpart $DEMProperties $mid]
+        writeDEMConditionMesh Parts_DEM $group $props
+    }
+}
+
+proc ::DEM::write::writeDEMConditionMesh { condition group props } {
+
+    set mid [write::AddSubmodelpart $condition $group]
+
+    write::WriteString "Begin SubModelPart $mid // $condition - group identifier: $group"
+    write::WriteString "  Begin SubModelPartData // $condition. Group name: $group"
+	# set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n = 'Parts_DEM'\]/group\[@n = '$group'\]"
+    write::WriteString "  End SubModelPartData"
+
+    write::WriteString "  Begin SubModelPartNodes"
+    GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
+    write::WriteString "  End SubModelPartNodes"
+
+    write::WriteString "Begin SubModelPartElements"
+    set gdict [dict create]
+    set f "%10i\n"
+    set f [subst $f]
+    dict set gdict $group $f
+    GiD_WriteCalculationFile elements -sorted $gdict
+    write::WriteString "End SubModelPartElements"
+    write::WriteString ""
+    write::WriteString "End SubModelPart"
+    write::WriteString ""
 }
 
 proc ::DEM::write::GetDEMPartGroupNodes { } {
@@ -127,7 +171,7 @@ proc ::DEM::write::writeSphereRadiusOnGroup { group } {
     write::WriteString ""
 }
 
-proc ::DEM::write::writeDEMConditionMeshes { } {
+proc ::DEM::write::old_writeDEMConditionMeshes { } {
     foreach {cond group_list} [GetSpheresGroupsListInConditions] {
         if {$cond in {"DEM-VelocityBC" "DEM-VelocityBC2D"}} {
             #set cnd [Model::getCondition $cond]
