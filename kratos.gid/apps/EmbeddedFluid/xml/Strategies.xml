@@ -6,7 +6,7 @@
 		ImplementedInApplication="FluidDynamicsApplication"
 		ImplementedInPythonFile="Embedded"
 		MinimumKratosVersion="8500" App="Fluid"
-		ProductionReady="ProductionReady"
+
 		help="">
 
     <!-- list of options to be filled -->
@@ -36,9 +36,9 @@
     </linearSolvers>
 
 	  <schemes>
-	  <scheme n="bdf2" pn="BDF2" help="2nd order Backward Differenctiation Formula (BDF2) scheme for CFD problems." ProductionReady="ProductionReady">
-             
-	    <!-- <scheme n="MN" pn="Monolitic generic scheme" help="FilterElements" ProductionReady="ProductionReady"> -->
+	  <scheme n="bdf2" pn="BDF2" help="2nd order Backward Differenctiation Formula (BDF2) scheme for CFD problems." >
+
+	    <!-- <scheme n="MN" pn="Monolitic generic scheme" help="FilterElements" > -->
 	      <parameter_list>
 		    </parameter_list>
   		  <element_filters>
