@@ -67,7 +67,7 @@ proc ::DEM::write::getParametersDict { } {
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
 
-    # dict set project_parameters_dict "ElementType"                          [GetElementType]
+    dict set project_parameters_dict "ElementType"                          [GetElementType]
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
     dict set project_parameters_dict "RotationalIntegrationScheme"          [write::getValue DEMRotationalScheme]
@@ -380,8 +380,23 @@ proc ::DEM::write::getForceProcessDictList {} {
 #     }
 # }
 
+proc ::DEM::write::GetUsedElements {} {
+    set root [customlib::GetBaseRoot]
+
+    set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
+
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set g $gNode
+        set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        if {$name ni $lista} {lappend lista $name}
+    }
+
+    return $lista
+}
+
 proc ::DEM::write::GetElementType { } {
-    set used_elements [spdAux::GetUsedElements]
+    set used_elements [DEM::write::GetUsedElements]
     set element_type [lindex $used_elements 0]
     return $element_type
 }
