@@ -123,10 +123,6 @@ proc ::DEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
-proc DEM::write::getSubModelPartId {cid group} {
-    return $cid$group
-}
-
 proc ::DEM::write::getKinematicsProcessDictList {} {
 
     set root [customlib::GetBaseRoot]
@@ -141,7 +137,7 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
     foreach group $groups {
         set groupName [$group @n]
         set cid [[$group parent] @n]
-        set submodelpart [DEM::write::getSubModelPartId $cid $groupName]
+        set submodelpart [write::getSubModelPartId $cid $groupName]
         # I want it to be FEMVelocity-Floor
 
         # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]

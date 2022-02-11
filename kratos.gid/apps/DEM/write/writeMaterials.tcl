@@ -63,7 +63,7 @@ proc ::DEM::write::getDEMMaterialsDict { } {
         set group_name [write::GetWriteGroupName [$gnode @n]]
         set cond_name [[$gnode parent] @n]
         set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
-        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $group_name]
+        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $cond_name]
         lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
 
     }
@@ -78,12 +78,12 @@ proc ::DEM::write::getDEMMaterialsDict { } {
     return $global_dict
 }
 
-proc ::DEM::write::GetModelPartParentNameFromGroup {group} {
+proc ::DEM::write::GetModelPartParentNameFromGroup {condition} {
 
     #TODO: Requires some tweaking to assign the correct type. now it is only assigning 'SpheresPart'
     set model_part_parent SpheresPart
     # if {$group in [DEM::write::GetWallsGroups]} {set model_part_parent "RigidFacePart"}
-    if {$group in "Parts_FEM"} {set model_part_parent "RigidFacePart"}
+    if {$condition in "Parts_FEM"} {set model_part_parent "RigidFacePart"}
     # if {$group in [DEM::write::GetInletGroups]} {set model_part_parent "DEMInletPart"}
     return $model_part_parent
 }
