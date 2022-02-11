@@ -278,9 +278,11 @@ proc ::FSI::examples::MokChannelFlexibleWall::TreeAssignation {args} {
     customlib::AddConditionGroupOnXPath "container\[@n='FSI'\]/container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='StructureInterface$nd'\]" StructureInterface
 
     # Structure domain time parameters
-    set parameters [list EndTime 25.0 DeltaTime 0.1]
+    set parameters [list EndTime 25.0]
     set xpath [spdAux::getRoute STTimeParameters]
     spdAux::SetValuesOnBasePath $xpath $parameters
+    set xpath "[spdAux::getRoute STTimeParameters]/container\[@n='TimeStep'\]/blockdata/value\[@n='DeltaTime'\]"
+    [[customlib::GetBaseRoot] selectNodes $xpath] setAttribute v 0.1
 
     # Structure domain output parameters
     set parameters [list OutputControlType step]

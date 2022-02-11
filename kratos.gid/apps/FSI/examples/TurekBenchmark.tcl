@@ -278,9 +278,11 @@ proc ::FSI::examples::TurekBenchmark::TreeAssignation {args} {
     customlib::AddConditionGroupOnXPath "container\[@n='FSI'\]/container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='StructureInterface$nd'\]" StructureInterface
 
     # Structure domain time parameters
-    set parameters [list EndTime 20.0 DeltaTime 0.002]
+    set parameters [list EndTime 20.0]
     set xpath [spdAux::getRoute STTimeParameters]
     spdAux::SetValuesOnBasePath $xpath $parameters
+    set xpath "[spdAux::getRoute STTimeParameters]/container\[@n='TimeStep'\]/blockdata/value\[@n='DeltaTime'\]"
+    [[customlib::GetBaseRoot] selectNodes $xpath] setAttribute v 0.002
 
     # Structure domain output parameters
     set parameters [list OutputControlType time OutputDeltaTime 0.01]
