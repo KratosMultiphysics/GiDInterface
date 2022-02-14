@@ -80,7 +80,6 @@ proc ::DEM::write::getDEMMaterialsDict { } {
 
 proc ::DEM::write::GetModelPartParentNameFromGroup {condition} {
 
-    #TODO: Requires some tweaking to assign the correct type. now it is only assigning 'SpheresPart'
     set model_part_parent SpheresPart
     # if {$group in [DEM::write::GetWallsGroups]} {set model_part_parent "RigidFacePart"}
     if {$condition in "Parts_FEM"} {set model_part_parent "RigidFacePart"}

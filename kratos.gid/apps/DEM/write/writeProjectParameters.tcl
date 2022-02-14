@@ -150,9 +150,9 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
 
         set params [dict create]
         # dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
-        set submodelpart_id [write::getSubModelPartId $cid $group_name]
+        # set submodelpart_id [write::getSubModelPartId $cid $groupName]
         set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $cid]
-        dict set params "model_part_name" ${modelpart_parent}.${submodelpart_id}
+        dict set params "model_part_name" ${modelpart_parent}.${groupName}
 
         set subparams [dict create]
         # proc write::ProcessVectorFunctionComponents { groupNode condition process}
@@ -253,6 +253,10 @@ proc ::DEM::write::getForceProcessDictList {} {
         set cid [[$group parent] @n]
         set submodelpart [::write::getSubModelPartId $cid $groupName]
 
+        # set submodelpart_id [write::getSubModelPartId $cond_name $groupName]
+        # set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $cond_name]
+        # lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
+
         # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]
         # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print'\]"]]]
         set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
@@ -262,7 +266,9 @@ proc ::DEM::write::getForceProcessDictList {} {
         #dict set pdict "process_name" "ComputeProcess"
         set params [dict create]
 
-        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        # dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $cid]
+        dict set params "model_part_name" ${modelpart_parent}.${submodelpart}
         set subparams [dict create]
 
         dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
