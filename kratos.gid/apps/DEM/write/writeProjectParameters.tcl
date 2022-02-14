@@ -149,7 +149,10 @@ proc ::DEM::write::getKinematicsProcessDictList {} {
         dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
 
         set params [dict create]
-        dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        # dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        set submodelpart_id [write::getSubModelPartId $cid $group_name]
+        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $cid]
+        dict set params "model_part_name" ${modelpart_parent}.${submodelpart_id}
 
         set subparams [dict create]
         # proc write::ProcessVectorFunctionComponents { groupNode condition process}
