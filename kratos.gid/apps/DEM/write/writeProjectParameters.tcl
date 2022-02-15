@@ -52,9 +52,9 @@ proc ::DEM::write::getParametersDict { } {
     set processes [dict create]
 
     # Boundary conditions processes
-    # dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
+    dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
 
-    dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
+    #dict set processes constraints_process_list [DEM::write::getKinematicsProcessDictList]
     dict set processes loads_process_list [DEM::write::getForceProcessDictList]
 
     dict set project_parameters_dict processes $processes
