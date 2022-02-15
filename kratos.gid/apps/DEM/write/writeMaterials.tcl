@@ -82,7 +82,7 @@ proc ::DEM::write::GetModelPartParentNameFromGroup {condition} {
 
     set model_part_parent SpheresPart
     # if {$group in [DEM::write::GetWallsGroups]} {set model_part_parent "RigidFacePart"}
-    if {$condition in "Parts_FEM"} {set model_part_parent "RigidFacePart"}
+    if {$condition in [list "Parts_FEM" "FEMVelocity" ""]} {set model_part_parent "RigidFacePart"}
     # if {$group in [DEM::write::GetInletGroups]} {set model_part_parent "DEMInletPart"}
     return $model_part_parent
 }
