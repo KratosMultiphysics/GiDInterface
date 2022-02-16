@@ -22,7 +22,7 @@ proc ::spdAux::LoadModelFiles { {root "" }} {
     }
     set files [$root getElementsByTagName "file"]
     if {[llength $files] > 0} {
-        Kratos::LoadImportFiles
+        #Kratos::LoadImportFiles
         foreach elem $files {
             FileSelector::AddFile [$elem @n]
         }
@@ -38,7 +38,7 @@ proc ::spdAux::SaveModelFile { fileid } {
 }
 
 proc ::spdAux::ProcGetFilesValues { domNode } {
-    Kratos::LoadImportFiles
+    #Kratos::LoadImportFiles
     customlib::UpdateDocument
     spdAux::LoadModelFiles
     lappend listilla $::spdAux::no_file_string
