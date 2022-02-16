@@ -277,9 +277,6 @@ proc Kratos::LoadModelSPD { filespd } {
         # Refresh the cache
         customlib::UpdateDocument
 
-        # Load default files (if any) (file selection values store the filepaths in the spd)
-        spdAux::LoadModelFiles
-
         # Load default intervals (if any)
         spdAux::LoadIntervalGroups
 
@@ -287,6 +284,9 @@ proc Kratos::LoadModelSPD { filespd } {
         spdAux::reactiveApp
 
         apps::ExecuteOnCurrentApp LoadModelEvent $filespd
+
+        # Load default files (if any) (file selection values store the filepaths in the spd)
+        spdAux::LoadModelFiles
 
         # Open the tree
         spdAux::OpenTree
