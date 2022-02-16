@@ -1,7 +1,7 @@
 namespace eval ::Fluid::xml {
     namespace path ::Fluid
     Kratos::AddNamespace [namespace current]
-    
+
     # Namespace variables declaration
     variable dir
 }
@@ -10,7 +10,7 @@ proc ::Fluid::xml::Init { } {
     # Namespace variables inicialization
     variable dir
     Model::InitVariables dir $::Fluid::dir
-    
+
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
     Model::getMaterials Materials.xml
@@ -40,7 +40,7 @@ proc ::Fluid::xml::CustomTree { args } {
     if {[$root selectNodes "$xpath/condition\[@n='Drag'\]"] eq ""} {
         gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
     }
-    
+
     customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     spdAux::parseRoutes
 
@@ -48,7 +48,7 @@ proc ::Fluid::xml::CustomTree { args } {
     if {[$root selectNodes "$xpath/container\[@n='OnNodes'\]"] ne ""} {
         gid_groups_conds::addF "$xpath/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
     }
-    
+
     # TODO: remove when Non newtonian is implemented for 2d
     if {$::Model::SpatialDimension eq "2D"} { Model::ForgetConstitutiveLaw HerschelBulkley }
 
@@ -56,7 +56,7 @@ proc ::Fluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state "\[HideIfElement {DVMS2D DVMS3D}\]" FLStratParams dynamic_tau
 }
 
-# Usage 
+# Usage
 # Fluid::xml::CreateNewInlet Inlet {new false name Total} true "6*y*(1-y)"
 proc ::Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name inlet1 ini 0 end "End"}} {uses_formula false} {value 10.0} {direction automatic_inwards_normal} {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
     # Fluid Inlet
@@ -66,8 +66,8 @@ proc ::Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true nam
 
     set fluidConditions [spdAux::getRoute $fluid_conditions_UN]
     set fluidInlet "$fluidConditions/condition\[@n='$inlet_condition_name_base$nd'\]"
-    
-    set interval_name [dict get $interval_data name] 
+
+    set interval_name [dict get $interval_data name]
     if {[write::isBooleanTrue [dict get $interval_data new]]} {
         spdAux::CreateInterval $interval_name [dict get $interval_data ini] [dict get $interval_data end]
 
@@ -94,7 +94,7 @@ proc ::Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true nam
 }
 
 proc ::Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
-    
+
     set nd $::Model::SpatialDimension
     set fluidConditions [spdAux::getRoute $fluid_conditions_UN]
     set fluidInlets "$fluidConditions/condition\[@n='$inlet_condition_name_base$nd'\]/group"

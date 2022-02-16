@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementList>
+  <ElementItem n="ChimeraPatch2D" pn="Patch" ImplementedInApplication="ChimeraApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" ElementType="Patch">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+    </TopologyFeatures>
+  </ElementItem>
+
+
+  <ElementItem n="ChimeraPatch3D" pn="Patch" ImplementedInApplication="ChimeraApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" ElementType="Patch">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
+    </TopologyFeatures>
+  </ElementItem>
+
+</ElementList>

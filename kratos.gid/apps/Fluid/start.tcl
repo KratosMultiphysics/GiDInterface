@@ -1,6 +1,6 @@
 namespace eval ::Fluid {
     Kratos::AddNamespace [namespace current]
-    
+
     # Variable declaration
     variable _app
     variable dir
@@ -17,7 +17,7 @@ proc ::Fluid::Init { app } {
 
     set _app $app
     set dir [apps::getMyDir "Fluid"]
-    
+
     # XML init event
     ::Fluid::xml::Init
     ::Fluid::write::Init
