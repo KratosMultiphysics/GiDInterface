@@ -19,13 +19,14 @@
             <option value='2' label='2'/>
         </combobox>
         <entrywithbutton name="debug_folder" label="Debug path" variable="debug_folder" buttonimage="folder.png" variablemanager='Kratos::ManagePreferences' buttonfunction="OpenBrowserForDirectory" help='Path to the kratos debug folder. This is placed in the launch.json file for debugging' />
-        <combobox name="launch_configuration" label="Launch configuration" variable="launch_configuration" variablemanager='Kratos::ManagePreferences' help='' >
+        <comboboxframe name="launch_configuration" label="Launch configuration" variable="launch_configuration" variablemanager='Kratos::ManagePreferences' help='' >
             <option value='Launch via pip' label='Launch via pip'/>
-            <!-- <option value='Launch via pip with local packages' label='Launch via pip with local packages'/> -->
             <option value='Launch local compiled version' label='Launch local compiled version'/>
-            <!-- <option value='Docker' label='Docker'/> -->
+            <option value='Docker' label='Docker' setactivate="docker_image" />
             <!-- <option value='Custom...' label='Custom...'/> -->
-        </combobox>
+
+            <entry name="docker_image" variable="docker_image" label="Docker image" variablemanager='Kratos::ManagePreferences'  help='Name of the Kratos Docker image'/>
+        </comboboxframe>
     </labelframe>
 </group>
 

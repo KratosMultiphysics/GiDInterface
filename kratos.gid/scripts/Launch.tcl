@@ -134,7 +134,7 @@ proc Kratos::CheckDependenciesLocalPipMode {} {
 
 }
 proc Kratos::CheckDependenciesLocalMode {} {
-    
+
 }
 proc Kratos::CheckDependenciesDockerMode {} {
 
@@ -189,7 +189,10 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
         set bat [dict get $mode script]
         set bat_file [file join exec $bat.$os.bat]
     }
-
+    if {[dict get $mode name] eq "Docker"} {
+        set docker_image [Kratos::ManagePreferences GetValue docker_image]
+        set ::env(kratos_docker_image) $docker_image
+    }
     return $bat_file
 }
 
@@ -203,4 +206,11 @@ proc Kratos::GetLaunchMode { {launch_mode "current"} } {
         }
     }
     return $curr_mode
+}
+
+proc Kratos::StopCalculation { } {
+    if {[dict get [Kratos::GetLaunchMode] name] eq "Docker"} {
+        exec docker stop [Kratos::GetModelName]
+    }
+    GiD_Process Mescape Utilities CancelProcess escape escape
 }
