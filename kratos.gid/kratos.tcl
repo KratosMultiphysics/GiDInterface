@@ -483,7 +483,7 @@ proc Kratos::BeforeInitGIDPostProcess {} {
         if {$launch_mode eq "Docker"} {
             set list_file [file join [GidUtils::GetDirectoryModel] model.post.lst]
             if {[file exists $list_file]} {
-                file copy -force $list_file [GidUtils::GetFilenameInsideProject [GidUtils::GetDirectoryModel] .post.lst]
+                file copy -force $list_file [GidUtils::GetFilenameInsideProject [file rootname [GidUtils::GetDirectoryModel]] .post.lst]
             }
         }
     }
