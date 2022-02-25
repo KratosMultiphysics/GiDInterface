@@ -156,7 +156,8 @@ proc ::MPM::write::GetOutputProcessesList { } {
          
 
          dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
-         dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
+         #dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
+         dict set project_parameters_dict output_processes grid_output_process gauss_point_results
          dict unset project_parameters_dict output_processes vtk_output
          
          # Append the fluid and solid output processes to the output processes list
