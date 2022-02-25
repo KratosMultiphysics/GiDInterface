@@ -1,5 +1,9 @@
 FROM python:3.9
 
-RUN pip install KratosMultiphysics-all
+RUN pip install KratosMultiphysics-all numpy
 WORKDIR "/model"
 ENTRYPOINT [ "python3", "MainKratos.py" ]
+
+# docker build --tag="kratos-run:latest" -t kratos-run .
+# docker tag kratos-run:latest fjgarate/kratos-run:latest
+# docker push fjgarate/kratos-run:0.0.1
