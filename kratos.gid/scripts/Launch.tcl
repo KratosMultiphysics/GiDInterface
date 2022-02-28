@@ -4,7 +4,7 @@ proc Kratos::InstallAllPythonDependencies { } {
 
     if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
     set dir [lindex [Kratos::GetLaunchConfigurationFile] 0]
-    if {$os eq "win"} {set py "python"} {set py "python3"}
+    set py [Kratos::GetPythonExeName]
     # Check if python is installed. minimum 3.5, best 3.9
     set python_version [pythonVersion $py]
     if { $python_version <= 0 || [GidUtils::TwoVersionsCmp $python_version "3.9.0"] <0 } {
@@ -33,6 +33,18 @@ proc Kratos::InstallAllPythonDependencies { } {
 
 proc Kratos::InstallPip { } {
     W ""
+}
+
+proc Kratos::GetPythonExeName { } {
+
+    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
+    if {$os eq "win"} {set py "python"} {set py "python3"}
+    return $py
+}
+
+proc Kratos::GetDefaultPythonPath { } {
+    set py [Kratos::GetPythonExeName]
+    return [exec $py -c "import sys; print(sys.exec_prefix)"  2>@1]
 }
 
 proc Kratos::pythonVersion {{pythonExecutable "python"}} {
@@ -65,11 +77,9 @@ proc Kratos::GetMissingPipPackages { } {
     variable pip_packages_required
     set missing_packages [list ]
 
-
-    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
-    if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
+    set py [Kratos::GetPythonExeName]
     set pip_packages_installed [list ]
-    set pip_packages_installed_raw [exec $pip -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed_raw [exec $py -m pip list --format=freeze --disable-pip-version-check 2>@1]
     foreach package $pip_packages_installed_raw {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
     }
@@ -94,8 +104,7 @@ proc Kratos::CheckDependenciesPipMode {} {
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }
-    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
-    if {$os eq "win"} {set py "python"} {set py "python3"}
+    set py [Kratos::GetPythonExeName]
     set py_version [Kratos::pythonVersion $py]
     if {$py_version <= 0} {
         set msgBox_type yesno
