@@ -10,4 +10,4 @@ rm -f "$2/$1.err"
 rm -f "$2/$1.flavia.dat"
 
 # Run Python using the script MainKratos.py
-python3 MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
+$kratos_python_exe MainKratos.py > "$2/$1.info" 2> "$2/$1.err"

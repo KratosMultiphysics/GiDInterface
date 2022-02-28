@@ -201,6 +201,9 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
     if {[dict get $mode name] eq "Docker"} {
         set docker_image [Kratos::ManagePreferences GetValue docker_image]
         set ::env(kratos_docker_image) $docker_image
+    } else {
+        set python_exe_path [Kratos::ManagePreferences GetValue python_path]
+        set ::env(kratos_python_exe) $python_exe_path
     }
     return $bat_file
 }
