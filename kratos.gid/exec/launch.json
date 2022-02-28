@@ -19,7 +19,7 @@
         },
         {
             "name": "Docker",
-            "script": "",
+            "script": "docker",
             "dependency_check": "Kratos::CheckDependenciesDockerMode"
         }
     ]
