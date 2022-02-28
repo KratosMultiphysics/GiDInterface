@@ -69,6 +69,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_SelectGIDBatFile Kratos::Event_SelectGIDBatFile PROBLEMTYPE Kratos
 
     # Postprocess
+    GiD_RegisterEvent GiD_Event_BeforeInitGIDPostProcess Kratos::BeforeInitGIDPostProcess PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_InitGIDPostProcess Kratos::Event_InitGIDPostProcess PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_EndGIDPostProcess Kratos::Event_EndGIDPostProcess PROBLEMTYPE Kratos
 
@@ -190,8 +191,8 @@ proc Kratos::InitGlobalVariables {dir} {
     # set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
     # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
     # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
-    # KratosFSIApplication]
-    set pip_packages_required KratosMultiphysics-all==9.0.2
+    # KratosFSIApplication==9.0.3]
+    set pip_packages_required KratosMultiphysics-all
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -475,6 +476,19 @@ proc Kratos::Event_InitGIDPostProcess {} {
     gid_groups_conds::open_post check_default
 }
 
+proc Kratos::BeforeInitGIDPostProcess {} {
+    # In docker run, rename lst file
+    if {[info exists Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $Kratos::kratos_private(launch_configuration)
+        if {$launch_mode eq "Docker"} {
+            set list_file [file join [GidUtils::GetDirectoryModel] model.post.lst]
+            if {[file exists $list_file]} {
+                file copy -force $list_file [GidUtils::GetFilenameInsideProject [file rootname [GidUtils::GetDirectoryModel]] .post.lst]
+            }
+        }
+    }
+}
+
 proc Kratos::Event_EndGIDPostProcess {} {
     # Close all postprocess windows
     gid_groups_conds::close_all_windows
@@ -509,6 +523,7 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
 proc Kratos::Event_SelectGIDBatFile { dir basename } {
     if {[info exists Kratos::kratos_private(launch_configuration)]} {
         set launch_mode $Kratos::kratos_private(launch_configuration)
+        ::GidUtils::SetWarnLine "Launch mode: $launch_mode"
         return [Kratos::ExecuteLaunchByMode $launch_mode]
     }
 }
@@ -522,6 +537,7 @@ proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
 }
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
+    # W "Kratos::WriteCalculationFilesEvent"
     # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
         # Model must be saved

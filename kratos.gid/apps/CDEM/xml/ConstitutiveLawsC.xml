@@ -1,7 +1,7 @@
 <?xml version="1.1" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!-- contact laws-->
-    <CLaw n="DEM_KDEM2D" pn="KDEM2D" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM2D" pn="KDEM2D"  help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Tangential Strength" units="Pa" unit_magnitude="P" v="25"/>
             <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" units="Pa" unit_magnitude="P" v="5"/>
@@ -10,7 +10,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="DEM_KDEM" pn="KDEM3D" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM" pn="KDEM3D"  help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Tangential Strength" units="Pa" unit_magnitude="P" v="25"/>
             <parameter n="CONTACT_SIGMA_MIN" pn="Nornal Tensile Strength" units="Pa" unit_magnitude="P" v="5"/>
@@ -19,21 +19,21 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="DEM_KDEM_Rankine2D" pn="Rankine2D" ProductionReady="ProductionReady" help="Not implemented" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM_Rankine2D" pn="Rankine2D"  help="Not implemented" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_SIGMA_MIN" pn="Normal Tensile Strength" units="Pa" unit_magnitude="P" v="5"/>
         </inputs>
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="DEM_KDEM_Rankine" pn="Rankine" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM_Rankine" pn="Rankine"  help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_SIGMA_MIN" pn="Normal Tensile Strength" units="Pa" unit_magnitude="P" v="5"/>
         </inputs>
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="DEM_KDEM_Mohr_Coulomb" pn="Mohr-Coulomb" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM_Mohr_Coulomb" pn="Mohr-Coulomb"  help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Mohr-Coulomb Cohesion" units="Pa" unit_magnitude="P" v="25"/>
             <parameter n="INTERNAL_FRICTION_ANGLE" pn="Mohr-Coulomb Friction Angle" units="deg" v="30"/>
@@ -41,7 +41,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="DEM_KDEM_Mohr_Coulomb2D" pn="Mohr-Coulomb2D" ProductionReady="ProductionReady" help="Not implemented" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM_Mohr_Coulomb2D" pn="Mohr-Coulomb2D"  help="Not implemented" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Mohr-Coulomb Cohesion" units="Pa" unit_magnitude="P" v="25"/>
             <parameter n="INTERNAL_FRICTION_ANGLE" pn="Mohr-Coulomb Friction Angle" units="deg" v="30"/>
@@ -49,7 +49,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="DEM_KDEM_with_damage_parallel_bond" pn="KDEM with damage parallel bond 3D" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM_with_damage_parallel_bond" pn="KDEM with damage parallel bond 3D"  help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="3D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Mohr-Coulomb Cohesion" units="Pa" unit_magnitude="P" v="10"/>
             <parameter n="CONTACT_SIGMA_MIN" pn="Normal Tensile Strength" units="Pa" unit_magnitude="P" v="13"/>
@@ -61,7 +61,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="DEM_KDEM_with_damage_parallel_bond_2D" pn="KDEM with damage parallel bond 2D" ProductionReady="ProductionReady" help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
+    <CLaw n="DEM_KDEM_with_damage_parallel_bond_2D" pn="KDEM with damage parallel bond 2D"  help="" ImplementedInApplication="DEMApplication" App="CDEM" Dimension="2D" OutputMode="Materials">
         <inputs>
             <parameter n="CONTACT_TAU_ZERO" pn="Mohr-Coulomb Cohesion" units="Pa" unit_magnitude="P" v="10"/>
             <parameter n="CONTACT_SIGMA_MIN" pn="Normal Tensile Strength" units="Pa" unit_magnitude="P" v="13"/>

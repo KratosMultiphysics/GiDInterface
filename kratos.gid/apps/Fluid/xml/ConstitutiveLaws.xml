@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--Newtonian constitutive laws-->
-	<CLaw n="Newtonian2DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="2D">
+	<CLaw n="Newtonian2DLaw" pn="Newtonian"  help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="2D">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/>
@@ -10,7 +10,7 @@
         </outputs>
     </CLaw>
 
-	<CLaw n="Newtonian3DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
+	<CLaw n="Newtonian3DLaw" pn="Newtonian"  help="Newtonian fluid" App="Fluid" ElementCompressibility="Incompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/>
@@ -20,7 +20,7 @@
     </CLaw>
 
     <!--Newtonian with sound velocity constitutive laws-->
-	<CLaw n="WeaklyCompressibleNewtonian2DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid with sound velocity for weak compressibility" App="Fluid" ElementCompressibility="WeaklyCompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="2D" KratosName="Newtonian2DLaw">
+	<CLaw n="WeaklyCompressibleNewtonian2DLaw" pn="Newtonian"  help="Newtonian fluid with sound velocity for weak compressibility" App="Fluid" ElementCompressibility="WeaklyCompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="2D" KratosName="Newtonian2DLaw">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/>
@@ -30,7 +30,7 @@
         </outputs>
     </CLaw>
 
-	<CLaw n="WeaklyCompressibleNewtonian3DLaw" pn="Newtonian" ProductionReady="ProductionReady" help="Newtonian fluid with sound velocity for weak compressibility" App="Fluid" ElementCompressibility="WeaklyCompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D" KratosName="Newtonian3DLaw">
+	<CLaw n="WeaklyCompressibleNewtonian3DLaw" pn="Newtonian"  help="Newtonian fluid with sound velocity for weak compressibility" App="Fluid" ElementCompressibility="WeaklyCompressible" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D" KratosName="Newtonian3DLaw">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1.225"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="M/(L*T)" units="kg/(m*s)" v="1.846e-5" help="Set the dynamic viscosity."/>
@@ -41,7 +41,7 @@
     </CLaw>
 
     <!-- TODO: Add back the Herschel–Bulkley constitutive law once the new elements, which will use the Kratos constitutive laws, migration are set as default monolithic element -->
-<!--     <CLaw n="HerschelBulkley3DLaw" pn="Herschel-Bulkley" ProductionReady="ProductionReady" help="Herschel–Bulkley fluid -> tau = tau0 + k * gamma^n" App="Fluid" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
+<!--     <CLaw n="HerschelBulkley3DLaw" pn="Herschel-Bulkley"  help="Herschel–Bulkley fluid -> tau = tau0 + k * gamma^n" App="Fluid" ImplementedInApplication="FluidDynamicsApplication" Dimension="3D">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Kinematic viscosity" unit_magnitude="L^2/T" units="m^2/s" v="1e-3" help="Fluidized viscosity."/>
