@@ -8,7 +8,7 @@ proc ::DemLauncher::Init { app } {
     variable available_apps
 
     # TODO: Get apps from json
-    set available_apps [list DEM FluidDEM CDEM]
+    set available_apps [list DEM CDEM]
     # Allow to open the tree
     set ::spdAux::TreeVisibility 0
 
