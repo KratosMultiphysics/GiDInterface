@@ -44,7 +44,7 @@ proc Kratos::GetPythonExeName { } {
 
 proc Kratos::GetDefaultPythonPath { } {
     set py [Kratos::GetPythonExeName]
-    return [exec $py -c "import sys; print(sys.exec_prefix)"  2>@1]
+    return [exec $py -c "import sys; print(sys.executable)"  2>@1]
 }
 
 proc Kratos::pythonVersion {{pythonExecutable "python"}} {
