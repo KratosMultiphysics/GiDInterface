@@ -12,4 +12,6 @@ python-installer.exe /quiet InstallAllUsers=1 PrependPath=1
 del python-installer.exe
 echo "Python 3.9.9 installed successfuly"
 
+echo "Installing Kratos packages"
+pip install KratosMultiphysics-all numpy
 pause

@@ -16,6 +16,7 @@ proc Kratos::InstallAllPythonDependencies { } {
         }
     }
     set python_version [pythonVersion $py]
+    W "desa -> $python_version"
     if { $python_version > 0} {
         if {$os ne "win"} {
             ::GidUtils::SetWarnLine "Installing python dependencies"
