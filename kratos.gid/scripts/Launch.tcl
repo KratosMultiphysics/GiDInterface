@@ -15,20 +15,22 @@ proc Kratos::InstallAllPythonDependencies { } {
             gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.unix.sh ]
         }
     }
+    set python_version [pythonVersion $py]
+    if { $python_version > 0} {
+        if {$os ne "win"} {
+            ::GidUtils::SetWarnLine "Installing python dependencies"
+            gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.unix.sh ]
+        }
 
-    if {$os ne "win"} {
-        ::GidUtils::SetWarnLine "Installing python dependencies"
-        gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.unix.sh ]
+        if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
+        set missing_packages [Kratos::GetMissingPipPackages]
+        ::GidUtils::SetWarnLine "Installing pip packages $missing_packages"
+        if {[llength $missing_packages] > 0} {
+            exec $pip -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
+        }
+        exec $pip -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$Kratos::pip_packages_required
+        ::GidUtils::SetWarnLine "Packages updated"
     }
-
-    if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
-    set missing_packages [Kratos::GetMissingPipPackages]
-    ::GidUtils::SetWarnLine "Installing pip packages $missing_packages"
-    if {[llength $missing_packages] > 0} {
-        exec $pip -m pip install --no-cache-dir --disable-pip-version-check {*}$missing_packages
-    }
-    exec $pip -m pip install --upgrade --no-cache-dir --disable-pip-version-check {*}$Kratos::pip_packages_required
-    ::GidUtils::SetWarnLine "Packages updated"
 }
 
 proc Kratos::InstallPip { } {
@@ -120,7 +122,7 @@ proc Kratos::CheckDependenciesPipMode {} {
         }
     }
     set py_version [Kratos::pythonVersion $py]
-    if {$py_version <= 0} {
+    if {$py_version > 0} {
         set pip_version [Kratos::pipVersion]
         if {$pip_version <= 0} {
             WarnWin "pip is not installed on your system. Please install it."
