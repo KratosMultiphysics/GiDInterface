@@ -39,7 +39,7 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                     set ret "fjgarate/kratos-run"
                 }
                 "python_path" {
-                    set ret [file join [Kratos::GetDefaultPythonPath] [Kratos::GetPythonExeName] ]
+                    set ret [Kratos::GetDefaultPythonPath] 
                 }
                 default {
                     set ret 0
