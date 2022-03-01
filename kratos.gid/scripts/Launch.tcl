@@ -119,22 +119,25 @@ proc Kratos::CheckDependenciesPipMode {} {
 
         }
     }
-    set pip_version [Kratos::pipVersion]
-    if {$pip_version <= 0} {
-        WarnWin "pip is not installed on your system. Please install it."
-    } else {
-        set missing_packages [Kratos::GetMissingPipPackages]
-        if {[llength $missing_packages] > 0} {
-            set msgBox_type yesno
-            #  -do_not_ask_again 1 -do_not_ask_again_key "kratos_install_python"
-            set reply [tk_messageBox -icon warning -type $msgBox_type -parent .gid \
-                    -message "Python $py_version is installed, but there are some missing packages. Do you want Kratos to install them? \n\nPackages to be installed: \n$missing_packages" \
-                    -title [_ "Missing python packages"]]
-            if {[string equal $reply "yes"]} {
-                Kratos::InstallAllPythonDependencies
-            }
-            if {[string equal $reply "cancel"]} {
+    set py_version [Kratos::pythonVersion $py]
+    if {$py_version <= 0} {
+        set pip_version [Kratos::pipVersion]
+        if {$pip_version <= 0} {
+            WarnWin "pip is not installed on your system. Please install it."
+        } else {
+            set missing_packages [Kratos::GetMissingPipPackages]
+            if {[llength $missing_packages] > 0} {
+                set msgBox_type yesno
+                #  -do_not_ask_again 1 -do_not_ask_again_key "kratos_install_python"
+                set reply [tk_messageBox -icon warning -type $msgBox_type -parent .gid \
+                        -message "Python $py_version is installed, but there are some missing packages. Do you want Kratos to install them? \n\nPackages to be installed: \n$missing_packages" \
+                        -title [_ "Missing python packages"]]
+                if {[string equal $reply "yes"]} {
+                    Kratos::InstallAllPythonDependencies
+                }
+                if {[string equal $reply "cancel"]} {
 
+                }
             }
         }
     }
@@ -143,7 +146,7 @@ proc Kratos::CheckDependenciesLocalPipMode {} {
 
 }
 proc Kratos::CheckDependenciesLocalMode {} {
-    
+
 }
 proc Kratos::CheckDependenciesDockerMode {} {
 
