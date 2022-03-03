@@ -103,7 +103,7 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
         set cndid 0
         set new 0
         if {$nnodes != 1} {
-            set eid [lindex $elems $i]
+            set eid [objarray get $elems $i]
             set cndid [objarray get $ConditionMap $eid]
         }
         if {$cndid == 0} {

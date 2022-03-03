@@ -4,6 +4,10 @@
     "prefix": "ST",
     "themed": false,
     "kratos_name": "StructuralMechanicsApplication",
+    "python_packages": [
+        "KratosStructuralMechanicsApplication",
+        "KratosContactStructuralMechanicsApplication"
+    ],
     "dimensions": [
         "2D",
         "2Da",
@@ -20,17 +24,17 @@
         "write/writeProjectParameters.tcl",
         "postprocess/formfinding.tcl"
     ],
-    "start_script":"::Structural::Init",
-    "requeriments":{
-        "apps":[],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::Structural::Init",
+    "requeriments": {
+        "apps": [],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
         "intervals": true,
         "wizard": false,
-        "import_files":true
+        "import_files": true
     },
     "unique_names": {
         "parts": "STParts",
@@ -40,7 +44,6 @@
         "time_parameters": "STTimeParameters",
         "results": "STResults",
         "materials": "STMaterials"
-        
     },
     "write": {
         "coordinates": "all",
@@ -49,6 +52,6 @@
         "model_part_name": "Structure",
         "output_model_part_name": ""
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
 }

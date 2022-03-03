@@ -4,6 +4,10 @@
     "prefix": "MPM",
     "themed": false,
     "kratos_name": "ParticleMechanicsApplication",
+    "python_packages": [
+        "KratosParticleMechanicsApplication",
+        "KratosLinearSolversApplication"
+    ],
     "dimensions": [
         "2D",
         "2Da",
@@ -17,10 +21,12 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::MPM::Init",
-    "requeriments":{
-        "apps":["Structural"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::MPM::Init",
+    "requeriments": {
+        "apps": [
+            "Structural"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
@@ -39,6 +45,6 @@
         "properties_location": "json",
         "model_part_name": "Background_Grid"
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
 }

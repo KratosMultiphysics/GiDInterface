@@ -23,6 +23,13 @@ If you need the developer version, you are on the right place.
 ### Step by step video
 https://www.youtube.com/watch?v=zZq7ypDdudo
 
+## Launch modea
+In Kratos preferences, select the execution mode:
+* Pip packages: Kratos will be installed via `pip install`
+* local compiled: If you are a developer and build your applications, use this one
+* docker: If you do not want to install any dependency, just run via docker!
+    * The default image is [fjgarate/kratos-run](https://hub.docker.com/repository/docker/fjgarate/kratos-run)
+
 ## Usage
 * Run GiD
 * Go to: Data / Problem type / kratos
