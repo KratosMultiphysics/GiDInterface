@@ -13,6 +13,14 @@
     <inputs>
     </inputs>
   </Process>
+  
+  	<Process n="ApplyMPMParticleNeumannConditionProcess" pn="ApplyMPMParticleNeumannConditionProcess" python_module="apply_mpm_particle_neumann_condition_process" 
+   kratos_module="KratosMultiphysics.ParticleMechanicsApplication" help="">
+		<inputs>
+			<parameter n="modulus" pn="Modulus" type="double" v="1.0" function="1" has_units="1"/>
+			<parameter n="direction" pn="Direction" type="vector" v="0.0,0.0,0.0" />
+		</inputs>
+	</Process>
 
  </ProcessList>
 

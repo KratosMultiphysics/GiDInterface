@@ -15,6 +15,21 @@
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
   </ConditionItem>
+  
+   <ConditionItem n="PointLoad2DMPM" pn="Load on mpm points" Interval="Total"
+		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
+		 ElementType="Point" ProcessName="ApplyMPMParticleNeumannConditionProcess" help=""
+		 units="N" unit_magnitude="F" VariableName="POINT_LOAD">
+    <TopologyFeatures>
+      <item  GeometryType="Point" nodes="1" KratosName="MPMGridPointLoadCondition2D1N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="FORCE" pn="External Load" v="false"/>
+    </outputs>
+  </ConditionItem>
 
   <ConditionItem n="PointLoad2DAxisym" pn="Load on points" Interval="Total"
      ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
