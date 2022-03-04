@@ -12,3 +12,4 @@ custom_tools/*
 .DS_Store
 
 *.zip
+*.tgz
