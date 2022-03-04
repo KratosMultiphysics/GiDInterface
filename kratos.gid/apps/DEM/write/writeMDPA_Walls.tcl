@@ -30,7 +30,6 @@ proc ::DEM::write::WriteMDPAWalls { } {
     WriteWallCustomSmp
 }
 
-
 proc ::DEM::write::processRigidWallMaterials { } {
     variable wallsProperties
     set walls_xpath [DEM::write::GetRigidWallXPath]
@@ -39,10 +38,10 @@ proc ::DEM::write::processRigidWallMaterials { } {
 }
 
 proc ::DEM::write::processPhantomWallMaterials { } {
-    variable wallsProperties
+    variable phantomwallsProperties
     set phantom_walls_xpath [DEM::write::GetPhantomWallXPath]
     write::processMaterials $phantom_walls_xpath/group
-    set phantomwallsProperties [write::processMaterials $phantom_walls_xpath]
+    set phantomwallsProperties [write::getPropertiesListByConditionXPath $phantom_walls_xpath 0]
 }
 
 proc ::DEM::write::WriteRigidWallProperties { } {
@@ -535,6 +534,6 @@ proc ::DEM::write::DefineFEMExtraConditions {props} {
     set GraphPrintval 0
     if {[write::isBooleanTrue $GraphPrint]} {
         set GraphPrintval 1
-    } 
+    }
     write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
 }

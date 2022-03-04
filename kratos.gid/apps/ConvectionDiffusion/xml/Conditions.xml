@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
     <ConditionItem n="HeatFlux2D" pn="External heat flux" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication"
-                   MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1"
+                   MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1"
                    SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Line" ProcessName="AssignScalarVariableProcess"
                    help="Applies an external thermal load" function="1" units="W/m^2" unit_magnitude="Power/L^2">
         <TopologyFeatures>
@@ -16,7 +16,7 @@
     </ConditionItem>
 
     <ConditionItem n="HeatFlux3D" pn="External heat flux" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication"
-                   MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2"
+                   MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="2"
                    SkinConditions="True" VariableName="FACE_HEAT_FLUX" App="ConvectionDiffusion" ElementType="Surface" ProcessName="AssignScalarVariableProcess"
                    help="Applies an external thermal load" function="1" units="W/m^2" unit_magnitude="Power/L^2">
         <TopologyFeatures>
@@ -32,7 +32,7 @@
     </ConditionItem>
 
     <ConditionItem n="ImposedTemperature2D" pn="Imposed temperature" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication"
-                   MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1"
+                   MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1"
                    SkinConditions="True" VariableName="TEMPERATURE" App="ConvectionDiffusion" ElementType="Point,Line" ProcessName="AssignScalarVariableProcess"
                    help="Imposes a fixed temperature" units="K" unit_magnitude="Temp">
         <TopologyFeatures>
@@ -47,7 +47,7 @@
     </ConditionItem>
 
     <ConditionItem n="ImposedTemperature3D" pn="Imposed temperature" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication"
-                   MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2"
+                   MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="2"
                    SkinConditions="True" VariableName="TEMPERATURE" App="ConvectionDiffusion" ElementType="Point,Line,Surface" ProcessName="AssignScalarVariableProcess"
                    help="Imposes a fixed temperature" units="K" unit_magnitude="Temp">
         <TopologyFeatures>
@@ -64,7 +64,7 @@
     </ConditionItem>
 
     <ConditionItem n="ThermalFace2D" pn="Thermal face conditions" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication"
-                   MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1"
+                   MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1"
                    SkinConditions="True" App="ConvectionDiffusion" ElementType="Line" ProcessName="ApplyThermalFaceProcess"
                    help="Assigns the thermal behaviour of the boundary. If it is not set, adiabatic behaviour is assumed">
         <TopologyFeatures>
@@ -78,7 +78,7 @@
     </ConditionItem>
 
     <ConditionItem n="ThermalFace3D" pn="Thermal face conditions" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="ConvectionDiffusionApplication"
-                   MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2"
+                   MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="2"
                    SkinConditions="True" App="ConvectionDiffusion" ElementType="Surface" ProcessName="ApplyThermalFaceProcess"
                    help="Assigns the thermal behaviour of the boundary. If it is not set, adiabatic behaviour is assumed">
         <TopologyFeatures>

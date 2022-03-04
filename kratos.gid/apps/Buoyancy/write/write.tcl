@@ -1,7 +1,7 @@
 namespace eval ::Buoyancy::write {
     namespace path ::Buoyancy::write
     Kratos::AddNamespace [namespace current]
-    
+
     variable writeAttributes
 }
 
@@ -54,7 +54,7 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
 proc ::Buoyancy::write::writeCustomFilesEvent { } {
     # Materials
     Buoyancy::write::WriteMaterialsFile True
-    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+    write::SetConfigurationAttribute main_launch_file [ConvectionDiffusion::write::GetAttribute main_launch_file]
 }
 
 proc ::Buoyancy::write::Validate {} {
@@ -65,7 +65,7 @@ proc ::Buoyancy::write::Validate {} {
 proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_modelpart_name True} } {
     # Note: This will generate 2 quasi identical files for materials. The difference is the model_part_name
 
-    # Write fluid material file 
+    # Write fluid material file
     Fluid::write::WriteMaterialsFile $write_const_law $include_modelpart_name
 
     # Write Buoyancy materials file

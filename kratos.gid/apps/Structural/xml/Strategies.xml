@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StrategyList>
-    <StrategyItem n="implicit" pn="Implicit" SolutionType="Dynamic" ImplementedInFile="structural_mechanics_implicit_dynamic_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_implicit_dynamic_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="">
+    <StrategyItem n="implicit" pn="Implicit" SolutionType="Dynamic" ImplementedInFile="structural_mechanics_implicit_dynamic_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_implicit_dynamic_solver" MinimumKratosVersion="8500" App="Structural"  help="">
         <parameter_list>
             <parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
             <parameter n="rayleigh_alpha" pn="Rayleigh alpha" type="double" v="0.0"  help=""/>
@@ -29,13 +29,13 @@
             </linearSolverItem>
         </linearSolvers>
         <schemes>
-            <scheme n="newmark" pn="Newmark" help="Newmark scheme for dynamic problems." ProductionReady="ProductionReady">
+            <scheme n="newmark" pn="Newmark" help="Newmark scheme for dynamic problems." >
                 <parameter_list></parameter_list>
                 <element_filters>
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
                 </element_filters>
             </scheme>
-            <scheme n="bossak" pn="Bossak" help="Bossak scheme for dynamic problems with high frequency accelerations damping." ProductionReady="ProductionReady">
+            <scheme n="bossak" pn="Bossak" help="Bossak scheme for dynamic problems with high frequency accelerations damping." >
                 <parameter_list></parameter_list>
                 <element_filters>
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
@@ -44,7 +44,7 @@
         </schemes>
     </StrategyItem>
 
-    <StrategyItem n="Eigen" pn="Eigen" SolutionType="eigen_value" ImplementedInFile="structural_mechanics_eigensolver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_eigensolver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="">
+    <StrategyItem n="Eigen" pn="Eigen" SolutionType="eigen_value" ImplementedInFile="structural_mechanics_eigensolver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_eigensolver" MinimumKratosVersion="8500" App="Structural"  help="">
         <parameter_list>
         </parameter_list>
         <linearSolvers>
@@ -56,13 +56,13 @@
             </linearSolverItem>
         </linearSolvers>
         <schemes>
-            <scheme n="dynamic" pn="Dynamic" help="Modal Analysis" ProductionReady="ProductionReady">
+            <scheme n="dynamic" pn="Dynamic" help="Modal Analysis" >
                 <parameter_list></parameter_list>
                 <element_filters>
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
                 </element_filters>
             </scheme>
-            <!-- <scheme n="stability" pn="Stability" help="" ProductionReady="Developer">
+            <!-- <scheme n="stability" pn="Stability" help="" >
                 <parameter_list></parameter_list>
                 <element_filters>
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
@@ -71,7 +71,7 @@
         </schemes>
     </StrategyItem>
 
-    <StrategyItem n="static" pn="Static" SolutionType="Static Quasi-static formfinding" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady" help="Default solver Super LU">
+    <StrategyItem n="static" pn="Static" SolutionType="Static Quasi-static formfinding" ImplementedInFile="structural_mechanics_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="structural_mechanics_static_solver" MinimumKratosVersion="8500" App="Structural"  help="Default solver Super LU">
         <parameter_list>
             <parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
             <parameter n="line_search" pn="Line search" type="bool" v="false" values="false,true" help="Switch on/off line search"/>
@@ -92,7 +92,7 @@
             </linearSolverItem>
         </linearSolvers>
         <schemes>
-            <scheme n="GenericScheme" pn="Generic scheme" ProductionReady="ProductionReady">
+            <scheme n="GenericScheme" pn="Generic scheme" >
                 <parameter_list></parameter_list>
                 <element_filters>
                     <filter field="ImplementedInApplication" value="StructuralMechanicsApplication"/>
@@ -100,5 +100,5 @@
             </scheme>
         </schemes>
     </StrategyItem>
-    
+
 </StrategyList>

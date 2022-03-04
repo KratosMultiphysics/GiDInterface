@@ -5,7 +5,7 @@
 
 namespace eval ::apps {
     Kratos::AddNamespace [namespace current]
-    
+
     variable activeApp
     variable appList
 }
@@ -26,7 +26,7 @@ proc apps::ClearActiveApp {} {
 proc apps::setActiveApp {appid} {
     variable activeApp
     variable appList
-    
+
     foreach app $appList {
         if {[$app getName] eq $appid} {
             set activeApp $app
@@ -101,7 +101,7 @@ proc apps::getAppsList {{also_tools 1}} {
     return $list
 }
 proc apps::getAllApplicationsName {{also_tools 1}} {
-    
+
     set appnames [list ]
     foreach app [apps::getAppsList $also_tools] {
         lappend appnames [$app getPublicName]
@@ -110,7 +110,7 @@ proc apps::getAllApplicationsName {{also_tools 1}} {
 }
 
 proc apps::getAllApplicationsID {{also_tools 1}} {
-    
+
     set appnames [list ]
     foreach app [apps::getAppsList $also_tools] {
         lappend appnames [$app getName]
@@ -123,7 +123,7 @@ proc apps::getImgFrom { appName {img "logo" } } {
 }
 proc apps::getImgPathFrom { appName {img "logo" } } {
     variable appList
-    
+
     set imagespath ""
     foreach app $appList {
         if {[$app getName] eq $appName} {set imagespath [expr {$img == "logo" ? [$app getIcon] : [$app getImagePath $img] }]; break}
@@ -155,7 +155,7 @@ proc apps::ExecuteOnCurrentXML { func args} {
 proc apps::ExecuteOnAppXML { appid func args} {
     set response ""
     set app [getAppById $appid]
-    set response [$app executexml $func {*}$args]   
+    set response [$app executexml $func {*}$args]
 
     return $response
 }
@@ -163,7 +163,7 @@ proc apps::ExecuteOnAppXML { appid func args} {
 proc apps::ExecuteOnApp {appid func args} {
     set response ""
     set app [getAppById $appid]
-    set response [$app execute $func {*}$args]   
+    set response [$app execute $func {*}$args]
 
     return $response
 }
@@ -193,7 +193,7 @@ proc apps::isPublic {appId} {
 
 proc apps::CheckElemState {elem inputid {arg ""} } {
     variable activeApp
-    
+
     return [$activeApp executexml CheckElemState $elem $inputid $arg]
 }
 
@@ -213,7 +213,7 @@ oo::class create App {
     variable is_tool
 
     variable properties
-    
+
     constructor {n} {
         variable name
         variable publicname
@@ -226,7 +226,7 @@ oo::class create App {
         variable public
         variable is_tool
         variable properties
-        
+
         set name $n
         set publicname $n
         set imagepath [file nativename [file join $::Kratos::kratos_private(Path) apps $n images] ]
@@ -249,28 +249,28 @@ oo::class create App {
         set properties [dict create ]
         apps::LoadAppProperties [self]
     }
-    
+
     method activate { } {apps::ActivateApp_do [self]}
-    
+
     method getPrefix { } {variable prefix; return $prefix}
     method setPrefix { p } {variable prefix; set prefix $p}
-    
+
     method getPublicName { } {variable publicname; return $publicname}
     method setPublicName { pn } {variable publicname; set publicname $pn}
-    
+
     method getName { } {variable name; return $name}
-    
+
     method getIcon { } {return [my getImagePath logo.png]}
     method getImagePath { imgName } {variable imagepath; return [file nativename [file join $imagepath $imgName] ]}
-    
+
     method getWriteModelPartEvent { } {variable writeModelPartEvent; return $writeModelPartEvent}
-    
+
     method getWriteParametersEvent { } {variable writeParametersEvent; return $writeParametersEvent}
-    
+
     method getWriteCustomEvent { } {variable writeCustomEvent; return $writeCustomEvent}
 
     method getValidateWriteEvent { } {variable writeValidateEvent; return $writeValidateEvent}
-    
+
     method executexml { func args } {
         variable name
         set f ::${name}::xml::${func}
@@ -281,24 +281,24 @@ oo::class create App {
         set f ::${name}::${func}
         if {[info procs $f] ne ""} {$f {*}$args}
         }
-    
+
     method setPublic {v} {variable public; set public $v}
     method isPublic { } {variable public; return $public}
-    
+
     method setIsTool {v} {variable is_tool; set is_tool $v}
     method isTool { } {variable is_tool; return $is_tool}
-    
+
     method getKratosApplicationName { } {return [::${name}::GetAttribute kratos_name]}
 
     method setProperties {props} {variable properties; set properties $props}
     method getProperty {n} {variable properties; if {[dict exists $properties $n]} {return [dict get $properties $n]}}
     method getProperties {} {variable properties; return $properties}
     method getPermission {n} {variable properties; if {[dict exists $properties permissions $n]} {return [dict get $properties permissions $n]} }
-    method getPermissions {} {variable properties; return [dict get $properties permissions]} 
+    method getPermissions {} {variable properties; return [dict get $properties permissions]}
     method getUniqueName {n} {variable properties; if {[dict exists $properties unique_names $n]} {return [dict get $properties unique_names $n]} }
-    method getUniqueNames {} {variable properties; return [dict get $properties unique_names} 
+    method getUniqueNames {} {variable properties; return [dict get $properties unique_names}
     method getWriteProperty {n} {variable properties; if {[dict exists $properties write $n]} {return [dict get $properties write $n]} }
-    method getWriteProperties {} {variable properties; return [dict get $properties write} 
+    method getWriteProperties {} {variable properties; return [dict get $properties write}
 }
 
 proc apps::LoadAppProperties {app} {
@@ -328,16 +328,18 @@ proc apps::ActivateApp_do {app} {
             apps::loadAppFile $fileName
         }
     }
-    
+    set app_minimum_gid_version [dict get [$app getProperty requeriments] minimum_gid_version]
+    if {[GiDVersionCmp $app_minimum_gid_version] < 0} {W "Caution. Minimum GiD version is $app_minimum_gid_version"}
+    if {[write::isBooleanTrue [$app getPermission import_files]]} { Kratos::LoadImportFiles }
     if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }
     if {[$app getProperty start_script] ne ""} {eval [$app getProperty start_script] $app}
     apps::ApplyAppPreferences $app
-    
-    
+
+
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
         gid_groups_conds::add_images_dir [file join $dir images Black]
-    } 
+    }
     gid_groups_conds::add_images_dir [file join $dir images]
 }
 

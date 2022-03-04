@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
-  <ElementItem n="GENERIC_ELEMENT" pn="GENERIC_ELEMENT" ProductionReady="Developer">
+  <ElementItem n="GENERIC_ELEMENT" pn="GENERIC_ELEMENT" >
     <TopologyFeatures>
       <item GeometryType="Line"          nodes="2"  KratosName="Element2D2N"/>
       <item GeometryType="Triangle"      nodes="3"  KratosName="Element2D3N"/>

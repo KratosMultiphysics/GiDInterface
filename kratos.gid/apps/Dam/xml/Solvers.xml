@@ -6,7 +6,7 @@
         </inputs>
     </solver>
 
-    <solver n="EigenSolversApplication.sparse_lu" pn="SparseLU" SolverType="Standard" Parallelism="OpenMP">
+    <solver n="LinearSolversApplication.sparse_lu" pn="SparseLU" SolverType="Standard" Parallelism="OpenMP">
         <inputs>
         </inputs>
     </solver>

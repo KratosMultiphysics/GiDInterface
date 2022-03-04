@@ -7,6 +7,9 @@ proc ::Dam::write::getParametersDict { } {
 
     set projectParametersDict [dict create]
 
+   # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.DamApplication.dam_analysis"
+
     ### Problem data
     dict set projectParametersDict problem_data [Dam::write::GetProblemDataDict]
 
@@ -441,7 +444,7 @@ proc ::Dam::write::GetOutputDict { {appid ""} } {
     } elseif {$outputCT eq "time_w"} {
         set frequency [write::getValue Results OutputDeltaTime_w]
     }
-    
+
     dict set resultDict output_interval $frequency
     dict set resultDict start_output_results [write::getValue Results StartOutputResults]
 
@@ -912,7 +915,7 @@ proc ::Dam::write::TemperaturebyDevices { } {
             dict set parameterDict is_fixed $isfixed
             dict set parameterDict value $value
 
-            if {$fileid ni [list "" "- No file"]} {
+            if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
                 if {$fileid ni $listaFiles} {
                     lappend listaFiles $fileid
                     incr number_devices

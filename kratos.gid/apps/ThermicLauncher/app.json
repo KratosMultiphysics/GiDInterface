@@ -4,10 +4,14 @@
     "script_files": [
         "start.tcl"
     ],
-    "start_script":"::ThermicLauncher::Init",
-    "requeriments":{
-        "apps_exist":["ConvectionDiffusion", "Buoyancy", "ConjugateHeatTransfer"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::ThermicLauncher::Init",
+    "requeriments": {
+        "apps_exist": [
+            "ConvectionDiffusion",
+            "Buoyancy",
+            "ConjugateHeatTransfer"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": false,

@@ -64,7 +64,7 @@ proc PfemFluid::write::writeMeshes { } {
 
 
 proc PfemFluid::write::writeNodalConditions { keyword } {
-    write::writeNodalConditions $keyword
+    ::write::writeNodalConditions $keyword
 }
 
 proc PfemFluid::write::GetPartsUN { } {

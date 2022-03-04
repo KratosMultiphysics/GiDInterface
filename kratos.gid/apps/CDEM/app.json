@@ -3,7 +3,10 @@
     "name": "CDEM",
     "prefix": "DEM",
     "themed": false,
-    "kratos_name": "DEMapplication",
+    "kratos_name": "DEMApplication",
+    "python_packages": [
+        "KratosDEMApplication","numpy"
+    ],
     "dimensions": [
         "2D",
         "3D"
@@ -21,10 +24,12 @@
         "xml/XmlController.tcl",
         "xml/BulkGroup.tcl"
     ],
-    "start_script":"::CDEM::Init",
-    "requeriments":{
-        "apps":["DEM"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::CDEM::Init",
+    "requeriments": {
+        "apps": [
+            "DEM"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,

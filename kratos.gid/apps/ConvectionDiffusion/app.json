@@ -4,6 +4,9 @@
     "prefix": "CNVDFF",
     "themed": false,
     "kratos_name": "ConvectionDiffusionApplication",
+    "python_packages": [
+        "KratosConvectionDiffusionApplication"
+    ],
     "dimensions": [
         "2D",
         "3D"
@@ -38,8 +41,8 @@
         "materials_file": "ConvectionDiffusionMaterials.json",
         "properties_location": "json",
         "model_part_name": "ThermalModelPart",
-        "output_model_part_name": "thermal_computing_domain"
+        "output_model_part_name": ""
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
 }
