@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangian2D" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Solid" help="Updated Lagrangian 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
+  <ElementItem n="UpdatedLagrangian2D" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="True,False" ElementType="Material_domain" help="Updated Lagrangian 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangian2D3N"/>
