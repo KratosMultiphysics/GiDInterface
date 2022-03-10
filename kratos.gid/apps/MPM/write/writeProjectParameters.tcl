@@ -101,6 +101,14 @@ proc ::MPM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
+
+proc write::GetResultsList { un {cnd ""} } {
+    if {$cnd eq ""} {set xp1 [spdAux::getRoute $un]} {set xp1 "[spdAux::getRoute $un]/container\[@n = '$cnd'\]"}
+    return [GetResultsByXPathList $xp1]
+}
+
+
+
 proc ::MPM::write::GetOutputProcessesList { } {
       set output_process [dict create]
     
@@ -131,7 +139,10 @@ proc ::MPM::write::GetOutputProcessesList { } {
          dict set body_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings model_import_settings input_filename]
          dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
          dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
+
+         
          dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
+      
 
          dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
          dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
@@ -146,26 +157,46 @@ proc ::MPM::write::GetOutputProcessesList { } {
      
      set need_vtk [write::getValue EnableVtkOutput]
      if {[write::isBooleanTrue $need_vtk]} {
+         #set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
 
          set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
          set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
+         
+
          dict set body_output_configuration_dict python_module particle_vtk_output_process
          dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
          dict set body_output_configuration_dict process_name ParticleMPMVTKOutputProcess
          dict set body_output_configuration_dict Parameters model_part_name MPM_Material
-         dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
+         dict unset body_output_configuration_dict Parameters nodal_data_value_variables
+         dict unset body_output_configuration_dict Parameters element_data_value_variables
+         dict unset body_output_configuration_dict Parameters condition_data_value_variables
          dict unset body_output_configuration_dict Parameters nodal_solution_step_data_variables
+         #dict unset body_output_configuration_dict Parameters output_interval
+         #set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
+         #dict set resultDict output_control_type $outputCT
+          #if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
+         #dict set body_output_configuration_dict Parameters output_frequency 
+         dict unset body_output_configuration_dict Parameters output_path
+         dict set body_output_configuration_dict Parameters folder_name  "vtk_output"
+         dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes 
+         dict set body_output_configuration_dict Parameters gauss_point_results [write::GetResultsList ElementResults]
+         
+         
+         dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
          dict unset grid_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
+         dict unset grid_output_configuration_dict Parameters nodal_data_value_variables
+         dict unset grid_output_configuration_dict Parameters element_data_value_variables
+         dict unset grid_output_configuration_dict Parameters condition_data_value_variables
          
 
          dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
          #dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
-         dict set project_parameters_dict output_processes grid_output_process gauss_point_results
          dict unset project_parameters_dict output_processes vtk_output
+         dict unset grid_output_configuration_dict Parameters gauss_point_results
          
          # Append the fluid and solid output processes to the output processes list
-         #lappend vtk_output_processes_list $body_output_configuration_dict
          lappend vtk_output_processes_list $grid_output_configuration_dict
+         lappend vtk_output_processes_list $body_output_configuration_dict
          dict set output_process vtk_output_processes $vtk_output_processes_list
 
      }
@@ -177,4 +208,6 @@ proc ::MPM::write::GetOutputProcessesList { } {
 proc ::MPM::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 }
+
+
 
