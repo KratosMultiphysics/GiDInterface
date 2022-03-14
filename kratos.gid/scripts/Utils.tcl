@@ -152,7 +152,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path docker_image]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
@@ -199,7 +199,7 @@ proc Kratos::LoadEnvironment { } {
         # W $data
         # Close the file
         close $fp
-        
+
         # Preferences are written in json format
         foreach {k v} [write::json2dict $data] {
             # W "$k $v"
@@ -320,5 +320,18 @@ proc Kratos::IsDeveloperMode {} {
     set is_dev 0
     if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
     return $is_dev
+}
+
+proc Kratos::GetFilePath { var_name type_names_extensions } {
+    set file [MessageBoxGetFilename file read "Get file" "" $type_names_extensions]
+    # set filename [MessageBoxGetFilename file read [_ "Read HDF5 Vibez file"] {} {{{HDF5 Vibez} {.h5 }} {{All files} {.*}}} {} $multiple [list [_ "Import options"] Vibez::MoreImportOptions]]
+    return $file
+}
+
+if { ![GidUtils::IsTkDisabled] } {
+    proc xmlprograms::GetPythonPath { baseframe variable } {
+        set $variable [Kratos::GetFilePath ::Kratos(python_path) {{{python path} {.exe }} {{All files} {.*}}}]
+        return variable
+    }
 }
 

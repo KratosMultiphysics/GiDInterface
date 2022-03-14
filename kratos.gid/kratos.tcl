@@ -69,6 +69,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_SelectGIDBatFile Kratos::Event_SelectGIDBatFile PROBLEMTYPE Kratos
 
     # Postprocess
+    GiD_RegisterEvent GiD_Event_BeforeInitGIDPostProcess Kratos::BeforeInitGIDPostProcess PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_InitGIDPostProcess Kratos::Event_InitGIDPostProcess PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_EndGIDPostProcess Kratos::Event_EndGIDPostProcess PROBLEMTYPE Kratos
 
@@ -187,11 +188,11 @@ proc Kratos::InitGlobalVariables {dir} {
     set namespaces [list ]
 
     variable pip_packages_required
-    set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
-    KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
-    KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
-    KratosFSIApplication==9.0.3]
-    #set pip_packages_required KratosMultiphysics-all==9.0.2
+    # set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
+    # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
+    # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
+    # KratosFSIApplication==9.0.3]
+    set pip_packages_required KratosMultiphysics-all
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -473,6 +474,19 @@ proc Kratos::Event_InitGIDPostProcess {} {
     gid_groups_conds::close_all_windows
     # We don't have (yet) any postprocess window
     gid_groups_conds::open_post check_default
+}
+
+proc Kratos::BeforeInitGIDPostProcess {} {
+    # In docker run, rename lst file
+    if {[info exists Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $Kratos::kratos_private(launch_configuration)
+        if {$launch_mode eq "Docker"} {
+            set list_file [file join [GidUtils::GetDirectoryModel] model.post.lst]
+            if {[file exists $list_file]} {
+                file copy -force $list_file [GidUtils::GetFilenameInsideProject [file rootname [GidUtils::GetDirectoryModel]] .post.lst]
+            }
+        }
+    }
 }
 
 proc Kratos::Event_EndGIDPostProcess {} {

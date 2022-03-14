@@ -35,6 +35,15 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                 "launch_configuration" {
                     set ret "local"
                 }
+                "docker_image" {
+                    set ret "fjgarate/kratos-run"
+                }
+                "python_path" {
+                    set ret [Kratos::GetDefaultPythonPath] 
+                }
+                default {
+                    set ret 0
+                }
             }
         }
     }
