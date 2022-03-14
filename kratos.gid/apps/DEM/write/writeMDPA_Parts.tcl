@@ -20,11 +20,13 @@ proc ::DEM::write::WriteMDPAParts { } {
 
     # Element connectivities (Groups on DEM Parts only)
     PrepareCustomMeshedParts
-    write::writeElementConnectivities DEMParts_Parts_DEM
+    write::writeElementConnectivities Parts_DEM
     RestoreCustomMeshedParts
 
     # Element radius
     writeSphereRadius
+
+    writeElements
 
     # SubmodelParts
     # write::writePartSubModelPart
@@ -32,6 +34,14 @@ proc ::DEM::write::WriteMDPAParts { } {
 
     # CustomSubmodelParts
     WriteCustomDEMSmp
+}
+
+proc ::DEM::write::writeElements {  } {
+    foreach group_node [::DEM::write::GetDEMPartGroupNodes] {
+        set elem [write::getValueByNode [$group_node selectNodes ".//value\[@n='Element']"] ]
+        # write as condition (check element WriteAsBlock)
+        write::writeGroupElementConnectivities $group_node $elem
+    }
 }
 
 
