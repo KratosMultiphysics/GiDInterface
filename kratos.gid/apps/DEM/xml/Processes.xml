@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProcessList>
 
-  <!-- kinematics -->
-  <Process n="FEMVelocity-Process" pn="Impose kinematics" python_module="apply_velocity_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
+<!-- kinematics -->
+  <Process n="FEMVelocity-Process" pn="Impose kinematics" python_module="processes.apply_velocity_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
       <parameter n="Constraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
@@ -18,7 +18,9 @@
   </Process>
 
 
-  <Process n="FEMAngular-Process" pn="Impose kinematics" python_module="apply_angular_velocity_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
+
+
+  <Process n="FEMAngular-Process" pn="Impose kinematics" python_module="processes.apply_angular_velocity_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
       <parameter n="Constraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
@@ -34,7 +36,7 @@
   </Process>
 
 
-  <Process n="DEMVelocity-Process" pn="Impose kinematics" python_module="apply_velocity_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
+  <Process n="DEMVelocity-Process" pn="Impose kinematics" python_module="processes.apply_velocity_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
       <parameter n="Constraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
@@ -44,7 +46,7 @@
     </inputs>
   </Process>
 
-  <Process n="DEMAngular-Process" pn="Impose kinematics" python_module="apply_angular_velocity_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+  <Process n="DEMAngular-Process" pn="Impose kinematics" python_module="processes.apply_angular_velocity_constraints_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">>
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
       <parameter n="Constraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
@@ -55,7 +57,7 @@
   </Process>
 
   <!-- Loads -->
-  <Process n="DEMForce-Process" pn="Impose loads" python_module="apply_forces_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+  <Process n="DEMForce-Process" pn="Impose loads" python_module="processes.apply_forces_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
       <parameter n="Constraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
@@ -65,7 +67,7 @@
     </inputs>
   </Process>
 
-  <Process n="DEMTorque-Process" pn="Impose moments" python_module="apply_moments_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
+  <Process n="DEMTorque-Process" pn="Impose moments" python_module="processes.apply_moments_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction" write_command="write::ProcessVectorFunctionComponents">>
     <inputs>
     <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
       <parameter n="Constraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
@@ -78,19 +80,6 @@
 
 
 
-  <!-- No need. Are the same as dem -->
-  <Process n="FEMForce-Process" pn="Impose loads" python_module="apply_forces_and_moments_process" kratos_module="KratosMultiphysics" help="" check="DirectorVectorNonZero direction">
-    <inputs>
-    <parameter n="SetActive" type="bool" pn="Activate" v="true" help="Set Yes to activate the condition.">
-      <parameter n="FConstraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
-      <parameter n="Forces" parent="true" pn="Forces" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-      <parameter n="FTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
-      <parameter n="MConstraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
-      <parameter n="Moments" parent="true" pn="Moments" type="inline_vector" v="1.0,0.0,0.0" show_in_window="0"/>
-      <parameter n="MTable" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
-    </parameter>
-    </inputs>
-  </Process>
 
 
 
