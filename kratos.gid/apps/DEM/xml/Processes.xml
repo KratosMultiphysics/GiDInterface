@@ -8,7 +8,7 @@
       <parameter n="Constraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
       <parameter n="component" pn="Velocity" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
       <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
-      <parameter n="fixed_wall" parent="true" pn="Do not update displacements" type="bool" v="false" help="If activated, the wall will not update its position but will have an imposed velocity field" show_in_window="0"/>
+      <!-- <parameter n="fixed_wall" parent="true" pn="Do not update displacements" type="bool" v="false" help="If activated, the wall will not update its position but will have an imposed velocity field" show_in_window="0"/> -->
       <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
       <parameter n="MaterialTest" parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
         <parameter n="DefineTopBot" parent="true" pn="Set wall as" v="Pressure plate" type="combo" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
@@ -26,7 +26,7 @@
       <parameter n="Constraints" parent="true" pn="Constraints" type="inline_vector" v="true,true,true" show_in_window="0"/>
       <parameter n="component" pn="Angular Velocity" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
       <parameter n="Table" parent="true" pn="Table" type="inline_vector" v="null,null,null" show_in_window="0"/>
-      <parameter n="fixed_wall" parent="true" pn="Do not update displacements" type="bool" v="false" help="If activated, the wall will not update its position but will have an imposed velocity field" show_in_window="0"/>
+      <!-- <parameter n="fixed_wall" parent="true" pn="Do not update displacements" type="bool" v="false" help="If activated, the wall will not update its position but will have an imposed velocity field" show_in_window="0"/> -->
       <parameter n="GraphPrint" parent="true" pn="Print group forces" v="false" type="bool" show_in_window="0"/>
       <parameter n="MaterialTest" parent="true" pn="Material testing" v="false" type="bool" help="Define the loading wall for material testing" show_in_window="0">
         <parameter n="DefineTopBot" parent="true" pn="Set wall as" v="Pressure plate" type="combo" values="top,bottom" pvalues="Pressure plate,Base support" help="Check Y-axis is the loading axis" show_in_window="0"/>
