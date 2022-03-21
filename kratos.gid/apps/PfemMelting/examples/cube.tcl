@@ -96,4 +96,8 @@ proc PfemMelting::examples::Cube::TreeAssignation {args} {
     set temp_xpath "[spdAux::getRoute [PfemMelting::GetUniqueName materials]]/blockdata\[@name='Polymer 1'\]/value\[@n='Temperature_Viscosity'\]"
     spdAux::SetFieldOnPath $temp_xpath v $temp_filename
 
+
+
+    
+    #TODO: HERE SET DT TO 0.005
 }
