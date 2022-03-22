@@ -40,7 +40,7 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
     Kratos::ToolbarAddItem "Spacer" "" "" ""
     Kratos::ToolbarAddItem "Run" "run.png" {Utilities Calculate} [= "Run the simulation"]
     Kratos::ToolbarAddItem "Output" "output.png" [list -np- PWViewOutput] [= "View process info"]
-    Kratos::ToolbarAddItem "Stop" "stop.png" {Utilities CancelProcess} [= "Cancel process"]
+    Kratos::ToolbarAddItem "Stop" "stop.png"  [list -np- Kratos::StopCalculation] [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp1" "" "" ""
     if {[info exists kratos_private(UseFiles)] && $kratos_private(UseFiles) == 1} {
         Kratos::ToolbarAddItem "Files" "files.png" [list -np- spdAux::LaunchFileWindow] [= "File handler window"]

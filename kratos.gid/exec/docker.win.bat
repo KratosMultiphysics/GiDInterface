@@ -15,4 +15,4 @@ DEL "%2\%1*.post.res"
 DEL "%2\%1*.post.msh"
 
 @REM Calculate!
-%kratos_python_exe% MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
+docker run -v "%2:/model" --rm --name "%1" %kratos_docker_image% > "%2\\%1.info" 2> "%2\\%1.err"
