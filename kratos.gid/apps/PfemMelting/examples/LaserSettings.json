@@ -3,7 +3,7 @@
         "laser_profile": {
             "shape": "flat",
             "radius": 0.003,
-            "power": 67.0 
+            "power": 30.0 
         },
         "direction": [
             0.0,
