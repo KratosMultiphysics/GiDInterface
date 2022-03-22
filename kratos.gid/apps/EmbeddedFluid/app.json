@@ -4,6 +4,9 @@
     "prefix": "EMBFL",
     "themed": false,
     "kratos_name": "FluidDynamicsApplication",
+    "python_packages": [
+        "KratosFluidDynamicsApplication"
+    ],
     "dimensions": [
         "3D"
     ],
@@ -17,17 +20,19 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::EmbeddedFluid::Init",
-    "requeriments":{
-        "apps":["Fluid"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::EmbeddedFluid::Init",
+    "requeriments": {
+        "apps": [
+            "Fluid"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
         "intervals": true,
         "wizard": false,
-        "import_files":true
+        "import_files": true
     },
     "unique_names": {
         "materials": "EMBFLMaterials"
@@ -37,6 +42,6 @@
         "materials_file": "FluidMaterials.json",
         "properties_location": "json"
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
 }

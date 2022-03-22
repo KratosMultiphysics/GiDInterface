@@ -27,17 +27,17 @@ if {[GidUtils::VersionCmp "14.0.1"] >=0 } {
         }
     }
 } {
-    # GiD versions previous to 14 are no longer allowed
+    # GiD versions previous to 15 are no longer allowed
     # As we dont register the event InitProblemtype, the rest of events are also unregistered
     # So no chance to open anything in GiD 13.x or earlier
-    WarnWin "The minimum GiD Version for Kratos is 14 or later \nUpdate at gidhome.com"
+    WarnWin "The minimum GiD Version for Kratos is 15 or later \nUpdate at gidhome.com"
 }
 
 proc Kratos::Events { } {
     variable kratos_private
 
     # Recommended GiD Version is the latest developer always
-    if {[GidUtils::VersionCmp "14.1.4d"] <0 } {
+    if {[GidUtils::VersionCmp "15.0.0"] <0 } {
         set dir [file dirname [info script]]
         uplevel #0 [list source [file join $kratos_private(Path) scripts DeprecatedEvents.tcl]]
         Kratos::ModifyPreferencesWindowOld
@@ -66,8 +66,10 @@ proc Kratos::RegisterGiDEvents { } {
     # Write - Calculation
     GiD_RegisterEvent GiD_Event_AfterWriteCalculationFile Kratos::Event_AfterWriteCalculationFile PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_BeforeRunCalculation Kratos::Event_BeforeRunCalculation PROBLEMTYPE Kratos
+    GiD_RegisterEvent GiD_Event_SelectGIDBatFile Kratos::Event_SelectGIDBatFile PROBLEMTYPE Kratos
 
     # Postprocess
+    GiD_RegisterEvent GiD_Event_BeforeInitGIDPostProcess Kratos::BeforeInitGIDPostProcess PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_InitGIDPostProcess Kratos::Event_InitGIDPostProcess PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_EndGIDPostProcess Kratos::Event_EndGIDPostProcess PROBLEMTYPE Kratos
 
@@ -83,7 +85,7 @@ proc Kratos::RegisterGiDEvents { } {
 
     # Preferences window
     GiD_RegisterPluginPreferencesProc Kratos::Event_ModifyPreferencesWindow
-    if {[GidUtils::VersionCmp "15.0.0"] >=0 } {CreateWidgetsFromXml::ClearCachePreferences}
+    CreateWidgetsFromXml::ClearCachePreferences
 }
 
 proc Kratos::Event_InitProblemtype { dir } {
@@ -107,8 +109,13 @@ proc Kratos::Event_InitProblemtype { dir } {
     # Problemtype libraries as CustomLib
     Kratos::LoadProblemtypeLibraries
 
+    # Load launch modes
+    Kratos::LoadLaunchModes
+
     # Load the Kratos problemtype global and user environment (stored preferences)
     Kratos::LoadEnvironment
+
+    Kratos::SetDefaultLaunchMode
 
     # Customize GiD menus to add the Kratos entry
     Kratos::UpdateMenus
@@ -122,6 +129,8 @@ proc Kratos::Event_InitProblemtype { dir } {
         #open a window to allow the user select the app
         after 500 [list spdAux::CreateWindow]
     }
+
+    Kratos::CheckDependencies
 }
 
 proc Kratos::InitGlobalVariables {dir} {
@@ -154,6 +163,9 @@ proc Kratos::InitGlobalVariables {dir} {
     set Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
     set Kratos::kratos_private(model_log_folder) ""
+    # Check exec/launch.json
+    set Kratos::kratos_private(configurations) [list ]
+    set Kratos::kratos_private(launch_configuration) ""
 
     # Variable to store the Kratos menu items
     set kratos_private(MenuItems) [dict create]
@@ -174,6 +186,13 @@ proc Kratos::InitGlobalVariables {dir} {
 
     variable namespaces
     set namespaces [list ]
+
+    variable pip_packages_required
+    # set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
+    # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
+    # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
+    # KratosFSIApplication==9.0.3]
+    set pip_packages_required KratosMultiphysics-all
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -188,26 +207,26 @@ proc Kratos::LoadCommonScripts { } {
     }
 
     # Writing common scripts
-    foreach filename {Writing.tcl WriteHeadings.tcl WriteMaterials.tcl WriteNodes.tcl
-        WriteElements.tcl WriteConditions.tcl WriteConditionsByGiDId.tcl WriteConditionsByUniqueId.tcl
-        WriteProjectParameters.tcl WriteSubModelPart.tcl WriteProcess.tcl} {
-        uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename]]
+    foreach filename {Writing WriteHeadings WriteMaterials WriteNodes
+        WriteElements WriteConditions WriteConditionsByGiDId WriteConditionsByUniqueId
+        WriteProjectParameters WriteSubModelPart WriteProcess} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename.tcl]]
     }
     # Common scripts
-    foreach filename {Utils.tcl Applications.tcl spdAuxiliar.tcl Menus.tcl Deprecated.tcl Logs.tcl} {
-        uplevel #0 [list source [file join $kratos_private(Path) scripts $filename]]
+    foreach filename {Utils Launch Applications spdAuxiliar Menus Deprecated Logs} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts $filename.tcl]]
     }
     # Common controllers
-    foreach filename {ApplicationMarketWindow.tcl ExamplesWindow.tcl CommonProcs.tcl PreferencesWindow.tcl TreeInjections.tcl MdpaImportMesh.tcl Drawer.tcl ImportFiles.tcl} {
-        uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename]]
+    foreach filename {ApplicationMarketWindow ExamplesWindow CommonProcs PreferencesWindow TreeInjections MdpaImportMesh Drawer ImportFiles} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts Controllers $filename.tcl]]
     }
     # Model class
-    foreach filename {Model.tcl Entity.tcl Parameter.tcl Topology.tcl Solver.tcl ConstitutiveLaw.tcl Condition.tcl Element.tcl Material.tcl SolutionStrategy.tcl Process.tcl} {
-        uplevel #0 [list source [file join $kratos_private(Path) scripts Model $filename]]
+    foreach filename {Model Entity Parameter Topology Solver ConstitutiveLaw Condition Element Material SolutionStrategy Process} {
+        uplevel #0 [list source [file join $kratos_private(Path) scripts Model $filename.tcl]]
     }
     # Libs
-    foreach filename {SimpleXMLViewer.tcl} {
-        uplevel #0 [list source [file join $kratos_private(Path) libs $filename]]
+    foreach filename {SimpleXMLViewer} {
+        uplevel #0 [list source [file join $kratos_private(Path) libs $filename.tcl]]
     }
 }
 
@@ -259,9 +278,6 @@ proc Kratos::LoadModelSPD { filespd } {
         # Refresh the cache
         customlib::UpdateDocument
 
-        # Load default files (if any) (file selection values store the filepaths in the spd)
-        spdAux::LoadModelFiles
-
         # Load default intervals (if any)
         spdAux::LoadIntervalGroups
 
@@ -269,6 +285,9 @@ proc Kratos::LoadModelSPD { filespd } {
         spdAux::reactiveApp
 
         apps::ExecuteOnCurrentApp LoadModelEvent $filespd
+
+        # Load default files (if any) (file selection values store the filepaths in the spd)
+        spdAux::LoadModelFiles
 
         # Open the tree
         spdAux::OpenTree
@@ -457,6 +476,19 @@ proc Kratos::Event_InitGIDPostProcess {} {
     gid_groups_conds::open_post check_default
 }
 
+proc Kratos::BeforeInitGIDPostProcess {} {
+    # In docker run, rename lst file
+    if {[info exists Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $Kratos::kratos_private(launch_configuration)
+        if {$launch_mode eq "Docker"} {
+            set list_file [file join [GidUtils::GetDirectoryModel] model.post.lst]
+            if {[file exists $list_file]} {
+                file copy -force $list_file [GidUtils::GetFilenameInsideProject [file rootname [GidUtils::GetDirectoryModel]] .post.lst]
+            }
+        }
+    }
+}
+
 proc Kratos::Event_EndGIDPostProcess {} {
     # Close all postprocess windows
     gid_groups_conds::close_all_windows
@@ -485,6 +517,15 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     }
     set app_run_brake [apps::ExecuteOnCurrentApp BreakRunCalculation]
     if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
+
+}
+
+proc Kratos::Event_SelectGIDBatFile { dir basename } {
+    if {[info exists Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $Kratos::kratos_private(launch_configuration)
+        ::GidUtils::SetWarnLine "Launch mode: $launch_mode"
+        return [Kratos::ExecuteLaunchByMode $launch_mode]
+    }
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
@@ -496,6 +537,7 @@ proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
 }
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
+    # W "Kratos::WriteCalculationFilesEvent"
     # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
         # Model must be saved

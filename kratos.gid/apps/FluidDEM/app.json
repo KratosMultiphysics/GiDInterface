@@ -4,6 +4,11 @@
     "prefix": "DEM",
     "themed": false,
     "kratos_name": "FluidDEMapplication",
+    "python_packages": [
+        "KratosSwimmingDEMApplication",
+        "KratosFluidDynamicsApplication",
+        "KratosDEMApplication"
+    ],
     "dimensions": [
         "3D"
     ],
@@ -15,10 +20,13 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
-    "start_script":"::FluidDEM::Init",
-    "requeriments":{
-        "apps":["DEM", "Fluid"],
-        "minimum_gid_version":"15.1.3d"
+    "start_script": "::FluidDEM::Init",
+    "requeriments": {
+        "apps": [
+            "DEM",
+            "Fluid"
+        ],
+        "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
         "open_tree": true,

@@ -7,6 +7,9 @@ proc ::Dam::write::getParametersDict { } {
 
     set projectParametersDict [dict create]
 
+   # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.DamApplication.dam_analysis"
+
     ### Problem data
     dict set projectParametersDict problem_data [Dam::write::GetProblemDataDict]
 

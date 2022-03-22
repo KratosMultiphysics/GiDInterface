@@ -2,6 +2,9 @@
 proc ::Fluid::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.FluidDynamicsApplication.fluid_dynamics_analysis"
+
     # Problem data
     dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict [::Fluid::GetAttribute id]]
 

@@ -2,6 +2,9 @@
 proc ::Buoyancy::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis"
+
     # problem data
     dict set projectParametersDict problem_data [::Buoyancy::write::GetProblemData_Dict]
 

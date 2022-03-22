@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--linear elastic laws-->
-    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic"  Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
 	  help="Linear elastic behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -12,7 +12,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain"  Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -23,7 +23,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress"  Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -35,7 +35,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Axisymmetric" Behaviour="Elastic" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic"  Type="Axisymmetric" Behaviour="Elastic" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D axisymmetric" Dimension="2Da" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -46,9 +46,9 @@
 
         </outputs>
     </CLaw>
-    
+
     <!--hyperelastic NeoHookean laws-->
-    <CLaw n="HyperElastic3DLaw" pn="Hyperelastic NeoHookean" ProductionReady="ProductionReady" Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="HyperElastic3DLaw" pn="Hyperelastic NeoHookean"  Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
 	  help="Hyperelastic Neo-Hookean behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -59,7 +59,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="HyperElasticPlaneStrain2DLaw" pn="Hyperelastic Neo-Hookean Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="HyperElasticPlaneStrain2DLaw" pn="Hyperelastic Neo-Hookean Plane Strain"  Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Hyperelastic Neo-Hookean behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -70,9 +70,9 @@
 
         </outputs>
     </CLaw>
-    
+
     <!--hyperelastic KirchhoffSaintVenant laws-->
-    <CLaw n="KirchhoffSaintVenant3DLaw" pn="Hyperelastic Kirchhoff Saint-Venant" ProductionReady="ProductionReady" Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="KirchhoffSaintVenant3DLaw" pn="Hyperelastic Kirchhoff Saint-Venant"  Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
 	  help="Hyperelastic Kirchhoff Saint-Venant behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -83,7 +83,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="KirchhoffSaintVenantPlaneStrain2DLaw" pn="Hyperelastic Kirchhoff Saint-Venant Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="KirchhoffSaintVenantPlaneStrain2DLaw" pn="Hyperelastic Kirchhoff Saint-Venant Plane Strain"  Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Hyperelastic Kirchhoff Saint-Venant behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -94,7 +94,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="KirchhoffSaintVenantPlaneStress2DLaw" pn="Hyperelastic Kirchhoff Saint-Venant Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="KirchhoffSaintVenantPlaneStress2DLaw" pn="Hyperelastic Kirchhoff Saint-Venant Plane Stress"  Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Hyperelastic Kirchhoff Saint-Venant behaviour in 2D plane stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -108,7 +108,7 @@
     </CLaw>
 
     <!--plasticity constitutive laws-->
-    <CLaw n="SmallStrainJ2PlasticityPlaneStrain2DLaw" pn="Linear J2 Plasticity" ProductionReady="ProductionReady" Type="PlaneStrain" Behaviour="Plasticity" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 2D (Plane Strain)" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainJ2PlasticityPlaneStrain2DLaw" pn="Linear J2 Plasticity"  Type="PlaneStrain" Behaviour="Plasticity" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 2D (Plane Strain)" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -122,7 +122,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="SmallStrainJ2Plasticity3DLaw" pn="Linear J2 Plasticity" ProductionReady="ProductionReady" Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainJ2Plasticity3DLaw" pn="Linear J2 Plasticity"  Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Simo J2 plasticity constitutive law in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -137,7 +137,7 @@
     </CLaw>
 
     <!--constitutive laws for shells and membranes-->
-    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic"  Type="PlaneStress" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
 	  help="Linear elastic behaviour in 3D for shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
@@ -149,7 +149,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="LinearElasticPlaneStress_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
+    <CLaw n="LinearElasticPlaneStress_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress"  Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
           help="Linear elastic behaviour in 2D plane stress" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -163,7 +163,7 @@
     </CLaw>
 
     <!--constitutive laws for trusses-->
-    <CLaw n="TrussConstitutiveLaw" pn="Linear elastic truss" ProductionReady="ProductionReady" Type="Truss" Behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for trusses" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="TrussConstitutiveLaw" pn="Linear elastic truss"  Type="Truss" Behaviour="Elastic" StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for trusses" Dimension="2D,3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -174,7 +174,7 @@
     </CLaw>
 
     <!--constitutive laws for beams-->
-    <CLaw n="BeamConstitutiveLaw2D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam2D" Behaviour="Elastic"
+    <CLaw n="BeamConstitutiveLaw2D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam"  Type="Beam2D" Behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
@@ -187,7 +187,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="BeamConstitutiveLaw3D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam" ProductionReady="ProductionReady" Type="Beam3D" Behaviour="Elastic"
+    <CLaw n="BeamConstitutiveLaw3D" KratosName="BeamConstitutiveLaw" pn="Linear elastic beam"  Type="Beam3D" Behaviour="Elastic"
           StrainSize="1" ImplementedInApplication="StructuralMechanicsApplication" help="Linear elastic behaviour for beams"
           Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>

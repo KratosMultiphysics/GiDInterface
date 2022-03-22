@@ -83,6 +83,11 @@ proc ::Fluid::write::WriteMaterialsFile { {write_const_law True} {include_modelp
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law $model_part_name
 }
+proc Fluid::write::GetMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
+    set model_part_name ""
+    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
+    return [write::getPropertiesJson [GetAttribute parts_un] $write_const_law $model_part_name]
+}
 
 proc ::Fluid::write::Validate {} {
     set err ""
