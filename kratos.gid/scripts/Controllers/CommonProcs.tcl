@@ -911,6 +911,16 @@ proc spdAux::ProcUpdateParts {domNode args} {
         spdAux::AddFile $file_params
     }
 
+    set exclusion_list [list Element ConstitutiveLaw Material]
+    set current [lindex [$domNode selectNodes "./group"] end]
+    # If a parameter type is file and the option selected is select file -> open it
+    set params [$current selectNodes "./value"]
+    foreach val $params {
+        if {[$val @n] ni $exclusion_list} {
+            $val setAttribute state "\[PartParamState\]"
+        }
+    }
+
     # Active app executexml
     set nodeApp [GetAppIdFromNode $domNode]
     apps::ExecuteOnAppXML $nodeApp UpdateParts $domNode
