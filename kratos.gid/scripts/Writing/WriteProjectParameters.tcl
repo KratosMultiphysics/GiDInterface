@@ -228,7 +228,7 @@ proc write::getSolversParametersDict { {appid ""} } {
     return $solverSettingsDict
 }
 
-proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
+proc write::getConditionsParametersDict {un {condition_type "Condition"} {forced_parent_cond_name ""} } {
 
     set root [customlib::GetBaseRoot]
     set bcCondsList [list ]
@@ -243,8 +243,13 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
     foreach group $groups {
         set groupName [$group @n]
         set cid [[$group parent] @n]
+        if {$forced_parent_cond_name eq ""} {
+            set smp_cid $cid
+        } else {
+            set smp_cid $forced_parent_cond_name
+        }
         set groupName [write::GetWriteGroupName $groupName]
-        set groupId [::write::getSubModelPartId $cid $groupName]
+        set groupId [::write::getSubModelPartId $smp_cid $groupName]
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
@@ -260,6 +265,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
                 lappend grouped_conditions $cid
             }
         } else {
+            if {[write::isBooleanFalse $groupId]} {continue}
             set processName [$condition getProcessName]
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
@@ -276,7 +282,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
                 }
 
             } else {
-                set processDict [$processWriteCommand $group $condition $process]
+                set processDict [$processWriteCommand $group $condition $process $groupId]
             }
             lappend bcCondsList $processDict
         }
