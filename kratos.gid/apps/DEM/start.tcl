@@ -68,7 +68,13 @@ proc ::DEM::AfterMeshGeneration { fail } {
 
     set root [customlib::GetBaseRoot]
     # Separar 2d de 3d
-    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
+    #set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
+    #para parts ?
+    set xp1 "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_FEM'\]/group"
+    # o para condiciones de contorno
+    #set object_BC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='DEMVelocity']}
+
+
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]

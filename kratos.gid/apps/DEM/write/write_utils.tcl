@@ -478,7 +478,8 @@ proc ::DEM::write::FindBoundariesOfNonSphericElements {entity} {
     # Note: This procedure in the same used in the fluid_only problem type
 
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute DEMParts]/group"
+    #set xp1_ "[spdAux::getRoute DEMParts]/group"
+    set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
     set groups_to_spherize_list [list ]
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
