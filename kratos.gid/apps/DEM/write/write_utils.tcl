@@ -2,7 +2,7 @@
 proc ::DEM::write::Elements_Substitution {} {
 
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute DEMParts]/group"
+    set xp1 "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_DEM'\]/group"
     package require math::statistics
     set seed [expr srand(0)]
     set fail 0
@@ -11,8 +11,8 @@ proc ::DEM::write::Elements_Substitution {} {
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
-        if {[write::isBooleanTrue $advanced_meshing_features]} {
 
+        if {[write::isBooleanTrue $advanced_meshing_features]} {
             set AdvancedMeshingFeaturesAlgorithmType [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeaturesAlgorithmType'\]"]]
             set FEMtoDEM [write::getValueByNode [$group selectNodes "./value\[@n='FEMtoDEM'\]"]]
             set Diameter [write::getValueByNode [$group selectNodes "./value\[@n='Diameter'\]"]]

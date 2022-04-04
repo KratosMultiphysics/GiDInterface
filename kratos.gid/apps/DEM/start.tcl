@@ -37,6 +37,7 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
         if {![write::isBooleanTrue $advanced_meshing_features]} {
+            # Usually, the DEMParts will be marked as not AdvancedMeshingFeatures, composed as volumes and meshed as spheres.
             if {$::Model::SpatialDimension eq "3D"} {
                 foreach volume [GiD_EntitiesGroups get $groupid volumes] {
                     GiD_Process Mescape Meshing ElemType Sphere Volumes $volume escape escape
@@ -47,6 +48,8 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
                 }
             }
         } else {
+            # If a DEMPart is created as FEM and AdvancedMeshingFeatures=true, initially meshed as fem
+            # it will later access Elements_Substitution to transform those elements into spheres (in AfterMeshGeneration)
             if {$::Model::SpatialDimension eq "3D"} {
                 foreach volume [GiD_EntitiesGroups get $groupid volumes] {
                     GiD_Process Mescape Meshing ElemType Default Volumes $volume escape escape
@@ -67,34 +70,121 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
 proc ::DEM::AfterMeshGeneration { fail } {
 
     set root [customlib::GetBaseRoot]
-    #set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
-    # o para condiciones de contorno?
-    #set object_BC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='DEMVelocity']}
 
-    ## unassign all spheres from all the groups in FEM parts 3D.
-    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_FEM'\]/group"
+    #LINEAR VELOCITY
+    # should be: unassign all spheres from all the groups in FEM conditions .
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'FEMVelocity'\]/group"
     foreach group [$root selectNodes $xp] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
     }
 
-    ## unassign all circles from all the groups in FEM parts 2D.
-    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_FEM'\]/group"
+    ## unassign all circles from all the groups in FEM conditions 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'FEMVelocity2D'\]/group"
     foreach group [$root selectNodes $xp] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
     }
 
-
-    ## unassign all triangles from all the groups in DEM parts 3D.
-    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_DEM'\]/group"
+    ## unassign all triangles from all the groups in DEM conditions 3D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'DEMVelocity'\]/group"
     foreach group [$root selectNodes $xp] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
     }
 
-    ## unassign all lines from all the groups in DEM parts 2D.
-    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_DEM'\]/group"
+    ## unassign all lines from all the groups in DEM conditions 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'DEMVelocity2D'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
+    }
+
+
+    # ANGULAR VELOCITY
+    # should be: unassign all spheres from all the groups in FEM conditions .
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'FEMAngular'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
+    }
+
+    ## unassign all circles from all the groups in FEM conditions 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'FEMAngular2D'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
+    }
+
+    ## unassign all triangles from all the groups in DEM conditions 3D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'DEMAngular'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
+    }
+
+    ## unassign all lines from all the groups in DEM conditions 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'DEMAngular2D'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
+    }
+
+
+    # FORCE
+    # should be: unassign all spheres from all the groups in FEM conditions .
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'FEMForce'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
+    }
+
+    ## unassign all circles from all the groups in FEM conditions 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'FEMForce2D'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
+    }
+
+    ## unassign all triangles from all the groups in DEM conditions 3D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'DEMForce'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
+    }
+
+    ## unassign all lines from all the groups in DEM conditions 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'DEMForce2D'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
+    }
+
+
+    # TORQUE
+    # should be: unassign all spheres from all the groups in FEM conditions .
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'FEMTorque'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
+    }
+
+    ## unassign all circles from all the groups in FEM conditions 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'FEMTorque2D'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
+    }
+
+    ## unassign all triangles from all the groups in DEM conditions 3D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'DEMTorque'\]/group"
+    foreach group [$root selectNodes $xp] {
+        set groupid [$group @n]
+        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
+    }
+
+    ## unassign all lines from all the groups in DEM conditions 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'DEMTorque2D'\]/group"
     foreach group [$root selectNodes $xp] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
