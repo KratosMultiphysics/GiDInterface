@@ -67,65 +67,49 @@ proc ::DEM::BeforeMeshGeneration {elementsize} {
 proc ::DEM::AfterMeshGeneration { fail } {
 
     set root [customlib::GetBaseRoot]
-    # Separar 2d de 3d
     #set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
-    #para parts ?
-    set xp1 "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_FEM'\]/group"
-    # o para condiciones de contorno
+    # o para condiciones de contorno?
     #set object_BC {container[@n='DEM']/container[@n='BoundaryConditions']/condition[@n='DEMVelocity']}
 
-
-    foreach group [$root selectNodes $xp1] {
+    ## unassign all spheres from all the groups in FEM parts 3D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_FEM'\]/group"
+    foreach group [$root selectNodes $xp] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type sphere]
     }
-    set xp2 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
-    foreach group [$root selectNodes $xp2] {
+
+    ## unassign all circles from all the groups in FEM parts 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_FEM'\]/group"
+    foreach group [$root selectNodes $xp] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type circle]
     }
 
-    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-VelocityIC'\]/group"
-    foreach group [$root selectNodes $xp0] {
+
+    ## unassign all triangles from all the groups in DEM parts 3D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_DEM'\]/group"
+    foreach group [$root selectNodes $xp] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
     }
 
-    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-VelocityIC2D'\]/group"
-    foreach group [$root selectNodes $xp0] {
+    ## unassign all lines from all the groups in DEM parts 2D.
+    set xp "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_DEM'\]/group"
+    foreach group [$root selectNodes $xp] {
         set groupid [$group @n]
         GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
     }
 
-    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-VelocityBC'\]/group"
-    foreach group [$root selectNodes $xp0] {
-        set groupid [$group @n]
-        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
-    }
 
-    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-VelocityBC2D'\]/group"
-    foreach group [$root selectNodes $xp0] {
-        set groupid [$group @n]
-        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
-    }
-
-    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-GraphCondition'\]/group"
-    foreach group [$root selectNodes $xp0] {
-        set groupid [$group @n]
-        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type triangle]
-    }
-
-    set xp0 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-GraphCondition2D'\]/group"
-    foreach group [$root selectNodes $xp0] {
-        set groupid [$group @n]
-        GiD_EntitiesGroups unassign $groupid -also_lower_entities elements [GiD_EntitiesGroups get $groupid elements -element_type linear]
-    }
-
+    # Delete all linear/triangle/quadrilateral from sphere_skin
+    # Unassign all linear/triangle from sphere_skin
     if [GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE] {
         GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
-        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type linear]
-        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
-        GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type quadrilateral]
+        GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
+        GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type linear]
+
+        # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type linear]
+        # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE elements [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
     }
 
     # set without_window [GidUtils::AreWindowsDisabled];
