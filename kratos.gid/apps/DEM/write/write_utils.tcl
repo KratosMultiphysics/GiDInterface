@@ -1,5 +1,6 @@
 # utility for advanced meshing features in DEM
 proc ::DEM::write::Elements_Substitution {} {
+    # updated to work with the new gidinterface
 
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/condition\[@n = 'Parts_DEM'\]/group"
@@ -237,6 +238,7 @@ proc ::DEM::write::Elements_Substitution {} {
 }
 
 proc ::DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
+    # not currently used
 
     set mesh_elements [GiD_EntitiesGroups get $cgroupid all_mesh]
     set real_mesh_elements [lindex $mesh_elements 1]
@@ -280,6 +282,7 @@ proc ::DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
 }
 
 proc ::DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
+    # removes all non spheric particles at the end of the advanced meshing option.
     set elem_types [list line triangle quadrilateral tetrahedra hexahedra]
     foreach elem_type $elem_types {
         if {[GiD_EntitiesGroups get $cgroupid elements -count -element_type $elem_type] > 0} {
@@ -289,6 +292,7 @@ proc ::DEM::write::Delete_Unnecessary_Elements_From_Mesh {cgroupid} {
 }
 
 proc ::DEM::write::Cleaning_Up_Skin_And_Removing_Isolated_Nodes {final_list_of_isolated_nodes} {
+    # remove left over nodes from the fem mesh when using advanced meshing option.
 
     # GiD_EntitiesGroups unassign SKIN_SPHERE_DO_NOT_DELETE nodes
     # # GiD_Mesh delete element [GiD_EntitiesGroups get SKIN_SPHERE_DO_NOT_DELETE elements -element_type triangle]
@@ -308,9 +312,6 @@ proc ::DEM::write::NormalDistribution {mean standard_deviation min_rad max_rad} 
     if {$standard_deviation} {
         set max_iterations 1000 ; #set a maximun number of iterations to avoid an infinite loop
         for {set i 0} {$i < $max_iterations} {incr i} {
-            set u1 [::tcl::mathfunc::rand]
-            set u2 [::tcl::mathfunc::rand]
-            #set distribution [expr {$mean + $standard_deviation * sqrt(-2.0 * log($u1)) * cos(6.28318530717958647692 * $u2)}]
             set distribution [math::statistics::random-normal $mean $standard_deviation 1] ; # We use the math::statistics library instead
             if {$distribution > $min_rad && $distribution < $max_rad} {
                 return $distribution
@@ -333,6 +334,7 @@ proc ::DEM::write::LognormalDistribution {mean standard_deviation min_rad max_ra
 }
 
 proc ::DEM::write::Destroy_Skin_Sphere_Group {what_dempack_package} {
+    # removes continuum specific group from granular interface.
     if {$what_dempack_package eq "G-DEMPack"} {
         if [GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE] {
             GiD_Groups delete SKIN_SPHERE_DO_NOT_DELETE
@@ -478,7 +480,6 @@ proc ::DEM::write::FindBoundariesOfNonSphericElements {entity} {
     # Note: This procedure in the same used in the fluid_only problem type
 
     set root [customlib::GetBaseRoot]
-    #set xp1_ "[spdAux::getRoute DEMParts]/group"
     set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
     set groups_to_spherize_list [list ]
     foreach group [$root selectNodes $xp1] {
@@ -486,32 +487,24 @@ proc ::DEM::write::FindBoundariesOfNonSphericElements {entity} {
         lappend groups_to_spherize_list $groupid
     }
 
-    # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
     foreach volume_id [GiD_Geometry list volume 1:end] {
         set volume_info [GiD_Info list_entities volume $volume_id]
         set is_spheric [regexp {Elemtype=9} $volume_info]
 
         foreach group_that_includes_this_volume [GiD_EntitiesGroups entity_groups volumes $volume_id] {
             #next we search $group_that_includes_this_volume among $groups_to_spherize_list:
-            if {[lsearch $groups_to_spherize_list $group_that_includes_this_volume] >= 0} {
-                set is_spheric 1
-            }
-        }
+            if {[lsearch $groups_to_spherize_list $group_that_includes_this_volume] >= 0} {set is_spheric 1}}
 
         if {$is_spheric==0} {
             foreach item [lrange [GiD_Geometry get volume $volume_id] 2 end] {
                 set surface_id [lindex $item 0]
-                incr surfaces_higher_entities_list($surface_id)
-            }
-        }
+                incr surfaces_higher_entities_list($surface_id)}}
     }
 
     set boundarylist [list]
     foreach surface_id [lsort -integer [array names surfaces_higher_entities_list]] {
-        if {$surfaces_higher_entities_list($surface_id) == 1} {
-            lappend boundarylist $surface_id
-        }
-    }
+        if {$surfaces_higher_entities_list($surface_id) == 1} {lappend boundarylist $surface_id}}
+
     return $boundarylist
 }
 
@@ -642,51 +635,52 @@ proc ::DEM::write::AssignConditionToGroupGID {entity elist groupid} {
 }
 
 proc ::DEM::write::AssignSpecialBoundaries {entitylist} {
-    #set DEMApplication "No"
-    #catch {set DEMApplication [::xmlutils::setXml {GeneralApplicationData//c.ApplicationTypes//i.DEM} dv]}
-    #if {$DEMApplication eq "Yes"} {
 
-        # Automatic Kratos Group for all DEM boundary lines
-        set groupid "-AKGDEMSkinMesh3D"
-        set entitytype "line"
-        DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
+    # Automatic Kratos Group for all DEM boundary lines
+    set groupid "-AKGDEMSkinMesh3D"
+    set entitytype "line"
+    DEM::write::CleanAutomaticConditionGroupGiD $entitytype $groupid
 
-        # Get all end line list from the boundary surfaces
-        set endlinelist [list]
-        foreach surfid $entitylist {
-            set surfprop [GiD_Geometry get surface $surfid]
-            set surfacetype [lindex $surfprop 0]
-            set nline [lindex $surfprop 2]
-            set lineprop [list]
-            if {$surfacetype eq "nurbssurface"} {
-                set lineprop [lrange $surfprop 9 [expr {9+$nline-1}]]
-            } else {
-                set lineprop [lrange $surfprop 3 [expr {3+$nline-1}]]
-            }
-            foreach lprop $lineprop {
-                lassign $lprop lineid orientation
-                lappend endlinelist $lineid
-            }
+    # Get all end line list from the boundary surfaces
+    set endlinelist [list]
+    foreach surfid $entitylist {
+        set surfprop [GiD_Geometry get surface $surfid]
+        set surfacetype [lindex $surfprop 0]
+        set nline [lindex $surfprop 2]
+        set lineprop [list]
+        if {$surfacetype eq "nurbssurface"} {
+            set lineprop [lrange $surfprop 9 [expr {9+$nline-1}]]
+        } else {
+            set lineprop [lrange $surfprop 3 [expr {3+$nline-1}]]
         }
-        set endlinelist [lsort -integer -unique $endlinelist]
+        foreach lprop $lineprop {
+            lassign $lprop lineid orientation
+            lappend endlinelist $lineid
+        }
+    }
+    set endlinelist [lsort -integer -unique $endlinelist]
 
-        # Assign the boundary condition
-        DEM::write::AssignConditionToGroupGID $entitytype $endlinelist $groupid
+    # Assign the boundary condition
+    DEM::write::AssignConditionToGroupGID $entitytype $endlinelist $groupid
 
-        #}
 }
 
 proc ::DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
+    # it forces the surface meshing of demfemwall groups with triangles
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
+    #set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
+    set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]/group"
+    if {$::Model::SpatialDimension eq "3D"} {
+        foreach group [$root selectNodes $xp1] {
+            set groupid [$group @n]
+            GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
+        }
     }
-    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
-    foreach group [$root selectNodes $xp1] {
-	set groupid [$group @n]
-	GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 1] escape
+    if {$::Model::SpatialDimension eq "2D"} {
+        foreach group [$root selectNodes $xp1] {
+            set groupid [$group @n]
+            GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 1] escape
+        }
     }
 }
 
