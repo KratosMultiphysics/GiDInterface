@@ -686,23 +686,24 @@ proc ::DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
 
 proc ::DEM::write::ForceTheMeshingOfDEMInletGroups {} {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet'\]/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
-    }
-    set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet2D'\]/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape
-    }
+    set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_Inlet-FEM'\]/group"
+    #set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet'\]/group"
+        if {$::Model::SpatialDimension eq "3D"} {
+        foreach group [$root selectNodes $xp1] {
+            set groupid [$group @n]
+            GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape}}
+
+        if {$::Model::SpatialDimension eq "2D"} {
+        foreach group [$root selectNodes $xp1] {
+            set groupid [$group @n]
+            GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 2] escape}}
 }
 
 proc ::DEM::write::FindBoundariesOfCircularElements {entity} {
 
-
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute DEMParts]/group"
+    #set xp1 "[spdAux::getRoute DEMParts]/group"
+    set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
     set groups_to_circularize_list [list ]
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
@@ -750,7 +751,7 @@ proc ::DEM::write::FindBoundariesOfCircularElements {entity} {
 proc ::DEM::write::FindBoundariesOfSphericElements {entity} {
 
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute DEMParts]/group"
+    set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
     set groups_to_spherize_list [list ]
     foreach group [$root selectNodes $xp1] {
             set groupid [$group @n]
