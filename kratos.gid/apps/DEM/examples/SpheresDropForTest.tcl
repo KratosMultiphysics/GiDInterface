@@ -29,6 +29,8 @@ proc ::DEM::examples::SpheresDropForTest::DrawGeometry { } {
     GiD_Process Mescape Geometry Create Object Rectangle -12 -2 5 -8 2 5 escape
     GiD_Process Mescape Geometry Create Object Rectangle -12 -2 6 -8 2 6 escape
 
+    GiD_Process Mescape Geometry Create Object Rectangle -7 10 6 -2 4 6 escape
+
 
     # Draw the volumes meshed with spheres
     GiD_Process Mescape Geometry Create Object Sphere 0 0 2 1 escape escape
@@ -47,12 +49,14 @@ proc ::DEM::examples::SpheresDropForTest::DrawGeometry { } {
     GiD_Groups create "d2"
     GiD_Groups create "d3"
     GiD_Groups create "d4"
+    GiD_Groups create "f2d"
 
     # Group assignation
     GiD_EntitiesGroups assign "f1" surfaces 1
     GiD_EntitiesGroups assign "f2" surfaces 2
     GiD_EntitiesGroups assign "f3" surfaces 3
     GiD_EntitiesGroups assign "f4" surfaces 4
+    GiD_EntitiesGroups assign "f2d" surfaces 5
 
     #GiD_EntitiesGroups assign "ClusterInlet" surfaces 3
     GiD_EntitiesGroups assign "d1" volumes 1
@@ -92,6 +96,16 @@ proc ::DEM::examples::SpheresDropForTest::AssignToTree { } {
     $DEMPartsNode setAttribute ov volume
     set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
+
+
+    set DEMParts [spdAux::getRoute "DEMParts"]/condition\[@n='Parts_DEM'\]
+    set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts f2d]
+    $DEMPartsNode setAttribute ov volume
+    set props [list Material "DEM-DefaultMaterial"]
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props
+    set props_extra [list AdvancedMeshingFeatures Yes AdvancedMeshingFeaturesAlgorithmType FEMtoDEM FEMtoDEM AttheNodes Diameter 0.5 ProbabilityDistribution NormalDistribution StandardDeviation 0.1]
+    spdAux::SetValuesOnBaseNode $DEMPartsNode $props_extra
+
 
 
     ###### FEM-Parts
