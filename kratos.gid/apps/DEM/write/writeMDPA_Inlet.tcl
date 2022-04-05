@@ -13,9 +13,7 @@ proc ::DEM::write::WriteMDPAInlet { } {
     # writeInletConditionMeshes
 
     # SubmodelParts
-
     writeInletMeshes
-
 
     #Copy cluster files (.clu)
     copyClusterFiles
@@ -134,11 +132,9 @@ proc ::DEM::write::GetInjectorElementType {} {
     return [DEM::write::GetInletElementType]
 }
 
-
 proc ::DEM::write::GetInletPartGroupNodes { } {
     return [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_Inlet-FEM'\]/group"]
 }
-
 
 proc ::DEM::write::writeInletConditionMeshes { } {
     variable inletProperties
@@ -150,8 +146,6 @@ proc ::DEM::write::writeInletConditionMeshes { } {
         writeWallConditionMesh Parts_Inlet-FEM $group $props
     }
 }
-
-
 
 proc ::DEM::write::writeInletMeshes { } {
     variable inletProperties
@@ -443,5 +437,4 @@ proc ::DEM::write::processInletMaterials { } {
     set inlet_xpath [DEM::write::GetInletConditionXpath]
     write::processMaterials $inlet_xpath/group
     set inletProperties [write::getPropertiesListByConditionXPath $inlet_xpath 0 DEMInletPart]
-
 }

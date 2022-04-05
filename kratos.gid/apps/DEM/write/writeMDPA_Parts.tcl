@@ -5,8 +5,8 @@ proc ::DEM::write::WriteMDPAParts { } {
     # Process DEM materials
     DEM::write::processDEMMaterials
 
-    # Write Properties into mdpa
-    #TODO: This is legacy, no Properties are being written here.
+    # Write legacy Properties into mdpa
+    # TODO: This is legacy, no Properties are being written with writeMaterialsParts.
     writeMaterialsParts
 
     # Nodal coordinates (only for DEM Parts <inefficient> )
@@ -23,9 +23,7 @@ proc ::DEM::write::WriteMDPAParts { } {
     write::writeElementConnectivities Parts_DEM
     RestoreCustomMeshedParts
 
-    # Element radius
     writeSphereRadius
-
     writeElements
 
     # SubmodelParts
@@ -43,7 +41,6 @@ proc ::DEM::write::writeElements {  } {
         write::writeGroupElementConnectivities $group_node $elem
     }
 }
-
 
 proc ::DEM::write::processDEMMaterials { } {
     write::processMaterials "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
@@ -92,14 +89,107 @@ proc ::DEM::write::GetDEMPartGroupNodes { } {
     return [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"]
 }
 
-
-proc ::DEM::write::WriteNodalCoordinatesParts { } {
-    write::writeNodalCoordinatesOnParts
-    write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupNamesCustomSubmodelpart]
-    write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundaryC]
-    write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
+proc ::DEM::write::writeSphereRadius { } {
+    set root [customlib::GetBaseRoot]
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        DEM::write::writeSphereRadiusOnGroup $group
+    }
 }
 
+proc ::DEM::write::writeSphereRadiusOnGroup { group } {
+    set groupid [$group @n]
+    set print_groupid [write::GetWriteGroupName $groupid]
+    write::WriteString "Begin NodalData RADIUS // GUI group identifier: $print_groupid"
+    GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
+    write::WriteString "End NodalData"
+    write::WriteString ""
+}
+
+proc ::DEM::write::writeMaterialsParts { } {
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties"
+    write::WriteString ""
+}
+
+proc ::DEM::write::PrepareCustomMeshedParts { } {
+    variable restore_ov
+    set root [customlib::GetBaseRoot]
+    #set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        if {[$group hasAttribute ov]} {set prev_ov [$group @ov]} {set prev_ov [[$group parent] @ov]}
+        dict set restore_ov $groupid $prev_ov
+        # We must force it to be volume/surface because anything applied to Parts will be converted into Spheres/Circles
+        if {$::Model::SpatialDimension eq "3D"} {
+            $group setAttribute ov volume
+        } else {
+            $group setAttribute ov surface
+        }
+    }
+}
+
+proc ::DEM::write::RestoreCustomMeshedParts { } {
+    variable restore_ov
+    set root [customlib::GetBaseRoot]
+    #set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
+    foreach group [$root selectNodes $xp1] {
+        set groupid [$group @n]
+        if {$groupid in [dict keys $restore_ov]} {
+            set prev_ov [dict get $restore_ov $groupid]
+            # Bring back to original entities (Check PrepareCustomMeshedParts)
+            $group setAttribute ov $prev_ov
+        }
+    }
+    set restore_ov [dict create]
+}
+
+proc ::DEM::write::WriteCustomDEMSmp { } {
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
+    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set group_id [$group @n]
+
+        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
+        if {$destination_mdpa == "DEM"} {
+            set mid [write::AddSubmodelpart DEM-CustomSmp $group_id]
+            write::WriteString  "Begin SubModelPart $mid \/\/ Custom SubModelPart. Group name: $group_id"
+            write::WriteString  "Begin SubModelPartData"
+            write::WriteString  "End SubModelPartData"
+            write::WriteString  "Begin SubModelPartNodes"
+            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group_id] [subst "%10i\n"]]
+            write::WriteString  "End SubModelPartNodes"
+            write::WriteString  "End SubModelPart"
+            write::WriteString  ""
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################
+# Unused & deprecated procs to be removed in the future.
+########################################################
+
+
+proc ::DEM::write::processPartMaterials { } {
+    # unused
+    variable partsProperties
+    set partsProperties [write::getPropertiesList [GetAttribute parts_un] 0 SpheresPart]
+}
 
 proc ::DEM::write::GetDEMGroupNamesCustomSubmodelpart { } {
     set groups [list ]
@@ -109,6 +199,7 @@ proc ::DEM::write::GetDEMGroupNamesCustomSubmodelpart { } {
     }
     return $groups
 }
+
 proc ::DEM::write::GetDEMGroupsCustomSubmodelpart { } {
     set groups [list ]
     set xp2 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
@@ -121,7 +212,18 @@ proc ::DEM::write::GetDEMGroupsCustomSubmodelpart { } {
     return $groups
 }
 
+proc ::DEM::write::WriteNodalCoordinatesParts { } {
+    # Unused. Deprecated.
+    # Writing nodal coordinates are currently being done for all particle groups in the write_parts proc.
+    # This implies all groups must be defined as parts beforehand, including custom and graphs.
+    write::writeNodalCoordinatesOnParts
+    write::writeNodalCoordinatesOnGroups [DEM::write::GetDEMGroupNamesCustomSubmodelpart]
+    write::writeNodalCoordinatesOnGroups [GetDEMGroupsBoundaryC]
+    write::writeNodalCoordinatesOnGroups [GetNodesForGraphs]
+}
+
 proc ::DEM::write::GetDEMGroupsInitialC { } {
+    # Unused & deprecated.
     set groups [list ]
     if {$::Model::SpatialDimension eq "2D"} {
         set xp3 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityIC2D'\]/group"
@@ -136,6 +238,7 @@ proc ::DEM::write::GetDEMGroupsInitialC { } {
 }
 
 proc ::DEM::write::GetDEMGroupsBoundaryC { } {
+    # Unused & deprecated.
     set groups [list ]
     if {$::Model::SpatialDimension eq "2D"} {
         set xp4 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC2D'\]/group"
@@ -149,7 +252,65 @@ proc ::DEM::write::GetDEMGroupsBoundaryC { } {
     return $groups
 }
 
+proc ::DEM::write::GetSpheresGroupsListInConditions { } {
+    # unused.
+    set conds_groups_dict [dict create ]
+    set groups [list ]
+
+    # Get all the groups with spheres
+    foreach group [GetSpheresGroups] {
+        foreach surface [GiD_EntitiesGroups get $group nodes] {
+            foreach involved_group [GiD_EntitiesGroups entity_groups nodes $surface] {
+                set involved_group_id [write::GetWriteGroupName $involved_group]
+                if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
+            }
+        }
+    }
+
+    # Find the relations condition -> group
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition"
+    foreach cond [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set condid [$cond @n]
+        foreach cond_group [$cond selectNodes "group"] {
+            set group [write::GetWriteGroupName [$cond_group @n]]
+            if {$group in $groups} {dict lappend conds_groups_dict $condid [$cond_group @n]}
+        }
+    }
+    return $conds_groups_dict
+}
+
+proc ::DEM::write::GetSpheresGroups { } {
+    set groups [list ]
+
+    set conditions_list {DEM-VelocityBC DEM-VelocityIC DEM-GraphCondition}
+    if {$::Model::SpatialDimension eq "2D"} {
+        set conditions_list {DEM-VelocityBC2D DEM-VelocityIC2D DEM-GraphCondition2D}
+    }
+
+    foreach condition $conditions_list {
+        set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition'\]/group"
+        foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+            set groupid [$group @n]
+            lappend groups [write::GetWriteGroupName $groupid]
+        }
+    }
+
+    return $groups
+}
+
+proc ::DEM::write::DefineDEMExtraConditions {group_node group} {
+    set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
+    if {$GraphPrint == "true"} {
+        set GraphPrintval 1
+    } else {
+        set GraphPrintval 0
+    }
+    write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
+    write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
+}
+
 proc ::DEM::write::GetNodesForGraphs { } {
+    # Unused & deprecated.
     set groups [list ]
     if {$::Model::SpatialDimension eq "2D"} {
         set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition2D'\]/group"
@@ -161,24 +322,6 @@ proc ::DEM::write::GetNodesForGraphs { } {
         lappend groups [write::GetWriteGroupName $groupid]
     }
     return $groups
-}
-
-proc ::DEM::write::writeSphereRadius { } {
-    set root [customlib::GetBaseRoot]
-    # set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
-    foreach group [$root selectNodes $xp1] {
-        DEM::write::writeSphereRadiusOnGroup $group
-    }
-}
-
-proc ::DEM::write::writeSphereRadiusOnGroup { group } {
-    set groupid [$group @n]
-    set print_groupid [write::GetWriteGroupName $groupid]
-    write::WriteString "Begin NodalData RADIUS // GUI group identifier: $print_groupid"
-    GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
-    write::WriteString "End NodalData"
-    write::WriteString ""
 }
 
 proc ::DEM::write::old_writeDEMConditionMeshes { } {
@@ -375,131 +518,6 @@ proc ::DEM::write::old_writeDEMConditionMeshes { } {
                 write::WriteString "End SubModelPart"
                 write::WriteString ""
             }
-        }
-    }
-}
-
-proc ::DEM::write::DefineDEMExtraConditions {group_node group} {
-    set GraphPrint [write::getValueByNode [$group_node selectNodes "./value\[@n='GraphPrint'\]"]]
-    if {$GraphPrint == "true"} {
-        set GraphPrintval 1
-    } else {
-        set GraphPrintval 0
-    }
-    write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
-    write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
-}
-
-# TODO: This code is extremely inefficient -> find a simple way to solve it
-proc ::DEM::write::GetSpheresGroupsListInConditions { } {
-    set conds_groups_dict [dict create ]
-    set groups [list ]
-
-    # Get all the groups with spheres
-    foreach group [GetSpheresGroups] {
-        foreach surface [GiD_EntitiesGroups get $group nodes] {
-            foreach involved_group [GiD_EntitiesGroups entity_groups nodes $surface] {
-                set involved_group_id [write::GetWriteGroupName $involved_group]
-                if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
-            }
-        }
-    }
-
-    # Find the relations condition -> group
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition"
-    foreach cond [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set condid [$cond @n]
-        foreach cond_group [$cond selectNodes "group"] {
-            set group [write::GetWriteGroupName [$cond_group @n]]
-            if {$group in $groups} {dict lappend conds_groups_dict $condid [$cond_group @n]}
-        }
-    }
-    return $conds_groups_dict
-}
-
-proc ::DEM::write::GetSpheresGroups { } {
-    set groups [list ]
-
-    set conditions_list {DEM-VelocityBC DEM-VelocityIC DEM-GraphCondition}
-    if {$::Model::SpatialDimension eq "2D"} {
-        set conditions_list {DEM-VelocityBC2D DEM-VelocityIC2D DEM-GraphCondition2D}
-    }
-
-    foreach condition $conditions_list {
-        set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition'\]/group"
-        foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-            set groupid [$group @n]
-            lappend groups [write::GetWriteGroupName $groupid]
-        }
-    }
-
-    return $groups
-}
-
-
-proc ::DEM::write::processPartMaterials { } {
-    variable partsProperties
-    # Materials for parts are already processed
-    #W [write::processMaterials]
-    set partsProperties [write::getPropertiesList [GetAttribute parts_un] 0 SpheresPart]
-}
-
-proc ::DEM::write::writeMaterialsParts { } {
-
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-    write::WriteString ""
-}
-
-proc ::DEM::write::PrepareCustomMeshedParts { } {
-    variable restore_ov
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        if {[$group hasAttribute ov]} {set prev_ov [$group @ov]} {set prev_ov [[$group parent] @ov]}
-        dict set restore_ov $groupid $prev_ov
-        # We must force it to be volume/surface because anything applied to Parts will be converted into Spheres/Circles
-        if {$::Model::SpatialDimension eq "3D"} {
-            $group setAttribute ov volume
-        } else {
-            $group setAttribute ov surface
-        }
-    }
-}
-
-proc ::DEM::write::RestoreCustomMeshedParts { } {
-    variable restore_ov
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        if {$groupid in [dict keys $restore_ov]} {
-            set prev_ov [dict get $restore_ov $groupid]
-            # Bring back to original entities (Check PrepareCustomMeshedParts)
-            $group setAttribute ov $prev_ov
-        }
-    }
-    set restore_ov [dict create]
-}
-
-
-proc ::DEM::write::WriteCustomDEMSmp { } {
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-CustomSmp'\]/group"
-    foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set group_id [$group @n]
-
-        set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
-        if {$destination_mdpa == "DEM"} {
-            set mid [write::AddSubmodelpart DEM-CustomSmp $group_id]
-            write::WriteString  "Begin SubModelPart $mid \/\/ Custom SubModelPart. Group name: $group_id"
-            write::WriteString  "Begin SubModelPartData"
-            write::WriteString  "End SubModelPartData"
-            write::WriteString  "Begin SubModelPartNodes"
-            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group_id] [subst "%10i\n"]]
-            write::WriteString  "End SubModelPartNodes"
-            write::WriteString  "End SubModelPart"
-            write::WriteString  ""
         }
     }
 }
