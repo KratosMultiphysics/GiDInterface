@@ -4,6 +4,8 @@ namespace eval ::DEM::examples::CirclesDrop {
 }
 
 proc ::DEM::examples::CirclesDrop::Init {args} {
+    W "This example requires to be updated to the new version of the interface."
+
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]

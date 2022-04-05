@@ -557,7 +557,6 @@ proc ::DEM::write::AssignGeometricalEntitiesToSkinSphere2D {} {
     GiD_EntitiesGroups assign SKIN_SPHERE_DO_NOT_DELETE all_geometry $total_skin_circle_list
 }
 
-
 proc ::DEM::write::AssignGeometricalEntitiesToSkinSphere3D {} {
 
     set list_of_points [GiD_Geometry list point 1:end]
@@ -666,7 +665,7 @@ proc ::DEM::write::AssignSpecialBoundaries {entitylist} {
 }
 
 proc ::DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
-    # it forces the surface meshing of demfemwall groups with triangles
+    # This proc forces the surface of FEM parts to be meshed.
     set root [customlib::GetBaseRoot]
     #set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall'\]/group"
     set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]/group"
@@ -685,9 +684,9 @@ proc ::DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
 }
 
 proc ::DEM::write::ForceTheMeshingOfDEMInletGroups {} {
+    # This proc forces the inlet geometry to be meshed.
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_Inlet-FEM'\]/group"
-    #set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='Inlet'\]/group"
         if {$::Model::SpatialDimension eq "3D"} {
         foreach group [$root selectNodes $xp1] {
             set groupid [$group @n]
@@ -745,8 +744,6 @@ proc ::DEM::write::FindBoundariesOfCircularElements {entity} {
     }
     return $boundarylist
 }
-
-
 
 proc ::DEM::write::FindBoundariesOfSphericElements {entity} {
 
