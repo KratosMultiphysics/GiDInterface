@@ -94,6 +94,7 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
 	}
 
 	lassign [dict get $props Material Variables InputOrientation] oX oY oZ
+    lassign [MathUtils::VectorNormalized [list $oX $oY $oZ]] oX oY oZ
     #La direccion del eje tiene que darse normalizada. Assert oX*oX+oY*oY+oZ*oZ = 1
     set angle [dict get $props Material Variables InputModule]
 
