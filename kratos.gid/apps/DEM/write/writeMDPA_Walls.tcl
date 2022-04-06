@@ -94,7 +94,17 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
 	}
 
 	lassign [dict get $props Material Variables InputOrientation] oX oY oZ
-	write::WriteString "    ORIENTATION \[4\] ($oX,$oY,$oZ, 0.0)"
+    #La direccion del eje tiene que darse normalizada. Assert oX*oX+oY*oY+oZ*oZ = 1
+    set angle [dict get $props Material Variables InputModule]
+
+    set mod [expr {sin($angle/2.0)}]
+    set qx [expr {$oX * [expr $mod]}]
+    set qy [expr {$oY * [expr $mod]}]
+    set qz [expr {$oZ * [expr $mod]}]
+    set qw [expr {cos($angle/2.0) }]
+
+	#write::WriteString "    ORIENTATION \[4\] ($oX,$oY,$oZ, 0.0)"
+    write::WriteString "    ORIENTATION \[4\] ($qx, $qy, $qz, $qw)"
 
 	write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
 
