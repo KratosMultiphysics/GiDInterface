@@ -9,10 +9,6 @@ proc ::DEM::write::WriteMDPAParts { } {
     # TODO: This is legacy, no Properties are being written with writeMaterialsParts.
     writeMaterialsParts
 
-    # Nodal coordinates (only for DEM Parts <inefficient> )
-    # WriteNodalCoordinatesParts
-
-    # Nodal coordinates (only for Walls <inefficient> )
     set dem_groups_list [list]
     foreach group_node [::DEM::write::GetDEMPartGroupNodes] {lappend dem_groups_list [$group_node @n]}
 

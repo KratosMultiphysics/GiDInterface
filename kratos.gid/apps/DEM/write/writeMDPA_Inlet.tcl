@@ -8,15 +8,19 @@ proc ::DEM::write::WriteMDPAInlet { } {
     # Properties section
     writeMaterialsInlet
 
-    # Nodal coordinates (only for DEM Parts <inefficient> )
-    write::writeNodalCoordinatesOnGroups [GetInletGroups]
-    # writeInletConditionMeshes
+    set inlet_groups_list [list]
+    foreach group_node [::DEM::write::GetInletPartGroupNodes] {lappend inlet_groups_list [$group_node @n]}
+    write::writeNodalCoordinatesOnGroups $inlet_groups_list
 
-    # SubmodelParts
-    writeInletMeshes
+    writeInletConditionMeshes
 
     #Copy cluster files (.clu)
     copyClusterFiles
+}
+
+
+proc ::DEM::write::GetInletPartGroupNodes { } {
+    return [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_Inlet-FEM'\]/group"]
 }
 
 proc ::DEM::write::GetInletConditionName { } {
@@ -33,7 +37,6 @@ proc ::DEM::write::GetInletConditionXpath { } {
     return $xp1
 }
 
-# That can be all or active / All by default
 proc ::DEM::write::GetInletGroups { {that all}} {
     set groups [list ]
     foreach group [[customlib::GetBaseRoot] selectNodes [DEM::write::GetInletConditionXpath]/group] {
@@ -46,7 +49,6 @@ proc ::DEM::write::GetInletGroups { {that all}} {
     }
     return $groups
 }
-
 
 proc ::DEM::write::copyClusterFiles { } {
 
@@ -98,6 +100,174 @@ proc ::DEM::write::GetUsedClusters { } {
     return [list $clusters_list $custom_clusters_list]
 }
 
+
+
+proc ::DEM::write::writeInletConditionMeshes { } {
+    variable inletProperties
+
+    foreach group_node [::DEM::write::GetInletPartGroupNodes] {
+        set group [$group_node @n]
+        set mid [write::AddSubmodelpart Parts_Inlet-FEM $group]
+        set props [DEM::write::FindPropertiesBySubmodelpart $inletProperties $mid]
+        writeInletConditionMesh Parts_Inlet-FEM $group $props
+    }
+}
+
+proc ::DEM::write::writeInletConditionMesh { condition group props } {
+
+    set mid [write::AddSubmodelpart $condition $group]
+
+    write::WriteString "Begin SubModelPart $mid // $condition - group identifier: $group"
+    write::WriteString "  Begin SubModelPartData // $condition. Group name: $group"
+    if {$props ne ""} {
+        set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition\[@n = 'Parts_Inlet-FEM'\]/group\[@n = '$group'\]"
+        set group_node [[customlib::GetBaseRoot] selectNodes $xp1]
+        write::WriteString "    RIGID_BODY_OPTION 1"
+
+        set mass [dict get $props Material Variables InputMass]
+        write::WriteString "    RIGID_BODY_MASS $mass"
+
+        lassign [dict get $props Material Variables InputCenter] cX cY cZ
+        if {$::Model::SpatialDimension eq "2D"} {write::WriteString "    RIGID_BODY_CENTER_OF_ROTATION \[3\] ($cX,$cY,0.0)"
+        } else {write::WriteString "    RIGID_BODY_CENTER_OF_ROTATION \[3\] ($cX,$cY,$cZ)"}
+
+        set inertias [dict get $props Material Variables InputInertia]
+        if {$::Model::SpatialDimension eq "2D"} {
+            set iX $inertias
+            write::WriteString "    RIGID_BODY_INERTIAS \[3\] (0.0,0.0,$iX)"
+        } else {
+            lassign $inertias iX iY iZ
+            write::WriteString "    RIGID_BODY_INERTIAS \[3\] ($iX,$iY,$iZ)"
+        }
+
+        lassign [dict get $props Material Variables InputOrientation] oX oY oZ
+        lassign [MathUtils::VectorNormalized [list $oX $oY $oZ]] oX oY oZ
+        #La direccion del eje tiene que darse normalizada. Assert oX*oX+oY*oY+oZ*oZ = 1
+        set angle [dict get $props Material Variables InputModule]
+        set mod [expr {sin($angle/2.0)}]
+        set qx [expr {$oX * [expr $mod]}]
+        set qy [expr {$oY * [expr $mod]}]
+        set qz [expr {$oZ * [expr $mod]}]
+        set qw [expr {cos($angle/2.0) }]
+
+        write::WriteString "    ORIENTATION \[4\] ($qx, $qy, $qz, $qw)"
+        write::WriteString "    IDENTIFIER [write::transformGroupName $group]"
+
+        DEM::write::DefineFEMExtraConditions $props
+    } else {W "Error - Properties empty for submodelpart $condition $group"}
+    write::WriteString "  End SubModelPartData"
+
+    write::WriteString "  Begin SubModelPartNodes"
+    GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
+    write::WriteString "  End SubModelPartNodes"
+
+    write::WriteString ""
+    write::WriteString "End SubModelPart"
+    write::WriteString ""
+}
+
+proc ::DEM::write::GetClusterFileNameAndReplaceInletElementType {inlet_element_type} {
+    if {$inlet_element_type eq "LineCluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "linecluster3D.clu"
+    } elseif {$inlet_element_type eq "RingCluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ringcluster3D.clu"
+    } elseif {$inlet_element_type eq "Wheat5Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "wheat5cluster3D.clu"
+    } elseif {$inlet_element_type eq "SoyBeanCluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "soybeancluster3D.clu"
+    } elseif {$inlet_element_type eq "CornKernel3Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "corn3cluster3D.clu"
+    } elseif {$inlet_element_type eq "CornKernelCluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "cornkernelcluster3D.clu"
+    } elseif {$inlet_element_type eq "Rock1Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "rock1cluster3D.clu"
+    } elseif {$inlet_element_type eq "Rock2Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "rock2cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast1Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast1cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast1Cluster3Dred"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast1cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast2Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast2cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast2Cluster3Dred"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast2cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast3Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast3cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast3Cluster3Dred"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast3cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast4Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast4cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast4Cluster3Dred"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast4cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast5Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast5cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast5Cluster3Dred"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast5cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "Ballast6Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast6cluster3D.clu"
+    } elseif {$inlet_element_type eq "Ballast6Cluster3Dred"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "ballast6cluster3Dred.clu"
+    } elseif {$inlet_element_type eq "SoyBean3Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "soybean3cluster3D.clu"
+    } elseif {$inlet_element_type eq "CapsuleCluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "capsulecluster3D.clu"
+    } elseif {$inlet_element_type eq "SingleSphereCluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "singlespherecluster3D.clu"
+    } elseif {$inlet_element_type eq "Rock3RefinedCluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "rock3refinedcluster3D.clu"
+    } else {
+        error "No cluster found"
+    }
+
+    return [list $inlet_element_type $cluster_file_name]
+}
+
+proc ::DEM::write::writeMaterialsInlet { } {
+
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties"
+    write::WriteString ""
+
+}
+
+proc ::DEM::write::processInletMaterials { } {
+    write::processMaterials "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_Inlet-FEM'\]/group"
+
+    variable inletProperties
+    set inletProperties [write::getPropertiesListByConditionXPath "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_Inlet-FEM'\]" 0 DEMInletPart]
+    W $inletProperties
+}
+
+
+
+
+########################## Deprecated procs ###################
+
+
 proc ::DEM::write::DefineInletConditions {inletProperties mid contains_clusters} {
     set inlet_element_type [DEM::write::GetInletElementType]
     if {[dict get $inletProperties Material Variables InletElementType] eq "Cluster3D"} {
@@ -132,20 +302,7 @@ proc ::DEM::write::GetInjectorElementType {} {
     return [DEM::write::GetInletElementType]
 }
 
-proc ::DEM::write::GetInletPartGroupNodes { } {
-    return [[customlib::GetBaseRoot] selectNodes "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_Inlet-FEM'\]/group"]
-}
 
-proc ::DEM::write::writeInletConditionMeshes { } {
-    variable inletProperties
-
-    foreach group_node [::DEM::write::GetInletPartGroupNodes] {
-        set group [$group_node @n]
-        set mid [write::AddSubmodelpart Parts_Inlet-FEM $group]
-        set props [DEM::write::FindPropertiesBySubmodelpart $wallsProperties $mid]
-        writeWallConditionMesh Parts_Inlet-FEM $group $props
-    }
-}
 
 proc ::DEM::write::writeInletMeshes { } {
     variable inletProperties
@@ -342,99 +499,4 @@ proc ::DEM::write::writeInletMeshes { } {
         write::WriteString "  End Table"
         write::WriteString "  "
     }
-}
-
-proc ::DEM::write::GetClusterFileNameAndReplaceInletElementType {inlet_element_type} {
-    if {$inlet_element_type eq "LineCluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "linecluster3D.clu"
-    } elseif {$inlet_element_type eq "RingCluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ringcluster3D.clu"
-    } elseif {$inlet_element_type eq "Wheat5Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "wheat5cluster3D.clu"
-    } elseif {$inlet_element_type eq "SoyBeanCluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "soybeancluster3D.clu"
-    } elseif {$inlet_element_type eq "CornKernel3Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "corn3cluster3D.clu"
-    } elseif {$inlet_element_type eq "CornKernelCluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "cornkernelcluster3D.clu"
-    } elseif {$inlet_element_type eq "Rock1Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "rock1cluster3D.clu"
-    } elseif {$inlet_element_type eq "Rock2Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "rock2cluster3D.clu"
-    } elseif {$inlet_element_type eq "Ballast1Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast1cluster3D.clu"
-    } elseif {$inlet_element_type eq "Ballast1Cluster3Dred"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast1cluster3Dred.clu"
-    } elseif {$inlet_element_type eq "Ballast2Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast2cluster3D.clu"
-    } elseif {$inlet_element_type eq "Ballast2Cluster3Dred"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast2cluster3Dred.clu"
-    } elseif {$inlet_element_type eq "Ballast3Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast3cluster3D.clu"
-    } elseif {$inlet_element_type eq "Ballast3Cluster3Dred"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast3cluster3Dred.clu"
-    } elseif {$inlet_element_type eq "Ballast4Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast4cluster3D.clu"
-    } elseif {$inlet_element_type eq "Ballast4Cluster3Dred"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast4cluster3Dred.clu"
-    } elseif {$inlet_element_type eq "Ballast5Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast5cluster3D.clu"
-    } elseif {$inlet_element_type eq "Ballast5Cluster3Dred"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast5cluster3Dred.clu"
-    } elseif {$inlet_element_type eq "Ballast6Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast6cluster3D.clu"
-    } elseif {$inlet_element_type eq "Ballast6Cluster3Dred"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "ballast6cluster3Dred.clu"
-    } elseif {$inlet_element_type eq "SoyBean3Cluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "soybean3cluster3D.clu"
-    } elseif {$inlet_element_type eq "CapsuleCluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "capsulecluster3D.clu"
-    } elseif {$inlet_element_type eq "SingleSphereCluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "singlespherecluster3D.clu"
-    } elseif {$inlet_element_type eq "Rock3RefinedCluster3D"} {
-        set inlet_element_type "Cluster3D"
-        set cluster_file_name "rock3refinedcluster3D.clu"
-    } else {
-        error "No cluster found"
-    }
-
-    return [list $inlet_element_type $cluster_file_name]
-}
-
-proc ::DEM::write::writeMaterialsInlet { } {
-
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
-    write::WriteString ""
-
-}
-
-proc ::DEM::write::processInletMaterials { } {
-    variable inletProperties
-    set inlet_xpath [DEM::write::GetInletConditionXpath]
-    write::processMaterials $inlet_xpath/group
-    set inletProperties [write::getPropertiesListByConditionXPath $inlet_xpath 0 DEMInletPart]
 }

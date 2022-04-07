@@ -79,7 +79,12 @@
     </ConstitutiveLaw_FilterFeatures>
     <NodalConditions></NodalConditions>
     <inputs>
-    <parameter n="Material" pn="Injector material" v="" type="combo" combotype="material" help="Material"/>
+    <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+    <parameter n="InputMass" pn="Mass" v="1.0" units="kg" unit_magnitude="M"/>
+    <parameter n="InputCenter" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
+    <parameter n="InputInertia" pn="Inertia" type="inline_vector" v="1.0,1.0,1.0" units="kg*m^2" unit_magnitude="M*L^2"/>
+    <parameter n="InputOrientation" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector)"/>
+    <parameter n="InputModule" pn="Module" v="1.0" units="rad" help="Set the object orientation in Axis Angle format (magnitude in rad)"/>
     </inputs>
     <outputs>
     </outputs>
