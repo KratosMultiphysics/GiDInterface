@@ -51,11 +51,17 @@ proc ::DEM::write::getParametersDict { } {
 
     # Boundary conditions processes
     set processes [dict create]
+
+    # Kinematics
     dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un] Condition Parts_DEM]
     dict lappend processes constraints_process_list {*}[write::getConditionsParametersDict [GetAttribute conditions_un] Condition Parts_FEM]
 
+    # Loads
     dict set processes loads_process_list [write::getConditionsParametersDict [GetAttribute loads_un] Condition Parts_DEM]
     dict lappend processes loads_process_list {*}[write::getConditionsParametersDict [GetAttribute loads_un] Condition Parts_FEM]
+
+    # Injectors
+    dict set processes injectors_process_list [write::getConditionsParametersDict [GetAttribute injectors_un] Condition Parts_Inlet-FEM]
 
     dict set project_parameters_dict processes                              $processes
 

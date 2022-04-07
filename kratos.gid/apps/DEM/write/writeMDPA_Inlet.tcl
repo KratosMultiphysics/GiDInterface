@@ -15,7 +15,7 @@ proc ::DEM::write::WriteMDPAInlet { } {
     writeInletConditionMeshes
 
     #Copy cluster files (.clu)
-    copyClusterFiles
+    #TODO:copyClusterFiles
 }
 
 
