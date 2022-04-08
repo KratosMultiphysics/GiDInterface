@@ -84,7 +84,7 @@
 
 
 <!-- Updated Inlet -->
-  <Process n="DEM-InletUpdated-Process" pn="Inlet" python_module="" kratos_module="KratosMultiphysics">
+  <Process n="DEM-InletUpdated-Process" pn="Define injection" python_module="" kratos_module="KratosMultiphysics">
     <inputs>
       <parameter n="SetActive" type="bool" pn="Activate" v="true">
 

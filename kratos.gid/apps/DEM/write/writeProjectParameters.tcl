@@ -60,8 +60,11 @@ proc ::DEM::write::getParametersDict { } {
     dict set processes loads_process_list [write::getConditionsParametersDict [GetAttribute loads_un] Condition Parts_DEM]
     dict lappend processes loads_process_list {*}[write::getConditionsParametersDict [GetAttribute loads_un] Condition Parts_FEM]
 
-    # Injectors
-    dict set processes injectors_process_list [write::getConditionsParametersDict [GetAttribute injectors_un] Condition Parts_Inlet-FEM]
+    # Injectors-core
+    #dict set processes injectors_process_list [write::getConditionsParametersDict [GetAttribute injectors_un] Condition Parts_Inlet-FEM]
+
+    # Injectors-custom
+    dict set processes injectors_process_list [DEM::write::getInjectorProcessDictList]
 
     dict set project_parameters_dict processes                              $processes
 
@@ -126,6 +129,80 @@ proc ::DEM::write::getParametersDict { } {
 
     return $project_parameters_dict
 }
+
+
+proc ::DEM::write::getInjectorProcessDictList {} {
+
+    set root [customlib::GetBaseRoot]
+    set process_list [list ]
+
+    set xp1 "[spdAux::getRoute [GetAttribute injectors_un]]/condition\[@n='DEMInlet'\]/group"
+    set groups [$root selectNodes $xp1]
+
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        W $groupName
+        W $cid
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
+        set submodelpart_id [write::getSubModelPartId $group $groupName]
+
+        # lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
+        # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]
+        # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print'\]"]]]
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+        W $interval_name
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_particle_injection_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        set params [dict create]
+
+        # dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $cid]
+        dict set params "model_part_name" ${modelpart_parent}.${groupName}
+        set subparams [dict create]
+
+        #dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
+        dict set subparams "ParticleDiameter" [write::GetInputValue $group $ParticleDiameter]
+        dict set subparams "ProbabilityDistribution" "normal"
+        dict set subparams "StandardDeviation" "0.0"
+        dict set params "granulometry_settings" $subparams
+        dict set params "interval" [write::getInterval $interval_name]
+        dict set pdict "Parameters" $params
+
+        # "model_part_name"      : "please_specify_model_part_name",
+        # "granulometry_settings" : {
+        #     "ParticleDiameter" : 1.0,
+        #     "ProbabilityDistribution": 'normal',
+        #     "StandardDeviation": 0.0,
+        # },
+        # "flow_settings" : {
+        #     "TypeOfFlowMeasurement" : false,
+        #     "NumberOfParticles": 100,
+        #     "InletLimitedVelocity": 2.0,
+        #     "InletMassFlow": 100.0,
+        #     "DenseInletOption" : false,
+        # },
+        # "injection_settings" : {
+        #     "InVelocityModulus": 1.0,
+        #     "InDirectionVector": [10.0, "3*t", "x+y"],
+        #     "VelocityDeviation": 1.0e-5,
+        #     "injector_element_type" : 'SphericParticle',
+        #     "injected_element_type" : 'SphericParticle',
+        #     "Excentricity": 0.1,
+        #     "ProbabilityDistributionOfExcentricity": 'normal',
+        #     "StandardDeviationOfExcentricity": 0.1,
+        #     "ClusterType": 'fromFile',
+        #     "ClusterFilename": 'custom.clu',
+        # },
+        # "injection_interval"             : [0.0, "End"]
+
+        lappend process_list $pdict
+        return $pdict
+    }
+}
+
 
 proc ::DEM::write::GetUsedElements {} {
     set root [customlib::GetBaseRoot]
