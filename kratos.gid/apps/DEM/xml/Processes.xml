@@ -116,6 +116,8 @@
           <parameter n="NumberOfParticles" parent="Particles" pn="Particles per second" type="double" v="200.0" show_in_window="0"/>
           <parameter n="InletLimitedVelocity" parent="Kilograms" pn="Inlet injection speed limit (m/s)" type="double" v="2.0" help="Inlet injection speed limit (m/s)" show_in_window="0"/>
           <parameter n="InletMassFlow" parent="Kilograms" pn="Mass flow (kg/s)" type="double" v="0.5" unit_magnitude="M/T" units="kg/s" show_in_window="0"/>
+          <parameter n="DenseInletOption" parent="Kilograms" pn="Dense injection" type="bool" v="false" show_in_window="0"/>
+
         </parameter>
 
         <parameter n="InletElementType" pn="Element Type" parent="true" type="combo" v="SphericParticle3D" values="SphericParticle3D,Cluster3D,SingleSphereCluster,CylinderParticle2D" pvalues="Sphere,Cluster,Single sphere cluster,Circle" help="Type of particle to insert. Single particles, clusters or user defined cluster file." show_in_window="0">

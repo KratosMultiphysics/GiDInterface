@@ -152,7 +152,6 @@ proc ::DEM::write::getInjectorProcessDictList {} {
         # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]
         # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print'\]"]]]
         set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
-        W $interval_name
         set pdict [dict create]
         dict set pdict "python_module" "apply_particle_injection_process"
         dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
@@ -161,42 +160,100 @@ proc ::DEM::write::getInjectorProcessDictList {} {
         # dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
         set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $cid]
         dict set params "model_part_name" ${modelpart_parent}.${groupName}
-        set subparams [dict create]
 
-        #dict set subparams "value" "\[-3.0, 0.0, 0.0\]"
-        dict set subparams "ParticleDiameter" [write::GetInputValue $group $ParticleDiameter]
-        dict set subparams "ProbabilityDistribution" "normal"
-        dict set subparams "StandardDeviation" "0.0"
+
+        ######### granulometry specifications
+        set subparams [dict create]
+        dict set subparams "ParticleDiameter" [write::getValueByNode [$group selectNodes "./value\[@n='ParticleDiameter'\]"]]
+        dict set subparams "ProbabilityDistribution" [write::getValueByNode [$group selectNodes "./value\[@n='ProbabilityDistribution'\]"]]
+        dict set subparams "StandardDeviation" [write::getValueByNode [$group selectNodes "./value\[@n='StandardDeviation'\]"]]
+
         dict set params "granulometry_settings" $subparams
+
+
+        ########## flow settings
+        set type_of_measurement [write::getValueByNode [$group selectNodes "./value\[@n='TypeOfFlowMeasurement'\]"]]
+        if {$type_of_measurement eq "Kilograms"} {
+            set mass_flow_option 1
+        } else {
+            set mass_flow_option 0
+        }
+
+        set subparams [dict create]
+        dict set subparams "TypeOfFlowMeasurement" $type_of_measurement
+
+        if {$mass_flow_option == 0} {
+            dict set subparams "NumberOfParticles" [write::getValueByNode [$group selectNodes "./value\[@n='NumberOfParticles'\]"]]
+        }
+
+        if {$mass_flow_option == 1} {
+            dict set subparams "InletMassFlow" [write::getValueByNode [$group selectNodes "./value\[@n='InletMassFlow'\]"]]
+
+            dict set subparams "InletLimitedVelocity" [write::getValueByNode [$group selectNodes "./value\[@n='InletLimitedVelocity'\]"]]
+
+            dict set subparams "DenseInletOption" [write::getValueByNode [$group selectNodes "./value\[@n='DenseInletOption'\]"]]
+        }
+
+        dict set params "flow_settings" $subparams
+
+
+        ########## injection specifications
+        set subparams [dict create]
+        set velocity_modulus [write::getValueByNode [$group selectNodes "./value\[@n='InVelocityModulus'\]"]]
+
+        lassign [write::getValueByNode [$group selectNodes "./value\[@n='InDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
+
+        if {$velocity_Z eq ""} {set velocity_Z 0.0}
+        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+
+        lassign [MathUtils::ScalarByVectorProd $velocity_modulus [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
+
+        dict set subparams "InjectedVelocity" [list $vx $vy $vz]
+
+        dict set subparams "VelocityDeviation" [write::getValueByNode [$group selectNodes "./value\[@n='VelocityDeviation'\]"]]
+
+
+        ####### cluster specifications
+        # set injector_element_type [write::getValueByNode [$group selectNodes "./value\[@n='injector_element_type'\]"]]
+        # dict set subparams "injector_element_type" $injector_element_type
+
+        set injected_element_type [write::getValueByNode [$group selectNodes "./value\[@n='InletElementType'\]"]]
+        dict set subparams "InletElementType" $injected_element_type
+
+        if {$injected_element_type eq "SingleSphereCluster3D"} {
+
+            dict set subparams "Excentricity" [write::getValueByNode [$group selectNodes "./value\[@n='Excentricity'\]"]]
+
+            dict set subparams "ProbabilityDistributionOfExcentricity" [write::getValueByNode [$group selectNodes "./value\[@n='ProbabilityDistributionOfExcentricity'\]"]]
+
+            dict set subparams "StandardDeviationOfExcentricity" [write::getValueByNode [$group selectNodes "./value\[@n='StandardDeviationOfExcentricity'\]"]]
+
+        }
+
+        if {$injected_element_type eq "Cluster3D"} {
+
+
+            dict set subparams "ClusterType" [write::getValueByNode [$group selectNodes "./value\[@n='ClusterType'\]"]]
+
+            dict set subparams "ClusterFilename" [write::getValueByNode [$group selectNodes "./value\[@n='ClusterFilename'\]"]]
+
+        }
+
+        set RandomOrientation [write::getValueByNode [$group selectNodes "./value\[@n='RandomOrientation'\]"]]
+
+        dict set subparams "RandomOrientation" $RandomOrientation
+
+        if {$RandomOrientation == 0} {
+
+            dict set subparams "OrientationX" [write::getValueByNode [$group selectNodes "./value\[@n='OrientationX'\]"]]
+        }
+
+        ####### end cluster specifications
+
+        dict set params "injection_settings" $subparams
+
         dict set params "interval" [write::getInterval $interval_name]
         dict set pdict "Parameters" $params
-
-        # "model_part_name"      : "please_specify_model_part_name",
-        # "granulometry_settings" : {
-        #     "ParticleDiameter" : 1.0,
-        #     "ProbabilityDistribution": 'normal',
-        #     "StandardDeviation": 0.0,
-        # },
-        # "flow_settings" : {
-        #     "TypeOfFlowMeasurement" : false,
-        #     "NumberOfParticles": 100,
-        #     "InletLimitedVelocity": 2.0,
-        #     "InletMassFlow": 100.0,
-        #     "DenseInletOption" : false,
-        # },
-        # "injection_settings" : {
-        #     "InVelocityModulus": 1.0,
-        #     "InDirectionVector": [10.0, "3*t", "x+y"],
-        #     "VelocityDeviation": 1.0e-5,
-        #     "injector_element_type" : 'SphericParticle',
-        #     "injected_element_type" : 'SphericParticle',
-        #     "Excentricity": 0.1,
-        #     "ProbabilityDistributionOfExcentricity": 'normal',
-        #     "StandardDeviationOfExcentricity": 0.1,
-        #     "ClusterType": 'fromFile',
-        #     "ClusterFilename": 'custom.clu',
-        # },
-        # "injection_interval"             : [0.0, "End"]
 
         lappend process_list $pdict
         return $pdict
