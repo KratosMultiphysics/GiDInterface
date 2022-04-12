@@ -5,6 +5,7 @@ namespace eval ::DEM::examples::SpheresDrop {
 }
 
 proc ::DEM::examples::SpheresDrop::Init {args} {
+    W "This example requires to be updated to the new version of the interface."
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -64,7 +65,7 @@ proc ::DEM::examples::SpheresDrop::AssignToTree { } {
     set walls "$DEMConditions/condition\[@n='DEM-FEM-Wall'\]"
     set wallsNode [customlib::AddConditionGroupOnXPath $walls Floor]
     $wallsNode setAttribute ov surface
-    
+
     # Inlet
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]

@@ -2,7 +2,7 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="SphericPartDEMElement3D" pn="Spheric Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication"  WorkingSpaceDimension="3D" ElementType="DEM" help="">
+  <ElementItem n="SphericPartDEMElement3D" pn="Spheric Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication"  WorkingSpaceDimension="3D" ElementType="DEM" help="" Groups="GetPartsGroupsList">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Sphere" nodes="1" KratosName="SphericParticle3D"/>
@@ -14,6 +14,15 @@
     <NodalConditions></NodalConditions>
     <inputs>
       <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+      <parameter n="AdvancedMeshingFeatures" pn="Advanced meshing features" type="combo" v="No" values="No,Yes" help="The standard meshing features use the default sphere mesher, filling a volume with spheres. Use the Advanced Meshing Features to have access to more advanced options">
+
+        <parameter  parent="Yes" n="AdvancedMeshingFeaturesAlgorithmType" pn="Algorithm type" type="combo" v="FEMtoDEM" values="FEMtoDEM,2Dto3D" help="FEMtoDEM: use this algorithm to convert an original FEM mesh (composed of hexaedra, tetrahedra, cuadrilaterals, triangles, lines or points) into spheres located at the nodes, at the centroids of the elements or at both. 2D to 3D: use this algorithm if you want to convert a surface meshed with circles into a mesh of spheres" />
+        <parameter  parent="Yes" n="FEMtoDEM" pn="FEM to DEM criterion type" v="AttheNodes" type="combo" values="AttheNodes,AttheCentroid,AtBothNodesAndCentroids" help="" />
+        <parameter  parent="Yes" n="Diameter" pn="Diameter (m)" v="1.0" help="Average diameter of the spheres" />
+        <parameter  parent="Yes" n="ProbabilityDistribution" pn="Probability distribution" v="NormalDistribution" type="combo" values="NormalDistribution,LogDistribution" help="Normal and logarithmic distributions are allowed when using FEMtoDEM" />
+        <parameter  parent="Yes" n="StandardDeviation" pn="Standard deviation" v="0.1" help="Standard deviation for the distribution" />
+      </parameter>
+
     </inputs>
     <outputs></outputs>
   </ElementItem>
@@ -32,6 +41,53 @@
       <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
     </inputs>
     <outputs></outputs>
+  </ElementItem>
+
+
+  <ElementItem n="FEM" pn="FEM Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" ElementType="FEM" help="" WriteAsBlock="Conditions" Groups="GetPartsGroupsList">
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="DEM"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions></NodalConditions>
+    <inputs>
+    <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+    <parameter n="InputMass" pn="Mass" v="1.0" units="kg" unit_magnitude="M"/>
+    <parameter n="InputCenter" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
+    <parameter n="InputInertia" pn="Inertia" type="inline_vector" v="1.0,1.0,1.0" units="kg*m^2" unit_magnitude="M*L^2"/>
+    <parameter n="InputOrientation" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector)"/>
+    <parameter n="InputModule" pn="Module" v="1.0" units="rad" help="Set the object orientation in Axis Angle format (magnitude in rad)"/>
+    <parameter n="InputGhost" pn="Is ghost" type="bool" v="false" help="Set the group as ghost"/>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ElementItem>
+
+
+  <ElementItem n="Inlet-FEM" pn="Inlet element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" ElementType="Inlet-FEM" help="" WriteAsBlock="Conditions">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="RigidFace3D2N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="RigidFace3D3N"/>
+    </TopologyFeatures>
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="DEM"/>
+    </ConstitutiveLaw_FilterFeatures>
+    <NodalConditions></NodalConditions>
+    <inputs>
+    <parameter n="Material" pn="Material" v="" type="combo" combotype="material" help="Material"/>
+    <parameter n="InputMass" pn="Mass" v="1.0" units="kg" unit_magnitude="M"/>
+    <parameter n="InputCenter" pn="Center of rotation" type="inline_vector" v="0.0,0.0,0.0" />
+    <parameter n="InputInertia" pn="Inertia" type="inline_vector" v="1.0,1.0,1.0" units="kg*m^2" unit_magnitude="M*L^2"/>
+    <parameter n="InputOrientation" pn="Orientation" type="inline_vector" v="0.577,0.577,0.577" help="Set the object orientation in Axis Angle format (unit vector)"/>
+    <parameter n="InputModule" pn="Module" v="1.0" units="rad" help="Set the object orientation in Axis Angle format (magnitude in rad)"/>
+    </inputs>
+    <outputs>
+    </outputs>
   </ElementItem>
 
 </ElementList>

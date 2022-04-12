@@ -45,16 +45,35 @@ proc ::DEM::write::getParametersDict { } {
 
     set material_import_settings [dict create]
     dict set material_import_settings "materials_filename" [GetAttribute materials_file]
-    dict set strategy_parameters_dict "material_import_settings" $material_import_settings
+    dict set strategy_parameters_dict "material_import_settings"            $material_import_settings
 
     dict set project_parameters_dict "solver_settings"                      $strategy_parameters_dict
+
+    # Boundary conditions processes
+    set processes [dict create]
+
+    # Kinematics
+    dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un] Condition Parts_DEM]
+    dict lappend processes constraints_process_list {*}[write::getConditionsParametersDict [GetAttribute conditions_un] Condition Parts_FEM]
+
+    # Loads
+    dict set processes loads_process_list [write::getConditionsParametersDict [GetAttribute loads_un] Condition Parts_DEM]
+    dict lappend processes loads_process_list {*}[write::getConditionsParametersDict [GetAttribute loads_un] Condition Parts_FEM]
+
+    # Injectors-core
+    #dict set processes injectors_process_list [write::getConditionsParametersDict [GetAttribute injectors_un] Condition Parts_Inlet-FEM]
+
+    # Injectors-custom
+    dict set processes injectors_process_list [DEM::write::getInjectorProcessDictList]
+
+    dict set project_parameters_dict processes                              $processes
+
     dict set project_parameters_dict "VirtualMassCoefficient"               [write::getValue AdvOptions VirtualMassCoef]
     dict set project_parameters_dict "RollingFrictionOption"                [write::getValue AdvOptions RollingFriction]
     dict set project_parameters_dict "GlobalDamping"                        [write::getValue AdvOptions GlobalDamping]
     dict set project_parameters_dict "ContactMeshOption"                    [write::getValue BondElem ContactMeshOption]
     dict set project_parameters_dict "OutputFileType"                       [write::getValue GiDOptions GiDPostMode]
     dict set project_parameters_dict "Multifile"                            [write::getValue GiDOptions GiDMultiFileFlag]
-
     dict set project_parameters_dict "ElementType"                          [GetElementType]
 
     dict set project_parameters_dict "TranslationalIntegrationScheme"       [write::getValue DEMTranslationalScheme]
@@ -111,31 +130,175 @@ proc ::DEM::write::getParametersDict { } {
     return $project_parameters_dict
 }
 
+
+proc ::DEM::write::getInjectorProcessDictList {} {
+
+    set root [customlib::GetBaseRoot]
+    set process_list [list ]
+
+    set xp1 "[spdAux::getRoute [GetAttribute injectors_un]]/condition\[@n='DEMInlet'\]/group"
+    set groups [$root selectNodes $xp1]
+
+    foreach group $groups {
+        set groupName [$group @n]
+        set groupName [write::GetWriteGroupName $groupName]
+        set cid [[$group parent] @n]
+        W $groupName
+        W $cid
+        set submodelpart [::write::getSubModelPartId $cid $groupName]
+        set submodelpart_id [write::getSubModelPartId $group $groupName]
+
+        # lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
+        # set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write'\]"]]]
+        # set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print'\]"]]]
+        set interval_name [write::getValueByNode [$group selectNodes "./value\[@n='Interval'\]"]]
+        set pdict [dict create]
+        dict set pdict "python_module" "apply_particle_injection_process"
+        dict set pdict "kratos_module" "KratosMultiphysics.DEMApplication"
+        set params [dict create]
+
+        # dict set params "model_part_name" [write::GetModelPartNameWithParent $submodelpart]
+        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $cid]
+        dict set params "model_part_name" ${modelpart_parent}.${groupName}
+
+
+        ######### granulometry specifications
+        set subparams [dict create]
+        dict set subparams "ParticleDiameter" [write::getValueByNode [$group selectNodes "./value\[@n='ParticleDiameter'\]"]]
+        dict set subparams "ProbabilityDistribution" [write::getValueByNode [$group selectNodes "./value\[@n='ProbabilityDistribution'\]"]]
+        dict set subparams "StandardDeviation" [write::getValueByNode [$group selectNodes "./value\[@n='StandardDeviation'\]"]]
+
+        dict set params "granulometry_settings" $subparams
+
+
+        ########## flow settings
+        set type_of_measurement [write::getValueByNode [$group selectNodes "./value\[@n='TypeOfFlowMeasurement'\]"]]
+        if {$type_of_measurement eq "Kilograms"} {
+            set mass_flow_option 1
+        } else {
+            set mass_flow_option 0
+        }
+
+        set subparams [dict create]
+        dict set subparams "TypeOfFlowMeasurement" $type_of_measurement
+
+        if {$mass_flow_option == 0} {
+            dict set subparams "NumberOfParticles" [write::getValueByNode [$group selectNodes "./value\[@n='NumberOfParticles'\]"]]
+        }
+
+        if {$mass_flow_option == 1} {
+            dict set subparams "InletMassFlow" [write::getValueByNode [$group selectNodes "./value\[@n='InletMassFlow'\]"]]
+
+            dict set subparams "InletLimitedVelocity" [write::getValueByNode [$group selectNodes "./value\[@n='InletLimitedVelocity'\]"]]
+
+            dict set subparams "DenseInletOption" [write::getValueByNode [$group selectNodes "./value\[@n='DenseInletOption'\]"]]
+        }
+
+        dict set params "flow_settings" $subparams
+
+
+        ########## injection specifications
+        set subparams [dict create]
+        set velocity_modulus [write::getValueByNode [$group selectNodes "./value\[@n='InVelocityModulus'\]"]]
+
+        lassign [write::getValueByNode [$group selectNodes "./value\[@n='InDirectionVector'\]"]] velocity_X velocity_Y velocity_Z
+
+        if {$velocity_Z eq ""} {set velocity_Z 0.0}
+        lassign [MathUtils::VectorNormalized [list $velocity_X $velocity_Y $velocity_Z]] velocity_X velocity_Y velocity_Z
+
+        lassign [MathUtils::ScalarByVectorProd $velocity_modulus [list $velocity_X $velocity_Y $velocity_Z] ] vx vy vz
+
+        dict set subparams "InjectedVelocity" [list $vx $vy $vz]
+
+        dict set subparams "VelocityDeviation" [write::getValueByNode [$group selectNodes "./value\[@n='VelocityDeviation'\]"]]
+
+
+        ####### cluster specifications
+        # set injector_element_type [write::getValueByNode [$group selectNodes "./value\[@n='injector_element_type'\]"]]
+        # dict set subparams "injector_element_type" $injector_element_type
+
+        set injected_element_type [write::getValueByNode [$group selectNodes "./value\[@n='InletElementType'\]"]]
+        dict set subparams "InletElementType" $injected_element_type
+
+        if {$injected_element_type eq "SingleSphereCluster3D"} {
+
+            dict set subparams "Excentricity" [write::getValueByNode [$group selectNodes "./value\[@n='Excentricity'\]"]]
+
+            dict set subparams "ProbabilityDistributionOfExcentricity" [write::getValueByNode [$group selectNodes "./value\[@n='ProbabilityDistributionOfExcentricity'\]"]]
+
+            dict set subparams "StandardDeviationOfExcentricity" [write::getValueByNode [$group selectNodes "./value\[@n='StandardDeviationOfExcentricity'\]"]]
+
+        }
+
+        if {$injected_element_type eq "Cluster3D"} {
+
+
+            dict set subparams "ClusterType" [write::getValueByNode [$group selectNodes "./value\[@n='ClusterType'\]"]]
+
+            dict set subparams "ClusterFilename" [write::getValueByNode [$group selectNodes "./value\[@n='ClusterFilename'\]"]]
+
+        }
+
+        set RandomOrientation [write::getValueByNode [$group selectNodes "./value\[@n='RandomOrientation'\]"]]
+
+        dict set subparams "RandomOrientation" $RandomOrientation
+
+        if {$RandomOrientation == 0} {
+
+            dict set subparams "OrientationX" [write::getValueByNode [$group selectNodes "./value\[@n='OrientationX'\]"]]
+        }
+
+        ####### end cluster specifications
+
+        dict set params "injection_settings" $subparams
+
+        dict set params "interval" [write::getInterval $interval_name]
+        dict set pdict "Parameters" $params
+
+        lappend process_list $pdict
+        return $pdict
+    }
+}
+
+
+proc ::DEM::write::GetUsedElements {} {
+    set root [customlib::GetBaseRoot]
+
+    set xp1 "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_DEM'\]/group"
+
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set g $gNode
+        set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        if {$name ni $lista} {lappend lista $name}
+    }
+
+    return $lista
+}
+
 proc ::DEM::write::GetElementType { } {
-    set used_elements [spdAux::GetUsedElements]
+    set used_elements [DEM::write::GetUsedElements]
     set element_type [lindex $used_elements 0]
     return $element_type
 }
 
 proc ::DEM::write::GetDemStrategyName { } {
-    return sphere_strategy
-    # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required
-    # set used_elements [spdAux::GetUsedElements]
 
-    # set ElementType SphericPartDEMElement3D
-	# if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
-	#     set dem_strategy "sphere_strategy"
-	# } elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
-	#     set dem_strategy "continuum_sphere_strategy"
-	# } elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
-	#    set dem_strategy "thermal_sphere_strategy"
-	# } elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
-	#    set dem_strategy "thermal_continuum_sphere_strategy"
-	# } elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
-	#    set dem_strategy "thermal_continuum_sphere_strategy"
-	# } elseif {$ElementType eq "IceContPartDEMElement3D"} {
-	#    set dem_strategy "ice_continuum_sphere_strategy"
-	# }
+    set ElementType [::DEM::write::GetElementType]
+	if {$ElementType eq "SphericPartDEMElement3D" || $ElementType eq "CylinderPartDEMElement2D"} {
+	    set dem_strategy "sphere_strategy"
+	} elseif {$ElementType eq "SphericContPartDEMElement3D" || $ElementType eq "CylinderContPartDEMElement3D"} {
+	    set dem_strategy "continuum_sphere_strategy"
+	} elseif {$ElementType eq "ThermalSphericPartDEMElement3D"} {
+	   set dem_strategy "thermal_sphere_strategy"
+	} elseif {$ElementType eq "ThermalSphericContPartDEMElement3D"} {
+	   set dem_strategy "thermal_continuum_sphere_strategy"
+	} elseif {$ElementType eq "SinteringSphericConPartDEMElement3D"} {
+	   set dem_strategy "thermal_continuum_sphere_strategy"
+	} elseif {$ElementType eq "IceContPartDEMElement3D"} {
+	   set dem_strategy "ice_continuum_sphere_strategy"
+	}
+    return $dem_strategy
 }
 
 proc ::DEM::write::GetTimeSettings { } {

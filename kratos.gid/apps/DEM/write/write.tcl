@@ -6,6 +6,7 @@ namespace eval ::DEM::write {
     variable partsProperties
     variable inletProperties
     variable wallsProperties
+    variable DEMProperties
     variable phantomwallsProperties
     variable last_property_id
     variable delete_previous_mdpa
@@ -20,8 +21,10 @@ proc ::DEM::write::Init { } {
     SetAttribute properties_location [::DEM::GetWriteProperty properties_location]
     SetAttribute parts_un [::DEM::GetUniqueName parts]
     SetAttribute materials_un [::DEM::GetUniqueName materials]
+    # SetAttribute init_conditions_un [::DEM::GetUniqueName init_conditions]
     SetAttribute conditions_un [::DEM::GetUniqueName conditions]
-    SetAttribute nodal_conditions_un [::DEM::GetUniqueName nodal_conditions]
+    SetAttribute loads_un [::DEM::GetUniqueName loads]
+    SetAttribute injectors_un [::DEM::GetUniqueName injectors]
     SetAttribute materials_file [::DEM::GetWriteProperty materials_file]
     SetAttribute main_launch_file [::DEM::GetAttribute main_launch_file]
 
@@ -33,6 +36,9 @@ proc ::DEM::write::Init { } {
 
     variable wallsProperties
     set wallsProperties [dict create]
+
+    variable DEMProperties
+    set DEMProperties [dict create]
 
     variable phantomwallsProperties
     set phantomwallsProperties [dict create]
@@ -73,7 +79,7 @@ proc ::DEM::write::writeModelPartEvent { } {
     WriteMDPAParts
     write::CloseFile
 
-    # MDPA Inlet
+    # MDPA Inlet - de momento offline
     write::OpenFile "[Kratos::GetModelName]DEM_Inlet.mdpa"
     WriteMDPAInlet
     write::CloseFile

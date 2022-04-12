@@ -24,7 +24,6 @@ proc write::writeConditionsByGiDId { baseUN {force_write_cond_id ""} {properties
     }
 }
 
-
 proc write::writeGroupNodeConditionByGiDId {groupNode condid {mid 0}} {
     set groupid [get_domnode_attribute $groupNode n]
     set groupid [GetWriteGroupName $groupid]
