@@ -29,9 +29,9 @@ proc PfemFluid::write::getNewParametersDict { } {
     set processList [GetPFEM_ProcessList]
     dict set projectParametersDict processes $processList
 
-    ##### Restart
-    # set output_process_list [GetPFEM_OutputProcessList]
-    # dict set projectParametersDict output_process_list $output_process_list
+    ##### WaveMonitor, Restart
+    set output_processes_list [GetPFEM_OutputProcesses]
+    dict set projectParametersDict output_processes $output_processes_list
 
     ##### output_configuration
     # dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
@@ -157,11 +157,52 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     return $solverSettingsDict
 }
 
+proc PfemFluid::write::GetPFEM_OutputProcesses { } {
+    set resultList [dict create]
+
+    set output_process_list [GetPFEM_OutputProcessList]
+    dict set resultList output_list $output_process_list
+
+    return $resultList
+}
+
+
 proc PfemFluid::write::GetPFEM_OutputProcessList { } {
+
     set resultList [list]
+    dict set resultList "python_module" "wave_height_output_process"
+    dict set resultList "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
+
+    set parametersWave [GetPFEM_OutputParameters]
+    dict set resultList Parameters $parametersWave
+
     # lappend resultList [write::GetRestartProcess Restart]
     return $resultList
 }
+
+
+proc PfemFluid::write::GetPFEM_OutputParameters { } {
+    
+    set parametersWave [dict create]
+    dict set parametersWave "model_part_name" "PfemFluidModelPart"
+    dict set parametersWave "coordinates"             [write::getValue WaveMonitor Coordinates]
+
+    set WaveCalculationSetting [dict create]
+    dict set WaveCalculationSetting "mean_water_level"        [write::getValue WaveMonitor MeanWaterLevel]
+    dict set WaveCalculationSetting "relative_search_radius"  [write::getValue WaveMonitor RelativeSearchRadius]
+    dict set parametersWave wave_calculation_settings $WaveCalculationSetting
+
+    set OutputFileSettings [dict create]
+    dict set OutputFileSettings "file_name"      "pfem_<i>"
+    dict set OutputFileSettings "output_path"      "gauges"
+    dict set parametersWave output_file_settings $OutputFileSettings
+
+    dict set parametersWave "time_between_outputs"    [write::getValue WaveMonitor TimeBetweenOutputs]
+  
+    return $parametersWave 
+}
+
+
 proc PfemFluid::write::GetPFEM_ProblemProcessList { free_surface_heat_flux free_surface_thermal_face } {
     set resultList [list ]
     set problemtype [write::getValue PFEMFLUID_DomainType]
