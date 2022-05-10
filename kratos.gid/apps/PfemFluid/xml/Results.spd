@@ -9,13 +9,13 @@
     <value n="BodyOutput" pn="Body output" v="Yes" values="Yes,No" help="The interior of the volume is printed" icon="data"/>
     <value n="NodeOutput" pn="Node output" v="Yes" values="Yes,No" help="The nodes are printed as a separate layer" icon="data"/>
     <value n="SkinOutput" pn="Skin output" v="No" values="Yes,No" help="" state="hidden" icon="data"/>
-    <container n="WaveMonitor" pn="Wave Monitor" un="WaveMonitor" icon="select" help="Activate the results you want to set wave gauges" open_window="0">
-     <value n="UseWaveMonitor" pn="Add Wave Gauges" type="bool" values="true,false" v="false" icon="data" />
-     <value n="Coordinates" pn="Coordinates" icon="data" fieldtype="vector" dimensions="3" format="%.6g" v="0.0,0.0,0.0" state="[getStateFromXPathValue {string(../value[@n='UseWaveMonitor']/@v)} true]" help="Coordinates of the wave gauges"/>
-     <value n="MeanWaterLevel" pn="Mean Level" icon="data" v="0" state="[getStateFromXPathValue {string(../value[@n='UseWaveMonitor']/@v)} true]" help="Water Level"/>
-     <value n="RelativeSearchRadius" pn="Relative Search Radius" icon="data" v="2"  state="[getStateFromXPathValue {string(../value[@n='UseWaveMonitor']/@v)} true]" help="Relative versus element size"/>
-     <value n="TimeBetweenOutputs" pn="Output Time" icon="data" v="0.01" state="[getStateFromXPathValue {string(../value[@n='UseWaveMonitor']/@v)} true]" help="Time between following measures"/>
-    </container>
+    <condition n="WaveMonitor" pn="Wave Monitor" ov="point" ovm="node" un="WaveMonitor" icon="select" help="Activate the results you want to set wave gauges" >
+     <!-- <value n="UseWaveMonitor" pn="Add Wave Gauges" type="bool" values="true,false" v="false" icon="data" /> -->
+     <!-- <value n="Coordinates" pn="Coordinates" icon="data" fieldtype="vector" dimensions="3" format="%.6g" v="0.0,0.0,0.0"  help="Coordinates of the wave gauges"/> -->
+     <value n="MeanWaterLevel" pn="Mean Level" icon="data" v="0" help="Water Level"/>
+     <value n="RelativeSearchRadius" pn="Relative Search Radius" icon="data" v="2"   help="Relative versus element size"/>
+     <value n="TimeBetweenOutputs" pn="Output Time" icon="data" v="0.01"  help="Time between following measures"/>
+    </condition>
     <container n="OnElement" pn="Elemental Results" un="ElementResults" icon="select" help="Activate the results you want to see in the elements" open_window="0">
         <!--<dynamicnode command="spdAux::injectElementOutputs" args=""/>-->
         <!--<dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>-->
