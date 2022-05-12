@@ -161,8 +161,8 @@ proc PfemFluid::write::GetPFEM_OutputProcesses { } {
     set resultList [dict create]
 
     set output_process_list [GetPFEM_OutputProcessList]
-    dict lappend resultList output_list $output_process_list
-
+    #dict lappend resultList output_list $output_process_list
+    dict set resultList output_list $output_process_list
     return $resultList
 }
 
@@ -190,8 +190,9 @@ proc PfemFluid::write::GetPFEM_WaveParameters { group } {
 
     set parametersWave [dict create]
 
-    set group_id [::write::getSubModelPartId WaveMonitor [$group @n]]
-    dict set parametersWave model_part_name [write::GetModelPartNameWithParent $group_id PfemFluidModelPart]
+    #set group_id [::write::getSubModelPartId WaveMonitor [$group @n]]
+    #dict set parametersWave model_part_name [write::GetModelPartNameWithParent $group_id PfemFluidModelPart]
+    dict set parametersWave model_part_name "PfemFluidModelPart"
 
     set coordinates [list ]
     foreach node [GiD_EntitiesGroups get [$group @n] nodes ] {
@@ -206,8 +207,8 @@ proc PfemFluid::write::GetPFEM_WaveParameters { group } {
     dict set parametersWave wave_calculation_settings $WaveCalculationSetting
 
     set OutputFileSettings [dict create]
-    dict set OutputFileSettings "file_name"      "pfem_<i>"
-    dict set OutputFileSettings "output_path"      "gauges"
+    dict set OutputFileSettings "file_name"      "gauge_<i>" 
+    dict set OutputFileSettings "output_path"             [write::getValueByNodeChild $group FolderName]
     dict set parametersWave output_file_settings $OutputFileSettings
 
     dict set parametersWave "time_between_outputs"    [write::getValueByNodeChild $group TimeBetweenOutputs]

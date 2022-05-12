@@ -59,7 +59,7 @@ proc PfemFluid::write::writeMeshes { } {
     }
     # Solo Malla , no en conditions
     writeNodalConditions [GetAttribute nodal_conditions_un]
-    writeWaveMonitorMesh
+    #writeWaveMonitorMesh
 
 
 }
