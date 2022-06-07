@@ -916,7 +916,7 @@ proc spdAux::ProcUpdateParts {domNode args} {
     # If a parameter type is file and the option selected is select file -> open it
     set params [$current selectNodes "./value"]
     foreach val $params {
-        if {[$val @n] ni $exclusion_list} {
+        if {[$val @n] ni $exclusion_list && [$val @state] eq ""} {
             $val setAttribute state "\[PartParamState\]"
         }
     }
