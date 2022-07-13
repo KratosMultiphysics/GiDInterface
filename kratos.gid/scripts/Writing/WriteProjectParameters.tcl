@@ -57,7 +57,9 @@ proc write::tcl2json { value } {
             } elseif {[string is double -strict $value]} {
                 return [expr {$value}]
             } elseif {[string is boolean -strict $value]} {
-                return [expr {$value ? "true" : "false"}]
+                if {[isBooleanFalse $value]} {return [expr "false"]}
+                if {[isBooleanTrue $value]} {return [expr "true"]}
+                return [json::write string $value]
             } elseif {[string index $value 0] eq "\{"} {
                 return [json::write array {*}[lmap v $value {tcl2json $v}]]
             }
