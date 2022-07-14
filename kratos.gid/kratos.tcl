@@ -516,7 +516,7 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     }
     set app_run_brake [apps::ExecuteOnCurrentApp BreakRunCalculation]
     if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
-    Kratos::CheckDependencies
+    if {[Kratos::CheckDependencies] ne 0} {return [list "-cancel-" "Unable to run. Missing dependencies"]}
 
 }
 
