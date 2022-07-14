@@ -114,12 +114,13 @@ proc Kratos::ShowErrorsAndActions {errs} {
     switch $errs {
         "MISSING_PYTHON" {
             W "Python 3 could not be found on this system. Please install it, and add the path to Kratos preferences before run the case."
+            W "If you have already installed Python, have you added it to the PATH?"
         }
         "MISSING_PIP" {
             W "Pip is not installed on your system. Please install it."
         }
         "MISSING_PIP_PACKAGES" {
-            W "Run the following command on a terminal:\npip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
+            W "Run the following command on a terminal:\npip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required==9.1.3"
         }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."
