@@ -24,9 +24,8 @@ If you need the developer version, you are on the right place.
         * Create there a symbolic link to the kratos installation folder (where runkratos is located)
             * Unix : `ln -s ~/Kratos Kratos` or maybe `ln -s ~/Kratos/bin/Release Kratos` if that's the destination folder
             * Windows : `mklink /J Kratos C:\kratos\bin\Release` (choose actual Kratos installation folder)
+        * Step by step video: https://www.youtube.com/watch?v=zZq7ypDdudo
     * 4.3- To execute Kratos using docker, just install docker
-### Step by step video
-https://www.youtube.com/watch?v=zZq7ypDdudo
 
 ### Launch modes
 In Kratos preferences, select the execution mode:
