@@ -15,22 +15,26 @@ If you need the developer version, you are on the right place.
 * 3- Navigate to GiD's problemtype folder and delete any previous kratos.gid
     * Create there a link to our [kratos.gid](./kratos.gid/) downloaded in step 1
         * Windows: Simple shortcut to kratos.gid folder
-* 4- Navigate to kratos.gid/exec/
-    * Create there a symbolic link to the kratos installation folder (where runkratos is located)
-        * Unix : `ln -s ~/Kratos Kratos` or maybe `ln -s ~/Kratos/bin/Release Kratos` if that's the destination folder
-        * Windows : `mklink /J Kratos C:\kratos\bin\Release` (choose actual Kratos installation folder)
+* 4- Choose your execution mode:
+    * 4.1- To execute Kratos using the standard pip packages:
+        *- Python version recommended: 3.9
+        *- Open a terminal and run `python3 -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.1.3`
+    * 4.2- To execute Kratos using your compiled binaries:
+        * Navigate to kratos.gid/exec/
+        * Create there a symbolic link to the kratos installation folder (where runkratos is located)
+            * Unix : `ln -s ~/Kratos Kratos` or maybe `ln -s ~/Kratos/bin/Release Kratos` if that's the destination folder
+            * Windows : `mklink /J Kratos C:\kratos\bin\Release` (choose actual Kratos installation folder)
+        * Step by step video: https://www.youtube.com/watch?v=zZq7ypDdudo
+    * 4.3- To execute Kratos using docker, just install docker
 
-### Step by step video
-https://www.youtube.com/watch?v=zZq7ypDdudo
-
-## Launch modea
+### Launch modes
 In Kratos preferences, select the execution mode:
 * Pip packages: Kratos will be installed via `pip install`
 * local compiled: If you are a developer and build your applications, use this one
 * docker: If you do not want to install any dependency, just run via docker!
     * The default image is [fjgarate/kratos-run](https://hub.docker.com/repository/docker/fjgarate/kratos-run)
 
-## Usage
+### Usage
 * Run GiD
 * Go to: Data / Problem type / kratos
 * kratos top menu / Developer mode (recommended)

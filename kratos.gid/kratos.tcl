@@ -130,7 +130,6 @@ proc Kratos::Event_InitProblemtype { dir } {
         after 500 [list spdAux::CreateWindow]
     }
 
-    Kratos::CheckDependencies
 }
 
 proc Kratos::InitGlobalVariables {dir} {
@@ -517,6 +516,7 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     }
     set app_run_brake [apps::ExecuteOnCurrentApp BreakRunCalculation]
     if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
+    if {[Kratos::CheckDependencies] ne 0} {return [list "-cancel-" "Unable to run. Missing dependencies"]}
 
 }
 
