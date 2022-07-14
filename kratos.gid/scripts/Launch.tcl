@@ -113,7 +113,7 @@ proc Kratos::ShowErrorsAndActions {errs} {
     }
     switch $errs {
         "MISSING_PYTHON" {
-            W "Python 3 is not installed on this system. Please install it before run the case."
+            W "Python 3 could not be found on this system. Please install it, and add the path to Kratos preferences before run the case."
         }
         "MISSING_PIP" {
             W "Pip is not installed on your system. Please install it."
