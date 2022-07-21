@@ -42,7 +42,7 @@ proc ::FreeSurface::xml::CustomTree { args } {
     set root [customlib::GetBaseRoot]
     foreach {n pn} [list LIN_DARCY_COEF "Linear darcy coefficient" NONLIN_DARCY_COEF "Nonlinear darcy coefficient" POROSITY "Porosity" BODY_FORCE "Body force"] {
         if {[$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n='$n'\]"] eq ""} {
-            gid_groups_conds::addF [spdAux::getRoute NodalResults] value [list n $n pn $pn v yes values "yes,no"]
+            gid_groups_conds::addF [spdAux::getRoute NodalResults] value [list n $n pn $pn v Yes values "Yes,No"]
         }
     }
 
