@@ -11,6 +11,7 @@ proc ::FreeSurface::xml::Init { } {
     Model::InitVariables dir $::FreeSurface::dir
 
     Model::getNodalConditions NodalConditions.xml
+    Model::getConditions Conditions.xml
 
 
     # Remove No splip
