@@ -33,7 +33,8 @@
     "write": {
         "coordinates": "all",
         "properties_location": "json",
-        "model_part_name": "FluidModelPart"
+        "model_part_name": "FluidModelPart",
+        "output_model_part_name": ""
     },
     "main_launch_file": "../../exec/MainKratos.py"
 }

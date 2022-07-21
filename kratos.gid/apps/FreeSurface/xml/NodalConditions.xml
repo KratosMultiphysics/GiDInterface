@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
 
-  <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignScalarVariableProcess" VariableName="DISPLACEMENT" Interval="False" unit_magnitude="L" units="m" App="Fluid" ImplementedInApplication="FluidDynamicsApplication">
+  <NodalConditionItem n="DISTANCE" pn="Distance" ProcessName="AssignScalarVariableProcess" VariableName="DISTANCE" Interval="False" unit_magnitude="L" units="m" App="Fluid" ImplementedInApplication="FluidDynamicsApplication">
 
     <DefaultValues>
       <value n="constrained" v="0" state="hidden" />
