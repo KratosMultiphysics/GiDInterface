@@ -9,7 +9,7 @@
         "KratosConvectionDiffusionApplication"
     ],
     "dimensions": [
-        "3D"
+        "2D","3D"
     ],
     "script_files": [
         "start.tcl",
