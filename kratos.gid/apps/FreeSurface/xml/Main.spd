@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<container n="Buoyancy" pn="Buoyancy" icon="app" prefix="Buoyancy_" tree_state="open" open_window="0">
+<container n="FreeSurface" pn="Free surface" icon="app" prefix="FS" tree_state="open" open_window="0">
 
     <container n="Fluid" pn="Fluid" icon="units" prefix="FL" tree_state="open" open_window="0">
         <include n="AnalysisType" active="1" path="apps/Fluid/xml/AnalysisType.spd"/>
@@ -20,7 +20,7 @@
         <include n="Materials" active="0" path="apps/ConvectionDiffusion/xml/Materials.spd"/>
     </container>
 
-    <container n="Buoyancy" pn="Coupling" icon="app" prefix="Buoyancy_" tree_state="open" open_window="0">
+    <container n="Coupling" pn="Coupling" icon="app" prefix="FS_couple" tree_state="open" open_window="0">
         <include n="SolutionStrategy" active="1" path="apps/Buoyancy/xml/SolutionStrategy.spd"/>
         <include n="Boussinesq" active="1" path="apps/Buoyancy/xml/Boussinesq.spd"/>
         <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>

@@ -10,6 +10,8 @@ proc ::FreeSurface::xml::Init { } {
     variable dir
     Model::InitVariables dir $::FreeSurface::dir
 
+    Model::getNodalConditions NodalConditions.xml
+
 }
 
 proc ::FreeSurface::xml::getUniqueName {name} {
@@ -23,5 +25,9 @@ proc ::FreeSurface::xml::CustomTree { args } {
     Fluid::xml::CustomTree
 
     apps::setActiveAppSoft FreeSurface
+
+    foreach element [Model::GetElements [list ElementType Fluid]] {
+        $element addNodalCondition DISPLACEMENT
+    }
 
 }
