@@ -12,6 +12,7 @@
         <inputs></inputs>
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
+            <value n="value" v="1500" />
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
@@ -28,6 +29,7 @@
         <inputs></inputs>
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
+            <value n="value" v="1500" />
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
@@ -43,6 +45,7 @@
         <inputs></inputs>
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
+            <value n="value" v="4000" />
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
@@ -59,6 +62,7 @@
         <inputs></inputs>
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
+            <value n="value" v="4000" />
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
@@ -75,6 +79,7 @@
         <inputs></inputs>
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
+            <value n="value" v="0.5" />
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
@@ -91,6 +96,7 @@
         <inputs></inputs>
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
+            <value n="value" v="0.5" />
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
