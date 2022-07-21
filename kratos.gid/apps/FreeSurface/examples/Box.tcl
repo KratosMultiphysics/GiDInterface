@@ -11,7 +11,7 @@ proc ::FreeSurface::examples::Box::Init {args} {
 		if { $retval == "cancel" } { return }
     }
     DrawGeometry$::Model::SpatialDimension
-    #AssignGroups$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
     #AssignMeshSizes$::Model::SpatialDimension
     #TreeAssignation$::Model::SpatialDimension
 
@@ -19,6 +19,7 @@ proc ::FreeSurface::examples::Box::Init {args} {
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
+    spdAux::RequestRefresh
 }
 
 
@@ -76,24 +77,25 @@ proc ::FreeSurface::examples::Box::AssignGroups2D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
-    GiD_EntitiesGroups assign Fluid surfaces 1
+    GiD_EntitiesGroups assign Fluid surfaces {1 2}
 
     GiD_Groups create Inlet
     GiD_Groups edit color Inlet "#e0210fff"
-    GiD_EntitiesGroups assign Inlet lines 4
+    GiD_EntitiesGroups assign Inlet lines 9
 
     GiD_Groups create Outlet
     GiD_Groups edit color Outlet "#42eb71ff"
-    GiD_EntitiesGroups assign Outlet lines 2
+    GiD_EntitiesGroups assign Outlet lines {5 12}
 
-    GiD_Groups create No_Slip_Walls
-    GiD_Groups edit color No_Slip_Walls "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Walls lines {1 3}
+    GiD_Groups create Slip_Walls
+    GiD_Groups edit color Slip_Walls "#3b3b3bff"
+    GiD_EntitiesGroups assign Slip_Walls lines {2 3 4 6 7 8 10 11 13}
 
-    GiD_Groups create No_Slip_Cylinder
-    GiD_Groups edit color No_Slip_Cylinder "#3b3b3bff"
-    GiD_EntitiesGroups assign No_Slip_Cylinder lines 5
+    GiD_Groups create Surface_Bottom
+    GiD_Groups edit color Surface_Bottom "#3b3b3bff"
+    GiD_EntitiesGroups assign Surface_Bottom surfaces 2
 }
+
 proc ::FreeSurface::examples::Box::AssignGroups3D {args} {
     # Create the groups
     GiD_Groups create Fluid
@@ -196,5 +198,5 @@ proc ::FreeSurface::examples::Box::TreeAssignation2D {args} {
     set xpath [spdAux::getRoute "Parallelization"]
     spdAux::SetValuesOnBasePath $xpath $parameters
 
-    spdAux::RequestRefresh
+
 }
