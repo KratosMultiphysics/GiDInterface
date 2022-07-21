@@ -5,6 +5,7 @@
 
     <DefaultValues>
       <value n="constrained" v="0" state="hidden" />
+      <value n="value" v="-1.0" />
     </DefaultValues>
   </NodalConditionItem>
 

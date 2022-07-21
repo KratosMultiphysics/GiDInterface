@@ -35,9 +35,9 @@ proc ::FreeSurface::xml::CustomTree { args } {
 
     apps::setActiveAppSoft FreeSurface
 
-    # Add displacement
+    # Add distance
     foreach element [Model::GetElements [list ElementType Fluid]] {
-        $element addNodalCondition DISPLACEMENT
+        $element addNodalCondition DISTANCE
     }
 
 }

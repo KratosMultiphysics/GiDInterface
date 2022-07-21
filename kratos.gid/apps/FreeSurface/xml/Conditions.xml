@@ -1,29 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
 
-    <ConditionItem n="Lin_Darcy_Coef_2D" pn="Linear darcy coefficient" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="FluidApplication"
+    <ConditionItem n="Lin_Darcy_Coef_2D" pn="Linear darcy coefficient" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication"
                    MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1"
-                   SkinConditions="True" VariableName="LIN_DARCY_COEF" App="Fluid" ElementType="Line" ProcessName="AssignScalarVariableProcess"
-                   help="" function="1" >
-        <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
-        </TopologyFeatures>
-        <DegreesOfFreedom></DegreesOfFreedom>
-        <inputs></inputs>
-        <DefaultValues>
-            <value n="constrained" v="0" state="hidden" />
-            <value n="value" v="1500" />
-        </DefaultValues>
-        <outputs></outputs>
-    </ConditionItem>
-
-    <ConditionItem n="Lin_Darcy_Coef_3D" pn="Linear darcy coefficient" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="FluidApplication"
-                   MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="2"
                    SkinConditions="True" VariableName="LIN_DARCY_COEF" App="Fluid" ElementType="Surface" ProcessName="AssignScalarVariableProcess"
-                   help="" function="1">
+                   help="" function="1" >
         <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
@@ -34,29 +16,41 @@
         <outputs></outputs>
     </ConditionItem>
 
-    <ConditionItem n="Non_Lin_Darcy_Coef_2D" pn="Nonlinear darcy coefficient" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="FluidApplication"
-                   MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1"
-                   SkinConditions="False" VariableName="NONLIN_DARCY_COEF" App="Fluid" ElementType="Line" ProcessName="AssignScalarVariableProcess"
-                   help="" function="1" >
-        <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
-        </TopologyFeatures>
-        <DegreesOfFreedom></DegreesOfFreedom>
-        <inputs></inputs>
-        <DefaultValues>
-            <value n="constrained" v="0" state="hidden" />
-            <value n="value" v="4000" />
-        </DefaultValues>
-        <outputs></outputs>
-    </ConditionItem>
-
-    <ConditionItem n="Non_Lin_Darcy_Coef_3D" pn="Nonlinear darcy coefficient" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="FluidApplication"
+    <ConditionItem n="Lin_Darcy_Coef_3D" pn="Linear darcy coefficient" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication"
                    MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="2"
-                   SkinConditions="False" VariableName="NONLIN_DARCY_COEF" App="Fluid" ElementType="Surface" ProcessName="AssignScalarVariableProcess"
+                   SkinConditions="True" VariableName="LIN_DARCY_COEF" App="Fluid" ElementType="Volume" ProcessName="AssignScalarVariableProcess"
                    help="" function="1">
         <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
+        </TopologyFeatures>
+        <DegreesOfFreedom></DegreesOfFreedom>
+        <inputs></inputs>
+        <DefaultValues>
+            <value n="constrained" v="0" state="hidden" />
+            <value n="value" v="1500" />
+        </DefaultValues>
+        <outputs></outputs>
+    </ConditionItem>
+
+    <ConditionItem n="Non_Lin_Darcy_Coef_2D" pn="Nonlinear darcy coefficient" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication"
+                   MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1"
+                   SkinConditions="False" VariableName="NONLIN_DARCY_COEF" App="Fluid" ElementType="Surface" ProcessName="AssignScalarVariableProcess"
+                   help="" function="1" >
+        <TopologyFeatures>
+        </TopologyFeatures>
+        <DegreesOfFreedom></DegreesOfFreedom>
+        <inputs></inputs>
+        <DefaultValues>
+            <value n="constrained" v="0" state="hidden" />
+            <value n="value" v="4000" />
+        </DefaultValues>
+        <outputs></outputs>
+    </ConditionItem>
+
+    <ConditionItem n="Non_Lin_Darcy_Coef_3D" pn="Nonlinear darcy coefficient" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication"
+                   MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="2"
+                   SkinConditions="False" VariableName="NONLIN_DARCY_COEF" App="Fluid" ElementType="Volume" ProcessName="AssignScalarVariableProcess"
+                   help="" function="1">
+        <TopologyFeatures>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
@@ -68,12 +62,11 @@
     </ConditionItem>
 
 
-    <ConditionItem n="Porosity2D" pn="Porosity" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="FluidApplication"
+    <ConditionItem n="Porosity2D" pn="Porosity" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication"
                    MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1"
-                   SkinConditions="False" VariableName="POROSITY" App="Fluid" ElementType="Line" ProcessName="AssignScalarVariableProcess"
+                   SkinConditions="False" VariableName="POROSITY" App="Fluid" ElementType="Surface" ProcessName="AssignScalarVariableProcess"
                    help="" function="1" >
         <TopologyFeatures>
-            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
@@ -84,13 +77,11 @@
         <outputs></outputs>
     </ConditionItem>
 
-    <ConditionItem n="Porosity3D" pn="Porosity" ImplementedInFile=".cpp" Interval="True" ImplementedInApplication="FluidApplication"
+    <ConditionItem n="Porosity3D" pn="Porosity" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication"
                    MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="2"
-                   SkinConditions="False" VariableName="POROSITY" App="Fluid" ElementType="Surface" ProcessName="AssignScalarVariableProcess"
+                   SkinConditions="False" VariableName="POROSITY" App="Fluid" ElementType="Volume" ProcessName="AssignScalarVariableProcess"
                    help="" function="1">
         <TopologyFeatures>
-            <item GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
-            <item GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
         </TopologyFeatures>
         <DegreesOfFreedom></DegreesOfFreedom>
         <inputs></inputs>
