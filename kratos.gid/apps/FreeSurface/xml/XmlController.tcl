@@ -37,6 +37,8 @@ proc ::FreeSurface::xml::CustomTree { args } {
 
     apps::setActiveAppSoft FreeSurface
 
+    spdAux::SetValueOnTreeItem v 9.8 FLGravity GravityValue
+
 }
 
 proc ::FreeSurface::xml::UpdateParts {domNode args} {

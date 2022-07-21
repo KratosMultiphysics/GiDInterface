@@ -4,7 +4,7 @@
 proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     set root [customlib::GetBaseRoot]
-    #W "$field $value $name $it"
+    # W "$field $value $unique_name $it"
     set node ""
 
     set xp [spdAux::getRoute $unique_name]
@@ -15,7 +15,7 @@ proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     if {$node ne ""} {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
-    } 
+    }
 }
 
 proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
