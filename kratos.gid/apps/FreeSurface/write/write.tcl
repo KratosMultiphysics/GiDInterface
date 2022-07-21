@@ -6,11 +6,12 @@ namespace eval ::FreeSurface::write {
 }
 
 proc ::FreeSurface::write::Init { } {
+    ::Fluid::write::Init
 }
 
 # Events
 proc ::FreeSurface::write::writeModelPartEvent { } {
-
+    ::Fluid::write::writeModelPartEvent
 }
 
 proc ::FreeSurface::write::writeCustomFilesEvent { } {
