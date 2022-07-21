@@ -1,7 +1,7 @@
 {
     "id": "FreeSurface",
     "name": "FreeSurface",
-    "prefix": "FreeSurface_",
+    "prefix": "FL",
     "themed": false,
     "kratos_name": "FreeSurfaceapplication",
     "python_packages": [

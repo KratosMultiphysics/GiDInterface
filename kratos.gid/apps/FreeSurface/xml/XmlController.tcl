@@ -37,3 +37,12 @@ proc ::FreeSurface::xml::CustomTree { args } {
     }
 
 }
+
+proc ::FreeSurface::xml::UpdateParts {domNode args} {
+    set childs [$domNode getElementsByTagName group]
+    if {[llength $childs] > 1} {
+        foreach group [lrange $childs 1 end] {$group delete}
+        gid_groups_conds::actualize_conditions_window
+        error "You can only set one part"
+    }
+}
