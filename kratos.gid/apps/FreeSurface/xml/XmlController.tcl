@@ -39,6 +39,13 @@ proc ::FreeSurface::xml::CustomTree { args } {
 
     spdAux::SetValueOnTreeItem v 9.8 FLGravity GravityValue
 
+    set root [customlib::GetBaseRoot]
+    foreach {n pn} [list LIN_DARCY_COEF "Linear darcy coefficient" NONLIN_DARCY_COEF "Nonlinear darcy coefficient" POROSITY "Porosity" BODY_FORCE "Body force"] {
+        if {[$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n='$n'\]"] eq ""} {
+            gid_groups_conds::addF [spdAux::getRoute NodalResults] value [list n $n pn $pn v yes values "yes,no"]
+        }
+    }
+
 }
 
 proc ::FreeSurface::xml::UpdateParts {domNode args} {
