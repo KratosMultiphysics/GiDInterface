@@ -13,6 +13,8 @@
     ],
     "script_files": [
         "start.tcl",
+        "examples/examples.tcl",
+        "examples/Box.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
