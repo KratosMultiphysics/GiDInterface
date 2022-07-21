@@ -12,6 +12,10 @@ proc ::FreeSurface::xml::Init { } {
 
     Model::getNodalConditions NodalConditions.xml
 
+
+    # Remove No splip
+    Model::ForgetCondition NoSlip2D
+    Model::ForgetCondition NoSlip3D
 }
 
 proc ::FreeSurface::xml::getUniqueName {name} {
@@ -26,6 +30,7 @@ proc ::FreeSurface::xml::CustomTree { args } {
 
     apps::setActiveAppSoft FreeSurface
 
+    # Add displacement
     foreach element [Model::GetElements [list ElementType Fluid]] {
         $element addNodalCondition DISPLACEMENT
     }
