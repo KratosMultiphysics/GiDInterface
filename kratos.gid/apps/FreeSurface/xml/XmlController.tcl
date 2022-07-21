@@ -10,6 +10,10 @@ proc ::FreeSurface::xml::Init { } {
     variable dir
     Model::InitVariables dir $::FreeSurface::dir
 
+
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies Strategies.xml
+
     Model::getNodalConditions NodalConditions.xml
     Model::getConditions Conditions.xml
 
