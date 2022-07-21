@@ -13,6 +13,8 @@ proc ::FreeSurface::xml::Init { } {
 
     Model::ForgetSolutionStrategies
     Model::getSolutionStrategies Strategies.xml
+    Model::ForgetElements
+    Model::getElements Elements.xml
 
     Model::getNodalConditions NodalConditions.xml
     Model::getConditions Conditions.xml
@@ -34,11 +36,6 @@ proc ::FreeSurface::xml::CustomTree { args } {
     Fluid::xml::CustomTree
 
     apps::setActiveAppSoft FreeSurface
-
-    # Add distance
-    foreach element [Model::GetElements [list ElementType Fluid]] {
-        $element addNodalCondition DISTANCE
-    }
 
 }
 

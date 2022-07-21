@@ -131,7 +131,7 @@ proc ::FreeSurface::examples::Box::TreeAssignation2D {args} {
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Porosity$nd'\]" Surface_Bottom] setAttribute ov $condtype
 
     # Time parameters
-    set parameters [list EndTime 45 DeltaTime 0.1]
+    set parameters [list EndTime 5 DeltaTime 0.1]
     set xpath [spdAux::getRoute "FLTimeParameters"]
     spdAux::SetValuesOnBasePath $xpath $parameters
 
