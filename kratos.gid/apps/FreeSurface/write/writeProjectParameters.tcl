@@ -2,6 +2,8 @@
 proc ::FreeSurface::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
+    ::write::SetConfigurationAttribute model_part_name [::FreeSurface::write::GetModelPartName]
+
     # # Analysis stage field
     dict set projectParametersDict analysis_stage "KratosMultiphysics.FreeSurfaceApplication.free_surface_analysis"
 
@@ -9,6 +11,7 @@ proc ::FreeSurface::write::getParametersDict { } {
     dict set projectParametersDict problem_data [::Fluid::write::GetProblemData_Dict]
 
     # # output configuration
+    ::write::SetConfigurationAttribute output_model_part_name [::FreeSurface::GetWriteProperty output_model_part_name]
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict [::Fluid::GetAttribute id]]
 
     # # restart options
@@ -26,7 +29,7 @@ proc ::FreeSurface::write::getParametersDict { } {
 proc ::FreeSurface::write::getSolverSettingsDict { } {
     set solverSettingsDict [dict create]
     # model_part_name
-    dict set solverSettingsDict model_part_name [GetAttribute model_part_name]
+    dict set solverSettingsDict model_part_name [::FreeSurface::write::GetModelPartName]
 
     # domain_size
     set nDim [expr [string range [write::getValue nDim] 0 0]]

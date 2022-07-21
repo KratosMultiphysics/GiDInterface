@@ -22,7 +22,7 @@ proc ::FreeSurface::write::writeCustomFilesEvent { } {
 
 
 proc ::FreeSurface::write::GetModelPartName { } {
-    return [Fluid::GetWriteProperty model_part_name]
+    return [Fluid::write::getFluidModelPartFilename]
 }
 
 proc ::FreeSurface::write::GetAttribute {att} {
