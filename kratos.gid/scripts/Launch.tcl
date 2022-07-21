@@ -45,8 +45,8 @@ proc Kratos::GetPythonExeName { } {
 proc Kratos::GetDefaultPythonPath { } {
     set pat ""
     catch {
-    set py [Kratos::GetPythonExeName]
-    set pat [exec $py -c "import sys; print(sys.executable)"  2>@1]
+        set py [Kratos::GetPythonExeName]
+        set pat [exec $py -c "import sys; print(sys.executable)"  2>@1]
     }
     return $pat
 }
@@ -97,51 +97,57 @@ proc Kratos::GetMissingPipPackages { } {
 
 proc Kratos::CheckDependencies { } {
     set curr_mode [Kratos::GetLaunchMode]
-    # W $curr_mode
+    set ret 0
+
     if {[dict exists $curr_mode dependency_check]} {
         set deps [dict get $curr_mode dependency_check]
-        $deps
+        set ret [$deps]
+    }
+    ShowErrorsAndActions $ret
+    return $ret
+}
+
+proc Kratos::ShowErrorsAndActions {errs} {
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
+    switch $errs {
+        "MISSING_PYTHON" {
+            W "Python 3 could not be found on this system. Please install it, and add the path to Kratos preferences before run the case."
+        }
+        "MISSING_PIP" {
+            W "Pip is not installed on your system. Please install it."
+        }
+        "MISSING_PIP_PACKAGES" {
+            W "Run the following command on a terminal:\npip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
+        }
+        "DOCKER_NOT_FOUND" {
+            W "Could not start docker. Please check if the Docker service is enabled."
+        }
+        "EXE_NOT_FOUND" {
+
+        }
     }
 }
 
 proc Kratos::CheckDependenciesPipMode {} {
-    if { [GidUtils::IsTkDisabled] } {
-        return 0
-    }
+    set ret 0
     set py [Kratos::GetPythonExeName]
     set py_version [Kratos::pythonVersion $py]
     if {$py_version <= 0} {
-        set msgBox_type yesno
-        #  -do_not_ask_again 1 -do_not_ask_again_key "kratos_install_python"
-        set reply [tk_messageBox -icon warning -type $msgBox_type -parent .gid \
-                -message "Python 3 not installed on this system. Do you want Kratos to install it?" \
-                -title [_ "Missing python"]]
-        if {[string equal $reply "yes"]} {
-            Kratos::InstallAllPythonDependencies
-        }
-        if {[string equal $reply "cancel"]} {
-
-        }
-    }
-    set pip_version [Kratos::pipVersion]
-    if {$pip_version <= 0} {
-        WarnWin "pip is not installed on your system. Please install it."
+        set ret "MISSING_PYTHON"
     } else {
-        set missing_packages [Kratos::GetMissingPipPackages]
-        if {[llength $missing_packages] > 0} {
-            set msgBox_type yesno
-            #  -do_not_ask_again 1 -do_not_ask_again_key "kratos_install_python"
-            set reply [tk_messageBox -icon warning -type $msgBox_type -parent .gid \
-                    -message "Python $py_version is installed, but there are some missing packages. Do you want Kratos to install them? \n\nPackages to be installed: \n$missing_packages" \
-                    -title [_ "Missing python packages"]]
-            if {[string equal $reply "yes"]} {
-                Kratos::InstallAllPythonDependencies
-            }
-            if {[string equal $reply "cancel"]} {
-
+        set pip_version [Kratos::pipVersion]
+        if {$pip_version <= 0} {
+            set ret "MISSING_PIP"
+        } else {
+            set missing_packages [Kratos::GetMissingPipPackages]
+            if {[llength $missing_packages] > 0} {
+                set ret "MISSING_PIP_PACKAGES"
             }
         }
     }
+    return $ret
 }
 proc Kratos::CheckDependenciesLocalPipMode {} {
 
@@ -150,7 +156,14 @@ proc Kratos::CheckDependenciesLocalMode {} {
 
 }
 proc Kratos::CheckDependenciesDockerMode {} {
-
+    set ret 0
+    try {
+        exec docker ps
+    } on error {msg} {
+        W $msg
+        set ret "DOCKER_NOT_FOUND"
+    }
+    return $ret
 }
 
 proc Kratos::GetLaunchConfigurationFile { } {

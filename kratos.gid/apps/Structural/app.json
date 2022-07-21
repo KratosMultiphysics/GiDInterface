@@ -50,7 +50,8 @@
         "materials_file": "StructuralMaterials.json",
         "properties_location": "json",
         "model_part_name": "Structure",
-        "output_model_part_name": ""
+        "output_model_part_name": "",
+        "enable_dynamic_substepping": true
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
