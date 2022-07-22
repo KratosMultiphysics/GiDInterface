@@ -108,7 +108,12 @@ proc ::FreeSurface::examples::Box::TreeAssignation2D {args} {
     set fluidConditions [spdAux::getRoute "FLNodalConditions"]
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='DISTANCE'\]" Inlet] setAttribute ov line
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='DISTANCE'\]" Surface_Bottom] setAttribute ov surface
-
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='LIN_DARCY_COEF'\]" Inlet] setAttribute ov line
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='LIN_DARCY_COEF'\]" Surface_Bottom] setAttribute ov surface
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NONLIN_DARCY_COEF'\]" Inlet] setAttribute ov line
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NONLIN_DARCY_COEF'\]" Surface_Bottom] setAttribute ov surface
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='POROSITY'\]" Inlet] setAttribute ov line
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='POROSITY'\]" Surface_Bottom] setAttribute ov surface
 
     set fluidConditions [spdAux::getRoute "FLBC"]
     ::Fluid::examples::ErasePreviousIntervals

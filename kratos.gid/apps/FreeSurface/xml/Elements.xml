@@ -16,6 +16,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
       <NodalCondition n="DISTANCE"/>
+      <NodalCondition n="LIN_DARCY_COEF"/>
+      <NodalCondition n="NONLIN_DARCY_COEF"/>
+      <NodalCondition n="POROSITY"/>
     </NodalConditions>
     <inputs>
     </inputs>
@@ -39,6 +42,9 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="PRESSURE"/>
       <NodalCondition n="DISTANCE"/>
+      <NodalCondition n="LIN_DARCY_COEF"/>
+      <NodalCondition n="NONLIN_DARCY_COEF"/>
+      <NodalCondition n="POROSITY"/>
     </NodalConditions>
     <inputs>
     </inputs>
