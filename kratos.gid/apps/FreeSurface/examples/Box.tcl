@@ -131,9 +131,9 @@ proc ::FreeSurface::examples::Box::TreeAssignation2D {args} {
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Slip_Walls] setAttribute ov $condtype
 
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Lin_Darcy_Coef_$nd'\]" Surface_Bottom] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Non_Lin_Darcy_Coef_$nd'\]" Surface_Bottom] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Porosity$nd'\]" Surface_Bottom] setAttribute ov $condtype
+    # [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Lin_Darcy_Coef_$nd'\]" Surface_Bottom] setAttribute ov $condtype
+    # [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Non_Lin_Darcy_Coef_$nd'\]" Surface_Bottom] setAttribute ov $condtype
+    # [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Porosity$nd'\]" Surface_Bottom] setAttribute ov $condtype
 
     # Time parameters
     set parameters [list EndTime 5 DeltaTime 0.1]
