@@ -13,7 +13,7 @@
 
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
-            <value n="value" v="1500" />
+            <value n="value" v="1000" />
         </DefaultValues>
         <outputs></outputs>
   </NodalConditionItem>
@@ -22,7 +22,7 @@
 
         <DefaultValues>
             <value n="constrained" v="0" state="hidden" />
-            <value n="value" v="4000" />
+            <value n="value" v="2500" />
         </DefaultValues>
         <outputs></outputs>
   </NodalConditionItem>
