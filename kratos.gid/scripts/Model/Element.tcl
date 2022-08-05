@@ -83,8 +83,8 @@ oo::class create Element {
         variable TopologyFeatures
         set ret ""
         foreach top $TopologyFeatures {            
-            if {[$top getNodes] eq $nod} {set ret $top; break}
-            #if {[$top getGeometry] eq $geo && [$top getNodes] eq $nod} {set ret $top; break}
+            #if {[$top getNodes] eq $nod} {set ret $top; break}
+            if {[$top getGeometry] eq $geo && [$top getNodes] eq $nod} {set ret $top; break}
         }
         return $ret
     }
