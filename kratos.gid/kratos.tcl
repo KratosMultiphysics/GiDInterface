@@ -521,11 +521,13 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
 }
 
 proc Kratos::Event_SelectGIDBatFile { dir basename } {
+    set result ""
     if {[info exists Kratos::kratos_private(launch_configuration)]} {
         set launch_mode $Kratos::kratos_private(launch_configuration)
         ::GidUtils::SetWarnLine "Launch mode: $launch_mode"
-        return [Kratos::ExecuteLaunchByMode $launch_mode]
+        catch {set result [Kratos::ExecuteLaunchByMode $launch_mode]} error_msg
     }
+    return $result
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
