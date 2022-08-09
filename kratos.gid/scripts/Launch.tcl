@@ -150,10 +150,10 @@ proc Kratos::CheckDependenciesPipMode {} {
     return $ret
 }
 proc Kratos::CheckDependenciesLocalPipMode {} {
-
+    return 0
 }
 proc Kratos::CheckDependenciesLocalMode {} {
-
+    return 0
 }
 proc Kratos::CheckDependenciesDockerMode {} {
     set ret 0

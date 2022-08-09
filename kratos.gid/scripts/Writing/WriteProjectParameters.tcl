@@ -330,7 +330,7 @@ proc write::GetResultsByXPathList { xpath } {
     set xp1 "$xpath/value"
     set resultxml [$root selectNodes $xp1]
     foreach res $resultxml {
-        if {[get_domnode_attribute $res v] in [list "Yes" "True" "1"] && [get_domnode_attribute $res state] ne "hidden"} {
+        if {[write::isBooleanTrue [get_domnode_attribute $res v]] && [get_domnode_attribute $res state] ne "hidden"} {
             set name [get_domnode_attribute $res n]
             lappend result $name
         }
