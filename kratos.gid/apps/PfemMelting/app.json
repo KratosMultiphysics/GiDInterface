@@ -33,6 +33,7 @@
         "parts": "PFEMMELTING_Parts",
         "laser": "PFEMMELTING_Laser",
         "ambient_temperature": "PFEMMELTING_AmbientTemperature",
+        "remeshing_option":"PFEMMELTING_remeshing_option",
         "materials": "PFEMMELTING_Materials",
         "results": "Results",
         "time_parameters": "TimeParameters"

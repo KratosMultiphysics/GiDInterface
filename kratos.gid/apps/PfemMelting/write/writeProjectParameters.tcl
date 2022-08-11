@@ -27,7 +27,13 @@ proc ::PfemMelting::write::GetProblemDataDict { } {
 proc ::PfemMelting::write::Getsolver_settings_dict { } {
     set solver_settings_dict [dict create ]
 
-    dict set solver_settings_dict solver_type ThermallyCoupledPfem2
+    set remesh_option [write::getValue [::PfemMelting::GetUniqueName remeshing_option]]
+    if {$remesh_option eq "remesh"} {
+        dict set solver_settings_dict solver_type ThermallyCoupledPfem2
+    } else {
+        dict set solver_settings_dict solver_type thermally_coupled_no_remesh
+    }
+
     dict set solver_settings_dict domain_size [expr 3]
     dict set solver_settings_dict echo_level 0
 
