@@ -292,7 +292,7 @@
     </CLaw>
 
     <!--ViscousGeneralizedMaxwell3D-->
-    <CLaw n="ViscousGeneralizedMaxwell3D" pn="Generalized Maxwell"  Type="3D" Behaviour="Small strain generalized Maxwell" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="ViscousGeneralizedMaxwell3D" pn="Generalized Maxwell"  Type="3D" Behaviour="Small strain generalized Maxwell" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" help="This viscoelastic model has been widely used when simulating the stress relaxation of materials subjected to a constant strain rate (like in pre-stressing tendons used in civil engineering).">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="Pa" units="Pa" v="30.0e9" />
@@ -304,12 +304,12 @@
     </CLaw>
 
     <!--ViscousGeneralizedKelvin3D-->
-    <CLaw n="ViscousGeneralizedKelvin3D" pn="Generalized Kelvin"  Type="3D" Behaviour="Small strain generalized Kelvin" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication"  Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="ViscousGeneralizedKelvin3D" pn="Generalized Kelvin"  Type="3D" Behaviour="Small strain generalized Kelvin" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication"  Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" help="This viscous model has been used in general to simulate delayed strains in materials such as the creep in concrete and soils">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="Pa" units="Pa" v="30.0e9" />
             <parameter n="DELAY_TIME" pn="Delay time" v="1.0"  />
-            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
         </inputs>
         <outputs></outputs>
     </CLaw>
