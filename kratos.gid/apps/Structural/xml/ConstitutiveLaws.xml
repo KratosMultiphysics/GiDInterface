@@ -242,4 +242,21 @@
         <outputs></outputs>
     </CLaw>
 
+    <!--Plasticity kinematic-->
+    <CLaw n="SmallStrainKinematicPlasticity3DVonMisesVonMises" pn="Generic Small Strain Kinematic-Isotropic plasticity"  Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Combined Isotropic-Kinematic plasticity for 3d solids" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="Pa" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="J/m^2" units="J/m^2" />
+            <parameter n="HARDENING_CURVE" pn="Hardening type"  v="0" help="Defines the flow rule to use (LinearSoft=0, ExpSoft=1, Hardening=2, PerfPlast=3)" />
+            <parameter n="MAXIMUM_STRESS_POSITION" pn="Peak stress position"  v="0.3" help="ONLY FOR CURVE 2, Defines the position of the peak strength (value ranging 0-1)" />
+            <parameter n="MAXIMUM_STRESS" pn="Peak stress"  v="2.0e6" help="ONLY FOR CURVE 2, Defines the peak strength value" />
+            <parameter n="KINEMATIC_HARDENING_TYPE" pn="Kinematic hardening type"  v="0" help="0: Linear kinematic hardening; 1: Armstrong-Frederick; 2: Araujo-Voyiadjis" />
+            <parameter n="KINEMATIC_PLASTICITY_PARAMETERS" pn="Kinematic hardening type" type="vector" vectorType="double" v="0.0" help="Vector of parameters for the kinematic hardening" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
 </ConstitutiveLaws>
