@@ -291,6 +291,7 @@
         <outputs></outputs>
     </CLaw>
 
+    <!--ViscousGeneralizedMaxwell3D-->
     <CLaw n="ViscousGeneralizedMaxwell3D" pn="Generalized Maxwell"  Type="3D" Behaviour="Small strain generalized Maxwell" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -302,6 +303,7 @@
         <outputs></outputs>
     </CLaw>
 
+    <!--ViscousGeneralizedKelvin3D-->
     <CLaw n="ViscousGeneralizedKelvin3D" pn="Generalized Kelvin"  Type="3D" Behaviour="Small strain generalized Kelvin" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication"  Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
