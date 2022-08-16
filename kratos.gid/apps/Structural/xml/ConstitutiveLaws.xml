@@ -254,7 +254,7 @@
             <parameter n="MAXIMUM_STRESS_POSITION" pn="Peak stress position"  v="0.3" help="ONLY FOR CURVE 2, Defines the position of the peak strength (value ranging 0-1)" />
             <parameter n="MAXIMUM_STRESS" pn="Peak stress"  v="2.0e6" help="ONLY FOR CURVE 2, Defines the peak strength value" />
             <parameter n="KINEMATIC_HARDENING_TYPE" pn="Kinematic hardening type"  v="0" help="0: Linear kinematic hardening; 1: Armstrong-Frederick; 2: Araujo-Voyiadjis" />
-            <parameter n="KINEMATIC_PLASTICITY_PARAMETERS" pn="Kinematic hardening type" type="vector" vectorType="double" v="0.0" help="Vector of parameters for the kinematic hardening" />
+            <parameter n="KINEMATIC_PLASTICITY_PARAMETERS" pn="Kinematic hardening parameters" type="vector" v="1.0e9,0.0,0.0" help="Vector of parameters for the kinematic hardening" />
         </inputs>
         <outputs></outputs>
     </CLaw>
