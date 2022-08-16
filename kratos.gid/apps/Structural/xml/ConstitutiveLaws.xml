@@ -215,7 +215,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="SmallStrainIsotropicDamage2DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="2D" Behaviour="Damage" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 3d solids" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainIsotropicDamage2DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="PlaneStrain" Behaviour="Damage" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 2d solids" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
