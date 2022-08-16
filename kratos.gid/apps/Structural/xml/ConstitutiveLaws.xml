@@ -314,4 +314,21 @@
         <outputs></outputs>
     </CLaw>
 
+    <!--Associative plastic damage model-->
+    <CLaw n="AssociativePlasticDamageModel3DVonMises" pn="Associative Plastic-Damage model"  Type="3D" Behaviour="Small Strain Plastic-Damage model" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication"  Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" help="Small Strain Plastic-Damage model">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="Pa" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="Pa" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="J/m^2" units="J/m^2" />
+            <parameter n="HARDENING_CURVE" pn="Hardening type"  v="0" help="Defines the flow rule to use (LinearSoft=0, ExpSoft=1)" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+
+
+
+
 </ConstitutiveLaws>
