@@ -278,7 +278,7 @@
     <CLaw n="FiniteStrainKinematicPlasticity3DVonMisesVonMises" pn="Generic Finite Strain Kinematic-Isotropic plasticity"  Type="3D" Behaviour="Combined Kinematic and Isotropic Plasticity in Finite Strains" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Combined Isotropic-Kinematic plasticity for 3d solids in Finite strains" Dimension="3D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="Pa" units="Pa" v="30.0e9" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
             <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="Pa" units="Pa" />
             <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="J/m^2" units="J/m^2" />
@@ -291,24 +291,22 @@
         <outputs></outputs>
     </CLaw>
 
-    <!--ViscousGeneralizedMaxwell3D-->
-    <CLaw n="ViscousGeneralizedMaxwell3D" pn="Generalized Maxwell"  Type="3D" Behaviour="Small strain generalized Maxwell" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication"  Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="ViscousGeneralizedMaxwell3D" pn="Generalized Maxwell"  Type="3D" Behaviour="Small strain generalized Maxwell" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
-            <parameter n="VISCOUS_PARAMETER" pn="Viscous parameter" v="0.15" help="Is the ratio between the stiffnesses C1/Cinf"/>
-            <parameter n="DELAY_TIME" pn="Delay time" v="1.0" help="Defines the initial slope of the curve" />
-            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="Pa" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2" />
+            <parameter n="VISCOUS_PARAMETER" pn="Viscous parameter" v="0.15" />
+            <parameter n="DELAY_TIME" pn="Delay time"  v="100" unit_magnitude="time" units="time" />
         </inputs>
         <outputs></outputs>
     </CLaw>
 
-    <!--ViscousGeneralizedKelvin3D-->
     <CLaw n="ViscousGeneralizedKelvin3D" pn="Generalized Kelvin"  Type="3D" Behaviour="Small strain generalized Kelvin" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication"  Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
-            <parameter n="DELAY_TIME" pn="Delay time" v="1.0" help="Defines the initial slope of the curve" />
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="Pa" units="Pa" v="30.0e9" />
+            <parameter n="DELAY_TIME" pn="Delay time" v="1.0"  />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
         </inputs>
         <outputs></outputs>
