@@ -201,4 +201,31 @@
         </inputs>
         <outputs></outputs>
     </CLaw>
+
+    <!--Damage isotropic-->
+    <CLaw n="SmallStrainIsotropicDamage3DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="3D" Behaviour="Damage" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 3d solids" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="Pa" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="J/m^2" units="J/m^2" />
+            <parameter n="SOFTENING_TYPE" pn="Softening type"  v="0" help="Defines the softening type (linear softening=0, exponential softening=1)" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <!--Plasticity isotropic-->
+    <CLaw n="SmallStrainIsotropicPlasticity3DVonMisesVonMises" pn="Generic Small Strain Isotropic plasticity"  Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic plasticity for 3d solids" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="Pa" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="J/m^2" units="J/m^2" />
+            <parameter n="HARDENING_CURVE" pn="Hardening type"  v="0" help="Defines the flow rule to use (LinearSoft=0, ExpSoft=1, Hardening=2, PerfPlast=3)" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
 </ConstitutiveLaws>
