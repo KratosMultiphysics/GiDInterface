@@ -2,7 +2,7 @@
 <ConstitutiveLaws>
     <!--linear elastic laws-->
     <CLaw n="LinearElastic3DLaw" pn="Linear Elastic"  Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
-	  help="Linear elastic behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
+    help="Linear elastic behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -13,7 +13,7 @@
         </outputs>
     </CLaw>
     <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain"  Type="PlaneStrain" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
-          help="Linear elastic behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    help="Linear elastic behaviour in 2D plane strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -24,7 +24,7 @@
         </outputs>
     </CLaw>
     <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress"  Type="PlaneStress" Behaviour="Elastic" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication"
-          help="Linear elastic behaviour in 2D plane stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    help="Linear elastic behaviour in 2D plane stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -36,7 +36,7 @@
         </outputs>
     </CLaw>
     <CLaw n="LinearElasticAxisym2DLaw" pn="Linear Elastic"  Type="Axisymmetric" Behaviour="Elastic" StrainSize="4" ImplementedInApplication="StructuralMechanicsApplication"
-          help="Linear elastic behaviour in 2D axisymmetric" Dimension="2Da" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
+    help="Linear elastic behaviour in 2D axisymmetric" Dimension="2Da" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -49,7 +49,7 @@
 
     <!--hyperelastic NeoHookean laws-->
     <CLaw n="HyperElastic3DLaw" pn="Hyperelastic NeoHookean"  Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
-	  help="Hyperelastic Neo-Hookean behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
+    help="Hyperelastic Neo-Hookean behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -73,7 +73,7 @@
 
     <!--hyperelastic KirchhoffSaintVenant laws-->
     <CLaw n="KirchhoffSaintVenant3DLaw" pn="Hyperelastic Kirchhoff Saint-Venant"  Type="3D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
-	  help="Hyperelastic Kirchhoff Saint-Venant behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
+      help="Hyperelastic Kirchhoff Saint-Venant behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -138,7 +138,7 @@
 
     <!--constitutive laws for shells and membranes-->
     <CLaw n="LinearElasticPlaneStress_Hybrid_3D" KratosName="LinearElasticPlaneStress2DLaw" pn="Linear Elastic"  Type="PlaneStress" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="StructuralMechanicsApplication"
-	  help="Linear elastic behaviour in 3D for shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
+      help="Linear elastic behaviour in 3D for shells" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="D-R" AllowsAnisotropy="False" >
         <inputs>
             <parameter n="DENSITY" pn="Density"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -201,4 +201,134 @@
         </inputs>
         <outputs></outputs>
     </CLaw>
+
+    <!--Damage isotropic-->
+    <CLaw n="SmallStrainIsotropicDamage3DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="3D" Behaviour="Damage" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 3d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="P" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="Energy/L^2" units="J/m^2" />
+            <parameter n="SOFTENING_TYPE" pn="Softening type"  v="0" help="Defines the softening type (linear softening=0, exponential softening=1)" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="SmallStrainIsotropicDamage2DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="PlaneStrain" Behaviour="Damage" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 2d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="P" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="Energy/L^2" units="J/m^2" />
+            <parameter n="SOFTENING_TYPE" pn="Softening type"  v="0" help="Defines the softening type (linear softening=0, exponential softening=1)" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <!--Plasticity isotropic-->
+    <CLaw n="SmallStrainIsotropicPlasticity3DVonMisesVonMises" pn="Generic Small Strain Isotropic plasticity"  Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic plasticity for 3d solids. This CL computes plastic strains in a rate-independent way based on the normalized plastic dissipation internal variable. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises represents the plastic potential to be used, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca in an associative or non-associative way." Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="P" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="Energy/L^2" units="J/m^2" />
+            <parameter n="HARDENING_CURVE" pn="Hardening type"  v="0" help="Defines the flow rule to use (LinearSoft=0, ExpSoft=1, Hardening=2, PerfPlast=3)" />
+            <parameter n="MAXIMUM_STRESS_POSITION" pn="Peak stress position"  v="0.3" help="ONLY FOR CURVE 2, Defines the position of the peak strength (value ranging 0-1)" />
+            <parameter n="MAXIMUM_STRESS" pn="Peak stress"  v="2.0e6" help="ONLY FOR CURVE 2, Defines the peak strength value" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <!--Plasticity kinematic-->
+    <CLaw n="SmallStrainKinematicPlasticity3DVonMisesVonMises" pn="Generic Small Strain Kinematic-Isotropic plasticity"  Type="3D" Behaviour="Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Combined Isotropic-Kinematic plasticity for 3d solids. This CL computes plastic strains and back stress vector in a rate-independent way based on the normalized plastic dissipation internal variable. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises represents the plastic potential to be used, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca in an associative or non-associative way." Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="P" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="Energy/L^2" units="J/m^2" />
+            <parameter n="HARDENING_CURVE" pn="Hardening type"  v="0" help="Defines the flow rule to use (LinearSoft=0, ExpSoft=1, Hardening=2, PerfPlast=3)" />
+            <parameter n="MAXIMUM_STRESS_POSITION" pn="Peak stress position"  v="0.3" help="ONLY FOR CURVE 2, Defines the position of the peak strength (value ranging 0-1)" />
+            <parameter n="MAXIMUM_STRESS" pn="Peak stress"  v="2.0e6" help="ONLY FOR CURVE 2, Defines the peak strength value" />
+            <parameter n="KINEMATIC_HARDENING_TYPE" pn="Kinematic hardening type"  v="0" help="0: Linear kinematic hardening; 1: Armstrong-Frederick; 2: Araujo-Voyiadjis" />
+            <parameter n="KINEMATIC_PLASTICITY_PARAMETERS" pn="Kinematic hardening parameters" type="inline_vector" v="1.0e9,0.0,0.0" help="Vector of parameters for the kinematic hardening" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <!--Plasticity isotropic-->
+    <CLaw n="FiniteStrainIsotropicPlasticity3DVonMisesVonMises" pn="Generic Finite Strain Isotropic plasticity"  Type="3D" Behaviour="Isotropic Plasticity" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic plasticity for 3d solids in finite strains. This CL computes plastic strains in a rate-independent way based on the normalized plastic dissipation internal variable. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises represents the plastic potential to be used, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca in an associative or non-associative way. This CL computes the logarithmic strain and then proceeds identically as in Small Strains (Souza et al.)" Dimension="3D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="P" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="Energy/L^2" units="J/m^2" />
+            <parameter n="HARDENING_CURVE" pn="Hardening type"  v="0" help="Defines the flow rule to use (LinearSoft=0, ExpSoft=1, Hardening=2, PerfPlast=3)" />
+            <parameter n="MAXIMUM_STRESS_POSITION" pn="Peak stress position"  v="0.3" help="ONLY FOR CURVE 2, Defines the position of the peak strength (value ranging 0-1)" />
+            <parameter n="MAXIMUM_STRESS" pn="Peak stress"  v="2.0e6" help="ONLY FOR CURVE 2, Defines the peak strength value" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <!--Plasticity kinematic-->
+    <CLaw n="FiniteStrainKinematicPlasticity3DVonMisesVonMises" pn="Generic Finite Strain Kinematic-Isotropic plasticity"  Type="3D" Behaviour="Combined Kinematic and Isotropic Plasticity in Finite Strains" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Combined Isotropic-Kinematic plasticity for 3d solids in Finite strains. This CL computes plastic strains and back stress tensor in a rate-independent way based on the normalized plastic dissipation internal variable. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises represents the plastic potential to be used, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca in an associative or non-associative way.This CL computes the logarithmic strain and then proceeds identically as in Small Strains (Souza et al.)" Dimension="3D" LargeDeformation="True" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="Pa" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="Pa" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="J/m^2" units="J/m^2" />
+            <parameter n="HARDENING_CURVE" pn="Hardening type"  v="0" help="Defines the flow rule to use (LinearSoft=0, ExpSoft=1, Hardening=2, PerfPlast=3)" />
+            <parameter n="MAXIMUM_STRESS_POSITION" pn="Peak stress position"  v="0.3" help="ONLY FOR CURVE 2, Defines the position of the peak strength (value ranging 0-1)" />
+            <parameter n="MAXIMUM_STRESS" pn="Peak stress"  v="2.0e6" help="ONLY FOR CURVE 2, Defines the peak strength value" />
+            <parameter n="KINEMATIC_HARDENING_TYPE" pn="Kinematic hardening type"  v="0" help="0: Linear kinematic hardening; 1: Armstrong-Frederick; 2: Araujo-Voyiadjis" />
+            <parameter n="KINEMATIC_PLASTICITY_PARAMETERS" pn="Kinematic hardening parameters" type="inline_vector" v="1.0e9,0.0,0.0" help="Vector of parameters for the kinematic hardening" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <!--ViscousGeneralizedMaxwell3D-->
+    <CLaw n="ViscousGeneralizedMaxwell3D" pn="Generalized Maxwell"  Type="3D" Behaviour="Small strain generalized Maxwell" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" help="This viscoelastic model has been widely used when simulating the stress relaxation of materials subjected to a constant strain rate (like in pre-stressing tendons used in civil engineering).">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2" />
+            <parameter n="VISCOUS_PARAMETER" pn="Viscous parameter" v="0.15" />
+            <parameter n="DELAY_TIME" pn="Delay time"  v="100" unit_magnitude="time" units="time" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <!--ViscousGeneralizedKelvin3D-->
+    <CLaw n="ViscousGeneralizedKelvin3D" pn="Generalized Kelvin"  Type="3D" Behaviour="Small strain generalized Kelvin" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication"  Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" help="This viscous model has been used in general to simulate delayed strains in materials such as the creep in concrete and soils">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="DELAY_TIME" pn="Delay time" v="1.0"  />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <!--Associative plastic damage model-->
+    <CLaw n="AssociativePlasticDamageModel3DVonMises" pn="Associative Plastic-Damage model"  Type="3D" Behaviour="Small Strain Plastic-Damage model" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication"  Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" help="Small Strain Plastic-Damage model, this model is able to simulate damage (loss of stiffness) and plasticity (irrecoverable strains) in a fully coupled way. The VonMises stands for the yield surface and plastic potential to be used. In this case the flow is always associative.">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="P" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="Energy/L^2" units="J/m^2" />
+            <parameter n="HARDENING_CURVE" pn="Hardening type"  v="0" help="Defines the flow rule to use (LinearSoft=0, ExpSoft=1)" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+
+
+
+
 </ConstitutiveLaws>
