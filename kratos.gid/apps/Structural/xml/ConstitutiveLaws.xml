@@ -203,7 +203,7 @@
     </CLaw>
 
     <!--Damage isotropic-->
-    <CLaw n="SmallStrainIsotropicDamage3DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="3D" Behaviour="Damage" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 3d solids. This CL computes a certain damage which degrades the stiffness of the material." Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainIsotropicDamage3DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="3D" Behaviour="Damage" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 3d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
@@ -215,7 +215,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="SmallStrainIsotropicDamage2DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="PlaneStrain" Behaviour="Damage" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 2d solids. This CL computes a certain damage which degrades the stiffness of the material." Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainIsotropicDamage2DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="PlaneStrain" Behaviour="Damage" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 2d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
