@@ -270,30 +270,36 @@ proc Kratos::LoadModelSPD { filespd } {
 
     } else {
         # If the spd versions are equal, partyhard
+        Kratos::_LoadGo $filespd
 
-        # Load the old spd
-        gid_groups_conds::open_spd_file $filespd
-
-        # Refresh the cache
-        customlib::UpdateDocument
-
-        # Load default intervals (if any)
-        spdAux::LoadIntervalGroups
-
-        # Reactive the previous app
-        spdAux::reactiveApp
-
-        apps::ExecuteOnCurrentApp LoadModelEvent $filespd
-
-        # Load default files (if any) (file selection values store the filepaths in the spd)
-        spdAux::LoadModelFiles
-
-        # Open the tree
-        spdAux::OpenTree
-
-        after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]}
     }
 
+}
+
+proc Kratos::_LoadGo {filespd} {
+    # If the spd versions are equal, partyhard
+
+    # Load the old spd
+    gid_groups_conds::open_spd_file $filespd
+
+    # Refresh the cache
+    customlib::UpdateDocument
+
+    # Load default intervals (if any)
+    spdAux::LoadIntervalGroups
+
+    # Reactive the previous app
+    spdAux::reactiveApp
+
+    apps::ExecuteOnCurrentApp LoadModelEvent $filespd
+
+    # Load default files (if any) (file selection values store the filepaths in the spd)
+    spdAux::LoadModelFiles
+
+    # Open the tree
+    spdAux::OpenTree
+
+    after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]}
 }
 
 proc Kratos::Event_EndProblemtype { } {
@@ -384,7 +390,7 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
         set w [dialogwin_snit .gid._ask -title [_ "Transform"] -entrytext [_ "The model needs to be upgraded. Do you want to upgrade to new version? You can lose data"]]
         set action [$w createwindow]
         destroy $w
-        if { $action < 1 } { return }
+        if { $action < 1 } { Kratos::_LoadGo $old_filespd; return }
     }
 
     # Get the old app
