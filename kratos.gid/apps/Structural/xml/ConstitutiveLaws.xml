@@ -203,7 +203,7 @@
     </CLaw>
 
     <!--Damage isotropic-->
-    <CLaw n="SmallStrainIsotropicDamage3DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="3D" Behaviour="Damage" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 3d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainIsotropicDamage3DVonMises" pn="Small Strain Isotropic damage"  Type="3D" Behaviour="Damage" StrainSize="6" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 3d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
@@ -215,7 +215,7 @@
         <outputs></outputs>
     </CLaw>
 
-    <CLaw n="SmallStrainIsotropicDamage2DVonMisesVonMises" pn="Small Strain Isotropic damage"  Type="PlaneStrain" Behaviour="Damage" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 2d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+    <CLaw n="SmallStrainIsotropicDamagePlaneStrainVonMises" pn="Small Strain Isotropic damage plane strain"  Type="PlaneStrain" Behaviour="Damage" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 2d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
@@ -223,6 +223,19 @@
             <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="P" units="Pa" />
             <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="Energy/L^2" units="J/m^2" />
             <parameter n="SOFTENING_TYPE" pn="Softening type"  v="0" help="Defines the softening type (linear softening=0, exponential softening=1)" />
+        </inputs>
+        <outputs></outputs>
+    </CLaw>
+
+    <CLaw n="SmallStrainIsotropicDamagePlaneStressVonMises" pn="Small Strain Isotropic damage plane stress"  Type="PlaneStress" Behaviour="Damage" StrainSize="3" ImplementedInApplication="StructuralMechanicsApplication" help="Isotropic damage for 2d solids. This CL computes a certain damage which degrades the stiffness of the material. The first VonMises represents the yield surface to use, it can be modified to use MohrCoulomb, DruckerPrager, ModifiedMohrCoulomb, Rankine, Tresca and SimoJu. The second VonMises in damage is unused." Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="30.0e9" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="YIELD_STRESS" pn="Yield stress" v="1.0e6" unit_magnitude="P" units="Pa" />
+            <parameter n="FRACTURE_ENERGY" pn="Fracture energy"  v="100" unit_magnitude="Energy/L^2" units="J/m^2" />
+            <parameter n="SOFTENING_TYPE" pn="Softening type"  v="0" help="Defines the softening type (linear softening=0, exponential softening=1)" />
+            <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
         </inputs>
         <outputs></outputs>
     </CLaw>
