@@ -35,8 +35,7 @@ jobs:
           rm -rf /gid/problemtypes/
           mkdir /gid/problemtypes
           mv ./kratos.gid /gid/problemtypes/
-          mkdir /gid/problemtypes/kratos.gid/exec/Kratos
-          mv /tmp/KratosRelease/* /gid/problemtypes/kratos.gid/exec/Kratos
+          python3 -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.1.3
 
       # start the tester thing
       - name: Tester
