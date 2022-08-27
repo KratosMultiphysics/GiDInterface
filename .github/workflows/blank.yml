@@ -32,6 +32,8 @@ jobs:
       # Copy problemtype to gid and copy exec
       - name: Move kratos where it should be
         run: |
+          rm -rf /gid/problemtypes/
+          mkdir /gid/problemtypes
           mv ./kratos.gid /gid/problemtypes/
           mkdir /gid/problemtypes/kratos.gid/exec/Kratos
           mv /tmp/KratosRelease/* /gid/problemtypes/kratos.gid/exec/Kratos
