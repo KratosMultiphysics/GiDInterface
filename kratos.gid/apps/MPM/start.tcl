@@ -1,55 +1,26 @@
 namespace eval ::MPM {
+    Kratos::AddNamespace [namespace current]
+    
     # Variable declaration
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
+    variable _app
+
+    proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
+    proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
+    proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
 }
 
-proc ::MPM::Init { } {
+proc ::MPM::Init { app } {
     # Variable initialization
     variable dir
-    variable prefix
-    variable attributes
-    variable kratos_name
-
-    apps::LoadAppById "Structural"
-    set kratos_name ParticleMechanicsApplication
+    variable _app
+    set _app $app
 
     set dir [apps::getMyDir "MPM"]
-    set attributes [dict create]
-
-    set prefix MPM
-
-    set ::Model::ValidSpatialDimensions [list 2D 2Da 3D]
-    # spdAux::SetSpatialDimmension "3D"
-
-    # Allow to open the tree
-    set ::spdAux::TreeVisibility 1
-
-    dict set attributes UseIntervals 1
-
-    LoadMyFiles
     Kratos::AddRestoreVar "::GidPriv(DuplicateEntities)"
     set ::GidPriv(DuplicateEntities) 1
 
-    #::spdAux::CreateDimensionWindow
+    # XML init event
+    ::MPM::xml::Init
+    ::MPM::write::Init
 }
-
-proc ::MPM::LoadMyFiles { } {
-    variable dir
-
-    uplevel #0 [list source [file join $dir xml XmlController.tcl]]
-    uplevel #0 [list source [file join $dir write write.tcl]]
-    uplevel #0 [list source [file join $dir write writeProjectParameters.tcl]]
-    uplevel #0 [list source [file join $dir examples examples.tcl]]
-}
-
-proc ::MPM::GetAttribute {name} {
-    variable attributes
-    set value ""
-    if {[dict exists $attributes $name]} {set value [dict get $attributes $name]}
-    return $value
-}
-
-::MPM::Init

@@ -1,11 +1,12 @@
 
 namespace eval ::Structural::Formfinding {
-    # Variable declaration
+    namespace path ::Structural
+    Kratos::AddNamespace [namespace current]
     
 }
 
 # copy problem folder to restore the formfinding problem
-proc Structural::Formfinding::CopyFormfinding {} {
+proc ::Structural::Formfinding::CopyFormfinding {} {
     #delete formfinding folder if it exists
     # set script_file [file nativename [GiD_Info project modelname].gid]
     set script_folder [GiD_Info project modelname].gid
@@ -28,7 +29,7 @@ proc Structural::Formfinding::CopyFormfinding {} {
 }
 
 # update nodal coordinates
-proc Structural::Formfinding::ModifyNodes {} {
+proc ::Structural::Formfinding::ModifyNodes {} {
     set node_list [GiD_Result get {Displacement Kratos 1.1}]
     set counter 0
     foreach node $node_list {
@@ -55,7 +56,7 @@ proc Structural::Formfinding::ModifyNodes {} {
     GidUtils::SetWarnLine "Preprocess mesh is now updated"
 }
 
-proc Structural::Formfinding::UpdateGeometry { } {
+proc ::Structural::Formfinding::UpdateGeometry { } {
     CopyFormfinding
     ModifyNodes
 }

@@ -21,14 +21,14 @@ proc Kratos::InitLog { } {
 
     if {[info exists Kratos::kratos_private(allow_logs)] && $Kratos::kratos_private(allow_logs)>0} {
 
-        set kratos_private(LogFilename) [clock format [clock seconds] -format "%Y%m%d%H%M%S"].log 
+        set kratos_private(LogFilename) [clock format [clock seconds] -format "%Y%m%d%H%M%S"].log
         set logpath [Kratos::GetLogFilePath]
         file mkdir [file dirname $logpath]
         set logfile [open $logpath "a+"];
         puts $logfile "Kratos Log Session"
         close $logfile
         set kratos_private(Log) [list ]
-        
+
         Kratos::AutoFlush
     }
 }
@@ -37,11 +37,11 @@ proc Kratos::Log {msg} {
     variable kratos_private
 
     if {[info exists kratos_private(Log)] &&  $Kratos::kratos_private(allow_logs) > 0} {
-    
+
         if {[info exists kratos_private(Log)]} {
             lappend kratos_private(Log) "*~* [clock format [clock seconds] -format {%Z %Y-%m-%d %H:%M:%S }] | $msg"
 
-            # One of the triggers is to flush if we've stored more than 5 
+            # One of the triggers is to flush if we've stored more than 5
             if {[llength $kratos_private(Log)] > 5} {
                 Kratos::FlushLog
             }
@@ -51,21 +51,25 @@ proc Kratos::Log {msg} {
 
 proc Kratos::FlushLog { }  {
     variable kratos_private
-    
+return ""
     if {[info exists kratos_private(Log)] && $Kratos::kratos_private(allow_logs) > 0} {
         # only disturb the disk if we have something new to write
         if {[llength $kratos_private(Log)] > 0} {
             set logpath [Kratos::GetLogFilePath]
 
-            set logfile [open $logpath "a+"];
-
+            set logfile ""
             try {
+                set logfile [open $logpath "a+"];
                 foreach msg $kratos_private(Log) {
                     puts $logfile $msg
                 }
-                
-            } finally {
-                close $logfile
+
+            }
+            on error {msg} {
+                W $msg
+            }
+            finally {
+                if {$logfile ne ""} {close $logfile}
             }
 
             set kratos_private(Log) [list ]
@@ -97,7 +101,7 @@ if { [GiD_Set SaveGidDefaults] } {
 Kratos::InitLog
 
 proc Kratos::MoveLogsToFolder {folder {flush_log 1}} {
-    
+
     if {[info exists Kratos::kratos_private(allow_logs)] && $Kratos::kratos_private(allow_logs)>0} {
         if {$flush_log} {FlushLog}
         if {![file exists $folder]} {file mkdir $folder}

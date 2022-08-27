@@ -1,6 +1,4 @@
-
-
-# Overwritten to ad TOP BOTTOM params
+# Overwritten to add TOP BOTTOM params
 proc DEM::write::DefineFEMExtraConditions {props} {
     set material_analysis [write::getValue DEMTestMaterial Active]
     if {$material_analysis == "true"} {

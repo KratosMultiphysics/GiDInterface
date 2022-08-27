@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
-  <ElementItem n="FractionalStep2D" pn="Fractional Step 2D" ImplementedInFile="fractional_step.cpp" ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a Fractional Step Element">
+  <ElementItem n="FractionalStep2D" pn="Fractional Step 2D" ImplementedInFile="fractional_step.cpp" ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a Fractional Step Element">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -26,7 +26,7 @@
   </ElementItem>
 
 
-  <ElementItem n="FractionalStep3D" pn="Fractional Step 3D" ImplementedInFile="fractional_step.cpp" ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a Fractional Step Element">
+  <ElementItem n="FractionalStep3D" pn="Fractional Step 3D" ImplementedInFile="fractional_step.cpp" ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY" ElementType="Fluid" help="This element implements a Fractional Step Element">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -49,7 +49,7 @@
   </ElementItem>
 
     <ElementItem n="QSVMS2D" pn="Quasi-static VMS" ImplementedInFile="qs_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="qsvms"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a quasi-static Variational MultiScale (VMS) monolithic element">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
@@ -77,7 +77,7 @@
     </ElementItem>
 
     <ElementItem n="QSVMS3D" pn="Quasi-static VMS" ImplementedInFile="qs_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="qsvms"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a quasi-static Variational MultiScale (VMS) monolithic element">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
@@ -105,7 +105,7 @@
     </ElementItem>
 
     <ElementItem n="DVMS2D" pn="Dynamic VMS" ImplementedInFile="d_vms.cpp" ImplementedInApplication="FluidDynamicsApplication"  FormulationElementType="dvms"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a dynamic Variational MultiScale (VMS) monolithic element">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
@@ -133,7 +133,7 @@
     </ElementItem>
 
     <ElementItem n="DVMS3D" pn="Dynamic VMS" ImplementedInFile="d_vms.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="dvms"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a dynamic Variational MultiScale (VMS) monolithic element">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
@@ -161,7 +161,7 @@
     </ElementItem>
 
     <ElementItem n="FIC2D" pn="FIC" ImplementedInFile="fic.cpp" ImplementedInApplication="FluidDynamicsApplication"  FormulationElementType="fic"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a Finite Increment Calculus (FIC) stabilization monolithic element">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
@@ -189,7 +189,7 @@
     </ElementItem>
 
     <ElementItem n="FIC3D" pn="FIC" ImplementedInFile="fic.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="fic"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a Finite Increment Calculus (FIC) stabilization monolithic element">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
@@ -217,7 +217,7 @@
     </ElementItem>
 
     <ElementItem n="WeaklyCompressible2D" pn="Weakly compressible" ImplementedInFile="weakly_compressible_navier_stokes.cpp" ImplementedInApplication="FluidDynamicsApplication"  FormulationElementType="weakly_compressible"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a VMS stabilized weakly compressible Navier-Stokes monolithic formulation">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
@@ -244,7 +244,7 @@
     </ElementItem>
 
     <ElementItem n="WeaklyCompressible3D" pn="Weakly compressible" ImplementedInFile="weakly_compressible_navier_stokes.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="weakly_compressible"
-        MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a VMS stabilized weakly compressible Navier-Stokes monolithic formulation">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>

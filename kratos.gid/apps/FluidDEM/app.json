@@ -1,0 +1,42 @@
+{
+    "id": "FluidDEM",
+    "name": "Swimming DEM",
+    "prefix": "DEM",
+    "themed": false,
+    "kratos_name": "FluidDEMapplication",
+    "python_packages": [
+        "KratosSwimmingDEMApplication",
+        "KratosFluidDynamicsApplication",
+        "KratosDEMApplication"
+    ],
+    "dimensions": [
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/CylinderInFlow.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script": "::FluidDEM::Init",
+    "requeriments": {
+        "apps": [
+            "DEM",
+            "Fluid"
+        ],
+        "minimum_gid_version": "15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "write": {
+        "coordinates": "groups"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

@@ -12,7 +12,7 @@
 		ImplementedInPythonFile="Monolithic"
 		MinimumKratosVersion="8500"
 		App="Fluid"
-		ProductionReady="ProductionReady"
+
 		help="Incompressible Navier-Stokes equations monolithic strategy.">
 
 		<!-- list of options to be filled -->
@@ -41,13 +41,13 @@
 
 		<!-- scheme settings -->
 		<schemes>
-			<scheme n="bossak" pn="Bossak" help="Bossak scheme for CFD problems." ProductionReady="ProductionReady">
+			<scheme n="bossak" pn="Bossak" help="Bossak scheme for CFD problems." >
                 <parameter_list></parameter_list>
                 <element_filters>
                     <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D"/>
                 </element_filters>
             </scheme>
-			<scheme n="bdf2" pn="BDF2" help="2nd order Backward Differenctiation Formula (BDF2) scheme for CFD problems." ProductionReady="ProductionReady">
+			<scheme n="bdf2" pn="BDF2" help="2nd order Backward Differenctiation Formula (BDF2) scheme for CFD problems." >
                 <parameter_list></parameter_list>
                 <element_filters>
                     <filter field="n" value="QSVMS2D,QSVMS3D,DVMS2D,DVMS3D,FIC2D,FIC3D,WeaklyCompressible2D,WeaklyCompressible3D"/>
@@ -67,7 +67,7 @@
 		ImplementedInPythonFile="FractionalStep"
 		MinimumKratosVersion="8500"
 		App="Fluid"
-		ProductionReady="ProductionReady"
+
 		help="Incompressible Navier-Stokes equations fractional step strategy.">
 
 		<!-- list of options to be filled -->

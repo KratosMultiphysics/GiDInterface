@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Groups>
     <Group id="PfemThermic" name="PfemThermic">
-        <Example id="PfemThermicSloshing"           app="PfemThermic" logo="exampleSloshing.png"           name="Thermic sloshing"            dim="2D" cmd="::PfemThermic::examples::ThermicSloshing"/>
-		<Example id="PfemThermicConvection"         app="PfemThermic" logo="exampleConvection.png"         name="Thermic convection"          dim="2D" cmd="::PfemThermic::examples::ThermicConvection"/>
-		<Example id="PfemThermicSloshingConvection" app="PfemThermic" logo="exampleSloshingConvection.png" name="Thermic sloshing/convection" dim="2D" cmd="::PfemThermic::examples::ThermicSloshingConvection"/>
-		<Example id="PfemThermicDamBreakFSI"        app="PfemThermic" logo="exampleDamBreakFSI.png"        name="Thermic dam break FSI"       dim="2D" cmd="::PfemThermic::examples::ThermicDamBreakFSI"/>
-		<Example id="PfemThermicCubeDrop"           app="PfemThermic" logo="exampleCubeDrop.png"           name="Thermic cube drop"           dim="2D" cmd="::PfemThermic::examples::ThermicCubeDrop"/>
-		<Example id="PfemThermicFluidDrop"          app="PfemThermic" logo="exampleFluidDrop.png"          name="Thermic fluid drop"          dim="2D" cmd="::PfemThermic::examples::ThermicFluidDrop"/>
+        <Example id="PfemThermicSloshing"           app="PfemThermic" logo="exampleSloshing.png"           name="Thermic sloshing"            dim="2D" cmd="::PfemThermic::examples::ThermicSloshing::Init">
+        <Description></Description>
+    </Example>
+		<Example id="PfemThermicConvection"         app="PfemThermic" logo="exampleConvection.png"         name="Thermic convection"          dim="2D" cmd="::PfemThermic::examples::ThermicConvection::Init">
+        <Description></Description>
+    </Example>
+		<Example id="PfemThermicSloshingConvection" app="PfemThermic" logo="exampleSloshingConvection.png" name="Thermic sloshing/convection" dim="2D" cmd="::PfemThermic::examples::ThermicSloshingConvection::Init">
+        <Description></Description>
+    </Example>
+		<Example id="PfemThermicDamBreakFSI"        app="PfemThermic" logo="exampleDamBreakFSI.png"        name="Thermic dam break FSI"       dim="2D" cmd="::PfemThermic::examples::ThermicDamBreakFSI::Init">
+        <Description></Description>
+    </Example>
+		<Example id="PfemThermicCubeDrop"           app="PfemThermic" logo="exampleCubeDrop.png"           name="Thermic cube drop"           dim="2D" cmd="::PfemThermic::examples::ThermicCubeDrop::Init">
+        <Description></Description>
+    </Example>
+		<Example id="PfemThermicFluidDrop"          app="PfemThermic" logo="exampleFluidDrop.png"          name="Thermic fluid drop"          dim="2D" cmd="::PfemThermic::examples::ThermicFluidDrop::Init">
+        <Description></Description>
+    </Example>
     </Group>
 </Groups>

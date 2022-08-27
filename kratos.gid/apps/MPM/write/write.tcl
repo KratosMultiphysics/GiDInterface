@@ -1,4 +1,7 @@
 namespace eval MPM::write {
+    namespace path ::MPM
+    Kratos::AddNamespace [namespace current]
+
     variable writeAttributes
     variable ConditionsDictGroupIterators
 }
@@ -7,17 +10,16 @@ proc MPM::write::Init { } {
     # Namespace variables inicialization
     variable ConditionsDictGroupIterators
     set ConditionsDictGroupIterators [dict create]
-    SetAttribute parts_un MPMParts
-    SetAttribute nodal_conditions_un MPMNodalConditions
-    SetAttribute conditions_un MPMLoads
-    SetAttribute properties_location json 
-    # SetAttribute conditions_un FLBC
-    # SetAttribute materials_un EMBFLMaterials
-    # SetAttribute writeCoordinatesByGroups 0
-    # SetAttribute validApps [list "MPM"]
-    SetAttribute main_script_file "KratosParticle.py"
-    SetAttribute materials_file "ParticleMaterials.json"
-    SetAttribute model_part_name "Background_Grid"
+
+    SetAttribute parts_un [::MPM::GetUniqueName parts]
+    SetAttribute nodal_conditions_un [::MPM:::GetUniqueName nodal_conditions]
+    SetAttribute conditions_un [::MPM::GetUniqueName conditions]
+
+    SetAttribute writeCoordinatesByGroups [::MPM::GetWriteProperty coordinates]
+    SetAttribute main_launch_file [::MPM::GetAttribute main_launch_file]
+    SetAttribute materials_file [::MPM::GetWriteProperty materials_file]
+    SetAttribute properties_location [::MPM::GetWriteProperty properties_location]
+    SetAttribute model_part_name [::MPM::GetWriteProperty model_part_name]
 }
 
 # Events
@@ -26,21 +28,21 @@ proc MPM::write::writeModelPartEvent { } {
     write::initWriteConfiguration [GetAttributes]
 
     MPM::write::UpdateMaterials
-    
+
     set filename [Kratos::GetModelName]
-    
+
     ## Grid MPDA ##
     # Headers
     write::writeModelPartData
     write::WriteString "Begin Properties 0"
     write::WriteString "End Properties"
 
-    # Nodal coordinates 
+    # Nodal coordinates
     write::writeNodalCoordinates
 
     # Grid element connectivities
     writeGridConnectivities
-    
+
     # Write conditions
     writeConditions
 
@@ -70,22 +72,30 @@ proc MPM::write::writeModelPartEvent { } {
     write::CloseFile
 }
 
-proc MPM::write::writeBodyNodalCoordinates { } {
+proc MPM::write::GetPartsGroups { part_type {what "name"} } {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
     set body_groups [list ]
+    set grid_elems [list GRID2D GRID3D]
     foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
-        if {$elem ni [list GRID2D GRID3D]} {
-            lappend body_groups [$gNode @n]
+
+        if {($part_type eq "grid" && $elem in $grid_elems) || ($part_type ne "grid" && $elem ni $grid_elems)} {
+            if {$what eq "name"} {
+                lappend body_groups [$gNode @n]
+            } {
+                lappend body_groups $gNode
+            }
         }
     }
-    write::writeNodalCoordinatesOnGroups $body_groups
+    return $body_groups
+}
+
+proc MPM::write::writeBodyNodalCoordinates { } {
+    write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroups Body]
 }
 
 proc MPM::write::writeBodyElementConnectivities { } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
-    set body_groups [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+    foreach gNode [MPM::write::GetPartsGroups Body node] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
         if {$elem ni [list GRID2D GRID3D]} {
             write::writeGroupElementConnectivities $gNode $elem
@@ -94,8 +104,7 @@ proc MPM::write::writeBodyElementConnectivities { } {
 }
 
 proc MPM::write::writeGridConnectivities { } {
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+    foreach gNode [MPM::write::GetPartsGroups grid node] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
         if {$elem in [list GRID2D GRID3D]} {
             write::writeGroupElementConnectivities $gNode $elem
@@ -104,39 +113,29 @@ proc MPM::write::writeGridConnectivities { } {
 }
 
 proc MPM::write::writeConditions { } {
-
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [write::writeConditions [GetAttribute conditions_un] ]
+    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] ]
 }
+
 proc MPM::write::writeSubmodelparts { type } {
 
     set grid_elements [list GRID2D GRID3D]
-
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group"
-    set body_groups [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+    foreach gNode [MPM::write::GetPartsGroups $type node] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element'\]"] ]
         set part_name [get_domnode_attribute [$gNode parent] n]
         set group_name [get_domnode_attribute $gNode n]
-        if {$type eq "grid"} {
-            if {$elem in $grid_elements} {
-                write::writeGroupSubModelPart $part_name $group_name "Elements"
-            }
-        } else {
-            if {$elem ni $grid_elements} {
-                write::writeGroupSubModelPart $part_name $group_name "Elements"
-            }
-        }
+        write::writeGroupSubModelPart $part_name $group_name "Elements"
     }
-    
     if {$type eq "grid"} {
         # Write the boundary conditions submodelpart
         write::writeNodalConditions [GetAttribute nodal_conditions_un]
-        
+
         # A Condition y a meshes-> salvo lo que no tenga topologia
         writeLoads
     }
 }
+
 proc MPM::write::writeLoads { } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
@@ -154,30 +153,36 @@ proc MPM::write::writeLoads { } {
 }
 
 proc MPM::write::writeCustomFilesEvent { } {
-    # write::RenameFileInModel "ProjectParameters.json" "ProjectParameters.py"
-
     # Materials file
-    write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] True Initial_MPM_Material
-    
-    # Main python script
-    set orig_name [GetAttribute main_script_file]
-    write::CopyFileIntoModel [file join "python" $orig_name ]
-    write::RenameFileInModel $orig_name "MainKratos.py"
-}
+    set mats_json [dict get [write::getPropertiesList [GetAttribute parts_un] True Initial_MPM_Material] properties ]
+    set new_mats [list ]
+    foreach mat $mats_json {
+        set type [dict exists $mat Material constitutive_law]
+        if {$type eq 0} {
+            set submodelpart [lindex [split [dict get $mat model_part_name] "."] end]
+            dict set mat model_part_name Background_Grid.$submodelpart
+        }
+        lappend new_mats $mat
+    }
+    write::OpenFile [GetAttribute materials_file]
+    write::WriteJSON [dict create properties $new_mats]
+    write::CloseFile
 
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
+}
 
 proc MPM::write::UpdateMaterials { } {
     set matdict [write::getMatDict]
     foreach {mat props} $matdict {
         # Modificar la ley constitutiva
         dict set matdict $mat THICKNESS  1.0000E+00
-        
+
         set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group\[@n='$mat'\]/value\[@n='THICKNESS'\]"
-        set vNode [[customlib::GetBaseRoot] selectNodes $xp1] 
+        set vNode [[customlib::GetBaseRoot] selectNodes $xp1]
         if {$vNode ne ""} {
             dict set matdict $mat THICKNESS [write::getValueByNode $vNode]
         }
-           
+
     }
     write::setMatDict $matdict
 }
@@ -196,5 +201,3 @@ proc MPM::write::SetAttribute {att val} {
     variable writeAttributes
     dict set writeAttributes $att $val
 }
-
-MPM::write::Init

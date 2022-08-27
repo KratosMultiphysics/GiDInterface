@@ -1,8 +1,8 @@
 
-proc Kratos::Quicktest {example_app example_dim example_cmd} {
-    apps::setActiveApp Examples
-    ::Examples::LaunchExample $example_app $example_dim $example_cmd
-} 
+# proc Kratos::Quicktest {example_app example_dim example_cmd} {
+#     apps::setActiveApp Examples
+#     ::Examples::LaunchExample $example_app $example_dim $example_cmd
+# }
 
 proc Kratos::ForceRun { } {
     # validated by escolano@cimne.upc.edu
@@ -54,7 +54,7 @@ proc Kratos::CheckValidProjectName {modelname} {
 }
 
 proc Kratos::PrintArray {a {pattern *}} {
-    upvar 1 $a array  
+    upvar 1 $a array
     if {![array exists array]} {
         error "\"$a\" isn't an array"
     }
@@ -88,7 +88,7 @@ proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
     if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
         W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
         if { [GidUtils::VersionCmp 14.0.0] < 0 } {
-            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14." 
+            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14."
         } {
             W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
         }
@@ -97,11 +97,11 @@ proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
 }
 
 # Customlib libs and preferences
-proc Kratos::LoadProblemtypeLibraries {} {  
+proc Kratos::LoadProblemtypeLibraries {} {
     package require customlib_extras
     package require customlib_native_groups
     variable kratos_private
-    
+
     gid_groups_conds::SetProgramName $kratos_private(Name)
     gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
     set spdfile [file join $kratos_private(Path) kratos_default.spd]
@@ -133,7 +133,7 @@ proc Kratos::GiveKratosDefaultsFile {} {
 proc Kratos::GetPreferencesFilePath { } {
     variable kratos_private
     # Where we store the user preferences :)
-    
+
     # Get the GiD preferences dir
     set dir_name [file dirname [GiveGidDefaultsFile]]
 
@@ -152,20 +152,37 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path docker_image]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
                 dict set preferences $v $kratos_private($v)
             }
         }
-        
+
         if {[llength [dict keys $preferences]] > 0} {
             set fp [open [Kratos::GetPreferencesFilePath] w]
-            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
+            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $preferences}
             close $fp
         }
     }
+}
+
+proc Kratos::ReadJsonDict {file_path} {
+    set data ""
+    catch {
+        # Try to open the preferences file
+        set fp [open $file_path r]
+        # Read the preferences
+        set data [read $fp]
+        # W $data
+        # Close the file
+        close $fp
+    }
+    if {$data ne ""} {
+        set data [write::json2dict $data]
+    }
+    return $data
 }
 
 proc Kratos::LoadEnvironment { } {
@@ -173,37 +190,40 @@ proc Kratos::LoadEnvironment { } {
 
     # Init variables
     set data ""
-    
+
     catch {
         # Try to open the preferences file
         set fp [open [Kratos::GetPreferencesFilePath] r]
         # Read the preferences
         set data [read $fp]
+        # W $data
         # Close the file
         close $fp
-    }
-    # Preferences are written in json format
-    foreach {k v} [write::json2dict $data] {
-        # Foreach pair key value, restore it
-        set kratos_private($k) $v
+
+        # Preferences are written in json format
+        foreach {k v} [write::json2dict $data] {
+            # W "$k $v"
+            # Foreach pair key value, restore it
+            set kratos_private($k) $v
+        }
     }
 }
 
 # LOGS
 
 proc Kratos::LogInitialData { } {
-    
+
     # Get the exec version
-    Kratos::GetExecVersion
-    Kratos::GetProblemtypeGitTag 
+    #Kratos::GetExecVersion
+    Kratos::GetProblemtypeGitTag
 
     set initial_data [dict create]
     dict set initial_data gid_version [GiD_Info gidversion]
     dict set initial_data problemtype_git_hash $Kratos::kratos_private(problemtype_git_hash)
     dict set initial_data problemtype_version $Kratos::kratos_private(Version)
-    dict set initial_data executable_version $Kratos::kratos_private(exec_version)
+    # dict set initial_data executable_version $Kratos::kratos_private(exec_version)
     dict set initial_data current_platform $::tcl_platform(platform)
-    
+
     Kratos::Log [write::tcl2json $initial_data]
 }
 
@@ -260,17 +280,58 @@ proc Kratos::GetProblemtypeGitTag {} {
 proc Kratos::GetMeshBasicData { } {
     set result [dict create]
     foreach element_type [GidUtils::GetElementTypes all] {
-        set ne [GiD_Info Mesh NumElements $element_type]       
+        set ne [GiD_Info Mesh NumElements $element_type]
         if { $ne } {
             dict set result $element_type $ne
         }
     }
-    
-    dict set result nodes [GiD_Info Mesh NumNodes] 
+
+    dict set result nodes [GiD_Info Mesh NumNodes]
     dict set result is_quadratic [expr [GiD_Info Project Quadratic] && ![GiD_Cartesian get iscartesian] ]
-    return $result   
+    return $result
 }
 
 proc ? {question true_val false_val} {
     return [expr $question ? $true_val : $false_val]
 }
+
+proc Kratos::OpenCaseIn {program} {
+    switch $program {
+        "VSCode" {
+            if {[GiD_Info Project ModelName] eq "UNNAMED"} {W "Save your model first"} {
+                catch {exec code -n [GidUtils::GetDirectoryModel]} msg
+                if {$msg eq {couldn't execute "code": no such file or directory}} {
+                    W "Install Visual Studio Code and add it to your PATH"
+                }
+            }
+        }
+        default {}
+    }
+}
+
+if { ![GidUtils::IsTkDisabled] } {
+    proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
+        return variable
+    }
+}
+
+proc Kratos::IsDeveloperMode {} {
+    set is_dev 0
+    if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
+    return $is_dev
+}
+
+proc Kratos::GetFilePath { var_name type_names_extensions } {
+    set file [MessageBoxGetFilename file read "Get file" "" $type_names_extensions]
+    # set filename [MessageBoxGetFilename file read [_ "Read HDF5 Vibez file"] {} {{{HDF5 Vibez} {.h5 }} {{All files} {.*}}} {} $multiple [list [_ "Import options"] Vibez::MoreImportOptions]]
+    return $file
+}
+
+if { ![GidUtils::IsTkDisabled] } {
+    proc xmlprograms::GetPythonPath { baseframe variable } {
+        set $variable [Kratos::GetFilePath ::Kratos(python_path) {{{python path} {.exe }} {{All files} {.*}}}]
+        return variable
+    }
+}
+

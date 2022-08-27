@@ -1,11 +1,15 @@
+namespace eval ::DEMPFEM::examples::InnerSphere {
+    namespace path ::DEMPFEM::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::DEMPFEM::examples::InnerSphere {args} {
+proc ::DEMPFEM::examples::InnerSphere::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawSquareGeometry3D
+    DrawGeometry3D
     AssignGroups3D
     TreeAssignation3D
     MeshAssignation3D
@@ -19,7 +23,7 @@ proc ::DEMPFEM::examples::InnerSphere {args} {
 
 
 # Draw Geometry
-proc DEMPFEM::examples::DrawSquareGeometry3D {args} {
+proc ::DEMPFEM::examples::InnerSphere::DrawGeometry3D {args} {
     
     Kratos::ResetModel
 
@@ -41,7 +45,7 @@ proc DEMPFEM::examples::DrawSquareGeometry3D {args} {
 
 
 # Group assign
-proc DEMPFEM::examples::AssignGroups3D {args} {
+proc ::DEMPFEM::examples::InnerSphere::AssignGroups3D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -62,7 +66,7 @@ proc DEMPFEM::examples::AssignGroups3D {args} {
 }
 
 # Tree assign
-proc DEMPFEM::examples::TreeAssignation3D {args} {
+proc ::DEMPFEM::examples::InnerSphere::TreeAssignation3D {args} {
     
     set root [customlib::GetBaseRoot]
     set condtype surface
@@ -70,7 +74,7 @@ proc DEMPFEM::examples::TreeAssignation3D {args} {
 
     # DEM - PARTS
     set demPart [customlib::AddConditionGroupOnXPath [spdAux::getRoute "DEMParts"] Dem]
-    set props [list Element SphericPartDEMElement3D ConstitutiveLaw Hertz Material DEM-DefaultMaterial]
+    set props [list Element SphericPartDEMElement3D]
     $demPart setAttribute ov $fluidtype
     spdAux::SetValuesOnBaseNode $demPart $props
     
@@ -104,16 +108,7 @@ proc DEMPFEM::examples::TreeAssignation3D {args} {
 
 }
 
-proc DEMPFEM::examples::MeshAssignation3D {} {
+proc ::DEMPFEM::examples::InnerSphere::MeshAssignation3D {} {
     set list_vols [GiD_EntitiesGroups get Dem volumes]
     GiD_Process Mescape Meshing ElemType Sphere Volumes {*}$list_vols escape 
-
-}
-
-proc DEMPFEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

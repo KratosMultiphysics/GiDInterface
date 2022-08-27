@@ -4,7 +4,7 @@
 proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     set root [customlib::GetBaseRoot]
-    #W "$field $value $name $it"
+    # W "$field $value $unique_name $it"
     set node ""
 
     set xp [spdAux::getRoute $unique_name]
@@ -15,14 +15,12 @@ proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     if {$node ne ""} {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
-    } {
-        error "$name $it not found - Check GetFromXML.tcl file"
     }
 }
 
 proc spdAux::SetValuesOnBasePath {base_path prop_value_pairs} {
     return [spdAux::SetValuesOnBaseNode [[customlib::GetBaseRoot] selectNodes $base_path] $prop_value_pairs]
-} 
+}
 
 proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
     if {$base_path eq ""} {error "Empty $base_path"}
@@ -193,8 +191,8 @@ proc spdAux::injectConditions { basenode args} {
 
 proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } {
     set conds [$basenode parent]
-    set AppUsesIntervals [apps::ExecuteOnApp [GetAppIdFromNode $conds] GetAttribute UseIntervals]
-    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
+    set app_uses_intervals [[apps::getAppById [GetAppIdFromNode $conds]] getPermission "intervals"]
+    if {$app_uses_intervals eq ""} {set app_uses_intervals 0}
     set initial_conds_flag 0
     if {$args ne "{}" && $args ne ""} {
         if {[dict exists {*}$args can_be_initial]} {
@@ -234,7 +232,11 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
             set state [$cnd getAttribute state]
             if {$state eq ""} {set state "CheckNodalConditionState"}
         }
-        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check'>"
+        set allow_group_creation ""
+        if {[$cnd getAttribute Groups] ne ""} {
+            set allow_group_creation "allow_group_creation='0' groups_list='\[[$cnd getAttribute Groups]\]'"
+        }
+        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check' $allow_group_creation>"
         set symbol_data [$cnd getSymbol]
         if { [llength $symbol_data] } {
             set txt "<symbol"
@@ -253,7 +255,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
             append node [GetParameterValueString $in $forcedParams $cnd]
         }
         set CondUsesIntervals [$cnd getAttribute "Interval"]
-        if {$AppUsesIntervals && $CondUsesIntervals ne "False"} {
+        if {$app_uses_intervals && ![write::isBooleanFalse $CondUsesIntervals]} {
             set state normal
             if {$initial_conds_flag} {
                 set CondUsesIntervals Initial
@@ -266,9 +268,8 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
     }
 }
 
-proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
+proc spdAux::GetParameterValueString { param forcedParams base} {
     set node ""
-
     set inName [$param getName]
     set pn [$param getPublicName]
     set type [$param getType]
@@ -345,7 +346,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                         set nodev "../value\[@n='$vname'\]"
                         if {$i eq "Z"} { set zstate "state='\[CheckDimension 3D\]'"; set state "\[CheckDimension 3D\]"} {set zstate ""}
                         if {[$param getAttribute "function"] eq "1"} {
-                            set values "ByFunction,ByValue,Not" 
+                            set values "ByFunction,ByValue,Not"
                             set pvalues "By function,By value,Not set"
                             set selector_name "selector_${inName}_${i}"
 
@@ -366,7 +367,7 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                             append node "<value n='$fname' pn='Function $i (x,y,z,t)' v='$vfX' help='$help'  $zstate /> "
                         }
                         if { $vector_type eq "file" || $vector_type eq "tablefile" } {
-                            if {[set $v] eq ""} {set $v "- No file"}
+                            if {[set $v] eq ""} {set $v $::spdAux::no_file_string}
                             append node "<value n='$vname' wn='[concat $n "_$i"]' pn='$i ${pn}' v='[set $v]' values='\[GetFilesValues\]' update_proc='AddFile' help='$help'  $zstate  type='$vector_type' show_in_window='$show_in_window'/>"
                         } else {
                             append node "<value n='$vname' wn='[concat $n "_$i"]' pn='Value $i' v='[set $v]' $has_units help='$help'  $zstate  show_in_window='$show_in_window'/>"
@@ -375,12 +376,33 @@ proc spdAux::GetParameterValueString { param {forcedParams ""} {base ""}} {
                 }
 
             }
+            "matrix" {
+                set rows [$param getAttribute "rows"]
+                set cols [$param getAttribute "cols"]
+                set components ""
+                for {set i 0} {$i < [expr max($rows,$cols)]} {incr i} {lappend components $i}; set components [join $components ","]
+                #append node "<value n='$inName' pn='$pn' v='$v' function='matrix_func,no_function' dimension_function_rows='$rows' dimension_function_cols='$cols' components_function='$components' help='$help'  state='$state' show_in_window='$show_in_window' />"
+                set value [split $v ","]
+                append node "<value n='$inName' pn='$pn' function='matrix_func,no_function' symmetric_function='0' has_diag='1' dimension_function_rows='$rows' dimension_function_cols='$cols' v='f(Matrix value for $pn)...' components_function='$components' help='$help' tree_state='closed' type='matrix'>"
+                append node "    <function>"
+                append node "        <functionVariable n='matrix_func' pn='Matrix value for $pn'>"
+                for {set i 0} {$i < $rows} {incr i} {
+                    for {set j 0} {$j < $cols} {incr j} {
+                        set vi [lindex $value [expr ($i*$cols)+$j] ]
+                        append node "        <value n='value' pn='V$i,$j' v='$vi'/>"
+                    }
+                }
+                append node "        </functionVariable>"
+                append node "    </function>"
+                append node "</value>"
+
+            }
             "combo" {
                 if {[$param getAttribute "combotype"] eq "material"} {
-                    append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>" 
+                    append node "<value n='$inName' pn='$pn' help='$help' v='$v' values='\[GetMaterialsList\]'/>"
                 } elseif {[$param getAttribute "combotype"] eq "constitutive_law"} {
                     append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
-                    append node "<dynamicnode command='spdAux::injectConstitutiveLawsInputs' args='' />" 
+                    append node "<dynamicnode command='spdAux::injectConstitutiveLawsInputs' args='' />"
                 } else {
                     append node [_GetComboParameterString $param $inName $pn $v $state $help $show_in_window $base]
                 }
@@ -487,7 +509,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
         }
     }
     set ret ""
-    
+
     foreach {name values} $dep_list {
         set ins ""
         set out ""
@@ -510,7 +532,7 @@ proc spdAux::_insert_cond_param_dependencies {base param_name} {
 
 proc spdAux::injectPartInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    set processeds [list ]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
     spdAux::injectLocalAxesButton $basenode
     foreach obj [concat [Model::GetElements] [Model::GetConstitutiveLaws]] {
         set inputs [$obj getInputs]
@@ -533,7 +555,7 @@ proc spdAux::injectPartInputs { basenode {inputs ""} } {
 }
 proc spdAux::injectConstitutiveLawsInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    set processeds [list ]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
     spdAux::injectLocalAxesButton $basenode
     foreach obj [Model::GetConstitutiveLaws] {
         set inputs [$obj getInputs]
@@ -556,7 +578,7 @@ proc spdAux::injectConstitutiveLawsInputs { basenode {inputs ""} } {
 }
 proc spdAux::injectPartElementInputs { basenode {inputs ""} } {
     set base [$basenode parent]
-    set processeds [list ]
+    set processeds [spdAux::getFromXQueryValue [$base selectNodes "./value/@n"]]
     spdAux::injectLocalAxesButton $basenode
     foreach obj [Model::GetElements] {
         set inputs [$obj getInputs]
@@ -565,7 +587,7 @@ proc spdAux::injectPartElementInputs { basenode {inputs ""} } {
                 lappend processeds $inName
                 set forcedParams [list state {[PartParamState]} ]
                 if {[$in getActualize]} { lappend forcedParams base $obj }
-                set node [GetParameterValueString $in $forcedParams $obj]
+                set node [spdAux::GetParameterValueString $in $forcedParams $obj]
 
                 $base appendXML $node
                 set orig [$base lastChild]
@@ -596,6 +618,14 @@ proc spdAux::injectMaterials { basenode args } {
         $base appendXML $matnode
     }
     $basenode delete
+}
+
+proc spdAux::getFromXQueryValue {obj} {
+    set ret [list ]
+    foreach pair $obj {
+        lappend ret [lindex $pair end]
+    }
+    return $ret
 }
 
 proc spdAux::injectLocalAxesButton { basenode } {
@@ -907,7 +937,7 @@ proc spdAux::ClearCutPlanes { {cut_planes_un CutPlanes} } {
         if {$first != true} {
             $plane delete
         } {set first false}
-        
+
     }
 
 }
@@ -948,7 +978,7 @@ proc spdAux::injectPartsByElementType {domNode args} {
         $orig delete
         $base insertBefore $new $domNode
     }
-    
+
     $domNode delete
     customlib::UpdateDocument
     spdAux::processDynamicNodes $base

@@ -8,7 +8,7 @@
 <!-- Currently Available in ParticleMechanicsApplication -->
   <!--linear elastic laws-->
   <CLaw n="LinearElasticIsotropicPlaneStrain2DLaw" pn="Linear Elastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
-	help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -18,7 +18,7 @@
   </CLaw>
 
   <CLaw n="LinearElasticIsotropicPlaneStress2DLaw" pn="Linear Elastic (Plane Stress)" Type="PlaneStress" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
-	help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -28,7 +28,7 @@
   </CLaw>
 
   <CLaw n="LinearElasticIsotropicAxisym2DLaw" pn="Linear Elastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
-  help="Linear Elastic Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+  help="Linear Elastic Behaviour in 2D Axis-symmetric" Dimension="2Da"  ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -38,7 +38,7 @@
   </CLaw>
 
   <CLaw n="LinearElasticIsotropic3DLaw" pn="Linear Elastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
-	help="Linear Elastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Linear Elastic Behaviour in 3D" Dimension="3D"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -49,7 +49,7 @@
 
   <!--hyper elastic laws-->
   <CLaw n="HyperElasticPlaneStrain2DLaw" pn="Hyperelastic (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication"
-	help="Hyperelastic Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Hyperelastic Behaviour in 2D Plane Strain" Dimension="2D"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -59,7 +59,7 @@
   </CLaw>
 
   <CLaw n="HyperElasticAxisym2DLaw" pn="Hyperelastic" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
-  help="Hyperelastic Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+  help="Hyperelastic Behaviour in 2D Axis-symmetric" Dimension="2Da"  ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
         <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -69,7 +69,7 @@
   </CLaw>
 
   <CLaw n="HyperElastic3DLaw" pn="Hyperelastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
-	help="HyperElastic Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="HyperElastic Behaviour in 3D" Dimension="3D"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -80,7 +80,7 @@
 
   <!-- Mohr Coulomb -->
   <CLaw n="HenckyMCPlasticPlaneStrain2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help="Mohr Coulomb Plasticity Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Mohr Coulomb Plasticity Behaviour in 2D Plane Strain" Dimension="2D"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -93,7 +93,7 @@
   </CLaw>
 
   <CLaw n="HenckyMCPlasticAxisym2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-  help="Mohr Coulomb Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+  help="Mohr Coulomb Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da"  ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -106,7 +106,7 @@
   </CLaw>
 
   <CLaw n="HenckyMCPlastic3DLaw" pn="Mohr Coulomb" class="HenckyMCPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help="Mohr Coulomb Plasticity Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
+	help="Mohr Coulomb Plasticity Behaviour in 3D" Dimension="3D"   ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -120,7 +120,7 @@
 
   <!-- Mohr Coulomb Strain Softening -->
   <CLaw n="HenckyMCStrainSofteningPlasticPlaneStrain2DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 2D Plane Strain" Dimension="2D"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -137,7 +137,7 @@
   </CLaw>
 
   <CLaw n="HenckyMCStrainSofteningPlasticAxisym2DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-  help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+  help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 2D Axis-symmetric" Dimension="2Da"  ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -154,7 +154,7 @@
   </CLaw>
 
   <CLaw n="HenckyMCStrainSofteningPlastic3DLaw" pn="Mohr Coulomb Strain Softening" class="HenckyMCStrainSofteningPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
+	help="Mohr Coulomb Plasticity with Strain Softening Behaviour in 3D" Dimension="3D"   ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -172,7 +172,7 @@
 
   <!-- Borja Modified Cam Clay -->
   <CLaw n="HenckyBorjaCamClayPlasticPlaneStrain2DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help="Modified Cam Clay Plasticity Behaviour in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication">
+	help="Modified Cam Clay Plasticity Behaviour in 2D Plane Strain" Dimension="2D"  ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />
@@ -187,7 +187,7 @@
   </CLaw>
 
   <CLaw n="HenckyBorjaCamClayPlasticAxisym2DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-  help="Modified Cam Clay Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da" ProductionReady="ProductionReady" ImplementedInApplication="ParticleMechanicsApplication" >
+  help="Modified Cam Clay Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da"  ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />
@@ -202,7 +202,7 @@
   </CLaw>
 
   <CLaw n="HenckyBorjaCamClayPlastic3DLaw" pn="Modified Cam Clay" class="HenckyBorjaCamClayPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
-	help="Modified Cam Clay Plasticity Behaviour in 3D" Dimension="3D" ProductionReady="ProductionReady"  ImplementedInApplication="ParticleMechanicsApplication">
+	help="Modified Cam Clay Plasticity Behaviour in 3D" Dimension="3D"   ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="PRE_CONSOLIDATION_STRESS" pn="Preconsolidation pressure" unit_magnitude="P" units="Pa" v="-90.e3" help="Historically maximum effective overburden stress." />

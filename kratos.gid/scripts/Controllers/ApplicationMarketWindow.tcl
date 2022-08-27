@@ -1,7 +1,14 @@
 
+namespace eval ::spdAux {
+    variable info_main_window_text
+    variable application_window_id
+    set application_window_id .gid.win_app_selection
+}
+
 proc spdAux::CreateWindow {} {
     variable initwind
     variable must_open_init_window
+    variable application_window_id
     
     # No graphics, no window
     if { [GidUtils::IsTkDisabled] } {
@@ -16,7 +23,7 @@ proc spdAux::CreateWindow {} {
     
     
     # Window creation
-    set w .gid.win_app_selection
+    set w $application_window_id
     set initwind $w
     # Close everything else
     gid_groups_conds::close_all_windows
@@ -35,7 +42,7 @@ proc spdAux::CreateWindow {} {
     spdAux::RegisterWindow $initwind
     
     # List of applications -> by family
-    ttk::labelframe $w.information -text " Applications " -relief ridge 
+    ttk::labelframe $w.applications -text " Applications " -relief ridge 
     
     set appsid [::apps::getAllApplicationsID 0]
     set appspn [::apps::getAllApplicationsName 0]
@@ -45,12 +52,14 @@ proc spdAux::CreateWindow {} {
     foreach appname $appspn appid $appsid {
         if {[apps::isPublic $appid]} {
             set img [::apps::getImgFrom $appid]
-            ttk::button $w.information.img$appid -image $img -command [list apps::setActiveApp $appid]
-            ttk::label $w.information.text$appid -text $appname
+            ttk::button $w.applications.img$appid -image $img -command [list apps::setActiveApp $appid]
+            ttk::label $w.applications.text$appid -text $appname
             
-            grid $w.information.img$appid -column $col -row $row
-            grid $w.information.text$appid -column $col -row [expr $row +1]
+            grid $w.applications.img$appid -column $col -row $row
+            grid $w.applications.text$appid -column $col -row [expr $row +1]
             
+            bind $w.applications.img$appid <Enter> {::spdAux::PlaceInformationWindowByPath %W applications}
+
             incr col
             if {$col >= 5} {set col 0; incr row; incr row}
         }
@@ -65,19 +74,21 @@ proc spdAux::CreateWindow {} {
     foreach toolname $toolspn toolid $toolsid {
         if {[apps::isPublic $toolid]} {
             set img [::apps::getImgFrom $toolid]
-            ttk::button $w.tools.img$toolid -image $img -command [list apps::setActiveApp $toolid]
+            set img_button $w.tools.img$toolid
+            ttk::button $img_button -image $img -command [list apps::setActiveApp $toolid]
             ttk::label $w.tools.text$toolid -text $toolname
             
-            grid $w.tools.img$toolid -column $col -row $row
+            grid $img_button -column $col -row $row
             grid $w.tools.text$toolid -column $col -row [expr $row +1]
-            
+            bind $w.tools.img$toolid <Enter> {::spdAux::PlaceInformationWindowByPath %W tools}
+                        
             incr col
             if {$col >= 5} {set col 0; incr row; incr row}
         }
     }
     
     # More button
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         set more_path [file nativename [file join $::Kratos::kratos_private(Path) images "more.png"] ]
         set img [gid_themes::GetImage $more_path Kratos]
         ttk::button $w.tools.img_more -image $img -command [list VisitWeb "https://github.com/KratosMultiphysics/GiDInterface"]
@@ -88,6 +99,11 @@ proc spdAux::CreateWindow {} {
         incr col
         if {$col >= 5} {set col 0; incr row; incr row}
     }
+
+    # Information panel
+    ttk::labelframe $w.info -text " Information " -relief ridge 
+    ttk::label $w.info.text -textvariable spdAux::info_main_window_text
+    grid $w.info.text
 
     # Settings
     set settings_path [file nativename [file join $::Kratos::kratos_private(Path) images "settings.png"] ]
@@ -100,12 +116,20 @@ proc spdAux::CreateWindow {} {
     incr col
     if {$col >= 5} {set col 0; incr row; incr row}
     
-    
     grid $w.top
     # grid $w.top.title_text
     
-    grid $w.information
+    grid $w.applications
     grid $w.tools -columnspan 5 -sticky w
+    grid $w.info -columnspan 5 -sticky we
+}
+
+proc spdAux::PlaceInformationWindowByPath {win_path what} {
+    variable application_window_id
+    set app_id [string trimleft $win_path $application_window_id.$what.img]
+    set app [::apps::getAppById $app_id]
+    set description [$app getProperty description]
+    set ::spdAux::info_main_window_text $description
 }
 
 proc spdAux::DestroyInitWindow { } {
@@ -208,7 +232,6 @@ proc spdAux::SwitchDimAndCreateWindow { ndim } {
     ::Kratos::UpdateMenus
 }
 
-
 proc spdAux::reactiveApp { } {
     #W "Reactive"
     variable initwind    
@@ -235,6 +258,7 @@ proc spdAux::deactiveApp { appid } {
         } 
     }
 }
+
 proc spdAux::activeApp { appid } {
     #W "Active $appid"
     catch {

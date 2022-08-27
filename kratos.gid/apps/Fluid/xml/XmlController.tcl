@@ -1,13 +1,16 @@
-namespace eval Fluid::xml {
+namespace eval ::Fluid::xml {
+    namespace path ::Fluid
+    Kratos::AddNamespace [namespace current]
+
     # Namespace variables declaration
     variable dir
 }
 
-proc Fluid::xml::Init { } {
+proc ::Fluid::xml::Init { } {
     # Namespace variables inicialization
     variable dir
-    Model::InitVariables dir $Fluid::dir
-    
+    Model::InitVariables dir $::Fluid::dir
+
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
     Model::getMaterials Materials.xml
@@ -17,15 +20,16 @@ proc Fluid::xml::Init { } {
     Model::getProcesses Processes.xml
     Model::getConditions Conditions.xml
     Model::getSolvers "../../Common/xml/Solvers.xml"
-
 }
 
-proc Fluid::xml::getUniqueName {name} {
-    return ${::Fluid::prefix}${name}
+proc ::Fluid::xml::getUniqueName {name} {
+    return [::Fluid::GetAttribute prefix]${name}
 }
 
-proc Fluid::xml::CustomTree { args } {
+proc ::Fluid::xml::CustomTree { args } {
     set root [customlib::GetBaseRoot]
+
+    set results_un [::Fluid::GetUniqueName "results"]
 
     # Output control in output settings
     spdAux::SetValueOnTreeItem v time FLResults FileLabel
@@ -36,7 +40,7 @@ proc Fluid::xml::CustomTree { args } {
     if {[$root selectNodes "$xpath/condition\[@n='Drag'\]"] eq ""} {
         gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
     }
-    
+
     customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     spdAux::parseRoutes
 
@@ -44,7 +48,7 @@ proc Fluid::xml::CustomTree { args } {
     if {[$root selectNodes "$xpath/container\[@n='OnNodes'\]"] ne ""} {
         gid_groups_conds::addF "$xpath/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
     }
-    
+
     # TODO: remove when Non newtonian is implemented for 2d
     if {$::Model::SpatialDimension eq "2D"} { Model::ForgetConstitutiveLaw HerschelBulkley }
 
@@ -52,9 +56,9 @@ proc Fluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state "\[HideIfElement {DVMS2D DVMS3D}\]" FLStratParams dynamic_tau
 }
 
-# Usage 
+# Usage
 # Fluid::xml::CreateNewInlet Inlet {new false name Total} true "6*y*(1-y)"
-proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name inlet1 ini 0 end "End"}} {uses_formula false} {value 10.0} {direction automatic_inwards_normal} {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
+proc ::Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name inlet1 ini 0 end "End"}} {uses_formula false} {value 10.0} {direction automatic_inwards_normal} {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
     # Fluid Inlet
     set nd $::Model::SpatialDimension
     set condtype line
@@ -62,8 +66,8 @@ proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name 
 
     set fluidConditions [spdAux::getRoute $fluid_conditions_UN]
     set fluidInlet "$fluidConditions/condition\[@n='$inlet_condition_name_base$nd'\]"
-    
-    set interval_name [dict get $interval_data name] 
+
+    set interval_name [dict get $interval_data name]
     if {[write::isBooleanTrue [dict get $interval_data new]]} {
         spdAux::CreateInterval $interval_name [dict get $interval_data ini] [dict get $interval_data end]
 
@@ -87,12 +91,10 @@ proc Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true name 
             W "Warning - Couldn't find property Inlet $prop"
         }
     }
-    
 }
 
+proc ::Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
 
-proc Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_condition_name_base AutomaticInlet} } {
-    
     set nd $::Model::SpatialDimension
     set fluidConditions [spdAux::getRoute $fluid_conditions_UN]
     set fluidInlets "$fluidConditions/condition\[@n='$inlet_condition_name_base$nd'\]/group"
@@ -106,9 +108,16 @@ proc Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet_c
     }
 }
 
-proc Fluid::xml::ProcHideIfElement { domNode list_elements } {
+proc ::Fluid::xml::ProcHideIfElement { domNode list_elements } {
     set element [lindex [Fluid::write::GetUsedElements] 0]
     if {$element in $list_elements} {return hidden} {return normal}
 }
 
-Fluid::xml::Init
+proc ::Fluid::xml::UpdateParts {domNode args} {
+    set childs [$domNode getElementsByTagName group]
+    if {[llength $childs] > 1} {
+        foreach group [lrange $childs 1 end] {$group delete}
+        gid_groups_conds::actualize_conditions_window
+        error "You can only set one part"
+    }
+}

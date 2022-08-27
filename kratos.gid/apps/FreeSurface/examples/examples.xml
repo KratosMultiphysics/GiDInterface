@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group id="Fluid" name="Fluid examples">
+    <Example id="FreeSurfaceBox2D" app="FreeSurface" logo="box2d.png" name="Free surface 2d" dim="2D" cmd="::FreeSurface::examples::Box::Init">
+        <Description></Description>
+    </Example>
+</Group>

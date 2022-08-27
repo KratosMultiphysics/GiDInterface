@@ -1,4 +1,6 @@
-namespace eval StenosisWizard::write {
+namespace eval ::StenosisWizard::write {
+    namespace path ::StenosisWizard
+    Kratos::AddNamespace [namespace current]
 
 }
 
@@ -8,13 +10,11 @@ proc StenosisWizard::write::Init { } {
 
 
 proc StenosisWizard::write::writeCustomFilesEvent { } {
-    Fluid::write::WriteMaterialsFile
-    write::CopyFileIntoModel "../Fluid/python/KratosFluid.py"
-    write::RenameFileInModel "KratosFluid.py" "MainKratos.py"
+    ::Fluid::write::writeCustomFilesEvent
+    ::Fluid::write::SetAttribute main_launch_file [StenosisWizard::GetAttribute main_launch_file]
 }
 
 # MDPA Blocks
-
 proc StenosisWizard::write::writeModelPartEvent { } {
     Fluid::write::AddValidApps StenosisWizard
     write::writeAppMDPA Fluid
@@ -25,5 +25,3 @@ proc StenosisWizard::write::writeParametersEvent { } {
     set project_parameters_dict [::Fluid::write::getParametersDict]
     write::WriteJSON $project_parameters_dict
 }
-
-StenosisWizard::write::Init

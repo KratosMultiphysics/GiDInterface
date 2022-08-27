@@ -4,7 +4,9 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval write {
+namespace eval ::write {
+    Kratos::AddNamespace [namespace current]
+
     variable mat_dict
     variable submodelparts
     variable MDPA_loop_control
@@ -36,7 +38,7 @@ proc write::Init { } {
 
     set current_mdpa_indent_level 0
 
-    
+
     variable formats_dict
     set formats_dict [dict create]
     variable properties_exclusion_list
@@ -101,7 +103,7 @@ proc write::writeEvent { filename } {
         return 1
     }
     set inittime [clock seconds]
-    
+
     # Set write formats depending on the user's configuration
     InitWriteFormats
 
@@ -116,11 +118,26 @@ proc write::writeEvent { filename } {
     Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
 
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Validate time: [Kratos::Duration $ttime]"
+    }
+
     #### MDPA Write ####
     if {$errcode eq 0} {
         Kratos::Log "Write MDPA $appid"
         set errcode [writeAppMDPA $appid]
     }
+
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "MDPA time: [Kratos::Duration $ttime]"
+    }
+
     #### Project Parameters Write ####
     set wevent [$activeapp getWriteParametersEvent]
     set filename "ProjectParameters.json"
@@ -128,6 +145,12 @@ proc write::writeEvent { filename } {
     if {$errcode eq 0} {
         Kratos::Log "Write project parameters $appid"
         set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
+    }
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Parameters time: [Kratos::Duration $ttime]"
     }
 
     #### Custom files block ####
@@ -142,7 +165,16 @@ proc write::writeEvent { filename } {
     if {$time_monitor}  {
         W "Total time: [Kratos::Duration $ttime]"
     }
-    
+
+    #### Copy main script file ####
+    if {$errcode eq 0} {
+        Kratos::Log "Write custom event $appid"
+        set errcode [CopyMainScriptFile]
+    }
+
+    #### Debug files for VSCode ####
+    write::writeLaunchJSONFile
+
     Kratos::Log "Write end $appid in [Kratos::Duration $ttime]"
     return $errcode
 }
@@ -169,7 +201,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
 
     CloseFile
     if {$needsOpen} {OpenFile $filename}
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         if {[catch {eval $wevent} errmsg options] } {
             W $::errorInfo
             set errcode 1
@@ -200,7 +232,7 @@ proc write::writeAppMDPA {appid} {
     CloseFile
     OpenFile $filename
 
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         eval $wevent
     } else {
         if { [catch {eval $wevent} fid] } {
@@ -278,9 +310,10 @@ proc write::getEtype {ov group} {
     if {$ov eq "line"} {
         if {$b} {error "Multiple element types in $group over $ov"}
         switch $isquadratic {
-            0 { set ret [list "Linear" 2] }
-            default { set ret [list "Linear" 3] }
+            0 { set ret [list "Line" 2] }
+            default { set ret [list "Line" 3] }
         }
+        set b 1
     }
 
     if {$ov eq "surface"} {
@@ -642,5 +675,42 @@ proc write::WriteAssignedValues {condNode} {
     return $ret
 }
 
+proc write::writeLaunchJSONFile { } {
+    # Check if developer
+    if {[Kratos::IsDeveloperMode]} {
+        set debug_folder $Kratos::kratos_private(debug_folder)
+
+        # Prepare JSON as dict
+        set json [dict create version "0.2.0"]
+        set n_omp "1"
+        set python_env [dict create OMP_NUM_THREADS $n_omp PYTHONPATH $debug_folder LD_LIBRARY_PATH [file join $debug_folder libs]]
+        set python_configuration [dict create name "python main" type python request launch program MainKratos.py console integratedTerminal env $python_env cwd [GetConfigurationAttribute dir]]
+        set cpp_configuration [dict create name "C++ Attach" type cppvsdbg request attach processId "\${command:pickProcess}"]
+        dict set json configurations [list $python_configuration $cpp_configuration]
+
+        # Print json
+        CloseFile
+        file mkdir [file join [GetConfigurationAttribute dir] .vscode]
+        OpenFile ".vscode/launch.json"
+        write::WriteJSONAsStringFields $json
+        CloseFile
+    }
+}
+
+proc write::CopyMainScriptFile { } {
+    set errcode 0
+    # Main python script
+    if {[catch {
+            set orig_name [write::GetConfigurationAttribute main_launch_file]
+            if {$orig_name ne ""} {
+                write::CopyFileIntoModel $orig_name
+                write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+            }
+        } fid] } {
+        W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
+        return errcode 1
+    }
+    return $errcode
+}
 
 write::Init
