@@ -90,6 +90,8 @@ proc ::Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict material_import_settings $materialsDict
 
     # Solution strategy parameters and Solvers
+    # We now added this variable as true by default (in solids is mandatory)
+    dict set solverSettingsDict use_old_stiffness_in_first_iteration true
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict STSolStrat STScheme STStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
