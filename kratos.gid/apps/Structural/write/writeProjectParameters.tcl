@@ -90,13 +90,12 @@ proc ::Structural::write::getOldParametersDict { } {
     dict set solverSettingsDict material_import_settings $materialsDict
 
     # Solution strategy parameters and Solvers
-    # We now added this variable as true by default (in nonlinear solids is mandatory)
-    if {[write::getValue STAnalysisType] eq "non_linear"} {
-        dict set solverSettingsDict use_old_stiffness_in_first_iteration true
-    }
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict STSolStrat STScheme STStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
+    if {[write::getValue STAnalysisType] ne "non_linear"} {
+        dict unset solverSettingsDict use_old_stiffness_in_first_iteration
+    }
     # Submodelpart lists
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart

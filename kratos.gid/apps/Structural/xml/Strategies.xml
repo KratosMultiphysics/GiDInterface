@@ -13,6 +13,7 @@
                 <parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-4" parent="residual_criterion,and_criterion,or_criterion" help="Relative residual tolerance employed in the nonlinear iteration"/>
                 <parameter n="residual_absolute_tolerance" pn="Residual absolute tolerance" type="double" v="1e-9" parent="residual_criterion,and_criterion,or_criterion" help="Absolute residual tolerance employed in the nonlinear iteration"/></parameter>
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
+            <parameter n="use_old_stiffness_in_first_iteration" pn="Use old stiffness in 1st iteration" type="bool" v="true" values="false,true" />
         </parameter_list>
         <linearSolvers>
             <linearSolverItem n="linear_solver_settings" pn="Linear Solver" help="Default solver Super LU" filter="STSoluType {Static Quasi-static Dynamic formfinding}">
@@ -82,6 +83,7 @@
                 <parameter n="residual_relative_tolerance" pn="Residual relative tolerance" type="double" v="1e-4" parent="residual_criterion,and_criterion,or_criterion" help="Relative residual tolerance employed in the nonlinear iteration"/>
                 <parameter n="residual_absolute_tolerance" pn="Residual absolute tolerance" type="double" v="1e-9" parent="residual_criterion,and_criterion,or_criterion" help="Absolute residual tolerance employed in the nonlinear iteration"/></parameter>
             <parameter n="max_iteration" pn="Maximum iterations" type="integer" v="10" help="This number will break the iterative loop when reached"/>
+            <parameter n="use_old_stiffness_in_first_iteration" pn="Use old stiffness in 1st iteration" type="bool" v="true" values="false,true"/>
         </parameter_list>
         <linearSolvers>
             <linearSolverItem n="linear_solver_settings" pn="Linear Solver" filter="STSoluType {Static Quasi-static Dynamic formfinding}">
