@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<condition n="ShallowWaterParts" pn="Parts"  ov="[CheckGeometry 1]" icon="land" help="Select the parts of the domain." un="SWParts">
+<condition n="ShallowWaterParts" pn="Parts"  ov="[CheckGeometry 1]" icon="land" help="Select the parts of the domain." un="SWParts" update_proc="UpdateParts">
 	<value n="Element" pn="Element" v="GENERIC_ELEMENT"  actualize="1" state="hidden">
 		<dependencies node="../value[@n!='Material']" actualize="1"/>
 	</value>

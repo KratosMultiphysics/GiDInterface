@@ -84,28 +84,6 @@ proc ::ConjugateHeatTransfer::write::GetProcessList { } {
     return $processes
 }
 
-
-proc write::GetDefaultOutputProcessDict { {appid ""} } {
-    # Output process must be placed inside json lists
-    set gid_output_process_list [list ]
-    set need_gid [write::getValue EnableGiDOutput]
-    if {[write::isBooleanTrue $need_gid]}  {
-        lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
-    }
-
-    set vtk_output_process_list [list ]
-    set need_vtk [write::getValue EnableVtkOutput]
-    if {[write::isBooleanTrue $need_vtk]} {
-        lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
-    }
-
-    set outputProcessesDict [dict create]
-    dict set outputProcessesDict gid_output $gid_output_process_list
-    dict set outputProcessesDict vtk_output $vtk_output_process_list
-
-    return $outputProcessesDict
-}
-
 proc ::ConjugateHeatTransfer::write::GetOutputProcessesList { } {
     set output_process [dict create]
 

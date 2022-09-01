@@ -10,4 +10,6 @@ kratos.gid/exec/Kratos*
 
 custom_tools/*
 .DS_Store
+
+*.zip
 *.tgz

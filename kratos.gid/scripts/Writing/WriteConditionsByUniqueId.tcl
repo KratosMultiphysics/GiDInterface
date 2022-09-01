@@ -156,12 +156,14 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
     variable submodelparts
     variable formats_dict
 
+
     set id_f [dict get $formats_dict ID]
 
     set mid ""
     set what [split $what "&"]
     set group [write::GetWriteGroupName $group]
     if {![dict exists $submodelparts [list $cid ${group}]]} {
+        set null_cond_warn 0
         # Add the submodelpart to the catalog
         set good_name [write::transformGroupName $group]
         set mid "${cid}_${good_name}"
@@ -204,12 +206,15 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
             set elems [GiD_WriteCalculationFile elements -sorted -return $gdict]
             for {set i 0} {$i <[llength $elems]} {incr i} {
                 set eid [objarray get $ConditionsMap [lindex $elems $i]]
+                if {$eid == 0} {set null_cond_warn 1}
                 WriteString "${s2}[format $id_f $eid]"
             }
         }
         WriteString "${s1}End SubModelPartConditions"
         WriteString "${s}End SubModelPart"
+        if {$null_cond_warn} {W "$mid submodelpart contains conditions that are not in the Conditions block"}
     }
+
     return $mid
 }
 

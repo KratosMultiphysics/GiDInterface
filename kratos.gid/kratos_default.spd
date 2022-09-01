@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- -*- coding: utf-8; mode: SGML -*- -->
-<Kratos_data version='9.0.1'>
+<Kratos_data version='9.2.0'>
 	<style show_menubutton_about='0' show_menubutton_search='1'></style>
 	<groups/>
 	<units></units>
@@ -12,6 +12,7 @@
 	<appLink n="Structural" public="1" pn="Structural" active="0" appid="Structural" prefix="ST"/>
 	<appLink n="FluidLauncher" public="1" pn="Fluid" active="0" appid="FluidLauncher" prefix="FLL"/>
 	<appLink n="Fluid" public="0" pn="Fluid" active="0" appid="Fluid" prefix="FL"/>
+	<appLink n="FreeSurface" public="0" pn="FreeSurface" active="0" appid="FreeSurface" prefix="FS"/>
 	<appLink n="EmbeddedFluid" public="0" pn="Embedded fluid" active="0" appid="EmbeddedFluid" prefix="EMBFL"/>
 	<appLink n="PotentialFluid" public="0" pn="Potential fluid" active="0" appid="PotentialFluid" prefix="PTFL"/>
 	<appLink n="Buoyancy" public="0" pn="Buoyancy" active="0" appid="Buoyancy" prefix="Buoyancy_"/>

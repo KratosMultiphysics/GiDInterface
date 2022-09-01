@@ -5,7 +5,7 @@
 
 namespace eval ::Model {
     Kratos::AddNamespace [namespace current]
-    
+
 catch {Condition destroy}
 oo::class create Condition {
     superclass Entity
@@ -14,32 +14,32 @@ oo::class create Condition {
     variable defaults
     variable groupby
     variable symbol
-        
+
     constructor {n} {
         next $n
         variable TopologyFeatures
         set TopologyFeatures [list ]
-        
+
         variable defaults
         set defaults [dict create ]
-        
+
         variable processName
         set processName ""
         variable groupby
         set groupby ""
         set symbol [list]
     }
-    
+
     method addTopologyFeature {top} {
         variable TopologyFeatures
         lappend TopologyFeatures $top
     }
-    
+
     method getTopologyFeature {geo nod} {
         variable TopologyFeatures
         set ret ""
         foreach top $TopologyFeatures {
-            if {[string match [$top getGeometry]* $geo] && [$top getNodes] eq $nod} {set ret $top; break}
+            if {[$top getGeometry] eq $geo && [$top getNodes] eq $nod} {set ret $top; break}
         }
         return $ret
     }
@@ -59,7 +59,7 @@ oo::class create Condition {
         variable TopologyFeatures
         return $TopologyFeatures
     }
-    
+
     method setProcessName {pn} {
         variable processName
         set processName $pn
@@ -128,17 +128,17 @@ proc Model::DeleteRepeatedConditions { } {
     variable Conditions
     set Conditions2 [dict create ]
     foreach cnd $Conditions {
-        set cnd_id [$cnd getName] 
+        set cnd_id [$cnd getName]
         dict set Conditions2 $cnd
     }
     set Conditions $Conditions2
 }
-proc Model::GetConditions {args} { 
+proc Model::GetConditions {args} {
     variable Conditions
     if {$args eq ""} {
         return $Conditions
     }
-    
+
     set cumplen [list ]
     foreach elem $Conditions {
         if {[$elem cumple {*}$args]} { lappend cumplen $elem}
@@ -149,7 +149,7 @@ proc Model::GetConditions {args} {
 
 proc Model::ParseConditions { doc } {
     variable Conditions
-    
+
     set CondNodeList [$doc getElementsByTagName ConditionItem]
     foreach CondNode $CondNodeList {
         lappend Conditions [ParseCondNode $CondNode]
@@ -164,7 +164,7 @@ proc Model::ParseCondNode { node } {
     if {[$node hasAttribute help]} {$cnd setHelp [$node getAttribute help]}
     if {[$node hasAttribute ProcessName]} {$cnd setProcessName [$node getAttribute ProcessName]}
     if {[$node hasAttribute GroupBy]} {$cnd setGroupBy [$node getAttribute GroupBy]}
-    
+
     foreach att [$node attributes] {
         $cnd setAttribute $att [split [$node getAttribute $att] ","]
         #W "$att : [$el getAttribute $att]"
@@ -173,11 +173,11 @@ proc Model::ParseCondNode { node } {
     if { [llength $symbol_node]==1 } {
         set data [list]
         foreach attribute [$symbol_node attributes] {
-            lappend data $attribute [$symbol_node getAttribute $attribute]            
+            lappend data $attribute [$symbol_node getAttribute $attribute]
         }
         $cnd setSymbol $data
     }
-    
+
     set topology_base [$node getElementsByTagName TopologyFeatures]
     if {[llength $topology_base] eq 1} {
         foreach top [$topology_base getElementsByTagName item]  {
@@ -214,7 +214,7 @@ proc Model::ParseCondNode { node } {
     return $cnd
 }
 
-proc Model::getCondition {cid} { 
+proc Model::getCondition {cid} {
     variable Conditions
 
     foreach elem $Conditions {
@@ -227,7 +227,7 @@ proc Model::getCondition {cid} {
 
 proc Model::GetAllCondOutputs {} {
     variable Conditions
-    
+
     set outputs [dict create]
     foreach el $Conditions {
         foreach in [dict keys [$el getOutputs]] {
@@ -239,7 +239,7 @@ proc Model::GetAllCondOutputs {} {
 
 proc Model::GetAllCondInputs {} {
     variable Conditions
-    
+
     set inputs [dict create]
     foreach el $Conditions {
         foreach in [dict keys [$el getInputs]] {
@@ -264,7 +264,7 @@ proc Model::CheckConditionState {node args} {
                     set eldim [split [$cond getAttribute "WorkingSpaceDimension"] ","]
                     if {$ptdim ni $eldim} {set cumple 0; break}
                 }
-             
+
             }
         }
     }
