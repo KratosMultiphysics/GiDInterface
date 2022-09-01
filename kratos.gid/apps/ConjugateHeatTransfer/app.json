@@ -1,0 +1,45 @@
+{
+    "id": "ConjugateHeatTransfer",
+    "name": "ConjugateHeatTransfer",
+    "prefix": "CHT",
+    "themed": false,
+    "kratos_name": "ConvectionDiffusionApplication",
+    "python_packages": [
+        "KratosConvectionDiffusionApplication",
+        "KratosFluidDynamicsApplication"
+    ],
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "examples/HeatedSquare.tcl",
+        "examples/CylinderCooling.tcl",
+        "examples/BFS.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script": "::ConjugateHeatTransfer::Init",
+    "requeriments": {
+        "apps": [
+            "Buoyancy"
+        ],
+        "minimum_gid_version": "15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "write": {
+        "coordinates": "groups",
+        "properties_location": "json",
+        "model_part_name": "ThermalModelPart"
+    },
+    "main_launch_file": "../../exec/MainKratos.py",
+    "examples": "examples/examples.xml"
+}

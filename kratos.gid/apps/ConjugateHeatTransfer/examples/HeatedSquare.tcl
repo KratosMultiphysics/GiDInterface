@@ -1,11 +1,15 @@
+namespace eval ::ConjugateHeatTransfer::examples::HeatedSquare {
+    namespace path ::ConjugateHeatTransfer::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::ConjugateHeatTransfer::examples::HeatedSquare {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawSquareGeometry$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
     AssignGroups$::Model::SpatialDimension
     TreeAssignation$::Model::SpatialDimension
 
@@ -15,17 +19,16 @@ proc ::ConjugateHeatTransfer::examples::HeatedSquare {args} {
     GiD_Process 'Zoom Frame
 }
 
-
 # Draw Geometry
-proc ConjugateHeatTransfer::examples::DrawSquareGeometry3D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::DrawGeometry3D {args} {
     # DrawSquareGeometry2D
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
-    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate obj x -150 y -30 escape escape
+    # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
 
-proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers create HeatSource
@@ -72,7 +75,7 @@ proc ConjugateHeatTransfer::examples::DrawSquareGeometry2D {args} {
 
 
 # Group assign
-proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::AssignGroups2D {args} {
     # Create the groups for the fluid
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -119,7 +122,7 @@ proc ConjugateHeatTransfer::examples::AssignGroups2D {args} {
     GiD_Groups edit color Heating_Left_Wall "#3b3b3bff"
     GiD_EntitiesGroups assign Heating_Left_Wall lines 8
 }
-proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::AssignGroups3D {args} {
     # Create the groups
     # GiD_Groups create Fluid
     # GiD_Groups edit color Fluid "#26d1a8ff"
@@ -143,11 +146,11 @@ proc ConjugateHeatTransfer::examples::AssignGroups3D {args} {
 }
 
 # Tree assign
-proc ConjugateHeatTransfer::examples::TreeAssignation3D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::TreeAssignation3D {args} {
     # TreeAssignationCylinderInFlow2D
     # AddCuts
 }
-proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
+proc ::ConjugateHeatTransfer::examples::HeatedSquare::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -161,16 +164,9 @@ proc ConjugateHeatTransfer::examples::TreeAssignation2D {args} {
     # Fluid Parts
     set parts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Fluid]
-    set props [list Element Monolithic$nd Material Water ConstitutiveLaw Newtonian]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
-
+    set props [list Element Monolithic$nd Material Water ConstitutiveLaw Newtonian2DLaw]
+    spdAux::SetValuesOnBaseNode $fluidNode $props
+    
     # Fluid conditions
     set fluid_conditions [spdAux::getRoute "FLBC"]
     set fluid_noslip "$fluid_conditions/condition\[@n='NoSlip$nd'\]"

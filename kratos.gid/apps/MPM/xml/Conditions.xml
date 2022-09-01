@@ -2,7 +2,7 @@
 <ConditionList>
 
   <ConditionItem n="PointLoad2D" pn="Load on points" Interval="Total"
-		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point" ProcessName="AssignVectorByDirectionToConditionProcess" help="Point load application by means of the AssignVectorByDirectionToConditionProcess in the core"
 		 units="N" unit_magnitude="F" VariableName="POINT_LOAD">
@@ -17,7 +17,7 @@
   </ConditionItem>
 
   <ConditionItem n="PointLoad2DAxisym" pn="Load on points" Interval="Total"
-     ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+     ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 		 WorkingSpaceDimension="2Da" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point" ProcessName="AssignVectorByDirectionToConditionProcess" help="Point load application by means of the AssignVectorByDirectionToConditionProcess in the core"
 		 units="N/m" unit_magnitude="F/L" VariableName="POINT_LOAD">
@@ -32,7 +32,7 @@
   </ConditionItem>
 
   <ConditionItem n="PointLoad3D" pn="Load on points" Interval="Total"
-		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+		 ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 		 WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
 		 ElementType="Point" ProcessName="AssignVectorByDirectionToConditionProcess" help="Load on points, load vector referred to global axes"
 		 units="N" unit_magnitude="F" VariableName="POINT_LOAD">
@@ -47,7 +47,7 @@
   </ConditionItem>
 
   <ConditionItem n="LineLoad2D" pn="Load on lines" Interval="Total"
-	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="AssignVectorByDirectionToConditionProcess" help="Load on lines, load vector referred to global axes"
 	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
@@ -62,7 +62,7 @@
   </ConditionItem>
 
   <ConditionItem n="LineLoad2DAxisym" pn="Load on lines" Interval="Total"
-	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="AssignVectorByDirectionToConditionProcess" help="Load on lines, load vector referred to global axes"
 	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
@@ -77,7 +77,7 @@
   </ConditionItem>
 
   <ConditionItem n="SurfaceLoad3D" pn="Load on surfaces" Interval="Total"
-	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Surface"  ProcessName="AssignVectorByDirectionToConditionProcess" help="Load on surfaces, load vector referred to global axes"
 	units="N/m^2" unit_magnitude="F/L^2" VariableName="SURFACE_LOAD">
@@ -93,11 +93,11 @@
   </ConditionItem>
 
   <ConditionItem n="Slip2D" pn="Slip" Interval="False"
-	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyMPMSlipBoundaryProcess" help="">
     <TopologyFeatures>
-      <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+      <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
@@ -106,11 +106,11 @@
   </ConditionItem>
 
   <ConditionItem n="Slip2DAxisymmetry" pn="Slip" Interval="False"
-	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2Da" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyMPMSlipBoundaryProcess" help="">
     <TopologyFeatures>
-      <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N"/>
+      <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
@@ -119,7 +119,7 @@
   </ConditionItem>
 
   <ConditionItem n="Slip3D" pn="Slip" Interval="False"
-	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Surface"  ProcessName="ApplyMPMSlipBoundaryProcess" help="">
     <TopologyFeatures>

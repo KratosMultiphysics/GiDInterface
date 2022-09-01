@@ -1,5 +1,3 @@
-from __future__ import print_function, absolute_import, division #makes KratosMultiphysics backward compatible with python 2.6 and 2.7
-
 # Time monitoring
 import time as timer
 print(timer.ctime())
@@ -12,7 +10,7 @@ import os
 
 # Import kratos core and applications
 import KratosMultiphysics
-import KratosMultiphysics.ExternalSolversApplication as KratosSolvers
+import KratosMultiphysics.LinearSolversApplication as KratosSolvers
 #import KratosMultiphysics.TrilinosApplication as TrilinosApplication
 import KratosMultiphysics.ConvectionDiffusionApplication as KratosConvDiff
 import KratosMultiphysics.SolidMechanicsApplication as KratosSolid
@@ -124,7 +122,7 @@ if(consider_selfweight == True):
 
     # Getting gravity direction
     direction_selfweight = ProjectParameters["problem_data"]["selfweight_direction"].GetString()
-    if(direction_selfweight == "X"): 
+    if(direction_selfweight == "X"):
         variable_name = KratosMultiphysics.VOLUME_ACCELERATION_X
     elif(direction_selfweight == "Y"):
         variable_name = KratosMultiphysics.VOLUME_ACCELERATION_Y

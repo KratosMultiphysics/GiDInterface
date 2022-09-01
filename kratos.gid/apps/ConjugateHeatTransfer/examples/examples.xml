@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group id="Thermic" name="Thermic examples">
+    <Example id="ConjugateHeatTransferHeatedSquare2D" app="ConjugateHeatTransfer" logo="HeatedSquare2D.png" name="Heated square 2D" dim="2D" cmd="::ConjugateHeatTransfer::examples::HeatedSquare::Init">
+        <Description></Description>
+    </Example>
+    <Example id="ConjugateHeatTransferCylinderCooling2D" app="ConjugateHeatTransfer" logo="CylinderCooling2D.png" name="Cylinder cooling 2D" dim="2D" cmd="::ConjugateHeatTransfer::examples::CylinderCooling::Init">
+        <Description></Description>
+    </Example>
+    <Example id="ConjugateHeatTransferBFS2D" app="ConjugateHeatTransfer" logo="BFS2D.png" name="BFS 2D" dim="2D" cmd="::ConjugateHeatTransfer::examples::BFS::Init">
+        <Description></Description>
+    </Example>
+</Group>

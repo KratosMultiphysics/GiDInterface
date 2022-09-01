@@ -16,6 +16,7 @@
         <value n="Stresses"                 type="bool" values="Yes,No" v="No" pn="Stresses in DEM particles"        icon="black1"  help="Stresses in DEM particles"/>
         <value n="Pressure"                 type="bool" values="Yes,No" v="No" pn="Pressure (FEM)"                   icon="black1"  help="Pressure"/>
         <value n="ShearStress"              type="bool" values="Yes,No" v="No" pn="Shear Stress (FEM)"               icon="black1"  help="Shear Stress"/>
+        <value n="SkinSphere"               type="bool" values="Yes,No" v="No" pn="Skin sphere"                      icon="black1" help="Print the spheres that form the skin of the DEM groups"/>
         <value n="Wear"                     type="bool" values="Yes,No" v="No" pn="Wear (FEM)"                       icon="black1"  help="It computes the volume of removed material due to wear"/>
         <value n="EulerAngles"              type="bool" values="Yes,No" v="No" pn="Euler angles"                     icon="black1"  help="Euler angles"/>
 
@@ -26,7 +27,6 @@
         <value n="AppliedForces"            type="bool" values="Yes,No" v="No" pn="Applied forces"                   icon="black1" help="Applied forces" state="hidden"/>
         <value n="GroupId"                  type="bool" values="Yes,No" v="No" pn="GroupId"                          icon="black1" help="GroupId" state="hidden"/>
         <value n="ExportId"                 type="bool" values="Yes,No" v="No" pn="Export Id"                        icon="black1" help="ExportId" state="hidden"/>
-        <value n="SkinSphere"               type="bool" values="Yes,No" v="No" pn="Skin sphere"                      icon="black1" help="Print the spheres that form the skin of the DEM groups" state="hidden"/>
         <value n="ParticleMoment"           type="bool" values="Yes,No" v="No" pn="Particle moment (DEM)"            icon="black1" help="Particle moment" state="hidden"/>
         <value n="RollingResistanceMoment"  type="bool" values="Yes,No" v="No" pn="Rolling resistance moment (DEM)"  icon="black1" help="Rolling resistance moment" state="hidden"/>
     </container>

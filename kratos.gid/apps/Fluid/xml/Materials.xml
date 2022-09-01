@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Materials>
-  <Material n="Air" MaterialType="Fluid" help="Air physical properties">
+  <Material n="Air" MaterialType="Fluid" help="Air physical properties" icon="gas">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="1.225" unit_magnitude="Density" units="kg/m^3"/>
-        <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="1.846e-5" unit_magnitude="M/L*T" units="kg/m*s"/>
+        <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="1.846e-5" unit_magnitude="M/(L*T)" units="kg/(m*s)"/>
+        <parameter n="SOUND_VELOCITY" pn="Sound velocity" v="3.43e+2" unit_magnitude="L/T" units="m/s"/>
     </inputs>
   </Material>
-  <Material n="Water" MaterialType="Fluid" help="Water physical properties">
+  <Material n="Water" MaterialType="Fluid" help="Water physical properties" icon="drop">
     <inputs>
         <parameter n="DENSITY" pn="Density" v="1000" unit_magnitude="Density" units="kg/m^3"/>
-        <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="1.002e-3" unit_magnitude="M/L*T" units="kg/m*s"/>
+        <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" v="1.002e-3" unit_magnitude="M/(L*T)" units="kg/(m*s)"/>
+        <parameter n="SOUND_VELOCITY" pn="Sound velocity" v="1.481e+3" unit_magnitude="L/T" units="m/s"/>
     </inputs>
   </Material>
 </Materials>

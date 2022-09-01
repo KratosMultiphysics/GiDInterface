@@ -1,20 +1,25 @@
-proc ::CDEM::examples::ContSpheresDrop3D {args} {
+namespace eval ::CDEM::examples::ContSpheresDrop3D {
+    namespace path ::CDEM::examples
+    Kratos::AddNamespace [namespace current]
+}
+
+proc ::CDEM::examples::ContSpheresDrop3D::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometryContSpheres
-    AssignToTreeContSpheres
-    AssignMeshSizeContSpheres
+    DrawGeometry
+    AssignToTree
+    AssignMeshSize
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
 }
 
-proc ::CDEM::examples::DrawGeometryContSpheres { } {
+proc ::CDEM::examples::ContSpheresDrop3D::DrawGeometry { } {
     Kratos::ResetModel
 
     # Draw floor surface
@@ -35,18 +40,18 @@ proc ::CDEM::examples::DrawGeometryContSpheres { } {
     GiD_EntitiesGroups assign "Body" -also_lower_entities volumes 1
 }
 
-proc ::CDEM::examples::AssignToTreeContSpheres { } {
+proc ::CDEM::examples::ContSpheresDrop3D::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
-    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEMCont-DefaultMaterial' \]"]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 ]
+    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Body]
     $DEMPartsNode setAttribute ov volume
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # DEM FEM Walls
@@ -59,7 +64,7 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "Inlet"]
     $inletNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
+    set props [list Material "DEM-DefaultMaterial" ParticleDiameter 0.13 InVelocityModulus 2.3 InDirectionVector "0.0,0.0,-1.0"]
     spdAux::SetValuesOnBaseNode $inletNode $props
 
     # DEM custom submodelpart
@@ -105,17 +110,8 @@ proc ::CDEM::examples::AssignToTreeContSpheres { } {
     spdAux::RequestRefresh
 }
 
-proc ::CDEM::::examples::AssignMeshSizeContSpheres { } {
+proc ::CDEM::::examples::ContSpheresDrop3D::AssignMeshSize { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.2 1:end escape escape escape
-}
-
-
-proc DEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

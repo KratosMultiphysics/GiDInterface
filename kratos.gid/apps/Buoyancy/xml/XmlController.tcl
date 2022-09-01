@@ -1,12 +1,14 @@
-namespace eval Buoyancy::xml {
+namespace eval ::Buoyancy::xml {
+    namespace path ::Buoyancy
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
     variable dir
 }
 
-proc Buoyancy::xml::Init { } {
+proc ::Buoyancy::xml::Init { } {
     # Namespace variables initialization
     variable dir
-    Model::InitVariables dir $Buoyancy::dir
+    Model::InitVariables dir $::Buoyancy::dir
 
     Model::ForgetSolutionStrategy stationary
 
@@ -16,6 +18,7 @@ proc Buoyancy::xml::Init { } {
     Model::ForgetMaterials
     Model::getMaterials Materials.xml
 
+    Model::ForgetSolvers
     Model::getSolvers "../../Common/xml/Solvers.xml"
     
     [Model::getCondition "Outlet2D"] setAttribute ElementType "Point,Line"
@@ -30,11 +33,11 @@ proc Buoyancy::xml::Init { } {
 
 }
 
-proc Buoyancy::xml::getUniqueName {name} {
-    return ${::Buoyancy::prefix}${name}
+proc ::Buoyancy::xml::getUniqueName {name} {
+    return [::Buoyancy::GetAttribute prefix]${name}
 }
 
-proc Buoyancy::xml::CustomTree { args } {
+proc ::Buoyancy::xml::CustomTree { args } {
     spdAux::parseRoutes
 
     apps::setActiveAppSoft Fluid
@@ -51,7 +54,4 @@ proc Buoyancy::xml::CustomTree { args } {
     
     # Hide Fluid gravity -> Boussinesq
     spdAux::SetValueOnTreeItem state hidden FLGravity
-
 }
-
-Buoyancy::xml::Init

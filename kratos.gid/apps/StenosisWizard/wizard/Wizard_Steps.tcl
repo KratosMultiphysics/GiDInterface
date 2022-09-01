@@ -1,13 +1,21 @@
 
-namespace eval StenosisWizard::Wizard {
+namespace eval ::StenosisWizard::Wizard {
+    namespace path ::StenosisWizard
+    Kratos::AddNamespace [namespace current]
+    
     # Namespace variables declaration
     variable curr_win
+    variable ogl_cuts
 }
 
 proc StenosisWizard::Wizard::Init { } {
     #W "Carga los pasos"
     variable curr_win
     set curr_win ""
+    variable draw_cuts_name
+    set draw_cuts_name StenosisWizard_cuts
+    variable draw_render_name
+    set draw_render_name StenosisWizard_render
 }
 
 proc StenosisWizard::Wizard::Geometry { win } {
@@ -24,7 +32,7 @@ proc StenosisWizard::Wizard::GeometryTypeChange { } {
     if {[GiDVersionCmp 14.1.3d] >= 0} {
         switch $type {
             "Circular" {
-                smart_wizard::SetProperty Geometry Length,value 100
+                smart_wizard::SetProperty Geometry Length,value 200
                 smart_wizard::SetProperty Geometry Delta,value 3.18
                 smart_wizard::SetProperty Geometry Precision,state normal
                 smart_wizard::SetProperty Geometry SphRadius,state hidden
@@ -107,6 +115,7 @@ proc StenosisWizard::Wizard::DrawGeometry {} {
 
 proc StenosisWizard::Wizard::DrawTriangular {length radius start end delta } {
     GidUtils::DisableGraphics
+
     set origin_x [expr double($length)/-2]
     set end_x [expr double($length)/2]
 
@@ -148,9 +157,7 @@ proc StenosisWizard::Wizard::DrawSpherical {length radius start end delta sphrad
 
     set origin_x [expr double($length)/-2]
     set end_x [expr double($length)/2]
-    # set m2 [expr double($end) / double ($delta)]
-    # set m1 [expr double($delta) / double($end) *-1.0]
-    # vGarate set ycenter [expr double($delta)/2-$m2*double($end)/2]
+    
     set hdelta [expr double($delta) - double($radius)]
     set ycenter [expr double ($hdelta) - double($sphradius)]
 
@@ -193,7 +200,7 @@ proc StenosisWizard::Wizard::DrawPolygonal {length radius start end delta tpoly 
     GidUtils::DisableGraphics
     set origin_x [expr double($length)/-2]
     set end_x [expr double($length)/2]
-
+    
     set halfpoly [expr double($tpoly)/2]
     set hdelta [expr $delta - $radius]
     
@@ -250,10 +257,12 @@ proc StenosisWizard::Wizard::DrawCircular {length radius start end delta precisi
     
     set zona [expr $end - $start]
     set delta_z [expr double($zona) / double($precision)]
-    
+    set origin_x [expr double($length)/-2]
+    set end_x [expr double($length)/2]
+
     # Initial point
-    lappend points [list -$length $radius 0]
-    GiD_Geometry create point 1 $layer -$length $radius 0
+    lappend points [list $origin_x $radius 0]
+    GiD_Geometry create point 1 $layer $origin_x $radius 0
     
     # first cut
     lappend points [list $start $radius 0]
@@ -269,8 +278,8 @@ proc StenosisWizard::Wizard::DrawCircular {length radius start end delta precisi
     # last cut
     lappend points [list $end $radius 0]
     # Final point
-    GiD_Geometry create point 2 $layer $length $radius 0
-    lappend points [list $length $radius 0]
+    GiD_Geometry create point 2 $layer $end_x $radius 0
+    lappend points [list $end_x $radius 0]
     
     set line [GiD_Geometry create line append nurbsline $layer 1 2 -interpolate [llength $points] {*}$points -tangents {1 0 0} {1 0 0}]
     
@@ -378,10 +387,12 @@ proc StenosisWizard::Wizard::NextFluid { } {
 
 proc StenosisWizard::Wizard::Simulation { win } {
     smart_wizard::AutoStep $win Simulation
-    smart_wizard::SetWindowSize 450 500
+    smart_wizard::SetWindowSize 450 600
 }
 
 proc StenosisWizard::Wizard::Mesh { } {
+    LastStep
+    StenosisWizard::Wizard::UnregisterDrawCuts
     if {[lindex [GiD_Info Mesh] 0]>0} {
         #GiD_Process Mescape Meshing reset Yes
         GiD_Process Mescape Meshing CancelMesh PreserveFrozen Yes
@@ -394,6 +405,7 @@ proc StenosisWizard::Wizard::Mesh { } {
     MeshGenerationOKDo $mesh
 }
 proc StenosisWizard::Wizard::Save { } {
+    LastStep
     GiD_Process Mescape Files Save 
 }
 
@@ -422,33 +434,8 @@ proc StenosisWizard::Wizard::LastStep { } {
     gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='EndTime']} "v $end"
     gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='TimeParameters']/value[@n='DeltaTime']} "v $delta"
     
-    set ncuts [smart_wizard::GetProperty Simulation Cuts,value]
-    set length [smart_wizard::GetProperty Geometry Length,value]
-    set delta [expr 2.0*double($length)/(double($ncuts)+1.0)]
-    #W "$length $delta"
 
-    # Cut planes    
-    #gid_groups_conds::copyNode {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][1]} {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']}
-    
-    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]} {name Main}
-    #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='Results']/container[@n='CutPlanes']/blockdata[@n='CutPlane'][2]/value[@n='normal']} {v 0.0,1.0,0.0}
-    spdAux::ClearCutPlanes
-    set cutplane_xp "[spdAux::getRoute CutPlanes]/blockdata\[1\]"
-    
-    for {set i 1} {$i <= $ncuts} {incr i} {
-        set x [expr -$length + ($i * $delta)]
-        set x [expr double(round(100*$x))/100]
-        gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
-        set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $i +1]\]"
-        gid_groups_conds::setAttributesF $cutplane "name CutPlane$i"
-        gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 1.0,0.0,0.0"
-        gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v $x,0.0,0.0"
-    }
-    
-    gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
-    set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $ncuts +2]\]"
-    gid_groups_conds::setAttributesF $cutplane "name CutPlane[expr $ncuts +1]"
-    gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v 0.0,1.0,0.0"
+    PlaceCutPlanes
     
     #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='velocity_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
     #gid_groups_conds::setAttributesF {container[@n='Fluid']/container[@n='SolutionStrat']/container[@n='pressure_linear_solver_settings']/value[@n='Solver']} {v Conjugate_gradient}
@@ -456,10 +443,232 @@ proc StenosisWizard::Wizard::LastStep { } {
     
 }
 
+proc StenosisWizard::Wizard::PlaceCutPlanes { } {
+    set ncuts [smart_wizard::GetProperty Simulation Cuts,value]
+    set length [smart_wizard::GetProperty Geometry Length,value]
+    set delta [expr double($length)/(double($ncuts)+1.0)]
+    set orig_x [ expr $length*-0.5]
+    
+    set angle [smart_wizard::GetProperty Simulation Bending,value]
+
+    # Cut planes    
+    set cuts_enabled 1
+    if {$cuts_enabled} {
+        spdAux::ClearCutPlanes
+        set cutplane_xp "[spdAux::getRoute CutPlanes]/blockdata\[1\]"
+        
+        for {set i 1} {$i <= $ncuts} {incr i} {
+            set x [expr $orig_x + ($i * $delta)]
+            set x [expr double(round(100*$x))/100]
+            gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
+            set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $i +1]\]"
+            gid_groups_conds::setAttributesF $cutplane "name CutPlane$i"
+
+            set coords [list [objarray new doublearray -values [list $x $x $x]] [objarray new doublearray -values {0.0 1.0 0.0}] [objarray new doublearray -values {0.0 0.0 1.0}]]           
+            set new_nodes [StenosisWizard::Wizard::BendNodes $orig_x $length [expr $angle/2] $coords]
+            set o [list [objarray get [lindex $new_nodes 0] 0] [objarray get [lindex $new_nodes 1] 0] [objarray get [lindex $new_nodes 2] 0] ]
+            set p1 [list [objarray get [lindex $new_nodes 0] 1] [objarray get [lindex $new_nodes 1] 1] [objarray get [lindex $new_nodes 2] 1] ]
+            set p2 [list [objarray get [lindex $new_nodes 0] 2] [objarray get [lindex $new_nodes 1] 2] [objarray get [lindex $new_nodes 2] 2] ]
+            set v1 [math::linearalgebra::sub $p1 $o]
+            set v2 [math::linearalgebra::sub $p2 $o]
+            set v_norm [::math::linearalgebra::crossproduct $v1 $v2]
+            gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v [join $v_norm {,}]"
+            gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v [join $o {,}]"
+        }
+        
+        set x 0.0
+        set coords [list [objarray new doublearray -values [list $x [expr $x +1] $x]] [objarray new doublearray -values {0.0 0.0 0.0}] [objarray new doublearray -values {0.0 0.0 1.0}]]           
+        set new_nodes [StenosisWizard::Wizard::BendNodes $orig_x $length [expr $angle/2] $coords]
+        set o [list [objarray get [lindex $new_nodes 0] 0] [objarray get [lindex $new_nodes 1] 0] [objarray get [lindex $new_nodes 2] 0] ]
+       
+        set p1 [list [objarray get [lindex $new_nodes 0] 1] [objarray get [lindex $new_nodes 1] 1] [objarray get [lindex $new_nodes 2] 1] ]
+        set p2 [list [objarray get [lindex $new_nodes 0] 2] [objarray get [lindex $new_nodes 1] 2] [objarray get [lindex $new_nodes 2] 2] ]
+        set v1 [math::linearalgebra::sub $p1 $o]
+        set v2 [math::linearalgebra::sub $p2 $o]
+        set v_norm [::math::linearalgebra::crossproduct $v1 $v2]
+        gid_groups_conds::copyNode $cutplane_xp [spdAux::getRoute CutPlanes]
+        set cutplane "[spdAux::getRoute CutPlanes]/blockdata\[@n='CutPlane'\]\[[expr $ncuts +2]\]"
+        gid_groups_conds::setAttributesF $cutplane "name CutPlane[expr $ncuts +1]"
+        gid_groups_conds::setAttributesF "$cutplane/value\[@n='normal'\]" "v [join $v_norm {,}]"
+        gid_groups_conds::setAttributesF "$cutplane/value\[@n='point'\]" "v [join $o {,}]"
+    }
+    
+}
+
 proc StenosisWizard::AfterMeshGeneration { fail } {
+
     GidUtils::CloseWindow MESHPROGRESS
     GiD_Process Mescape Mescape Mescape
     GiD_Process Mescape Files Save 
+    StenosisWizard::Wizard::PostMeshBend
+    GiD_Process Mescape Files Save 
+}
+
+
+proc StenosisWizard::Wizard::PostMeshBend { } {
+
+    set length [ smart_wizard::GetProperty Geometry Length,value]
+    set orig_x [ expr $length*-0.5]
+    set angle [ smart_wizard::GetProperty Simulation Bending,value]
+    set angle [expr $angle/2]
+    GidUtils::DisableGraphics
+    StenosisWizard::Wizard::Bend $orig_x $length $angle
+    GidUtils::EnableGraphics
+    GiD_Process Mescape Meshing MeshView escape 
+    GiD_Process 'Redraw 
+}
+
+proc StenosisWizard::Wizard::Bend { orig_x len angle} {
+
+    lassign [GiD_Info Mesh nodes -array] ids coords
+    set moved_nodes [StenosisWizard::Wizard::BendNodes $orig_x $len $angle $coords]
+    lassign $moved_nodes coord_x coord_y coord_z
+    set size [objarray length $coord_x]
+    for {set i 0} {$i < $size} {incr i} {
+        set res_x [objarray get $coord_x $i]
+        set res_y [objarray get $coord_y $i]
+        set res_z [objarray get $coord_z $i]
+        GiD_Mesh edit node [objarray get $ids $i] [list $res_x $res_y $res_z]
+    }
+}
+
+proc StenosisWizard::Wizard::BendNodes {orig_x len angle coords} {
+    lassign $coords coord_x coord_y coord_z
+    set size [objarray length $coord_x]
+    set result_x [objarray new doublearray $size 0.0]
+    set result_y [objarray new doublearray $size 0.0]
+    set result_z [objarray new doublearray $size 0.0]
+    
+    for {set i 0} {$i < $size} {incr i} {
+        # primera parte 
+        set old_val_x [objarray get $coord_x $i]
+        set old_val_y [objarray get $coord_y $i]
+        set old_val_z [objarray get $coord_z $i]
+        set dist_x [expr $old_val_x - $orig_x]
+        set ang [expr $angle*$dist_x/$len]
+        set ang [expr {double(round(10000*$ang))/10000}]
+        set res_x [expr $old_val_x + sin($ang) * $old_val_y]
+        set res_y [expr cos($ang) *$old_val_y]
+        set res_z $old_val_z
+       
+        # segunda parte
+        set ang2 [expr $angle*($old_val_x - $orig_x)/$len]
+        set res_x_tmp $res_x
+        set x_rel [expr $res_x_tmp - $orig_x]
+
+        # Store the nodes final position
+        objarray set $result_x $i [expr $orig_x + cos($ang2)*($x_rel) + sin($ang2)*$res_y]
+        objarray set $result_y $i [expr -sin($ang2)*($x_rel) + cos($ang2)*$res_y]
+        objarray set $result_z $i $old_val_z
+    }
+    return [list $result_x $result_y $result_z]
+}
+
+proc StenosisWizard::Wizard::UnregisterDrawCuts { } {
+    variable draw_cuts_name
+    Drawer::Unregister $draw_cuts_name
+    GiD_Process 'Redraw 
+    smart_wizard::SetProperty Simulation ViewCuts,name "Draw cuts"
+}
+
+proc StenosisWizard::Wizard::DrawCuts { } {
+    variable draw_cuts_name
+    variable curr_win
+    if {[Drawer::IsRegistered $draw_cuts_name]} {
+        StenosisWizard::Wizard::UnregisterDrawCuts
+    } else {
+        set planes [write::GetCutPlanesList]
+        set glob_cuts [list ]
+        foreach plane $planes {
+            set center [dict get $plane point]
+            set normal [dict get $plane normal]
+            lassign [MathUtils::CalculateLocalAxisFromXAxis $normal] v1 v2
+
+            # set v1 [list [expr -1.0*[lindex $normal 0]] [lindex $normal 1] [lindex $normal 2]]
+            # set v2 [list [lindex $normal 0] [lindex $normal 1] 1]
+            set c1 [MathUtils::VectorSum $center  [MathUtils::ScalarByVectorProd 30 $v1]]
+            set c2 [MathUtils::VectorSum $center  [MathUtils::ScalarByVectorProd 30 $v2]]
+            set c3 [MathUtils::VectorSum $center [MathUtils::ScalarByVectorProd -30 $v1]]
+            set c4 [MathUtils::VectorSum $center [MathUtils::ScalarByVectorProd -30 $v2]]
+
+            lappend glob_cuts [list $c1 $c2 $c3 $c4]
+        }
+        Drawer::Register $draw_cuts_name StenosisWizard::Wizard::RedrawCuts $glob_cuts
+        smart_wizard::SetProperty Simulation ViewCuts,name "End draw cuts"
+    }
+    GiD_Process 'Redraw 
+    StenosisWizard::Wizard::Simulation $curr_win
+}
+
+proc StenosisWizard::Wizard::RedrawCuts { } { 
+    variable draw_cuts_name
+    # blue
+    GiD_OpenGL draw -color "0.0 0.0 1.0"
+    foreach cuadrado [Drawer::GetVars $draw_cuts_name] {
+        lassign $cuadrado c1 c2 c3 c4
+        GiD_OpenGL draw -begin lineloop 
+        GiD_OpenGL draw -vertex $c1
+        GiD_OpenGL draw -vertex $c2
+        GiD_OpenGL draw -vertex $c3
+        GiD_OpenGL draw -vertex $c4
+        GiD_OpenGL draw -end
+    }
+}
+
+proc StenosisWizard::Wizard::PreviewCurvature {} {
+    variable draw_render_name
+    variable curr_win
+    if {[Drawer::IsRegistered $draw_render_name]} {
+        StenosisWizard::Wizard::UnregisterDrawPrecurvature
+    } else {
+        set surfaces [GiD_Geometry -v2 list surface]
+
+        set x [list ]
+        set y [list ]
+        set z [list ]
+        
+        foreach surface_id $surfaces {
+            lassign [GiD_Geometry get surface $surface_id -force render_mesh] elemtype elementnnodes nodes elements normals uvs
+            foreach {cx cy cz} $nodes {
+                lappend x $cx
+                lappend y $cy
+                lappend z $cz
+            }
+        }
+        set coords [list [objarray new doublearray -values $x] [objarray new doublearray -values $y] [objarray new doublearray -values $z]]
+        
+        set length [ smart_wizard::GetProperty Geometry Length,value]
+        set orig_x [ expr $length*-0.5]
+        set angle [ smart_wizard::GetProperty Simulation Bending,value]
+        set angle [expr $angle/2]
+        set nodes [StenosisWizard::Wizard::BendNodes $orig_x $length $angle $coords]
+        
+        Drawer::Register $draw_render_name StenosisWizard::Wizard::RedrawRenderBended $nodes
+        
+        smart_wizard::SetProperty Simulation PreviewCurvature,name "End preview curvature"
+    }
+    GiD_Process 'Redraw 
+    StenosisWizard::Wizard::Simulation $curr_win
+}
+
+
+proc StenosisWizard::Wizard::UnregisterDrawPrecurvature { } {
+    variable draw_render_name
+    Drawer::Unregister $draw_render_name
+    GiD_Process 'Redraw 
+    smart_wizard::SetProperty Simulation PreviewCurvature,name "Preview curvature"
+}
+
+proc StenosisWizard::Wizard::RedrawRenderBended { } { 
+    variable draw_render_name
+    # blue
+    GiD_OpenGL draw -color "0.0 0.0 1.0" -pointsize 3  
+    lassign [Drawer::GetVars $draw_render_name] x y z
+    GiD_OpenGL draw -begin points 
+    foreach cx $x cy $y cz $z {
+        GiD_OpenGL draw -vertex [list $cx $cy $cz]
+    }
+    GiD_OpenGL draw -end
 }
 
 StenosisWizard::Wizard::Init

@@ -1,6 +1,10 @@
 
-proc write::writeElementConnectivities { } {
-    set parts [GetConfigurationAttribute parts_un]
+proc write::writeElementConnectivities { {default_parts_un "" } } {
+    if {$default_parts_un eq ""} {
+        set parts [GetConfigurationAttribute parts_un]
+    } else {
+        set parts $default_parts_un
+    }
     set root [customlib::GetBaseRoot]
 
     set xp1 "[spdAux::getRoute $parts]/group"
@@ -20,8 +24,9 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
     set write_properties_in mdpa
     if {[GetConfigurationAttribute properties_location] ne ""} {set write_properties_in [GetConfigurationAttribute properties_location]}
     set group [get_domnode_attribute $gNode n]
-    if { [dict exists $mat_dict $group] && $write_properties_in eq "mdpa"} {
-        set mid [dict get $mat_dict $group MID]
+    set submodelpart [write::GetSubModelPartName Parts $group]
+    if { [dict exists $mat_dict $submodelpart] && $write_properties_in eq "mdpa"} {
+        set mid [dict get $mat_dict $submodelpart MID]
     } else {
         set mid 0
     }

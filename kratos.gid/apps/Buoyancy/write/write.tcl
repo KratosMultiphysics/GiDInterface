@@ -1,20 +1,26 @@
-namespace eval Buoyancy::write {
+namespace eval ::Buoyancy::write {
+    namespace path ::Buoyancy::write
+    Kratos::AddNamespace [namespace current]
+
     variable writeAttributes
 }
 
-proc Buoyancy::write::Init { } {
-    Fluid::write::Init
-    Fluid::write::SetAttribute thermal_bc_un "CNVDFFBC"
+proc ::Buoyancy::write::Init { } {
+    # Start Fluid write variables
+    # Add thermal unique names to Fluid write variables
+    Fluid::write::SetAttribute thermal_bc_un [ConvectionDiffusion::write::GetAttribute conditions_un]
     Fluid::write::SetAttribute thermal_initial_cnd_un [ConvectionDiffusion::write::GetAttribute nodal_conditions_un]
 }
 
 # Events
-proc Buoyancy::write::writeModelPartEvent { } {
+proc ::Buoyancy::write::writeModelPartEvent { } {
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
 
+    # Start Fluid write variables
     Fluid::write::Init
+    # Start Fluid write conditions map from scratch
     Fluid::write::InitConditionsMap
 
     # Init data
@@ -25,7 +31,7 @@ proc Buoyancy::write::writeModelPartEvent { } {
     Fluid::write::writeProperties
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[Fluid::write::GetAttribute writeCoordinatesByGroups]} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    if {[Fluid::write::GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
     # Element connectivities (Groups on FLParts)
     write::writeElementConnectivities
@@ -44,29 +50,31 @@ proc Buoyancy::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     #write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
 }
-proc Buoyancy::write::writeCustomFilesEvent { } {
-    # Materials
-    Buoyancy::write::WriteMaterialsFile False
 
-    # Main python script
-    set orig_name "MainKratos.py"
-    write::CopyFileIntoModel [file join "python" $orig_name ]
+proc ::Buoyancy::write::writeCustomFilesEvent { } {
+    # Materials
+    Buoyancy::write::WriteMaterialsFile True
+    write::SetConfigurationAttribute main_launch_file [ConvectionDiffusion::write::GetAttribute main_launch_file]
 }
 
-proc Buoyancy::write::Validate {} {
+proc ::Buoyancy::write::Validate {} {
     set err ""
-
     return $err
 }
 
-proc Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_modelpart_name True} } {
+proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_modelpart_name True} } {
+    # Note: This will generate 2 quasi identical files for materials. The difference is the model_part_name
+
+    # Write fluid material file
     Fluid::write::WriteMaterialsFile $write_const_law $include_modelpart_name
+
+    # Write Buoyancy materials file
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetModelPartName]}
     write::writePropertiesJsonFile [GetAttribute parts_un] "BuoyancyMaterials.json" $write_const_law $model_part_name
 }
 
-proc Buoyancy::write::writeSubModelParts { } {
+proc ::Buoyancy::write::writeSubModelParts { } {
     set BCUN [GetAttribute thermal_bc_un]
 
     set root [customlib::GetBaseRoot]
@@ -86,7 +94,7 @@ proc Buoyancy::write::writeSubModelParts { } {
     }
 }
 
-proc Buoyancy::write::writeBoussinesqSubModelPart { } {
+proc ::Buoyancy::write::writeBoussinesqSubModelPart { } {
     set groupid "_Boussinesq_hidden_"
     GiD_Groups create $groupid
     GiD_EntitiesGroups assign $groupid nodes [GiD_Mesh list node]
@@ -94,25 +102,23 @@ proc Buoyancy::write::writeBoussinesqSubModelPart { } {
     GiD_Groups delete $groupid
 }
 
-proc Buoyancy::write::GetModelPartName { } {
-    return ThermalModelPart
+proc ::Buoyancy::write::GetModelPartName { } {
+    return [Fluid::GetWriteProperty model_part_name]
 }
 
-proc Buoyancy::write::GetAttribute {att} {
+proc ::Buoyancy::write::GetAttribute {att} {
     return [Fluid::write::GetAttribute $att]
 }
 
-proc Buoyancy::write::GetAttributes {} {
+proc ::Buoyancy::write::GetAttributes {} {
     return [Fluid::write::GetAttributes]
 }
 
-proc Buoyancy::write::AddAttributes {configuration} {
+proc ::Buoyancy::write::AddAttributes {configuration} {
     variable writeAttributes
     set writeAttributes [dict merge $writeAttributes $configuration]
 }
 
-proc Buoyancy::write::AddValidApps {appid} {
+proc ::Buoyancy::write::AddValidApps {appid} {
     AddAttribute validApps $appid
 }
-
-Buoyancy::write::Init

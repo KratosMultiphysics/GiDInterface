@@ -1,16 +1,21 @@
+namespace eval ::FSI::examples::MokChannelFlexibleWall {
+    namespace path ::FSI::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::FSI::examples::MokChannelFlexibleWall {args} {
+}
+
+proc ::FSI::examples::MokChannelFlexibleWall::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawMokChannelFlexibleWallGeometry
-    AssignMokChannelFlexibleWallMeshSizes$::Model::SpatialDimension
-    TreeAssignationMokChannelFlexibleWall
+    DrawGeometry
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation
 }
 
-proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
+proc ::FSI::examples::MokChannelFlexibleWall::DrawGeometry {args} {
     Kratos::ResetModel
     GiD_Process Mescape 'Layers ChangeName Layer0 Fluid escape
 
@@ -137,7 +142,7 @@ proc FSI::examples::DrawMokChannelFlexibleWallGeometry {args} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes2D {args} {
+proc ::FSI::examples::MokChannelFlexibleWall::AssignMeshSizes2D {args} {
     set long_side_divisions 100
     set short_side_divisions 4
     set outlet_element_size 0.01
@@ -154,7 +159,7 @@ proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes2D {args} {
     GiD_Process Mescape Meshing ElemType Triangle [GiD_EntitiesGroups get Fluid surfaces] escape escape
 }
 
-proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes3D {args} {
+proc ::FSI::examples::MokChannelFlexibleWall::AssignMeshSizes3D {args} {
     set long_side_divisions 100
     set short_side_divisions 4
     set outlet_element_size 0.01
@@ -164,7 +169,8 @@ proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes3D {args} {
 
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
     GiD_Process Mescape Meshing ElemType Tetrahedra [GiD_EntitiesGroups get Fluid volumes] escape
-    GiD_Process Mescape Meshing ElemType Hexahedra [GiD_EntitiesGroups get Structure volumes] escape
+    GiD_Process Mescape Meshing ElemType Tetrahedra [GiD_EntitiesGroups get Structure volumes] escape
+    # GiD_Process Mescape Meshing ElemType Hexahedra [GiD_EntitiesGroups get Structure volumes] escape
     GiD_Process Mescape Meshing Structured Surfaces 14 16 escape $long_side_divisions 12 14 escape $long_side_divisions 45 46 escape escape
     GiD_Process Mescape Meshing Structured Surfaces 15 escape $short_side_divisions 13 escape $long_side_divisions 45 46 escape escape
     GiD_Process Mescape Meshing Structured Volumes [GiD_EntitiesGroups get Structure volumes] escape $short_side_divisions 48 escape $long_side_divisions 15 17 52 53 escape escape
@@ -174,7 +180,7 @@ proc FSI::examples::AssignMokChannelFlexibleWallMeshSizes3D {args} {
     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_element_size [GiD_EntitiesGroups get Fluid volumes] escape escape
 }
 
-proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
+proc ::FSI::examples::MokChannelFlexibleWall::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -188,12 +194,13 @@ proc FSI::examples::TreeAssignationMokChannelFlexibleWall {args} {
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
+
     # Fluid Interface
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
 
     # Fluid Inlet
-    set function {0.1214*(1-cos(0.1*pi*t))*y*(1-y) if t<10 else 0.2428*y*(1-y)}
-    Fluid::xml::CreateNewInlet Inlet {new false name Total} true $function
+    Fluid::xml::CreateNewInlet Inlet {new true name interval1 ini 0 end 10.0} true "0.1214*(1-cos(0.1*pi*t))*y*(1-y)"
+    Fluid::xml::CreateNewInlet Inlet {new true name interval2 ini 10.0 end End} true "0.2428*y*(1-y)"
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"

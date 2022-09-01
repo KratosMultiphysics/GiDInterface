@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ConstitutiveLaws>
     <!--3D laws-->
-    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic" ProductionReady="ProductionReady" Type="Linear3D" behaviour="Elastic"
+    <CLaw n="LinearElastic3DLaw" pn="Linear Elastic"  Type="Linear3D" behaviour="Elastic"
     StrainSize="6" AnalysisType="Linear"
 	  help="Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
@@ -13,7 +13,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="ThermalLinearElastic3DLaw" pn="Thermal Linear Elastic" ProductionReady="ProductionReady" Type="Thermal3D" behaviour="Elastic"
+    <CLaw n="ThermalLinearElastic3DLaw" pn="Thermal Linear Elastic"  Type="Thermal3D" behaviour="Elastic"
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Thermal Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
@@ -30,7 +30,7 @@
     </CLaw>
 
     <!--3D Nodal laws-->
-    <CLaw n="LinearElastic3DLawNodal" pn="Nodal Linear Elastic" ProductionReady="ProductionReady" Type="Linear3D" behaviour="Elastic"
+    <CLaw n="LinearElastic3DLawNodal" pn="Nodal Linear Elastic"  Type="Linear3D" behaviour="Elastic"
     StrainSize="6" AnalysisType="Linear"
 	  help="Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
@@ -42,7 +42,7 @@
 
         </outputs>
     </CLaw>
-    <CLaw n="ThermalLinearElastic3DLawNodal" pn="Nodal Thermal Linear Elastic" ProductionReady="ProductionReady" Type="Thermal3D" behaviour="Elastic"
+    <CLaw n="ThermalLinearElastic3DLawNodal" pn="Nodal Thermal Linear Elastic"  Type="Thermal3D" behaviour="Elastic"
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Thermal Linear Elastic Behaviour in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
         <inputs>
@@ -59,7 +59,7 @@
     </CLaw>
 
     <!--3D  Interface laws-->
-    <CLaw n="BilinearCohesive3DLaw" pn="Bilinear Cohesive 3D" ProductionReady="ProductionReady" Type="Interface3D" behaviour="Elastic"
+    <CLaw n="BilinearCohesive3DLaw" pn="Bilinear Cohesive 3D"  Type="Interface3D" behaviour="Elastic"
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Bilinear Cohesive law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
@@ -77,13 +77,28 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="SimplifiedBilinear3DLaw" pn="Simplified Bilinear Cohesive 3D" ProductionReady="ProductionReady" Type="SimplifiedInterface3D" behaviour="Elastic"
+    <CLaw n="JointCohesionDriven3DLaw" pn="Joint Cohesion Driven"  Type="SimplifiedInterface3D" behaviour="Elastic"
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
-	  help="Simplified Bilinear Cohesive law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
+	  help="Simplified joint cohesion driven law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.6"/>
+            <parameter n="COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="1e6"/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
+    <CLaw n="JointStressDriven3DLaw" pn="Joint Stress Driven"  Type="SimplifiedInterface3D" behaviour="Elastic"
+    StrainSize="6"  AnalysisType="Linear,Non-Linear"
+	  help="Simplified joint stress driven law for problems in 3D" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.4"/>
             <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress" unit_magnitude="P" units="Pa" v="20e06"/>
             <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress" unit_magnitude="P" units="Pa" v="2e06"/>
             <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.7"/>
@@ -93,7 +108,7 @@
     </CLaw>
 
     <!--2D laws-->
-    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Elastic" StrainSize="3"
+    <CLaw n="LinearElasticPlaneStrain2DLaw" pn="Linear Elastic Plane Strain"  Type="PlaneStrain" behaviour="Elastic" StrainSize="3"
           help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -104,7 +119,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3"
+    <CLaw n="LinearElasticPlaneStress2DLaw" pn="Linear Elastic Plane Stress"  Type="PlaneStress" behaviour="Elastic" StrainSize="3"
           help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -116,7 +131,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="ThermalLinearElastic2DPlaneStrain" pn="Thermal Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="ThermalPlaneStrain" behaviour="Elastic" StrainSize="3"
+    <CLaw n="ThermalLinearElastic2DPlaneStrain" pn="Thermal Linear Elastic Plane Strain"  Type="ThermalPlaneStrain" behaviour="Elastic" StrainSize="3"
           help="Thermal Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -131,7 +146,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="ThermalLinearElastic2DPlaneStress" pn="Thermal Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="ThermalPlaneStress" behaviour="Elastic" StrainSize="3"
+    <CLaw n="ThermalLinearElastic2DPlaneStress" pn="Thermal Linear Elastic Plane Stress"  Type="ThermalPlaneStress" behaviour="Elastic" StrainSize="3"
           help="Thermal Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -148,7 +163,7 @@
     </CLaw>
 
     <!--2D Nodal laws-->
-    <CLaw n="LinearElastic2DPlaneStrainNodal" pn="Nodal Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="PlaneStrain" behaviour="Elastic" StrainSize="3"
+    <CLaw n="LinearElastic2DPlaneStrainNodal" pn="Nodal Linear Elastic Plane Strain"  Type="PlaneStrain" behaviour="Elastic" StrainSize="3"
           help="Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -159,7 +174,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="LinearElastic2DPlaneStressNodal" pn="Nodal Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="PlaneStress" behaviour="Elastic" StrainSize="3"
+    <CLaw n="LinearElastic2DPlaneStressNodal" pn="Nodal Linear Elastic Plane Stress"  Type="PlaneStress" behaviour="Elastic" StrainSize="3"
           help="Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -171,7 +186,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="ThermalLinearElastic2DPlaneStrainNodal" pn="Nodal Thermal Linear Elastic Plane Strain" ProductionReady="ProductionReady" Type="ThermalPlaneStrain" behaviour="Elastic" StrainSize="3"
+    <CLaw n="ThermalLinearElastic2DPlaneStrainNodal" pn="Nodal Thermal Linear Elastic Plane Strain"  Type="ThermalPlaneStrain" behaviour="Elastic" StrainSize="3"
           help="Thermal Linear Elastic Behaviour in 2D Plane Strain" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -186,7 +201,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="ThermalLinearElastic2DPlaneStressNodal" pn="Nodal Thermal Linear Elastic Plane Stress" ProductionReady="ProductionReady" Type="ThermalPlaneStress" behaviour="Elastic" StrainSize="3"
+    <CLaw n="ThermalLinearElastic2DPlaneStressNodal" pn="Nodal Thermal Linear Elastic Plane Stress"  Type="ThermalPlaneStress" behaviour="Elastic" StrainSize="3"
           help="Thermal Linear Elastic Behaviour in 2D Plane Stress" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"  AnalysisType="Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -203,7 +218,7 @@
     </CLaw>
 
     <!--2D  Interface laws-->
-    <CLaw n="BilinearCohesive2DPlaneStrain" pn="Bilinear Cohesive Plane Strain" ProductionReady="ProductionReady" Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
+    <CLaw n="BilinearCohesive2DPlaneStrain" pn="Bilinear Cohesive Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -220,7 +235,7 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="BilinearCohesive2DPlaneStress" pn="Bilinear Cohesive Plane Stress" ProductionReady="ProductionReady" Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
+    <CLaw n="BilinearCohesive2DPlaneStress" pn="Bilinear Cohesive Plane Stress"  Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
@@ -238,30 +253,29 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="SimplifiedBilinear2DPlaneStrain" pn="Simplified Bilinear Cohesive Plane Strain" ProductionReady="ProductionReady" Type="SimplifiedInterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
-          help="Simplified Bilinear Cohesive law for Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
+    <CLaw n="JointCohesionDriven2DLaw" pn="Joint Cohesion Driven"  Type="SimplifiedInterface" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
+          help="Simplified joint cohesion driven law for problems in 2D" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress" unit_magnitude="P" units="Pa" v="20e06"/>
-            <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress" unit_magnitude="P" units="Pa" v="2e06"/>
-            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.7"/>
-
+            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.6"/>
+            <parameter n="COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="1e6"/>
+            <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
         </inputs>
         <outputs>
         </outputs>
     </CLaw>
 
-    <CLaw n="SimplifiedBilinear2DPlaneStress" pn="Simplified Bilinear Cohesive Plane Stress" ProductionReady="ProductionReady" Type="SimplifiedInterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
-          help="Simplified Bilinear Cohesive law for Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
+    <CLaw n="JointStressDriven2DLaw" pn="Joint Stress Driven"  Type="SimplifiedInterface" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
+          help="Simplified joint stress driven law for problems in 2D" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.83"/>
             <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress" unit_magnitude="P" units="Pa" v="20e06"/>
             <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress" unit_magnitude="P" units="Pa" v="2e06"/>
-            <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.7"/>
             <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
         </inputs>
         <outputs>

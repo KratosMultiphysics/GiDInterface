@@ -1,7 +1,10 @@
 # Project Parameters
 proc ::ConvectionDiffusion::write::getParametersDict { } {
-    
+
     set projectParametersDict [dict create]
+
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis"
 
     # Set the problem data section
     dict set projectParametersDict problem_data [ConvectionDiffusion::write::GetProblemDataDict]
@@ -15,7 +18,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set processes constraints_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
     # dict set processes fluxes_process_list [write::getConditionsParametersDict [GetAttribute conditions_un]]
     dict set processes list_other_processes [ConvectionDiffusion::write::getBodyForceProcessDictList]
-    
+
     dict set projectParametersDict processes $processes
     # Output configuration
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
@@ -32,7 +35,7 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc ConvectionDiffusion::write::GetProblemDataDict { } {
+proc ::ConvectionDiffusion::write::GetProblemDataDict { } {
 
     # First section -> Problem data
     set problem_data_dict [dict create]
@@ -67,18 +70,18 @@ proc ConvectionDiffusion::write::GetProblemDataDict { } {
     return $problem_data_dict
 }
 
-proc ConvectionDiffusion::write::writeParametersEvent { } {
+proc ::ConvectionDiffusion::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
 
 # Body force SubModelParts and Process collection
-proc ConvectionDiffusion::write::getBodyForceProcessDictList {} {
+proc ::ConvectionDiffusion::write::getBodyForceProcessDictList {} {
     set ret [list ]
 
     set model_part_name [GetAttribute model_part_name]
-    
+
     foreach partgroup [write::getPartsSubModelPartId] {
         set value [write::getValue CNVDFFBodyForce BodyForceValue]
         set pdict [dict create]
@@ -97,7 +100,7 @@ proc ConvectionDiffusion::write::getBodyForceProcessDictList {} {
     return $ret
 }
 
-proc ConvectionDiffusion::write::GetSolverSettingsDict {} {
+proc ::ConvectionDiffusion::write::GetSolverSettingsDict {} {
     set solverSettingsDict [dict create]
     set currentStrategyId [write::getValue CNVDFFSolStrat]
     set currentAnalysisTypeId [write::getValue CNVDFFAnalysisType]

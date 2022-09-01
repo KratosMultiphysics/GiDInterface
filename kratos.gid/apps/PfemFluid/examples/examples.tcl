@@ -1,17 +1,13 @@
-namespace eval PfemFluid::examples {
+namespace eval ::PfemFluid::examples {
+    namespace path ::PfemFluid
+    Kratos::AddNamespace [namespace current]
 
 }
 
-proc PfemFluid::examples::Init { } {
-    uplevel #0 [list source [file join $::PfemFluid::dir examples WaterDamBreak.tcl]]
-    uplevel #0 [list source [file join $::PfemFluid::dir examples DamBreakFSI.tcl]]
+proc ::PfemFluid::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
-
-proc PfemFluid::examples::UpdateMenus { } {
-    GiDMenu::InsertOption "Kratos" [list "---"] 7 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Water dam break" ] 7 PRE [list ::PfemFluid::examples::WaterDamBreak] "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Dam break FSI" ] 7 PRE [list ::PfemFluid::examples::DamBreakFSI] "" "" insertafter =
-    GiDMenu::UpdateMenus
-}
-
-PfemFluid::examples::Init

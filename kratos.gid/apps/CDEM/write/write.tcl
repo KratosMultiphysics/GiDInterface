@@ -1,4 +1,8 @@
 namespace eval ::CDEM::write {
+    
+    namespace path ::CDEM
+    Kratos::AddNamespace [namespace current]
+    
     variable writeAttributes
     variable inletProperties
     variable last_property_id
@@ -7,7 +11,7 @@ namespace eval ::CDEM::write {
 
 proc ::CDEM::write::Init { } {
     DEM::write::Init
-    SetAttribute partscont_un DEMParts
+    SetAttribute partscont_un [::DEM::GetUniqueName parts]
 }
 
 # Events
@@ -17,6 +21,7 @@ proc CDEM::write::writeModelPartEvent { } {
 
 proc CDEM::write::writeCustomFilesEvent { } {
     DEM::write::writeCustomFilesEvent
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
 
 # Attributes block
@@ -35,5 +40,3 @@ proc CDEM::write::AddAttributes {configuration} {
 proc CDEM::write::AddValidApps {appid} {
     DEM::write::AddAttribute validApps $appid
 }
-
-CDEM::write::Init

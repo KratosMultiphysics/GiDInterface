@@ -6,18 +6,28 @@
     </value>
     <value n="OutputDeltaTime" pn="Time between outputs (s)" v="0.01" help="Output will be printed in intervals of this time" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} time]" icon="data"/>
     <value n="OutputDeltaStep" pn="Time steps between outputs" v="1" help="Output will be printed in intervals of this number of steps" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} step]" icon="data"/>
-    <value n="BodyOutput" pn="Body output" v="Yes" values="Yes,No" help="The interior of the volume is printed" state="[ShowInMode Developer]" icon="data"/>
-    <value n="NodeOutput" pn="Node output" v="Yes" values="Yes,No" help="The nodes are printed as a separate layer" state="[ShowInMode Developer]" icon="data"/>
+    <value n="BodyOutput" pn="Body output" v="Yes" values="Yes,No" help="The interior of the volume is printed" icon="data"/>
+    <value n="NodeOutput" pn="Node output" v="Yes" values="Yes,No" help="The nodes are printed as a separate layer" icon="data"/>
     <value n="SkinOutput" pn="Skin output" v="No" values="Yes,No" help="" state="hidden" icon="data"/>
-    <container n="OnElement" pn="On element" un="ElementResults" icon="select" help="Activate the results you want to see in the elements" state="hidden" open_window="0">
-        <dynamicnode command="spdAux::injectElementOutputs" args=""/>
-        <dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>
+    <condition n="WaveMonitor" pn="Wave Monitor" ov="point" ovm="node" un="WaveMonitor" icon="select" help="Activate the results you want to set wave gauges" >
+     <value n="MeanWaterLevel" pn="Mean Level" icon="data" v="0" help="Water Level"/>
+     <value n="RelativeSearchRadius" pn="Relative Search Radius" icon="data" v="2"   help="Relative value versus element size"/>
+     <value n="TimeBetweenOutputs" pn="Output Time" icon="data" v="0.01"  help="Time between two consecutive measures"/>
+     <value n="FolderName" pn="Gauges Folder Name" icon="data" v="WaveMeasures"  help="Name of the folder that will contain the results"/>
+    </condition>
+    <container n="OnElement" pn="Elemental Results" un="ElementResults" icon="select" help="Activate the results you want to see in the elements" open_window="0">
+        <!--<dynamicnode command="spdAux::injectElementOutputs" args=""/>-->
+        <!--<dynamicnode command="spdAux::injectConstitutiveLawOutputs" args=""/>-->
+        <value n="CAUCHY_STRESS_VECTOR" pn="Cauchy stress vector" v="No" values="Yes,No"/>
+        <value n="YIELDED" pn="Yielded" v="No" values="Yes,No"/>
     </container>
-    <container n="OnNodes" pn="On nodes" un="NodalResults" icon="select" help="Activate the results you want to see in the nodes" open_window="0">
+    <container n="OnNodes" pn="Nodal Results" un="NodalResults" icon="select" help="Activate the results you want to see in the nodes" open_window="0">
         <value n="PARTITION_INDEX" pn="Partition index" v="Yes" values="Yes,No" help="" state="[checkStateByUniqueName ParallelType MPI]"/>
         <dynamicnode command="spdAux::injectNodalConditionsOutputs" args=""/>
+        <!--<value n="ACCELERATION" pn="Acceleration" v="No" values="Yes,No" state="[checkStateByUniqueName PFEMFLUID_DomainType Fluids]"/>-->
     </container>
     <container n="GiDOptions" pn="Options" un="GiDOptions" help="GiD postprocess options" open_window="0" icon="select">
+        <value n="FolderName" pn="Folder name" v="gid_output" help="This folder will be created to store the GiD results" />
         <value n="GiDPostMode" pn="Result format" v="GiD_PostBinary" values="GiD_PostBinary,GiD_PostAscii,GiD_PostAsciiZipped" dict="GiD_PostBinary,Binary,GiD_PostAscii,Ascii,GiD_PostAsciiZipped,Ascii zipped" icon="data" help="GiD result file format" />
         <value n="GiDWriteMeshFlag" pn="Write deformed mesh" v="WriteDeformed" values="WriteDeformed,WriteUndeformed" dict="WriteDeformed,Write deformed,WriteUndeformed, Write undeformed" icon="data" help="Write the GiD deformed or undeformed mesh"/>
         <value n="GiDWriteConditionsFlag" pn="Write conditions" v="WriteConditions" values="WriteConditions,WriteElementsOnly,WriteConditionsOnly" dict="WriteConditions,Write conditions,WriteElementsOnly,Write elements only,WriteConditionsOnly,Write conditions only" icon="data" help="Write the conditions or only element to the GiD result file"/>

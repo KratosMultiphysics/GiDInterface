@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Group id="Structural" name="Structural examples">
+    <Example id="HighRiseBuilding2D" app="Structural" logo="HighRiseBuilding2D.png" name="High rise building 2D" dim="2D" cmd="::Structural::examples::HighRiseBuilding::Init">
+        <Description></Description>
+    </Example>
+    <Example id="TrussCantilever2D" app="Structural" logo="TrussCantilever2D.png" name="Truss cantilever 2D" dim="2D" cmd="::Structural::examples::TrussCantilever::Init">
+        <Description></Description>
+    </Example>
+    <Example id="TrussCantilever3D" app="Structural" logo="TrussCantilever3D.png" name="Truss cantilever 3D" dim="3D" cmd="::Structural::examples::TrussCantilever::Init">
+        <Description></Description>
+    </Example>
+    <Example id="IncompressibleCookMembrane2D" app="Structural" logo="IncompressibleCookMembrane2D.png" name="Incompressible cook\nmembrane 2D" dim="2D" cmd="::Structural::examples::IncompressibleCookMembrane::Init">
+        <Description></Description>
+    </Example>
+    <Example id="IncompressibleCookMembrane3D" app="Structural" logo="IncompressibleCookMembrane3D.png" name="Incompressible cook\nmembrane 3D" dim="3D" cmd="::Structural::examples::IncompressibleCookMembrane::Init">
+        <Description></Description>
+    </Example>
+</Group>

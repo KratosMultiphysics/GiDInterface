@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="SolStratST" pn="Solution" un="CNVDFFStratSection" icon="select" help="Solution Strategy" open_window="0">
+    
+	<!-- Linear solvers -->
+    <dynamicnode command="spdAux::injectSolvers" args="ImplementedInApplication ConvectionDiffusionApplication"/>
+    
+	<!-- Strategy parameters -->
+    <container n="StratParams" pn="Strategy parameters" un="CNVDFFStratParams" icon="groupsTreeNew.gif" state="normal" open_window="0">
+        <dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication ConvectionDiffusionApplication"/>
+    </container>
+
+</container>

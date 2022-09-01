@@ -1,15 +1,13 @@
-namespace eval DEMPFEM::examples {
+namespace eval ::DEMPFEM::examples {
+    namespace path ::DEMPFEM
+    Kratos::AddNamespace [namespace current]
 
 }
 
-proc DEMPFEM::examples::Init { } {
-    uplevel #0 [list source [file join $::DEMPFEM::dir examples InnerSphere.tcl]]
+proc ::DEMPFEM::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
-
-proc DEMPFEM::examples::UpdateMenus { } {
-    GiDMenu::InsertOption "Kratos" [list "---"] 8 PRE "" "" "" insertafter =
-    GiDMenu::InsertOption "Kratos" [list "Heated square" ] 8 PRE [list ::DEMPFEM::examples::InnerSphere] "" "" insertafter =
-    GiDMenu::UpdateMenus
-}
-
-DEMPFEM::examples::Init

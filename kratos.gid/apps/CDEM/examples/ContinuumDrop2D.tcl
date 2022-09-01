@@ -1,25 +1,27 @@
+namespace eval ::CDEM::examples::ContinuumDrop2D {
+    namespace path ::CDEM::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::CDEM::examples::ContinuumDrop2D {args} {
+proc ::CDEM::examples::ContinuumDrop2D::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to discard your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
         if { $retval == "cancel" } { return }
     }
 
-    DrawGeometryContinuumDrop
-    AssignToTreeContinuumDrop
-    AssignMeshSizeContinuumDrop
+    DrawGeometry
+    AssignToTree
+    AssignMeshSize
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
     GiD_Process 'Zoom Frame
 
-    MeshGenerationOKDo 1.0
-
 }
 
-proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
+proc ::CDEM::examples::ContinuumDrop2D::DrawGeometry { } {
     Kratos::ResetModel
 
     GiD_Groups create "Box"
@@ -50,39 +52,39 @@ proc ::CDEM::examples::DrawGeometryContinuumDrop { } {
 }
 
 
-proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
+proc ::CDEM::examples::ContinuumDrop2D::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7 PARTICLE_MATERIAL 2 ]
-    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEMCont-DefaultMaterial' \]"]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e7  ]
+    set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     spdAux::SetValuesOnBaseNode $material_node $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts LowPart]
     $DEMPartsNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts MidPart]
     $DEMPartsNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts TopPart]
     $DEMPartsNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # Parts
     set DEMParts [spdAux::getRoute "DEMParts"]
     set DEMPartsNode [customlib::AddConditionGroupOnXPath $DEMParts Sand]
     $DEMPartsNode setAttribute ov surface
-    set props [list Material "DEMCont-DefaultMaterial"]
+    set props [list Material "DEM-DefaultMaterial"]
     spdAux::SetValuesOnBaseNode $DEMPartsNode $props
 
     # DEM FEM Walls
@@ -121,17 +123,8 @@ proc ::CDEM::examples::AssignToTreeContinuumDrop { } {
     spdAux::RequestRefresh
 }
 
-proc ::CDEM::examples::AssignMeshSizeContinuumDrop { } {
+proc ::CDEM::examples::ContinuumDrop2D::AssignMeshSize { } {
     GiD_Process Mescape Meshing AssignSizes Volumes 0.2 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces 0.6 1:end escape escape escape
     GiD_Process Mescape Meshing AssignSizes Lines 0.6 1:end escape escape escape
-}
-
-
-proc ::CDEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

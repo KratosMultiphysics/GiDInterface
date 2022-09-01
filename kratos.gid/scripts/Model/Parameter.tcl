@@ -4,7 +4,7 @@
 ##################################################################################
 
 # Clase Parameter
-namespace eval Model {
+namespace eval ::Model {
 catch {Parameter destroy}
 oo::class create Parameter {
     superclass Entity

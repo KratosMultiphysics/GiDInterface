@@ -23,6 +23,7 @@
                 <value n="RollingFriction"              type="bool"     values="true,false" v="false" icon="black1" pn="Rolling friction"                     help="Activate to consider the rolling friction parameter set in the properties. Otherwise it will be ignored. This option will slightly increase computation times."/>
                 <value n="VirtualMassCoef"                                                  v="1.0"   icon="black1" pn="Virtual mass coefficient"             help="Alterate particle mass set in the simulation"/>
                 <value n="GlobalDamping"                                                    v="0.0"   icon="black1" pn="Global damping"                       help="Choose the value for the damping. Set it to 1.0 for maximum energy dissipation."/>
+                <value n="SearchTolerance"                                                  v="0.001" icon="black1" pn="Search tolerance"                     help="Minimum tolerance to avoid initial overlaps"/>
 	</container>
 	<container     n="TimeParameters"               un="DEMTimeParameters"  pn="Time parameters"    help="Problem parameters" icon="time4" open_window="0">
                 <value n="StartTime"                    v="0.0"                 pn="Start time"         icon="black1" help="Simulation start time"/>
@@ -30,7 +31,7 @@
                 <value n="DeltaTime"                    v="1e-6"                pn="Delta time"         icon="black1" help="Simulation time step value"/>
                 <value n="ScreenInfoOutput"             v="5"                   pn="Info screen output" icon="black1" help="Interval to deliver onscreen information on the running process (in seconds)"/>
                 <value n="NeighbourSearchFrequency"     v="50"                  pn="Search frequency"   icon="black1" help="Search for new particle or wall neighbours. Set its value to '10': a single search will be computed out every ten steps"/>
-	</container>
+        </container>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
 	<dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>

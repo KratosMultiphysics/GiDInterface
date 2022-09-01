@@ -3,9 +3,10 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval spdAux {
+namespace eval ::spdAux {
+    Kratos::AddNamespace [namespace current]
+
     # Namespace variables declaration
-    
     variable uniqueNames
     variable initwind
     
@@ -17,6 +18,8 @@ namespace eval spdAux {
 
     variable must_open_init_window
     variable must_open_dim_window
+
+    variable list_of_windows
 }
 
 proc spdAux::Init { } {
@@ -29,16 +32,19 @@ proc spdAux::Init { } {
     variable GroupsEdited
     variable must_open_init_window
     variable must_open_dim_window
+    variable list_of_windows
     
     set uniqueNames ""
     dict set uniqueNames "dummy" 0
     set initwind ""
-    set  currentexternalfile ""
+    set currentexternalfile ""
     set refreshTreeTurn 0
     set TreeVisibility 0
     set GroupsEdited [dict create]
     set must_open_init_window 1
     set must_open_dim_window 1
+    
+    set list_of_windows [list ]
 }
 
 proc spdAux::StartAsNewProject { } {
@@ -71,7 +77,7 @@ proc spdAux::TryRefreshTree { } {
         }
         set ::spdAux::refreshTreeTurn 0
     }
-    after 750 {spdAux::TryRefreshTree}
+    after 750 {catch {spdAux::TryRefreshTree}}
 }
 
 proc spdAux::OpenTree { } {
@@ -86,7 +92,7 @@ proc spdAux::OpenTree { } {
 proc spdAux::EndRefreshTree { } {
     variable refreshTreeTurn
     set refreshTreeTurn 0
-    after cancel {spdAux::TryRefreshTree}
+    after cancel {catch {spdAux::TryRefreshTree}}
 }
 
 # Includes
@@ -116,6 +122,8 @@ proc spdAux::processAppIncludes { root } {
         if {[$elem hasAttribute "public"]} {set public [$elem getAttribute "public"]}
         set app [apps::NewApp $appid $pn $prefix]
         $app setPublic $public
+        if {[$elem hasAttribute "is_tool"] } {$app setIsTool [$elem getAttribute "is_tool"]}
+
         if {$active} {
             set dir $::Kratos::kratos_private(Path)
             set f [file join $dir apps $appid xml Main.spd]
@@ -127,10 +135,9 @@ proc spdAux::processAppIncludes { root } {
 }
 
 proc spdAux::CustomTreeCommon { } {
-    set AppUsesIntervals [apps::ExecuteOnCurrentApp GetAttribute UseIntervals]
-    
-    if {$AppUsesIntervals eq ""} {set AppUsesIntervals 0}
-    if {!$AppUsesIntervals} {
+    set app_uses_intervals [[apps::getActiveApp] getPermission "intervals"]
+    if {$app_uses_intervals eq ""} {set app_uses_intervals 0}
+    if {!$app_uses_intervals} {
         if {[getRoute Intervals] ne ""} {
             catch {spdAux::SetValueOnTreeItem state hidden Intervals}
         }
@@ -167,14 +174,17 @@ proc spdAux::getImagePathDim { dim } {
     set imagepath [file nativename [file join $::Model::dir images "$dim.png"] ]
     return $imagepath
 }
-proc spdAux::DestroyWindow {} {
+proc spdAux::DestroyWindows {} {
     if { [GidUtils::IsTkDisabled] } {
         return 0
     }
-    variable initwind
-    if {[winfo exists $initwind]} {
-        destroy $initwind    
+    variable list_of_windows
+    foreach window $list_of_windows {
+        if {[winfo exists $window]} {
+            destroy $window    
+        }
     }
+    set list_of_windows [list ]
 }
 
 # Routes
@@ -252,6 +262,7 @@ proc spdAux::insertDependencies { baseNode originUN } {
     set insertxpath [getRoute $originUN]
     set insertonnode [$root selectNodes $insertxpath]
     # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
+    $insertonnode setAttribute "actualize" 1
     $insertonnode setAttribute "actualize_tree" 1
     
     ## Aun no soy capaz de insertar y que funcione
@@ -353,6 +364,23 @@ proc spdAux::MergeGroups {result_group_name group_list} {
     }
 }
 
+
+proc spdAux::GetUsedElements {{alt_un ""}} {
+    set root [customlib::GetBaseRoot]
+
+    set un $alt_un
+    if {$un eq ""} {set un [apps::ExecuteOnCurrentApp write::GetAttribute parts_un]}
+
+    set xp1 "[spdAux::getRoute $un]/group"
+    set lista [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        if {$name ni $lista} {lappend lista $name}
+    }
+
+    return $lista
+}
+
 proc spdAux::LoadIntervalGroups { {root ""} } {
     customlib::UpdateDocument
     variable GroupsEdited
@@ -408,34 +436,9 @@ proc spdAux::GetAppliedGroups { {root ""} } {
     }
     return [lsort -unique $group_list]
 }
-
-proc spdAux::LoadModelFiles { {root "" }} {
-    if {$root eq ""} {
-        set root [customlib::GetBaseRoot]
-        customlib::UpdateDocument
-    }
-    foreach elem [$root getElementsByTagName "file"] {
-        FileSelector::AddFile [$elem @n]
-    }
+proc spdAux::RegisterWindow {window_name} {
+    variable list_of_windows
+    lappend list_of_windows $window_name
 }
-
-proc spdAux::SaveModelFile { fileid } {
-    customlib::UpdateDocument
-    FileSelector::AddFile $fileid
-    gid_groups_conds::addF {container[@n='files']} file [list n ${fileid}]
-}
-
-proc spdAux::AddFile { domNode } {
-    FileSelector::InitWindow "spdAux::UpdateFileField" $domNode
-}
-
-proc spdAux::UpdateFileField { fileid domNode} {
-    if {$fileid ne ""} {
-        $domNode setAttribute v $fileid
-        spdAux::SaveModelFile $fileid
-        RequestRefresh 
-    }
-}
-
 
 spdAux::Init
