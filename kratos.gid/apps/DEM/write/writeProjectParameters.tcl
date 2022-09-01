@@ -71,6 +71,13 @@ proc ::DEM::write::getParametersDict { } {
     dict set project_parameters_dict "SearchTolerance"                      [write::getValue AdvOptions SearchTolerance]
     dict set project_parameters_dict "GraphExportFreq"                      [write::getValue DGraphs GraphExportFreq]
     dict set project_parameters_dict "VelTrapGraphExportFreq"               1e-3
+    dict set project_parameters_dict "FilterType"                           "Linear"
+
+    set homogenization_settings_dict [dict create]
+    dict set homogenization_settings_dict "active" [write::getValue DEMHomogenizationDomain Active]
+    dict set homogenization_settings_dict "geometry_source" [write::getValue DEMHomogenizationDomain GeometrySource]
+    dict set homogenization_settings_dict "element_size" [write::getValue DEMHomogenizationDomain ElementSize]
+    dict set project_parameters_dict "homogenization_utility_settings" $homogenization_settings_dict
 
     # Output timestep
     set output_criterion [write::getValue DEMResults DEM-OTimeStepType]
