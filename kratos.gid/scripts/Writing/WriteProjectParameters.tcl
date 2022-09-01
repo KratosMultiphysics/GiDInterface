@@ -57,7 +57,9 @@ proc write::tcl2json { value } {
             } elseif {[string is double -strict $value]} {
                 return [expr {$value}]
             } elseif {[string is boolean -strict $value]} {
-                return [expr {$value ? "true" : "false"}]
+                if {[isBooleanFalse $value]} {return [expr "false"]}
+                if {[isBooleanTrue $value]} {return [expr "true"]}
+                return [json::write string $value]
             } elseif {[string index $value 0] eq "\{"} {
                 return [json::write array {*}[lmap v $value {tcl2json $v}]]
             }
@@ -328,7 +330,7 @@ proc write::GetResultsByXPathList { xpath } {
     set xp1 "$xpath/value"
     set resultxml [$root selectNodes $xp1]
     foreach res $resultxml {
-        if {[get_domnode_attribute $res v] in [list "Yes" "True" "1"] && [get_domnode_attribute $res state] ne "hidden"} {
+        if {[write::isBooleanTrue [get_domnode_attribute $res v]] && [get_domnode_attribute $res state] ne "hidden"} {
             set name [get_domnode_attribute $res n]
             lappend result $name
         }

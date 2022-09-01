@@ -12,7 +12,8 @@ proc ::Structural::write::getOldParametersDict { } {
 
     # Time Parameters
     set timeSteppingDict [dict create]
-    if {$solutiontype eq "Static" || $solutiontype eq "eigen_value"} {
+    set enable_dynamic_substepping [::Structural::GetWriteProperty "enable_dynamic_substepping"]
+    if {[write::isBooleanFalse $enable_dynamic_substepping] || ($solutiontype eq "Static" || $solutiontype eq "eigen_value")} {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"

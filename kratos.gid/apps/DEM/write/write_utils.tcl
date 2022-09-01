@@ -31,7 +31,8 @@ proc ::DEM::write::Elements_Substitution {} {
                     #array set is_external_element [DEM::write::Compute_External_Elements 3 $groupid $element_ids]
 
                     foreach element_id $element_ids { ;                                         # loop on each of the elements by id
-                        set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ;   # get the nodes of the element
+                        # set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ;   # get the nodes of the element
+                        set element_nodes [GiD_Mesh get element $element_id connectivities] ;   # get the nodes of the element
                         lappend nodes_to_delete {*}$element_nodes ;                             # add those nodes to the nodes_to_delete list
                         if {$probldistr == "NormalDistribution"} {
                             set final_elem_radius [DEM::write::NormalDistribution $element_radius $standard_deviation $min_radius $max_radius]
@@ -71,6 +72,7 @@ proc ::DEM::write::Elements_Substitution {} {
                     # reorder the list and remove repeated nodes
                     foreach node_id $nodes_to_delete {
                         set gid_info [GiD_Info list_entities nodes $node_id]
+                        GiD_EntitiesGroups unassign $groupid nodes $node_id
                         if {![DEM::write::GetNodeHigherentities $node_id]} {
                             # if this node does not have higher entities
                             GiD_Mesh delete node $node_id
@@ -140,7 +142,8 @@ proc ::DEM::write::Elements_Substitution {} {
                     foreach element_id $element_ids {
                         # loop on each of the elements by id
 
-                        set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end]
+                        # set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end]
+                        set element_nodes [GiD_Mesh get element $element_id connectivities]
                         # get the nodes of the element
 
                         lappend nodes_to_delete {*}$element_nodes
@@ -266,7 +269,8 @@ proc ::DEM::write::Compute_External_Elements {ndime cgroupid element_ids} {
     set unrepeated_list_exterior_nodes [lsort -integer -unique $list_of_faces]
 
     foreach element_id $element_ids { ; # Here we loop on each of the elements by id
-        set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ; # We get the nodes of the element
+        # set element_nodes [lrange [GiD_Mesh get element $element_id] 3 end] ; # We get the nodes of the element
+        set element_nodes [GiD_Mesh get element $element_id connectivities] ; # We get the nodes of the element
 
         set is_external_element($element_id) 0
         foreach element_node $element_nodes {
@@ -377,7 +381,7 @@ proc ::DEM::write::BeforeMeshGenerationUtils {elementsize} {
 
     # Find boundaries
     if {[GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
-	    GiD_Groups delete SKIN_SPHERE_DO_NOT_DELETE
+        GiD_Groups delete SKIN_SPHERE_DO_NOT_DELETE
     }
     set bsurfacelist [DEM::write::FindBoundariesOfNonSphericElements $entitytype]
     set allsurfacelist [DEM::write::FindAllSurfacesOfNonSphericElements $entitytype]
@@ -550,7 +554,7 @@ proc ::DEM::write::AssignGeometricalEntitiesToSkinSphere2D {} {
     set list_of_points [GiD_Geometry list point 1:end]
     set list_of_lines [GiD_Geometry list line 1:end]
     if {![GiD_Groups exists SKIN_SPHERE_DO_NOT_DELETE]} {
-	    GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
+        GiD_Groups create SKIN_SPHERE_DO_NOT_DELETE
         GiD_Groups edit state SKIN_SPHERE_DO_NOT_DELETE hidden
     }
 
@@ -684,8 +688,8 @@ proc ::DEM::write::ForceTheMeshingOfDEMFEMWallGroups {} {
     }
     set xp1 "[spdAux::getRoute "DEMConditions"]/condition\[@n ='DEM-FEM-Wall2D'\]/group"
     foreach group [$root selectNodes $xp1] {
-	set groupid [$group @n]
-	GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 1] escape
+        set groupid [$group @n]
+        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[lindex [GiD_EntitiesGroups get $groupid all_geometry] 1] escape
     }
 }
 
@@ -717,15 +721,15 @@ proc ::DEM::write::FindBoundariesOfCircularElements {entity} {
     # ld wckf:dem  code
     # set groups_to_circularize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]
     # foreach surface_id [GiD_Geometry list surface 1:end] {} ; #list of surface identifiers in the whole range
-	# set surface_info [GiD_Info list_entities surface $surface_id] ; #info about those surfaces
-	# set is_circular [regexp {Elemtype=10} $surface_info] ; #finding out if the element type is circular
+    # set surface_info [GiD_Info list_entities surface $surface_id] ; #info about those surfaces
+    # set is_circular [regexp {Elemtype=10} $surface_info] ; #finding out if the element type is circular
 
     foreach surface_id [GiD_Geometry list surface 1:end] {
         set surface_info [GiD_Info list_entities surface $surface_id]
         set is_circular [regexp {Elemtype=10} $surface_info]
 
         foreach group_that_includes_this_surface [GiD_EntitiesGroups entity_groups surfaces $surface_id] {
-        #next we search $group_that_includes_this_surface among $groups_to_circularize_list:
+            #next we search $group_that_includes_this_surface among $groups_to_circularize_list:
             if {[lsearch $groups_to_circularize_list $group_that_includes_this_surface] >= 0} {
                 set is_circular 1
             }
@@ -758,8 +762,8 @@ proc ::DEM::write::FindBoundariesOfSphericElements {entity} {
     set xp1 "[spdAux::getRoute DEMParts]/group"
     set groups_to_spherize_list [list ]
     foreach group [$root selectNodes $xp1] {
-            set groupid [$group @n]
-            lappend groups_to_spherize_list $groupid
+        set groupid [$group @n]
+        lappend groups_to_spherize_list $groupid
     }
 
     # set groups_to_spherize_list [::xmlutils::setXmlContainerIds {DEM//c.DEM-Elements//c.DEM-Element}]

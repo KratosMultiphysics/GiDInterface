@@ -1,6 +1,6 @@
 namespace eval ::DEM {
     Kratos::AddNamespace [namespace current]
-    
+
     # Variable declaration
     variable dir
     variable _app
@@ -26,14 +26,15 @@ proc ::DEM::Init { app } {
 
 proc ::DEM::CustomToolbarItems { } {
     variable dir
-    
+
     Kratos::ToolbarAddItem "MaterialRelations" "material-relation.png" [list -np- DEM::xml::ShowMaterialRelationWindow] [= "Material relations"]
 }
 
 proc ::DEM::BeforeMeshGeneration {elementsize} {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute DEMParts]/group"
-    foreach group [concat [$root selectNodes $xp1] [DEM::write::GetDEMGroupsCustomSubmodelpart]] {
+    # [concat [$root selectNodes $xp1] [DEM::write::GetDEMGroupsCustomSubmodelpart]]
+    foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set advanced_meshing_features [write::getValueByNode [$group selectNodes "./value\[@n='AdvancedMeshingFeatures'\]"]]
         if {![write::isBooleanTrue $advanced_meshing_features]} {

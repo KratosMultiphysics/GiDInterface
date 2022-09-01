@@ -29,9 +29,9 @@ proc PfemFluid::write::getNewParametersDict { } {
     set processList [GetPFEM_ProcessList]
     dict set projectParametersDict processes $processList
 
-    ##### Restart
-    # set output_process_list [GetPFEM_OutputProcessList]
-    # dict set projectParametersDict output_process_list $output_process_list
+    ##### WaveMonitor, Restart
+    set output_processes_list [GetPFEM_OutputProcesses]
+    dict set projectParametersDict output_processes $output_processes_list
 
     ##### output_configuration
     # dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
@@ -157,11 +157,66 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     return $solverSettingsDict
 }
 
-proc PfemFluid::write::GetPFEM_OutputProcessList { } {
-    set resultList [list]
-    # lappend resultList [write::GetRestartProcess Restart]
+proc PfemFluid::write::GetPFEM_OutputProcesses { } {
+    set resultList [dict create]
+
+    set output_process_list [GetPFEM_OutputProcessList]
+    #dict lappend resultList output_list $output_process_list
+    dict set resultList output_list $output_process_list
     return $resultList
 }
+
+
+proc PfemFluid::write::GetPFEM_OutputProcessList { } {
+
+    set resultList [list]
+
+    set xp1 "[spdAux::getRoute "WaveMonitor"]/group"
+    set groups_wave_height [[customlib::GetBaseRoot] selectNodes $xp1]
+    foreach group $groups_wave_height {
+        set process [dict create]
+        dict set process "python_module" "wave_height_output_process"
+        dict set process "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
+        set parameters [GetPFEM_WaveParameters $group]
+        dict set process Parameters $parameters
+
+        lappend resultList $process
+    }
+    return $resultList
+}
+
+
+proc PfemFluid::write::GetPFEM_WaveParameters { group } {
+
+    set parametersWave [dict create]
+
+    #set group_id [::write::getSubModelPartId WaveMonitor [$group @n]]
+    #dict set parametersWave model_part_name [write::GetModelPartNameWithParent $group_id PfemFluidModelPart]
+    dict set parametersWave model_part_name "PfemFluidModelPart"
+
+    set coordinates [list ]
+    foreach node [GiD_EntitiesGroups get [$group @n] nodes ] {
+        set coords [GiD_Mesh get node $node coordinates]
+        lappend coordinates $coords
+    }
+    dict set parametersWave "coordinates" $coordinates
+
+    set WaveCalculationSetting [dict create]
+    dict set WaveCalculationSetting "mean_water_level"        [write::getValueByNodeChild $group MeanWaterLevel]
+    dict set WaveCalculationSetting "relative_search_radius"  [write::getValueByNodeChild $group RelativeSearchRadius]
+    dict set parametersWave wave_calculation_settings $WaveCalculationSetting
+
+    set OutputFileSettings [dict create]
+    dict set OutputFileSettings "file_name"      "gauge_<i>" 
+    dict set OutputFileSettings "output_path"             [write::getValueByNodeChild $group FolderName]
+    dict set parametersWave output_file_settings $OutputFileSettings
+
+    dict set parametersWave "time_between_outputs"    [write::getValueByNodeChild $group TimeBetweenOutputs]
+
+    return $parametersWave
+}
+
+
 proc PfemFluid::write::GetPFEM_ProblemProcessList { free_surface_heat_flux free_surface_thermal_face } {
     set resultList [list ]
     set problemtype [write::getValue PFEMFLUID_DomainType]
