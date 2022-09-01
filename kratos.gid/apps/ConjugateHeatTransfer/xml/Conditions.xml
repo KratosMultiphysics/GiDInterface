@@ -3,7 +3,7 @@
 
   <!-- Fluid side -->
   <ConditionItem n="FluidThermalInterface2D" pn="Fluid thermal interface" ImplementedInFile=".cpp" Interval="False"
-	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
 	ElementType="Line" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
@@ -20,7 +20,7 @@
   </ConditionItem>
 
   <ConditionItem n="FluidThermalInterface3D" pn="Fluid thermal interface" ImplementedInFile=".cpp" Interval="False"
-	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
 	ElementType="Surface" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
@@ -39,7 +39,7 @@
 
 <!-- Structural side -->
   <ConditionItem n="SolidThermalInterface2D" pn="Solid thermal interface" ImplementedInFile=".cpp" Interval="False"
-	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="ConvectionDiffusion"
 	ElementType="Line" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
@@ -53,7 +53,7 @@
   </ConditionItem>
 
   <ConditionItem n="SolidThermalInterface3D" pn="Solid thermal interface" ImplementedInFile=".cpp" Interval="False"
-	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	ImplementedInApplication="ConvectionDiffusionApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="ConvectionDiffusion"
 	ElementType="Surface" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>

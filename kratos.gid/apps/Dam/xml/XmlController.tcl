@@ -1,10 +1,10 @@
-namespace eval Dam::xml {
-    variable dir
+namespace eval ::Dam::xml {
+    namespace path ::Dam
+    Kratos::AddNamespace [namespace current]
 }
 
-proc Dam::xml::Init { } {
-    variable dir
-    Model::InitVariables dir $Dam::dir
+proc ::Dam::xml::Init { } {
+    Model::InitVariables dir $::Dam::dir
 
     Model::getSolutionStrategies Strategies.xml
     Model::getElements Elements.xml
@@ -16,7 +16,7 @@ proc Dam::xml::Init { } {
     Model::getSolvers Solvers.xml
 }
 
-proc Dam::xml::getUniqueName {name} {
+proc ::Dam::xml::getUniqueName {name} {
     return Dam$name
 }
 
@@ -29,7 +29,7 @@ proc ::Dam::xml::MultiAppEvent {args} {
 }
 
 
-proc Dam::xml::CustomTree { args } {
+proc ::Dam::xml::CustomTree { args } {
     customlib::UpdateDocument
     # Add some nodal results
     set nodal_results_base [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute NodalResults]]
@@ -57,7 +57,7 @@ proc Dam::xml::CustomTree { args } {
 
 }
 
-proc Dam::xml::ProcGetSchemes {domNode args} {
+proc ::Dam::xml::ProcGetSchemes {domNode args} {
     set type_of_problem [write::getValue DamTypeofProblem]
 
     set sol_stratUN "DamSolStratTherm"
@@ -99,7 +99,7 @@ proc Dam::xml::ProcGetSchemes {domNode args} {
 }
 
 
-proc Dam::xml::SolStratParamState {outnode} {
+proc ::Dam::xml::SolStratParamState {outnode} {
     set root [customlib::GetBaseRoot]
 
     set solstrat_un "DamSolStrat"
@@ -125,7 +125,7 @@ proc Dam::xml::SolStratParamState {outnode} {
     return $ret
 }
 
-proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
+proc ::Dam::xml::ProcGetConstitutiveLaws {domNode args} {
     set Elementname [$domNode selectNodes {string(../value[@n='Element']/@v)}]
     set Claws [::Model::GetAvailableConstitutiveLaws $Elementname]
     #W "Round 1 $Claws"
@@ -227,7 +227,7 @@ proc Dam::xml::ProcGetConstitutiveLaws {domNode args} {
     return $values
 }
 
-proc Dam::xml::ProcCheckNodalConditionState {domNode args} {
+proc ::Dam::xml::ProcCheckNodalConditionState {domNode args} {
     set parts_un DamParts
     if {[spdAux::getRoute $parts_un] ne ""} {
         set conditionId [$domNode @n]
@@ -269,7 +269,7 @@ proc Dam::xml::ProcCheckNodalConditionState {domNode args} {
     } {return "hidden"}
 }
 
-proc Dam::xml::ProcCheckConditionState {domNode args} {
+proc ::Dam::xml::ProcCheckConditionState {domNode args} {
     set cond_id [$domNode @n]
 
     # By active parts
@@ -322,7 +322,7 @@ proc Dam::xml::ProcCheckConditionState {domNode args} {
 }
 
 
-proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
+proc ::Dam::xml::ProcGetSolutionStrategies {domNode args} {
     set names ""
     set pnames ""
     set ids [list ]
@@ -359,7 +359,7 @@ proc Dam::xml::ProcGetSolutionStrategies {domNode args} {
     return [join $pnames ","]
 }
 
-proc Dam::xml::ProcGetElementsValues {domNode args} {
+proc ::Dam::xml::ProcGetElementsValues {domNode args} {
     set TypeofProblem [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeofProblem]] v]
     set nodeApp [spdAux::GetAppIdFromNode $domNode]
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
@@ -403,7 +403,7 @@ proc Dam::xml::ProcGetElementsValues {domNode args} {
     return $values
 }
 
-proc Dam::xml::ProcActivatePartsState {domNode args} {
+proc ::Dam::xml::ProcActivatePartsState {domNode args} {
     set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
     set state hidden
     if {$ActivateConstruction} {
@@ -412,7 +412,7 @@ proc Dam::xml::ProcActivatePartsState {domNode args} {
     return $state
 }
 
-proc Dam::xml::ProcCheckTemperatureState {domNode args} {
+proc ::Dam::xml::ProcCheckTemperatureState {domNode args} {
     set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
     set state hidden
     if {$ActivateConstruction} {
@@ -421,7 +421,7 @@ proc Dam::xml::ProcCheckTemperatureState {domNode args} {
     return $state
 }
 
-proc Dam::xml::ProcNoorzaiState {domNode args} {
+proc ::Dam::xml::ProcNoorzaiState {domNode args} {
     set SourceType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamSourceType]] v]
     set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
     set state hidden
@@ -431,7 +431,7 @@ proc Dam::xml::ProcNoorzaiState {domNode args} {
     return $state
 }
 
-proc Dam::xml::ProcAzenhaState {domNode args} {
+proc ::Dam::xml::ProcAzenhaState {domNode args} {
     set SourceType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamSourceType]] v]
     set ActivateConstruction [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamActivateConstruction]] v]
     set state hidden
@@ -441,14 +441,10 @@ proc Dam::xml::ProcAzenhaState {domNode args} {
     return $state
 }
 
-proc Dam::xml::ProcAddResultsState {domNode args} {
+proc ::Dam::xml::ProcAddResultsState {domNode args} {
     set TypeResults [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamTypeResults]] v]
     set ActivateAddResults [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute DamAddPreviousResults]] v]
     set state hidden
     if {$ActivateAddResults} {set state normal}
     return $state
 }
-
-Dam::xml::Init
-
-

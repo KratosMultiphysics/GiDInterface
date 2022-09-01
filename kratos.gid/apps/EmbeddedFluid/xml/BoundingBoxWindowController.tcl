@@ -1,12 +1,18 @@
 
 
-namespace eval EmbeddedFluid::xml::BoundingBox {
+namespace eval ::EmbeddedFluid::xml::BoundingBox {
+    namespace path ::EmbeddedFluid::xml
+    Kratos::AddNamespace [namespace current]
+
     variable winpath
     variable box
     variable boxname
 }
 
 proc EmbeddedFluid::xml::BoundingBox::Init {} {
+    if { [GidUtils::IsTkDisabled] } {
+        return 0
+    }
     package require wcb
     variable winpath
     set winpath ".gid.bboxwindow"
@@ -199,4 +205,3 @@ proc EmbeddedFluid::xml::BoundingBox::GetCurrentBox { } {
     return {*}$modelbox
 }
 
-EmbeddedFluid::xml::BoundingBox::Init

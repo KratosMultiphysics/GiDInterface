@@ -1,17 +1,12 @@
-namespace eval PfemThermic::examples {
+namespace eval ::PfemThermic::examples {
+    namespace path ::PfemThermic
+    Kratos::AddNamespace [namespace current]
 
 }
-
-proc PfemThermic::examples::Init { } {
-    uplevel #0 [list source [file join $::PfemThermic::dir examples ThermicSloshing.tcl]]
-	uplevel #0 [list source [file join $::PfemThermic::dir examples ThermicConvection.tcl]]
-	uplevel #0 [list source [file join $::PfemThermic::dir examples ThermicSloshingConvection.tcl]]
-	uplevel #0 [list source [file join $::PfemThermic::dir examples ThermicDamBreakFSI.tcl]]
-	uplevel #0 [list source [file join $::PfemThermic::dir examples ThermicCubeDrop.tcl]]
-	uplevel #0 [list source [file join $::PfemThermic::dir examples ThermicFluidDrop.tcl]]
+proc ::PfemThermic::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
-
-proc PfemThermic::examples::UpdateMenus { } {
-}
-
-PfemThermic::examples::Init

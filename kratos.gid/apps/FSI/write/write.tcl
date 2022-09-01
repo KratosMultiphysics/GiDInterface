@@ -1,10 +1,13 @@
-namespace eval FSI::write {
+namespace eval ::FSI::write {
+    namespace path ::FSI
+    Kratos::AddNamespace [namespace current]
+    
     variable fluid_project_parameters
     variable structure_project_parameters
     variable mdpa_names
 }
 
-proc FSI::write::Init { } {
+proc ::FSI::write::Init { } {
     variable fluid_project_parameters
     variable structure_project_parameters
     set fluid_project_parameters [dict create ]
@@ -15,7 +18,7 @@ proc FSI::write::Init { } {
 }
 
 # Events
-proc FSI::write::writeModelPartEvent { } {
+proc ::FSI::write::writeModelPartEvent { } {
     variable mdpa_names
     set filename [Kratos::GetModelName]
     
@@ -33,13 +36,8 @@ proc FSI::write::writeModelPartEvent { } {
     write::RenameFileInModel "$filename.mdpa" "[dict get $mdpa_names Structural].mdpa"
 }
 
-proc FSI::write::writeCustomFilesEvent { } {
+proc ::FSI::write::writeCustomFilesEvent { } {
     Fluid::write::WriteMaterialsFile
     Structural::write::WriteMaterialsFile
-    
-    write::CopyFileIntoModel "python/KratosFSI.py"
-    write::RenameFileInModel "KratosFSI.py" "MainKratos.py"
+    write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 }
-
-
-FSI::write::Init

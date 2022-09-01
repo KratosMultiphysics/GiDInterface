@@ -13,6 +13,6 @@ proc write::writeTables { } {
     set s [mdpaIndent]
     WriteString "${s}Begin Table"
     WriteString "${s}Table content"
-    WriteString "${s}End Tablee"
+    WriteString "${s}End Table"
     WriteString ""
 }

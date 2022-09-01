@@ -1,5 +1,10 @@
+namespace eval ::FSI::examples::TurekBenchmark {
+    namespace path ::FSI::examples
+    Kratos::AddNamespace [namespace current]
 
-proc ::FSI::examples::TurekBenchmark {args} {
+}
+
+proc ::FSI::examples::TurekBenchmark::Init {args} {
     # At this moment we do only support 2D for this test
     if {$::Model::SpatialDimension eq "2D"} {
         if {![Kratos::IsModelEmpty]} {
@@ -8,41 +13,41 @@ proc ::FSI::examples::TurekBenchmark {args} {
             if { $retval == "cancel" } { return }
         }
         # Set up geometry and groups
-        DrawTurekBenchmarkFluidGeometry
-        DrawTurekBenchmarkStructureGeometry
+        DrawGeometryFluid
+        DrawGeometryStructure
         # Generated geometry frame zoom
         GiD_Process 'Layers On Fluid escape
         GiD_Process 'Layers On Structure escape
         GiD_Process 'Zoom Frame
         GiD_Process 'Render Flat escape
         # Assign mesh sizes
-        AssignTurekBenchmarkMeshSizes$::Model::SpatialDimension
+        AssignMeshSizes$::Model::SpatialDimension
         # Assign tree values
-        TreeAssignationTurekBenchmark
+        TreeAssignation
     }
 }
 
-proc FSI::examples::DrawTurekBenchmarkFluidGeometry {args} {
+proc ::FSI::examples::TurekBenchmark::DrawGeometryFluid {args} {
     Kratos::ResetModel
 
     # Set fluid domain geometry
     if {$::Model::SpatialDimension eq "2D"} {
-        GiD_Process 'Layers ChangeName Layer0 Fluid escape Mescape 
-        GiD_Process MEscape Geometry Create Object Rectangle 0,0 2.5,0.41 Mescape 
+        GiD_Process 'Layers ChangeName Layer0 Fluid escape Mescape
+        GiD_Process MEscape Geometry Create Object Rectangle 0,0 2.5,0.41 Mescape
         GiD_Process MEscape Geometry Delete Surfaces 1 escape Mescape \
-        'GetPointCoord Silent FNoJoin 0.2,0.2 escape escape 
-        GiD_Process MEscape Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 escape escape escape 
-        GiD_Process MEscape Geometry Delete Surfaces 1 escape escape  
-        GiD_Process MEscape Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 6 NoJoin @0,0.02 @-0.4,0 escape escape escape escape escape  
-        GiD_Process MEscape Geometry Create IntMultLines 5 6 escape 8 10 escape escape escape escape  
-        GiD_Process MEscape Geometry Delete AllTypes points 7 9 lines 12 14 surfaces volumes dimensions points lines 15 surfaces volumes dimensions escape escape 
+        'GetPointCoord Silent FNoJoin 0.2,0.2 escape escape
+        GiD_Process MEscape Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 escape escape escape
+        GiD_Process MEscape Geometry Delete Surfaces 1 escape escape
+        GiD_Process MEscape Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 6 NoJoin @0,0.02 @-0.4,0 escape escape escape escape escape
+        GiD_Process MEscape Geometry Create IntMultLines 5 6 escape 8 10 escape escape escape escape
+        GiD_Process MEscape Geometry Delete AllTypes points 7 9 lines 12 14 surfaces volumes dimensions points lines 15 surfaces volumes dimensions escape escape
         GiD_Process MEscape Geometry Create NurbsSurface 1 2 3 4 7 9 11 13 16 escape escape
     } else {
         # 3D version not implemented yet
     }
 
     # Set layer coloring
-    GiD_Process 'Layers Color Fluid 047186223 Transparent Fluid 255 escape 
+    GiD_Process 'Layers Color Fluid 047186223 Transparent Fluid 255 escape
     GiD_Process 'Layers On Fluid escape
 
     # Group creation
@@ -74,21 +79,21 @@ proc FSI::examples::DrawTurekBenchmarkFluidGeometry {args} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc FSI::examples::DrawTurekBenchmarkStructureGeometry {args} {
+proc ::FSI::examples::TurekBenchmark::DrawGeometryStructure {args} {
 
     # Set structure domain geometry
     if {$::Model::SpatialDimension eq "2D"} {
-        
+
         GiD_Process 'Layers New Structure escape
         GiD_Process 'Layers Off Fluid escape
         GiD_Process 'Layers ToUse Structure escape
 
-        GiD_Process Mescape Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 escape Mescape 
-        GiD_Process Mescape Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 13 NoJoin @0,0.02 @-0.4,0 escape escape Mescape 
-        GiD_Process Mescape Geometry Delete Surfaces 2 escape escape Mescape 
-        GiD_Process Mescape Geometry Create IntMultLines 17 18 escape 20 22 escape escape escape escape escape Mescape 
-        GiD_Process Mescape Geometry Delete Lines 21 28 escape Mescape 
-        GiD_Process Mescape Geometry Delete AllTypes points 12 14 16 lines 24 26 surfaces volumes dimensions escape escape escape escape escape escape Mescape 
+        GiD_Process Mescape Geometry Create Object CirclePNR 0.2 0.2 0.0 0.0 0.0 1.0 0.05 escape Mescape
+        GiD_Process Mescape Geometry Create Line 0.6,0.19 @-0.4,0 escape Join 13 NoJoin @0,0.02 @-0.4,0 escape escape Mescape
+        GiD_Process Mescape Geometry Delete Surfaces 2 escape escape Mescape
+        GiD_Process Mescape Geometry Create IntMultLines 17 18 escape 20 22 escape escape escape escape escape Mescape
+        GiD_Process Mescape Geometry Delete Lines 21 28 escape Mescape
+        GiD_Process Mescape Geometry Delete AllTypes points 12 14 16 lines 24 26 surfaces volumes dimensions escape escape escape escape escape escape Mescape
         GiD_Process Mescape Geometry Create NurbsSurface 19 23 25 27 escape escape escape escape
     } else {
         # 3D version not implemented yet
@@ -115,7 +120,7 @@ proc FSI::examples::DrawTurekBenchmarkStructureGeometry {args} {
     GidUtils::UpdateWindow GROUPS
 }
 
-proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
+proc ::FSI::examples::TurekBenchmark::AssignMeshSizes2D {args} {
     # Structure and fluid mesh settings
     set str_flag_tail_divisions 15
     set str_flag_long_sides_divisions 175
@@ -129,11 +134,11 @@ proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.3 escape escape
 
     # Structure meshing settings
-    GiD_Process Mescape Meshing ElemType Quadrilateral 2 escape 
+    GiD_Process Mescape Meshing ElemType Quadrilateral 2 escape
     GiD_Process Mescape Meshing Structured Surfaces 2 escape $str_flag_long_sides_divisions 23 25 escape $str_flag_tail_divisions 27 escape escape
 
     # Fluid meshing settings
-    GiD_Process Mescape Meshing ElemType Triangle 1 escape 
+    GiD_Process Mescape Meshing ElemType Triangle 1 escape
     GiD_Process Mescape Meshing AssignSizes Lines $fluid_flag_tail_element_size 7 escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $fluid_cylinder_element_size 9 16 escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $fluid_walls_element_size 1 2 3 4 escape escape
@@ -141,7 +146,7 @@ proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_domain_element_size 1 escape escape
 }
 
-# proc FSI::examples::AssignTurekBenchmarkMeshSizes3D {args} {
+# proc ::FSI::examples::TurekBenchmark::AssignTurekBenchmarkMeshSizes3D {args} {
 #     set long_side_divisions 100
 #     set short_side_divisions 4
 #     set outlet_element_size 0.01
@@ -161,7 +166,7 @@ proc FSI::examples::AssignTurekBenchmarkMeshSizes2D {args} {
 #     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_element_size [GiD_EntitiesGroups get Fluid volumes] escape escape
 # }
 
-proc FSI::examples::TreeAssignationTurekBenchmark {args} {
+proc ::FSI::examples::TurekBenchmark::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -175,14 +180,14 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
-    
+
     # Fluid Interface
     set fluidInlet "$fluidConditions/condition\[@n='AutomaticInlet$nd'\]"
-    
+
     # Fluid Inlet
     Fluid::xml::CreateNewInlet Inlet {new true name interval1 ini 0 end 2.0} true "1.5*(0.5*(1-cos(0.5*pi*t))*1.0)*(4.0/0.1681)*y*(0.41-y)"
-    Fluid::xml::CreateNewInlet Inlet {new true name interval2 ini 2.0 end end} true "1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)"
-    
+    Fluid::xml::CreateNewInlet Inlet {new true name interval2 ini 2.0 end End} true "1.5*(1.0)*(4.0/0.1681)*y*(0.41-y)"
+
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
@@ -197,7 +202,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
 
     # Displacement 3D
     if {$nd eq "3D"} {
-        
+
     } {
         set gname "FluidALEMeshFreeX//Total"
         GiD_Groups create $gname
@@ -209,7 +214,7 @@ proc FSI::examples::TreeAssignationTurekBenchmark {args} {
         $fluidDisplacementNode setAttribute ov line
         set props [list selector_component_X Not selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
         spdAux::SetValuesOnBaseNode $fluidDisplacementNode $props
-        
+
         set gname "FluidALEMeshFixXY//Total"
         GiD_Groups create $gname
         GiD_Groups edit state $gname hidden

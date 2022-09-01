@@ -1,12 +1,12 @@
-namespace eval EmbeddedFluid::examples {
-    variable CylinderInFlow_Data
+namespace eval ::EmbeddedFluid::examples {
+    namespace path ::EmbeddedFluid
+    Kratos::AddNamespace [namespace current]
 }
 
-proc EmbeddedFluid::examples::Init { } {
-    uplevel #0 [list source [file join $::EmbeddedFluid::dir examples CylinderInFlow.tcl]]
+proc ::EmbeddedFluid::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
 }
-
-proc EmbeddedFluid::examples::UpdateMenus { } {
-}
-
-EmbeddedFluid::examples::Init

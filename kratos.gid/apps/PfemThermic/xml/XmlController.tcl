@@ -1,11 +1,11 @@
-namespace eval PfemThermic::xml {
+namespace eval ::PfemThermic::xml {
+    namespace path ::PfemThermic
+    Kratos::AddNamespace [namespace current]
     # Namespace variables declaration
-    variable dir
 }
 
 proc PfemThermic::xml::Init { } {
-    variable dir
-    Model::InitVariables dir $PfemThermic::dir
+    Model::InitVariables dir $::PfemThermic::dir
 	
 	Model::ForgetConstitutiveLaws
     Model::getConstitutiveLaws ConstitutiveLaws.xml
@@ -18,7 +18,7 @@ proc PfemThermic::xml::Init { } {
 }
 
 proc PfemThermic::xml::getUniqueName {name} {
-    return ${::PfemThermic::prefix}${name}
+    return [::PfemThermic::GetAttribute prefix]${name}
 }
 
 proc PfemThermic::xml::CustomTree { args } {
@@ -103,5 +103,3 @@ proc PfemThermic::xml::ProcGetElementsValues {domNode args} {
     
     return $values
 }
-
-PfemThermic::xml::Init

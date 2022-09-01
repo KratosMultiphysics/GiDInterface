@@ -1,10 +1,7 @@
-namespace eval CDEM::examples {
+namespace eval ::CDEM::examples {
+    namespace path ::CDEM
+    Kratos::AddNamespace [namespace current]
 
-}
-
-proc CDEM::examples::Init { } {
-    uplevel #0 [list source [file join $::CDEM::dir examples ContinuumDrop2D.tcl]]
-    uplevel #0 [list source [file join $::CDEM::dir examples ContSpheresDrop3D.tcl]]
 }
 
 proc CDEM::examples::UpdateMenus { } {
@@ -13,4 +10,10 @@ proc CDEM::examples::UpdateMenus { } {
     GiDMenu::UpdateMenus
 }
 
-CDEM::examples::Init
+proc ::CDEM::examples::ErasePreviousIntervals { } {
+    set root [customlib::GetBaseRoot]
+    set interval_base [spdAux::getRoute "Intervals"]
+    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
+        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
+    }
+}

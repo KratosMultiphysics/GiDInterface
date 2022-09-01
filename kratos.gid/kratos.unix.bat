@@ -45,4 +45,4 @@ else
 fi
 
 # Run Python using the script MainKratos.py
-"$3/exec/Kratos/runkratos" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
+python3 MainKratos.py > "$2/$1.info" 2> "$2/$1.err"

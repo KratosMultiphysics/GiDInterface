@@ -40,11 +40,14 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
     Kratos::ToolbarAddItem "Spacer" "" "" ""
     Kratos::ToolbarAddItem "Run" "run.png" {Utilities Calculate} [= "Run the simulation"]
     Kratos::ToolbarAddItem "Output" "output.png" [list -np- PWViewOutput] [= "View process info"]
-    Kratos::ToolbarAddItem "Stop" "stop.png" {Utilities CancelProcess} [= "Cancel process"]
-    Kratos::ToolbarAddItem "SpacerApp" "" "" ""
-    Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]   
-    Kratos::ToolbarAddItem "SpacerApp" "" "" ""
-    
+    Kratos::ToolbarAddItem "Stop" "stop.png"  [list -np- Kratos::StopCalculation] [= "Cancel process"]
+    Kratos::ToolbarAddItem "SpacerApp1" "" "" ""
+    if {[info exists kratos_private(UseFiles)] && $kratos_private(UseFiles) == 1} {
+        Kratos::ToolbarAddItem "Files" "files.png" [list -np- spdAux::LaunchFileWindow] [= "File handler window"]
+    }
+    Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]
+    Kratos::ToolbarAddItem "SpacerApp2" "" "" ""
+
     set app_items_toolbar [apps::ExecuteOnCurrentApp CustomToolbarItems]
     if {$app_items_toolbar < 1} {
         Kratos::ToolbarDeleteItem "SpacerApp"
@@ -80,25 +83,25 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
             lappend commslist  [dict get $kratos_private(MenuItems) $item code]
             lappend helpslist [dict get $kratos_private(MenuItems) $item tex]
         }
-        
+
         set KBitmapsNames(0) $iconslist
         set KBitmapsCommands(0) $commslist
         set KBitmapsHelp(0) $helpslist
-        
+
         set prefix Pre
         set name KPreprocessModelbar
         set procname ::Kratos::CreatePreprocessModelTBar
         set kratos_private(ToolBars,PreprocessModelTBar) [CreateOtherBitmaps ${name} [= "Kratos toolbar"] KBitmapsNames KBitmapsCommands KBitmapsHelp $dir $procname $type $prefix]
-        
+
         AddNewToolbar [= "Kratos toolbar"] ${prefix}${name}WindowGeom $procname
     }
 }
 
 proc Kratos::EndCreatePreprocessTBar {} {
     variable kratos_private
-   
+
     set name KPreprocessModelbar
-    
+
     ReleaseToolbar ${name}
     if {[info exists kratos_private(ToolBars,PreprocessModelTBar)]} {
         destroy $kratos_private(ToolBars,PreprocessModelTBar)
@@ -130,6 +133,7 @@ proc Kratos::ChangeMenus { } {
     GiDMenu::InsertOption "Kratos" [list "Kratos data" ] [incr pos] PRE [list gid_groups_conds::open_conditions menu] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Local axes window" ] [incr pos] PRE [list gid_groups_conds::local_axes_window] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "View spd file" ] [incr pos] PRE [list spdAux::ViewDoc] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Open case in VS Code" ] [incr pos] PRE [list Kratos::OpenCaseIn VSCode] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Write calculation files - No run" ] [incr pos] PRE [list Kratos::WriteCalculationFilesEvent] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Run - No write" ] [incr pos] PRE [list Kratos::ForceRun] "" "" replace =
@@ -147,6 +151,9 @@ proc Kratos::ChangeMenus { } {
     if {[GidUtils::VersionCmp "14.1.4d"] <0 } { set cmd  [list ChangeVariables kratos_preferences] } {set cmd [list PreferencesWindow kratos_preferences]}
     GiDMenu::InsertOption "Kratos" [list "Kratos preferences" ] [incr pos] PRE $cmd "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "View current log" ] [incr pos] PREPOST [list Kratos::ViewLog] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Check dependencies" ] [incr pos] PREPOST [list Kratos::CheckDependencies] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Refresh launch configurations" ] [incr pos] PREPOST [list Kratos::LoadLaunchModes 1] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "About Kratos" ] [incr pos] PREPOST [list Kratos::About] "" "" replace =
     GidChangeDataLabel "Data units" ""
     GidChangeDataLabel "Interval" ""
@@ -161,14 +168,14 @@ proc Kratos::ChangeMenus { } {
         GiDMenu::InsertOption "Help" [list [_ "Visit %s web" Kratos]] end PREPOST [list VisitWeb "http://www.cimne.com/kratos"] "" "" insertafter
         GiDMenu::InsertOption "Help" [list [_ "Do you want to develop Kratos?"]] end PREPOST [list VisitWeb "https://github.com/KratosMultiphysics"] "" "" insertafter
     }
-    
+
     GiDMenu::UpdateMenus
 }
 
 proc Kratos::About {} {
     Splash
 }
- 
+
 
 proc Kratos::Splash { } {
     variable kratos_private
@@ -186,6 +193,6 @@ proc Kratos::Splash { } {
 
     .splash.lv configure -font $fnt -background white -foreground black -relief solid -borderwidth 1 -padx 12 -pady 3
     update
-    
+
     GiD_Set SplashWindow $prev_splash_state
 }

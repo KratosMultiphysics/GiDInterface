@@ -1,0 +1,28 @@
+{
+    "id": "StenosisWizard",
+    "name": "Stenosis",
+    "prefix": "FL",
+    "themed": false,
+    "kratos_name": "FluidDynamicsApplication",
+    "dimensions": [
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "wizard/wizard_steps.tcl"
+    ],
+    "start_script":"::StenosisWizard::Init",
+    "requeriments":{
+        "apps":["Fluid"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": false,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": true
+    },
+    "main_launch_file": "../../exec/MainKratos.py"
+}

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="TestMaterial" un="DEMTestMaterial" pn="Material Analysis" help="Testing specimens under certain pressure conditions" icon="black1" open_window="0">
+<container n="TestMaterial" un="DEMTestMaterial" pn="Material Analysis" help="Please, create two groups for the plates called TOP and BOT respectively." icon="black1" open_window="0">
         <value n="Active" v="false" type="bool" pn="Activate" values="true,false" icon="black1"/>
         <value n="TestType" v="UCS" pn="Select test type" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" values="UCS,Triaxial,Oedometric,Hydrostatic,BTS,Shear" icon="black1"/>
         <value n="ConfinementPressure" v="0.0" pn="Confinement pressure" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
         <value n="LoadVelocity" v="0.1" pn="Loading speed" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1" help="Total loading speed defined as the sum of top and bottom loading speeds"/>
-        <value n="Meshtype" v="Current" pn="Select mesh type" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" values="Current,Predefined" icon="black1"/>
         <value n="Specimenlength" v="0.30" pn="Length" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
         <value n="Specimendiameter" v="0.15" pn="Diameter" state="[getStateFromXPathValue {string(../value[@n='Active']/@v)} true]" update_proc="spdAux::RequestRefresh" icon="black1"/>
+        <value n="AxisPerpendicularToPlates" v="Y" pn="Axis perpendicular to plates" state="disabled" update_proc="spdAux::RequestRefresh" icon="black1"/>
 </container>
