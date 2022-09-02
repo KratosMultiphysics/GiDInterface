@@ -41,8 +41,8 @@ proc ::PfemSw::xml::CustomTree { args } {
     PfemFluid::xml::CustomTree
 
     PfemSw::write::UpdateUniqueNames SW
-    apps::setActiveAppSoft SW
-    SW::xml::CustomTree
+    apps::setActiveAppSoft ShallowWater
+    ShallowWater::xml::CustomTree
 
     PfemSw::write::UpdateUniqueNames PfemSw
     apps::setActiveAppSoft PfemSw
