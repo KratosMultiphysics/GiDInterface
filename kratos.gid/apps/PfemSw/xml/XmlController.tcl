@@ -11,6 +11,9 @@ proc ::PfemSw::xml::Init { } {
     variable dir
     Model::InitVariables dir $::PfemSw::dir
 
+    Model::getConditions CouplingConditions.xml
+    Model::getProcesses Processes.xml
+
     # Model::ForgetSolutionStrategies
     # Model::getSolutionStrategies "../../Fluid/xml/Strategies.xml"
     # Model::getSolutionStrategies "../../Structural/xml/Strategies.xml"

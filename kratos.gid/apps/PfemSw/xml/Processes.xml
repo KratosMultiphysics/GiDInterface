@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+
+	<Process
+        n="DepthIntegrationOutputProcess" 
+        pn="DepthIntegrationOutputProcess"
+        python_module="depth_integration_output_process"
+        kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
+		<inputs>
+		</inputs>
+	</Process>
+
+	<Process
+        n="DepthIntegrationInputProcess"
+        pn="DepthIntegrationInputProcess"
+        python_module="depth_integration_input_process"
+        kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
+		<inputs>
+		</inputs>
+	</Process>
+
+	<Process
+        n="DepthExtrapolationOutputProcess"
+        pn="DepthExtrapolationOutputProcess"
+        python_module="depth_extrapolation_output_process"
+        kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
+		<inputs>
+		</inputs>
+	</Process>
+
+	<Process
+        n="DepthExtrapolationInputProcess"
+        pn="DepthExtrapolationInputProcess"
+        python_module="DepthExtrapolationInputProcess"
+        kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
+		<inputs>
+		</inputs>
+	</Process>
+
+</ProcessList>
