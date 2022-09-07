@@ -15,9 +15,9 @@
             <parameter n="extrapolate_boundaries" pn="Extrapolate boundaries" type="bool" v="0"/>
             <parameter n="print_velocity_profile" pn="Print velocity profile" type="bool" v="0"/>
             <parameter n="file_settings" pn="File settings"/>
-            <!-- <parameter n="file_name" pn="File name"/> -->
+            <!-- <parameter n="file_name" pn="File name" state="hidden" help="This can be handled internally, without GUI."/> -->
             <parameter n="output_time_settings" pn="Output time settings"/>
-            <!-- <parameter n="step_frequency" pn="step_frequency"/> -->
+            <!-- <parameter n="step_frequency" pn="step_frequency" v=10 /> -->
 		</inputs>
 	</Process>
 
