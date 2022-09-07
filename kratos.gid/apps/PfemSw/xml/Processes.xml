@@ -8,6 +8,16 @@
         python_module="depth_integration_output_process"
         kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
 		<inputs>
+            <parameter n="volume_model_part_name" pn="Volume model part" state="hidden"/> <!--This is the computing part, doesn't need to be selected by the user.-->
+            <parameter n="interface_model_part_name" pn="Interface model part"/> <!--SELECT MP-->
+            <parameter n="output_model_part_name" pn="Output model part name" state="hidden"/> <!--Just a name. The process duplicates the interface in order to store the integrated values avoiding variable overwritting. This value can be handled internally without exporting to GUI.-->
+            <parameter n="store_historical_database" pn="Store historical database" type="bool" v="0" state="hidden"/>
+            <parameter n="extrapolate_boundaries" pn="Extrapolate boundaries" type="bool" v="0"/>
+            <parameter n="print_velocity_profile" pn="Print velocity profile" type="bool" v="0"/>
+            <parameter n="file_settings" pn="File settings"/>
+            <!-- <parameter n="file_name" pn="File name"/> -->
+            <parameter n="output_time_settings" pn="Output time settings"/>
+            <!-- <parameter n="step_frequency" pn="step_frequency"/> -->
 		</inputs>
 	</Process>
 
@@ -17,6 +27,17 @@
         python_module="depth_integration_input_process"
         kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
 		<inputs>
+            <parameter n="interface_model_part_name" pn="Interface model part" help="The boundary condition belonging to the shallow water domain."/> <!--SELECT MP. The BC belonging to SW (SW mesh)-->
+            <parameter n="input_model_part_name" pn="Input model part name" state="hidden"/> <!--Same than PFEM. This value can be handled internally without exporting to GUI.-->
+            <parameter n="read_historical_database" pn="Read historical database" type="bool" v="0" state="hidden"/>
+            <parameter n="list_of_variables" pn="List of variables" v="MOMENTUM" state="hidden"/>
+            <parameter n="list_of_variables_to_fix" pn="List of variables to fix" v="MOMENTUM_X,MOMENTUM_Y" state="hidden"/>
+            <parameter n="default_time_after_interval" pn="Default time after interval" type="double" v="null" help="If this value exists, this time step will be applied after the PFEM simulation interval."/>
+            <parameter n="semi_period_after_interval" pn="Semi period after interval" type="double" v="1.0" help="The exponential decay from the last value read and the default value."/>
+            <parameter n="swap_yz_axis" pn="Swap YZ axis" type="bool" v="0" help="Select this option whether the gravity vector is orthogonal among the PFEM and SW simulations."/>
+            <parameter n="ignore_vertical_component" pn="Ignore vertical component" type="bool" v="1" help="Ignore the Z component of the vector applied a SW BC."/>
+            <parameter n="file_settings" pn="File settings"/>
+            <!-- <parameter n="file_name" pn="File name"/> -->
 		</inputs>
 	</Process>
 
