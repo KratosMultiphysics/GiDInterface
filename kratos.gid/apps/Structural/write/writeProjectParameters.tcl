@@ -93,6 +93,9 @@ proc ::Structural::write::getOldParametersDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict STSolStrat STScheme STStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
+    if {[write::getValue STAnalysisType] ne "non_linear"} {
+        dict unset solverSettingsDict use_old_stiffness_in_first_iteration
+    }
     # Submodelpart lists
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart
