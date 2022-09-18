@@ -6,10 +6,9 @@ namespace eval ::ThermicLauncher {
 
 proc ::ThermicLauncher::Init { app } {
     variable available_apps
-
-    # TODO: Get apps from json
-    set available_apps [list ConvectionDiffusion Buoyancy ConjugateHeatTransfer]
     
+    set available_apps [dict get [$app getProperty requeriments] apps]
+
     ::ThermicLauncher::AppSelectorWindow
 }
 
