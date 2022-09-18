@@ -29,6 +29,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Install bins
+        run: |
+          pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.2
+
       # Copy problemtype to gid and copy exec
       - name: Move kratos where it should be
         run: |
