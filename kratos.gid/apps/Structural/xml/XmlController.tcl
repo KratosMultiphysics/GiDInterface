@@ -48,6 +48,9 @@ proc ::Structural::xml::CustomTree { args } {
     if {[[customlib::GetBaseRoot] selectNodes "$xpath/value\[@n='print_mdpa'\]"] eq ""} {
         gid_groups_conds::addF $xpath value [list n print_mdpa pn "Print modelpart" values "true,false" v true state "\[checkStateByUniqueName STSoluType formfinding\]"]
     }
+
+    spdAux::SetValueOnTreeItem state {[HideIfUniqueName STAnalysisType linear]} STStratSection use_old_stiffness_in_first_iteration
+
 }
 
 proc ::Structural::xml::ProcCheckGeometryStructural {domNode args} {

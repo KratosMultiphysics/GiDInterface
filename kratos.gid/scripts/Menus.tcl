@@ -46,6 +46,7 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
         Kratos::ToolbarAddItem "Files" "files.png" [list -np- spdAux::LaunchFileWindow] [= "File handler window"]
     }
     Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]
+    Kratos::ToolbarAddItem "Settings" "config.png" [list -np- PreferencesWindow kratos_preferences] [= "Settings"]
     Kratos::ToolbarAddItem "SpacerApp2" "" "" ""
 
     set app_items_toolbar [apps::ExecuteOnCurrentApp CustomToolbarItems]
