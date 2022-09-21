@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConditionList>
 
-<!---  CALIBRATION CONDITIONS -->
+<!---  DISTRIBUTED VARIABLES CONDITIONS -->
 
-  <!---  Conditions: YOUNG VARIABLE -->
-  <ConditionItem n="YoungModulus3D" pn="Young Modulus Calibration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical"
+  <!---  Conditions: DISTRIBUTED YOUNG MODULUS -->
+  <ConditionItem n="YoungModulus3D" pn="Distrubuted Young Modulus" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000"  TypeofCondition="Mechanical"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
-	ElementType="Volume" ProcessName="ImposeInputTableNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
-    help="Application of variable young modulus in the nodes">
+	ElementType="Volume" ProcessName="Impose3dRandomFieldsVariableProcess" VariableName="NODAL_YOUNG_MODULUS"
+    help="Application of distributed young modulus in the nodes according to a Gaussian random field with exponential covariance distribution">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
@@ -19,11 +19,11 @@
     </outputs>
   </ConditionItem>
 
- <ConditionItem n="YoungModulus2D" pn="Young Modulus Calibration" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical"
+ <ConditionItem n="YoungModulus2D" pn="Distrubuted Young Modulus" ImplementedInFile="process_factory"  TypeofProblem="Mechanical,Thermo-Mechanical"
 	ImplementedInApplication="DamApplication" MinimumKratosVersion="13000"  TypeofCondition="Mechanical"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False"
-	ElementType="Surface" ProcessName="ImposeInputTableNodalYoungModulusProcess" VariableName="NODAL_YOUNG_MODULUS"
-    help="Application of variable young modulus in the nodes">
+	ElementType="Surface" ProcessName="Impose2dRandomFieldsVariableProcess" VariableName="NODAL_YOUNG_MODULUS"
+    help="Application of variable young modulus in the nodes according to a Gaussian random field with exponential covariance distribution">
     <TopologyFeatures>
     </TopologyFeatures>
     <inputs>
