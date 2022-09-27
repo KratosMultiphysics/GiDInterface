@@ -2,6 +2,12 @@
 
 <ProcessList>
 
+	<!--Kratos base process -->
+	<Process n="Process" pn="Base process" python_module="" kratos_module="KratosMultiphysics" help="Empty base class to be used as placeholder.">
+		<inputs>
+		</inputs>
+	</Process>
+
 	<!--Processes for nodes -->
 	<Process n="AssignScalarVariableProcess" pn="Assign scalar variable process" python_module="assign_scalar_variable_process" kratos_module="KratosMultiphysics" help="This process fixes the selected components of a given vector variable">
 		<inputs>

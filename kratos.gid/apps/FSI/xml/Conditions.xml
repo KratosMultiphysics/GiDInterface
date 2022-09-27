@@ -23,7 +23,7 @@
   <ConditionItem n="FluidNoSlipInterface2D" pn="FSI fluid interface" ImplementedInFile=".cpp" Interval="False"
 	ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
-	ElementType="Line" ProcessName="" help="Auxiliary condition to set the fluid FSI interface.">
+	ElementType="Line" ProcessName="Process" help="Auxiliary condition to set the fluid FSI interface.">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
     </TopologyFeatures>
