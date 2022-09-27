@@ -3,7 +3,7 @@
 <ProcessList>
 
 	<!--Kratos base process -->
-	<Process n="Process" pn="Base process" python_module="" kratos_module="KratosMultiphysics" help="Empty base class to be used as placeholder.">
+	<Process n="Process" pn="Base process" python_module="process" kratos_module="KratosMultiphysics" help="Empty base class to be used as placeholder.">
 		<inputs>
 		</inputs>
 	</Process>
