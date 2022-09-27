@@ -843,7 +843,10 @@ proc ::Dam::write::DevicesOutput { } {
             lappend positionList $xposition $yposition $zposition
             dict set parameterDict position $positionList
             dict set parameterDict model_part_name "MainModelPart"
-            dict set parameterDict output_file_name $name$extension
+            set outputDict [dict create]
+            dict set outputDict file_name "CrestDisplacement.dat"
+            dict set outputDict output_path "Displacements"
+            dict set parameterDict output_file_settings $outputDict
             set outputlist [list ]
             lappend outputlist $variable
             dict set parameterDict output_variables $outputlist
