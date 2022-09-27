@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="CouplingConditions" pn="Coupling conditions" un="PfemSw_PfemConditions" icon="coupling" open_window="0">
+    <dynamicnode command="spdAux::injectConditions" args="App PfemSw Type PfemCouplingCondition"/>
+</container>

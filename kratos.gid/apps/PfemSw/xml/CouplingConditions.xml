@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+
+    <ConditionItem 
+        n="ToSW"
+        pn="To SW"
+        Interval="Total"
+        App="PfemSw"
+        Type="PfemCouplingCondition"
+        ElementType="Line"
+        ProcessName="DepthIntegrationOutputProcess"
+        help="This process performs a depth integration in the direction of the grevity and stores the average values in order to trigger a shallow water simulation.">
+        <TopologyFeatures>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+    </ConditionItem>
+
+    <ConditionItem 
+        n="FromPfem"
+        pn="From Pfem"
+        Interval="Total"
+        App="PfemSw"
+        Type="SwCouplingCondition"
+        ElementType="Line"
+        ProcessName="DepthIntegrationInputProcess"
+        help="This process reads the depth integrated values from a PFEM simulation and imposes them as a boundary condition.">
+        <TopologyFeatures>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+    </ConditionItem>
+
+    <ConditionItem 
+        n="FromSW"
+        pn="From SW"
+        state="disabled"
+        Interval="Total"
+        App="PfemSw"
+        Type="PfemCouplingCondition"
+        ElementType="Line"
+        ProcessName="DepthExtrapolationOutputProcess"
+        help="This process records the depth integrated values from a shallow water simulation in order to feed a PFEM simulation.">
+        <!-- state="[checkStateByUniqueName PfemSw_SolStrat FromWsToPfem]" -->
+        <TopologyFeatures>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+    </ConditionItem>
+
+    <ConditionItem 
+        n="ToPfem"
+        pn="To Pfem"
+        state="disabled"
+        Interval="Total"
+        App="PfemSw"
+        Type="SwCouplingCondition"
+        ElementType="Line"
+        ProcessName="DepthExtrapolationInputProcess"
+        help="This process extrapolate the depth integrated values over the vertical column as a PFEM boundary condition.">
+        <!-- state="[checkStateByUniqueName PfemSw_SolStrat FromWsToPfem]" -->
+        <TopologyFeatures>
+            <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+        </TopologyFeatures>
+    </ConditionItem>
+
+</ConditionList>

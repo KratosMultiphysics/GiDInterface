@@ -1,0 +1,54 @@
+{
+    "id": "PfemSw",
+    "name": "Pfem SW Coupling",
+    "prefix": "PfemSw_",
+    "themed": false,
+    "kratos_name": "PfemShallowWaterApplication",
+    "python_packages": [
+        "KratosPfemFluidDynamicsApplication",
+        "KratosShallowWaterApplication",
+        "KratosMappingApplication"
+    ],
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script": "::PfemSw::Init",
+    "requeriments": {
+        "apps": [
+            "PfemFluid",
+            "ShallowWater"
+        ],
+        "minimum_gid_version": "15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        // "parts": "STParts",
+        // "initial_conditions": "STInitialConditions",
+        // "nodal_conditions": "STNodalConditions",
+        // "conditions": "STLoads",
+        // "time_parameters": "STTimeParameters",
+        // "results": "STResults",
+        // "materials": "STMaterials"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "StructuralMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "Structure",
+        "enable_dynamic_substepping": false
+    },
+    "main_launch_file": "../../exec/MainKratos.py",
+    "examples": "examples/examples.xml"
+}
