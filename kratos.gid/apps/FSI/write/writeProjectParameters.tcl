@@ -123,7 +123,7 @@ proc ::FSI::write::GetProcessesDict { } {
 proc ::FSI::write::GetNonDeprecatedProcessList { original_process_list } {
     set list [list ]
     foreach process $original_process_list {
-        if {[dict get $process python_module] ne "python_process"} {lappend list $process}
+        if {[dict get $process python_module] ne "process"} {lappend list $process}
     }
     return $list
 }
