@@ -7,9 +7,8 @@ namespace eval ::FluidLauncher {
 proc ::FluidLauncher::Init { app } {
     variable available_apps
 
-    # TODO: Get apps from json
-    set available_apps [list Fluid EmbeddedFluid PotentialFluid Buoyancy ConjugateHeatTransfer FluidDEM FreeSurface]
-
+    set available_apps [dict get [$app getProperty requeriments] display_apps]
+    
     ::FluidLauncher::FluidAppSelectorWindow
 }
 
