@@ -7,7 +7,7 @@ proc Kratos::InstallAllPythonDependencies { } {
     set py [Kratos::GetPythonExeName]
     # Check if python is installed. minimum 3.5, best 3.9
     set python_version [pythonVersion $py]
-    if { $python_version <= 0 || [GidUtils::TwoVersionsCmp $python_version "3.9.0"] <0 } {
+    if { $python_version <= 0 || [GidUtils::TwoVersionsCmp $python_version "3.10.8"] <0 } {
         ::GidUtils::SetWarnLine "Installing python"
         if {$os eq "win"} {
             gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.win.bat ] $dir
@@ -126,9 +126,11 @@ proc Kratos::ShowErrorsAndActions {errs} {
             W "$python_exe_path $install_pip_path"
         }
         "MISSING_PIP_PACKAGES" {
+            W "Kratos package was not found on your system."
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
-            W "Run the following command on a terminal:\n $python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
+            W "Run the following command on a terminal:"
+            W "$python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
         }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."

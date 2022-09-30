@@ -102,6 +102,7 @@ proc ::MPM::write::getParametersDict { } {
     dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
     dict unset project_parameters_dict solver_settings rayleigh_alpha
     dict unset project_parameters_dict solver_settings rayleigh_beta
+    dict unset project_parameters_dict solver_settings use_old_stiffness_in_first_iteration
 
     return $project_parameters_dict
 }
