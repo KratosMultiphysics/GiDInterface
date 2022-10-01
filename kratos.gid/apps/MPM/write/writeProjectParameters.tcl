@@ -34,17 +34,20 @@ proc ::MPM::write::getParametersDict { } {
         dict set project_parameters_dict solver_settings axis_symmetric_flag true
     }
 
-    
     # Pressure dofs
-    set check_list [list "UpdatedLagrangianUP2D"]
+    set check_list [list "UpdatedLagrangianUP2D" "UpdatedLagrangianUP3D"]
     foreach elem $check_list {
         if {$elem in [MPM::write::GetUsedElements Name]} {
             dict set project_parameters_dict solver_settings pressure_dofs true
             break
         } else {
             dict set project_parameters_dict solver_settings pressure_dofs false
+            dict unset project_parameters_dict solver_settings stabilization
         }
     }
+
+
+
 
     # Rotation dofs
     dict unset project_parameters_dict solver_settings rotation_dofs
@@ -97,6 +100,8 @@ proc ::MPM::write::getParametersDict { } {
     dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
     dict unset project_parameters_dict solver_settings rayleigh_alpha
     dict unset project_parameters_dict solver_settings rayleigh_beta
+
+    # REMOVE use_old_stiffness_in_first_iteration
     dict unset project_parameters_dict solver_settings use_old_stiffness_in_first_iteration
 
     return $project_parameters_dict

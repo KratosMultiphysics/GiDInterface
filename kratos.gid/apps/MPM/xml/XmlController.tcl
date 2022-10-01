@@ -15,7 +15,7 @@ proc MPM::xml::Init { } {
     Model::ForgetElements
     Model::getElements Elements.xml
     
-   Model::ForgetSolutionStrategies
+    Model::ForgetSolutionStrategies
     Model::getSolutionStrategies Strategies.xml
 
     # Modify the schemes so more elements are filtered
