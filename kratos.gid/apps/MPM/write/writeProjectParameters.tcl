@@ -181,7 +181,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
          #set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
          #dict set resultDict output_control_type $outputCT
           #if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
-         #dict set body_output_configuration_dict Parameters output_frequency 
+         #dict set body_output_configuration_dict Parameters output_frequency
          dict unset body_output_configuration_dict Parameters output_path
          dict set body_output_configuration_dict Parameters folder_name  "vtk_output"
          dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes 

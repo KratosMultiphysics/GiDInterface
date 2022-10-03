@@ -5,7 +5,6 @@ namespace eval MPM::xml {
 }
 
 
-
 proc MPM::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $::MPM::dir
@@ -69,6 +68,28 @@ proc ::MPM::xml::ProcGetSolutionStrategiesMPM { domNode args } {
     if {[$domNode getAttribute v] ni $ids} {$domNode setAttribute v $dv}
     #spdAux::RequestRefresh
     return $pnames
+}
+
+
+proc ::MPM::xml::ProcCheckNodalConditionStateMPM {domNode args} {
+    # Overwritten the base function to add Solution Type restrictions
+    set parts_un STParts
+    if {[spdAux::getRoute $parts_un] ne ""} {
+        set conditionId [$domNode @n]
+        set condition [Model::getNodalConditionbyId $conditionId]
+        set cnd_dim [$condition getAttribute WorkingSpaceDimension]
+        if {$cnd_dim ne ""} {
+            if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
+        }
+        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/condition/group/value\[@n='Element'\]"]
+        set elemnames [list ]
+        foreach elem $elems { lappend elemnames [$elem @v]}
+        set elemnames [lsort -unique $elemnames]
+
+        set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
+        set params [list analysis_type $solutionType]
+        if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
+    } {return "normal"}
 }
 
 proc MPM::xml::MultiAppEvent {args} {
