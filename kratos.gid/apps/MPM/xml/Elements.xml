@@ -23,12 +23,12 @@
       <parameter n="PARTICLES_PER_ELEMENT" pn="Particles per element" type="combo" v="1" values="1,3,4,6,9,12,16,33"  pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
-      <parameter n="MP_VELOCITY" pn="Material point velocity" v="Yes" />
-      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="Yes" />
-      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="No" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="No"/>
-      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="No" />
-      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="No" />
+      <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
+      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false"/>
+      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
+      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
   <!--updated lagrangian mixed UP-->
@@ -54,12 +54,12 @@
       <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
-      <parameter n="MP_VELOCITY" pn="Material point velocity" v="Yes" />
-      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="Yes" />
-      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="No" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="No" />
-      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="No" />
-      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="No" />
+      <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
+      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" />
+      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
+      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D axis-symmetric element for large deformation kinematics consist of a material point and connectivity nodes" AnalysisType="non_linear,linear">
@@ -85,12 +85,12 @@
       <parameter n="PARTICLES_PER_ELEMENT" pn="Particles per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
-      <parameter n="MP_VELOCITY" pn="Material point velocity" v="Yes" />
-      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="Yes" />
-      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="No" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="No" />
-      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="No" />
-      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="No" />
+      <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
+      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" />
+      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
+      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
   <ElementItem n="UpdatedLagrangian3D" pn="Updated lagrangian" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear,linear">
@@ -114,12 +114,12 @@
       <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
     </inputs>
     <outputs>
-      <parameter n="MP_VELOCITY" pn="Material point velocity" v="Yes" />
-      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="Yes" />
-      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="No" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="No" />
-      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="No" />
-      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="No" />
+      <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
+      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" />
+      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
+      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
    <ElementItem n="UpdatedLagrangianUP3D" pn="Updated lagrangian mixed UP" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
@@ -143,12 +143,12 @@
       <parameter n="PARTICLES_PER_ELEMENT" pn="Particles per element" type="combo" v="1" values="1,3,4,6,9,12,16,33"  pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of particle generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
     </inputs>
     <outputs>
-      <parameter n="MP_VELOCITY" pn="Material point velocity" v="Yes" />
-      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="Yes" />
-      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="No" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="No" />
-      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="No" />
-      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="No" />
+      <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
+      <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
+      <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" />
+      <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
+      <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
   <!--background grid-->
