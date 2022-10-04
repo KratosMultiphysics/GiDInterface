@@ -32,7 +32,7 @@
         </schemes>
     </StrategyItem>
     
-     <StrategyItem n="explicit" pn="Explicit" SolutionType="Dynamic" ImplementedInFile="mpm_explicit_solver.py" ImplementedInApplication="ParticleMechanicsApplication" ImplementedInPythonFile="mpm_explicit_solver" MinimumKratosVersion="8500"  App="Structural" ProductionReady="ProductionReady" help="">
+     <!--<StrategyItem n="explicit" pn="Explicit" SolutionType="Dynamic" ImplementedInFile="mpm_explicit_solver.py" ImplementedInApplication="ParticleMechanicsApplication" ImplementedInPythonFile="mpm_explicit_solver" MinimumKratosVersion="8500"  App="Structural" ProductionReady="ProductionReady" help="">
         <parameter_list>
             <parameter n="echo_level" pn="Echo level" type="combo" v="0" values="0,1,2,3" help=""/>
             <parameter n="rayleigh_alpha" pn="Rayleigh alpha" type="double" v="0.0"  help=""/>
@@ -60,7 +60,7 @@
                 </element_filters>
             </scheme>
         </schemes>
-    </StrategyItem>
+    </StrategyItem>-->
 
 
     <StrategyItem n="static" pn="Static" SolutionType="Static Quasi-static" ImplementedInFile="mpm_static_solver.py" ImplementedInApplication="StructuralMechanicsApplication" ImplementedInPythonFile="mpm_static_solver" MinimumKratosVersion="8500" App="Structural" ProductionReady="ProductionReady"  help="Default solver Super LU">
