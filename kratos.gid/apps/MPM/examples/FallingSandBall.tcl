@@ -141,6 +141,9 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     set mpm_loads_route [spdAux::getRoute "MPMLoads"]
     [customlib::AddConditionGroupOnXPath "$mpm_loads_route/condition\[@n='Slip$nd'\]" Slip] setAttribute ov $condtype
 
+    # Set gravity On
+    spdAux::SetValueOnTreeItem v "On" ActivateGravity
+
     # Solution strategy parameters
     spdAux::SetValueOnTreeItem v "0.005" MPMTimeParameters DeltaTime
     spdAux::SetValueOnTreeItem v "0.01" GiDOptions OutputDeltaTime
