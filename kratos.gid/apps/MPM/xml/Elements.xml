@@ -26,7 +26,7 @@
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
       <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
       <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false"/>
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" state="hidden"/>
       <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
@@ -57,7 +57,7 @@
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
       <parameter n="MP_DISPLACEMENT" pn="Material point displacement" v="true" />
       <parameter n="MP_ACCELERATION" pn="Material point acceleration" v="false" />
-      <parameter n="MP_PRESSURE" pn="Material point pressure" v="false" />
+      <parameter n="MP_PRESSURE" pn="Material point pressure" v="true" />
       <parameter n="MP_CAUCHY_STRESS_VECTOR" pn="Material point cauchy stress" v="false" />
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
