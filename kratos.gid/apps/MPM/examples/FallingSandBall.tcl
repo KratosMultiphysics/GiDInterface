@@ -121,6 +121,8 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     set props [list Element GRID$nd ]
     spdAux::SetValuesOnBaseNode $mpm_grid_part $props
 
+    # Set Initial Conditions Off
+    spdAux::SetValueOnTreeItem v "Off" InitialCondition
 
     # Fix Displacement
     ## Create interval subgroup
