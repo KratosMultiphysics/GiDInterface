@@ -93,27 +93,30 @@ proc ::MPM::write::getParametersDict { } {
     dict set project_parameters_dict processes gravity [list $gravity_dict]
 
     # Tracking of points
-    set tracking_dict [dict create ]
-    dict set tracking_dict python_module mpm_point_output_process
-    dict set tracking_dict kratos_module "KratosMultiphysics.ParticleMechanicsApplication"
-    dict set tracking_dict process_name MPMPointOutputProcess
-    set tracking_parameters_dict [dict create ]
-    dict set tracking_parameters_dict model_part_name MPM_Material
-    lassign [write::getValue MPTracking position] dx dy dz
-    dict set tracking_parameters_dict position [list [expr $dx] [expr $dy] [expr $dz]]
-    lassign [write::getValue MPTracking interval] t0 tf
-    dict set tracking_parameters_dict interval [list [expr $t0] [expr $tf]]
-    dict set tracking_parameters_dict search_tolerance [write::getValue MPTracking tolerance]
-    lassign [write::getValue MPTracking print_format] press
-     if {$press eq "Yes"} {
-             dict set tracking_parameters_dict output_pressure true
-         } else {
-             dict set tracking_parameters_dict output_pressure false
-         }
-    dict set tracking_parameters_dict print_format [write::getValue MPTracking print_format]
-    dict set tracking_parameters_dict write_tracking_output_file true
-    dict set tracking_dict Parameters $tracking_parameters_dict
-    dict set project_parameters_dict processes tracking [list $tracking_dict]
+    lassign [write::getValue MPTracking ActivateTracking] track
+    if {$track eq "On"} {
+        set tracking_dict [dict create ]
+        dict set tracking_dict python_module mpm_point_output_process
+        dict set tracking_dict kratos_module "KratosMultiphysics.ParticleMechanicsApplication"
+        dict set tracking_dict process_name MPMPointOutputProcess
+        set tracking_parameters_dict [dict create ]
+        dict set tracking_parameters_dict model_part_name MPM_Material
+        lassign [write::getValue MPTracking position] dx dy dz
+        dict set tracking_parameters_dict position [list [expr $dx] [expr $dy] [expr $dz]]
+        lassign [write::getValue MPTracking interval] t0 tf
+        dict set tracking_parameters_dict interval [list [expr $t0] [expr $tf]]
+        dict set tracking_parameters_dict search_tolerance [write::getValue MPTracking tolerance]
+        lassign [write::getValue MPTracking print_format] press
+        if {$press eq "Yes"} {
+                dict set tracking_parameters_dict output_pressure true
+            } else {
+                dict set tracking_parameters_dict output_pressure false
+            }
+        dict set tracking_parameters_dict print_format [write::getValue MPTracking print_format]
+        dict set tracking_parameters_dict write_tracking_output_file true
+        dict set tracking_dict Parameters $tracking_parameters_dict
+        dict set project_parameters_dict processes tracking [list $tracking_dict]
+        }
 
     # Output processes
     dict set project_parameters_dict output_processes [MPM::write::GetOutputProcessesList]
