@@ -13,6 +13,12 @@ proc ::MPM::write::getParametersDict { } {
         dict set project_parameters_dict solver_settings scheme_type [write::getValue STcheme]
     }
 
+    # Time Parameters
+    if {$solutiontype eq "Dynamic"} {
+        dict unset project_parameters_dict solver_settings time_stepping "time_step_table"
+        dict set project_parameters_dict solver_settings time_stepping "time_step" [write::getValue MPTimeParameters DeltaTime]
+    }
+
     # Change the model part name
     dict set project_parameters_dict solver_settings model_part_name MPM_Material
 

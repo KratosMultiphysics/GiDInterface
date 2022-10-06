@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="SolStrat" pn="Solution" un="STStratSection" help="Solution Strategy" icon="solution" open_window="0">
 	<!--<include n="Time" active="1" path="apps/Common/xml/TimeParametersWithSubstepping.spd" un="STTimeParameters" state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]"/>-->
-	<container n="TimeParameters" pn="Time parameters" un="FLTimeParameters" help="Time parameters" open_window="0" icon="time4" state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]">
+	<container n="Time" pn="Time parameters" un="MPTimeParameters" help="Time parameters" open_window="0" icon="time4" state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]">
 		<value n="StartTime" pn="Start time" v="0.0" help=""/>
 		<value n="EndTime" pn="End time" v="1" help=""/>
 		<value n="DeltaTime" pn="Delta time" v="0.01" help="User-defined time step" />
