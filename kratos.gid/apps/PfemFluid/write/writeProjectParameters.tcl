@@ -204,10 +204,13 @@ proc PfemFluid::write::GetPFEM_WaveParameters { group } {
     set WaveCalculationSetting [dict create]
     dict set WaveCalculationSetting "mean_water_level"        [write::getValueByNodeChild $group MeanWaterLevel]
     dict set WaveCalculationSetting "relative_search_radius"  [write::getValueByNodeChild $group RelativeSearchRadius]
+    dict set WaveCalculationSetting "search_tolerance"  [write::getValueByNodeChild $group SearchTolerance]
+    dict set WaveCalculationSetting "use_local_element_size"  [write::getValueByNodeChild $group UseLocalElementSize]
+    dict set WaveCalculationSetting "use_nearest_node"  [write::getValueByNodeChild $group UseNearestNode]
     dict set parametersWave wave_calculation_settings $WaveCalculationSetting
 
     set OutputFileSettings [dict create]
-    dict set OutputFileSettings "file_name"      "gauge_<i>" 
+    dict set OutputFileSettings "file_name"      "gauge_<X>" 
     dict set OutputFileSettings "output_path"             [write::getValueByNodeChild $group FolderName]
     dict set parametersWave output_file_settings $OutputFileSettings
 
