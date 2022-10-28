@@ -322,14 +322,14 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { free_surface_heat_flux free_sur
         foreach box [$root selectNodes "[spdAux::getRoute PFEMFLUID_MeshBoxes]/blockdata"] {
             set spatial_bounding_box_dict [dict create ]
             dict set spatial_bounding_box_dict "use_refining_box" [write::getValueByNodeChild $box UseRefiningBox]
-            dict set spatial_bounding_box_dict "mesh_size"        [write::getValueByNodeChild $box RefinedMeshSize]
+            dict set spatial_bounding_box_dict "transition_elements"        [write::getValueByNodeChild $box TransitionElements]
             dict set spatial_bounding_box_dict "initial_time"     [write::getValueByNodeChild $box StartTime]
             dict set spatial_bounding_box_dict "final_time"       [write::getValueByNodeChild $box StopTime]
             dict set spatial_bounding_box_dict "upper_point"      [PfemFluid::write::GetUpperPointRefiningBox $box]
             dict set spatial_bounding_box_dict "lower_point"      [PfemFluid::write::GetLowerPointRefiningBox $box]
             lappend spatial_refining_box_list $spatial_bounding_box_dict
         }
-        dict set bodyDict spatial_refining_box $spatial_refining_box_list
+        dict set bodyDict spatial_refining_box_list $spatial_refining_box_list
 
         lappend meshing_domains_list $bodyDict
     }

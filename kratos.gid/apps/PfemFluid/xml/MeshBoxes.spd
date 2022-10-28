@@ -11,9 +11,9 @@
     <value n="StartTime" pn="Start Time" v="0.0" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Time at which the bounding box gets active."/>
     <value n="StopTime" pn="Stop Time" v="1000.0" state="[getStateFromXPathValue {string(../value[@n='UseBoundingBox']/@v)} true]" help="Time at which the bounding box stops acting."/>
 	</container>
-  <blockdata n='RefiningBox' name='Refining Box' icon="select" editable="false" sequence='1' editable_name='unique' open_window="0" state="[HideIfUniqueName PFEMFLUID_DomainType Solids]">
+  <blockdata n='RefiningBoxList' name='Refining Box' icon="select" editable="false" sequence='1' editable_name='unique' open_window="0" state="[HideIfUniqueName PFEMFLUID_DomainType Solids]">
     <value n="UseRefiningBox" pn="Refining box" type="bool" values="true,false" v="false" icon="data" />
-    <value n="RefinedMeshSize" pn="Mesh size" icon="data" v="0.01"  state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Mesh size of refined zone"/>
+    <value n="TransitionElements" pn="Transition Elements" icon="data" v="4"  state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Size of transition zone in terms of coarse elements"/>
     <value n="MaxX" pn="Max X" icon="data" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Max X"/>
     <value n="MinX" pn="Min X" icon="data" v="-10" state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Min X"/>
     <value n="MaxY" pn="Max Y" icon="data" v="10"  state="[getStateFromXPathValue {string(../value[@n='UseRefiningBox']/@v)} true]" help="Max Y"/>
