@@ -48,7 +48,7 @@ proc ::MPM::write::getParametersDict { } {
             break
         } else {
             dict set project_parameters_dict solver_settings pressure_dofs false
-            dict unset project_parameters_dict solver_settings stabilization
+            #dict unset project_parameters_dict solver_settings stabilization
         }
     }
 
