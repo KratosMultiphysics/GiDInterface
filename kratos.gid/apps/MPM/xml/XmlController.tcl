@@ -11,6 +11,9 @@ proc MPM::xml::Init { } {
     # Import our elements
     Model::ForgetElements
     Model::getElements Elements.xml
+    
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies Strategies.xml
 
     # Modify the schemes so more elements are filtered
     foreach strategy $::Model::SolutionStrategies {

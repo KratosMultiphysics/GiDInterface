@@ -107,7 +107,7 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     set mpm_parts_route [spdAux::getRoute "MPMParts"]
 
     ## Sand
-    set mpm_solid_parts_route "${mpm_parts_route}/condition\[@n='Parts_Solid'\]"
+    set mpm_solid_parts_route "${mpm_parts_route}/condition\[@n='Parts_Material_domain'\]"
     set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route Sand]
     $mpm_solid_part setAttribute ov surface
     set constitutive_law_name "HenckyMCPlasticPlaneStrain${nd}Law"
@@ -140,6 +140,9 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     ## Slip
     set mpm_loads_route [spdAux::getRoute "MPMLoads"]
     [customlib::AddConditionGroupOnXPath "$mpm_loads_route/condition\[@n='Slip$nd'\]" Slip] setAttribute ov $condtype
+
+    # Set gravity On
+    spdAux::SetValueOnTreeItem v "On" ActivateGravity
 
     # Solution strategy parameters
     spdAux::SetValueOnTreeItem v "0.005" MPMTimeParameters DeltaTime
