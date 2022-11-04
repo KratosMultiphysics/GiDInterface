@@ -17,6 +17,9 @@ proc ::MPM::write::getParametersDict { } {
     if {$solutiontype eq "Dynamic"} {
         dict unset project_parameters_dict solver_settings time_stepping "time_step_table"
         dict set project_parameters_dict solver_settings time_stepping "time_step" [write::getValue MPTimeParameters DeltaTime]
+        dict set project_parameters_dict problem_data start_time [write::getValue MPTimeParameters StartTime]
+        dict set project_parameters_dict problem_data end_time [write::getValue MPTimeParameters EndTime]
+
     }
 
     # Change the model part name
@@ -49,6 +52,7 @@ proc ::MPM::write::getParametersDict { } {
         } else {
             dict set project_parameters_dict solver_settings pressure_dofs false
             dict unset project_parameters_dict solver_settings stabilization
+
         }
     }
 
@@ -126,8 +130,7 @@ proc ::MPM::write::getParametersDict { } {
 
     # Output processes
     dict set project_parameters_dict output_processes [MPM::write::GetOutputProcessesList]
-    
-    
+
     # REMOVE RAYLEIGH
     dict set project_parameters_dict solver_settings auxiliary_variables_list [list NORMAL IS_STRUCTURE]
     dict unset project_parameters_dict solver_settings rayleigh_alpha
@@ -149,7 +152,7 @@ proc write::GetResultsList { un {cnd ""} } {
 
 proc ::MPM::write::GetOutputProcessesList { } {
       set output_process [dict create]
-    
+
       set project_parameters_dict [Structural::write::getParametersDict]
       # Change the model part name
       dict set project_parameters_dict solver_settings model_part_name MPM_Material
@@ -163,7 +166,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
       set model_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
       dict append model_import_settings_dict input_filename _Body
       dict set project_parameters_dict solver_settings model_import_settings $model_import_settings_dict
-    
+
       set need_gid [write::getValue EnableGiDOutput]
       if {[write::isBooleanTrue $need_gid]} {
 
@@ -178,28 +181,26 @@ proc ::MPM::write::GetOutputProcessesList { } {
          dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
          dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
 
-         
          dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
-      
+
 
          dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
          dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
          dict unset project_parameters_dict output_processes gid_output
-         
+
          # Append the fluid and solid output processes to the output processes list
          lappend gid_output_processes_list $body_output_configuration_dict
          lappend gid_output_processes_list $grid_output_configuration_dict
          dict set output_process gid_output_processes $gid_output_processes_list
-    
+
       }
-     
+
      set need_vtk [write::getValue EnableVtkOutput]
      if {[write::isBooleanTrue $need_vtk]} {
          #set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
 
          set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
          set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
-         
 
          dict set body_output_configuration_dict python_module particle_vtk_output_process
          dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
@@ -215,22 +216,22 @@ proc ::MPM::write::GetOutputProcessesList { } {
           #if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
          dict unset body_output_configuration_dict Parameters output_path
          dict set body_output_configuration_dict Parameters folder_name  "vtk_output"
-         dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes 
+
+         dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
          dict set body_output_configuration_dict Parameters gauss_point_results [write::GetResultsList ElementResults]
-         
-         
+
+
          dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
          dict unset grid_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
          dict unset grid_output_configuration_dict Parameters nodal_data_value_variables
          dict unset grid_output_configuration_dict Parameters element_data_value_variables
          dict unset grid_output_configuration_dict Parameters condition_data_value_variables
-         
 
          dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
          #dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
          dict unset project_parameters_dict output_processes vtk_output
          dict unset grid_output_configuration_dict Parameters gauss_point_results
-         
+
          # Append the fluid and solid output processes to the output processes list
          lappend vtk_output_processes_list $grid_output_configuration_dict
          lappend vtk_output_processes_list $body_output_configuration_dict

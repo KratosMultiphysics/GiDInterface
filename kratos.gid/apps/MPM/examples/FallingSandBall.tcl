@@ -106,6 +106,9 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     # Parts
     set mpm_parts_route [spdAux::getRoute "MPMParts"]
 
+    # Erase Intervals
+    ErasePreviousIntervals
+
     ## Sand
     set mpm_solid_parts_route "${mpm_parts_route}/condition\[@n='Parts_Material_domain'\]"
     set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route Sand]
@@ -136,7 +139,7 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     set mpm_displacement_route "${mpm_bc_route}/condition\[@n='DISPLACEMENT'\]"
     set mpm_displacement [customlib::AddConditionGroupOnXPath $mpm_displacement_route "FixedDisplacement//Total"]
     $mpm_displacement setAttribute ov $condtype
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0  selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0  selector_component_Z ByValue value_component_Z 0.0]
     spdAux::SetValuesOnBaseNode $mpm_displacement $props
 
     ## Slip
@@ -147,6 +150,10 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     spdAux::SetValueOnTreeItem v "On" ActivateGravity
 
     # Solution strategy parameters
-    spdAux::SetValueOnTreeItem v "0.005" MPMTimeParameters DeltaTime
-    spdAux::SetValueOnTreeItem v "0.01" GiDOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "0.005" MPTimeParameters DeltaTime
+    spdAux::SetValueOnTreeItem v "2" MPTimeParameters EndTime
+    spdAux::SetValueOnTreeItem v "time" GiDOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "0.02" GiDOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "time" VtkOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "0.02" VtkOptions OutputDeltaTime
 }

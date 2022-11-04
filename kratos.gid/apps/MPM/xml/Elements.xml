@@ -40,7 +40,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="MPM"/> 
+      <filter field="App" value="MPM"/>
       <filter field="FormulationType" value="Mixed"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
@@ -64,14 +64,15 @@
   </ElementItem>
   <ElementItem n="UpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D axis-symmetric element for large deformation kinematics consist of a material point and connectivity nodes" AnalysisType="non_linear,linear">
 
-    <!--here we could add a list of all of the possible geometries-->
+      <!--here we could add a list of all of the possible geometries-->
+
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianAxisymmetry2D3N"/>
       <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangianAxisymmetry2D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="MPM"/> 
+      <filter field="App" value="MPM"/>
       <filter field="FormulationType" value="Irreducible"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
@@ -101,7 +102,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="MPM"/> 
+      <filter field="App" value="MPM"/>
       <filter field="FormulationType" value="Irreducible"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->
@@ -130,7 +131,7 @@
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
-      <filter field="App" value="MPM"/> 
+      <filter field="App" value="MPM"/>
       <filter field="FormulationType" value="Mixed"/>
     </ConstitutiveLaw_FilterFeatures>
     <!--define list of NodalConditions-->

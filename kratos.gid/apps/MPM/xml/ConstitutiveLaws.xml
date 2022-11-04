@@ -128,6 +128,7 @@
   </CLaw>
 
   <CLaw n="HenckyMCPlastic3DLaw" pn="Mohr Coulomb" class="HenckyMCPlastic3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication" help="Mohr Coulomb Plasticity Behaviour in 3D" Dimension="3D"  App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication">
+
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
       <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="206.9e9" />
@@ -297,7 +298,4 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
-  
-
 </ConstitutiveLaws>
