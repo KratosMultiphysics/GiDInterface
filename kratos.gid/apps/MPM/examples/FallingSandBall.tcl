@@ -148,6 +148,7 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
 
     # Solution strategy parameters
     spdAux::SetValueOnTreeItem v "0.005" MPTimeParameters DeltaTime
+    spdAux::SetValueOnTreeItem v "2" MPTimeParameters EndTime
     spdAux::SetValueOnTreeItem v "time" GiDOptions OutputControlType
     spdAux::SetValueOnTreeItem v "0.02" GiDOptions OutputDeltaTime
     spdAux::SetValueOnTreeItem v "time" VtkOptions OutputControlType
