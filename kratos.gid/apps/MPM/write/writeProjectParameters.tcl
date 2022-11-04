@@ -100,24 +100,6 @@ proc ::MPM::write::getParametersDict { } {
     dict set gravity_dict Parameters $gravity_parameters_dict
     dict set project_parameters_dict processes gravity [list $gravity_dict]
 
-    # Output configuration
-    set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
-    set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
-    dict set body_output_configuration_dict python_module particle_gid_output_process
-    dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
-    dict set body_output_configuration_dict process_name ParticleMPMGiDOutputProcess
-    dict set body_output_configuration_dict Parameters model_part_name MPM_Material
-    dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
-    dict set body_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings model_import_settings input_filename]
-    dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
-    dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
-    dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
-    dict set body_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results [list MP_VELOCITY MP_DISPLACEMENT]
-    dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
-    dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
-    dict unset project_parameters_dict output_processes gid_output
-    dict unset project_parameters_dict output_processes vtk_output
-
     # Output processes
     dict set project_parameters_dict output_processes [MPM::write::GetOutputProcessesList]
 
