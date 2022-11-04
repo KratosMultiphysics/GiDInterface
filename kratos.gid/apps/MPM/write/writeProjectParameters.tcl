@@ -87,18 +87,21 @@ proc ::MPM::write::getParametersDict { } {
     dict set project_parameters_dict processes list_other_processes $slip_process_list
 
     # Gravity
-    set gravity_dict [dict create ]
-    dict set gravity_dict python_module assign_gravity_to_particle_process
-    dict set gravity_dict kratos_module "KratosMultiphysics.ParticleMechanicsApplication"
-    dict set gravity_dict process_name AssignGravityToParticleProcess
-    set gravity_parameters_dict [dict create ]
-    dict set gravity_parameters_dict model_part_name MPM_Material
-    dict set gravity_parameters_dict variable_name MP_VOLUME_ACCELERATION
-    dict set gravity_parameters_dict modulus [write::getValue MPMGravity modulus]
-    lassign [write::getValue MPMGravity direction] dx dy dz
-    dict set gravity_parameters_dict direction [list [expr $dx] [expr $dy] [expr $dz]]
-    dict set gravity_dict Parameters $gravity_parameters_dict
-    dict set project_parameters_dict processes gravity [list $gravity_dict]
+    set activate_gravity [write::getValue ActivateGravity]
+    if {$activate_gravity eq "On"} {
+        set gravity_dict [dict create ]
+        dict set gravity_dict python_module assign_gravity_to_particle_process
+        dict set gravity_dict kratos_module "KratosMultiphysics.ParticleMechanicsApplication"
+        dict set gravity_dict process_name AssignGravityToParticleProcess
+        set gravity_parameters_dict [dict create ]
+        dict set gravity_parameters_dict model_part_name MPM_Material
+        dict set gravity_parameters_dict variable_name MP_VOLUME_ACCELERATION
+        dict set gravity_parameters_dict modulus [write::getValue MPMGravity modulus]
+        lassign [write::getValue MPMGravity direction] dx dy dz
+        dict set gravity_parameters_dict direction [list [expr $dx] [expr $dy] [expr $dz]]
+        dict set gravity_dict Parameters $gravity_parameters_dict
+        dict set project_parameters_dict processes gravity [list $gravity_dict]
+        }
 
     # Output processes
     dict set project_parameters_dict output_processes [MPM::write::GetOutputProcessesList]
