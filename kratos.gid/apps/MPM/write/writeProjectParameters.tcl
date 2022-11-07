@@ -103,6 +103,7 @@ proc ::MPM::write::getParametersDict { } {
         dict set gravity_parameters_dict direction [list [expr $dx] [expr $dy] [expr $dz]]
         dict set gravity_dict Parameters $gravity_parameters_dict
         dict set project_parameters_dict processes gravity [list $gravity_dict]
+	}
 
     # Tracking of points
     lassign [write::getValue MPTracking ActivateTracking] track
