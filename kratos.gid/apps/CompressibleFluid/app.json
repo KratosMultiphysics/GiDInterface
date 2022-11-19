@@ -11,7 +11,8 @@
         "start.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
-        "write/writeProjectParameters.tcl"
+        "write/writeProjectParameters.tcl",
+        "examples/SodShockTube.tcl"
     ],
     "start_script": "::CompressibleFluid::Init",
     "requeriments": {
@@ -42,6 +43,6 @@
         "output_model_part_name": "fluid_computational_model_part"
     },
     "main_launch_file": "python/MainKratos.py",
-    "examples": "",
+    "examples": "examples/examples.xml",
     "description": ""
 }
