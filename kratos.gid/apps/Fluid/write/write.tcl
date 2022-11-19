@@ -1,7 +1,7 @@
 namespace eval ::Fluid::write {
     namespace path ::Fluid
     Kratos::AddNamespace [namespace current]
-    
+
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes
@@ -20,7 +20,7 @@ proc ::Fluid::write::Init { } {
     SetAttribute results_un [::Fluid::GetUniqueName results]
     SetAttribute drag_un [::Fluid::GetUniqueName drag]
     SetAttribute time_parameters_un [::Fluid::GetUniqueName time_parameters]
-    
+
     SetAttribute writeCoordinatesByGroups [::Fluid::GetWriteProperty coordinates]
     SetAttribute validApps [list "Fluid"]
     SetAttribute main_launch_file [::Fluid::GetAttribute main_launch_file]
@@ -59,8 +59,8 @@ proc ::Fluid::write::writeModelPartEvent { } {
 
     # Custom SubmodelParts
     variable last_condition_iterator
-    write::writeBasicSubmodelPartsByUniqueId  $Fluid::write::FluidConditionMap $last_condition_iterator
-    
+    write::writeBasicSubmodelPartsByUniqueId $Fluid::write::FluidConditionMap $last_condition_iterator
+
     # SubmodelParts
     writeMeshes
 
@@ -82,6 +82,11 @@ proc ::Fluid::write::WriteMaterialsFile { {write_const_law True} {include_modelp
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
     write::writePropertiesJsonFile [GetAttribute parts_un] [GetAttribute materials_file] $write_const_law $model_part_name
+}
+proc Fluid::write::GetMaterialsFile { {write_const_law True} {include_modelpart_name True} } {
+    set model_part_name ""
+    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
+    return [write::getPropertiesJson [GetAttribute parts_un] $write_const_law $model_part_name]
 }
 
 proc ::Fluid::write::Validate {} {

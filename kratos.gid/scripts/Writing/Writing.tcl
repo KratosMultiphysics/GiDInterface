@@ -6,7 +6,7 @@
 
 namespace eval ::write {
     Kratos::AddNamespace [namespace current]
-    
+
     variable mat_dict
     variable submodelparts
     variable MDPA_loop_control
@@ -38,7 +38,7 @@ proc write::Init { } {
 
     set current_mdpa_indent_level 0
 
-    
+
     variable formats_dict
     set formats_dict [dict create]
     variable properties_exclusion_list
@@ -103,7 +103,7 @@ proc write::writeEvent { filename } {
         return 1
     }
     set inittime [clock seconds]
-    
+
     # Set write formats depending on the user's configuration
     InitWriteFormats
 
@@ -118,11 +118,26 @@ proc write::writeEvent { filename } {
     Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
 
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Validate time: [Kratos::Duration $ttime]"
+    }
+
     #### MDPA Write ####
     if {$errcode eq 0} {
         Kratos::Log "Write MDPA $appid"
         set errcode [writeAppMDPA $appid]
     }
+
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "MDPA time: [Kratos::Duration $ttime]"
+    }
+
     #### Project Parameters Write ####
     set wevent [$activeapp getWriteParametersEvent]
     set filename "ProjectParameters.json"
@@ -130,6 +145,12 @@ proc write::writeEvent { filename } {
     if {$errcode eq 0} {
         Kratos::Log "Write project parameters $appid"
         set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
+    }
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Parameters time: [Kratos::Duration $ttime]"
     }
 
     #### Custom files block ####
@@ -144,7 +165,7 @@ proc write::writeEvent { filename } {
     if {$time_monitor}  {
         W "Total time: [Kratos::Duration $ttime]"
     }
-    
+
     #### Copy main script file ####
     if {$errcode eq 0} {
         Kratos::Log "Write custom event $appid"
@@ -153,7 +174,7 @@ proc write::writeEvent { filename } {
 
     #### Debug files for VSCode ####
     write::writeLaunchJSONFile
-    
+
     Kratos::Log "Write end $appid in [Kratos::Duration $ttime]"
     return $errcode
 }
@@ -289,9 +310,10 @@ proc write::getEtype {ov group} {
     if {$ov eq "line"} {
         if {$b} {error "Multiple element types in $group over $ov"}
         switch $isquadratic {
-            0 { set ret [list "Linear" 2] }
-            default { set ret [list "Linear" 3] }
+            0 { set ret [list "Line" 2] }
+            default { set ret [list "Line" 3] }
         }
+        set b 1
     }
 
     if {$ov eq "surface"} {
@@ -680,8 +702,10 @@ proc write::CopyMainScriptFile { } {
     # Main python script
     if {[catch {
             set orig_name [write::GetConfigurationAttribute main_launch_file]
-            write::CopyFileIntoModel $orig_name
-            write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+            if {$orig_name ne ""} {
+                write::CopyFileIntoModel $orig_name
+                write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
+            }
         } fid] } {
         W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
         return errcode 1

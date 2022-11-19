@@ -2,27 +2,35 @@
 proc ::Fluid::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.FluidDynamicsApplication.fluid_dynamics_analysis"
+
     # Problem data
-    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict [::Fluid::GetAttribute id]]
+    dict set projectParametersDict problem_data [::Fluid::write::GetProblemData_Dict]
 
     # output configuration
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict [::Fluid::GetAttribute id]]
 
     # Solver settings
-    set solver_settings_dict [Fluid::write::getSolverSettingsDict]
-    dict set solver_settings_dict "reform_dofs_at_each_step" false
-    dict set projectParametersDict solver_settings $solver_settings_dict
+    dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
 
     # Boundary conditions processes
+    dict set projectParametersDict processes [Fluid::write::GetProcesses_Dict]
+
+    return $projectParametersDict
+}
+
+proc ::Fluid::write::GetProblemData_Dict { } {
+    return [write::GetDefaultProblemDataDict [::Fluid::GetAttribute id]]
+}
+
+proc ::Fluid::write::GetProcesses_Dict { } {
     set processesDict [dict create]
     dict set processesDict initial_conditions_process_list [write::getConditionsParametersDict [::Fluid::GetUniqueName nodal_conditions] "Nodal"]
     dict set processesDict boundary_conditions_process_list [write::getConditionsParametersDict [::Fluid::GetUniqueName conditions]]
     dict set processesDict gravity [list [getGravityProcessDict] ]
     dict set processesDict auxiliar_process_list [getAuxiliarProcessList]
-
-    dict set projectParametersDict processes $processesDict
-
-    return $projectParametersDict
+    return $processesDict
 }
 
 proc ::Fluid::write::writeParametersEvent { } {
@@ -255,7 +263,7 @@ proc ::Fluid::write::getSolverSettingsDict { } {
         # Include the formulation settings in the solver settings dict
         dict set solverSettingsDict formulation $formulationSettingsDict
     }
-
+    dict set solverSettingsDict "reform_dofs_at_each_step" false
     return $solverSettingsDict
 }
 

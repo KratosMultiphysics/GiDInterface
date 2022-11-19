@@ -337,7 +337,7 @@
 		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Reference Temperature to each node" >
     <inputs>
         <parameter n="initial_value" pn="Initial Reference Temperature Value" type="double" v="0.0"/>
-        <parameter n="input_file_name" pn="Table filename" type="file" v="- No file"/>
+        <parameter n="input_file_name" pn="Table filename" type="file" v="- No file - (add files using File handler toolbar)"/>
     </inputs>
   </Process>
 

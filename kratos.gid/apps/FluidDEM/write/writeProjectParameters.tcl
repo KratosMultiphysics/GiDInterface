@@ -37,17 +37,17 @@ proc ::FluidDEM::write::getParametersDict { } {
     # nodal results
     dict set project_parameters_dict dem_nodal_results [FluidDEM::write::GetDEMNodalResultsDict]
     dict set project_parameters_dict fluid_nodal_results [FluidDEM::write::GetFluidNodalResultsDict]
-    
+
     # Hydrodynamic Properties
     dict set project_parameters_dict properties [FluidDEM::write::GetHydrodynamicPropertiesList]
-    
+
     # output configuration  #TODO to be checked/modified by GCasas
     dict set project_parameters_dict sdem_output_processes [write::GetDefaultOutputProcessDict [::Fluid::GetAttribute id]]
     FluidDEM::write::InitExternalProjectParameters
     dict set project_parameters_dict dem_parameters $FluidDEM::write::dem_project_parameters
     dict set project_parameters_dict dem_parameters "solver_settings" "strategy" "swimming_sphere_strategy"
     dict set project_parameters_dict fluid_parameters $FluidDEM::write::fluid_project_parameters
-    
+
     # Update the fluid element
     set element_name {*}[FluidDEM::write::GetCurrentFluidElementName]
     dict set project_parameters_dict fluid_parameters solver_settings formulation element_type $element_name
@@ -313,3 +313,8 @@ proc FluidDEM::write::InitExternalProjectParameters { } {
 
     apps::setActiveAppSoft FluidDEM
 }
+
+proc ::DEM::write::GetElementType { } {
+    return "SphericPartDEMElement3D"
+}
+

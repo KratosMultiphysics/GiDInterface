@@ -30,7 +30,8 @@
         "open_tree": true,
         "show_toolbar": true,
         "intervals": true,
-        "wizard": false
+        "wizard": false,
+        "import_files":true
     },
     "unique_names": {
         "nodal_conditions": "PFEMFLUID_NodalConditions",
@@ -44,6 +45,6 @@
         "properties_location": "json",
         "model_part_name": "PfemFluidModelPart"
     },
-    "main_launch_file": "python/MainKratos.py",
+    "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"
 }

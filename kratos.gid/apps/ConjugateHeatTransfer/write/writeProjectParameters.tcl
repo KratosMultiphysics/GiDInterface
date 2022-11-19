@@ -4,6 +4,9 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
 
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis"
+
     # Set the problem data section
     dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict]
 
@@ -81,31 +84,9 @@ proc ::ConjugateHeatTransfer::write::GetProcessList { } {
     return $processes
 }
 
-
-proc write::GetDefaultOutputProcessDict { {appid ""} } {
-    # Output process must be placed inside json lists
-    set gid_output_process_list [list ]
-    set need_gid [write::getValue EnableGiDOutput]
-    if {[write::isBooleanTrue $need_gid]}  {
-        lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
-    }
-
-    set vtk_output_process_list [list ]
-    set need_vtk [write::getValue EnableVtkOutput]
-    if {[write::isBooleanTrue $need_vtk]} {
-        lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
-    }
-
-    set outputProcessesDict [dict create]
-    dict set outputProcessesDict gid_output $gid_output_process_list
-    dict set outputProcessesDict vtk_output $vtk_output_process_list
-
-    return $outputProcessesDict
-}
-
 proc ::ConjugateHeatTransfer::write::GetOutputProcessesList { } {
     set output_process [dict create]
-    
+
     set need_gid [write::getValue EnableGiDOutput]
     if {[write::isBooleanTrue $need_gid]} {
         # Set a different output_name for the fluid and solid domains
@@ -128,7 +109,7 @@ proc ::ConjugateHeatTransfer::write::GetOutputProcessesList { } {
         lappend gid_output_processes_list $solid_output
         dict set output_process gid_output_processes $gid_output_processes_list
     }
-    
+
     set need_vtk [write::getValue EnableVtkOutput]
     if {[write::isBooleanTrue $need_vtk]} {
     # Set a different output_name for the fluid and solid domains

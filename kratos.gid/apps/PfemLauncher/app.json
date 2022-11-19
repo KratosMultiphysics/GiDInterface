@@ -6,7 +6,7 @@
     ],
     "start_script":"::PfemLauncher::Init",
     "requeriments":{
-        "apps_exist":["PfemFluid", "DEMPFEM", "PfemThermic"],
+        "display_apps":["PfemFluid", "DEMPFEM", "PfemThermic"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
-    
+
     <!--fluid elements-->
     <!--updated lagrangian-->
-    
+
     <ElementItem n                     = "TwoStepUpdatedLagrangianVPFluidElement2D"
                  pn                    = "Fluid Updated Lagrangian"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
@@ -17,38 +17,38 @@
                  help                  = "To be written by..."
                  ElementType           = "Fluid"
                  Dofs                  = "VELOCITY,PRESSURE">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="TwoStepUpdatedLagrangianVPFluidElement2D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Fluid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "TwoStepUpdatedLagrangianVPFluidElement3D"
                  pn                    = "Fluid Updated Lagrangian"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "3D"
                  LocalSpaceDimension   = "3"
                  RequiresLocalAxes     = "False"
@@ -61,33 +61,33 @@
         <TopologyFeatures>
             <item GeometryType="Tetrahedra" nodes="4" KratosName="TwoStepUpdatedLagrangianVPFluidElement3D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Fluid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "TwoStepUpdatedLagrangianVPFluidDEMcouplingElement2D"
                  pn                    = "Fluid Updated Lagrangian for DEM coupling"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
@@ -100,33 +100,33 @@
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="TwoStepUpdatedLagrangianVPFluidDEMcouplingElement2D"/>
         </TopologyFeatures>
-      
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Fluid"/>
         </ConstitutiveLaw_FilterFeatures>
-      
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
         </NodalConditions>
-      
+
         <inputs>
         </inputs>
-      
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "TwoStepUpdatedLagrangianVPFluidDEMcouplingElement3D"
                  pn                    = "Fluid Updated Lagrangian for DEM coupling"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "3D"
                  LocalSpaceDimension   = "3"
                  RequiresLocalAxes     = "False"
@@ -139,35 +139,35 @@
         <TopologyFeatures>
             <item GeometryType="Tetrahedra" nodes="4" KratosName="TwoStepUpdatedLagrangianVPFluidDEMcouplingElement3D"/>
         </TopologyFeatures>
-    
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Fluid"/>
         </ConstitutiveLaw_FilterFeatures>
-    
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
         </NodalConditions>
-    
+
         <inputs>
         </inputs>
-    
+
         <outputs>
         </outputs>
     </ElementItem>
-    
+
     <!--solid elements in velocities-->
     <!--updated lagrangian-->
-    
+
     <ElementItem n                     = "TwoStepUpdatedLagrangianVPSolidElement2D"
                  pn                    = "Solid Updated Lagrangian VP"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
@@ -175,41 +175,41 @@
                  help                  = "To be written by..."
                  ElementType           = "Solid"
                  Dofs                  = "VELOCITY,PRESSURE">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="TwoStepUpdatedLagrangianVPSolidElement2D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Solid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "TwoStepUpdatedLagrangianVPSolidElement3D"
                  pn                    = "Solid Updated Lagrangian VP"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "3D"
                  LocalSpaceDimension   = "3"
                  RequiresLocalAxes     = "False"
@@ -217,41 +217,41 @@
                  help                  = "To be written by..."
                  ElementType           = "Solid"
                  Dofs                  = "VELOCITY,PRESSURE">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Tetrahedra" nodes="4" KratosName="TwoStepUpdatedLagrangianVPSolidElement3D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Solid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "UpdatedLagrangianVSolidElement2D"
                  pn                    = "Solid Updated Lagrangian V"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
@@ -259,41 +259,41 @@
                  help                  = "To be written by..."
                  ElementType           = "Solid"
                  Dofs                  = "VELOCITY" >
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianVSolidElement2D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Solid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>       
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "UpdatedLagrangianVSolidElement3D"
                  pn                    = "Solid Updated Lagrangian V"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "3D"
                  LocalSpaceDimension   = "3"
                  RequiresLocalAxes     = "False"
@@ -301,44 +301,44 @@
                  help                  = "To be written by..."
                  ElementType           = "Solid"
                  Dofs                  = "VELOCITY">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangianVSolidElement3D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Solid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <!--fluid elements-->
     <!--updated lagrangian-->
-    
+
     <ElementItem n                     = "TwoStepUpdatedLagrangianVPNodallyIntegratedFluidElement2D"
                  pn                    = "Fluid Updated Lagrangian (nodal integration)"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
@@ -346,38 +346,38 @@
                  help                  = "To be written by..."
                  ElementType           = "Fluid"
                  Dofs                  = "VELOCITY,PRESSURE">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="TwoStepUpdatedLagrangianVPNodallyIntegratedFluidElement2D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Fluid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     ="TwoStepUpdatedLagrangianVPNodallyIntegratedFluidElement3D"
                  pn                    ="Fluid Updated Lagrangian (nodal integration)"
                  ImplementedInFile     ="none.cpp"
                  kratos_module         ="PfemFluidDynamicsApplication"
                  MinimumKratosVersion  ="9000"
-                 ProductionReady       ="Developer"
+
                  WorkingSpaceDimension ="3D"
                  LocalSpaceDimension   ="3"
                  RequiresLocalAxes     ="False"
@@ -385,41 +385,41 @@
                  help                  ="To be written by..."
                  ElementType           ="Fluid"
                  Dofs                  ="VELOCITY,PRESSURE">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Tetrahedra" nodes="4" KratosName="TwoStepUpdatedLagrangianVPNodallyIntegratedFluidElement3D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Fluid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-    
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <!--solid elements in velocities-->
     <!--updated lagrangian-->
-    
+
     <ElementItem n                     = "TwoStepUpdatedLagrangianVPNodallyIntegratedSolidElement2D"
                  pn                    = "Solid Updated Lagrangian (nodal integration)"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
@@ -432,36 +432,36 @@
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="TwoStepUpdatedLagrangianVPNodallyIntegratedSolidElement2D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Solid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>      
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
    <ElementItem n                     = "TwoStepUpdatedLagrangianVPNodallyIntegratedSolidElement3D"
                 pn                    = "Solid Updated Lagrangian (nodal integration)"
                 ImplementedInFile     = "none.cpp"
                 kratos_module         = "PfemFluidDynamicsApplication"
                 MinimumKratosVersion  = "9000"
-                ProductionReady       = "Developer"
+
                 WorkingSpaceDimension = "3D"
                 LocalSpaceDimension   = "3"
                 RequiresLocalAxes     = "False"
@@ -469,61 +469,61 @@
                 help                  = "To be written by..."
                 ElementType           = "Solid"
                 Dofs                  = "VELOCITY,PRESSURE">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Tetrahedra" nodes="4" KratosName="TwoStepUpdatedLagrangianVPNodallyIntegratedSolidElement3D"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="kratos_module" value="PfemFluidDynamicsApplication"/>
             <filter field="type"          value="Solid"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
-        <NodalConditions> 
+        <NodalConditions>
             <NodalCondition n="VELOCITY"/>
             <NodalCondition n="PRESSURE"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>       
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <!--rigid elements-->
     <!--updated lagrangian-->
-    
+
     <ElementItem n                     = "SurfaceRigidLagrangianElement2D2N"
                  pn                    = "Rigid Wall"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
                  LocalSpaceDimension   = "1"
                  RequiresLocalAxes     = "False"
                  LargeDeformation      = "False,True"
                  help                  = "To be written by..."
                  ElementType           = "Rigid">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="Element2D2N"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="n" value="None"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
         <NodalConditions>
             <NodalCondition n="DISPLACEMENT"/>
@@ -531,23 +531,23 @@
             <NodalCondition n="ACCELERATION"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>             
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "RigidLagrangianElement2D3N"
                  pn                    = "Rigid Body"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
@@ -555,17 +555,17 @@
                  help                  = "To be written by..."
                  ElementType           = "Rigid"
                  Dofs                  = "ROTATION">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="n" value="None"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
         <NodalConditions>
             <NodalCondition n="DISPLACEMENT"/>
@@ -573,40 +573,40 @@
             <NodalCondition n="ACCELERATION"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>                   
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "SurfaceRigidLagrangianElement3D3N"
                  pn                    = "Rigid Wall"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "3D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
                  LargeDeformation      = "False,True"
                  help                  = "To be written by..."
                  ElementType           = "Rigid">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="Element3D3N"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="n" value="None"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
         <NodalConditions>
             <NodalCondition n="DISPLACEMENT"/>
@@ -614,23 +614,23 @@
             <NodalCondition n="ACCELERATION"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "RigidLagrangianElement3D4N"
                  pn                    = "Rigid Body"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "3D"
                  LocalSpaceDimension   = "3"
                  RequiresLocalAxes     = "False"
@@ -638,17 +638,17 @@
                  help                  = "To be written by..."
                  ElementType           = "Rigid"
                  Dofs                  = "ROTATION">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="n" value="None"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
         <NodalConditions>
             <NodalCondition n="DISPLACEMENT"/>
@@ -656,43 +656,43 @@
             <NodalCondition n="ACCELERATION"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <!--interface elements-->
     <!--updated lagrangian-->
-    
+
     <ElementItem n                     = "SurfaceRigidLagrangianElement2D2N"
                  pn                    = "Interface Wall"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "2D"
-                 LocalSpaceDimension   = "1" 
+                 LocalSpaceDimension   = "1"
                  RequiresLocalAxes     = "False"
                  LargeDeformation      = "False,True"
                  help                  = "To be written by..."
                  ElementType           = "Interface">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Line" nodes="2" KratosName="Element2D2N"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="n" value="None"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
         <NodalConditions>
             <NodalCondition n="DISPLACEMENT"/>
@@ -700,40 +700,40 @@
             <NodalCondition n="ACCELERATION"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_2D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_2D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>             
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_2D"/>
         </NodalConditions>
-        
+
         <inputs>
         </inputs>
-        
+
         <outputs>
         </outputs>
     </ElementItem>
-    
-    
+
+
     <ElementItem n                     = "SurfaceRigidLagrangianElement3D3N"
                  pn                    = "Interface Wall"
                  ImplementedInFile     = "none.cpp"
                  kratos_module         = "PfemFluidDynamicsApplication"
                  MinimumKratosVersion  = "9000"
-                 ProductionReady       = "Developer"
+
                  WorkingSpaceDimension = "3D"
                  LocalSpaceDimension   = "2"
                  RequiresLocalAxes     = "False"
                  LargeDeformation      = "False,True"
                  help                  = "To be written by..."
                  ElementType           = "Interface">
-        
+
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
             <item GeometryType="Triangle" nodes="3" KratosName="Element3D3N"/>
         </TopologyFeatures>
-        
+
         <!-- here we add the block of features which we require from the constitutive law-->
         <ConstitutiveLaw_FilterFeatures>
             <filter field="n" value="None"/>
         </ConstitutiveLaw_FilterFeatures>
-        
+
         <!--define list of NodalConditions-->
         <NodalConditions>
             <NodalCondition n="DISPLACEMENT"/>
@@ -741,14 +741,14 @@
             <NodalCondition n="ACCELERATION"/>
             <NodalCondition n="PFEM_RIGID_BODY_ROTATION_3D"/>
             <NodalCondition n="RIGID_BODY_ANGULAR_VELOCITY_3D"/>
-            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>             
+            <NodalCondition n="RIGID_BODY_ANGULAR_ACCELERATION_3D"/>
         </NodalConditions>
-    
+
         <inputs>
         </inputs>
-    
+
         <outputs>
         </outputs>
     </ElementItem>
-    
+
 </ElementList>
