@@ -61,7 +61,7 @@ proc ::MPM::examples::GranularFlow::DrawGeometry2D {args} {
     GiD_Layers edit color Grid "#fddda0"
 
     ## Points ##
-    set coordinates [list {0 0.1 0} {0 0.15 0} {0.55 0.15 0} {0.55 0 0} {0.2 0 0} {0.2 0.1 0}]
+    set coordinates [list {0 0.0 0} {0 0.15 0} {0.55 0.15 0} {0.55 0 0}]
     set grid_points [list ]
     foreach point $coordinates {
         lappend grid_points [GiD_Geometry create point append Grid {*}$point]
@@ -90,11 +90,11 @@ proc ::MPM::examples::GranularFlow::AssignGroups2D {args} {
 
     GiD_Groups create Grid
     GiD_Groups edit color Grid "#e0210fff"
-    GiD_EntitiesGroups assign Grid surfaces {1 2}
+    GiD_EntitiesGroups assign Grid surfaces {2}
 
     GiD_Groups create FixedDisplacement
     GiD_Groups edit color FixedDisplacement "#3b3b3bff"
-    GiD_EntitiesGroups assign FixedDisplacement lines {1 4 5 8}
+    GiD_EntitiesGroups assign FixedDisplacement lines {5 8}
 }
 
 proc ::MPM::examples::GranularFlow::AssignGroups3D {args} {
