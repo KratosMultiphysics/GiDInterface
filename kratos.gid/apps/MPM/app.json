@@ -17,6 +17,7 @@
         "start.tcl",
         "examples/examples.tcl",
         "examples/FallingSandBall.tcl",
+        "examples/GranularFlow.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
