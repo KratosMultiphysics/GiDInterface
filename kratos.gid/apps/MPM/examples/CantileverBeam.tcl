@@ -1,9 +1,9 @@
-namespace eval ::MPM::examples::GranularFlow {
+namespace eval ::MPM::examples::CantileverBeam {
     namespace path ::MPM::examples
     Kratos::AddNamespace [namespace current]
 
 }
-proc ::MPM::examples::GranularFlow::Init {args} {
+proc ::MPM::examples::CantileverBeam::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -21,35 +21,35 @@ proc ::MPM::examples::GranularFlow::Init {args} {
 
 
 # Draw Geometry
-proc ::MPM::examples::GranularFlow::DrawGeometry3D {args} {
-    # DrawGranularFlowGeometry2D
+proc ::MPM::examples::CantileverBeam::DrawGeometry3D {args} {
+    # DrawCantileverBeamGeometry2D
     # GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     # GiD_Layers edit opaque Fluid 0
 
     # GiD_Process escape escape 'Render Flat escape 'Rotate Angle 270 90 escape escape escape escape 'Rotate objaxes x -150 y -30 escape escape
 }
-proc ::MPM::examples::GranularFlow::DrawGeometry2D {args} {
+proc ::MPM::examples::CantileverBeam::DrawGeometry2D {args} {
     Kratos::ResetModel
-    GiD_Layers create GranularMaterial
-    GiD_Layers edit to_use GranularMaterial
-    GiD_Layers edit color GranularMaterial "#e1aa72"
+    GiD_Layers create HyperelasticBeam
+    GiD_Layers edit to_use HyperelasticBeam
+    GiD_Layers edit color HyperelasticBeam "#e1aa72"
 
-    # GranularMaterial square
+    # HyperelasticBeam square
     ## Points ##
-    set coordinates [list {0 0 0} {0 0.1 0} {0.2 0.1 0} {0.2 0 0}]
+    set coordinates [list {0 0 0} {0 1 0} {10 1 0} {10 0 0}]
     set material_points [list ]
     foreach point $coordinates {
-        lappend material_points [GiD_Geometry create point append GranularMaterial {*}$point]
+        lappend material_points [GiD_Geometry create point append HyperelasticBeam {*}$point]
     }
 
     ## Lines ##
     set material_lines [list ]
     set initial [lindex $material_points 0]
     foreach point [lrange $material_points 1 end] {
-        lappend material_lines [GiD_Geometry create line append stline GranularMaterial $initial $point]
+        lappend material_lines [GiD_Geometry create line append stline HyperelasticBeam $initial $point]
         set initial $point
     }
-    lappend material_lines [GiD_Geometry create line append stline GranularMaterial $initial [lindex $material_points 0]]
+    lappend material_lines [GiD_Geometry create line append stline HyperelasticBeam $initial [lindex $material_points 0]]
 
     ## Surface ##
     GiD_Process Mescape Geometry Create NurbsSurface {*}$material_lines escape escape
@@ -61,7 +61,7 @@ proc ::MPM::examples::GranularFlow::DrawGeometry2D {args} {
     GiD_Layers edit color Grid "#fddda0"
 
     ## Points ##
-    set coordinates [list {0 0.0 0} {0 0.15 0} {0.55 0.15 0} {0.55 0 0}]
+    set coordinates [list {0 -4 0} {0 2 0} {12 2 0} {12 -4 0}]
     set grid_points [list ]
     foreach point $coordinates {
         lappend grid_points [GiD_Geometry create point append Grid {*}$point]
@@ -82,31 +82,31 @@ proc ::MPM::examples::GranularFlow::DrawGeometry2D {args} {
 
 
 # Group assign
-proc ::MPM::examples::GranularFlow::AssignGroups2D {args} {
+proc ::MPM::examples::CantileverBeam::AssignGroups2D {args} {
     # Create the groups
-    GiD_Groups create GranularMaterial
-    GiD_Groups edit color GranularMaterial "#26d1a8ff"
-    GiD_EntitiesGroups assign GranularMaterial surfaces 1
+    GiD_Groups create HyperelasticBeam
+    GiD_Groups edit color HyperelasticBeam "#26d1a8ff"
+    GiD_EntitiesGroups assign HyperelasticBeam surfaces 1
 
     GiD_Groups create Grid
     GiD_Groups edit color Grid "#e0210fff"
-    GiD_EntitiesGroups assign Grid surfaces {2}
+    GiD_EntitiesGroups assign Grid surfaces 2
 
     GiD_Groups create FixedDisplacement
     GiD_Groups edit color FixedDisplacement "#3b3b3bff"
-    GiD_EntitiesGroups assign FixedDisplacement lines {5 8}
+    GiD_EntitiesGroups assign FixedDisplacement lines 5
 }
 
-proc ::MPM::examples::GranularFlow::AssignGroups3D {args} {
+proc ::MPM::examples::CantileverBeam::AssignGroups3D {args} {
 
 }
 
 # Tree assign
-proc ::MPM::examples::GranularFlow::TreeAssignation3D {args} {
+proc ::MPM::examples::CantileverBeam::TreeAssignation3D {args} {
     TreeAssignation2D
 }
 
-proc ::MPM::examples::GranularFlow::TreeAssignation2D {args} {
+proc ::MPM::examples::CantileverBeam::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -122,12 +122,12 @@ proc ::MPM::examples::GranularFlow::TreeAssignation2D {args} {
     # Erase Intervals
     ErasePreviousIntervals
 
-    ## GranularMaterial
+    ## Hyperelastic beam
     set mpm_solid_parts_route "${mpm_parts_route}/condition\[@n='Parts_Material_domain'\]"
-    set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route GranularMaterial]
+    set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route HyperelasticBeam]
     $mpm_solid_part setAttribute ov surface
-    set constitutive_law_name "HenckyMCPlasticPlaneStrain${nd}Law"
-    set props [list Element UpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material GranularMaterial DENSITY 2650 YOUNG_MODULUS 840000 POISSON_RATIO 0.3 INTERNAL_FRICTION_ANGLE 19.8 THICKNESS 0.1 PARTICLES_PER_ELEMENT 3]
+    set constitutive_law_name "HyperElasticNeoHookeanPlaneStrain${nd}Law"
+    set props [list Element UpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material HyperelasticBeam DENSITY 1000 YOUNG_MODULUS 90000000 POISSON_RATIO 0.49 THICKNESS 0.1 PARTICLES_PER_ELEMENT 6]
     spdAux::SetValuesOnBaseNode $mpm_solid_part $props
 
     ## Grid
@@ -156,10 +156,10 @@ proc ::MPM::examples::GranularFlow::TreeAssignation2D {args} {
     spdAux::SetValueOnTreeItem v "On" ActivateGravity
 
     # Solution strategy parameters
-    spdAux::SetValueOnTreeItem v "0.00005" MPTimeParameters DeltaTime
-    spdAux::SetValueOnTreeItem v "2" MPTimeParameters EndTime
-    spdAux::SetValueOnTreeItem v "time" GiDOptions OutputControlType
-    spdAux::SetValueOnTreeItem v "0.01" GiDOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "0.01" MPTimeParameters DeltaTime
+    spdAux::SetValueOnTreeItem v "10" MPTimeParameters EndTime
+    spdAux::SetValueOnTreeItem v "wtep" GiDOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "0.1" GiDOptions OutputDeltaTime
     spdAux::SetValueOnTreeItem v "time" VtkOptions OutputControlType
-    spdAux::SetValueOnTreeItem v "0.01" VtkOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "0.1" VtkOptions OutputDeltaTime
 }
