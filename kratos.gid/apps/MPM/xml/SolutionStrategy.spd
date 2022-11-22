@@ -9,9 +9,7 @@
 	<container n="StratParams" pn="Strategy parameters" un="STStratParams" icon="groupsTreeNew.gif" open_window="0" state="[HideIfUniqueName STSoluType eigen_value]">
 		<dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication StructuralMechanicsApplication"/>
 	</container>
+   <include n="Gravity" active="1" path="apps/MPM/xml/Gravity.spd"/>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>
-	<container n="ContactParameters" pn="Contact parameters" un="STContactParams" icon="contact">
-		<value n="contact_type" pn="Contact type" v="FrictionlessComponents" values="FrictionlessComponents,Frictional" dict="FrictionlessComponents,Frictionless,Frictional,Frictional"/>
-	</container>
 	<dynamicnode command="spdAux::injectSolvers" args=""/>
 </container>
