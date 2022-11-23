@@ -1,0 +1,48 @@
+{
+    "id": "CompressibleFluid",
+    "name": "Compressible Fluid",
+    "prefix": "CF",
+    "themed": false,
+    "kratos_name": "FluidDynamicsApplication",
+    "dimensions": [
+        "2D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl",
+        "examples/SodShockTube.tcl"
+    ],
+    "start_script": "::CompressibleFluid::Init",
+    "requeriments": {
+        "apps": [
+            "Fluid"
+        ],
+        "minimum_gid_version": "15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "CFParts",
+        "nodal_conditions": "CFNodalConditions",
+        "conditions": "CFBC",
+        "materials": "CFMaterials",
+        "results": "CFResults",
+        "time_parameters": "CFTimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "FluidMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "FluidModelPart",
+        "output_model_part_name": "fluid_computational_model_part"
+    },
+    "main_launch_file": "python/MainKratos.py",
+    "examples": "examples/examples.xml",
+    "description": ""
+}
