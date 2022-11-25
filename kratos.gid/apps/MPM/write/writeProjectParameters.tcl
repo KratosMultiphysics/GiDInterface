@@ -47,11 +47,13 @@ proc ::MPM::write::getParametersDict { } {
     foreach elem $check_list {
         if {$elem in [MPM::write::GetUsedElements Name]} {
             dict set project_parameters_dict solver_settings pressure_dofs true
-            set active_stab [write::getValue STStratParams activate_stabilization]
+            set active_stab [write::getValue STStratParams ActivateStabilization]
             if {$active_stab eq "Off"} {
                dict set project_parameters_dict solver_settings stabilization "none"
+            } else {
+               dict set project_parameters_dict solver_settings stabilization "ppp"
             }
-            dict unset project_parameters_dict solver_settings activate_stabilization
+            dict unset project_parameters_dict solver_settings ActivateStabilization
             break
         } else {
             dict set project_parameters_dict solver_settings pressure_dofs false
