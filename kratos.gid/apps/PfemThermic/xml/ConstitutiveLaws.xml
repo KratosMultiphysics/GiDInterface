@@ -106,6 +106,128 @@
         </outputs>
     </CLaw>
 
+    <CLaw n               = "MuIRheologyTemperatureDependent2DLaw"
+          pn              = "Mu(I) Rheology temperature dependent"
+
+          help            = "Mu(I) Rheology temperature dependent fluid"
+          Dimension       = "2D"
+          App             = "Pfem"
+          OutputMode      = "Parameters"
+          kratos_module   = "PfemFluidDynamicsApplication"
+          type            = "Fluid">
+        <inputs>
+            <parameter n="DENSITY"                          pn="Density"                    unit_magnitude="Density"            units="kg/m^3"      v="1000"/>
+            <parameter n="TEMPERATURE_vs_DENSITY"           pn="Density table"              type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="GRAIN_DENSITY"                    pn="Grain Density"              unit_magnitude="P"                  units=""            v="0.5"/>
+			<parameter n="TEMPERATURE_vs_GRAIN_DENSITY"     pn="Grain Density table"        type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="STATIC_FRICTION"                  pn="Static Friction"            unit_magnitude="P"                  units=""            v="0.3"/>
+			<parameter n="TEMPERATURE_vs_STATIC_FRICTION"   pn="Static Friction table"      type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="DYNAMIC_FRICTION"                 pn="Dynamic Friction"           unit_magnitude="P"                  units=""            v="0.5"/>
+			<parameter n="TEMPERATURE_vs_DYNAMIC_FRICTION"  pn="Dynamic Friction table"     type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="INERTIAL_NUMBER_ZERO"             pn="Inertial Number Zero"       unit_magnitude=""                   units=""            v="0.5"/>
+            <parameter n="GRAIN_DIAMETER"                   pn="Grain Diameter"             unit_magnitude="L"                  units="m"           v="0.001"/>
+            <parameter n="BULK_MODULUS"                     pn="Bulk modulus"               unit_magnitude="P"                  units="Pa"          v="2.1e+9"/>
+            <parameter n="REGULARIZATION_COEFFICIENT"       pn="Regularization Coefficient" unit_magnitude=""                   units="1/s"         v="0.01"        help="The higher is, the lower is the regularization."/>
+			<parameter n="CONDUCTIVITY"                     pn="Thermal conductivity"       unit_magnitude="Power/(L*Temp)"     units="W/(m*K)"     v="0.024"/>
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"      pn="Conductivity table"         type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="SPECIFIC_HEAT"                    pn="Specific heat"              unit_magnitude="Energy/(M*Temp)"    units="J/(kg*K)"    v="1012.0"/>
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT"     pn="Specific heat table"        type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
+    <CLaw n               = "MuIRheologyTemperatureDependent3DLaw"
+          pn              = "Mu(I) Rheology temperature dependent"
+
+          help            = "Mu(I) Rheology temperature dependent fluid"
+          Dimension       = "3D"
+          App             = "Pfem"
+          OutputMode      = "Parameters"
+          kratos_module   = "PfemFluidDynamicsApplication"
+          type            = "Fluid">
+        <inputs>
+            <parameter n="DENSITY"                          pn="Density"                    unit_magnitude="Density"            units="kg/m^3"      v="1000"/>
+            <parameter n="TEMPERATURE_vs_DENSITY"           pn="Density table"              type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="GRAIN_DENSITY"                    pn="Grain Density"              unit_magnitude="P"                  units=""            v="0.5"/>
+			<parameter n="TEMPERATURE_vs_GRAIN_DENSITY"     pn="Grain Density table"        type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="STATIC_FRICTION"                  pn="Static Friction"            unit_magnitude="P"                  units=""            v="0.3"/>
+			<parameter n="TEMPERATURE_vs_STATIC_FRICTION"   pn="Static Friction table"      type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="DYNAMIC_FRICTION"                 pn="Dynamic Friction"           unit_magnitude="P"                  units=""            v="0.5"/>
+			<parameter n="TEMPERATURE_vs_DYNAMIC_FRICTION"  pn="Dynamic Friction table"     type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="INERTIAL_NUMBER_ZERO"             pn="Inertial Number Zero"       unit_magnitude=""                   units=""            v="0.5"/>
+            <parameter n="GRAIN_DIAMETER"                   pn="Grain Diameter"             unit_magnitude="L"                  units="m"           v="0.001"/>
+            <parameter n="BULK_MODULUS"                     pn="Bulk modulus"               unit_magnitude="P"                  units="Pa"          v="2.1e+9"/>
+            <parameter n="REGULARIZATION_COEFFICIENT"       pn="Regularization Coefficient" unit_magnitude=""                   units="1/s"         v="0.01"        help="The higher is, the lower is the regularization."/>
+			<parameter n="CONDUCTIVITY"                     pn="Thermal conductivity"       unit_magnitude="Power/(L*Temp)"     units="W/(m*K)"     v="0.024"/>
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"      pn="Conductivity table"         type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="SPECIFIC_HEAT"                    pn="Specific heat"              unit_magnitude="Energy/(M*Temp)"    units="J/(kg*K)"    v="1012.0"/>
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT"     pn="Specific heat table"        type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
+
+
+    <CLaw n               = "FrictionalViscoplasticTemperatureDependent2DLaw"
+          pn              = "Frictional Viscoplastic temperature dependent"
+
+          help            = "Non Newtonian Frictional Viscoplastic temperature dependent fluid"
+          Dimension       = "2D"
+          App             = "Pfem"
+          OutputMode      = "Parameters"
+          kratos_module   = "PfemFluidDynamicsApplication"
+          type            = "Fluid">
+        <inputs>
+            <parameter n="DENSITY"                                  pn="Density"                unit_magnitude="Density"         units="kg/m^3"   v="1000"/>
+            <parameter n="TEMPERATURE_vs_DENSITY"                   pn="Density table"          type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="INTERNAL_FRICTION_ANGLE"                  pn="Friction angle"         unit_magnitude="P"               units=""       v="25"/>
+			<parameter n="TEMPERATURE_vs_INTERNAL_FRICTION_ANGLE"   pn="Friction angle table"   type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="COHESION"                                 pn="Cohesion"               unit_magnitude="P"               units="Pa"       v="0"/>
+			<parameter n="TEMPERATURE_vs_COHESION"                  pn="Cohesion table"         type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="DYNAMIC_VISCOSITY"                        pn="Dynamic viscosity"      unit_magnitude="P*T"             units="Pa*s"     v="1e-3"/>
+            <parameter n="TEMPERATURE_vs_VISCOSITY"                 pn="Viscosity table"        type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="BULK_MODULUS"                             pn="Bulk modulus"           unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
+            <parameter n="ADAPTIVE_EXPONENT"                        pn="Adaptive exponent"      unit_magnitude=""                units="1/s"      v="1000" help="The higher is, the lower is the regularization."/>
+			<parameter n="CONDUCTIVITY"                             pn="Thermal conductivity"   unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"              pn="Conductivity table"     type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="SPECIFIC_HEAT"                            pn="Specific heat"          unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT"             pn="Specific heat table"    type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
+    <CLaw n               = "FrictionalViscoplasticTemperatureDependent3DLaw"
+          pn              = "Frictional Viscoplastic temperature dependent"
+
+          help            = "Non Newtonian Frictional Viscoplastic temperature dependent fluid"
+          Dimension       = "3D"
+          App             = "Pfem"
+          OutputMode      = "Parameters"
+          kratos_module   = "PfemFluidDynamicsApplication"
+          type            = "Fluid">
+        <inputs>
+            <parameter n="DENSITY"                                  pn="Density"                unit_magnitude="Density"         units="kg/m^3"   v="1000"/>
+            <parameter n="TEMPERATURE_vs_DENSITY"                   pn="Density table"          type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="INTERNAL_FRICTION_ANGLE"                  pn="Friction angle"         unit_magnitude="P"               units="Pa"       v="25"/>
+			<parameter n="TEMPERATURE_vs_INTERNAL_FRICTION_ANGLE"   pn="Friction angle table"   type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="COHESION"                                 pn="Cohesion"               unit_magnitude="P"               units="Pa"       v="0"/>
+			<parameter n="TEMPERATURE_vs_COHESION"                  pn="Cohesion table"         type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="DYNAMIC_VISCOSITY"                        pn="Dynamic viscosity"      unit_magnitude="P*T"             units="Pa*s"     v="1e-3"/>
+            <parameter n="TEMPERATURE_vs_VISCOSITY"                 pn="Viscosity table"        type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="BULK_MODULUS"                             pn="Bulk modulus"           unit_magnitude="P"               units="Pa"       v="2.1e+9"/>
+            <parameter n="ADAPTIVE_EXPONENT"                        pn="Adaptive exponent"      unit_magnitude=""                units="1/s"      v="1000" help="The higher is, the lower is the regularization."/>
+			<parameter n="CONDUCTIVITY"                             pn="Thermal conductivity"   unit_magnitude="Power/(L*Temp)"  units="W/(m*K)"  v="0.024"/>
+            <parameter n="TEMPERATURE_vs_CONDUCTIVITY"              pn="Conductivity table"     type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+            <parameter n="SPECIFIC_HEAT"                            pn="Specific heat"          unit_magnitude="Energy/(M*Temp)" units="J/(kg*K)" v="1012.0"/>
+            <parameter n="TEMPERATURE_vs_SPECIFIC_HEAT"             pn="Specific heat table"    type="tablefile"                                  v="- No file - (add files using File handler toolbar)"/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
     <!--Solid temperature dependent laws -->
     <CLaw n               = "HypoelasticTemperatureDependent2DLaw"
           pn              = "Hypoelastic temperature dependent"
