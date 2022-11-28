@@ -52,7 +52,8 @@ proc ::MPM::write::getParametersDict { } {
             if {$active_stab eq "Off"} {
                dict set project_parameters_dict solver_settings stabilization "none"
             } else {
-               dict set project_parameters_dict solver_settings stabilization "ppp"
+               set stab_type [write::getValue STStratParams stabilization]
+               dict set project_parameters_dict solver_settings stabilization $stab_type
             }
             dict unset project_parameters_dict solver_settings ActivateStabilization
             break
