@@ -12,7 +12,7 @@
 		  <dependencies value="On" node="../value[@n='stabilization']" att1="state" v1="normal"/>
 		</value>
 		<value n="stabilization" pn="Stabilization method" type="combo" v="asgs" values="ppp,asgs" pvalues="PPP" help="Stabilization method"/>
-		<dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication StructuralMechanicsApplication"/>
+		<dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication ParticleMechanicsApplication"/>
 	</container>
    <include n="Gravity" active="1" path="apps/MPM/xml/Gravity.spd"/>
 	<include n="Parallelism" active="1" path="apps/Common/xml/Parallelism.spd"/>

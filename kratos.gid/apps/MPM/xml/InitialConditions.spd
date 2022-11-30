@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="InitialConditions" pn="Initial conditions" un="MPMNodalConditions" icon="air" open_window="0">
-	  <value n="ImposeInitialCondition" pn="Impose initial conditions" v="Off" values="Off,Velocity" un="ImposeInitialCondition" help="">
-	 </value>
+<container n="InitialConditions" pn="Initial conditions" un="MPMInitialConditions" icon="air" open_window="0">
+	 <dynamicnode command="spdAux::injectNodalConditions" args="App MPM Type Initial"/>
 </container>

@@ -39,7 +39,8 @@
     "unique_names": {
         "parts": "MPMParts",
         "nodal_conditions": "MPMNodalConditions",
-        "conditions": "MPMLoads"
+        "conditions": "MPMLoads",
+        "initial_conditions": "MPMInitialConditions"
     },
     "write": {
         "coordinates": "all",

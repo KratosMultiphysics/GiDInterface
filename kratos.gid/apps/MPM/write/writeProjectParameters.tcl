@@ -93,6 +93,11 @@ proc ::MPM::write::getParametersDict { } {
     dict set project_parameters_dict processes loads_process_list $new_load_process_list
     dict set project_parameters_dict processes list_other_processes $slip_process_list
 
+    # Initial Conditions
+    set initial_conditions_list [write::getConditionsParametersDict [GetAttribute initial_conditions_un] "Nodal"]
+    dict set project_parameters_dict processes initial_conditions_processes $initial_conditions_list
+#     dict set project_parameters_dict processes initial_conditions_processes Parameteres model_part_name MPM_Material
+
     # Gravity
     set activate_gravity [write::getValue ActivateGravity]
     if {$activate_gravity eq "On"} {
