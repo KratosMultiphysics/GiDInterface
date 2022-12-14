@@ -27,7 +27,8 @@ proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
     foreach {prop val} $prop_value_pairs {
         set propnode [$base_path selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
-            $propnode setAttribute v $val
+            gid_groups_conds::modify_value_node $propnode $val
+            # $propnode setAttribute v $val
             catch {get_domnode_attribute $propnode dict}
         } else {
             W "Warning - Couldn't find property $prop"

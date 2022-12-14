@@ -125,13 +125,13 @@ proc ::CompressibleFluid::examples::SodShockTube::TreeAssignation2D {args} {
     set fluid_density "$initial_conditions/condition\[@n='DENSITY'\]"
     set initial_density_node [customlib::AddConditionGroupOnXPath $fluid_density Fluid]
     $initial_density_node setAttribute ov surface
-    set props [list ByFunction true function_value "1.0 if x < 0.5 else 0.125"]
+    set props [list ByFunction Yes function_value "1.0 if x < 0.5 else 0.125"]
     spdAux::SetValuesOnBaseNode $initial_density_node $props
 
     set fluid_energy "$initial_conditions/condition\[@n='TOTAL_ENERGY'\]"
     set initial_energy_node [customlib::AddConditionGroupOnXPath $fluid_energy Fluid]
     $initial_energy_node setAttribute ov surface
-    set props [list ByFunction true function_value "2.5 if x < 0.5 else 0.25"]
+    set props [list ByFunction Yes function_value "2.5 if x < 0.5 else 0.25"]
     spdAux::SetValuesOnBaseNode $initial_energy_node $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
@@ -148,6 +148,7 @@ proc ::CompressibleFluid::examples::SodShockTube::TreeAssignation2D {args} {
         set momentum_node [customlib::AddConditionGroupOnXPath $momentum "$gr//Total"]
         $momentum_node setAttribute ov $condtype
         [$momentum_node selectNodes "./value\[@n = 'selector_component_X'\]"] setAttribute v "Not"
+
     }
 
     # Time parameters
