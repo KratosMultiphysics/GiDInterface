@@ -150,16 +150,13 @@ proc ::CompressibleFluid::examples::SodShockTube::TreeAssignation2D {args} {
         [$momentum_node selectNodes "./value\[@n = 'selector_component_X'\]"] setAttribute v "Not"
     }
 
-spdAux::RequestRefresh
-return ""
-
     # Time parameters
-    set parameters [list EndTime 40.0 DeltaTime 0.05]
+    set parameters [list EndTime 0.1 AutomaticDeltaTime Yes]
     set xpath [spdAux::getRoute "FLTimeParameters"]
     spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Output
-    set parameters [list OutputControlType time OutputDeltaTime 1.0]
+    set parameters [list OutputControlType time OutputDeltaTime 0.01]
     set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     spdAux::SetValuesOnBasePath $xpath $parameters
 
