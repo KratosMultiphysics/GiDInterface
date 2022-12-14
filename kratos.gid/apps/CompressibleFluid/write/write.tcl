@@ -1,7 +1,7 @@
 namespace eval ::CompressibleFluid::write {
     namespace path ::CompressibleFluid
     Kratos::AddNamespace [namespace current]
-    
+
     # Namespace variables declaration
     variable writeCoordinatesByGroups
     variable writeAttributes
@@ -14,23 +14,23 @@ namespace eval ::CompressibleFluid::write {
 proc ::CompressibleFluid::write::Init { } {
     # Namespace variables inicialization
 
-    SetAttribute parts_un            [::CompressibleFluid::GetUniqueName parts]
+    SetAttribute parts_un            [::Fluid::GetUniqueName parts]
     SetAttribute nodal_conditions_un [::CompressibleFluid::GetUniqueName nodal_conditions]
     SetAttribute conditions_un       [::CompressibleFluid::GetUniqueName conditions]
     SetAttribute materials_un        [::CompressibleFluid::GetUniqueName materials]
     SetAttribute results_un          [::CompressibleFluid::GetUniqueName results]
     SetAttribute drag_un             [::CompressibleFluid::GetUniqueName drag]
-    SetAttribute time_parameters_un  [::CompressibleFluid::GetUniqueName time_parameters]
+    SetAttribute time_parameters_un  [::Fluid::GetUniqueName time_parameters]
 
     SetAttribute writeCoordinatesByGroups [::CompressibleFluid::GetWriteProperty coordinates]
     SetAttribute validApps [list "CompressibleFluid"]
-  
+
     SetAttribute main_launch_file       [::CompressibleFluid::GetAttribute main_launch_file]
     SetAttribute materials_file         [::CompressibleFluid::GetWriteProperty materials_file]
     SetAttribute properties_location    [::CompressibleFluid::GetWriteProperty properties_location]
     SetAttribute model_part_name        [::CompressibleFluid::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::CompressibleFluid::GetWriteProperty output_model_part_name]
-    
+
     variable last_condition_iterator
     set last_condition_iterator 0
 }
@@ -62,7 +62,7 @@ proc ::CompressibleFluid::write::writeModelPartEvent { } {
     # Custom SubmodelParts
     variable last_condition_iterator
     write::writeBasicSubmodelPartsByUniqueId  $CompressibleFluid::write::FluidConditionMap $last_condition_iterator
-    
+
     # SubmodelParts
     writeMeshes
 
