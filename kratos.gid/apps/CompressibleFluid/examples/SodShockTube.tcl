@@ -13,7 +13,6 @@ proc ::CompressibleFluid::examples::SodShockTube::Init {args} {
     Kratos::ResetModel
     DrawGeometry$::Model::SpatialDimension
     AssignGroups$::Model::SpatialDimension
-    return ""
     AssignMeshSizes$::Model::SpatialDimension
     TreeAssignation$::Model::SpatialDimension
 
@@ -87,16 +86,16 @@ proc ::CompressibleFluid::examples::SodShockTube::AssignMeshSizes3D {args} {
 }
 
 proc ::CompressibleFluid::examples::SodShockTube::AssignMeshSizes2D {args} {
-    set fluid_mesh_size 30.0
-    set walls_mesh_size 30.0
-    set building_mesh_size 3.0
-    GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Inlet lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Outlet lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Top_Wall lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Bottom_Wall lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Lines $building_mesh_size {*}[GiD_EntitiesGroups get InterfaceFluid lines] escape escape
-    GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
-    Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
+    # set fluid_mesh_size 30.0
+    # set walls_mesh_size 30.0
+    # set building_mesh_size 3.0
+    # GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Inlet lines] escape escape
+    # GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Outlet lines] escape escape
+    # GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Top_Wall lines] escape escape
+    # GiD_Process Mescape Meshing AssignSizes Lines $walls_mesh_size {*}[GiD_EntitiesGroups get Bottom_Wall lines] escape escape
+    # GiD_Process Mescape Meshing AssignSizes Lines $building_mesh_size {*}[GiD_EntitiesGroups get InterfaceFluid lines] escape escape
+    # GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size [GiD_EntitiesGroups get Fluid surfaces] escape escape
+    # Kratos::Event_BeforeMeshGeneration $fluid_mesh_size
 }
 
 
@@ -113,32 +112,46 @@ proc ::CompressibleFluid::examples::SodShockTube::TreeAssignation2D {args} {
     if {$nd eq "3D"} { set condtype surface }
 
     # Monolithic solution strategy set
-    spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
+    # spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
 
     # Fluid Parts
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian Material Air]
-    spdAux::SetValuesOnBaseNode $fluidNode $props
+    # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian Material Air]
+    # spdAux::SetValuesOnBaseNode $fluidNode $props
+
+    set initial_conditions [spdAux::getRoute "CFNodalConditions"]
+    # Fluid density
+    set fluid_density "$initial_conditions/condition\[@n='DENSITY'\]"
+    set initial_density_node [customlib::AddConditionGroupOnXPath $fluid_density Fluid]
+    $initial_density_node setAttribute ov surface
+    set props [list ByFunction true function_value "1.0 if x < 0.5 else 0.125"]
+    spdAux::SetValuesOnBaseNode $initial_density_node $props
+
+    set fluid_energy "$initial_conditions/condition\[@n='TOTAL_ENERGY'\]"
+    set initial_energy_node [customlib::AddConditionGroupOnXPath $fluid_energy Fluid]
+    $initial_energy_node setAttribute ov surface
+    set props [list ByFunction true function_value "2.5 if x < 0.5 else 0.25"]
+    spdAux::SetValuesOnBaseNode $initial_energy_node $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
-    ::CompressibleFluid::examples::ErasePreviousIntervals
-
-    # Fluid Inlet
-    ::CompressibleFluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 10.0} true "25.0*t/10.0"
-    ::CompressibleFluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 10.0 end End} false 25.0
-
-    # Fluid Outlet
-    set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-    set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
-    $outletNode setAttribute ov $condtype
-    set props [list value 0.0]
-    spdAux::SetValuesOnBaseNode $outletNode $props
 
     # Fluid Conditions
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Top_Wall] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Bottom_Wall] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" InterfaceFluid] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Top] setAttribute ov $condtype
+    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Bottom] setAttribute ov $condtype
+
+    set momentum "$fluidConditions/condition\[@n='MomentumConstraints$nd'\]"
+    foreach gr [list Left Right] {
+        GiD_Groups create "$gr//Total"
+        GiD_Groups edit state "$gr//Total" hidden
+        spdAux::AddIntervalGroup $gr "$gr//Total"
+        set momentum_node [customlib::AddConditionGroupOnXPath $momentum "$gr//Total"]
+        $momentum_node setAttribute ov $condtype
+        [$momentum_node selectNodes "./value\[@n = 'selector_component_X'\]"] setAttribute v "Not"
+    }
+
+spdAux::RequestRefresh
+return ""
 
     # Time parameters
     set parameters [list EndTime 40.0 DeltaTime 0.05]

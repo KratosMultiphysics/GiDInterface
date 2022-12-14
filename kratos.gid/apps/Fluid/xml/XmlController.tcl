@@ -68,7 +68,6 @@ proc ::Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true nam
     set interval_name [dict get $interval_data name]
     if {[write::isBooleanTrue [dict get $interval_data new]]} {
         spdAux::CreateInterval $interval_name [dict get $interval_data ini] [dict get $interval_data end]
-
     }
     GiD_Groups create "$base_group_name//$interval_name"
     GiD_Groups edit state "$base_group_name//$interval_name" hidden
