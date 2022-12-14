@@ -59,11 +59,11 @@ proc ::CompressibleFluid::xml::CustomTree { args } {
     if {$nDim ne "3D"} {
         set xpath "[spdAux::getRoute CFBC]/condition\[@n='MomentumConstraints2D'\]"
         if {[$root selectNodes "$xpath"] ne ""} {
-            [$momentum_node selectNodes "./value\[@n = 'selector_component_Z'\]"] setAttribute v "Not"
+            [$root selectNodes "$xpath/value\[@n = 'selector_component_Z'\]"] setAttribute v "Not"
         }
         set xpath "[spdAux::getRoute FLNodalConditions]/condition\[@n='MOMENTUM'\]"
         if {[$root selectNodes "$xpath"] ne ""} {
-            [$momentum_node selectNodes "./value\[@n = 'selector_component_Z'\]"] setAttribute v "Not"
+            [$root selectNodes "$xpath/value\[@n = 'selector_component_Z'\]"] setAttribute v "Not"
         }
     }
 }
