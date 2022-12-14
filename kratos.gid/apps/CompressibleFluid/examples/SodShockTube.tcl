@@ -12,8 +12,8 @@ proc ::CompressibleFluid::examples::SodShockTube::Init {args} {
 
     Kratos::ResetModel
     DrawGeometry$::Model::SpatialDimension
-    return ""
     AssignGroups$::Model::SpatialDimension
+    return ""
     AssignMeshSizes$::Model::SpatialDimension
     TreeAssignation$::Model::SpatialDimension
 
@@ -35,7 +35,7 @@ proc ::CompressibleFluid::examples::SodShockTube::DrawGeometry2D {args} {
 
     # Geometry creation
     ## Points ##
-    set coordinates [list {0 0 0} {0.5 0 0} {0.5 0.1 0} {0 0.1 0} {1 0 0} {1 0.1 0}]
+    set coordinates [list {0 0 0} {1 0 0} {1 0.1 0} {0 0.1 0} ]
     foreach point $coordinates {
         lassign $point x y z
         GiD_Geometry create point append Fluid $x $y $z
@@ -46,16 +46,9 @@ proc ::CompressibleFluid::examples::SodShockTube::DrawGeometry2D {args} {
     GiD_Geometry create line append stline Fluid 2 3
     GiD_Geometry create line append stline Fluid 3 4
     GiD_Geometry create line append stline Fluid 4 1
-    GiD_Geometry create line append stline Fluid 2 5
-    GiD_Geometry create line append stline Fluid 5 6
-    GiD_Geometry create line append stline Fluid 6 3
-
-        
 
     ## Surface ##
     GiD_Process Mescape Geometry Create NurbsSurface 1 2 3 4 escape escape
-    GiD_Process Mescape Geometry Create NurbsSurface 2 5 6 7 escape escape
-    
 }
 
 
@@ -66,25 +59,22 @@ proc ::CompressibleFluid::examples::SodShockTube::AssignGroups2D {args} {
     GiD_Groups edit color Fluid "#26d1a8ff"
     GiD_EntitiesGroups assign Fluid surfaces 1
 
-    GiD_Groups create Inlet
-    GiD_Groups edit color Inlet "#e0210fff"
-    GiD_EntitiesGroups assign Inlet lines 8
+    GiD_Groups create Left
+    GiD_Groups edit color Left "#e0210fff"
+    GiD_EntitiesGroups assign Left lines 4
 
-    GiD_Groups create Outlet
-    GiD_Groups edit color Outlet "#42eb71ff"
-    GiD_EntitiesGroups assign Outlet lines 6
+    GiD_Groups create Right
+    GiD_Groups edit color Right "#42eb71ff"
+    GiD_EntitiesGroups assign Right lines 2
 
-    GiD_Groups create Top_Wall
-    GiD_Groups edit color Top_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Top_Wall lines 7
+    GiD_Groups create Top
+    GiD_Groups edit color Top "#3b3b3bff"
+    GiD_EntitiesGroups assign Top lines 3
 
-    GiD_Groups create Bottom_Wall
-    GiD_Groups edit color Bottom_Wall "#3b3b3bff"
-    GiD_EntitiesGroups assign Bottom_Wall lines {1 5}
+    GiD_Groups create Bottom
+    GiD_Groups edit color Bottom "#3b3b3bff"
+    GiD_EntitiesGroups assign Bottom lines 1
 
-    GiD_Groups create InterfaceFluid
-    GiD_Groups edit color InterfaceFluid "#3b3b3bff"
-    GiD_EntitiesGroups assign InterfaceFluid lines {2 3 4}
 }
 proc ::CompressibleFluid::examples::SodShockTube::AssignGroups3D {args} {
     # To be implemented
@@ -159,7 +149,7 @@ proc ::CompressibleFluid::examples::SodShockTube::TreeAssignation2D {args} {
     set parameters [list OutputControlType time OutputDeltaTime 1.0]
     set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
     spdAux::SetValuesOnBasePath $xpath $parameters
-    
+
     # Parallelism
     set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
     set xpath [spdAux::getRoute "Parallelization"]
