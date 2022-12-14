@@ -116,9 +116,9 @@
           kratos_module   = "PfemFluidDynamicsApplication"
           type            = "Fluid">
         <inputs>
-            <parameter n="DENSITY"                          pn="Density"                    unit_magnitude="Density"            units="kg/m^3"      v="1000"/>
+            <parameter n="DENSITY"                          pn="Density"                    unit_magnitude="Density"            units="kg/m^3"      v="1600"/>
             <parameter n="TEMPERATURE_vs_DENSITY"           pn="Density table"              type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
-            <parameter n="GRAIN_DENSITY"                    pn="Grain Density"              unit_magnitude="P"                  units=""            v="0.5"/>
+            <parameter n="GRAIN_DENSITY"                    pn="Grain Density"              unit_magnitude="P"                  units=""            v="2500"/>
 			<parameter n="TEMPERATURE_vs_GRAIN_DENSITY"     pn="Grain Density table"        type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
             <parameter n="STATIC_FRICTION"                  pn="Static Friction"            unit_magnitude="P"                  units=""            v="0.3"/>
 			<parameter n="TEMPERATURE_vs_STATIC_FRICTION"   pn="Static Friction table"      type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
@@ -147,9 +147,9 @@
           kratos_module   = "PfemFluidDynamicsApplication"
           type            = "Fluid">
         <inputs>
-            <parameter n="DENSITY"                          pn="Density"                    unit_magnitude="Density"            units="kg/m^3"      v="1000"/>
+            <parameter n="DENSITY"                          pn="Density"                    unit_magnitude="Density"            units="kg/m^3"      v="1600"/>
             <parameter n="TEMPERATURE_vs_DENSITY"           pn="Density table"              type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
-            <parameter n="GRAIN_DENSITY"                    pn="Grain Density"              unit_magnitude="P"                  units=""            v="0.5"/>
+            <parameter n="GRAIN_DENSITY"                    pn="Grain Density"              unit_magnitude="P"                  units=""            v="2500"/>
 			<parameter n="TEMPERATURE_vs_GRAIN_DENSITY"     pn="Grain Density table"        type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
             <parameter n="STATIC_FRICTION"                  pn="Static Friction"            unit_magnitude="P"                  units=""            v="0.3"/>
 			<parameter n="TEMPERATURE_vs_STATIC_FRICTION"   pn="Static Friction table"      type="tablefile"                                        v="- No file - (add files using File handler toolbar)"/>
