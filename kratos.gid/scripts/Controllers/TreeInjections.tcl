@@ -689,7 +689,7 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
     }
     foreach nc $nodal_conditions {
 
-        if {[$nc getAttribute is_historical] eq "False"} {
+        if {[write::isBooleanFalse [$nc getAttribute is_historical]]} {
             # Variables are historical by default for backwards compatibility purposes
             continue
         }

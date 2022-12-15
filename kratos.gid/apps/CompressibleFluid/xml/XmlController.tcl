@@ -55,6 +55,7 @@ proc ::CompressibleFluid::xml::CustomTree { args } {
         gid_groups_conds::addF "$xpath/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
     }
 
+    # If case is 2D, set Z variables to Not
     set nDim $::Model::SpatialDimension
     if {$nDim ne "3D"} {
         set xpath "[spdAux::getRoute CFBC]/condition\[@n='MomentumConstraints2D'\]"
@@ -66,6 +67,8 @@ proc ::CompressibleFluid::xml::CustomTree { args } {
             [$root selectNodes "$xpath/value\[@n = 'selector_component_Z'\]"] setAttribute v "Not"
         }
     }
+
+    
 }
 
 proc ::CompressibleFluid::xml::ProcHideIfElement { domNode list_elements } {
