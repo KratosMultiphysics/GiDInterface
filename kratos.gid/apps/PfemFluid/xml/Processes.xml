@@ -7,4 +7,14 @@
 
         </inputs>
     </Process>
+
+        <Process n="LagangianRotationProcess" pn="AngularVelocity" python_module="lagrangian_rotation_process" kratos_module="KratosMultiphysics.PfemFluidDynamicsApplication">
+        <inputs>
+            <parameter n="angular_velocity" pn="Angular Velocity Module" type="double"  v="0.0"  has_units="1"/>
+            <parameter n="rotation_axis_initial_point" pn="Rotation Axis First Point" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0"  has_units="1"/>
+            <parameter n="rotation_axis_final_point" pn="Rotation Axis Second Point" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" has_units="1"/>
+            <parameter n="initial_time" pn="InitialTime" type="double"  v="0.0"  has_units="1"/>
+        </inputs>
+    </Process>
+
 </ProcessList>
