@@ -6,10 +6,10 @@ namespace eval CompressibleFluid::xml {
 proc ::CompressibleFluid::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $::CompressibleFluid::dir
-    
+
     set FluidXML  "$::Fluid::dir/xml"
     set CommonXML "../../Common/xml"
-    
+
     Model::getSolutionStrategies Strategies.xml
     Model::getElements           Elements.xml
     Model::getMaterials          Materials.xml
@@ -17,10 +17,10 @@ proc ::CompressibleFluid::xml::Init { } {
     Model::ForgetNodalConditions
     Model::getNodalConditions    "$FluidXML/NodalConditions.xml"
     Model::getNodalConditions    NodalConditions.xml
-    
+
     Model::ForgetConstitutiveLaws
     Model::getConstitutiveLaws   ConstitutiveLaws.xml
-    
+
     Model::getProcesses          "$CommonXML/Processes.xml"
     Model::getProcesses          "$FluidXML/Processes.xml"
 
@@ -46,7 +46,7 @@ proc ::CompressibleFluid::xml::CustomTree { args } {
     if {[$root selectNodes "$xpath/condition\[@n='Drag'\]"] eq ""} {
         gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
     }
-    
+
     customlib::ProcessIncludes $::Kratos::kratos_private(Path)
     spdAux::parseRoutes
 
@@ -54,6 +54,21 @@ proc ::CompressibleFluid::xml::CustomTree { args } {
     if {[$root selectNodes "$xpath/container\[@n='OnNodes'\]"] ne ""} {
         gid_groups_conds::addF "$xpath/container\[@n='OnNodes'\]" value [list n REACTION pn "Reaction" v No values "Yes,No"]
     }
+
+    # If case is 2D, set Z variables to Not
+    set nDim $::Model::SpatialDimension
+    if {$nDim ne "3D"} {
+        set xpath "[spdAux::getRoute CFBC]/condition\[@n='MomentumConstraints2D'\]"
+        if {[$root selectNodes "$xpath"] ne ""} {
+            [$root selectNodes "$xpath/value\[@n = 'selector_component_Z'\]"] setAttribute v "Not"
+        }
+        set xpath "[spdAux::getRoute FLNodalConditions]/condition\[@n='MOMENTUM'\]"
+        if {[$root selectNodes "$xpath"] ne ""} {
+            [$root selectNodes "$xpath/value\[@n = 'selector_component_Z'\]"] setAttribute v "Not"
+        }
+    }
+
+    
 }
 
 proc ::CompressibleFluid::xml::ProcHideIfElement { domNode list_elements } {

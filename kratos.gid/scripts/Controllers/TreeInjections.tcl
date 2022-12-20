@@ -27,7 +27,8 @@ proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
     foreach {prop val} $prop_value_pairs {
         set propnode [$base_path selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
-            $propnode setAttribute v $val
+            gid_groups_conds::modify_value_node $propnode $val
+            # $propnode setAttribute v $val
             catch {get_domnode_attribute $propnode dict}
         } else {
             W "Warning - Couldn't find property $prop"
@@ -688,7 +689,7 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
     }
     foreach nc $nodal_conditions {
 
-        if {[$nc getAttribute is_historical] eq "False"} {
+        if {[write::isBooleanFalse [$nc getAttribute is_historical]]} {
             # Variables are historical by default for backwards compatibility purposes
             continue
         }
@@ -1008,9 +1009,8 @@ proc spdAux::injectPartsByElementType {domNode args} {
         set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
         if {[llength $ov] == 0} {set ov "point,line,surface,volume"}
         set ovm "node,element"
-        set element_type_pn [string map {_ " "} $element_type]
         #if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
-        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type_pn}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
+        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
             <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
                     <dependencies node=\"../value\[@n!='Material'\]\" actualize=\"1\" />
             </value>

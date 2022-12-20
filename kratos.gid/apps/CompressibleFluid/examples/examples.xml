@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Fluid" name="Fluid examples">
-    <Example id="SodShockTube2D" app="SodShockTube2D" logo="SodShockTube2D.png" name="Sod shock tube 2D" dim="2D" cmd="::CompressibleFluid::examples::SodShockTube::Init">
-        <Description>This example applies an inlet condition to the air surrounding a 2D building. 
+    <Example id="SodShockTube2D" app="CompressibleFluid" logo="logo.png" name="Sod shock tube 2D" dim="2D" cmd="::CompressibleFluid::examples::SodShockTube::Init">
+        <Description>This example applies an inlet condition to the air surrounding a 2D building.
         The default mesh is made of 4.000 trianglular elements, and the calculation generates results for 800 timesteps.
         - Size of model: 0.4 MB
         - Time: Avg calulation time: 2 minutes
