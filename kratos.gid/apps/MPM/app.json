@@ -16,6 +16,7 @@
     "script_files": [
         "start.tcl",
         "examples/examples.tcl",
+        "examples/StaticCantileverBeam.tcl",
         "examples/CantileverBeam.tcl",
         "examples/FallingSandBall.tcl",
         "examples/GranularFlow.tcl",
