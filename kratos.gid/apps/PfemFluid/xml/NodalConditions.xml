@@ -29,4 +29,8 @@
   <NodalConditionItem n="INLET" pn="Inlet" ProcessName="AssignInletProcess" VariableName="VELOCITY" Interval="Total"
 		      unit_magnitude="Velocity" units="m/s" App="Pfem" kratos_module="DelaunayMeshingApplication" ov="[CheckGeometry 2]">
   </NodalConditionItem>
+  <NodalConditionItem n="ANGULAR_VELOCITY" pn="Angular velocity" ProcessName="LagangianRotationProcess" VariableName="ANGULAR_VELOCITY" Interval="Total"
+		     App="PfemFluid" state="CheckNodalConditionStatePFEM" ov="[CheckGeometry 2]">
+  </NodalConditionItem>
+
 </NodalConditionList>
