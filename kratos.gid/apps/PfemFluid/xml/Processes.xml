@@ -13,7 +13,6 @@
             <parameter n="angular_velocity" pn="Angular Velocity Module" type="double"  v="0.0"  has_units="1"/>
             <parameter n="rotation_axis_initial_point" pn="Rotation Axis First Point (x,y,z)" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"  has_units="1" dimension="3"/>
             <parameter n="rotation_axis_final_point"  pn="Rotation Axis Second Point (x,y,z)" type="inline_vector" vectorType="double" function="0"  v="0.0,0.0,0.0" has_units="1" dimension="3"/>
-            <parameter n="initial_time" pn="InitialTime" type="double"  v="0.0"  has_units="1"/>
         </inputs>
     </Process>
 
