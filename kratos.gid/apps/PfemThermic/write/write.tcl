@@ -158,7 +158,7 @@ proc PfemThermic::write::getPropertiesList {parts_un {write_claw_name "True"} {m
             set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
             if {$constitutive_law ne ""} {
                 set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
-                set tableList [list "TEMPERATURE_vs_DENSITY" "TEMPERATURE_vs_VISCOSITY" "TEMPERATURE_vs_YIELDSHEAR" "TEMPERATURE_vs_YOUNG" "TEMPERATURE_vs_POISSON" "TEMPERATURE_vs_CONDUCTIVITY" "TEMPERATURE_vs_SPECIFIC_HEAT"]
+                set tableList [list "TEMPERATURE_vs_DENSITY" "TEMPERATURE_vs_VISCOSITY" "TEMPERATURE_vs_YIELDSHEAR" "TEMPERATURE_vs_INTERNAL_FRICTION_ANGLE"  "TEMPERATURE_vs_COHESION"  "TEMPERATURE_vs_GRAIN_DENSITY"  "TEMPERATURE_vs_STATIC_FRICTION"  "TEMPERATURE_vs_DYNAMIC_FRICTION"  "TEMPERATURE_vs_YOUNG" "TEMPERATURE_vs_POISSON" "TEMPERATURE_vs_CONDUCTIVITY" "TEMPERATURE_vs_SPECIFIC_HEAT"]
                 set variables_dict [dict create]
                 set tables_dict [dict create]
                 foreach prop [dict keys [dict get $mat_dict $submodelpart_id] ] {
@@ -202,6 +202,16 @@ proc PfemThermic::write::GetTable { prop fileName } {
         dict set table output_variable "DYNAMIC_VISCOSITY"
     } elseif {$prop eq "TEMPERATURE_vs_YIELDSHEAR"} {
         dict set table output_variable "YIELD_SHEAR"
+    } elseif {$prop eq "TEMPERATURE_vs_INTERNAL_FRICTION_ANGLE"} {
+        dict set table output_variable "INTERNAL_FRICTION_ANGLE"
+    } elseif {$prop eq "TEMPERATURE_vs_COHESION"} {
+        dict set table output_variable "COHESION"
+    } elseif {$prop eq "TEMPERATURE_vs_GRAIN_DENSITY"} {
+        dict set table output_variable "GRAIN_DENSITY"
+    } elseif {$prop eq "TEMPERATURE_vs_STATIC_FRICTION"} {
+        dict set table output_variable "STATIC_FRICTION"
+    } elseif {$prop eq "TEMPERATURE_vs_DYNAMIC_FRICTION"} {
+        dict set table output_variable "DYNAMIC_FRICTION"
     } elseif {$prop eq "TEMPERATURE_vs_YOUNG"} {
         dict set table output_variable "YOUNG_MODULUS"
     } elseif {$prop eq "TEMPERATURE_vs_POISSON"} {
@@ -211,6 +221,7 @@ proc PfemThermic::write::GetTable { prop fileName } {
     } elseif {$prop eq "TEMPERATURE_vs_SPECIFIC_HEAT"} {
         dict set table output_variable "SPECIFIC_HEAT"
     }
+
 
     set fp [open $fileName r]
     set file_data [read $fp]

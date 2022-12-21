@@ -4,9 +4,9 @@
     <include n="Parts" active="1" path="apps/MPM/xml/Parts.spd"/>
     <include n="BoundaryConditions" active="1" path="apps/MPM/xml/BoundaryConditions.spd"/>
     <include n="Processes" active="0" path="apps/Structural/xml/Processes.spd"/>
-    <include n="Intervals" active="0" path="apps/Common/xml/Intervals.spd"/>
-    <include n="SolutionStrategy" active="1" path="apps/MPM/xml/SolutionStrategy.spd"/>
-    <include n="Results" un="Results,STResults" active="1" path="apps/MPM/xml/Results.spd"/>
+    <include n="SolutionStrategy" active="1" path="apps/Structural/xml/SolutionStrategy.spd"/>
+    <include n="Gravity" active="1" path="apps/MPM/xml/Gravity.spd"/>
+    <include n="Results" un="Results,STResults" active="1" path="apps/Common/xml/Results.spd"/>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
     <include n="materials" active="1" path="apps/Structural/xml/Materials.spd"/>
   </container>
