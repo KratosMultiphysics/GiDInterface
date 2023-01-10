@@ -27,10 +27,33 @@ proc ::Fluid::write::GetProblemData_Dict { } {
 proc ::Fluid::write::GetProcesses_Dict { } {
     set processesDict [dict create]
     dict set processesDict initial_conditions_process_list [write::getConditionsParametersDict [::Fluid::GetUniqueName nodal_conditions] "Nodal"]
-    dict set processesDict boundary_conditions_process_list [write::getConditionsParametersDict [::Fluid::GetUniqueName conditions]]
+    set boundary_conditions_process_list [process_special_conditions [write::getConditionsParametersDict [::Fluid::GetUniqueName conditions]]]
+    dict set processesDict boundary_conditions_process_list $boundary_conditions_process_list
     dict set processesDict gravity [list [getGravityProcessDict] ]
     dict set processesDict auxiliar_process_list [getAuxiliarProcessList]
     return $processesDict
+}
+
+proc ::Fluid::write::process_special_conditions { list_of_processes } {
+    set new_list [list ]
+    foreach process $list_of_processes {
+        # Wall law has nested parameters
+        if {[dict get $process process_name] eq "ApplyWallLawProcess" } {
+            if {[dict get $process Parameters wall_model] eq "navier_slip"} {
+                dict set process Parameters wall_model_settings slip_length [dict get $process Parameters slip_length]
+                dict unset process Parameters y_wall
+                dict unset process Parameters slip_length
+            }
+            if {[dict get $process Parameters wall_model] eq "linear_log"} {
+                dict set process Parameters wall_model_settings y_wall [dict get $process Parameters y_wall]
+                dict unset process Parameters y_wall
+                dict unset process Parameters slip_length
+            }
+        }
+        lappend new_list $process
+    }
+    return $new_list
+    
 }
 
 proc ::Fluid::write::writeParametersEvent { } {
