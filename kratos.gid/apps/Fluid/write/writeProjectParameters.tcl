@@ -41,14 +41,12 @@ proc ::Fluid::write::process_special_conditions { list_of_processes } {
         if {[dict get $process process_name] eq "ApplyWallLawProcess" } {
             if {[dict get $process Parameters wall_model] eq "navier_slip"} {
                 dict set process Parameters wall_model_settings slip_length [dict get $process Parameters slip_length]
-                dict unset process Parameters y_wall
-                dict unset process Parameters slip_length
             }
             if {[dict get $process Parameters wall_model] eq "linear_log"} {
                 dict set process Parameters wall_model_settings y_wall [dict get $process Parameters y_wall]
-                dict unset process Parameters y_wall
-                dict unset process Parameters slip_length
             }
+            dict unset process Parameters y_wall
+            dict unset process Parameters slip_length
         }
         lappend new_list $process
     }
