@@ -70,6 +70,22 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
+  <ConditionItem n="WallLaw2D" pn="Wall law" ImplementedInFile="" Interval="False" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid" ElementType="Line" ProcessName="ApplyWallLawProcess" help="">
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName=""/>
+    </TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+  <ConditionItem n="WallLaw3D" pn="Wall law" ImplementedInFile="" Interval="False" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="True" App="Fluid" ElementType="Surface" ProcessName="ApplyWallLawProcess" help="">
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName=""/>
+    </TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
   <ConditionItem n="VelocityConstraints2D" pn="Custom velocity constraints" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" SkinConditions="False" ElementType="Line" App="Fluid" ProcessName="AssignVectorVariableProcess" VariableName="VELOCITY" help="" units="m/s" unit_magnitude="Velocity">
     <TopologyFeatures></TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
