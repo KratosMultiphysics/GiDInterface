@@ -313,7 +313,12 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
         }
         switch $type {
             "inline_vector" {
-                set ndim [string index $::Model::SpatialDimension 0]
+                set param_ndim [$param getAttribute "dimension"]
+                if {$param_ndim eq ""} {
+                    set ndim [string index $::Model::SpatialDimension 0]
+                } else {
+                    set ndim $param_ndim
+                }
                 if {[string is double $v]} {
                     set v [string repeat "${v}," $ndim]
                 }

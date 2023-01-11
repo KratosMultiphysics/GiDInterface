@@ -105,6 +105,9 @@ proc PfemFluid::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v No NodalResults VELOCITY_REACTION
     spdAux::SetValueOnTreeItem v No NodalResults DISPLACEMENT_REACTION
 
+    set lagrangian_rotation_process_result_node [[$app_root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'ANGULAR_VELOCITY'\]"]
+    if {$lagrangian_rotation_process_result_node ne "" } {$lagrangian_rotation_process_result_node delete}
+
     set inlet_result_node [[$app_root parent] selectNodes "[spdAux::getRoute NodalResults]/value\[@n = 'INLET'\]"]
     if {$inlet_result_node ne "" } {$inlet_result_node delete}
 
@@ -124,7 +127,7 @@ proc PfemFluid::xml::CustomTree { args } {
 
 proc PfemFluid::xml::ProcCheckNodalConditionStatePFEM {domNode args} {
     set domain_type [write::getValue PFEMFLUID_DomainType]
-    set fluid_exclusive_conditions [list "VELOCITY" "INLET" "PRESSURE"]
+    set fluid_exclusive_conditions [list "VELOCITY" "INLET" "ANGULAR_VELOCITY" "PRESSURE"]
     set current_condition [$domNode @n]
     if {$domain_type eq "Fluids" && $current_condition ni $fluid_exclusive_conditions} {
         return hidden

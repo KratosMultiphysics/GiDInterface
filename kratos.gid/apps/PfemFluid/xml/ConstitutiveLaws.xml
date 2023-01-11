@@ -29,7 +29,7 @@
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
             <parameter n="FLOW_INDEX" pn="Flow index" unit_magnitude="" units="" v="1"/>
             <parameter n="YIELD_SHEAR" pn="Yield shear" unit_magnitude="P" units="Pa" v="100"/>
-            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the lower is the regularization."/>
+            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the better is the approximation of the curve."/>
         </inputs>
         <outputs>
         </outputs>
@@ -42,7 +42,7 @@
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
             <parameter n="FLOW_INDEX" pn="Flow index" unit_magnitude="" units="" v="1"/>
             <parameter n="YIELD_SHEAR" pn="Yield shear" unit_magnitude="P" units="Pa" v="100"/>
-            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the lower is the regularization."/>
+            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the better is the approximation of the curve."/>
         </inputs>
         <outputs>
         </outputs>
@@ -55,7 +55,7 @@
             <parameter n="COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0" help="Set the cohesion."/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
-            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the lower is the regularization."/>
+            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the better is the approximation of the curve."/>
         </inputs>
         <outputs>
         </outputs>
@@ -68,13 +68,13 @@
             <parameter n="COHESION" pn="Cohesion" unit_magnitude="P" units="Pa" v="0" help="Set the cohesion."/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
-            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the lower is the regularization."/>
+            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the better is the approximation of the curve."/>
         </inputs>
         <outputs>
         </outputs>
     </CLaw>
 
-    <CLaw n="PapanastasiouMuIRheology2DLaw" pn="Mu(I) Rheology"  help="Dense Incompressible granular material" Dimension="2D" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
+    <CLaw n="MuIRheology2DLaw" pn="Mu(I) Rheology"  help="Dense Incompressible granular material" Dimension="2D" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1600"/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
@@ -83,13 +83,13 @@
             <parameter n="INERTIAL_NUMBER_ZERO" pn="Inertial Number Zero" unit_magnitude="" units="" v="0.5"/>
             <parameter n="GRAIN_DIAMETER" pn="Grain Diameter" unit_magnitude="" units="m" v="0.001"/>
             <parameter n="GRAIN_DENSITY" pn="Grain Density" unit_magnitude="" units="kg/m^3" v="2500"/>
-            <parameter n="REGULARIZATION_COEFFICIENT" pn="Regularization Coefficient" unit_magnitude="" units="1/s" v="0.01" help="The smaller is, the lower is the regularization."/>
+            <parameter n="REGULARIZATION_COEFFICIENT" pn="Regularization Coefficient" unit_magnitude="" units="1/s" v="0.01" help="The lower is, the better is the approximation of the curve."/>
         </inputs>
         <outputs>
         </outputs>
     </CLaw>
 
-     <CLaw n="PapanastasiouMuIRheology3DLaw" pn="Mu(I) Rheology"  help="Dense Incompressible granular material" Dimension="3D" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
+     <CLaw n="MuIRheology3DLaw" pn="Mu(I) Rheology"  help="Dense Incompressible granular material" Dimension="3D" OutputMode="Parameters" App="Pfem" type="Fluid" kratos_module="PfemFluidDynamicsApplication">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1600"/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
@@ -98,7 +98,7 @@
             <parameter n="INERTIAL_NUMBER_ZERO" pn="Inertial Number Zero" unit_magnitude="" units="" v="0.5"/>
             <parameter n="GRAIN_DIAMETER" pn="Grain Diameter" unit_magnitude="" units="m" v="0.001"/>
             <parameter n="GRAIN_DENSITY" pn="Grain Density" unit_magnitude="" units="kg/m^3" v="2500"/>
-            <parameter n="REGULARIZATION_COEFFICIENT" pn="Regularization Coefficient" unit_magnitude="" units="1/s" v="0.01" help="The smaller is, the lower is the regularization."/>
+            <parameter n="REGULARIZATION_COEFFICIENT" pn="Regularization Coefficient" unit_magnitude="" units="1/s" v="0.01" help="The lower is, the better is the approximation of the curve."/>
         </inputs>
         <outputs>
         </outputs>

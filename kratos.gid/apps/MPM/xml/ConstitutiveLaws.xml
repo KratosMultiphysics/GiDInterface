@@ -39,7 +39,7 @@
   </CLaw>
 
 
-  <CLaw n="LinearElasticIsotropic3DLaw" pn="Linear Elastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication" help="Linear Elastic Behaviour in 3D" Dimension="3D"  App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication"> 
+  <CLaw n="LinearElasticIsotropic3DLaw" pn="Linear Elastic" Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication" help="Linear Elastic Behaviour in 3D" Dimension="3D"  App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication">
 
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -58,7 +58,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
+
   <CLaw n="HyperElasticNeoHookeanAxisym2DLaw" pn="Hyperelastic NeoHookean" Type="Axisymmetric" LargeDeformation="False" kratos_module="ParticleMechanicsApplication"
   help="Hyperelastic Behaviour in 2D Axis-symmetric" Dimension="2Da" App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication" >
 
@@ -79,7 +79,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
+
    <CLaw n="HyperElasticNeoHookeanPlaneStrainUP2DLaw" pn="Hyperelastic NeoHookean (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Hyperelastic Behaviour in 2D Plane Strain for the mixed formulation" Dimension="2D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -88,7 +88,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
+
 
     <CLaw n="HyperElasticNeoHookeanUP3DLaw" pn="Hyperelastic NeoHookean " Type="3D" LargeDeformation="False" kratos_module="ParticleMechanicsApplication" help="HyperElastic Behaviour in 3D for mixed formulation" Dimension="3D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
@@ -98,8 +98,8 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
-  
+
+
   <!-- Mohr Coulomb -->
   <CLaw n="HenckyMCPlasticPlaneStrain2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticPlaneStrain2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication" help="Mohr Coulomb Plasticity Behaviour in 2D Plane Strain" Dimension="2D"  App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication">
 
@@ -113,7 +113,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
+
   <CLaw n="HenckyMCPlasticAxisym2DLaw" pn="Mohr Coulomb" class="HenckyMCPlasticAxisym2DLaw" Type="Axisymmetric" LargeDeformation="True" kratos_module="ParticleMechanicsApplication"
   help="Mohr Coulomb Plasticity Behaviour in 2D Axis-symmetric" Dimension="2Da" App="MPM" FormulationType="Irreducible"  ImplementedInApplication="ParticleMechanicsApplication" >
     <inputs>
@@ -139,7 +139,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
+
   <CLaw n="HenckyMCPlasticPlaneStrainUP2DLaw" pn="Mohr Coulomb " class="HenckyMCPlasticPlaneStrainUP2DLaw" Type="2D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication" help="Mohr Coulomb Plasticity Behaviour in 2D Plane Strain for mixed formulation" Dimension="2D"  App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="7850"/>
@@ -151,7 +151,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
+
    <CLaw n="HenckyMCPlasticUP3DLaw" pn="Mohr Coulomb " class="HenckyMCPlasticUP3DLaw" Type="3D" LargeDeformation="True" kratos_module="ParticleMechanicsApplication" help="Mohr Coulomb Plasticity Behaviour in 3D" Dimension="3D"  App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
 
     <inputs>
@@ -260,8 +260,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
-  
+
    <CLaw n="DispNewtonianFluidPlaneStrain2DLaw" pn="Newtonian Fluid (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
@@ -270,7 +269,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
+
    <CLaw n="DispNewtonianFluid3DLaw" pn="Newtonian Fluid (Plane Strain)" Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 3D Plane Strain" Dimension="3D" ProductionReady="ProductionReady" App="MPM" FormulationType="Irreducible" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
@@ -279,9 +278,7 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
-  
-    <CLaw n="DispNewtonianFluidPlaneStrainUP2DLaw" pn="Newtonian Fluid (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
+  <CLaw n="DispNewtonianFluidPlaneStrainUP2DLaw" pn="Newtonian Fluid (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 2D Plane Strain" Dimension="2D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
       <parameter n="BULK_MODULUS" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2e6" />
@@ -289,8 +286,8 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
-  
-   <CLaw n="DispNewtonianFluidUP3DLaw" pn="Newtonian Fluid (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 3D Plane Strain" Dimension="3D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
+
+  <CLaw n="DispNewtonianFluidUP3DLaw" pn="Newtonian Fluid (Plane Strain) " Type="PlaneStrain" LargeDeformation="False"  kratos_module="ParticleMechanicsApplication" help="Newtonian Fluid in 3D Plane Strain" Dimension="3D" ProductionReady="ProductionReady" App="MPM" FormulationType="Mixed" ImplementedInApplication="ParticleMechanicsApplication">
     <inputs>
       <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
       <parameter n="BULK_MODULUS" pn="Bulk Modulus" unit_magnitude="P" units="Pa" v="2e6" />
@@ -298,4 +295,5 @@
     </inputs>
     <outputs></outputs>
   </CLaw>
+
 </ConstitutiveLaws>

@@ -11,5 +11,6 @@ proc ::MPM::examples::ErasePreviousIntervals { } {
     foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
         if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
     }
+
 }
 

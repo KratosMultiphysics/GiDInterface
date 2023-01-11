@@ -30,6 +30,10 @@ proc PfemFluid::write::Init { } {
 
 # Model Part Blocks
 proc PfemFluid::write::writeModelPartEvent { } {
+    # Validation
+    set err [Validate]
+    if {$err ne ""} {error $err}
+
     # Init data
     write::initWriteConfiguration [GetAttributes]
 
@@ -101,6 +105,15 @@ proc PfemFluid::write::writeWaveMonitorMesh {  } {
         set groupid [::write::GetWriteGroupName $groupid]
         ::write::writeGroupSubModelPart WaveMonitor $groupid "nodal"
     }
+}
+
+
+proc ::PfemFluid::write::Validate {} {
+    set err ""
+    set root [customlib::GetBaseRoot]
+
+    
+    return $err
 }
 
 
