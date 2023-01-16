@@ -12,6 +12,9 @@ proc MPM::xml::Init { } {
     Model::ForgetElements
     Model::getElements Elements.xml
 
+    Model::ForgetSolutionStrategies
+    Model::getSolutionStrategies Strategies.xml
+
     # Modify the schemes so more elements are filtered
     foreach strategy $::Model::SolutionStrategies {
         $strategy setAttribute NeedElements false
@@ -57,8 +60,8 @@ proc MPM::xml::getUniqueName {name} {
 
 proc MPM::xml::CustomTree { args } {
 
-    spdAux::SetValueOnTreeItem v "time" Results OutputControlType
-    spdAux::SetValueOnTreeItem values "time" Results OutputControlType
+#     spdAux::SetValueOnTreeItem v "time" Results OutputControlType
+#     spdAux::SetValueOnTreeItem values "time" Results OutputControlType
     spdAux::SetValueOnTreeItem v No NodalResults PARTITION_INDEX
     spdAux::SetValueOnTreeItem v "LinearSolversApplication.sparse_lu" MPMimplicitlinear_solver_settings Solver
 }
