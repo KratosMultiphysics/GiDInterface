@@ -12,7 +12,9 @@
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl",
-        "examples/SodShockTube.tcl"
+        "examples/SodShockTube.tcl",
+        "examples/Step.tcl",
+        "examples/Wedge.tcl"
     ],
     "start_script": "::CompressibleFluid::Init",
     "requeriments": {

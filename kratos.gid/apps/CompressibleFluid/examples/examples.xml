@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Fluid" name="Fluid examples">
-    <Example id="SodShockTube2D" app="CompressibleFluid" logo="logo.png" name="Sod shock tube 2D" dim="2D" cmd="::CompressibleFluid::examples::SodShockTube::Init">
-        <Description>This example applies an inlet condition to the air surrounding a 2D building.
-        The default mesh is made of 4.000 trianglular elements, and the calculation generates results for 800 timesteps.
-        - Size of model: 0.4 MB
-        - Time: Avg calulation time: 2 minutes
-        - Size with results: 250 MB
+    <Example id="SodShockTube2D" app="CompressibleFluid" logo="logo_sod.png" name="Sod shock tube 2D" dim="2D" cmd="::CompressibleFluid::examples::SodShockTube::Init">
+        <Description>Shock tube is a long tube with contant cross section, where a diaphragm separates the left and right halves that are filled with two differecnt pressures of air.
+        The gas in the left portion is higher pressure than the one on the right.
+        </Description>
+    </Example>
+    <Example id="Wedge" app="CompressibleFluid" logo="logo_wedge.png" name="Wedge 2D" dim="2D" cmd="::CompressibleFluid::examples::Wedge::Init">
+        <Description>A supersonic inviscid flow over a wedge having an angle of 21.5°. This supersonic flow will create an oblique shock over the wedge.
+        </Description>
+    </Example>
+    <Example id="Step" app="CompressibleFluid" logo="logo_step.png" name="Step 2D" dim="2D" cmd="::CompressibleFluid::examples::Step::Init">
+        <Description>This example is a classical test example dating at least back to the famous paper of Woodward and Colella: 
+        The numerical simulation of two-dimensional fluid flow with strong shocks, Journal of Computational Physics, 54, pp. 115-173 (1984).
+        The test case describes a Mach 3 flow in a wind tunnel. The tunnel is 1 length unit high and 3 length units long. 
+        The step is 0.2 length units high and is located 0.6 length units from the left-hand end of the tunnel. The walls are reflective.
         </Description>
     </Example>
 </Group>

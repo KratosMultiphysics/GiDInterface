@@ -23,7 +23,28 @@
 
 		<!-- scheme settings -->
 		<schemes>
-			<scheme n="CompressibleExplicitNS" pn="Compressible Navier-Stokes explicit scheme" help="FilterElements">
+			<scheme n="RK4" pn="RK4" help="Runge Kutta Order 4th">
+				<parameter_list>
+				</parameter_list>
+				<element_filters>
+					<filter field="n" value="CompressibleNavierStokes2D"/>
+				</element_filters>
+			</scheme>
+			<scheme n="RK3-TVD" pn="RK3-TVD" help="Runge Kutta Order 3rd - Total Variation Diminishing">
+				<parameter_list>
+				</parameter_list>
+				<element_filters>
+					<filter field="n" value="CompressibleNavierStokes2D"/>
+				</element_filters>
+			</scheme>
+			<scheme n="bfecc" pn="BFECC" help="Back and Foth Error Compensation and Correction">
+				<parameter_list>
+				</parameter_list>
+				<element_filters>
+					<filter field="n" value="CompressibleNavierStokes2D"/>
+				</element_filters>
+			</scheme>
+			<scheme n="forward_euler" pn="Forward Euler" help="Forward Euler">
 				<parameter_list>
 				</parameter_list>
 				<element_filters>
