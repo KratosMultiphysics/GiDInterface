@@ -1,7 +1,7 @@
 {
     "id": "CompressibleFluid",
     "name": "Compressible Fluid",
-    "prefix": "CF",
+    "prefix": "FL",
     "themed": false,
     "kratos_name": "FluidDynamicsApplication",
     "dimensions": [
@@ -28,12 +28,12 @@
         "wizard": false
     },
     "unique_names": {
-        "parts": "CFParts",
-        "nodal_conditions": "CFNodalConditions",
-        "conditions": "CFBC",
-        "materials": "CFMaterials",
-        "results": "CFResults",
-        "time_parameters": "CFTimeParameters"
+        "parts": "FLParts",
+        "nodal_conditions": "FLNodalConditions",
+        "conditions": "FLBC",
+        "materials": "Materials",
+        "results": "Results",
+        "time_parameters": "TimeParameters"
     },
     "write": {
         "coordinates": "all",

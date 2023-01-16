@@ -139,5 +139,20 @@
       <value n="constrained" v="0" state="hidden" />
     </DefaultValues>
   </NodalConditionItem>
+  <NodalConditionItem n="ARTIFICIAL_MASS_DIFFUSIVITY"
+                      is_historical="False"
+                      pn="Artificial dynamic viscosity"
+                      ProcessName="AssignScalarVariableProcess"
+                      VariableName="ARTIFICIAL_MASS_DIFFUSIVITY"
+                      Interval="False"
+                      unit_magnitude="L^2/T"
+                      units="m^2/s"
+                      App="CompressibleFluid"
+                      can_be_initial="false"
+                      ImplementedInApplication="FluidDynamicsApplication">
+    <DefaultValues>
+      <value n="constrained" v="0" state="hidden" />
+    </DefaultValues>
+  </NodalConditionItem>
 
 </NodalConditionList>

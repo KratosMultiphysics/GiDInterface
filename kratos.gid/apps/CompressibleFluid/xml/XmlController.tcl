@@ -38,11 +38,11 @@ proc ::CompressibleFluid::xml::CustomTree { args } {
     set results_un [::CompressibleFluid::GetUniqueName "results"]
 
     # Output control in output settings
-    spdAux::SetValueOnTreeItem v time CFResults FileLabel
-    spdAux::SetValueOnTreeItem v time CFResults OutputControlType
+    spdAux::SetValueOnTreeItem v time $results_un FileLabel
+    spdAux::SetValueOnTreeItem v time $results_un OutputControlType
 
     # Drag in output settings
-    set xpath "[spdAux::getRoute CFResults]/container\[@n='GiDOutput'\]"
+    set xpath "[spdAux::getRoute $results_un]/container\[@n='GiDOutput'\]"
     if {[$root selectNodes "$xpath/condition\[@n='Drag'\]"] eq ""} {
         gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
     }
@@ -58,7 +58,7 @@ proc ::CompressibleFluid::xml::CustomTree { args } {
     # If case is 2D, set Z variables to Not
     set nDim $::Model::SpatialDimension
     if {$nDim ne "3D"} {
-        set xpath "[spdAux::getRoute CFBC]/condition\[@n='MomentumConstraints2D'\]"
+        set xpath "[spdAux::getRoute FLBC]/condition\[@n='MomentumConstraints2D'\]"
         if {[$root selectNodes "$xpath"] ne ""} {
             [$root selectNodes "$xpath/value\[@n = 'selector_component_Z'\]"] setAttribute v "Not"
         }
@@ -68,7 +68,15 @@ proc ::CompressibleFluid::xml::CustomTree { args } {
         }
     }
 
-    
+    # foreach non_historical [Model::GetNodalConditions {is_historical False}] {
+    #     set xpath [spdAux::getRoute NodalResults]
+    #     # <value n="VELOCITY" pn="Velocity" v="Yes" values="Yes,No" state="[CheckNodalConditionState VELOCITY]" tree_state="close"/>
+    #     set name [$non_historical getName]
+    #     if {[$root selectNodes "$xpath/value\[@n='$name'\]"] eq ""} {
+    #         gid_groups_conds::addF $xpath include [list n Drag active 1 path {apps/Fluid/xml/Drag.spd}]
+    #     }
+    # }
+
 }
 
 proc ::CompressibleFluid::xml::ProcHideIfElement { domNode list_elements } {

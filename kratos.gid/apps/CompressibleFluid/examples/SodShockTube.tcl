@@ -120,7 +120,7 @@ proc ::CompressibleFluid::examples::SodShockTube::TreeAssignation2D {args} {
     # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian Material Air]
     # spdAux::SetValuesOnBaseNode $fluidNode $props
 
-    set initial_conditions [spdAux::getRoute "CFNodalConditions"]
+    set initial_conditions [spdAux::getRoute "FLNodalConditions"]
     # Fluid density
     set fluid_density "$initial_conditions/condition\[@n='DENSITY'\]"
     set initial_density_node [customlib::AddConditionGroupOnXPath $fluid_density Fluid]

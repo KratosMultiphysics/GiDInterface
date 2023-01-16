@@ -36,6 +36,7 @@
       <NodalCondition n="SOUND_VELOCITY"/>
       <NodalCondition n="ARTIFICIAL_CONDUCTIVITY"/>
       <NodalCondition n="ARTIFICIAL_BULK_VISCOSITY"/>
+      <NodalCondition n="ARTIFICIAL_MASS_DIFFUSIVITY"/>
       <NodalCondition n="ARTIFICIAL_DYNAMIC_VISCOSITY"/>
     </NodalConditions>
     <inputs>
@@ -43,6 +44,8 @@
     <outputs>
       <parameter n="SHOCK_SENSOR" pn="Shock sensor" v="true" />
       <parameter n="THERMAL_SENSOR" pn="Thermal sensor" v="true" />
+      <parameter n="SHEAR_SENSOR" pn="Shear sensor" v="true" />
+      <parameter n="VELOCITY_DIVERGENCE" pn="Velocity divergence" v="true" />
     </outputs>
   </ElementItem>
 </ElementList>
