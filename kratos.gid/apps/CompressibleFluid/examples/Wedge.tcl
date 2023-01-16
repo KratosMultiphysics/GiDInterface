@@ -119,7 +119,7 @@ proc ::CompressibleFluid::examples::Wedge::TreeAssignation2D {args} {
     set props [list ConstitutiveLaw Newtonian DENSITY 1.225 DYNAMIC_VISCOSITY 0.0000178 CONDUCTIVITY 0.001 SPECIFIC_HEAT 717.25 HEAT_CAPACITY_RATIO 1.4]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
-    set initial_conditions [spdAux::getRoute "CFNodalConditions"]
+    set initial_conditions [spdAux::getRoute "FLNodalConditions"]
     # Fluid density
     set fluid_density "$initial_conditions/condition\[@n='DENSITY'\]"
     set initial_density_node [customlib::AddConditionGroupOnXPath $fluid_density Fluid]
@@ -156,7 +156,7 @@ proc ::CompressibleFluid::examples::Wedge::TreeAssignation2D {args} {
         $momentum setAttribute ov line
         set props [list value_component_X 1262 value_component_Y 0.0]
         spdAux::SetValuesOnBaseNode $momentum $props
-        
+
         set density [customlib::AddConditionGroupOnXPath $density "$gr//Total"]
         $density setAttribute ov line
         set props [list ByFunction No value 1.225 Interval Total]
@@ -166,7 +166,7 @@ proc ::CompressibleFluid::examples::Wedge::TreeAssignation2D {args} {
         $energy setAttribute ov line
         set props [list ByFunction No value 8.9119e5 Interval Total]
         spdAux::SetValuesOnBaseNode $energy $props
-    
+
     }
 
     # Time parameters

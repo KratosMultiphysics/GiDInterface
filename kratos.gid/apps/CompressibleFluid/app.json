@@ -34,7 +34,7 @@
         "nodal_conditions": "FLNodalConditions",
         "conditions": "FLBC",
         "materials": "Materials",
-        "results": "Results",
+        "results": "FLResults",
         "time_parameters": "TimeParameters"
     },
     "write": {
