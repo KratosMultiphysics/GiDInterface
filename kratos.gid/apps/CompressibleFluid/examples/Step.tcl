@@ -80,6 +80,10 @@ proc ::CompressibleFluid::examples::Step::AssignGroups2D {args} {
     GiD_Groups edit color Obstacle "#3b3b3bff"
     GiD_EntitiesGroups assign Obstacle lines 2
 
+    GiD_Groups create Corner
+    GiD_Groups edit color Corner "#3b3b3bff"
+    GiD_EntitiesGroups assign Corner point 2
+
 }
 proc ::CompressibleFluid::examples::Step::AssignGroups3D {args} {
     # To be implemented
@@ -175,7 +179,18 @@ proc ::CompressibleFluid::examples::Step::TreeAssignation2D {args} {
         $energy setAttribute ov line
         set props [list ByFunction No value 8.8 Interval Total]
         spdAux::SetValuesOnBaseNode $energy $props
+    }
 
+    set momentum "$fluidConditions/condition\[@n='MomentumConstraints$nd'\]"
+    foreach gr [list Corner] {
+        GiD_Groups create "$gr//Total"
+        GiD_Groups edit state "$gr//Total" hidden
+        spdAux::AddIntervalGroup $gr "$gr//Total"
+
+        set momentum [customlib::AddConditionGroupOnXPath $momentum "$gr//Total"]
+        $momentum setAttribute ov point
+        set props [list value_component_X 0.0 value_component_Y 0.0]
+        spdAux::SetValuesOnBaseNode $momentum $props
     }
 
     # Time parameters

@@ -103,7 +103,7 @@
                  WorkingSpaceDimension="2D" 
                  LocalSpaceDimension="2" 
                  SkinConditions="True" 
-                 ElementType="Line" 
+                 ElementType="Point,Line" 
                  App="CompressibleFluid" 
                  ProcessName="AssignVectorVariableProcess" 
                  help="Choose a momentum to enforce at the boundary" 
@@ -113,6 +113,7 @@
                  unit_magnitude="M/T/L^2">
     <TopologyFeatures>
       <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+      <item GeometryType="Point" nodes="1" KratosName="WallCondition2D1N"/>
     </TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>
