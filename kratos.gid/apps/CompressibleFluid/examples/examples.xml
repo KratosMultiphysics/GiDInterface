@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Group id="Fluid" name="Fluid examples">
     <Example id="SodShockTube2D" app="CompressibleFluid" logo="logo_sod.png" name="Sod shock tube 2D" dim="2D" cmd="::CompressibleFluid::examples::SodShockTube::Init">
-        <Description>Shock tube is a long tube with contant cross section, where a diaphragm separates the left and right halves that are filled with two differecnt pressures of air.
-        The gas in the left portion is higher pressure than the one on the right.
+        <Description>This is a 2D simulation of the classical Sod shock tube benchmark using the Euler equations.
+Shock tube is a long tube with contant cross section, where a diaphragm separates the left and right halves that are filled with two different pressures 
+of air. This diaphragm is located at x=0.5.
+The gas in the left portion is higher pressure than the one on the right.
+The problem geometry consists in a rectangular domain, 1 unit long and 0.1 units wide, with free-slip conditions on long sides and open boundaries on 
+the short sides. 
+The Sod shock problem is one-dimensional, which coincides with the X-axis in this case. Hence, no variations along the Y-axis are observed.
         </Description>
     </Example>
     <Example id="Wedge" app="CompressibleFluid" logo="logo_wedge.png" name="Wedge 2D" dim="2D" cmd="::CompressibleFluid::examples::Wedge::Init">
-        <Description>A supersonic inviscid flow over a wedge having an angle of 21.5°. This supersonic flow will create an oblique shock over the wedge.
+        <Description>This is a classical 2D simulation of a supersonic flow over a wedge using the Euler equations. 
+The supersonic flow will create an oblique shock over the wedge that reach a stedy state very quickly.
+The geometry is a Wedge with an angle of 21.5° in a rectangular domain. The Wedge and bottom boundaries are free-slip. The right and top boundaries are 
+left open and the left boundary enforces same values as the initial conditions.
         </Description>
     </Example>
     <Example id="Step" app="CompressibleFluid" logo="logo_step.png" name="Step 2D" dim="2D" cmd="::CompressibleFluid::examples::Step::Init">
-        <Description>This example is a classical test example dating at least back to the famous paper of Woodward and Colella: 
-        The numerical simulation of two-dimensional fluid flow with strong shocks, Journal of Computational Physics, 54, pp. 115-173 (1984).
-        The test case describes a Mach 3 flow in a wind tunnel. The tunnel is 1 length unit high and 3 length units long. 
-        The step is 0.2 length units high and is located 0.6 length units from the left-hand end of the tunnel. The walls are reflective.
+        <Description>This is a 2D simulation of the classical step from Woodward and Collela using the Euler equations.
+The problem geometry consists of a rectangle with a step at the bottom. The rectangular domain has a width of 3 units and a height of 1 unit. The step 
+is located 0.6 units to the right of the bottom-left corner, and it rises to 0.1 units above the bottom edge.
+The top and bottom boundaries, as well as the step are free-slip. The node at the bottom of the step (0.6, 0.0), has its velocity set to zero for 
+numerical stability purposes. 
+The right boundary is left open and the left boundary enforces same values as the initial conditions.
         </Description>
     </Example>
 </Group>
