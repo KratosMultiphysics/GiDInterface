@@ -395,9 +395,11 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
 
     # Get the old app
     set old_activeapp_node [$old_dom selectNodes "//hiddenfield\[@n='activeapp'\]"]
+    set old_activeapp ""
     if {$old_activeapp_node ne ""} {
         set old_activeapp [get_domnode_attribute $old_activeapp_node v]
-    } else {
+    } 
+    if {$old_activeapp eq ""} {
         WarnWin "Unable to get the active application in your model"
         return ""
     }
