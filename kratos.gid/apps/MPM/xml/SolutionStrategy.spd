@@ -11,7 +11,7 @@
 		  <dependencies value="Off" node="../value[@n='stabilization']" att1="state" v1="hidden"/>
 		  <dependencies value="On" node="../value[@n='stabilization']" att1="state" v1="normal"/>
 		</value>
-		<value n="stabilization" pn="Stabilization method" type="combo" v="asgs" values="ppp,asgs" pvalues="PPP" help="Stabilization method"/>
+		<value n="stabilization" pn="Stabilization method" type="combo" v="asgs" values="ppp,asgs,osgs" pvalues="PPP" help="Stabilization method"/>
 		<dynamicnode command="spdAux::injectSolStratParams" args="ImplementedInApplication ParticleMechanicsApplication"/>
 	</container>
    <include n="Gravity" active="1" path="apps/MPM/xml/Gravity.spd"/>
