@@ -129,7 +129,7 @@ proc ::MPM::write::getParametersDict { } {
         lassign [write::getValue MPTracking interval] t0 tf
         dict set tracking_parameters_dict interval [list [expr $t0] [expr $tf]]
         dict set tracking_parameters_dict search_tolerance [write::getValue MPTracking tolerance]
-        lassign [write::getValue MPTracking print_format] press
+        lassign [write::getValue MPTracking output_press] press
         if {$press eq "Yes"} {
                 dict set tracking_parameters_dict output_pressure true
             } else {
