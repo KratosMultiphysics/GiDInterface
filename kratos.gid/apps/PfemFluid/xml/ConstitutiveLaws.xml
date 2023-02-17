@@ -27,7 +27,6 @@
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
             <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
-            <parameter n="FLOW_INDEX" pn="Flow index" unit_magnitude="" units="" v="1"/>
             <parameter n="YIELD_SHEAR" pn="Yield shear" unit_magnitude="P" units="Pa" v="100"/>
             <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the better is the approximation of the curve."/>
         </inputs>
@@ -36,6 +35,31 @@
     </CLaw>
 
     <CLaw n="Bingham3DLaw" pn="Bingham"  help="Bingham Model with Papanastasiou Regularization" Dimension="3D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+            <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
+            <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
+            <parameter n="YIELD_SHEAR" pn="Yield shear" unit_magnitude="P" units="Pa" v="100"/>
+            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the better is the approximation of the curve."/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
+    <CLaw n="HerschelBulkley2DLaw" pn="Herschel Bulkley"  help="Herschel Bulkley Model with Papanastasiou Regularization" Dimension="2D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
+        <inputs>
+            <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
+            <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
+            <parameter n="BULK_MODULUS" pn="Bulk modulus" unit_magnitude="P" units="Pa" v="2.1e+9" help="Set the Bulk modulus."/>
+            <parameter n="FLOW_INDEX" pn="Flow index" unit_magnitude="" units="" v="1"/>
+            <parameter n="YIELD_SHEAR" pn="Yield shear" unit_magnitude="P" units="Pa" v="100"/>
+            <parameter n="ADAPTIVE_EXPONENT" pn="Adaptive exponent" unit_magnitude="" units="1/s" v="1000" help="The higher is, the better is the approximation of the curve."/>
+        </inputs>
+        <outputs>
+        </outputs>
+    </CLaw>
+
+    <CLaw n="HerschelBulkley3DLaw" pn="Herschel Bulkley"  help="Herschel Bulkley Model with Papanastasiou Regularization" Dimension="3D" OutputMode="Parameters" App="Pfem" kratos_module="PfemFluidDynamicsApplication" type="Fluid">
         <inputs>
             <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="1000"/>
             <parameter n="DYNAMIC_VISCOSITY" pn="Dynamic viscosity" unit_magnitude="P*T" units="Pa*s" v="1e-3" help="Set the dynamic viscosity."/>
