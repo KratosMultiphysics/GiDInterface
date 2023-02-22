@@ -844,8 +844,8 @@ proc ::Dam::write::DevicesOutput { } {
             dict set parameterDict position $positionList
             dict set parameterDict model_part_name "MainModelPart"
             set outputDict [dict create]
-            dict set outputDict file_name "CrestDisplacement.dat"
-            dict set outputDict output_path "Displacements"
+            dict set outputDict file_name $name
+            dict set outputDict output_path "MonitoringDevices"
             dict set parameterDict output_file_settings $outputDict
             set outputlist [list ]
             lappend outputlist $variable
