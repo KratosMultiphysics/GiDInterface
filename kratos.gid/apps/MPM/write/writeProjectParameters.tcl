@@ -229,7 +229,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
     if {[write::isBooleanTrue $need_restart]} {
         set restart_dict [dict create ]
         dict set restart_dict python_module save_restart_process
-        dict set restart_dict kratos_module "KratosMultiphysics"
+        dict set restart_dict kratos_module KratosMultiphysics
         dict set restart_dict process_name SaveRestartProcess
         set restart_parameters_dict [dict create ]
         dict set restart_parameters_dict model_part_name MPM_Material
@@ -237,7 +237,9 @@ proc ::MPM::write::GetOutputProcessesList { } {
         set restOutputCT [write::getValue RestartOptions OutputControlType]
         dict set restart_parameters_dict restart_control_type $restOutputCT
         if {$restOutputCT eq "time"} {dict set restart_parameters_dict restart_save_frequency [write::getValue RestartOptions OutputDeltaTime]} {dict set restart_parameters_dict restart_save_frequency [write::getValue RestartOptions OutputDeltaStep]}
-        dict set restart_parameters_dict processes save_restart_process [list $restart_dict]
+        dict set restart_dict Parameters $restart_parameters_dict
+        dict set output_process save_restart_process [list $restart_dict]
+
         }
 
     return $output_process
