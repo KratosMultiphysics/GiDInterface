@@ -237,7 +237,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
         set restOutputCT [write::getValue RestartOptions OutputControlType]
         dict set restart_parameters_dict restart_control_type $restOutputCT
         if {$restOutputCT eq "time"} {dict set restart_parameters_dict restart_save_frequency [write::getValue RestartOptions OutputDeltaTime]} {dict set restart_parameters_dict restart_save_frequency [write::getValue RestartOptions OutputDeltaStep]}
-        dict set project_parameters_dict processes save_restart_process [list $restart_dict]
+        dict set restart_parameters_dict processes save_restart_process [list $restart_dict]
         }
 
     return $output_process
