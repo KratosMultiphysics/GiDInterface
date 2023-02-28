@@ -226,7 +226,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
 
      # Restart
     set need_restart [write::getValue EnableRestartOutput]
-    if {$need_restart eq "On"} {
+    if {[write::isBooleanTrue $need_restart]} {
         set restart_dict [dict create ]
         dict set restart_dict python_module save_restart_process
         dict set restart_dict kratos_module "KratosMultiphysics"
