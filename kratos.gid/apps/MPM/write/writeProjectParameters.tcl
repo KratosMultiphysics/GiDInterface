@@ -32,7 +32,7 @@ proc ::MPM::write::getParametersDict { } {
     # add _Body to model_import_settings
     set model_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
     dict append model_import_settings_dict input_filename _Body
-    dict set model_import_settings_dict restart_load_file_label 0
+    dict set model_import_settings_dict restart_load_file_label " "
     dict set project_parameters_dict solver_settings model_import_settings $model_import_settings_dict
 
 
