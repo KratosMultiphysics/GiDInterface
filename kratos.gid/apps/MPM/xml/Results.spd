@@ -49,5 +49,16 @@
 
         </container>
     </container>
+    <container n="RestartOutput" pn="Restart-Output" un="RestartOutput" state="normal" open="1" open_window="0" icon="results">
+        <value n="EnableRestartOutput" pn="Enable output" v="Yes" values="Yes,No" un="EnableRestartOutput" help="Writing output for Restart or not" />
+        <container n="RestartOptions" pn="Options" un="RestartOptions" help="Restart postprocess options" open_window="1" icon="options" state="[checkStateByUniqueName EnableRestartOutput Yes]">
+            <value n="OutputControlType" pn="Units used for output frequency" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
+                <dependencies node="../value" actualize="1"/>
+            </value>
+            <value n="OutputDeltaTime" pn="Time between outputs (s)" v="1.0" help="Output will be printed in intervals of this time" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} time]"/>
+            <value n="OutputDeltaStep" pn="Time steps between outputs" v="1" help="Output will be printed in intervals of this number of steps" state="[getStateFromXPathValue {string(../value[@n='OutputControlType']/@v)} step]"/>
+
+        </container>
+    </container>
 
 </container>
