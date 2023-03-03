@@ -38,7 +38,7 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
 
     # Nodal coordinates
-    write::writeNodalCoordinates
+    write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroups grid]
 
     # Grid element connectivities
     writeGridConnectivities
