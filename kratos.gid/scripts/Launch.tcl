@@ -44,9 +44,13 @@ proc Kratos::GetPythonExeName { } {
 
 proc Kratos::GetDefaultPythonPath { } {
     set pat ""
-    catch {
-        set py [Kratos::GetPythonExeName]
-        set pat [exec $py -c "import sys; print(sys.executable)"  2>@1]
+    if {true} {
+        set pat "C:/Users/garat/Desktop/GiD 16.1.3d/scripts/tohil/python/python"
+    } else {
+        catch {
+            set py [Kratos::GetPythonExeName]
+            set pat [exec $py -c "import sys; print(sys.executable)"  2>@1]
+        }
     }
     return $pat
 }
@@ -56,24 +60,31 @@ proc Kratos::pythonVersion {{pythonExecutable "python"}} {
     set ver 0
     catch {
         set info [exec $pythonExecutable --version 2>@1]
-        if {[regexp {^Python ([\d.]+)$} $info --> version]} {
+        set rege "{Python\s+(\d+)}"
+        if {[regexp  {Python\s+(\d+\.\d+\.\d+)} $info --> version]} {
             set ver $version
         }
     }
     return $ver
 }
 
-proc Kratos::pipVersion { } {
+proc Kratos::pipVersion { {pythonExecutable ""} } {
 
-    if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
-    if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
+    if {$pythonExecutable eq ""} {
+        if { $::tcl_platform(platform) == "windows" } { set os win } {set os unix}
+        if {$os eq "win"} {set pip "pyw"} {set pip "python3"}
+    } else {
+        set pip $pythonExecutable
+    }
     set ver 0
+
     catch {
         set info [exec $pip -m pip --version 2>@1]
-        if {[regexp {^pip ([\d.]+)*} $info --> version]} {
+        if {[regexp {pip\s+(\d+\.\d+)} $info --> version]} {
             set ver $version
         }
     }
+    
     return $ver
 }
 
@@ -141,6 +152,27 @@ proc Kratos::ShowErrorsAndActions {errs} {
     }
 }
 
+proc Kratos::CheckDependenciesPipGiDsPythonMode {} {
+    set ret 0
+    set python_exe_path [Kratos::ManagePreferences GetValue python_path]
+    set py [Kratos::GetPythonExeName]
+
+    set py_version [Kratos::pythonVersion $python_exe_path]
+    if {$py_version <= 0} {
+        set ret "MISSING_PYTHON"
+    } else {
+        set pip_version [Kratos::pipVersion $python_exe_path]
+        if {$pip_version <= 0} {
+            set ret "MISSING_PIP"
+        } else {
+            set missing_packages [Kratos::GetMissingPipPackages]
+            if {[llength $missing_packages] > 0} {
+                set ret "MISSING_PIP_PACKAGES"
+            }
+        }
+    }
+    return $ret
+}
 proc Kratos::CheckDependenciesPipMode {} {
     set ret 0
     set python_exe_path [Kratos::ManagePreferences GetValue python_path]
@@ -170,12 +202,14 @@ proc Kratos::CheckDependenciesLocalMode {} {
 }
 proc Kratos::CheckDependenciesDockerMode {} {
     set ret 0
+    set result ""
     try {
-        exec docker ps
+        set result [exec docker ps]
     } on error {msg} {
         W $msg
         set ret "DOCKER_NOT_FOUND"
     }
+    W $result
     return $ret
 }
 
@@ -255,4 +289,39 @@ proc Kratos::StopCalculation { } {
         exec docker stop [Kratos::GetModelName]
     }
     GiD_Process Mescape Utilities CancelProcess escape escape
+}
+
+proc Kratos::CreateModeCombo {  } {
+    global GidPriv
+    set w .gid.bitmapsStdBar.execombo
+    if { [winfo exists $w] } {
+        destroy $w
+    }
+    ttk::frame $w -style Horizontal.ForcedFrame
+    
+    ttk::frame $w.f -borderwidth 0 -style ForcedFrame   
+    ttk::entry $w.e -cursor arrow -style ForcedCombobox  
+    
+    bind $w.e <Enter> {
+        %W state pressed 
+    }
+    bind $w.e <Leave> {
+        %W state !pressed 
+    }
+    
+    grid $w.f -sticky ew
+    grid $w.e -in $w.f -sticky ew
+    grid rowconfigure $w 0 -weight 1
+    
+    bind $w.e <ButtonPress-1> "[list open_layers_as_menu .gid $w.f]; break"
+    bind $w.e <ButtonRelease-1> "break"
+    bind $w.e <KeyPress> "break"
+    bind $w.e <Key-Down> "[list open_layers_as_menu .gid $w.f]; break"
+    
+    set GidPriv(ComboLayers,entry) $w.e    
+    $w.e insert end [ GiD_Info Project LayerToUse]
+    
+    
+    grid $w -col 9 -row 0 -padx 10 -sticky news
+    
 }
