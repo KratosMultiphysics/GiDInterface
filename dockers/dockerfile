@@ -1,10 +1,24 @@
-FROM python:3.9
+# Default values. Use --build-arg on build to change
+ARG pyversion=3.10
 
-RUN pip install KratosMultiphysics-all numpy
+# Base pyton image
+FROM python:3.10.10-alpine3.17
+
+ARG krversion=9.3
+ENV krversion=9.3
+
+# Update pip
+RUN pip install --upgrade pip
+
+# Install Kratos and dependencies
+RUN python3 -m pip install KratosMultiphysics-all==$krversion numpy
+
+# Prepare run folder
 WORKDIR "/model"
 RUN chmod 777 /model
+
+# Kratos will start on docker run
 ENTRYPOINT [ "python3", "MainKratos.py" ]
 
-# docker build --tag="kratos-run:latest" -t kratos-run .
-# docker tag kratos-run:latest fjgarate/kratos-run:latest
-# docker push fjgarate/kratos-run:0.0.1
+# docker build -t kratos-run .
+# docker run -rm -it  --entrypoint bash kratos-run
