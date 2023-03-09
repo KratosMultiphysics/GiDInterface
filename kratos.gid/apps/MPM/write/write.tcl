@@ -91,10 +91,9 @@ proc MPM::write::GetPartsGroups { part_type {what "name"} } {
     return $body_groups
 }
 
-
 proc ::MPM::write::GetUsedElements { {get "Objects"} } {
     set lista [list ]
-    foreach gNode [write::getPartsGroupsId node] {
+    foreach gNode [MPM::write::GetPartsGroups Body node] {
         set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
         set e [Model::getElement $elem_name]
         if {$get eq "Name"} { set e [$e getName] }
@@ -102,7 +101,6 @@ proc ::MPM::write::GetUsedElements { {get "Objects"} } {
     }
     return $lista
 }
-
 
 proc MPM::write::writeBodyNodalCoordinates { } {
     write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroups Body]

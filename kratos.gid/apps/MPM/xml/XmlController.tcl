@@ -122,3 +122,23 @@ proc MPM::xml::ProcCheckGeometry {domNode args} {
     }
     return $ret
 }
+
+proc MPM::xml::ProcCheckActivateStabilizationState {domNode args} {
+    set ret "hidden"
+    set up_mixed UpdatedLagrangianUP$::Model::SpatialDimension
+    set used_elements [::MPM::write::GetUsedElements Name]
+    if {$up_mixed in $used_elements} {
+        set ret "normal"
+    }
+    return $ret
+}
+
+proc MPM::xml::ProcCheckStabilizationState {domNode args} {
+    set ret "hidden"
+    set first_check [MPM::xml::ProcCheckActivateStabilizationState domNode args]
+    if {$first_check eq "normal"} {
+        set second_check [write::getValueByNode [$domNode selectNodes "..//value\[@n='ActivateStabilization']"] ]
+        if {$second_check eq "On"} {set ret "normal"}
+    }
+    return $ret
+}
