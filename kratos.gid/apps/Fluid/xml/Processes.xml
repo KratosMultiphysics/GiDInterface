@@ -31,7 +31,7 @@
 
     <Process n="ApplyWallLawProcess" pn="Assign wall law process" python_module="apply_wall_law_process" kratos_module="KratosMultiphysics.FluidDynamicsApplication" help="">
         <inputs>
-            <parameter n="wall_model" pn="Wall model" type="combo" values="navier_slip,linear_log" pvalues="Navier-slip,Linear-log" v="navier_slip" help="">
+            <parameter n="wall_model_name" pn="Wall model" type="combo" values="navier_slip,linear_log" pvalues="Navier-slip,Linear-log" v="navier_slip" help="">
                 <parameter parent="navier_slip" n="slip_length" pn="Slip length" type="double" v="0.001" unit_magnitude="L" units="m" help=""/>
                 <parameter parent="linear_log" n="y_wall" pn="Wall distance" type="double" v="0.001" unit_magnitude="L" units="m" help=""/>
             </parameter>
