@@ -45,6 +45,7 @@ proc Kratos::GetPythonExeName { } {
 proc Kratos::GetDefaultPythonPath { } {
     set pat ""
     if {true} {
+        # TODO: change to relative path
         set pat "C:/Users/garat/Desktop/GiD 16.1.3d/scripts/tohil/python/python"
     } else {
         catch {
@@ -84,7 +85,7 @@ proc Kratos::pipVersion { {pythonExecutable ""} } {
             set ver $version
         }
     }
-    
+
     return $ver
 }
 
@@ -298,30 +299,30 @@ proc Kratos::CreateModeCombo {  } {
         destroy $w
     }
     ttk::frame $w -style Horizontal.ForcedFrame
-    
-    ttk::frame $w.f -borderwidth 0 -style ForcedFrame   
-    ttk::entry $w.e -cursor arrow -style ForcedCombobox  
-    
+
+    ttk::frame $w.f -borderwidth 0 -style ForcedFrame
+    ttk::entry $w.e -cursor arrow -style ForcedCombobox
+
     bind $w.e <Enter> {
-        %W state pressed 
+        %W state pressed
     }
     bind $w.e <Leave> {
-        %W state !pressed 
+        %W state !pressed
     }
-    
+
     grid $w.f -sticky ew
     grid $w.e -in $w.f -sticky ew
     grid rowconfigure $w 0 -weight 1
-    
+
     bind $w.e <ButtonPress-1> "[list open_layers_as_menu .gid $w.f]; break"
     bind $w.e <ButtonRelease-1> "break"
     bind $w.e <KeyPress> "break"
     bind $w.e <Key-Down> "[list open_layers_as_menu .gid $w.f]; break"
-    
-    set GidPriv(ComboLayers,entry) $w.e    
+
+    set GidPriv(ComboLayers,entry) $w.e
     $w.e insert end [ GiD_Info Project LayerToUse]
-    
-    
+
+
     grid $w -col 9 -row 0 -padx 10 -sticky news
-    
+
 }
