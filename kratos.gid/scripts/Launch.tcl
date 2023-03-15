@@ -45,10 +45,7 @@ proc Kratos::GetPythonExeName { } {
 proc Kratos::GetDefaultPythonPath { } {
     set pat ""
     if {true} {
-        # TODO: change to relative path
-        set base [gid_filesystem::get_folder_standard scripts]
-        set pat [file join $base tohil python python]
-        W $pat
+        set pat [GiD_Python_GetPythonExe]
     } else {
         catch {
             set py [Kratos::GetPythonExeName]
@@ -161,6 +158,13 @@ proc Kratos::ShowErrorsAndActions {errs} {
             W "Run the following command on a terminal (note: On Windows systems, use cmd, not PowerShell):"
             W "$python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
         }
+        "MISSING_PIP_PACKAGES_GiDS_PYTHON" {
+            W "Kratos package was not found on your system."
+            set py [Kratos::GetPythonExeName]
+            set python_exe_path [Kratos::ManagePreferences GetValue python_path]
+            W "Run the following command on the GiD Command line:"
+            W "-np- W \[GiD_Python_PipInstallMissingPackages \[list $Kratos::pip_packages_required \] \]"
+        }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."
         }
@@ -172,25 +176,16 @@ proc Kratos::ShowErrorsAndActions {errs} {
 
 proc Kratos::CheckDependenciesPipGiDsPythonMode {} {
     set ret 0
-    set python_exe_path [Kratos::ManagePreferences GetValue python_path]
-    set py [Kratos::GetPythonExeName]
 
-    set py_version [Kratos::pythonVersion $python_exe_path]
-    if {$py_version <= 0} {
-        set ret "MISSING_PYTHON"
-    } else {
-        set pip_version [Kratos::pipVersion $python_exe_path]
-        if {$pip_version <= 0} {
-            set ret "MISSING_PIP"
-        } else {
-            set missing_packages [Kratos::GetMissingPipPackagesGiDsPython]
-            if {[llength $missing_packages] > 0} {
-                set ret "MISSING_PIP_PACKAGES"
-            }
-        }
+    # Assume GiD Always comes with python and pip
+    set missing_packages [Kratos::GetMissingPipPackagesGiDsPython]
+    if {[llength $missing_packages] > 0} {
+        W $missing_packages
+        set ret "MISSING_PIP_PACKAGES_GiDS_PYTHON"
     }
     return $ret
 }
+
 proc Kratos::CheckDependenciesPipMode {} {
     set ret 0
     set python_exe_path [Kratos::ManagePreferences GetValue python_path]

@@ -41,6 +41,9 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                 "python_path" {
                     set ret [Kratos::GetDefaultPythonPath] 
                 }
+                "runkratos_path" {
+                    set ret [file join $::Kratos::kratos_private(Path) exec kratos runkratos.exe]
+                }
                 default {
                     set ret 0
                 }

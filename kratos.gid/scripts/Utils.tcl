@@ -152,7 +152,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path docker_image]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path runkratos_path docker_image]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
@@ -331,6 +331,10 @@ proc Kratos::GetFilePath { var_name type_names_extensions } {
 if { ![GidUtils::IsTkDisabled] } {
     proc xmlprograms::GetPythonPath { baseframe variable } {
         set $variable [Kratos::GetFilePath ::Kratos(python_path) {{{python path} {.exe }} {{All files} {.*}}}]
+        return variable
+    }
+    proc xmlprograms::GetRunKratosPath { baseframe variable } {
+        set $variable [Kratos::GetFilePath [file join $::Kratos::kratos_private(Path) exec kratos runkratos.exe] {{{run kratos path} {.exe }} {{All files} {.*}}}]
         return variable
     }
 }

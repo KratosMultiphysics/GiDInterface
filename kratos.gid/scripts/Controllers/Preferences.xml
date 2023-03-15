@@ -22,10 +22,11 @@
         <comboboxframe name="launch_configuration" label="Launch configuration" variable="launch_configuration" variablemanager='Kratos::ManagePreferences' help='' >
             <option value='Launch via pip' label='Launch via pip'  setactivate="python_path"/>
             <option value='Launch via pip on GiDs python' label='Launch via pip on GiDs python'/>
-            <option value='Launch local compiled version' label='Launch local compiled version (kratos.gid/exec/Kratos/runkratos)'/>
+            <option value='Launch local compiled version' label='Launch local compiled version' setactivate="runkratos_path"/>
             <option value='Docker' label='Docker' setactivate="docker_image" />
             
             <entrywithbutton name="python_path" variable="python_path" label="Python path (exe)" variablemanager='Kratos::ManagePreferences'  help='Path to python.exe' buttonimage="folder.png" buttonfunction="GetPythonPath"/>
+            <entrywithbutton name="runkratos_path" variable="runkratos_path" label="Kratos path (exe)" variablemanager='Kratos::ManagePreferences'  help='Path to runkratos.exe' buttonimage="folder.png" buttonfunction="GetRunKratosPath"/>
             <entry name="docker_image" variable="docker_image" label="Docker image" variablemanager='Kratos::ManagePreferences'  help='Name of the Kratos Docker image'/>
         </comboboxframe>
     </labelframe>
