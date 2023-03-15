@@ -46,7 +46,9 @@ proc Kratos::GetDefaultPythonPath { } {
     set pat ""
     if {true} {
         # TODO: change to relative path
-        set pat "C:/Users/garat/Desktop/GiD 16.1.3d/scripts/tohil/python/python"
+        set base [gid_filesystem::get_folder_standard scripts]
+        set pat [file join $base tohil python python]
+        W $pat
     } else {
         catch {
             set py [Kratos::GetPythonExeName]
@@ -107,6 +109,21 @@ proc Kratos::GetMissingPipPackages { } {
     return $missing_packages
 }
 
+proc Kratos::GetMissingPipPackagesGiDsPython { } {
+    variable pip_packages_required
+    set missing_packages [list ]
+
+    set pip_packages_installed [list ]
+    set pip_packages_installed_raw [exec [Kratos::GetDefaultPythonPath] -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    foreach package $pip_packages_installed_raw {
+        lappend pip_packages_installed [lindex [split $package "=="] 0]
+    }
+    foreach required_package $pip_packages_required {
+        set required_package_name [lindex [split $required_package "=="] 0]
+        if {$required_package_name ni $pip_packages_installed} {lappend missing_packages $required_package}
+    }
+    return $missing_packages
+}
 
 proc Kratos::CheckDependencies { {show 1} } {
     set curr_mode [Kratos::GetLaunchMode]
@@ -141,7 +158,7 @@ proc Kratos::ShowErrorsAndActions {errs} {
             W "Kratos package was not found on your system."
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
-            W "Run the following command on a terminal:"
+            W "Run the following command on a terminal (note: On Windows systems, use cmd, not PowerShell):"
             W "$python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
         }
         "DOCKER_NOT_FOUND" {
@@ -166,7 +183,7 @@ proc Kratos::CheckDependenciesPipGiDsPythonMode {} {
         if {$pip_version <= 0} {
             set ret "MISSING_PIP"
         } else {
-            set missing_packages [Kratos::GetMissingPipPackages]
+            set missing_packages [Kratos::GetMissingPipPackagesGiDsPython]
             if {[llength $missing_packages] > 0} {
                 set ret "MISSING_PIP_PACKAGES"
             }
