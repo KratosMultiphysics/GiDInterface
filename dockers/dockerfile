@@ -4,8 +4,8 @@ ARG pyversion=3.10
 # Base pyton image
 FROM python:3.10.10-alpine3.17
 
-ARG krversion=9.3
-ENV krversion=9.3
+ARG krversion=9.3.1
+ENV krversion=9.3.1
 
 # Update pip
 RUN pip install --upgrade pip

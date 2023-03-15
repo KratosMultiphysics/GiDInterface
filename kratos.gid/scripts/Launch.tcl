@@ -180,7 +180,6 @@ proc Kratos::CheckDependenciesPipGiDsPythonMode {} {
     # Assume GiD Always comes with python and pip
     set missing_packages [Kratos::GetMissingPipPackagesGiDsPython]
     if {[llength $missing_packages] > 0} {
-        W $missing_packages
         set ret "MISSING_PIP_PACKAGES_GiDS_PYTHON"
     }
     return $ret
@@ -219,10 +218,8 @@ proc Kratos::CheckDependenciesDockerMode {} {
     try {
         set result [exec docker ps]
     } on error {msg} {
-        W $msg
         set ret "DOCKER_NOT_FOUND"
     }
-    W $result
     return $ret
 }
 
