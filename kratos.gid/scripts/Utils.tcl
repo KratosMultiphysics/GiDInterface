@@ -333,9 +333,5 @@ if { ![GidUtils::IsTkDisabled] } {
         set $variable [Kratos::GetFilePath ::Kratos(python_path) {{{python path} {.exe }} {{All files} {.*}}}]
         return variable
     }
-    proc xmlprograms::GetRunKratosPath { baseframe variable } {
-        set $variable [Kratos::GetFilePath [file join $::Kratos::kratos_private(Path) exec kratos runkratos.exe] {{{run kratos path} {.exe }} {{All files} {.*}}}]
-        return variable
-    }
 }
 
