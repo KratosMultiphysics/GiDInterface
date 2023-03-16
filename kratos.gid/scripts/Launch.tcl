@@ -111,13 +111,25 @@ proc Kratos::GetMissingPipPackagesGiDsPython { } {
     set missing_packages [list ]
 
     set pip_packages_installed [list ]
+    set pip_packages_installed_versions [list ]
     set pip_packages_installed_raw [exec [Kratos::GetDefaultPythonPath] -m pip list --format=freeze --disable-pip-version-check 2>@1]
     foreach package $pip_packages_installed_raw {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
+        lappend pip_packages_installed_versions [lindex [split $package "=="] end]
     }
     foreach required_package $pip_packages_required {
         set required_package_name [lindex [split $required_package "=="] 0]
-        if {$required_package_name ni $pip_packages_installed} {lappend missing_packages $required_package}
+        set required_package_version [lindex [split $required_package "=="] end]
+
+        set pos [lsearch $pip_packages_installed $required_package_name]
+        if {$pos eq -1} {
+            lappend missing_packages "${required_package}=${required_package_version}"
+        } else {
+            set installed_version [lindex $pip_packages_installed_versions $pos]
+            if {$installed_version ne $required_package_version} {
+                lappend missing_packages "${required_package}"
+            }
+        }
     }
     return $missing_packages
 }
