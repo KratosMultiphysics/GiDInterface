@@ -1,16 +1,16 @@
 {
     "configurations": [
         {
-            "name": "Launch via pip",
-            "script": "pip",
-            "pip_packages": "KratosMultiphysics-all==9.3.1",
-            "dependency_check": "Kratos::CheckDependenciesPipMode"
-        },
-        {
             "name": "Launch via pip on GiDs python",
             "script": "pip_gids_python",
             "pip_packages": "KratosMultiphysics-all==9.3.1",
             "dependency_check": "Kratos::CheckDependenciesPipGiDsPythonMode"
+        },
+        {
+            "name": "Launch via pip",
+            "script": "pip",
+            "pip_packages": "KratosMultiphysics-all==9.3.1",
+            "dependency_check": "Kratos::CheckDependenciesPipMode"
         },
         {
             "name": "Launch local compiled version",

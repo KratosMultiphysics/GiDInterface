@@ -42,4 +42,4 @@ else
 fi
 
 # Run Python using the script MainKratos.py
-"$3/exec/Kratos/runkratos" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
+"$run_kratos_exe" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
