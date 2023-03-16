@@ -123,7 +123,7 @@ proc Kratos::GetMissingPipPackagesGiDsPython { } {
 
         set pos [lsearch $pip_packages_installed $required_package_name]
         if {$pos eq -1} {
-            lappend missing_packages "${required_package}=${required_package_version}"
+            lappend missing_packages "${required_package}"
         } else {
             set installed_version [lindex $pip_packages_installed_versions $pos]
             if {$installed_version ne $required_package_version} {
