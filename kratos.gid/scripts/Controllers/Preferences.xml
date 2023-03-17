@@ -18,14 +18,14 @@
             <option value='1' label='1'/>
             <option value='2' label='2'/>
         </combobox>
-        <entrywithbutton name="debug_folder" label="Debug path" variable="debug_folder" buttonimage="folder.png" variablemanager='Kratos::ManagePreferences' buttonfunction="OpenBrowserForDirectory" help='Path to the kratos debug folder. This is placed in the launch.json file for debugging' />
+        <entrywithbutton name="debug_folder" label="Debug path" variable="debug_folder" buttonimage="folder.png" variablemanager='Kratos::ManagePreferences' buttonfunction="OpenBrowserForDirectoryDebug" help='Path to the kratos debug folder. This is placed in the launch.json file for debugging' />
         <comboboxframe name="launch_configuration" label="Launch configuration" variable="launch_configuration" variablemanager='Kratos::ManagePreferences' help='' >
             <option value='Launch via pip on GiDs python' label='Launch via pip on GiDs python'/>
             <option value='Launch via pip' label='Launch via pip'  setactivate="python_path"/>
-            <option value='Launch local compiled version' label='Launch local compiled version' setactivate="runkratos_path"/>
+            <option value='Launch local compiled version' label='Launch local compiled version' setactivate="python_path kratos_bin_path"/>
             <option value='Docker' label='Docker' setactivate="docker_image" />
-            <entrywithbutton name="python_path" variable="python_path" label="Python path (exe)" variablemanager='Kratos::ManagePreferences'  help='Path to python.exe' buttonimage="folder.png" buttonfunction="GetPythonPath"/>
-            <entrywithbutton name="runkratos_path" variable="runkratos_path" label="Kratos path (exe)" variablemanager='Kratos::ManagePreferences'  help='Path to runkratos.exe' buttonimage="folder.png" buttonfunction="OpenBrowserForDirectory"/>
+            <entrywithbutton name="python_path" variable="python_path" label="Python path (exe)" variablemanager='Kratos::ManagePreferences'  help='Path to python.exe' buttonimage="folder.png" buttonfunction="OpenBrowserForDirectoryPython"/>
+            <entrywithbutton name="kratos_bin_path" variable="kratos_bin_path" label="Kratos path (bin)" variablemanager='Kratos::ManagePreferences'  help='Path to your compiled kratos folder' buttonimage="folder.png" buttonfunction="OpenBrowserForDirectoryKratos"/>
             <entry name="docker_image" variable="docker_image" label="Docker image" variablemanager='Kratos::ManagePreferences'  help='Name of the Kratos Docker image'/>
         </comboboxframe>
     </labelframe>

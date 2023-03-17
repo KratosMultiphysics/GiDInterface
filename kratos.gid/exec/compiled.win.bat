@@ -10,7 +10,8 @@ REM ErrorFile: "%2\%1.err"
 DEL "%2\%1.info"
 DEL "%2\%1.err"
 
-set PATH=%run_kratos_exe%;%run_kratos_exe%\\libs;%PATH%
+set PATH=%kratos_bin_path%\\libs;%PATH%
+set PYTHONPATH=%kratos_bin_path%
 
 REM Run Python using the script MainKratos.py
-%run_kratos_exe%\\runkratos .\MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
+python .\MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
