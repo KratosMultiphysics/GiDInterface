@@ -32,7 +32,7 @@ proc Kratos::InstallAllPythonDependencies { } {
 }
 
 proc Kratos::InstallPip { } {
-    W ""
+    # W ""
 }
 
 proc Kratos::GetPythonExeName { } {
