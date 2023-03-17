@@ -300,7 +300,8 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
             set ::env(python_path) $python_path
         }
         {Launch via pip on GiDs python} {
-            W "local"
+            set python_path [GiD_Python_GetPythonExe]
+            set ::env(python_path) $python_path
         }
         default {}
     }
