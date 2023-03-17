@@ -18,6 +18,8 @@ DEL "%2\%1.flavia.dat"
 DEL "%2\gid_output"
 DEL "%2\vtk_output"
 
+@REM echo "Launching on Compiled for windows -> %kratos_bin_path%" > .run
+
 set PATH=%kratos_bin_path%\libs;%PATH%
 set PYTHONPATH=%kratos_bin_path%
 
