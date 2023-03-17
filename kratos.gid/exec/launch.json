@@ -3,13 +3,13 @@
         {
             "name": "Launch via pip on GiDs python",
             "script": "pip_gids_python",
-            "pip_packages": "KratosMultiphysics-all==9.3.1",
+            "pip_packages": "KratosMultiphysics-all==9.3.2",
             "dependency_check": "Kratos::CheckDependenciesPipGiDsPythonMode"
         },
         {
             "name": "Launch via pip",
             "script": "pip",
-            "pip_packages": "KratosMultiphysics-all==9.3.1",
+            "pip_packages": "KratosMultiphysics-all==9.3.2",
             "dependency_check": "Kratos::CheckDependenciesPipMode"
         },
         {

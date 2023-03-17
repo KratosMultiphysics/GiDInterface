@@ -284,15 +284,25 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
         set bat [dict get $mode script]
         set bat_file [file join exec $bat.$os.bat]
     }
-    if {[dict get $mode name] eq "Docker"} {
-        set docker_image [Kratos::ManagePreferences GetValue docker_image]
-        set ::env(kratos_docker_image) $docker_image
-    } elseif {[dict get $mode name] eq {Launch local compiled version}} {
-        set kratos_bin_path [Kratos::ManagePreferences GetValue kratos_bin_path]
-        set ::env(kratos_bin_path) $kratos_bin_path
-    } else {
-        set python_exe_path [Kratos::ManagePreferences GetValue python_path]
-        set ::env(kratos_python_exe) $python_exe_path
+    switch [dict get $mode name] {
+        Docker {
+            set docker_image [Kratos::ManagePreferences GetValue docker_image]
+            set ::env(kratos_docker_image) $docker_image
+        }
+        {Launch local compiled version} {
+            set python_path [Kratos::ManagePreferences GetValue python_path]
+            set ::env(python_path) $python_path
+            set kratos_bin_path [Kratos::ManagePreferences GetValue kratos_bin_path]
+            set ::env(kratos_bin_path) $kratos_bin_path
+        }
+        {Launch via pip} {
+            set python_path [Kratos::ManagePreferences GetValue python_path]
+            set ::env(python_path) $python_path
+        }
+        {Launch via pip on GiDs python} {
+            W "local"
+        }
+        default {}
     }
     return $bat_file
 }
