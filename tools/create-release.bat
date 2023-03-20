@@ -1,12 +1,22 @@
 set VERSION=9.3.3
-git checkout master
-git fetch -p
-git pull -p
+@REM git checkout master
+@REM git fetch -p
+@REM git pull -p
 @REM set BRANCH=Release-%VERSION%
 @REM git branch %BRANCH%
 @REM git checkout %BRANCH%
 cd ..
 mkdir dist
-set FOLDER=dist\kratos-%VERSION%-win-64\kratos.gid
+set FOLDER=dist\kratos-%VERSION%
 mkdir %FOLDER%
-xcopy /s/e/y kratos.gid %FOLDER%
+xcopy /s/e/y/q kratos.gid %FOLDER%\kratos.gid\
+copy LICENSE.md %FOLDER%\kratos.gid\LICENSE.md
+copy README.md %FOLDER%\kratos.gid\README.md
+
+set RELEASE_FILE=kratos-%VERSION%-win-64.zip
+del /f /q %RELEASE_FILE% 2>null
+powershell.exe -noprofile -command "Compress-Archive -Path '%FOLDER%\*' -DestinationPath %RELEASE_FILE%"
+del /f /q .\dist\%RELEASE_FILE% 2>null
+move %RELEASE_FILE% .\dist\%RELEASE_FILE%
+echo "Version created -> kratos-%VERSION%-win-64"
+
