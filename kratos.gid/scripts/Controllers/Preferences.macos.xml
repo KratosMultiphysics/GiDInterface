@@ -1,0 +1,28 @@
+<group name='kratos_preferences' label='Kratos'>
+    <labelframe name='main_options' label='General options'>
+        <combobox name='DevMode' variable='DevMode' variablemanager='Kratos::ManagePreferences' label='Mode' help='Show/Hide some experimental features'>
+            <option value='dev' label='Developer'/>
+            <option value='release' label='Release'/>
+        </combobox>
+        <combobox name='mdpa_format' variable='mdpa_format' variablemanager='Kratos::ManagePreferences' label='MDPA Optimization' help=''>
+            <option value='0' label='Optimized'/>
+            <option value='1' label='Readable'/>
+        </combobox>
+        <combobox name='allow_logs' variable='allow_logs' variablemanager='Kratos::ManagePreferences' label='Store logs' help=''>
+            <option value='0' label='No'/>
+            <option value='1' label='Only local, so I will get better support from the developers.'/>
+            <option value='2' label='Share anonymous usage data. (See kratos > View current log) Coming soon :)'/>
+        </combobox>
+        <combobox name='echo_level' variable='echo_level' variablemanager='Kratos::ManagePreferences' label='Echo level' help='Show more/less message'>
+            <option value='0' label='0'/>
+            <option value='1' label='1'/>
+            <option value='2' label='2'/>
+        </combobox>
+        <entrywithbutton name="debug_folder" label="Debug path" variable="debug_folder" buttonimage="folder.png" variablemanager='Kratos::ManagePreferences' buttonfunction="OpenBrowserForDirectoryDebug" help='Path to the kratos debug folder. This is placed in the launch.json file for debugging' />
+        <comboboxframe name="launch_configuration" label="Launch configuration" variable="launch_configuration" variablemanager='Kratos::ManagePreferences' help='' >
+            <option value='Docker' label='Docker' setactivate="docker_image" />
+            <entry name="docker_image" variable="docker_image" label="Docker image" variablemanager='Kratos::ManagePreferences'  help='Name of the Kratos Docker image'/>
+        </comboboxframe>
+    </labelframe>
+</group>
+
