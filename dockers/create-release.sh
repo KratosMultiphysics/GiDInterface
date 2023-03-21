@@ -2,6 +2,7 @@
 
 # Change directory to the specified directory
 cd /tmp/dist/kratos-9.3.3/
+find . -type f -name "*.unix.bat" -print0 | xargs -0 dos2unix
 
 # Add execute permission to all .bat files in the directory
 # chmod 755 *.bat

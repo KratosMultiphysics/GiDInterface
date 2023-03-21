@@ -289,17 +289,17 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
             set docker_image [Kratos::ManagePreferences GetValue docker_image]
             set ::env(kratos_docker_image) $docker_image
         }
-        {Launch local compiled version} {
+        {Your compiled Kratos} {
             set python_path [Kratos::ManagePreferences GetValue python_path]
             set ::env(python_path) $python_path
             set kratos_bin_path [Kratos::ManagePreferences GetValue kratos_bin_path]
             set ::env(kratos_bin_path) $kratos_bin_path
         }
-        {Launch via pip} {
+        {External python} {
             set python_path [Kratos::ManagePreferences GetValue python_path]
             set ::env(python_path) $python_path
         }
-        {Launch via pip on GiDs python} {
+        Default {
             set python_path [GiD_Python_GetPythonExe]
             set ::env(python_path) $python_path
         }

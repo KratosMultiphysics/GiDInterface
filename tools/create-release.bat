@@ -14,9 +14,15 @@ copy LICENSE.md %FOLDER%\kratos.gid\LICENSE.md
 copy README.md %FOLDER%\kratos.gid\README.md
 
 set RELEASE_FILE=kratos-%VERSION%-win-64.zip
-del /f /q %RELEASE_FILE% 2>null
+del /f /q %RELEASE_FILE% 2>NUL
 powershell.exe -noprofile -command "Compress-Archive -Path '%FOLDER%\*' -DestinationPath %RELEASE_FILE%"
 del /f /q .\dist\%RELEASE_FILE% 2>null
 move %RELEASE_FILE% .\dist\%RELEASE_FILE%
-echo "Version created -> kratos-%VERSION%-win-64"
+echo "Windows version created -> kratos-%VERSION%-win-64"
 
+cd ./dockers
+docker build -t linux_releaser -f linux-releaser.dockerfile .
+set PWD=%cd%
+docker run --rm -v "%PWD%\..\dist:/tmp/dist" linux_releaser
+
+echo "Linux version created -> kratos-%VERSION%-linux-64"
