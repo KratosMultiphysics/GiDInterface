@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<container n="InitialConditions" pn="Initial conditions" un="SWInitialConditions" icon="wave" open_window="0">
-	<dynamicnode command="spdAux::injectNodalConditions" args="App ShallowWater Type Initial"/>
-</container>

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<container n="TopographicData" pn="Topographic data" un="SWTopographicData" icon="topography" open_window="1">
-    <dynamicnode command="spdAux::injectNodalConditions" args="App ShallowWater Type TopographicData"/>
-</container>
