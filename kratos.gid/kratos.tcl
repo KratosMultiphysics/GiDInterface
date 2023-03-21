@@ -110,7 +110,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     Kratos::LoadProblemtypeLibraries
 
     # Load launch modes
-    Kratos::LoadLaunchModes
+    Kratos::LoadLaunchModes 1
 
     # Load the Kratos problemtype global and user environment (stored preferences)
     Kratos::LoadEnvironment
