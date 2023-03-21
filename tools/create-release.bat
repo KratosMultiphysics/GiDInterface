@@ -16,7 +16,7 @@ copy README.md %FOLDER%\kratos.gid\README.md
 set RELEASE_FILE=kratos-%VERSION%-win-64.zip
 del /f /q %RELEASE_FILE% 2>NUL
 powershell.exe -noprofile -command "Compress-Archive -Path '%FOLDER%\*' -DestinationPath %RELEASE_FILE%"
-del /f /q .\dist\%RELEASE_FILE% 2>null
+del /f /q .\dist\%RELEASE_FILE% 2>NUL
 move %RELEASE_FILE% .\dist\%RELEASE_FILE%
 echo "Windows version created -> kratos-%VERSION%-win-64"
 
