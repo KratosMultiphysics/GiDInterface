@@ -313,7 +313,12 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
         }
         switch $type {
             "inline_vector" {
-                set ndim [string index $::Model::SpatialDimension 0]
+                set param_ndim [$param getAttribute "dimension"]
+                if {$param_ndim eq ""} {
+                    set ndim [string index $::Model::SpatialDimension 0]
+                } else {
+                    set ndim $param_ndim
+                }
                 if {[string is double $v]} {
                     set v [string repeat "${v}," $ndim]
                 }
@@ -957,8 +962,9 @@ proc spdAux::injectPartsByElementType {domNode args} {
         set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
         if {[llength $ov] == 0} {set ov "point,line,surface,volume"}
         set ovm "node,element"
+        set element_type_pn [string map {_ " "} $element_type]
         #if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
-        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
+        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type_pn}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
             <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
                     <dependencies node=\"../value\[@n!='Material'\]\" actualize=\"1\" />
             </value>

@@ -27,7 +27,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
+      - name: Install bins
+        run: |
+          pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.2
 
       # Copy problemtype to gid and copy exec
       - name: Move kratos where it should be

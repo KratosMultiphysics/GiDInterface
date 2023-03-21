@@ -6,7 +6,7 @@
     ],
     "start_script": "::ThermicLauncher::Init",
     "requeriments": {
-        "apps_exist": [
+        "display_apps": [
             "ConvectionDiffusion",
             "Buoyancy",
             "ConjugateHeatTransfer"

@@ -7,7 +7,7 @@ proc Kratos::InstallAllPythonDependencies { } {
     set py [Kratos::GetPythonExeName]
     # Check if python is installed. minimum 3.5, best 3.9
     set python_version [pythonVersion $py]
-    if { $python_version <= 0 || [GidUtils::TwoVersionsCmp $python_version "3.9.0"] <0 } {
+    if { $python_version <= 0 || [GidUtils::TwoVersionsCmp $python_version "3.10.8"] <0 } {
         ::GidUtils::SetWarnLine "Installing python"
         if {$os eq "win"} {
             gid_cross_platform::run_as_administrator [file join $::Kratos::kratos_private(Path) exec install_python_and_dependencies.win.bat ] $dir
@@ -82,8 +82,9 @@ proc Kratos::GetMissingPipPackages { } {
     set missing_packages [list ]
 
     set py [Kratos::GetPythonExeName]
+    set python_exe_path [Kratos::ManagePreferences GetValue python_path]
     set pip_packages_installed [list ]
-    set pip_packages_installed_raw [exec $py -m pip list --format=freeze --disable-pip-version-check 2>@1]
+    set pip_packages_installed_raw [exec $python_exe_path -m pip list --format=freeze --disable-pip-version-check 2>@1]
     foreach package $pip_packages_installed_raw {
         lappend pip_packages_installed [lindex [split $package "=="] 0]
     }
@@ -95,7 +96,7 @@ proc Kratos::GetMissingPipPackages { } {
 }
 
 
-proc Kratos::CheckDependencies { } {
+proc Kratos::CheckDependencies { {show 1} } {
     set curr_mode [Kratos::GetLaunchMode]
     set ret 0
 
@@ -103,7 +104,7 @@ proc Kratos::CheckDependencies { } {
         set deps [dict get $curr_mode dependency_check]
         set ret [$deps]
     }
-    ShowErrorsAndActions $ret
+    if {$show} {ShowErrorsAndActions $ret}
     return $ret
 }
 
@@ -113,13 +114,23 @@ proc Kratos::ShowErrorsAndActions {errs} {
     }
     switch $errs {
         "MISSING_PYTHON" {
-            W "Python 3 could not be found on this system. Please install it, and add the path to Kratos preferences before run the case."
+            W "Python 3 could not be found on this system."
+            W "Please install python 3.9 with pip, and add the PATH to Kratos preferences before run the case."
+            W "https://www.python.org/downloads/release/python-3913/"
         }
         "MISSING_PIP" {
-            W "Pip is not installed on your system. Please install it."
+            W "Pip is not installed on your system. Please install it by running in a terminal:"
+            set py [Kratos::GetPythonExeName]
+            set python_exe_path [Kratos::ManagePreferences GetValue python_path]
+            set install_pip_path [file join $::Kratos::kratos_private(Path) exec get-pip.py]
+            W "$python_exe_path $install_pip_path"
         }
         "MISSING_PIP_PACKAGES" {
-            W "Run the following command on a terminal:\npip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
+            W "Kratos package was not found on your system."
+            set py [Kratos::GetPythonExeName]
+            set python_exe_path [Kratos::ManagePreferences GetValue python_path]
+            W "Run the following command on a terminal:"
+            W "$python_exe_path -m pip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
         }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."
@@ -132,8 +143,10 @@ proc Kratos::ShowErrorsAndActions {errs} {
 
 proc Kratos::CheckDependenciesPipMode {} {
     set ret 0
+    set python_exe_path [Kratos::ManagePreferences GetValue python_path]
     set py [Kratos::GetPythonExeName]
-    set py_version [Kratos::pythonVersion $py]
+
+    set py_version [Kratos::pythonVersion $python_exe_path]
     if {$py_version <= 0} {
         set ret "MISSING_PYTHON"
     } else {

@@ -16,7 +16,10 @@
     "script_files": [
         "start.tcl",
         "examples/examples.tcl",
+        "examples/StaticCantileverBeam.tcl",
+        "examples/CantileverBeam.tcl",
         "examples/FallingSandBall.tcl",
+        "examples/GranularFlow.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
@@ -31,7 +34,7 @@
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
-        "intervals": true,
+        "intervals": false,
         "wizard": false
     },
     "unique_names": {
