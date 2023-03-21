@@ -33,7 +33,7 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                     set ret ""
                 }
                 "launch_configuration" {
-                    set ret "local"
+                    set ret "Default"
                 }
                 "docker_image" {
                     set ret "fjgarate/kratos-run"
