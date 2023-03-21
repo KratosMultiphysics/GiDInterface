@@ -8,6 +8,8 @@ rm -f "$2/$1*.post.msh"
 rm -f "$2/$1.info"
 rm -f "$2/$1.err"
 rm -f "$2/$1.flavia.dat"
+rm -fr "$2/gid_output"
+rm -fr "$2/vtk_output"
 
 # include .bashrc if it exists
 if [ -f "$HOME/.bashrc" ]; then
@@ -18,28 +20,18 @@ fi
 # and maintains OLD_LD_LIBRARY_PATH with previous settings
 # therefore, we use the OLD_LD_LIBRARY_PATH and prepend the path to the kratos libs
 if [ "$OLD_LD_LIBRARY_PATH" != "" ]; then
-    export LD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$OLD_LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH="$kratos_bin_path/libs":$OLD_LD_LIBRARY_PATH
 else
     # do not add the ':'
-    export LD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs"
+    export LD_LIBRARY_PATH="$kratos_bin_path/libs"
 fi
 
 # Prevents the PYTHONHOME error from happening and isolate possible python repacks present
 # in the system and interfeering with runkratos
-export PYTHONPATH="$3/exec/Kratos":$PYTHONPATH
+export PYTHONPATH=$kratos_bin_path:$PYTHONPATH
 
+KERNEL_NAME="linux"
 
-# if mac
-KERNEL=`uname -s`
-if [ $KERNEL = "Darwin" ]; then
-    KERNEL_NAME="macosx"
-    export DYLD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$DYLD_LIBRARY_PATH
-    export DYLD_FALLBACK_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs":$DYLD_FALLBACK_LIBRARY_PATH
-    export PYTHONPATH="$3/exec/Kratos/Lib":"$3/exec/Kratos/Lib/lib-dynload/":$PYTHONPATH
-    export PYTHONHOME="$3/exec/Kratos"
-else
-    KERNEL_NAME="linux"
-fi
 
 # Run Python using the script MainKratos.py
-"$3/exec/Kratos/runkratos" MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
+$python_path/python3 MainKratos.py > "$2/$1.info" 2> "$2/$1.err"

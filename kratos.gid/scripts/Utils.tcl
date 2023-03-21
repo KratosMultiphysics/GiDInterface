@@ -152,7 +152,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path docker_image]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path kratos_bin_path docker_image]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
@@ -310,8 +310,16 @@ proc Kratos::OpenCaseIn {program} {
 }
 
 if { ![GidUtils::IsTkDisabled] } {
-    proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {
-        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
+    proc xmlprograms::OpenBrowserForDirectoryDebug { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug)"]]
+        return variable
+    }
+    proc xmlprograms::OpenBrowserForDirectoryPython { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select python installation folder (python path, where python3.exe is)"]]
+        return variable
+    }
+    proc xmlprograms::OpenBrowserForDirectoryKratos { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos compiled folder (kratos / bin / (release | debug))"]]
         return variable
     }
 }
