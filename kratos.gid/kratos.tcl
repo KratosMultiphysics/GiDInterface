@@ -191,7 +191,8 @@ proc Kratos::InitGlobalVariables {dir} {
     # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
     # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
     # KratosFSIApplication==9.0.3]
-    set pip_packages_required KratosMultiphysics-all==9.3.2
+    # set pip_packages_required [list KratosMultiphysics-all==9.3.2 KratosDamApplication==9.3.2]
+    set pip_packages_required [list KratosMultiphysics-all==9.3.2]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -398,7 +399,7 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
     set old_activeapp ""
     if {$old_activeapp_node ne ""} {
         set old_activeapp [get_domnode_attribute $old_activeapp_node v]
-    } 
+    }
     if {$old_activeapp eq ""} {
         WarnWin "Unable to get the active application in your model"
         return ""

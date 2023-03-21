@@ -1,4 +1,4 @@
-set VERSION=9.3.3
+set VERSION=9.3.2
 @REM git checkout master
 @REM git fetch -p
 @REM git pull -p
