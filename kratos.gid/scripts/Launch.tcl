@@ -288,6 +288,15 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
         Docker {
             set docker_image [Kratos::ManagePreferences GetValue docker_image]
             set ::env(kratos_docker_image) $docker_image
+            
+            if { $::tcl_platform(platform) == "Darwin" } { 
+                W "For secutity reasons, we can not run this for you."
+                W "Please make sure you have docker running on your system running this command in a terminal 'docker ps'"
+                W "In order to run this case, please type in a terminal this command:"
+                W ""
+                W "docker run -v [GiD_Info project ModelName].gid:/model $docker_image"
+            }
+            
         }
         {Your compiled Kratos} {
             set python_path [Kratos::ManagePreferences GetValue python_path]
