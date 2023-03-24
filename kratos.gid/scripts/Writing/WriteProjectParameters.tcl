@@ -24,8 +24,12 @@ proc write::tcl2json { value } {
     #if {$type eq "exprcode"} {set type list; W "$type -> $value"}
     switch $type {
         string {
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return null
+            }
             if {[isBooleanFalse $value]} {return [expr "false"]}
             if {[isBooleanTrue $value]} {return [expr "true"]}
             return [json::write string $value]
@@ -75,8 +79,12 @@ proc write::tcl2jsonstrings { value } {
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]}
     switch $type {
         string {
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return {{}}
+            }
             return [json::write string $value]
         }
         dict {
@@ -112,7 +120,9 @@ proc write::tcl2jsonstrings { value } {
 }
 
 proc write::WriteJSON {processDict} {
-    WriteString [write::tcl2json $processDict]
+    set json_string [write::tcl2json $processDict]
+    set new_string [string map {"\[null\]" "null"} $json_string]
+    WriteString $new_string
 }
 proc write::WriteJSONAsStringFields {processDict} {
     WriteString [write::tcl2jsonstrings $processDict]
