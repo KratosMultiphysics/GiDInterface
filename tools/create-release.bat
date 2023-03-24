@@ -5,6 +5,7 @@ set VERSION=9.3.2
 @REM set BRANCH=Release-%VERSION%
 @REM git branch %BRANCH%
 @REM git checkout %BRANCH%
+git tag -f Release-%VERSION%
 cd ..
 mkdir dist
 set FOLDER=dist\kratos-%VERSION%
