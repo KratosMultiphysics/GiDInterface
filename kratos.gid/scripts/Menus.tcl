@@ -86,7 +86,7 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
                 }
             }
             lappend iconslist [expr {$icon ne "" ? $icon_path : "---"}]
-            lappend commslist  [dict get $kratos_private(MenuItems) $item code]
+            lappend commslist [dict get $kratos_private(MenuItems) $item code]
             lappend helpslist [dict get $kratos_private(MenuItems) $item tex]
         }
 
