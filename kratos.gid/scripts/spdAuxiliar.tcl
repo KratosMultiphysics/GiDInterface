@@ -29,6 +29,7 @@ proc spdAux::Init { } {
     variable currentexternalfile
     variable refreshTreeTurn
     variable TreeVisibility
+    variable ToolbarVisibility
     variable GroupsEdited
     variable must_open_init_window
     variable must_open_dim_window
@@ -40,6 +41,7 @@ proc spdAux::Init { } {
     set currentexternalfile ""
     set refreshTreeTurn 0
     set TreeVisibility 0
+    set ToolbarVisibility 0
     set GroupsEdited [dict create]
     set must_open_init_window 1
     set must_open_dim_window 1

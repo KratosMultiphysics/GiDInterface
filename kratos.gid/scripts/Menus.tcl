@@ -30,9 +30,10 @@ proc Kratos::ToolbarRefresh {} {
 }
 
 proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
-    if { [GidUtils::IsTkDisabled] } {
-        return 0
-    }
+    if { [GidUtils::IsTkDisabled] } { return 0 }
+    
+    if {[write::isBooleanFalse $::spdAux::ToolbarVisibility]} { return 0 }
+
     global KBitmapsNames KBitmapsCommands KBitmapsHelp
     variable kratos_private
     Kratos::EndCreatePreprocessTBar
