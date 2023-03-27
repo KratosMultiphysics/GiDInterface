@@ -1,7 +1,7 @@
 {
-    "id": "Fluid",
-    "name": "CFD",
-    "prefix": "FL",
+    "id": "GeoMechanics",
+    "name": "GeoMechanics",
+    "prefix": "GEOM",
     "themed": false,
     "kratos_name": "GeoMechanicsApplication",
     "python_packages": [
@@ -39,7 +39,7 @@
     },
     "write": {
         "coordinates": "all",
-        "materials_file": "dMaterials.json",
+        "materials_file": "Materials.json",
         "properties_location": "json",
         "model_part_name": "ModelPart",
         "output_model_part_name": "computational_model_part"
