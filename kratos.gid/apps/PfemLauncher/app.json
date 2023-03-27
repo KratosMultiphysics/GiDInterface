@@ -11,7 +11,7 @@
     },
     "permissions": {
         "open_tree": false,
-        "show_toolbar": true,
+        "show_toolbar": false,
         "intervals": false,
         "wizard": false
     }
