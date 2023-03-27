@@ -21,4 +21,5 @@ proc ::GeoMechanics::Init { app } {
     # XML init event
     ::GeoMechanics::xml::Init
     ::GeoMechanics::write::Init
+    ::GeoMechanics::toolbar::Init
 }
