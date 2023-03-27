@@ -1,0 +1,48 @@
+{
+    "id": "Fluid",
+    "name": "CFD",
+    "prefix": "FL",
+    "themed": false,
+    "kratos_name": "GeoMechanicsApplication",
+    "python_packages": [
+        "KratosGeoMechanicsApplication"
+    ],
+    "dimensions": [
+        "2D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script": "::GeoMechanics::Init",
+    "requeriments": {
+        "apps": ["Structural"],
+        "minimum_gid_version": "16.1.4d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "GEOMParts",
+        "nodal_conditions": "GEOMNodalConditions",
+        "conditions": "GEOMBC",
+        "materials": "GEOMMaterials",
+        "results": "GEOMResults",
+        "drag": "GEOMDrags",
+        "time_parameters": "GEOMTimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "dMaterials.json",
+        "properties_location": "json",
+        "model_part_name": "ModelPart",
+        "output_model_part_name": "computational_model_part"
+    },
+    "main_launch_file": "../../exec/MainKratos.py",
+    "description": ""
+}
