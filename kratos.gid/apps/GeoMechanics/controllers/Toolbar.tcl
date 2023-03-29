@@ -12,7 +12,7 @@ proc ::GeoMechanics::toolbar::Init { } {
     set phases_toolbar_name phases_toolbar
     variable phases PhasesTBar
     set phases [list Geometry Stages]
-    CreateToolbarPhases
+    #CreateToolbarPhases
 
 }
 
