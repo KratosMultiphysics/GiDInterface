@@ -14,6 +14,7 @@ namespace eval ::spdAux {
     variable refreshTreeTurn
     
     variable TreeVisibility
+    variable UseStages
     variable GroupsEdited
 
     variable must_open_init_window
@@ -29,6 +30,7 @@ proc spdAux::Init { } {
     variable currentexternalfile
     variable refreshTreeTurn
     variable TreeVisibility
+    variable UseStages
     variable ToolbarVisibility
     variable GroupsEdited
     variable must_open_init_window
@@ -41,6 +43,7 @@ proc spdAux::Init { } {
     set currentexternalfile ""
     set refreshTreeTurn 0
     set TreeVisibility 0
+    set UseStages 0
     set ToolbarVisibility 0
     set GroupsEdited [dict create]
     set must_open_init_window 1
@@ -229,7 +232,6 @@ proc spdAux::parseRecurse { root } {
     }
 }
 
-
 proc spdAux::ExploreAllRoutes { } {
     variable uniqueNames
     
@@ -240,8 +242,7 @@ proc spdAux::ExploreAllRoutes { } {
         W "Route $routeName $route"
         set node [$root selectNodes $route]
         W "Node $node"
-    }
-    
+    }   
 }
 
 proc spdAux::GetAppIdFromNode {domNode} {
@@ -253,6 +254,12 @@ proc spdAux::GetAppIdFromNode {domNode} {
         if {[$domNode hasAttribute prefix]} {set prefix [$domNode @prefix]}
     }
     return [$domNode @n]
+}
+proc spdAux::GetStageNodeFromNode {domNode} {
+    while {[$domNode @is_stage] != 1} {
+        set domNode [$domNode parent]
+    }
+    return $domNode
 }
 
 # Dependencies

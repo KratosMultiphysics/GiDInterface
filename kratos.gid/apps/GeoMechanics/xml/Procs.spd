@@ -23,5 +23,30 @@
 		return [Structural::xml::ProcGetElementsStructural $domNode $args]              
 		]]>
 	</proc>
+	<proc n='before_delete_stage' args='args'>
+		<![CDATA[
+		# W "before_delete_stage"
+		return ""
+		]]>
+	</proc>
+	<proc n='update_stage' args='args'>
+		<![CDATA[
+		# create stage
+		# W "update_stage"
+		return ""
+		]]>
+	</proc>
+	<proc n='delete_stage' args='args'>
+		<![CDATA[
+		# W "delete_stage"
+		return ""
+		]]>
+	</proc>
+	<proc n='check_stage' args='args'>
+		<![CDATA[
+		# W "check_stage"
+		return ""
+		]]>
+	</proc>
 
 </container>

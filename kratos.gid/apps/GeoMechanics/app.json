@@ -23,10 +23,11 @@
         "minimum_gid_version": "16.1.4d"
     },
     "permissions": {
-        "open_tree": false,
-        "show_toolbar": false,
+        "open_tree": true,
+        "show_toolbar": true,
         "intervals": true,
-        "wizard": false
+        "wizard": false,
+        "stages": true
     },
     "unique_names": {
         "parts": "GEOMParts",

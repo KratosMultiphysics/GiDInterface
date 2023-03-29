@@ -345,6 +345,7 @@ proc apps::ActivateApp_do {app} {
 }
 
 proc apps::ApplyAppPreferences {app} {
+    if {[write::isBooleanTrue [$app getPermission stages]]} {set spdAux::UseStages 1} {set spdAux::UseStages 0}
     if {[write::isBooleanTrue [$app getPermission open_tree]]} {set spdAux::TreeVisibility 1} {set spdAux::TreeVisibility 0}
     if {[write::isBooleanTrue [$app getPermission show_toolbar]]} {set spdAux::ToolbarVisibility 1} {set spdAux::ToolbarVisibility 0}
     if {[$app getProperty dimensions] ne ""} { set ::Model::ValidSpatialDimensions [$app getProperty dimensions] }
