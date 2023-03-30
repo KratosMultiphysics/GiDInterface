@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
   <!--updated lagrangian-->
-  <ElementItem n="UpdatedLagrangian2D" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
+  <ElementItem n="MPMUpdatedLagrangian2D" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangian2D3N"/>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangian2D4N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="MPMUpdatedLagrangian2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="MPMUpdatedLagrangian2D4N"/>
     </TopologyFeatures>
         <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -32,11 +32,11 @@
     </outputs>
   </ElementItem>
   <!--updated lagrangian mixed UP-->
-  <ElementItem n="UpdatedLagrangianUP2D" pn="Updated lagrangian mixed UP" ov="surface" ImplementedInFile="updated_lagrangian_UP.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian mixed formulation UP 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
+  <ElementItem n="MPMUpdatedLagrangianUP2D" pn="Updated lagrangian mixed UP" ov="surface" ImplementedInFile="updated_lagrangian_UP.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian mixed formulation UP 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianUP2D3N"/>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangianUP2D4N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="MPMUpdatedLagrangianUP2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="MPMUpdatedLagrangianUP2D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -62,12 +62,12 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-  <ElementItem n="UpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D axis-symmetric element for large deformation kinematics consist of a material point and connectivity nodes" AnalysisType="non_linear,linear">
+  <ElementItem n="MPMUpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D axis-symmetric element for large deformation kinematics consist of a material point and connectivity nodes" AnalysisType="non_linear,linear">
 
       <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="UpdatedLagrangianAxisymmetry2D3N"/>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="UpdatedLagrangianAxisymmetry2D4N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="MPMUpdatedLagrangianAxisymmetry2D3N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="MPMUpdatedLagrangianAxisymmetry2D4N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -94,11 +94,11 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="UpdatedLagrangian3D" pn="Updated lagrangian" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
+  <ElementItem n="MPMUpdatedLagrangian3D" pn="Updated lagrangian" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangian3D4N"/>
-      <item GeometryType="Hexahedra" nodes="8" KratosName="UpdatedLagrangian3D8N"/>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="MPMUpdatedLagrangian3D4N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="MPMUpdatedLagrangian3D8N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
@@ -123,11 +123,11 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-   <ElementItem n="UpdatedLagrangianUP3D" pn="Updated lagrangian mixed UP" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
+   <ElementItem n="MPMUpdatedLagrangianUP3D" pn="Updated lagrangian mixed UP" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Tetrahedra" nodes="4" KratosName="UpdatedLagrangian3D4N"/>
-      <item GeometryType="Hexahedra" nodes="8" KratosName="UpdatedLagrangian3D8N"/>
+      <item GeometryType="Tetrahedra" nodes="4" KratosName="MPMUpdatedLagrangian3D4N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="MPMUpdatedLagrangian3D8N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
