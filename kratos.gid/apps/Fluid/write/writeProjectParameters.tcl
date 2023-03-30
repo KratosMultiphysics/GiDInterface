@@ -39,10 +39,10 @@ proc ::Fluid::write::process_special_conditions { list_of_processes } {
     foreach process $list_of_processes {
         # Wall law has nested parameters
         if {[dict get $process process_name] eq "ApplyWallLawProcess" } {
-            if {[dict get $process Parameters wall_model] eq "navier_slip"} {
+            if {[dict get $process Parameters wall_model_name] eq "navier_slip"} {
                 dict set process Parameters wall_model_settings slip_length [dict get $process Parameters slip_length]
             }
-            if {[dict get $process Parameters wall_model] eq "linear_log"} {
+            if {[dict get $process Parameters wall_model_name] eq "linear_log"} {
                 dict set process Parameters wall_model_settings y_wall [dict get $process Parameters y_wall]
             }
             dict unset process Parameters y_wall

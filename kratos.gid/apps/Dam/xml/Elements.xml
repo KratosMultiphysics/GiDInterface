@@ -93,8 +93,8 @@
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Prism"        nodes="6" KratosName="SmallDisplacementInterfaceElement3D6N"/>
-      <item GeometryType="Hexahedra"   nodes="8" KratosName="SmallDisplacementInterfaceElement3D8N"/>
+      <item GeometryType="Prism" nodes="6" KratosName="SmallDisplacementInterfaceElement3D6N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="SmallDisplacementInterfaceElement3D8N"/>
     </TopologyFeatures>
 
     <!-- here we add the block of features which we require from the constitutive law-->
@@ -130,8 +130,8 @@
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Prism"        nodes="6" KratosName="SmallDisplacementInterfaceElement3D6N"/>
-      <item GeometryType="Hexahedra"   nodes="8" KratosName="SmallDisplacementInterfaceElement3D8N"/>
+      <item GeometryType="Prism" nodes="6" KratosName="SmallDisplacementInterfaceElement3D6N"/>
+      <item GeometryType="Hexahedra" nodes="8" KratosName="SmallDisplacementInterfaceElement3D8N"/>
     </TopologyFeatures>
 
     <!-- here we add the block of features which we require from the constitutive law-->

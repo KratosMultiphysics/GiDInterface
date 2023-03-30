@@ -110,7 +110,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     Kratos::LoadProblemtypeLibraries
 
     # Load launch modes
-    Kratos::LoadLaunchModes
+    Kratos::LoadLaunchModes 1
 
     # Load the Kratos problemtype global and user environment (stored preferences)
     Kratos::LoadEnvironment
@@ -191,7 +191,8 @@ proc Kratos::InitGlobalVariables {dir} {
     # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
     # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
     # KratosFSIApplication==9.0.3]
-    set pip_packages_required KratosMultiphysics-all
+    # set pip_packages_required [list KratosMultiphysics-all==9.3.2 KratosDamApplication==9.3.2]
+    set pip_packages_required [list KratosMultiphysics-all==9.3.2]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -395,9 +396,11 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
 
     # Get the old app
     set old_activeapp_node [$old_dom selectNodes "//hiddenfield\[@n='activeapp'\]"]
+    set old_activeapp ""
     if {$old_activeapp_node ne ""} {
         set old_activeapp [get_domnode_attribute $old_activeapp_node v]
-    } else {
+    }
+    if {$old_activeapp eq ""} {
         WarnWin "Unable to get the active application in your model"
         return ""
     }

@@ -9,8 +9,19 @@ REM ErrorFile: "%2\%1.err"
 
 DEL "%2\%1.info"
 DEL "%2\%1.err"
+DEL "%2\%1*.post.bin"
+DEL "%2\%1*.post.res"
+DEL "%2\%1*.post.msh"
+DEL "%2\%1.info"
+DEL "%2\%1.err"
+DEL "%2\%1.flavia.dat"
+DEL "%2\gid_output"
+DEL "%2\vtk_output"
 
-set PATH=%3\\exec\\kratos;%3\\exec\\kratos\\libs;%PATH%
+@REM echo "Launching on Compiled for windows -> %kratos_bin_path%" > .run
+
+set PATH=%kratos_bin_path%\libs;%PATH%
+set PYTHONPATH=%kratos_bin_path%
 
 REM Run Python using the script MainKratos.py
-"%3\\exec\\kratos\\runkratos" MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
+%python_path%/python MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"

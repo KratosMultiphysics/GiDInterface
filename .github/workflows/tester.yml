@@ -31,7 +31,7 @@ jobs:
 
       - name: Install bins
         run: |
-          pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.2
+          pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.3.2
 
       # Copy problemtype to gid and copy exec
       - name: Move kratos where it should be
