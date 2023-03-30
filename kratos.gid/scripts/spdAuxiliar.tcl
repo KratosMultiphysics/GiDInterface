@@ -195,11 +195,12 @@ proc spdAux::DestroyWindows {} {
 # Routes
 proc spdAux::getRoute {name {domNode ""}} {
     variable uniqueNames
+    variable UseStages
     set v ""
     if {[dict exists $uniqueNames $name]} {
         set v [dict get $uniqueNames $name]
     }
-    if {$domNode ne ""} {
+    if {$domNode ne "" && [write::isBooleanTrue $UseStages]} {
         set stage_node [GetStageNodeFromNode $domNode]
         set stage_xpath [$stage_node toXPath]
 
