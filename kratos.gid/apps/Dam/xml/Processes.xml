@@ -322,13 +322,25 @@
   </Process>
 
 <!---  YOUNG VARIABLE PROCESS -->
-  <Process n="ImposeInputTableNodalYoungModulusProcess" pn="Variable Young Modulus" python_module="impose_input_table_nodal_young_modulus_process"
-		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according an spatial formulation" >
+  <Process n="Impose3dRandomFieldsVariableProcess" pn="Distrubuted Young Modulus" python_module="impose_3d_random_fields_variable_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according to a Gaussian random field with exponential covariance distribution" >
     <inputs>
-        <parameter n="initial_value" pn="Initial Young Modulus Value" type="double" v="0.0"/>
-        <parameter n="min_value" pn="Minimum Young Modulus Value" type="double" v="0.0"/>
-        <parameter n="max_value" pn="Maximum Young Modulus Value" type="double" v="0.0"/>
-        <parameter n="input_file_name" pn="Table filename" type="tablefile" v=""/>
+        <parameter n="mean_value" pn="Mean Value" type="double" v="0.0"/>
+        <parameter n="min_value" pn="Minimum Value" type="double" v="0.0"/>
+        <parameter n="max_value" pn="Maximum Value" type="double" v="0.0"/>
+        <parameter n="variance" pn="Variance" type="double" v="0.0"/>
+        <parameter n="corr_length" pn="Correlation Length" type="integer" v="0"/>
+    </inputs>
+  </Process>
+
+  <Process n="Impose2dRandomFieldsVariableProcess" pn="Distrubuted Young Modulus" python_module="impose_2d_random_fields_variable_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according to a Gaussian random field with exponential covariance distribution" >
+    <inputs>
+        <parameter n="mean_value" pn="Mean Value" type="double" v="0.0"/>
+        <parameter n="min_value" pn="Minimum Value" type="double" v="0.0"/>
+        <parameter n="max_value" pn="Maximum Value" type="double" v="0.0"/>
+        <parameter n="variance" pn="Variance" type="double" v="0.0"/>
+        <parameter n="corr_length" pn="Correlation Length" type="integer" v="0"/>
     </inputs>
   </Process>
 
