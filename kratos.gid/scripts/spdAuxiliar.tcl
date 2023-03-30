@@ -193,11 +193,22 @@ proc spdAux::DestroyWindows {} {
 }
 
 # Routes
-proc spdAux::getRoute {name} {
+proc spdAux::getRoute {name {domNode ""}} {
     variable uniqueNames
     set v ""
     if {[dict exists $uniqueNames $name]} {
         set v [dict get $uniqueNames $name]
+    }
+    if {$domNode ne ""} {
+        set stage_node [GetStageNodeFromNode $domNode]
+        set stage_xpath [$stage_node toXPath]
+
+        set number -1
+        regexp {.blockdata\[(\d+)\]$} $stage_xpath match number
+        if {$number ne -1} {
+            set new_string "blockdata\[$number\]"
+            set v [string map [list "blockdata" $new_string] $v]
+        }
     }
     return $v
 }
@@ -256,7 +267,7 @@ proc spdAux::GetAppIdFromNode {domNode} {
     return [$domNode @n]
 }
 proc spdAux::GetStageNodeFromNode {domNode} {
-    while {[$domNode @is_stage] != 1} {
+    while {![$domNode hasAttribute is_stage]} {
         set domNode [$domNode parent]
     }
     return $domNode
@@ -268,7 +279,7 @@ proc spdAux::insertDependencies { baseNode originUN } {
     set root [customlib::GetBaseRoot]
     
     set originxpath [$baseNode toXPath]
-    set insertxpath [getRoute $originUN]
+    set insertxpath [getRoute $originUN $baseNode]
     set insertonnode [$root selectNodes $insertxpath]
     # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
     $insertonnode setAttribute "actualize" 1
@@ -307,7 +318,7 @@ proc spdAux::insertDependenciesSoft { originxpath relativepath n attn attv} {
 proc spdAux::CheckSolverEntryState {domNode} {
     set appid [GetAppIdFromNode $domNode]
     set kw [apps::getAppUniqueName $appid SolStrat]
-    set nodo [$domNode selectNodes [getRoute $kw]]
+    set nodo [$domNode selectNodes [getRoute $kw $domNode]]
     get_domnode_attribute $nodo dict
     set currentSolStrat [get_domnode_attribute $nodo v]
     set mySolStrat [get_domnode_attribute $domNode solstratname]
@@ -318,7 +329,7 @@ proc spdAux::CheckSolverEntryState {domNode} {
             if {[get_domnode_attribute $domNode n] == [$se getName]} {
                 set filter [$se getAttribute filter]
                 foreach {k v} $filter {
-                    set real [get_domnode_attribute [$domNode selectNodes [getRoute $k]] v]
+                    set real [get_domnode_attribute [$domNode selectNodes [getRoute $k $domNode]] v]
                     if {$real ni $v} {
                         set ret false
                         break;

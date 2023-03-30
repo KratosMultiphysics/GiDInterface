@@ -12,6 +12,13 @@ proc ::GeoMechanics::xml::getUniqueName {name} {
     return [::GeoMechanics::GetAttribute prefix]$name
 }
 
+proc ::GeoMechanics::xml::MultiAppEvent {args} {
+    if {$args eq "init"} {
+        spdAux::parseRoutes
+        spdAux::ConvertAllUniqueNames ST GEOM
+    }
+}
+
 proc ::GeoMechanics::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem state hidden STResults CutPlanes
     spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag

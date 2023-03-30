@@ -4,11 +4,11 @@ proc spdAux::ProcGetElements { domNode args } {
     set nodeApp [GetAppIdFromNode $domNode]
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
     set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
-    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
-        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
+    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN $domNode]] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN $domNode]] dict
     }
-    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] v] eq ""} {
-        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
+    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN $domNode]] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN $domNode]] dict
     }
 
     #W "solStrat $sol_stratUN sch $schemeUN"
@@ -41,16 +41,18 @@ proc spdAux::ProcGetElements { domNode args } {
 proc spdAux::ProcGetElementsValues { domNode args } {
     set nodeApp [GetAppIdFromNode $domNode]
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
-    set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
-    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
-        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
+    set sol_strat_stage_xpath [spdAux::getRoute $sol_stratUN $domNode]
+    if {[get_domnode_attribute [$domNode selectNodes $sol_strat_stage_xpath] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes $sol_strat_stage_xpath] dict
     }
-    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] v] eq ""} {
-        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
+    set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
+    set scheme_stage_xpath [spdAux::getRoute $schemeUN $domNode]
+    if {[get_domnode_attribute [$domNode selectNodes $scheme_stage_xpath] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes  $scheme_stage_xpath] dict
     }
 
-    set solStratName [::write::getValue $sol_stratUN]
-    set schemeName [write::getValue $schemeUN]
+    set solStratName [::write::getValueByXPath $sol_strat_stage_xpath]
+    set schemeName [write::getValueByXPath $scheme_stage_xpath]
     set elems [::Model::GetAvailableElements $solStratName $schemeName]
 
     set names [list ]
@@ -101,8 +103,10 @@ proc spdAux::ProcGetSchemes {domNode args} {
     set nodeApp [GetAppIdFromNode $domNode]
     # W $nodeApp
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
+    
+    set sol_strat_stage_xpath [spdAux::getRoute $sol_stratUN $domNode]
 
-    set solStratName [::write::getValue $sol_stratUN "" force]
+    set solStratName [::write::getValueByXPath $sol_strat_stage_xpath]
     if {$solStratName eq "" } {error "No solution strategy"}
     #W "Unique name: $sol_stratUN - Nombre $solStratName"
     set schemes [::Model::GetAvailableSchemes $solStratName {*}$args]
@@ -261,9 +265,9 @@ proc spdAux::ProcCheckNodalConditionState { domNode args } {
     set nodeApp [GetAppIdFromNode $domNode]
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
     #W $parts_un
-    if {[spdAux::getRoute $parts_un] ne ""} {
+    if {[spdAux::getRoute $parts_un $domNode] ne ""} {
         set conditionId [$domNode @n]
-        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/group/value\[@n='Element'\]"]
+        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un $domNode]/group/value\[@n='Element'\]"]
         set elemnames [list ]
         foreach elem $elems {
             set elemName [$elem @v]
@@ -279,8 +283,8 @@ proc spdAux::ProcCheckNodalConditionOutputState { domNode args } {
 
     set nodeApp [GetAppIdFromNode $domNode]
     set NC_un [apps::getAppUniqueName $nodeApp NodalConditions]
-    if {[spdAux::getRoute $NC_un] ne ""} {
-        set ncs [$domNode selectNodes "[spdAux::getRoute $NC_un]/condition/group"]
+    if {[spdAux::getRoute $NC_un $domNode] ne ""} {
+        set ncs [$domNode selectNodes "[spdAux::getRoute $NC_un $domNode]/condition/group"]
         set ncslist [list ]
         foreach nc $ncs { lappend ncslist [[$nc parent] @n]}
         set ncslist [lsort -unique $ncslist]
@@ -297,7 +301,7 @@ proc spdAux::ProcRefreshTree { domNode args } {
 proc spdAux::ProccheckStateByUniqueName { domNode args } {
     set total 0
     foreach {un val} {*}$args {
-        set xpath [spdAux::getRoute $un]
+        set xpath [spdAux::getRoute $un $domNode]
         if {$xpath ne ""} {
             spdAux::insertDependencies $domNode $un
             set node [$domNode selectNodes $xpath]
@@ -490,7 +494,7 @@ proc spdAux::ProcHideIfUniqueName { domNode args } {
 proc spdAux::ProcChangeStateIfUniqueName { domNode newState args } {
     set total 1
     foreach {un val} {*}$args {
-        set xpath [spdAux::getRoute $un]
+        set xpath [spdAux::getRoute $un $domNode]
         spdAux::insertDependencies $domNode $un
         set node [$domNode selectNodes $xpath]
         if {$node eq ""} {
@@ -609,7 +613,7 @@ proc spdAux::ProcEdit_database_list {domNode args} {
                 #W $propname
                 set appid [spdAux::GetAppIdFromNode $domNode]
                 set mats_un [apps::getAppUniqueName $appid Materials]
-                set xp3 [spdAux::getRoute $mats_un]
+                set xp3 [spdAux::getRoute $mats_un $domNode]
                 append xp3 [format_xpath {/blockdata[@n="material" and @name=%s]/value} $matname]
 
                 foreach valueNode [$root selectNodes $xp3] {
@@ -721,7 +725,7 @@ proc spdAux::ProcGetMaterialsList { domNode args } {
 
     set appid [spdAux::GetAppIdFromNode $domNode]
     set mats_un [apps::getAppUniqueName $appid Materials]
-    set xp3 [spdAux::getRoute $mats_un]
+    set xp3 [spdAux::getRoute $mats_un $domNode]
 
     # set xp3 [spdAux::getRoute $mats_un]
     set parentNode [$domNode selectNodes $xp3]
@@ -887,7 +891,7 @@ proc spdAux::ProcGetParts {domNode args} {
     set parts ""
     set nodeApp [GetAppIdFromNode $domNode]
     set parts_un [apps::getAppUniqueName $nodeApp Parts]
-    set parts_path [spdAux::getRoute $parts_un]
+    set parts_path [spdAux::getRoute $parts_un $domNode]
     if {$parts_path ne ""} {
         foreach part [$domNode selectNodes "$parts_path/group"] {
             lappend parts [$part @n]
