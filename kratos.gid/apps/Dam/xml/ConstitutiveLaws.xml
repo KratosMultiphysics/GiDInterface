@@ -59,6 +59,18 @@
     </CLaw>
 
     <!--3D  Interface laws-->
+    <CLaw n="DamJoint3DLaw" pn="Joint 3D"  Type="Interface3D" behaviour="Elastic"
+    StrainSize="6"  AnalysisType="Linear,Non-Linear"
+	  help="Simplified law for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
+        <inputs>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
+            <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
+        </inputs>
+        <outputs>
+            <parameter n="DAMAGE_VARIABLE" pn="Damage" v="False" />
+        </outputs>
+    </CLaw>
+
     <CLaw n="DamJointBilinearCohesive3DLaw" pn="Joint Bilinear Cohesive 3D"  Type="Interface3D" behaviour="Elastic"
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Bilinear Cohesive law for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
@@ -203,6 +215,28 @@
     </CLaw>
 
     <!--2D  Interface laws-->
+    <CLaw n="DamJoint2DPlaneStrain" pn="Simplified Joint Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
+          help="Simplified law for joints in Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
+        <inputs>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+        </inputs>
+        <outputs>
+            <parameter n="DAMAGE_VARIABLE" pn="Damage" v="False" />
+        </outputs>
+    </CLaw>
+
+    <CLaw n="DamJoint2DPlaneStress" pn="Simplified Joint Plane Stress"  Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
+          help="Simplified law for joints in Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
+        <inputs>
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
+        </inputs>
+        <outputs>
+            <parameter n="DAMAGE_VARIABLE" pn="Damage" v="False" />
+        </outputs>
+    </CLaw>
+
     <CLaw n="DamJointBilinearCohesive2DPlaneStrain" pn="Joint Bilinear Cohesive Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for joints in Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
