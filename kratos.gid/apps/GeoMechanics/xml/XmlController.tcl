@@ -6,6 +6,7 @@ namespace eval ::GeoMechanics::xml {
 proc ::GeoMechanics::xml::Init { } {
     Model::InitVariables dir $::GeoMechanics::dir
 
+    Model::getElements Elements.xml
 }
 
 proc ::GeoMechanics::xml::getUniqueName {name} {
