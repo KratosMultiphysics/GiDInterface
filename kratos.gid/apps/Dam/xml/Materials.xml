@@ -21,19 +21,13 @@
 
     <Material n="Simplified-Joint" MaterialType="Dam" help="">
     <inputs>
-        <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2400"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10"/>
-        <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-        <parameter n="MAX_COMPRESSIVE_STRESS" pn="Maximum Compressive Stress"  unit_magnitude="P" units="Pa" v="20e06"/>
-        <parameter n="MAX_TENSILE_STRESS" pn="Maximum Tensile Stress"  unit_magnitude="P" units="Pa" v="2e06"/>
-        <parameter n="FRICTION_COEFFICIENT" pn="Friction Coefficient" v="0.7"/>
-        <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m"  />
+        <parameter n="YIELD_STRESS" pn="Yield Stress"  unit_magnitude="P" units="Pa" v="20e06"/>
     </inputs>
   </Material>
 
-  <Material n="Strong-Joint" MaterialType="Dam" help="">
+  <Material n="Bilinear Strong-Joint" MaterialType="Dam" help="">
     <inputs>
-        <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
         <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="3e-03"/>
@@ -44,9 +38,8 @@
     </inputs>
   </Material>
 
-    <Material n="Weak-Joint" MaterialType="Dam" help="">
+    <Material n="Bilinear Weak-Joint" MaterialType="Dam" help="">
     <inputs>
-        <parameter n="DENSITY" pn="Density" unit_magnitude="Density" units="kg/m^3" v="2500"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0" />
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
         <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="3e-03"/>
