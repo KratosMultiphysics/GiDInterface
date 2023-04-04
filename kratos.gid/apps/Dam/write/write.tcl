@@ -74,15 +74,15 @@ proc ::Dam::write::UpdateMaterials { } {
             dict set matdict $mat THICKNESS  1.0000E+00
             set newconstlaw "DamJoint2DLaw"
         }
-        if {$constlaw eq "DamJointBilinearCohesive2DPlaneStress"} {set newconstlaw "DamJointBilinearCohesive2DLaw"}
-        if {$constlaw eq "DamJointBilinearCohesive2DPlaneStrain"} {
+        if {$constlaw eq "BilinearCohesive2DPlaneStress"} {set newconstlaw "BilinearCohesive2DLaw"}
+        if {$constlaw eq "BilinearCohesive2DPlaneStrain"} {
             dict set matdict $mat THICKNESS  1.0000E+00
-            set newconstlaw "DamJointBilinearCohesive2DLaw"
+            set newconstlaw "BilinearCohesive2DLaw"
         }
-        if {$constlaw eq "DamJointExponentialCohesive2DPlaneStress"} {set newconstlaw "DamJointExponentialCohesive2DLaw"}
-        if {$constlaw eq "DamJointExponentialCohesive2DPlaneStrain"} {
+        if {$constlaw eq "ExponentialCohesive2DPlaneStress"} {set newconstlaw "ExponentialCohesive2DLaw"}
+        if {$constlaw eq "ExponentialCohesive2DPlaneStrain"} {
             dict set matdict $mat THICKNESS  1.0000E+00
-            set newconstlaw "DamJointExponentialCohesive2DLaw"
+            set newconstlaw "ExponentialCohesive2DLaw"
         }
 
         dict set matdict $mat CONSTITUTIVE_LAW_NAME $newconstlaw
