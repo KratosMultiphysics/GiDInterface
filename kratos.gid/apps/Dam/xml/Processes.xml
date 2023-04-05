@@ -216,7 +216,7 @@
         <parameter n="Modify" pn="Modify" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z"/>
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
-        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="9810"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_Table" pn="Water Level table filename" type="tablefile" v=""/>
     </inputs>
@@ -229,7 +229,7 @@
         <parameter n="Modify" pn="Modify" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z"/>
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
-        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="9810"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Aceleration" pn="Aceleration" type="double" v="0.0"/>
@@ -247,7 +247,7 @@
         <parameter n="Upstream_Coordinate" pn="Upstream Coordinate" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Downstream_Coordinate" pn="Downstream Coordinate" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Upstream_Longitudinal_Coordinate" pn="Upstream Longitudinal Coordinate" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="9810"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Drains" pn="Drains" un="DamDrains" type="bool" v="0"/>
@@ -266,7 +266,7 @@
         <parameter n="Upstream_Coordinate_first_bracket" pn="Upstream Coordinate First Bracket" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Downstream_Coordinate_first_bracket" pn="Downstream Coordinate First Bracket" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Focus" pn="Focus" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="9810"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Drains" pn="Drains" un="DamDrains" type="bool" v="0"/>
