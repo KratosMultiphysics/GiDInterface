@@ -4,7 +4,7 @@
   <ConditionItem n="NewCondition2D" pn="New condition" Interval="Total"
 		 ImplementedInApplication="GeoMechanicsApplication" MinimumKratosVersion="9000"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False"
-		 ElementType="Line"  ProcessName="AssignVectorByDirectionProcess" VariableName="VOLUME_ACCELERATION"
+		 ElementType="Line"  ProcessName="MyCustomProcess" VariableName="VOLUME_ACCELERATION"
 		 help="Self weight application by means of the AssignVectorByDirectionProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
     <TopologyFeatures>
     </TopologyFeatures>

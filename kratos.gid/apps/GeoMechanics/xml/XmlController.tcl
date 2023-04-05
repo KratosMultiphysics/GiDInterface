@@ -8,6 +8,7 @@ proc ::GeoMechanics::xml::Init { } {
 
     Model::getElements Elements.xml
     Model::getConditions Conditions.xml
+    Model::getProcesses Processes.xml
 }
 
 proc ::GeoMechanics::xml::getUniqueName {name} {
