@@ -7,6 +7,7 @@ proc ::GeoMechanics::xml::Init { } {
     Model::InitVariables dir $::GeoMechanics::dir
 
     Model::getElements Elements.xml
+    Model::getConditions Conditions.xml
 }
 
 proc ::GeoMechanics::xml::getUniqueName {name} {
@@ -48,6 +49,8 @@ proc ::GeoMechanics::xml::CustomTree { args } {
 
     spdAux::SetValueOnTreeItem state {[HideIfUniqueName STAnalysisType linear]} STStratSection use_old_stiffness_in_first_iteration
 
+    # Stress test
+    # for {set index 0} {$index < 200} {incr index} {::snit::RT.CallInstance ::boundary_conds::Snit_inst1 copy_block_data}
 }
 
 proc ::GeoMechanics::xml::ProcCheckGeometryGeoMechanics {domNode args} {
