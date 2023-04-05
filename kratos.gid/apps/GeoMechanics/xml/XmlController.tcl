@@ -9,6 +9,12 @@ proc ::GeoMechanics::xml::Init { } {
     Model::getElements Elements.xml
     Model::getConditions Conditions.xml
     Model::getProcesses Processes.xml
+
+    foreach strategy $::Model::SolutionStrategies {
+        foreach scheme [$strategy getSchemes] {
+            $scheme addElementFilter ImplementedInApplication GeoMechanicsApplication
+        }
+    }
 }
 
 proc ::GeoMechanics::xml::getUniqueName {name} {
