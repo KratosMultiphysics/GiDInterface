@@ -10,6 +10,8 @@ proc ::GeoMechanics::xml::Init { } {
     Model::getConditions Conditions.xml
     Model::getProcesses Processes.xml
 
+    # Structural strategies and schemes filter elements by ImplementedInApplication StructuralMechanicsApplication
+    # In order to add our elements, we need to tell the schemes to accept GeoMechanicsApplication
     foreach strategy $::Model::SolutionStrategies {
         foreach scheme [$strategy getSchemes] {
             $scheme addElementFilter ImplementedInApplication GeoMechanicsApplication
