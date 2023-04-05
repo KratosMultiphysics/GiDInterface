@@ -203,16 +203,16 @@ proc spdAux::getRoute {name {domNode ""}} {
     if {$domNode ne "" && [write::isBooleanTrue $UseStages]} {
         set stage_node [GetStageNodeFromNode $domNode]
         set stage_xpath [$stage_node toXPath]
-
         set number -1
         regexp {.blockdata\[(\d+)\]$} $stage_xpath match number
         if {$number ne -1} {
-            set new_string "blockdata\[$number\]"
-            set v [string map [list "blockdata" $new_string] $v]
+            set new_string "/blockdata\[$number\]"
+            set v [string map [list $match $new_string] $v]
         }
     }
     return $v
 }
+
 proc spdAux::setRoute {name route} {
     variable uniqueNames
     #if {[dict exists $uniqueNames $name]} {W "Warning: Unique name $name already exists.\n    Previous value: [dict get $uniqueNames $name],\n    Updated value: $route"}
@@ -279,13 +279,13 @@ proc spdAux::insertDependencies { baseNode originUN } {
     
     set root [customlib::GetBaseRoot]
     
-    set originxpath [$baseNode toXPath]
-    set insertxpath [getRoute $originUN $baseNode]
+    set insertxpath [spdAux::getRoute $originUN $baseNode]
     set insertonnode [$root selectNodes $insertxpath]
-    # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
-    $insertonnode setAttribute "actualize" 1
-    $insertonnode setAttribute "actualize_tree" 1
-    
+    if {$insertonnode ne ""} {
+        # a lo bestia, cambiar cuando sepamos inyectar la dependencia, abajo esta a medias
+        $insertonnode setAttribute "actualize" 1
+        $insertonnode setAttribute "actualize_tree" 1
+    }
     ## Aun no soy capaz de insertar y que funcione
     #set ready 1
     #foreach c [$insertonnode getElementsByTagName "dependencies"] {

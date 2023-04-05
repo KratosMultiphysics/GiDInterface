@@ -98,7 +98,8 @@ proc ::Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
         foreach elem $elems { lappend elemnames [$elem @v]}
         set elemnames [lsort -unique $elemnames]
 
-        set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType $domNode]] v]
+        set solution_type_xpath [spdAux::getRoute STSoluType $domNode]
+        set solutionType [::write::getValueByXPath $solution_type_xpath]
         set params [list analysis_type $solutionType]
         if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
     } {return "normal"}

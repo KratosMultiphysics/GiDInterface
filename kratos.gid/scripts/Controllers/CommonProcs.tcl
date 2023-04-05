@@ -501,7 +501,7 @@ proc spdAux::ProcChangeStateIfUniqueName { domNode newState args } {
             set total 0
             W "Warning: state of [$domNode @n]"
         } else {
-            set realval [get_domnode_attribute $node v]
+            set realval [::write::getValueByNode $node]
             if {$realval eq ""} {W "Warning: Check unique name $un"}
             if {[lsearch $val $realval] == -1} {
                 set total 0
