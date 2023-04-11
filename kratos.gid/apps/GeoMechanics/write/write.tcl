@@ -74,7 +74,8 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
 proc ::GeoMechanics::write::writeCustomFilesEvent { } {
     ::Structural::write::WriteMaterialsFile
 
-    write::SetParallelismConfiguration
+    # TODO: How are we going to handle the parallelism in stages?
+    # write::SetParallelismConfiguration
     write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 
 }
