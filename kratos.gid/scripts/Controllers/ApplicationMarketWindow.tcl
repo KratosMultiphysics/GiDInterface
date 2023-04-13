@@ -28,15 +28,8 @@ proc spdAux::CreateWindow {} {
     # Close everything else
     gid_groups_conds::close_all_windows
     spdAux::DestroyInitWindow
-    if {[winfo exist $initwind]} {destroy $initwind}
-    toplevel $w
-    wm withdraw $w
-    set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
-    set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-    wm geom $w +$x+$y
-    wm transient $w .gid    
-    
-    InitWindow $w [_ "Kratos Multiphysics - Application market"] Kratos "" "" 1
+
+    InitWindow $w [_ "Kratos Multiphysics - Application market"] PreKratosWindowGeom "" "" 1 0
     
     ttk::frame $w.top
     spdAux::RegisterWindow $initwind
@@ -158,20 +151,7 @@ proc spdAux::CreateDimensionWindow { } {
         set dir $::Kratos::kratos_private(Path)
         
         set initwind .gid.win_dimension
-        if { [ winfo exist $initwind]} {
-            destroy $initwind
-        }
-        toplevel $initwind
-        wm withdraw $initwind
-        
-        set w $initwind
-        
-        set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
-        set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-        
-        wm geom $initwind +$x+$y
-        wm transient $initwind .gid    
-        
+                
         InitWindow $w [_ "Kratos Multiphysics"] Kratos "" "" 1
         set initwind $w
         spdAux::RegisterWindow $initwind
