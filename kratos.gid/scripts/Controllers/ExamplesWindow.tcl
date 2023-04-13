@@ -58,15 +58,7 @@ proc Examples::StartWindow { {filter ""} } {
 
     spdAux::DestroyInitWindow
     Examples::DestroyExamplesWindow
-    toplevel $examples_window
-    wm withdraw $examples_window
-
-    set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $examples_window]/2]
-    set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $examples_window]/2]
-
-    wm geom $examples_window +$x+$y
-    wm transient $examples_window .gid
-
+    
     InitWindow $examples_window [_ "Kratos Multiphysics - Examples"] Kratos "" "" 1
 
     spdAux::RegisterWindow $examples_window

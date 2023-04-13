@@ -5,14 +5,7 @@ proc ::DEM::xml::ShowMaterialRelationWindow { } {
     set materials [dict keys $material_relations]
     # window name
     set w .gid.windowmatrel
-    
-    if {[winfo exist $w]} {destroy $w}
-    toplevel $w
-    wm withdraw $w
-    set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
-    set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-    wm geom $w +$x+$y
-    wm transient $w .gid    
+     
     InitWindow $w [_ "Kratos Multiphysics - DEM - Material Relations"] Kratos "" "" 1
 
     if {[llength $materials]>0} {
