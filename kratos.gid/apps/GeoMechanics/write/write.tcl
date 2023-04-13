@@ -39,10 +39,43 @@ proc ::GeoMechanics::write::Init { } {
     SetAttribute output_model_part_name [::GeoMechanics::GetWriteProperty output_model_part_name]
 }
 
-proc ::GeoMechanics::write::writeCustomFilesEvent { } {
-    WriteMaterialsFile
+proc ::GeoMechanics::write::writeModelPartEvent { } {
+    ::Structural::write::Init
+    write::initWriteConfiguration [GetAttributes]
 
-    write::SetParallelismConfiguration
+    # Headers
+    write::writeModelPartData
+    write::WriteString "Begin Properties 0"
+    write::WriteString "End Properties"
+
+    # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
+    if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+
+    # Element connectivities (Groups on STParts)
+    write::writeElementConnectivities
+
+    # Local Axes
+    Structural::write::writeLocalAxes
+
+    # Hinges special section
+    Structural::write::writeHinges
+
+    # Write Conditions section
+    Structural::write::writeConditions
+    
+    # Custom SubmodelParts
+    set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
+    set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
+
+    # SubmodelParts
+    Structural::write::writeMeshes
+}
+
+proc ::GeoMechanics::write::writeCustomFilesEvent { } {
+    ::Structural::write::WriteMaterialsFile
+
+    # TODO: How are we going to handle the parallelism in stages?
+    # write::SetParallelismConfiguration
     write::SetConfigurationAttribute main_launch_file [GetAttribute main_launch_file]
 
 }

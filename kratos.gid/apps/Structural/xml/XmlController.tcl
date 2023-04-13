@@ -93,7 +93,8 @@ proc ::Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
         if {$cnd_dim ne ""} {
             if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
         }
-        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un $domNode]/condition/group/value\[@n='Element'\]"]
+        set parts_xpath [spdAux::getRoute $parts_un $domNode]
+        set elems [$domNode selectNodes "$parts_xpath/condition/group/value\[@n='Element'\]"]
         set elemnames [list ]
         foreach elem $elems { lappend elemnames [$elem @v]}
         set elemnames [lsort -unique $elemnames]

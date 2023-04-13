@@ -207,7 +207,7 @@ proc spdAux::getRoute {name {domNode ""}} {
         regexp {.blockdata\[(\d+)\]$} $stage_xpath match number
         if {$number ne -1} {
             set new_string "/blockdata\[$number\]"
-            set v [string map [list $match $new_string] $v]
+            set v [string map [list $match $new_string "/blockdata" $new_string] $v]
         }
     }
     return $v
