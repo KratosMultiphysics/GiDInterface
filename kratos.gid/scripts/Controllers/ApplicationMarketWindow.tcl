@@ -151,7 +151,7 @@ proc spdAux::CreateDimensionWindow { } {
         set dir $::Kratos::kratos_private(Path)
         
         set initwind .gid.win_dimension
-                
+        set w $initwind 
         InitWindow $w [_ "Kratos Multiphysics"] Kratos "" "" 1
         set initwind $w
         spdAux::RegisterWindow $initwind
