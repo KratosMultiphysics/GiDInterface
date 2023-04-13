@@ -2,14 +2,14 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="GeoMechanicsElement2D" pn="Example element" ov="surface" ImplementedInFile="lets_see.cpp" ImplementedInApplication="GeoMechanicsApplication" AnalysisType="linear,non_linear" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="GeoMechanics" help="This is an example">
+  <ElementItem n="SteadyStateFlowElement2D" pn="Steady state flow element 2D" ov="surface" ImplementedInFile="lets_see.cpp" ImplementedInApplication="GeoMechanicsApplication" AnalysisType="linear,non_linear" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="GeoMechanics" help="Steady state flow element 2D">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
-      <item GeometryType="Triangle" nodes="3" KratosName="SmallDisplacementElement2D3N"/>
-      <item GeometryType="Triangle" nodes="6" KratosName="SmallDisplacementElement2D6N"/>
-      <item GeometryType="Quadrilateral" nodes="4" KratosName="SmallDisplacementElement2D4N"/>
-      <item GeometryType="Quadrilateral" nodes="8" KratosName="SmallDisplacementElement2D8N"/>
-      <item GeometryType="Quadrilateral" nodes="9" KratosName="SmallDisplacementElement2D9N"/>
+      <item GeometryType="Triangle" nodes="3" KratosName="SteadyStatePwElement2D3N"/>
+      <item GeometryType="Triangle" nodes="6" KratosName="SteadyStatePwElement2D6N"/>
+      <item GeometryType="Quadrilateral" nodes="4" KratosName="SteadyStatePwElement2D4N"/>
+      <item GeometryType="Quadrilateral" nodes="8" KratosName="SteadyStatePwElement2D8N"/>
+      <item GeometryType="Quadrilateral" nodes="9" KratosName="SteadyStatePwElement2D9N"/>
     </TopologyFeatures>
     <!-- here we add the block of features which we require from the constitutive law-->
     <ConstitutiveLaw_FilterFeatures>
