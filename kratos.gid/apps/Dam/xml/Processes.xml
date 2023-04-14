@@ -242,7 +242,7 @@
 		kratos_module="KratosMultiphysics.DamApplication" help="This process sets a scalar value according its law over a condition" >
     <inputs>
         <parameter n="Modify" pn="Modify" type="bool" v="1"/>
-        <parameter n="Joint_Group_Name" pn="Joint Group Name" type="combo" v="0"/>
+        <parameter n="joint_group_name" pn="Joint Group Name" type="combo" v="0"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z"/>
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Upstream_Coordinate" pn="Upstream Coordinate" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"/>
@@ -262,7 +262,7 @@
 		kratos_module="KratosMultiphysics.DamApplication" help="This process sets a scalar value according its law over a condition" >
     <inputs>
         <parameter n="Modify" pn="Modify" type="bool" v="1"/>
-        <parameter n="Joint_Group_Name" pn="Joint Group Name" type="combo" v="0"/>
+        <parameter n="joint_group_name" pn="Joint Group Name" type="combo" v="0"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Upstream_Coordinate_first_bracket" pn="Upstream Coordinate First Bracket" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"/>
