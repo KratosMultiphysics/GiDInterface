@@ -19,27 +19,15 @@ proc ::PfemLauncher::AppSelectorWindow { } {
     
     set root [customlib::GetBaseRoot]
     set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
-    if { $nd ne "undefined" } {
-        # if {[apps::getActiveAppId] eq "Fluid"} {
-        #     spdAux::SwitchDimAndCreateWindow $nd
-        # }
-    } {
+    if { $nd eq "undefined" } {
+    
         [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
 
         set initwind $::spdAux::application_window_id
         spdAux::DestroyWindows
         spdAux::RegisterWindow $initwind
-        toplevel $initwind
-        wm withdraw $initwind
 
         set w $initwind
-
-        set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
-        set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-
-        wm geom $initwind +$x+$y
-        wm transient $initwind .gid
-
         InitWindow $w [_ "Pfem applications"] Kratos "" "" 1
         set initwind $w
         ttk::frame $w.top
