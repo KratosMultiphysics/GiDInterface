@@ -11,7 +11,10 @@
       <item GeometryType="Tetrahedra"    nodes="4"  KratosName="Element3D4N"/>
       <item GeometryType="Tetrahedra"    nodes="10" KratosName="Element3D10N"/>
       <item GeometryType="Hexahedra"     nodes="8"  KratosName="Element3D8N"/>
+      <item GeometryType="Hexahedra"     nodes="20"  KratosName="Element3D20N"/>
+      <item GeometryType="Hexahedra"     nodes="27"  KratosName="Element3D27N"/>
       <item GeometryType="Prism"         nodes="6"  KratosName="Element3D6N"/>
+      <item GeometryType="Prism"         nodes="15"  KratosName="Element3D15N"/>
     </TopologyFeatures>
   </ElementItem>
 </ElementList>
