@@ -205,3 +205,34 @@ proc ::GeoMechanics::xml::ProcGetElementsGeoMechanics { domNode args } {
     #spdAux::RequestRefresh
     return $diction
 }
+
+# Get stages list
+proc ::GeoMechanics::xml::GetStages { } {
+    set stages [list ]
+    set root [customlib::GetBaseRoot]
+    set stages [$root selectNodes ".//container\[@n='stages'\]/blockdata"]
+    return $stages
+}
+
+# Close all stages
+proc ::GeoMechanics::xml::CloseStages { } {
+    set stages [::GeoMechanics::xml::GetStages]
+    foreach stage $stages {
+        $stage setAttribute tree_state "closed"
+    }
+}
+# Open stage by name
+proc ::GeoMechanics::xml::OpenStage { stage_name } {
+    set root [customlib::GetBaseRoot]
+    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name='$stage_name'\]"]
+    W "Opening stage $stage"
+    $stage setAttribute tree_state "open"
+}
+# Draw stage by id
+proc ::GeoMechanics::xml::DrawStage {stage_name} {
+    
+    set root [customlib::GetBaseRoot]
+    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name='$stage_name'\]"]
+    W "Drawing stage $stage"
+    $stage setAttribute tree_state "open"
+}
