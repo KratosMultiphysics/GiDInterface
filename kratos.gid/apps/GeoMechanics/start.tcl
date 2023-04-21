@@ -39,7 +39,6 @@ proc ::GeoMechanics::CustomToolbarItems { } {
 
 proc ::GeoMechanics::PrevStage {  } {
     variable curr_stage
-    W $curr_stage
     set stages [::GeoMechanics::xml::GetStages]
     incr curr_stage -1
     if {$curr_stage < 0} {
@@ -48,12 +47,9 @@ proc ::GeoMechanics::PrevStage {  } {
     ::GeoMechanics::xml::CloseStages
     ::GeoMechanics::xml::OpenStage [[lindex $stages $curr_stage] @name]
     spdAux::RequestRefresh
-    W $curr_stage
-    W "current stage: [[lindex $stages $curr_stage] @name]"
 }
 proc ::GeoMechanics::NextStage {  } {
     variable curr_stage
-    W $curr_stage
     set stages [::GeoMechanics::xml::GetStages]
     incr curr_stage 1
     set max [llength [::GeoMechanics::xml::GetStages]]
@@ -63,8 +59,6 @@ proc ::GeoMechanics::NextStage {  } {
     ::GeoMechanics::xml::CloseStages
     ::GeoMechanics::xml::OpenStage [[lindex $stages $curr_stage] @name]
     spdAux::RequestRefresh
-    W $curr_stage
-    W "current stage: [[lindex $stages $curr_stage] @name]"
 }
 
 proc ::GeoMechanics::DrawStage { } {

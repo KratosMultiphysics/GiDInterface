@@ -1,6 +1,8 @@
 namespace eval ::GeoMechanics::xml {
     namespace path ::GeoMechanics
     Kratos::AddNamespace [namespace current]
+
+    variable is_drawing_stage
 }
 
 proc ::GeoMechanics::xml::Init { } {
@@ -17,6 +19,10 @@ proc ::GeoMechanics::xml::Init { } {
             $scheme addElementFilter ImplementedInApplication StructuralMechanicsApplication,GeoMechanicsApplication
         }
     }
+
+    
+    variable is_drawing_stage
+    set is_drawing_stage 0
 }
 
 proc ::GeoMechanics::xml::getUniqueName {name} {
@@ -225,14 +231,50 @@ proc ::GeoMechanics::xml::CloseStages { } {
 proc ::GeoMechanics::xml::OpenStage { stage_name } {
     set root [customlib::GetBaseRoot]
     set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name='$stage_name'\]"]
-    W "Opening stage $stage"
+
     $stage setAttribute tree_state "open"
+
+    # We should not use this, but it is the only way to open the stage
+    set w .gid.central.boundaryconds
+    set wbc [gid_groups_conds::open_conditions_window -force_open $w]
+    $wbc select_domNode $stage
+
+    variable is_drawing_stage
+    if {$is_drawing_stage} {
+        ::GeoMechanics::xml::EndDrawStage
+        ::GeoMechanics::xml::DrawStage $stage_name
+    }
 }
+
 # Draw stage by id
 proc ::GeoMechanics::xml::DrawStage {stage_name} {
     
-    set root [customlib::GetBaseRoot]
-    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name='$stage_name'\]"]
-    W "Drawing stage $stage"
-    $stage setAttribute tree_state "open"
+    variable is_drawing_stage
+
+    if {$is_drawing_stage} {
+        ::GeoMechanics::xml::EndDrawStage
+    } else {
+        set root [customlib::GetBaseRoot]
+        set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name='$stage_name'\]"]
+        
+        set groups_raw [$stage selectNodes ".//group"]
+        set groups [list ]
+        foreach group $groups_raw {
+            set n [get_domnode_attribute $group n]
+            lappend groups $n
+        }
+        if {[llength $groups] ne 0} {
+            GiD_Groups draw $groups
+        }
+
+        set is_drawing_stage 1
+    }
+    
+    GiD_Process 'Redraw
+}
+
+proc ::GeoMechanics::xml::EndDrawStage { } {
+    variable is_drawing_stage
+    set is_drawing_stage 0
+    GiD_Groups end_draw
 }
