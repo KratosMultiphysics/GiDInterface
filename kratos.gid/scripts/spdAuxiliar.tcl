@@ -214,7 +214,6 @@ proc spdAux::getRoute {name {domNode ""}} {
             } else {
                 set v [string map [list $match $new_string ] $v]
             }
-            
         }
     }
     return $v
