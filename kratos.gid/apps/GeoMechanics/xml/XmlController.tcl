@@ -265,9 +265,9 @@ proc ::GeoMechanics::xml::DrawStage {stage_name} {
         }
         if {[llength $groups] ne 0} {
             GiD_Groups draw $groups
+            set is_drawing_stage 1
         }
 
-        set is_drawing_stage 1
     }
     
     GiD_Process 'Redraw
