@@ -305,7 +305,7 @@ proc spdAux::ProccheckStateByUniqueName { domNode args } {
         if {$xpath ne ""} {
             spdAux::insertDependencies $domNode $un
             set node [$domNode selectNodes $xpath]
-            set realval [get_domnode_attribute $node v]
+            set realval [write::getValueByNode $node]
             if {$realval eq ""} {W "Warning: Check unique name $un"}
             if {[lsearch $val $realval] != -1} {
                 set total 1

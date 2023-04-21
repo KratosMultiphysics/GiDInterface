@@ -32,7 +32,8 @@
 	<proc n='update_stage' args='args'>
 		<![CDATA[
 		# create stage
-		# W "update_stage"
+		# W "update_stage $domNode $args"
+		spdAux::parseRoutes
 		return ""
 		]]>
 	</proc>
