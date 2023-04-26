@@ -1,14 +1,14 @@
 # Default values. Use --build-arg on build to change
-ARG pyversion=3.10
+ARG pyversion=3.10.8
 
 # Base pyton image
-FROM python:3.10.10-alpine3.17
-
-ARG krversion=9.3
-ENV krversion=9.3
+FROM python:$pyversion
+# FROM python:3.10.10-alpine3.17
 
 # Update pip
 RUN pip install --upgrade pip
+
+ARG krversion=9.3.2
 
 # Install Kratos and dependencies
 RUN python3 -m pip install KratosMultiphysics-all==$krversion numpy
