@@ -26,6 +26,7 @@ proc ::Structural::Init { app } {
 # Topic: Local axes, beams
 # TODO: remove this when GiD creates this relation automatically
 proc ::Structural::BeforeMeshGeneration { size } {
+    GiD_UnAssignData condition relation_line_geo_mesh Lines all
     foreach group [GiD_Groups list] {
         GiD_AssignData condition relation_line_geo_mesh Lines {0} [GiD_EntitiesGroups get $group lines]
     }
