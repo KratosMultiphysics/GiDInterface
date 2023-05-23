@@ -48,6 +48,7 @@ proc ::GeoMechanics::PrevStage {  } {
     ::GeoMechanics::xml::OpenStage [[lindex $stages $curr_stage] @name]
     spdAux::RequestRefresh
 }
+
 proc ::GeoMechanics::NextStage {  } {
     variable curr_stage
     set stages [::GeoMechanics::xml::GetStages]

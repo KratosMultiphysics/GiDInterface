@@ -7,6 +7,7 @@
 		 ElementType="Line"  ProcessName="MyCustomProcess" VariableName="VOLUME_ACCELERATION"
 		 help="Self weight application by means of the AssignVectorByDirectionProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
     <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N" KratosNameSmallDisplacement="Condition2D2N"/>
     </TopologyFeatures>
     <inputs>
     </inputs>
