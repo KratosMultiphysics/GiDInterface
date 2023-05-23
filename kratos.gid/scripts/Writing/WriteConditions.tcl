@@ -1,17 +1,17 @@
 
-proc ::write::writeConditions { baseUN {iter 0} {cond_id ""}} {
+proc ::write::writeConditions { baseUN {iter 0} {domNode ""}} {
     set dictGroupsIterators [dict create]
 
     set root [customlib::GetBaseRoot]
 
-    set xp1 "[spdAux::getRoute $baseUN]/condition/group"
+    set xp1 "[spdAux::getRoute $baseUN $domNode]/condition/group"
     set groupNodes [$root selectNodes $xp1]
     if {[llength $groupNodes] < 1} {
-        set xp1 "[spdAux::getRoute $baseUN]/group"
+        set xp1 "[spdAux::getRoute $baseUN domNode]/group"
         set groupNodes [$root selectNodes $xp1]
     }
     foreach groupNode $groupNodes {
-        if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
+        set condid [[$groupNode parent] @n]
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
         set dictGroupsIterators [writeGroupNodeCondition $dictGroupsIterators $groupNode $condid [incr iter]]
@@ -90,13 +90,13 @@ proc ::write::writeGroupCondition {groupid kname nnodes iter} {
     return [list $initial $final]
 }
 
-proc ::write::writeNodalConditions { un } {
+proc ::write::writeNodalConditions { un {stage ""} } {
 
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $un]/condition/group"
+    set xp1 "[spdAux::getRoute $un $stage]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
-        set xp1 "[spdAux::getRoute $un]/group"
+        set xp1 "[spdAux::getRoute $un $stage]/group"
         set groups [$root selectNodes $xp1]
     }
     foreach group $groups {

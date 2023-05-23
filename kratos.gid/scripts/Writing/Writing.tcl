@@ -410,13 +410,13 @@ proc write::GetNodesFromElementFace {elem_id face_id} {
     return $nodes
 }
 
-proc write::getPartsGroupsId {{what "name"} } {
+proc write::getPartsGroupsId {{what "name"} {stage ""} } {
     set root [customlib::GetBaseRoot]
 
     set listOfGroups [list ]
-    set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un] $stage]/group"
     if {[llength [$root selectNodes $xp1]] < 1} {
-        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/condition/group"
+        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un] $stage]/condition/group"
     }
     set groups [$root selectNodes $xp1]
 
@@ -444,8 +444,8 @@ proc write::getPartsSubModelPartId {} {
     return $listOfGroups
 }
 
-proc write::writePartSubModelPart { } {
-    foreach group [getPartsGroupsId node] {
+proc write::writePartSubModelPart { {stage ""} } {
+    foreach group [getPartsGroupsId node $stage] {
         set part_name  [get_domnode_attribute [$group parent] n]
         set group_name [get_domnode_attribute $group n]
         writeGroupSubModelPart $part_name $group_name "Elements"
