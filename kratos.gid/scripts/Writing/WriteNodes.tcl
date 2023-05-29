@@ -43,8 +43,8 @@ proc write::writeNodalCoordinatesOnGroups { groups } {
     }
 }
 
-proc write::writeNodalCoordinatesOnParts { } {
-    writeNodalCoordinatesOnGroups [getPartsGroupsId]
+proc write::writeNodalCoordinatesOnParts { {stage ""} } {
+    writeNodalCoordinatesOnGroups [getPartsGroupsId name $stage]
 }
 
 proc write::writeNodalCoordinates { } {

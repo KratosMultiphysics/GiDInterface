@@ -37,39 +37,81 @@ proc ::GeoMechanics::write::Init { } {
     SetAttribute main_launch_file [::GeoMechanics::GetAttribute main_launch_file]
     SetAttribute model_part_name [::GeoMechanics::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::GeoMechanics::GetWriteProperty output_model_part_name]
+
+    SetAttribute multistage_write_mdpa_mode [::GeoMechanics::GetWriteProperty multistage_write_mdpa_mode]
 }
 
 proc ::GeoMechanics::write::writeModelPartEvent { } {
     ::Structural::write::Init
     write::initWriteConfiguration [GetAttributes]
 
-    # Headers
-    write::writeModelPartData
-    write::WriteString "Begin Properties 0"
-    write::WriteString "End Properties"
+    if { [GetAttribute multistage_write_mdpa_mode] == "single_file" } {  
 
-    write::writeNodalCoordinates
+        # Headers
+        write::writeModelPartData
+        write::WriteString "Begin Properties 0"
+        write::WriteString "End Properties"
 
-    # Element connectivities (Groups on STParts)
-    ::GeoMechanics::write::writeElementConnectivities
-    
-    # Local Axes
-    Structural::write::writeLocalAxes
+        write::writeNodalCoordinates
 
-    # Hinges special section
-    Structural::write::writeHinges
+        # Element connectivities (Groups on STParts)
+        ::GeoMechanics::write::writeElementConnectivities
+        
+        # Local Axes
+        Structural::write::writeLocalAxes
 
-    # # Write Conditions section
-    # Structural::write::writeConditions
-    
-    # # Custom SubmodelParts
-    # set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
-    # set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
+        # Hinges special section
+        Structural::write::writeHinges
 
-    # SubmodelParts
-    set stages [::GeoMechanics::xml::GetStages]
-    foreach stage $stages {
+        # # Write Conditions section
+        # Structural::write::writeConditions
+        
+        # # Custom SubmodelParts
+        # set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
+        # set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
 
+        # SubmodelParts
+        set stages [::GeoMechanics::xml::GetStages]
+        foreach stage $stages {
+
+            write::WriteString "// Stage [$stage @name]"
+
+            # Write Conditions section
+            Structural::write::writeConditions $stage
+            
+            # Custom SubmodelParts
+            set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
+            set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
+
+            Structural::write::writeMeshes $stage
+        }
+    } else {
+        set stages [::GeoMechanics::xml::GetStages]
+        foreach stage $stages {
+            # Headers
+        write::writeModelPartData
+        write::WriteString "Begin Properties 0"
+        write::WriteString "End Properties"
+
+        write::writeNodalCoordinatesOnParts
+
+        # Element connectivities (Groups on STParts)
+        ::GeoMechanics::write::writeElementConnectivities
+        
+        # Local Axes
+        Structural::write::writeLocalAxes
+
+        # Hinges special section
+        Structural::write::writeHinges
+
+        # # Write Conditions section
+        # Structural::write::writeConditions
+        
+        # # Custom SubmodelParts
+        # set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
+        # set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
+
+        # SubmodelParts
         write::WriteString "// Stage [$stage @name]"
 
         # Write Conditions section
@@ -80,6 +122,7 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
         set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
 
         Structural::write::writeMeshes $stage
+        
     }
 }
 
