@@ -6,6 +6,8 @@ namespace eval ::GeoMechanics::write {
     variable NodalConditionsGroup
     variable writeAttributes
     variable ContactsDict
+
+    variable mdpa_list 
 }
 
 proc ::GeoMechanics::write::Init { } {
@@ -19,6 +21,9 @@ proc ::GeoMechanics::write::Init { } {
 
     variable writeAttributes
     set writeAttributes [dict create]
+
+    variable mdpa_list 
+    set mdpa_list [list ]
     
     SetAttribute validApps [list "GeoMechanics"]
     SetAttribute writeCoordinatesByGroups [::GeoMechanics::GetWriteProperty coordinates]
@@ -42,6 +47,9 @@ proc ::GeoMechanics::write::Init { } {
 }
 
 proc ::GeoMechanics::write::writeModelPartEvent { } {
+    variable mdpa_list 
+    set mdpa_list [list ]
+
     ::Structural::write::Init
     write::initWriteConfiguration [GetAttributes]
 
@@ -88,8 +96,9 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
 
         set stages [::GeoMechanics::xml::GetStages]
         foreach stage $stages {
-            W "Printing stage $stage"
             write::OpenFile "[$stage @name].mdpa"
+            lappend mdpa_list "[$stage @name].mdpa"
+
             # Headers
             write::writeModelPartData
             write::WriteString "Begin Properties 0"
