@@ -88,50 +88,56 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
     } else {
         set stages [::GeoMechanics::xml::GetStages]
         foreach stage $stages {
+            W "Printing stage $stage"
             # Headers
-        write::writeModelPartData
-        write::WriteString "Begin Properties 0"
-        write::WriteString "End Properties"
+            write::writeModelPartData
+            write::WriteString "Begin Properties 0"
+            write::WriteString "End Properties"
 
-        write::writeNodalCoordinatesOnParts
+            write::writeNodalCoordinatesOnParts $stage
 
-        # Element connectivities (Groups on STParts)
-        ::GeoMechanics::write::writeElementConnectivities
-        
-        # Local Axes
-        Structural::write::writeLocalAxes
+            # Element connectivities (Groups on STParts)
+            ::GeoMechanics::write::writeElementConnectivities $stage
+            
+            # Local Axes
+            Structural::write::writeLocalAxes
 
-        # Hinges special section
-        Structural::write::writeHinges
+            # Hinges special section
+            Structural::write::writeHinges
 
-        # # Write Conditions section
-        # Structural::write::writeConditions
-        
-        # # Custom SubmodelParts
-        # set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
-        # set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
+            # # Write Conditions section
+            # Structural::write::writeConditions
+            
+            # # Custom SubmodelParts
+            # set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
+            # set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
 
-        # SubmodelParts
-        write::WriteString "// Stage [$stage @name]"
+            # SubmodelParts
+            write::WriteString "// Stage [$stage @name]"
 
-        # Write Conditions section
-        Structural::write::writeConditions $stage
-        
-        # Custom SubmodelParts
-        set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
-        set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
+            # Write Conditions section
+            Structural::write::writeConditions $stage
+            
+            # Custom SubmodelParts
+            set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
+            set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
 
-        Structural::write::writeMeshes $stage
-        
+            Structural::write::writeMeshes $stage
+        }
     }
 }
 
-proc ::GeoMechanics::write::writeElementConnectivities { } {
+proc ::GeoMechanics::write::writeElementConnectivities { {stage ""} } {
     set root [customlib::GetBaseRoot]
-
     set xp1 "//container\[@n = 'Parts'\]/condition/group"
+    if { $stage != "" } {
+        set root $stage
+        set xp1 "./container\[@n = 'Parts'\]/condition/group"
+    }
     foreach gNode [$root selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+    W $stage
+    W [$gNode @n]
         write::writeGroupElementConnectivities $gNode $elem
     }
 }

@@ -44,7 +44,7 @@
         "properties_location": "json",
         "model_part_name": "ModelPart",
         "output_model_part_name": "computational_model_part",
-        "multistage_write_mdpa_mode": "single_file",
+        "multistage_write_mdpa_mode": "different_files"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "description": ""
