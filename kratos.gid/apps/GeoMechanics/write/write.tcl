@@ -62,9 +62,6 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
 
         # Hinges special section
         Structural::write::writeHinges
-
-        # # Write Conditions section
-        # Structural::write::writeConditions
         
         # # Custom SubmodelParts
         # set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
@@ -86,9 +83,13 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
             Structural::write::writeMeshes $stage
         }
     } else {
+        
+        write::CloseFile
+
         set stages [::GeoMechanics::xml::GetStages]
         foreach stage $stages {
             W "Printing stage $stage"
+            write::OpenFile "[$stage @name].mdpa"
             # Headers
             write::writeModelPartData
             write::WriteString "Begin Properties 0"
@@ -104,9 +105,6 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
 
             # Hinges special section
             Structural::write::writeHinges
-
-            # # Write Conditions section
-            # Structural::write::writeConditions
             
             # # Custom SubmodelParts
             # set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
@@ -123,6 +121,7 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
             set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
 
             Structural::write::writeMeshes $stage
+            write::CloseFile
         }
     }
 }
@@ -136,8 +135,6 @@ proc ::GeoMechanics::write::writeElementConnectivities { {stage ""} } {
     }
     foreach gNode [$root selectNodes $xp1] {
         set elem [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
-    W $stage
-    W [$gNode @n]
         write::writeGroupElementConnectivities $gNode $elem
     }
 }
