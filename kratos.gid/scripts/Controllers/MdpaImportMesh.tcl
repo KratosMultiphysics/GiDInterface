@@ -23,6 +23,10 @@ proc Kratos::ReadPre { filename } {
         WarnWin [_ "Cannot open file '%s'" $filename]
         return 1
     }
+
+    set num_nodes_before [GiD_Info Mesh NumNodes]
+    set num_elements_before [GiD_Info Mesh NumElements]
+
     #offset_nodes to be added to the number if a previous model exists
     set offset_nodes [GiD_Info Mesh MaxNumNodes]
     set offset_elements [GiD_Info Mesh MaxNumElements]
@@ -108,6 +112,7 @@ proc Kratos::ReadPre { filename } {
                 }
             }
         }
+        
         if {[string match "Begin SubModelPart*" $line]} {
             set group_name [lindex [split [lindex $line 2] "//"] 0]
             set group_name_orig $group_name
@@ -154,6 +159,13 @@ proc Kratos::ReadPre { filename } {
         }
     }
     close $fp
+    
+    set num_nodes [GiD_Info Mesh NumNodes]
+    set num_elements [GiD_Info Mesh NumElements]
+    if { $num_nodes != $num_nodes_before || $num_elements != $num_elements_before } {
+        GiD_RaiseEvent GiD_Event_AfterChangeMesh $num_nodes $num_elements
+    }
+    GiD_RaiseEvent GiD_Event_AfterOpenFile $filename MESHIO_FORMAT 0
 
     ::GidUtils::EndWaitState
     ::GidUtils::SetWarnLine [_ "File read"]
