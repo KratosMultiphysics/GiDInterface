@@ -2,13 +2,8 @@
 # Project Parameters
 proc ::GeoMechanics::write::getParametersDict { stage } {
     # Get the base dictionary for the project parameters
-    set project_parameters_dict [dict create]
-
-    set problem_data [dict create]
-    set solver_settings [dict create]
-    set output_processes [dict create]
-    set processes [dict create]
-    set loads_process_list [dict create]
+    
+    set project_parameters_dict [Structural::write::getParametersDict $stage]
     
     return $project_parameters_dict
 }

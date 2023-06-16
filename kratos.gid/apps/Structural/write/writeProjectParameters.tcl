@@ -1,6 +1,6 @@
 # Project Parameters
 
-proc ::Structural::write::getOldParametersDict { } {
+proc ::Structural::write::getOldParametersDict { {stage ""} } {
     set model_part_name [GetAttribute model_part_name]
     set projectParametersDict [dict create]
 
@@ -174,7 +174,7 @@ proc ::Structural::write::getOldParametersDict { } {
     return $projectParametersDict
 }
 
-proc ::Structural::write::GetContactConditionsDict { } {
+proc ::Structural::write::GetContactConditionsDict { {stage ""} } {
     variable ContactsDict
     set root [customlib::GetBaseRoot]
 
@@ -228,16 +228,16 @@ proc ::Structural::write::writeParametersEvent { } {
 }
 
 # Project Parameters
-proc ::Structural::write::getParametersDict { } {
+proc ::Structural::write::getParametersDict { {stage ""} } {
     # Get the base dictionary for the project parameters
-    set project_parameters_dict [getOldParametersDict]
+    set project_parameters_dict [getOldParametersDict $stage]
 
     # Analysis stage field
     dict set project_parameters_dict analysis_stage "KratosMultiphysics.StructuralMechanicsApplication.structural_mechanics_analysis"
 
     # If using any element with the attribute RotationDofs set to true
-    dict set project_parameters_dict solver_settings rotation_dofs [UsingSpecificDofElements RotationDofs]
-    dict set project_parameters_dict solver_settings volumetric_strain_dofs [UsingSpecificDofElements VolumetricStrainDofs]
+    dict set project_parameters_dict solver_settings rotation_dofs [UsingSpecificDofElements RotationDofs $stage]
+    dict set project_parameters_dict solver_settings volumetric_strain_dofs [UsingSpecificDofElements VolumetricStrainDofs $stage]
 
     # Merging the old solver_settings with the common one for this app
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
@@ -250,9 +250,9 @@ proc ::Structural::write::writeParametersEvent { } {
     write::WriteJSON [::Structural::write::getParametersDict]
 }
 
-proc ::Structural::write::UsingSpecificDofElements { SpecificDof } {
+proc ::Structural::write::UsingSpecificDofElements { SpecificDof {stage ""} } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un] $stage]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
@@ -264,9 +264,9 @@ proc ::Structural::write::UsingSpecificDofElements { SpecificDof } {
     return $bool
 }
 
-proc ::Structural::write::UsingFileInPrestressedMembrane { } {
+proc ::Structural::write::UsingFileInPrestressedMembrane { {stage ""} } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un] $stage]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set found false
     foreach element_node $elements {
