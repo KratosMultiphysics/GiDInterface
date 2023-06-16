@@ -213,10 +213,17 @@ proc ::GeoMechanics::xml::ProcGetElementsGeoMechanics { domNode args } {
 }
 
 # Get stages list
-proc ::GeoMechanics::xml::GetStages { } {
+proc ::GeoMechanics::xml::GetStages { {what "nodes"} } {
     set stages [list ]
     set root [customlib::GetBaseRoot]
     set stages [$root selectNodes ".//container\[@n='stages'\]/blockdata"]
+    if {$what eq "names"} {
+        set names [list ]
+        foreach stage $stages {
+            lappend names [$stage getAttribute name]
+        }
+        set stages $names
+    }
     return $stages
 }
 

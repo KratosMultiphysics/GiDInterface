@@ -44,6 +44,7 @@ proc ::GeoMechanics::write::Init { } {
     SetAttribute output_model_part_name [::GeoMechanics::GetWriteProperty output_model_part_name]
 
     SetAttribute multistage_write_mdpa_mode [::GeoMechanics::GetWriteProperty multistage_write_mdpa_mode]
+    SetAttribute multistage_write_json_mode [::GeoMechanics::GetWriteProperty multistage_write_json_mode]
 }
 
 proc ::GeoMechanics::write::writeModelPartEvent { } {

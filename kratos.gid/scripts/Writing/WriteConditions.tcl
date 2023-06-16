@@ -7,7 +7,7 @@ proc ::write::writeConditions { baseUN {iter 0} {domNode ""}} {
     set xp1 "[spdAux::getRoute $baseUN $domNode]/condition/group"
     set groupNodes [$root selectNodes $xp1]
     if {[llength $groupNodes] < 1} {
-        set xp1 "[spdAux::getRoute $baseUN domNode]/group"
+        set xp1 "[spdAux::getRoute $baseUN $domNode]/group"
         set groupNodes [$root selectNodes $xp1]
     }
     foreach groupNode $groupNodes {
