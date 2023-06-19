@@ -439,15 +439,16 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     set inittime [clock seconds]
     set tmp_init_mesh_time $inittime
     Kratos::Log "Mesh BeforeMeshGeneration start"
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Lines 1:end escape escape escape
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces 1:end escape escape escape
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Volumes 1:end escape escape escape
+
+    GiD_MeshData mesh_criteria to_be_meshed 1 lines [GiD_Geometry list line]
+    GiD_MeshData mesh_criteria to_be_meshed 1 surfaces [GiD_Geometry list surface]
+    GiD_MeshData mesh_criteria to_be_meshed 1 volumes  [GiD_Geometry list volume ]
 
     # We need to mesh every line and surface assigned to a group that appears in the tree
     foreach group [spdAux::GetAppliedGroups] {
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Volumes {*}[GiD_EntitiesGroups get $group volumes] escape escape escape
+        GiD_MeshData mesh_criteria to_be_meshed 2 lines [GiD_EntitiesGroups get $group lines]
+        GiD_MeshData mesh_criteria to_be_meshed 2 surfaces [GiD_EntitiesGroups get $group surfaces]
+        GiD_MeshData mesh_criteria to_be_meshed 2 volumes  [GiD_EntitiesGroups get $group volumes]
     }
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
