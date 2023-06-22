@@ -68,10 +68,8 @@ proc ::MdpaGenerator::write::Validate {} {
 proc ::MdpaGenerator::write::writeGeometries { } {
     # Get the list of groups in the spd
     
-    Model::getElements "../../Common/xml/Elements.xml"
     set lista [::MdpaGenerator::xml::GetListOfSubModelParts]
-    set ret [::write::writeGeometryConnectivitiesByElementType $lista]
-    Model::ForgetElement GENERIC_ELEMENT
+    set ret [::write::writeGeometryConnectivities $lista]
 }
 
 # MDPA Blocks
