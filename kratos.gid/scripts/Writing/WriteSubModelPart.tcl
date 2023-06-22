@@ -56,6 +56,11 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
             }
         }
         WriteString "${s1}End SubModelPartConditions"
+        WriteString "${s1}Begin SubModelPartGeometries"
+        if {"Geometries" in $what} {
+            GiD_WriteCalculationFile elements -sorted $gdict
+        }
+        WriteString "${s1}End SubModelPartGeometries"
         WriteString "${s}End SubModelPart"
     }
     return $mid
