@@ -12,3 +12,9 @@ proc ::MdpaGenerator::xml::Init { } {
     Model::InitVariables dir $::MdpaGenerator::dir
     
 }
+
+proc ::MdpaGenerator::xml::GetListOfSubModelParts { } {
+    set list_of_submodelparts [write::getPartsGroupsId node]
+
+    return $list_of_submodelparts
+}

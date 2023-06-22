@@ -19,6 +19,8 @@ proc ::MdpaGenerator::write::Init { } {
 
     variable writeAttributes
     set writeAttributes [dict create ]
+    
+    SetAttribute parts_un [::MdpaGenerator::GetUniqueName parts]
 }
 
 # MDPA write event
@@ -27,11 +29,11 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
 
-    InitConditionsMap
-    writeProperties
-
     # Init data
     write::initWriteConfiguration [GetAttributes]
+
+    InitConditionsMap
+    writeProperties
 
     # Headers
     write::writeModelPartData
@@ -46,10 +48,9 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
     switch $conditions_mode {
         "unique" {write::writeBasicSubmodelPartsByUniqueId $MdpaGenerator::write::ConditionMap $last_condition_iterator}
         "norepeat" {write::writeBasicSubmodelParts $last_condition_iterator}
-        "gid-id" {}
+        "geometries" {MdpaGenerator::write::writeGeometries }
         default {}
     }
-
 
     # Clean
     unset ::MdpaGenerator::write::ConditionMap
@@ -58,11 +59,20 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
 proc ::MdpaGenerator::write::writeCustomFilesEvent { } {
 }
 
-
 proc ::MdpaGenerator::write::Validate {} {
     set err ""
 
     return $err
+}
+
+proc ::MdpaGenerator::write::writeGeometries { } {
+    # Get the list of groups in the spd
+    
+    Model::getElements "../../Common/xml/Elements.xml"
+    set lista [::MdpaGenerator::xml::GetListOfSubModelParts]
+    set ret [::write::writeGeometryConnectivitiesByElementType $lista]
+    Model::ForgetElement GENERIC_ELEMENT
+    W $lista
 }
 
 # MDPA Blocks

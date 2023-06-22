@@ -3,4 +3,5 @@
       <value n="WriteNodes" pn="Write nodes" v="True" values="True,False" state="disabled"/>
       <value n="WriteElements" pn="Write elements" v="False" values="True,False"/>
       <value n="WriteConditions" pn="Write conditions" v="True" values="True,False"/>
+      <value n="WriteGeometries" pn="Write geometries" v="True" values="True,False"/>
 </condition>
