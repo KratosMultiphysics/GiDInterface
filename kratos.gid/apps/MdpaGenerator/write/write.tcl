@@ -72,7 +72,6 @@ proc ::MdpaGenerator::write::writeGeometries { } {
     set lista [::MdpaGenerator::xml::GetListOfSubModelParts]
     set ret [::write::writeGeometryConnectivitiesByElementType $lista]
     Model::ForgetElement GENERIC_ELEMENT
-    W $lista
 }
 
 # MDPA Blocks
