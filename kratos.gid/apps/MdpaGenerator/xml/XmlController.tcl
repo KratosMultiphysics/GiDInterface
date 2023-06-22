@@ -18,3 +18,7 @@ proc ::MdpaGenerator::xml::GetListOfSubModelParts { } {
 
     return $list_of_submodelparts
 }
+
+proc ::MdpaGenerator::xml::GetCurrentWriteMode { } {
+    return [write::getValue SMP_write_mode]
+}

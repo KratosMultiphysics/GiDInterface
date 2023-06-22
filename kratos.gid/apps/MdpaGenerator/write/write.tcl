@@ -41,15 +41,20 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
     # Nodal coordinates
     write::writeNodalCoordinates
 
-    # Custom SubmodelParts
-    set conditions_mode [write::getValue SMP_write_options condition_write_mode]
-    variable last_condition_iterator
-    set last_condition_iterator [expr [write::getValue SMP_write_options conditions_start_id] -1]
-    switch $conditions_mode {
-        "unique" {write::writeBasicSubmodelPartsByUniqueId $MdpaGenerator::write::ConditionMap $last_condition_iterator}
-        "norepeat" {write::writeBasicSubmodelParts $last_condition_iterator}
-        "geometries" {MdpaGenerator::write::writeGeometries }
-        default {}
+    set write_mode [::MdpaGenerator::xml::GetCurrentWriteMode]
+    if {$write_mode eq "geometries"} {
+        MdpaGenerator::write::writeGeometries
+    } else {
+        
+        # Custom SubmodelParts
+        set conditions_mode [write::getValue SMP_write_options condition_write_mode]
+        variable last_condition_iterator
+        set last_condition_iterator [expr [write::getValue SMP_write_options conditions_start_id] -1]
+        switch $conditions_mode {
+            "unique" {write::writeBasicSubmodelPartsByUniqueId $MdpaGenerator::write::ConditionMap $last_condition_iterator}
+            "norepeat" {write::writeBasicSubmodelParts $last_condition_iterator}
+            default {}
+        }
     }
 
     # Clean
@@ -67,9 +72,19 @@ proc ::MdpaGenerator::write::Validate {} {
 
 proc ::MdpaGenerator::write::writeGeometries { } {
     # Get the list of groups in the spd
-    
     set lista [::MdpaGenerator::xml::GetListOfSubModelParts]
+
+    # Write the geometries
     set ret [::write::writeGeometryConnectivities $lista]
+
+    # Write the submodelparts
+    set what "nodal"
+    append what "&Geometries"
+    # Write conditions (By iterator, so need the app condition iterator)
+    foreach group $lista {
+        ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what
+    }
+    
 }
 
 # MDPA Blocks
