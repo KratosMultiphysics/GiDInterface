@@ -20,8 +20,10 @@ proc write::writeGeometryConnectivities { group_list} {
 proc write::printGeometryConnectivities {group etype nnodes} {
     # Prepare the indent
     set s [mdpaIndent]
+    set nDim $::Model::SpatialDimension
+    set geometry_name ${etype}${nDim}${nnodes}
     # Write header
-    WriteString "${s}Begin Geometries ${etype}${nnodes}N// GUI group identifier: $group"
+    WriteString "${s}Begin Geometries $geometry_name // GUI group identifier: $group"
     # increase indent (allows folding in text editor)
     incr ::write::current_mdpa_indent_level
     # Prepare the formats dict
@@ -33,4 +35,17 @@ proc write::printGeometryConnectivities {group etype nnodes} {
     # Write footer
     WriteString "${s}End Geometries"
     WriteString ""
+
+    # Write the radius if it is a sphere or a circle
+    if {$etype == "Sphere" || $etype == "Circle"} {
+        write::writeSphereRadiusOnGroup $group
+    }
+}
+
+proc write::writeSphereRadiusOnGroup { groupid } {
+    set print_groupid [write::GetWriteGroupName $groupid]
+    write::WriteString "Begin NodalData RADIUS // GUI group identifier: $print_groupid"
+    GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
+    write::WriteString "End NodalData"
+    write::WriteString ""
 }
