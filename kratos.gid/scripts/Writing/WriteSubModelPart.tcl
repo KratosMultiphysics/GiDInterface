@@ -38,13 +38,13 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         WriteString "${s1}Begin SubModelPartNodes"
         GiD_WriteCalculationFile nodes -sorted $gdict
         WriteString "${s1}End SubModelPartNodes"
-        WriteString "${s1}Begin SubModelPartElements"
         if {"Elements" in $what} {
+            WriteString "${s1}Begin SubModelPartElements"
             GiD_WriteCalculationFile elements -sorted $gdict
+            WriteString "${s1}End SubModelPartElements"
         }
-        WriteString "${s1}End SubModelPartElements"
-        WriteString "${s1}Begin SubModelPartConditions"
         if {"Conditions" in $what} {
+            WriteString "${s1}Begin SubModelPartConditions"
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
                 #W $iniend
@@ -54,13 +54,13 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
                     }
                 }
             }
+            WriteString "${s1}End SubModelPartConditions"
         }
-        WriteString "${s1}End SubModelPartConditions"
-        WriteString "${s1}Begin SubModelPartGeometries"
         if {"Geometries" in $what} {
+            WriteString "${s1}Begin SubModelPartGeometries"
             GiD_WriteCalculationFile elements -sorted $gdict
+            WriteString "${s1}End SubModelPartGeometries"
         }
-        WriteString "${s1}End SubModelPartGeometries"
         WriteString "${s}End SubModelPart"
     }
     return $mid
