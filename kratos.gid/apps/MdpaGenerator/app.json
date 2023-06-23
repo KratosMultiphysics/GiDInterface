@@ -19,6 +19,9 @@
         "intervals": false,
         "wizard": false
     },
+    "unique_names": {
+        "parts": "GenericSubmodelPart"
+    },
     "main_launch_file": null,
     "description": "MDPA generator \n-Useful tool to generate modelparts"
 }
