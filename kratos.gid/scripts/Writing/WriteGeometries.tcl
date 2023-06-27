@@ -18,6 +18,8 @@ proc write::writeGeometryConnectivities { group_list} {
 }
 
 proc write::printGeometryConnectivities {group etype nnodes} {
+    
+    set inittime [clock seconds]
     # Prepare the indent
     set s [mdpaIndent]
     set nDim $::Model::SpatialDimension
@@ -40,6 +42,7 @@ proc write::printGeometryConnectivities {group etype nnodes} {
     if {$etype == "Sphere" || $etype == "Circle"} {
         write::writeSphereRadiusOnGroup $group
     }
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "printGeometryConnectivities $geometry_name time: [Kratos::Duration $ttime]"}
 }
 
 proc write::writeSphereRadiusOnGroup { groupid } {
