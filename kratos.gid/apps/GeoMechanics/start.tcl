@@ -35,6 +35,8 @@ proc ::GeoMechanics::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "BackStage" "back.png" [list -np- ::GeoMechanics::PrevStage] [= "Previous stage"]
     Kratos::ToolbarAddItem "DrawStage" "pie.png" [list -np- ::GeoMechanics::DrawStage] [= "Draw stage"]
     Kratos::ToolbarAddItem "NextStage" "next.png" [list -np- ::GeoMechanics::NextStage] [= "Next stage"]
+    Kratos::ToolbarAddItem "SpacerGeoMechanics1" "" "" ""
+    Kratos::ToolbarAddItem "callPython" "python.png" [list -np- ::GeoMechanics::PythonButton] [= "Python click"]
 }
 
 proc ::GeoMechanics::PrevStage {  } {
