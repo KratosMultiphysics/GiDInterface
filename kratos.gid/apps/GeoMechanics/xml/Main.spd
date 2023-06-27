@@ -16,6 +16,6 @@
       <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
       </blockdata>
     </container>
-    <include n="materials" active="1" path="apps/Structural/xml/Materials.spd"/>
+    <include n="materials" active="1" path="apps/GeoMechanics/xml/Materials.spd"/>
     <value n="mat_dll" pn="Material dll path" v="C:/"/>
   </container>

@@ -14,8 +14,8 @@ proc ::GeoMechanics::xml::Init { } {
     Model::getConditions Conditions.xml
     Model::getConstitutiveLaws ConstitutiveLaws.xml
 
-    # Model::ForgetMaterials
-    # Model::getMaterials Materials.xml
+    Model::ForgetMaterials
+    Model::getMaterials Materials.xml
 
     Model::getProcesses Processes.xml
 
