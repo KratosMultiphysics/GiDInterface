@@ -166,11 +166,13 @@ proc ::DEM::write::Validate {} {
 proc ::DEM::write::FindPropertiesBySubmodelpart {props subid } {
 
     set result ""
+    if {$props eq ""} {W "Check materials in $subid"}
     foreach prop [dict get $props properties]  {
         if { [dict get $prop model_part_name] eq $subid || [lindex [split [dict get $prop model_part_name] "."] end] eq $subid } {
             set result $prop
         }
     }
+
     return $result
 }
 

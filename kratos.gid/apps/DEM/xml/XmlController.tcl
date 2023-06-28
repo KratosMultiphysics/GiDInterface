@@ -43,10 +43,10 @@ proc ::DEM::xml::CustomTree { args } {
         }
     }
 
-    set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='Element'\]"
-    gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden dict {[GetElements ElementType DEM]} ]
-    set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='AdvancedMeshingFeatures'\]"
-    gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden ]
+    # set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='Element'\]"
+    # gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden dict {[GetElements ElementType DEM]} ]
+    # set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='AdvancedMeshingFeatures'\]"
+    # gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden ]
 
     # Inlet 2D or 3D special parameters
     set 3dinlet_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='Inlet'\]/value\[@n='InletElementType'\]"

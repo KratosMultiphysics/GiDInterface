@@ -43,7 +43,7 @@ proc ::write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter
                 }
             } else {
                 # If kname eq "" => no topology feature match, condition written as nodal
-                if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
+                if {[$cond hasTopologyFeatures]} {error [= "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"]}
             }
         } else {
             error "Could not find conditon named $condid"

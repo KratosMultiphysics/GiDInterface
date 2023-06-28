@@ -69,6 +69,7 @@ proc Kratos::RegisterGiDEvents { } {
     GiD_RegisterEvent GiD_Event_SelectGIDBatFile Kratos::Event_SelectGIDBatFile PROBLEMTYPE Kratos
 
     # Postprocess
+    GiD_RegisterEvent GiD_Event_BeforeInitGIDPostProcess Kratos::BeforeInitGIDPostProcess PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_InitGIDPostProcess Kratos::Event_InitGIDPostProcess PROBLEMTYPE Kratos
     GiD_RegisterEvent GiD_Event_EndGIDPostProcess Kratos::Event_EndGIDPostProcess PROBLEMTYPE Kratos
 
@@ -110,7 +111,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     Kratos::LoadProblemtypeLibraries
 
     # Load launch modes
-    Kratos::LoadLaunchModes
+    Kratos::LoadLaunchModes 1
 
     # Load the Kratos problemtype global and user environment (stored preferences)
     Kratos::LoadEnvironment
@@ -130,7 +131,6 @@ proc Kratos::Event_InitProblemtype { dir } {
         after 500 [list spdAux::CreateWindow]
     }
 
-    Kratos::CheckDependencies
 }
 
 proc Kratos::InitGlobalVariables {dir} {
@@ -188,11 +188,12 @@ proc Kratos::InitGlobalVariables {dir} {
     set namespaces [list ]
 
     variable pip_packages_required
-    set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
-    KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
-    KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
-    KratosFSIApplication==9.0.3]
-    #set pip_packages_required KratosMultiphysics-all==9.0.2
+    # set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
+    # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
+    # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
+    # KratosFSIApplication==9.0.3]
+    # set pip_packages_required [list KratosMultiphysics-all==9.3.2 KratosDamApplication==9.3.2]
+    set pip_packages_required [list KratosMultiphysics-all==9.3.2]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -208,7 +209,7 @@ proc Kratos::LoadCommonScripts { } {
 
     # Writing common scripts
     foreach filename {Writing WriteHeadings WriteMaterials WriteNodes
-        WriteElements WriteConditions WriteConditionsByGiDId WriteConditionsByUniqueId
+        WriteElements WriteConditions WriteGeometries WriteConditionsByGiDId WriteConditionsByUniqueId
         WriteProjectParameters WriteSubModelPart WriteProcess} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename.tcl]]
     }
@@ -271,30 +272,36 @@ proc Kratos::LoadModelSPD { filespd } {
 
     } else {
         # If the spd versions are equal, partyhard
+        Kratos::_LoadGo $filespd
 
-        # Load the old spd
-        gid_groups_conds::open_spd_file $filespd
-
-        # Refresh the cache
-        customlib::UpdateDocument
-
-        # Load default files (if any) (file selection values store the filepaths in the spd)
-        spdAux::LoadModelFiles
-
-        # Load default intervals (if any)
-        spdAux::LoadIntervalGroups
-
-        # Reactive the previous app
-        spdAux::reactiveApp
-
-        apps::ExecuteOnCurrentApp LoadModelEvent $filespd
-
-        # Open the tree
-        spdAux::OpenTree
-
-        after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GidUtils::GetDirectoryModel] Logs]}
     }
 
+}
+
+proc Kratos::_LoadGo {filespd} {
+    # If the spd versions are equal, partyhard
+
+    # Load the old spd
+    gid_groups_conds::open_spd_file $filespd
+
+    # Refresh the cache
+    customlib::UpdateDocument
+
+    # Load default intervals (if any)
+    spdAux::LoadIntervalGroups
+
+    # Reactive the previous app
+    spdAux::reactiveApp
+
+    apps::ExecuteOnCurrentApp LoadModelEvent $filespd
+
+    # Load default files (if any) (file selection values store the filepaths in the spd)
+    spdAux::LoadModelFiles
+
+    # Open the tree
+    spdAux::OpenTree
+
+    after 500 {set ::Kratos::kratos_private(model_log_folder) [file join [GiD_Info Project ModelName].gid Logs]}
 }
 
 proc Kratos::Event_EndProblemtype { } {
@@ -387,14 +394,16 @@ proc Kratos::TransformProblemtype {old_dom old_filespd} {
         set w [dialogwin_snit .gid._ask -title [_ "Transform"] -entrytext [_ "The model needs to be upgraded. Do you want to upgrade to new version? You can lose data"]]
         set action [$w createwindow]
         destroy $w
-        if { $action < 1 } { return }
+        if { $action < 1 } { Kratos::_LoadGo $old_filespd; return }
     }
 
     # Get the old app
     set old_activeapp_node [$old_dom selectNodes "//hiddenfield\[@n='activeapp'\]"]
+    set old_activeapp ""
     if {$old_activeapp_node ne ""} {
         set old_activeapp [get_domnode_attribute $old_activeapp_node v]
-    } else {
+    }
+    if {$old_activeapp eq ""} {
         WarnWin "Unable to get the active application in your model"
         return ""
     }
@@ -433,15 +442,16 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     set inittime [clock seconds]
     set tmp_init_mesh_time $inittime
     Kratos::Log "Mesh BeforeMeshGeneration start"
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Lines 1:end escape escape escape
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces 1:end escape escape escape
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Volumes 1:end escape escape escape
+
+    GiD_MeshData mesh_criteria to_be_meshed 1 lines [GiD_Geometry list line]
+    GiD_MeshData mesh_criteria to_be_meshed 1 surfaces [GiD_Geometry list surface]
+    GiD_MeshData mesh_criteria to_be_meshed 1 volumes  [GiD_Geometry list volume ]
 
     # We need to mesh every line and surface assigned to a group that appears in the tree
     foreach group [spdAux::GetAppliedGroups] {
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Volumes {*}[GiD_EntitiesGroups get $group volumes] escape escape escape
+        GiD_MeshData mesh_criteria to_be_meshed 2 lines [GiD_EntitiesGroups get $group lines]
+        GiD_MeshData mesh_criteria to_be_meshed 2 surfaces [GiD_EntitiesGroups get $group surfaces]
+        GiD_MeshData mesh_criteria to_be_meshed 2 volumes  [GiD_EntitiesGroups get $group volumes]
     }
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
@@ -463,6 +473,7 @@ proc Kratos::Event_AfterMeshGeneration {fail} {
     set endtime [clock seconds]
     set ttime [expr {$endtime-$tmp_init_mesh_time}]
     Kratos::Log "Mesh end process in [Duration $ttime]"
+    # W "Meshing finished  [Duration $ttime]"
     set mesh_data [Kratos::GetMeshBasicData]
     Kratos::Log "Mesh data -> [write::tcl2json $mesh_data]"
 }
@@ -476,6 +487,19 @@ proc Kratos::Event_InitGIDPostProcess {} {
     gid_groups_conds::close_all_windows
     # We don't have (yet) any postprocess window
     gid_groups_conds::open_post check_default
+}
+
+proc Kratos::BeforeInitGIDPostProcess {} {
+    # In docker run, rename lst file
+    if {[info exists Kratos::kratos_private(launch_configuration)]} {
+        set launch_mode $Kratos::kratos_private(launch_configuration)
+        if {$launch_mode eq "Docker"} {
+            set list_file [file join [GidUtils::GetDirectoryModel] model.post.lst]
+            if {[file exists $list_file]} {
+                file copy -force $list_file [GidUtils::GetFilenameInsideProject [file rootname [GidUtils::GetDirectoryModel]] .post.lst]
+            }
+        }
+    }
 }
 
 proc Kratos::Event_EndGIDPostProcess {} {
@@ -506,15 +530,18 @@ proc Kratos::Event_BeforeRunCalculation { batfilename basename dir problemtypedi
     }
     set app_run_brake [apps::ExecuteOnCurrentApp BreakRunCalculation]
     if {[write::isBooleanTrue $app_run_brake]} {return "-cancel-"}
+    if {[Kratos::CheckDependencies] ne 0} {return [list "-cancel-" "Unable to run. Missing dependencies"]}
 
 }
 
 proc Kratos::Event_SelectGIDBatFile { dir basename } {
+    set result ""
     if {[info exists Kratos::kratos_private(launch_configuration)]} {
         set launch_mode $Kratos::kratos_private(launch_configuration)
         ::GidUtils::SetWarnLine "Launch mode: $launch_mode"
-        return [Kratos::ExecuteLaunchByMode $launch_mode]
+        catch {set result [Kratos::ExecuteLaunchByMode $launch_mode]} error_msg
     }
+    return $result
 }
 
 proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
@@ -526,6 +553,8 @@ proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
 }
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
+    # W "Kratos::WriteCalculationFilesEvent"
+    set ini_time [clock seconds]
     # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
         # Model must be saved
@@ -551,6 +580,10 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     } else {
         ::GidUtils::SetWarnLine "MDPA and JSON written OK"
     }
+    set end_time [clock seconds]
+    set ttime [expr {$end_time-$ini_time}]
+    Kratos::Log "Write calculation files in [Duration $ttime]"
+    W "Write calculation files in [Duration $ttime]"
     return $errcode
 }
 

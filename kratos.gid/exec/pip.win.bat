@@ -15,4 +15,4 @@ DEL "%2\%1*.post.res"
 DEL "%2\%1*.post.msh"
 
 @REM Calculate!
-python MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
+%kratos_python_exe% MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"

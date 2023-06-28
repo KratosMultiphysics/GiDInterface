@@ -298,7 +298,8 @@ oo::class create App {
     method getUniqueName {n} {variable properties; if {[dict exists $properties unique_names $n]} {return [dict get $properties unique_names $n]} }
     method getUniqueNames {} {variable properties; return [dict get $properties unique_names]}
     method getWriteProperty {n} {variable properties; if {[dict exists $properties write $n]} {return [dict get $properties write $n]} }
-    method getWriteProperties {} {variable properties; return [dict get $properties write}
+    method setWriteProperty {n v} {variable properties; dict set properties write $n $v} 
+    method getWriteProperties {} {variable properties; return [dict get $properties write]}
 }
 
 proc apps::LoadAppProperties {app} {

@@ -40,12 +40,17 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
     Kratos::ToolbarAddItem "Spacer" "" "" ""
     Kratos::ToolbarAddItem "Run" "run.png" {Utilities Calculate} [= "Run the simulation"]
     Kratos::ToolbarAddItem "Output" "output.png" [list -np- PWViewOutput] [= "View process info"]
-    Kratos::ToolbarAddItem "Stop" "stop.png" {Utilities CancelProcess} [= "Cancel process"]
+    Kratos::ToolbarAddItem "Stop" "stop.png"  [list -np- Kratos::StopCalculation] [= "Cancel process"]
     Kratos::ToolbarAddItem "SpacerApp1" "" "" ""
     if {[info exists kratos_private(UseFiles)] && $kratos_private(UseFiles) == 1} {
         Kratos::ToolbarAddItem "Files" "files.png" [list -np- spdAux::LaunchFileWindow] [= "File handler window"]
     }
     Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]
+    Kratos::ToolbarAddItem "Settings" "config.png" [list -np- PreferencesWindow kratos_preferences] [= "Settings"]
+    set missing_dependencies [Kratos::CheckDependencies 0]
+    if {$missing_dependencies ne "0"} {
+        Kratos::ToolbarAddItem "Version" "version_warning.png" [list -np- Kratos::ToolbarDependenciesRefresh] [= "Dependencies check!"]
+    } 
     Kratos::ToolbarAddItem "SpacerApp2" "" "" ""
 
     set app_items_toolbar [apps::ExecuteOnCurrentApp CustomToolbarItems]
@@ -95,6 +100,11 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
 
         AddNewToolbar [= "Kratos toolbar"] ${prefix}${name}WindowGeom $procname
     }
+}
+
+proc Kratos::ToolbarDependenciesRefresh { } {
+    Kratos::CheckDependencies
+    Kratos::ToolbarRefresh
 }
 
 proc Kratos::EndCreatePreprocessTBar {} {
@@ -151,7 +161,7 @@ proc Kratos::ChangeMenus { } {
     if {[GidUtils::VersionCmp "14.1.4d"] <0 } { set cmd  [list ChangeVariables kratos_preferences] } {set cmd [list PreferencesWindow kratos_preferences]}
     GiDMenu::InsertOption "Kratos" [list "Kratos preferences" ] [incr pos] PRE $cmd "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "View current log" ] [incr pos] PREPOST [list Kratos::ViewLog] "" "" replace =
-    GiDMenu::InsertOption "Kratos" [list "Install python and update dependencies" ] [incr pos] PREPOST [list Kratos::InstallAllPythonDependencies] "" "" replace =
+    GiDMenu::InsertOption "Kratos" [list "Check dependencies" ] [incr pos] PREPOST [list Kratos::CheckDependencies] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "Refresh launch configurations" ] [incr pos] PREPOST [list Kratos::LoadLaunchModes 1] "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "---"] [incr pos] PRE "" "" "" replace =
     GiDMenu::InsertOption "Kratos" [list "About Kratos" ] [incr pos] PREPOST [list Kratos::About] "" "" replace =

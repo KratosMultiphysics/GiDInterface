@@ -382,6 +382,12 @@ proc ::DEM::write::getForceProcessDictList {} {
 #     }
 # }
 
+proc ::DEM::write::GetElementType { } {
+    set used_elements [spdAux::GetUsedElements]
+    set element_type [lindex $used_elements 0]
+    return $element_type
+}
+
 proc ::DEM::write::GetDemStrategyName { } {
     return sphere_strategy
     # set ElementType [::wkcf::GetElementType]   # TODO: check old ::wkcf::GetElementType functionalities if required

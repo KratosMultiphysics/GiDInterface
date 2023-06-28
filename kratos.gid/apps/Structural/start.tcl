@@ -1,6 +1,6 @@
 namespace eval ::Structural {
     Kratos::AddNamespace [namespace current]
-    
+
     # Variable declaration
     variable dir
     variable _app
@@ -8,6 +8,7 @@ namespace eval ::Structural {
     proc GetAttribute {name} {variable _app; return [$_app getProperty $name]}
     proc GetUniqueName {name} {variable _app; return [$_app getUniqueName $name]}
     proc GetWriteProperty {name} {variable _app; return [$_app getWriteProperty $name]}
+    proc SetWriteProperty {name value} {variable _app; return [$_app setWriteProperty $name $value]}
 }
 
 proc ::Structural::Init { app } {
@@ -21,10 +22,11 @@ proc ::Structural::Init { app } {
     ::Structural::write::Init
 }
 
-# Create the old-gid condition relation_line_geo_mesh to link geometry and mesh entities. 
+# Create the old-gid condition relation_line_geo_mesh to link geometry and mesh entities.
 # Topic: Local axes, beams
 # TODO: remove this when GiD creates this relation automatically
 proc ::Structural::BeforeMeshGeneration { size } {
+    GiD_UnAssignData condition relation_line_geo_mesh Lines all
     foreach group [GiD_Groups list] {
         GiD_AssignData condition relation_line_geo_mesh Lines {0} [GiD_EntitiesGroups get $group lines]
     }

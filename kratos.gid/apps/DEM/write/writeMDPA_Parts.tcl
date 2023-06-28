@@ -101,17 +101,9 @@ proc ::DEM::write::writeSphereRadius { } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach group [$root selectNodes $xp1] {
-        DEM::write::writeSphereRadiusOnGroup $group
+        set groupid [$group @n]
+        write::writeSphereRadiusOnGroup $groupid
     }
-}
-
-proc ::DEM::write::writeSphereRadiusOnGroup { group } {
-    set groupid [$group @n]
-    set print_groupid [write::GetWriteGroupName $groupid]
-    write::WriteString "Begin NodalData RADIUS // GUI group identifier: $print_groupid"
-    GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 %10g\n"]
-    write::WriteString "End NodalData"
-    write::WriteString ""
 }
 
 proc ::DEM::write::writeDEMConditionMeshes { } {

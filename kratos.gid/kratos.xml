@@ -3,9 +3,9 @@
 <Infoproblemtype version="1.0">
   <Program>
     <Name>Kratos</Name>
-    <Version>9.0.1</Version>
+    <Version>9.3.3</Version>
     <ExecutableVersion></ExecutableVersion>
-    <CheckMinimumGiDVersion>15.1.3d</CheckMinimumGiDVersion>
+    <CheckMinimumGiDVersion>16.1.4d</CheckMinimumGiDVersion>
     <CustomLibAutomatic>0</CustomLibAutomatic>
     <CustomLibNativeGroups>1</CustomLibNativeGroups>
     <ImageFileBrowser>images/ImageFileBrowser.gif</ImageFileBrowser>

@@ -38,7 +38,7 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
 
     # Nodal coordinates
-    write::writeNodalCoordinates
+    write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroups grid]
 
     # Grid element connectivities
     writeGridConnectivities
@@ -88,6 +88,17 @@ proc MPM::write::GetPartsGroups { part_type {what "name"} } {
         }
     }
     return $body_groups
+}
+
+proc ::MPM::write::GetUsedElements { {get "Objects"} } {
+    set lista [list ]
+    foreach gNode [MPM::write::GetPartsGroups Body node] {
+        set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        set e [Model::getElement $elem_name]
+        if {$get eq "Name"} { set e [$e getName] }
+        lappend lista $e
+    }
+    return $lista
 }
 
 proc MPM::write::writeBodyNodalCoordinates { } {
@@ -158,11 +169,13 @@ proc MPM::write::writeCustomFilesEvent { } {
     set new_mats [list ]
     foreach mat $mats_json {
         set type [dict exists $mat Material constitutive_law]
-        if {$type eq 0} {
-            set submodelpart [lindex [split [dict get $mat model_part_name] "."] end]
-            dict set mat model_part_name Background_Grid.$submodelpart
+#         if {$type eq 0} {
+#             set submodelpart [lindex [split [dict get $mat model_part_name] "."] end]
+#             dict set mat model_part_name Background_Grid.$submodelpart
+#         }
+        if {$type eq 1} {
+            lappend new_mats $mat
         }
-        lappend new_mats $mat
     }
     write::OpenFile [GetAttribute materials_file]
     write::WriteJSON [dict create properties $new_mats]

@@ -7,6 +7,9 @@ proc ::Dam::write::getParametersDict { } {
 
     set projectParametersDict [dict create]
 
+   # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.DamApplication.dam_analysis"
+
     ### Problem data
     dict set projectParametersDict problem_data [Dam::write::GetProblemDataDict]
 
@@ -840,7 +843,10 @@ proc ::Dam::write::DevicesOutput { } {
             lappend positionList $xposition $yposition $zposition
             dict set parameterDict position $positionList
             dict set parameterDict model_part_name "MainModelPart"
-            dict set parameterDict output_file_name $name$extension
+            set outputDict [dict create]
+            dict set outputDict file_name $name
+            dict set outputDict output_path "MonitoringDevices"
+            dict set parameterDict output_file_settings $outputDict
             set outputlist [list ]
             lappend outputlist $variable
             dict set parameterDict output_variables $outputlist

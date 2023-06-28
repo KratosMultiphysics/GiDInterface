@@ -2,7 +2,7 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="SphericPartDEMElement3D" pn="Spheric Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" ElementType="DEM" help="">
+  <ElementItem n="SphericPartDEMElement3D" pn="Spheric Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication"  WorkingSpaceDimension="3D" ElementType="DEM" help="">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Sphere" nodes="1" KratosName="SphericParticle3D"/>
@@ -30,7 +30,7 @@
     <outputs></outputs>
   </ElementItem>
 
-  <ElementItem n="CylinderPartDEMElement2D" pn="Circle Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" ElementType="DEM" help="">
+  <ElementItem n="CylinderPartDEMElement2D" pn="Circle Element" ImplementedInFile=".cpp" ImplementedInApplication="DEMApplication"  WorkingSpaceDimension="2D" ElementType="DEM" help="">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Circle" nodes="1" KratosName="CylinderParticle2D"/>

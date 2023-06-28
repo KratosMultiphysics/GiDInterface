@@ -3,6 +3,8 @@
 proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable submodelparts
     variable formats_dict
+    
+    set inittime [clock seconds]
 
     set id_f [dict get $formats_dict ID]
     set mid ""
@@ -38,13 +40,13 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         WriteString "${s1}Begin SubModelPartNodes"
         GiD_WriteCalculationFile nodes -sorted $gdict
         WriteString "${s1}End SubModelPartNodes"
-        WriteString "${s1}Begin SubModelPartElements"
         if {"Elements" in $what} {
+            WriteString "${s1}Begin SubModelPartElements"
             GiD_WriteCalculationFile elements -sorted $gdict
+            WriteString "${s1}End SubModelPartElements"
         }
-        WriteString "${s1}End SubModelPartElements"
-        WriteString "${s1}Begin SubModelPartConditions"
         if {"Conditions" in $what} {
+            WriteString "${s1}Begin SubModelPartConditions"
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
                 #W $iniend
@@ -54,14 +56,22 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
                     }
                 }
             }
+            WriteString "${s1}End SubModelPartConditions"
         }
-        WriteString "${s1}End SubModelPartConditions"
+        if {"Geometries" in $what} {
+            WriteString "${s1}Begin SubModelPartGeometries"
+            GiD_WriteCalculationFile elements -sorted $gdict
+            WriteString "${s1}End SubModelPartGeometries"
+        }
         WriteString "${s}End SubModelPart"
     }
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupSubModelPart $group time: [Kratos::Duration $ttime]"}
     return $mid
 }
 
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
+    
+    set inittime [clock seconds]
     # Write elements
     set groups [write::_writeElementsForBasicSubmodelParts $un]
     # Write conditions (By iterator, so need the app condition iterator)
@@ -75,6 +85,7 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
         if {$needConds} {append what "&Conditions"; set iters [dict get $conditions_dict [$group @n]]}
         ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what $iters
     }
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeBasicSubmodelParts $un time: [Kratos::Duration $ttime]"}
     return $conditions_dict
 }
 

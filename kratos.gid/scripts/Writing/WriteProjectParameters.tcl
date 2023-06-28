@@ -17,14 +17,21 @@ proc write::json2dict {JSONtext} {
 proc write::tcl2json { value } {
     # Guess the type of the value; deep *UNSUPPORTED* magic!
     # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
-    regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    # regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    set type [GidUtils::GetInternalRepresentation $value]
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2json $v}]]}
+    #if {$type ne "dict" && [llength $value]>1 && [string index $value 0] eq "\{"} { W "$value as list"; set type list}
+    #if {$type eq "exprcode"} {set type list; W "$type -> $value"}
     switch $type {
         string {
-            if {$value eq "false"} {return [expr "false"]}
-            if {$value eq "true"} {return [expr "true"]}
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return null
+            }
+            if {[isBooleanFalse $value]} {return [expr "false"]}
+            if {[isBooleanTrue $value]} {return [expr "true"]}
             return [json::write string $value]
         }
         dict {
@@ -54,12 +61,17 @@ proc write::tcl2json { value } {
             } elseif {[string is double -strict $value]} {
                 return [expr {$value}]
             } elseif {[string is boolean -strict $value]} {
-                return [expr {$value ? "true" : "false"}]
+                if {[isBooleanFalse $value]} {return [expr "false"]}
+                if {[isBooleanTrue $value]} {return [expr "true"]}
+                return [json::write string $value]
+            } elseif {[string index $value 0] eq "\{"} {
+                return [json::write array {*}[lmap v $value {tcl2json $v}]]
             }
             return [json::write string $value]
         }
     }
 }
+
 proc write::tcl2jsonstrings { value } {
     # Guess the type of the value; deep *UNSUPPORTED* magic!
     # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
@@ -67,8 +79,12 @@ proc write::tcl2jsonstrings { value } {
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]}
     switch $type {
         string {
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return {{}}
+            }
             return [json::write string $value]
         }
         dict {
@@ -104,7 +120,9 @@ proc write::tcl2jsonstrings { value } {
 }
 
 proc write::WriteJSON {processDict} {
-    WriteString [write::tcl2json $processDict]
+    set json_string [write::tcl2json $processDict]
+    set new_string [string map {"\[null\]" "null"} $json_string]
+    WriteString $new_string
 }
 proc write::WriteJSONAsStringFields {processDict} {
     WriteString [write::tcl2jsonstrings $processDict]
@@ -169,8 +187,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
         set StratParamsUN [apps::getCurrentUniqueName StratParams]
     }
 
-    set solstratName [write::getValue $solStratUN]
-    set schemeName [write::getValue $schemeUN]
+    set solstratName [write::getValue $solStratUN "" force]
+    set schemeName [write::getValue $schemeUN "" force]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
 
@@ -322,7 +340,7 @@ proc write::GetResultsByXPathList { xpath } {
     set xp1 "$xpath/value"
     set resultxml [$root selectNodes $xp1]
     foreach res $resultxml {
-        if {[get_domnode_attribute $res v] in [list "Yes" "True" "1"] && [get_domnode_attribute $res state] ne "hidden"} {
+        if {[write::isBooleanTrue [get_domnode_attribute $res v]] && [get_domnode_attribute $res state] ne "hidden"} {
             set name [get_domnode_attribute $res n]
             lappend result $name
         }
@@ -456,7 +474,7 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     dict set outputConfigDict python_module gid_output_process
     dict set outputConfigDict kratos_module KratosMultiphysics
     dict set outputConfigDict process_name GiDOutputProcess
-    dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    # dict set outputConfigDict help "This process writes postprocessing files for GiD"
     dict set outputConfigDict Parameters $outputProcessParams
 
     return $outputConfigDict
@@ -514,7 +532,7 @@ proc write::GetDefaultVTKOutput { {appid ""} } {
     dict set outputConfigDictVtk python_module vtk_output_process
     dict set outputConfigDictVtk kratos_module KratosMultiphysics
     dict set outputConfigDictVtk process_name VtkOutputProcess
-    dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
+    #dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
     dict set outputConfigDictVtk Parameters [write::GetDefaultParametersOutputVTKDict $appid]
 
     return $outputConfigDictVtk
@@ -556,7 +574,6 @@ proc write::GetDefaultRestartDict { } {
     return $restartDict
 }
 
-
 proc write::GetGravityByModuleDirection { gravity_un } {
     set gravity_value [write::getValue $gravity_un GravityValue]
     set gravity_X [write::getValue $gravity_un Cx]
@@ -568,4 +585,28 @@ proc write::GetGravityByModuleDirection { gravity_un } {
     lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
 
     return [list $gx $gy $gz]
+}
+
+proc write::GetTimeStepIntervals { {time_parameters_un ""} } {
+    if {$time_parameters_un eq ""} {set time_parameters_un [GetConfigurationAttribute time_parameters_un]}
+    set root [customlib::GetBaseRoot]
+
+    set xp "[spdAux::getRoute $time_parameters_un]/container\[@n = 'TimeStep'\]/blockdata"
+    set time_step_interval_nodes [$root selectNodes $xp]
+
+    # If the app is still working on fixed Delta time
+    if {[llength $time_step_interval_nodes] eq 0} {return [write::getValue $time_parameters_un DeltaTime]}
+
+    # If it works with interval delta time
+    set time_step_intervals_list [list ]
+    foreach time_step_interval_node $time_step_interval_nodes {
+        set time_step_interval_start_time [write::getValueByNode [$time_step_interval_node find n StartTime]]
+        set time_step_interval_delta_time [write::getValueByNode [$time_step_interval_node find n DeltaTime]]
+
+        set key_value [list $time_step_interval_start_time $time_step_interval_delta_time]
+        lappend time_step_intervals_list $key_value
+    }
+
+    set time_step_intervals_list [lsort -real -index 0 $time_step_intervals_list]
+    return $time_step_intervals_list
 }

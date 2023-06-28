@@ -11,7 +11,7 @@
 				   ImplementedInApplication = "ConvectionDiffusionApplication"
 				   ImplementedInFile        = ".cpp"
                    MinimumKratosVersion     = "9000"
-				   ProductionReady          = "ProductionReady"
+
 				   WorkingSpaceDimension    = "2D"
 				   LocalSpaceDimension      = "1"
                    SkinConditions           = "True"
@@ -40,7 +40,7 @@
 				   ImplementedInApplication = "ConvectionDiffusionApplication"
 				   ImplementedInFile        = ".cpp"
                    MinimumKratosVersion     = "9000"
-				   ProductionReady          = "ProductionReady"
+
 				   WorkingSpaceDimension    = "3D"
 				   LocalSpaceDimension      = "2"
                    SkinConditions           = "True"
@@ -58,7 +58,7 @@
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
-	
+
 	<ConditionItem n                        = "FreeSurfaceHeatFlux2D"
 	               pn                       = "Free surface heat flux"
 				   ProcessName              = "AssignScalarVariableProcess"
@@ -70,7 +70,7 @@
 				   ImplementedInApplication = "ConvectionDiffusionApplication"
 				   ImplementedInFile        = ".cpp"
                    MinimumKratosVersion     = "9000"
-				   ProductionReady          = "ProductionReady"
+
 				   WorkingSpaceDimension    = "2D"
 				   LocalSpaceDimension      = "1"
                    SkinConditions           = "True"
@@ -87,7 +87,7 @@
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
-	
+
 	<ConditionItem n                        = "FreeSurfaceHeatFlux3D"
 	               pn                       = "Free surface heat flux"
 				   ProcessName              = "AssignScalarVariableProcess"
@@ -99,7 +99,7 @@
 				   ImplementedInApplication = "ConvectionDiffusionApplication"
 				   ImplementedInFile        = ".cpp"
                    MinimumKratosVersion     = "9000"
-				   ProductionReady          = "ProductionReady"
+
 				   WorkingSpaceDimension    = "3D"
 				   LocalSpaceDimension      = "2"
                    SkinConditions           = "True"
@@ -117,7 +117,7 @@
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
-	
+
 	<ConditionItem n                        = "ThermalFace2D"
 	               pn                       = "Thermal face"
 				   ProcessName              = "ApplyThermalFaceProcess"
@@ -126,7 +126,7 @@
 				   ImplementedInApplication = "ConvectionDiffusionApplication"
 				   ImplementedInFile        = ".cpp"
                    MinimumKratosVersion     = "9000"
-				   ProductionReady          = "ProductionReady"
+
 				   WorkingSpaceDimension    = "2D"
 				   LocalSpaceDimension      = "1"
                    SkinConditions           = "True"
@@ -141,7 +141,7 @@
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
-	
+
     <ConditionItem n                        = "ThermalFace3D"
 	               pn                       = "Thermal face"
 				   ProcessName              = "ApplyThermalFaceProcess"
@@ -150,7 +150,7 @@
 				   ImplementedInApplication = "ConvectionDiffusionApplication"
 				   ImplementedInFile        = ".cpp"
                    MinimumKratosVersion     = "9000"
-				   ProductionReady          = "ProductionReady"
+
 				   WorkingSpaceDimension    = "3D"
 				   LocalSpaceDimension      = "2"
                    SkinConditions           = "True"
@@ -166,7 +166,7 @@
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
-	
+
 	<ConditionItem n                        = "FreeSurfaceThermalFace2D"
 	               pn                       = "Free surface thermal face"
 				   ProcessName              = "ApplyThermalFaceProcess"
@@ -175,7 +175,7 @@
 				   ImplementedInApplication = "ConvectionDiffusionApplication"
 				   ImplementedInFile        = ".cpp"
                    MinimumKratosVersion     = "9000"
-				   ProductionReady          = "ProductionReady"
+
 				   WorkingSpaceDimension    = "2D"
 				   LocalSpaceDimension      = "1"
                    SkinConditions           = "True"
@@ -190,7 +190,7 @@
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
-	
+
     <ConditionItem n                        = "FreeSurfaceThermalFace3D"
 	               pn                       = "Free surface thermal face"
 				   ProcessName              = "ApplyThermalFaceProcess"
@@ -199,7 +199,7 @@
 				   ImplementedInApplication = "ConvectionDiffusionApplication"
 				   ImplementedInFile        = ".cpp"
                    MinimumKratosVersion     = "9000"
-				   ProductionReady          = "ProductionReady"
+
 				   WorkingSpaceDimension    = "3D"
 				   LocalSpaceDimension      = "2"
                    SkinConditions           = "True"
@@ -215,5 +215,5 @@
         </DefaultValues>
         <outputs></outputs>
     </ConditionItem>
-	
+
 </ConditionList>

@@ -296,3 +296,8 @@ proc FluidDEM::write::InitExternalProjectParameters { } {
 
     apps::setActiveAppSoft FluidDEM
 }
+
+proc ::DEM::write::GetElementType { } {
+    return "SphericPartDEMElement3D"
+}
+

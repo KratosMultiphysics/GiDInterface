@@ -35,14 +35,14 @@ proc ::MPM::examples::FallingSandBall::DrawGeometry2D {args} {
     GiD_Layers edit color Sand "#e1aa72"
 
     # Sand circle
-    GiD_Process Mescape Geometry Create Object CirclePNR 2.0 3.0 0.0 0.0 0.0 1.0 0.5 escape escape 
+    GiD_Process Mescape Geometry Create Object CirclePNR 2.0 3.0 0.0 0.0 0.0 1.0 0.5 escape escape
 
 
     # Grid creation
     GiD_Layers create Grid
     GiD_Layers edit to_use Grid
     GiD_Layers edit color Grid "#fddda0"
-    
+
     ## Points ##
     set coordinates [list {0 0 0} {0 4 0} {4 4 0} {4 0 0}]
     set grid_points [list ]
@@ -85,7 +85,7 @@ proc ::MPM::examples::FallingSandBall::AssignGroups2D {args} {
 }
 
 proc ::MPM::examples::FallingSandBall::AssignGroups3D {args} {
-    
+
 }
 
 # Tree assign
@@ -106,12 +106,15 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     # Parts
     set mpm_parts_route [spdAux::getRoute "MPMParts"]
 
+    # Erase Intervals
+    ErasePreviousIntervals
+
     ## Sand
-    set mpm_solid_parts_route "${mpm_parts_route}/condition\[@n='Parts_Solid'\]"
+    set mpm_solid_parts_route "${mpm_parts_route}/condition\[@n='Parts_Material_domain'\]"
     set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route Sand]
     $mpm_solid_part setAttribute ov surface
     set constitutive_law_name "HenckyMCPlasticPlaneStrain${nd}Law"
-    set props [list Element UpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material Sand DENSITY 2300 YOUNG_MODULUS 6e6 POISSON_RATIO 0.3 THICKNESS 0.1 PARTICLES_PER_ELEMENT 10]
+    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material Sand DENSITY 2300 YOUNG_MODULUS 6e6 POISSON_RATIO 0.3 THICKNESS 0.1 PARTICLES_PER_ELEMENT 6]
     spdAux::SetValuesOnBaseNode $mpm_solid_part $props
 
     ## Grid
@@ -121,7 +124,6 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     set props [list Element GRID$nd ]
     spdAux::SetValuesOnBaseNode $mpm_grid_part $props
 
-    
     # Fix Displacement
     ## Create interval subgroup
     GiD_Groups clone FixedDisplacement Total
@@ -134,14 +136,21 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     set mpm_displacement_route "${mpm_bc_route}/condition\[@n='DISPLACEMENT'\]"
     set mpm_displacement [customlib::AddConditionGroupOnXPath $mpm_displacement_route "FixedDisplacement//Total"]
     $mpm_displacement setAttribute ov $condtype
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0  selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0  selector_component_Z ByValue value_component_Z 0.0]
     spdAux::SetValuesOnBaseNode $mpm_displacement $props
 
     ## Slip
     set mpm_loads_route [spdAux::getRoute "MPMLoads"]
     [customlib::AddConditionGroupOnXPath "$mpm_loads_route/condition\[@n='Slip$nd'\]" Slip] setAttribute ov $condtype
 
+    # Set gravity On
+    spdAux::SetValueOnTreeItem v "On" ActivateGravity
+
     # Solution strategy parameters
-    spdAux::SetValueOnTreeItem v "0.005" MPMTimeParameters DeltaTime
-    spdAux::SetValueOnTreeItem v "0.01" GiDOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "0.005" MPTimeParameters DeltaTime
+    spdAux::SetValueOnTreeItem v "2" MPTimeParameters EndTime
+    spdAux::SetValueOnTreeItem v "time" GiDOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "0.02" GiDOptions OutputDeltaTime
+    spdAux::SetValueOnTreeItem v "time" VtkOptions OutputControlType
+    spdAux::SetValueOnTreeItem v "0.02" VtkOptions OutputDeltaTime
 }

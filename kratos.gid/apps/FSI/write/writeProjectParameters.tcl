@@ -93,6 +93,9 @@ proc ::FSI::write::GetSolverSettingsDict { } {
     dict set solver_settings_dict structure_solver_settings model_import_settings input_filename [dict get $mdpa_names Structural]
     dict set solver_settings_dict fluid_solver_settings model_import_settings input_filename [dict get $mdpa_names Fluid]
 
+    # Overwrite structural timestep with fluid timestep
+    dict set solver_settings_dict structure_solver_settings time_stepping [dict get $solver_settings_dict fluid_solver_settings time_stepping]
+
     # Add the MESH_DISPLACEMENT to the gid_output process
     # set gid_output [lindex [dict get $FluidParametersDict output_processes gid_output] 0]
     # set nodalresults [dict get $gid_output Parameters postprocess_parameters result_file_configuration nodal_results]
@@ -120,7 +123,7 @@ proc ::FSI::write::GetProcessesDict { } {
 proc ::FSI::write::GetNonDeprecatedProcessList { original_process_list } {
     set list [list ]
     foreach process $original_process_list {
-        if {[dict get $process python_module] ne "python_process"} {lappend list $process}
+        if {[dict get $process python_module] ne "process"} {lappend list $process}
     }
     return $list
 }
@@ -181,6 +184,7 @@ proc ::FSI::write::InitExternalProjectParameters { } {
     apps::setActiveAppSoft Structure
     Structural::write::SetAttribute time_parameters_un FLTimeParameters
     write::initWriteConfiguration [Structural::write::GetAttributes]
+    Structural::SetWriteProperty enable_dynamic_substepping [::FSI::GetWriteProperty "enable_dynamic_substepping"]
     set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
 
     apps::setActiveAppSoft FSI

@@ -6,26 +6,52 @@ proc ::Fluid::write::getParametersDict { } {
     dict set projectParametersDict analysis_stage "KratosMultiphysics.FluidDynamicsApplication.fluid_dynamics_analysis"
 
     # Problem data
-    dict set projectParametersDict problem_data [write::GetDefaultProblemDataDict [::Fluid::GetAttribute id]]
+    dict set projectParametersDict problem_data [::Fluid::write::GetProblemData_Dict]
 
     # output configuration
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict [::Fluid::GetAttribute id]]
 
     # Solver settings
-    set solver_settings_dict [Fluid::write::getSolverSettingsDict]
-    dict set solver_settings_dict "reform_dofs_at_each_step" false
-    dict set projectParametersDict solver_settings $solver_settings_dict
+    dict set projectParametersDict solver_settings [Fluid::write::getSolverSettingsDict]
 
     # Boundary conditions processes
-    set processesDict [dict create]
-    dict set processesDict initial_conditions_process_list [write::getConditionsParametersDict [::Fluid::GetUniqueName nodal_conditions] "Nodal"]
-    dict set processesDict boundary_conditions_process_list [write::getConditionsParametersDict [::Fluid::GetUniqueName conditions]]
-    dict set processesDict gravity [list [getGravityProcessDict] ]
-    dict set processesDict auxiliar_process_list [getAuxiliarProcessList]
-
-    dict set projectParametersDict processes $processesDict
+    dict set projectParametersDict processes [Fluid::write::GetProcesses_Dict]
 
     return $projectParametersDict
+}
+
+proc ::Fluid::write::GetProblemData_Dict { } {
+    return [write::GetDefaultProblemDataDict [::Fluid::GetAttribute id]]
+}
+
+proc ::Fluid::write::GetProcesses_Dict { } {
+    set processesDict [dict create]
+    dict set processesDict initial_conditions_process_list [write::getConditionsParametersDict [::Fluid::GetUniqueName nodal_conditions] "Nodal"]
+    set boundary_conditions_process_list [process_special_conditions [write::getConditionsParametersDict [::Fluid::GetUniqueName conditions]]]
+    dict set processesDict boundary_conditions_process_list $boundary_conditions_process_list
+    dict set processesDict gravity [list [getGravityProcessDict] ]
+    dict set processesDict auxiliar_process_list [getAuxiliarProcessList]
+    return $processesDict
+}
+
+proc ::Fluid::write::process_special_conditions { list_of_processes } {
+    set new_list [list ]
+    foreach process $list_of_processes {
+        # Wall law has nested parameters
+        if {[dict get $process process_name] eq "ApplyWallLawProcess" } {
+            if {[dict get $process Parameters wall_model_name] eq "navier_slip"} {
+                dict set process Parameters wall_model_settings slip_length [dict get $process Parameters slip_length]
+            }
+            if {[dict get $process Parameters wall_model_name] eq "linear_log"} {
+                dict set process Parameters wall_model_settings y_wall [dict get $process Parameters y_wall]
+            }
+            dict unset process Parameters y_wall
+            dict unset process Parameters slip_length
+        }
+        lappend new_list $process
+    }
+    return $new_list
+    
 }
 
 proc ::Fluid::write::writeParametersEvent { } {
@@ -258,7 +284,7 @@ proc ::Fluid::write::getSolverSettingsDict { } {
         # Include the formulation settings in the solver settings dict
         dict set solverSettingsDict formulation $formulationSettingsDict
     }
-
+    dict set solverSettingsDict "reform_dofs_at_each_step" false
     return $solverSettingsDict
 }
 

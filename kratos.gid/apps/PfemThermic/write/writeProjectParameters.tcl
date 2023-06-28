@@ -7,14 +7,15 @@ proc PfemThermic::write::getNewParametersDict { } {
     PfemFluid::write::CalculateMyVariables
     set projectParametersDict [dict create]
 
-	dict set projectParametersDict analysis_stage "KratosMultiphysics.PfemFluidDynamicsApplication.pfem_fluid_dynamics_analysis"
-    dict set projectParametersDict problem_data         [PfemFluid::write::GetPFEM_ProblemDataDict]
-	dict set projectParametersDict solver_settings      [PfemThermic::write::GetSolverSettingsDict]
-	dict set projectParametersDict problem_process_list [PfemFluid::write::GetPFEM_ProblemProcessList [PfemThermic::write::GetFreeSurfaceHeatFluxParts] [PfemThermic::write::GetFreeSurfaceThermalFaceParts]]
-	dict set projectParametersDict processes            [PfemThermic::write::GetProcessList]
-    dict set projectParametersDict output_configuration [write::GetDefaultOutputGiDDict PfemFluid     [spdAux::getRoute Results]]
-    dict set projectParametersDict output_configuration result_file_configuration nodal_results       [write::GetResultsByXPathList [spdAux::getRoute NodalResults]]
-    dict set projectParametersDict output_configuration result_file_configuration gauss_point_results [write::GetResultsList ElementResults]
+	dict set   projectParametersDict analysis_stage "KratosMultiphysics.PfemFluidDynamicsApplication.pfem_fluid_dynamics_analysis"
+    dict set   projectParametersDict problem_data         [PfemFluid::write::GetPFEM_ProblemDataDict]
+	dict set   projectParametersDict solver_settings      [PfemThermic::write::GetSolverSettingsDict]
+	dict set   projectParametersDict problem_process_list [PfemFluid::write::GetPFEM_ProblemProcessList [PfemThermic::write::GetFreeSurfaceHeatFluxParts] [PfemThermic::write::GetFreeSurfaceThermalFaceParts]]
+	dict set   projectParametersDict processes            [PfemThermic::write::GetProcessList]
+    dict set   projectParametersDict output_configuration [write::GetDefaultOutputGiDDict PfemFluid     [spdAux::getRoute Results]]
+	dict unset projectParametersDict output_configuration folder_name
+    dict set   projectParametersDict output_configuration result_file_configuration nodal_results       [write::GetResultsByXPathList [spdAux::getRoute NodalResults]]
+    dict set   projectParametersDict output_configuration result_file_configuration gauss_point_results [write::GetResultsList ElementResults]
 
     return $projectParametersDict
 }

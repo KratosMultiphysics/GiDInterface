@@ -4,7 +4,7 @@
 proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     set root [customlib::GetBaseRoot]
-    #W "$field $value $name $it"
+    # W "$field $value $unique_name $it"
     set node ""
 
     set xp [spdAux::getRoute $unique_name]
@@ -319,7 +319,12 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
         }
         switch $type {
             "inline_vector" {
-                set ndim [string index $::Model::SpatialDimension 0]
+                set param_ndim [$param getAttribute "dimension"]
+                if {$param_ndim eq ""} {
+                    set ndim [string index $::Model::SpatialDimension 0]
+                } else {
+                    set ndim $param_ndim
+                }
                 if {[string is double $v]} {
                     set v [string repeat "${v}," $ndim]
                 }
@@ -380,6 +385,27 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
                         }
                     }
                 }
+
+            }
+            "matrix" {
+                set rows [$param getAttribute "rows"]
+                set cols [$param getAttribute "cols"]
+                set components ""
+                for {set i 0} {$i < [expr max($rows,$cols)]} {incr i} {lappend components $i}; set components [join $components ","]
+                #append node "<value n='$inName' pn='$pn' v='$v' function='matrix_func,no_function' dimension_function_rows='$rows' dimension_function_cols='$cols' components_function='$components' help='$help'  state='$state' show_in_window='$show_in_window' />"
+                set value [split $v ","]
+                append node "<value n='$inName' pn='$pn' function='matrix_func,no_function' symmetric_function='0' has_diag='1' dimension_function_rows='$rows' dimension_function_cols='$cols' v='f(Matrix value for $pn)...' components_function='$components' help='$help' tree_state='closed' type='matrix'>"
+                append node "    <function>"
+                append node "        <functionVariable n='matrix_func' pn='Matrix value for $pn'>"
+                for {set i 0} {$i < $rows} {incr i} {
+                    for {set j 0} {$j < $cols} {incr j} {
+                        set vi [lindex $value [expr ($i*$cols)+$j] ]
+                        append node "        <value n='value' pn='V$i,$j' v='$vi'/>"
+                    }
+                }
+                append node "        </functionVariable>"
+                append node "    </function>"
+                append node "</value>"
 
             }
             "combo" {
@@ -942,8 +968,9 @@ proc spdAux::injectPartsByElementType {domNode args} {
         set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
         if {[llength $ov] == 0} {set ov "point,line,surface,volume"}
         set ovm "node,element"
+        set element_type_pn [string map {_ " "} $element_type]
         #if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
-        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
+        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type_pn}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
             <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
                     <dependencies node=\"../value\[@n!='Material'\]\" actualize=\"1\" />
             </value>

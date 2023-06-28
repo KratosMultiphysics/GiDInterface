@@ -32,6 +32,13 @@ proc ::DEM::write::processRigidWallMaterials { } {
 
     write::processMaterials "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]/group"
     set wallsProperties [write::getPropertiesListByConditionXPath "[spdAux::getRoute [::DEM::write::GetAttribute parts_un]]/condition\[@n='Parts_FEM'\]" 0 RigidFacePart]
+
+}
+proc ::DEM::write::processPhantomWallMaterials { } {
+    variable phantomwallsProperties
+    set phantom_walls_xpath [DEM::write::GetPhantomWallXPath]
+    write::processMaterials $phantom_walls_xpath/group
+    set phantomwallsProperties [write::getPropertiesListByConditionXPath $phantom_walls_xpath 0]
 }
 
 proc ::DEM::write::WriteRigidWallProperties { } {
@@ -119,7 +126,7 @@ proc ::DEM::write::DefineFEMExtraConditions {props} {
     set GraphPrint [dict get $props Material Variables GraphPrint]
     set GraphPrintval 0
     if {[write::isBooleanTrue $GraphPrint]} {
-	set GraphPrintval 1
+	    set GraphPrintval 1
     }
     write::WriteString "    FORCE_INTEGRATION_GROUP $GraphPrintval"
 }

@@ -118,11 +118,26 @@ proc write::writeEvent { filename } {
     Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
 
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Validate time: [Kratos::Duration $ttime]"
+    }
+
     #### MDPA Write ####
     if {$errcode eq 0} {
         Kratos::Log "Write MDPA $appid"
         set errcode [writeAppMDPA $appid]
     }
+
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "MDPA time: [Kratos::Duration $ttime]"
+    }
+
     #### Project Parameters Write ####
     set wevent [$activeapp getWriteParametersEvent]
     set filename "ProjectParameters.json"
@@ -130,6 +145,12 @@ proc write::writeEvent { filename } {
     if {$errcode eq 0} {
         Kratos::Log "Write project parameters $appid"
         set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
+    }
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Parameters time: [Kratos::Duration $ttime]"
     }
 
     #### Custom files block ####
@@ -289,9 +310,10 @@ proc write::getEtype {ov group} {
     if {$ov eq "line"} {
         if {$b} {error "Multiple element types in $group over $ov"}
         switch $isquadratic {
-            0 { set ret [list "Linear" 2] }
-            default { set ret [list "Linear" 3] }
+            0 { set ret [list "Line" 2] }
+            default { set ret [list "Line" 3] }
         }
+        set b 1
     }
 
     if {$ov eq "surface"} {
@@ -343,9 +365,9 @@ proc write::getEtype {ov group} {
         if {[GiD_EntitiesGroups get $group elements -count -element_type Prism]} {
             if {$b} {error "Multiple element types in $group over $ov"}
             switch $isquadratic {
-                0 { set ret [list "Hexahedra" 6]  }
-                1 { set ret [list "Hexahedra" 1]  }
-                2 { set ret [list "Hexahedra" 27]  }
+                0 { set ret [list "Prism" 6]  }
+                1 { set ret [list "Prism" 1]  }
+                2 { set ret [list "Prism" 27]  }
             }
             set b 1
         }
@@ -685,7 +707,7 @@ proc write::CopyMainScriptFile { } {
                 write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
             }
         } fid] } {
-        W "Problem Writing Main launch script \nEvent $fid \nEnd problems"
+        W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
         return errcode 1
     }
     return $errcode

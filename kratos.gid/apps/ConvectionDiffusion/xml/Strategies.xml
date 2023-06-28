@@ -10,7 +10,7 @@
 		ImplementedInPythonFile="ConvectionDiffusionStationarySolver"
 		MinimumKratosVersion="8500"
 		App="ConvectionDiffusion"
-		ProductionReady="ProductionReady"
+
 		help="Stationary strategy for convection-diffusion problems.">
 
 		<!-- list of options to be filled -->
@@ -58,7 +58,7 @@
 		ImplementedInPythonFile="ConvectionDiffusionTransientSolver"
 		MinimumKratosVersion="8500"
 		App="ConvectionDiffusion"
-		ProductionReady="ProductionReady"
+
 		help="Transient strategy for convection-diffusion solvers.">
 
 		<!-- list of options to be filled -->

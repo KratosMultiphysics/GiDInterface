@@ -1,7 +1,7 @@
 namespace eval ::PfemFluid::write {
     namespace path ::PfemFluid
     Kratos::AddNamespace [namespace current]
-    
+
     variable writeAttributes
     variable remesh_domains_dict
     variable bodies_list
@@ -20,7 +20,7 @@ proc PfemFluid::write::Init { } {
 
     SetAttribute materials_un [::PfemFluid::GetUniqueName materials]
     SetAttribute nodal_conditions_un [::PfemFluid::GetUniqueName nodal_conditions]
-    
+
     SetAttribute main_launch_file [::PfemFluid::GetAttribute main_launch_file]
     SetAttribute materials_file [::PfemFluid::GetWriteProperty materials_file]
     SetAttribute properties_location [::PfemFluid::GetWriteProperty properties_location]
@@ -30,6 +30,10 @@ proc PfemFluid::write::Init { } {
 
 # Model Part Blocks
 proc PfemFluid::write::writeModelPartEvent { } {
+    # Validation
+    set err [Validate]
+    if {$err ne ""} {error $err}
+
     # Init data
     write::initWriteConfiguration [GetAttributes]
 
@@ -59,6 +63,8 @@ proc PfemFluid::write::writeMeshes { } {
     }
     # Solo Malla , no en conditions
     writeNodalConditions [GetAttribute nodal_conditions_un]
+    #writeWaveMonitorMesh
+
 
 }
 
@@ -88,6 +94,28 @@ proc PfemFluid::write::GetPartsUN { } {
     customlib::UpdateDocument
     return $lista
 }
+
+
+proc PfemFluid::write::writeWaveMonitorMesh {  } {
+
+    set xp1 "[spdAux::getRoute "WaveMonitor"]/group"
+    set groups_wave_height [[customlib::GetBaseRoot] selectNodes $xp1]
+    foreach group $groups_wave_height {
+        set groupid [$group @n]
+        set groupid [::write::GetWriteGroupName $groupid]
+        ::write::writeGroupSubModelPart WaveMonitor $groupid "nodal"
+    }
+}
+
+
+proc ::PfemFluid::write::Validate {} {
+    set err ""
+    set root [customlib::GetBaseRoot]
+
+    
+    return $err
+}
+
 
 # Custom files (Copy python scripts, write materials file...)
 proc PfemFluid::write::writeCustomFilesEvent { } {

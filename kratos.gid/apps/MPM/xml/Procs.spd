@@ -19,11 +19,21 @@
 		]]>
 	</proc>
 
-	<proc n='GetSolutionStrategiesStructural' args='args'>
+	<proc n='GetSolutionStrategiesMPM' args='args'>
 	  <![CDATA[
-	  return [Structural::xml::ProcGetSolutionStrategiesSolid $domNode $args]
+	  return [MPM::xml::ProcGetSolutionStrategiesMPM $domNode $args]
+	  ]]>
+	</proc>
+	<proc n='CheckActivateStabilizationState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckActivateStabilizationState $domNode $args]
 	  ]]>
 	</proc>
 		  		
+	<proc n='CheckStabilizationState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckStabilizationState $domNode $args]
+	  ]]>
+	</proc>
 
 </container>

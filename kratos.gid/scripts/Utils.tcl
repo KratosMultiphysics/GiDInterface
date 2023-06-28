@@ -152,7 +152,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path kratos_bin_path docker_image]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
@@ -162,7 +162,7 @@ proc Kratos::RegisterEnvironment { } {
 
         if {[llength [dict keys $preferences]] > 0} {
             set fp [open [Kratos::GetPreferencesFilePath] w]
-            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $data}
+            if {[catch {set data [puts $fp [write::tcl2json $preferences]]} ]} {W "Problems saving user prefecences"; W $preferences}
             close $fp
         }
     }
@@ -309,8 +309,16 @@ proc Kratos::OpenCaseIn {program} {
 }
 
 if { ![GidUtils::IsTkDisabled] } {
-    proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {
-        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
+    proc xmlprograms::OpenBrowserForDirectoryDebug { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug)"]]
+        return variable
+    }
+    proc xmlprograms::OpenBrowserForDirectoryPython { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select python installation folder (python path, where python3.exe is)"]]
+        return variable
+    }
+    proc xmlprograms::OpenBrowserForDirectoryKratos { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos compiled folder (kratos / bin / (release | debug))"]]
         return variable
     }
 }
@@ -320,3 +328,17 @@ proc Kratos::IsDeveloperMode {} {
     if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
     return $is_dev
 }
+
+proc Kratos::GetFilePath { var_name type_names_extensions } {
+    set file [MessageBoxGetFilename file read "Get file" "" $type_names_extensions]
+    # set filename [MessageBoxGetFilename file read [_ "Read HDF5 Vibez file"] {} {{{HDF5 Vibez} {.h5 }} {{All files} {.*}}} {} $multiple [list [_ "Import options"] Vibez::MoreImportOptions]]
+    return $file
+}
+
+if { ![GidUtils::IsTkDisabled] } {
+    proc xmlprograms::GetPythonPath { baseframe variable } {
+        set $variable [Kratos::GetFilePath ::Kratos(python_path) {{{python path} {.exe }} {{All files} {.*}}}]
+        return variable
+    }
+}
+
