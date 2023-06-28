@@ -470,6 +470,7 @@ proc Kratos::Event_AfterMeshGeneration {fail} {
     set endtime [clock seconds]
     set ttime [expr {$endtime-$tmp_init_mesh_time}]
     Kratos::Log "Mesh end process in [Duration $ttime]"
+    # W "Meshing finished  [Duration $ttime]"
     set mesh_data [Kratos::GetMeshBasicData]
     Kratos::Log "Mesh data -> [write::tcl2json $mesh_data]"
 }
@@ -550,6 +551,7 @@ proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     # W "Kratos::WriteCalculationFilesEvent"
+    set ini_time [clock seconds]
     # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
         # Model must be saved
@@ -575,6 +577,10 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     } else {
         ::GidUtils::SetWarnLine "MDPA and JSON written OK"
     }
+    set end_time [clock seconds]
+    set ttime [expr {$end_time-$ini_time}]
+    Kratos::Log "Write calculation files in [Duration $ttime]"
+    W "Write calculation files in [Duration $ttime]"
     return $errcode
 }
 
