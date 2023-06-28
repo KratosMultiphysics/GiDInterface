@@ -23,7 +23,7 @@
     ],
     "start_script":"::PfemThermic::Init",
     "requeriments":{
-        "apps":["PfemFluid", "ConvectionDiffusion"],
+        "apps":["PfemFluid", "ConvectionDiffusion", "PfemMelting"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
