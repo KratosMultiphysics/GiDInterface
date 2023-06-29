@@ -20,7 +20,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::FreeSurface::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Fluid"
         ],

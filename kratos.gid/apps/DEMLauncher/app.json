@@ -5,7 +5,7 @@
         "start.tcl"
     ],
     "start_script":"::DemLauncher::Init",
-    "requeriments":{
+    "requirements":{
         "display_apps":["DEM", "DEMPFEM", "FluidDEM", "CDEM"],
         "minimum_gid_version":"15.1.3d"
     },

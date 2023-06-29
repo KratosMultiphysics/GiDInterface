@@ -19,7 +19,7 @@
         "controllers/Python.tcl"
     ],
     "start_script": "::GeoMechanics::Init",
-    "requeriments": {
+    "requirements": {
         "apps": ["Structural"],
         "minimum_gid_version": "16.1.4d"
     },
