@@ -8,8 +8,15 @@ namespace eval ::GeoMechanics::xml {
 proc ::GeoMechanics::xml::Init { } {
     Model::InitVariables dir $::GeoMechanics::dir
 
+    Model::ForgetElements
     Model::getElements Elements.xml
+
     Model::getConditions Conditions.xml
+    Model::getConstitutiveLaws ConstitutiveLaws.xml
+
+    Model::ForgetMaterials
+    Model::getMaterials Materials.xml
+
     Model::getProcesses Processes.xml
 
     # Structural strategies and schemes filter elements by ImplementedInApplication StructuralMechanicsApplication
