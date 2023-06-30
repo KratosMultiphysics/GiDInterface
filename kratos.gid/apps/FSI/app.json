@@ -26,7 +26,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::FSI::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Fluid",
             "Structural"

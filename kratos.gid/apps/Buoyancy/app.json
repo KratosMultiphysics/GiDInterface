@@ -21,7 +21,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::Buoyancy::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Fluid",
             "ConvectionDiffusion"
