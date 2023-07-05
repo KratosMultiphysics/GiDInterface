@@ -52,7 +52,7 @@ proc ::PfemMelting::write::writeCustomFilesEvent { } {
 
         set values [list ]
         if {![file exists [file join [GidUtils::GetDirectoryModel] $file]]} {
-            W "WARNINR: The seleted material does not define a valid viscosity file."
+            W "WARNING: The seleted material does not define a valid viscosity file."
         } else {
             set f [open [file join [GidUtils::GetDirectoryModel] $file] r]
             while {[gets $f line] > 0} {
