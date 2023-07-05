@@ -156,7 +156,12 @@ proc ::PfemMelting::write::getLaserProcesses { } {
         dict set laser_process_dict python_module apply_laser_process
         dict set laser_process_dict kratos_module KratosMultiphysics.PfemMeltingApplication
         dict set laser_process_dict Parameters model_part_name [GetAttribute model_part_name]
-        dict set laser_process_dict Parameters filename [write::getValueByNode $laser]
+        set laser_filename [write::getValueByNode $laser]
+        if { ![file exists $laser_filename]} {
+            W "WARNING: Laser file for '[[$laser parent] @name]' does not exist. Fill it manually in the ProjectParameter.json section."
+            set laser_filename null
+        }
+        dict set laser_process_dict Parameters filename $laser_filename
         lappend laser_process_list $laser_process_dict
     }
     return $laser_process_list
