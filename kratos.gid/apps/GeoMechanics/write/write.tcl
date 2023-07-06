@@ -89,7 +89,8 @@ proc ::GeoMechanics::write::writeModelPartFileAsGeometries { } {
         append what "&Geometries"
         
         foreach group $lista {
-            ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what
+            set condid [[$group parent] @n]
+            ::write::writeGroupSubModelPart $condid [$group @n] $what
         }
 
     } else {
