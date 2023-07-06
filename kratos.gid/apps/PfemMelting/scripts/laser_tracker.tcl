@@ -29,15 +29,15 @@ proc ::PfemMelting::LaserTracker::TurnOn { } {
     set laser_cond_xpath "[spdAux::getRoute PFEMMELTING_Laser]"
     set paths [[customlib::GetBaseRoot] selectNodes "$laser_cond_xpath/blockdata/value\[@n='laser_path'\]"]
     foreach path_node $paths {
-        set coordinates [list ]
         set path [write::getValueByNode $path_node]
         set fullpath [file join [GidUtils::GetDirectoryModel] $path]
-        if {![file exists $fullpath]} {error "file $fullpath not found"}
-        set laser_dict [Kratos::ReadJsonDict $fullpath]
-        set steps [dict get $laser_dict laser_settings]
-        lappend steps_set $steps
-        set id [GiD_OpenGL register ::PfemMelting::LaserTracker::MyRedrawProcedure]
-        lappend functions $id
+        if {![file exists $fullpath]} {W "WARNING: Laser file [[$path_node parent] @name] not found"} else {
+            set laser_dict [Kratos::ReadJsonDict $fullpath]
+            set steps [dict get $laser_dict laser_settings]
+            lappend steps_set $steps
+            set id [GiD_OpenGL register ::PfemMelting::LaserTracker::MyRedrawProcedure]
+            lappend functions $id
+        }
     }
 }
 
