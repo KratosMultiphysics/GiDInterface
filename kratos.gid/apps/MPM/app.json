@@ -25,7 +25,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::MPM::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Structural"
         ],

@@ -64,7 +64,7 @@ proc ::Structural::xml::ProcCheckGeometryStructural {domNode args} {
 proc ::Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
     set names ""
     set pnames ""
-    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
+    set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType $domNode]] v]
     set Sols [::Model::GetSolutionStrategies [list "SolutionType" $solutionType] ]
     set ids [list ]
     foreach ss $Sols {
@@ -86,19 +86,21 @@ proc ::Structural::xml::ProcGetSolutionStrategiesStructural { domNode args } {
 proc ::Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
     # Overwritten the base function to add Solution Type restrictions
     set parts_un STParts
-    if {[spdAux::getRoute $parts_un] ne ""} {
+    if {[spdAux::getRoute $parts_un $domNode] ne ""} {
         set conditionId [$domNode @n]
         set condition [Model::getNodalConditionbyId $conditionId]
         set cnd_dim [$condition getAttribute WorkingSpaceDimension]
         if {$cnd_dim ne ""} {
             if {$cnd_dim ne $Model::SpatialDimension} {return "hidden"}
         }
-        set elems [$domNode selectNodes "[spdAux::getRoute $parts_un]/condition/group/value\[@n='Element'\]"]
+        set parts_xpath [spdAux::getRoute $parts_un $domNode]
+        set elems [$domNode selectNodes "$parts_xpath/condition/group/value\[@n='Element'\]"]
         set elemnames [list ]
         foreach elem $elems { lappend elemnames [$elem @v]}
         set elemnames [lsort -unique $elemnames]
 
-        set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
+        set solution_type_xpath [spdAux::getRoute STSoluType $domNode]
+        set solutionType [::write::getValueByXPath $solution_type_xpath]
         set params [list analysis_type $solutionType]
         if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
     } {return "normal"}
@@ -135,30 +137,31 @@ proc ::Structural::xml::AddLocalAxesToBeamElement { current } {
     }
 }
 
-
 ############# procs #################
 proc ::Structural::xml::ProcGetElementsStructural { domNode args } {
     set nodeApp [spdAux::GetAppIdFromNode $domNode]
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
-    set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
-    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
-        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $sol_stratUN]] dict
+    set sol_strat_stage_xpath [spdAux::getRoute $sol_stratUN $domNode]
+    if {[get_domnode_attribute [$domNode selectNodes $sol_strat_stage_xpath] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes $sol_strat_stage_xpath] dict
     }
-    if {[get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] v] eq ""} {
-        get_domnode_attribute [$domNode selectNodes [spdAux::getRoute $schemeUN]] dict
+    set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
+    set scheme_stage_xpath [spdAux::getRoute $schemeUN $domNode]
+    if {[get_domnode_attribute [$domNode selectNodes $scheme_stage_xpath] v] eq ""} {
+        get_domnode_attribute [$domNode selectNodes  $scheme_stage_xpath] dict
     }
 
     #W "solStrat $sol_stratUN sch $schemeUN"
-    set solStratName [::write::getValue $sol_stratUN]
-    set schemeName [write::getValue $schemeUN]
+    set solStratName [::write::getValueByXPath $sol_strat_stage_xpath]
+    set schemeName [write::getValueByXPath $scheme_stage_xpath]
     #W "$solStratName $schemeName"
     #W "************************************************************************"
     #W "$nodeApp $solStratName $schemeName"
     set elems [::Model::GetAvailableElements $solStratName $schemeName]
     #W "************************************************************************"
 
-    set solution_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]; # This filters between Static, Quasi-static, Dynamic, formfinding, ...
-    set analysis_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STAnalysisType]] v]; # This filters between linear and non-linear
+    set solution_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType $domNode]] v]; # This filters between Static, Quasi-static, Dynamic, formfinding, ...
+    set analysis_type [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STAnalysisType $domNode]] v]; # This filters between linear and non-linear
     set params [list AnalysisType $analysis_type]
 
     set names [list ]

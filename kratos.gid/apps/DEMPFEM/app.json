@@ -16,7 +16,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script":"::DEMPFEM::Init",
-    "requeriments":{
+    "requirements":{
         "apps":["DEM", "PfemFluid"],
         "minimum_gid_version":"15.1.3d"
     },

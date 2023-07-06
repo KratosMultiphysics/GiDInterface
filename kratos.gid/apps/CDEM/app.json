@@ -25,7 +25,7 @@
         "xml/BulkGroup.tcl"
     ],
     "start_script": "::CDEM::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "DEM"
         ],

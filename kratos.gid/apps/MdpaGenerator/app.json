@@ -10,7 +10,7 @@
         "3D"
     ],
     "start_script":"::MdpaGenerator::Init",
-    "requeriments":{
+    "requirements":{
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {

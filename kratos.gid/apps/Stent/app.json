@@ -14,7 +14,7 @@
         "wizard/StentGeometry.tcl"
     ],
     "start_script": "::Stent::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Structural"
         ],

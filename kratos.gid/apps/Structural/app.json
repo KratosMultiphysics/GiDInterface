@@ -25,7 +25,7 @@
         "postprocess/formfinding.tcl"
     ],
     "start_script": "::Structural::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [],
         "minimum_gid_version": "15.1.3d"
     },

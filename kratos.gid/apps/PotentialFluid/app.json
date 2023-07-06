@@ -18,7 +18,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script":"::PotentialFluid::Init",
-    "requeriments":{
+    "requirements":{
         "apps":["Fluid"],
         "minimum_gid_version":"15.1.3d"
     },

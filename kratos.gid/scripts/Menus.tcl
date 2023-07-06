@@ -30,9 +30,10 @@ proc Kratos::ToolbarRefresh {} {
 }
 
 proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
-    if { [GidUtils::IsTkDisabled] } {
-        return 0
-    }
+    if { [GidUtils::IsTkDisabled] } { return 0 }
+    
+    if {[write::isBooleanFalse $::spdAux::ToolbarVisibility]} { return 0 }
+
     global KBitmapsNames KBitmapsCommands KBitmapsHelp
     variable kratos_private
     Kratos::EndCreatePreprocessTBar
@@ -85,7 +86,7 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
                 }
             }
             lappend iconslist [expr {$icon ne "" ? $icon_path : "---"}]
-            lappend commslist  [dict get $kratos_private(MenuItems) $item code]
+            lappend commslist [dict get $kratos_private(MenuItems) $item code]
             lappend helpslist [dict get $kratos_private(MenuItems) $item tex]
         }
 

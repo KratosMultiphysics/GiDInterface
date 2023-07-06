@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+
+  <ConditionItem n="NewCondition2D" pn="New condition" Interval="Total"
+		 ImplementedInApplication="GeoMechanicsApplication" MinimumKratosVersion="9000"
+		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False"
+		 ElementType="Line"  ProcessName="MyCustomProcess" VariableName="VOLUME_ACCELERATION"
+		 help="Self weight application by means of the AssignVectorByDirectionProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
+    <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N" KratosNameSmallDisplacement="Condition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <DefaultValues>
+	  <value n="modulus" pn="Modulus" v="9.81" />
+	  <value n="direction" v="0.0,-1.0,0.0" />
+    </DefaultValues>
+    <outputs>
+      <parameter n="FORCE" pn="External Load" v="false"/>
+    </outputs>
+  </ConditionItem>
+
+
+</ConditionList>

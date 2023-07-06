@@ -5,7 +5,7 @@
         "start.tcl"
     ],
     "start_script": "::ThermicLauncher::Init",
-    "requeriments": {
+    "requirements": {
         "display_apps": [
             "ConvectionDiffusion",
             "Buoyancy",

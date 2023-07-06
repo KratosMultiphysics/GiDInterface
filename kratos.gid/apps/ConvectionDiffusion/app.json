@@ -20,7 +20,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script":"::ConvectionDiffusion::Init",
-    "requeriments":{
+    "requirements":{
         "apps":[],
         "minimum_gid_version":"15.1.3d"
     },
