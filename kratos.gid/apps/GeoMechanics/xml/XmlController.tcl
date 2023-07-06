@@ -292,3 +292,9 @@ proc ::GeoMechanics::xml::EndDrawStage { } {
     set is_drawing_stage 0
     GiD_Groups end_draw
 }
+
+proc ::GeoMechanics::xml::GetListOfSubModelParts { } {
+    set root [customlib::GetBaseRoot]
+    set all_raw [$root selectNodes ".//condition/group"]
+    return $all_raw
+}

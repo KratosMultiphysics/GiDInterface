@@ -80,7 +80,7 @@ proc ::MdpaGenerator::write::writeGeometries { } {
     # Write the submodelparts
     set what "nodal"
     append what "&Geometries"
-    # Write conditions (By iterator, so need the app condition iterator)
+    
     foreach group $lista {
         ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what
     }
