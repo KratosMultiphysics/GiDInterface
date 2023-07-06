@@ -288,12 +288,18 @@ proc write::transformGroupName {groupid} {
 
 # Warning! Indentation must be set before calling here!
 proc write::GetFormatDict { groupid mid num} {
+    set s [mdpaIndent]
+
     variable formats_dict
     set id_f [dict get $formats_dict ID]
-    set mid_f [dict get $formats_dict MAT_ID]
 
-    set s [mdpaIndent]
-    set f "${s}$id_f [format $mid_f $mid] [string repeat "$id_f " $num]\n"
+    set mid_str ""
+    if {$mid ne ""} {
+        set mid_f [dict get $formats_dict MAT_ID]
+        set mid_str [format $mid_f $mid]
+    }
+    
+    set f "${s}$id_f $mid_str [string repeat "$id_f " $num]\n"
     return [dict create $groupid $f]
 }
 
