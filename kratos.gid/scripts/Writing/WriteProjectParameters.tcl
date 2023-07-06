@@ -437,6 +437,19 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
     return $problem_data_dict
 }
 
+proc write::GetGravityByModuleDirection { gravity_un } {
+    set gravity_value [write::getValue $gravity_un GravityValue]
+    set gravity_X [write::getValue $gravity_un Cx]
+    set gravity_Y [write::getValue $gravity_un Cy]
+    set gravity_Z [write::getValue $gravity_un Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+
+    return [list $gx $gy $gz]
+}
+
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # Output process must be placed inside json lists
     set gid_output_process_list [list ]
