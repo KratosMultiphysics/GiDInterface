@@ -29,7 +29,7 @@ proc write::printGeometryConnectivities {group etype nnodes} {
     # increase indent (allows folding in text editor)
     incr ::write::current_mdpa_indent_level
     # Prepare the formats dict
-    set formats [GetFormatDict $group 0 $nnodes]
+    set formats [GetFormatDict $group "" $nnodes]
     # Write the connectivities
     GiD_WriteCalculationFile connectivities $formats
     # decrease indent
