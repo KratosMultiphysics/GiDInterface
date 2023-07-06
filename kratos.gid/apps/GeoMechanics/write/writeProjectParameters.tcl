@@ -4,6 +4,10 @@ proc ::GeoMechanics::write::getParametersDict { stage } {
     # Get the base dictionary for the project parameters
     
     set project_parameters_dict [Structural::write::getParametersDict $stage]
+
+    if { [GetAttribute multistage_write_mdpa_file_mode] != "single_file" } {
+        dict set project_parameters_dict solver_settings model_import_settings input_filename [$stage @name]
+    }
     
     return $project_parameters_dict
 }
