@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Groups>
+    <Group id="PfemMelting" name="Melting Pfem">
+        <Example id="MeltingPfemCube" app="PfemMelting" logo="logo.png" name="Laser burn" dim="3D" cmd="::PfemMelting::examples::Cube::Init">
+            <Description></Description>
+        </Example>
+    </Group>
+</Groups>

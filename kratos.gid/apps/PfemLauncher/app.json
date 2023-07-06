@@ -5,8 +5,8 @@
         "start.tcl"
     ],
     "start_script":"::PfemLauncher::Init",
-    "requirements":{
-        "display_apps":["PfemFluid", "DEMPFEM", "PfemThermic"],
+    "requeriments":{
+        "display_apps":["PfemFluid", "DEMPFEM", "PfemThermic", "PfemMelting"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
