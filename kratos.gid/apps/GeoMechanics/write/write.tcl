@@ -105,30 +105,18 @@ proc ::GeoMechanics::write::writeModelPartFileAsGeometries { } {
 
             write::writeNodalCoordinatesOnParts $stage
 
-            # Element connectivities (Groups on STParts)
-            ::GeoMechanics::write::writeElementConnectivities $stage
+            # Write geometries
+            # Get the list of groups in the spd
+            set lista [::GeoMechanics::xml::GetListOfSubModelParts $stage]
+
+            # Write the geometries
+            set ret [::write::writeGeometryConnectivities $lista]
             
-            # Local Axes
-            Structural::write::writeLocalAxes
+            # Write the submodelparts
+            foreach group $lista {
+                write::writeGroupSubModelPartAsGeometry [$group @n] 
+            }
 
-            # Hinges special section
-            Structural::write::writeHinges
-            
-            # # Custom SubmodelParts
-            # set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
-            # set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
-
-            # SubmodelParts
-            write::WriteString "// Stage [$stage @name]"
-
-            # Write Conditions section
-            Structural::write::writeConditions $stage
-            
-            # Custom SubmodelParts
-            set basicConds [write::writeBasicSubmodelParts [::Structural::write::getLastConditionId]]
-            set ::Structural::write::ConditionsDictGroupIterators [dict merge $::Structural::write::ConditionsDictGroupIterators $basicConds]
-
-            Structural::write::writeMeshes $stage
             write::CloseFile
         }
     }
