@@ -69,6 +69,53 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
     return $mid
 }
 
+# 
+proc write::writeGroupSubModelPartAsGeometry { group } {
+    variable submodelparts
+    variable formats_dict
+    variable geometry_cnd_name
+
+    set cid $geometry_cnd_name
+    
+    set inittime [clock seconds]
+
+    set id_f [dict get $formats_dict ID]
+    set submodelpart_id ""
+    set group [GetWriteGroupName $group]
+    set submodelpart_id [write::getSubModelPartId "$cid" $group]
+    if {$submodelpart_id eq 0} {
+        # Add the submodelpart to the catalog
+        set submodelpart_id [write::AddSubmodelpart $cid $group]
+        # Prepare the print formats
+        incr ::write::current_mdpa_indent_level
+        set s1 [mdpaIndent]
+        incr ::write::current_mdpa_indent_level -1
+        incr ::write::current_mdpa_indent_level 2
+        set s2 [mdpaIndent]
+        set gdict [dict create]
+        set f "${s2}$id_f\n"
+        set f [subst $f]
+        dict set gdict $group $f
+        incr ::write::current_mdpa_indent_level -2
+
+        # Print header
+        set s [mdpaIndent]
+        WriteString "${s}Begin SubModelPart $submodelpart_id // Group $group"
+        # Print nodes
+        WriteString "${s1}Begin SubModelPartNodes"
+        GiD_WriteCalculationFile nodes -sorted $gdict
+        WriteString "${s1}End SubModelPartNodes"
+        # Print geometries
+        WriteString "${s1}Begin SubModelPartGeometries"
+        GiD_WriteCalculationFile elements -sorted $gdict
+        WriteString "${s1}End SubModelPartGeometries"
+        
+        WriteString "${s}End SubModelPart"
+    }
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupSubModelPart $group time: [Kratos::Duration $ttime]"}
+    return $submodelpart_id
+}
+
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     
     set inittime [clock seconds]
@@ -173,8 +220,12 @@ proc write::GetSubModelPartFromCondition { base_UN condition_id } {
 }
 
 proc write::GetSubModelPartName {condid group} {
+    variable geometry_cnd_name
     set group_name [write::GetWriteGroupName $group]
     set good_name [write::transformGroupName $group_name]
+    if {$condid eq $geometry_cnd_name} {
+        return "${good_name}"
+    }
     return "${condid}_${good_name}"
 }
 

@@ -85,12 +85,8 @@ proc ::GeoMechanics::write::writeModelPartFileAsGeometries { } {
         set ret [::write::writeGeometryConnectivities $lista]
         
         # Write the submodelparts
-        set what "nodal"
-        append what "&Geometries"
-        
         foreach group $lista {
-            set condid [[$group parent] @n]
-            ::write::writeGroupSubModelPart $condid [$group @n] $what
+            write::writeGroupSubModelPartAsGeometry [$group @n] 
         }
 
     } else {

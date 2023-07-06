@@ -14,6 +14,7 @@ namespace eval ::write {
     variable current_mdpa_indent_level
     variable formats_dict
     variable properties_exclusion_list
+    variable geometry_cnd_name
 }
 
 proc write::Init { } {
@@ -43,6 +44,9 @@ proc write::Init { } {
     set formats_dict [dict create]
     variable properties_exclusion_list
     set properties_exclusion_list [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+
+    variable geometry_cnd_name
+    set geometry_cnd_name "-GEOMETRY-"
 }
 
 proc write::initWriteConfiguration {configuration} {
