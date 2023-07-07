@@ -580,7 +580,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     set end_time [clock seconds]
     set ttime [expr {$end_time-$ini_time}]
     Kratos::Log "Write calculation files in [Duration $ttime]"
-    W "Write calculation files in [Duration $ttime]"
+    # W "Write calculation files in [Duration $ttime]"
     return $errcode
 }
 
