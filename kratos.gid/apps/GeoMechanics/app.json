@@ -16,7 +16,9 @@
         "controllers/Toolbar.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl",
-        "controllers/Python.tcl"
+        "controllers/Python.tcl",
+        "examples/examples.tcl",
+        "examples/FirstExample.tcl"
     ],
     "start_script": "::GeoMechanics::Init",
     "requirements": {
