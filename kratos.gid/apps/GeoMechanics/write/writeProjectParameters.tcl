@@ -17,7 +17,10 @@ proc ::GeoMechanics::write::GetSingleFileStageProjectParameters {  } {
     set project_parameters_dict [dict create]
 
     # Set the list of stages
-    dict set project_parameters_dict "execution_list" [::GeoMechanics::xml::GetStages "names"]
+    dict set project_parameters_dict orquestrator name "MultistageOrchestrators.KratosMultiphysics.SequentialMultistageOrchestrator"
+    dict set project_parameters_dict orquestrator settings echo_level 0
+    dict set project_parameters_dict orquestrator settings "execution_list" [::GeoMechanics::xml::GetStages "names"]
+    dict set project_parameters_dict orquestrator "stage_checkpoints" : true
 
     # Set the stages
     set stages [dict create]
