@@ -13,8 +13,8 @@ proc ::GeoMechanics::examples::FirstExample::Init {args} {
     Kratos::ResetModel
 
     DrawGeometry
+    AssignGroups
     return ""
-    AssignGroups$::Model::SpatialDimension
     AssignMeshSizes
     TreeAssignation
 
@@ -52,42 +52,31 @@ proc ::GeoMechanics::examples::FirstExample::DrawGeometry {args} {
 
 }
 
-proc ::GeoMechanics::examples::FirstExample::AssignGroups2D {args} {
+proc ::GeoMechanics::examples::FirstExample::AssignGroups {args} {
     # Fluid group creation
-    GiD_Groups create Fluid
-    GiD_EntitiesGroups assign Fluid surfaces 1
+    GiD_Groups create Bottom
+    GiD_EntitiesGroups assign Bottom lines 1
 
-    GiD_Groups create Inlet
-    GiD_EntitiesGroups assign Inlet lines 8
+    GiD_Groups create Clay_after_excavation
+    GiD_EntitiesGroups assign Clay_after_excavation surfaces 2
 
-    GiD_Groups create Outlet
-    GiD_EntitiesGroups assign Outlet lines 6
+    GiD_Groups create Excavated
+    GiD_EntitiesGroups assign Excavated surfaces 1
 
-    GiD_Groups create Top_Wall
-    GiD_EntitiesGroups assign Top_Wall lines 7
+    GiD_Groups create Load
+    GiD_EntitiesGroups assign Load lines 8
 
-    GiD_Groups create Bottom_Wall
-    GiD_EntitiesGroups assign Bottom_Wall lines {1 5}
+    GiD_Groups create Body
+    GiD_EntitiesGroups assign Body surfaces {1 2}
 
-    GiD_Groups create InterfaceFluid
-    GiD_EntitiesGroups assign InterfaceFluid lines {2 3 4}
+    GiD_Groups create Hydrostatic_load_in_sloot
+    GiD_EntitiesGroups assign Hydrostatic_load_in_sloot lines {4 5 6}
 
-    GiD_Groups create FluidALEMeshBC
-    GiD_EntitiesGroups assign FluidALEMeshBC lines {1 5 6 7 8}
+    GiD_Groups create Side_sliders
+    GiD_EntitiesGroups assign Side_sliders lines {2 10}
 
-    # Structure group creation
-    GiD_Groups create Structure
-    GiD_Groups create Ground
-    GiD_Groups create InterfaceStructure
-    
-    GiD_EntitiesGroups assign Structure surfaces 2
-    GiD_EntitiesGroups assign Ground lines 12
-    GiD_EntitiesGroups assign InterfaceStructure lines {9 10 11}
 }
 
-proc ::GeoMechanics::examples::FirstExample::AssignGroups3D {args} {
-    # To be implemented
-}
 
 proc ::GeoMechanics::examples::FirstExample::AssignMeshSizes {args} {
     ::Fluid::examples::HighRiseBuilding::AssignMeshSizes$::Model::SpatialDimension
