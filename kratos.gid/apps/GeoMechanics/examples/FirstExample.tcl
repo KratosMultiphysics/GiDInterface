@@ -14,7 +14,6 @@ proc ::GeoMechanics::examples::FirstExample::Init {args} {
 
     DrawGeometry
     AssignGroups
-    return ""
     AssignMeshSizes
     TreeAssignation
 
@@ -79,16 +78,35 @@ proc ::GeoMechanics::examples::FirstExample::AssignGroups {args} {
 
 
 proc ::GeoMechanics::examples::FirstExample::AssignMeshSizes {args} {
-    ::Fluid::examples::HighRiseBuilding::AssignMeshSizes$::Model::SpatialDimension
-    ::Structural::examples::HighRiseBuilding::AssignMeshSizes$::Model::SpatialDimension
+
 }
 
 proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
-    set condtype line
-    if {$::Model::SpatialDimension eq "3D"} { set condtype surface }
+    # Prepare stages
+    ::GeoMechanics::xml::NewStage "Stage 2"
+    ::GeoMechanics::xml::NewStage "Stage 3"
+    ::GeoMechanics::xml::NewStage "Stage 4"
+    spdAux::parseRoutes
+
+    # Stage 1
+    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 1'\]"]
+
+    # Solution type
+    set xpath [spdAux::getRoute "GEOMSoluType" $stage]
+    [[customlib::GetBaseRoot] selectNodes $xpath] setAttribute v "Quasi-static"
+
+    # Time parameters
+    set parameters [list EndTime 1.0 StartTime 0.0]
+    set xpath [spdAux::getRoute "GEOMTimeParameters" $stage]
+    spdAux::SetValuesOnBasePath $xpath $parameters
+    
+    set parameters [list DeltaTime 1.0 StartTime 0]
+    set xpath "[spdAux::getRoute GEOMTimeParameters $stage]/container\[@n = 'TimeStep'\]/blockdata"
+    spdAux::SetValuesOnBasePath $xpath $parameters
+    return ""
 
     # Fluid monolithic strategy setting
     spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
