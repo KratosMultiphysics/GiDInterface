@@ -293,6 +293,16 @@ proc ::GeoMechanics::xml::EndDrawStage { } {
     GiD_Groups end_draw
 }
 
+proc ::GeoMechanics::xml::NewStage { stage_name } {
+    set root [customlib::GetBaseRoot]
+    set stages [$root selectNodes ".//container\[@n='stages'\]/blockdata"]
+    set newstage [[lindex $stages end] cloneNode -deep]
+    $newstage setAttribute name $stage_name
+    $newstage setAttribute tree_state "open"
+    [$root selectNodes ".//container\[@n='stages'\]"] appendChild $newstage
+    spdAux::RequestRefresh
+}
+
 proc ::GeoMechanics::xml::GetListOfSubModelParts { {stage ""} } {
     set root [customlib::GetBaseRoot]
     if {$stage ne ""} {set root $stage}
