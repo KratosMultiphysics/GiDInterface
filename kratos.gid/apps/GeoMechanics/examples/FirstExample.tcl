@@ -151,6 +151,21 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     $gravity_node setAttribute ov surface
     set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
     spdAux::SetValuesOnBaseNode $gravity_node $props
+
+    # Top Pressure
+    GiD_Groups clone Load Total
+    GiD_Groups edit parent Total Load
+    spdAux::AddIntervalGroup Body "Load//Total"
+    GiD_Groups edit state "Load//Total" hidden
+    GiD_Groups edit color "Load" "#ff2548"
+    GiD_Groups edit color "Load//Total" "#ff2548"
+    set pressure [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='LinePressure2D'\]
+    set pressure_node [customlib::AddConditionGroupOnXPath $pressure "Load//Total"]
+    $pressure_node setAttribute ov surface
+    set props [list value 5000 Interval Total]
+    spdAux::SetValuesOnBaseNode $pressure_node $props
+
+
     return ""
 
 
