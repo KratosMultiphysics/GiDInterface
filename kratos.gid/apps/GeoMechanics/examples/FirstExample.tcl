@@ -106,16 +106,13 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     set parameters [list DeltaTime 1.0 StartTime 0]
     set xpath "[spdAux::getRoute GEOMTimeParameters $stage]/container\[@n = 'TimeStep'\]/blockdata"
     spdAux::SetValuesOnBasePath $xpath $parameters
+
+    # Parts
+    set parts [spdAux::getRoute "GEOMParts" $stage]/condition\[@n='Parts_GeoSteadyState'\]
+    set body_node [customlib::AddConditionGroupOnXPath $parts Body]
+    set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
+    spdAux::SetValuesOnBaseNode $body_node $props
     return ""
-
-    # Fluid monolithic strategy setting
-    spdAux::SetValueOnTreeItem v "Monolithic" FLSolStrat
-
-    # Fluid Parts
-    set fluidParts [spdAux::getRoute "FLParts"]
-    set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.225 DYNAMIC_VISCOSITY 1.846e-5]
-    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
 
