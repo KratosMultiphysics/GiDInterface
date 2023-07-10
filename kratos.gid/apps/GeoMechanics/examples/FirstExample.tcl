@@ -113,15 +113,44 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
     spdAux::SetValuesOnBaseNode $body_node $props
 
+    # Fix ground
     GiD_Groups clone Bottom Total
     GiD_Groups edit parent Total Bottom
     spdAux::AddIntervalGroup Bottom "Bottom//Total"
     GiD_Groups edit state "Bottom//Total" hidden
+    GiD_Groups edit color "Bottom" "#25ff48"
+    GiD_Groups edit color "Bottom//Total" "#25ff48"
     set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
     set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Bottom//Total"]
     $displacement_node setAttribute ov line
     set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue selector_component_Z Not Interval Total]
     spdAux::SetValuesOnBaseNode $displacement_node $props
+
+    # Fix sides only X
+    GiD_Groups clone Side_sliders Total
+    GiD_Groups edit parent Total Side_sliders
+    spdAux::AddIntervalGroup Side_sliders "Side_sliders//Total"
+    GiD_Groups edit state "Side_sliders//Total" hidden
+    GiD_Groups edit color "Side_sliders" "#ff2548"
+    GiD_Groups edit color "Side_sliders//Total" "#ff2548"
+    set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
+    set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Side_sliders//Total"]
+    $displacement_node setAttribute ov line
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z Not Interval Total]
+    spdAux::SetValuesOnBaseNode $displacement_node $props
+    
+    # Gravity
+    GiD_Groups clone Body Total
+    GiD_Groups edit parent Total Body
+    spdAux::AddIntervalGroup Body "Body//Total"
+    GiD_Groups edit state "Body//Total" hidden
+    GiD_Groups edit color "Body" "#ff2548"
+    GiD_Groups edit color "Body//Total" "#ff2548"
+    set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Body//Total"]
+    $gravity_node setAttribute ov surface
+    set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
+    spdAux::SetValuesOnBaseNode $gravity_node $props
     return ""
 
 
