@@ -112,40 +112,18 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     set body_node [customlib::AddConditionGroupOnXPath $parts Body]
     set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
     spdAux::SetValuesOnBaseNode $body_node $props
+
+    GiD_Groups clone Bottom Total
+    GiD_Groups edit parent Total Bottom
+    spdAux::AddIntervalGroup Bottom "Bottom//Total"
+    GiD_Groups edit state "Bottom//Total" hidden
+    set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
+    set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Bottom//Total"]
+    $displacement_node setAttribute ov line
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue selector_component_Z Not Interval Total]
+    spdAux::SetValuesOnBaseNode $displacement_node $props
     return ""
 
-    set fluidConditions {container[@n='FSI']/container[@n='Fluid']/container[@n='BoundaryConditions']}
-
-    # Fluid Inlet
-    Fluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 10.0} true "25.0*t/10.0"
-    Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 10.0 end End} false 25.0
-    
-    # Fluid Outlet
-    set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
-    set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
-    $outletNode setAttribute ov $condtype
-    set props [list value 0.0]
-    spdAux::SetValuesOnBaseNode $outletNode $props
-
-    # Fluid Conditions
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Top_Wall] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Bottom_Wall] setAttribute ov $condtype
-    [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='FluidNoSlipInterface$nd'\]" InterfaceFluid] setAttribute ov $condtype
-
-    # Displacement 3D
-    if {$nd eq "3D"} {
-        # To be implemented
-    } {
-        GiD_Groups create "FluidALEMeshBC//Total"
-        GiD_Groups edit state "FluidALEMeshBC//Total" hidden
-        spdAux::AddIntervalGroup FluidALEMeshBC "FluidALEMeshBC//Total"
-        set fluidDisplacement "$fluidConditions/condition\[@n='ALEMeshDisplacementBC2D'\]"
-        set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement "FluidALEMeshBC//Total"]
-        $fluidDisplacementNode setAttribute ov line
-        set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-        
-        spdAux::SetValuesOnBaseNode $fluidDisplacementNode $props
-    }
 
     # Time parameters
     set parameters [list EndTime 40.0 DeltaTime 0.05]
