@@ -96,7 +96,7 @@ proc ::Structural::xml::ProcCheckNodalConditionStateStructural {domNode args} {
         set parts_xpath [spdAux::getRoute $parts_un $domNode]
         set elems [$domNode selectNodes "$parts_xpath/condition/group/value\[@n='Element'\]"]
         set elemnames [list ]
-        foreach elem $elems { lappend elemnames [$elem @v]}
+        foreach elem $elems { lappend elemnames [write::getValueByNode $elem]}
         set elemnames [lsort -unique $elemnames]
 
         set solution_type_xpath [spdAux::getRoute STSoluType $domNode]
