@@ -955,15 +955,23 @@ proc spdAux::injectPartsByElementType {domNode args} {
 
     foreach element [Model::GetElements {*}$args] {
         if {[$element hasAttribute ElementType]} {
-            dict lappend element_types [$element getAttribute ElementType] $element
+            dict lappend element_types [$element getAttribute ElementType] elements $element
+            if {[$element hasAttribute pElementType]} {
+                dict set element_types [$element getAttribute ElementType] name [$element getAttribute pElementType]
+            } else {
+                dict set element_types [$element getAttribute ElementType] name [string map {_ " "} [$element getAttribute ElementType]]
+            }
+            
         }
     }
 
     foreach element_type [dict keys $element_types] {
-        set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
+        set element_type_public_name [dict get $element_types $element_type name]
+
+        set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type elements] ov]
         if {[llength $ov] == 0} {set ov "point,line,surface,volume"}
         set ovm "node,element"
-        set element_type_pn [string map {_ " "} $element_type]
+        set element_type_pn $element_type_public_name
         #if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
         set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type_pn}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
             <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
