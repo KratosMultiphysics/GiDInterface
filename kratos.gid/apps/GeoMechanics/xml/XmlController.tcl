@@ -73,6 +73,9 @@ proc ::GeoMechanics::xml::CustomTree { args } {
 
     # Stress test
     # for {set index 0} {$index < 200} {incr index} {::snit::RT.CallInstance ::boundary_conds::Snit_inst1 copy_block_data}
+    set xpath [spdAux::getRoute GEOMSoluType]
+    set solution_type_node [[customlib::GetBaseRoot] selectNodes $xpath]
+    $solution_type_node setAttribute values "Static,Quasi-static,Dynamic"
 }
 
 proc ::GeoMechanics::xml::ProcCheckGeometryGeoMechanics {domNode args} {
