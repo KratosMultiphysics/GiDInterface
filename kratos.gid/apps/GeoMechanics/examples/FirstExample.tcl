@@ -99,7 +99,7 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     [[customlib::GetBaseRoot] selectNodes $xpath] setAttribute v "Quasi-static"
 
     # Time parameters
-    set parameters [list EndTime 1.0 StartTime 0.0]
+    set parameters [list StartTime 0.0 EndTime 1.0]
     set xpath [spdAux::getRoute "GEOMTimeParameters" $stage]
     spdAux::SetValuesOnBasePath $xpath $parameters
     
