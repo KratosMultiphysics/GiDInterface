@@ -5,7 +5,7 @@
 		 ImplementedInApplication="GeoMechanicsApplication" MinimumKratosVersion="9000"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False"
 		 ElementType="Line"  ProcessName="MyCustomProcess" VariableName="VOLUME_ACCELERATION"
-		 help="Self weight application by means of the AssignVectorByDirectionProcess in the core" units="m/s^2" unit_magnitude="Acceleration">
+		 help="Self weight application by means of the AssignVectorByDirectionProcess in the core" units="m/s^2" unit_magnitude="Acceleration" Water="True">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N" KratosNameSmallDisplacement="Condition2D2N"/>
     </TopologyFeatures>
@@ -24,7 +24,7 @@
 		 ImplementedInApplication="GeoMechanicsApplication" MinimumKratosVersion="9000"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="2D" RequiresLocalAxes="False"
 		 ElementType="Surface"  ProcessName="apply_excavation_process" VariableName="EXCAVATION"
-		 help="Apply this over the excavated surface" units="" unit_magnitude="">
+		 help="Apply this over the excavated surface" units="" unit_magnitude="" Water="False">
     <TopologyFeatures>
       <item  GeometryType="Triangle" nodes="3" KratosName="Triangle2D3"/>
       <item  GeometryType="Triangle" nodes="6" KratosName="Triangle2D6"/>

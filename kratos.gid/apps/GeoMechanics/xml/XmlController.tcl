@@ -11,6 +11,9 @@ proc ::GeoMechanics::xml::Init { } {
     Model::ForgetElements
     Model::getElements Elements.xml
 
+    foreach condition [Model::GetConditions] {
+        $condition setAttribute Water False
+    }
     Model::getConditions Conditions.xml
     Model::getConstitutiveLaws ConstitutiveLaws.xml
 

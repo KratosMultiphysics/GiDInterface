@@ -8,6 +8,7 @@
       <include n="InitialConditions" active="0" path="apps/Structural/xml/InitialConditions.spd"/>
       <include n="BoundaryConditions" active="1" path="apps/Structural/xml/BoundaryConditions.spd"/>
       <include n="Loads" active="1" path="apps/GeoMechanics/xml/Loads.spd"/>
+      <include n="Water" active="1" path="apps/GeoMechanics/xml/Water.spd"/>
       <include n="Processes" active="0" path="apps/Structural/xml/Processes.spd"/>
       <include n="SolutionStrategy" active="1" path="apps/Structural/xml/SolutionStrategy.spd"/>
       <include n="Results" active="1" path="apps/Common/xml/Results.spd" un="STResults"/>
