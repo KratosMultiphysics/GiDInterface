@@ -19,6 +19,23 @@
       <parameter n="FORCE" pn="External Load" v="false"/>
     </outputs>
   </ConditionItem>
+  
+  <ConditionItem n="Excavation" pn="Excavation" Interval="False"
+		 ImplementedInApplication="GeoMechanicsApplication" MinimumKratosVersion="9000"
+		 WorkingSpaceDimension="2D" LocalSpaceDimension="2D" RequiresLocalAxes="False"
+		 ElementType="Surface"  ProcessName="apply_excavation_process" VariableName="EXCAVATION"
+		 help="Apply this over the excavated surface" units="" unit_magnitude="">
+    <TopologyFeatures>
+      <item  GeometryType="Triangle" nodes="3" KratosName="Triangle2D3"/>
+      <item  GeometryType="Triangle" nodes="6" KratosName="Triangle2D6"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <DefaultValues>
+    </DefaultValues>
+    <outputs>
+    </outputs>
+  </ConditionItem>
 
 
 </ConditionList>

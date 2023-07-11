@@ -6,5 +6,10 @@
       <parameter n="value" pn="Value" type="double" v="0.0" function="0" has_units="1"/>
     </inputs>
   </Process>
+  <Process n="apply_excavation_process" pn="Apply excavation process" python_module="apply_excavation_process" kratos_module="KratosMultiphysics.GeoMechanicsApplication" help="Sets an area to be excavated">
+    <inputs>
+      <parameter n="deactivate_soil_part" pn="Deactivate soil part" type="bool" v="true" values="true,false" />
+    </inputs>
+  </Process>
 </ProcessList>
 
