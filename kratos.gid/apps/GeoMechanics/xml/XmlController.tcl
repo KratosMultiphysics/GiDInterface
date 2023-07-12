@@ -315,3 +315,29 @@ proc ::GeoMechanics::xml::GetListOfSubModelParts { {stage ""} } {
     set all_raw [$root selectNodes ".//condition/group"]
     return $all_raw
 }
+
+proc ::GeoMechanics::xml::GetPhreaticPoints {stage} {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//container\[@n='PhreaticPoints'\]/value"]
+
+    set result [list ]  
+    foreach point $all_raw {
+        lappend result [write::getValueByNode $point]
+    }
+    return $result
+}
+
+proc ::GeoMechanics::xml::AddPhreaticPoint {stage x1 y1 z1} {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set base [$root selectNodes ".//container\[@n='PhreaticPoints'\]"]
+    
+    set all_raw [$base selectNodes "./value"]
+    set num [llength $all_raw]
+    set v "$x1,$y1"
+    set node "<value n='p_$num' pn='P $num' v='$v' fieldtype='vector' dimensions='2' />"
+    $base appendXML $node
+    set result [$base selectNodes "./value\[@n=p_$num\]"]
+    return $result
+}
