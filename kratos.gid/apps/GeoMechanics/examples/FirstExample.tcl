@@ -16,6 +16,7 @@ proc ::GeoMechanics::examples::FirstExample::Init {args} {
     AssignGroups
     AssignMeshSizes
     TreeAssignation
+    MeshGenerationOKDo 1
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -85,12 +86,6 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
-    # Prepare stages
-    ::GeoMechanics::xml::NewStage "Stage 2"
-    ::GeoMechanics::xml::NewStage "Stage 3"
-    ::GeoMechanics::xml::NewStage "Stage 4"
-    spdAux::parseRoutes
-
     # Stage 1
     set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 1'\]"]
 
@@ -112,6 +107,10 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     set body_node [customlib::AddConditionGroupOnXPath $parts Body]
     set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
     spdAux::SetValuesOnBaseNode $body_node $props
+
+    # Phreatic line 
+    ::GeoMechanics::xml::AddPhreaticPoint $stage 0.0 -1.0 0.0
+    ::GeoMechanics::xml::AddPhreaticPoint $stage 30.0 -1.0 0.0
 
     # Fix ground
     GiD_Groups clone Bottom Total
@@ -165,6 +164,14 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     set props [list value 5000 Interval Total]
     spdAux::SetValuesOnBaseNode $pressure_node $props
 
+
+
+
+    # Prepare stages
+    ::GeoMechanics::xml::NewStage "Stage 2"
+    ::GeoMechanics::xml::NewStage "Stage 3"
+    ::GeoMechanics::xml::NewStage "Stage 4"
+    spdAux::parseRoutes
 
     return ""
 
