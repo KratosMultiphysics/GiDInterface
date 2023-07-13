@@ -25,6 +25,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="NEW_GEO_NODAL_CONDITION"/>
     </NodalConditions>
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
     <inputs></inputs>
@@ -57,6 +58,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
+      <NodalCondition n="NEW_GEO_NODAL_CONDITION"/>
     </NodalConditions>
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
     <inputs></inputs>

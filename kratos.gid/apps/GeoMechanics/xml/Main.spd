@@ -6,7 +6,7 @@
       <include n="Parts" active="1" path="apps/GeoMechanics/xml/Parts.spd"/>
       <include n="Intervals" active="1" path="apps/Common/xml/Intervals.spd"/>
       <include n="InitialConditions" active="0" path="apps/Structural/xml/InitialConditions.spd"/>
-      <include n="BoundaryConditions" active="1" path="apps/Structural/xml/BoundaryConditions.spd"/>
+      <include n="BoundaryConditions" active="1" path="apps/GeoMechanics/xml/BoundaryConditions.spd"/>
       <include n="Loads" active="1" path="apps/GeoMechanics/xml/Loads.spd"/>
       <include n="Water" active="1" path="apps/GeoMechanics/xml/Water.spd"/>
       <include n="Processes" active="0" path="apps/Structural/xml/Processes.spd"/>

@@ -11,5 +11,10 @@
       <parameter n="deactivate_soil_part" pn="Deactivate soil part" type="bool" v="true" values="true,false" />
     </inputs>
   </Process>
+  <Process n="ApplyConstantBoundaryPhreaticLinePressureProcess" pn="Apply constant boundary phreatic line pressure process" python_module="apply_constant_boundary_phreatic_line_pressure_process" kratos_module="KratosMultiphysics.GeoMechanicsApplication" help="">
+    <inputs>
+    </inputs>
+  </Process>
+
 </ProcessList>
 

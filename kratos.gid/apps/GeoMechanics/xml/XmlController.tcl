@@ -20,6 +20,8 @@ proc ::GeoMechanics::xml::Init { } {
     Model::ForgetMaterials
     Model::getMaterials Materials.xml
 
+    Model::getNodalConditions NodalConditions.xml
+
     Model::getProcesses Processes.xml
 
     # Structural strategies and schemes filter elements by ImplementedInApplication StructuralMechanicsApplication
