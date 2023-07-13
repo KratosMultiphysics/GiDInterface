@@ -40,15 +40,19 @@ proc ::GeoMechanics::CustomToolbarItems { } {
 
     Kratos::ToolbarAddItem "BackStage" "back.png" [list -np- ::GeoMechanics::PrevStage] [= "Previous stage"]
     Kratos::ToolbarAddItem "DrawStage" "pie.png" [list -np- ::GeoMechanics::DrawStage] [= "Draw stage"]
-    Kratos::ToolbarAddItem "WaterLevel" "wave.png" [list -np- ::GeoMechanics::PhreaticButton] [= "Phreatic line"]
     Kratos::ToolbarAddItem "NextStage" "next.png" [list -np- ::GeoMechanics::NextStage] [= "Next stage"]
     Kratos::ToolbarAddItem "SpacerGeoMechanics1" "" "" ""
+    Kratos::ToolbarAddItem "WaterLevel" "wave.png" [list -np- ::GeoMechanics::PhreaticButton] [= "Phreatic line"]
+    Kratos::ToolbarAddItem "WaterLevelDelete" "wave_cross.png" [list -np- ::GeoMechanics::DeletePhreaticButton] [= "Delete phreatic line"]
     Kratos::ToolbarAddItem "callPython" "python.png" [list -np- ::GeoMechanics::PythonButton] [= "Python click"]
 }
 
 proc ::GeoMechanics::PrevStage {  } {
     variable curr_stage
     set stages [::GeoMechanics::xml::GetStages]
+    # try to end the line creation or displaying
+    catch {::GeoMechanics::EndCreatePhreaticLine}
+
     incr curr_stage -1
     if {$curr_stage < 0} {
         set curr_stage 0
@@ -61,6 +65,10 @@ proc ::GeoMechanics::PrevStage {  } {
 
 proc ::GeoMechanics::NextStage {  } {
     variable curr_stage
+    
+    # try to end the line creation or displaying
+    catch {::GeoMechanics::EndCreatePhreaticLine}
+
     set stages [::GeoMechanics::xml::GetStages]
     incr curr_stage 1
     set max [llength [::GeoMechanics::xml::GetStages]]
@@ -75,6 +83,9 @@ proc ::GeoMechanics::NextStage {  } {
 
 proc ::GeoMechanics::DrawStage { } {
     variable curr_stage
+    
+    # try to end the line creation or displaying
+    catch {::GeoMechanics::EndCreatePhreaticLine}
     
     set stages [::GeoMechanics::xml::GetStages]
     ::GeoMechanics::xml::CloseStages

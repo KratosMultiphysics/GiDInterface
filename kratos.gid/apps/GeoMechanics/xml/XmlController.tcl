@@ -331,6 +331,15 @@ proc ::GeoMechanics::xml::GetPhreaticPoints {stage} {
     }
     return $result
 }
+proc ::GeoMechanics::xml::DeletePhreaticPoints {stage} {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//container\[@n='PhreaticPoints'\]/value"]
+
+    foreach point $all_raw {
+        $point delete
+    }
+}
 
 proc ::GeoMechanics::xml::AddPhreaticPoint {stage x1 y1 z1} {
     set root [customlib::GetBaseRoot]

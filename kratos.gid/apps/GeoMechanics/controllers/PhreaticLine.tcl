@@ -22,11 +22,19 @@ proc ::GeoMechanics::PhreaticButton { } {
             ::GeoMechanics::DisplayPhreaticLine $stage
         }
     } elseif {$state_phreatic_line in [list "creating" "displaying"]} {
-        set state_phreatic_line none
-        # Delete the phreatic line
-        ::GeoMechanics::DeletePhreaticLine $stage
-        catch {::GeoMechanics::EndCreatePhreaticLine}
+        ::GeoMechanics::EndCreatePhreaticLine
     }
+}
+
+proc ::GeoMechanics::DeletePhreaticButton { } {
+    variable curr_stage
+
+    # Get the current active stage
+    set stages [::GeoMechanics::xml::GetStages]
+    set stage [lindex $stages $curr_stage]
+
+    ::GeoMechanics::xml::DeletePhreaticPoints $stage
+    ::GeoMechanics::EndCreatePhreaticLine
 }
 
 proc ::GeoMechanics::CreatePhreaticLine {stage} {
@@ -65,24 +73,38 @@ proc ::GeoMechanics::AfterCreatePhreaticLine { line } {
     } else {
 
     }
+
+    # TODO: at this moment we only allow 2 points, in the future, will see
+    set num [llength [::GeoMechanics::xml::GetPhreaticPoints $stage]]
+    if {$num >= 2} {
+        ::GeoMechanics::EndCreatePhreaticLine
+        ::GeoMechanics::DisplayPhreaticLine $stage
+    }
 }
 proc ::GeoMechanics::EndCreatePhreaticLine { } {
+    variable state_phreatic_line
+    set state_phreatic_line none
+
+    # Delete the phreatic line
+    ::GeoMechanics::DeleteVisiblePhreaticLine
 
     # Delete the lines from the variable list
     variable creating_phreatic_previous_layer
     GiD_Layers edit to_use $creating_phreatic_previous_layer
-    GiD_UnRegisterEvent GiD_Event_AfterCreateLine ::GeoMechanics::AfterCreatePhreaticLine PROBLEMTYPE Kratos
+    catch {GiD_UnRegisterEvent GiD_Event_AfterCreateLine ::GeoMechanics::AfterCreatePhreaticLine PROBLEMTYPE Kratos}
     spdAux::RequestRefresh
 }
 
-proc ::GeoMechanics::DeletePhreaticLine { stage } {
-    variable state_phreatic_line
-    variable creating_phreatic_lines
+proc ::GeoMechanics::DeleteVisiblePhreaticLine { } {
+    variable curr_stage
 
+    # Get the current active stage
+    set stages [::GeoMechanics::xml::GetStages]
+    set stage [lindex $stages $curr_stage]
 
     set stage_name [$stage @name]
     # Delete the lines from the variable list
-    GiD_Layers delete PhreaticLine_$stage_name
+    if {[GiD_Layers exists PhreaticLine_$stage_name]} {GiD_Layers delete PhreaticLine_$stage_name}
     GiD_Process MEscape 'Redraw escape
 }
 
