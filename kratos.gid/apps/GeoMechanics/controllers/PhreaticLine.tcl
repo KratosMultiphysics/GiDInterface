@@ -18,8 +18,7 @@ proc ::GeoMechanics::PhreaticButton { } {
             ::GeoMechanics::CreatePhreaticLine $stage
         } else {
             # If there are phreatic points, display it somehow
-            set state_phreatic_line displaying
-            ::GeoMechanics::DisplayPhreaticLine $stage
+            ::GeoMechanics::DisplayPhreaticLine
         }
     } elseif {$state_phreatic_line in [list "creating" "displaying"]} {
         ::GeoMechanics::EndCreatePhreaticLine
@@ -78,7 +77,7 @@ proc ::GeoMechanics::AfterCreatePhreaticLine { line } {
     set num [llength [::GeoMechanics::xml::GetPhreaticPoints $stage]]
     if {$num >= 2} {
         ::GeoMechanics::EndCreatePhreaticLine
-        ::GeoMechanics::DisplayPhreaticLine $stage
+        ::GeoMechanics::DisplayPhreaticLine
     }
 }
 proc ::GeoMechanics::EndCreatePhreaticLine { } {
@@ -108,7 +107,14 @@ proc ::GeoMechanics::DeleteVisiblePhreaticLine { } {
     GiD_Process MEscape 'Redraw escape
 }
 
-proc ::GeoMechanics::DisplayPhreaticLine {stage} {
+proc ::GeoMechanics::DisplayPhreaticLine {} {
+    variable state_phreatic_line
+    set state_phreatic_line displaying
+    
+    # Get the current active stage
+    variable curr_stage
+    set stages [::GeoMechanics::xml::GetStages]
+    set stage [lindex $stages $curr_stage]
 
     set stage_name [$stage @name]
     set layer_name PhreaticLine_$stage_name

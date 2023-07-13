@@ -49,6 +49,9 @@ proc ::GeoMechanics::CustomToolbarItems { } {
 
 proc ::GeoMechanics::PrevStage {  } {
     variable curr_stage
+    variable state_phreatic_line
+    set prev_state_phreatic_line $state_phreatic_line
+    
     set stages [::GeoMechanics::xml::GetStages]
     # try to end the line creation or displaying
     catch {::GeoMechanics::EndCreatePhreaticLine}
@@ -61,10 +64,13 @@ proc ::GeoMechanics::PrevStage {  } {
     ::GeoMechanics::xml::OpenStage [[lindex $stages $curr_stage] @name]
     spdAux::RequestRefresh
     ::GeoMechanics::WarnActiveStage
+    if {$prev_state_phreatic_line eq "displaying"} {::GeoMechanics::DisplayPhreaticLine}
 }
 
 proc ::GeoMechanics::NextStage {  } {
     variable curr_stage
+    variable state_phreatic_line
+    set prev_state_phreatic_line $state_phreatic_line
     
     # try to end the line creation or displaying
     catch {::GeoMechanics::EndCreatePhreaticLine}
@@ -79,14 +85,13 @@ proc ::GeoMechanics::NextStage {  } {
     ::GeoMechanics::xml::OpenStage [[lindex $stages $curr_stage] @name]
     spdAux::RequestRefresh
     ::GeoMechanics::WarnActiveStage
+
+    if {$prev_state_phreatic_line eq "displaying"} {::GeoMechanics::DisplayPhreaticLine}
 }
 
 proc ::GeoMechanics::DrawStage { } {
     variable curr_stage
-    
-    # try to end the line creation or displaying
-    catch {::GeoMechanics::EndCreatePhreaticLine}
-    
+        
     set stages [::GeoMechanics::xml::GetStages]
     ::GeoMechanics::xml::CloseStages
     ::GeoMechanics::xml::DrawStage [[lindex $stages $curr_stage] @name]
