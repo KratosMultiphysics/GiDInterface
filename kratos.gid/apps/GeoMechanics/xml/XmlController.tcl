@@ -79,6 +79,8 @@ proc ::GeoMechanics::xml::CustomTree { args } {
     set xpath [spdAux::getRoute GEOMSoluType]
     set solution_type_node [[customlib::GetBaseRoot] selectNodes $xpath]
     $solution_type_node setAttribute values "Static,Quasi-static,Dynamic"
+
+    ::GeoMechanics::WarnActiveStage
 }
 
 proc ::GeoMechanics::xml::ProcCheckGeometryGeoMechanics {domNode args} {

@@ -17,6 +17,7 @@
         "write/write.tcl",
         "write/writeProjectParameters.tcl",
         "controllers/Python.tcl",
+        "controllers/PhreaticLine.tcl",
         "examples/examples.tcl",
         "examples/FirstExample.tcl"
     ],
