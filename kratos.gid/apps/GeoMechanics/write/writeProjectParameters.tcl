@@ -9,6 +9,14 @@ proc ::GeoMechanics::write::getParametersDict { stage } {
         dict set project_parameters_dict solver_settings model_import_settings input_filename [$stage @name]
     }
     
+
+
+    # add the phreatic water properties
+    set list_of_processes [dict get $project_parameters_dict processes constraints_process_list]
+    WV list_of_processes
+    lappend list_of_processes [::GeoMechanics::write::getPhreaticWaterProperties $stage]
+    dict set project_parameters_dict processes constraints_process_list $list_of_processes
+
     return $project_parameters_dict
 }
 
@@ -54,4 +62,23 @@ proc ::GeoMechanics::write::writeParametersEvent { } {
             write::WriteJSON [::GeoMechanics::write::getParametersDict $stage]
         }
     }
+}
+
+# Get the phreatic water properties for the stage
+proc ::GeoMechanics::write::getPhreaticWaterProperties { stage } {
+    # Get the points from the tree
+    set points [::GeoMechanics::xml::GetPhreaticPoints $stage]
+
+    # TODO: AT THIS MOMENT WE ONLY ALLOW 2 POINTS
+    set point_1 [lappend [lindex $points 0] 0.0]
+    set point_2 [lappend [lindex $points end] 0.0]
+
+    set phreatic_water_process [dict create]
+    dict set phreatic_water_process python_module apply_constant_phreatic_line_pressure_process
+    dict set phreatic_water_process kratos_module KratosMultiphysics.GeoMechanicsApplication
+    dict set phreatic_water_process process_name ApplyConstantPhreaticLinePressureProcess
+    dict set phreatic_water_process Parameters model_part_name [GetAttribute model_part_name]
+    dict set phreatic_water_process Parameters variable_name WATER_PRESSURE
+    dict set phreatic_water_process Parameters first_reference_coordinate $point_1
+    dict set phreatic_water_process Parameters second_reference_coordinate $point_2
 }
