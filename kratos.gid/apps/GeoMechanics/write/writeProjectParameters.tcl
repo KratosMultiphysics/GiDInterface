@@ -73,8 +73,10 @@ proc ::GeoMechanics::write::getPhreaticWaterProperties { stage } {
     set points [::GeoMechanics::xml::GetPhreaticPoints $stage]
 
     # TODO: AT THIS MOMENT WE ONLY ALLOW 2 POINTS
-    set point_1 [lappend [lindex $points 0] 0.0]
-    set point_2 [lappend [lindex $points end] 0.0]
+    set p1 [lindex $points 0] 
+    set point_1 [lappend p1 0.0]
+    set p2 [lindex $points end]
+    set point_2 [lappend p2 0.0]
 
     set phreatic_water_process [dict create]
     dict set phreatic_water_process python_module apply_constant_phreatic_line_pressure_process
