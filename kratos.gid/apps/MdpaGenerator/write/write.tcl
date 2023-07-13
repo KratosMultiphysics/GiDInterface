@@ -21,6 +21,7 @@ proc ::MdpaGenerator::write::Init { } {
     set writeAttributes [dict create ]
     
     SetAttribute parts_un [::MdpaGenerator::GetUniqueName parts]
+    SetAttribute write_mdpa_mode [::MdpaGenerator::GetWriteProperty write_mdpa_mode]
 }
 
 # MDPA write event
