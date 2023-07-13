@@ -45,6 +45,7 @@ proc ::GeoMechanics::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "WaterLevel" "wave.png" [list -np- ::GeoMechanics::PhreaticButton] [= "Phreatic line"]
     Kratos::ToolbarAddItem "WaterLevelDelete" "wave_cross.png" [list -np- ::GeoMechanics::DeletePhreaticButton] [= "Delete phreatic line"]
     Kratos::ToolbarAddItem "callPython" "python.png" [list -np- ::GeoMechanics::PythonButton] [= "Python click"]
+    Kratos::ToolbarAddItem "callPython" "python.png" [list -np- ::GeoMechanics::PythonButtonImportPlaxis] [= "Import Plaxis model"]
 }
 
 proc ::GeoMechanics::PrevStage {  } {
