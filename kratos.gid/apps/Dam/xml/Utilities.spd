@@ -45,6 +45,7 @@
             <value n="B" pn="Second Factor" v="6.9"/>
             <value n="C" pn="Third Factor" v="27.0"/>
             <value n="D" pn="Fourth Factor" v="10.0"/>
+            <value n="decomposition_threshold" pn="Decomposition threshold" v="0.1" help="Decomposition threshold"/>
         </container>
     </container>
 

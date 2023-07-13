@@ -16,10 +16,6 @@ proc ::PfemMelting::write::getParametersDict { } {
 proc ::PfemMelting::write::GetProblemDataDict { } {
     set problem_data_dict [write::GetDefaultProblemDataDict]
     dict set problem_data_dict domain_size [expr 3*1]
-    dict set problem_data_dict material_settings material_filename [GetAttribute materials_file]
-    dict set problem_data_dict environment_settings gravity [write::GetGravityByModuleDirection Gravity]
-    dict set problem_data_dict environment_settings ambient_temperature [write::getValue [::PfemMelting::GetUniqueName ambient_temperature]]
-    dict set problem_data_dict mesh_element_size [GiD_Info Project LastElementSize]
 
     return $problem_data_dict
 }
@@ -31,11 +27,18 @@ proc ::PfemMelting::write::Getsolver_settings_dict { } {
     if {$remesh_option eq "remesh"} {
         dict set solver_settings_dict solver_type ThermallyCoupledPfem2
     } else {
-        dict set solver_settings_dict solver_type thermally_coupled_no_remesh
+        dict set solver_settings_dict solver_type FemtolaserDrilling
     }
 
     dict set solver_settings_dict domain_size [expr 3]
     dict set solver_settings_dict echo_level 0
+
+    dict set solver_settings_dict material_import_settings materials_filename [GetAttribute materials_file]
+    dict set solver_settings_dict laser_import_settings laser_filename "LaserSettings.json"
+    dict set solver_settings_dict environment_settings gravity [write::GetGravityByModuleDirection Gravity]
+    dict set solver_settings_dict environment_settings ambient_temperature [write::getValue [::PfemMelting::GetUniqueName ambient_temperature]]
+
+    dict set solver_settings_dict mesh_element_size [GiD_Info Project LastElementSize]
 
     dict set solver_settings_dict fluid_solver_settings [GetSolverSettingsFluidDict]
     dict set solver_settings_dict thermal_solver_settings [GetSolverSettingsThermicDict]
@@ -68,6 +71,7 @@ proc ::PfemMelting::write::GetSolverSettingsFluidDict { } {
     set timeSteppingDict [dict create]
     dict set timeSteppingDict "time_step" [write::getValue TimeParameters DeltaTime]
     dict set timeSteppingDict "automatic_time_step" false
+    dict set timeSteppingDict "time_step_reduction_coefficient" 1.0
 
     dict set solver_settings_dict time_stepping $timeSteppingDict
 
@@ -157,13 +161,18 @@ proc ::PfemMelting::write::getLaserProcesses { } {
         dict set laser_process_dict kratos_module KratosMultiphysics.PfemMeltingApplication
         dict set laser_process_dict Parameters model_part_name [GetAttribute model_part_name]
         set laser_filename [write::getValueByNode $laser]
-        if { ![file exists $laser_filename]} {
-            W "WARNING: Laser file for '[[$laser parent] @name]' does not exist. Fill it manually in the ProjectParameter.json section."
-            set laser_filename null
+        if {![file exists $laser_filename]} {
+            #W "WARNING: Laser file for '[[$laser parent] @name]' does not exist. Fill it manually in the ProjectParameter.json section."
+            set laser_filename "LaserSettings.json"
         }
         dict set laser_process_dict Parameters filename $laser_filename
         lappend laser_process_list $laser_process_dict
     }
+
+    set laser_filename_origin [file join $PfemMelting::dir jsons $laser_filename]
+    set laser_filename [::FileSelector::_ProcessFile $laser_filename_origin]
+    ::spdAux::SaveModelFile $laser_filename
+
     return $laser_process_list
 }
 

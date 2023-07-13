@@ -576,6 +576,7 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
         ::GidUtils::SetWarnLine "Error writing mdpa or json"
     } else {
         ::GidUtils::SetWarnLine "MDPA and JSON written OK"
+        ::GidUtils::SetWarnLine "Calculation files successfully written!"
     }
     set end_time [clock seconds]
     set ttime [expr {$end_time-$ini_time}]

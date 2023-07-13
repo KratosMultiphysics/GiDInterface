@@ -125,6 +125,7 @@
         <parameter n="B" pn="Second Factor" type="double" v="6.9" />
         <parameter n="C" pn="Third Factor" type="double" v="18.8" />
         <parameter n="D" pn="Fourth Factor" type="double" v="7.0" />
+        <parameter n="decomposition_threshold" pn="Decomposition threshold" type="double" v="0.1" help="Decomposition threshold"/>
     </inputs>
   </Process>
 

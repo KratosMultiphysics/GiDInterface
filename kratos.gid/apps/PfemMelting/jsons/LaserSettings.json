@@ -1,0 +1,48 @@
+{
+    "laser_settings": {
+        "laser_profile": {
+            "shape": "flat",
+            "values":[
+            {
+            "distance": 0.0,
+            "power_deviation_from_flat" : 3.0
+            },
+            {
+            "distance": 0.002,
+            "power_deviation_from_flat" : 1.5
+            },
+            {
+            "distance": 0.004,
+            "power_deviation_from_flat" : 1.0
+            }
+            ],
+            "radius": 0.02,
+            "power": 1e6
+        },
+        "direction": [
+            0.0,
+            0.0,
+            -1.0
+        ],
+        "path": [{
+            "time": 0,
+            "x": 0.2,
+            "y": 0.5,
+            "z": 0.2,
+            "power": 1e6
+        },{
+            "time": 0.08,
+            "x": 0.8,
+            "y": 0.5,
+            "z": 0.2,
+            "power": 1e6
+        },{
+            "time": 0.1,
+            "x": 0.8,
+            "y": 0.5,
+            "z": 0.2,
+            "power": 1e6
+        }
+        ]
+    }
+}

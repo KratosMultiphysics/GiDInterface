@@ -329,7 +329,8 @@ proc apps::ActivateApp_do {app} {
             apps::loadAppFile $fileName
         }
     }
-    set app_minimum_gid_version [dict get [$app getProperty requirements] minimum_gid_version]
+    #set app_minimum_gid_version [dict get [$app getProperty requirements] minimum_gid_version]
+    set app_minimum_gid_version "16.1.4d"
     if {[GiDVersionCmp $app_minimum_gid_version] < 0} {W "Caution. Minimum GiD version is $app_minimum_gid_version"}
     if {[write::isBooleanTrue [$app getPermission import_files]]} { Kratos::LoadImportFiles }
     if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }

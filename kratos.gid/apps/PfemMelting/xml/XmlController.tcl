@@ -32,25 +32,28 @@ proc PfemMelting::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v MultipleFiles GiDOptions GiDMultiFileFlag
     spdAux::SetValueOnTreeItem state disabled GiDOptions GiDMultiFileFlag
 
-
     spdAux::SetValueOnTreeItem v 9.81 Gravity GravityValue
     spdAux::SetValueOnTreeItem v 0 Gravity Cy
     spdAux::SetValueOnTreeItem v -1.0 Gravity Cz
-    foreach res [list "VELOCITY" "PRESSURE" "TEMPERATURE" "FACE_HEAT_FLUX" "BODY_FORCE" "ARRHENIUS_COEFFICIENT" "VISCOSITY" "CONDUCTIVITY" "SPECIFIC_HEAT" "IS_STRUCTURE" "IS_FREE_SURFACE" ] {
+    foreach res [list "TEMPERATURE" "FACE_HEAT_FLUX"] {
         gid_groups_conds::addF "[spdAux::getRoute NodalResults]" value [list n $res pn $res v Yes values "Yes,No"]
     }
-
+    foreach res [list "VELOCITY" "PRESSURE" "BODY_FORCE" "ARRHENIUS_COEFFICIENT" "VISCOSITY" "CONDUCTIVITY" "SPECIFIC_HEAT" "IS_STRUCTURE" "IS_FREE_SURFACE" ] {
+        gid_groups_conds::addF "[spdAux::getRoute NodalResults]" value [list n $res pn $res v No values "Yes,No"]
+    }
 }
 
 proc PfemMelting::xml::ProcAfterApplyParts { domNode } {
     # Fluid::xml::ProcAfterApplyParts $domNode
 }
+
 proc PfemMelting::xml::MultiAppEvent {args} {
     if {$args eq "init"} {
         spdAux::parseRoutes
         spdAux::ConvertAllUniqueNames FL [::PfemMelting::GetAttribute prefix]
     }
 }
+
 proc spdAux::SetFieldOnPath {path field value} {
     gid_groups_conds::setAttributes $path [list $field $value]
 }

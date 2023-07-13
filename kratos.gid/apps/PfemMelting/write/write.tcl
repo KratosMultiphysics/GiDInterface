@@ -48,11 +48,11 @@ proc ::PfemMelting::write::writeCustomFilesEvent { } {
 
         set file [dict get $mat Material Variables Temperature_Viscosity]
         dict unset mat Material Variables Temperature_Viscosity
-        dict set mat Material Variables DYNAMIC_VISCOSITY 1000000
+        dict set mat Material Variables DYNAMIC_VISCOSITY 576.0
 
         set values [list ]
         if {![file exists [file join [GidUtils::GetDirectoryModel] $file]]} {
-            W "WARNING: The seleted material does not define a valid viscosity file."
+            #W "WARNING: The seleted material does not define a valid viscosity file."
         } else {
             set f [open [file join [GidUtils::GetDirectoryModel] $file] r]
             while {[gets $f line] > 0} {
