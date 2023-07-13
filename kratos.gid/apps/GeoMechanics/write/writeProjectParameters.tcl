@@ -40,17 +40,33 @@ proc ::GeoMechanics::write::GetSingleFileStageProjectParameters {  } {
     foreach stage [::GeoMechanics::xml::GetStages] {
         set stage_name [$stage @name]
         set stage_content [::GeoMechanics::write::getParametersDict $stage]
-        dict set stage_content stage_preprocess prepare_restart write_restart true
-        dict set stage_content stage_preprocess prepare_restart restart_settings [dict create]
-        dict set stage_content stage_preprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
-        dict set stage_content stage_preprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
-        dict set stage_content stage_preprocess modelers [list [dict create name "KratosMultiphysics.modelers.import_mdpa_modeler.ImportMDPAModeler" Parameters [dict create ] ]]
-        dict set stages $stage_name $stage_content
+        dict set stages $stage_name stage_preprocess [::GeoMechanics::write::getPreprocessForStage $stage]
+        dict set stages $stage_name stage_settings $stage_content
+        dict set stages $stage_name stage_postprocess [::GeoMechanics::write::getPostprocessForStage $stage]
     }
 
     dict set project_parameters_dict "stages" $stages
     
     return $project_parameters_dict
+}
+
+# Get the dictionary for the preprocess of the stage
+proc ::GeoMechanics::write::getPreprocessForStage {stage} {
+    set stage_preprocess [dict create ]
+    dict set stage_preprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
+    dict set stage_preprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
+    dict set stage_preprocess modelers [list [dict create name "KratosMultiphysics.modelers.import_mdpa_modeler.ImportMDPAModeler" Parameters [dict create ] ]]
+
+    return $stage_preprocess 
+}
+
+# Get the dictionary for the postprocess of the stage
+proc ::GeoMechanics::write::getPostprocessForStage {stage} {
+    set stage_postprocess [dict create ]
+    dict set stage_postprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
+    dict set stage_postprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
+
+    return $stage_postprocess 
 }
 
 proc ::GeoMechanics::write::writeParametersEvent { } {
