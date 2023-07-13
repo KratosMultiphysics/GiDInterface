@@ -44,6 +44,7 @@ proc ::GeoMechanics::CustomToolbarItems { } {
     Kratos::ToolbarAddItem "NextStage" "next.png" [list -np- ::GeoMechanics::NextStage] [= "Next stage"]
     Kratos::ToolbarAddItem "SpacerGeoMechanics1" "" "" ""
     Kratos::ToolbarAddItem "callPython" "python.png" [list -np- ::GeoMechanics::PythonButton] [= "Python click"]
+    Kratos::ToolbarAddItem "callPython" "python.png" [list -np- ::GeoMechanics::PythonButtonImportPlaxis] [= "Import Plaxis model"]
 }
 
 proc ::GeoMechanics::PrevStage {  } {
