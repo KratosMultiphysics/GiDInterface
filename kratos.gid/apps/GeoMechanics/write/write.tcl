@@ -46,9 +46,8 @@ proc ::GeoMechanics::write::Init { } {
     # multistage_write_mdpa_file_mode can be single_file or multiple_files
     SetAttribute multistage_write_mdpa_file_mode [::GeoMechanics::GetWriteProperty multistage_write_mdpa_file_mode]
     SetAttribute multistage_write_json_mode [::GeoMechanics::GetWriteProperty multistage_write_json_mode]
+    SetAttribute write_mdpa_mode [::GeoMechanics::GetWriteProperty write_mdpa_mode]
 
-    # mdpa mode can be geometries or elements
-    SetAttribute write_mdpa_mode geometries
 }
 
 proc ::GeoMechanics::write::writeModelPartEvent { } {

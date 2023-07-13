@@ -242,6 +242,10 @@ proc write::AddSubmodelpart {condid group} {
 
 proc write::getSubModelPartId {cid group} {
     variable submodelparts
+    if { [GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+        variable geometry_cnd_name
+        set cid $geometry_cnd_name
+    }
     set find [list $cid ${group}]
     if {[dict exists $submodelparts $find]} {
         return [dict get $submodelparts [list $cid ${group}]]

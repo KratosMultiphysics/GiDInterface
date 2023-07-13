@@ -48,6 +48,7 @@
         "properties_location": "json",
         "model_part_name": "PorousDomain",
         "output_model_part_name": "computational_model_part",
+        "write_mdpa_mode": "geometries",
         "multistage_write_json_mode": "single_file",
         "multistage_write_mdpa_file_mode": "single_file"
     },
