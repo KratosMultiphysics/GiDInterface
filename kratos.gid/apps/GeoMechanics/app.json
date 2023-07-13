@@ -49,8 +49,8 @@
         "model_part_name": "PorousDomain",
         "output_model_part_name": "computational_model_part",
         "multistage_write_json_mode": "single_file",
-        "multistage_write_mdpa_file_mode": "multiple_files"
+        "multistage_write_mdpa_file_mode": "single_file"
     },
-    "main_launch_file": "../../exec/MainKratos.py",
+    "main_launch_file": "MainKratos.py",
     "description": ""
 }
