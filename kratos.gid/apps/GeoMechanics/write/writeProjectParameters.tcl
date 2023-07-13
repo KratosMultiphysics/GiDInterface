@@ -13,7 +13,6 @@ proc ::GeoMechanics::write::getParametersDict { stage } {
 
     # add the phreatic water properties
     set list_of_processes [dict get $project_parameters_dict processes constraints_process_list]
-    WV list_of_processes
     lappend list_of_processes [::GeoMechanics::write::getPhreaticWaterProperties $stage]
     dict set project_parameters_dict processes constraints_process_list $list_of_processes
 
