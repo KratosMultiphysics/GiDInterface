@@ -17,6 +17,9 @@ proc ::GeoMechanics::write::getParametersDict { stage } {
     lappend list_of_processes [::GeoMechanics::write::getPhreaticWaterProperties $stage]
     dict set project_parameters_dict processes constraints_process_list $list_of_processes
 
+    # Modify the analysis stage
+    dict set project_parameters_dict analysis_stage "KratosMultiphysics.GeoMechanicsApplication.staged_geo_mechanics_analysis"
+
     return $project_parameters_dict
 }
 
@@ -24,13 +27,13 @@ proc ::GeoMechanics::write::GetSingleFileStageProjectParameters {  } {
     # Get the base dictionary for the project parameters
     set project_parameters_dict [dict create]
 
-    # Set the orquestrator
-    dict set project_parameters_dict orquestrator name "MultistageOrchestrators.KratosMultiphysics.SequentialMultistageOrchestrator"
-    dict set project_parameters_dict orquestrator settings echo_level 0
-    dict set project_parameters_dict orquestrator settings execution_list [::GeoMechanics::xml::GetStages "names"]
-    dict set project_parameters_dict orquestrator settings stage_checkpoints true
-    dict set project_parameters_dict orquestrator settings stage_checkpoints_folder new_checkpoints
-    # dict set project_parameters_dict orquestrator settings load_from_checkpoint "new_checkpoints/fluid_stage"
+    # Set the orchestrator
+    dict set project_parameters_dict orchestrator name "MultistageOrchestrators.KratosMultiphysics.SequentialMultistageOrchestrator"
+    dict set project_parameters_dict orchestrator settings echo_level 0
+    dict set project_parameters_dict orchestrator settings execution_list [::GeoMechanics::xml::GetStages "names"]
+    dict set project_parameters_dict orchestrator settings stage_checkpoints true
+    dict set project_parameters_dict orchestrator settings stage_checkpoints_folder new_checkpoints
+    # dict set project_parameters_dict orchestrator settings load_from_checkpoint "new_checkpoints/fluid_stage"
 
     # Set the stages
     set stages [dict create]

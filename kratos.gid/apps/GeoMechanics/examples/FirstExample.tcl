@@ -161,7 +161,7 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     GiD_Groups edit color "Load//Total" "#ff2548"
     set pressure [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='LinePressure2D'\]
     set pressure_node [customlib::AddConditionGroupOnXPath $pressure "Load//Total"]
-    $pressure_node setAttribute ov surface
+    $pressure_node setAttribute ov line
     set props [list value 5000 Interval Total]
     spdAux::SetValuesOnBaseNode $pressure_node $props
 
