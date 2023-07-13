@@ -173,6 +173,7 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     ::GeoMechanics::xml::NewStage "Stage 4"
     spdAux::parseRoutes
 
+    ::GeoMechanics::PrevStage
     return ""
 
 
