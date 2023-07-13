@@ -17,4 +17,6 @@
   </container>
   <include n="materials" active="1" path="apps/GeoMechanics/xml/Materials.spd"/>
   <value n="mat_dll" pn="Material dll path" v="C:/"/>
+  
+  <include n="CommonSettings" active="1" path="apps/GeoMechanics/xml/Settings.spd"/>
 </container>

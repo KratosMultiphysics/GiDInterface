@@ -82,6 +82,10 @@ proc ::GeoMechanics::xml::CustomTree { args } {
     set solution_type_node [[customlib::GetBaseRoot] selectNodes $xpath]
     $solution_type_node setAttribute values "Static,Quasi-static,Dynamic"
 
+    set xpath "[spdAux::getRoute STStratSection]/container\[@n='ParallelType'\]"
+    set old_parallel [[customlib::GetBaseRoot] selectNodes $xpath]
+    $old_parallel delete
+
     ::GeoMechanics::WarnActiveStage
 }
 
