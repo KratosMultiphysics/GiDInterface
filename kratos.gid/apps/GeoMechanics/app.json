@@ -16,6 +16,7 @@
         "controllers/Toolbar.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl",
+        "controllers/SplashWindow.tcl",
         "controllers/Python.tcl",
         "controllers/PhreaticLine.tcl",
         "examples/examples.tcl",
