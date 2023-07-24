@@ -21,7 +21,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::FluidDEM::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "DEM",
             "Fluid"

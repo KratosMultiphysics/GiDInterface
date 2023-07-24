@@ -796,7 +796,7 @@ proc spdAux::CheckAnyPartState {domNode {parts_uns ""}} {
         lappend parts_uns [apps::getAppUniqueName $nodeApp Parts]
     }
     foreach parts_un $parts_uns {
-        set parts_path [spdAux::getRoute $parts_un]
+        set parts_path [spdAux::getRoute $parts_un $domNode]
         if {$parts_path ne ""} {
             set parts_base [[customlib::GetBaseRoot] selectNodes $parts_path]
             lappend parts {*}[$parts_base getElementsByTagName group]
@@ -805,23 +805,24 @@ proc spdAux::CheckAnyPartState {domNode {parts_uns ""}} {
     if {[llength $parts] > 0} {return true} {return false}
 }
 
-proc spdAux::SolStratParamState {outnode} {
+proc spdAux::SolStratParamState {domNode} {
 
     set root [customlib::GetBaseRoot]
-    set nodeApp [GetAppIdFromNode $outnode]
+    set nodeApp [GetAppIdFromNode $domNode]
 
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
+    set xpath [spdAux::getRoute $sol_stratUN $domNode]
 
-    if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
-        get_domnode_attribute [$root selectNodes [spdAux::getRoute $sol_stratUN]] dict
+    if {[get_domnode_attribute [$root selectNodes $xpath] v] eq ""} {
+        get_domnode_attribute [$root selectNodes $xpath] dict
     }
-    set SolStrat [::write::getValue $sol_stratUN]
+    set SolStrat [::write::getValueByXPath $xpath]
 
-    set paramName [$outnode @n]
+    set paramName [$domNode @n]
     set ret [::Model::CheckSolStratInputState $SolStrat $paramName]
     if {$ret} {
         lassign [Model::GetSolStratParamDep $SolStrat $paramName] depN depV
-        foreach node [[$outnode parent] childNodes] {
+        foreach node [[$domNode parent] childNodes] {
             if {[$node @n] eq $depN} {
                 if {[get_domnode_attribute $node v] ni $depV} {
                     set ret 0
@@ -833,10 +834,10 @@ proc spdAux::SolStratParamState {outnode} {
     return $ret
 }
 
-proc spdAux::SchemeParamState {outnode} {
+proc spdAux::SchemeParamState {domNode} {
 
     set root [customlib::GetBaseRoot]
-    set nodeApp [GetAppIdFromNode $outnode]
+    set nodeApp [GetAppIdFromNode $domNode]
 
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
     set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
@@ -850,7 +851,7 @@ proc spdAux::SchemeParamState {outnode} {
     set SolStrat [::write::getValue $sol_stratUN]
     set Scheme [write::getValue $schemeUN]
 
-    set paramName [$outnode @n]
+    set paramName [$domNode @n]
     return [::Model::CheckSchemeInputState $SolStrat $Scheme $paramName]
 }
 

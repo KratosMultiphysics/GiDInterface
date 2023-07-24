@@ -6,12 +6,12 @@
     ],
     "start_script":"::PfemLauncher::Init",
     "requeriments":{
-        "display_apps":["PfemFluid", "DEMPFEM", "PfemThermic"],
+        "display_apps":["PfemFluid", "DEMPFEM", "PfemThermic", "PfemMelting"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
         "open_tree": false,
-        "show_toolbar": true,
+        "show_toolbar": false,
         "intervals": false,
         "wizard": false
     }

@@ -22,6 +22,7 @@
 	<appLink n="PfemLauncher" public="1" pn="Pfem" active="0" appid="PfemLauncher" prefix="PFEMLauncher_"/>
 	<appLink n="PfemFluid" public="0" pn="Pfem Fluid" active="0" appid="PfemFluid" prefix="PFEMFLUID_"/>
 	<appLink n="PfemThermic" public="0" pn="Pfem Thermic" active="0" appid="PfemThermic" prefix="PFEMTHERMIC_"/>
+	<appLink n="PfemMelting" public="0" pn="Pfem Melting" active="0" appid="PfemMelting" prefix="PFEMMELTING_"/>
 	<appLink n="StenosisWizard" public="1" pn="Stenosis Wizard" active="0" appid="StenosisWizard" prefix="StenosisWizard" is_tool="1"/>
 	<appLink n="Stent" public="1" pn="Stent" active="0" appid="Stent" prefix="Stent" is_tool="1"/>
 	<appLink n="DEMLauncher" public="1" pn="DEM" active="0" appid="DEMLauncher" prefix="DEMLauncher"/>
@@ -33,6 +34,7 @@
 	<appLink n="ShallowWater" public="1" pn="Shallow water" active="0" appid="ShallowWater" prefix="SW"/>
 	<appLink n="MdpaGenerator" public="1" pn="Mdpa Generator" active="0" appid="MdpaGenerator" prefix="MDPAGen_" is_tool="1"/>
 	<appLink n="Examples" public="1" pn="Examples" active="0" appid="Examples" prefix="EXA_" is_tool="1"/>
+	<appLink n="GeoMechanics" public="1" pn="GeoMechanics" active="0" appid="GeoMechanics" prefix="GEOM_"/>
 	<blockdata n="units" pn="Units" icon="units" open_window="0">
 		<value n='units_mesh' pn='Mesh units' unit_mesh_definition="1"/>
 		<value n='units_system' pn='Units system' units_system_definition="1">
