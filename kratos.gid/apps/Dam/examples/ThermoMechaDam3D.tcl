@@ -122,8 +122,9 @@ proc ::Dam::examples::ThermoMechaDam3D::AssignGroups {args} {
 proc ::Dam::examples::ThermoMechaDam3D::AssignMeshSizes {args} {
 
     set dam_mesh_size 2
-    GiD_Process Mescape Meshing AssignSizes Volumes $dam_mesh_size [GiD_EntitiesGroups get Dam volumes] escape escape
-    GiD_Process Mescape Meshing AssignSizes Volumes $dam_mesh_size [GiD_EntitiesGroups get Ground volumes] escape escape
+    GiD_Process Mescape Meshing AssignSizes Volumes $dam_mesh_size 1:end escape escape
+    GiD_Process Mescape Meshing AssignSizes Surfaces $dam_mesh_size 1:end escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $dam_mesh_size 1:end escape escape
     ##Kratos::BeforeMeshGeneration $dam_mesh_size
 }
 
