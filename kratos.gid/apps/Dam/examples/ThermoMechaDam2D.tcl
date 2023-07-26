@@ -79,6 +79,13 @@ proc ::Dam::examples::ThermoMechaDam2D::DrawGeometry {args} {
     ## Surface ##
     GiD_Process Mescape Geometry Create NurbsSurface {*}$groundLines escape escape
 
+    # Swap normals of hydrostatic pressure and heat flux surfaces to point outside the volume
+    GiD_Process Mescape Utilities SwapNormals Lines Select 2 escape escape
+    GiD_Process Mescape Utilities SwapNormals Lines Select 3 escape escape
+    GiD_Process Mescape Utilities SwapNormals Lines Select 4 escape escape
+    GiD_Process Mescape Utilities SwapNormals Lines Select 5 escape escape
+    GiD_Process Mescape Utilities SwapNormals Lines Select 9 escape escape
+
     GiD_Process 'Zoom Frame
 
 }
@@ -100,7 +107,7 @@ proc ::Dam::examples::ThermoMechaDam2D::AssignGroups {args} {
 
     GiD_Groups create UniformTemperature
     GiD_Groups edit color UniformTemperature "#3b3b3bff"
-    GiD_EntitiesGroups assign UniformTemperature lines {3 2 9}
+    GiD_EntitiesGroups assign UniformTemperature lines {2 3 4 5 9}
 
     GiD_Groups create Water
     GiD_Groups edit color Water "#26d1a8fe"
