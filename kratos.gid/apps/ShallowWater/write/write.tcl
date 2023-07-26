@@ -74,7 +74,9 @@ proc ::ShallowWater::write::WriteConditionsSubModelParts { } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
         if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
             ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
         } else {

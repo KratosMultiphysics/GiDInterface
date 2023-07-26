@@ -32,16 +32,16 @@ proc write::GetRestartProcess { {un ""} {name "" } } {
     return $resultDict
 }
 
-proc write::GetProcessHeader {group process condition {groupId ""}} {
+proc write::GetProcessHeader {group process condition {groupid ""}} {
     set processDict [dict create]
-    if {$groupId eq ""} {
+    if {$groupid eq ""} {
         set groupName [$group @n]
         set cid [[$group parent] @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set groupId [::write::getSubModelPartId $cid $groupName]
+        set groupName [write::GetWriteGroupName $groupName $cid]
+        set groupid [::write::getSubModelPartId $cid $groupName]
     }
     set paramDict [dict create ]
-    dict set paramDict model_part_name [write::GetModelPartNameWithParent $groupId]
+    dict set paramDict model_part_name [write::GetModelPartNameWithParent $groupid]
     
     set process_attributes [$process getAttributes]
     

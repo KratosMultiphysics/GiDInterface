@@ -9,7 +9,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
     set id_f [dict get $formats_dict ID]
     set mid ""
     set what [split $what "&"]
-    set group [GetWriteGroupName $group]
+    set group [GetWriteGroupName $group $cid]
     if {[write::getSubModelPartId $cid $group] eq 0} {
         # Add the submodelpart to the catalog
         set mid [write::AddSubmodelpart $cid $group]
@@ -142,11 +142,13 @@ proc write::getSubModelPartNames { args } {
         if {$grs ne ""} {lappend groups {*}$grs}
     }
     foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
         set cid [[$group parent] @n]
         if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || [string first Parts $cid] >= 0 } {
-            set gname [::write::getSubModelPartId $cid $groupName]
+            set gname [::write::getSubModelPartId $cid $groupid]
             if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
         }
     }
@@ -164,16 +166,18 @@ proc write::GetSubModelPartFromCondition { base_UN condition_id } {
 
     set submodelpart_list [list ]
     foreach gNode $groups {
-        set group [$gNode @n]
-        set group [write::GetWriteGroupName $group]
-        set submodelpart_id [write::getSubModelPartId $condition_id $group]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        set submodelpart_id [write::getSubModelPartId $condition_id $groupid]
         lappend submodelpart_list $submodelpart_id
     }
     return $submodelpart_list
 }
 
 proc write::GetSubModelPartName {condid group} {
-    set group_name [write::GetWriteGroupName $group]
+    set group_name [write::GetWriteGroupName $group $condid]
     set good_name [write::transformGroupName $group_name]
     return "${condid}_${good_name}"
 }
@@ -181,7 +185,7 @@ proc write::GetSubModelPartName {condid group} {
 proc write::AddSubmodelpart {condid group} {
     variable submodelparts
     set mid [write::GetSubModelPartName $condid $group]
-    set group_name [write::GetWriteGroupName $group]
+    set group_name [write::GetWriteGroupName $group $condid]
     set good_name [write::transformGroupName $group_name]
     if {[write::getSubModelPartId $condid $group_name] eq 0} {
         dict set submodelparts [list $condid ${group_name}] $mid

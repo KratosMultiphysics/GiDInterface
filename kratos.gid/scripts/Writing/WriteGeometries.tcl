@@ -8,16 +8,18 @@ proc write::writeGeometryConnectivities { group_list} {
         
         # Get the group name
         set group [get_domnode_attribute $gNode n]
+        set condid [[$gNode parent] @n]
+        set groupid [write::GetWriteGroupName $groupid $condid]
 
         # Get the number of nodes and the geometry type
         lassign [getEtype $ov $group] etype nnodes
         
         # Print into the mdpa file
-        write::printGeometryConnectivities $group $etype $nnodes
+        write::printGeometryConnectivities $groupid $condid $etype $nnodes
     }
 }
 
-proc write::printGeometryConnectivities {group etype nnodes} {
+proc write::printGeometryConnectivities {group condid etype nnodes} {
     
     set inittime [clock seconds]
     # Prepare the indent

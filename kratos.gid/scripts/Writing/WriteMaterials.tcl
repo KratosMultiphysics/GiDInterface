@@ -21,14 +21,18 @@ proc write::processMaterials { {alt_path ""} {last_assigned_id -1}} {
     
     # Foreach group applied to parts
     foreach gNode [$root selectNodes $xp1] {
+        # Get the write group name. Used as unique id due to intervals and child tricks.
+        set groupid [$gNode @n]
+        set condid [[$gNode parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+
         # Get the application. Important in Mixed apps (multiple inheritance).
         set nodeApp [spdAux::GetAppIdFromNode $gNode]
-        # Get the write group name. Used as unique id due to intervals and child tricks.
-        set group_name [write::GetWriteGroupName [$gNode @n]]
         # This group nodes are (always) child of condition (by definition), so get the condition is easy.
         set cond_name [[$gNode parent] @n]
         # Using the condition and the group name, we can get the submodelpart id. A submodelpart is always the joint of condition + group.
-        set submodelpart_id [write::GetSubModelPartName $cond_name $group_name]
+        set submodelpart_id [write::GetSubModelPartName $cond_name $groupid]
         
         #set material_name "material $material_number".
         if { ![dict exists $mat_dict $submodelpart_id] } {

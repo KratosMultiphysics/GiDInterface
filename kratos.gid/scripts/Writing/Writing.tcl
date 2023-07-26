@@ -244,14 +244,22 @@ proc write::writeAppMDPA {appid} {
     return $errcode
 }
 
-proc write::GetWriteGroupName { group_id } {
+proc write::GetWriteGroupName { group_id {condition_id ""} } {
     # Interval trick
     # If a group is child, and has been created due to the Interval issue
     # it's entities are on the father, so we need to use it's fathers name
-    foreach parent [dict keys $spdAux::GroupsEdited] {
-        if {$group_id in [dict get $spdAux::GroupsEdited $parent]} {
-            set group_id $parent
-            break
+    # foreach parent [dict keys $spdAux::GroupsEdited] {
+    #     if {$group_id in [dict get $spdAux::GroupsEdited $parent]} {
+    #         set group_id $parent
+    #         break
+    #     }
+    # }
+    if {$condition_id ne "" } {
+        set condition [::Model::getCondition $condition_id]
+        if {$condition ne "" } {
+            if {[$condition getAttribute "Interval"] ne "False"} {
+                set group_id [GiD_Groups get parent $group_id]
+            }
         }
     }
     return $group_id

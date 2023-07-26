@@ -43,8 +43,10 @@ proc CDEM::write::writeCohesiveGroups { } {
     foreach group [$root selectNodes $xp1] {
         incr cohesive_group
         set groupid [$group @n]
-        set group_id [write::GetWriteGroupName $groupid]
-        write::WriteString "Begin NodalData COHESIVE_GROUP // GUI group identifier: $group_id"
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid  $condid]
+        write::WriteString "Begin NodalData COHESIVE_GROUP // GUI group identifier: $groupid"
         GiD_WriteCalculationFile connectivities [dict create $groupid "%.0s %10d 0 $cohesive_group\n"]
         write::WriteString "End NodalData"
         write::WriteString ""

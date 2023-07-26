@@ -458,7 +458,10 @@ proc spdAux::GetAppliedGroups { {root ""} } {
     foreach group_node [$root getElementsByTagName "group"] {
         set parent [[$group_node parent] nodeName]
         if {$parent eq "condition"} {
-            lappend group_list [write::GetWriteGroupName [$group_node @n]]
+            set groupid [$group_node @n]
+            set condid [[$group_node parent] @n]
+            set groupid [write::GetWriteGroupName $groupid $condid]
+            lappend group_list $groupid
         }
     }
     return [lsort -unique $group_list]

@@ -101,8 +101,11 @@ proc PfemFluid::write::writeWaveMonitorMesh {  } {
     set xp1 "[spdAux::getRoute "WaveMonitor"]/group"
     set groups_wave_height [[customlib::GetBaseRoot] selectNodes $xp1]
     foreach group $groups_wave_height {
+        
         set groupid [$group @n]
-        set groupid [::write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
         ::write::writeGroupSubModelPart WaveMonitor $groupid "nodal"
     }
 }

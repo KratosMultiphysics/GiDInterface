@@ -75,10 +75,11 @@ proc ::Fluid::write::getDragProcessList {} {
     set xp1 "[spdAux::getRoute [::Fluid::GetUniqueName drag]]/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        set submodelpart [::write::getSubModelPartId $condid $groupid]
 
         set write_output [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='write_drag_output_file'\]"]]]
         set print_screen [write::getStringBinaryFromValue [write::getValueByNode [$group selectNodes "./value\[@n='print_drag_to_screen'\]"]]]
@@ -133,18 +134,19 @@ proc ::Fluid::write::getBoundaryConditionMeshId {} {
     set xp1 "[spdAux::getRoute [::Fluid::GetUniqueName conditions]]/condition/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        set cond [Model::getCondition $cid]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+
         if {[$cond getAttribute "SkinConditions"] eq "True"} {
-            if {[[::Model::getCondition $cid] getGroupBy] eq "Condition"} {
+            if {[[::Model::getCondition $condid] getGroupBy] eq "Condition"} {
                 # Grouped conditions have its own submodelpart
-                if {$cid ni $listOfBCGroups} {
-                    lappend listOfBCGroups $cid
+                if {$condid ni $listOfBCGroups} {
+                    lappend listOfBCGroups $condid
                 }
             } else {
-                set gname [::write::getSubModelPartId $cid $groupName]
+                set gname [::write::getSubModelPartId $condid $groupid]
                 if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
             }
 
@@ -163,10 +165,11 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
     set xp1 "[spdAux::getRoute [::Fluid::GetUniqueName drag]]/group"
     set dragGroups [$root selectNodes $xp1]
     foreach dragGroup $dragGroups {
-        set groupName [$dragGroup @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$dragGroup parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        set submodelpart [::write::getSubModelPartId $condid $groupid]
         if {$submodelpart ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $submodelpart}
     }
 
@@ -174,12 +177,12 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     set groups [$root selectNodes $xp1]
     foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        set cond [Model::getCondition $cid]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
         if {[$cond getAttribute "SkinConditions"] eq "False"} {
-            set gname [::write::getSubModelPartId $cid $groupName]
+            set gname [::write::getSubModelPartId $condid $groupid]
             if {$gname ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $gname}
         }
     }

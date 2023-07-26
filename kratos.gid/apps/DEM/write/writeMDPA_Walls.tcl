@@ -181,8 +181,12 @@ proc ::DEM::write::GetRigidWallsGroups { } {
     set groups [list ]
 
     foreach group [[customlib::GetBaseRoot] selectNodes "[DEM::write::GetRigidWallXPath]/group"] {
+        
         set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        lappend groups $groupid
     }
     return $groups
 }
@@ -191,8 +195,12 @@ proc ::DEM::write::GetPhantomWallsGroups { } {
     set groups [list ]
 
     foreach group [[customlib::GetBaseRoot] selectNodes "[DEM::write::GetPhantomWallXPath]/group"] {
+        
         set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        lappend groups $groupid
     }
     return $groups
 }
@@ -204,7 +212,7 @@ proc ::DEM::write::GetWallsGroupsSmp { } {
         set destination_mdpa [write::getValueByNode [$group selectNodes "./value\[@n='WhatMdpa'\]"]]
         if {$destination_mdpa == "FEM"} {
             set groupid [$group @n]
-            lappend groups [write::GetWriteGroupName $groupid]
+            lappend groups [write::GetWriteGroupName $groupid "DEM-CustomSmp"]
         }
     }
     return $groups
@@ -219,16 +227,13 @@ proc ::DEM::write::GetWallsGroupsListInConditions { } {
     foreach group [GetRigidWallsGroups] {
         foreach surface [GiD_EntitiesGroups get $group surfaces] {
             foreach involved_group [GiD_EntitiesGroups entity_groups surfaces $surface] {
-                set involved_group_id [write::GetWriteGroupName $involved_group]
+                set involved_group_id [write::GetWriteGroupName $involved_group [::DEM::write::GetRigidWallConditionName]]
                 if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
             }
         }
-    }
-
-    foreach group [GetRigidWallsGroups] {
         foreach line [GiD_EntitiesGroups get $group lines] {
             foreach involved_group [GiD_EntitiesGroups entity_groups lines $line] {
-                set involved_group_id [write::GetWriteGroupName $involved_group]
+                set involved_group_id [write::GetWriteGroupName $involved_group [::DEM::write::GetRigidWallConditionName]]
                 if {$involved_group_id ni $groups} {lappend groups $involved_group_id}
             }
         }
@@ -238,9 +243,12 @@ proc ::DEM::write::GetWallsGroupsListInConditions { } {
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition"
     foreach cond [[customlib::GetBaseRoot] selectNodes $xp1] {
         set condid [$cond @n]
-        foreach cond_group [$cond selectNodes "group"] {
-            set group [write::GetWriteGroupName [$cond_group @n]]
-            if {$group in $groups} {dict lappend conds_groups_dict $condid [$cond_group @n]}
+        foreach group [$cond selectNodes "group"] {
+            set groupid [$group @n]
+            set condid [[$group parent] @n]
+            set cond [::Model::getCondition $condid]
+            set groupid [write::GetWriteGroupName $groupid $condid]
+            if {$group in $groups} {dict lappend conds_groups_dict $condid [$group @n]}
         }
     }
     return $conds_groups_dict
@@ -252,8 +260,12 @@ proc ::DEM::write::GetConditionsGroups { } {
     set groups [list ]
     set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
     foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
+        
         set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        lappend groups $groupid
     }
     return $groups
 }
@@ -514,7 +526,7 @@ proc ::DEM::write::writeWallConditionMesh { condition group props } {
     write::WriteString "  End SubModelPartData"
 
     write::WriteString "  Begin SubModelPartNodes"
-    GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group] [subst "%10i\n"]]
+    GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group $condition] [subst "%10i\n"]]
     write::WriteString "  End SubModelPartNodes"
 
     write::WriteString "Begin SubModelPartConditions"

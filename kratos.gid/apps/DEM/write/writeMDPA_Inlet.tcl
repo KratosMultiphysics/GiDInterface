@@ -38,12 +38,17 @@ proc ::DEM::write::GetInletGroups { {that all}} {
     set groups [list ]
 
     foreach group [[customlib::GetBaseRoot] selectNodes [DEM::write::GetInletConditionXpath]/group] {
+        
         set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        
         if {$that eq "active"} {
             set active_inlet [write::getValueByNodeChild $group SetActive]
             if {[write::isBooleanFalse $active_inlet]} {continue}
         }
-        lappend groups [write::GetWriteGroupName $groupid]
+        lappend groups $groupid
     }
     return $groups
 }
@@ -149,7 +154,7 @@ proc ::DEM::write::writeInletMeshes { } {
                 continue
             }
 
-            set group_real_name [write::GetWriteGroupName $groupid]
+            set group_real_name [write::GetWriteGroupName $groupid $condition_name]
             set gdict [dict create]
             set f "%10i\n"
             set f [subst $f]

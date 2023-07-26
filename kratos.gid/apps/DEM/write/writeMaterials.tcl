@@ -60,10 +60,14 @@ proc ::DEM::write::getDEMMaterialsDict { } {
             }
         }
         set mat_name [write::getValueByNode $mnode]
-        set group_name [write::GetWriteGroupName [$gnode @n]]
-        set cond_name [[$gnode parent] @n]
-        set submodelpart_id [write::getSubModelPartId $cond_name $group_name]
-        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $group_name]
+        
+        set groupid [$gnode @n]
+        set condid [[$gnode parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid  $condid]
+
+        set submodelpart_id [write::getSubModelPartId $condid $groupid]
+        set modelpart_parent [DEM::write::GetModelPartParentNameFromGroup $groupid]
         lappend assignation_table_list [list ${modelpart_parent}.${submodelpart_id} $mat_name]
         
     }

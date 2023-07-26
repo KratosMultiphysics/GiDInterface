@@ -134,9 +134,10 @@ proc ::Dam::write::writeNodalConditions { keyword } {
         set groups [$root selectNodes $xp1]
     }
     foreach group $groups {
-        set condid [[$group parent] @n]
         set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid  $condid]
         set tableid [list ]
         if {[dict exists $TableDict $condid $groupid]} {
             set groupdict [dict get $TableDict $condid $groupid]
@@ -154,9 +155,10 @@ proc ::Dam::write::writeLoads { baseUN } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute $baseUN]/condition/group"
     foreach group [$root selectNodes $xp1] {
-        set condid [get_domnode_attribute [$group parent] n]
-        set groupid [get_domnode_attribute $group n]
-        set groupid [write::GetWriteGroupName $groupid]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid  $condid]
         set tableid [list ]
         if {[dict exists $TableDict $condid $groupid]} {
             set groupdict [dict get $TableDict $condid $groupid]

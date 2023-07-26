@@ -253,10 +253,13 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set groups [$root selectNodes $xp1]
     }
     foreach group $groups {
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
         set groupName [$group @n]
         set cid [[$group parent] @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set groupId [::write::getSubModelPartId $cid $groupName]
+        set groupid [::write::getSubModelPartId $cid $groupid]
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
@@ -280,7 +283,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             dict set processDict process_name $processName
 
             if {$processWriteCommand eq ""} {
-                set processDict [write::GetProcessHeader $group $process $condition $groupId]
+                set processDict [write::GetProcessHeader $group $process $condition $groupid]
 
                 set process_parameters [$process getInputs]
                 foreach {inputName in_obj} $process_parameters {

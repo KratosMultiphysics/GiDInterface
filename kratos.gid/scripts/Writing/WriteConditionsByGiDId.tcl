@@ -14,7 +14,7 @@ proc write::writeConditionsByGiDId { baseUN {force_write_cond_id ""} {properties
     foreach groupNode $groupNodes {
         if {$force_write_cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $force_write_cond_id}
         set groupid [get_domnode_attribute $groupNode n]
-        set groupid [GetWriteGroupName $groupid]
+        set groupid [GetWriteGroupName $groupid $condid]
         set mid 0
         if {$properties_dict ne "" && [dict exists $properties_dict $groupid]} {
             set mid [dict get $properties_dict $groupid]
@@ -27,7 +27,7 @@ proc write::writeConditionsByGiDId { baseUN {force_write_cond_id ""} {properties
 
 proc write::writeGroupNodeConditionByGiDId {groupNode condid {mid 0}} {
     set groupid [get_domnode_attribute $groupNode n]
-    set groupid [GetWriteGroupName $groupid]
+    set groupid [GetWriteGroupName $groupid $condid]
     if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
     set cond [::Model::getCondition $condid]
     if {$cond ne ""} {
@@ -79,7 +79,7 @@ proc write::writeGroupSubModelPartByGiDId { cid group {what "Elements"} {tableid
 
     set mid ""
     set what [split $what "&"]
-    set group [GetWriteGroupName $group]
+    set group [GetWriteGroupName $group $cid]
     if {![dict exists $submodelparts [list $cid ${group}]]} {
         # Add the submodelpart to the catalog
         set good_name [write::transformGroupName $group]

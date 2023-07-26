@@ -134,9 +134,12 @@ proc ::Fluid::write::writeBoundaryConditions { } {
     set grouped_conditions [list ]
     set groups [list ]
     foreach group [$root selectNodes $xp1] {
+        # Foreach group, get the condition
         set group_id [$group @n]
         set condition [Model::getCondition [[$group parent] @n]]
+        # If the condition is in the skin
         if {[write::isBooleanTrue [$condition getAttribute SkinConditions]]} {
+            # For groups with intervals, we need to get the parent group
             if {[$condition getAttribute "Interval"] ne "False"} {
                 set group_id [GiD_Groups get parent $group_id]
             }
@@ -182,9 +185,9 @@ proc ::Fluid::write::writeConditionsMesh { } {
     #W "Conditions $xp1 [$root selectNodes $xp1]"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
         set condid [[$group parent] @n]
         set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
         if {[$cond getGroupBy] eq "Condition"} {
             # Grouped conditions will be written later
             if {$condid ni $grouped_conditions} {

@@ -111,10 +111,12 @@ proc ::ConvectionDiffusion::write::writeBoundaryConditions { } {
     set xp1 "[spdAux::getRoute $BCUN]/condition/group"
     set iter 1
     foreach group [$root selectNodes $xp1] {
+        
+        set groupid [$group @n]
         set condid [[$group parent] @n]
-        set groupid [get_domnode_attribute $group n]
-        set groupid [write::GetWriteGroupName $groupid]
         set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid  $condid]
+
         if {[$cond getAttribute SkinConditions]} {
             lassign [dict get $dict_group_intervals $groupid] ini fin
             set ConvectionDiffusionConditions($groupid,initial) $ini
@@ -143,9 +145,12 @@ proc ::ConvectionDiffusion::write::writeConditionsMesh { } {
     set grouped_conditions [list ]
     #W "Conditions $xp1 [$root selectNodes $xp1]"
     foreach group [$root selectNodes $xp1] {
+        
         set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
         set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid  $condid]
+        
         if {[[::Model::getCondition $condid] getGroupBy] eq "Condition"} {
             # Grouped conditions will be written later
             if {$condid ni $grouped_conditions} {

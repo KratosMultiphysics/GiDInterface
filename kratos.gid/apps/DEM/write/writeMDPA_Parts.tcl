@@ -39,8 +39,12 @@ proc ::DEM::write::WriteNodalCoordinatesParts { } {
 proc ::DEM::write::GetDEMGroupNamesCustomSubmodelpart { } {
     set groups [list ]
     foreach group [DEM::write::GetDEMGroupsCustomSubmodelpart] {
+        
         set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        lappend groups $groupid
     }
     return $groups
 }
@@ -64,8 +68,12 @@ proc ::DEM::write::GetDEMGroupsInitialC { } {
         set xp3 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityIC'\]/group"
     }
     foreach group [[customlib::GetBaseRoot] selectNodes $xp3] {
+        
         set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        lappend groups $groupid
     }
     return $groups
 }
@@ -78,8 +86,12 @@ proc ::DEM::write::GetDEMGroupsBoundaryC { } {
         set xp4 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-VelocityBC'\]/group"
     }
     foreach group [[customlib::GetBaseRoot] selectNodes $xp4] {
-        set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
+        
+            set groupid [$group @n]
+            set condid [[$group parent] @n]
+            set cond [::Model::getCondition $condid]
+            set groupid [write::GetWriteGroupName $groupid $condid]
+        lappend groups $groupid
     }
     return $groups
 }
@@ -92,8 +104,12 @@ proc ::DEM::write::GetNodesForGraphs { } {
         set xp5 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = 'DEM-GraphCondition'\]/group"
     }
     foreach group [[customlib::GetBaseRoot] selectNodes $xp5] {
+        
         set groupid [$group @n]
-        lappend groups [write::GetWriteGroupName $groupid]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        lappend groups $groupid
     }
     return $groups
 }
@@ -102,7 +118,11 @@ proc ::DEM::write::writeSphereRadius { } {
     set root [customlib::GetBaseRoot]
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     foreach group [$root selectNodes $xp1] {
+        
         set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
         write::writeSphereRadiusOnGroup $groupid
     }
 }
@@ -336,7 +356,7 @@ proc ::DEM::write::GetSpheresGroupsListInConditions { } {
     foreach cond [[customlib::GetBaseRoot] selectNodes $xp1] {
         set condid [$cond @n]
         foreach cond_group [$cond selectNodes "group"] {
-            set group [write::GetWriteGroupName [$cond_group @n]]
+            set group [write::GetWriteGroupName [$cond_group @n] $condid]
             if {$group in $groups} {dict lappend conds_groups_dict $condid [$cond_group @n]}
         }
     }
@@ -355,7 +375,7 @@ proc ::DEM::write::GetSpheresGroups { } {
         set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition\[@n = '$condition'\]/group"
         foreach group [[customlib::GetBaseRoot] selectNodes $xp1] {
             set groupid [$group @n]
-            lappend groups [write::GetWriteGroupName $groupid]
+            lappend groups [write::GetWriteGroupName $groupid $condition]
         }
     }
     
@@ -422,7 +442,7 @@ proc ::DEM::write::WriteCustomDEMSmp { } {
             write::WriteString  "Begin SubModelPartData"
             write::WriteString  "End SubModelPartData"
             write::WriteString  "Begin SubModelPartNodes"
-            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group_id] [subst "%10i\n"]]
+            GiD_WriteCalculationFile nodes -sorted [dict create [write::GetWriteGroupName $group_id "DEM-CustomSmp"] [subst "%10i\n"]]
             write::WriteString  "End SubModelPartNodes"
             write::WriteString  "End SubModelPart"
             write::WriteString  ""

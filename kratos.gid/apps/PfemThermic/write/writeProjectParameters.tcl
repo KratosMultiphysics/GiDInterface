@@ -115,12 +115,13 @@ proc PfemThermic::write::GetFreeSurfaceHeatFluxParts {} {
     set grs [$root selectNodes $xp2]
     if {$grs ne ""} {lappend groups {*}$grs}
     foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || [string first Parts $cid] >= 0 } {
-			if {$cid eq "FreeSurfaceHeatFlux2D" || $cid eq "FreeSurfaceHeatFlux3D"} {
-				set gname [::write::getSubModelPartId $cid $groupName]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        if {[Model::getNodalConditionbyId $condid] ne "" || [Model::getCondition $condid] ne "" || [string first Parts $condid] >= 0 } {
+			if {$condid eq "FreeSurfaceHeatFlux2D" || $condid eq "FreeSurfaceHeatFlux3D"} {
+				set gname [::write::getSubModelPartId $condid $groupName]
 				if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
 			}
         }
@@ -139,12 +140,13 @@ proc PfemThermic::write::GetFreeSurfaceThermalFaceParts {} {
     set grs [$root selectNodes $xp2]
     if {$grs ne ""} {lappend groups {*}$grs}
     foreach group $groups {
-        set groupName [$group @n]
-        set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$group parent] @n]
-        if {[Model::getNodalConditionbyId $cid] ne "" || [Model::getCondition $cid] ne "" || [string first Parts $cid] >= 0 } {
-			if {$cid eq "FreeSurfaceThermalFace2D" || $cid eq "FreeSurfaceThermalFace3D"} {
-				set gname [::write::getSubModelPartId $cid $groupName]
+        set groupid [$group @n]
+        set condid [[$group parent] @n]
+        set cond [::Model::getCondition $condid]
+        set groupid [write::GetWriteGroupName $groupid $condid]
+        if {[Model::getNodalConditionbyId $condid] ne "" || [Model::getCondition $condid] ne "" || [string first Parts $condid] >= 0 } {
+			if {$condid eq "FreeSurfaceThermalFace2D" || $condid eq "FreeSurfaceThermalFace3D"} {
+				set gname [::write::getSubModelPartId $condid $groupid]
 				if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
 			}
         }

@@ -13,7 +13,7 @@ proc ::write::writeConditions { baseUN {iter 0} {domNode ""}} {
     foreach groupNode $groupNodes {
         set condid [[$groupNode parent] @n]
         set groupid [get_domnode_attribute $groupNode n]
-        set groupid [GetWriteGroupName $groupid]
+        set groupid [GetWriteGroupName $groupid $condid]
         set dictGroupsIterators [writeGroupNodeCondition $dictGroupsIterators $groupNode $condid [incr iter]]
         if { [dict exists $dictGroupsIterators $groupid] } {
             set iter [lindex [dict get $dictGroupsIterators $groupid] 1]
@@ -26,7 +26,7 @@ proc ::write::writeConditions { baseUN {iter 0} {domNode ""}} {
 
 proc ::write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
     set groupid [get_domnode_attribute $groupNode n]
-    set groupid [GetWriteGroupName $groupid]
+    set groupid [GetWriteGroupName $groupid $condid]
     if {![dict exists $dictGroupsIterators $groupid]} {
         if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
         set cond [::Model::getCondition $condid]
@@ -103,7 +103,7 @@ proc ::write::writeNodalConditions { un {stage ""} } {
         set cid [[$group parent] @n]
         if {[Model::getNodalConditionbyId $cid] ne ""} {
             set groupid [$group @n]
-            set groupid [GetWriteGroupName $groupid]
+            set groupid [GetWriteGroupName $groupid $cid]
             ::write::writeGroupSubModelPart $cid $groupid "nodal"
         }
     }

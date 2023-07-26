@@ -11,7 +11,7 @@ proc write::writeConditionsByUniqueId { baseUN ConditionMapVariableName {iter 0}
     foreach groupNode $groupNodes {
         if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
         set groupid [get_domnode_attribute $groupNode n]
-        set groupid [GetWriteGroupName $groupid]
+        set groupid [GetWriteGroupName $groupid $condid]
         set iter [writeGroupNodeConditionByUniqueId $groupNode $condid $iter $ConditionMapVariableName $print_again_repeated]
     }
     return $iter
@@ -20,7 +20,7 @@ proc write::writeConditionsByUniqueId { baseUN ConditionMapVariableName {iter 0}
 
 proc write::writeGroupNodeConditionByUniqueId {groupNode condid iter ConditionMapVariableName {print_again_repeated 0}} {
     set groupid [get_domnode_attribute $groupNode n]
-    set groupid [GetWriteGroupName $groupid]
+    set groupid [GetWriteGroupName $groupid $condid]
     if {[$groupNode hasAttribute ov]} {set ov [$groupNode getAttribute ov]} {set ov [[$groupNode parent ] getAttribute ov]}
     set cond [::Model::getCondition $condid]
     if {$cond ne ""} {
@@ -166,7 +166,7 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
 
     set mid ""
     set what [split $what "&"]
-    set group [write::GetWriteGroupName $group]
+    set group [write::GetWriteGroupName $group $cid]
     if {![dict exists $submodelparts [list $cid ${group}]]} {
         set null_cond_warn 0
         # Add the submodelpart to the catalog
