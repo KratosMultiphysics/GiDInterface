@@ -100,7 +100,7 @@ proc ::FreeSurface::examples::Box3D::AssignGroups {args} {
 
 proc ::FreeSurface::examples::Box3D::AssignMeshSizes {args} {
 
-    set fluid_mesh_size 0.05
+    set fluid_mesh_size 0.075
     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_mesh_size 1:end escape escape
     GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size 1:end escape escape
     GiD_Process Mescape Meshing AssignSizes Lines $fluid_mesh_size 1:end escape escape

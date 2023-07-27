@@ -225,6 +225,7 @@ proc ::Dam::examples::ThermoMechaDam3D::TreeAssignation {args} {
     set results [list REACTION No TEMPERATURE Yes POSITIVE_FACE_PRESSURE Yes]
     set nodal_path [spdAux::getRoute "NodalResults"]
     spdAux::SetValuesOnBasePath $nodal_path $results
+    spdAux::SetValueOnTreeItem v SingleFile GiDOptions GiDMultiFileFlag
 
     spdAux::RequestRefresh
 
