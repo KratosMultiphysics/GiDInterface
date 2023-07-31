@@ -77,7 +77,7 @@
         <inputs>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.04"/>
@@ -93,7 +93,7 @@
 	  help="Exponential Cohesive law for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture Energy" v="90.0e06"/>
             <parameter n="SHEAR_FRACTURE_ENERGY" pn="Shear Fracture Energy" v="350.0e06"/>
             <parameter n="STATE_VARIABLE" pn="State Variable" v="1.0e-15"/>
@@ -242,7 +242,7 @@
         <inputs>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.04"/>
@@ -258,7 +258,7 @@
         <inputs>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.04"/>
@@ -273,7 +273,7 @@
           help="Exponential Cohesive law for joints in Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture Energy" v="90.0e06"/>
             <parameter n="SHEAR_FRACTURE_ENERGY" pn="Shear Fracture Energy" v="350.0e06"/>
             <parameter n="STATE_VARIABLE" pn="State Variable" v="1.0e-15"/>
@@ -288,7 +288,7 @@
           help="Exponential Cohesive law for joints in Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture Energy" v="90.0e06"/>
             <parameter n="SHEAR_FRACTURE_ENERGY" pn="Shear Fracture Energy" v="350.0e06"/>
             <parameter n="STATE_VARIABLE" pn="State Variable" v="1.0e-15"/>
