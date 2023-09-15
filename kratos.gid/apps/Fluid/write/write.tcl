@@ -28,6 +28,7 @@ proc ::Fluid::write::Init { } {
     SetAttribute properties_location [::Fluid::GetWriteProperty properties_location]
     SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::Fluid::GetWriteProperty output_model_part_name]
+    SetAttribute mdpa_mode [::Fluid::GetWriteProperty mdpa_mode]
 
     variable last_condition_iterator
     set last_condition_iterator 0
@@ -51,21 +52,34 @@ proc ::Fluid::write::writeModelPartEvent { } {
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
-    # Element connectivities (Groups on FLParts)
-    write::writeElementConnectivities
+    if {[GetAttribute mdpa_mode] eq "geometries"} {
+        # Write geometries
+        # Get the list of groups in the spd
+        set lista [::Fluid::xml::GetListOfSubModelParts]
 
-    # Nodal conditions and conditions
-    writeConditions
+        # Write the geometries
+        set ret [::write::writeGeometryConnectivities $lista]
+        
+        # Write the submodelparts
+        foreach group $lista {
+            write::writeGroupSubModelPartAsGeometry [$group @n] 
+        }
+    } else {
+        # Element connectivities (Groups on FLParts)
+        write::writeElementConnectivities
 
-    # Custom SubmodelParts
-    variable last_condition_iterator
-    write::writeBasicSubmodelPartsByUniqueId $Fluid::write::FluidConditionMap $last_condition_iterator
+        # Nodal conditions and conditions
+        writeConditions
 
-    # SubmodelParts
-    writeMeshes
+        # Custom SubmodelParts
+        variable last_condition_iterator
+        write::writeBasicSubmodelPartsByUniqueId $Fluid::write::FluidConditionMap $last_condition_iterator
+        # SubmodelParts
+        writeMeshes
 
-    # Write custom blocks at the end of the file
-    writeCustomBlocks
+        # Write custom blocks at the end of the file
+        writeCustomBlocks
+    }
 
     # Clean
     unset ::Fluid::write::FluidConditionMap

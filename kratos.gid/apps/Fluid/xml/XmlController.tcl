@@ -121,3 +121,10 @@ proc ::Fluid::xml::UpdateParts {domNode args} {
         error "You can only set one part"
     }
 }
+
+proc ::Fluid::xml::GetListOfSubModelParts { {stage ""} } {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//condition/group"]
+    return $all_raw
+}
