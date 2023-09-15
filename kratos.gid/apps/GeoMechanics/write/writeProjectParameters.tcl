@@ -37,12 +37,20 @@ proc ::GeoMechanics::write::GetSingleFileStageProjectParameters {  } {
     # Set the stages
     set stages [dict create]
 
+    set i 0
     foreach stage [::GeoMechanics::xml::GetStages] {
         set stage_name [$stage @name]
         set stage_content [::GeoMechanics::write::getParametersDict $stage]
-        dict set stages $stage_name stage_preprocess [::GeoMechanics::write::getPreprocessForStage $stage]
+        # In first iteration we add the mdpa importer
+        if {$i == 0} {
+            set parameters_modeler [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]
+            dict set stages $stage_name stage_preprocess [::GeoMechanics::write::getPreprocessForStage $stage $parameters_modeler]
+        } else {
+            dict set stages $stage_name stage_preprocess [::GeoMechanics::write::getPreprocessForStage $stage]
+        }
         dict set stages $stage_name stage_settings $stage_content
         dict set stages $stage_name stage_postprocess [::GeoMechanics::write::getPostprocessForStage $stage]
+        incr i
     }
 
     dict set project_parameters_dict "stages" $stages
@@ -51,11 +59,16 @@ proc ::GeoMechanics::write::GetSingleFileStageProjectParameters {  } {
 }
 
 # Get the dictionary for the preprocess of the stage
-proc ::GeoMechanics::write::getPreprocessForStage {stage} {
+proc ::GeoMechanics::write::getPreprocessForStage {stage {mdpaimporter ""}} {
     set stage_preprocess [dict create ]
-    dict set stage_preprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
-    dict set stage_preprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
-    dict set stage_preprocess modelers [list [dict create name "KratosMultiphysics.modelers.import_mdpa_modeler.ImportMDPAModeler" Parameters [dict create ] ]]
+    set operation_parameters [dict create ]
+    dict set stage_preprocess operations [list [dict create name "user_operation.EmptyOperation" Parameters $operation_parameters]] 
+
+    if { $mdpaimporter ne "" } {
+        # Get the modeler parameters
+        set modeler [dict create name "KratosMultiphysics.modelers.import_mdpa_modeler.ImportMDPAModeler" Parameters $mdpaimporter]  
+        dict set stage_preprocess modelers [list $modeler]
+    }
 
     return $stage_preprocess 
 }
@@ -63,8 +76,7 @@ proc ::GeoMechanics::write::getPreprocessForStage {stage} {
 # Get the dictionary for the postprocess of the stage
 proc ::GeoMechanics::write::getPostprocessForStage {stage} {
     set stage_postprocess [dict create ]
-    dict set stage_postprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
-    dict set stage_postprocess operations [list [dict create name "user_operation.UserOperation" parameters [dict create ] ]] 
+    dict set stage_postprocess operations [list [dict create name "user_operation.EmptyOperation" Parameters [dict create ] ]] 
 
     return $stage_postprocess 
 }
