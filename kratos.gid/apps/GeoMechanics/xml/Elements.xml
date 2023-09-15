@@ -2,7 +2,7 @@
 <ElementList>
   <!--solid elements-->
   <!--small displacements-->
-  <ElementItem n="SteadyStateFlowElement2D" pn="Steady state flow element 2D" ov="surface" ImplementedInFile="lets_see.cpp" ImplementedInApplication="GeoMechanicsApplication" AnalysisType="linear,non_linear" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="GeoSteadyState" help="Steady state flow element 2D">
+  <ElementItem n="SteadyStateFlowElement2D" pn="Steady state flow element 2D" ov="surface" ImplementedInFile="lets_see.cpp" ImplementedInApplication="GeoMechanicsApplication" AnalysisType="linear,non_linear" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="GeoSteadyState" pElementType="Geo_steady_State"  help="Steady state flow element 2D">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="SteadyStatePwElement2D3N"/>
@@ -25,8 +25,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-      <NodalCondition n="CONTACT_SLAVE"/>
+      <NodalCondition n="NEW_GEO_NODAL_CONDITION"/>
     </NodalConditions>
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
     <inputs></inputs>
@@ -39,7 +38,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="SmallStrainUPwDiffOrderElement2D" pn="Small strain different order 2D" ov="surface" ImplementedInFile="small_strain_U_Pw_diff_order_element.cpp" ImplementedInApplication="GeoMechanicsApplication" AnalysisType="linear,non_linear" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="GeoSmallStrain" help="Small strain different order element 2D">
+  <ElementItem n="SmallStrainUPwDiffOrderElement2D" pn="Small strain different order 2D" ov="surface" ImplementedInFile="small_strain_U_Pw_diff_order_element.cpp" ImplementedInApplication="GeoMechanicsApplication" AnalysisType="linear,non_linear" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False" ElementType="GeoSmallStrain"  help="Small strain different order element 2D">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="6" KratosName="SmallStrainUPwDiffOrderElement2D6N"/>
@@ -59,8 +58,7 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="CONTACT"/>
-      <NodalCondition n="CONTACT_SLAVE"/>
+      <NodalCondition n="NEW_GEO_NODAL_CONDITION"/>
     </NodalConditions>
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
     <inputs></inputs>

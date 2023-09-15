@@ -43,18 +43,87 @@ proc ::GeoMechanics::write::Init { } {
     SetAttribute model_part_name [::GeoMechanics::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::GeoMechanics::GetWriteProperty output_model_part_name]
 
-    SetAttribute multistage_write_mdpa_mode [::GeoMechanics::GetWriteProperty multistage_write_mdpa_mode]
+    # multistage_write_mdpa_file_mode can be single_file or multiple_files
+    SetAttribute multistage_write_mdpa_file_mode [::GeoMechanics::GetWriteProperty multistage_write_mdpa_file_mode]
     SetAttribute multistage_write_json_mode [::GeoMechanics::GetWriteProperty multistage_write_json_mode]
+    SetAttribute write_mdpa_mode [::GeoMechanics::GetWriteProperty write_mdpa_mode]
+
 }
 
 proc ::GeoMechanics::write::writeModelPartEvent { } {
+
     variable mdpa_list 
     set mdpa_list [list ]
 
     ::Structural::write::Init
     write::initWriteConfiguration [GetAttributes]
 
-    if { [GetAttribute multistage_write_mdpa_mode] == "single_file" } {  
+    if { [GetAttribute write_mdpa_mode] == "geometries" } {  
+        write::writeModelPartFileAsGeometries
+    } else {
+        write::writeModelPartFileOld
+    }
+    
+}
+
+proc ::GeoMechanics::write::writeModelPartFileAsGeometries { } {
+    if { [GetAttribute multistage_write_mdpa_file_mode] == "single_file" } {  
+
+        # Headers
+        write::writeModelPartData
+        write::WriteString "Begin Properties 0"
+        write::WriteString "End Properties"
+
+        write::writeNodalCoordinates
+
+        # Write geometries
+        # Get the list of groups in the spd
+        set lista [::GeoMechanics::xml::GetListOfSubModelParts]
+
+        # Write the geometries
+        set ret [::write::writeGeometryConnectivities $lista]
+        
+        # Write the submodelparts
+        foreach group $lista {
+            write::writeGroupSubModelPartAsGeometry [$group @n] 
+        }
+
+    } else {
+        variable mdpa_list 
+        write::CloseFile
+
+        set stages [::GeoMechanics::xml::GetStages]
+        foreach stage $stages {
+            write::OpenFile "[$stage @name].mdpa"
+            lappend mdpa_list "[$stage @name].mdpa"
+
+            # Headers
+            write::writeModelPartData
+            write::WriteString "Begin Properties 0"
+            write::WriteString "End Properties"
+
+            write::writeNodalCoordinatesOnParts $stage
+
+            # Write geometries
+            # Get the list of groups in the spd
+            set lista [::GeoMechanics::xml::GetListOfSubModelParts $stage]
+
+            # Write the geometries
+            set ret [::write::writeGeometryConnectivities $lista]
+            
+            # Write the submodelparts
+            foreach group $lista {
+                write::writeGroupSubModelPartAsGeometry [$group @n] 
+            }
+
+            write::CloseFile
+        }
+    }
+}
+
+
+proc ::GeoMechanics::write::writeModelPartFileOld { } {
+    if { [GetAttribute multistage_write_mdpa_file_mode] == "single_file" } {  
 
         # Headers
         write::writeModelPartData
@@ -92,7 +161,7 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
             Structural::write::writeMeshes $stage
         }
     } else {
-        
+        variable mdpa_list 
         write::CloseFile
 
         set stages [::GeoMechanics::xml::GetStages]
@@ -135,6 +204,7 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
         }
     }
 }
+
 
 proc ::GeoMechanics::write::writeElementConnectivities { {stage ""} } {
     set root [customlib::GetBaseRoot]

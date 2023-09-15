@@ -24,4 +24,5 @@
 	<link path="apps/PfemThermic/examples/examples.xml"/>
 	<link path="apps/ShallowWater/examples/examples.xml"/>
 	<link path="apps/FreeSurface/examples/examples.xml"/>
+	<link path="apps/GeoMechanics/examples/examples.xml"/>
 </examples>

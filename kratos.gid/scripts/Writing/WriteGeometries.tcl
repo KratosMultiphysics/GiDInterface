@@ -1,5 +1,5 @@
 
-proc write::writeGeometryConnectivities { group_list} {
+proc write::writeGeometryConnectivities { group_list } {
     # Foreach group in the list
     foreach gNode $group_list {
 

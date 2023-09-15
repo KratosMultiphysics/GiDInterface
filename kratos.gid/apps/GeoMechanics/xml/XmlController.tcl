@@ -11,11 +11,16 @@ proc ::GeoMechanics::xml::Init { } {
     Model::ForgetElements
     Model::getElements Elements.xml
 
+    foreach condition [Model::GetConditions] {
+        $condition setAttribute Water False
+    }
     Model::getConditions Conditions.xml
     Model::getConstitutiveLaws ConstitutiveLaws.xml
 
     Model::ForgetMaterials
     Model::getMaterials Materials.xml
+
+    Model::getNodalConditions NodalConditions.xml
 
     Model::getProcesses Processes.xml
 
@@ -73,6 +78,15 @@ proc ::GeoMechanics::xml::CustomTree { args } {
 
     # Stress test
     # for {set index 0} {$index < 200} {incr index} {::snit::RT.CallInstance ::boundary_conds::Snit_inst1 copy_block_data}
+    set xpath [spdAux::getRoute GEOMSoluType]
+    set solution_type_node [[customlib::GetBaseRoot] selectNodes $xpath]
+    $solution_type_node setAttribute values "Static,Quasi-static,Dynamic"
+
+    set xpath "[spdAux::getRoute STStratSection]/container\[@n='ParallelType'\]"
+    set old_parallel [[customlib::GetBaseRoot] selectNodes $xpath]
+    $old_parallel delete
+
+    ::GeoMechanics::WarnActiveStage
 }
 
 proc ::GeoMechanics::xml::ProcCheckGeometryGeoMechanics {domNode args} {
@@ -291,4 +305,56 @@ proc ::GeoMechanics::xml::EndDrawStage { } {
     variable is_drawing_stage
     set is_drawing_stage 0
     GiD_Groups end_draw
+}
+
+proc ::GeoMechanics::xml::NewStage { stage_name } {
+    set root [customlib::GetBaseRoot]
+    set stages [$root selectNodes ".//container\[@n='stages'\]/blockdata"]
+    set newstage [[lindex $stages end] cloneNode -deep]
+    $newstage setAttribute name $stage_name
+    $newstage setAttribute tree_state "open"
+    [$root selectNodes ".//container\[@n='stages'\]"] appendChild $newstage
+    spdAux::RequestRefresh
+}
+
+proc ::GeoMechanics::xml::GetListOfSubModelParts { {stage ""} } {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//condition/group"]
+    return $all_raw
+}
+
+proc ::GeoMechanics::xml::GetPhreaticPoints {stage} {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//container\[@n='PhreaticPoints'\]/value"]
+
+    set result [list ]  
+    foreach point $all_raw {
+        lappend result [write::getValueByNode $point]
+    }
+    return $result
+}
+proc ::GeoMechanics::xml::DeletePhreaticPoints {stage} {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//container\[@n='PhreaticPoints'\]/value"]
+
+    foreach point $all_raw {
+        $point delete
+    }
+}
+
+proc ::GeoMechanics::xml::AddPhreaticPoint {stage x1 y1 z1} {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set base [$root selectNodes ".//container\[@n='PhreaticPoints'\]"]
+    
+    set all_raw [$base selectNodes "./value"]
+    set num [llength $all_raw]
+    set v "$x1,$y1"
+    set node "<value n='p_$num' pn='P $num' v='$v' fieldtype='vector' dimensions='2' />"
+    $base appendXML $node
+    set result [$base selectNodes "./value\[@n=p_$num\]"]
+    return $result
 }

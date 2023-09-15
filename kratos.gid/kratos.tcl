@@ -209,7 +209,7 @@ proc Kratos::LoadCommonScripts { } {
     # Writing common scripts
     foreach filename {Writing WriteHeadings WriteMaterials WriteNodes
         WriteElements WriteConditions WriteGeometries WriteConditionsByGiDId WriteConditionsByUniqueId
-        WriteProjectParameters WriteSubModelPart WriteProcess} {
+        WriteProjectParameters WriteSubModelPart WriteProcess WriteStages} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename.tcl]]
     }
     # Common scripts
@@ -577,10 +577,10 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     } else {
         ::GidUtils::SetWarnLine "MDPA and JSON written OK"
     }
-    set end_time [clock seconds]
-    set ttime [expr {$end_time-$ini_time}]
-    Kratos::Log "Write calculation files in [Duration $ttime]"
-    # W "Write calculation files in [Duration $ttime]"
+    if {[::write::GetConfigurationAttribute time_monitor]} { set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; 
+        W "Nodal coordinates time: [Kratos::Duration $ttime]"
+        Kratos::Log "Write calculation files in [Duration $ttime]"
+    }
     return $errcode
 }
 

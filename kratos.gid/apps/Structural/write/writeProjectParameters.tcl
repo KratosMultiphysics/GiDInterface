@@ -19,13 +19,13 @@ proc ::Structural::write::getOldParametersDict { {stage ""} } {
         dict set problemDataDict end_time "1.0"
 
         # Time stepping settings for static
-        dict set timeSteppingDict "time_step" $time_step
+        dict set timeSteppingDict time_step $time_step
 
     } {
         set time_step_table [write::GetTimeStepIntervals]
 
         # Time stepping settings for dynamic
-        dict set timeSteppingDict "time_step_table" $time_step_table
+        dict set timeSteppingDict time_step_table $time_step_table
     }
 
     # Add section to document
@@ -256,7 +256,7 @@ proc ::Structural::write::UsingSpecificDofElements { SpecificDof {stage ""} } {
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
-        set elemid [$element_node @v]
+        set elemid [write::getValueByNode $element_node]
         set elem [Model::getElement $elemid]
         if {[write::isBooleanTrue [$elem getAttribute $SpecificDof]]} {set bool true; break}
     }
@@ -270,7 +270,7 @@ proc ::Structural::write::UsingFileInPrestressedMembrane { {stage ""} } {
     set elements [$root selectNodes $xp1]
     set found false
     foreach element_node $elements {
-        set elemid [$element_node @v]
+        set elemid [write::getValueByNode $element_node]
         if {$elemid eq "PrestressedMembraneElement"} {
             set selector [write::getValueByNode [$element_node selectNodes "../value\[@n = 'PROJECTION_TYPE_COMBO'\]"]]
             if {$selector eq "file"} {set found true; break}

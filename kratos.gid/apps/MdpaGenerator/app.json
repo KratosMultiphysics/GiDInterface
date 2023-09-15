@@ -22,6 +22,9 @@
     "unique_names": {
         "parts": "GenericSubmodelPart"
     },
+    "write": {
+        "write_mdpa_mode": "geometries"
+    },
     "main_launch_file": null,
     "description": "MDPA generator \n-Useful tool to generate modelparts"
 }
