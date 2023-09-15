@@ -8,8 +8,6 @@ proc ::GeoMechanics::write::getParametersDict { stage } {
     if { [GetAttribute multistage_write_mdpa_file_mode] != "single_file" } {
         dict set project_parameters_dict solver_settings model_import_settings input_filename [$stage @name]
     }
-    
-
 
     # add the phreatic water properties
     set list_of_processes [dict get $project_parameters_dict processes constraints_process_list]
@@ -22,34 +20,37 @@ proc ::GeoMechanics::write::getParametersDict { stage } {
     return $project_parameters_dict
 }
 
+
 proc ::GeoMechanics::write::GetSingleFileStageProjectParameters {  } {
     # Get the base dictionary for the project parameters
     set project_parameters_dict [dict create]
 
+    # Get the stages
+    set stages_list [::GeoMechanics::xml::GetStages]
+    set stages_names [list ]
+    foreach stage $stages_list {
+        lappend stages_names [$stage @name]
+    }
+
     # Set the orchestrator
-    dict set project_parameters_dict orchestrator name "MultistageOrchestrators.KratosMultiphysics.SequentialMultistageOrchestrator"
-    dict set project_parameters_dict orchestrator settings echo_level 0
-    dict set project_parameters_dict orchestrator settings execution_list [::GeoMechanics::xml::GetStages "names"]
-    dict set project_parameters_dict orchestrator settings stage_checkpoints true
-    dict set project_parameters_dict orchestrator settings stage_checkpoints_folder new_checkpoints
-    # dict set project_parameters_dict orchestrator settings load_from_checkpoint "new_checkpoints/fluid_stage"
+    dict set project_parameters_dict orchestrator [::write::GetOrchestratorDict $stages_names]
 
     # Set the stages
     set stages [dict create]
 
     set i 0
-    foreach stage [::GeoMechanics::xml::GetStages] {
+    foreach stage $stages_list {
         set stage_name [$stage @name]
         set stage_content [::GeoMechanics::write::getParametersDict $stage]
         # In first iteration we add the mdpa importer
         if {$i == 0} {
             set parameters_modeler [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]
-            dict set stages $stage_name stage_preprocess [::GeoMechanics::write::getPreprocessForStage $stage $parameters_modeler]
+            dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage $parameters_modeler]
         } else {
-            dict set stages $stage_name stage_preprocess [::GeoMechanics::write::getPreprocessForStage $stage]
+            dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage]
         }
         dict set stages $stage_name stage_settings $stage_content
-        dict set stages $stage_name stage_postprocess [::GeoMechanics::write::getPostprocessForStage $stage]
+        dict set stages $stage_name stage_postprocess [::write::getPostprocessForStage $stage]
         incr i
     }
 
@@ -58,28 +59,6 @@ proc ::GeoMechanics::write::GetSingleFileStageProjectParameters {  } {
     return $project_parameters_dict
 }
 
-# Get the dictionary for the preprocess of the stage
-proc ::GeoMechanics::write::getPreprocessForStage {stage {mdpaimporter ""}} {
-    set stage_preprocess [dict create ]
-    set operation_parameters [dict create ]
-    dict set stage_preprocess operations [list [dict create name "user_operation.EmptyOperation" Parameters $operation_parameters]] 
-
-    if { $mdpaimporter ne "" } {
-        # Get the modeler parameters
-        set modeler [dict create name "KratosMultiphysics.modelers.import_mdpa_modeler.ImportMDPAModeler" Parameters $mdpaimporter]  
-        dict set stage_preprocess modelers [list $modeler]
-    }
-
-    return $stage_preprocess 
-}
-
-# Get the dictionary for the postprocess of the stage
-proc ::GeoMechanics::write::getPostprocessForStage {stage} {
-    set stage_postprocess [dict create ]
-    dict set stage_postprocess operations [list [dict create name "user_operation.EmptyOperation" Parameters [dict create ] ]] 
-
-    return $stage_postprocess 
-}
 
 proc ::GeoMechanics::write::writeParametersEvent { } {
     if { [GetAttribute multistage_write_json_mode] == "single_file" } {  
@@ -91,6 +70,8 @@ proc ::GeoMechanics::write::writeParametersEvent { } {
             write::OpenFile "ProjectParameters[$stage @name].json"
             write::WriteJSON [::GeoMechanics::write::getParametersDict $stage]
         }
+
+        # TODO: add the orchestrator in ProjectParameters.json
     }
 }
 

@@ -209,7 +209,7 @@ proc Kratos::LoadCommonScripts { } {
     # Writing common scripts
     foreach filename {Writing WriteHeadings WriteMaterials WriteNodes
         WriteElements WriteConditions WriteGeometries WriteConditionsByGiDId WriteConditionsByUniqueId
-        WriteProjectParameters WriteSubModelPart WriteProcess} {
+        WriteProjectParameters WriteSubModelPart WriteProcess WriteStages} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename.tcl]]
     }
     # Common scripts
