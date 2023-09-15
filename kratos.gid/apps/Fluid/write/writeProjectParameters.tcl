@@ -1,5 +1,5 @@
 # Project Parameters
-proc ::Fluid::write::getParametersDict { } {
+proc ::Fluid::write::getParametersDict { {stage ""} } {
     set projectParametersDict [dict create]
 
     # Analysis stage field
@@ -54,8 +54,44 @@ proc ::Fluid::write::process_special_conditions { list_of_processes } {
     
 }
 
+proc ::Fluid::write::getParametersMultistageDict { } {
+    # At this moment we can only fake stages, so we'll have only one stage
+    # Get the base dictionary for the project parameters
+    set project_parameters_dict [dict create]
+
+    # Get the stages
+    set stages_list [list "stage_1"]
+    set stages_names [list "stage_1"]
+
+    # Set the orchestrator
+    dict set project_parameters_dict orchestrator [::write::GetOrchestratorDict $stages_names]
+
+    # Set the stages
+    set stages [dict create]
+
+    set i 0
+    foreach stage $stages_list {
+        set stage_name [lindex $stages_names 0]
+        set stage_content [::Fluid::write::getParametersDict]
+        # In first iteration we add the mdpa importer
+        if {$i == 0} {
+            set parameters_modeler [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]
+            dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage $parameters_modeler]
+        } else {
+            dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage]
+        }
+        dict set stages $stage_name stage_settings $stage_content
+        dict set stages $stage_name stage_postprocess [::write::getPostprocessForStage $stage]
+        incr i
+    }
+
+    dict set project_parameters_dict "stages" $stages
+    
+    return $project_parameters_dict
+}
+
 proc ::Fluid::write::writeParametersEvent { } {
-    set projectParametersDict [getParametersDict]
+    set projectParametersDict [getParametersMultistageDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
