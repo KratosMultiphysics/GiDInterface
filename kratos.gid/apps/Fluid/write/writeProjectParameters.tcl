@@ -80,7 +80,9 @@ proc ::Fluid::write::getParametersMultistageDict { } {
         } else {
             dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage]
         }
+        if {[dict exists $stage_content solver_settings model_import_settings]} {dict unset stage_content solver_settings model_import_settings}
         dict set stages $stage_name stage_settings $stage_content
+        
         dict set stages $stage_name stage_postprocess [::write::getPostprocessForStage $stage]
         incr i
     }
