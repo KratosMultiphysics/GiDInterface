@@ -93,15 +93,61 @@ proc ::Fluid::write::getParametersMultistageDict { } {
 }
 
 # Update the modelers information
-proc ::Fluid::write::UpdateModelers { projectParametersDict } {
-    # set modelers [dict get $projectParametersDict solver_settings model_import_settings]
+proc ::Fluid::write::UpdateModelers { projectParametersDict {stage ""} } {
     set modelerts_list [list ]
+    # Move the import to the modelers
+    # set modelers [dict get $projectParametersDict solver_settings model_import_settings]
+    dict unset projectParametersDict solver_settings model_import_settings 
+    dict set projectParametersDict solver_settings model_import_settings input_type use_input_model_part
     set importer_modeler [dict create name "KratosMultiphysics.modelers.import_mdpa_modeler.ImportMDPAModeler"]  
-    dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]
+    dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]  
     lappend modelerts_list $importer_modeler
+
+    # Add the entities creation modeler
+    set entities_modeler [dict create name "KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
+    dict set entities_modeler "parameters" elements_list [Fluid::write::GetMatchSubModelPart element $stage]
+    dict set entities_modeler "parameters" conditions_list [Fluid::write::GetMatchSubModelPart condition $stage]
+    lappend modelerts_list $entities_modeler
     dict set projectParametersDict "modelers" $modelerts_list
-    
+
     return $projectParametersDict
+}
+
+# what can be element, condition
+proc Fluid::write::GetMatchSubModelPart { what {stage ""} } {
+    set model_part_basename [write::GetConfigurationAttribute model_part_name]
+    set entity_name element_name
+    if {$what == "condition"} {set entity_name condition_name}
+   
+    set elements_list [list ]
+    set processed_groups_list [list ]
+    set groups [::Fluid::xml::GetListOfSubModelParts $stage]
+    foreach group $groups {
+        # get the group and submodelpart name
+        set group_name [$group @n]
+        
+        set group_name [write::GetWriteGroupName $group_name]
+        if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
+        if {$what == "condition"} {set cid [[$group parent] @n]} {
+            set element_node [$group selectNodes "./value\[@n='Element']"]
+            if {[llength $element_node] == 0} {continue}
+            set cid [write::getValueByNode $element_node]
+        }
+        if {$cid eq ""} {continue}
+        if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
+        if {$entity eq ""} {continue}
+        set good_name [write::transformGroupName $group_name]
+        # Get the entity (element or condition)
+        if {[$group hasAttribute ov]} {set ov [get_domnode_attribute $group ov]} {set ov [get_domnode_attribute [$group parent] ov]}
+
+        lassign [write::getEtype $ov $group_name] etype nnodes
+
+        set kname [$entity getTopologyKratosName $etype $nnodes]
+        set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
+        lappend elements_list $pair
+        
+    }
+    return $elements_list
 }
 
 proc ::Fluid::write::writeParametersEvent { } {
