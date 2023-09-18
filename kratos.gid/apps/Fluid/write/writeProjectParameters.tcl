@@ -92,8 +92,26 @@ proc ::Fluid::write::getParametersMultistageDict { } {
     return $project_parameters_dict
 }
 
+# Update the modelers information
+proc ::Fluid::write::UpdateModelers { projectParametersDict } {
+    # set modelers [dict get $projectParametersDict solver_settings model_import_settings]
+    set modelerts_list [list ]
+    set importer_modeler [dict create name "KratosMultiphysics.modelers.import_mdpa_modeler.ImportMDPAModeler"]  
+    dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]
+    lappend modelerts_list $importer_modeler
+    dict set projectParametersDict "modelers" $modelerts_list
+    
+    return $projectParametersDict
+}
+
 proc ::Fluid::write::writeParametersEvent { } {
-    set projectParametersDict [getParametersMultistageDict]
+    set write_parameters_mode 0
+    if {$write_parameters_mode == 0} {
+        set projectParametersDict [getParametersDict]
+        set projectParametersDict [Fluid::write::UpdateModelers $projectParametersDict]
+    } else {
+        set projectParametersDict [getParametersMultistageDict]
+    }
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
