@@ -17,7 +17,7 @@
         "examples/Wedge.tcl"
     ],
     "start_script": "::CompressibleFluid::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Fluid"
         ],
