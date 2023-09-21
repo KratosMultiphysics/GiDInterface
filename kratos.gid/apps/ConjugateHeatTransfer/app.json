@@ -23,7 +23,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::ConjugateHeatTransfer::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Buoyancy"
         ],

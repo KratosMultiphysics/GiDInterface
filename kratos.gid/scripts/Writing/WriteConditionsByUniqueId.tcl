@@ -60,6 +60,7 @@ proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap ite
 }
 
 proc write::writeBasicSubmodelPartsByUniqueId {ConditionMap iter {un "GenericSubmodelPart"}} {
+    
     # Write elements
     set groups [write::_writeElementsForBasicSubmodelParts $un]
     # Write conditions (By unique id, so need the app ConditionMap)
@@ -78,6 +79,8 @@ proc write::writeBasicSubmodelPartsByUniqueId {ConditionMap iter {un "GenericSub
 
 proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap {print_again_repeated 0}} {
     set obj [list ]
+
+    set inittime [clock seconds]
 
     # Print header
     set s [mdpaIndent]
@@ -123,6 +126,7 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
     WriteString "${s}End Conditions"
     WriteString ""
 
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupConditionByUniqueId $groupid time: [Kratos::Duration $ttime]"}
     return $iter
 }
 
@@ -153,6 +157,7 @@ proc write::writeConditionGroupedSubmodelPartsByUniqueId {cid groups_dict condit
 
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "Elements"} {tableid_list ""} } {
+    set inittime [clock seconds]
     variable submodelparts
     variable formats_dict
 
@@ -214,7 +219,7 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
         WriteString "${s}End SubModelPart"
         if {$null_cond_warn} {W "$mid submodelpart contains conditions that are not in the Conditions block"}
     }
-
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupSubModelPartByUniqueId $group time: [Kratos::Duration $ttime]"}
     return $mid
 }
 

@@ -32,7 +32,9 @@ proc ::MPM::write::getParametersDict { } {
     # add _Body to model_import_settings
     set model_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
     dict append model_import_settings_dict input_filename _Body
+    if {[write::isBooleanTrue [write::getValue EnableRestartOutput]]} {dict set model_import_settings_dict restart_load_file_label " "}
     dict set project_parameters_dict solver_settings model_import_settings $model_import_settings_dict
+
 
     # materials file
     dict set project_parameters_dict solver_settings material_import_settings materials_filename [GetAttribute materials_file]
@@ -43,7 +45,7 @@ proc ::MPM::write::getParametersDict { } {
     }
 
     # Pressure dofs
-    set check_list [list "UpdatedLagrangianUP2D" "UpdatedLagrangianUP3D"]
+    set check_list [list "MPMUpdatedLagrangianUP2D" "MPMUpdatedLagrangianUP3D"]
     foreach elem $check_list {
         if {$elem in [MPM::write::GetUsedElements Name]} {
             dict set project_parameters_dict solver_settings pressure_dofs true
@@ -199,7 +201,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
          #dict set resultDict output_control_type $outputCT
           #if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
          dict unset body_output_configuration_dict Parameters output_path
-         dict set body_output_configuration_dict Parameters folder_name  "vtk_output"
+         dict set body_output_configuration_dict Parameters folder_name  "vtk_output_Body"
          dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
          dict set body_output_configuration_dict Parameters gauss_point_results [write::GetResultsList ElementResults]
 
@@ -223,6 +225,24 @@ proc ::MPM::write::GetOutputProcessesList { } {
 
 
      }
+
+     # Restart
+    set need_restart [write::getValue EnableRestartOutput]
+    if {[write::isBooleanTrue $need_restart]} {
+        set restart_dict [dict create ]
+        dict set restart_dict python_module save_restart_process
+        dict set restart_dict kratos_module KratosMultiphysics
+        dict set restart_dict process_name SaveRestartProcess
+        set restart_parameters_dict [dict create ]
+        dict set restart_parameters_dict model_part_name MPM_Material
+        dict set restart_parameters_dict echo_level 0
+        set restOutputCT [write::getValue RestartOptions OutputControlType]
+        dict set restart_parameters_dict restart_control_type $restOutputCT
+        if {$restOutputCT eq "time"} {dict set restart_parameters_dict restart_save_frequency [write::getValue RestartOptions OutputDeltaTime]} {dict set restart_parameters_dict restart_save_frequency [write::getValue RestartOptions OutputDeltaStep]}
+        dict set restart_dict Parameters $restart_parameters_dict
+        dict set output_process save_restart_process [list $restart_dict]
+
+        }
 
     return $output_process
 }

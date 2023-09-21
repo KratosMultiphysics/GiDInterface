@@ -49,6 +49,7 @@ proc write::writeGroupElementConnectivities { gNode kelemtype} {
         error [= "You have not assigned a proper entity to group $group"]
     }
 }
+
 proc write::writeGroupElementConnectivitiesFor { kratos_element_type nnodes group mid } {
     set s [mdpaIndent]
     WriteString "${s}Begin Elements $kratos_element_type// GUI group identifier: $group"

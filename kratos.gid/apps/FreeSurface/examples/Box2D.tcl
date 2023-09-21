@@ -1,39 +1,40 @@
 
-namespace eval ::FreeSurface::examples::Box {
+namespace eval ::FreeSurface::examples::Box2D {
     namespace path ::FreeSurface::examples
     Kratos::AddNamespace [namespace current]
 }
 
-proc ::FreeSurface::examples::Box::Init {args} {
+proc ::FreeSurface::examples::Box2D::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
-    DrawGeometry$::Model::SpatialDimension
-    AssignGroups$::Model::SpatialDimension
-    TreeAssignation$::Model::SpatialDimension
+
+    DrawGeometry
+    AssignGroups
+    AssignMeshSizes
+    TreeAssignation
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
     GidUtils::UpdateWindow LAYER
-    GiD_Process 'Zoom Frame
-    spdAux::RequestRefresh
 }
 
 
 # Draw Geometry
-proc ::FreeSurface::examples::Box::DrawGeometry2D {args} {
+proc ::FreeSurface::examples::Box2D::DrawGeometry {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
 
     # Geometry creation
     ## Points ##
-    set coordinates [list -3.91362 -3.3393 0 -2.91362 -3.3393 0 -2.91362 -3.1393 0 -2.91362 -2.7393 0 -2.71362 -2.7393 0]
-    lappend coordinates {*}[list -2.71362 -2.5393 0 -3.91362 -2.5393 0 -3.91362 -3.1393 0 -4.11362 -3.1393 0 -4.11362 -3.3393 0 ]
+    set coordinates [list {-3.91362 -3.3393 0} {-2.91362 -3.3393 0} {-2.91362 -3.1393 0} {-2.91362 -2.7393 0} {-2.71362 -2.7393 0} ]
+    lappend coordinates {*}[list {-2.71362 -2.5393 0} {-3.91362 -2.5393 0} {-3.91362 -3.1393 0} {-4.11362 -3.1393 0} {-4.11362 -3.3393 0} ]
     set fluidPoints [list ]
-    foreach {x y z} $coordinates {
+    foreach point $coordinates {
+        lassign $point x y z
         lappend fluidPoints [GiD_Geometry create point append Fluid $x $y $z]
     }
 
@@ -50,9 +51,10 @@ proc ::FreeSurface::examples::Box::DrawGeometry2D {args} {
     GiD_Process Mescape Geometry Create NurbsSurface {*}$fluidLines escape escape
 
     ## Points ##
-    set coordinates [list -3.91362 -3.5393 0 -2.91362 -3.5393 0 ]
+    set coordinates [list {-3.91362 -3.5393 0} {-2.91362 -3.5393 0} ]
     set fluidPoints [list ]
-    foreach {x y z} $coordinates {
+    foreach point $coordinates {
+        lassign $point x y z
         lappend fluidPoints [GiD_Geometry create point append Fluid $x $y $z]
     }
 
@@ -67,11 +69,11 @@ proc ::FreeSurface::examples::Box::DrawGeometry2D {args} {
     ## Surface ##
     GiD_Process Mescape Geometry Create NurbsSurface 1 {*}$fluidLines escape escape
 
-
+    GiD_Process 'Zoom Frame
 }
 
 # Group assign
-proc ::FreeSurface::examples::Box::AssignGroups2D {args} {
+proc ::FreeSurface::examples::Box2D::AssignGroups {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -94,8 +96,16 @@ proc ::FreeSurface::examples::Box::AssignGroups2D {args} {
     GiD_EntitiesGroups assign Surface_Bottom surfaces 2
 }
 
+proc ::FreeSurface::examples::Box2D::AssignMeshSizes {args} {
+
+    set fluid_mesh_size 0.05
+    GiD_Process Mescape Meshing AssignSizes Surfaces $fluid_mesh_size 1:end escape escape escape
+    GiD_Process Mescape Meshing AssignSizes Lines $fluid_mesh_size 1:end escape escape escape
+    ##Kratos::BeforeMeshGeneration $fluid_mesh_size
+}
+
 # Tree assign
-proc ::FreeSurface::examples::Box::TreeAssignation2D {args} {
+proc ::FreeSurface::examples::Box2D::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -128,11 +138,7 @@ proc ::FreeSurface::examples::Box::TreeAssignation2D {args} {
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Slip_Walls] setAttribute ov $condtype
 
-    # [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Lin_Darcy_Coef_$nd'\]" Surface_Bottom] setAttribute ov $condtype
-    # [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Non_Lin_Darcy_Coef_$nd'\]" Surface_Bottom] setAttribute ov $condtype
-    # [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Porosity$nd'\]" Surface_Bottom] setAttribute ov $condtype
-
-    # Time parameters
+    # Time Parameters
     set parameters [list EndTime 5 DeltaTime 0.1]
     set xpath [spdAux::getRoute "FLTimeParameters"]
     spdAux::SetValuesOnBasePath $xpath $parameters

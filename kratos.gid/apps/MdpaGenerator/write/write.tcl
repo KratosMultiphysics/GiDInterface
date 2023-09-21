@@ -19,6 +19,9 @@ proc ::MdpaGenerator::write::Init { } {
 
     variable writeAttributes
     set writeAttributes [dict create ]
+    
+    SetAttribute parts_un [::MdpaGenerator::GetUniqueName parts]
+    SetAttribute write_mdpa_mode [::MdpaGenerator::GetWriteProperty write_mdpa_mode]
 }
 
 # MDPA write event
@@ -27,11 +30,11 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
 
-    InitConditionsMap
-    writeProperties
-
     # Init data
     write::initWriteConfiguration [GetAttributes]
+
+    InitConditionsMap
+    writeProperties
 
     # Headers
     write::writeModelPartData
@@ -39,17 +42,21 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
     # Nodal coordinates
     write::writeNodalCoordinates
 
-    # Custom SubmodelParts
-    set conditions_mode [write::getValue SMP_write_options condition_write_mode]
-    variable last_condition_iterator
-    set last_condition_iterator [expr [write::getValue SMP_write_options conditions_start_id] -1]
-    switch $conditions_mode {
-        "unique" {write::writeBasicSubmodelPartsByUniqueId $MdpaGenerator::write::ConditionMap $last_condition_iterator}
-        "norepeat" {write::writeBasicSubmodelParts $last_condition_iterator}
-        "gid-id" {}
-        default {}
+    set write_mode [::MdpaGenerator::xml::GetCurrentWriteMode]
+    if {$write_mode eq "geometries"} {
+        MdpaGenerator::write::writeGeometries
+    } else {
+        
+        # Custom SubmodelParts
+        set conditions_mode [write::getValue SMP_write_options condition_write_mode]
+        variable last_condition_iterator
+        set last_condition_iterator [expr [write::getValue SMP_write_options conditions_start_id] -1]
+        switch $conditions_mode {
+            "unique" {write::writeBasicSubmodelPartsByUniqueId $MdpaGenerator::write::ConditionMap $last_condition_iterator}
+            "norepeat" {write::writeBasicSubmodelParts $last_condition_iterator}
+            default {}
+        }
     }
-
 
     # Clean
     unset ::MdpaGenerator::write::ConditionMap
@@ -58,11 +65,27 @@ proc ::MdpaGenerator::write::writeModelPartEvent { } {
 proc ::MdpaGenerator::write::writeCustomFilesEvent { } {
 }
 
-
 proc ::MdpaGenerator::write::Validate {} {
     set err ""
 
     return $err
+}
+
+proc ::MdpaGenerator::write::writeGeometries { } {
+    # Get the list of groups in the spd
+    set lista [::MdpaGenerator::xml::GetListOfSubModelParts]
+
+    # Write the geometries
+    set ret [::write::writeGeometryConnectivities $lista]
+
+    # Write the submodelparts
+    set what "nodal"
+    append what "&Geometries"
+    
+    foreach group $lista {
+        ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what
+    }
+    
 }
 
 # MDPA Blocks

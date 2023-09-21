@@ -1,0 +1,57 @@
+{
+    "id": "GeoMechanics",
+    "name": "GeoMechanics",
+    "prefix": "GEOM",
+    "themed": false,
+    "kratos_name": "GeoMechanicsApplication",
+    "python_packages": [
+        "KratosGeoMechanicsApplication"
+    ],
+    "dimensions": [
+        "2D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "controllers/Toolbar.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl",
+        "controllers/Python.tcl",
+        "controllers/PhreaticLine.tcl",
+        "examples/examples.tcl",
+        "examples/FirstExample.tcl"
+    ],
+    "start_script": "::GeoMechanics::Init",
+    "requirements": {
+        "apps": ["Structural"],
+        "minimum_gid_version": "16.1.4d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false,
+        "stages": true
+    },
+    "unique_names": {
+        "parts": "GEOMParts",
+        "nodal_conditions": "GEOMNodalConditions",
+        "conditions": "GEOMBC",
+        "materials": "GEOMMaterials",
+        "results": "GEOMResults",
+        "drag": "GEOMDrags",
+        "time_parameters": "GEOMTimeParameters"
+    },
+    "write": {
+        "coordinates": "all",
+        "materials_file": "Materials.json",
+        "properties_location": "json",
+        "model_part_name": "PorousDomain",
+        "output_model_part_name": "computational_model_part",
+        "write_mdpa_mode": "geometries",
+        "multistage_write_json_mode": "single_file",
+        "multistage_write_mdpa_file_mode": "single_file"
+    },
+    "main_launch_file": "MainKratos.py",
+    "description": ""
+}

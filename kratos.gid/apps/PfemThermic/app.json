@@ -22,7 +22,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script":"::PfemThermic::Init",
-    "requeriments":{
+    "requirements":{
         "apps":["PfemFluid", "ConvectionDiffusion"],
         "minimum_gid_version":"15.1.3d"
     },

@@ -316,8 +316,8 @@ proc apps::LoadAppProperties {app} {
 proc apps::ActivateApp_do {app} {
     set dir [file join $::Kratos::kratos_private(Path) apps [$app getName]]
     # Load app dependences
-    if {[dict exists [$app getProperty requeriments] apps]} {
-        foreach app_id [dict get [$app getProperty requeriments] apps] {
+    if {[dict exists [$app getProperty requirements] apps]} {
+        foreach app_id [dict get [$app getProperty requirements] apps] {
             apps::LoadAppById $app_id
         }
     }
@@ -329,8 +329,10 @@ proc apps::ActivateApp_do {app} {
             apps::loadAppFile $fileName
         }
     }
-    set app_minimum_gid_version [dict get [$app getProperty requeriments] minimum_gid_version]
-    if {[GiDVersionCmp $app_minimum_gid_version] < 0} {W "Caution. Minimum GiD version is $app_minimum_gid_version"}
+    if {[dict exists [$app getProperty requirements] minimum_gid_version]} {
+        set app_minimum_gid_version [dict get [$app getProperty requirements] minimum_gid_version]
+        if {[GiDVersionCmp $app_minimum_gid_version] < 0} {W "Caution. Minimum GiD version is $app_minimum_gid_version"}
+    }
     if {[write::isBooleanTrue [$app getPermission import_files]]} { Kratos::LoadImportFiles }
     if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }
     if {[$app getProperty start_script] ne ""} {eval [$app getProperty start_script] $app}
@@ -345,7 +347,9 @@ proc apps::ActivateApp_do {app} {
 }
 
 proc apps::ApplyAppPreferences {app} {
+    if {[write::isBooleanTrue [$app getPermission stages]]} {set spdAux::UseStages 1} {set spdAux::UseStages 0}
     if {[write::isBooleanTrue [$app getPermission open_tree]]} {set spdAux::TreeVisibility 1} {set spdAux::TreeVisibility 0}
+    if {[write::isBooleanTrue [$app getPermission show_toolbar]]} {set spdAux::ToolbarVisibility 1} {set spdAux::ToolbarVisibility 0}
     if {[$app getProperty dimensions] ne ""} { set ::Model::ValidSpatialDimensions [$app getProperty dimensions] }
 }
 

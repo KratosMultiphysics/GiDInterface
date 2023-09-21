@@ -24,8 +24,12 @@ proc write::tcl2json { value } {
     #if {$type eq "exprcode"} {set type list; W "$type -> $value"}
     switch $type {
         string {
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return null
+            }
             if {[isBooleanFalse $value]} {return [expr "false"]}
             if {[isBooleanTrue $value]} {return [expr "true"]}
             return [json::write string $value]
@@ -75,8 +79,12 @@ proc write::tcl2jsonstrings { value } {
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]}
     switch $type {
         string {
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return {{}}
+            }
             return [json::write string $value]
         }
         dict {
@@ -112,7 +120,9 @@ proc write::tcl2jsonstrings { value } {
 }
 
 proc write::WriteJSON {processDict} {
-    WriteString [write::tcl2json $processDict]
+    set json_string [write::tcl2json $processDict]
+    set new_string [string map {"\[null\]" "null"} $json_string]
+    WriteString $new_string
 }
 proc write::WriteJSONAsStringFields {processDict} {
     WriteString [write::tcl2jsonstrings $processDict]
@@ -425,6 +435,19 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
     dict set problem_data_dict end_time [write::getValue [GetConfigurationAttribute time_parameters_un] EndTime]
 
     return $problem_data_dict
+}
+
+proc write::GetGravityByModuleDirection { gravity_un } {
+    set gravity_value [write::getValue $gravity_un GravityValue]
+    set gravity_X [write::getValue $gravity_un Cx]
+    set gravity_Y [write::getValue $gravity_un Cy]
+    set gravity_Z [write::getValue $gravity_un Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+
+    return [list $gx $gy $gz]
 }
 
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {

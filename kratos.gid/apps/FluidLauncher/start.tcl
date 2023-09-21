@@ -7,7 +7,7 @@ namespace eval ::FluidLauncher {
 proc ::FluidLauncher::Init { app } {
     variable available_apps
 
-    set available_apps [dict get [$app getProperty requeriments] display_apps]
+    set available_apps [dict get [$app getProperty requirements] display_apps]
     
     ::FluidLauncher::FluidAppSelectorWindow
 }
@@ -27,19 +27,8 @@ proc ::FluidLauncher::FluidAppSelectorWindow { } {
         set initwind $::spdAux::application_window_id
         spdAux::DestroyWindows
         spdAux::RegisterWindow $initwind
-        if { [ winfo exist $initwind]} {
-            destroy $initwind
-        }
-        toplevel $initwind
-        wm withdraw $initwind
 
         set w $initwind
-
-        set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
-        set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-
-        wm geom $initwind +$x+$y
-        wm transient $initwind .gid
 
         InitWindow $w [_ "Fluid applications"] Kratos "" "" 1
         set initwind $w

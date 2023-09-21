@@ -5,8 +5,8 @@
         "start.tcl"
     ],
     "start_script":"::FluidLauncher::Init",
-    "requeriments":{
-        "display_apps":["Fluid","EmbeddedFluid", "PotentialFluid", "Buoyancy", "ConjugateHeatTransfer", "FluidDEM", "CompressibleFluid"],
+    "requirements":{
+        "display_apps":["Fluid","EmbeddedFluid", "PotentialFluid", "Buoyancy", "ConjugateHeatTransfer", "FluidDEM", "CompressibleFluid", "FreeSurface"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {

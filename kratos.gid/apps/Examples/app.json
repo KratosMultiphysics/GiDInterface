@@ -3,7 +3,7 @@
     "name": "Examples",
     "themed": false,
     "start_script":"::Examples::StartWindowEmpty",
-    "requeriments":{
+    "requirements":{
         "apps":[],
         "minimum_gid_version":"15.1.3d"
     },
