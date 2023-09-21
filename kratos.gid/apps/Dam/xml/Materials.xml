@@ -24,7 +24,7 @@
         <parameter n="DENSITY" pn="Density" v="2400"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10"/>
         <parameter n="YIELD_STRESS" pn="Yield Stress"  unit_magnitude="P" units="Pa" v="20e06"/>
-        <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+        <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
     </inputs>
   </Material>
 
@@ -33,7 +33,7 @@
         <parameter n="DENSITY" pn="Density" v="2400"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="35.0e9" />
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-        <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+        <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
         <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
         <parameter n="YIELD_STRESS" pn="Yield Stress" v="3.5e8"/>
         <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.04"/>
@@ -46,7 +46,7 @@
         <parameter n="DENSITY" pn="Density" v="2400"/>
         <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1.0" />
         <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-        <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+        <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
         <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
         <parameter n="YIELD_STRESS" pn="Yield Stress" v="1.0"/>
         <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.04"/>

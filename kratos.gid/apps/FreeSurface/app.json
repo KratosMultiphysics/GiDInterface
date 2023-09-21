@@ -14,7 +14,8 @@
     "script_files": [
         "start.tcl",
         "examples/examples.tcl",
-        "examples/Box.tcl",
+        "examples/Box2D.tcl",
+        "examples/Box3D.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"

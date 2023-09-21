@@ -59,17 +59,15 @@
     </CLaw>
 
     <!--3D  Interface laws-->
-    <CLaw n="DamJoint3DLaw" pn="Joint 3D"  Type="Interface3D" behaviour="Elastic"
+    <CLaw n="ElasticCohesive3DLaw" pn="Joint Elastic Cohesive 3D"  Type="Interface3D" behaviour="Elastic"
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
-	  help="Simplified law for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
+	  help="Elastic law (no breakage)for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
-            <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="SHEAR_STIFFNESS" pn="Shear stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
+            <parameter n="NORMAL_STIFFNESS" pn="Normal stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
+            <parameter n="PENALTY_STIFFNESS" pn="Penalty stiffness" v="1e03"/>
         </inputs>
         <outputs>
-            <parameter n="DAMAGE_VARIABLE" pn="Damage" v="False" />
         </outputs>
     </CLaw>
 
@@ -77,10 +75,9 @@
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Bilinear Cohesive law for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.04"/>
@@ -95,9 +92,8 @@
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
 	  help="Exponential Cohesive law for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture Energy" v="90.0e06"/>
             <parameter n="SHEAR_FRACTURE_ENERGY" pn="Shear Fracture Energy" v="350.0e06"/>
             <parameter n="STATE_VARIABLE" pn="State Variable" v="1.0e-15"/>
@@ -219,39 +215,34 @@
     </CLaw>
 
     <!--2D  Interface laws-->
-    <CLaw n="DamJoint2DPlaneStrain" pn="Simplified Joint Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
+    <CLaw n="ElasticCohesive2DPlaneStrain" pn="Simplified Joint Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
           help="Simplified law for joints in Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
-            <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="SHEAR_STIFFNESS" pn="Shear stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
+            <parameter n="NORMAL_STIFFNESS" pn="Normal stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
+            <parameter n="PENALTY_STIFFNESS" pn="Penalty stiffness" v="1e03"/>
         </inputs>
         <outputs>
-            <parameter n="DAMAGE_VARIABLE" pn="Damage" v="False" />
         </outputs>
     </CLaw>
 
-    <CLaw n="DamJoint2DPlaneStress" pn="Simplified Joint Plane Stress"  Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
+    <CLaw n="ElasticCohesive2DPlaneStress" pn="Simplified Joint Plane Stress"  Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
           help="Simplified law for joints in Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
-            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
-            <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="SHEAR_STIFFNESS" pn="Shear stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
+            <parameter n="NORMAL_STIFFNESS" pn="Normal stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
+            <parameter n="PENALTY_STIFFNESS" pn="Penalty stiffness" v="1e03"/>
         </inputs>
         <outputs>
-            <parameter n="DAMAGE_VARIABLE" pn="Damage" v="False" />
         </outputs>
     </CLaw>
 
     <CLaw n="BilinearCohesive2DPlaneStrain" pn="Joint Bilinear Cohesive Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for joints in Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.04"/>
@@ -265,10 +256,9 @@
     <CLaw n="BilinearCohesive2DPlaneStress" pn="Joint Bilinear Cohesive Plane Stress"  Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
           help="Bilinear Cohesive law for joints in Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
             <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="2.6e10" />
             <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.20"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="CRITICAL_DISPLACEMENT" pn="Critical Displacement" v="0.05"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
             <parameter n="DAMAGE_THRESHOLD" pn="Damage Threshold" v="0.04"/>
@@ -282,9 +272,8 @@
     <CLaw n="ExponentialCohesive2DPlaneStrain" pn="Joint Exponential Cohesive Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
           help="Exponential Cohesive law for joints in Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture Energy" v="90.0e06"/>
             <parameter n="SHEAR_FRACTURE_ENERGY" pn="Shear Fracture Energy" v="350.0e06"/>
             <parameter n="STATE_VARIABLE" pn="State Variable" v="1.0e-15"/>
@@ -298,9 +287,8 @@
     <CLaw n="ExponentialCohesive2DPlaneStress" pn="Joint Exponential Cohesive Plane Stress"  Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
           help="Exponential Cohesive law for joints in Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
-            <parameter n="DENSITY" pn="Density" v="2400"/>
             <parameter n="YIELD_STRESS" pn="Yield Stress" v="0.3e06"/>
-            <parameter n="MINIMUM_JOINT_WIDTH" pn="Minimum Joint Width" v="1e-03"/>
+            <parameter n="INITIAL_JOINT_WIDTH" pn="Initial Joint Width" v="1e-03"/>
             <parameter n="FRACTURE_ENERGY" pn="Fracture Energy" v="90.0e06"/>
             <parameter n="SHEAR_FRACTURE_ENERGY" pn="Shear Fracture Energy" v="350.0e06"/>
             <parameter n="STATE_VARIABLE" pn="State Variable" v="1.0e-15"/>
