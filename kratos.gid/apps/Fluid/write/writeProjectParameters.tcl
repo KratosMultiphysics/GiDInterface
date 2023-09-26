@@ -246,8 +246,12 @@ proc ::Fluid::write::getBoundaryConditionMeshId {} {
                     lappend listOfBCGroups $cid
                 }
             } else {
-                set gname [::write::getSubModelPartId $cid $groupName]
-                if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
+                if {[GetAttribute mdpa_mode] eq "geometries"} {
+                    if {$groupName ni $listOfBCGroups} {lappend listOfBCGroups $groupName}
+                } else {
+                    set gname [::write::getSubModelPartId $cid $groupName]
+                    if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
+                }
             }
 
         }
