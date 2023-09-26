@@ -269,9 +269,13 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
     foreach dragGroup $dragGroups {
         set groupName [$dragGroup @n]
         set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$dragGroup parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
-        if {$submodelpart ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $submodelpart}
+        if {[GetAttribute mdpa_mode] eq "geometries"} {
+            if {$groupName ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $groupName}
+        } else {
+            set cid [[$dragGroup parent] @n]
+            set submodelpart [::write::getSubModelPartId $cid $groupName]
+            if {$submodelpart ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $submodelpart}
+        }
     }
 
     # Append no skin conditions model parts names
@@ -283,8 +287,12 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "False"} {
-            set gname [::write::getSubModelPartId $cid $groupName]
-            if {$gname ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $gname}
+            if {[GetAttribute mdpa_mode] eq "geometries"} {
+                if {$groupName ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $groupName}
+            } else {
+                set gname [::write::getSubModelPartId $cid $groupName]
+                if {$gname ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $gname}
+            }
         }
     }
 
