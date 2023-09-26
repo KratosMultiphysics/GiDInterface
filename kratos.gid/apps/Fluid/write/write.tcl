@@ -28,7 +28,7 @@ proc ::Fluid::write::Init { } {
     SetAttribute properties_location [::Fluid::GetWriteProperty properties_location]
     SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::Fluid::GetWriteProperty output_model_part_name]
-    SetAttribute mdpa_mode [::Fluid::GetWriteProperty mdpa_mode]
+    SetAttribute write_mdpa_mode [::Fluid::GetWriteProperty write_mdpa_mode]
 
     variable last_condition_iterator
     set last_condition_iterator 0
@@ -52,7 +52,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
-    if {[GetAttribute mdpa_mode] eq "geometries"} {
+    if {[GetAttribute write_mdpa_mode] eq "geometries"} {
         # Write geometries
         # Get the list of groups in the spd
         set lista [::Fluid::xml::GetListOfSubModelParts]

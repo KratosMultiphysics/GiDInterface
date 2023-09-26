@@ -256,7 +256,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set groupName [$group @n]
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
-        if {[GetConfigurationAttribute mdpa_mode] eq "geometries"} {
+        if {[GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
             set groupId $groupName
         } else {
             set groupId [::write::getSubModelPartId $cid $groupName]
@@ -270,7 +270,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set condition [::Model::getNodalConditionbyId $cid]
             if {$condition eq ""} {continue}
         }
-        if {$grouping_by eq "Condition" && [GetConfigurationAttribute mdpa_mode] ne "geometries"} {
+        if {$grouping_by eq "Condition" && [GetConfigurationAttribute write_mdpa_mode] ne "geometries"} {
             # Grouped conditions will be processed later
             if {$cid ni $grouped_conditions} {
                 lappend grouped_conditions $cid

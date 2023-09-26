@@ -240,7 +240,7 @@ proc ::Fluid::write::getBoundaryConditionMeshId {} {
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "True"} {
-            if {[GetAttribute mdpa_mode] eq "geometries"} {
+            if {[GetAttribute write_mdpa_mode] eq "geometries"} {
                     if {$groupName ni $listOfBCGroups} {lappend listOfBCGroups $groupName}
             } else {
                 if {[[::Model::getCondition $cid] getGroupBy] eq "Condition"} {
@@ -269,7 +269,7 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
     foreach dragGroup $dragGroups {
         set groupName [$dragGroup @n]
         set groupName [write::GetWriteGroupName $groupName]
-        if {[GetAttribute mdpa_mode] eq "geometries"} {
+        if {[GetAttribute write_mdpa_mode] eq "geometries"} {
             if {$groupName ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $groupName}
         } else {
             set cid [[$dragGroup parent] @n]
@@ -287,7 +287,7 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "False"} {
-            if {[GetAttribute mdpa_mode] eq "geometries"} {
+            if {[GetAttribute write_mdpa_mode] eq "geometries"} {
                 if {$groupName ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $groupName}
             } else {
                 set gname [::write::getSubModelPartId $cid $groupName]
