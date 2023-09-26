@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ElementList>
+  <ElementItem n="CompressibleNavierStokes2D"
+               pn="Compressible Navier-Stokes 2D"
+               ImplementedInFile="compressible_navier_stokes_explicit.cpp"
+               ImplementedInApplication="FluidDynamicsApplication"
+               MinimumKratosVersion="9000"
+               ProductionReady="ProductionReady"
+               WorkingSpaceDimension="2D"
+               LocalSpaceDimension="2"
+               RequiresLocalAxes="False"
+               LargeDeformation="False"
+               MainDofsVariables="MOMENTUM"
+               ElementType="CompressibleFluid"
+               help="This element implements a Compressible Navier Stokes element">
+
+    <!--here we could add a list of all of the possible geometries-->
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
+    </TopologyFeatures>
+    <!-- here we add the block of features which we require from the constitutive law-->
+
+    <ConstitutiveLaw_FilterFeatures>
+      <filter field="App" value="CompressibleFluid"/>
+    </ConstitutiveLaw_FilterFeatures>
+
+    <!--define list of NodalConditions-->
+    <NodalConditions>
+      <NodalCondition n="DENSITY"/>
+      <NodalCondition n="MOMENTUM"/>
+      <NodalCondition n="TOTAL_ENERGY"/>
+      <NodalCondition n="PRESSURE"/>
+      <NodalCondition n="TEMPERATURE"/>
+      <NodalCondition n="VELOCITY"/>
+      <NodalCondition n="MACH"/>
+      <NodalCondition n="SOUND_VELOCITY"/>
+      <NodalCondition n="ARTIFICIAL_CONDUCTIVITY"/>
+      <NodalCondition n="ARTIFICIAL_BULK_VISCOSITY"/>
+      <NodalCondition n="ARTIFICIAL_MASS_DIFFUSIVITY"/>
+      <NodalCondition n="ARTIFICIAL_DYNAMIC_VISCOSITY"/>
+    </NodalConditions>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="SHOCK_SENSOR" pn="Shock sensor" v="true" />
+      <parameter n="THERMAL_SENSOR" pn="Thermal sensor" v="true" />
+      <parameter n="SHEAR_SENSOR" pn="Shear sensor" v="true" />
+      <parameter n="VELOCITY_DIVERGENCE" pn="Velocity divergence" v="true" />
+    </outputs>
+  </ElementItem>
+</ElementList>
