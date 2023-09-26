@@ -223,6 +223,9 @@ proc write::GetSubModelPartName {condid group} {
     variable geometry_cnd_name
     set group_name [write::GetWriteGroupName $group]
     set good_name [write::transformGroupName $group_name]
+    if {[GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+        return "${good_name}"
+    }
     if {$condid eq $geometry_cnd_name} {
         return "${good_name}"
     }
