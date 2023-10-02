@@ -20,8 +20,17 @@ DEL "%2\vtk_output"
 
 @REM echo "Launching on Compiled for windows -> %kratos_bin_path%" > .run
 
+
+set PATH=E:\Deploy_Deltares\libs;%PATH%
+set PYTHONPATH=E:\Deploy_Deltares
+set PYTHONHOME=C:\Users\garat\AppData\Local\Programs\Python\Python311
+
+
 set PATH=%kratos_bin_path%\libs;%PATH%
 set PYTHONPATH=%kratos_bin_path%
+REM pythonhome is the parent directory of %python_path%
 
+set PYTHONHOME=""
+%python_path% -c "import os; print (os.environ)" > "%2\\%1.1info" 2> "%2\\%1.1err"
 REM Run Python using the script MainKratos.py
-%python_path%/python MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
+%python_path% MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"

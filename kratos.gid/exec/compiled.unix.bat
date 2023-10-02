@@ -28,6 +28,7 @@ fi
 
 # Prevents the PYTHONHOME error from happening and isolate possible python repacks present
 # in the system and interfeering with runkratos
+export PYTHONHOME=""
 export PYTHONPATH=$kratos_bin_path:$PYTHONPATH
 
 KERNEL_NAME="linux"

@@ -2,7 +2,7 @@
 <ConditionList>
   <ConditionItem n="AutomaticInlet2D" pn="Automatic inlet velocity" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="VELOCITY" App="Fluid" ElementType="Line" ProcessName="ApplyInletProcess" help="" units="m/s" unit_magnitude="Velocity">
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>
@@ -18,7 +18,7 @@
   </ConditionItem>
   <ConditionItem n="Outlet2D" pn="Outlet pressure" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" VariableName="PRESSURE" App="Fluid" ElementType="Line" ProcessName="ApplyOutletProcess" help="Fixes the pressure" units="Pa" unit_magnitude="P">
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>
@@ -40,7 +40,7 @@
   </ConditionItem>
   <ConditionItem n="Slip2D" pn="Slip" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid" ElementType="Line" ProcessName="ApplySlipProcess" help="" GroupBy="Condition">
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>
@@ -56,7 +56,7 @@
   </ConditionItem>
   <ConditionItem n="NoSlip2D" pn="No Slip" ImplementedInFile=".cpp" Interval="False" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid" ElementType="Line" ProcessName="ApplyNoSlipProcess" help="">
     <TopologyFeatures>
-      <item GeometryType="Line" nodes="2" KratosName="WallCondition2D2N"/>
+      <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
     </TopologyFeatures>
     <DegreesOfFreedom></DegreesOfFreedom>
     <inputs></inputs>

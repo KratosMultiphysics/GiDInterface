@@ -78,12 +78,11 @@ proc Kratos::pipVersion { {pythonExecutable ""} } {
     }
     set ver 0
 
-    catch {
         set info [exec $pip -m pip --version 2>@1]
         if {[regexp {pip\s+(\d+\.\d+)} $info --> version]} {
             set ver $version
         }
-    }
+    
 
     return $ver
 }
@@ -206,7 +205,7 @@ proc Kratos::CheckDependenciesPipMode {} {
     if {$py_version <= 0} {
         set ret "MISSING_PYTHON"
     } else {
-        set pip_version [Kratos::pipVersion]
+        set pip_version [Kratos::pipVersion $python_exe_path]
         if {$pip_version <= 0} {
             set ret "MISSING_PIP"
         } else {
