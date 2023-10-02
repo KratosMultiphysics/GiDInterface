@@ -13,7 +13,9 @@ DEL "%2\%1.err"
 DEL "%2\%1*.post.bin"
 DEL "%2\%1*.post.res"
 DEL "%2\%1*.post.msh"
-@REM Calculate!
 
-set PYTHONHOME=""
-%python_path% MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
+set PYTHONPATH=%python_home%
+set PYTHONHOME=%python_home%
+
+@REM Calculate!
+%python_home%/python.exe MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"

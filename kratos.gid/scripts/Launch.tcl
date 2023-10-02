@@ -78,11 +78,12 @@ proc Kratos::pipVersion { {pythonExecutable ""} } {
     }
     set ver 0
 
+    catch {
         set info [exec $pip -m pip --version 2>@1]
         if {[regexp {pip\s+(\d+\.\d+)} $info --> version]} {
             set ver $version
         }
-    
+    }
 
     return $ver
 }
@@ -205,7 +206,7 @@ proc Kratos::CheckDependenciesPipMode {} {
     if {$py_version <= 0} {
         set ret "MISSING_PYTHON"
     } else {
-        set pip_version [Kratos::pipVersion $python_exe_path]
+        set pip_version [Kratos::pipVersion]
         if {$pip_version <= 0} {
             set ret "MISSING_PIP"
         } else {
@@ -292,11 +293,13 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
             set python_path [Kratos::ManagePreferences GetValue python_path]
             set ::env(python_path) $python_path
             set kratos_bin_path [Kratos::ManagePreferences GetValue kratos_bin_path]
+            set ::env(python_home) [file dirname $python_path]
             set ::env(kratos_bin_path) $kratos_bin_path
         }
         {External python} {
             set python_path [Kratos::ManagePreferences GetValue python_path]
             set ::env(python_path) $python_path
+            set ::env(python_home) [file dirname $python_path]
         }
         Default {
             set python_path [GiD_Python_GetPythonExe]
