@@ -37,7 +37,8 @@
     "write": {
         "coordinates": "all",
         "properties_location": "json",
-        "model_part_name": "ThermalModelPart"
+        "model_part_name": "ThermalModelPart",
+        "write_mdpa_mode": "entities"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"

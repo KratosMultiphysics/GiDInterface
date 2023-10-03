@@ -10,6 +10,8 @@ namespace eval ::CompressibleFluid::write {
 proc ::CompressibleFluid::write::Init { } {
     # Namespace variables inicialization
     ::Fluid::write::Init
+    # Fluid has implemented the geometry mode, but we do not use it yet in inherited apps
+    ::Fluid::write::SetAttribute write_mdpa_mode [::CompressibleFluid::GetWriteProperty write_mdpa_mode]
 
     SetAttribute parts_un            [::Fluid::GetUniqueName parts]
     SetAttribute nodal_conditions_un [::CompressibleFluid::GetUniqueName nodal_conditions]
