@@ -270,7 +270,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set condition [::Model::getNodalConditionbyId $cid]
             if {$condition eq ""} {continue}
         }
-        if {$grouping_by eq "Condition" && [GetConfigurationAttribute write_mdpa_mode] ne "geometries"} {
+        if {$grouping_by eq "Condition"} {
             # Grouped conditions will be processed later
             if {$cid ni $grouped_conditions} {
                 lappend grouped_conditions $cid
@@ -309,7 +309,11 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
-        dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
+        if {[GetConfigurationAttribute write_mdpa_mode] ne "geometries"} {
+            dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
+        } else {
+            dict set paramDict model_part_name "_HIDDEN_$cid"
+        }
 
         set process_attributes [$process getAttributes]
         set process_parameters [$process getInputs]

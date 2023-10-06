@@ -126,6 +126,7 @@ proc Fluid::write::GetMatchSubModelPart { what {stage ""} } {
     set processed_groups_list [list ]
     set groups [::Fluid::xml::GetListOfSubModelParts $stage]
     foreach group $groups {
+        set good_name ""
         # get the group and submodelpart name
         set group_name [$group @n]
         
@@ -139,7 +140,13 @@ proc Fluid::write::GetMatchSubModelPart { what {stage ""} } {
         if {$cid eq ""} {continue}
         if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
         if {$entity eq ""} {continue}
-        set good_name [write::transformGroupName $group_name]
+        if {$what == "condition"} {
+            if {[$entity getGroupBy] eq "Condition"} {
+                set good_name "_HIDDEN_$cid"
+                if {$good_name ni $processed_groups_list} {lappend processed_groups_list $good_name} {continue}
+            }
+        } 
+        if {$good_name eq ""} {set good_name [write::transformGroupName $group_name]}
         # Get the entity (element or condition)
         if {[$group hasAttribute ov]} {set ov [get_domnode_attribute $group ov]} {set ov [get_domnode_attribute [$group parent] ov]}
 
@@ -147,6 +154,7 @@ proc Fluid::write::GetMatchSubModelPart { what {stage ""} } {
 
         set kname [$entity getTopologyKratosName $etype $nnodes]
         set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
+
         lappend elements_list $pair
         
     }
@@ -241,12 +249,18 @@ proc ::Fluid::write::getBoundaryConditionMeshId {} {
         set groupName [$group @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        set cond [Model::getCondition $cid]
-        if {[$cond getAttribute "SkinConditions"] eq "True"} {
+        set condition [Model::getCondition $cid]
+        if {[$condition getAttribute "SkinConditions"] eq "True"} {
             if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+                if {[$condition getGroupBy] eq "Condition"} {
+                    set condition_name [$condition getName]
+                    set groupName "_HIDDEN_$condition_name"
                     if {$groupName ni $listOfBCGroups} {lappend listOfBCGroups $groupName}
+                } else {
+                    if {$groupName ni $listOfBCGroups} {lappend listOfBCGroups $groupName}
+                }
             } else {
-                if {[[::Model::getCondition $cid] getGroupBy] eq "Condition"} {
+                if {[$condition getGroupBy] eq "Condition"} {
                     # Grouped conditions have its own submodelpart
                     if {$cid ni $listOfBCGroups} {
                         lappend listOfBCGroups $cid
