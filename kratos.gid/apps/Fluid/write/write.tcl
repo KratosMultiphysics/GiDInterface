@@ -29,6 +29,14 @@ proc ::Fluid::write::Init { } {
     SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::Fluid::GetWriteProperty output_model_part_name]
     SetAttribute write_mdpa_mode [::Fluid::GetWriteProperty write_mdpa_mode]
+    # Only write as geometries if the app says it AND the user allows it
+    # Note: Fluid will enable it but most of the apps that derive from Fluid are not ready for it
+    # Also user can disable it by setting the variable experimental_write_geometries to 0 in the preferences window
+    set write_geometries_enabled 0
+    if {[info exists Kratos::kratos_private(experimental_write_geometries)] && $Kratos::kratos_private(experimental_write_geometries)>0} {set write_geometries_enabled 1}
+    if {[GetAttribute write_mdpa_mode] eq "geometries" && $write_geometries_enabled ne 1} {
+        SetAttribute write_mdpa_mode "entities"
+    }
     
     variable last_condition_iterator
     set last_condition_iterator 0

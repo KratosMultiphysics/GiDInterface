@@ -103,11 +103,14 @@ proc ::Fluid::write::UpdateModelers { projectParametersDict {stage ""} } {
     dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]  
     lappend modelerts_list $importer_modeler
 
-    # Add the entities creation modeler
-    set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
-    dict set entities_modeler "parameters" elements_list [Fluid::write::GetMatchSubModelPart element $stage]
-    dict set entities_modeler "parameters" conditions_list [Fluid::write::GetMatchSubModelPart condition $stage]
-    lappend modelerts_list $entities_modeler
+    if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+        # Add the entities creation modeler
+        set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
+        dict set entities_modeler "parameters" elements_list [Fluid::write::GetMatchSubModelPart element $stage]
+        dict set entities_modeler "parameters" conditions_list [Fluid::write::GetMatchSubModelPart condition $stage]
+        lappend modelerts_list $entities_modeler
+    }
+    
     dict set projectParametersDict "modelers" $modelerts_list
 
     return $projectParametersDict
