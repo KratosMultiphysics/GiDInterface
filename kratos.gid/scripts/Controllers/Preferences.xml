@@ -9,8 +9,8 @@
             <option value='1' label='Readable'/>
         </combobox>
         <combobox name='experimental_write_geometries' variable='experimental_write_geometries' variablemanager='Kratos::ManagePreferences' label='Experimental: Write geometries' help=''>
-            <option value='0' label='No'/>
-            <option value='1' label='Yes (if available)'/>
+            <option value='0' label='Entities (elements,conditons)'/>
+            <option value='1' label='Geometries (if available)'/>
         </combobox>
         <combobox name='allow_logs' variable='allow_logs' variablemanager='Kratos::ManagePreferences' label='Store logs' help=''>
             <option value='0' label='No'/>

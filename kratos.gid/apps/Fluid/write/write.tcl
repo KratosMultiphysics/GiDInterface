@@ -59,7 +59,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
     
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
-    
+
     if {[GetAttribute write_mdpa_mode] eq "geometries"} {
         # Write geometries
         # Get the list of groups in the spd
@@ -125,6 +125,13 @@ proc ::Fluid::write::Validate {} {
     set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/group"
     if {[llength [$root selectNodes $xp1]] ne 1} {
         set err "You must set one part in Parts.\n"
+    }
+
+    # if the user has selected MPI, check that the write is set to entities
+    if {[write::getValue ParallelType] eq "MPI"} {
+        if {[GetAttribute write_mdpa_mode] ne "entities"} {
+            set err "You must set the write mode to entities when using MPI.\nCheck the Preferences window.\n"
+        }
     }
     
     # Check closed volume
