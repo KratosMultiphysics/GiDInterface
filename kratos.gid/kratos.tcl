@@ -194,7 +194,7 @@ proc Kratos::InitGlobalVariables {dir} {
     # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
     # KratosFSIApplication==9.0.3]
     # set pip_packages_required [list KratosMultiphysics-all==9.3.2 KratosDamApplication==9.3.2]
-    set pip_packages_required [list KratosMultiphysics-all==9.3.2]
+    set pip_packages_required [list KratosMultiphysics-all==9.4.1]
 }
 
 proc Kratos::LoadCommonScripts { } {
