@@ -312,7 +312,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         if {[GetConfigurationAttribute write_mdpa_mode] ne "geometries"} {
             dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
         } else {
-            dict set paramDict model_part_name "_HIDDEN_$cid"
+            dict set paramDict model_part_name "[GetConfigurationAttribute model_part_name]._HIDDEN_$cid"
         }
 
         set process_attributes [$process getAttributes]
