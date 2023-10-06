@@ -20,9 +20,12 @@ proc ::FreeSurface::xml::Init { } {
     Model::getConditions Conditions.xml
 
 
-    # Remove No splip
+    # Remove No slip
     Model::ForgetCondition NoSlip2D
     Model::ForgetCondition NoSlip3D
+    # Remove Wall Law
+    Model::ForgetCondition WallLaw2D
+    Model::ForgetCondition WallLaw3D
 }
 
 proc ::FreeSurface::xml::getUniqueName {name} {
