@@ -69,9 +69,32 @@ proc ::Fluid::write::writeModelPartEvent { } {
         set ret [::write::writeGeometryConnectivities $lista]
         
         # Write the submodelparts
+        set grouped_conditions [dict create]
         foreach group $lista {
-            write::writeGroupSubModelPartAsGeometry [$group @n]
+            # Some conditions should be grouped in the same submodelpart
+            # Get condition 
+            set condition_node [$group parent]
+            # W "Condition node: $condition_node"
+            set condition_name [$condition_node @n]
+            # W "Condition name: $condition_name"
+            set condition [Model::getCondition $condition_name]
+            if {$condition ne "" && [$condition getGroupBy] eq "Condition"} {
+                dict lappend grouped_conditions $condition [$group @n]
+            } else {
+                write::writeGroupSubModelPartAsGeometry [$group @n]
+            }
         }
+
+        # Write the grouped conditions
+        foreach condition [dict keys $grouped_conditions] {
+            set condition_name [$condition getName]
+            set new_group_name "_HIDDEN_$condition_name"
+            set groups [dict get $grouped_conditions $condition]
+            set new_group [spdAux::MergeGroups $new_group_name $groups]
+            write::writeGroupSubModelPartAsGeometry $new_group_name 
+            GiD_Groups delete $new_group_name
+        }
+
     } else {
         # Element connectivities (Groups on FLParts)
         write::writeElementConnectivities
