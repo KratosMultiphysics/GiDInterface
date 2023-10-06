@@ -152,7 +152,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path kratos_bin_path docker_image]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs experimental_write_geometries launch_configuration python_path kratos_bin_path docker_image]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {

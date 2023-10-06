@@ -158,6 +158,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
     set Kratos::kratos_private(allow_logs) 1
+    # Experimental: Write mdpa as geometries
+    set Kratos::kratos_private(experimental_write_geometries) 0
     # git hash of the problemtype
     set Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
