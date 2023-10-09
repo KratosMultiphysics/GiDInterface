@@ -2,12 +2,5 @@
 
 <condition n="FluidParts" pn="Parts" ov="[CheckGeometry 1]" icon="reservoir16" help="Select your group" un="FLParts" update_proc="UpdateParts">
 	<value n="Element" pn="Element" v="" dict="[GetElements]" actualize="1" values="" state="hidden">
-		<dependencies node="../value[@n!='Material']" actualize="1"/>
-	</value>
-	<value n="ConstitutiveLaw" pn="Fluid type" v="" actualize_tree="1" values="[GetConstitutiveLaws]" state="hidden" dict="[GetAllConstitutiveLaws]">
-		<dependencies node="../value[@n!='Material']" actualize="1"/>
-	</value>
-	<value n="Material" pn="Material" state="hidden" help="Choose a material from the database" v="Air" values="[GetMaterialsList]">
-		<edit_command n="Edit materials" pn="Edit materials" icon="refresh.png" proc='EditDatabaseList'/>
 	</value>
 </condition>
