@@ -106,8 +106,8 @@ proc ::Fluid::write::UpdateModelers { projectParametersDict {stage ""} } {
     if {[GetAttribute write_mdpa_mode] eq "geometries"} {
         # Add the entities creation modeler
         set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
-        dict set entities_modeler "parameters" elements_list [Fluid::write::GetMatchSubModelPart element $stage]
-        dict set entities_modeler "parameters" conditions_list [Fluid::write::GetMatchSubModelPart condition $stage]
+        dict set entities_modeler "parameters" elements_list [::write::GetMatchSubModelPart element $stage]
+        dict set entities_modeler "parameters" conditions_list [::write::GetMatchSubModelPart condition $stage]
         lappend modelerts_list $entities_modeler
     }
     
@@ -116,50 +116,6 @@ proc ::Fluid::write::UpdateModelers { projectParametersDict {stage ""} } {
     return $projectParametersDict
 }
 
-# what can be element, condition
-proc Fluid::write::GetMatchSubModelPart { what {stage ""} } {
-    set model_part_basename [write::GetConfigurationAttribute model_part_name]
-    set entity_name element_name
-    if {$what == "condition"} {set entity_name condition_name}
-   
-    set elements_list [list ]
-    set processed_groups_list [list ]
-    set groups [::Fluid::xml::GetListOfSubModelParts $stage]
-    foreach group $groups {
-        set good_name ""
-        # get the group and submodelpart name
-        set group_name [$group @n]
-        
-        set group_name [write::GetWriteGroupName $group_name]
-        if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
-        if {$what == "condition"} {set cid [[$group parent] @n]} {
-            set element_node [$group selectNodes "./value\[@n='Element']"]
-            if {[llength $element_node] == 0} {continue}
-            set cid [write::getValueByNode $element_node]
-        }
-        if {$cid eq ""} {continue}
-        if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
-        if {$entity eq ""} {continue}
-        if {$what == "condition"} {
-            if {[$entity getGroupBy] eq "Condition"} {
-                set good_name "_HIDDEN_$cid"
-                if {$good_name ni $processed_groups_list} {lappend processed_groups_list $good_name} {continue}
-            }
-        } 
-        if {$good_name eq ""} {set good_name [write::transformGroupName $group_name]}
-        # Get the entity (element or condition)
-        if {[$group hasAttribute ov]} {set ov [get_domnode_attribute $group ov]} {set ov [get_domnode_attribute [$group parent] ov]}
-
-        lassign [write::getEtype $ov $group_name] etype nnodes
-
-        set kname [$entity getTopologyKratosName $etype $nnodes]
-        set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
-
-        lappend elements_list $pair
-        
-    }
-    return $elements_list
-}
 
 proc ::Fluid::write::writeParametersEvent { } {
     set write_parameters_mode 0
