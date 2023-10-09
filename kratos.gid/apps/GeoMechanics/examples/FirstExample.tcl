@@ -154,7 +154,7 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     # Top Pressure
     GiD_Groups clone Load Total
     GiD_Groups edit parent Total Load
-    spdAux::AddIntervalGroup Body "Load//Total"
+    spdAux::AddIntervalGroup Load "Load//Total"
     GiD_Groups edit state "Load//Total" hidden
     GiD_Groups edit color "Load" "#ff2548"
     GiD_Groups edit color "Load//Total" "#ff2548"
