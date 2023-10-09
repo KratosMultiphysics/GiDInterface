@@ -4,7 +4,8 @@ proc ::write::getPreprocessForStage {stage {mdpaimporter ""}} {
     set stage_preprocess [dict create ]
     set operation_parameters [dict create ]
     dict set stage_preprocess operations [list [dict create name "user_operation.EmptyOperation" Parameters $operation_parameters]] 
-
+    dict set stage_preprocess modelers [list ]
+    
     if { $mdpaimporter ne "" } {
         # Get the modeler parameters
         set modeler [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" Parameters $mdpaimporter]  
