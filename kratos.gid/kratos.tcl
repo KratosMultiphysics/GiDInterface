@@ -593,7 +593,7 @@ proc Kratos::Event_BeforeSaveGIDProject { modelname} {
 
 proc Kratos::Event_SaveModelSPD { filespd } {
     # Save the spd
-    gid_groups_conds::save_spd_file $filespd
+    gid_groups_conds::save_spd_file -compress 0 -save_post 0 $filespd
 
     # Save user preferences
     Kratos::RegisterEnvironment
