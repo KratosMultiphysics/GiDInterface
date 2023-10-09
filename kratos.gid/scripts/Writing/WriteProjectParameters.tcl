@@ -256,7 +256,11 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set groupName [$group @n]
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
-        set groupId [::write::getSubModelPartId $cid $groupName]
+        if {[GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+            set groupId $groupName
+        } else {
+            set groupId [::write::getSubModelPartId $cid $groupName]
+        }
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
@@ -305,7 +309,11 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
-        dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
+        if {[GetConfigurationAttribute write_mdpa_mode] ne "geometries"} {
+            dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
+        } else {
+            dict set paramDict model_part_name "[GetConfigurationAttribute model_part_name]._HIDDEN_$cid"
+        }
 
         set process_attributes [$process getAttributes]
         set process_parameters [$process getInputs]

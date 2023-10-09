@@ -40,7 +40,8 @@
     "write": {
         "coordinates": "all",
         "materials_file": "FluidMaterials.json",
-        "properties_location": "json"
+        "properties_location": "json",
+        "write_mdpa_mode": "entities"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"

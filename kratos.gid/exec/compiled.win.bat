@@ -22,6 +22,7 @@ DEL "%2\vtk_output"
 
 set PATH=%kratos_bin_path%\libs;%PATH%
 set PYTHONPATH=%kratos_bin_path%
+set PYTHONHOME=%python_home%
 
 REM Run Python using the script MainKratos.py
-%python_path%/python MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"
+%python_path% MainKratos.py > "%2\\%1.info" 2> "%2\\%1.err"

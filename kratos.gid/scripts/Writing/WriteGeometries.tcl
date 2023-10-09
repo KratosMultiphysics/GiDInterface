@@ -1,19 +1,34 @@
 
 proc write::writeGeometryConnectivities { group_list } {
-    # Foreach group in the list
+    # Avoid duplicates (groups used twice and intervals!)
+    set processed_list_names [list ]
+    set processed_list [list ]
     foreach gNode $group_list {
+        set group [get_domnode_attribute $gNode n]
+        set group_name [write::GetWriteGroupName $group]
+        
+        # If the group is not in the list, add it
+        if {[lsearch $processed_list_names $group_name] == -1} {
+            lappend processed_list_names $group_name
+            lappend processed_list $gNode
+        }
+    }
+    
+    # Foreach group in the list
+    foreach gNode $processed_list {
 
         # With the ov field, we know what is selected in the tree (point, line, surface, volume)
         if {[$gNode hasAttribute ov]} {set ov [get_domnode_attribute $gNode ov] } {set ov [get_domnode_attribute [$gNode parent] ov] }
         
         # Get the group name
         set group [get_domnode_attribute $gNode n]
+        set group_name [write::GetWriteGroupName $group]
 
         # Get the number of nodes and the geometry type
-        lassign [getEtype $ov $group] etype nnodes
+        lassign [getEtype $ov $group_name] etype nnodes
         
         # Print into the mdpa file
-        write::printGeometryConnectivities $group $etype $nnodes
+        write::printGeometryConnectivities $group_name $etype $nnodes
     }
 }
 
