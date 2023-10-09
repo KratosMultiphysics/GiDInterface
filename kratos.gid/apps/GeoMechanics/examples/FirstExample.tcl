@@ -59,15 +59,18 @@ proc ::GeoMechanics::examples::FirstExample::AssignGroups {args} {
 
     GiD_Groups create Clay_after_excavation
     GiD_EntitiesGroups assign Clay_after_excavation surfaces 2
+    GiD_Groups edit color Clay_after_excavation "#1d78ff"
 
     GiD_Groups create Excavated
     GiD_EntitiesGroups assign Excavated surfaces 1
+    GiD_Groups edit color Excavated "#6e4aff"
 
     GiD_Groups create Load
     GiD_EntitiesGroups assign Load lines 8
 
     GiD_Groups create Body
     GiD_EntitiesGroups assign Body surfaces {1 2}
+    GiD_Groups edit color Body "#995e05"
 
     GiD_Groups create Hydrostatic_load_in_sloot
     GiD_EntitiesGroups assign Hydrostatic_load_in_sloot lines {4 5 6}
@@ -117,8 +120,6 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     GiD_Groups edit parent Total Bottom
     spdAux::AddIntervalGroup Bottom "Bottom//Total"
     GiD_Groups edit state "Bottom//Total" hidden
-    GiD_Groups edit color "Bottom" "#25ff48"
-    GiD_Groups edit color "Bottom//Total" "#25ff48"
     set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
     set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Bottom//Total"]
     $displacement_node setAttribute ov line
@@ -130,8 +131,6 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     GiD_Groups edit parent Total Side_sliders
     spdAux::AddIntervalGroup Side_sliders "Side_sliders//Total"
     GiD_Groups edit state "Side_sliders//Total" hidden
-    GiD_Groups edit color "Side_sliders" "#ff2548"
-    GiD_Groups edit color "Side_sliders//Total" "#ff2548"
     set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
     set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Side_sliders//Total"]
     $displacement_node setAttribute ov line
@@ -143,34 +142,79 @@ proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
     GiD_Groups edit parent Total Body
     spdAux::AddIntervalGroup Body "Body//Total"
     GiD_Groups edit state "Body//Total" hidden
-    GiD_Groups edit color "Body" "#ff2548"
-    GiD_Groups edit color "Body//Total" "#ff2548"
     set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
     set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Body//Total"]
     $gravity_node setAttribute ov surface
     set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
     spdAux::SetValuesOnBaseNode $gravity_node $props
 
+
+    # Stage 2
+    ::GeoMechanics::xml::NewStage "Stage 2"
+    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 2'\]"]
+
     # Top Pressure
     GiD_Groups clone Load Total
     GiD_Groups edit parent Total Load
     spdAux::AddIntervalGroup Load "Load//Total"
     GiD_Groups edit state "Load//Total" hidden
-    GiD_Groups edit color "Load" "#ff2548"
-    GiD_Groups edit color "Load//Total" "#ff2548"
     set pressure [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='LinePressure2D'\]
     set pressure_node [customlib::AddConditionGroupOnXPath $pressure "Load//Total"]
     $pressure_node setAttribute ov line
     set props [list value 5000 Interval Total]
     spdAux::SetValuesOnBaseNode $pressure_node $props
 
-
-
-
-    # Prepare stages
-    ::GeoMechanics::xml::NewStage "Stage 2"
+    # Stage 3
     ::GeoMechanics::xml::NewStage "Stage 3"
+    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 3'\]"]
+    
+    # Remove body to split into excavated and clay
+    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 3'\]/container\[@n = 'Parts']/condition/group"
+    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 3'\]/container\[@n = 'Loads']/condition\[@n='SelfWeight2D'\]/group"
+
+    # Parts
+    set parts [spdAux::getRoute "GEOMParts" $stage]/condition\[@n='Parts_GeoSteadyState'\]
+    set body_node [customlib::AddConditionGroupOnXPath $parts Clay_after_excavation]
+    set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
+    spdAux::SetValuesOnBaseNode $body_node $props
+
+    set parts [spdAux::getRoute "GEOMParts" $stage]/condition\[@n='Parts_GeoSteadyState'\]
+    set body_node [customlib::AddConditionGroupOnXPath $parts Excavated]
+    set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
+    spdAux::SetValuesOnBaseNode $body_node $props
+
+    
+    # Gravity
+    GiD_Groups clone Clay_after_excavation Total
+    GiD_Groups edit parent Total Clay_after_excavation
+    spdAux::AddIntervalGroup Body "Clay_after_excavation//Total"
+    GiD_Groups edit state "Clay_after_excavation//Total" hidden
+    set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Clay_after_excavation//Total"]
+    $gravity_node setAttribute ov surface
+    set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
+    spdAux::SetValuesOnBaseNode $gravity_node $props
+    
+    GiD_Groups clone Excavated Total
+    GiD_Groups edit parent Total Excavated
+    spdAux::AddIntervalGroup Body "Excavated//Total"
+    GiD_Groups edit state "Excavated//Total" hidden
+    set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Excavated//Total"]
+    $gravity_node setAttribute ov surface
+    set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
+    spdAux::SetValuesOnBaseNode $gravity_node $props
+
+    
+    # Stage 4
     ::GeoMechanics::xml::NewStage "Stage 4"
+    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 4'\]"]
+
+    # Remove excavated
+    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 4'\]/container\[@n = 'Parts']/condition/group\[@n='Excavated'\]"
+    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 4'\]/container\[@n = 'Loads']/condition\[@n='SelfWeight2D'\]/group\[@n='Excavated//Total'\]"
+    
+    
     spdAux::parseRoutes
 
     ::GeoMechanics::PrevStage
