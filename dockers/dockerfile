@@ -3,7 +3,6 @@ ARG pyversion=3.11
 
 # Base pyton image
 FROM python:$pyversion
-# FROM python:3.10.10-alpine3.17
 
 # Update pip
 RUN pip install --upgrade pip
