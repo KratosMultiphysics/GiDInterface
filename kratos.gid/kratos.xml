@@ -3,7 +3,7 @@
 <Infoproblemtype version="1.0">
   <Program>
     <Name>Kratos</Name>
-    <Version>9.4.0</Version>
+    <Version>9.4.3</Version>
     <ExecutableVersion></ExecutableVersion>
     <CheckMinimumGiDVersion>16.1.4d</CheckMinimumGiDVersion>
     <CustomLibAutomatic>0</CustomLibAutomatic>
