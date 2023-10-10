@@ -9,8 +9,7 @@
         "display_apps": [
             "ConvectionDiffusion",
             "Buoyancy",
-            "ConjugateHeatTransfer",
-            "PfemMelting"
+            "ConjugateHeatTransfer"
         ],
         "minimum_gid_version": "15.1.3d"
     },
