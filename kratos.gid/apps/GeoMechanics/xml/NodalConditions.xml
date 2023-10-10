@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<NodalConditionList>
-  <NodalConditionItem n="NEW_GEO_NODAL_CONDITION" pn="New geo nodal condition" ov="line" ProcessName="ApplyConstantBoundaryPhreaticLinePressureProcess" state="CheckNodalConditionStateStructural" WorkingSpaceDimension="2D" Interval="False" analysis_type="Static,Quasi-static,Dynamic" VariableName="WATER_PRESSURE" App="GeoMechanics" ImplementedInApplication="GeoMechanicsApplication"></NodalConditionItem>
-</NodalConditionList>

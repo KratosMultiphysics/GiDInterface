@@ -11,9 +11,6 @@
     <link path="apps/ConvectionDiffusion/examples/examples.xml"/>
     <!-- DEM -->
     <link path="apps/DEM/examples/examples.xml"/>
-    <link path="apps/CDEM/examples/examples.xml"/>
-    <link path="apps/DEMPFEM/examples/examples.xml"/>
-    <link path="apps/FluidDEM/examples/examples.xml"/>
     <link path="apps/Dam/examples/examples.xml"/>
     <!-- More -->
     <link path="apps/PotentialFluid/examples/examples.xml"/>
@@ -24,6 +21,4 @@
 	<link path="apps/PfemThermic/examples/examples.xml"/>
     <link path="apps/CompressibleFluid/examples/examples.xml"/>
 	<link path="apps/ShallowWater/examples/examples.xml"/>
-	<link path="apps/FreeSurface/examples/examples.xml"/>
-	<link path="apps/GeoMechanics/examples/examples.xml"/>
 </examples>
