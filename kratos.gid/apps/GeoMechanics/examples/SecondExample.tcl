@@ -1,10 +1,10 @@
-namespace eval ::GeoMechanics::examples::FirstExample {
+namespace eval ::GeoMechanics::examples::SecondExample {
     namespace path ::GeoMechanics::examples
     Kratos::AddNamespace [namespace current]
 
 }
 
-proc ::GeoMechanics::examples::FirstExample::Init {args} {
+proc ::GeoMechanics::examples::SecondExample::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -24,7 +24,7 @@ proc ::GeoMechanics::examples::FirstExample::Init {args} {
     GiD_Process 'Zoom Frame
 }
 
-proc ::GeoMechanics::examples::FirstExample::DrawGeometry {args} {
+proc ::GeoMechanics::examples::SecondExample::DrawGeometry {args} {
     
     Kratos::ResetModel
     set layer_in_use Model
@@ -52,7 +52,7 @@ proc ::GeoMechanics::examples::FirstExample::DrawGeometry {args} {
 
 }
 
-proc ::GeoMechanics::examples::FirstExample::AssignGroups {args} {
+proc ::GeoMechanics::examples::SecondExample::AssignGroups {args} {
     # Fluid group creation
     GiD_Groups create Bottom
     GiD_EntitiesGroups assign Bottom lines 1
@@ -77,11 +77,11 @@ proc ::GeoMechanics::examples::FirstExample::AssignGroups {args} {
 }
 
 
-proc ::GeoMechanics::examples::FirstExample::AssignMeshSizes {args} {
+proc ::GeoMechanics::examples::SecondExample::AssignMeshSizes {args} {
 
 }
 
-proc ::GeoMechanics::examples::FirstExample::TreeAssignation {args} {
+proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 

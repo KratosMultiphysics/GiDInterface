@@ -4,5 +4,9 @@
         <Example id="GeoMechanicsFirstExample2D" app="GeoMechanics" logo="FirstExample.png" name="GeoMechanics\nFirst example 2D" dim="2D" cmd="::GeoMechanics::examples::FirstExample::Init">
             <Description></Description>
         </Example>
+        
+        <Example id="GeoMechanicsSecondExample2D" app="GeoMechanics" logo="SecondExample.png" name="GeoMechanics\nSecond example 2D" dim="2D" cmd="::GeoMechanics::examples::SecondExample::Init">
+            <Description></Description>
+        </Example>
     </Group>
 </Groups>
