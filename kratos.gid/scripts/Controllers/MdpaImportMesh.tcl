@@ -74,6 +74,29 @@ proc Kratos::ReadPre { filename } {
                 }
             }
         }
+        
+        if {[string match "Begin Geometries*" $line]} {
+            set element_type [Kratos::GuessElementTypeFromMDPA $line]
+            while { ![eof $fp] } {
+                gets $fp line
+                if {$line ne "End Geometries"} {
+                    # lo del elemento
+                    set raw [regsub -all {\s+} $line $space]
+                    set id [lindex $raw 0]
+                    set nodes [lrange $raw 1 end]
+                    if {[llength $nodes] > 1} {
+                        set nodes_new [list ]
+                        foreach node $nodes {lappend nodes_new [expr $node + $offset_nodes]}
+                        GiD_Mesh create element [expr $offset_elements + $id] $element_type [llength $nodes_new] $nodes_new
+                    } else {
+                        dict set spheres_dict $nodes element_type $element_type
+                        dict set spheres_dict $nodes element $id
+                    }
+                } else {
+                    break
+                }
+            }
+        }
         if {[string match "Begin NodalData RADIUS*" $line]} {
             while { ![eof $fp] } {
                 gets $fp line
@@ -142,6 +165,16 @@ proc Kratos::ReadPre { filename } {
                             }
                         }
                     }
+                    if {[string trim $line] eq "Begin SubModelPartGeometries"} {
+                        while { ![eof $fp] } {
+                            gets $fp line
+                            if {[string trim $line] ne "End SubModelPartGeometries"} {
+                                GiD_EntitiesGroups assign $group_name elements [expr $offset_elements + [string trim $line]]
+                            } else {
+                                break
+                            }
+                        }
+                    }
                     if {[string trim $line] eq "Begin SubModelPartConditions"} {
                         while { ![eof $fp] } {
                             gets $fp line
@@ -186,12 +219,10 @@ proc Kratos::ReadPre { filename } {
 
 proc Kratos::GuessElementTypeFromMDPA {line} {
     set element_type "unknown"
-    set element_name [lindex $line 2]
-    set element_name [lindex [split $element_name "//"] 0]
+    set entity [lindex $line 1]
+    set element_name1 [lindex $line 2]
+    set element_name [lindex [split $element_name1 "//"] 0]
 
-    # 0: linear, 1: quadratic, 2: biquadratic
-    set is_quadratic [write::isquadratic]
-    
     if {$element_name eq "Sphere3D"} {
         set element_type "Sphere"
     } elseif {$element_name in {"SphericContinuumParticle3D" "SphericParticle3D"}} {
@@ -199,9 +230,24 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
     } elseif {$element_name in {"CylinderContinuumParticle2D" "CylinderParticle2D"}} {
         set element_type "Circle"
     } else {
+        if {$entity eq "Geometries"} {
+            set dim [string index $element_name end-2]
+            set nnodes [string index $element_name end]
+        } else {
+            set dim [string index $element_name end-3]
+            set nnodes [string index $element_name end-1]
+        }
+        # 0: linear, 1: quadratic, 2: biquadratic
+        set detected_mesh_quad [Kratos::GuessQuadMesh $element_name $dim $nnodes]
+        set is_quadratic [GiD_Set Model(QuadraticType)]
+        if { $detected_mesh_quad eq "0" } {
+            if {$is_quadratic ne "0"} {W "We have changed the mesh mode to linear. Check preferences to change it back."}
+            GiD_Set Model(QuadraticType) 0
+        } elseif {$is_quadratic eq "1"} {
+            if {is_quadratic ne "1"} {W "We have changed the mesh mode to quadratic. Check preferences to change it back."}
+            GiD_Set Model(QuadraticType) 1
+        }
 
-        set dim [string index $element_name end-3]
-        set nnodes [string index $element_name end-1]
         switch $nnodes {
             2 {
                 set element_type "Line"
@@ -265,6 +311,19 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
         }
     }
     return $element_type
+}
+
+proc Kratos::GuessQuadMesh {element_name dim nnodes} {
+    set guess -1
+    # If element name contains "Line"
+    if {[string first "Line" $element_name] != -1} {
+        if {$nnodes eq 2} {
+            set guess 0
+        } elseif {$nnodes eq 3} {
+            set guess 1
+        }
+    }
+    return $guess
 }
 
 #register the proc to be automatically called when dropping a file
