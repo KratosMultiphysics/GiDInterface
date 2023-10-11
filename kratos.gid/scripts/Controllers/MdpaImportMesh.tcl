@@ -241,13 +241,14 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
         set detected_mesh_quad [Kratos::GuessQuadMesh $element_name $dim $nnodes]
         set is_quadratic [GiD_Set Model(QuadraticType)]
         if { $detected_mesh_quad eq "0" } {
-            if {$is_quadratic ne "0"} {W "We have changed the mesh mode to linear. Check preferences to change it back."}
+            if {$is_quadratic ne "0"} {W "We have changed the mesh mode to linear. Check Mesh menu to change it back."}
             GiD_Set Model(QuadraticType) 0
-        } elseif {$is_quadratic eq "1"} {
-            if {is_quadratic ne "1"} {W "We have changed the mesh mode to quadratic. Check preferences to change it back."}
+        } 
+        if {$detected_mesh_quad eq "1"} {
+            if {$is_quadratic ne "1"} {W "We have changed the mesh mode to quadratic. Check Mesh menu to change it back."}
             GiD_Set Model(QuadraticType) 1
         }
-
+        
         switch $nnodes {
             2 {
                 set element_type "Line"
@@ -314,16 +315,20 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
 }
 
 proc Kratos::GuessQuadMesh {element_name dim nnodes} {
-    set guess -1
-    # If element name contains "Line"
-    if {[string first "Line" $element_name] != -1} {
-        if {$nnodes eq 2} {
-            set guess 0
-        } elseif {$nnodes eq 3} {
-            set guess 1
-        }
-    }
-    return $guess
+    if {$nnodes eq 6 && $dim eq 2} {return 1}
+    if {$nnodes eq 4 && $dim eq 2} {return 0}
+    if {$nnodes eq 4 && $dim eq 3} {return 0}
+    if {$nnodes eq 8 && $dim eq 2} {return 1}
+    if {$nnodes eq 8 && $dim eq 3} {return 0}
+    if {$nnodes eq 2 }  {return 0}
+    if {$nnodes eq 9 }  {return 2}
+    if {$nnodes eq 20 } {return 1}
+    if {$nnodes eq 27 } {return 2}
+    if {$nnodes eq 15 } {return 1}
+    if {$nnodes eq 18 } {return 2}
+    if {$nnodes eq 5 }  {return 0}
+    if {$nnodes eq 13 } {return 1}
+    return -1
 }
 
 #register the proc to be automatically called when dropping a file
