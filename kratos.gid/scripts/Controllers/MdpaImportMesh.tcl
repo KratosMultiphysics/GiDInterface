@@ -188,6 +188,9 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
     set element_type "unknown"
     set element_name [lindex $line 2]
     set element_name [lindex [split $element_name "//"] 0]
+
+    # 0: linear, 1: quadratic, 2: biquadratic
+    set is_quadratic [write::isquadratic]
     
     if {$element_name eq "Sphere3D"} {
         set element_type "Sphere"
@@ -196,6 +199,7 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
     } elseif {$element_name in {"CylinderContinuumParticle2D" "CylinderParticle2D"}} {
         set element_type "Circle"
     } else {
+
         set dim [string index $element_name end-3]
         set nnodes [string index $element_name end-1]
         switch $nnodes {
@@ -203,7 +207,11 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
                 set element_type "Line"
             }
             3 {
-                set element_type "Triangle"
+                if {$is_quadratic eq "0"} {
+                    set element_type "Triangle"
+                } else {
+                    set element_type "Line"
+                }
             }
             4 {
                 if {$dim eq 2} {
@@ -216,10 +224,14 @@ proc Kratos::GuessElementTypeFromMDPA {line} {
                 set element_type "Pyramid"
             }
             6 { 
-                if {$dim eq 2} {
-                    set element_type "Triangle"
+                if {$is_quadratic eq "0"} {
+                    if {$dim eq 2} {
+                        set element_type "Triangle"
+                    } 
                 } else {
-                    set element_type "Prism"
+                    if {$dim eq 2} {
+                        set element_type "Triangle"
+                    } 
                 }
             }
             8 { 
