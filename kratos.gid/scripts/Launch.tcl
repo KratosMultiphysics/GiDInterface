@@ -172,10 +172,11 @@ proc Kratos::ShowErrorsAndActions {errs} {
         }
         "MISSING_PIP_PACKAGES_GiDS_PYTHON" {
             W "Kratos package was not found on your system."
-            set py [Kratos::GetPythonExeName]
-            set python_exe_path [Kratos::ManagePreferences GetValue python_path]
+            set python_exe_path [GiD_Python_GetPythonExe] 
             W "Run the following command on the GiD Command line:"
-            W "-np- W \[GiD_Python_PipInstallMissingPackages \[list $Kratos::pip_packages_required \] \]"
+
+            W "-np- gid_cross_platform::run_as_administrator -show hide \"$python_exe_path\" -m pip install --upgrade --force-reinstall --no-cache-dir $Kratos::pip_packages_required"
+            # W "-np- W \[GiD_Python_PipInstallMissingPackages \[list $Kratos::pip_packages_required \] \]"
         }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."
