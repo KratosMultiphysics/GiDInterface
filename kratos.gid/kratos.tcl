@@ -646,3 +646,21 @@ proc Kratos::DestroyNamespaces { } {
     }
     uplevel #0 [list namespace delete ::Kratos]
 }
+
+proc GiD_Python_PipGetMissingPackages { required_packages } {
+    set packages_and_versions [GiD_Python_PipListPackages]
+    set missing_packages [list]
+    foreach item $required_packages {
+        lassign [GiD_Python_SplitPackageComparationVersion $item] package comparation version
+        set pos [lsearch -index 0 $packages_and_versions $package]
+        if { $pos == -1 } {
+            lappend missing_packages $item
+        } else {
+            #if requiring a specific version must check if match the current
+            if { ![GiD_Python_VersionSatisfy [lindex $packages_and_versions $pos 1] $comparation $version] } {
+                lappend missing_packages $item
+            }
+        }
+    }
+    return $missing_packages
+} 
