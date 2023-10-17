@@ -38,7 +38,7 @@
         </container>
     </container>
     <container n="VtkOutput" pn="Vtk-Output" un="VtkOutput" state="normal" open="1" open_window="0" icon="results">
-        <value n="EnableVtkOutput" pn="Enable output" v="Yes" values="Yes,No" un="EnableVtkOutput" help="Writing output for Vtk or not" />
+        <value n="EnableVtkOutput" pn="Enable output" v="No" values="Yes,No" un="EnableVtkOutput" help="Writing output for Vtk or not" />
         <container n="VtkOptions" pn="Options" un="VtkOptions" help="Vtk postprocess options" open_window="1" icon="options" state="[checkStateByUniqueName EnableVtkOutput Yes]">
             <value n="VtkFileFormat" pn="Result format" v="ascii" values="ascii,binary" dict="ascii,Ascii,binary,Binary" help="Vtk result file format" />
             <value n="OutputControlType" pn="Units used for output frequency" v="step" values="time,step" dict="time,Time (s),step,Steps" help="" update_proc="spdAux::RequestRefresh">
