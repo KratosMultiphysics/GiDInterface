@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<container n="Water" pn="Water" un="GEOMWater" icon="wave16" open_window="0">
-	<container n="PhreaticPoints" pn="Phreatic line" icon="wave16">
+<container n="Water" pn="Water" un="GEOMWater" icon="wave16.png" open_window="0">
+    <dynamicnode command="spdAux::injectConditions" args="Water True"/>
+	<container n="PhreaticPoints" pn="Phreatic line" icon="wave16.png">
     </container>
 </container>
