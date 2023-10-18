@@ -86,7 +86,8 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     set root [customlib::GetBaseRoot]
 
     # Stage 1
-    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 1'\]"]
+    set stage_id "Stage 1"
+    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = '$stage_id'\]"]
 
     # Solution type
     set xpath [spdAux::getRoute "GEOMSoluType" $stage]
@@ -102,7 +103,7 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Parts
-    set parts [spdAux::getRoute "GEOMParts" $stage]/condition\[@n='Parts_GeoSteadyState'\]
+    set parts [spdAux::getRoute "GEOMParts" $stage]/condition\[@n='Parts_GeoSmallStrain'\]
     set body_node [customlib::AddConditionGroupOnXPath $parts Clay_after_excavation]
     set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
     spdAux::SetValuesOnBaseNode $body_node $props
@@ -113,121 +114,78 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     # Phreatic line 
     ::GeoMechanics::xml::AddPhreaticPoint $stage 0.0 -1.0 0.0
     ::GeoMechanics::xml::AddPhreaticPoint $stage 30.0 -1.0 0.0
-
-    # Fix ground
-    GiD_Groups clone Bottom Total
-    GiD_Groups edit parent Total Bottom
-    spdAux::AddIntervalGroup Bottom "Bottom//Total"
-    GiD_Groups edit state "Bottom//Total" hidden
-    set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
-    set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Bottom//Total"]
-    $displacement_node setAttribute ov line
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue selector_component_Z Not Interval Total]
-    spdAux::SetValuesOnBaseNode $displacement_node $props
-
-    # Fix sides only X
-    GiD_Groups clone Side_sliders Total
-    GiD_Groups edit parent Total Side_sliders
-    spdAux::AddIntervalGroup Side_sliders "Side_sliders//Total"
-    GiD_Groups edit state "Side_sliders//Total" hidden
-    set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
-    set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Side_sliders//Total"]
-    $displacement_node setAttribute ov line
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z Not Interval Total]
-    spdAux::SetValuesOnBaseNode $displacement_node $props
     
-    # Gravity
-    if {![GiD_Groups exists "Clay_after_excavation//Total"]} {
-        GiD_Groups clone Clay_after_excavation Total
-        GiD_Groups edit parent Total Clay_after_excavation
-        spdAux::AddIntervalGroup Clay_after_excavation "Clay_after_excavation//Total"
-        GiD_Groups edit state "Clay_after_excavation//Total" hidden
-    }
-    set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
-    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Clay_after_excavation//Total"]
-    $gravity_node setAttribute ov surface
-    set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
-    spdAux::SetValuesOnBaseNode $gravity_node $props
-
-    if {![GiD_Groups exists "Excavated//Total"]} {
-        GiD_Groups clone Excavated Total
-        GiD_Groups edit parent Total Excavated
-        spdAux::AddIntervalGroup Excavated "Excavated//Total"
-        GiD_Groups edit state "Excavated//Total" hidden
-    }
-    set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
-    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Excavated//Total"]
-    $gravity_node setAttribute ov surface
-    set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
-    spdAux::SetValuesOnBaseNode $gravity_node $props
-
     # Pressure on bottom line
-    set pressure [spdAux::getRoute "STNodalConditions" $stage]/condition\[@n='WATER_PRESSURE'\]
+    set pressure [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='WATER_PRESSURE'\]
     set pressure_node [customlib::AddConditionGroupOnXPath $pressure "Bottom"]
     $pressure_node setAttribute ov line
     set props [list value -137.34]
     spdAux::SetValuesOnBaseNode $pressure_node $props
 
+    # Fix ground
+    set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
+    set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Bottom"]
+    $displacement_node setAttribute ov line
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue selector_component_Z Not]
+    spdAux::SetValuesOnBaseNode $displacement_node $props
+
+    # Fix sides only X
+    set displacement [spdAux::getRoute "GEOMNodalConditions" $stage]/condition\[@n='DISPLACEMENT'\]
+    set displacement_node [customlib::AddConditionGroupOnXPath $displacement "Side_sliders"]
+    $displacement_node setAttribute ov line
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y Not selector_component_Z Not]
+    spdAux::SetValuesOnBaseNode $displacement_node $props
+    
+    # Gravity
+    set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Clay_after_excavation"]
+    $gravity_node setAttribute ov surface
+    set props [list modulus 9.81 value_direction_Y -1.0]
+    spdAux::SetValuesOnBaseNode $gravity_node $props
+
+    set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Excavated"]
+    $gravity_node setAttribute ov surface
+    set props [list modulus 9.81 value_direction_Y -1.0]
+    spdAux::SetValuesOnBaseNode $gravity_node $props
+
 
     # Stage 2
-    ::GeoMechanics::xml::NewStage "Stage 2"
-    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 2'\]"]
+    set stage_id "Stage 2"
+    ::GeoMechanics::xml::NewStage $stage_id
+    set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = '$stage_id'\]"]
 
     # Top Pressure
-    GiD_Groups clone Load Total
-    GiD_Groups edit parent Total Load
-    spdAux::AddIntervalGroup Load "Load//Total"
-    GiD_Groups edit state "Load//Total" hidden
     set pressure [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='LinePressure2D'\]
-    set pressure_node [customlib::AddConditionGroupOnXPath $pressure "Load//Total"]
+    set pressure_node [customlib::AddConditionGroupOnXPath $pressure "Load"]
     $pressure_node setAttribute ov line
-    set props [list value 5000 Interval Total]
+    set props [list value -5]
     spdAux::SetValuesOnBaseNode $pressure_node $props
 
     # Stage 3
     ::GeoMechanics::xml::NewStage "Stage 3"
     set stage [$root selectNodes ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 3'\]"]
+
+    # Delete the load and create another one here
+    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 3'\]/container\[@n = 'Loads']/condition\[@n='LinePressure2D'\]/group"
+    set pressure [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='LinePressure2D'\]
+    set pressure_node [customlib::AddConditionGroupOnXPath $pressure "Load"]
+    $pressure_node setAttribute ov line
+    set props [list value -15]
+    spdAux::SetValuesOnBaseNode $pressure_node $props
     
-    # Remove body to split into excavated and clay
-    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 3'\]/container\[@n = 'Parts']/condition/group"
-    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 3'\]/container\[@n = 'Loads']/condition\[@n='SelfWeight2D'\]/group"
-
-    # Parts
-    set parts [spdAux::getRoute "GEOMParts" $stage]/condition\[@n='Parts_GeoSteadyState'\]
-    set body_node [customlib::AddConditionGroupOnXPath $parts Clay_after_excavation]
-    set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
-    spdAux::SetValuesOnBaseNode $body_node $props
-
-    set parts [spdAux::getRoute "GEOMParts" $stage]/condition\[@n='Parts_GeoSteadyState'\]
-    set body_node [customlib::AddConditionGroupOnXPath $parts Excavated]
-    set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
-    spdAux::SetValuesOnBaseNode $body_node $props
-
     
     # Gravity
-    if {![GiD_Groups exists "Clay_after_excavation//Total"]} {
-        GiD_Groups clone Clay_after_excavation Total
-        GiD_Groups edit parent Total Clay_after_excavation
-        spdAux::AddIntervalGroup Clay_after_excavation "Clay_after_excavation//Total"
-        GiD_Groups edit state "Clay_after_excavation//Total" hidden
-    }
     set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
-    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Clay_after_excavation//Total"]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Clay_after_excavation"]
     $gravity_node setAttribute ov surface
-    set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
+    set props [list modulus 9.81 value_direction_Y -1.0]
     spdAux::SetValuesOnBaseNode $gravity_node $props
     
-    
-    if {![GiD_Groups exists "Excavated//Total"]} {
-        GiD_Groups clone Excavated Total
-        GiD_Groups edit parent Total Excavated
-        spdAux::AddIntervalGroup Excavated "Excavated//Total"
-        GiD_Groups edit state "Excavated//Total" hidden
-    }
     set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
-    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Excavated//Total"]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Excavated"]
     $gravity_node setAttribute ov surface
-    set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
+    set props [list modulus 9.81 value_direction_Y -1.0]
     spdAux::SetValuesOnBaseNode $gravity_node $props
 
     
@@ -237,8 +195,13 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
 
     # Remove excavated
     gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 4'\]/container\[@n = 'Parts']/condition/group\[@n='Excavated'\]"
-    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 4'\]/container\[@n = 'Loads']/condition\[@n='SelfWeight2D'\]/group\[@n='Excavated//Total'\]"
+    gid_groups_conds::delete ".//container\[@n='stages'\]/blockdata\[@name = 'Stage 4'\]/container\[@n = 'Loads']/condition\[@n='SelfWeight2D'\]/group\[@n='Excavated'\]"
     
+    set excavation [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='Excavation'\]
+    set excavation_node [customlib::AddConditionGroupOnXPath $excavation "Excavated"]
+    $excavation_node setAttribute ov surface
+    set props [list deactivate_soil_part true]
+    spdAux::SetValuesOnBaseNode $excavation_node $props
     
     spdAux::parseRoutes
 
@@ -273,18 +236,14 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov surface
     set constLawNameStruc "LinearElasticPlaneStress2DLaw"
-    set props [list Element TotalLagrangianElement$nd ConstitutiveLaw $constLawNameStruc DENSITY 7850 YOUNG_MODULUS 206.9e9 POISSON_RATIO 0.29 THICKNESS 0.1]
+    set props [list Element TotalLagrangianElement2D ConstitutiveLaw $constLawNameStruc DENSITY 7850 YOUNG_MODULUS 206.9e9 POISSON_RATIO 0.29 THICKNESS 0.1]
     spdAux::SetValuesOnBaseNode $structPartsNode $props
 
     # Structural Displacement
-    GiD_Groups clone Ground Total
-    GiD_Groups edit parent Total Ground
-    spdAux::AddIntervalGroup Ground "Ground//Total"
-    GiD_Groups edit state "Ground//Total" hidden
     set structDisplacement {container[@n='FSI']/container[@n='Structural']/container[@n='Boundary Conditions']/condition[@n='DISPLACEMENT']}
     set structDisplacementNode [customlib::AddConditionGroupOnXPath $structDisplacement Ground]
     $structDisplacementNode setAttribute ov line
-    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
+    set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0]
     spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Structure domain time parameters

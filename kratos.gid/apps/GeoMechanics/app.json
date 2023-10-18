@@ -30,7 +30,7 @@
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
-        "intervals": true,
+        "intervals": false,
         "wizard": false,
         "stages": true
     },
