@@ -106,7 +106,7 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     set body_node [customlib::AddConditionGroupOnXPath $parts Clay_after_excavation]
     set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
     spdAux::SetValuesOnBaseNode $body_node $props
-    set body_node [customlib::AddConditionGroupOnXPath $parts Excavated_clay]
+    set body_node [customlib::AddConditionGroupOnXPath $parts Excavated]
     set props [list YOUNG_MODULUS 1000 POISSON_RATIO 0.3]
     spdAux::SetValuesOnBaseNode $body_node $props
 
@@ -137,12 +137,26 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     spdAux::SetValuesOnBaseNode $displacement_node $props
     
     # Gravity
-    GiD_Groups clone Body Total
-    GiD_Groups edit parent Total Body
-    spdAux::AddIntervalGroup Body "Body//Total"
-    GiD_Groups edit state "Body//Total" hidden
+    if {![GiD_Groups exists "Clay_after_excavation//Total"]} {
+        GiD_Groups clone Clay_after_excavation Total
+        GiD_Groups edit parent Total Clay_after_excavation
+        spdAux::AddIntervalGroup Clay_after_excavation "Clay_after_excavation//Total"
+        GiD_Groups edit state "Clay_after_excavation//Total" hidden
+    }
     set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
-    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Body//Total"]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Clay_after_excavation//Total"]
+    $gravity_node setAttribute ov surface
+    set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
+    spdAux::SetValuesOnBaseNode $gravity_node $props
+
+    if {![GiD_Groups exists "Excavated//Total"]} {
+        GiD_Groups clone Excavated Total
+        GiD_Groups edit parent Total Excavated
+        spdAux::AddIntervalGroup Excavated "Excavated//Total"
+        GiD_Groups edit state "Excavated//Total" hidden
+    }
+    set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
+    set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Excavated//Total"]
     $gravity_node setAttribute ov surface
     set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
     spdAux::SetValuesOnBaseNode $gravity_node $props
@@ -184,20 +198,25 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
 
     
     # Gravity
-    GiD_Groups clone Clay_after_excavation Total
-    GiD_Groups edit parent Total Clay_after_excavation
-    spdAux::AddIntervalGroup Body "Clay_after_excavation//Total"
-    GiD_Groups edit state "Clay_after_excavation//Total" hidden
+    if {![GiD_Groups exists "Clay_after_excavation//Total"]} {
+        GiD_Groups clone Clay_after_excavation Total
+        GiD_Groups edit parent Total Clay_after_excavation
+        spdAux::AddIntervalGroup Clay_after_excavation "Clay_after_excavation//Total"
+        GiD_Groups edit state "Clay_after_excavation//Total" hidden
+    }
     set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
     set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Clay_after_excavation//Total"]
     $gravity_node setAttribute ov surface
     set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
     spdAux::SetValuesOnBaseNode $gravity_node $props
     
-    GiD_Groups clone Excavated Total
-    GiD_Groups edit parent Total Excavated
-    spdAux::AddIntervalGroup Body "Excavated//Total"
-    GiD_Groups edit state "Excavated//Total" hidden
+    
+    if {![GiD_Groups exists "Excavated//Total"]} {
+        GiD_Groups clone Excavated Total
+        GiD_Groups edit parent Total Excavated
+        spdAux::AddIntervalGroup Excavated "Excavated//Total"
+        GiD_Groups edit state "Excavated//Total" hidden
+    }
     set gravity [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='SelfWeight2D'\]
     set gravity_node [customlib::AddConditionGroupOnXPath $gravity "Excavated//Total"]
     $gravity_node setAttribute ov surface
