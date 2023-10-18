@@ -304,6 +304,7 @@ proc Kratos::ExecuteLaunchByMode {launch_mode} {
         Default {
             set python_path [GiD_Python_GetPythonExe]
             set ::env(python_path) $python_path
+            set ::env(python_home) [file dirname $python_path]
         }
         default {}
     }

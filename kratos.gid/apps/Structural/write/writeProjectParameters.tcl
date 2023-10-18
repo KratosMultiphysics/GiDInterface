@@ -169,6 +169,7 @@ proc ::Structural::write::getOldParametersDict { {stage ""} } {
     if {$solutiontype eq "eigen_value"} {
         dict unset projectParametersDict output_processes
         dict unset projectParametersDict solver_settings analysis_type
+        dict set projectParametersDict solver_settings builder_and_solver_settings use_block_builder false
     }
 
     return $projectParametersDict

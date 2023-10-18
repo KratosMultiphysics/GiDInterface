@@ -124,7 +124,7 @@ proc ::ConvectionDiffusion::examples::HeatedSquare::TreeAssignation2D {args} {
     # Fluid Parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Body]
-    set props [list Element EulerianConvDiff$nd Material Gold DENSITY 19300.0 CONDUCTIVITY 310 SPECIFIC_HEAT 125.6]
+    set props [list Element EulerianConvDiff$nd Material Gold DENSITY 19300.0 CONDUCTIVITY 310.0 SPECIFIC_HEAT 125.6]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     # Thermal Nodal Conditions
