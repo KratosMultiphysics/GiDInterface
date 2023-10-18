@@ -1,10 +1,10 @@
-namespace eval ::GeoMechanics::examples::SecondExample {
+namespace eval ::GeoMechanics::examples::Simple {
     namespace path ::GeoMechanics::examples
     Kratos::AddNamespace [namespace current]
 
 }
 
-proc ::GeoMechanics::examples::SecondExample::Init {args} {
+proc ::GeoMechanics::examples::Simple::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -24,7 +24,7 @@ proc ::GeoMechanics::examples::SecondExample::Init {args} {
     GiD_Process 'Zoom Frame
 }
 
-proc ::GeoMechanics::examples::SecondExample::DrawGeometry {args} {
+proc ::GeoMechanics::examples::Simple::DrawGeometry {args} {
     
     Kratos::ResetModel
     set layer_in_use Model
@@ -52,7 +52,7 @@ proc ::GeoMechanics::examples::SecondExample::DrawGeometry {args} {
 
 }
 
-proc ::GeoMechanics::examples::SecondExample::AssignGroups {args} {
+proc ::GeoMechanics::examples::Simple::AssignGroups {args} {
     # Fluid group creation
     GiD_Groups create Bottom
     GiD_EntitiesGroups assign Bottom lines 1
@@ -77,11 +77,11 @@ proc ::GeoMechanics::examples::SecondExample::AssignGroups {args} {
 }
 
 
-proc ::GeoMechanics::examples::SecondExample::AssignMeshSizes {args} {
+proc ::GeoMechanics::examples::Simple::AssignMeshSizes {args} {
 
 }
 
-proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
+proc ::GeoMechanics::examples::Simple::TreeAssignation {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -202,6 +202,12 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     $excavation_node setAttribute ov surface
     set props [list deactivate_soil_part true]
     spdAux::SetValuesOnBaseNode $excavation_node $props
+
+    # Set excavation line stress
+    set hydro_load [spdAux::getRoute "GEOMWater" $stage]/condition\[@n='WaterPressure2D'\]
+    set hydro_load_node [customlib::AddConditionGroupOnXPath $hydro_load "Hydrostatic_load_in_sloot"]
+    $hydro_load_node setAttribute ov line
+
     
     spdAux::parseRoutes
 

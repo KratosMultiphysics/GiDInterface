@@ -23,7 +23,7 @@
   <ConditionItem n="WaterPressure2D" pn="Water pressure" Interval="False"
 		 ImplementedInApplication="GeoMechanicsApplication" MinimumKratosVersion="9000"
 		 WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False"
-		 ElementType="Line"  ProcessName="ApplyConstantBoundaryPhreaticLinePressureProcess" VariableName="NORMAL_CONTACT_STRESS"
+		 ElementType="Line"  ProcessName="ApplyWaterPressureProcess" VariableName="NORMAL_CONTACT_STRESS"
 		 help="Self weight application by means of the AssignVectorByDirectionProcess in the core" units="m/s^2" unit_magnitude="Acceleration" Water="True">
     <TopologyFeatures>
       <item  GeometryType="Line" nodes="2" KratosName="Condition2D2N" KratosNameSmallDisplacement="Condition2D2N"/>

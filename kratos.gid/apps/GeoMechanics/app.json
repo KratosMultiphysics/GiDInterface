@@ -19,8 +19,7 @@
         "controllers/Python.tcl",
         "controllers/PhreaticLine.tcl",
         "examples/examples.tcl",
-        "examples/FirstExample.tcl",
-        "examples/SecondExample.tcl"
+        "examples/Simple.tcl"
     ],
     "start_script": "::GeoMechanics::Init",
     "requirements": {
