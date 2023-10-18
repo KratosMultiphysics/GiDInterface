@@ -161,6 +161,19 @@ proc ::GeoMechanics::examples::SecondExample::TreeAssignation {args} {
     set props [list modulus 9.81 value_direction_Y -1.0 Interval Total]
     spdAux::SetValuesOnBaseNode $gravity_node $props
 
+    # Pressure on bottom line
+    if {![GiD_Groups exists "Bottom//Total"]} {
+        GiD_Groups clone Bottom Total
+        GiD_Groups edit parent Total Bottom
+        spdAux::AddIntervalGroup Bottom "Bottom//Total"
+        GiD_Groups edit state "Bottom//Total" hidden
+    }
+    set pressure [spdAux::getRoute "GEOMLoads" $stage]/condition\[@n='LinePressure2D'\]
+    set pressure_node [customlib::AddConditionGroupOnXPath $pressure "Bottom//Total"]
+    $pressure_node setAttribute ov line
+    set props [list value -137.34 Interval Total]
+    spdAux::SetValuesOnBaseNode $pressure_node $props
+
 
     # Stage 2
     ::GeoMechanics::xml::NewStage "Stage 2"
