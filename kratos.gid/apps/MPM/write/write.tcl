@@ -38,7 +38,8 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
 
     # Nodal coordinates
-    write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroups grid]
+    set list_of_groups [concat [MPM::write::GetPartsGroups grid] [MPM::write::GetConditionsGroups]]
+    write::writeNodalCoordinatesOnGroups $list_of_groups
 
     # Grid element connectivities
     writeGridConnectivities
@@ -145,6 +146,19 @@ proc MPM::write::writeSubmodelparts { type } {
         # A Condition y a meshes-> salvo lo que no tenga topologia
         writeLoads
     }
+}
+
+proc MPM::write::GetConditionsGroups { } {
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+    set condition_groups [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set group_name [get_domnode_attribute $gNode n]
+        set good_group_name [write::GetWriteGroupName $group_name]
+        if {$good_group_name ne $condition_groups} {
+            lappend condition_groups $good_group_name
+        }    
+    }
+    return $condition_groups
 }
 
 proc MPM::write::writeLoads { } {
