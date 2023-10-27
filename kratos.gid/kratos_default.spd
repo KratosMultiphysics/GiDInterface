@@ -267,6 +267,12 @@
 				return [spdAux::ProcShowInMode $domNode $args]
 			]]>
 		</proc>
+		
+		<proc n='ShowInWriteMode' args='args'>
+			<![CDATA[
+				return [spdAux::ProcShowInWriteMode $domNode $args]
+			]]>
+		</proc>
 		<proc n='UpdateDictAndReturnState' args='args'>
 			<![CDATA[
 				set dict [spdAux::ProcGetConstitutiveLaws $domNode]
@@ -324,6 +330,8 @@
 				return [spdAux::ProcGetFilesValues $domNode]
 			]]>
 		</proc>
+		
+
 
 		<proc n='GetMaterialsList' args='args'>
 			<![CDATA[

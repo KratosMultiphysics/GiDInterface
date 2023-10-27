@@ -543,6 +543,20 @@ proc spdAux::ProcDirectorVectorNonZero { domNode args } {
         gid_groups_conds::actualize_conditions_window
     }
 }
+proc spdAux::ProcShowInWriteMode { domNode args } {
+    set kw [lindex $args 0]
+    if {$kw ni [list "Geometries" "Entitites"]} {return "hidden"}
+    set write_geometries_enabled 0
+    if {[info exists Kratos::kratos_private(experimental_write_geometries)] && $Kratos::kratos_private(experimental_write_geometries)>0} {set write_geometries_enabled 1}
+    
+    if {$write_geometries_enabled} {
+        if {$kw eq "Geometries"} {return "normal"} {return "hidden"}
+    } else {
+        if {$kw eq "Entitites"} {return "normal"} {return "hidden"}
+    }
+}
+
+
 proc spdAux::ProcShowInMode { domNode args } {
     set kw [lindex $args 0]
     if {$kw ni [list "Release" "Developer"]} {return "hidden"}

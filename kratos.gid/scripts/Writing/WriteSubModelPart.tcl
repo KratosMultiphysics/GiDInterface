@@ -127,6 +127,7 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     foreach group $groups {
         set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        set needGeoms [write::getValueByNode [$group selectNodes "./value\[@n='WriteGeometries'\]"]]
         set what "nodal"
         set iters ""
         if {$needElems} {append what "&Elements"}
