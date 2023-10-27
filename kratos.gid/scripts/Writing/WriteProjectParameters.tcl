@@ -256,11 +256,8 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set groupName [$group @n]
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
-        if {[GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
-            set groupId $groupName
-        } else {
-            set groupId [::write::getSubModelPartId $cid $groupName]
-        }
+        set groupId [::write::getSubModelPartId $cid $groupName]
+       
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]

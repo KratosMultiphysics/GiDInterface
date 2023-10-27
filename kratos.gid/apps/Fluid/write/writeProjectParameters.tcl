@@ -257,6 +257,7 @@ proc ::Fluid::write::getBoundaryConditionMeshId {} {
                     set groupName "_HIDDEN_$condition_name"
                     if {$groupName ni $listOfBCGroups} {lappend listOfBCGroups $groupName}
                 } else {
+                    set groupName [::write::getSubModelPartId $cid $groupName]
                     if {$groupName ni $listOfBCGroups} {lappend listOfBCGroups $groupName}
                 }
             } else {
@@ -287,6 +288,7 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
         set groupName [$dragGroup @n]
         set groupName [write::GetWriteGroupName $groupName]
         if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+            set groupName [::write::getSubModelPartId $cid $groupName]
             if {$groupName ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $groupName}
         } else {
             set cid [[$dragGroup parent] @n]
