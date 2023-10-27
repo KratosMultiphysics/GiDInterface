@@ -253,11 +253,12 @@ proc write::getSubModelPartId {cid group} {
         set name [write::GetWriteGroupName $group]
         set good_name [write::transformGroupName $name]
         return $good_name
-    }
-    set find [list $cid ${group}]
-    if {[dict exists $submodelparts $find]} {
-        return [dict get $submodelparts [list $cid ${group}]]
-    } {
-        return 0
+    } else {
+        set find [list $cid ${group}]
+        if {[dict exists $submodelparts $find]} {
+            return [dict get $submodelparts [list $cid ${group}]]
+        } {
+            return 0
+        }
     }
 }
