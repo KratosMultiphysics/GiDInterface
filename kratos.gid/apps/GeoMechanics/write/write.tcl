@@ -59,7 +59,7 @@ proc ::GeoMechanics::write::writeModelPartEvent { } {
     write::initWriteConfiguration [GetAttributes]
 
     if { [GetAttribute write_mdpa_mode] == "geometries" } {  
-        write::writeModelPartFileAsGeometries
+        ::GeoMechanics::write::writeModelPartFileAsGeometries
     } else {
         write::writeModelPartFileOld
     }

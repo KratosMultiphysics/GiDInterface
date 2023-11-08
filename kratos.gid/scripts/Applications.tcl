@@ -339,6 +339,7 @@ proc apps::ActivateApp_do {app} {
     apps::ApplyAppPreferences $app
 
 
+    # If theme is dark, set the Black images dir before the normal one, so images for dark theme are loaded first
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
         gid_groups_conds::add_images_dir [file join $dir images Black]

@@ -10,7 +10,10 @@ proc ::GeoMechanics::xml::Init { } {
 
     Model::ForgetElements
     Model::getElements Elements.xml
+    
+    Model::getProcesses Processes.xml
 
+    # Set Water to false on all conditions coming from Structural Application
     foreach condition [Model::GetConditions] {
         $condition setAttribute Water False
     }
@@ -22,7 +25,6 @@ proc ::GeoMechanics::xml::Init { } {
 
     Model::getNodalConditions NodalConditions.xml
 
-    Model::getProcesses Processes.xml
 
     # Structural strategies and schemes filter elements by ImplementedInApplication StructuralMechanicsApplication
     # In order to add our elements, we need to tell the schemes to accept GeoMechanicsApplication

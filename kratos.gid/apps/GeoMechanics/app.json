@@ -19,7 +19,7 @@
         "controllers/Python.tcl",
         "controllers/PhreaticLine.tcl",
         "examples/examples.tcl",
-        "examples/FirstExample.tcl"
+        "examples/Simple.tcl"
     ],
     "start_script": "::GeoMechanics::Init",
     "requirements": {
@@ -29,7 +29,7 @@
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
-        "intervals": true,
+        "intervals": false,
         "wizard": false,
         "stages": true
     },

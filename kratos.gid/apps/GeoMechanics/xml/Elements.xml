@@ -26,6 +26,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="NEW_GEO_NODAL_CONDITION"/>
+      <NodalCondition n="WATER_PRESSURE"/>
     </NodalConditions>
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
     <inputs></inputs>
@@ -59,6 +60,7 @@
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
       <NodalCondition n="NEW_GEO_NODAL_CONDITION"/>
+      <NodalCondition n="WATER_PRESSURE"/>
     </NodalConditions>
     <!--<parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />-->
     <inputs></inputs>
