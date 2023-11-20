@@ -24,7 +24,8 @@
     "start_script": "::GeoMechanics::Init",
     "requirements": {
         "apps": ["Structural"],
-        "minimum_gid_version": "16.1.4d"
+        "minimum_gid_version": "16.1.4d",
+        "mesh_type": "quadratic"
     },
     "permissions": {
         "open_tree": true,

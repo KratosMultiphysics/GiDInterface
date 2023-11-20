@@ -333,6 +333,20 @@ proc apps::ActivateApp_do {app} {
         set app_minimum_gid_version [dict get [$app getProperty requirements] minimum_gid_version]
         if {[GiDVersionCmp $app_minimum_gid_version] < 0} {W "Caution. Minimum GiD version is $app_minimum_gid_version"}
     }
+    
+    # If mesh_type is not defined, do not touch it
+    if {[dict exists [$app getProperty requirements] mesh_type]} {
+        set mesh_type [dict get [$app getProperty requirements] mesh_type]
+        # If its quadratic, warn user and set it
+        if {$mesh_type eq "quadratic"} {
+            GiD_Set Model(QuadraticType) 1
+            ::GidUtils::SetWarnLine "Setting mesh mode: $mesh_type"
+        } else {
+            # If it's set to anything else, set it to linear
+            GiD_Set Model(QuadraticType) 0
+            ::GidUtils::SetWarnLine "Setting mesh mode: linear"
+        }
+    }
     if {[write::isBooleanTrue [$app getPermission import_files]]} { Kratos::LoadImportFiles }
     if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }
     if {[$app getProperty start_script] ne ""} {eval [$app getProperty start_script] $app}
