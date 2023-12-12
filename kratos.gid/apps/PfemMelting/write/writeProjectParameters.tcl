@@ -34,7 +34,7 @@ proc ::PfemMelting::write::Getsolver_settings_dict { } {
     dict set solver_settings_dict echo_level 0
 
     dict set solver_settings_dict material_import_settings materials_filename [GetAttribute materials_file]
-    dict set solver_settings_dict laser_import_settings laser_filename "LaserSettings.json"
+    dict set solver_settings_dict laser_import_settings laser_filename "LaserSettings_pulse.json"
     dict set solver_settings_dict environment_settings gravity [write::GetGravityByModuleDirection Gravity]
     dict set solver_settings_dict environment_settings ambient_temperature [write::getValue [::PfemMelting::GetUniqueName ambient_temperature]]
 
@@ -163,7 +163,7 @@ proc ::PfemMelting::write::getLaserProcesses { } {
         set laser_filename [write::getValueByNode $laser]
         if {![file exists $laser_filename]} {
             #W "WARNING: Laser file for '[[$laser parent] @name]' does not exist. Fill it manually in the ProjectParameter.json section."
-            set laser_filename "LaserSettings.json"
+            set laser_filename "LaserSettings_pulse.json"
         }
         dict set laser_process_dict Parameters filename $laser_filename
         lappend laser_process_list $laser_process_dict

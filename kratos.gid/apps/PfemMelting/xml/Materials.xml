@@ -11,6 +11,8 @@
       <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
       <parameter n="CONVECTION_COEFFICIENT" pn="Convective heat transfer coefficient" v="0.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/>
       <parameter n="Temperature_Viscosity" pn="Temperature-Viscosity filename" type="tablefile" v=""/>
+      <parameter n="DECOMPOSITION" pn="Decomposition" v="0.0" unit_magnitude="" units=""/>
+      <parameter n="NORMAL" pn="Normal" v="0.0" unit_magnitude="" units=""/>
       <!-- <parameter n="DECOMPOSITION_THRESHOLD" pn="Decomposition threshold" v="0.1" unit_magnitude="" units=""/> -->
     </inputs>
   </Material>
@@ -25,6 +27,8 @@
       <parameter n="EMISSIVITY" pn="Emissivity" v="1.0" unit_magnitude="" units=""/>
       <parameter n="CONVECTION_COEFFICIENT" pn="Convective heat transfer coefficient" v="4.0" unit_magnitude="Power/(L^2*Temp)"  units="W/(m^2*K)"/>
       <parameter n="Temperature_Viscosity" pn="Temperature-Viscosity filename" type="tablefile" v=""/>
+      <parameter n="DECOMPOSITION" pn="Decomposition" v="0.0" unit_magnitude="" units=""/>
+      <parameter n="NORMAL" pn="Normal" v="0.0" unit_magnitude="" units=""/>
       <!-- <parameter n="DECOMPOSITION_THRESHOLD" pn="Decomposition threshold" v="0.1" unit_magnitude="" units=""/> -->
     </inputs>
   </Material>

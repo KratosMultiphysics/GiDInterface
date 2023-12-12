@@ -58,7 +58,6 @@ proc ::PfemMelting::write::writeCustomFilesEvent { } {
             while {[gets $f line] > 0} {
                 lassign [split $line ,] k v
                 lappend values [list [expr $k] [expr $v]]
-
             }
             close $f
         }

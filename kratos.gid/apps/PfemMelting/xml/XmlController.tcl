@@ -38,8 +38,8 @@ proc PfemMelting::xml::CustomTree { args } {
     foreach res [list "TEMPERATURE" "FACE_HEAT_FLUX"] {
         gid_groups_conds::addF "[spdAux::getRoute NodalResults]" value [list n $res pn $res v Yes values "Yes,No"]
     }
-    foreach res [list "VELOCITY" "PRESSURE" "BODY_FORCE" "ARRHENIUS_COEFFICIENT" "VISCOSITY" "CONDUCTIVITY" "SPECIFIC_HEAT" "IS_STRUCTURE" "IS_FREE_SURFACE" ] {
-        gid_groups_conds::addF "[spdAux::getRoute NodalResults]" value [list n $res pn $res v No values "Yes,No"]
+    foreach res [list "VELOCITY" "PRESSURE" "BODY_FORCE" "ARRHENIUS_COEFFICIENT" "VISCOSITY" "CONDUCTIVITY" "SPECIFIC_HEAT" "IS_STRUCTURE" "IS_FREE_SURFACE" "DECOMPOSITION" "NORMAL"] {
+        gid_groups_conds::addF "[spdAux::getRoute NodalResults]" value [list n $res pn $res v Yes values "Yes,No"]
     }
 }
 
