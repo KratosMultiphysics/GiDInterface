@@ -38,9 +38,54 @@
         </schemes>
 
     </StrategyItem>
+    
+    <StrategyItem n="boussinesq_solver"
+        pn="Dispersive waves"
+        App="ShallowWater"
+        NeedElements="false"
+		help="">
+
+        <!-- list of options to be filled -->
+        <parameter_list>
+            <parameter n="maximum_iterations" pn="Maximum iterations" type="integer" v="10" values="" help=""/>
+            <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
+            <parameter n="stabilization_factor" pn="Stabilization factor" type="double" v="0.01" help=""/>
+            <parameter n="shock_capturing_factor" pn="Shock capturing factor" type="double" v="0.5" help=""/>
+        </parameter_list>
+
+		<!-- linear solver settings -->
+        <linearSolvers>
+            <linearSolverItem n="linear_solver_settings" pn="Linear Solver">
+                <filterFeatures>
+                    <filter field="SolverType" value="Standard"/>
+                </filterFeatures>
+                <defaults>
+                </defaults>
+            </linearSolverItem>
+        </linearSolvers>
+
+		<!-- scheme settings -->
+        <schemes>
+            <scheme n="Adams-Moulton" pn="Adams-Moulton" help=""  NeedElements="false">
+                <parameter_list>
+                    <parameter n="time_integration_order" pn="BDF order" type="int" v="4" help=""/>
+                </parameter_list>
+                <element_filters>
+                </element_filters>
+            </scheme>
+            <scheme n="bdf" pn="Backward differenctiation formula" help=""  NeedElements="false">
+                <parameter_list>
+                    <parameter n="time_integration_order" pn="BDF order" type="int" v="2" help=""/>
+                </parameter_list>
+                <element_filters>
+                </element_filters>
+            </scheme>
+        </schemes>
+
+    </StrategyItem>
 
     <StrategyItem n="wave_solver"
-        pn="Waves propagation"
+        pn="Linear Waves"
         App="ShallowWater"
         NeedElements="false"
 		help="">

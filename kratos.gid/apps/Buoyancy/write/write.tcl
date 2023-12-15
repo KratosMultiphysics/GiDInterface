@@ -20,6 +20,8 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
 
     # Start Fluid write variables
     Fluid::write::Init
+    # Fluid has implemented the geometry mode, but we do not use it yet in inherited apps
+    ::Fluid::write::SetAttribute write_mdpa_mode [::Buoyancy::GetWriteProperty write_mdpa_mode]
     # Start Fluid write conditions map from scratch
     Fluid::write::InitConditionsMap
 

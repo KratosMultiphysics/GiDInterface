@@ -135,7 +135,8 @@
 	ElementType="Surface"  ProcessName="ApplyMPMSlipBoundaryProcess" help="">
     <TopologyFeatures>
       <item  GeometryType="Triangle"      nodes="3" KratosName="SurfaceCondition3D3N"/>
-      <item  GeometryType="Quadrilateral"      nodes="4" KratosName="Condition3D4N"/>
+      <item  GeometryType="Quadrilateral"      nodes="4" KratosName="SurfaceCondition3D4N"/>
+
     </TopologyFeatures>
     <inputs>
     </inputs>

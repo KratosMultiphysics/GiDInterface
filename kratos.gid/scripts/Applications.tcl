@@ -316,8 +316,8 @@ proc apps::LoadAppProperties {app} {
 proc apps::ActivateApp_do {app} {
     set dir [file join $::Kratos::kratos_private(Path) apps [$app getName]]
     # Load app dependences
-    if {[dict exists [$app getProperty requeriments] apps]} {
-        foreach app_id [dict get [$app getProperty requeriments] apps] {
+    if {[dict exists [$app getProperty requirements] apps]} {
+        foreach app_id [dict get [$app getProperty requirements] apps] {
             apps::LoadAppById $app_id
         }
     }
@@ -329,14 +329,31 @@ proc apps::ActivateApp_do {app} {
             apps::loadAppFile $fileName
         }
     }
-    set app_minimum_gid_version [dict get [$app getProperty requeriments] minimum_gid_version]
-    if {[GiDVersionCmp $app_minimum_gid_version] < 0} {W "Caution. Minimum GiD version is $app_minimum_gid_version"}
+    if {[dict exists [$app getProperty requirements] minimum_gid_version]} {
+        set app_minimum_gid_version [dict get [$app getProperty requirements] minimum_gid_version]
+        if {[GiDVersionCmp $app_minimum_gid_version] < 0} {W "Caution. Minimum GiD version is $app_minimum_gid_version"}
+    }
+    
+    # If mesh_type is not defined, do not touch it
+    if {[dict exists [$app getProperty requirements] mesh_type]} {
+        set mesh_type [dict get [$app getProperty requirements] mesh_type]
+        # If its quadratic, warn user and set it
+        if {$mesh_type eq "quadratic"} {
+            GiD_Set Model(QuadraticType) 1
+            ::GidUtils::SetWarnLine "Setting mesh mode: $mesh_type"
+        } else {
+            # If it's set to anything else, set it to linear
+            GiD_Set Model(QuadraticType) 0
+            ::GidUtils::SetWarnLine "Setting mesh mode: linear"
+        }
+    }
     if {[write::isBooleanTrue [$app getPermission import_files]]} { Kratos::LoadImportFiles }
     if {[write::isBooleanTrue [$app getPermission wizard]]} { Kratos::LoadWizardFiles }
     if {[$app getProperty start_script] ne ""} {eval [$app getProperty start_script] $app}
     apps::ApplyAppPreferences $app
 
 
+    # If theme is dark, set the Black images dir before the normal one, so images for dark theme are loaded first
     if {[gid_themes::GetCurrentTheme] eq "GiD_black"} {
         set gid_groups_conds::imagesdirList [lsearch -all -inline -not -exact $gid_groups_conds::imagesdirList [list [file join $dir images]]]
         gid_groups_conds::add_images_dir [file join $dir images Black]
@@ -345,7 +362,9 @@ proc apps::ActivateApp_do {app} {
 }
 
 proc apps::ApplyAppPreferences {app} {
+    if {[write::isBooleanTrue [$app getPermission stages]]} {set spdAux::UseStages 1} {set spdAux::UseStages 0}
     if {[write::isBooleanTrue [$app getPermission open_tree]]} {set spdAux::TreeVisibility 1} {set spdAux::TreeVisibility 0}
+    if {[write::isBooleanTrue [$app getPermission show_toolbar]]} {set spdAux::ToolbarVisibility 1} {set spdAux::ToolbarVisibility 0}
     if {[$app getProperty dimensions] ne ""} { set ::Model::ValidSpatialDimensions [$app getProperty dimensions] }
 }
 

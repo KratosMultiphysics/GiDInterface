@@ -158,6 +158,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
     set Kratos::kratos_private(allow_logs) 1
+    # Experimental: Write mdpa as geometries
+    set Kratos::kratos_private(experimental_write_geometries) 0
     # git hash of the problemtype
     set Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
@@ -187,12 +189,7 @@ proc Kratos::InitGlobalVariables {dir} {
     set namespaces [list ]
 
     variable pip_packages_required
-    # set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
-    # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
-    # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
-    # KratosFSIApplication==9.0.3]
-    # set pip_packages_required [list KratosMultiphysics-all==9.3.2 KratosDamApplication==9.3.2]
-    set pip_packages_required [list KratosMultiphysics-all==9.3.2]
+    set pip_packages_required [list KratosMultiphysics-all==9.4.2]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -208,8 +205,8 @@ proc Kratos::LoadCommonScripts { } {
 
     # Writing common scripts
     foreach filename {Writing WriteHeadings WriteMaterials WriteNodes
-        WriteElements WriteConditions WriteConditionsByGiDId WriteConditionsByUniqueId
-        WriteProjectParameters WriteSubModelPart WriteProcess} {
+        WriteElements WriteConditions WriteGeometries WriteConditionsByGiDId WriteConditionsByUniqueId
+        WriteProjectParameters WriteSubModelPart WriteProcess WriteStages} {
         uplevel #0 [list source [file join $kratos_private(Path) scripts Writing $filename.tcl]]
     }
     # Common scripts
@@ -439,15 +436,16 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     set inittime [clock seconds]
     set tmp_init_mesh_time $inittime
     Kratos::Log "Mesh BeforeMeshGeneration start"
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Lines 1:end escape escape escape
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Surfaces 1:end escape escape escape
-    GiD_Process Mescape Meshing MeshCriteria NoMesh Volumes 1:end escape escape escape
+
+    GiD_MeshData mesh_criteria to_be_meshed 1 lines [GiD_Geometry list line]
+    GiD_MeshData mesh_criteria to_be_meshed 1 surfaces [GiD_Geometry list surface]
+    GiD_MeshData mesh_criteria to_be_meshed 1 volumes  [GiD_Geometry list volume ]
 
     # We need to mesh every line and surface assigned to a group that appears in the tree
     foreach group [spdAux::GetAppliedGroups] {
-        GiD_Process Mescape Meshing MeshCriteria Mesh Lines {*}[GiD_EntitiesGroups get $group lines] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Surfaces {*}[GiD_EntitiesGroups get $group surfaces] escape escape escape
-        GiD_Process Mescape Meshing MeshCriteria Mesh Volumes {*}[GiD_EntitiesGroups get $group volumes] escape escape escape
+        GiD_MeshData mesh_criteria to_be_meshed 2 lines [GiD_EntitiesGroups get $group lines]
+        GiD_MeshData mesh_criteria to_be_meshed 2 surfaces [GiD_EntitiesGroups get $group surfaces]
+        GiD_MeshData mesh_criteria to_be_meshed 2 volumes  [GiD_EntitiesGroups get $group volumes]
     }
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
@@ -469,6 +467,7 @@ proc Kratos::Event_AfterMeshGeneration {fail} {
     set endtime [clock seconds]
     set ttime [expr {$endtime-$tmp_init_mesh_time}]
     Kratos::Log "Mesh end process in [Duration $ttime]"
+    # W "Meshing finished  [Duration $ttime]"
     set mesh_data [Kratos::GetMeshBasicData]
     Kratos::Log "Mesh data -> [write::tcl2json $mesh_data]"
 }
@@ -549,6 +548,7 @@ proc Kratos::Event_AfterWriteCalculationFile { filename errorflag } {
 
 proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     # W "Kratos::WriteCalculationFilesEvent"
+    set ini_time [clock seconds]
     # Write the calculation files (mdpa, json...)
     if {$filename eq ""} {
         # Model must be saved
@@ -574,6 +574,10 @@ proc Kratos::WriteCalculationFilesEvent { {filename ""} } {
     } else {
         ::GidUtils::SetWarnLine "MDPA and JSON written OK"
     }
+    if {[::write::GetConfigurationAttribute time_monitor]} { set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; 
+        W "Nodal coordinates time: [Kratos::Duration $ttime]"
+        Kratos::Log "Write calculation files in [Duration $ttime]"
+    }
     return $errcode
 }
 
@@ -589,7 +593,7 @@ proc Kratos::Event_BeforeSaveGIDProject { modelname} {
 
 proc Kratos::Event_SaveModelSPD { filespd } {
     # Save the spd
-    gid_groups_conds::save_spd_file $filespd
+    gid_groups_conds::save_spd_file -compress 0 -save_post 0 $filespd
 
     # Save user preferences
     Kratos::RegisterEnvironment

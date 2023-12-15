@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ConstitutiveLaws>
+    <!-- Placeholder Geo Law-->
+    <CLaw n="GeoLinearElasticPlaneStrain2DLaw" pn="Linear elastic plain Strain"  Type="2D" Behaviour="Elastic" StrainSize="6"  ImplementedInApplication="GeoMechanicsApplication"
+    help="Linear elastic behaviour in 2D" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False" >
+        <inputs>
+            <parameter n="IGNORE_UNDRAINED" pn="Ignore undrained" type="bool" v="false" values="true,false" />
+            <parameter n="YOUNG_MODULUS" pn="Young Modulus" unit_magnitude="P" units="Pa" v="1e5" />
+            <parameter n="POISSON_RATIO" pn="Poisson Ratio" v="0.2"/>
+            <parameter n="DENSITY_SOLID" pn="Density Solid" v="2.65"/>
+            <parameter n="DENSITY_WATER" pn="Density Water" v="1.0"/>
+            <parameter n="POROSITY" pn="Porosity" v="0.3"/>
+            
+            <parameter n="BULK_MODULUS_SOLID" pn="BULK_MODULUS_SOLID" v="1.0e9" />
+            <parameter n="BULK_MODULUS_FLUID" pn="BULK_MODULUS_FLUID" v="2.0e6" />
+            <parameter n="PERMEABILITY_XX" pn="PERMEABILITY_XX" v="4.5e-13" />
+            <parameter n="PERMEABILITY_YY" pn="PERMEABILITY_YY" v="4.5e-13" />
+            <parameter n="PERMEABILITY_XY" pn="PERMEABILITY_XY" v="0.0" />
+            <parameter n="DYNAMIC_VISCOSITY" pn="DYNAMIC_VISCOSITY" v="8.90e-7" />
+            <parameter n="THICKNESS" pn="THICKNESS" v="1.0" />
+            <parameter n="BIOT_COEFFICIENT" pn="BIOT_COEFFICIENT" v="1.0" />
+            <parameter n="RETENTION_LAW" pn="RETENTION_LAW" type="combo" v="SaturatedBelowPhreaticLevelLaw" values="VanGenuchtenLaw,SaturatedLaw,SaturatedBelowPhreaticLevelLaw" />
+            <parameter n="SATURATED_SATURATION" pn="SATURATED_SATURATION" v="1.0" />
+            <parameter n="RESIDUAL_SATURATION" pn="RESIDUAL_SATURATION" v="1e-10" />
+            <parameter n="VAN_GENUCHTEN_AIR_ENTRY_PRESSURE" pn="VAN_GENUCHTEN_AIR_ENTRY_PRESSURE" v=".561" />
+            <parameter n="VAN_GENUCHTEN_GN" pn="VAN_GENUCHTEN_GN" v="1.377" />
+            <parameter n="VAN_GENUCHTEN_GL" pn="VAN_GENUCHTEN_GL" v="1.25" />
+            <parameter n="MINIMUM_RELATIVE_PERMEABILITY" pn="MINIMUM_RELATIVE_PERMEABILITY" v="0.0001" />
+        </inputs>
+        <outputs>
+
+        </outputs>
+    </CLaw>
+
+</ConstitutiveLaws>

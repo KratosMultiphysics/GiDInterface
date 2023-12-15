@@ -14,13 +14,14 @@
     "script_files": [
         "start.tcl",
         "examples/examples.tcl",
-        "examples/Box.tcl",
+        "examples/Box2D.tcl",
+        "examples/Box3D.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::FreeSurface::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Fluid"
         ],
@@ -36,7 +37,8 @@
         "coordinates": "all",
         "properties_location": "json",
         "model_part_name": "FluidModelPart",
-        "output_model_part_name": ""
+        "output_model_part_name": "",
+        "write_mdpa_mode": "entities"
     },
     "main_launch_file": "../../exec/MainKratos.py"
 }

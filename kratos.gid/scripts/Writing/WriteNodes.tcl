@@ -43,8 +43,8 @@ proc write::writeNodalCoordinatesOnGroups { groups } {
     }
 }
 
-proc write::writeNodalCoordinatesOnParts { } {
-    writeNodalCoordinatesOnGroups [getPartsGroupsId]
+proc write::writeNodalCoordinatesOnParts { {stage ""} } {
+    writeNodalCoordinatesOnGroups [getPartsGroupsId name $stage]
 }
 
 proc write::writeNodalCoordinates { } {
@@ -54,6 +54,7 @@ proc write::writeNodalCoordinates { } {
     # // id          X        Y        Z
     # End Nodes
     variable formats_dict
+    set inittime [clock seconds]
     set id_f [dict get $formats_dict ID]
     set coord_f [dict get $formats_dict COORDINATE]
     set s [mdpaIndent]
@@ -63,5 +64,6 @@ proc write::writeNodalCoordinates { } {
     incr ::write::current_mdpa_indent_level -1
     WriteString "${s}End Nodes"
     WriteString "\n"
+    if {[GetConfigurationAttribute time_monitor]} { set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "Nodal coordinates time: [Kratos::Duration $ttime]"}
 }
 

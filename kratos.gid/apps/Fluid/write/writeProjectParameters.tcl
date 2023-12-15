@@ -1,5 +1,5 @@
 # Project Parameters
-proc ::Fluid::write::getParametersDict { } {
+proc ::Fluid::write::getParametersDict { {stage ""} } {
     set projectParametersDict [dict create]
 
     # Analysis stage field
@@ -54,8 +54,77 @@ proc ::Fluid::write::process_special_conditions { list_of_processes } {
     
 }
 
+proc ::Fluid::write::getParametersMultistageDict { } {
+    # At this moment we can only fake stages, so we'll have only one stage
+    # Get the base dictionary for the project parameters
+    set project_parameters_dict [dict create]
+
+    # Get the stages
+    set stages_list [list "stage_1"]
+    set stages_names [list "stage_1"]
+
+    # Set the orchestrator
+    dict set project_parameters_dict orchestrator [::write::GetOrchestratorDict $stages_names]
+
+    # Set the stages
+    set stages [dict create]
+
+    set i 0
+    foreach stage $stages_list {
+        set stage_name [lindex $stages_names 0]
+        set stage_content [::Fluid::write::getParametersDict]
+        # In first iteration we add the mdpa importer
+        if {$i == 0} {
+            set parameters_modeler [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]
+            dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage $parameters_modeler]
+        } else {
+            dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage]
+        }
+        if {[dict exists $stage_content solver_settings model_import_settings]} {dict unset stage_content solver_settings model_import_settings}
+        dict set stages $stage_name stage_settings $stage_content
+        
+        dict set stages $stage_name stage_postprocess [::write::getPostprocessForStage $stage]
+        incr i
+    }
+
+    dict set project_parameters_dict "stages" $stages
+    
+    return $project_parameters_dict
+}
+
+# Update the modelers information
+proc ::Fluid::write::UpdateModelers { projectParametersDict {stage ""} } {
+    set modelerts_list [list ]
+    # Move the import to the modelers
+    # set modelers [dict get $projectParametersDict solver_settings model_import_settings]
+    dict unset projectParametersDict solver_settings model_import_settings 
+    dict set projectParametersDict solver_settings model_import_settings input_type use_input_model_part
+    set importer_modeler [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler"]  
+    dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]  
+    lappend modelerts_list $importer_modeler
+
+    if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+        # Add the entities creation modeler
+        set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
+        dict set entities_modeler "parameters" elements_list [::write::GetMatchSubModelPart element $stage]
+        dict set entities_modeler "parameters" conditions_list [::write::GetMatchSubModelPart condition $stage]
+        lappend modelerts_list $entities_modeler
+    }
+    
+    dict set projectParametersDict "modelers" $modelerts_list
+
+    return $projectParametersDict
+}
+
+
 proc ::Fluid::write::writeParametersEvent { } {
-    set projectParametersDict [getParametersDict]
+    set write_parameters_mode 0
+    if {$write_parameters_mode == 0} {
+        set projectParametersDict [getParametersDict]
+        set projectParametersDict [Fluid::write::UpdateModelers $projectParametersDict]
+    } else {
+        set projectParametersDict [getParametersMultistageDict]
+    }
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
@@ -136,21 +205,30 @@ proc ::Fluid::write::getBoundaryConditionMeshId {} {
         set groupName [$group @n]
         set groupName [write::GetWriteGroupName $groupName]
         set cid [[$group parent] @n]
-        set cond [Model::getCondition $cid]
-        if {[$cond getAttribute "SkinConditions"] eq "True"} {
-            if {[[::Model::getCondition $cid] getGroupBy] eq "Condition"} {
-                # Grouped conditions have its own submodelpart
-                if {$cid ni $listOfBCGroups} {
-                    lappend listOfBCGroups $cid
+        set condition [Model::getCondition $cid]
+        if {[$condition getAttribute "SkinConditions"] eq "True"} {
+            if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+                if {[$condition getGroupBy] eq "Condition"} {
+                    set condition_name [$condition getName]
+                    set groupName "_HIDDEN_$condition_name"
+                    if {$groupName ni $listOfBCGroups} {lappend listOfBCGroups $groupName}
+                } else {
+                    set groupName [::write::getSubModelPartId $cid $groupName]
+                    if {$groupName ni $listOfBCGroups} {lappend listOfBCGroups $groupName}
                 }
             } else {
-                set gname [::write::getSubModelPartId $cid $groupName]
-                if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
+                if {[$condition getGroupBy] eq "Condition"} {
+                    # Grouped conditions have its own submodelpart
+                    if {$cid ni $listOfBCGroups} {
+                        lappend listOfBCGroups $cid
+                    }
+                } else {
+                    set gname [::write::getSubModelPartId $cid $groupName]
+                    if {$gname ni $listOfBCGroups} {lappend listOfBCGroups $gname}
+                }
             }
-
         }
     }
-
     return $listOfBCGroups
 }
 
@@ -165,9 +243,14 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
     foreach dragGroup $dragGroups {
         set groupName [$dragGroup @n]
         set groupName [write::GetWriteGroupName $groupName]
-        set cid [[$dragGroup parent] @n]
-        set submodelpart [::write::getSubModelPartId $cid $groupName]
-        if {$submodelpart ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $submodelpart}
+        if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+            set groupName [::write::getSubModelPartId $cid $groupName]
+            if {$groupName ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $groupName}
+        } else {
+            set cid [[$dragGroup parent] @n]
+            set submodelpart [::write::getSubModelPartId $cid $groupName]
+            if {$submodelpart ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $submodelpart}
+        }
     }
 
     # Append no skin conditions model parts names
@@ -179,8 +262,12 @@ proc ::Fluid::write::getNoSkinConditionMeshId {} {
         set cid [[$group parent] @n]
         set cond [Model::getCondition $cid]
         if {[$cond getAttribute "SkinConditions"] eq "False"} {
-            set gname [::write::getSubModelPartId $cid $groupName]
-            if {$gname ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $gname}
+            if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+                if {$groupName ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $groupName}
+            } else {
+                set gname [::write::getSubModelPartId $cid $groupName]
+                if {$gname ni $listOfNoSkinGroups} {lappend listOfNoSkinGroups $gname}
+            }
         }
     }
 

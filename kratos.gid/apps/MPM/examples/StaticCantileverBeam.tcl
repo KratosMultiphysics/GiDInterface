@@ -142,15 +142,6 @@ proc ::MPM::examples::StaticCantileverBeam::TreeAssignation2D {args} {
     set props [list Element GRID$nd ]
     spdAux::SetValuesOnBaseNode $mpm_grid_part $props
 
-    # Fix Displacement
-    ## Create interval subgroup
-    GiD_Groups clone FixedDisplacement Total
-    GiD_Groups edit parent Total FixedDisplacement
-    spdAux::AddIntervalGroup FixedDisplacement "FixedDisplacement"
-    GiD_Groups edit state "FixedDisplacement" hidden
-
-    #Slip condition
-
     ## Assign boundary condition
     set mpm_bc_route [spdAux::getRoute "MPMNodalConditions"]
     set mpm_displacement_route "${mpm_bc_route}/condition\[@n='DISPLACEMENT'\]"

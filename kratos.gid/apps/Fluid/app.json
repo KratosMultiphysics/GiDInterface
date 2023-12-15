@@ -21,7 +21,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::Fluid::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [],
         "minimum_gid_version": "15.1.3d"
     },
@@ -45,7 +45,8 @@
         "materials_file": "FluidMaterials.json",
         "properties_location": "json",
         "model_part_name": "FluidModelPart",
-        "output_model_part_name": "fluid_computational_model_part"
+        "output_model_part_name": "fluid_computational_model_part",
+        "write_mdpa_mode": "geometries"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml",

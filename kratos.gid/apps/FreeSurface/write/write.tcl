@@ -7,6 +7,8 @@ namespace eval ::FreeSurface::write {
 
 proc ::FreeSurface::write::Init { } {
     ::Fluid::write::Init
+    # Fluid has implemented the geometry mode, but we do not use it yet in inherited apps
+    ::Fluid::write::SetAttribute write_mdpa_mode [::FreeSurface::GetWriteProperty write_mdpa_mode]
 }
 
 # Events

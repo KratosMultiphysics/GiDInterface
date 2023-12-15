@@ -74,15 +74,16 @@ proc ::Structural::write::writeModelPartEvent { } {
 
 }
 
-proc ::Structural::write::writeConditions { } {
+proc ::Structural::write::writeConditions { {stage ""} } {
     variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] ]
+    set last_iter [Structural::write::getLastConditionId]
+    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] $last_iter $stage ]
 
     set last_iter [Structural::write::getLastConditionId]
     writeContactConditions $last_iter
 }
 
-proc ::Structural::write::writeMeshes { } {
+proc ::Structural::write::writeMeshes { {stage ""} } {
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart
     # Add them to this list
@@ -92,14 +93,14 @@ proc ::Structural::write::writeMeshes { } {
         lappend special_nodal_conditions [Model::getNodalConditionbyId $cnd_name]
         Model::ForgetNodalCondition $cnd_name
     }
-    write::writePartSubModelPart
+    write::writePartSubModelPart $stage
 
     # Solo Malla , no en conditions
-    write::writeNodalConditions [GetAttribute initial_conditions_un]
-    write::writeNodalConditions [GetAttribute nodal_conditions_un]
+    write::writeNodalConditions [GetAttribute initial_conditions_un] $stage
+    write::writeNodalConditions [GetAttribute nodal_conditions_un] $stage
 
     # A Condition y a meshes-> salvo lo que no tenga topologia
-    writeLoads
+    writeLoads $stage
 
     # Recover the conditions and nodal conditions that we didn't want to print in submodelparts
     foreach cnd $special_nodal_conditions {
@@ -128,10 +129,10 @@ proc ::Structural::write::writeContactConditions { last_iter } {
     }
 }
 
-proc ::Structural::write::writeLoads { } {
+proc ::Structural::write::writeLoads { {base ""} } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un] $base]/condition/group"
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set groupid [write::GetWriteGroupName $groupid]

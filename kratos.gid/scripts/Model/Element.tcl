@@ -92,6 +92,11 @@ oo::class create Element {
         variable TopologyFeatures
         return $TopologyFeatures
     }
+    
+    method getTopologyKratosName {geo nod} {
+        set top [my getTopologyFeature $geo $nod]
+        if {$top ne ""} {return [$top getKratosName]} {return ""}
+    }
 
     method cumple {args} {
         set c [next {*}$args]

@@ -7,7 +7,7 @@ namespace eval ::ThermicLauncher {
 proc ::ThermicLauncher::Init { app } {
     variable available_apps
     
-    set available_apps [dict get [$app getProperty requeriments] display_apps]
+    set available_apps [dict get [$app getProperty requirements] display_apps]
 
     ::ThermicLauncher::AppSelectorWindow
 }

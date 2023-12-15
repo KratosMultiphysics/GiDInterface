@@ -21,7 +21,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::FluidDEM::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "DEM",
             "Fluid"
@@ -35,7 +35,8 @@
         "wizard": false
     },
     "write": {
-        "coordinates": "groups"
+        "coordinates": "groups",
+        "write_mdpa_mode": "entities"
     },
     "main_launch_file": "python/MainKratos.py",
     "examples": "examples/examples.xml"

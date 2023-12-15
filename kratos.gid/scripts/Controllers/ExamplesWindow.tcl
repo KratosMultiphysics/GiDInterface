@@ -22,9 +22,6 @@ proc Examples::Init { } {
 
     set dir [apps::getMyDir "Examples"]
 
-    # Don't open the tree
-    set ::spdAux::TreeVisibility 0
-
     LoadMyFiles
 
     variable filter_entry

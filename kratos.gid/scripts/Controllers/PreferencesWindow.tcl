@@ -26,6 +26,9 @@ proc Kratos::ManagePreferences { cmd name {value ""}} {
                 "allow_logs" {
                     set ret 1
                 }
+                "experimental_write_geometries" {
+                    set ret 0
+                }
                 "mdpa_format" {
                     set ret 1
                 }

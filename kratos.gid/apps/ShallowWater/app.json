@@ -17,7 +17,7 @@
         "examples/HydraulicJump.tcl"
     ],
     "start_script": "::ShallowWater::Init",
-    "requeriments":{
+    "requirements":{
         "apps":[],
         "minimum_gid_version":"15.1.3d"
     },
