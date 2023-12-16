@@ -190,7 +190,7 @@ proc ::MPM::write::GetOutputProcessesList { } {
 
          dict set body_output_configuration_dict python_module particle_vtk_output_process
          dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
-         dict set body_output_configuration_dict process_name ParticleMPMVTKOutputProcess
+         dict set body_output_configuration_dict process_name ParticleVtkOutputProcess
          dict set body_output_configuration_dict Parameters model_part_name MPM_Material
          dict unset body_output_configuration_dict Parameters nodal_data_value_variables
          dict unset body_output_configuration_dict Parameters element_data_value_variables
@@ -200,10 +200,9 @@ proc ::MPM::write::GetOutputProcessesList { } {
          #set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
          #dict set resultDict output_control_type $outputCT
           #if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
-         dict unset body_output_configuration_dict Parameters output_path
-         dict set body_output_configuration_dict Parameters folder_name  "vtk_output_Body"
+         dict set body_output_configuration_dict Parameters output_path  "vtk_output_Body"
          dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
-         dict set body_output_configuration_dict Parameters gauss_point_results [write::GetResultsList ElementResults]
+         dict set body_output_configuration_dict Parameters gauss_point_variables_in_elements [write::GetResultsList ElementResults]
 
 
          dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
