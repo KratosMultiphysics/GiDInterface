@@ -117,7 +117,7 @@ proc ::MPM::write::getParametersDict { } {
         dict set project_parameters_dict processes gravity [list $gravity_dict]
 	}
 
-    # Tracking of points
+    # Tracking of mp points
     lassign [write::getValue MPTracking ActivateTracking] track
     if {$track eq "On"} {
         set tracking_dict [dict create ]
@@ -139,7 +139,34 @@ proc ::MPM::write::getParametersDict { } {
         dict set tracking_parameters_dict print_format [write::getValue MPTracking print_format]
         dict set tracking_parameters_dict write_tracking_output_file true
         dict set tracking_dict Parameters $tracking_parameters_dict
-        dict set project_parameters_dict processes tracking [list $tracking_dict]
+        dict set project_parameters_dict processes mp_tracking [list $tracking_dict]
+        }
+
+
+
+     # Tracking of Grid points
+    lassign [write::getValue GridTracking ActivateTrackingGrid] track
+    if {$track eq "On"} {
+        set tracking_dict [dict create ]
+        dict set tracking_dict python_module point_output_process
+        dict set tracking_dict kratos_module "KratosMultiphysics"
+        dict set tracking_dict process_name PointOutputProcess
+        set tracking_parameters_dict [dict create ]
+        dict set tracking_parameters_dict model_part_name Background_Grid
+        lassign [write::getValue GridTracking positionGrid] dx dy dz
+        dict set tracking_parameters_dict position [list [expr $dx] [expr $dy] [expr $dz]]
+        lassign [write::getValue GridTracking intervalGrid] t0 tf
+        dict set tracking_parameters_dict interval [list [expr $t0] [expr $tf]]
+
+        dict set tracking_parameters_dict print_format [write::getValue GridTracking print_formatGrid]
+        dict set tracking_parameters_dict entity_type element
+        dict set tracking_parameters_dict search_configuration initial
+        dict set tracking_parameters_dict output_variables [list "DISPLACEMENT" "VELOCITY"]
+        set output_file_settings_dict [dict create ]
+        dict set output_file_settings_dict file_name "grid_point_tracking.dat"
+        dict set tracking_parameters_dict output_file_settings $output_file_settings_dict
+        dict set tracking_dict Parameters $tracking_parameters_dict
+        dict set project_parameters_dict processes grid_point_tracking [list $tracking_dict]
         }
 
     # Output processes
