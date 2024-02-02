@@ -50,28 +50,29 @@
         </container>
     </container>
 
-    <container n="Tracking" pn="Tracking of a mp in time" un="MPTracking" help="" icon="results" open="1" open_window="0"  state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]">
-        <value n="ActivateTracking" pn="Activate tracking" v="Off" values="Off,On" un="ActivateTracking" help="Tracking is printed in a .txt file">
-            <dependencies value="Off" node="../value[@n='position']|../value[@n='interval']|../value[@n='output_press']|../value[@n='print_format']" att1="state" v1="hidden"/>
-            <dependencies value="On"  node="../value[@n='position']|../value[@n='interval']|../value[@n='output_press']|../value[@n='print_format']" att1="state" v1="normal"/>
-        </value>
-        <value n="position" pn="Initial position" v="0.0,0.0,0.0" fieldtype="vector" help=""/>
-        <value n="interval"  pn="Time interval" v="0.0,1e30" fieldtype="vector" help=""/>
-        <value n="output_press" pn="Write pressure" v="No" values="Yes,No" help=""/>
-        <value n="print_format" pn="Format" v=".5f" help=""/>
-	 </container>
 
+    <container n="TrackingPoint" pn="Tracking of a point in time" un="TrackingPoint" help="" icon="results" open="1" open_window="0"  state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]">
+        <container n="Tracking" pn="Tracking of a mp in time" un="MPTracking" help="" icon="triangle" open="1" open_window="0"  state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]">
+            <value n="ActivateTracking" pn="Activate tracking" v="Off" values="Off,On" un="ActivateTracking" help="Tracking is printed in a .txt file">
+                <dependencies value="Off" node="../value[@n='position']|../value[@n='interval']|../value[@n='output_press']|../value[@n='print_format']" att1="state" v1="hidden"/>
+                <dependencies value="On"  node="../value[@n='position']|../value[@n='interval']|../value[@n='output_press']|../value[@n='print_format']" att1="state" v1="normal"/>
+            </value>
+            <value n="position" pn="Initial position" v="0.0,0.0,0.0" fieldtype="vector" help=""/>
+            <value n="interval"  pn="Time interval" v="0.0,1e30" fieldtype="vector" help=""/>
+            <value n="output_press" pn="Write pressure" v="No" values="Yes,No" help=""/>
+            <value n="print_format" pn="Format" v=".5f" help=""/>
+        </container>
 
-
-    <container n="TrackingGrid" pn="Tracking of a Grid point in time" un="GridTracking" help="" icon="results" open="1" open_window="0"  state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]">
-        <value n="ActivateTrackingGrid" pn="Activate tracking" v="Off" values="Off,On" un="ActivateTrackingGrid" help="Tracking is printed in a .txt file">
-            <dependencies value="Off" node="../value[@n='positionGrid']|../value[@n='intervalGrid']|../value[@n='print_formatGrid']" att1="state" v1="hidden"/>
-            <dependencies value="On"  node="../value[@n='positionGrid']|../value[@n='intervalGrid']|../value[@n='print_formatGrid']" att1="state" v1="normal"/>
-        </value>
-        <value n="positionGrid" pn="Initial position" v="0.0,0.0,0.0" fieldtype="vector" help=""/>
-        <value n="intervalGrid" pn="Time interval" v="0.0,1e30" fieldtype="vector" help=""/>
-        <value n="print_formatGrid" pn="Format" v=".5f" help=""/>
-	 </container>
+        <container n="TrackingGrid" pn="Tracking of a Grid point in time" un="GridTracking" help="" icon="point3d" open="1" open_window="0"  state="[checkStateByUniqueName STSoluType {Quasi-static Dynamic}]">
+            <value n="ActivateTrackingGrid" pn="Activate tracking" v="Off" values="Off,On" un="ActivateTrackingGrid" help="Tracking is printed in a .txt file">
+                <dependencies value="Off" node="../value[@n='positionGrid']|../value[@n='intervalGrid']|../value[@n='print_formatGrid']" att1="state" v1="hidden"/>
+                <dependencies value="On"  node="../value[@n='positionGrid']|../value[@n='intervalGrid']|../value[@n='print_formatGrid']" att1="state" v1="normal"/>
+            </value>
+            <value n="positionGrid" pn="Initial position" v="0.0,0.0,0.0" fieldtype="vector" help=""/>
+            <value n="intervalGrid" pn="Time interval" v="0.0,1e30" fieldtype="vector" help=""/>
+            <value n="print_formatGrid" pn="Format" v=".5f" help=""/>
+        </container>
+    </container>
 
     <container n="RestartOutput" pn="Restart-Output" un="RestartOutput" state="normal" open="1" open_window="0" icon="results">
         <value n="EnableRestartOutput" pn="Enable output" v="No" values="Yes,No" un="EnableRestartOutput" help="Writing output for Restart or not" />

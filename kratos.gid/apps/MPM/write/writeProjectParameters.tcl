@@ -163,7 +163,7 @@ proc ::MPM::write::getParametersDict { } {
         dict set tracking_parameters_dict search_configuration initial
         dict set tracking_parameters_dict output_variables [list "DISPLACEMENT" "VELOCITY"]
         set output_file_settings_dict [dict create ]
-        dict set output_file_settings_dict file_name "grid_point_tracking.dat"
+        dict set output_file_settings_dict file_name "Grid_point_tracking.dat"
         dict set tracking_parameters_dict output_file_settings $output_file_settings_dict
         dict set tracking_dict Parameters $tracking_parameters_dict
         dict set project_parameters_dict processes grid_point_tracking [list $tracking_dict]
