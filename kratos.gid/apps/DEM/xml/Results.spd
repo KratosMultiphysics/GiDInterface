@@ -46,4 +46,6 @@
     <container n="PrintGraphs" pn="Graphs settings" un="DGraphs" open="1" icon="options">
         <value n="GraphExportFreq"    v="1e-3"    pn="Graph print frequency (s)"  icon="black1" help="Graph frequency for active groups"/>
     </container>
+    <value n="DEM-RestartPrintTimeInterval"  v="0.05"    pn="Time interval for resumption files (s)"  icon="black1" help="NON-working feature! Simulated time between the print of two consecutive restart files, wich will allow resumption of the computation from that point"/>
+
 </container>
