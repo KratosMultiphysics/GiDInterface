@@ -92,17 +92,6 @@
     </outputs>
   </ConditionItem>
 
-<!--    <ConditionItem n="PointLoad2DMPM" pn="Load on material points" Interval="Total" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point" ProcessName="ApplyMPMParticleNeumannConditionProcess" help="" units="N" unit_magnitude="F" VariableName="POINT_LOAD">
-    <TopologyFeatures>
-      <item  GeometryType="Point" nodes="1" KratosName="MPMGridPointLoadCondition2D1N"/>
-    </TopologyFeatures>
-    <inputs>
-    </inputs>
-    <outputs>
-      <parameter n="FORCE" pn="External Load" v="false"/>
-    </outputs>
-  </ConditionItem>-->
-
   <ConditionItem n="Slip2D" pn="Slip" Interval="False"
 	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
@@ -130,7 +119,7 @@
   </ConditionItem>
 
 
-  <ConditionItem n="Slip3DLines" pn="Slip on lines" Interval="False"
+<!--  <ConditionItem n="Slip3DLines" pn="Slip on lines" Interval="False"
 	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line"  ProcessName="ApplyMPMSlipBoundaryProcess" help="">
@@ -141,9 +130,9 @@
     </inputs>
     <outputs>
     </outputs>
-  </ConditionItem>
+  </ConditionItem>-->
 
-  <ConditionItem n="Slip3DSurfaces" pn="Slip on surfaces" Interval="False"
+  <ConditionItem n="Slip3D" pn="Slip" Interval="False"
 	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="3D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Surface"  ProcessName="ApplyMPMSlipBoundaryProcess" help="">
@@ -157,5 +146,31 @@
     <outputs>
     </outputs>
   </ConditionItem>
+
+
+  <ConditionItem n="PointLoad2DMPM" pn="Load on points" Interval="Total" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point" ProcessName="ApplyMPMParticleNeumannConditionProcess" help="" units="N" unit_magnitude="F" VariableName="POINT_LOAD">
+    <TopologyFeatures>
+      <item  GeometryType="Point" nodes="1" KratosName="MPMGridPointLoadCondition2D1N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="FORCE" pn="External Load" v="false"/>
+    </outputs>
+  </ConditionItem>
+
+    <ConditionItem n="LineLoad2DMPM" pn="Load on lines" Interval="Total" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Line" ProcessName="ApplyMPMParticleNeumannConditionProcess" help="Load on lines, load vector referred to global axes"
+	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
+    <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="MPMGridLineLoadCondition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+      <parameter n="FORCE" pn="External Load" v="false"/>
+    </outputs>
+  </ConditionItem>
+
+
 
 </ConditionList>
