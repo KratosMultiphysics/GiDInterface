@@ -159,6 +159,22 @@
     </outputs>
   </ConditionItem>
 
+
+  <ConditionItem n="Dirichlet2DMPM" pn="Slip/Contact/Fixed" Interval="False"
+	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"
+	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
+	ElementType="Line" ProcessName="ApplyMPMParticleDirichletContitionProcess" help="">
+    <TopologyFeatures>
+      <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+    </TopologyFeatures>
+    <inputs>
+    </inputs>
+    <outputs>
+    </outputs>
+  </ConditionItem>
+
+
+
 <!--    <ConditionItem n="LineLoad2DMPM" pn="Load on lines" Interval="Total" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Line" ProcessName="ApplyMPMParticleNeumannConditionProcess" help="Load on lines, load vector referred to global axes"
 	units="N/m" unit_magnitude="F/L" VariableName="LINE_LOAD">
     <TopologyFeatures>
