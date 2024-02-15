@@ -125,7 +125,7 @@ proc MPM::xml::ProcCheckGeometry {domNode args} {
 
 proc MPM::xml::ProcCheckActivateStabilizationState {domNode args} {
     set ret "hidden"
-    set up_mixed UpdatedLagrangianUP$::Model::SpatialDimension
+    set up_mixed MPMUpdatedLagrangianUP$::Model::SpatialDimension
     set used_elements [::MPM::write::GetUsedElements Name]
     if {$up_mixed in $used_elements} {
         set ret "normal"
