@@ -1,4 +1,4 @@
-set krversion=9.3.2
+set krversion=9.4.2
 set pyversion=3.10.5
 @REM 3.10.10-alpine3.17
 echo "Building kratos %krversion% on python %pyversion%"

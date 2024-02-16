@@ -30,8 +30,12 @@ fi
 # in the system and interfeering with runkratos
 export PYTHONPATH=$kratos_bin_path:$PYTHONPATH
 
+
+export PATH=$kratos_bin_path\libs;$PATH
+export PYTHONHOME=$python_home
+
 KERNEL_NAME="linux"
 
 
 # Run Python using the script MainKratos.py
-$python_path/python3 MainKratos.py > "$2/$1.info" 2> "$2/$1.err"
+$python_path MainKratos.py > "$2/$1.info" 2> "$2/$1.err"

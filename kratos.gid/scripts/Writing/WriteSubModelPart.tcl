@@ -5,7 +5,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
     variable formats_dict
     
     set inittime [clock seconds]
-
+    
     set id_f [dict get $formats_dict ID]
     set mid ""
     set what [split $what "&"]
@@ -24,7 +24,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
-
+        
         # Print header
         set s [mdpaIndent]
         WriteString "${s}Begin SubModelPart $mid // Group $group // Subtree $cid"
@@ -74,18 +74,19 @@ proc write::writeGroupSubModelPartAsGeometry { group } {
     variable submodelparts
     variable formats_dict
     variable geometry_cnd_name
-
+    
     set cid $geometry_cnd_name
     
     set inittime [clock seconds]
-
+    
     set id_f [dict get $formats_dict ID]
     set submodelpart_id ""
     set group [GetWriteGroupName $group]
     set submodelpart_id [write::getSubModelPartId "$cid" $group]
-    if {$submodelpart_id eq 0} {
+    if {$submodelpart_id ni $submodelparts} {
         # Add the submodelpart to the catalog
         set submodelpart_id [write::AddSubmodelpart $cid $group]
+        lappend submodelparts $submodelpart_id
         # Prepare the print formats
         incr ::write::current_mdpa_indent_level
         set s1 [mdpaIndent]
@@ -97,7 +98,7 @@ proc write::writeGroupSubModelPartAsGeometry { group } {
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
-
+        
         # Print header
         set s [mdpaIndent]
         WriteString "${s}Begin SubModelPart $submodelpart_id // Group $group"
@@ -126,6 +127,7 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     foreach group $groups {
         set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        set needGeoms [write::getValueByNode [$group selectNodes "./value\[@n='WriteGeometries'\]"]]
         set what "nodal"
         set iters ""
         if {$needElems} {append what "&Elements"}
@@ -175,9 +177,9 @@ proc write::_writeElementsForBasicSubmodelParts {un} {
 }
 
 proc write::getSubModelPartNames { args } {
-
+    
     set root [customlib::GetBaseRoot]
-
+    
     set listOfProcessedGroups [list ]
     set groups [list ]
     foreach un $args {
@@ -197,18 +199,18 @@ proc write::getSubModelPartNames { args } {
             if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
         }
     }
-
+    
     return $listOfProcessedGroups
 }
 
 
 proc write::GetSubModelPartFromCondition { base_UN condition_id } {
-
+    
     set root [customlib::GetBaseRoot]
-
+    
     set xp1 "[spdAux::getRoute $base_UN]/condition\[@n='$condition_id'\]/group"
     set groups [$root selectNodes $xp1]
-
+    
     set submodelpart_list [list ]
     foreach gNode $groups {
         set group [$gNode @n]
@@ -223,6 +225,9 @@ proc write::GetSubModelPartName {condid group} {
     variable geometry_cnd_name
     set group_name [write::GetWriteGroupName $group]
     set good_name [write::transformGroupName $group_name]
+    if {[GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+        return "${good_name}"
+    }
     if {$condid eq $geometry_cnd_name} {
         return "${good_name}"
     }
@@ -243,13 +248,17 @@ proc write::AddSubmodelpart {condid group} {
 proc write::getSubModelPartId {cid group} {
     variable submodelparts
     if { [GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
-        variable geometry_cnd_name
-        set cid $geometry_cnd_name
-    }
-    set find [list $cid ${group}]
-    if {[dict exists $submodelparts $find]} {
-        return [dict get $submodelparts [list $cid ${group}]]
-    } {
-        return 0
+        # variable geometry_cnd_name
+        # set cid $geometry_cnd_name
+        set name [write::GetWriteGroupName $group]
+        set good_name [write::transformGroupName $name]
+        return $good_name
+    } else {
+        set find [list $cid ${group}]
+        if {[dict exists $submodelparts $find]} {
+            return [dict get $submodelparts [list $cid ${group}]]
+        } {
+            return 0
+        }
     }
 }

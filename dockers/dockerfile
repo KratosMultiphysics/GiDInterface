@@ -1,5 +1,5 @@
 # Default values. Use --build-arg on build to change
-ARG pyversion=3.10.8
+ARG pyversion=3.11
 
 # Base pyton image
 FROM python:$pyversion
@@ -8,10 +8,14 @@ FROM python:$pyversion
 # Update pip
 RUN pip install --upgrade pip
 
-ARG krversion=9.3.2
+ARG krversion=9.4.2
+
+# WORKDIR /tmp
+# COPY ./wheels/ ./wheels/
 
 # Install Kratos and dependencies
 RUN python3 -m pip install KratosMultiphysics-all==$krversion numpy
+# RUN python3 -m pip install ./wheels/*.whl
 
 # Prepare run folder
 WORKDIR "/model"

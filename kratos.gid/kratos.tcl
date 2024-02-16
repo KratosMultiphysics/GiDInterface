@@ -158,6 +158,8 @@ proc Kratos::InitGlobalVariables {dir} {
     set kratos_private(exec_version) "dev"
     # Allow logs -> 0 No | 1 Only local | 2 Share with dev team
     set Kratos::kratos_private(allow_logs) 1
+    # Experimental: Write mdpa as geometries
+    set Kratos::kratos_private(experimental_write_geometries) 0
     # git hash of the problemtype
     set Kratos::kratos_private(problemtype_git_hash) 0
     # Place were the logs will be placed
@@ -187,12 +189,7 @@ proc Kratos::InitGlobalVariables {dir} {
     set namespaces [list ]
 
     variable pip_packages_required
-    # set pip_packages_required [list KratosMultiphysics KratosFluidDynamicsApplication KratosConvectionDiffusionApplication \
-    # KratosDEMApplication numpy KratosDamApplication KratosSwimmingDEMApplication KratosStructuralMechanicsApplication KratosMeshMovingApplication \
-    # KratosMappingApplication KratosParticleMechanicsApplication KratosLinearSolversApplication KratosContactStructuralMechanicsApplication \
-    # KratosFSIApplication==9.0.3]
-    # set pip_packages_required [list KratosMultiphysics-all==9.3.2 KratosDamApplication==9.3.2]
-    set pip_packages_required [list KratosMultiphysics-all==9.3.2]
+    set pip_packages_required [list KratosMultiphysics-all==9.4.2]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -596,7 +593,7 @@ proc Kratos::Event_BeforeSaveGIDProject { modelname} {
 
 proc Kratos::Event_SaveModelSPD { filespd } {
     # Save the spd
-    gid_groups_conds::save_spd_file $filespd
+    gid_groups_conds::save_spd_file -compress 0 -save_post 0 $filespd
 
     # Save user preferences
     Kratos::RegisterEnvironment

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- -*- coding: utf-8; mode: SGML -*- -->
-<Kratos_data version='9.3.3'>
+<Kratos_data version='9.4.3'>
 	<style show_menubutton_about='0' show_menubutton_search='1'></style>
 	<groups/>
 	<units></units>
@@ -267,6 +267,12 @@
 				return [spdAux::ProcShowInMode $domNode $args]
 			]]>
 		</proc>
+		
+		<proc n='ShowInWriteMode' args='args'>
+			<![CDATA[
+				return [spdAux::ProcShowInWriteMode $domNode $args]
+			]]>
+		</proc>
 		<proc n='UpdateDictAndReturnState' args='args'>
 			<![CDATA[
 				set dict [spdAux::ProcGetConstitutiveLaws $domNode]
@@ -324,6 +330,8 @@
 				return [spdAux::ProcGetFilesValues $domNode]
 			]]>
 		</proc>
+		
+
 
 		<proc n='GetMaterialsList' args='args'>
 			<![CDATA[

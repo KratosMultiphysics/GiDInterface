@@ -22,5 +22,4 @@ proc ::PotentialFluid::Init { app } {
     set ::GidPriv(DuplicateEntities) 1
     PotentialFluid::xml::Init
     PotentialFluid::write::Init
-
 }

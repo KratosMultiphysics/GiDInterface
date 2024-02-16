@@ -1,0 +1,80 @@
+#map changes from v 6.0 to 9.3.2
+
+CONDITION RENAME_QUESTION {SelfWeight3D directionX value_direction_X}
+CONDITION RENAME_QUESTION {SelfWeight3D directionY value_direction_Y}
+CONDITION RENAME_QUESTION {SelfWeight3D directionZ value_direction_Z}
+
+CONDITION RENAME_QUESTION {SelfWeight2D directionX value_direction_X}
+CONDITION RENAME_QUESTION {SelfWeight2D directionY value_direction_Y}
+CONDITION RENAME_QUESTION {SelfWeight2D directionZ value_direction_Z}
+
+
+CONDITION RENAME_QUESTION {SelfWeight2Da directionX value_direction_X}
+CONDITION RENAME_QUESTION {SelfWeight2Da directionY value_direction_Y}
+CONDITION RENAME_QUESTION {SelfWeight2Da directionZ value_direction_Z}
+
+CONDITION RENAME_QUESTION {PointLoad2D directionX value_direction_X}
+CONDITION RENAME_QUESTION {PointLoad2D directionY value_direction_Y}
+CONDITION RENAME_QUESTION {PointLoad2D directionZ value_direction_Z}
+
+CONDITION RENAME_QUESTION {PointLoad2DAxisym directionX value_direction_X}
+CONDITION RENAME_QUESTION {PointLoad2DAxisym directionY value_direction_Y}
+CONDITION RENAME_QUESTION {PointLoad2DAxisym directionZ value_direction_Z}
+
+CONDITION RENAME_QUESTION {PointLoad3D directionX value_direction_X}
+CONDITION RENAME_QUESTION {PointLoad3D directionY value_direction_Y}
+CONDITION RENAME_QUESTION {PointLoad3D directionZ value_direction_Z}
+
+CONDITION RENAME_QUESTION {PointMoment3D directionX value_direction_X}
+CONDITION RENAME_QUESTION {PointMoment3D directionY value_direction_Y}
+CONDITION RENAME_QUESTION {PointMoment3D directionZ value_direction_Z}
+
+CONDITION RENAME_QUESTION {LineLoad2D directionX value_direction_X}
+CONDITION RENAME_QUESTION {LineLoad2D directionY value_direction_Y}
+CONDITION RENAME_QUESTION {LineLoad2D directionZ value_direction_Z}
+
+CONDITION RENAME_QUESTION {LineLoad2DAxisym directionX value_direction_X}
+CONDITION RENAME_QUESTION {LineLoad2DAxisym directionY value_direction_Y}
+CONDITION RENAME_QUESTION {LineLoad2DAxisym directionZ value_direction_Z}
+
+CONDITION RENAME_QUESTION {SurfaceLoad3D directionX value_direction_X}
+CONDITION RENAME_QUESTION {SurfaceLoad3D directionY value_direction_Y}
+CONDITION RENAME_QUESTION {SurfaceLoad3D directionZ value_direction_Z}
+
+# este caso DISPLACEMENT debo combinar dos values originales {constrainedX 0,1+ ByFunctionX Yes,No} en uno conjunto selector_component_X ByFunction,ByValue,Not
+CONDITION COMBINE_QUESTIONS_PROC {DISPLACEMENT {constrainedX ByFunctionX} selector_component_X gid_groups_conds::transform_combine_two_dom_boolean_values {Not ByValue ByFunction ByValue}}
+CONDITION COMBINE_QUESTIONS_PROC {DISPLACEMENT {constrainedY ByFunctionY} selector_component_Y gid_groups_conds::transform_combine_two_dom_boolean_values {Not ByValue ByFunction ByValue}}
+CONDITION COMBINE_QUESTIONS_PROC {DISPLACEMENT {constrainedZ ByFunctionZ} selector_component_Z gid_groups_conds::transform_combine_two_dom_boolean_values {Not ByValue ByFunction ByValue}}
+
+CONDITION COMBINE_QUESTIONS_PROC {ALEMeshDisplacementBC2D {constrainedX ByFunctionX} selector_component_X gid_groups_conds::transform_combine_two_dom_boolean_values {Not ByValue ByFunction ByValue}}
+CONDITION COMBINE_QUESTIONS_PROC {ALEMeshDisplacementBC2D {constrainedY ByFunctionY} selector_component_Y gid_groups_conds::transform_combine_two_dom_boolean_values {Not ByValue ByFunction ByValue}}
+CONDITION COMBINE_QUESTIONS_PROC {ALEMeshDisplacementBC2D {constrainedZ ByFunctionZ} selector_component_Z gid_groups_conds::transform_combine_two_dom_boolean_values {Not ByValue ByFunction ByValue}}
+
+
+CONDITION RENAME_QUESTION {DISPLACEMENT valueX value_component_X}
+CONDITION RENAME_QUESTION {DISPLACEMENT Xfunction_value function_component_X}
+
+CONDITION RENAME_QUESTION {DISPLACEMENT valueY value_component_Y}
+CONDITION RENAME_QUESTION {DISPLACEMENT Yfunction_value function_component_Y}
+
+CONDITION RENAME_QUESTION {DISPLACEMENT valueZ value_component_Z}
+CONDITION RENAME_QUESTION {DISPLACEMENT Zfunction_value function_component_Z}
+
+# do not use CONDITION RENAME because Parts are mapped in more that one possibility, depends on the application, use CONDITION XPATH
+# CONDITION RENAME {Parts FluidParts}
+
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Fluid"]]} {//condition[@n="FluidParts"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="EmbeddedFluid"]]} {//condition[@n="FluidParts"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="SmallDisplacementElement2D"]]]} {//condition[@n="Parts_Solid"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="SmallDisplacementBbarElement2D"]]]} {//condition[@n="Parts_Solid"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="TotalLagrangianElement2D"]]]} {//condition[@n="Parts_Solid"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="UpdatedLagrangianElement2D"]]]} {//condition[@n="Parts_Solid"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="LinearBeamElement2D"]]]} {//condition[@n="Parts_Beam"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="BeamElement2D"]]]} {//condition[@n="Parts_Beam"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="TrussLinearElement2D"]]]} {//condition[@n="Parts_Truss"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="TrussElement2D"]]]} {//condition[@n="Parts_Truss"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="Structural"] and child::group[child::value[@n="Element" and @v="CableElement2D"]]]} {//condition[@n="Parts_Cable"]}}
+CONDITION XPATH {Parts {//condition[@n="Parts" and parent::container[@n="ConvectionDiffusion"]]} {//condition[@n="CNVDFFParts"]}}
+# CONDITION RENAME {Parts_Solid Parts_Material_domain}
+CONDITION XPATH {Parts_Solid {//condition[@n="Parts_Solid" and parent::container[@n="MPM"]]} {//condition[@n="Parts_Material_domain"]}}
+

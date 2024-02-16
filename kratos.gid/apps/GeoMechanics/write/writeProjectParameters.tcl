@@ -44,11 +44,24 @@ proc ::GeoMechanics::write::GetSingleFileStageProjectParameters {  } {
         set stage_content [::GeoMechanics::write::getParametersDict $stage]
         # In first iteration we add the mdpa importer
         if {$i == 0} {
+            # Import mdpa file
             set parameters_modeler [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]
             dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage $parameters_modeler]
+
+            # Add the entities creation modeler
+            set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
+            dict set entities_modeler "parameters" elements_list [::write::GetMatchSubModelPart element]
+            dict set entities_modeler "parameters" conditions_list [::write::GetMatchSubModelPart condition]
+            set modelerts_list [dict get $stages $stage_name stage_preprocess modelers]
+            lappend modelerts_list $entities_modeler
+            dict set stages $stage_name stage_preprocess modelers $modelerts_list
+    
         } else {
             dict set stages $stage_name stage_preprocess [::write::getPreprocessForStage $stage]
         }
+        
+
+        
         dict set stages $stage_name stage_settings $stage_content
         dict set stages $stage_name stage_postprocess [::write::getPostprocessForStage $stage]
         incr i

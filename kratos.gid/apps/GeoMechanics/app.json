@@ -19,17 +19,18 @@
         "controllers/Python.tcl",
         "controllers/PhreaticLine.tcl",
         "examples/examples.tcl",
-        "examples/FirstExample.tcl"
+        "examples/Simple.tcl"
     ],
     "start_script": "::GeoMechanics::Init",
     "requirements": {
         "apps": ["Structural"],
-        "minimum_gid_version": "16.1.4d"
+        "minimum_gid_version": "16.1.4d",
+        "mesh_type": "quadratic"
     },
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
-        "intervals": true,
+        "intervals": false,
         "wizard": false,
         "stages": true
     },
