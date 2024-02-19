@@ -14,7 +14,7 @@
     <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="10" help=""/>
     <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-4" help=""/>
     <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-4" help=""/>
-    <parameter n="echo_level" pn="Echo level" type="int" v="1" help=""/>
+    <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
   </parameter_list>
 
   <linearSolvers>
@@ -66,7 +66,7 @@
     <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="10" help=""/>
     <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-4" help=""/>
     <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-4" help=""/>
-    <parameter n="echo_level" pn="Echo level" type="int" v="1" help=""/>
+    <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
   </parameter_list>
 
   <linearSolvers>
@@ -118,7 +118,7 @@
     <parameter n="maximum_pressure_iterations" pn="Maximum of iterations" type="integer" v="10" help=""/>
     <parameter n="velocity_tolerance" pn="Velocity tolerance" type="double" v="1e-4" help=""/>
     <parameter n="pressure_tolerance" pn="Pressure tolerance " type="double" v="1e-4" help=""/>
-    <parameter n="echo_level" pn="Echo level" type="int" v="1" help=""/>
+    <parameter n="echo_level" pn="Echo level" type="int" v="0" help=""/>
   </parameter_list>
 
   <linearSolvers>
