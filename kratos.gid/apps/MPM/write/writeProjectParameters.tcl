@@ -98,7 +98,7 @@ proc ::MPM::write::getParametersDict { } {
     # Initial Conditions
     set initial_conditions_list [write::getConditionsParametersDict [GetAttribute initial_conditions_un] "Nodal"]
     dict set project_parameters_dict processes initial_conditions_processes $initial_conditions_list
-#     dict set project_parameters_dict processes initial_conditions_processes Parameteres model_part_name MPM_Material
+    #dict set project_parameters_dict processes initial_conditions_processes $initial_conditions_list Parameteres model_part_name MPM_Material
 
     # Gravity
     set activate_gravity [write::getValue ActivateGravity]
