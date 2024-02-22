@@ -9,7 +9,7 @@
         <dynamicnode command="spdAux::injectNodalConditionsOutputs" args=""/>
     </container>
     <container n="GiDOutput" pn="GiD-Output" un="GiDOutput" state="normal" open="1" open_window="0" icon="results">
-        <value n="EnableGiDOutput" pn="Enable output" v="Yes" values="Yes,No" un="EnableGiDOutput" help="Writing output for GiD or not">
+        <value n="EnableGiDOutput" pn="Enable output" v="No" values="Yes,No" un="EnableGiDOutput" help="Writing output for GiD or not">
             <dependencies value="No" node="../container" att1="state" v1="hidden"/>
             <dependencies value="Yes" node="../container" att1="state" v1="normal"/>
         </value>

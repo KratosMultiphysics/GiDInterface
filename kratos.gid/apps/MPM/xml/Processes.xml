@@ -8,13 +8,14 @@
       <parameter n="Displacement" pn="Displacement" enabled="1" function="0" type="vector" vectorType="double" v="0,0,0"/>
     </inputs>
   </Process>
+
   <Process n="ApplyMPMSlipBoundaryProcess" pn="ApplyMPMSlipBoundaryProcess" python_module="apply_mpm_slip_boundary_process"
 	   kratos_module="KratosMultiphysics.ParticleMechanicsApplication" help="" >
     <inputs>
     </inputs>
   </Process>
 
-  	<Process n="ApplyMPMParticleNeumannConditionProcess" pn="ApplyMPMParticleNeumannConditionProcess" python_module="apply_mpm_particle_neumann_condition_process"
+  <Process n="ApplyMPMParticleNeumannConditionProcess" pn="ApplyMPMParticleNeumannConditionProcess" python_module="apply_mpm_particle_neumann_condition_process"
    kratos_module="KratosMultiphysics.ParticleMechanicsApplication" help="">
 		<inputs>
 			<parameter n="modulus" pn="Modulus" type="double" v="1.0" function="1" has_units="1"/>
@@ -22,7 +23,17 @@
 		</inputs>
 	</Process>
 
-   <Process n="AssignInitialVelocityToParticleProcess" pn="AssignInitialVelocityToParticleProcess" python_module="assign_initial_velocity_to_particle_process"
+   <Process n="ApplyMPMParticleDirichletContitionProcess" pn="ApplyMPMParticleDirichletContitionProcess" python_module="apply_mpm_particle_dirichlet_condition_process"
+   kratos_module="KratosMultiphysics.ParticleMechanicsApplication" help="">
+		<inputs>
+            <parameter n="constrained" pn="Constrained" type="combo" v="slip" values="slip,contact,fixed" help="" />
+			<parameter n="particles_per_condition" pn="Particles per condition" type="integer" v="3" has_units="1"/>
+			<parameter n="penalty_factor" pn="Penalty factor" type="double" v="1e13" />
+            <parameter n="option" pn="Option" type="combo" v="flip_normal" values="flip_normal"/>
+		</inputs>
+	</Process>
+
+   <Process n="AssignInitialConditionToParticleProcess" pn="AssignInitialConditionToParticleProcess" python_module="assign_initial_condition_to_particle_process"
    kratos_module="KratosMultiphysics.ParticleMechanicsApplication" help="">
     <inputs>
          <parameter n="component" pn="Component" type="vector" vectorType="double" function="1" cv="ByValue,ByValue,ByValue" v="0.0,0.0,0.0" fv="2*x,2*y*t,0.5*z" has_units="1"/>
