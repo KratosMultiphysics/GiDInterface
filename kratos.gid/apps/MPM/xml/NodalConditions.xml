@@ -8,7 +8,7 @@
   </NodalConditionItem>
 
 
-  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignInitialVelocityToParticleProcess" VariableName="MP_VELOCITY" ImplementedInApplication="ParticleMechanicsApplication" analysis_type="Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="Initial" state="CheckNodalConditionStateMPM" Interval="Total">
+  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignInitialConditionToParticleProcess" VariableName="MP_VELOCITY" ImplementedInApplication="ParticleMechanicsApplication" analysis_type="Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="Initial" state="CheckNodalConditionStateMPM" Interval="Total">
   </NodalConditionItem>
 
 </NodalConditionList>
