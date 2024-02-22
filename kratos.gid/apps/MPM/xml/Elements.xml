@@ -17,7 +17,6 @@
       <NodalCondition n="DISPLACEMENT"/>
       <NodalCondition n="VELOCITY"/>
       <NodalCondition n="ACCELERATION"/>
-      <NodalCondition n="MP_VELOCITY"/>
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />

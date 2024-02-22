@@ -138,6 +138,9 @@ proc ::MPM::write::getParametersDict { } {
             }
         dict set tracking_parameters_dict print_format [write::getValue MPTracking print_format]
         dict set tracking_parameters_dict write_tracking_output_file true
+        set output_file_settings_dict [dict create ]
+        dict set output_file_settings_dict file_name "MP_tracking.dat"
+        dict set tracking_parameters_dict output_file_settings $output_file_settings_dict
         dict set tracking_dict Parameters $tracking_parameters_dict
         dict set project_parameters_dict processes mp_tracking [list $tracking_dict]
         }
