@@ -4,6 +4,7 @@
     <include n="Parts" active="1" path="apps/MPM/xml/Parts.spd"/>
     <include n="InitialConditions" active="1" path="apps/MPM/xml/InitialConditions.spd"/>
     <include n="BoundaryConditions" active="1" path="apps/MPM/xml/BoundaryConditions.spd"/>
+    <include n="Non-Conforming BC" active="1" path="apps/MPM/xml/NonConformingBoundaryConditions.spd"/>
     <include n="Processes" active="0" path="apps/Structural/xml/Processes.spd"/>
     <include n="Intervals" active="0" path="apps/Common/xml/Intervals.spd"/>
     <include n="SolutionStrategy" active="1" path="apps/MPM/xml/SolutionStrategy.spd"/>

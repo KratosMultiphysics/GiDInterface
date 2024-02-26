@@ -1,0 +1,4 @@
+ <?xml version="1.0" encoding="utf-8"?>
+<container n="Non-Conforming Boundary Conditions" pn="Non-Conforming Boundary conditions" un="STNodalConditions" icon="nodal" open_window="0">
+	<include n="Loads" active="1" pn="Loads and other conditions" path="apps/MPM/xml/Loads.spd"/>
+</container>
