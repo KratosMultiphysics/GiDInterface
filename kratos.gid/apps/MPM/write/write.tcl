@@ -146,6 +146,9 @@ proc MPM::write::writeSubmodelparts { type } {
 
         # A Condition y a meshes-> salvo lo que no tenga topologia
         writeLoads
+    } else {
+        # Write the initial conditions submodelpart
+        write::writeNodalConditions [GetAttribute initial_conditions_un]
     }
 }
 
