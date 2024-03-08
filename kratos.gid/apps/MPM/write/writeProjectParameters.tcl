@@ -19,7 +19,10 @@ proc ::MPM::write::getParametersDict { } {
         dict set project_parameters_dict solver_settings time_stepping "time_step" [write::getValue MPTimeParameters DeltaTime]
         dict set project_parameters_dict problem_data start_time [write::getValue MPTimeParameters StartTime]
         dict set project_parameters_dict problem_data end_time [write::getValue MPTimeParameters EndTime]
+<<<<<<< HEAD
+=======
         
+>>>>>>> 2c0555c2ee972697d8ea681f9f79e9e1581a38e7
     }
     
     # Change the model part name
@@ -195,60 +198,57 @@ proc write::GetResultsList { un {cnd ""} } {
     return [GetResultsByXPathList $xp1]
 }
 
-
-
 proc ::MPM::write::GetOutputProcessesList { } {
-    set output_process [dict create]
-    
-    set project_parameters_dict [Structural::write::getParametersDict]
-    # Change the model part name
-    dict set project_parameters_dict solver_settings model_part_name MPM_Material
-    
-    # create grid_import_settings
-    set grid_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
-    dict append grid_import_settings_dict input_filename _Grid
-    dict set project_parameters_dict solver_settings grid_model_import_settings $grid_import_settings_dict
-    
-    # add _Body to model_import_settings
-    set model_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
-    dict append model_import_settings_dict input_filename _Body
-    dict set project_parameters_dict solver_settings model_import_settings $model_import_settings_dict
-    
-    set need_gid [write::getValue EnableGiDOutput]
-    if {[write::isBooleanTrue $need_gid]} {
-        
-        set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
-        set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
-        dict set body_output_configuration_dict python_module particle_gid_output_process
-        dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
-        dict set body_output_configuration_dict process_name ParticleMPMGiDOutputProcess
-        dict set body_output_configuration_dict Parameters model_part_name MPM_Material
-        dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
-        dict set body_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings model_import_settings input_filename]
-        dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
-        dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
-        
-        dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
-        
-        
-        dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
-        dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
-        dict unset project_parameters_dict output_processes gid_output
-        
-        # Append the fluid and solid output processes to the output processes list
-        lappend gid_output_processes_list $body_output_configuration_dict
-        lappend gid_output_processes_list $grid_output_configuration_dict
-        dict set output_process gid_output_processes $gid_output_processes_list
-        
-    }
-    
-    set need_vtk [write::getValue EnableVtkOutput]
-    if {[write::isBooleanTrue $need_vtk]} {
-        #set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
-        
+      set output_process [dict create]
+
+      set project_parameters_dict [Structural::write::getParametersDict]
+      # Change the model part name
+      dict set project_parameters_dict solver_settings model_part_name MPM_Material
+
+      # create grid_import_settings
+      set grid_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
+      dict append grid_import_settings_dict input_filename _Grid
+      dict set project_parameters_dict solver_settings grid_model_import_settings $grid_import_settings_dict
+
+      # add _Body to model_import_settings
+      set model_import_settings_dict [dict get $project_parameters_dict solver_settings model_import_settings]
+      dict append model_import_settings_dict input_filename _Body
+      dict set project_parameters_dict solver_settings model_import_settings $model_import_settings_dict
+
+      set need_gid [write::getValue EnableGiDOutput]
+      if {[write::isBooleanTrue $need_gid]} {
+
+         set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
+         set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
+         dict set body_output_configuration_dict python_module particle_gid_output_process
+         dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
+         dict set body_output_configuration_dict process_name ParticleMPMGiDOutputProcess
+         dict set body_output_configuration_dict Parameters model_part_name MPM_Material
+         dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
+         dict set body_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings model_import_settings input_filename]
+         dict set grid_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings grid_model_import_settings input_filename]
+         dict unset body_output_configuration_dict Parameters postprocess_parameters result_file_configuration nodal_results
+
+         dict unset grid_output_configuration_dict Parameters postprocess_parameters result_file_configuration gauss_point_results
+
+
+         dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
+         dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
+         dict unset project_parameters_dict output_processes gid_output
+
+         # Append the fluid and solid output processes to the output processes list
+         lappend gid_output_processes_list $body_output_configuration_dict
+         lappend gid_output_processes_list $grid_output_configuration_dict
+         dict set output_process gid_output_processes $gid_output_processes_list
+
+      }
+
+     set need_vtk [write::getValue EnableVtkOutput]
+     if {[write::isBooleanTrue $need_vtk]} {
+         #set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
+        set print_vtk [write::getValue VtkOptions PrintOption]
         set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
-        set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
-        
+
         dict set body_output_configuration_dict python_module particle_vtk_output_process
         dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
         dict set body_output_configuration_dict process_name ParticleVtkOutputProcess
@@ -261,33 +261,37 @@ proc ::MPM::write::GetOutputProcessesList { } {
         #set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
         #dict set resultDict output_control_type $outputCT
         #if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
-        
-        dict set body_output_configuration_dict Parameters output_path  "vtk_output_Body"
-        
+
+
+        dict set body_output_configuration_dict Parameters output_path "vtk_output_Body"
         dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
         dict set body_output_configuration_dict Parameters gauss_point_variables_in_elements [write::GetResultsList ElementResults]
-        
-        
+        dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
+        set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
+
         dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
         dict unset grid_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
         dict unset grid_output_configuration_dict Parameters nodal_data_value_variables
         dict unset grid_output_configuration_dict Parameters element_data_value_variables
         dict unset grid_output_configuration_dict Parameters condition_data_value_variables
-        
-        dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
-        #dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
-        dict unset project_parameters_dict output_processes vtk_output
         dict unset grid_output_configuration_dict Parameters gauss_point_results
-        
-        # Append the fluid and solid output processes to the output processes list
-        lappend vtk_output_processes_list $grid_output_configuration_dict
-        lappend vtk_output_processes_list $body_output_configuration_dict
-        dict set output_process vtk_output_processes $vtk_output_processes_list
-        
-        
-    }
-    
-    # Restart
+
+         #dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
+         dict unset project_parameters_dict output_processes vtk_output
+
+         # Append the fluid and solid output processes to the output processes list
+         if {$print_vtk eq "grid"} {lappend vtk_output_processes_list $grid_output_configuration_dict}
+         if {$print_vtk eq "body"} {lappend vtk_output_processes_list $body_output_configuration_dict}
+         if {$print_vtk eq "both"} {lappend vtk_output_processes_list $grid_output_configuration_dict
+                                    lappend vtk_output_processes_list $body_output_configuration_dict}
+
+         dict set output_process vtk_output_processes $vtk_output_processes_list
+
+
+     }
+
+     # Restart
+
     set need_restart [write::getValue EnableRestartOutput]
     if {[write::isBooleanTrue $need_restart]} {
         set restart_dict [dict create ]
