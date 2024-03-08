@@ -148,7 +148,7 @@
   </ConditionItem>
 
 
-  <ConditionItem n="PointLoad2DMPM" pn="Load on points" Interval="Total" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point" ProcessName="ApplyMPMParticleNeumannConditionProcess" help="" units="N" unit_magnitude="F" VariableName="POINT_LOAD">
+  <ConditionItem n="PointLoad2DMPM" pn="Non-Conforming Load on points" Interval="Total" ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="0" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Point" ProcessName="ApplyMPMParticleNeumannConditionProcess" help="" units="N" unit_magnitude="F" VariableName="POINT_LOAD">
     <TopologyFeatures>
       <item  GeometryType="Point" nodes="1" KratosName="MPMGridPointLoadCondition2D1N"/>
     </TopologyFeatures>
@@ -160,8 +160,8 @@
   </ConditionItem>
 
 
-  <ConditionItem n="Dirichlet2DMPM" pn="Slip/Contact/Fixed" Interval="False"
-	ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"
+  <ConditionItem n="Dirichlet2DMPM" pn="Non-Conforming Slip/Contact/Fixed" Interval="False"
+	ImplementedInApplication="StructuralMechanicsApplication" MinimumKratosVersion="9000"
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" RequiresLocalAxes="False" LargeDeformation="False"
 	ElementType="Line" ProcessName="ApplyMPMParticleDirichletContitionProcess" help="">
     <TopologyFeatures>
