@@ -44,7 +44,7 @@
     },
     "write": {
         "coordinates": "all",
-        "materials_file": "MaterialPointsMaterials.json",
+        "materials_file": "ParticleMaterials.json",
         "properties_location": "json",
         "model_part_name": "Background_Grid"
     },
