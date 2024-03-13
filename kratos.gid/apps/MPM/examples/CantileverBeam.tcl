@@ -127,7 +127,7 @@ proc ::MPM::examples::CantileverBeam::TreeAssignation2D {args} {
     set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route HyperelasticBeam]
     $mpm_solid_part setAttribute ov surface
     set constitutive_law_name "HyperElasticNeoHookeanPlaneStrain${nd}Law"
-    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material HyperelasticBeam DENSITY 1000 YOUNG_MODULUS 90000000 POISSON_RATIO 0.49 THICKNESS 0.1 PARTICLES_PER_ELEMENT 6]
+    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material HyperelasticBeam DENSITY 1000 YOUNG_MODULUS 90000000 POISSON_RATIO 0.49 THICKNESS 0.1 MATERIAL_POINTS_PER_ELEMENT 6]
     spdAux::SetValuesOnBaseNode $mpm_solid_part $props
 
     ## Grid
