@@ -19,10 +19,7 @@ proc ::MPM::write::getParametersDict { } {
         dict set project_parameters_dict solver_settings time_stepping "time_step" [write::getValue MPTimeParameters DeltaTime]
         dict set project_parameters_dict problem_data start_time [write::getValue MPTimeParameters StartTime]
         dict set project_parameters_dict problem_data end_time [write::getValue MPTimeParameters EndTime]
-<<<<<<< HEAD
-=======
-        
->>>>>>> 2c0555c2ee972697d8ea681f9f79e9e1581a38e7
+
     }
     
     # Change the model part name
