@@ -206,17 +206,28 @@ proc ::Fluid::write::writeBoundaryConditions { } {
     spdAux::MergeGroups $skin_group_name $groups
     
     # Write the conditions
-    if {$::Model::SpatialDimension eq "3D"} {
-        set kname SurfaceCondition3D3N
-        set nnodes 3
-    } {
-        set kname LineCondition2D2N
-        set nnodes 2
-    }
+    lassign [write::_getConditionDefaultName] kname nnodes
     set last_condition_iterator [write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $::Fluid::write::FluidConditionMap]
     
     # Clean
     GiD_Groups delete $skin_group_name
+}
+
+proc ::Fluid::write::_getConditionDefaultName { } {
+    set is_quadratic [write::isquadratic]
+    if {$::Model::SpatialDimension eq "3D"} {
+
+        set nnodes 3
+        if {$is_quadratic} {set nnodes 6}
+        
+        set kname SurfaceCondition3D${nnodes}N
+    } {
+        set nnodes 2
+        if {$is_quadratic} {set nnodes 3}
+        set kname LineCondition2D${nnodes}N
+    }
+
+    return [list $kname $nnodes]
 }
 
 proc ::Fluid::write::writeDrags { } {
