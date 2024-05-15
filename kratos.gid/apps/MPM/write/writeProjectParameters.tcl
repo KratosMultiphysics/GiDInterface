@@ -3,7 +3,7 @@ proc ::MPM::write::getParametersDict { } {
     set project_parameters_dict [Structural::write::getParametersDict]
     
     # Analysis stage field
-    dict set project_parameters_dict analysis_stage "KratosMultiphysics.MPMApplication.mpm_analysis"
+    dict set project_parameters_dict analysis_stage "KratosMultiphysics.MPMApplication.particle_mechanics_analysis"
     # Quasi-static must be written as Quasi-static...
     set solutiontype [write::getValue STSoluType]
     dict set project_parameters_dict solver_settings solver_type $solutiontype
