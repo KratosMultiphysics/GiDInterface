@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <NodalConditionList>
-  <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorVariableProcess" VariableName="DISPLACEMENT" ImplementedInApplication="ParticleMechanicsApplication" analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="BoundaryCondition" state="CheckNodalConditionStateMPM" Interval="Total">
+  <NodalConditionItem n="DISPLACEMENT" pn="Displacement" ProcessName="AssignVectorVariableProcess" VariableName="DISPLACEMENT" ImplementedInApplication="MPMApplication" analysis_type="Static,Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="BoundaryCondition" state="CheckNodalConditionStateMPM" Interval="Total">
   <outputs>
     <parameter n="REACTION" pn="Reaction" v="Yes"/>
 <!--     <parameter n="PRESSURE" pn="Pressure" v="No"/> -->
@@ -8,7 +8,7 @@
   </NodalConditionItem>
 
 
-  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignInitialConditionToParticleProcess" VariableName="MP_VELOCITY" ImplementedInApplication="ParticleMechanicsApplication" analysis_type="Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="Initial" state="CheckNodalConditionStateMPM" Interval="Total">
+  <NodalConditionItem n="VELOCITY" pn="Velocity" ProcessName="AssignInitialConditionToParticleProcess" VariableName="MP_VELOCITY" ImplementedInApplication="MPMApplication" analysis_type="Quasi-static,Dynamic"  unit_magnitude="L" units="m" App="MPM" Type="Initial" state="CheckNodalConditionStateMPM" Interval="Total">
   </NodalConditionItem>
 
 </NodalConditionList>

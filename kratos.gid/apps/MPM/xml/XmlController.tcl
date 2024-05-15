@@ -24,7 +24,7 @@ proc MPM::xml::Init { } {
     foreach strategy $::Model::SolutionStrategies {
         $strategy setAttribute NeedElements false
         foreach scheme [$strategy getSchemes] {
-            $scheme addElementFilter ImplementedInApplication ParticleMechanicsApplication
+            $scheme addElementFilter ImplementedInApplication MPMApplication
         }
     }
 
