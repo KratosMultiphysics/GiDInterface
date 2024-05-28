@@ -291,6 +291,61 @@ proc Kratos::GetMeshBasicData { } {
     return $result
 }
 
+proc Kratos::SetMeshCriteria { elementsize } {
+
+    set force_mesh_order [dict create]
+    set elements_used [spdAux::GetUsedElements]
+    set forced_mesh_order -1
+    foreach element_id $elements_used {
+        set element [Model::getElement $element_id]
+        if {[$element hasAttribute "MeshOrder"]} {
+            set element_forces [$element getAttribute "MeshOrder"]
+            if {$element_forces eq "Quadratic"} {
+                set element_forces 1
+            } else {
+                set element_forces 0
+            }
+            dict set force_mesh_order $element_id $element_forces
+            if {$forced_mesh_order eq -1} {
+                set forced_mesh_order $element_forces
+            } else {
+                if {$forced_mesh_order ne $element_forces} {
+                    # W "The element $element_id requires a different mesh order"
+                    error "Incompatible mesh orders in elements"
+                }
+            }
+        }        
+    }
+    
+    if {$forced_mesh_order ne -1} {
+        
+    set previous_mesh_order [write::isquadratic]
+        variable mesh_criteria_forced
+        dict set mesh_criteria_forced "PreviousMeshOrder" [write::isquadratic]
+        GiD_Set Model(QuadraticType) $forced_mesh_order
+        set mesh_type "Quadratic"
+        if {$forced_mesh_order eq 0} {
+            set mesh_type "Linear"
+        }
+        ::GidUtils::SetWarnLine "Setting mesh mode: $mesh_type"
+    }
+}
+
+
+proc Kratos::ResetMeshCriteria { fail } {
+    variable mesh_criteria_forced
+    if {[dict exists $mesh_criteria_forced "PreviousMeshOrder"]} {
+        set previous_mesh_order [dict get $mesh_criteria_forced "PreviousMeshOrder"]
+        GiD_Set Model(QuadraticType) $previous_mesh_order
+        set mesh_type "Quadratic"
+        if {$previous_mesh_order eq 0} {
+            set mesh_type "Linear"
+        }
+        ::GidUtils::SetWarnLine "Restoring mesh mode: $mesh_type"
+        dict unset mesh_criteria_forced "PreviousMeshOrder"
+    }
+}
+
 proc ? {question true_val false_val} {
     return [expr $question ? $true_val : $false_val]
 }

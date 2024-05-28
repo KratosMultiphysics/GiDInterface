@@ -11,6 +11,8 @@ namespace eval ::Kratos {
 
     variable tmp_init_mesh_time
     variable namespaces
+
+    variable mesh_criteria_forced
 }
 
 # Hard minimum GiD Version is 14
@@ -190,6 +192,9 @@ proc Kratos::InitGlobalVariables {dir} {
 
     variable pip_packages_required
     set pip_packages_required [list KratosMultiphysics-all==9.4.2]
+
+    variable mesh_criteria_forced
+    set mesh_criteria_forced [dict create]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -447,6 +452,10 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
         GiD_MeshData mesh_criteria to_be_meshed 2 surfaces [GiD_EntitiesGroups get $group surfaces]
         GiD_MeshData mesh_criteria to_be_meshed 2 volumes  [GiD_EntitiesGroups get $group volumes]
     }
+
+    # Change the mesh settings depending on the element requirements
+    catch {Kratos::SetMeshCriteria $elementsize}
+
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
     set endtime [clock seconds]
@@ -462,6 +471,10 @@ proc Kratos::Event_MeshProgress { total_percent partial_percents_0 partial_perce
 
 proc Kratos::Event_AfterMeshGeneration {fail} {
     variable tmp_init_mesh_time
+
+    # Change the mesh settings depending on the element requirements. Reset previous settings
+    catch {Kratos::ResetMeshCriteria $fail}
+
     # Maybe the current application needs to do some extra job
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
     set endtime [clock seconds]
