@@ -85,8 +85,8 @@ proc Kratos::CheckProjectIsNew {filespd} {
 proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
     variable kratos_private
 
-    if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
-        W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
+    if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
+        W "Warning: kratos interface requires GiD $kratos_private(MinimumGiDVersion) or later."
         if { [GidUtils::VersionCmp 14.0.0] < 0 } {
             W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14."
         } {
