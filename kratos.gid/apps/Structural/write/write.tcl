@@ -292,9 +292,18 @@ proc ::Structural::write::writeHinges { } {
             foreach geom_line [GiD_EntitiesGroups get $group lines] {
                 # ask the mesh for the linear elements of this line
                 # check https://gidsimulation.atlassian.net/wiki/spaces/GCM/pages/2385543949/Geometry
-                set linear_elements [lindex [GiD_Geometry get line $geom_line mesh] 4]
-                set first [::tcl::mathfunc::min {*}$linear_elements]
-                set end [::tcl::mathfunc::max {*}$linear_elements]
+                # set linear_elements [lindex [GiD_Geometry get line $geom_line mesh] 4]
+                # set first [::tcl::mathfunc::min {*}$linear_elements]
+                # set end [::tcl::mathfunc::max {*}$linear_elements]
+
+                lassign [lrange [GiD_Geometry line $geom_line] 2 3] first_point end_point
+                set first [GiD_Geometry get point $first_point node] 
+                set end [GiD_Geometry get point $end_point node]
+                if {$first eq "" || $end eq ""} {
+                    W "Error: Line $geom_line has no nodes. Please make sure the mesh is attached to the geometry."
+                    continue
+                }
+
                 if {[llength $first_list] > 0} {
                     set value [join $first_list ,]
                     write::WriteString [format "$id_f \[%d\] (%s)" $first [llength $first_list] $value]
