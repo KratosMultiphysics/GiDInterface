@@ -291,6 +291,56 @@ proc Kratos::GetMeshBasicData { } {
     return $result
 }
 
+proc Kratos::CheckMeshCriteria { elementsize } {
+
+    set force_mesh_order [dict create]
+    set elements_used [spdAux::GetUsedElements]
+    set forced_mesh_order -1
+    foreach element_id $elements_used {
+        set element [Model::getElement $element_id]
+        if {[$element hasAttribute "MeshOrder"]} {
+            set element_forces [$element getAttribute "MeshOrder"]
+            if {$element_forces eq "Quadratic"} {
+                set element_forces 1
+            } else {
+                set element_forces 0
+            }
+            dict set force_mesh_order $element_id $element_forces
+            if {$forced_mesh_order eq -1} {
+                set forced_mesh_order $element_forces
+            } else {
+                if {$forced_mesh_order ne $element_forces} {
+                    # W "The element $element_id requires a different mesh order"
+                    error "Incompatible mesh orders in elements"
+                }
+            }
+        }        
+    }
+    
+    if {$forced_mesh_order ne -1} {
+        
+        set element [lindex [dict keys $force_mesh_order] 0]
+        set previous_mesh_order [write::isquadratic]
+        set current_mesh_type [Kratos::GetMeshOrderName $previous_mesh_order]
+        set desired_mesh_type [Kratos::GetMeshOrderName $forced_mesh_order]
+        if {$previous_mesh_order ne $forced_mesh_order} {
+            W "The element $element requires a different mesh order: $desired_mesh_type"
+            W "Currently the mesh order is $current_mesh_type. please change it in the menu Mesh > Quadratic type"
+            return -1
+        }
+    }
+    return 0
+}
+
+proc Kratos::GetMeshOrderName {order} {
+    switch $order {
+        0 {return "Linear"}
+        1 {return "Quadratic"}
+        2 {return "Quadratic9"}
+        default {return "Unknown"}
+    }
+}
+
 proc Kratos::SetMeshCriteria { elementsize } {
 
     set force_mesh_order [dict create]

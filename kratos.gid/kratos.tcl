@@ -454,7 +454,7 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
     }
 
     # Change the mesh settings depending on the element requirements
-    catch {Kratos::SetMeshCriteria $elementsize}
+    catch {Kratos::CheckMeshCriteria $elementsize}
 
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
@@ -473,7 +473,7 @@ proc Kratos::Event_AfterMeshGeneration {fail} {
     variable tmp_init_mesh_time
 
     # Change the mesh settings depending on the element requirements. Reset previous settings
-    catch {Kratos::ResetMeshCriteria $fail}
+    # catch {Kratos::ResetMeshCriteria $fail}
 
     # Maybe the current application needs to do some extra job
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
