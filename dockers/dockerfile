@@ -8,7 +8,7 @@ FROM python:$pyversion
 # Update pip
 RUN pip install --upgrade pip
 
-ARG krversion=9.4.2
+ARG krversion=9.4.6
 
 # WORKDIR /tmp
 # COPY ./wheels/ ./wheels/
