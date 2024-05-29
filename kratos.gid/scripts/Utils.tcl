@@ -311,7 +311,8 @@ proc Kratos::CheckMeshCriteria { elementsize } {
             } else {
                 if {$forced_mesh_order ne $element_forces} {
                     # W "The element $element_id requires a different mesh order"
-                    error "Incompatible mesh orders in elements"
+                    W "Incompatible mesh orders in elements"
+                    return -1
                 }
             }
         }        
