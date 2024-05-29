@@ -296,7 +296,7 @@ proc ::Structural::write::writeHinges { } {
                 # set first [::tcl::mathfunc::min {*}$linear_elements]
                 # set end [::tcl::mathfunc::max {*}$linear_elements]
 
-                lassign [lrange [GiD_Geometry line $geom_line] 2 3] first_point end_point
+                lassign [lrange [GiD_Geometry get line $geom_line] 2 3] first_point end_point
                 set first [GiD_Geometry get point $first_point node] 
                 set end [GiD_Geometry get point $end_point node]
                 if {$first eq "" || $end eq ""} {
