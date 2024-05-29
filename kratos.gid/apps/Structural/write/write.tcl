@@ -249,13 +249,6 @@ proc ::Structural::write::writeHinges { } {
     # format for writing ids
     set id_f [dict get $write::formats_dict ID]
 
-    # Preprocess old_conditions. Each mesh linear element remembers the origin line in geometry
-    set match_dict [dict create]
-    foreach line [GiD_Info conditions relation_line_geo_mesh mesh] {
-        lassign $line E eid - geom_line
-        dict lappend match_dict $geom_line $eid
-    }
-
     # Process groups assigned to Hinges
     if {$::Model::SpatialDimension eq "3D"} {
         set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
@@ -297,7 +290,9 @@ proc ::Structural::write::writeHinges { } {
 
             # Write Left and Rigth end of each geometrical bar
             foreach geom_line [GiD_EntitiesGroups get $group lines] {
-                set linear_elements [dict get $match_dict $geom_line]
+                # ask the mesh for the linear elements of this line
+                # check https://gidsimulation.atlassian.net/wiki/spaces/GCM/pages/2385543949/Geometry
+                set linear_elements [lindex [GiD_Geometry get line $geom_line mesh] 4]
                 set first [::tcl::mathfunc::min {*}$linear_elements]
                 set end [::tcl::mathfunc::max {*}$linear_elements]
                 if {[llength $first_list] > 0} {
