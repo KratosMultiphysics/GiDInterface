@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Groups>
+    <Group id="GeoMechanics" name="GeoMechanics examples">
+        <!-- <Example id="GeoMechanicsFirstExample2D" app="GeoMechanics" logo="FirstExample.png" name="GeoMechanics\nFirst example 2D" dim="2D" cmd="::GeoMechanics::examples::FirstExample::Init">
+            <Description></Description>
+        </Example>
+         -->
+        <Example id="GeoMechanicsSimple2D" app="GeoMechanics" logo="Simple.png" name="GeoMechanics\nSecond example 2D" dim="2D" cmd="::GeoMechanics::examples::Simple::Init">
+            <Description></Description>
+        </Example>
+    </Group>
+</Groups>

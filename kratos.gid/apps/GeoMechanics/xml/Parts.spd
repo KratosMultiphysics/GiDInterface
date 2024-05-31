@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container  n="Parts" pn="Parts" un="STParts" icon="shells16"  update_proc="UpdateParts">
+	<dynamicnode command="spdAux::injectPartsByElementType" args=""/>
+</container>
