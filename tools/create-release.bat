@@ -5,6 +5,11 @@ set VERSION=9.5.1
 @REM set BRANCH=Release-%VERSION%
 @REM git branch %BRANCH%
 @REM git checkout %BRANCH%
+
+
+@REM run python prepare-release-files.py
+python prepare-release-files.py
+
 cd ..
 mkdir dist
 set FOLDER=dist\kratos-%VERSION%
