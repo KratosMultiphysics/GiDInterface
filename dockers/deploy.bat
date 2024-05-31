@@ -1,5 +1,5 @@
-set krversion=9.4.2
-set pyversion=3.10.5
+set krversion=9.4.6
+set pyversion=3.11
 @REM 3.10.10-alpine3.17
 echo "Building kratos %krversion% on python %pyversion%"
 docker build --build-arg krversion=%krversion% --build-arg pyversion=%pyversion% -t kratos-run:%krversion% -t kratos-run:latest .

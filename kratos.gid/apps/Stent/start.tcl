@@ -49,5 +49,5 @@ proc ::Stent::CustomToolbarItems { } {
 }
 
 proc ::Stent::BeforeMeshGeneration { size } { 
-    ::Structural::BeforeMeshGeneration $size
+    catch {::Structural::BeforeMeshGeneration $size}
 }
