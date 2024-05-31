@@ -13,24 +13,8 @@ namespace eval ::Kratos {
     variable namespaces
 }
 
-# Hard minimum GiD Version is 14
-if {[GidUtils::VersionCmp "14.0.1"] >=0 } {
-    if {[GidUtils::VersionCmp "14.1.1"] >=0 } {
-        # GiD Developer versions
-        proc GiD_Event_InitProblemtype { dir } {
+proc GiD_Event_InitProblemtype { dir } {
             Kratos::Event_InitProblemtype $dir
-        }
-    } {
-        # GiD Official versions
-        proc InitGIDProject { dir } {
-            Kratos::Event_InitProblemtype $dir
-        }
-    }
-} {
-    # GiD versions previous to 15 are no longer allowed
-    # As we dont register the event InitProblemtype, the rest of events are also unregistered
-    # So no chance to open anything in GiD 13.x or earlier
-    WarnWin "The minimum GiD Version for Kratos is 15 or later \nUpdate at gidhome.com"
 }
 
 proc Kratos::Events { } {

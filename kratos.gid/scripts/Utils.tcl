@@ -87,12 +87,13 @@ proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
 
     if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
         W "Warning: kratos interface requires GiD $kratos_private(MinimumGiDVersion) or later."
-        if { [GidUtils::VersionCmp 14.0.0] < 0 } {
-            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14."
-        } {
-            W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
-        }
-        W "Download it from: https://www.gidhome.com/download/developer-versions/"
+        W "Download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
+    }
+    # Check GiD maximum version
+    if { [GidUtils::VersionCmp $kratos_private(MaximumGiDVersion)] > 0 } {
+        W "Warning: kratos interface requires GiD $kratos_private(MaximumGiDVersion) or less."
+        W "You may experience problems with the python packages"
+        W "You can download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
     }
 }
 
