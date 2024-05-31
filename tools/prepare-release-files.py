@@ -22,7 +22,7 @@ if __name__ == "__main__":
     applications = root.findall('.//appLink')
     # create a list of applications, reading the field 'n'
 
-    app_list = []
+    app_list = ['Common', 'Examples']
     for app in applications:
         app_list.append(app.attrib['n'])
 
