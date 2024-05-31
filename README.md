@@ -25,8 +25,8 @@ If you need the developer version, you are on the right place.
     * 4.1- To execute Kratos using the standard pip packages:
         * Python version recommended: 3.8, 3.9, 3.10, 3.11
         * Open a terminal and run
-            - Linux: `python3 -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.5.1`
-            - Windows: `python -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.5.1`
+            - Linux: `python3 -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.4.6`
+            - Windows: `python -m pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==9.4.6`
     * 4.2- To execute Kratos using your compiled binaries:
         * Fill the Kratos preferences windows with
             - Path to the python folder

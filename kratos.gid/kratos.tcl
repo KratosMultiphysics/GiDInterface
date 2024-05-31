@@ -173,7 +173,7 @@ proc Kratos::InitGlobalVariables {dir} {
     set namespaces [list ]
 
     variable pip_packages_required
-    set pip_packages_required [list KratosMultiphysics-all==9.5.1]
+    set pip_packages_required [list KratosMultiphysics-all==9.4.6]
 }
 
 proc Kratos::LoadCommonScripts { } {
