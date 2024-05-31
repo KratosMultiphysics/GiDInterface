@@ -7,7 +7,7 @@ import sys
 def get_version_number(file_name):
     tree = ET.parse(file_name)
     root = tree.getroot()
-    version = root.find('version').text
+    version = root.attrib['version']
     return version
 
 if __name__ == "__main__":
