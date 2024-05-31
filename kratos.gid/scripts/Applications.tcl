@@ -75,6 +75,10 @@ proc apps::getAppById { id } {
 
 proc apps::appExists {id} {
     variable appList
+
+    if {[getAppById $id] eq ""} {
+        return 0
+    }
     
     set dir [file join $::Kratos::kratos_private(Path) apps $id]
     set app_definition_file [file join $dir app.json]
