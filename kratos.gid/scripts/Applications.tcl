@@ -73,6 +73,20 @@ proc apps::getAppById { id } {
     return $appR
 }
 
+proc apps::appExists {id} {
+    variable appList
+    
+    set dir [file join $::Kratos::kratos_private(Path) apps $id]
+    set app_definition_file [file join $dir app.json]
+    # if the directory does not exist, do not load the app
+    if {[file exists $dir]} {
+        if {[file exists $app_definition_file]} {
+            return 1
+        }
+    }
+    return 0
+}
+
 proc apps::NewApp {appid publicname prefix} {
     variable appList
     set ap [App new $appid]
@@ -305,11 +319,14 @@ oo::class create App {
 proc apps::LoadAppProperties {app} {
     set dir [file join $::Kratos::kratos_private(Path) apps [$app getName]]
     set app_definition_file [file join $dir app.json]
-    if {[file exists $app_definition_file]} {
-        set props [Kratos::ReadJsonDict $app_definition_file]
-        $app setProperties $props
-    } else {
-        W "MISSING app.json file for app [$app getName]"
+    # if the directory does not exist, do not load the app
+    if {[file exists $dir]} {
+        if {[file exists $app_definition_file]} {
+            set props [Kratos::ReadJsonDict $app_definition_file]
+            $app setProperties $props
+        } else {
+            W "MISSING app.json file for app [$app getName]"
+        }
     }
 }
 

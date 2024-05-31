@@ -111,7 +111,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     set activeapp_dom [spdAux::SetActiveAppFromDOM]
     if { $activeapp_dom == "" } {
         #open a window to allow the user select the app
-        after 500 [list spdAux::CreateWindow]
+        after 500 [list spdAux::CreateInitialApplicationsWindow]
     }
 
 }
