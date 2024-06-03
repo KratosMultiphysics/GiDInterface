@@ -98,4 +98,16 @@
     <inputs></inputs>
     <outputs></outputs>
   </ConditionItem>
+  <ConditionItem n="PressureConstraints2D" pn="Custom pressure constraints" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="2D" LocalSpaceDimension="2" SkinConditions="False" ElementType="Point,Line" App="Fluid" ProcessName="AssignScalarVariableProcess" VariableName="PRESSURE" help="" units="Pa" unit_magnitude="P">
+    <TopologyFeatures></TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+  <ConditionItem n="PressureConstraints3D" pn="Custom pressure constraints" ImplementedInFile=".cpp" Interval="Total" ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" App="Fluid" WorkingSpaceDimension="3D" LocalSpaceDimension="3" SkinConditions="False" ElementType="Point,Line,Surface" ProcessName="AssignScalarVariableProcess" VariableName="PRESSURE" help="" units="Pa" unit_magnitude="P">
+    <TopologyFeatures></TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
 </ConditionList>
