@@ -15,8 +15,10 @@
         <Description></Description>
     </Example>
     
-    <Example id="CylinderInFlowP2P12D" app="Fluid" logo="CylinderInFlow2D.png" name="Cylinder in flow 2D with P2 P1 element" dim="2D" cmd="::Fluid::examples::CylinderInFlowP2P1::Init">
-        <Description></Description>
+    <Example id="CylinderInFlowP2P12D" app="Fluid" logo="CylinderInFlow2D.png" name="CFD 2D. P2-P1 elem" dim="2D" cmd="::Fluid::examples::CylinderInFlowP2P1::Init">
+        <Description>This example uses a P2-P1 element to simulate the flow around a cylinder in 2D.
+        - Quadratic mesh
+        </Description>
     </Example>
     <!-- <Example id="CylinderInFlow3D" app="Fluid" logo="CylinderInFlow3D.png" name="Cylinder in flow 3D" dim="3D" cmd="::Fluid::examples::CylinderInFlow::Init">
         <Description></Description>
