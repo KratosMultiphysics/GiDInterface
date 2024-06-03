@@ -271,7 +271,7 @@
     </ElementItem>
 
     <ElementItem n="P2P12D" pn="P2-P1" ImplementedInFile="incompressible_navier_stokes_p2_p1_continuous.cpp" ImplementedInApplication="FluidDynamicsApplication" FormulationElementType="p2p1"
-        MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False"
+        MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" MeshOrder="Quadratic"
         LargeDeformation="False" ElementType="Fluid" help="This element implements a P2-P1 incompressible Navier-Stokes element">
         <!--here we could add a list of all of the possible geometries-->
         <TopologyFeatures>
