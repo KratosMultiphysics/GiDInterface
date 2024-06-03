@@ -4,8 +4,8 @@
         <Description>This example applies an inlet condition to the air surrounding a 2D building.
         The default mesh is made of 4.000 trianglular elements, and the calculation generates results for 800 timesteps.
         - Size of model: 0.4 MB
-        - Time: Avg calulation time: 2 minutes
         - Size with results: 250 MB
+        - Avg. calulation time: 2 minutes
         </Description>
     </Example>
     <Example id="CylinderInFlow2D" app="Fluid" logo="CylinderInFlow2D.png" name="Cylinder in flow 2D" dim="2D" cmd="::Fluid::examples::CylinderInFlow::Init">
@@ -17,7 +17,10 @@
 
     <Example id="LidDrivenCavity2D" app="Fluid" logo="LidDrivenCavity2D.png" name="Lid-driven cavity" dim="2D" cmd="::Fluid::examples::LidDrivenCavity::Init">
         <Description>This example uses a P2-P1 element to simulate the 2D lid-driven cavity flow.
-        - Quadratic mesh
+        - Requires quadratic mesh
+        - Size of model: 2.3 MB
+        - Size with results: 484 MB
+        - Avg. calculation time: 2 minutes
         </Description>
     </Example>
     <!-- <Example id="CylinderInFlow3D" app="Fluid" logo="CylinderInFlow3D.png" name="Cylinder in flow 3D" dim="3D" cmd="::Fluid::examples::CylinderInFlow::Init">
