@@ -7,6 +7,9 @@ set VERSION=9.4.5
 @REM git checkout %BRANCH%
 
 
+git tag -f Release-%version%
+git push --tags --force
+
 @REM run python prepare-release-files.py
 python prepare-release-files.py
 
