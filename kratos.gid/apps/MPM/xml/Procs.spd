@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="procs" pn="procs" includeContainer="No">
-<proc n='CheckNodalConditionStateSolid' args='args'>
+		  			
+    <proc n='CheckNodalConditionStateStructural' args='args'>
 	  <![CDATA[
-	  return [Structural::xml::ProcCheckNodalConditionStateSolid $domNode $args]
+	  return [Structural::xml::ProcCheckNodalConditionStateStructural $domNode $args]
 	  ]]>
 	</proc>		
-
+	
 	<proc n='CheckGeometrySolid' args='args'>
 		<![CDATA[
 		return [MPM::xml::ProcCheckGeometry $domNode $args]              
 		]]>
 	</proc>
-
 	
 	<proc n='GetElements' args='args'>
 		<![CDATA[
@@ -19,11 +19,21 @@
 		]]>
 	</proc>
 
-	<proc n='GetSolutionStrategiesStructural' args='args'>
+	<proc n='GetSolutionStrategiesMPM' args='args'>
 	  <![CDATA[
-	  return [Structural::xml::ProcGetSolutionStrategiesSolid $domNode $args]
+	  return [MPM::xml::ProcGetSolutionStrategiesMPM $domNode $args]
+	  ]]>
+	</proc>
+	<proc n='CheckActivateStabilizationState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckActivateStabilizationState $domNode $args]
 	  ]]>
 	</proc>
 		  		
+	<proc n='CheckStabilizationState' args='args'>
+	  <![CDATA[
+	  return [MPM::xml::ProcCheckStabilizationState $domNode $args]
+	  ]]>
+	</proc>
 
 </container>

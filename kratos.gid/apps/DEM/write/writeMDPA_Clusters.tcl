@@ -1,4 +1,4 @@
-proc DEM::write::WriteMDPAClusters { } {
+proc ::DEM::write::WriteMDPAClusters { } {
     
 
 }

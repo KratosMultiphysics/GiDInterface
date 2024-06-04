@@ -1,15 +1,19 @@
+namespace eval ::FluidDEM::examples::CylinderInFlow {
+    namespace path ::FluidDEM::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::FluidDEM::examples::CylinderInFlow {args} {
+proc ::FluidDEM::examples::CylinderInFlow::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
 
-    DrawCylinderInFlowGeometry$::Model::SpatialDimension
-    AssignGroupsCylinderInFlow$::Model::SpatialDimension
-    AssignCylinderInFlowMeshSizes$::Model::SpatialDimension
-    TreeAssignationCylinderInFlow$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
     AssignToTree
 
     GiD_Process 'Redraw
@@ -18,14 +22,14 @@ proc ::FluidDEM::examples::CylinderInFlow {args} {
     GiD_Process 'Zoom Frame
 
     GiD_Process Mescape Meshing ElemType Sphere Volumes 2 escape
-    MeshGenerationOKDo 0.1
+    # MeshGenerationOKDo 0.1
 
 }
 
 
 # Draw Geometry
-proc FluidDEM::examples::DrawCylinderInFlowGeometry3D {args} {
-    DrawCylinderInFlowGeometry2D
+proc ::FluidDEM::examples::DrawGeometry3D {args} {
+    DrawGeometry2D
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     GiD_Layers edit opaque Fluid 0
 
@@ -45,7 +49,7 @@ proc FluidDEM::examples::DrawCylinderInFlowGeometry3D {args} {
     GiD_Process 'Rotate Angle 0 0 'rotate scr y -45 'rotate scr x 45 escape
 }
 
-proc FluidDEM::examples::DrawCylinderInFlowGeometry2D {args} {
+proc ::FluidDEM::examples::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
@@ -86,10 +90,8 @@ proc FluidDEM::examples::DrawCylinderInFlowGeometry2D {args} {
 
 }
 
-
 # Group assign
-
-proc FluidDEM::examples::AssignGroupsCylinderInFlow3D {args} {
+proc ::FluidDEM::examples::AssignGroups3D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -122,7 +124,7 @@ proc FluidDEM::examples::AssignGroupsCylinderInFlow3D {args} {
 }
 
 # Mesh sizes
-proc FluidDEM::examples::AssignCylinderInFlowMeshSizes3D {args} {
+proc ::FluidDEM::examples::AssignMeshSizes3D {args} {
     set cylinder_mesh_size 0.1
     set walls_mesh_size 0.1
     set fluid_mesh_size 0.1
@@ -139,11 +141,8 @@ proc FluidDEM::examples::AssignCylinderInFlowMeshSizes3D {args} {
 
 }
 
-
-
 # Tree assign
-
-proc FluidDEM::examples::TreeAssignationCylinderInFlow3D {args} {
+proc ::FluidDEM::examples::TreeAssignation3D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -157,15 +156,8 @@ proc FluidDEM::examples::TreeAssignationCylinderInFlow3D {args} {
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
-    set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    set props [list ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
     ErasePreviousIntervals
@@ -179,37 +171,24 @@ proc FluidDEM::examples::TreeAssignationCylinderInFlow3D {args} {
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
     set props [list hydrostatic_outlet true]
-    foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $outletNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
 
     # Time parameters
-    set time_parameters [list EndTime 45 DeltaTime 0.1]
-    set time_params_path [spdAux::getRoute "FLTimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list EndTime 45 DeltaTime 0.1]
+    set xpath [spdAux::getRoute "FLTimeParameters"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
     # Output
-    set time_parameters [list OutputControlType step OutputDeltaStep 1]
+    set parameters [list OutputControlType step OutputDeltaStep 1]
     set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
     # Parallelism
-    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set time_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set xpath [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
 }
@@ -217,7 +196,7 @@ proc FluidDEM::examples::TreeAssignationCylinderInFlow3D {args} {
 proc ::FluidDEM::examples::AssignToTree { } {
     # Material
     set DEMmaterials [spdAux::getRoute "DEMMaterials"]
-    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 PARTICLE_MATERIAL 2 ]
+    set props [list PARTICLE_DENSITY 2500.0 YOUNG_MODULUS 1.0e6 ]
     set material_node [[customlib::GetBaseRoot] selectNodes "$DEMmaterials/blockdata\[@name = 'DEM-DefaultMaterial' \]"]
     foreach {prop val} $props {
         set propnode [$material_node selectNodes "./value\[@n = '$prop'\]"]
@@ -261,7 +240,7 @@ proc ::FluidDEM::examples::AssignToTree { } {
     set DEMInlet "$DEMConditions/condition\[@n='Inlet'\]"
     set inletNode [customlib::AddConditionGroupOnXPath $DEMInlet "SpheresInlet"]
     $inletNode setAttribute ov surface
-    set props [list Material "DEM-DefaultMaterial" NumberOfParticles 10000 ParticleDiameter 0.01 VelocityModulus 2 Interval "Total" DirectionVector "1.0,0.0,0.0"]
+    set props [list Material "DEM-DefaultMaterial" NumberOfParticles 10000 ParticleDiameter 0.01 VelocityModulus 2 DirectionVector "1.0,0.0,0.0"]
     foreach {prop val} $props {
         set propnode [$inletNode selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
@@ -270,8 +249,6 @@ proc ::FluidDEM::examples::AssignToTree { } {
             W "Warning - Couldn't find property Inlet $prop"
         }
     }
-
-
 
     # General data
     # Time parameters
@@ -289,11 +266,4 @@ proc ::FluidDEM::examples::AssignToTree { } {
     spdAux::RequestRefresh
 }
 
-proc FluidDEM::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
-}
 

@@ -1,30 +1,7 @@
-
-# proc write::dict2json {dictVal} {
-#     # XXX: Currently this API isn't symmetrical, as to create proper
-#     # XXX: JSON text requires type knowledge of the input data
-#     set json ""
-#     dict for {key val} $dictVal {
-#         # key must always be a string, val may be a number, string or
-#         # bare word (true|false|null)
-#         if {0 && ![string is double -strict $val] && ![regexp {^(?:true|false|null)$} $val]} {
-#             set val "\"$val\""
-#         }
-#         if {[isDict $val]} {
-#             set val [dict2json $val]
-#             set val "\[${val}\]"
-#         } else {
-#             set val \"$val\"
-#         }
-#         append json "\"$key\": $val," \n
-#     }
-#     if {[string range $json end-1 end] eq ",\n"} {set json [string range $json 0 end-2]}
-#     return "\{${json}\}"
-# }
-
-
 package require json::write
+package require json
 
-proc write::json2dict {JSONtext} {
+proc write::json2dict_former {JSONtext} {
     string range [
         string trim [
             string trimleft [
@@ -33,18 +10,28 @@ proc write::json2dict {JSONtext} {
             ]
         ] 1 end-1
 }
+proc write::json2dict {JSONtext} {
+    return [::json::json2dict $JSONtext]
+}
 
 proc write::tcl2json { value } {
     # Guess the type of the value; deep *UNSUPPORTED* magic!
     # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
-    regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    # regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    set type [GidUtils::GetInternalRepresentation $value]
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2json $v}]]}
+    #if {$type ne "dict" && [llength $value]>1 && [string index $value 0] eq "\{"} { W "$value as list"; set type list}
+    #if {$type eq "exprcode"} {set type list; W "$type -> $value"}
     switch $type {
         string {
-            if {$value eq "false"} {return [expr "false"]}
-            if {$value eq "true"} {return [expr "true"]}
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return null
+            }
+            if {[isBooleanFalse $value]} {return [expr "false"]}
+            if {[isBooleanTrue $value]} {return [expr "true"]}
             return [json::write string $value]
         }
         dict {
@@ -74,7 +61,58 @@ proc write::tcl2json { value } {
             } elseif {[string is double -strict $value]} {
                 return [expr {$value}]
             } elseif {[string is boolean -strict $value]} {
-                return [expr {$value ? "true" : "false"}]
+                if {[isBooleanFalse $value]} {return [expr "false"]}
+                if {[isBooleanTrue $value]} {return [expr "true"]}
+                return [json::write string $value]
+            } elseif {[string index $value 0] eq "\{"} {
+                return [json::write array {*}[lmap v $value {tcl2json $v}]]
+            }
+            return [json::write string $value]
+        }
+    }
+}
+
+proc write::tcl2jsonstrings { value } {
+    # Guess the type of the value; deep *UNSUPPORTED* magic!
+    # display the representation of a Tcl_Obj for debugging purposes. Do not base the behavior of any command on the results of this one; it does not conform to Tcl's value semantics!
+    regexp {^value is a (.*?) with a refcount} [::tcl::unsupported::representation $value] -> type
+    if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]}
+    switch $type {
+        string {
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return {{}}
+            }
+            return [json::write string $value]
+        }
+        dict {
+            return [json::write object {*}[
+                    dict map {k v} $value {tcl2jsonstrings $v}]]
+        }
+        list {
+            return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]
+        }
+        int - double {
+            return [json::write string $value]
+        }
+        booleanString {
+            return [json::write string $value]
+            #return [expr {$value ? "true" : "false"}]
+        }
+        default {
+            # Some other type; do some guessing...
+            if {$value eq "null"} {
+                # Tcl has *no* null value at all; empty strings are semantically
+                # different and absent variables aren't values. So cheat!
+                return $value
+            } elseif {[string is integer -strict $value]} {
+                return [json::write string $value]
+            } elseif {[string is double -strict $value]} {
+                return [json::write string $value]
+            } elseif {[string is boolean -strict $value]} {
+                return [json::write string $value]
             }
             return [json::write string $value]
         }
@@ -82,7 +120,12 @@ proc write::tcl2json { value } {
 }
 
 proc write::WriteJSON {processDict} {
-    WriteString [write::tcl2json $processDict]
+    set json_string [write::tcl2json $processDict]
+    set new_string [string map {"\[null\]" "null"} $json_string]
+    WriteString $new_string
+}
+proc write::WriteJSONAsStringFields {processDict} {
+    WriteString [write::tcl2jsonstrings $processDict]
 }
 
 proc write::GetEmptyList { } {
@@ -144,8 +187,8 @@ proc write::getSolutionStrategyParametersDict { {solStratUN ""} {schemeUN ""} {S
         set StratParamsUN [apps::getCurrentUniqueName StratParams]
     }
 
-    set solstratName [write::getValue $solStratUN]
-    set schemeName [write::getValue $schemeUN]
+    set solstratName [write::getValue $solStratUN "" force]
+    set schemeName [write::getValue $schemeUN "" force]
     set sol [::Model::GetSolutionStrategy $solstratName]
     set sch [$sol getScheme $schemeName]
 
@@ -200,7 +243,7 @@ proc write::getSolversParametersDict { {appid ""} } {
 proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
 
     set root [customlib::GetBaseRoot]
-    set bcCondsDict [list ]
+    set bcCondsList [list ]
     set grouped_conditions [list ]
 
     set xp1 "[spdAux::getRoute $un]/condition/group"
@@ -214,6 +257,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
         set groupId [::write::getSubModelPartId $cid $groupName]
+       
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
@@ -232,120 +276,22 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             set processName [$condition getProcessName]
             set process [::Model::GetProcess $processName]
             set processDict [dict create]
-            set paramDict [dict create]
-            dict set paramDict model_part_name [write::GetModelPartNameWithParent $groupId]
+            set processWriteCommand [$process getAttribute write_command]
 
-            set process_attributes [$process getAttributes]
-            set process_parameters [$process getInputs]
+            dict set processDict process_name $processName
 
-            dict set process_attributes process_name [dict get $process_attributes n]
-            dict unset process_attributes n
-            dict unset process_attributes pn
-            if {[dict exists $process_attributes help]} {dict unset process_attributes help}
-            if {[dict exists $process_attributes process_name]} {dict unset process_attributes process_name}
+            if {$processWriteCommand eq ""} {
+                set processDict [write::GetProcessHeader $group $process $condition $groupId]
 
-            set processDict [dict merge $processDict $process_attributes]
-            if {[$condition hasAttribute VariableName]} {
-                set variable_name [$condition getAttribute VariableName]
-                # "lindex" is a rough solution. Look for a better one.
-                if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
-            }
-            foreach {inputName in_obj} $process_parameters {
-                set in_type [$in_obj getType]
-                if {$in_type eq "vector"} {
-                    set vector_type [$in_obj getAttribute "vectorType"]
-                    if {$vector_type eq "bool"} {
-                        set ValX [expr [get_domnode_attribute [$group find n ${inputName}X] v] ? True : False]
-                        set ValY [expr [get_domnode_attribute [$group find n ${inputName}Y] v] ? True : False]
-                        set ValZ [expr False]
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [get_domnode_attribute [$group find n ${inputName}Z] v] ? True : False]}
-                    } elseif {$vector_type eq "double"} {
-                        if {[$in_obj getAttribute "enabled"] in [list "1" "0"]} {
-                            foreach i [list "X" "Y" "Z"] {
-                                if {[expr [get_domnode_attribute [$group find n Enabled_$i] v] ] ne "Yes"} {
-                                    set Val$i null
-                                } else {
-                                    set printed 0
-                                    if {[$in_obj getAttribute "function"] eq "1"} {
-                                        if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                                            set funcinputName "${i}function_$inputName"
-                                            set value [get_domnode_attribute [$group find n $funcinputName] v]
-                                            set Val$i $value
-                                            set printed 1
-                                        }
-                                    }
-                                    if {!$printed} {
-                                        set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
-                                        set Val$i $value
-                                    }
-                                }
-                            }
-                        } else {
-                            foreach i [list "X" "Y" "Z"] {
-                                set printed 0
-                                if {[$in_obj getAttribute "function"] eq "1"} {
-                                    if {[get_domnode_attribute [$group find n "ByFunction$i"] v]  eq "Yes"} {
-                                        set funcinputName "${i}function_$inputName"
-                                        set value [get_domnode_attribute [$group find n $funcinputName] v]
-                                        set Val$i $value
-                                        set printed 1
-                                    }
-                                }
-                                if {!$printed} {
-                                    set value [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}$i] ] ]
-                                    set Val$i $value
-                                }
-                            }
-                        }
-                    } elseif {$vector_type eq "tablefile" || $vector_type eq "file"} {
-                        set ValX "[get_domnode_attribute [$group find n ${inputName}X] v]"
-                        set ValY "[get_domnode_attribute [$group find n ${inputName}Y] v]"
-                        set ValZ "0"
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ "[get_domnode_attribute [$group find n ${inputName}Z] v]"}
-                    } else {
-                        set ValX [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}X] ] ]
-                        set ValY [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Y] ] ]
-                        set ValZ [expr 0.0]
-                        if {[$group find n ${inputName}Z] ne ""} {set ValZ [expr [gid_groups_conds::convert_value_to_default [$group find n ${inputName}Z] ]]}
-                    }
-                    dict set paramDict $inputName [list $ValX $ValY $ValZ]
-                } elseif {$in_type eq "inline_vector"} {
-                    set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
-                    lassign [split $value ","] ValX ValY ValZ
-                    if {$ValZ eq ""} {set ValZ 0.0}
-                    dict set paramDict $inputName [list [expr $ValX] [expr $ValY] [expr $ValZ]]
-                } elseif {$in_type eq "double" || $in_type eq "integer"} {
-                    set printed 0
-                    if {[$in_obj getAttribute "function"] eq "1"} {
-                        if {[get_domnode_attribute [$group find n "ByFunction"] v]  eq "Yes"} {
-                            set funcinputName "function_$inputName"
-                            set value [get_domnode_attribute [$group find n $funcinputName] v]
-                            dict set paramDict $inputName $value
-                            set printed 1
-                        }
-                    }
-                    if {!$printed} {
-                        set value [gid_groups_conds::convert_value_to_default [$group find n $inputName]]
-                        #set value [get_domnode_attribute [$group find n $inputName] v]
-                        dict set paramDict $inputName [expr $value]
-                    }
-                } elseif {$in_type eq "bool"} {
-                    set value [get_domnode_attribute [$group find n $inputName] v]
-                    set value [expr $value ? True : False]
-                    dict set paramDict $inputName [expr $value]
-                } elseif {$in_type eq "tablefile"} {
-                    set value [get_domnode_attribute [$group find n $inputName] v]
-                    dict set paramDict $inputName $value
-                } else {
-                    if {[get_domnode_attribute [$group find n $inputName] state] ne "hidden" } {
-                        set value [get_domnode_attribute [$group find n $inputName] v]
-                        dict set paramDict $inputName $value
-                    }
+                set process_parameters [$process getInputs]
+                foreach {inputName in_obj} $process_parameters {
+                    dict set processDict Parameters $inputName [write::GetInputValue $group $in_obj]
                 }
+
+            } else {
+                set processDict [$processWriteCommand $group $condition $process]
             }
-            if {[$group find n Interval] ne ""} {dict set paramDict interval [write::getInterval  [get_domnode_attribute [$group find n Interval] v]] }
-            dict set processDict Parameters $paramDict
-            lappend bcCondsDict $processDict
+            lappend bcCondsList $processDict
         }
     }
 
@@ -360,7 +306,11 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
-        dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
+        if {[GetConfigurationAttribute write_mdpa_mode] ne "geometries"} {
+            dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
+        } else {
+            dict set paramDict model_part_name "[GetConfigurationAttribute model_part_name]._HIDDEN_$cid"
+        }
 
         set process_attributes [$process getAttributes]
         set process_parameters [$process getInputs]
@@ -376,9 +326,9 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
             if {$variable_name ne ""} {dict set paramDict variable_name [lindex $variable_name 0]}
         }
         dict set processDict Parameters $paramDict
-        lappend bcCondsDict $processDict
+        lappend bcCondsList $processDict
     }
-    return $bcCondsDict
+    return $bcCondsList
 }
 
 proc write::GetResultsList { un {cnd ""} } {
@@ -395,7 +345,7 @@ proc write::GetResultsByXPathList { xpath } {
     set xp1 "$xpath/value"
     set resultxml [$root selectNodes $xp1]
     foreach res $resultxml {
-        if {[get_domnode_attribute $res v] in [list "Yes" "True" "1"] && [get_domnode_attribute $res state] ne "hidden"} {
+        if {[write::isBooleanTrue [get_domnode_attribute $res v]] && [get_domnode_attribute $res state] ne "hidden"} {
             set name [get_domnode_attribute $res n]
             lappend result $name
         }
@@ -403,39 +353,6 @@ proc write::GetResultsByXPathList { xpath } {
     return $result
 }
 
-proc write::GetRestartProcess { {un ""} {name "" } } {
-
-    set root [customlib::GetBaseRoot]
-
-    set resultDict [dict create ]
-    if {$un eq ""} {set un "Restart"}
-    if {$name eq ""} {set name "RestartOptions"}
-
-    dict set resultDict "python_module" "restart_process"
-    dict set resultDict "kratos_module" "KratosMultiphysics.SolidMechanicsApplication"
-    dict set resultDict "help" "This process writes restart files"
-    dict set resultDict "process_name" "RestartProcess"
-
-    set params [dict create]
-    set saveValue [write::getStringBinaryValue $un SaveRestart]
-
-    dict set resultDict "process_name" "RestartProcess"
-    set model_name [Kratos::GetModelName]
-    dict set params "model_part_name" [write::GetModelPartNameWithParent $model_name]
-    dict set params "save_restart" $saveValue
-    dict set params "restart_file_name" $model_name
-    set xp1 "[spdAux::getRoute $un]/container\[@n = '$name'\]/value"
-    set file_label [getValue $un RestartFileLabel]
-    dict set params "restart_file_label" $file_label
-    set output_control [getValue $un RestartControlType]
-    dict set params "output_control_type" $output_control
-    if {$output_control eq "time"} {dict set params "output_frequency" [getValue $un RestartDeltaTime]} {dict set params "output_frequency" [getValue $un RestartDeltaStep]}
-    set jsonoutput [write::getStringBinaryValue $un json_output]
-    dict set params "json_output" $jsonoutput
-
-    dict set resultDict "Parameters" $params
-    return $resultDict
-}
 
 
 proc write::getAllMaterialParametersDict {matname} {
@@ -494,7 +411,7 @@ proc write::GetModelPartNameWithParent { child_name {forced_parent ""}} {
             append parent $par "."
         }
     } else {
-         append parent $forced_parent "."
+        append parent $forced_parent "."
     }
     append result $parent $child_name
     return [string trim $result "."]
@@ -525,6 +442,19 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
     return $problem_data_dict
 }
 
+proc write::GetGravityByModuleDirection { gravity_un } {
+    set gravity_value [write::getValue $gravity_un GravityValue]
+    set gravity_X [write::getValue $gravity_un Cx]
+    set gravity_Y [write::getValue $gravity_un Cy]
+    set gravity_Z [write::getValue $gravity_un Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+
+    return [list $gx $gy $gz]
+}
+
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # Output process must be placed inside json lists
     set gid_output_process_list [list ]
@@ -553,14 +483,16 @@ proc write::GetDefaultGiDOutput { {appid ""} } {
     # Setup GiD-Output
     set outputProcessParams [dict create]
     dict set outputProcessParams model_part_name [write::GetModelPartNameWithParent [GetConfigurationAttribute output_model_part_name]]
-    dict set outputProcessParams output_name $model_name
     dict set outputProcessParams postprocess_parameters [write::GetDefaultOutputGiDDict $appid]
+    set folder_name [dict get $outputProcessParams postprocess_parameters folder_name]
+    dict unset outputProcessParams postprocess_parameters folder_name
+    dict set outputProcessParams output_name [file join $folder_name $model_name]
 
     set outputConfigDict [dict create]
     dict set outputConfigDict python_module gid_output_process
     dict set outputConfigDict kratos_module KratosMultiphysics
     dict set outputConfigDict process_name GiDOutputProcess
-    dict set outputConfigDict help "This process writes postprocessing files for GiD"
+    # dict set outputConfigDict help "This process writes postprocessing files for GiD"
     dict set outputConfigDict Parameters $outputProcessParams
 
     return $outputConfigDict
@@ -582,22 +514,33 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
     dict set resultDict file_label                 [getValueByXPath $gid_options_xpath FileLabel]
     set outputCT [getValueByXPath $gid_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
-    if {$outputCT eq "time"} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]}
-    dict set resultDict output_frequency $frequency
+    if {$outputCT eq "time"} {
+        set frequency [getValueByXPath $gid_options_xpath OutputDeltaTime]
+    } {
+        set frequency [getValueByXPath $gid_options_xpath OutputDeltaStep]
+    }
+    dict set resultDict output_interval $frequency
 
     dict set resultDict body_output [getValueByXPath $gid_options_xpath BodyOutput]
     dict set resultDict node_output [getValueByXPath $gid_options_xpath NodeOutput]
     dict set resultDict skin_output [getValueByXPath $gid_options_xpath SkinOutput]
 
-    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='CutPlanes'\]"
+    set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='CutPlanes'\]"
     dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
+    
     set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
     dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]
+    
+    set gid_nodes_nh_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodesNonHistorical'\]"
+    dict set resultDict nodal_nonhistorical_results [GetResultsByXPathList $gid_nodes_nh_xpath]
+
     set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnElement'\]"
     dict set resultDict gauss_point_results [GetResultsByXPathList $gid_elements_xpath]
 
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [GetEmptyList]
+
+    dict set outputDict folder_name [getValueByXPath $gid_options_xpath FolderName]
     return $outputDict
 }
 
@@ -611,7 +554,7 @@ proc write::GetDefaultVTKOutput { {appid ""} } {
     dict set outputConfigDictVtk python_module vtk_output_process
     dict set outputConfigDictVtk kratos_module KratosMultiphysics
     dict set outputConfigDictVtk process_name VtkOutputProcess
-    dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
+    #dict set outputConfigDictVtk help "This process writes postprocessing files for Paraview"
     dict set outputConfigDictVtk Parameters [write::GetDefaultParametersOutputVTKDict $appid]
 
     return $outputConfigDictVtk
@@ -628,17 +571,17 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
     dict set resultDict output_control_type $outputCT
     if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
-    dict set resultDict output_frequency               $frequency
+    dict set resultDict output_interval               $frequency
     dict set resultDict file_format                    [getValueByXPath $vtk_options_xpath VtkFileFormat]
     dict set resultDict output_precision               7
     dict set resultDict output_sub_model_parts         "false"
-    dict set resultDict folder_name                    "vtk_output"
+    dict set resultDict output_path                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
-    dict set resultDict nodal_data_value_variables     []
-    dict set resultDict element_data_value_variables   []
-    dict set resultDict condition_data_value_variables []
-    dict set resultDict gauss_point_variables   [GetResultsList $results_UN OnElement]
+    dict set resultDict nodal_data_value_variables      [GetResultsList $results_UN OnNodesNonHistorical]
+    dict set resultDict element_data_value_variables    [list ]
+    dict set resultDict condition_data_value_variables  [list ]
+    dict set resultDict gauss_point_variables_extrapolated_to_nodes   [GetResultsList $results_UN OnElement]
 
     return $resultDict
 }
@@ -651,4 +594,76 @@ proc write::GetDefaultRestartDict { } {
     dict set restartDict LoadRestart False
     dict set restartDict Restart_Step 0
     return $restartDict
+}
+
+proc write::GetTimeStepIntervals { {time_parameters_un ""} } {
+    if {$time_parameters_un eq ""} {set time_parameters_un [GetConfigurationAttribute time_parameters_un]}
+    set root [customlib::GetBaseRoot]
+
+    set xp "[spdAux::getRoute $time_parameters_un]/container\[@n = 'TimeStep'\]/blockdata"
+    set time_step_interval_nodes [$root selectNodes $xp]
+
+    # If the app is still working on fixed Delta time
+    if {[llength $time_step_interval_nodes] eq 0} {return [write::getValue $time_parameters_un DeltaTime]}
+
+    # If it works with interval delta time
+    set time_step_intervals_list [list ]
+    foreach time_step_interval_node $time_step_interval_nodes {
+        set time_step_interval_start_time [write::getValueByNode [$time_step_interval_node find n StartTime]]
+        set time_step_interval_delta_time [write::getValueByNode [$time_step_interval_node find n DeltaTime]]
+
+        set key_value [list $time_step_interval_start_time $time_step_interval_delta_time]
+        lappend time_step_intervals_list $key_value
+    }
+
+    set time_step_intervals_list [lsort -real -index 0 $time_step_intervals_list]
+    return $time_step_intervals_list
+}
+
+
+# what can be element, condition
+proc write::GetMatchSubModelPart { what {stage ""} } {
+    set model_part_basename [write::GetConfigurationAttribute model_part_name]
+    set entity_name element_name
+    if {$what == "condition"} {set entity_name condition_name}
+   
+    set elements_list [list ]
+    set processed_groups_list [list ]
+    set groups [apps::ExecuteOnCurrentXML GetListOfSubModelParts $stage]
+    foreach group $groups {
+        set good_name ""
+        # get the group and submodelpart name
+        set group_name [$group @n]
+        
+        set group_name [write::GetWriteGroupName $group_name]
+        if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
+        if {$what == "condition"} {set cid [[$group parent] @n]} {
+            set element_node [$group selectNodes "./value\[@n='Element']"]
+            if {[llength $element_node] == 0} {continue}
+            set cid [write::getValueByNode $element_node]
+        }
+        if {$cid eq ""} {continue}
+        if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
+        if {$entity eq ""} {continue}
+        if {$what == "condition"} {
+            if {[$entity getGroupBy] eq "Condition"} {
+                set good_name "_HIDDEN_$cid"
+                if {$good_name ni $processed_groups_list} {lappend processed_groups_list $good_name} {continue}
+            }
+        } 
+        if {$good_name eq ""} {set good_name [write::transformGroupName $group_name]}
+        # Get the entity (element or condition)
+        if {[$group hasAttribute ov]} {set ov [get_domnode_attribute $group ov]} {set ov [get_domnode_attribute [$group parent] ov]}
+
+        lassign [write::getEtype $ov $group_name] etype nnodes
+
+        set kname [$entity getTopologyKratosName $etype $nnodes]
+        # If no topology present, it may be a nodal condition
+        if {$kname eq ""} {continue}
+        set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
+
+        lappend elements_list $pair
+        
+    }
+    return $elements_list
 }

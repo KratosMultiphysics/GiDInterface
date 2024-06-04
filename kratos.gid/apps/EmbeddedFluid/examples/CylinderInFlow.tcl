@@ -1,15 +1,21 @@
+namespace eval ::EmbeddedFluid::examples::CylinderInFlow {
+    namespace path ::EmbeddedFluid::examples
+    Kratos::AddNamespace [namespace current]
+    
+    variable CylinderInFlow_Data
+}
 
-proc ::EmbeddedFluid::examples::CylinderInFlow {args} {
+proc ::EmbeddedFluid::examples::CylinderInFlow::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
 		if { $retval == "cancel" } { return }
     }
     InitVariables
-    DrawCylinderInFlowGeometry3D
-    AssignGroupsCylinderInFlow3D
-    AssignCylinderInFlowMeshSizes3D
-    TreeAssignationCylinderInFlow3D
+    DrawGeometry3D
+    AssignGroups3D
+    AssignMeshSizes3D
+    TreeAssignation3D
 
     AddMeshOptimizationPoints
 
@@ -19,7 +25,7 @@ proc ::EmbeddedFluid::examples::CylinderInFlow {args} {
     GidUtils::UpdateWindow LAYER
 }
 
-proc EmbeddedFluid::examples::InitVariables { } {
+proc EmbeddedFluid::examples::CylinderInFlow::InitVariables { } {
     variable CylinderInFlow_Data
     set CylinderInFlow_Data(circle_center_x) 0.75
     set CylinderInFlow_Data(circle_center_y) 0.5
@@ -29,14 +35,14 @@ proc EmbeddedFluid::examples::InitVariables { } {
 
 
 # Draw Geometry
-proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry3D {args} {
-    DrawCylinderInFlowGeometry2D
+proc EmbeddedFluid::examples::CylinderInFlow::DrawGeometry3D {args} {
+    DrawGeometry2D
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Volumes MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 1 escape escape escape
     GiD_Process Mescape Utilities Copy Surfaces Duplicate DoExtrude Surfaces MaintainLayers Translation FNoJoin 0.0,0.0,0.0 FNoJoin 0.0,0.0,1.0 2 escape escape escape
     GiD_Layers edit opaque Fluid 0
 
 }
-proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry2D {args} {
+proc EmbeddedFluid::examples::CylinderInFlow::DrawGeometry2D {args} {
     Kratos::ResetModel
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
@@ -81,7 +87,7 @@ proc EmbeddedFluid::examples::DrawCylinderInFlowGeometry2D {args} {
 }
 
 # Group assign
-proc EmbeddedFluid::examples::AssignGroupsCylinderInFlow3D {args} {
+proc EmbeddedFluid::examples::CylinderInFlow::AssignGroups3D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -105,7 +111,7 @@ proc EmbeddedFluid::examples::AssignGroupsCylinderInFlow3D {args} {
 }
 
 # Mesh sizes
-proc EmbeddedFluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
+proc EmbeddedFluid::examples::CylinderInFlow::AssignMeshSizes3D {args} {
     set cylinder_mesh_size 0.005
     set walls_mesh_size 0.05
     set fluid_mesh_size 0.05
@@ -117,7 +123,7 @@ proc EmbeddedFluid::examples::AssignCylinderInFlowMeshSizes3D {args} {
     GiD_Process Mescape Meshing AssignSizes Volumes $fluid_mesh_size [GiD_EntitiesGroups get Fluid volumes] escape escape
     # Kratos::BeforeMeshGeneration $fluid_mesh_size
 }
-proc EmbeddedFluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
+proc EmbeddedFluid::examples::CylinderInFlow::AssignMeshSizes2D {args} {
     set cylinder_mesh_size 0.005
     set fluid_mesh_size 0.05
     GiD_Process Mescape Utilities Variables SizeTransitionsFactor 0.4 escape escape
@@ -127,10 +133,10 @@ proc EmbeddedFluid::examples::AssignCylinderInFlowMeshSizes2D {args} {
 }
 
 # Tree assign
-proc EmbeddedFluid::examples::TreeAssignationCylinderInFlow3D {args} {
-    TreeAssignationCylinderInFlow2D
+proc EmbeddedFluid::examples::CylinderInFlow::TreeAssignation3D {args} {
+    TreeAssignation2D
 }
-proc EmbeddedFluid::examples::TreeAssignationCylinderInFlow2D {args} {
+proc EmbeddedFluid::examples::CylinderInFlow::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -145,14 +151,7 @@ proc EmbeddedFluid::examples::TreeAssignationCylinderInFlow2D {args} {
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     # set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002 YIELD_STRESS 0 POWER_LAW_K 1 POWER_LAW_N 1]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian DENSITY 1.0 DYNAMIC_VISCOSITY 0.002]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     ErasePreviousIntervals
     set fluidConditions [spdAux::getRoute "FLBC"]
@@ -166,50 +165,31 @@ proc EmbeddedFluid::examples::TreeAssignationCylinderInFlow2D {args} {
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
     set props [list value 0.0]
-    foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $outletNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Walls] setAttribute ov $condtype
     # [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" No_Slip_Cylinder] setAttribute ov $condtype
 
     # Time parameters
-    set time_parameters [list EndTime 45 DeltaTime 0.1]
-    set time_params_path [spdAux::getRoute "FLTimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list EndTime 45 DeltaTime 0.1]
+    set xpath [spdAux::getRoute "FLTimeParameters"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
+
     # Output
-    set time_parameters [list OutputControlType step OutputDeltaStep 1]
+    set parameters [list OutputControlType step OutputDeltaStep 1]
     set xpath "[spdAux::getRoute Results]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
+    
     # Parallelism
-    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set time_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set xpath [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
 }
 
-proc EmbeddedFluid::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
-}
-
-proc EmbeddedFluid::examples::AddMeshOptimizationPoints { } {
+proc EmbeddedFluid::examples::CylinderInFlow::AddMeshOptimizationPoints { } {
     set optimized_group "Optimized mesh"
     
     GiD_Layers create Mesh_Optimization

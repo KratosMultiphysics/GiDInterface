@@ -13,7 +13,7 @@
 	  ]]>
 	</proc>		
 
-	<proc n='CheckGeometrySolid' args='args'>
+	<proc n='CheckGeometryStructural' args='args'>
 		<![CDATA[
 		return [Structural::xml::ProcCheckGeometryStructural $domNode $args]              
 		]]>

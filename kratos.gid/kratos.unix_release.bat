@@ -24,6 +24,10 @@ else
     export LD_LIBRARY_PATH="$3/exec/Kratos":"$3/exec/Kratos/libs"
 fi
 
+# Mpi
+export PWD=`pwd`
+export OPAL_PREFIX="$PWD/exec/Kratos/OpenMPI"
+
 # Prevents the PYTHONHOME error from happening and isolate possible python repacks present
 # in the system and interfeering with runkratos
 export PYTHONHOME="$3/exec/Kratos"

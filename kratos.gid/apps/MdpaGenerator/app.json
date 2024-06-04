@@ -1,0 +1,30 @@
+{
+    "id": "MdpaGenerator",
+    "name": "Mdpa Generator",
+    "script_files": [
+        "start.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl"
+    ],
+    "dimensions": [
+        "3D"
+    ],
+    "start_script":"::MdpaGenerator::Init",
+    "requirements":{
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": false,
+        "wizard": false
+    },
+    "unique_names": {
+        "parts": "GenericSubmodelPart"
+    },
+    "write": {
+        "write_mdpa_mode": "geometries"
+    },
+    "main_launch_file": null,
+    "description": "MDPA generator \n-Useful tool to generate modelparts"
+}

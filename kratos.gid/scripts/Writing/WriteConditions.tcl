@@ -1,17 +1,17 @@
 
-proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
+proc ::write::writeConditions { baseUN {iter 0} {domNode ""}} {
     set dictGroupsIterators [dict create]
 
     set root [customlib::GetBaseRoot]
 
-    set xp1 "[spdAux::getRoute $baseUN]/condition/group"
+    set xp1 "[spdAux::getRoute $baseUN $domNode]/condition/group"
     set groupNodes [$root selectNodes $xp1]
     if {[llength $groupNodes] < 1} {
-        set xp1 "[spdAux::getRoute $baseUN]/group"
+        set xp1 "[spdAux::getRoute $baseUN $domNode]/group"
         set groupNodes [$root selectNodes $xp1]
     }
     foreach groupNode $groupNodes {
-        if {$cond_id eq ""} {set condid [[$groupNode parent] @n]} {set condid $cond_id}
+        set condid [[$groupNode parent] @n]
         set groupid [get_domnode_attribute $groupNode n]
         set groupid [GetWriteGroupName $groupid]
         set dictGroupsIterators [writeGroupNodeCondition $dictGroupsIterators $groupNode $condid [incr iter]]
@@ -24,7 +24,7 @@ proc write::writeConditions { baseUN {iter 0} {cond_id ""}} {
     return $dictGroupsIterators
 }
 
-proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
+proc ::write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} {
     set groupid [get_domnode_attribute $groupNode n]
     set groupid [GetWriteGroupName $groupid]
     if {![dict exists $dictGroupsIterators $groupid]} {
@@ -32,13 +32,18 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
         set cond [::Model::getCondition $condid]
         if {$cond ne ""} {
             lassign [write::getEtype $ov $groupid] etype nnodes
+            # Let the app change things in the condition based on the model: p.e. -> topology based on element
+            set aux_cond [apps::ExecuteOnCurrentApp ApplicationSpecificGetCondition $cond $groupid $etype $nnodes]
+            if {$aux_cond ne ""} {set cond $aux_cond}
             set kname [$cond getTopologyKratosName $etype $nnodes]
             if {$kname ne ""} {
-                lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
-                dict set dictGroupsIterators $groupid [list $initial $final]
+                if {$nnodes >= 1} {
+                    lassign [write::writeGroupCondition $groupid $kname $nnodes $iter] initial final
+                    dict set dictGroupsIterators $groupid [list $initial $final]
+                }
             } else {
                 # If kname eq "" => no topology feature match, condition written as nodal
-                if {[$cond hasTopologyFeatures]} {W "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"}
+                if {[$cond hasTopologyFeatures]} {error [= "$groupid assigned to $condid - Selected invalid entity $ov with $nnodes nodes - Check Conditions.xml"]}
             }
         } else {
             error "Could not find conditon named $condid"
@@ -47,7 +52,7 @@ proc write::writeGroupNodeCondition {dictGroupsIterators groupNode condid iter} 
     return $dictGroupsIterators
 }
 
-proc write::writeGroupCondition {groupid kname nnodes iter} {
+proc ::write::writeGroupCondition {groupid kname nnodes iter} {
     set obj [list ]
 
     # Print header
@@ -56,10 +61,13 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
 
     # Get the entities to print
     if {$nnodes == 1} {
-        set formats [dict create $groupid "%10d \n"]
+        variable formats_dict
+        set id_f [dict get $formats_dict ID]
+        set formats [dict create $groupid "${s}$id_f \n"]
         set obj [GiD_EntitiesGroups get $groupid nodes]
     } else {
         set formats [write::GetFormatDict $groupid 0 $nnodes]
+        #W "$groupid [GiD_Groups list $groupid]"
         set elems [GiD_WriteCalculationFile connectivities -return $formats]
         set obj [GetListsOfNodes $elems $nnodes 2]
     }
@@ -82,13 +90,13 @@ proc write::writeGroupCondition {groupid kname nnodes iter} {
     return [list $initial $final]
 }
 
-proc write::writeNodalConditions { un } {
+proc ::write::writeNodalConditions { un {stage ""} } {
 
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute $un]/condition/group"
+    set xp1 "[spdAux::getRoute $un $stage]/condition/group"
     set groups [$root selectNodes $xp1]
     if {$groups eq ""} {
-        set xp1 "[spdAux::getRoute $un]/group"
+        set xp1 "[spdAux::getRoute $un $stage]/group"
         set groups [$root selectNodes $xp1]
     }
     foreach group $groups {
@@ -101,7 +109,7 @@ proc write::writeNodalConditions { un } {
     }
 }
 
-proc write::writeConditionGroupedSubmodelParts {cid groups_dict} {
+proc ::write::writeConditionGroupedSubmodelParts {cid groups_dict} {
     set s [mdpaIndent]
     WriteString "${s}Begin SubModelPart $cid // Condition $cid"
 

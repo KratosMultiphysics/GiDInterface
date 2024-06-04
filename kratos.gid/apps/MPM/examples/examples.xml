@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group id="MPM" name="MPM examples">
+    <Example id="StaticCantileverBeam" app="MPM" logo="StaticCantileverBeam.png" name="Static cantilever beam 2D" dim="2D" cmd="::MPM::examples::StaticCantileverBeam::Init">
+        <Description> Static cantilever beam using an linear elastic material and a slip condition
+        </Description>
+    </Example>
+     <Example id="CantileverBeam" app="MPM" logo="CantileverBeam.png" name="Cantilever beam 2D" dim="2D" cmd="::MPM::examples::CantileverBeam::Init">
+        <Description> Dynamic cantilever beam using an hyperelastic material
+            </Description>
+    </Example>
+    <Example id="FallingSandBall" app="MPM" logo="FallingSandBall.png" name="Falling sand ball 2D" dim="2D" cmd="::MPM::examples::FallingSandBall::Init">
+        <Description></Description>
+    </Example>
+    <Example id="GranularFlow" app="MPM" logo="GranularFlow.png" name="Granular flow 2D" dim="2D" cmd="::MPM::examples::GranularFlow::Init">
+        <Description> This is a 2D non-cohesive granular material simulation according to the experiment conducted by (Bui et al., 2008).
+            </Description>
+    </Example>
+
+</Group>

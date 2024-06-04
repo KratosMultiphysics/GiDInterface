@@ -4,12 +4,17 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval write {
+namespace eval ::write {
+    Kratos::AddNamespace [namespace current]
+
     variable mat_dict
     variable submodelparts
     variable MDPA_loop_control
     variable current_configuration
     variable current_mdpa_indent_level
+    variable formats_dict
+    variable properties_exclusion_list
+    variable geometry_cnd_name
 }
 
 proc write::Init { } {
@@ -33,6 +38,15 @@ proc write::Init { } {
     set MDPA_loop_control 0
 
     set current_mdpa_indent_level 0
+
+
+    variable formats_dict
+    set formats_dict [dict create]
+    variable properties_exclusion_list
+    set properties_exclusion_list [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+
+    variable geometry_cnd_name
+    set geometry_cnd_name "-GEOMETRY-"
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -80,6 +94,7 @@ proc write::AddConfigurationAttribute {att val} {
 proc write::writeEvent { filename } {
     update ;#else appid is empty running in batch mode with window
     set time_monitor [GetConfigurationAttribute time_monitor]
+    Kratos::Log "Write start $filename"
     customlib::UpdateDocument
     SetConfigurationAttribute dir [file dirname $filename]
     SetConfigurationAttribute model_name [file rootname [file tail $filename]]
@@ -91,36 +106,80 @@ proc write::writeEvent { filename } {
         W [= "Wrong project name. Avoid boolean and numeric names."]
         return 1
     }
-    if {$time_monitor} {set inittime [clock seconds]}
+    set inittime [clock seconds]
+
+    # Set write formats depending on the user's configuration
+    InitWriteFormats
+
+    # Current active app
     set activeapp [::apps::getActiveApp]
     set appid [::apps::getActiveAppId]
 
+    #### Force values update ####
+    spdAux::ForceTreePreload
+
     #### Validate ####
+    Kratos::Log "Write validation $appid"
     set errcode [writeValidateInApp $appid]
+
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Validate time: [Kratos::Duration $ttime]"
+    }
 
     #### MDPA Write ####
     if {$errcode eq 0} {
+        Kratos::Log "Write MDPA $appid"
         set errcode [writeAppMDPA $appid]
     }
+
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "MDPA time: [Kratos::Duration $ttime]"
+    }
+
     #### Project Parameters Write ####
     set wevent [$activeapp getWriteParametersEvent]
     set filename "ProjectParameters.json"
 
     if {$errcode eq 0} {
+        Kratos::Log "Write project parameters $appid"
         set errcode [write::singleFileEvent $filename $wevent "Project Parameters"]
+    }
+
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
+    if {$time_monitor}  {
+        W "Parameters time: [Kratos::Duration $ttime]"
     }
 
     #### Custom files block ####
     set wevent [$activeapp getWriteCustomEvent]
     set filename ""
     if {$errcode eq 0} {
+        Kratos::Log "Write custom event $appid"
         set errcode [write::singleFileEvent $filename $wevent "Custom file" 0]
     }
+    set endtime [clock seconds]
+    set ttime [expr {$endtime-$inittime}]
     if {$time_monitor}  {
-        set endtime [clock seconds]
-        set ttime [expr {$endtime-$inittime}]
-        W "Total time: [Duration $ttime]"
+        W "Total time: [Kratos::Duration $ttime]"
     }
+
+    #### Copy main script file ####
+    if {$errcode eq 0} {
+        Kratos::Log "Write custom event $appid"
+        set errcode [CopyMainScriptFile]
+    }
+
+    #### Debug files for VSCode ####
+    write::writeLaunchJSONFile
+
+    Kratos::Log "Write end $appid in [Kratos::Duration $ttime]"
     return $errcode
 }
 
@@ -146,7 +205,7 @@ proc write::singleFileEvent { filename wevent {errName ""} {needsOpen 1} } {
 
     CloseFile
     if {$needsOpen} {OpenFile $filename}
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         if {[catch {eval $wevent} errmsg options] } {
             W $::errorInfo
             set errcode 1
@@ -177,7 +236,7 @@ proc write::writeAppMDPA {appid} {
     CloseFile
     OpenFile $filename
 
-    if {$::Kratos::kratos_private(DevMode) eq "dev"} {
+    if {[Kratos::IsDeveloperMode]} {
         eval $wevent
     } else {
         if { [catch {eval $wevent} fid] } {
@@ -220,16 +279,6 @@ proc write::GetListsOfNodes {elems nnodes {ignore 0} } {
     return $obj
 }
 
-proc write::getSubModelPartId {cid group} {
-    variable submodelparts
-
-    set find [list $cid ${group}]
-    if {[dict exists $submodelparts $find]} {
-        return [dict get $submodelparts [list $cid ${group}]]
-    } {
-        return 0
-    }
-}
 
 proc write::transformGroupName {groupid} {
     set new_parts [list ]
@@ -238,13 +287,23 @@ proc write::transformGroupName {groupid} {
             lappend new_parts [string map [list $bad $good] $part]
         }
     }
-    return [join $new_parts /]
+    return [join $new_parts -]
 }
 
 # Warning! Indentation must be set before calling here!
 proc write::GetFormatDict { groupid mid num} {
     set s [mdpaIndent]
-    set f "${s}%5d [format "%10d" $mid] [string repeat "%10d " $num]\n"
+
+    variable formats_dict
+    set id_f [dict get $formats_dict ID]
+
+    set mid_str ""
+    if {$mid ne ""} {
+        set mid_f [dict get $formats_dict MAT_ID]
+        set mid_str [format $mid_f $mid]
+    }
+    
+    set f "${s}$id_f $mid_str [string repeat "$id_f " $num]\n"
     return [dict create $groupid $f]
 }
 
@@ -261,9 +320,10 @@ proc write::getEtype {ov group} {
     if {$ov eq "line"} {
         if {$b} {error "Multiple element types in $group over $ov"}
         switch $isquadratic {
-            0 { set ret [list "Linear" 2] }
-            default { set ret [list "Linear" 3] }
+            0 { set ret [list "Line" 2] }
+            default { set ret [list "Line" 3] }
         }
+        set b 1
     }
 
     if {$ov eq "surface"} {
@@ -315,9 +375,9 @@ proc write::getEtype {ov group} {
         if {[GiD_EntitiesGroups get $group elements -count -element_type Prism]} {
             if {$b} {error "Multiple element types in $group over $ov"}
             switch $isquadratic {
-                0 { set ret [list "Hexahedra" 6]  }
-                1 { set ret [list "Hexahedra" 1]  }
-                2 { set ret [list "Hexahedra" 27]  }
+                0 { set ret [list "Prism" 6]  }
+                1 { set ret [list "Prism" 1]  }
+                2 { set ret [list "Prism" 27]  }
             }
             set b 1
         }
@@ -360,19 +420,23 @@ proc write::GetNodesFromElementFace {elem_id face_id} {
     return $nodes
 }
 
-proc write::getPartsGroupsId {} {
+proc write::getPartsGroupsId {{what "name"} {stage ""} } {
     set root [customlib::GetBaseRoot]
 
     set listOfGroups [list ]
-    set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un] $stage]/group"
     if {[llength [$root selectNodes $xp1]] < 1} {
-        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/condition/group"
+        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un] $stage]/condition/group"
     }
     set groups [$root selectNodes $xp1]
 
     foreach group $groups {
-        set groupName [get_domnode_attribute $group n]
-        lappend listOfGroups $groupName
+        if {$what eq "node"} {
+            lappend listOfGroups $group
+        } else {
+            set groupName [get_domnode_attribute $group n]
+            lappend listOfGroups $groupName
+        }
     }
     return $listOfGroups
 }
@@ -382,19 +446,26 @@ proc write::getPartsSubModelPartId {} {
 
     set listOfGroups [list ]
 
-    foreach group [getPartsGroupsId] {
-        lappend listOfGroups [write::getSubModelPartId Parts $group]
+    foreach group [getPartsGroupsId node] {
+        set cnd_id [get_domnode_attribute [$group parent] n]
+        set group_name [get_domnode_attribute $group n]
+        lappend listOfGroups [write::getSubModelPartId $cnd_id $group_name]
     }
     return $listOfGroups
 }
 
-proc write::writePartSubModelPart { } {
-    foreach group [getPartsGroupsId] {
-        writeGroupSubModelPart Parts $group "Elements"
+proc write::writePartSubModelPart { {stage ""} } {
+    foreach group [getPartsGroupsId node $stage] {
+        set part_name  [get_domnode_attribute [$group parent] n]
+        set group_name [get_domnode_attribute $group n]
+        writeGroupSubModelPart $part_name $group_name "Elements"
     }
 }
 
 proc write::writeLinearLocalAxesGroup {group} {
+    variable formats_dict
+    set id_f [dict get $formats_dict ID]
+    set coord_f [dict get $formats_dict COORDINATE]
     set elements [GiD_EntitiesGroups get $group elements -element_type linear]
     set num_elements [objarray length $elements]
     if {$num_elements} {
@@ -405,7 +476,7 @@ proc write::writeLinearLocalAxesGroup {group} {
             set y0 [lindex $raw 1]
             set y1 [lindex $raw 4]
             set y2 [lindex $raw 7]
-            write::WriteString [format "%5d \[3\](%14.10f, %14.10f, %14.10f)" $line $y0 $y1 $y2]
+            write::WriteString [format "$id_f \[3\]($coord_f, $coord_f, $coord_f)" $line $y0 $y1 $y2]
         }
         write::WriteString "End ElementalData"
         write::WriteString ""
@@ -445,31 +516,21 @@ proc write::WriteMPIbatFile {un} {
     GiD_File fclose $fd
 }
 
-proc write::Duration { int_time } {
-    set timeList [list]
-    foreach div {86400 3600 60 1} mod {0 24 60 60} name {day hr min sec} {
-        set n [expr {$int_time / $div}]
-        if {$mod > 0} {set n [expr {$n % $mod}]}
-        if {$n > 1} {
-            lappend timeList "$n ${name}s"
-        } elseif {$n == 1} {
-            lappend timeList "$n $name"
-        }
-    }
-    return [join $timeList]
-}
-
 proc write::forceUpdateNode {node} {
     catch {get_domnode_attribute $node dict}
     catch {get_domnode_attribute $node values}
     catch {get_domnode_attribute $node value}
     catch {get_domnode_attribute $node state}
 }
-proc write::getValueByNode { node } {
-    if {[get_domnode_attribute $node v] eq ""} {
+proc write::getValueByNode { node {what noforce} } {
+    if {[get_domnode_attribute $node v] eq "" || $what eq "force"} {
         write::forceUpdateNode $node
     }
     return [getFormattedValue [get_domnode_attribute $node v]]
+}
+proc write::getValueByNodeChild { parent_node child_name {what noforce} } {
+    set node [$parent_node find n $child_name]
+    return [write::getValueByNode $node $what]
 }
 proc write::getValueByXPath { xpath { it "" }} {
     set root [customlib::GetBaseRoot]
@@ -574,6 +635,30 @@ proc write::mdpaIndent { {b 4} } {
     string repeat [string repeat " " $b] $current_mdpa_indent_level
 }
 
+# Sets the precission for the diffetent entities written in the mdpa
+# To customize the formats and precissions for your mdpa.
+# You can edit in your write mdpa event script using write::SetWriteFormatFor
+proc write::InitWriteFormats { } {
+    if {$::Kratos::kratos_private(mdpa_format) == 1} {
+        # Readable
+        write::SetWriteFormatFor ID "%5d"
+        write::SetWriteFormatFor CONNECTIVITY "%10d"
+        write::SetWriteFormatFor MAT_ID "%10d"
+        write::SetWriteFormatFor COORDINATE "%14.10f"
+    } else {
+        # Optimized
+        write::SetWriteFormatFor ID "%d"
+        write::SetWriteFormatFor CONNECTIVITY "%d"
+        write::SetWriteFormatFor MAT_ID "%d"
+        write::SetWriteFormatFor COORDINATE "%.10f"
+    }
+}
+
+proc write::SetWriteFormatFor { what format } {
+    variable formats_dict
+    dict set formats_dict $what $format
+}
+
 proc write::CopyFileIntoModel { filepath } {
     set dir [GetConfigurationAttribute dir]
     set activeapp [::apps::getActiveApp]
@@ -600,66 +685,42 @@ proc write::WriteAssignedValues {condNode} {
     return $ret
 }
 
-proc write::writePropertiesJsonFile {{parts_un ""} {fname "materials.json"} {write_claw_name "True"} {model_part_name ""}} {
-    if {$parts_un eq ""} {set parts_un [GetConfigurationAttribute parts_un]}
-    set mats_json [getPropertiesList $parts_un $write_claw_name $model_part_name]
-    write::OpenFile $fname
-    write::WriteJSON $mats_json
-    write::CloseFile
+proc write::writeLaunchJSONFile { } {
+    # Check if developer
+    if {[Kratos::IsDeveloperMode]} {
+        set debug_folder $Kratos::kratos_private(debug_folder)
+
+        # Prepare JSON as dict
+        set json [dict create version "0.2.0"]
+        set n_omp "1"
+        set python_env [dict create OMP_NUM_THREADS $n_omp PYTHONPATH $debug_folder LD_LIBRARY_PATH [file join $debug_folder libs]]
+        set python_configuration [dict create name "python main" type python request launch program MainKratos.py console integratedTerminal env $python_env cwd [GetConfigurationAttribute dir]]
+        set cpp_configuration [dict create name "C++ Attach" type cppvsdbg request attach processId "\${command:pickProcess}"]
+        dict set json configurations [list $python_configuration $cpp_configuration]
+
+        # Print json
+        CloseFile
+        file mkdir [file join [GetConfigurationAttribute dir] .vscode]
+        OpenFile ".vscode/launch.json"
+        write::WriteJSONAsStringFields $json
+        CloseFile
+    }
 }
 
-proc write::getPropertiesList {parts_un {write_claw_name "True"} {model_part_name ""}} {
-    variable mat_dict
-    set props_dict [dict create]
-    set props [list ]
-
-    set doc $gid_groups_conds::doc
-    set root [$doc documentElement]
-    #set root [customlib::GetBaseRoot]
-
-    set xp1 "[spdAux::getRoute $parts_un]/group"
-    if {[llength [$root selectNodes $xp1]] < 1} {
-        set xp1 "[spdAux::getRoute $parts_un]/condition/group"
-    }
-    foreach gNode [$root selectNodes $xp1] {
-        set group [get_domnode_attribute $gNode n]
-        set sub_model_part [write::getSubModelPartId Parts $group]
-        if {$model_part_name ne ""} {set sub_model_part $model_part_name.$sub_model_part}
-        set sub_model_part [string trim $sub_model_part "."]
-        if { [dict exists $mat_dict $group] } {
-            set mid [dict get $mat_dict $group MID]
-            set prop_dict [dict create]
-            dict set prop_dict "model_part_name" $sub_model_part
-            dict set prop_dict "properties_id" $mid
-            set constitutive_law_id [dict get $mat_dict $group ConstitutiveLaw]
-            set constitutive_law [Model::getConstitutiveLaw $constitutive_law_id]
-            if {$constitutive_law ne ""} {
-                set exclusionList [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
-                set variables_dict [dict create]
-                foreach prop [dict keys [dict get $mat_dict $group] ] {
-                    if {$prop ni $exclusionList} {
-                        dict set variables_list $prop [getFormattedValue [dict get $mat_dict $group $prop]]
-                    }
-                }
-                set material_dict [dict create]
-
-                if {$write_claw_name eq "True"} {
-                    set constitutive_law_name [$constitutive_law getKratosName]
-                    dict set material_dict constitutive_law [dict create name $constitutive_law_name]
-                }
-                dict set material_dict Variables $variables_list
-                dict set material_dict Tables dictnull
-
-                dict set prop_dict Material $material_dict
-
-                lappend props $prop_dict
+proc write::CopyMainScriptFile { } {
+    set errcode 0
+    # Main python script
+    if {[catch {
+            set orig_name [write::GetConfigurationAttribute main_launch_file]
+            if {$orig_name ne ""} {
+                write::CopyFileIntoModel $orig_name
+                write::RenameFileInModel [file tail $orig_name] "MainKratos.py"
             }
-        }
-
+        } fid] } {
+        W "Problem Writing $errName block:\n$fid\nEvent $wevent \nEnd problems"
+        return errcode 1
     }
-
-    dict set props_dict properties $props
-    return $props_dict
+    return $errcode
 }
 
 write::Init

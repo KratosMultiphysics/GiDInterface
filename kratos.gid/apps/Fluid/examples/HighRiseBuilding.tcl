@@ -1,5 +1,9 @@
+namespace eval ::Fluid::examples::HighRiseBuilding {
+    namespace path ::Fluid::examples
+    Kratos::AddNamespace [namespace current]
+}
 
-proc ::Fluid::examples::HighRiseBuilding {args} {
+proc ::Fluid::examples::HighRiseBuilding::Init {args} {
     if {![Kratos::IsModelEmpty]} {
         set txt "We are going to draw the example geometry.\nDo you want to lose your previous work?"
         set retval [tk_messageBox -default ok -icon question -message $txt -type okcancel]
@@ -7,10 +11,10 @@ proc ::Fluid::examples::HighRiseBuilding {args} {
     }
 
     Kratos::ResetModel
-    DrawHighRiseBuildingGeometry$::Model::SpatialDimension
-    AssignGroupsHighRiseBuilding$::Model::SpatialDimension
-    AssignHighRiseBuildingMeshSizes$::Model::SpatialDimension
-    TreeAssignationHighRiseBuilding$::Model::SpatialDimension
+    DrawGeometry$::Model::SpatialDimension
+    AssignGroups$::Model::SpatialDimension
+    AssignMeshSizes$::Model::SpatialDimension
+    TreeAssignation$::Model::SpatialDimension
 
     GiD_Process 'Redraw
     GidUtils::UpdateWindow GROUPS
@@ -20,11 +24,11 @@ proc ::Fluid::examples::HighRiseBuilding {args} {
 
 
 # Draw Geometry
-proc Fluid::examples::DrawHighRiseBuildingGeometry3D {args} {
+proc ::Fluid::examples::HighRiseBuilding::DrawGeometry3D {args} {
     # To be implemented
 }
 
-proc Fluid::examples::DrawHighRiseBuildingGeometry2D {args} {
+proc ::Fluid::examples::HighRiseBuilding::DrawGeometry2D {args} {
     GiD_Layers create Fluid
     GiD_Layers edit to_use Fluid
 
@@ -51,7 +55,7 @@ proc Fluid::examples::DrawHighRiseBuildingGeometry2D {args} {
 
 
 # Group assign
-proc Fluid::examples::AssignGroupsHighRiseBuilding2D {args} {
+proc ::Fluid::examples::HighRiseBuilding::AssignGroups2D {args} {
     # Create the groups
     GiD_Groups create Fluid
     GiD_Groups edit color Fluid "#26d1a8ff"
@@ -77,17 +81,17 @@ proc Fluid::examples::AssignGroupsHighRiseBuilding2D {args} {
     GiD_Groups edit color InterfaceFluid "#3b3b3bff"
     GiD_EntitiesGroups assign InterfaceFluid lines {2 3 4}
 }
-proc Fluid::examples::AssignGroupsHighRiseBuilding3D {args} {
+proc ::Fluid::examples::HighRiseBuilding::AssignGroups3D {args} {
     # To be implemented
 }
 
 
 # Mesh sizes
-proc Fluid::examples::AssignHighRiseBuildingMeshSizes3D {args} {
+proc ::Fluid::examples::HighRiseBuilding::AssignMeshSizes3D {args} {
     # To be implemented
 }
 
-proc Fluid::examples::AssignHighRiseBuildingMeshSizes2D {args} {
+proc ::Fluid::examples::HighRiseBuilding::AssignMeshSizes2D {args} {
     set fluid_mesh_size 30.0
     set walls_mesh_size 30.0
     set building_mesh_size 3.0
@@ -102,11 +106,11 @@ proc Fluid::examples::AssignHighRiseBuildingMeshSizes2D {args} {
 
 
 # Tree assign
-proc Fluid::examples::TreeAssignationHighRiseBuilding3D {args} {
+proc ::Fluid::examples::HighRiseBuilding::TreeAssignation3D {args} {
     # To be implemented
 }
 
-proc Fluid::examples::TreeAssignationHighRiseBuilding2D {args} {
+proc ::Fluid::examples::HighRiseBuilding::TreeAssignation2D {args} {
     set nd $::Model::SpatialDimension
     set root [customlib::GetBaseRoot]
 
@@ -120,35 +124,21 @@ proc Fluid::examples::TreeAssignationHighRiseBuilding2D {args} {
     set fluidParts [spdAux::getRoute "FLParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $fluidParts Fluid]
     set props [list Element Monolithic$nd ConstitutiveLaw Newtonian Material Air]
-    foreach {prop val} $props {
-        set propnode [$fluidNode selectNodes "./value\[@n = '$prop'\]"]
-        if {$propnode ne "" } {
-            $propnode setAttribute v $val
-        } else {
-            W "Warning - Couldn't find property Fluid $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $fluidNode $props
 
     set fluidConditions [spdAux::getRoute "FLBC"]
-    ErasePreviousIntervals
+    ::Fluid::examples::ErasePreviousIntervals
 
     # Fluid Inlet
-    Fluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 10.0} true "25.0*t/10.0"
-    Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 10.0 end End} false 25.0
+    ::Fluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 10.0} true "25.0*t/10.0"
+    ::Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 10.0 end End} false 25.0
 
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
     $outletNode setAttribute ov $condtype
     set props [list value 0.0]
-    foreach {prop val} $props {
-         set propnode [$outletNode selectNodes "./value\[@n = '$prop'\]"]
-         if {$propnode ne "" } {
-              $propnode setAttribute v $val
-         } else {
-            W "Warning - Couldn't find property Outlet $prop"
-        }
-    }
+    spdAux::SetValuesOnBaseNode $outletNode $props
 
     # Fluid Conditions
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='Slip$nd'\]" Top_Wall] setAttribute ov $condtype
@@ -156,33 +146,19 @@ proc Fluid::examples::TreeAssignationHighRiseBuilding2D {args} {
     [customlib::AddConditionGroupOnXPath "$fluidConditions/condition\[@n='NoSlip$nd'\]" InterfaceFluid] setAttribute ov $condtype
 
     # Time parameters
-    set time_parameters [list EndTime 40.0 DeltaTime 0.05]
-    set time_params_path [spdAux::getRoute "FLTimeParameters"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list EndTime 40.0 DeltaTime 0.05]
+    set xpath [spdAux::getRoute "FLTimeParameters"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Output
-    set time_parameters [list OutputControlType time OutputDeltaTime 1.0]
+    set parameters [list OutputControlType time OutputDeltaTime 1.0]
     set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$xpath/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    spdAux::SetValuesOnBasePath $xpath $parameters
     
     # Parallelism
-    set time_parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
-    set time_params_path [spdAux::getRoute "Parallelization"]
-    foreach {n v} $time_parameters {
-        [$root selectNodes "$time_params_path/value\[@n = '$n'\]"] setAttribute v $v
-    }
+    set parameters [list ParallelSolutionType OpenMP OpenMPNumberOfThreads 4]
+    set xpath [spdAux::getRoute "Parallelization"]
+    spdAux::SetValuesOnBasePath $xpath $parameters
 
     spdAux::RequestRefresh
-}
-
-proc Fluid::examples::ErasePreviousIntervals { } {
-    set root [customlib::GetBaseRoot]
-    set interval_base [spdAux::getRoute "Intervals"]
-    foreach int [$root selectNodes "$interval_base/blockdata\[@n='Interval'\]"] {
-        if {[$int @name] ni [list Initial Total Custom1]} {$int delete}
-    }
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials>
+  <Material n="Air" MaterialType="CompressibleFluid" help="Air physical properties" icon="gas">
+    <inputs>
+      <parameter n="DENSITY"             pn="Density"             unit_magnitue="M/L^3"        units="kg/m^3"   v="1.225"  />
+      <parameter n="DYNAMIC_VISCOSITY"   pn="Dynamic viscosity"   unit_magnitue="M/(L*T)"      units="kg/(m*s)" v="2e-5"   />
+      <parameter n="CONDUCTIVITY"        pn="Conductivity"        unit_magnitue="M*L/T^3/Temp" units="W/m/K"    v="0.024"  />
+      <parameter n="SPECIFIC_HEAT"       pn="Specific_heat"       unit_magnitue="L^2/Temp/T^2" units="J/K/kg"   v="722.14" />
+      <parameter n="HEAT_CAPACITY_RATIO" pn="Heat capacity ratio" unit_magnitue=""             units=""         v="1.4"    />
+    </inputs>
+  </Material>
+</Materials>

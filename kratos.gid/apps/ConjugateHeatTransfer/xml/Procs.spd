@@ -5,16 +5,6 @@
 		return "normal"
 	  ]]>
 	</proc>
-	<proc n='MaxGroups' args='args'>
-		<![CDATA[
-		set childs [$domNode getElementsByTagName group]
-		if {[llength $childs] > 1} {
-			foreach group [lrange $childs 1 end] {$group delete}
-			gid_groups_conds::actualize_conditions_window
-			error "You can only set one part"
-		}
-	  ]]>
-	</proc>
 	<proc n='CheckIdOnMyParent' args='args'>
 		<![CDATA[
 		set r "hidden"
@@ -39,7 +29,7 @@
 
 	<proc n='GetSolutionStrategiesSolid' args='args'>
 		<![CDATA[
-	  
+
 		set names ""
 		set pnames ""
 		set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
@@ -51,21 +41,21 @@
 		}
 		set names [string range $names 0 end-1]
 		set pnames [string range $pnames 0 end-1]
-		
+
 		$domNode setAttribute values $names
 		if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v [lindex $ids 0]}
 		spdAux::RequestRefresh
 		return $pnames
-	  
+
 	  ]]>
 	</proc>
 
 	<proc n='GetSolutionStrategiesStructural' args='args'>
 		<![CDATA[
-	  
+
 		set names ""
 		set pnames ""
-        
+
 		set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
         set arguments $args
         lappend arguments "SolutionType" $solutionType
@@ -79,18 +69,18 @@
 		}
 		set names [string range $names 0 end-1]
 		set pnames [string range $pnames 0 end-1]
-		
+
 		$domNode setAttribute values $names
 			set dv [lindex $ids 0]
 			if {[$domNode getAttribute v] eq ""} {$domNode setAttribute v $dv}
 			if {[$domNode getAttribute v] ni $ids} {$domNode setAttribute v $dv}
 		#spdAux::RequestRefresh
 		return $pnames
-	  
+
 	  ]]>
 	</proc>
 
-	<proc n='CheckNodalConditionStateSolid' args='args'>
+	<proc n='CheckNodalConditionStateStructural' args='args'>
 		<![CDATA[
 	  # Overwritten the base function to add Solution Type restrictions
 		set parts_un STParts
@@ -102,7 +92,7 @@
 			set elemnames [list ]
 			foreach elem $elems { lappend elemnames [$elem @v]}
 			set elemnames [lsort -unique $elemnames]
-			
+
 			set solutionType [get_domnode_attribute [$domNode selectNodes [spdAux::getRoute STSoluType]] v]
 			set params [list analysis_type $solutionType]
 			if {[::Model::CheckElementsNodalCondition $conditionId $elemnames $params]} {return "normal"} else {return "hidden"}
@@ -111,8 +101,8 @@
 	</proc>
 
 	<proc n='CheckGeometryStructural' args='args'>
-		<![CDATA[                
-                if {$::Model::SpatialDimension eq "3D"} {return surface,volume} {return surface}                
+		<![CDATA[
+                if {$::Model::SpatialDimension eq "3D"} {return surface,volume} {return surface}
           ]]>
 	</proc>
 
@@ -127,21 +117,16 @@
 	  return [spdAux::ProcCheckNodalConditionState $domNode $args]
 	  ]]>
 	</proc>
-	<proc n='CheckGeometrySolid' args='args'>
-		<![CDATA[                
-      return [Structural::xml::ProcCheckGeometrySolid $domNode $args]              
-      ]]>
-	</proc>
 
 	<proc n="ElementOutputState" args='args'>
-		<![CDATA[  
+		<![CDATA[
 				set resp [::spdAux::CheckElementOutputState $domNode {FLParts CNVDFFParts}]
 				if {$resp} {return "normal"} else {return "hidden"}
 		}
 	]]>
 	</proc>
 	<proc n="ActiveIfAnyPartState" args='args'>
-		<![CDATA[  
+		<![CDATA[
 				set resp [::spdAux::CheckAnyPartState $domNode {FLParts CNVDFFParts}]
 				if {$resp} {return "normal"} else {return "hidden"}
 		}

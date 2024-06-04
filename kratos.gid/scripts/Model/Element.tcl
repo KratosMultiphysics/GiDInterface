@@ -3,30 +3,30 @@
 #   Do not change anything here unless it's strictly necessary.
 ##################################################################################
 
-namespace eval Model {
+namespace eval ::Model {
 catch {Element destroy}
 oo::class create Element {
     superclass Entity
-    
+
     variable TopologyFeatures
     variable ElementNodalCondition
     variable constLawFilters
-    
+
     constructor {n} {
         next $n
         variable TopologyFeatures
         variable ElementNodalCondition
         variable constLawFilters
-        
+
         set TopologyFeatures [list ]
         set ElementNodalCondition [list ]
         set constLawFilters [dict create]
     }
-    
+
     method addConstLawFilter {key value} {variable constLawFilters; dict set constLawFilters $key $value}
     method getConstLawFilterValue {key} {
         variable constLawFilters;
-        
+
         set v ""
         if {[dict exists $constLawFilters $key]} {
             set v [dict get $constLawFilters $key]
@@ -35,16 +35,16 @@ oo::class create Element {
     }
     method getConstLawFilters {} {
         variable constLawFilters
-        
+
         set v [list ]
         if {[info exists constLawFilters]} {
             foreach k [dict keys $constLawFilters] {
-                lappend v $k [dict get $constLawFilters $k] 
+                lappend v $k [dict get $constLawFilters $k]
             }
         }
         return $v
     }
-    
+
     method addNodalCondition {nc_name} {
         variable ElementNodalCondition
         lappend ElementNodalCondition $nc_name
@@ -67,10 +67,10 @@ oo::class create Element {
                 return $nc
             }
         }
-        
+
         return $v
     }
-    
+
     method resetTopologies { } {
         variable TopologyFeatures
         set TopologyFeatures [list ]
@@ -82,9 +82,9 @@ oo::class create Element {
     method getTopologyFeature {geo nod} {
         variable TopologyFeatures
         set ret ""
-        foreach top $TopologyFeatures {            
-            if {[$top getNodes] eq $nod} {set ret $top; break}
-            #if {[$top getGeometry] eq $geo && [$top getNodes] eq $nod} {set ret $top; break}
+        foreach top $TopologyFeatures {
+            #if {[$top getNodes] eq $nod} {set ret $top; break}
+            if {[$top getGeometry] eq $geo && [$top getNodes] eq $nod} {set ret $top; break}
         }
         return $ret
     }
@@ -92,16 +92,21 @@ oo::class create Element {
         variable TopologyFeatures
         return $TopologyFeatures
     }
+    
+    method getTopologyKratosName {geo nod} {
+        set top [my getTopologyFeature $geo $nod]
+        if {$top ne ""} {return [$top getKratosName]} {return ""}
+    }
 
     method cumple {args} {
         set c [next {*}$args]
-         
+
         if {$c} {
             set ptdim $::Model::SpatialDimension
             set eldim [split [my getAttribute "WorkingSpaceDimension"] ","]
             if {$ptdim ni $eldim} {set c 0}
         }
-        
+
         return $c
     }
 }
@@ -109,20 +114,20 @@ catch {NodalCondition destroy}
 oo::class create NodalCondition {
     superclass Condition
     variable reaction
-    variable ov    
-    
+    variable ov
+
     constructor {n} {
         next $n
         set reaction ""
         set ov ""
         #set ov "point,line,surface,volume"
     }
-    
+
     method setReaction {r} {variable reaction; set reaction $r}
     method getReaction {} {variable reaction; return $reaction}
     method setOv {r} {variable ov; set ov $r}
     method getOv {} { variable ov; return $ov}
-    
+
 }
 }
 
@@ -143,7 +148,7 @@ proc Model::ForgetElement { elem_id } {
 
 proc Model::ParseElements { doc } {
     variable Elements
-    
+
     set ElemNodeList [$doc getElementsByTagName ElementItem]
     foreach ElemNode $ElemNodeList {
         lappend Elements [ParseElemNode $ElemNode]
@@ -175,11 +180,11 @@ proc Model::ForgetNodalCondition { cnd_id } {
 
 proc Model::ParseElemNode { node } {
     set name [$node getAttribute n]
-    
+
     set el [::Model::Element new $name]
     $el setPublicName [$node getAttribute pn]
     if {[$node hasAttribute v]} {$el setDv [$node getAttribute v]}
-    
+
     foreach att [$node attributes] {
         $el setAttribute $att [split [$node getAttribute $att] ","]
         #W "$att : [$el getAttribute $att]"
@@ -196,7 +201,7 @@ proc Model::ParseElemNode { node } {
             set el [ParseInputParamNode $el $in]
         }
     }
-    
+
     set outputs_node [$node getElementsByTagName outputs]
     if {$outputs_node ne "" && [$outputs_node hasChildNodes]} {
         foreach out [$outputs_node childNodes] {
@@ -221,7 +226,7 @@ proc Model::ParseElemNode { node } {
             $el addNodalCondition $n
         }
     }
-    
+
     return $el
 }
 proc Model::ParseNodalConditionsNode { node } {
@@ -229,13 +234,13 @@ proc Model::ParseNodalConditionsNode { node } {
     #W "Parsing $name"
     set el [::Model::NodalCondition new $name]
     $el setPublicName [$node getAttribute pn]
-    
+
     if {[$node hasAttribute ov]} {
         set ov [$node getAttribute ov]
         $el setOv $ov
     }
-    
-    
+
+
     foreach att [$node attributes] {
         $el setAttribute $att [split [$node getAttribute $att] ","]
         #W "$att : [$el getAttribute $att]"
@@ -244,7 +249,7 @@ proc Model::ParseNodalConditionsNode { node } {
     if { [llength $symbol_node]==1 } {
         set data [list]
         foreach attribute [$symbol_node attributes] {
-            lappend data $attribute [$symbol_node getAttribute $attribute]            
+            lappend data $attribute [$symbol_node getAttribute $attribute]
         }
         $el setSymbol $data
     }
@@ -254,7 +259,7 @@ proc Model::ParseNodalConditionsNode { node } {
             set el [ParseInputParamNode $el $in]
         }
     }
-    
+
     set outputNodes [$node getElementsByTagName outputs]
     if {$outputNodes ne ""} {
         foreach out [$outputNodes getElementsByTagName parameter] {
@@ -284,7 +289,7 @@ proc Model::ParseNodalConditionsNode { node } {
     return $el
 }
 
-proc Model::GetElements {args} { 
+proc Model::GetElements {args} {
     variable Elements
     #W "Get elements $args"
     set cumplen [list ]
@@ -295,7 +300,7 @@ proc Model::GetElements {args} {
     return $cumplen
 }
 
-proc Model::getElement {eid} { 
+proc Model::getElement {eid} {
     variable Elements
 
     foreach elem $Elements {
@@ -306,24 +311,24 @@ proc Model::getElement {eid} {
 
 proc Model::GetConstitutiveLawFilters {ename} {
     variable Elements
-    
+
     foreach elem $Elements {
         if {[$elem getName] eq $ename} { return [$elem getConstLawFilters]}
     }
 }
 
-proc Model::GetAvailableConstitutiveLaws {elementId} { 
+proc Model::GetAvailableConstitutiveLaws {elementId} {
     variable ConstitutiveLaws
 
     set cumplen [list ]
-    
+
     set filters [GetConstitutiveLawFilters $elementId]
     #W "filtros $filters"
     foreach cl $ConstitutiveLaws {
         #W "Cumple [$cl getName]? [$cl cumple $filters]"
         if {[$cl cumple $filters]} { lappend cumplen $cl}
     }
-    
+
     return $cumplen
 }
 
@@ -339,7 +344,7 @@ proc Model::GetAllElemOutputs {args} {
 
 proc Model::GetAllElemInputs {} {
     variable Elements
-    
+
     set inputs [dict create]
     foreach el $Elements {
         foreach in [dict keys [$el getInputs]] {
@@ -359,7 +364,7 @@ proc Model::GetNodalConditions {args} {
     #return [Model::getAllNodalConditions]
     variable NodalConditions
     set validlist [list ]
-    
+
     foreach nc $NodalConditions {
         #W "ASK [$nc cumple {*}$args]"
         if {[$nc cumple {*}$args]} {lappend validlist $nc}
@@ -402,7 +407,7 @@ proc Model::CheckElemParamState {node} {
         if {$depN ne ""} {
             set depV [$param getDepV]
             set realV [get_domnode_attribute [$node selectNodes "../value\[@n='$depN'\]"] v]
-            if {$depV ne $realV} {set ret 0}
+            if {$realV ni $depV} {set ret 0}
         }
     }
     return $ret
@@ -459,6 +464,6 @@ proc Model::CheckNodalConditionOutputState {conditionId outputId {restrictions "
             }
         }
     }
-    
+
     return $ret
 }

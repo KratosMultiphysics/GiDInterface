@@ -46,18 +46,21 @@ proc write::_writeConditionsByUniqueIdForBasicSubmodelParts {un ConditionMap ite
     Model::getConditions "../../Common/xml/Conditions.xml"
     set conditions_dict [dict create ]
     set elements_list [list ]
+    set generic_condition_name GENERIC_CONDITION3D
+    if {$::Model::SpatialDimension ne "3D"} {set generic_condition_name GENERIC_CONDITION2D}
     foreach group_node $groups {
         set needConds [write::getValueByNode [$group_node selectNodes "./value\[@n='WriteConditions'\]"]]
         if {$needConds} {
-            # TODO: be carefull with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
-            set iter [write::writeGroupNodeConditionByUniqueId $group_node "GENERIC_CONDITION" $iter $ConditionMap {print_again_repeated 0}]
+            # TODO: be careful with the answer to https://github.com/KratosMultiphysics/GiDInterface/issues/576#issuecomment-485928815
+            set iter [write::writeGroupNodeConditionByUniqueId $group_node $generic_condition_name $iter $ConditionMap {print_again_repeated 0}]
         }
     }
-    Model::ForgetCondition GENERIC_CONDITIONS
+    Model::ForgetCondition $generic_condition_name
     return $iter
 }
 
 proc write::writeBasicSubmodelPartsByUniqueId {ConditionMap iter {un "GenericSubmodelPart"}} {
+    
     # Write elements
     set groups [write::_writeElementsForBasicSubmodelParts $un]
     # Write conditions (By unique id, so need the app ConditionMap)
@@ -77,13 +80,17 @@ proc write::writeBasicSubmodelPartsByUniqueId {ConditionMap iter {un "GenericSub
 proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMap {print_again_repeated 0}} {
     set obj [list ]
 
+    set inittime [clock seconds]
+
     # Print header
     set s [mdpaIndent]
     WriteString "${s}Begin Conditions $kname// GUI group identifier: $groupid"
 
     # Get the entities to print
     if {$nnodes == 1} {
-        set formats [dict create $groupid "%10d \n"]
+        variable formats_dict
+        set id_f [dict get $formats_dict ID]
+        set formats [dict create $groupid "${s}$id_f \n"]
         set obj [GiD_EntitiesGroups get $groupid nodes]
     } else {
         set formats [write::GetFormatDict $groupid 0 $nnodes]
@@ -99,7 +106,7 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
         set cndid 0
         set new 0
         if {$nnodes != 1} {
-            set eid [lindex $elems $i]
+            set eid [objarray get $elems $i]
             set cndid [objarray get $ConditionMap $eid]
         }
         if {$cndid == 0} {
@@ -119,6 +126,7 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
     WriteString "${s}End Conditions"
     WriteString ""
 
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupConditionByUniqueId $groupid time: [Kratos::Duration $ttime]"}
     return $iter
 }
 
@@ -149,12 +157,18 @@ proc write::writeConditionGroupedSubmodelPartsByUniqueId {cid groups_dict condit
 
 # what can be: nodal, Elements, Conditions or Elements&Conditions
 proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "Elements"} {tableid_list ""} } {
+    set inittime [clock seconds]
     variable submodelparts
+    variable formats_dict
+
+
+    set id_f [dict get $formats_dict ID]
 
     set mid ""
     set what [split $what "&"]
-    set group [GetWriteGroupName $group]
+    set group [write::GetWriteGroupName $group]
     if {![dict exists $submodelparts [list $cid ${group}]]} {
+        set null_cond_warn 0
         # Add the submodelpart to the catalog
         set good_name [write::transformGroupName $group]
         set mid "${cid}_${good_name}"
@@ -167,7 +181,7 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
         incr ::write::current_mdpa_indent_level 2
         set s2 [mdpaIndent]
         set gdict [dict create]
-        set f "${s2}%5i\n"
+        set f "${s2}$id_f\n"
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
@@ -197,12 +211,15 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
             set elems [GiD_WriteCalculationFile elements -sorted -return $gdict]
             for {set i 0} {$i <[llength $elems]} {incr i} {
                 set eid [objarray get $ConditionsMap [lindex $elems $i]]
-                WriteString "${s2}[format %10d $eid]"
+                if {$eid == 0} {set null_cond_warn 1}
+                WriteString "${s2}[format $id_f $eid]"
             }
         }
         WriteString "${s1}End SubModelPartConditions"
         WriteString "${s}End SubModelPart"
+        if {$null_cond_warn} {W "$mid submodelpart contains conditions that are not in the Conditions block"}
     }
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupSubModelPartByUniqueId $group time: [Kratos::Duration $ttime]"}
     return $mid
 }
 

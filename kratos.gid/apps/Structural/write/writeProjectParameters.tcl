@@ -1,22 +1,33 @@
 # Project Parameters
 
-proc Structural::write::getOldParametersDict { } {
+proc ::Structural::write::getOldParametersDict { {stage ""} } {
     set model_part_name [GetAttribute model_part_name]
     set projectParametersDict [dict create]
 
     # Problem data
     # Create section
-    set problemDataDict [write::GetDefaultProblemDataDict $Structural::app_id]
+    set problemDataDict [write::GetDefaultProblemDataDict [::Structural::GetAttribute id]]
 
     set solutiontype [write::getValue STSoluType]
+
     # Time Parameters
-    if {$solutiontype eq "Static" || $solutiontype eq "eigen_value"} {
+    set timeSteppingDict [dict create]
+    set enable_dynamic_substepping [::Structural::GetWriteProperty "enable_dynamic_substepping"]
+    if {[write::isBooleanFalse $enable_dynamic_substepping] || ($solutiontype eq "Static" || $solutiontype eq "eigen_value")} {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
+
+        # Time stepping settings for static
+        dict set timeSteppingDict time_step $time_step
+
     } {
-        set time_step [write::getValue STTimeParameters DeltaTime]
+        set time_step_table [write::GetTimeStepIntervals]
+
+        # Time stepping settings for dynamic
+        dict set timeSteppingDict time_step_table $time_step_table
     }
+
     # Add section to document
     dict set projectParametersDict problem_data $problemDataDict
 
@@ -29,6 +40,7 @@ proc Structural::write::getOldParametersDict { } {
         set params [dict create]
         dict set params "result_file_name" [Kratos::GetModelName]
         dict set params "animation_steps" 20
+        dict set params "file_format" "gid"
         dict set params "label_type" "frequency"
         dict set eigen_process_dict "Parameters" $params
     }
@@ -49,6 +61,8 @@ proc Structural::write::getOldParametersDict { } {
     # TODO: Use default
     # Solution strategy
     set solverSettingsDict [dict create]
+    # Time stepping
+    dict set solverSettingsDict time_stepping $timeSteppingDict
     set currentStrategyId [write::getValue STSolStrat]
     # set strategy_write_name [[::Model::GetSolutionStrategy $currentStrategyId] getAttribute "n"]
     set solver_type_name $solutiontype
@@ -75,15 +89,13 @@ proc Structural::write::getOldParametersDict { } {
     dict set materialsDict materials_filename [GetAttribute materials_file]
     dict set solverSettingsDict material_import_settings $materialsDict
 
-    # Time stepping settings
-    set timeSteppingDict [dict create]
-    dict set timeSteppingDict "time_step" $time_step
-    dict set solverSettingsDict time_stepping $timeSteppingDict
-
     # Solution strategy parameters and Solvers
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict STSolStrat STScheme STStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
+    if {[write::getValue STAnalysisType] ne "non_linear"} {
+        dict unset solverSettingsDict use_old_stiffness_in_first_iteration
+    }
     # Submodelpart lists
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart
@@ -111,9 +123,17 @@ proc Structural::write::getOldParametersDict { } {
     # Lists of processes
     set processesDict [dict create]
 
-    set nodal_conditions_dict [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
-    #lassign [ProcessContacts $nodal_conditions_dict] nodal_conditions_dict contact_conditions_dict
-    dict set processesDict constraints_process_list $nodal_conditions_dict
+    set initial_conditions_list_raw [write::getConditionsParametersDict [GetAttribute initial_conditions_un] "Nodal"]
+    set initial_conditions_list [list ]
+    foreach process $initial_conditions_list_raw {
+        if {[dict exists $process Parameters constrained]} {
+            if {[llength [dict get $process Parameters constrained]] == 1} {dict set process Parameters constrained false}
+            if {[llength [dict get $process Parameters constrained]] == 3} {dict set process Parameters constrained [list false false false]}
+        }
+        lappend initial_conditions_list $process
+    }
+    set nodal_conditions_list [write::getConditionsParametersDict [GetAttribute nodal_conditions_un] "Nodal"]
+    dict set processesDict constraints_process_list [concat $initial_conditions_list $nodal_conditions_list]
     if {[usesContact]} {
         set contact_conditions_dict [GetContactConditionsDict]
         dict set processesDict contact_process_list $contact_conditions_dict
@@ -136,7 +156,7 @@ proc Structural::write::getOldParametersDict { } {
     dict set projectParametersDict processes $processesDict
 
     # GiD output configuration
-    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict $Structural::app_id]
+    dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict [::Structural::GetAttribute id]]
 
     set check_list [list "UpdatedLagrangianElementUP2D" "UpdatedLagrangianElementUPAxisym"]
     foreach elem $check_list {
@@ -149,12 +169,13 @@ proc Structural::write::getOldParametersDict { } {
     if {$solutiontype eq "eigen_value"} {
         dict unset projectParametersDict output_processes
         dict unset projectParametersDict solver_settings analysis_type
+        dict set projectParametersDict solver_settings builder_and_solver_settings use_block_builder false
     }
 
     return $projectParametersDict
 }
 
-proc Structural::write::GetContactConditionsDict { } {
+proc ::Structural::write::GetContactConditionsDict { {stage ""} } {
     variable ContactsDict
     set root [customlib::GetBaseRoot]
 
@@ -194,7 +215,7 @@ proc Structural::write::GetContactConditionsDict { } {
     dict set contact_parameters_dict assume_master_slave $val
 
     dict set contact_parameters_dict contact_type [write::getValue STContactParams contact_type]
-    
+
     dict set contact_process_dict Parameters $contact_parameters_dict
 
     lappend contacts $contact_process_dict
@@ -202,20 +223,22 @@ proc Structural::write::GetContactConditionsDict { } {
     return $contacts
 }
 
-
-proc Structural::write::writeParametersEvent { } {
+proc ::Structural::write::writeParametersEvent { } {
     write::WriteJSON [getParametersDict]
 
 }
 
-
 # Project Parameters
-proc Structural::write::getParametersDict { } {
+proc ::Structural::write::getParametersDict { {stage ""} } {
     # Get the base dictionary for the project parameters
-    set project_parameters_dict [getOldParametersDict]
+    set project_parameters_dict [getOldParametersDict $stage]
+
+    # Analysis stage field
+    dict set project_parameters_dict analysis_stage "KratosMultiphysics.StructuralMechanicsApplication.structural_mechanics_analysis"
 
     # If using any element with the attribute RotationDofs set to true
-    dict set project_parameters_dict solver_settings rotation_dofs [UsingRotationDofElements]
+    dict set project_parameters_dict solver_settings rotation_dofs [UsingSpecificDofElements RotationDofs $stage]
+    dict set project_parameters_dict solver_settings volumetric_strain_dofs [UsingSpecificDofElements VolumetricStrainDofs $stage]
 
     # Merging the old solver_settings with the common one for this app
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
@@ -224,30 +247,31 @@ proc Structural::write::getParametersDict { } {
 
     return $project_parameters_dict
 }
-proc Structural::write::writeParametersEvent { } {
+proc ::Structural::write::writeParametersEvent { } {
     write::WriteJSON [::Structural::write::getParametersDict]
 }
 
-proc Structural::write::UsingRotationDofElements { } {
+proc ::Structural::write::UsingSpecificDofElements { SpecificDof {stage ""} } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un] $stage]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
-        set elemid [$element_node @v]
+        set elemid [write::getValueByNode $element_node]
         set elem [Model::getElement $elemid]
-        if {[write::isBooleanTrue [$elem getAttribute "RotationDofs"]]} {set bool true; break}
+        if {[write::isBooleanTrue [$elem getAttribute $SpecificDof]]} {set bool true; break}
     }
 
     return $bool
 }
-proc Structural::write::UsingFileInPrestressedMembrane { } {
+
+proc ::Structural::write::UsingFileInPrestressedMembrane { {stage ""} } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un] $stage]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set found false
     foreach element_node $elements {
-        set elemid [$element_node @v]
+        set elemid [write::getValueByNode $element_node]
         if {$elemid eq "PrestressedMembraneElement"} {
             set selector [write::getValueByNode [$element_node selectNodes "../value\[@n = 'PROJECTION_TYPE_COMBO'\]"]]
             if {$selector eq "file"} {set found true; break}

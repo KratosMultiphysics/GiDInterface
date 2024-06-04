@@ -2,13 +2,16 @@
 proc ::Buoyancy::write::getParametersDict { } {
     set projectParametersDict [dict create]
 
+    # Analysis stage field
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.ConvectionDiffusionApplication.convection_diffusion_analysis"
+
     # problem data
     dict set projectParametersDict problem_data [::Buoyancy::write::GetProblemData_Dict]
 
     # output configuration
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
 
-    # restart options 
+    # restart options
     dict set projectParametersDict restart_options [Buoyancy::write::GetRestart_Dict]
 
     # solver settings
@@ -20,13 +23,13 @@ proc ::Buoyancy::write::getParametersDict { } {
     return $projectParametersDict
 }
 
-proc Buoyancy::write::writeParametersEvent { } {
+proc ::Buoyancy::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
 
-proc Buoyancy::write::GetProblemData_Dict { } {
+proc ::Buoyancy::write::GetProblemData_Dict { } {
     set problemDataDict [dict create ]
 
     # problem name
@@ -52,8 +55,8 @@ proc Buoyancy::write::GetProblemData_Dict { } {
     # dict set problemDataDict model_part_name "ThermalModelPart"
 }
 
-proc Buoyancy::write::GetRestart_Dict { } {
-    
+proc ::Buoyancy::write::GetRestart_Dict { } {
+
     set restartDict [dict create]
     dict set restartDict SaveRestart False
     dict set restartDict RestartFrequency 0
@@ -61,7 +64,7 @@ proc Buoyancy::write::GetRestart_Dict { } {
     dict set restartDict Restart_Step 0
 }
 
-proc Buoyancy::write::GetSolverSettings_Dict { } {
+proc ::Buoyancy::write::GetSolverSettings_Dict { } {
     set settings [dict create]
 
     dict set settings solver_type "ThermallyCoupled"
@@ -75,8 +78,9 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
 
     # Fluid things
     write::SetConfigurationAttributes [Fluid::write::GetAttributes]
+    #Fluid::write::SetAttribute materials_file "BuoyancyMaterials.json"
     dict set settings fluid_solver_settings [Fluid::write::getSolverSettingsDict]
-   
+
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set settings fluid_solver_settings domain_size $nDim
 
@@ -92,7 +96,7 @@ proc Buoyancy::write::GetSolverSettings_Dict { } {
     return $settings
 }
 
-proc Buoyancy::write::GetProcesses_Dict { } {
+proc ::Buoyancy::write::GetProcesses_Dict { } {
     set constraints_process_list [list ]
     write::SetConfigurationAttributes [Fluid::write::GetAttributes]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute conditions_un] ]
@@ -104,13 +108,13 @@ proc Buoyancy::write::GetProcesses_Dict { } {
     return [dict create "constraints_process_list" $constraints_process_list]
 }
 
-proc Buoyancy::write::GetBoussinesqProcess { } {
+proc ::Buoyancy::write::GetBoussinesqProcess { } {
     set process [dict create]
     dict set process python_module apply_boussinesq_force_process
     dict set process kratos_module KratosMultiphysics.FluidDynamicsApplication
     dict set process process_name ApplyBoussinesqForceProcess
     set params [dict create]
-    
+
     set groupid "_Boussinesq_hidden_"
     set groupId [::write::getSubModelPartId Boussinesq $groupid]
     dict set params model_part_name [write::GetModelPartNameWithParent $groupId]

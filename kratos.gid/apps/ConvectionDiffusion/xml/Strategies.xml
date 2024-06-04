@@ -3,14 +3,14 @@
 
 	<!-- Stationary strategy -->
 	<StrategyItem
-		n="stationary" 
+		n="stationary"
 		pn="Stationary"
 		ImplementedInFile="convection_diffusion_stationary_solver.py"
 		ImplementedInApplication="ConvectionDiffusionApplication"
 		ImplementedInPythonFile="ConvectionDiffusionStationarySolver"
-		MinimumKratosVersion="8500" 
+		MinimumKratosVersion="8500"
 		App="ConvectionDiffusion"
-		ProductionReady="ProductionReady"
+
 		help="Stationary strategy for convection-diffusion problems.">
 
 		<!-- list of options to be filled -->
@@ -50,15 +50,15 @@
 	</StrategyItem>
 
 	<!-- Transient strategy -->
-	<StrategyItem 
-		n="transient" 
+	<StrategyItem
+		n="transient"
 		pn="Transient"
 		ImplementedInFile="convection_diffusion_transient_solver.py"
 		ImplementedInApplication="ConvectionDiffusionApplication"
 		ImplementedInPythonFile="ConvectionDiffusionTransientSolver"
-		MinimumKratosVersion="8500" 
+		MinimumKratosVersion="8500"
 		App="ConvectionDiffusion"
-		ProductionReady="ProductionReady"
+
 		help="Transient strategy for convection-diffusion solvers.">
 
 		<!-- list of options to be filled -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
   <ElementItem n="PotentialFlowElement2D" pn="Potential Flow Element 2D" ImplementedInFile=".cpp"
-	       ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000"
 	       WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="False" LargeDeformation="False"
 	       ElementType="Fluid" help="This element implements a Potential Flow Element">
 
@@ -30,7 +30,7 @@
 
 
   <ElementItem n="PotentialFlowElement3D" pn="Potential Flow Element 3D" ImplementedInFile="fractional_step.cpp"
-	       ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady"
+	       ImplementedInApplication="CompressiblePotentialFlowApplication" MinimumKratosVersion="9000"
 	       WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" MainDofsVariables="VELOCITY"
 	       ElementType="Fluid" help="This element implements a Potential Flow Element">
 

@@ -2,7 +2,17 @@
 *.lnk
 
 # Kratos execution folder
-kratos.gid/exec/*
-!kratos.gid/exec/README.md
+kratos.gid/exec/Kratos*
+# !kratos.gid/exec/README.md
+!kratos.gid/exec/MainKratos.py
 *.orig
 .vscode/
+
+dist
+.DS_Store
+
+*.zip
+*.tgz
+null
+__pycache__
+*.whl

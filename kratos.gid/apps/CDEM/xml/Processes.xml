@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProcessList>
+  <Process n="Cohesive2D-Process" pn="Define bonded domains" python_module=" " kratos_module="KratosMultiphysics" check="DirectorVectorNonZero direction">
+    <inputs>
+    </inputs>
+  </Process>
+
+  <Process n="Cohesive-Process" pn="Define bonded domains" python_module=" " kratos_module="KratosMultiphysics" check="DirectorVectorNonZero direction">
+    <inputs>
+    </inputs>
+  </Process>
+</ProcessList>
