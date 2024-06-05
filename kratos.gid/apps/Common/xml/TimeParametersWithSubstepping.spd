@@ -2,8 +2,8 @@
 <container n="TimeParameters" pn="Time parameters" un="TimeParameters" icon="time3" help="Problem time parameters"  open_window="0">
 	<value n="StartTime" pn="Start time" v="0.0" help=""/>
 	<value n="EndTime" pn="End time" v="1.0" help=""/>
-	<container n="TimeStep" pn="Time Steps" icon="time1" >
-		<blockdata n="delta_time_interval" pn="delta time interval" name="Delta time interval 1" sequence="1" can_delete_last_item="0"  icon="time2" editable_name="unique" sequence_type="non_void_disabled">
+	<container n="TimeStep" pn="Time Steps" icon="time1">
+		<blockdata n="delta_time_interval" pn="delta time interval" name="Delta time interval 1" sequence="1" can_delete_last_item="0"  icon="time2" editable_name="unique" sequence_type="non_void_disabled"  tree_state="open">
 			<value n="StartTime" pn="Start time" v="0.0" />
 			<value n="DeltaTime" pn="Delta time" v="0.1" />
 		</blockdata>
