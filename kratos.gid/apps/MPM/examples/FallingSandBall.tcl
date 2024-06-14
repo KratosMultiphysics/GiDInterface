@@ -114,7 +114,7 @@ proc ::MPM::examples::FallingSandBall::TreeAssignation2D {args} {
     set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route Sand]
     $mpm_solid_part setAttribute ov surface
     set constitutive_law_name "HenckyMCPlasticPlaneStrain${nd}Law"
-    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material Sand DENSITY 2300 YOUNG_MODULUS 6e6 POISSON_RATIO 0.3 THICKNESS 0.1 PARTICLES_PER_ELEMENT 6]
+    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material Sand DENSITY 2300 YOUNG_MODULUS 6e6 POISSON_RATIO 0.3 THICKNESS 0.1 MATERIAL_POINTS_PER_ELEMENT 6]
     spdAux::SetValuesOnBaseNode $mpm_solid_part $props
 
     ## Grid

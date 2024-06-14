@@ -3,7 +3,7 @@ proc ::MPM::write::getParametersDict { } {
     set project_parameters_dict [Structural::write::getParametersDict]
 
     # Analysis stage field
-    dict set project_parameters_dict analysis_stage "KratosMultiphysics.ParticleMechanicsApplication.particle_mechanics_analysis"
+    dict set project_parameters_dict analysis_stage "KratosMultiphysics.MPMApplication.mpm_analysis"
 
     # Quasi-static must be written as Quasi-static...
     set solutiontype [write::getValue STSoluType]
@@ -98,9 +98,9 @@ proc ::MPM::write::getParametersDict { } {
     set activate_gravity [write::getValue ActivateGravity]
     if {$activate_gravity eq "On"} {
         set gravity_dict [dict create ]
-        dict set gravity_dict python_module assign_gravity_to_particle_process
-        dict set gravity_dict kratos_module "KratosMultiphysics.ParticleMechanicsApplication"
-        dict set gravity_dict process_name AssignGravityToParticleProcess
+        dict set gravity_dict python_module assign_gravity_to_material_point_process
+        dict set gravity_dict kratos_module "KratosMultiphysics.MPMApplication"
+        dict set gravity_dict process_name AssignGravityToMaterialPointProcess
         set gravity_parameters_dict [dict create ]
         dict set gravity_parameters_dict model_part_name MPM_Material
         dict set gravity_parameters_dict variable_name MP_VOLUME_ACCELERATION
@@ -156,9 +156,9 @@ proc ::MPM::write::GetOutputProcessesList { } {
 
          set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
          set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes gid_output] 0]
-         dict set body_output_configuration_dict python_module particle_gid_output_process
-         dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
-         dict set body_output_configuration_dict process_name ParticleMPMGiDOutputProcess
+         dict set body_output_configuration_dict python_module mpm_gid_output_process
+         dict set body_output_configuration_dict kratos_module KratosMultiphysics.MPMApplication
+         dict set body_output_configuration_dict process_name MPMGiDOutputProcess
          dict set body_output_configuration_dict Parameters model_part_name MPM_Material
          dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
          dict set body_output_configuration_dict Parameters output_name [dict get $project_parameters_dict solver_settings model_import_settings input_filename]
@@ -188,9 +188,9 @@ proc ::MPM::write::GetOutputProcessesList { } {
          set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
 
 
-         dict set body_output_configuration_dict python_module particle_vtk_output_process
-         dict set body_output_configuration_dict kratos_module KratosMultiphysics.ParticleMechanicsApplication
-         dict set body_output_configuration_dict process_name ParticleVtkOutputProcess
+         dict set body_output_configuration_dict python_module mpm_vtk_output_process
+         dict set body_output_configuration_dict kratos_module KratosMultiphysics.MPMApplication
+         dict set body_output_configuration_dict process_name MPMVtkOutputProcess
          dict set body_output_configuration_dict Parameters model_part_name MPM_Material
          dict unset body_output_configuration_dict Parameters nodal_data_value_variables
          dict unset body_output_configuration_dict Parameters element_data_value_variables
