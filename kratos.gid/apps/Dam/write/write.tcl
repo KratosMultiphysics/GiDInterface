@@ -81,7 +81,7 @@ proc ::Dam::write::UpdateMaterials { } {
             dict set matdict $mat THICKNESS  1.0
             set newconstlaw "IsotropicDamageCohesive2DLaw"
         }
-        if {$constlaw eq "IsotropicDamageCohesive2DLawPlaneStrain"} {
+        if {$constlaw eq "IsotropicDamageCohesive2DPlaneStrain"} {
             dict set matdict $mat THICKNESS  1.0
             set newconstlaw "IsotropicDamageCohesive2DLaw"
         }
