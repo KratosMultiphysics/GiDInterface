@@ -61,7 +61,7 @@
     <!--3D  Interface laws-->
     <CLaw n="ElasticCohesive3DLaw" pn="Joint Elastic Cohesive 3D"  Type="Interface3D" behaviour="Elastic"
     StrainSize="6"  AnalysisType="Linear,Non-Linear"
-	  help="Elastic law (no breakage) for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
+	  help="Elastic Cohesive law (no breakage) for joints in 3D problems" Dimension="3D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False" AllowsAnisotropy="False"   DamageType="Local,NonLocal" >
         <inputs>
             <parameter n="NORMAL_STIFFNESS" pn="Normal stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
             <parameter n="SHEAR_STIFFNESS" pn="Shear stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
@@ -199,8 +199,8 @@
     </CLaw>
 
     <!--2D  Interface laws-->
-    <CLaw n="ElasticCohesive2DPlaneStrain" pn="Simplified Joint Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
-          help="Simplified law for joints in Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
+    <CLaw n="ElasticCohesive2DPlaneStrain" pn="Joint Elastic Cohesive Plane Strain"  Type="InterfaceStrain" behaviour="Elastic" StrainSize="3"   DamageType="Local,NonLocal"
+          help="Elastic Cohesive law (no breakage) for joints in Plane Strain problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="NORMAL_STIFFNESS" pn="Normal stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
             <parameter n="SHEAR_STIFFNESS" pn="Shear stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
@@ -210,8 +210,8 @@
         </outputs>
     </CLaw>
 
-    <CLaw n="ElasticCohesive2DPlaneStress" pn="Simplified Joint Plane Stress"  Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
-          help="Simplified law for joints in Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
+    <CLaw n="ElasticCohesive2DPlaneStress" pn="Joint Elastic Cohesive Plane Stress"  Type="InterfaceStress" behaviour="Elastic" StrainSize="3"  DamageType="Local,NonLocal"
+          help="Elastic Cohesive law (no breakage) for joints in Plane Stress problems" Dimension="2D" LargeDeformation="False" RequiresLocalAxes="False" HybridType="False"   AnalysisType="Linear,Non-Linear">
         <inputs>
             <parameter n="NORMAL_STIFFNESS" pn="Normal stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
             <parameter n="SHEAR_STIFFNESS" pn="Shear stiffness" unit_magnitude="F/L" units="N/m" v="0.3e06" />
