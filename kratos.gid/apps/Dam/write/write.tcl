@@ -69,19 +69,26 @@ proc ::Dam::write::UpdateMaterials { } {
         set constlaw [dict get $props ConstitutiveLaw]
         # Modificar la ley constitutiva
         set newconstlaw $constlaw
+        if {$constlaw eq "ElasticCohesive3DLaw"} {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  1.0
+        }
         if {$constlaw eq "ElasticCohesive2DPlaneStrain"} {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  1.0
             dict set matdict $mat THICKNESS  1.0
             set newconstlaw "ElasticCohesive2DLaw"
         }
         if {$constlaw eq "ElasticCohesive2DPlaneStress"} {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  1.0
             dict set matdict $mat THICKNESS  1.0
             set newconstlaw "ElasticCohesive2DLaw"
         }
         if {$constlaw eq "IsotropicDamageCohesive2DPlaneStress"}  {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  1.0
             dict set matdict $mat THICKNESS  1.0
             set newconstlaw "IsotropicDamageCohesive2DLaw"
         }
         if {$constlaw eq "IsotropicDamageCohesive2DPlaneStrain"} {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  1.0
             dict set matdict $mat THICKNESS  1.0
             set newconstlaw "IsotropicDamageCohesive2DLaw"
         }
