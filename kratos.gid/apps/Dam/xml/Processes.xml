@@ -43,7 +43,7 @@
         <parameter n="Bottom_Temp" pn="Bottom Temperature" type="double" v="0.0"/>
         <parameter n="Height_Dam" pn="Height Dam" type="double" v="0.0"/>
         <parameter n="Temperature_Amplitude" pn="Temperature Amplitude" type="double" v="0.0"/>
-        <parameter n="Day_Ambient_Temp" pn="Day" type="integer" v="0.0"/>
+        <parameter n="Day_Max_Temp" pn="Day Maximum Temperature" type="integer" v="0.0"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_level_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Month" pn="Month" type="double" v="0.0"/>
