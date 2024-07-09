@@ -221,6 +221,7 @@ proc ::Dam::write::writeTables { } {
     set printed_tables [list ]
     foreach table [GetPrinTables] {
         lassign $table tableid fileid condid groupid valueid
+        set groupid [write::GetWriteGroupName $groupid]
         dict set TableDict $condid $groupid $valueid tableid $tableid
         dict set TableDict $condid $groupid $valueid fileid $fileid
         if {$tableid ni $printed_tables} {
