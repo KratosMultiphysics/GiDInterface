@@ -164,7 +164,7 @@ proc ::Dam::examples::ThermoMechaDam2D::TreeAssignation {args} {
         # Bofang Temperature
         set bofang_temperature "$damDirichletConditions/condition\[@n='BOFANGTEMPERATURE'\]"
         set bofang_temperature_node [customlib::AddConditionGroupOnXPath $bofang_temperature Water]
-        set props_bofang_temperature [list is_fixed 1 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Surface_Temp 15.19 Bottom_Temp 9.35 Height_Dam 30.0 Temperature_Amplitude 6.51 Day_Ambient_Temp 201 Water_level 20.0 Month 7 ]
+        set props_bofang_temperature [list is_fixed 1 Gravity_Direction Y Reservoir_Bottom_Coordinate_in_Gravity_Direction 0.0 Surface_Temp 15.19 Bottom_Temp 9.35 Height_Dam 30.0 Temperature_Amplitude 6.51 Day_Max_Temp 201 Water_level 20.0 Month 7 ]
         spdAux::SetValuesOnBaseNode $bofang_temperature_node $props_bofang_temperature
 
         # Uniform Temperature

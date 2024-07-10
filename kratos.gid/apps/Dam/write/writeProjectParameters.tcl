@@ -376,7 +376,7 @@ proc ::Dam::write::DefinitionDomains { } {
 # This process assign a number for the different tables instead of names (this is for matching with .mdpa)
 proc ::Dam::write::ChangeFileNameforTableid { processList } {
 
-    # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
+    # Global variable defined at the beginning and used to transfer between processes the number of existing tables
     variable number_tables
 
     set returnList [list ]
@@ -862,12 +862,12 @@ proc ::Dam::write::DevicesOutput { } {
 
 proc ::Dam::write::TemperaturebyDevices { } {
 
-    # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
+    # Global variable defined at the beginning and used to transfer between processes the number of existing tables
     variable number_tables
 
     set device_temp_state [write::getValue DamTemperatureState]
     set lista [list ]
-    set listaFiles [list ]
+    set files_list [list ]
 
     if { $device_temp_state == True} {
 
@@ -919,13 +919,13 @@ proc ::Dam::write::TemperaturebyDevices { } {
             dict set parameterDict value $value
 
             if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
-                if {$fileid ni $listaFiles} {
-                    lappend listaFiles $fileid
+                if {$fileid ni $files_list} {
+                    lappend files_list $fileid
                     incr number_devices
                     dict set parameterDict table [expr $number_tables + $number_devices]
                 } else {
-                    for {set i 0} {$i < [llength $listaFiles]} {incr i} {
-                        if {$fileid eq [lindex $listaFiles $i]} {
+                    for {set i 0} {$i < [llength $files_list]} {incr i} {
+                        if {$fileid eq [lindex $files_list $i]} {
                             dict set parameterDict table [expr $number_tables + $i + 1]
                             break
                         }
