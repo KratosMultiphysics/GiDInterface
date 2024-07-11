@@ -20,6 +20,9 @@ proc ::Buoyancy::write::getParametersDict { } {
     # processes
     dict set projectParametersDict processes [Buoyancy::write::GetProcesses_Dict]
 
+    # modelers
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+
     return $projectParametersDict
 }
 
