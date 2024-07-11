@@ -10,6 +10,7 @@ proc ::Buoyancy::write::Init { } {
     # Add thermal unique names to Fluid write variables
     Fluid::write::SetAttribute thermal_bc_un [ConvectionDiffusion::write::GetAttribute conditions_un]
     Fluid::write::SetAttribute thermal_initial_cnd_un [ConvectionDiffusion::write::GetAttribute nodal_conditions_un]
+
 }
 
 # Events
@@ -18,39 +19,10 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
 
-    # Start Fluid write variables
-    Fluid::write::Init
-    # Fluid has implemented the geometry mode, but we do not use it yet in inherited apps
-    ::Fluid::write::SetAttribute write_mdpa_mode [::Buoyancy::GetWriteProperty write_mdpa_mode]
-    # Start Fluid write conditions map from scratch
-    Fluid::write::InitConditionsMap
+    ::Fluid::write::Init
+    
+    ::Fluid::write::writeModelPartEvent
 
-    # Init data
-    write::initWriteConfiguration [Fluid::write::GetAttributes]
-
-    # Headers
-    write::writeModelPartData
-    Fluid::write::writeProperties
-
-    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[Fluid::write::GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
-
-    # Element connectivities (Groups on FLParts)
-    write::writeElementConnectivities
-
-    # Nodal conditions and conditions
-    Fluid::write::writeConditions
-
-    # SubmodelParts
-    Fluid::write::writeMeshes
-    write::writeNodalConditions [GetAttribute thermal_initial_cnd_un]
-    Buoyancy::write::writeSubModelParts
-
-    # Boussinesq nodes
-    Buoyancy::write::writeBoussinesqSubModelPart
-
-    # Custom SubmodelParts
-    #write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
 }
 
 proc ::Buoyancy::write::writeCustomFilesEvent { } {
