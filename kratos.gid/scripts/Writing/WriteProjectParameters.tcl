@@ -620,6 +620,30 @@ proc write::GetTimeStepIntervals { {time_parameters_un ""} } {
     return $time_step_intervals_list
 }
 
+proc write::GetModelersDict { projectParametersDict {stage ""}  } {
+    set modelerts_list [list ]
+
+    # Move the import to the modelers
+    dict unset projectParametersDict solver_settings model_import_settings 
+    dict set projectParametersDict solver_settings model_import_settings input_type use_input_model_part
+    set importer_modeler [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler"]  
+    dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]  
+    lappend modelerts_list $importer_modeler
+
+    if {[write::GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+        # Add the entities creation modeler
+        set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
+        dict set entities_modeler "parameters" elements_list [::write::GetMatchSubModelPart element $stage]
+        dict set entities_modeler "parameters" conditions_list [::write::GetMatchSubModelPart condition $stage]
+        lappend modelerts_list $entities_modeler
+    }
+    
+    dict set projectParametersDict "modelers" $modelerts_list
+
+    return $projectParametersDict
+}
+
+
 
 # what can be element, condition
 proc write::GetMatchSubModelPart { what {stage ""} } {
@@ -630,6 +654,9 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
     set elements_list [list ]
     set processed_groups_list [list ]
     set groups [apps::ExecuteOnCurrentXML GetListOfSubModelParts $stage]
+    if {$groups eq ""} {
+        set groups [spdAux::GetListOfSubModelParts $stage]
+    }
     foreach group $groups {
         set good_name ""
         # get the group and submodelpart name
