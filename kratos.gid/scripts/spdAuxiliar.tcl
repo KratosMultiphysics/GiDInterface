@@ -448,6 +448,14 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
     }
 }
 
+proc spdAux::GetListOfSubModelParts { {stage ""} } {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//condition/group"]
+
+    return $all_raw
+}
+
 proc spdAux::GetAppliedGroups { {root ""} } {
     customlib::UpdateDocument
     
@@ -463,9 +471,11 @@ proc spdAux::GetAppliedGroups { {root ""} } {
     }
     return [lsort -unique $group_list]
 }
+
 proc spdAux::RegisterWindow {window_name} {
     variable list_of_windows
     lappend list_of_windows $window_name
 }
+
 
 spdAux::Init
