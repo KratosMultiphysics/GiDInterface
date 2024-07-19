@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ElementList>
   <!--updated lagrangian-->
-  <ElementItem n="MPMUpdatedLagrangian2D" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
+  <ElementItem n="MPMUpdatedLagrangian2D" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="MPMApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="MPMUpdatedLagrangian2D3N"/>
@@ -20,7 +20,7 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-      <parameter n="PARTICLES_PER_ELEMENT" pn="Particles per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of material points generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -32,7 +32,7 @@
     </outputs>
   </ElementItem>
   <!--updated lagrangian mixed UP-->
-  <ElementItem n="MPMUpdatedLagrangianUP2D" pn="Updated lagrangian mixed UP" ov="surface" ImplementedInFile="updated_lagrangian_UP.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian mixed formulation UP 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
+  <ElementItem n="MPMUpdatedLagrangianUP2D" pn="Updated lagrangian mixed UP" ov="surface" ImplementedInFile="updated_lagrangian_UP.cpp" ImplementedInApplication="MPMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian mixed formulation UP 2D element for large deformation kinematics consist of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="MPMUpdatedLagrangianUP2D3N"/>
@@ -51,7 +51,7 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-      <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="integer" v="1" help="Number of material points generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -62,7 +62,7 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-  <ElementItem n="MPMUpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D axis-symmetric element for large deformation kinematics consist of a material point and connectivity nodes" AnalysisType="non_linear,linear">
+  <ElementItem n="MPMUpdatedLagrangian2DAxisymmetry" pn="Updated lagrangian" ov="surface" ImplementedInFile="updated_lagrangian_axisymmetry.cpp" ImplementedInApplication="MPMApplication" MinimumKratosVersion="9000" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="Yes,No" ElementType="Material_domain" help="Updated Lagrangian 2D axis-symmetric element for large deformation kinematics consist of a material point and connectivity nodes" AnalysisType="non_linear,linear">
 
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
@@ -82,7 +82,7 @@
     </NodalConditions>
     <inputs>
       <parameter n="THICKNESS" pn="Thickness" v="1.0" unit_magnitude="L" units="m" />
-      <parameter n="PARTICLES_PER_ELEMENT" pn="Particles per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of particle generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of material points generated for each element. Available options are: Triangular: 1,3,6,12,16,33 and Quadrilateral: 1,4,9,16" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -94,7 +94,7 @@
     </outputs>
   </ElementItem>
 
-  <ElementItem n="MPMUpdatedLagrangian3D" pn="Updated lagrangian" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
+  <ElementItem n="MPMUpdatedLagrangian3D" pn="Updated lagrangian" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="MPMApplication" MinimumKratosVersion="9000"  WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="False" LargeDeformation="False" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="MPMUpdatedLagrangian3D4N"/>
@@ -112,7 +112,7 @@
       <NodalCondition n="ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="PARTICLES_PER_ELEMENT" pn="Particle per element" type="integer" v="1" help="Number of particle generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="integer" v="1" help="Number of material points generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -123,7 +123,7 @@
       <parameter n="MP_EQUIVALENT_PLASTIC_STRAIN" pn="Material point equivalent plastic strain" v="false" />
     </outputs>
   </ElementItem>
-   <ElementItem n="MPMUpdatedLagrangianUP3D" pn="Updated lagrangian mixed UP" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="ParticleMechanicsApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
+   <ElementItem n="MPMUpdatedLagrangianUP3D" pn="Updated lagrangian mixed UP" ov="volume" ImplementedInFile="updated_lagrangian.cpp" ImplementedInApplication="MPMApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Material_domain" help="Updated Lagrangian 3D element for large deformation kinematics consists of a material point and connectivity nodes." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="MPMUpdatedLagrangian3D4N"/>
@@ -141,7 +141,7 @@
       <NodalCondition n="ACCELERATION"/>
     </NodalConditions>
     <inputs>
-      <parameter n="PARTICLES_PER_ELEMENT" pn="Particles per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of particle generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
+      <parameter n="MATERIAL_POINTS_PER_ELEMENT" pn="Material points per element" type="combo" v="1" values="1,3,4,6,9,12,16,33" pvalues="1 (for triangles or quads),3 (for triangles),4 (for quads),6 (for triangles),9 (for quads),12 (for triangles),16 (for triangles or quads),33 (for triangles)" help="Number of material points generated for each element. Available options are: Tetrahedral: 1,3,6,12 and Hexahedral: 1,4,9,16" />
     </inputs>
     <outputs>
       <parameter n="MP_VELOCITY" pn="Material point velocity" v="true" />
@@ -154,7 +154,7 @@
   </ElementItem>
 
   <!--background grid-->
-  <ElementItem n="GRID2D" pn="Background Grid" ov="surface" ImplementedInApplication="ParticleMechanicsApplication" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Grid" help="2D Background element required for the computation of material point method." AnalysisType="non_linear,linear">
+  <ElementItem n="GRID2D" pn="Background Grid" ov="surface" ImplementedInApplication="MPMApplication" WorkingSpaceDimension="2D" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Grid" help="2D Background element required for the computation of material point method." AnalysisType="non_linear,linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
@@ -173,7 +173,7 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
-  <ElementItem n="GRID2D" pn="Background Grid" ov="surface" ImplementedInApplication="ParticleMechanicsApplication" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Grid" help="2D axis-symmetric Background element required for the computation of material point method." AnalysisType="non_linear">
+  <ElementItem n="GRID2D" pn="Background Grid" ov="surface" ImplementedInApplication="MPMApplication" WorkingSpaceDimension="2Da" LocalSpaceDimension="2" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Grid" help="2D axis-symmetric Background element required for the computation of material point method." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Triangle" nodes="3" KratosName="Element2D3N"/>
@@ -192,7 +192,7 @@
     <inputs></inputs>
     <outputs></outputs>
   </ElementItem>
-  <ElementItem n="GRID3D" pn="Background Grid" ov="volume" ImplementedInApplication="ParticleMechanicsApplication" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Grid" help="3D Background element required for the computation of material point method." AnalysisType="non_linear">
+  <ElementItem n="GRID3D" pn="Background Grid" ov="volume" ImplementedInApplication="MPMApplication" WorkingSpaceDimension="3D" LocalSpaceDimension="3" RequiresLocalAxes="No" LargeDeformation="No" ElementType="Grid" help="3D Background element required for the computation of material point method." AnalysisType="non_linear">
     <!--here we could add a list of all of the possible geometries-->
     <TopologyFeatures>
       <item GeometryType="Tetrahedra" nodes="4" KratosName="Element3D4N"/>
