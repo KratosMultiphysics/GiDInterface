@@ -1,0 +1,13 @@
+{
+    "python_module" : "apply_outlet_process",
+    "kratos_module" : "KratosMultiphysics.FluidDynamicsApplication",
+    "process_name"  : "ApplyOutletProcess",
+    "Parameters"    : {
+        "model_part_name"    : "FluidModelPart.$modelpart_name",
+        "variable_name"      : "PRESSURE",
+        "constrained"        : true,
+        "value"              : 0.0,
+        "hydrostatic_outlet" : false,
+        "h_top"              : 0.0
+    }
+}

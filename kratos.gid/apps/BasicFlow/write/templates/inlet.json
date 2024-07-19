@@ -1,0 +1,12 @@
+{
+    "python_module" : "apply_inlet_process",
+    "kratos_module" : "KratosMultiphysics.FluidDynamicsApplication",
+    "process_name"  : "ApplyInletProcess",
+    "Parameters"    : {
+        "model_part_name" : "FluidModelPart.$modelpart_name",
+        "variable_name"   : "VELOCITY",
+        "interval"        : [0,"End"],
+        "modulus"         : $inlet_value,
+        "direction"       : "automatic_inwards_normal"
+    }
+}

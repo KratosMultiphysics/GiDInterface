@@ -10,9 +10,17 @@ proc ::BasicFlow::write::Init { } {
 
 # MDPA write event
 proc ::BasicFlow::write::writeModelPartEvent { } {
-    # Validation
-    set err [Validate]
-    if {$err ne ""} {error $err}
+
+    # Get the list of groups in the spd
+    set lista [::spdAux::GetListOfSubModelParts]
+    
+    # Write the geometries
+    set ret [::write::writeGeometryConnectivities $lista]
+
+    # Write the submodelparts
+    foreach group $lista {
+        write::writeGroupSubModelPartAsGeometry [$group @n]
+    }
     
 }
 

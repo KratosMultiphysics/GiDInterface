@@ -1,0 +1,8 @@
+{
+    "python_module" : "apply_noslip_process",
+    "kratos_module" : "KratosMultiphysics.FluidDynamicsApplication",
+    "process_name"  : "ApplyNoSlipProcess",
+    "Parameters"    : {
+        "model_part_name" : "FluidModelPart.$modelpart_name"
+    }
+}

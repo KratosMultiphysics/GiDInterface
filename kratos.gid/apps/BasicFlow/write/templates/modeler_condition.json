@@ -1,0 +1,4 @@
+{
+    "model_part_name" : "FluidModelPart.$modelpart_name",
+    "condition_name"  : "$condition_name"
+}
