@@ -55,7 +55,7 @@ proc ::FSI::examples::HighRiseBuilding::AssignGroups2D {args} {
     GiD_Groups create Structure
     GiD_Groups create Ground
     GiD_Groups create InterfaceStructure
-    
+
     GiD_EntitiesGroups assign Structure surfaces 2
     GiD_EntitiesGroups assign Ground lines 12
     GiD_EntitiesGroups assign InterfaceStructure lines {9 10 11}
@@ -91,7 +91,7 @@ proc ::FSI::examples::HighRiseBuilding::TreeAssignation {args} {
     # Fluid Inlet
     Fluid::xml::CreateNewInlet Inlet {new true name inlet1 ini 0 end 10.0} true "25.0*t/10.0"
     Fluid::xml::CreateNewInlet Inlet {new true name inlet2 ini 10.0 end End} false 25.0
-    
+
     # Fluid Outlet
     set fluidOutlet "$fluidConditions/condition\[@n='Outlet$nd'\]"
     set outletNode [customlib::AddConditionGroupOnXPath $fluidOutlet Outlet]
@@ -115,33 +115,31 @@ proc ::FSI::examples::HighRiseBuilding::TreeAssignation {args} {
         set fluidDisplacementNode [customlib::AddConditionGroupOnXPath $fluidDisplacement "FluidALEMeshBC//Total"]
         $fluidDisplacementNode setAttribute ov line
         set props [list selector_component_X ByValue value_component_X 0.0 selector_component_Y ByValue value_component_Y 0.0 selector_component_Z ByValue value_component_Z 0.0 Interval Total]
-        
+
         spdAux::SetValuesOnBaseNode $fluidDisplacementNode $props
     }
 
     # Time parameters
     set parameters [list EndTime 40.0 DeltaTime 0.05]
     set xpath [spdAux::getRoute "FLTimeParameters"]
-    
     spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Output
     set parameters [list OutputControlType time OutputDeltaTime 1.0]
     set xpath "[spdAux::getRoute FLResults]/container\[@n='GiDOutput'\]/container\[@n='GiDOptions'\]"
-    
     spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Fluid domain strategy settings
     set parameters [list relative_velocity_tolerance "1e-8" absolute_velocity_tolerance "1e-10" relative_pressure_tolerance "1e-8" absolute_pressure_tolerance "1e-10" maximum_iterations "20"]
     set xpath [spdAux::getRoute FLStratParams]
-    
+
     spdAux::SetValuesOnBasePath $xpath $parameters
 
     # Structural
     gid_groups_conds::setAttributesF {container[@n='FSI']/container[@n='Structural']/container[@n='StageInfo']/value[@n='SolutionType']} {v Dynamic}
 
     # Structural Parts
-    
+
     set structParts [spdAux::getRoute "STParts"]/condition\[@n='Parts_Solid'\]
     set structPartsNode [customlib::AddConditionGroupOnXPath $structParts Structure]
     $structPartsNode setAttribute ov surface
@@ -161,9 +159,11 @@ proc ::FSI::examples::HighRiseBuilding::TreeAssignation {args} {
     spdAux::SetValuesOnBaseNode $structDisplacementNode $props
 
     # Structure domain time parameters
-    set parameters [list EndTime 40.0 DeltaTime 0.05]
+    set parameters [list EndTime 40.0]
     set xpath [spdAux::getRoute STTimeParameters]
     spdAux::SetValuesOnBasePath $xpath $parameters
+    set xpath "[spdAux::getRoute STTimeParameters]/container\[@n='TimeStep'\]/blockdata/value\[@n='DeltaTime'\]"
+    [[customlib::GetBaseRoot] selectNodes $xpath] setAttribute v 0.05
 
     # Structural Interface
     customlib::AddConditionGroupOnXPath "container\[@n='FSI'\]/container\[@n='Structural'\]/container\[@n='Loads'\]/condition\[@n='StructureInterface$nd'\]" InterfaceStructure
