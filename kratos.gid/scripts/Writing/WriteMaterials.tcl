@@ -170,6 +170,10 @@ proc write::getPropertiesListByConditionXPath {cnd_xpath {write_claw_name "True"
     set props_dict [dict create]
     set props [list ]
 
+    # first property
+    set first [dict create "model_part_name" $model_part_name "properties_id" 0 "Material" [dict create Variables [dict create]]]
+    lappend props $first
+
     set doc $gid_groups_conds::doc
     set root [$doc documentElement]
     
