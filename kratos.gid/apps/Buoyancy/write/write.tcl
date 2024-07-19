@@ -23,6 +23,9 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
     
     ::Fluid::write::writeModelPartEvent
 
+    # Write Boussinesq submodel part as nodals
+    ::Buoyancy::write::writeBoussinesqSubModelPart
+
 }
 
 proc ::Buoyancy::write::writeCustomFilesEvent { } {
@@ -45,7 +48,14 @@ proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_mode
     # Write Buoyancy materials file
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetModelPartName]}
-    write::writePropertiesJsonFile [GetAttribute parts_un] "BuoyancyMaterials.json" $write_const_law $model_part_name
+    
+    set mats [write::getPropertiesJson [GetAttribute parts_un] $write_const_law $model_part_name]
+    # keep only first entry
+    set clear_mat [dict get $mats properties]
+    set clear_mat [lindex $clear_mat 0]
+    dict set clear_mat model_part_name ThermalModelPart
+    set clear_mat [dict create properties [list $clear_mat]]
+    write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $clear_mat
 }
 
 proc ::Buoyancy::write::writeSubModelParts { } {
@@ -72,7 +82,7 @@ proc ::Buoyancy::write::writeBoussinesqSubModelPart { } {
     set groupid "_Boussinesq_hidden_"
     GiD_Groups create $groupid
     GiD_EntitiesGroups assign $groupid nodes [GiD_Mesh list node]
-    ::write::writeGroupSubModelPart Boussinesq $groupid "Nodes"
+    ::write::writeGroupSubModelPartAsGeometry $groupid
     GiD_Groups delete $groupid
 }
 
