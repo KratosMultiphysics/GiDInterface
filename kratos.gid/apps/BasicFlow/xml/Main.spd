@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <container n="BasicFlow" pn="Basic Flow" prefix="BFL" tree_state="open" open_window="0" icon2="drag">
-  <condition n="fluid" pn="Fluid" ov="surface" icon2="drop" ovm="node,element">
+  <condition n="fluid" pn="Fluid" ov="surface" un="BFLParts" icon2="drop" ovm="node,element">
+    <value n="Element" pn="Element" v="FractionalStep2D" state="hidden" />
     <value n="density" pn="Density" v="1000" />
     <value n="dynamic_viscosity" pn="Dynamic viscosity" v="1.002e-3" />
   </condition>
 
-  <container n="boundary_conditions" pn="Boundary Conditions" tree_state="open">
-    <condition n="inlet" pn="Inlet" ov="line" ovm="node,element" icon2="inlet">
-      <value n="velocity" pn="Velocity" v="5" />
-    </condition>
-    <condition n="outlet" pn="Outlet" ov="line" ovm="node,element" icon2="outlet">
-
-    </condition>
-    <condition n="slip" pn="Slip" ov="line" ovm="node,element" icon2="slip">
-
-    </condition>
-    <condition n="noslip" pn="No slip" ov="line" ovm="node,element" icon2="noslip">
-
-    </condition>
+  <container n="boundary_conditions" pn="Boundary Conditions" un="BFLBC" tree_state="open">
+	  <dynamicnode command="spdAux::injectConditions" args="ImplementedInApplication FluidApplication"/>
   </container>
   <container n="time" pn="Time parameters" icon2="time">
     <value n="end-time" pn="End time" v="20" />

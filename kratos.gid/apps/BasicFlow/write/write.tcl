@@ -6,6 +6,8 @@ namespace eval ::BasicFlow::write {
 
 proc ::BasicFlow::write::Init { } {
     # Namespace variables inicialization
+    SetAttribute parts_un [::BasicFlow::GetUniqueName parts]
+    SetAttribute conditions_un [::BasicFlow::GetUniqueName conditions]
 }
 
 # MDPA write event
