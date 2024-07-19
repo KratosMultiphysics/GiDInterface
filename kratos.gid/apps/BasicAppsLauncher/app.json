@@ -1,0 +1,18 @@
+{
+    "id": "Basic Launcher",
+    "name": "Basic Apps",
+    "script_files": [
+        "start.tcl"
+    ],
+    "start_script":"::BasicLauncher::Init",
+    "requirements":{
+        "display_apps":["BasicFlow"],
+        "minimum_gid_version":"15.1.3d"
+    },
+    "permissions": {
+        "open_tree": false,
+        "show_toolbar": true,
+        "intervals": false,
+        "wizard": false
+    }
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container n="BasicFlow" pn="Basic Flow" icon="app" prefix="BFL" tree_state="open" open_window="0">
+  <condition n="fluid" pn="Fluid" ov="surface" ovm="node,element">
+    <value n="density" pn="Density" v="1000" />
+    <value n="dynamic_viscosity" pn="Dynamic viscosity" v="1.002e-3" />
+  </condition>
+
+  <container n="boundary_conditions" pn="Boundary Conditions" tree_state="open">
+    <condition n="inlet" pn="Inlet" ov="line" ovm="node,element">
+      <value n="velocity" pn="Velocity" v="5" />
+    </condition>
+    <condition n="outlet" pn="Outlet" ov="line" ovm="node,element">
+
+    </condition>
+    <condition n="slip" pn="Slip" ov="line" ovm="node,element">
+
+    </condition>
+    <condition n="noslip" pn="No slip" ov="line" ovm="node,element">
+
+    </condition>
+  </container>
+  <container n="time" pn="Time parameters">
+    <value n="end-time" pn="End time" v="20" />
+    <value n="delta-time" pn="Delta time" v="0.05" />
+  </container>
+</container>

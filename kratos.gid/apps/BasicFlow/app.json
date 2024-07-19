@@ -1,0 +1,40 @@
+{
+    "id": "BasicFlow",
+    "name": "CFD",
+    "prefix": "BFL",
+    "themed": false,
+    "kratos_name": "KratosFluidDynamicsApplication",
+    "python_packages": [
+        "KratosFluidDynamicsApplication"
+    ],
+    "dimensions": [
+        "2D",
+        "3D"
+    ],
+    "script_files": [
+        "start.tcl",
+        "examples/examples.tcl",
+        "xml/XmlController.tcl",
+        "write/write.tcl",
+        "write/writeProjectParameters.tcl"
+    ],
+    "start_script": "::BasicFlow::Init",
+    "requirements": {
+        "apps": [],
+        "minimum_gid_version": "15.1.3d"
+    },
+    "permissions": {
+        "open_tree": true,
+        "show_toolbar": true,
+        "intervals": true,
+        "wizard": false
+    },
+    "unique_names": {
+    },
+    "write": {
+        "write_mdpa_mode": "geometries"
+    },
+    "main_launch_file": "../../exec/MainKratos.py",
+    "examples": "examples/examples.xml",
+    "description": ""
+}
