@@ -25,6 +25,8 @@ proc ::ConvectionDiffusion::write::Init { } {
     SetAttribute properties_location [::ConvectionDiffusion::GetWriteProperty properties_location]
     SetAttribute model_part_name [::ConvectionDiffusion::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::ConvectionDiffusion::GetWriteProperty output_model_part_name]
+    SetAttribute write_mdpa_mode [::ConvectionDiffusion::GetWriteProperty write_mdpa_mode]
+
 }
 
 # Events
@@ -42,19 +44,33 @@ proc ::ConvectionDiffusion::write::writeModelPartEvent { } {
 
     # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
+    
+    if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+        
+        # Get the list of groups in the spd
+        set lista [::spdAux::GetListOfSubModelParts]
+        
+        # Write the geometries
+        set ret [::write::writeGeometryConnectivities $lista]
 
-    # Element connectivities (Groups on CNVDFFParts)
-    write::writeElementConnectivities
+        foreach group $lista {
+            write::writeGroupSubModelPartAsGeometry [$group @n]
+        }
 
-    # Nodal conditions and conditions
-    writeConditions
+    } else {
 
-    # Custom SubmodelParts
-    write::writeBasicSubmodelParts [getLastConditionId]
+        # Element connectivities (Groups on CNVDFFParts)
+        write::writeElementConnectivities
 
-    # SubmodelParts
-    writeMeshes
+        # Nodal conditions and conditions
+        writeConditions
 
+        # Custom SubmodelParts
+        write::writeBasicSubmodelParts [getLastConditionId]
+
+        # SubmodelParts
+        writeMeshes
+    }
 }
 
 proc ::ConvectionDiffusion::write::writeCustomFilesEvent { } {

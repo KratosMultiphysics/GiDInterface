@@ -39,23 +39,28 @@ proc write::printGeometryConnectivities {group etype nnodes} {
     set s [mdpaIndent]
     set nDim $::Model::SpatialDimension
     set geometry_name ${etype}${nDim}${nnodes}
-    # Write header
-    WriteString "${s}Begin Geometries $geometry_name // GUI group identifier: $group"
-    # increase indent (allows folding in text editor)
-    incr ::write::current_mdpa_indent_level
+
     # Prepare the formats dict
     set formats [GetFormatDict $group "" $nnodes]
-    # Write the connectivities
-    GiD_WriteCalculationFile connectivities $formats
-    # decrease indent
-    incr ::write::current_mdpa_indent_level -1
-    # Write footer
-    WriteString "${s}End Geometries"
-    WriteString ""
+    set num_elems [GiD_WriteCalculationFile connectivities -count $formats]
+    if {$num_elems > 0} {
 
-    # Write the radius if it is a sphere or a circle
-    if {$etype == "Sphere" || $etype == "Circle"} {
-        write::writeSphereRadiusOnGroup $group
+        # Write header
+        WriteString "${s}Begin Geometries $geometry_name // GUI group identifier: $group"
+        # increase indent (allows folding in text editor)
+        incr ::write::current_mdpa_indent_level
+        # Write the connectivities
+        GiD_WriteCalculationFile connectivities $formats
+        # decrease indent
+        incr ::write::current_mdpa_indent_level -1
+        # Write footer
+        WriteString "${s}End Geometries"
+        WriteString ""
+
+        # Write the radius if it is a sphere or a circle
+        if {$etype == "Sphere" || $etype == "Circle"} {
+            write::writeSphereRadiusOnGroup $group
+        }
     }
     if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "printGeometryConnectivities $geometry_name time: [Kratos::Duration $ttime]"}
 }
