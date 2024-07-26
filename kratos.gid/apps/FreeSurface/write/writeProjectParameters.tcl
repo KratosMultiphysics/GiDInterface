@@ -23,6 +23,8 @@ proc ::FreeSurface::write::getParametersDict { } {
     # # processes
     dict set projectParametersDict processes [::Fluid::write::GetProcesses_Dict]
 
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+
     return $projectParametersDict
 }
 
