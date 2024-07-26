@@ -172,6 +172,10 @@ proc ::Structural::write::getOldParametersDict { {stage ""} } {
         dict set projectParametersDict solver_settings builder_and_solver_settings use_block_builder false
     }
 
+
+    # Modelers if needed
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+    
     return $projectParametersDict
 }
 

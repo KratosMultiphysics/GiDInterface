@@ -10,6 +10,7 @@ proc ::Buoyancy::write::Init { } {
     # Add thermal unique names to Fluid write variables
     Fluid::write::SetAttribute thermal_bc_un [ConvectionDiffusion::write::GetAttribute conditions_un]
     Fluid::write::SetAttribute thermal_initial_cnd_un [ConvectionDiffusion::write::GetAttribute nodal_conditions_un]
+
 }
 
 # Events
@@ -18,39 +19,13 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
     set err [Validate]
     if {$err ne ""} {error $err}
 
-    # Start Fluid write variables
-    Fluid::write::Init
-    # Fluid has implemented the geometry mode, but we do not use it yet in inherited apps
-    ::Fluid::write::SetAttribute write_mdpa_mode [::Buoyancy::GetWriteProperty write_mdpa_mode]
-    # Start Fluid write conditions map from scratch
-    Fluid::write::InitConditionsMap
+    ::Fluid::write::Init
+    
+    ::Fluid::write::writeModelPartEvent
 
-    # Init data
-    write::initWriteConfiguration [Fluid::write::GetAttributes]
+    # Write Boussinesq submodel part as nodals
+    ::Buoyancy::write::writeBoussinesqSubModelPart
 
-    # Headers
-    write::writeModelPartData
-    Fluid::write::writeProperties
-
-    # Nodal coordinates (1: Print only Fluid nodes <inefficient> | 0: the whole mesh <efficient>)
-    if {[Fluid::write::GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
-
-    # Element connectivities (Groups on FLParts)
-    write::writeElementConnectivities
-
-    # Nodal conditions and conditions
-    Fluid::write::writeConditions
-
-    # SubmodelParts
-    Fluid::write::writeMeshes
-    write::writeNodalConditions [GetAttribute thermal_initial_cnd_un]
-    Buoyancy::write::writeSubModelParts
-
-    # Boussinesq nodes
-    Buoyancy::write::writeBoussinesqSubModelPart
-
-    # Custom SubmodelParts
-    #write::writeBasicSubmodelParts [Fluid::write::getLastConditionId]
 }
 
 proc ::Buoyancy::write::writeCustomFilesEvent { } {
@@ -73,7 +48,14 @@ proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_mode
     # Write Buoyancy materials file
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetModelPartName]}
-    write::writePropertiesJsonFile [GetAttribute parts_un] "BuoyancyMaterials.json" $write_const_law $model_part_name
+    
+    set mats [write::getPropertiesJson [GetAttribute parts_un] $write_const_law $model_part_name]
+    # keep only first entry
+    set clear_mat [dict get $mats properties]
+    set clear_mat [lindex $clear_mat 0]
+    dict set clear_mat model_part_name ThermalModelPart
+    set clear_mat [dict create properties [list $clear_mat]]
+    write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $clear_mat
 }
 
 proc ::Buoyancy::write::writeSubModelParts { } {
@@ -100,7 +82,7 @@ proc ::Buoyancy::write::writeBoussinesqSubModelPart { } {
     set groupid "_Boussinesq_hidden_"
     GiD_Groups create $groupid
     GiD_EntitiesGroups assign $groupid nodes [GiD_Mesh list node]
-    ::write::writeGroupSubModelPart Boussinesq $groupid "Nodes"
+    ::write::writeGroupSubModelPartAsGeometry $groupid
     GiD_Groups delete $groupid
 }
 
