@@ -37,6 +37,7 @@ proc ::Structural::write::Init { } {
     SetAttribute main_launch_file [::Structural::GetAttribute main_launch_file]
     SetAttribute model_part_name [::Structural::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::Structural::GetWriteProperty output_model_part_name]
+    SetAttribute write_mdpa_mode [::Structural::GetWriteProperty write_mdpa_mode]
 }
 
 # MDPA Blocks
@@ -53,25 +54,41 @@ proc ::Structural::write::writeModelPartEvent { } {
     # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
-    # Element connectivities (Groups on STParts)
-    write::writeElementConnectivities
 
-    # Local Axes
-    Structural::write::writeLocalAxes
+    if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+        # Write geometries
+        # Get the list of groups in the spd
+        set lista [spdAux::GetListOfSubModelParts]
+        
+        # Write the geometries
+        set ret [::write::writeGeometryConnectivities $lista]
 
-    # Hinges special section
-    Structural::write::writeHinges
+        # Write the submodelparts
+        set grouped_conditions [dict create]
+        foreach group $lista {
+            write::writeGroupSubModelPartAsGeometry [$group @n]
+        }
 
-    # Write Conditions section
-    Structural::write::writeConditions
-    
-    # Custom SubmodelParts
-    set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
-    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
+    } else {
+        # Element connectivities (Groups on STParts)
+        write::writeElementConnectivities
 
-    # SubmodelParts
-    Structural::write::writeMeshes
+        # Local Axes
+        Structural::write::writeLocalAxes
 
+        # Hinges special section
+        Structural::write::writeHinges
+
+        # Write Conditions section
+        Structural::write::writeConditions
+        
+        # Custom SubmodelParts
+        set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
+        set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
+
+        # SubmodelParts
+        Structural::write::writeMeshes
+    }
 }
 
 proc ::Structural::write::writeConditions { {stage ""} } {
