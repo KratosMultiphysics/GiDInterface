@@ -20,6 +20,9 @@ proc ::Buoyancy::write::getParametersDict { } {
     # processes
     dict set projectParametersDict processes [Buoyancy::write::GetProcesses_Dict]
 
+    # modelers
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+    
     return $projectParametersDict
 }
 
@@ -78,8 +81,9 @@ proc ::Buoyancy::write::GetSolverSettings_Dict { } {
 
     # Fluid things
     write::SetConfigurationAttributes [Fluid::write::GetAttributes]
-    #Fluid::write::SetAttribute materials_file "BuoyancyMaterials.json"
     dict set settings fluid_solver_settings [Fluid::write::getSolverSettingsDict]
+    dict unset settings fluid_solver_settings model_import_settings
+    dict set settings fluid_solver_settings model_import_settings input_type "use_input_model_part"
 
     set nDim [expr [string range [write::getValue nDim] 0 0]]
     dict set settings fluid_solver_settings domain_size $nDim
@@ -87,9 +91,12 @@ proc ::Buoyancy::write::GetSolverSettings_Dict { } {
     # Thermal things
     set prev [ConvectionDiffusion::write::GetAttribute materials_file]
     ConvectionDiffusion::write::SetAttribute materials_file "BuoyancyMaterials.json"
-    write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
+    # write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
     dict set settings thermal_solver_settings [ConvectionDiffusion::write::GetSolverSettingsDict]
     ConvectionDiffusion::write::SetAttribute materials_file $prev
+    
+    dict unset settings thermal_solver_settings model_import_settings
+    dict set settings thermal_solver_settings model_import_settings input_type "use_input_model_part"
 
     dict set settings thermal_solver_settings problem_domain_sub_model_part_list [list [dict get $settings fluid_solver_settings volume_model_part_name]]
 
@@ -101,7 +108,7 @@ proc ::Buoyancy::write::GetProcesses_Dict { } {
     write::SetConfigurationAttributes [Fluid::write::GetAttributes]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute conditions_un] ]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [Fluid::write::GetAttribute nodal_conditions_un] "Nodal"]
-    write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
+    # write::SetConfigurationAttributes [ConvectionDiffusion::write::GetAttributes]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute nodal_conditions_un] "Nodal"]
     lappend constraints_process_list {*}[write::getConditionsParametersDict [ConvectionDiffusion::write::GetAttribute conditions_un]]
     lappend constraints_process_list [GetBoussinesqProcess]
