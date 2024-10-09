@@ -33,7 +33,7 @@ proc write::writeGeometryConnectivities { group_list } {
 }
 
 proc write::printGeometryConnectivities {group etype nnodes} {
-    W "printGeometryConnectivities $group $etype $nnodes"
+    # W "printGeometryConnectivities $group $etype $nnodes"
     
     if {$nnodes eq "" || $nnodes < 1} {return}
     set inittime [clock seconds]
