@@ -393,18 +393,20 @@ proc spdAux::MergeGroups {result_group_name group_list} {
 
 
 proc spdAux::GetUsedElements {{alt_un ""}} {
+    set lista [list ]
     set root [customlib::GetBaseRoot]
 
     set un $alt_un
     if {$un eq ""} {set un [apps::ExecuteOnCurrentApp write::GetAttribute parts_un]}
 
-    set xp1 "[spdAux::getRoute $un]/group"
-    set lista [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
-        if {$name ni $lista} {lappend lista $name}
-    }
+    if {$un ne ""} {
 
+        set xp1 "[spdAux::getRoute $un]/group"
+        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+            set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+            if {$name ni $lista} {lappend lista $name}
+        }
+    }
     return $lista
 }
 
