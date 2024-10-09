@@ -22,6 +22,9 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     # processes
     dict set projectParametersDict processes [ConjugateHeatTransfer::write::GetProcessList]
 
+    # modelers
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+
     return $projectParametersDict
 }
 
