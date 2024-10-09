@@ -20,6 +20,7 @@ proc ::ConjugateHeatTransfer::write::Init { } {
     SetAttribute model_part_name [::ConjugateHeatTransfer::GetWriteProperty model_part_name]
 
     SetAttribute coordinates [::ConjugateHeatTransfer::GetWriteProperty coordinates]
+    SetAttribute write_mdpa_mode [::ConvectionDiffusion::GetWriteProperty write_mdpa_mode]
 
     SetAttribute fluid_mdpa_suffix Fluid
     SetAttribute solid_mdpa_suffix Solid
