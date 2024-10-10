@@ -24,6 +24,10 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
 
     # modelers
     set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+    set projectParametersDict [::ConjugateHeatTransfer::write::PlaceMDPAImports $projectParametersDict]
+    set projectParametersDict [::ConjugateHeatTransfer::write::ModelersPrefix $projectParametersDict]
+
+    dict unset projectParametersDict solver_settings model_import_settings
 
     return $projectParametersDict
 }
@@ -44,16 +48,10 @@ proc ::ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set filename [Kratos::GetModelName]
 
     # Prepare the solver strategies
-    # Buoyancy Fluid > model_import_settings -> mdpa fluid
-    dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings fluid_solver_settings model_import_settings input_filename "${filename}_[GetAttribute fluid_mdpa_suffix]"
-    # Buoyancy Thermic > model_import_settings -> none
-    dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_import_settings input_filename "use_input_model_part"
-    dict unset ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_import_settings input_type
+    dict unset ConjugateHeatTransfer::write::fluid_domain_solver_settings model_import_settings
     # Buoyancy Thermic > model_part_name
     dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_part_name "FluidThermalModelPart"
-    # Solid Thermic > Modelpart name -> mdpa solid
-    dict set ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings model_import_settings input_filename "${filename}_[GetAttribute solid_mdpa_suffix]"
-
+    
     dict set solver_settings_dict fluid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings]
     dict set solver_settings_dict solid_domain_solver_settings thermal_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
 
@@ -70,6 +68,8 @@ proc ::ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     dict set coupling_settings solid_interfaces_list $solid_interfaces_list
     dict set solver_settings_dict coupling_settings $coupling_settings
 
+    dict unset solver_settings_dict fluid_domain_solver_settings model_import_settings
+    
     return $solver_settings_dict
 }
 
@@ -157,4 +157,63 @@ proc ::ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
 
     apps::setActiveAppSoft ConjugateHeatTransfer
+}
+
+proc ::ConjugateHeatTransfer::write::PlaceMDPAImports { projectParametersDict } {
+    variable mdpa_files
+
+    set new_modelers [list]
+    
+    set modelers [dict get $projectParametersDict modelers]
+    # remove the modelers that import the mdpa files (name = Modelers.KratosMultiphysics.ImportMDPAModeler)
+    set modelers [lsearch -all -inline -not -glob $modelers *ImportMDPAModeler*]
+    lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" parameters [dict create input_filename [lindex $mdpa_files 0] model_part_name "FluidModelPart"]]
+    lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" parameters [dict create input_filename [lindex $mdpa_files 1] model_part_name "ThermalModelPart"]]
+    set modelers [concat $new_modelers $modelers]
+    dict set projectParametersDict modelers $modelers
+    return $projectParametersDict
+}
+
+proc ::ConjugateHeatTransfer::write::ModelersPrefix { projectParametersDict } {
+    set modelers [dict get $projectParametersDict modelers]
+    set new_modelers [list]
+    set thermal_modelparts [dict get $projectParametersDict solver_settings solid_domain_solver_settings thermal_solver_settings processes_sub_model_part_list]
+    # W "Thermal modelparts: $thermal_modelparts"
+    foreach modeler $modelers {
+        set name [dict get $modeler name]
+        if {[string match "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler" $name]} {
+            set new_parameters [dict create]
+            set new_modeler [dict create name $name parameters [dict create elements_list [dict create] conditions_list [dict create]]]
+            set new_element_list [list ]
+            foreach element [dict get $modeler parameters elements_list] {
+                set model_part_name [dict get $element model_part_name]
+                set raw_name [lindex [split $model_part_name "."] 1]
+
+                if {$raw_name in $thermal_modelparts} {
+                    set new_element $element
+                } else {
+                    set new_element [dict create model_part_name "FluidModelPart.$raw_name" element_name [dict get $element element_name]]
+                }
+                lappend new_element_list $new_element
+                dict set new_parameters elements_list $new_element_list
+            }
+            set new_conditions_list [list ]
+            foreach condition [dict get $modeler parameters conditions_list] {
+                set model_part_name [dict get $condition model_part_name]
+                set raw_name [lindex [split $model_part_name "."] 1]
+                if {$raw_name in $thermal_modelparts} {
+                    set new_condition $condition
+                } else {
+                    set new_condition [dict create model_part_name "FluidModelPart.$raw_name" condition_name [dict get $condition condition_name]]
+                }
+                lappend new_conditions_list $new_condition
+                dict set new_parameters conditions_list $new_conditions_list
+            }
+            dict set new_modeler parameters $new_parameters
+            set modeler $new_modeler
+        }
+        lappend new_modelers $modeler
+    }
+    dict set projectParametersDict modelers $new_modelers
+    return $projectParametersDict
 }
