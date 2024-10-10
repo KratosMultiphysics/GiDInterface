@@ -663,8 +663,10 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         set group_name [$group @n]
         
         set group_name [write::GetWriteGroupName $group_name]
-        if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
-        if {$what == "condition"} {set cid [[$group parent] @n]} {
+        #if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
+        if {$what == "condition"} {
+            set cid [[$group parent] @n]
+        } else {
             set element_node [$group selectNodes "./value\[@n='Element']"]
             if {[llength $element_node] == 0} {continue}
             set cid [write::getValueByNode $element_node]
@@ -672,6 +674,8 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         if {$cid eq ""} {continue}
         if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
         if {$entity eq ""} {continue}
+        
+        if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
         if {$what == "condition"} {
             if {[$entity getGroupBy] eq "Condition"} {
                 set good_name "_HIDDEN_$cid"
