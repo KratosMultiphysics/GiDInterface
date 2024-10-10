@@ -20,6 +20,10 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
     if {$err ne ""} {error $err}
 
     ::Fluid::write::Init
+
+    set fluid_base_xpath [spdAux::getRoute Buoyancy_FL]
+    set fluid_base [[customlib::GetBaseRoot] selectNodes $fluid_base_xpath]
+    set ::Fluid::write::fluid_base $fluid_base
     
     ::Fluid::write::writeModelPartEvent
 

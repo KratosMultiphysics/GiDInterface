@@ -47,6 +47,11 @@ proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
     # Convection diffusion mdpa
     ConvectionDiffusion::write::Init
     ConvectionDiffusion::write::SetAttribute writeCoordinatesByGroups [GetAttribute coordinates]
+        
+    set base_root_xpath [spdAux::getRoute CHTCNVDFF]
+    set base_root [[customlib::GetBaseRoot] selectNodes $base_root_xpath]
+    set ::ConvectionDiffusion::write::base_root $base_root
+
     write::writeAppMDPA ConvectionDiffusion
     write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute solid_mdpa_suffix].mdpa"
 }
