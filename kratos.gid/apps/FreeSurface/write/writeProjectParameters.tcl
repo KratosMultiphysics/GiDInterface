@@ -25,6 +25,9 @@ proc ::FreeSurface::write::getParametersDict { } {
 
     set projectParametersDict [::write::GetModelersDict $projectParametersDict]
 
+    set projectParametersDict [::FreeSurface::write::ReplaceConditionsName $projectParametersDict "WallCondition2D2N" "LineCondition2D2N"]
+    set projectParametersDict [::FreeSurface::write::ReplaceConditionsName $projectParametersDict "WallCondition3D3N" "LineCondition3D3N"]
+
     return $projectParametersDict
 }
 
@@ -61,4 +64,68 @@ proc ::FreeSurface::write::writeParametersEvent { } {
     set projectParametersDict [getParametersDict]
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
+}
+
+proc ::FreeSurface::write::ReplaceConditionsName { projectParametersDict old_cond_name new_cond_name } {
+
+    # in the section 'modelers' we have this structure
+    # [
+        # {
+            # "name": "Modelers.KratosMultiphysics.ImportMDPAModeler",
+            # "parameters": {
+                # "input_filename": "free",
+                # "model_part_name": "free"
+            # }
+        # },
+        # {
+            # "name": "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler",
+            # "parameters": {
+                # "elements_list": [
+                    # {
+                        # "model_part_name": "free.Fluid",
+                        # "element_name": "Element2D3N"
+                    # }
+                # ],
+                # "conditions_list": [
+                    # {
+                        # "model_part_name": "free.Outlet",
+                        # "condition_name": "WallCondition2D2N"
+                    # },
+                    # {
+                        # "model_part_name": "free._HIDDEN_Slip2D",
+                        # "condition_name": "WallCondition2D2N"
+                    # }
+                # ]
+            # }
+        # }
+    # ]
+    # we need to replace all the occurrences of old_cond_name with new_cond_name
+
+    set modelers [dict get $projectParametersDict modelers]
+    set modelers_new [list]
+    foreach modeler $modelers {
+        set modeler_new [dict create]
+        dict set modeler_new name [dict get $modeler name]
+        set parameters [dict get $modeler parameters]
+        set parameters_new [dict create]
+        foreach {key value} $parameters {
+            if { $key == "conditions_list" } {
+                set conditions_list_new [list]
+                foreach {condition} $value {
+                    set condition_new [dict create]
+                    dict set condition_new model_part_name [dict get $condition model_part_name]
+                    dict set condition_new condition_name [expr {[dict get $condition condition_name] == $old_cond_name ? $new_cond_name : [dict get $condition condition_name]}]
+                    lappend conditions_list_new $condition_new
+                }
+                dict set parameters_new $key $conditions_list_new
+            } else {
+                dict set parameters_new $key $value
+            }
+        }
+        dict set modeler_new parameters $parameters_new
+        lappend modelers_new $modeler_new
+    }
+    dict set projectParametersDict modelers $modelers_new
+
+    return $projectParametersDict
 }
