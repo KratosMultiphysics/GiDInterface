@@ -94,8 +94,10 @@ proc ::FSI::write::GetSolverSettingsDict { } {
     dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
 
     # Change the input_filenames
-    dict set solver_settings_dict structure_solver_settings model_import_settings input_filename [dict get $mdpa_names Structural]
-    dict set solver_settings_dict fluid_solver_settings model_import_settings input_filename [dict get $mdpa_names Fluid]
+    dict unset solver_settings_dict structure_solver_settings model_import_settings
+    dict set solver_settings_dict structure_solver_settings model_import_settings input_type use_input_model_part
+    dict unset solver_settings_dict fluid_solver_settings model_import_settings
+    dict set solver_settings_dict fluid_solver_settings model_import_settings input_type use_input_model_part
 
     # Overwrite structural timestep with fluid timestep
     dict set solver_settings_dict structure_solver_settings time_stepping [dict get $solver_settings_dict fluid_solver_settings time_stepping]
