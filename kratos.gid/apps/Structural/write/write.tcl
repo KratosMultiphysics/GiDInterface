@@ -6,6 +6,8 @@ namespace eval ::Structural::write {
     variable NodalConditionsGroup
     variable writeAttributes
     variable ContactsDict
+    variable base_root 
+    set base_root ""
 }
 
 proc ::Structural::write::Init { } {
@@ -38,6 +40,10 @@ proc ::Structural::write::Init { } {
     SetAttribute model_part_name [::Structural::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::Structural::GetWriteProperty output_model_part_name]
     SetAttribute write_mdpa_mode [::Structural::GetWriteProperty write_mdpa_mode]
+
+    
+    variable base_root 
+    set base_root ""
 }
 
 # MDPA Blocks
@@ -56,9 +62,10 @@ proc ::Structural::write::writeModelPartEvent { } {
 
 
     if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+        variable base_root
         # Write geometries
         # Get the list of groups in the spd
-        set lista [spdAux::GetListOfSubModelParts]
+        set lista [spdAux::GetListOfSubModelParts $base_root]
         
         # Write the geometries
         set ret [::write::writeGeometryConnectivities $lista]

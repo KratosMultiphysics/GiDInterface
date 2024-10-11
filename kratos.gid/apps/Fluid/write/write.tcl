@@ -34,13 +34,13 @@ proc ::Fluid::write::Init { } {
     variable last_condition_iterator
     set last_condition_iterator 0
 
-    variable fluid_base 
-    set fluid_base ""
+    variable base_root 
+    set base_root ""
 }
 
 # MDPA write event
 proc ::Fluid::write::writeModelPartEvent { } {
-    variable fluid_base
+    variable base_root
 
     # Validation
     set err [Validate]
@@ -61,7 +61,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
     if {[GetAttribute write_mdpa_mode] eq "geometries"} {
         # Write geometries
         # Get the list of groups in the spd
-        set lista [::Fluid::xml::GetListOfSubModelParts $fluid_base]
+        set lista [::Fluid::xml::GetListOfSubModelParts $base_root]
         
         # Write the geometries
         set ret [::write::writeGeometryConnectivities $lista]
