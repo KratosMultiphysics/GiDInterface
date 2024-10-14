@@ -38,7 +38,7 @@
         "properties_location": "json",
         "model_part_name": "FluidModelPart",
         "output_model_part_name": "",
-        "write_mdpa_mode": "entities"
+        "write_mdpa_mode": "geometries"
     },
     "main_launch_file": "../../exec/MainKratos.py"
 }

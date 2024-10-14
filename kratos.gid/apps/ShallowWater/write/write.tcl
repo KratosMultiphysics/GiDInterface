@@ -22,6 +22,7 @@ proc ::ShallowWater::write::Init { } {
     SetAttribute properties_location [GetWriteProperty properties_location]
     SetAttribute materials_file [GetWriteProperty materials_file]
     SetAttribute model_part_name [GetWriteProperty model_part_name]
+    SetAttribute write_mdpa_mode [GetWriteProperty write_mdpa_mode]
 }
 
 proc ::ShallowWater::write::writeModelPartEvent { } {
@@ -32,55 +33,23 @@ proc ::ShallowWater::write::writeModelPartEvent { } {
     # Init data
     ::write::initWriteConfiguration [GetAttributes]
 
-    # Headers
-    ::write::writeModelPartData
-    ::write::WriteString "Begin Properties 0"
-    ::write::WriteString "End Properties"
-    ::write::WriteString ""
-
     # Nodal Coordinates
     ::write::writeNodalCoordinates
 
-    # Element connectivities
-    ::write::writeElementConnectivities
+    # Get the list of groups in the spd
+    set lista [spdAux::GetListOfSubModelParts]
 
-    # Conditions connectivities
-    writeConditions
+    # Write the geometries
+    set ret [::write::writeGeometryConnectivities $lista]
 
-    # SubmodelParts
-    writeSubModelParts
+    foreach group $lista {
+        write::writeGroupSubModelPartAsGeometry [$group @n]
+    }
 }
 
 proc ::ShallowWater::write::Validate {} {
     set err ""
     return $err
-}
-
-proc ::ShallowWater::write::writeConditions { } {
-    variable ConditionsDictGroupIterators
-    set ConditionsDictGroupIterators [::write::writeConditions [GetAttribute conditions_un] ]
-}
-
-proc ::ShallowWater::write::writeSubModelParts {} {
-    ::write::writePartSubModelPart
-    ::write::writeNodalConditions [GetAttribute topography_data_un]
-    ::write::writeNodalConditions [GetAttribute initial_conditions_un]
-    WriteConditionsSubModelParts
-}
-
-proc ::ShallowWater::write::WriteConditionsSubModelParts { } {
-    variable ConditionsDictGroupIterators
-    set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
-    foreach group [$root selectNodes $xp1] {
-        set groupid [$group @n]
-        set groupid [write::GetWriteGroupName $groupid]
-        if {$groupid in [dict keys $ConditionsDictGroupIterators]} {
-            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "Conditions" [dict get $ConditionsDictGroupIterators $groupid]
-        } else {
-            ::write::writeGroupSubModelPart [[$group parent] @n] $groupid "nodal"
-        }
-    }
 }
 
 proc ::ShallowWater::write::writeCustomFilesEvent { } {

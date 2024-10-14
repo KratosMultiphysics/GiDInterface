@@ -25,6 +25,8 @@ proc ::ShallowWater::write::getParametersDict { } {
     # Output processes
     dict set projectParametersDict output_processes [write::GetDefaultOutputProcessDict]
 
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+
     return $projectParametersDict
 }
 
