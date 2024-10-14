@@ -86,6 +86,10 @@ proc ::DEM::write::getParametersDict { } {
             set output_timestep $MaxTimeStep
         }
     }
+<<<<<<< HEAD
+
+=======
+>>>>>>> master
     dict set project_parameters_dict "OutputTimeStep"                   $output_timestep
     dict set project_parameters_dict "PostBoundingBox"                  [write::getValue Boundingbox PostBB]
     dict set project_parameters_dict "PostLocalContactForce"            [write::getValue BondElem LocalContactForce]
@@ -107,6 +111,30 @@ proc ::DEM::write::getParametersDict { } {
     dict set project_parameters_dict "PostEulerAngles"                  [write::getValue PostPrint EulerAngles]
     dict set project_parameters_dict "PostRollingResistanceMoment"      [write::getValue PostPrint RollingResistanceMoment]
     dict set project_parameters_dict "problem_name" [Kratos::GetModelName]
+
+    set restart_interval [write::getValue DEMResults DEM-RestartPrintTimeInterval]
+
+
+    set output_processes_dict [dict create]
+    set restart_process_dict [dict create]
+    set restart_parameters_dict [dict create]
+    dict set restart_parameters_dict "model_part_names" [list "SpheresPart" "RigidFacePart"]
+    dict set restart_parameters_dict "echo_level" 0
+    dict set restart_parameters_dict "serializer_trace" "no_trace"
+    dict set restart_parameters_dict "restart_save_frequency" $restart_interval
+    dict set restart_parameters_dict "restart_control_type" "time"
+    dict set restart_parameters_dict "save_restart_files_in_folder" true
+
+    set lst {}
+    dict set restart_process_dict "python_module" "DEMApplication.DEM_save_restart_process"
+    dict set restart_process_dict "kratos_module" "KratosMultiphysics"
+    dict set restart_process_dict "process_name" "DEMSaveRestartProcess"
+    dict set restart_process_dict "Parameters" $restart_parameters_dict
+    lappend lst $restart_process_dict
+
+    dict set output_processes_dict "restart_processes" $lst
+
+    dict set project_parameters_dict "output_processes" $output_processes_dict
 
     return $project_parameters_dict
 }
