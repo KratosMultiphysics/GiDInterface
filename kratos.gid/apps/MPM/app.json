@@ -3,9 +3,9 @@
     "name": "MPM",
     "prefix": "MPM",
     "themed": false,
-    "kratos_name": "ParticleMechanicsApplication",
+    "kratos_name": "MPMApplication",
     "python_packages": [
-        "KratosParticleMechanicsApplication",
+        "KratosMPMApplication",
         "KratosLinearSolversApplication"
     ],
     "dimensions": [

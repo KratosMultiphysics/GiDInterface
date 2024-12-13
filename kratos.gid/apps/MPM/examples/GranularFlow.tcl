@@ -127,7 +127,7 @@ proc ::MPM::examples::GranularFlow::TreeAssignation2D {args} {
     set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route GranularMaterial]
     $mpm_solid_part setAttribute ov surface
     set constitutive_law_name "HenckyMCPlasticPlaneStrain${nd}Law"
-    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material GranularMaterial DENSITY 2650 YOUNG_MODULUS 840000 POISSON_RATIO 0.3 INTERNAL_FRICTION_ANGLE 19.8 THICKNESS 0.1 PARTICLES_PER_ELEMENT 3]
+    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material GranularMaterial DENSITY 2650 YOUNG_MODULUS 840000 POISSON_RATIO 0.3 INTERNAL_FRICTION_ANGLE 19.8 THICKNESS 0.1 MATERIAL_POINTS_PER_ELEMENT 3]
     spdAux::SetValuesOnBaseNode $mpm_solid_part $props
 
     ## Grid

@@ -132,7 +132,7 @@ proc ::MPM::examples::StaticCantileverBeam::TreeAssignation2D {args} {
     set mpm_solid_part [customlib::AddConditionGroupOnXPath $mpm_solid_parts_route LinearElasticBeam]
     $mpm_solid_part setAttribute ov surface
     set constitutive_law_name "LinearElasticIsotropicPlaneStrain{nd}Law"
-    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material LinearElasticBeam DENSITY 7850 YOUNG_MODULUS 206.9e9 POISSON_RATIO 0.29 THICKNESS 0.1 PARTICLES_PER_ELEMENT 6]
+    set props [list Element MPMUpdatedLagrangian$nd ConstitutiveLaw $constitutive_law_name Material LinearElasticBeam DENSITY 7850 YOUNG_MODULUS 206.9e9 POISSON_RATIO 0.29 THICKNESS 0.1 MATERIAL_POINTS_PER_ELEMENT 6]
     spdAux::SetValuesOnBaseNode $mpm_solid_part $props
 
     ## Grid
