@@ -31,6 +31,8 @@ proc ::ConvectionDiffusion::write::getParametersDict { } {
     dict set restartDict Restart_Step 0
     dict set projectParametersDict restart_options $restartDict
 
+    # Get the modelers
+    set projectParametersDict [write::GetModelersDict $projectParametersDict]
 
     return $projectParametersDict
 }

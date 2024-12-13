@@ -92,36 +92,11 @@ proc ::Fluid::write::getParametersMultistageDict { } {
     return $project_parameters_dict
 }
 
-# Update the modelers information
-proc ::Fluid::write::UpdateModelers { projectParametersDict {stage ""} } {
-    set modelerts_list [list ]
-    # Move the import to the modelers
-    # set modelers [dict get $projectParametersDict solver_settings model_import_settings]
-    dict unset projectParametersDict solver_settings model_import_settings 
-    dict set projectParametersDict solver_settings model_import_settings input_type use_input_model_part
-    set importer_modeler [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler"]  
-    dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]  
-    lappend modelerts_list $importer_modeler
-
-    if {[GetAttribute write_mdpa_mode] eq "geometries"} {
-        # Add the entities creation modeler
-        set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
-        dict set entities_modeler "parameters" elements_list [::write::GetMatchSubModelPart element $stage]
-        dict set entities_modeler "parameters" conditions_list [::write::GetMatchSubModelPart condition $stage]
-        lappend modelerts_list $entities_modeler
-    }
-    
-    dict set projectParametersDict "modelers" $modelerts_list
-
-    return $projectParametersDict
-}
-
-
 proc ::Fluid::write::writeParametersEvent { } {
     set write_parameters_mode 0
     if {$write_parameters_mode == 0} {
         set projectParametersDict [getParametersDict]
-        set projectParametersDict [Fluid::write::UpdateModelers $projectParametersDict]
+        set projectParametersDict [::write::GetModelersDict $projectParametersDict]
     } else {
         set projectParametersDict [getParametersMultistageDict]
     }
