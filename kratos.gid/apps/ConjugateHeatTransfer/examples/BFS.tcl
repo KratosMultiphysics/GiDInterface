@@ -221,7 +221,7 @@ proc ::ConjugateHeatTransfer::examples::BFS::TreeAssignation2D {args} {
     # Solid parts
     set parts [spdAux::getRoute "CNVDFFParts"]
     set fluidNode [customlib::AddConditionGroupOnXPath $parts Heating]
-    set props [list Element EulerianConvDiff$nd DENSITY 0.0 CONDUCTIVITY 10 SPECIFIC_HEAT 0.0]
+    set props [list Element EulerianConvDiff$nd DENSITY 0.0 CONDUCTIVITY 10.0 SPECIFIC_HEAT 0.0]
     spdAux::SetValuesOnBaseNode $fluidNode $props
 
     # Solid thermal initial conditions
