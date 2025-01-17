@@ -59,7 +59,7 @@ proc ::ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set solid_interfaces_list_raw [write::GetSubModelPartFromCondition CNVDFFBC SolidThermalInterface$::Model::SpatialDimension]
     set fluid_interfaces_list_raw [write::GetSubModelPartFromCondition Buoyancy_CNVDFFBC FluidThermalInterface$::Model::SpatialDimension]
     foreach solid_interface $solid_interfaces_list_raw {lappend solid_interfaces_list [join [list ThermalModelPart $solid_interface] "."]}
-    foreach fluid_interface $fluid_interfaces_list_raw {lappend fluid_interfaces_list [join [list FluidModelPart $fluid_interface] "."]}
+    foreach fluid_interface $fluid_interfaces_list_raw {lappend fluid_interfaces_list [join [list FluidThermalModelPart $fluid_interface] "."]}
 
     set coupling_settings [dict create]
     dict set coupling_settings max_iteration [write::getValue CHTGeneralParameters max_iteration]
@@ -192,10 +192,13 @@ proc ::ConjugateHeatTransfer::write::ModelersPrefix { projectParametersDict } {
 
                 if {$raw_name in $thermal_modelparts} {
                     set new_element $element
+                    lappend new_element_list $new_element
                 } else {
                     set new_element [dict create model_part_name "FluidModelPart.$raw_name" element_name [dict get $element element_name]]
+                    set new_element2 [dict create model_part_name "FluidThermalModelPart.$raw_name" element_name [dict get $element element_name]]
+                    lappend new_element_list $new_element
+                    lappend new_element_list $new_element2
                 }
-                lappend new_element_list $new_element
                 dict set new_parameters elements_list $new_element_list
             }
             set new_conditions_list [list ]
