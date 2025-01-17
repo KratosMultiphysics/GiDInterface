@@ -169,6 +169,7 @@ proc ::ConjugateHeatTransfer::write::PlaceMDPAImports { projectParametersDict } 
     set modelers [lsearch -all -inline -not -glob $modelers *ImportMDPAModeler*]
     lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" parameters [dict create input_filename [lindex $mdpa_files 0] model_part_name "FluidModelPart"]]
     lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" parameters [dict create input_filename [lindex $mdpa_files 1] model_part_name "ThermalModelPart"]]
+    lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ConnectivityPreserveModeler" parameters [dict create origin_model_part_name "FluidModelPart" destination_model_part_name "FluidThermalModelPart"]]
     set modelers [concat $new_modelers $modelers]
     dict set projectParametersDict modelers $modelers
     return $projectParametersDict
