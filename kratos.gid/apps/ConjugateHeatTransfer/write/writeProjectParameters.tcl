@@ -77,7 +77,8 @@ proc ::ConjugateHeatTransfer::write::GetProcessList { } {
     set processes [dict create]
 
     # Get and add fluid processes
-    dict set processes fluid_constraints_process_list [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings processes constraints_process_list]
+    set fluid_constraints_process_list [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings processes constraints_process_list]
+    dict set processes fluid_constraints_process_list [::ConjugateHeatTransfer::write::TransformFluidProcess $fluid_constraints_process_list]
 
     # Get and add solid processes
     dict set processes solid_initial_conditions_process_list [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes initial_conditions_process_list]
@@ -220,4 +221,21 @@ proc ::ConjugateHeatTransfer::write::ModelersPrefix { projectParametersDict } {
     }
     dict set projectParametersDict modelers $new_modelers
     return $projectParametersDict
+}
+
+proc ::ConjugateHeatTransfer::write::TransformFluidProcess {fluid_constraints_process_list} {
+    # Find any process with python_module = apply_thermal_face_process and change the Parameters.model_part_name to FluidThermalModelPart
+    set new_fluid_constraints_process_list [list] 
+    foreach process $fluid_constraints_process_list {
+        set new_process $process
+        if {[dict get $process python_module] == "apply_thermal_face_process"} {
+            set old_name [dict get $process Parameters model_part_name]
+            # old name is in the form FluidModelPart.XXX
+            # new name is in the form FluidThermalModelPart.XXX
+            set new_name "FluidThermalModelPart.[lindex [split $old_name "."] 1]"
+            dict set new_process Parameters model_part_name $new_name
+        }
+        lappend new_fluid_constraints_process_list $new_process
+    }
+    return $new_fluid_constraints_process_list
 }
