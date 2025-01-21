@@ -675,7 +675,7 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
         if {$entity eq ""} {continue}
         
-        if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
+        #if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
         if {$what == "condition"} {
             if {[$entity getGroupBy] eq "Condition"} {
                 set good_name "_HIDDEN_$cid"
@@ -692,6 +692,10 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         # If no topology present, it may be a nodal condition
         if {$kname eq ""} {continue}
         set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
+
+        set pair_join [join [list $model_part_basename.$good_name $entity_name $kname] "__"]
+        W "pair_join: $pair_join"
+        if {$pair_join ni $processed_groups_list} {lappend processed_groups_list $pair} {continue}
 
         lappend elements_list $pair
         
