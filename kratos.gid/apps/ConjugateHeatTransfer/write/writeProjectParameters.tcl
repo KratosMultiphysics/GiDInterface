@@ -188,6 +188,11 @@ proc ::ConjugateHeatTransfer::write::ModelersPrefix { projectParametersDict } {
     set new_modelers [list]
     set thermal_modelparts [dict get $projectParametersDict solver_settings solid_domain_solver_settings thermal_solver_settings processes_sub_model_part_list]
     # W "Thermal modelparts: $thermal_modelparts"
+    set fluid_modelparts [dict get $projectParametersDict solver_settings fluid_domain_solver_settings fluid_solver_settings skin_parts]
+    lappend fluid_modelparts [dict get $projectParametersDict solver_settings fluid_domain_solver_settings fluid_solver_settings no_skin_parts]
+    # W "Fluid modelparts: $fluid_modelparts"
+    set fluid_thermal_modelparts [dict get $projectParametersDict solver_settings fluid_domain_solver_settings thermal_solver_settings processes_sub_model_part_list]
+    # W "Fluid thermal modelparts: $fluid_thermal_modelparts"
     foreach modeler $modelers {
         set name [dict get $modeler name]
         if {[string match "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler" $name]} {
@@ -210,13 +215,19 @@ proc ::ConjugateHeatTransfer::write::ModelersPrefix { projectParametersDict } {
                 dict set new_parameters elements_list $new_element_list
             }
             set new_conditions_list [list ]
+            set cond_submodelpart [list ]
             foreach condition [dict get $modeler parameters conditions_list] {
                 set model_part_name [dict get $condition model_part_name]
                 set raw_name [lindex [split $model_part_name "."] 1]
                 if {$raw_name in $thermal_modelparts} {
-                    set new_condition $condition
+                    set new_condition [dict create model_part_name "ThermalModelPart.$raw_name" condition_name [dict get $condition condition_name]]
                 } else {
-                    set new_condition [dict create model_part_name "FluidModelPart.$raw_name" condition_name [dict get $condition condition_name]]
+                    if {$raw_name in $fluid_modelparts && $raw_name ni $cond_submodelpart} {
+                        set new_condition [dict create model_part_name "FluidModelPart.$raw_name" condition_name [dict get $condition condition_name]]
+                        lappend cond_submodelpart $raw_name
+                    } elseif {$raw_name in $fluid_thermal_modelparts} {
+                        set new_condition [dict create model_part_name "FluidThermalModelPart.$raw_name" condition_name [dict get $condition condition_name]]
+                    }
                 }
                 lappend new_conditions_list $new_condition
                 dict set new_parameters conditions_list $new_conditions_list
