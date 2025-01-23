@@ -2,7 +2,7 @@
 
 <container n="ConjugateHeatTransfer" pn="Conjugate heat transfer" icon="heat" prefix="CHT" tree_state="open" open_window="0">
 
-    <container n="Buoyancy" pn="Buoyancy" icon="app" prefix="Buoyancy_" tree_state="open" open_window="0">
+    <container n="Buoyancy" pn="Buoyancy" icon="app" prefix="Buoyancy_" un="CHTBuoyancy" tree_state="open" open_window="0">
 
         <container n="Fluid" pn="Fluid" icon="units" un="Buoyancy_FL" prefix="FL" tree_state="open" open_window="0">
             <include n="AnalysisType" active="1" path="apps/Fluid/xml/AnalysisType.spd"/>
@@ -13,7 +13,7 @@
             <include n="Materials" active="1" path="apps/Fluid/xml/Materials.spd"/>
         </container>
 
-        <container n="ConvectionDiffusion" pn="Fluid thermal" icon="heat" prefix="Buoyancy_CNVDFF" un="Buoyancy_CNVDFF" tree_state="open" open_window="0">
+        <container n="ConvectionDiffusion" pn="Fluid thermal" icon="heat" prefix="Buoyancy_CNVDFF" un="Buoyancy_CNVDFF" modelpart_name="FluidThermalModelPart" tree_state="open" open_window="0">
             <include n="StageInfo" active="1" path="apps/ConvectionDiffusion/xml/StageInfo.spd"/>
             <include n="Parts" active="1" state="hidden" path="apps/ConvectionDiffusion/xml/Parts.spd"/>
             <include n="InitialConditions" un="Buoyancy_CNVDFFNodalConditions" active="1" path="apps/ConvectionDiffusion/xml/InitialConditions.spd"/>

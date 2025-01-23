@@ -33,7 +33,12 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
 }
 
 proc ::ConjugateHeatTransfer::write::writeParametersEvent { } {
-    set projectParametersDict [getParametersDict]
+    try {
+        set projectParametersDict [getParametersDict]
+    } on error {errorMsg} {
+        apps::setActiveAppSoft ConjugateHeatTransfer
+        error $errorMsg
+    }
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
@@ -146,7 +151,8 @@ proc ::ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     ::ConvectionDiffusion::write::SetAttribute conditions_un Buoyancy_CNVDFFBC
     ::ConvectionDiffusion::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
     ::ConvectionDiffusion::write::SetAttribute model_part_name FluidThermalModelPart
-    set ConjugateHeatTransfer::write::fluid_domain_solver_settings [Buoyancy::write::getParametersDict]
+    set buoyancy_stage [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute CHTBuoyancy]]
+    set ConjugateHeatTransfer::write::fluid_domain_solver_settings [Buoyancy::write::getParametersDict $buoyancy_stage]
 
     # Heating section
     apps::setActiveAppSoft ConvectionDiffusion
@@ -155,7 +161,8 @@ proc ::ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     ::ConvectionDiffusion::write::SetAttribute model_part_name ThermalModelPart
     ::ConvectionDiffusion::write::SetAttribute thermal_bc_un CNVDFFBC
     write::initWriteConfiguration [ConvectionDiffusion::write::GetAttributes]
-    set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
+    set heating_stage [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute CHTCNVDFF]]
+    set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict $heating_stage]
 
     apps::setActiveAppSoft ConjugateHeatTransfer
 }
