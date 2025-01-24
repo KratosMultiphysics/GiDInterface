@@ -95,6 +95,9 @@ proc ::ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True}
 
 proc ::ConjugateHeatTransfer::write::GetAttribute {att} {
     variable writeAttributes
+    if {![dict exists $writeAttributes $att]} {
+        return ""
+    }
     return [dict get $writeAttributes $att]
 }
 
