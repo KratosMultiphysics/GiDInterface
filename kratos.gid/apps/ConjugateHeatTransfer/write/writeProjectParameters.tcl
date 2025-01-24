@@ -249,7 +249,9 @@ proc ::ConjugateHeatTransfer::write::TransformFluidProcess {fluid_constraints_pr
         # temporal trick to set the model_part base
         # TODO: set a list of thermal model parts
         if {[dict get $process python_module] == "apply_thermal_face_process" ||
-            [dict get $process Parameters variable_name] == "TEMPERATURE" } {
+        
+            ([dict exists $process Parameters variable_name] &&
+            [dict get $process Parameters variable_name] == "TEMPERATURE") } {
             set old_name [dict get $process Parameters model_part_name]
             # old name is in the form FluidModelPart.XXX
             # new name is in the form FluidThermalModelPart.XXX
