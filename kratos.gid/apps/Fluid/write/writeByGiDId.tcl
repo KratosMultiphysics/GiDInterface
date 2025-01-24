@@ -97,6 +97,7 @@ proc ::Fluid::write::writeBoundaryConditions { } {
     set BCUN [GetAttribute conditions_un]
 
     # Write the conditions
+    W "Writing conditions on $BCUN"
     ::write::writeConditionsByGiDId $BCUN
 
 }

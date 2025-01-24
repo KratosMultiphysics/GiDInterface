@@ -1,5 +1,5 @@
 # Project Parameters
-proc ::Buoyancy::write::getParametersDict { } {
+proc ::Buoyancy::write::getParametersDict { {stage ""} } {
     set projectParametersDict [dict create]
 
     # Analysis stage field
@@ -21,7 +21,7 @@ proc ::Buoyancy::write::getParametersDict { } {
     dict set projectParametersDict processes [Buoyancy::write::GetProcesses_Dict]
 
     # modelers
-    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict $stage]
     
     return $projectParametersDict
 }

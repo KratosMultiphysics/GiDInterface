@@ -7,7 +7,7 @@
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
 	ElementType="Line" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
-      <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+      <item  GeometryType="Line" nodes="2" KratosName="ThermalFace2D2N"/>
     </TopologyFeatures>
     <DefaultValues>
       <value n="ambient_temperature" v="0.0" state="hidden" />
@@ -24,8 +24,8 @@
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="Fluid"
 	ElementType="Surface" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
-      <item  GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
-      <item  GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
+      <item  GeometryType="Triangle" nodes="3" KratosName="ThermalFace3D3N"/>
+      <item  GeometryType="Quadrilateral" nodes="4" KratosName="ThermalFace3D4N"/>
     </TopologyFeatures>
     <DefaultValues>
       <value n="ambient_temperature" v="0.0" state="hidden" />
@@ -43,7 +43,7 @@
 	WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="True" App="ConvectionDiffusion"
 	ElementType="Line" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
-      <item  GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+      <item  GeometryType="Line" nodes="2" KratosName="ThermalFace2D2N"/>
     </TopologyFeatures>
     <DefaultValues>
       <value n="ambient_temperature" v="0.0" state="hidden" />
@@ -57,8 +57,8 @@
 	WorkingSpaceDimension="3D" LocalSpaceDimension="1" SkinConditions="True" App="ConvectionDiffusion"
 	ElementType="Surface" ProcessName="ApplyThermalFaceProcess" help="This process sets the interface thermal behavior">
     <TopologyFeatures>
-      <item  GeometryType="Triangle" nodes="3" KratosName="SurfaceCondition3D3N"/>
-      <item  GeometryType="Quadrilateral" nodes="4" KratosName="SurfaceCondition3D4N"/>
+      <item  GeometryType="Triangle" nodes="3" KratosName="ThermalFace3D3N"/>
+      <item  GeometryType="Quadrilateral" nodes="4" KratosName="ThermalFace3D4N"/>
     </TopologyFeatures>
     <DefaultValues>
       <value n="ambient_temperature" v="0.0" state="hidden" />

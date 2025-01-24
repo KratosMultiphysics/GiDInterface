@@ -7,6 +7,8 @@ namespace eval ::ConjugateHeatTransfer::write {
     variable writeAttributes
     variable fluid_domain_solver_settings
     variable solid_domain_solver_settings
+
+    variable mdpa_files
 }
 
 proc ::ConjugateHeatTransfer::write::Init { } {
@@ -20,6 +22,7 @@ proc ::ConjugateHeatTransfer::write::Init { } {
     SetAttribute model_part_name [::ConjugateHeatTransfer::GetWriteProperty model_part_name]
 
     SetAttribute coordinates [::ConjugateHeatTransfer::GetWriteProperty coordinates]
+    SetAttribute write_mdpa_mode [::ConvectionDiffusion::GetWriteProperty write_mdpa_mode]
 
     SetAttribute fluid_mdpa_suffix Fluid
     SetAttribute solid_mdpa_suffix Solid
@@ -28,10 +31,14 @@ proc ::ConjugateHeatTransfer::write::Init { } {
     variable solid_domain_solver_settings
     set fluid_domain_solver_settings [dict create]
     set solid_domain_solver_settings [dict create]
+
+    variable mdpa_files
+    set mdpa_files []
 }
 
 # Events
 proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
+    variable mdpa_files
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -41,13 +48,22 @@ proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
     # Buoyancy mdpa
     ::ConjugateHeatTransfer::write::PrepareBuoyancy
     write::writeAppMDPA Buoyancy
-    write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute fluid_mdpa_suffix].mdpa"
+    set buoyancy_mdpa "${filename}_[GetAttribute fluid_mdpa_suffix]"
+    write::RenameFileInModel "$filename.mdpa" ${buoyancy_mdpa}.mdpa
+    lappend mdpa_files $buoyancy_mdpa
     
     # Convection diffusion mdpa
     ConvectionDiffusion::write::Init
     ConvectionDiffusion::write::SetAttribute writeCoordinatesByGroups [GetAttribute coordinates]
+        
+    set base_root_xpath [spdAux::getRoute CHTCNVDFF]
+    set base_root [[customlib::GetBaseRoot] selectNodes $base_root_xpath]
+    set ::ConvectionDiffusion::write::base_root $base_root
+
     write::writeAppMDPA ConvectionDiffusion
-    write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute solid_mdpa_suffix].mdpa"
+    set convdif_mdpa "${filename}_[GetAttribute solid_mdpa_suffix]"
+    write::RenameFileInModel "$filename.mdpa" ${convdif_mdpa}.mdpa
+    lappend mdpa_files $convdif_mdpa
 }
 
 proc ::ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
@@ -79,6 +95,9 @@ proc ::ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True}
 
 proc ::ConjugateHeatTransfer::write::GetAttribute {att} {
     variable writeAttributes
+    if {![dict exists $writeAttributes $att]} {
+        return ""
+    }
     return [dict get $writeAttributes $att]
 }
 
