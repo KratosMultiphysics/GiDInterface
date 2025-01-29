@@ -402,6 +402,12 @@ proc ::DEM::write::GetClusterFileNameAndReplaceInletElementType {inlet_element_t
     } elseif {$inlet_element_type eq "Rock3RefinedCluster3D"} {
         set inlet_element_type "Cluster3D"
         set cluster_file_name "rock3refinedcluster3D.clu"
+    } elseif {$inlet_element_type eq "CoffeeBean10Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "coffeebean10cluster3D.clu"
+    } elseif {$inlet_element_type eq "CoffeeBean20Cluster3D"} {
+        set inlet_element_type "Cluster3D"
+        set cluster_file_name "coffeebean20cluster3D.clu"
     } else {
         error "No cluster found"
     }
