@@ -182,46 +182,46 @@ proc ::MPM::write::GetOutputProcessesList { } {
 
      set need_vtk [write::getValue EnableVtkOutput]
      if {[write::isBooleanTrue $need_vtk]} {
-         #set vtk_options_xpath "[spdAux::getRoute $results_UN]/container\[@n='VtkOutput'\]/container\[@n='VtkOptions'\]"
 
          set body_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
          set grid_output_configuration_dict [lindex [dict get $project_parameters_dict output_processes vtk_output] 0]
 
+         dict unset body_output_configuration_dict Parameters nodal_data_value_variables
+         dict unset body_output_configuration_dict Parameters element_data_value_variables
+         dict unset body_output_configuration_dict Parameters condition_data_value_variables
+         dict unset body_output_configuration_dict Parameters nodal_solution_step_data_variables
+         dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
 
          dict set body_output_configuration_dict python_module mpm_vtk_output_process
          dict set body_output_configuration_dict kratos_module KratosMultiphysics.MPMApplication
          dict set body_output_configuration_dict process_name MPMVtkOutputProcess
          dict set body_output_configuration_dict Parameters model_part_name MPM_Material
-         dict unset body_output_configuration_dict Parameters nodal_data_value_variables
-         dict unset body_output_configuration_dict Parameters element_data_value_variables
-         dict unset body_output_configuration_dict Parameters condition_data_value_variables
-         dict unset body_output_configuration_dict Parameters nodal_solution_step_data_variables
-         #dict unset body_output_configuration_dict Parameters output_interval
-         #set outputCT [getValueByXPath $vtk_options_xpath OutputControlType]
-         #dict set resultDict output_control_type $outputCT
-          #if {$outputCT eq "time"} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaTime]} {set frequency [getValueByXPath $vtk_options_xpath OutputDeltaStep]}
-         dict set body_output_configuration_dict Parameters output_path  "vtk_output_Body"
-         dict unset body_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
+         dict set body_output_configuration_dict Parameters output_path "vtk_output_Body"
          dict set body_output_configuration_dict Parameters gauss_point_variables_in_elements [write::GetResultsList ElementResults]
+         dict set body_output_configuration_dict Parameters entity_type "automatic"
+         dict set body_output_configuration_dict Parameters write_ids false
 
-
-         dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
          dict unset grid_output_configuration_dict Parameters gauss_point_variables_extrapolated_to_nodes
          dict unset grid_output_configuration_dict Parameters nodal_data_value_variables
          dict unset grid_output_configuration_dict Parameters element_data_value_variables
          dict unset grid_output_configuration_dict Parameters condition_data_value_variables
-
-
-         dict set project_parameters_dict output_processes body_output_process [list $body_output_configuration_dict]
-         #dict set project_parameters_dict output_processes grid_output_process [list $grid_output_configuration_dict]
-         dict unset project_parameters_dict output_processes vtk_output
          dict unset grid_output_configuration_dict Parameters gauss_point_results
 
-         # Append the fluid and solid output processes to the output processes list
-         lappend vtk_output_processes_list $grid_output_configuration_dict
-         lappend vtk_output_processes_list $body_output_configuration_dict
-         dict set output_process vtk_output_processes $vtk_output_processes_list
+         dict set grid_output_configuration_dict Parameters model_part_name Background_Grid
+         dict set grid_output_configuration_dict Parameters output_path "vtk_output_Grid"
+         dict set grid_output_configuration_dict Parameters entity_type "automatic"
+         dict set grid_output_configuration_dict Parameters write_ids false
 
+         dict unset project_parameters_dict output_processes vtk_output
+
+         set vtk_output_type [write::getValue VtkOptions VtkOutputType]
+         if {$vtk_output_type eq "grid" || $vtk_output_type eq "both"} {
+            lappend vtk_output_processes_list $grid_output_configuration_dict
+         }
+         if {$vtk_output_type eq "mpm" || $vtk_output_type eq "both"} {
+            lappend vtk_output_processes_list $body_output_configuration_dict
+         }
+         dict set output_process vtk_output_processes $vtk_output_processes_list
 
      }
 
