@@ -713,6 +713,8 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
 proc write::GetModelPartNameFromParentTree { group {stage ""} } {
     set modelpart_name ""
     set parent $group
+    set safety 0
+    set max_safety 10000
     while {1} {
         set parent [$parent parent]
         if {$parent eq ""} {break}
@@ -720,6 +722,11 @@ proc write::GetModelPartNameFromParentTree { group {stage ""} } {
             set modelpart_name [get_domnode_attribute $parent modelpart_name]
             break
         }
+        if {$safety > $max_safety} {
+            W "GetModelPartNameFromParentTree: safety limit reached"
+            break
+        }
+        incr safety
     }
     return $modelpart_name
 }
