@@ -699,7 +699,7 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
 
         set pair_join [join [list $model_part_basename.$good_name $entity_name $kname] "__"]
-        W "pair_join: $pair_join"
+        # W "pair_join: $pair_join"
         if {$pair_join ni $processed_groups_list} {lappend processed_groups_list $pair} {continue}
 
         lappend elements_list $pair
