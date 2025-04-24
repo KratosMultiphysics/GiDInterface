@@ -100,8 +100,12 @@ proc ::ConjugateHeatTransfer::write::WriteBuoyancyMaterialsFile { {write_const_l
     write::writePropertiesJsonFileDone [::Fluid::write::GetAttribute materials_file] $fluid_materials
 
     # Write Buoyancy materials file
-    set buoyancy_material [::Buoyancy::write::GetBuoyancyMaterialsFile]
-    write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $buoyancy_material
+    set buoyancy_material [::Buoyancy::write::GetBuoyancyMaterialsFile $write_const_law $include_modelpart_name FluidThermalModelPart]
+    set clear_mat [dict get $buoyancy_material properties]
+    set clear_mat [lindex $clear_mat 0]
+    dict set clear_mat model_part_name FluidThermalModelPart
+    set clear_mat [dict create properties [list $clear_mat]]
+    write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $clear_mat
 }
 
 proc ::ConjugateHeatTransfer::write::GetAttribute {att} {

@@ -54,11 +54,12 @@ proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_mode
     write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $clear_mat
 }
 
-proc ::Buoyancy::write::GetBuoyancyMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
-    set model_part_name ""
-    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetModelPartName]}
+proc ::Buoyancy::write::GetBuoyancyMaterialsFile { {write_const_law True} {include_modelpart_name True} {model_part_name ""} } {
+    
+    if {[write::isBooleanTrue $include_modelpart_name] && $model_part_name eq ""} {set model_part_name [GetModelPartName]}
     
     set mats [write::getPropertiesJson [GetAttribute parts_un] $write_const_law $model_part_name]
+    
     # keep only first entry
     set clear_mat [dict get $mats properties]
     set clear_mat [lindex $clear_mat 0]
