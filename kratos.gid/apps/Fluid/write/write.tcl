@@ -131,11 +131,7 @@ proc Fluid::write::GetMaterialsFile { {write_const_law True} {include_modelpart_
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
     set parts [write::getPropertiesJson [GetAttribute parts_un] $write_const_law $model_part_name]
-    # set base [dict create model_part_name [GetAttribute model_part_name] properties_id 0 Material null]
-    # set old_list [dict get $parts properties]
-    # set new_list [concat [list $base] $old_list]
-    # set result [dict create properties $new_list]
-    # return $result
+
     return $parts
 }
 

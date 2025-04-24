@@ -50,6 +50,11 @@ proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_mode
     Fluid::write::WriteMaterialsFile $write_const_law $include_modelpart_name
 
     # Write Buoyancy materials file
+    set mat_clear [::Buoyancy::write::GetBuoyancyMaterialsFile $write_const_law $include_modelpart_name]
+    write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $clear_mat
+}
+
+proc ::Buoyancy::write::GetBuoyancyMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetModelPartName]}
     
@@ -59,7 +64,7 @@ proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_mode
     set clear_mat [lindex $clear_mat 0]
     dict set clear_mat model_part_name ThermalModelPart
     set clear_mat [dict create properties [list $clear_mat]]
-    write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $clear_mat
+    return $clear_mat
 }
 
 proc ::Buoyancy::write::writeSubModelParts { } {

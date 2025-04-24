@@ -88,10 +88,21 @@ proc ::ConjugateHeatTransfer::write::PrepareBuoyancy { } {
 }
 
 proc ::ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
-    Buoyancy::write::WriteMaterialsFile $write_const_law $include_modelpart_name
+    ConjugateHeatTransfer::write::WriteBuoyancyMaterialsFile $write_const_law $include_modelpart_name
     ConvectionDiffusion::write::WriteMaterialsFile False $include_modelpart_name
 }
 
+proc ::ConjugateHeatTransfer::write::WriteBuoyancyMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
+    ## Write fluid material file
+    set model_part_name ""
+    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
+    set fluid_materials [Fluid::write::GetMaterialsFile $write_const_law $include_modelpart_name]
+    write::writePropertiesJsonFileDone [::Fluid::write::GetAttribute materials_file] $fluid_materials
+
+    # Write Buoyancy materials file
+    set buoyancy_material [::Buoyancy::write::GetBuoyancyMaterialsFile]
+    write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $buoyancy_material
+}
 
 proc ::ConjugateHeatTransfer::write::GetAttribute {att} {
     variable writeAttributes
