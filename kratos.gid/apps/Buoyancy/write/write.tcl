@@ -50,7 +50,7 @@ proc ::Buoyancy::write::WriteMaterialsFile {{write_const_law True} {include_mode
     Fluid::write::WriteMaterialsFile $write_const_law $include_modelpart_name
 
     # Write Buoyancy materials file
-    set mat_clear [::Buoyancy::write::GetBuoyancyMaterialsFile $write_const_law $include_modelpart_name]
+    set clear_mat [::Buoyancy::write::GetBuoyancyMaterialsFile $write_const_law $include_modelpart_name]
     write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $clear_mat
 }
 
