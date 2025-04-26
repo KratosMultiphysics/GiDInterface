@@ -675,7 +675,7 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
         if {$entity eq ""} {continue}
         
-        if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
+        #if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
         if {$what == "condition"} {
             if {[$entity getGroupBy] eq "Condition"} {
                 set good_name "_HIDDEN_$cid"
@@ -691,10 +691,42 @@ proc write::GetMatchSubModelPart { what {stage ""} } {
         set kname [$entity getTopologyKratosName $etype $nnodes]
         # If no topology present, it may be a nodal condition
         if {$kname eq ""} {continue}
+
+        # If spd application sets a modelpartname, use it
+        set model_part_name [write::GetModelPartNameFromParentTree $group stage]
+        if {$model_part_name ne ""} {set model_part_basename $model_part_name}
+
         set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
+
+        set pair_join [join [list $model_part_basename.$good_name $entity_name $kname] "__"]
+        # W "pair_join: $pair_join"
+        if {$pair_join ni $processed_groups_list} {lappend processed_groups_list $pair} {continue}
 
         lappend elements_list $pair
         
     }
     return $elements_list
+}
+
+
+# in the xml file, look up to find if some of the ancestors define a property modelpartname
+proc write::GetModelPartNameFromParentTree { group {stage ""} } {
+    set modelpart_name ""
+    set parent $group
+    set safety 0
+    set max_safety 10000
+    while {1} {
+        set parent [$parent parent]
+        if {$parent eq ""} {break}
+        if {[$parent hasAttribute modelpart_name]} {
+            set modelpart_name [get_domnode_attribute $parent modelpart_name]
+            break
+        }
+        if {$safety > $max_safety} {
+            W "GetModelPartNameFromParentTree: safety limit reached"
+            break
+        }
+        incr safety
+    }
+    return $modelpart_name
 }
