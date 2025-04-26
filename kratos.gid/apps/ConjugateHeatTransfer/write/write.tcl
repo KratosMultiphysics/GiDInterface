@@ -85,6 +85,9 @@ proc ::ConjugateHeatTransfer::write::PrepareBuoyancy { } {
     Fluid::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
     Fluid::write::SetAttribute thermal_initial_cnd_un Buoyancy_CNVDFFNodalConditions
     Fluid::write::SetCoordinatesByGroups [GetAttribute coordinates]
+    set base_root_xpath [spdAux::getRoute CHTBuoyancy]
+    set base_root [[customlib::GetBaseRoot] selectNodes $base_root_xpath]
+    set ::Fluid::write::base_root $base_root
 }
 
 proc ::ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {

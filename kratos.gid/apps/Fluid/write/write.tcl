@@ -9,7 +9,7 @@ namespace eval ::Fluid::write {
     # after regular conditions are written, we need this number in order to print the custom submodelpart conditions
     # only if are applied over things that are not in the skin
     variable last_condition_iterator
-    variable fluid_base
+    variable base_root
 }
 
 proc ::Fluid::write::Init { } {
