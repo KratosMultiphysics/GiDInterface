@@ -9,6 +9,7 @@ namespace eval ::Fluid::write {
     # after regular conditions are written, we need this number in order to print the custom submodelpart conditions
     # only if are applied over things that are not in the skin
     variable last_condition_iterator
+    variable fluid_base
 }
 
 proc ::Fluid::write::Init { } {
@@ -32,10 +33,15 @@ proc ::Fluid::write::Init { } {
     
     variable last_condition_iterator
     set last_condition_iterator 0
+
+    variable fluid_base 
+    set fluid_base ""
 }
 
 # MDPA write event
 proc ::Fluid::write::writeModelPartEvent { } {
+    variable fluid_base
+
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -55,7 +61,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
     if {[GetAttribute write_mdpa_mode] eq "geometries"} {
         # Write geometries
         # Get the list of groups in the spd
-        set lista [::Fluid::xml::GetListOfSubModelParts]
+        set lista [::Fluid::xml::GetListOfSubModelParts $fluid_base]
         
         # Write the geometries
         set ret [::write::writeGeometryConnectivities $lista]
@@ -125,11 +131,7 @@ proc Fluid::write::GetMaterialsFile { {write_const_law True} {include_modelpart_
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
     set parts [write::getPropertiesJson [GetAttribute parts_un] $write_const_law $model_part_name]
-    # set base [dict create model_part_name [GetAttribute model_part_name] properties_id 0 Material null]
-    # set old_list [dict get $parts properties]
-    # set new_list [concat [list $base] $old_list]
-    # set result [dict create properties $new_list]
-    # return $result
+
     return $parts
 }
 

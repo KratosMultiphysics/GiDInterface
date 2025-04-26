@@ -5,6 +5,7 @@ namespace eval ::ConvectionDiffusion::write {
     variable ConvectionDiffusionConditions
     variable writeCoordinatesByGroups
     variable writeAttributes
+    variable base_root
 }
 
 proc ::ConvectionDiffusion::write::Init { } {
@@ -27,10 +28,14 @@ proc ::ConvectionDiffusion::write::Init { } {
     SetAttribute output_model_part_name [::ConvectionDiffusion::GetWriteProperty output_model_part_name]
     SetAttribute write_mdpa_mode [::ConvectionDiffusion::GetWriteProperty write_mdpa_mode]
 
+
+    variable base_root
+    set base_root [customlib::GetBaseRoot]
 }
 
 # Events
 proc ::ConvectionDiffusion::write::writeModelPartEvent { } {
+    variable base_root
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -48,7 +53,7 @@ proc ::ConvectionDiffusion::write::writeModelPartEvent { } {
     if {[GetAttribute write_mdpa_mode] eq "geometries"} {
         
         # Get the list of groups in the spd
-        set lista [::spdAux::GetListOfSubModelParts]
+        set lista [::spdAux::GetListOfSubModelParts $base_root]
         
         # Write the geometries
         set ret [::write::writeGeometryConnectivities $lista]
