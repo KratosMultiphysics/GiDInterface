@@ -23,7 +23,7 @@ proc ::Buoyancy::write::writeModelPartEvent { } {
 
     set fluid_base_xpath [spdAux::getRoute Buoyancy_FL]
     set fluid_base [[customlib::GetBaseRoot] selectNodes $fluid_base_xpath]
-    set ::Fluid::write::fluid_base $fluid_base
+    set ::Fluid::write::base_root $fluid_base
     
     ::Fluid::write::writeModelPartEvent
 

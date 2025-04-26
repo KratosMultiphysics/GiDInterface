@@ -9,7 +9,7 @@ namespace eval ::Fluid::write {
     # after regular conditions are written, we need this number in order to print the custom submodelpart conditions
     # only if are applied over things that are not in the skin
     variable last_condition_iterator
-    variable fluid_base
+    variable base_root
 }
 
 proc ::Fluid::write::Init { } {
@@ -34,13 +34,13 @@ proc ::Fluid::write::Init { } {
     variable last_condition_iterator
     set last_condition_iterator 0
 
-    variable fluid_base 
-    set fluid_base ""
+    variable base_root 
+    set base_root ""
 }
 
 # MDPA write event
 proc ::Fluid::write::writeModelPartEvent { } {
-    variable fluid_base
+    variable base_root
 
     # Validation
     set err [Validate]
@@ -61,7 +61,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
     if {[GetAttribute write_mdpa_mode] eq "geometries"} {
         # Write geometries
         # Get the list of groups in the spd
-        set lista [::Fluid::xml::GetListOfSubModelParts $fluid_base]
+        set lista [::Fluid::xml::GetListOfSubModelParts $base_root]
         
         # Write the geometries
         set ret [::write::writeGeometryConnectivities $lista]
