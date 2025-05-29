@@ -887,7 +887,7 @@ proc ::Dam::write::TemperaturebyDevices { } {
 
             set name [$node @name]
 
-            set xp2 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='is_fixed'\]"
+            set xp2 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='constrained'\]"
             set node_xp2 [$root selectNodes $xp2]
             set isfixed [get_domnode_attribute $node_xp2 v]
 
@@ -915,7 +915,7 @@ proc ::Dam::write::TemperaturebyDevices { } {
             set positionList [list ]
             dict set parameterDict model_part_name "MainModelPart"
             dict set parameterDict variable_name "TEMPERATURE"
-            dict set parameterDict is_fixed $isfixed
+            dict set parameterDict constrained $isfixed
             dict set parameterDict value $value
 
             if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
