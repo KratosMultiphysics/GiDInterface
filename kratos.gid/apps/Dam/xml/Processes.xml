@@ -6,7 +6,7 @@
   <Process n="ApplyConstraintVectorDamTableProcess" pn="Impose vector value by components process" python_module="apply_constraint_vector_dam_table_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the selected components of a given vector variable">
     <inputs>
-		    <parameter n="is_fixed" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
+		    <parameter n="constrained" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
         <parameter n="value" pn="Value" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Value_Table" pn="Value table filename" type="vector" vectorType="tablefile" v=""/>
     </inputs>
@@ -16,7 +16,7 @@
   <Process n="ImposeUniformPressureProcess" pn="Impose uniform value of pressure by process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+		    <parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="value" pn="Value" type="double" v="0.0"/>
         <parameter n="table" pn="Pressure table filename" type="tablefile" v=""/>
     </inputs>
@@ -26,7 +26,7 @@
   <Process n="ImposeUniformTemperatureProcess" pn="Impose uniform value of temperature by process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+		    <parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="value" pn="Value" type="double" v="0.0"/>
         <parameter n="table" pn="Uniform Temperature table filename" type="tablefile" v=""/>
     </inputs>
@@ -36,14 +36,14 @@
   <Process n="ImposeBofangConditionProcess" pn="Impose Bofang scalar field value" python_module="impose_reservoir_temperature_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-		<parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+		<parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Surface_Temp" pn="Surface Temperature" type="double" v="0.0"/>
         <parameter n="Bottom_Temp" pn="Bottom Temperature" type="double" v="0.0"/>
         <parameter n="Height_Dam" pn="Height Dam" type="double" v="0.0"/>
         <parameter n="Temperature_Amplitude" pn="Temperature Amplitude" type="double" v="0.0"/>
-        <parameter n="Day_Ambient_Temp" pn="Day" type="integer" v="0.0"/>
+        <parameter n="Day_Max_Temp" pn="Day Maximum Temperature" type="integer" v="0.0"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_level_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Month" pn="Month" type="double" v="0.0"/>
@@ -55,7 +55,7 @@
   <Process n="ImposeReservoirConstantTemperatureConditionProcess" pn="Impose constant reservoir temperature value" python_module="impose_reservoir_temperature_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+        <parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Water_temp" pn="Water Temperature" type="double" v="0.0"/>
@@ -69,7 +69,7 @@
   <Process n="ImposeReservoirMonitoringTemperatureConditionProcess" pn="Impose constant reservoir temperature value" python_module="impose_reservoir_temperature_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+        <parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Height_Dam" pn="Height Dam" type="double" v="0.0"/>

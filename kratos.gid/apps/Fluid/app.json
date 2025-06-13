@@ -15,6 +15,7 @@
         "start.tcl",
         "examples/examples.tcl",
         "examples/CylinderInFlow.tcl",
+        "examples/LidDrivenCavity.tcl",
         "examples/HighRiseBuilding.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",

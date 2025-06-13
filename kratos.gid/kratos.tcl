@@ -11,26 +11,12 @@ namespace eval ::Kratos {
 
     variable tmp_init_mesh_time
     variable namespaces
+
+    variable mesh_criteria_forced
 }
 
-# Hard minimum GiD Version is 14
-if {[GidUtils::VersionCmp "14.0.1"] >=0 } {
-    if {[GidUtils::VersionCmp "14.1.1"] >=0 } {
-        # GiD Developer versions
-        proc GiD_Event_InitProblemtype { dir } {
+proc GiD_Event_InitProblemtype { dir } {
             Kratos::Event_InitProblemtype $dir
-        }
-    } {
-        # GiD Official versions
-        proc InitGIDProject { dir } {
-            Kratos::Event_InitProblemtype $dir
-        }
-    }
-} {
-    # GiD versions previous to 15 are no longer allowed
-    # As we dont register the event InitProblemtype, the rest of events are also unregistered
-    # So no chance to open anything in GiD 13.x or earlier
-    WarnWin "The minimum GiD Version for Kratos is 15 or later \nUpdate at gidhome.com"
 }
 
 proc Kratos::Events { } {
@@ -127,7 +113,7 @@ proc Kratos::Event_InitProblemtype { dir } {
     set activeapp_dom [spdAux::SetActiveAppFromDOM]
     if { $activeapp_dom == "" } {
         #open a window to allow the user select the app
-        after 500 [list spdAux::CreateWindow]
+        after 500 [list spdAux::CreateInitialApplicationsWindow]
     }
 
 }
@@ -183,13 +169,16 @@ proc Kratos::InitGlobalVariables {dir} {
     # Is using files modules
     set kratos_private(UseFiles) 0
     # Variables from the problemtype definition (kratos.xml)
-    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version CheckMinimumGiDVersion}]
+    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version MinimumGiDVersion MaximumGiDVersion}]
 
     variable namespaces
     set namespaces [list ]
 
     variable pip_packages_required
-    set pip_packages_required [list KratosMultiphysics-all==9.4.2]
+    set pip_packages_required [list KratosMultiphysics-all==9.5.1]
+
+    variable mesh_criteria_forced
+    set mesh_criteria_forced [dict create]
 }
 
 proc Kratos::LoadCommonScripts { } {
@@ -447,6 +436,12 @@ proc Kratos::Event_BeforeMeshGeneration {elementsize} {
         GiD_MeshData mesh_criteria to_be_meshed 2 surfaces [GiD_EntitiesGroups get $group surfaces]
         GiD_MeshData mesh_criteria to_be_meshed 2 volumes  [GiD_EntitiesGroups get $group volumes]
     }
+
+    # Change the mesh settings depending on the element requirements
+    if {[Kratos::CheckMeshCriteria $elementsize]<0} {
+        return "-cancel-"
+    }
+
     # Maybe the current application needs to do some extra job
     set ret [apps::ExecuteOnCurrentApp BeforeMeshGeneration $elementsize]
     set endtime [clock seconds]
@@ -462,6 +457,10 @@ proc Kratos::Event_MeshProgress { total_percent partial_percents_0 partial_perce
 
 proc Kratos::Event_AfterMeshGeneration {fail} {
     variable tmp_init_mesh_time
+
+    # Change the mesh settings depending on the element requirements. Reset previous settings
+    # catch {Kratos::ResetMeshCriteria $fail}
+
     # Maybe the current application needs to do some extra job
     apps::ExecuteOnCurrentApp AfterMeshGeneration $fail
     set endtime [clock seconds]

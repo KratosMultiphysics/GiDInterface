@@ -1,10 +1,18 @@
-set VERSION=9.4.2
+set VERSION=9.5.1
 @REM git checkout master
 @REM git fetch -p
 @REM git pull -p
 @REM set BRANCH=Release-%VERSION%
 @REM git branch %BRANCH%
 @REM git checkout %BRANCH%
+
+
+git tag -f Release-%version%
+git push --tags --force
+
+@REM run python prepare-release-files.py
+python prepare-release-files.py
+
 cd ..
 mkdir dist
 set FOLDER=dist\kratos-%VERSION%
