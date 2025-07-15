@@ -3,10 +3,10 @@
 <Infoproblemtype version="1.0">
   <Program>
     <Name>Kratos</Name>
-    <Version>9.5.1</Version>
+    <Version>10.2.3</Version>
     <ExecutableVersion></ExecutableVersion>
     <MinimumGiDVersion>16.1.10d</MinimumGiDVersion>
-    <MaximumGiDVersion>17.1.99d</MaximumGiDVersion>
+    <MaximumGiDVersion>17.99.99d</MaximumGiDVersion>
     <CustomLibAutomatic>0</CustomLibAutomatic>
     <CustomLibNativeGroups>1</CustomLibNativeGroups>
     <ImageFileBrowser>images/ImageFileBrowser.gif</ImageFileBrowser>
