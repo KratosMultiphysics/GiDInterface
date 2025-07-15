@@ -21,7 +21,7 @@ If you need the developer version, you are on the right place.
         * You don't need to install python. The program will detect if you have any pending package to install.
         * If there's any missing package, use the GiD command line and execute:
         
-            `-np- W [GiD_Python_PipInstallMissingPackages [list $Kratos::pip_packages_required ] ]`
+            `-np- W [GiD_Python_PipInstall [list $Kratos::pip_packages_required ] 1 ]`
     * 4.1- To execute Kratos using the standard pip packages:
         * Python version recommended: 3.8, 3.9, 3.10, 3.11, 3.12
         * Open a terminal and run
