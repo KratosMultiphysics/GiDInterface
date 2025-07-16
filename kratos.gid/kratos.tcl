@@ -173,7 +173,7 @@ proc Kratos::InitGlobalVariables {dir} {
     set namespaces [list ]
 
     variable pip_packages_required
-    set pip_packages_required [list KratosMultiphysics-all==10.2.3]
+    set pip_packages_required [list KratosMultiphysics-all==10.2.1]
 
     variable mesh_criteria_forced
     set mesh_criteria_forced [dict create]
