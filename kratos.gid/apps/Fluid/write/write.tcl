@@ -79,7 +79,13 @@ proc ::Fluid::write::writeModelPartEvent { } {
             if {$condition ne "" && [$condition getGroupBy] eq "Condition"} {
                 dict lappend grouped_conditions $condition [$group @n]
             } else {
-                write::writeGroupSubModelPartAsGeometry [$group @n]
+                # Check topology in condition
+                set geoms 1
+                if {$condition ne "" && ![$condition hasTopologyFeatures]} {
+                    set geoms 0
+                }
+                write::writeGroupSubModelPartAsGeometry [$group @n] $geoms
+                
             }
         }
 
@@ -89,7 +95,11 @@ proc ::Fluid::write::writeModelPartEvent { } {
             set new_group_name "_HIDDEN_$condition_name"
             set groups [dict get $grouped_conditions $condition]
             set new_group [spdAux::MergeGroups $new_group_name $groups]
-            write::writeGroupSubModelPartAsGeometry $new_group_name 
+            set geoms 1
+            if {![$condition hasTopologyFeatures]} {
+                set geoms 0
+            }
+            write::writeGroupSubModelPartAsGeometry $new_group_name $geoms
             GiD_Groups delete $new_group_name
         }
 
