@@ -19,11 +19,8 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::PfemSw::Init",
-    "requeriments": {
-        "apps": [
-            "PfemFluid",
-            "ShallowWater"
-        ],
+    "requirements":{
+        "apps":["ShallowWater", "PfemFluid"],
         "minimum_gid_version": "15.1.3d"
     },
     "permissions": {
