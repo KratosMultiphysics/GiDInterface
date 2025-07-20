@@ -376,7 +376,7 @@ proc ::Dam::write::DefinitionDomains { } {
 # This process assign a number for the different tables instead of names (this is for matching with .mdpa)
 proc ::Dam::write::ChangeFileNameforTableid { processList } {
 
-    # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
+    # Global variable defined at the beginning and used to transfer between processes the number of existing tables
     variable number_tables
 
     set returnList [list ]
@@ -843,7 +843,10 @@ proc ::Dam::write::DevicesOutput { } {
             lappend positionList $xposition $yposition $zposition
             dict set parameterDict position $positionList
             dict set parameterDict model_part_name "MainModelPart"
-            dict set parameterDict output_file_name $name$extension
+            set outputDict [dict create]
+            dict set outputDict file_name $name
+            dict set outputDict output_path "MonitoringDevices"
+            dict set parameterDict output_file_settings $outputDict
             set outputlist [list ]
             lappend outputlist $variable
             dict set parameterDict output_variables $outputlist
@@ -859,12 +862,12 @@ proc ::Dam::write::DevicesOutput { } {
 
 proc ::Dam::write::TemperaturebyDevices { } {
 
-    # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
+    # Global variable defined at the beginning and used to transfer between processes the number of existing tables
     variable number_tables
 
     set device_temp_state [write::getValue DamTemperatureState]
     set lista [list ]
-    set listaFiles [list ]
+    set files_list [list ]
 
     if { $device_temp_state == True} {
 
@@ -884,7 +887,7 @@ proc ::Dam::write::TemperaturebyDevices { } {
 
             set name [$node @name]
 
-            set xp2 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='is_fixed'\]"
+            set xp2 "[spdAux::getRoute DamTempDevice]/blockdata\[@name='$name'\]/value\[@n='constrained'\]"
             set node_xp2 [$root selectNodes $xp2]
             set isfixed [get_domnode_attribute $node_xp2 v]
 
@@ -912,17 +915,17 @@ proc ::Dam::write::TemperaturebyDevices { } {
             set positionList [list ]
             dict set parameterDict model_part_name "MainModelPart"
             dict set parameterDict variable_name "TEMPERATURE"
-            dict set parameterDict is_fixed $isfixed
+            dict set parameterDict constrained $isfixed
             dict set parameterDict value $value
 
             if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
-                if {$fileid ni $listaFiles} {
-                    lappend listaFiles $fileid
+                if {$fileid ni $files_list} {
+                    lappend files_list $fileid
                     incr number_devices
                     dict set parameterDict table [expr $number_tables + $number_devices]
                 } else {
-                    for {set i 0} {$i < [llength $listaFiles]} {incr i} {
-                        if {$fileid eq [lindex $listaFiles $i]} {
+                    for {set i 0} {$i < [llength $files_list]} {incr i} {
+                        if {$fileid eq [lindex $files_list $i]} {
                             dict set parameterDict table [expr $number_tables + $i + 1]
                             break
                         }

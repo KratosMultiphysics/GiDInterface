@@ -12,8 +12,11 @@
     <condition n="WaveMonitor" pn="Wave Monitor" ov="point" ovm="node" un="WaveMonitor" icon="select" help="Activate the results you want to set wave gauges" >
      <value n="MeanWaterLevel" pn="Mean Level" icon="data" v="0" help="Water Level"/>
      <value n="RelativeSearchRadius" pn="Relative Search Radius" icon="data" v="2"   help="Relative value versus element size"/>
+     <value n="SearchTolerance" pn="Search Tolerance" icon="data" v="0.000001"   help="Absolute search tolerance in m"/>
+     <value n="UseLocalElementSize" pn="Use Local Element Size" icon="data" v="Yes"  values="Yes,No" help="Recommended for mesh with refined zones"/>
+     <value n="UseNearestNode" pn="Use Nearest Node" icon="data" v="No"  values="Yes,No" help="Alternative search technique"/>
      <value n="TimeBetweenOutputs" pn="Output Time" icon="data" v="0.01"  help="Time between two consecutive measures"/>
-     <value n="FolderName" pn="Gauges Folder Name" icon="data" v="WaveMeasures"  help="Name of the folder that will contain the results"/>
+     <value n="FolderName" pn="Gauges Folder Name" icon="data" v="GaugesMeasures"  help="Name of the folder that will contain the results"/>
     </condition>
     <container n="OnElement" pn="Elemental Results" un="ElementResults" icon="select" help="Activate the results you want to see in the elements" open_window="0">
         <!--<dynamicnode command="spdAux::injectElementOutputs" args=""/>-->

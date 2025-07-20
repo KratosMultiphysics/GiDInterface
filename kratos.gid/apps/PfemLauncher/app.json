@@ -5,13 +5,13 @@
         "start.tcl"
     ],
     "start_script":"::PfemLauncher::Init",
-    "requeriments":{
-        "apps":["PfemFluid", "DEMPFEM", "PfemThermic", "PfemSw"],
+    "requirements":{
+        "display_apps":["PfemFluid", "DEMPFEM", "PfemThermic", "PfemMelting", "PfemSw"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
         "open_tree": false,
-        "show_toolbar": true,
+        "show_toolbar": false,
         "intervals": false,
         "wizard": false
     }

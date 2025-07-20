@@ -25,7 +25,7 @@
         "postprocess/formfinding.tcl"
     ],
     "start_script": "::Structural::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [],
         "minimum_gid_version": "15.1.3d"
     },
@@ -51,7 +51,8 @@
         "properties_location": "json",
         "model_part_name": "Structure",
         "output_model_part_name": "",
-        "enable_dynamic_substepping": true
+        "enable_dynamic_substepping": true,
+        "write_mdpa_mode": "geometries"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"

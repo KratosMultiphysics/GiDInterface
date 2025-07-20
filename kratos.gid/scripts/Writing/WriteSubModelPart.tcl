@@ -3,7 +3,9 @@
 proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {tableid_list ""} } {
     variable submodelparts
     variable formats_dict
-
+    
+    set inittime [clock seconds]
+    
     set id_f [dict get $formats_dict ID]
     set mid ""
     set what [split $what "&"]
@@ -22,7 +24,7 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         set f [subst $f]
         dict set gdict $group $f
         incr ::write::current_mdpa_indent_level -2
-
+        
         # Print header
         set s [mdpaIndent]
         WriteString "${s}Begin SubModelPart $mid // Group $group // Subtree $cid"
@@ -38,13 +40,13 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
         WriteString "${s1}Begin SubModelPartNodes"
         GiD_WriteCalculationFile nodes -sorted $gdict
         WriteString "${s1}End SubModelPartNodes"
-        WriteString "${s1}Begin SubModelPartElements"
         if {"Elements" in $what} {
+            WriteString "${s1}Begin SubModelPartElements"
             GiD_WriteCalculationFile elements -sorted $gdict
+            WriteString "${s1}End SubModelPartElements"
         }
-        WriteString "${s1}End SubModelPartElements"
-        WriteString "${s1}Begin SubModelPartConditions"
         if {"Conditions" in $what} {
+            WriteString "${s1}Begin SubModelPartConditions"
             #GiD_WriteCalculationFile elements -sorted $gdict
             if {$iniend ne ""} {
                 #W $iniend
@@ -54,14 +56,72 @@ proc write::writeGroupSubModelPart { cid group {what "Elements"} {iniend ""} {ta
                     }
                 }
             }
+            WriteString "${s1}End SubModelPartConditions"
         }
-        WriteString "${s1}End SubModelPartConditions"
+        if {"Geometries" in $what} {
+            WriteString "${s1}Begin SubModelPartGeometries"
+            GiD_WriteCalculationFile elements -sorted $gdict
+            WriteString "${s1}End SubModelPartGeometries"
+        }
         WriteString "${s}End SubModelPart"
     }
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupSubModelPart $group time: [Kratos::Duration $ttime]"}
     return $mid
 }
 
+# 
+proc write::writeGroupSubModelPartAsGeometry { group { write_geometries 1} } {
+    variable submodelparts
+    variable formats_dict
+    variable geometry_cnd_name
+    
+    set cid $geometry_cnd_name
+    
+    set inittime [clock seconds]
+    
+    set id_f [dict get $formats_dict ID]
+    set submodelpart_id ""
+    set group [GetWriteGroupName $group]
+    set submodelpart_id [write::getSubModelPartId "$cid" $group]
+    if {$submodelpart_id ni $submodelparts} {
+        # Add the submodelpart to the catalog
+        set submodelpart_id [write::AddSubmodelpart $cid $group]
+        lappend submodelparts $submodelpart_id
+        # Prepare the print formats
+        incr ::write::current_mdpa_indent_level
+        set s1 [mdpaIndent]
+        incr ::write::current_mdpa_indent_level -1
+        incr ::write::current_mdpa_indent_level 2
+        set s2 [mdpaIndent]
+        set gdict [dict create]
+        set f "${s2}$id_f\n"
+        set f [subst $f]
+        dict set gdict $group $f
+        incr ::write::current_mdpa_indent_level -2
+        
+        # Print header
+        set s [mdpaIndent]
+        WriteString "${s}Begin SubModelPart $submodelpart_id // Group $group"
+        # Print nodes
+        WriteString "${s1}Begin SubModelPartNodes"
+        GiD_WriteCalculationFile nodes -sorted $gdict
+        WriteString "${s1}End SubModelPartNodes"
+        if {$write_geometries} {
+            # Print geometries only if requested, so conditions with no topology features are not printed
+            WriteString "${s1}Begin SubModelPartGeometries"
+            GiD_WriteCalculationFile elements -sorted $gdict
+            WriteString "${s1}End SubModelPartGeometries"
+        }
+        
+        WriteString "${s}End SubModelPart"
+    }
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupSubModelPart $group time: [Kratos::Duration $ttime]"}
+    return $submodelpart_id
+}
+
 proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
+    
+    set inittime [clock seconds]
     # Write elements
     set groups [write::_writeElementsForBasicSubmodelParts $un]
     # Write conditions (By iterator, so need the app condition iterator)
@@ -69,12 +129,14 @@ proc write::writeBasicSubmodelParts {cond_iter {un "GenericSubmodelPart"}} {
     foreach group $groups {
         set needElems [write::getValueByNode [$group selectNodes "./value\[@n='WriteElements'\]"]]
         set needConds [write::getValueByNode [$group selectNodes "./value\[@n='WriteConditions'\]"]]
+        set needGeoms [write::getValueByNode [$group selectNodes "./value\[@n='WriteGeometries'\]"]]
         set what "nodal"
         set iters ""
         if {$needElems} {append what "&Elements"}
         if {$needConds} {append what "&Conditions"; set iters [dict get $conditions_dict [$group @n]]}
         ::write::writeGroupSubModelPart "GENERIC" [$group @n] $what $iters
     }
+    if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeBasicSubmodelParts $un time: [Kratos::Duration $ttime]"}
     return $conditions_dict
 }
 
@@ -117,9 +179,9 @@ proc write::_writeElementsForBasicSubmodelParts {un} {
 }
 
 proc write::getSubModelPartNames { args } {
-
+    
     set root [customlib::GetBaseRoot]
-
+    
     set listOfProcessedGroups [list ]
     set groups [list ]
     foreach un $args {
@@ -139,18 +201,18 @@ proc write::getSubModelPartNames { args } {
             if {$gname ni $listOfProcessedGroups} {lappend listOfProcessedGroups $gname}
         }
     }
-
+    
     return $listOfProcessedGroups
 }
 
 
 proc write::GetSubModelPartFromCondition { base_UN condition_id } {
-
+    
     set root [customlib::GetBaseRoot]
-
+    
     set xp1 "[spdAux::getRoute $base_UN]/condition\[@n='$condition_id'\]/group"
     set groups [$root selectNodes $xp1]
-
+    
     set submodelpart_list [list ]
     foreach gNode $groups {
         set group [$gNode @n]
@@ -162,8 +224,15 @@ proc write::GetSubModelPartFromCondition { base_UN condition_id } {
 }
 
 proc write::GetSubModelPartName {condid group} {
+    variable geometry_cnd_name
     set group_name [write::GetWriteGroupName $group]
     set good_name [write::transformGroupName $group_name]
+    if {[GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+        return "${good_name}"
+    }
+    if {$condid eq $geometry_cnd_name} {
+        return "${good_name}"
+    }
     return "${condid}_${good_name}"
 }
 
@@ -180,10 +249,18 @@ proc write::AddSubmodelpart {condid group} {
 
 proc write::getSubModelPartId {cid group} {
     variable submodelparts
-    set find [list $cid ${group}]
-    if {[dict exists $submodelparts $find]} {
-        return [dict get $submodelparts [list $cid ${group}]]
-    } {
-        return 0
+    if { [GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+        # variable geometry_cnd_name
+        # set cid $geometry_cnd_name
+        set name [write::GetWriteGroupName $group]
+        set good_name [write::transformGroupName $name]
+        return $good_name
+    } else {
+        set find [list $cid ${group}]
+        if {[dict exists $submodelparts $find]} {
+            return [dict get $submodelparts [list $cid ${group}]]
+        } {
+            return 0
+        }
     }
 }

@@ -30,9 +30,10 @@ proc Kratos::ToolbarRefresh {} {
 }
 
 proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
-    if { [GidUtils::IsTkDisabled] } {
-        return 0
-    }
+    if { [GidUtils::IsTkDisabled] } { return 0 }
+    
+    if {[write::isBooleanFalse $::spdAux::ToolbarVisibility]} { return 0 }
+
     global KBitmapsNames KBitmapsCommands KBitmapsHelp
     variable kratos_private
     Kratos::EndCreatePreprocessTBar
@@ -47,6 +48,10 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
     }
     Kratos::ToolbarAddItem "Examples" "losta.png" [list -np- ::Examples::StartWindow [apps::getActiveAppId]] [= "Examples window"]
     Kratos::ToolbarAddItem "Settings" "config.png" [list -np- PreferencesWindow kratos_preferences] [= "Settings"]
+    set missing_dependencies [Kratos::CheckDependencies 0]
+    if {$missing_dependencies ne "0"} {
+        Kratos::ToolbarAddItem "Version" "version_warning.png" [list -np- Kratos::ToolbarDependenciesRefresh] [= "Dependencies check!"]
+    } 
     Kratos::ToolbarAddItem "SpacerApp2" "" "" ""
 
     set app_items_toolbar [apps::ExecuteOnCurrentApp CustomToolbarItems]
@@ -81,7 +86,7 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
                 }
             }
             lappend iconslist [expr {$icon ne "" ? $icon_path : "---"}]
-            lappend commslist  [dict get $kratos_private(MenuItems) $item code]
+            lappend commslist [dict get $kratos_private(MenuItems) $item code]
             lappend helpslist [dict get $kratos_private(MenuItems) $item tex]
         }
 
@@ -96,6 +101,11 @@ proc Kratos::CreatePreprocessModelTBar { {type "DEFAULT INSIDELEFT"} } {
 
         AddNewToolbar [= "Kratos toolbar"] ${prefix}${name}WindowGeom $procname
     }
+}
+
+proc Kratos::ToolbarDependenciesRefresh { } {
+    Kratos::CheckDependencies
+    Kratos::ToolbarRefresh
 }
 
 proc Kratos::EndCreatePreprocessTBar {} {

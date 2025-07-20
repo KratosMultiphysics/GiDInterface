@@ -7,6 +7,8 @@ namespace eval ::ConjugateHeatTransfer::write {
     variable writeAttributes
     variable fluid_domain_solver_settings
     variable solid_domain_solver_settings
+
+    variable mdpa_files
 }
 
 proc ::ConjugateHeatTransfer::write::Init { } {
@@ -20,6 +22,7 @@ proc ::ConjugateHeatTransfer::write::Init { } {
     SetAttribute model_part_name [::ConjugateHeatTransfer::GetWriteProperty model_part_name]
 
     SetAttribute coordinates [::ConjugateHeatTransfer::GetWriteProperty coordinates]
+    SetAttribute write_mdpa_mode [::ConvectionDiffusion::GetWriteProperty write_mdpa_mode]
 
     SetAttribute fluid_mdpa_suffix Fluid
     SetAttribute solid_mdpa_suffix Solid
@@ -28,10 +31,14 @@ proc ::ConjugateHeatTransfer::write::Init { } {
     variable solid_domain_solver_settings
     set fluid_domain_solver_settings [dict create]
     set solid_domain_solver_settings [dict create]
+
+    variable mdpa_files
+    set mdpa_files []
 }
 
 # Events
 proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
+    variable mdpa_files
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -41,13 +48,22 @@ proc ::ConjugateHeatTransfer::write::writeModelPartEvent { } {
     # Buoyancy mdpa
     ::ConjugateHeatTransfer::write::PrepareBuoyancy
     write::writeAppMDPA Buoyancy
-    write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute fluid_mdpa_suffix].mdpa"
+    set buoyancy_mdpa "${filename}_[GetAttribute fluid_mdpa_suffix]"
+    write::RenameFileInModel "$filename.mdpa" ${buoyancy_mdpa}.mdpa
+    lappend mdpa_files $buoyancy_mdpa
     
     # Convection diffusion mdpa
     ConvectionDiffusion::write::Init
     ConvectionDiffusion::write::SetAttribute writeCoordinatesByGroups [GetAttribute coordinates]
+        
+    set base_root_xpath [spdAux::getRoute CHTCNVDFF]
+    set base_root [[customlib::GetBaseRoot] selectNodes $base_root_xpath]
+    set ::ConvectionDiffusion::write::base_root $base_root
+
     write::writeAppMDPA ConvectionDiffusion
-    write::RenameFileInModel "$filename.mdpa" "${filename}_[GetAttribute solid_mdpa_suffix].mdpa"
+    set convdif_mdpa "${filename}_[GetAttribute solid_mdpa_suffix]"
+    write::RenameFileInModel "$filename.mdpa" ${convdif_mdpa}.mdpa
+    lappend mdpa_files $convdif_mdpa
 }
 
 proc ::ConjugateHeatTransfer::write::writeCustomFilesEvent { } {
@@ -69,16 +85,37 @@ proc ::ConjugateHeatTransfer::write::PrepareBuoyancy { } {
     Fluid::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
     Fluid::write::SetAttribute thermal_initial_cnd_un Buoyancy_CNVDFFNodalConditions
     Fluid::write::SetCoordinatesByGroups [GetAttribute coordinates]
+    set base_root_xpath [spdAux::getRoute CHTBuoyancy]
+    set base_root [[customlib::GetBaseRoot] selectNodes $base_root_xpath]
+    set ::Fluid::write::base_root $base_root
 }
 
 proc ::ConjugateHeatTransfer::write::WriteMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
-    Buoyancy::write::WriteMaterialsFile $write_const_law $include_modelpart_name
+    ConjugateHeatTransfer::write::WriteBuoyancyMaterialsFile $write_const_law $include_modelpart_name
     ConvectionDiffusion::write::WriteMaterialsFile False $include_modelpart_name
 }
 
+proc ::ConjugateHeatTransfer::write::WriteBuoyancyMaterialsFile { {write_const_law True} {include_modelpart_name True}  } {
+    ## Write fluid material file
+    set model_part_name ""
+    if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
+    set fluid_materials [Fluid::write::GetMaterialsFile $write_const_law $include_modelpart_name]
+    write::writePropertiesJsonFileDone [::Fluid::write::GetAttribute materials_file] $fluid_materials
+
+    # Write Buoyancy materials file
+    set buoyancy_material [::Buoyancy::write::GetBuoyancyMaterialsFile $write_const_law $include_modelpart_name FluidThermalModelPart]
+    set clear_mat [dict get $buoyancy_material properties]
+    set clear_mat [lindex $clear_mat 0]
+    dict set clear_mat model_part_name FluidThermalModelPart
+    set clear_mat [dict create properties [list $clear_mat]]
+    write::writePropertiesJsonFileDone "BuoyancyMaterials.json" $clear_mat
+}
 
 proc ::ConjugateHeatTransfer::write::GetAttribute {att} {
     variable writeAttributes
+    if {![dict exists $writeAttributes $att]} {
+        return ""
+    }
     return [dict get $writeAttributes $att]
 }
 

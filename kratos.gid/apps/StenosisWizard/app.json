@@ -14,7 +14,7 @@
         "wizard/wizard_steps.tcl"
     ],
     "start_script":"::StenosisWizard::Init",
-    "requeriments":{
+    "requirements":{
         "apps":["Fluid"],
         "minimum_gid_version":"15.1.3d"
     },

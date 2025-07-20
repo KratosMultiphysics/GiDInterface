@@ -20,9 +20,12 @@ proc ::FreeSurface::xml::Init { } {
     Model::getConditions Conditions.xml
 
 
-    # Remove No splip
+    # Remove No slip
     Model::ForgetCondition NoSlip2D
     Model::ForgetCondition NoSlip3D
+    # Remove Wall Law
+    Model::ForgetCondition WallLaw2D
+    Model::ForgetCondition WallLaw3D
 }
 
 proc ::FreeSurface::xml::getUniqueName {name} {
@@ -40,7 +43,7 @@ proc ::FreeSurface::xml::CustomTree { args } {
     spdAux::SetValueOnTreeItem v 9.8 FLGravity GravityValue
 
     set root [customlib::GetBaseRoot]
-    foreach {n pn} [list LIN_DARCY_COEF "Linear darcy coefficient" NONLIN_DARCY_COEF "Nonlinear darcy coefficient" POROSITY "Porosity" BODY_FORCE "Body force"] {
+    foreach {n pn} [list LIN_DARCY_COEF "Linear darcy coefficient" NONLIN_DARCY_COEF "Nonlinear darcy coefficient" POROSITY "Porosity"] {
         if {[$root selectNodes "[spdAux::getRoute NodalResults]/value\[@n='$n'\]"] eq ""} {
             gid_groups_conds::addF [spdAux::getRoute NodalResults] value [list n $n pn $pn v Yes values "Yes,No"]
         }

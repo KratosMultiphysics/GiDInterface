@@ -9,5 +9,5 @@
     <include n="SolutionStrategy" active="1" path="apps/Fluid/xml/SolutionStrategy.spd"/>
     <include n="Results" active="1" un="FLResults" path="apps/Common/xml/Results.spd"/>
     <include n="GenericSubModelPart" active="1" path="apps/Common/xml/GenericSubModelPart.spd"/>
-    <include n="Materials" active="1" path="apps/Fluid/xml/Materials.spd"/>
-</container>
+    <include n="Materials" active="0" path="apps/Fluid/xml/Materials.spd"/>
+    </container>

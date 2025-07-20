@@ -8,6 +8,8 @@ namespace eval ::EmbeddedFluid::write {
 proc EmbeddedFluid::write::Init { } {
     # Namespace variables inicialization        
     variable writeAttributes
+    # Fluid has implemented the geometry mode, but we do not use it yet in inherited apps
+    ::Fluid::write::SetAttribute write_mdpa_mode [::EmbeddedFluid::GetWriteProperty write_mdpa_mode]
     set writeAttributes [::Fluid::write::GetAttributes]
 }
 

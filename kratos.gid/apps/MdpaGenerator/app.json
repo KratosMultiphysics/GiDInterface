@@ -10,7 +10,7 @@
         "3D"
     ],
     "start_script":"::MdpaGenerator::Init",
-    "requeriments":{
+    "requirements":{
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
@@ -18,6 +18,12 @@
         "show_toolbar": true,
         "intervals": false,
         "wizard": false
+    },
+    "unique_names": {
+        "parts": "GenericSubmodelPart"
+    },
+    "write": {
+        "write_mdpa_mode": "geometries"
     },
     "main_launch_file": null,
     "description": "MDPA generator \n-Useful tool to generate modelparts"

@@ -20,6 +20,7 @@ proc MPM::write::Init { } {
     SetAttribute materials_file [::MPM::GetWriteProperty materials_file]
     SetAttribute properties_location [::MPM::GetWriteProperty properties_location]
     SetAttribute model_part_name [::MPM::GetWriteProperty model_part_name]
+    SetAttribute write_mdpa_mode [::MPM::GetWriteProperty write_mdpa_mode]
 }
 
 # Events
@@ -38,7 +39,8 @@ proc MPM::write::writeModelPartEvent { } {
     write::WriteString "End Properties"
 
     # Nodal coordinates
-    write::writeNodalCoordinates
+    set list_of_groups [concat [MPM::write::GetPartsGroups grid] [MPM::write::GetConditionsGroups] [MPM::write::GetNodalConditionsGroups]]
+    write::writeNodalCoordinatesOnGroups $list_of_groups
 
     # Grid element connectivities
     writeGridConnectivities
@@ -90,6 +92,17 @@ proc MPM::write::GetPartsGroups { part_type {what "name"} } {
     return $body_groups
 }
 
+proc ::MPM::write::GetUsedElements { {get "Objects"} } {
+    set lista [list ]
+    foreach gNode [MPM::write::GetPartsGroups Body node] {
+        set elem_name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+        set e [Model::getElement $elem_name]
+        if {$get eq "Name"} { set e [$e getName] }
+        lappend lista $e
+    }
+    return $lista
+}
+
 proc MPM::write::writeBodyNodalCoordinates { } {
     write::writeNodalCoordinatesOnGroups [MPM::write::GetPartsGroups Body]
 }
@@ -136,6 +149,32 @@ proc MPM::write::writeSubmodelparts { type } {
     }
 }
 
+proc MPM::write::GetConditionsGroups { } {
+    set xp1 "[spdAux::getRoute [GetAttribute conditions_un]]/condition/group"
+    set condition_groups [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set group_name [get_domnode_attribute $gNode n]
+        set good_group_name [write::GetWriteGroupName $group_name]
+        if {$good_group_name ne $condition_groups} {
+            lappend condition_groups $good_group_name
+        }    
+    }
+    return $condition_groups
+}
+
+proc MPM::write::GetNodalConditionsGroups { } {
+    set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition/group"
+    set condition_groups [list ]
+    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+        set group_name [get_domnode_attribute $gNode n]
+        set good_group_name [write::GetWriteGroupName $group_name]
+        if {$good_group_name ne $condition_groups} {
+            lappend condition_groups $good_group_name
+        }    
+    }
+    return $condition_groups
+}
+
 proc MPM::write::writeLoads { } {
     variable ConditionsDictGroupIterators
     set root [customlib::GetBaseRoot]
@@ -158,11 +197,13 @@ proc MPM::write::writeCustomFilesEvent { } {
     set new_mats [list ]
     foreach mat $mats_json {
         set type [dict exists $mat Material constitutive_law]
-        if {$type eq 0} {
-            set submodelpart [lindex [split [dict get $mat model_part_name] "."] end]
-            dict set mat model_part_name Background_Grid.$submodelpart
+#         if {$type eq 0} {
+#             set submodelpart [lindex [split [dict get $mat model_part_name] "."] end]
+#             dict set mat model_part_name Background_Grid.$submodelpart
+#         }
+        if {$type eq 1} {
+            lappend new_mats $mat
         }
-        lappend new_mats $mat
     }
     write::OpenFile [GetAttribute materials_file]
     write::WriteJSON [dict create properties $new_mats]

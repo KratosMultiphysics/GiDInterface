@@ -2,6 +2,11 @@
 proc PotentialFluid::write::writeParametersEvent { } {
     ## Get the base settings dictionary from the base application (Fluid)
     set projectParametersDict [Fluid::write::getParametersDict]
+    
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+
+    # Change analysis type to potential flow
+    dict set projectParametersDict analysis_stage "KratosMultiphysics.CompressiblePotentialFlowApplication.potential_flow_analysis"
 
     ## Remove unused entries
     # Remove gravity and initial conditions

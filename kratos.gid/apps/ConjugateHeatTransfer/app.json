@@ -23,7 +23,7 @@
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::ConjugateHeatTransfer::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Buoyancy"
         ],
@@ -38,7 +38,8 @@
     "write": {
         "coordinates": "groups",
         "properties_location": "json",
-        "model_part_name": "ThermalModelPart"
+        "model_part_name": "ThermalModelPart",
+        "write_mdpa_mode": "geometries"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"

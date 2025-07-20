@@ -14,6 +14,7 @@ namespace eval ::write {
     variable current_mdpa_indent_level
     variable formats_dict
     variable properties_exclusion_list
+    variable geometry_cnd_name
 }
 
 proc write::Init { } {
@@ -43,6 +44,9 @@ proc write::Init { } {
     set formats_dict [dict create]
     variable properties_exclusion_list
     set properties_exclusion_list [list "MID" "APPID" "ConstitutiveLaw" "Material" "Element"]
+
+    variable geometry_cnd_name
+    set geometry_cnd_name "-GEOMETRY-"
 }
 
 proc write::initWriteConfiguration {configuration} {
@@ -288,12 +292,18 @@ proc write::transformGroupName {groupid} {
 
 # Warning! Indentation must be set before calling here!
 proc write::GetFormatDict { groupid mid num} {
+    set s [mdpaIndent]
+
     variable formats_dict
     set id_f [dict get $formats_dict ID]
-    set mid_f [dict get $formats_dict MAT_ID]
 
-    set s [mdpaIndent]
-    set f "${s}$id_f [format $mid_f $mid] [string repeat "$id_f " $num]\n"
+    set mid_str ""
+    if {$mid ne ""} {
+        set mid_f [dict get $formats_dict MAT_ID]
+        set mid_str [format $mid_f $mid]
+    }
+    
+    set f "${s}$id_f $mid_str [string repeat "$id_f " $num]\n"
     return [dict create $groupid $f]
 }
 
@@ -365,9 +375,9 @@ proc write::getEtype {ov group} {
         if {[GiD_EntitiesGroups get $group elements -count -element_type Prism]} {
             if {$b} {error "Multiple element types in $group over $ov"}
             switch $isquadratic {
-                0 { set ret [list "Hexahedra" 6]  }
-                1 { set ret [list "Hexahedra" 1]  }
-                2 { set ret [list "Hexahedra" 27]  }
+                0 { set ret [list "Prism" 6]  }
+                1 { set ret [list "Prism" 1]  }
+                2 { set ret [list "Prism" 27]  }
             }
             set b 1
         }
@@ -410,13 +420,13 @@ proc write::GetNodesFromElementFace {elem_id face_id} {
     return $nodes
 }
 
-proc write::getPartsGroupsId {{what "name"} } {
+proc write::getPartsGroupsId {{what "name"} {stage ""} } {
     set root [customlib::GetBaseRoot]
 
     set listOfGroups [list ]
-    set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/group"
+    set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un] $stage]/group"
     if {[llength [$root selectNodes $xp1]] < 1} {
-        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un]]/condition/group"
+        set xp1 "[spdAux::getRoute [GetConfigurationAttribute parts_un] $stage]/condition/group"
     }
     set groups [$root selectNodes $xp1]
 
@@ -444,8 +454,8 @@ proc write::getPartsSubModelPartId {} {
     return $listOfGroups
 }
 
-proc write::writePartSubModelPart { } {
-    foreach group [getPartsGroupsId node] {
+proc write::writePartSubModelPart { {stage ""} } {
+    foreach group [getPartsGroupsId node $stage] {
         set part_name  [get_domnode_attribute [$group parent] n]
         set group_name [get_domnode_attribute $group n]
         writeGroupSubModelPart $part_name $group_name "Elements"
