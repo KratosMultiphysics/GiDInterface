@@ -10,8 +10,7 @@
         "KratosMappingApplication"
     ],
     "dimensions": [
-        "2D",
-        "3D"
+        "2D"
     ],
     "script_files": [
         "start.tcl",
