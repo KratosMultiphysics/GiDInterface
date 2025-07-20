@@ -9,6 +9,7 @@ proc Chimera::xml::Init { } {
     # Namespace variables inicialization
     Model::InitVariables dir $Chimera::dir
 
+    Model::getProcesses Process.xml 
     Model::getConditions Conditions.xml
     Model::getElements Elements.xml
     spdAux::processIncludes
