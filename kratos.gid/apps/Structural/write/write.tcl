@@ -6,6 +6,8 @@ namespace eval ::Structural::write {
     variable NodalConditionsGroup
     variable writeAttributes
     variable ContactsDict
+    variable base_root 
+    set base_root ""
 }
 
 proc ::Structural::write::Init { } {
@@ -37,6 +39,11 @@ proc ::Structural::write::Init { } {
     SetAttribute main_launch_file [::Structural::GetAttribute main_launch_file]
     SetAttribute model_part_name [::Structural::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::Structural::GetWriteProperty output_model_part_name]
+    SetAttribute write_mdpa_mode [::Structural::GetWriteProperty write_mdpa_mode]
+
+    
+    variable base_root 
+    set base_root ""
 }
 
 # MDPA Blocks
@@ -53,25 +60,42 @@ proc ::Structural::write::writeModelPartEvent { } {
     # Nodal coordinates (1: Print only Structural nodes <inefficient> | 0: the whole mesh <efficient>)
     if {[GetAttribute writeCoordinatesByGroups] ne "all"} {write::writeNodalCoordinatesOnParts} {write::writeNodalCoordinates}
 
-    # Element connectivities (Groups on STParts)
-    write::writeElementConnectivities
 
-    # Local Axes
-    Structural::write::writeLocalAxes
+    if {[GetAttribute write_mdpa_mode] eq "geometries"} {
+        variable base_root
+        # Write geometries
+        # Get the list of groups in the spd
+        set lista [spdAux::GetListOfSubModelParts $base_root]
+        
+        # Write the geometries
+        set ret [::write::writeGeometryConnectivities $lista]
 
-    # Hinges special section
-    Structural::write::writeHinges
+        # Write the submodelparts
+        set grouped_conditions [dict create]
+        foreach group $lista {
+            write::writeGroupSubModelPartAsGeometry [$group @n]
+        }
 
-    # Write Conditions section
-    Structural::write::writeConditions
-    
-    # Custom SubmodelParts
-    set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
-    set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
+    } else {
+        # Element connectivities (Groups on STParts)
+        write::writeElementConnectivities
 
-    # SubmodelParts
-    Structural::write::writeMeshes
+        # Local Axes
+        Structural::write::writeLocalAxes
 
+        # Hinges special section
+        Structural::write::writeHinges
+
+        # Write Conditions section
+        Structural::write::writeConditions
+        
+        # Custom SubmodelParts
+        set basicConds [write::writeBasicSubmodelParts [getLastConditionId]]
+        set ConditionsDictGroupIterators [dict merge $ConditionsDictGroupIterators $basicConds]
+
+        # SubmodelParts
+        Structural::write::writeMeshes
+    }
 }
 
 proc ::Structural::write::writeConditions { {stage ""} } {
@@ -249,13 +273,6 @@ proc ::Structural::write::writeHinges { } {
     # format for writing ids
     set id_f [dict get $write::formats_dict ID]
 
-    # Preprocess old_conditions. Each mesh linear element remembers the origin line in geometry
-    set match_dict [dict create]
-    foreach line [GiD_Info conditions relation_line_geo_mesh mesh] {
-        lassign $line E eid - geom_line
-        dict lappend match_dict $geom_line $eid
-    }
-
     # Process groups assigned to Hinges
     if {$::Model::SpatialDimension eq "3D"} {
         set xp1 "[spdAux::getRoute [GetAttribute nodal_conditions_un]]/condition\[@n = 'CONDENSED_DOF_LIST'\]/group"
@@ -297,9 +314,20 @@ proc ::Structural::write::writeHinges { } {
 
             # Write Left and Rigth end of each geometrical bar
             foreach geom_line [GiD_EntitiesGroups get $group lines] {
-                set linear_elements [dict get $match_dict $geom_line]
-                set first [::tcl::mathfunc::min {*}$linear_elements]
-                set end [::tcl::mathfunc::max {*}$linear_elements]
+                # ask the mesh for the linear elements of this line
+                # check https://gidsimulation.atlassian.net/wiki/spaces/GCM/pages/2385543949/Geometry
+                # set linear_elements [lindex [GiD_Geometry get line $geom_line mesh] 4]
+                # set first [::tcl::mathfunc::min {*}$linear_elements]
+                # set end [::tcl::mathfunc::max {*}$linear_elements]
+
+                lassign [lrange [GiD_Geometry get line $geom_line] 2 3] first_point end_point
+                set first [GiD_Geometry get point $first_point node] 
+                set end [GiD_Geometry get point $end_point node]
+                if {$first eq "" || $end eq ""} {
+                    W "Error: Line $geom_line has no nodes. Please make sure the mesh is attached to the geometry."
+                    continue
+                }
+
                 if {[llength $first_list] > 0} {
                     set value [join $first_list ,]
                     write::WriteString [format "$id_f \[%d\] (%s)" $first [llength $first_list] $value]

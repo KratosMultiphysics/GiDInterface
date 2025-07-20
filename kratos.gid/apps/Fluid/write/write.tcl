@@ -9,6 +9,7 @@ namespace eval ::Fluid::write {
     # after regular conditions are written, we need this number in order to print the custom submodelpart conditions
     # only if are applied over things that are not in the skin
     variable last_condition_iterator
+    variable base_root
 }
 
 proc ::Fluid::write::Init { } {
@@ -29,21 +30,18 @@ proc ::Fluid::write::Init { } {
     SetAttribute model_part_name [::Fluid::GetWriteProperty model_part_name]
     SetAttribute output_model_part_name [::Fluid::GetWriteProperty output_model_part_name]
     SetAttribute write_mdpa_mode [::Fluid::GetWriteProperty write_mdpa_mode]
-    # Only write as geometries if the app says it AND the user allows it
-    # Note: Fluid will enable it but most of the apps that derive from Fluid are not ready for it
-    # Also user can disable it by setting the variable experimental_write_geometries to 0 in the preferences window
-    set write_geometries_enabled 0
-    if {[info exists Kratos::kratos_private(experimental_write_geometries)] && $Kratos::kratos_private(experimental_write_geometries)>0} {set write_geometries_enabled 1}
-    if {[GetAttribute write_mdpa_mode] eq "geometries" && $write_geometries_enabled ne 1} {
-        SetAttribute write_mdpa_mode "entities"
-    }
     
     variable last_condition_iterator
     set last_condition_iterator 0
+
+    variable base_root 
+    set base_root ""
 }
 
 # MDPA write event
 proc ::Fluid::write::writeModelPartEvent { } {
+    variable base_root
+
     # Validation
     set err [Validate]
     if {$err ne ""} {error $err}
@@ -63,7 +61,7 @@ proc ::Fluid::write::writeModelPartEvent { } {
     if {[GetAttribute write_mdpa_mode] eq "geometries"} {
         # Write geometries
         # Get the list of groups in the spd
-        set lista [::Fluid::xml::GetListOfSubModelParts]
+        set lista [::Fluid::xml::GetListOfSubModelParts $base_root]
         
         # Write the geometries
         set ret [::write::writeGeometryConnectivities $lista]
@@ -81,7 +79,13 @@ proc ::Fluid::write::writeModelPartEvent { } {
             if {$condition ne "" && [$condition getGroupBy] eq "Condition"} {
                 dict lappend grouped_conditions $condition [$group @n]
             } else {
-                write::writeGroupSubModelPartAsGeometry [$group @n]
+                # Check topology in condition
+                set geoms 1
+                if {$condition ne "" && ![$condition hasTopologyFeatures]} {
+                    set geoms 0
+                }
+                write::writeGroupSubModelPartAsGeometry [$group @n] $geoms
+                
             }
         }
 
@@ -91,7 +95,11 @@ proc ::Fluid::write::writeModelPartEvent { } {
             set new_group_name "_HIDDEN_$condition_name"
             set groups [dict get $grouped_conditions $condition]
             set new_group [spdAux::MergeGroups $new_group_name $groups]
-            write::writeGroupSubModelPartAsGeometry $new_group_name 
+            set geoms 1
+            if {![$condition hasTopologyFeatures]} {
+                set geoms 0
+            }
+            write::writeGroupSubModelPartAsGeometry $new_group_name $geoms
             GiD_Groups delete $new_group_name
         }
 
@@ -133,11 +141,8 @@ proc Fluid::write::GetMaterialsFile { {write_const_law True} {include_modelpart_
     set model_part_name ""
     if {[write::isBooleanTrue $include_modelpart_name]} {set model_part_name [GetAttribute model_part_name]}
     set parts [write::getPropertiesJson [GetAttribute parts_un] $write_const_law $model_part_name]
-    set base [dict create model_part_name [GetAttribute model_part_name] properties_id 0 Material null]
-    set old_list [dict get $parts properties]
-    set new_list [concat [list $base] $old_list]
-    set result [dict create properties $new_list]
-    return $result
+
+    return $parts
 }
 
 proc ::Fluid::write::Validate {} {
@@ -206,17 +211,28 @@ proc ::Fluid::write::writeBoundaryConditions { } {
     spdAux::MergeGroups $skin_group_name $groups
     
     # Write the conditions
-    if {$::Model::SpatialDimension eq "3D"} {
-        set kname SurfaceCondition3D3N
-        set nnodes 3
-    } {
-        set kname LineCondition2D2N
-        set nnodes 2
-    }
+    lassign [write::_getConditionDefaultName] kname nnodes
     set last_condition_iterator [write::writeGroupConditionByUniqueId $skin_group_name $kname $nnodes 0 $::Fluid::write::FluidConditionMap]
     
     # Clean
     GiD_Groups delete $skin_group_name
+}
+
+proc ::Fluid::write::_getConditionDefaultName { } {
+    set is_quadratic [write::isquadratic]
+    if {$::Model::SpatialDimension eq "3D"} {
+
+        set nnodes 3
+        if {$is_quadratic} {set nnodes 6}
+        
+        set kname SurfaceCondition3D${nnodes}N
+    } {
+        set nnodes 2
+        if {$is_quadratic} {set nnodes 3}
+        set kname LineCondition2D${nnodes}N
+    }
+
+    return [list $kname $nnodes]
 }
 
 proc ::Fluid::write::writeDrags { } {
