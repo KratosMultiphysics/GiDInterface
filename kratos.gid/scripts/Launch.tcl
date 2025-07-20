@@ -175,7 +175,7 @@ proc Kratos::ShowErrorsAndActions {errs} {
             set py [Kratos::GetPythonExeName]
             set python_exe_path [Kratos::ManagePreferences GetValue python_path]
             W "Run the following command on the GiD Command line:"
-            W "-np- W \[GiD_Python_PipInstallMissingPackages \[list $Kratos::pip_packages_required \] \]"
+            W "-np- W \[GiD_Python_PipInstall \[list $Kratos::pip_packages_required \] 1 \]"
         }
         "DOCKER_NOT_FOUND" {
             W "Could not start docker. Please check if the Docker service is enabled."
