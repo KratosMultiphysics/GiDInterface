@@ -49,4 +49,17 @@ proc ::PfemSw::xml::CustomTree { args } {
 
     PfemSw::write::UpdateUniqueNames PfemSw
     apps::setActiveAppSoft PfemSw
+
+
+    
+    # remove Nodal results from PFEM Fluid Data / Results / Nodal Results
+    set pfem_base_root [[customlib::GetBaseRoot] selectNodes "//container\[@n = 'PfemFluid'\]"]
+    set pfem_nodal_results_node [$pfem_base_root selectNodes "//container\[@un = 'NodalResults'\]"]
+
+    set pfem_nodal_results_delete_list [list "InitialWaterLevel" "InitialPerturbation" "Topography" "MOMENTUM" "FREE_SURFACE_ELEVATION" "INLET" "ANGULAR_VELOCITY"]
+    foreach name $pfem_nodal_results_delete_list {
+        set result_node [$pfem_nodal_results_node selectNodes "./value\[@n = '$name'\]"]
+        if {$result_node ne "" } {$result_node setAttribute "state" "hidden"}
+        if {$result_node ne "" } {$result_node setAttribute "v" "No"}
+    }
 }
