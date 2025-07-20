@@ -32,7 +32,7 @@ jobs:
 
       - name: Install bins
         run: |
-          pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==10.2.1
+          pip install --upgrade --force-reinstall --no-cache-dir KratosMultiphysics-all==10.3.0
 
       # Copy problemtype to gid and copy exec
       - name: Move kratos where it should be
