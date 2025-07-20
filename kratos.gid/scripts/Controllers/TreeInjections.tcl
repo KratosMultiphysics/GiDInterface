@@ -4,7 +4,7 @@
 proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     set root [customlib::GetBaseRoot]
-    #W "$field $value $name $it"
+    # W "$field $value $unique_name $it"
     set node ""
 
     set xp [spdAux::getRoute $unique_name]
@@ -15,8 +15,6 @@ proc spdAux::SetValueOnTreeItem { field value unique_name {it "" } } {
 
     if {$node ne ""} {
         gid_groups_conds::setAttributes [$node toXPath] [list $field $value]
-    } {
-        error "$name $it not found - Check GetFromXML.tcl file"
     }
 }
 
@@ -29,7 +27,8 @@ proc spdAux::SetValuesOnBaseNode {base_path prop_value_pairs} {
     foreach {prop val} $prop_value_pairs {
         set propnode [$base_path selectNodes "./value\[@n = '$prop'\]"]
         if {$propnode ne "" } {
-            $propnode setAttribute v $val
+            gid_groups_conds::modify_value_node $propnode $val
+            # $propnode setAttribute v $val
             catch {get_domnode_attribute $propnode dict}
         } else {
             W "Warning - Couldn't find property $prop"
@@ -225,6 +224,9 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
         set um [$cnd getAttribute "unit_magnitude"]
         set processName [$cnd getProcessName]
 
+        set icon [$cnd getAttribute "icon"]
+        if {$icon eq ""} {set icon "shells16"}
+
         set process [::Model::GetProcess $processName]
         if {$process eq ""} {error [= "Condition %s can't find its process: %s" $n $processName]}
         set check [$process getAttribute "check"]
@@ -238,7 +240,7 @@ proc spdAux::_injectCondsToTree {basenode cond_list {cond_type "normal"} args } 
         if {[$cnd getAttribute Groups] ne ""} {
             set allow_group_creation "allow_group_creation='0' groups_list='\[[$cnd getAttribute Groups]\]'"
         }
-        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='shells16' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check' $allow_group_creation>"
+        set node "<condition n='$n' pn='$pn' ov='$etype' ovm='' icon='$icon' help='$help' state='\[$state\]' update_proc='\[OkNewCondition\]' check='$check' $allow_group_creation>"
         set symbol_data [$cnd getSymbol]
         if { [llength $symbol_data] } {
             set txt "<symbol"
@@ -315,7 +317,12 @@ proc spdAux::GetParameterValueString { param forcedParams base} {
         }
         switch $type {
             "inline_vector" {
-                set ndim [string index $::Model::SpatialDimension 0]
+                set param_ndim [$param getAttribute "dimension"]
+                if {$param_ndim eq ""} {
+                    set ndim [string index $::Model::SpatialDimension 0]
+                } else {
+                    set ndim $param_ndim
+                }
                 if {[string is double $v]} {
                     set v [string repeat "${v}," $ndim]
                 }
@@ -672,6 +679,13 @@ proc spdAux::injectNodalConditionsOutputs { basenode args} {
     set args {*}$args
     return [spdAux::injectNodalConditionsOutputs_do $basenode $args]
 }
+
+proc spdAux::injectNodalConditionsOutputsNonhistorical { basenode args} {
+    set args {*}$args
+    return [spdAux::injectNodalConditionsOutputsNonhistorical_do $basenode $args]
+}
+
+
 proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
     set base [$basenode parent]
     set args {*}$args
@@ -682,6 +696,12 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
         set nodal_conditions [::Model::GetNodalConditions $args]
     }
     foreach nc $nodal_conditions {
+
+        if {[write::isBooleanFalse [$nc getAttribute is_historical]]} {
+            # Variables are historical by default for backwards compatibility purposes
+            continue
+        }
+
         set n [$nc getName]
         set pn [$nc getPublicName]
         set v [$nc getAttribute v]
@@ -702,6 +722,44 @@ proc spdAux::injectNodalConditionsOutputs_do { basenode args} {
     }
     $basenode delete
 }
+
+proc spdAux::injectNodalConditionsOutputsNonhistorical_do { basenode args} {
+    set base [$basenode parent]
+    set args {*}$args
+
+    if {$args eq ""} {
+        set nodal_conditions [::Model::getAllNodalConditions]
+    } {
+        set nodal_conditions [::Model::GetNodalConditions $args]
+    }
+    foreach nc $nodal_conditions {
+
+        if {[$nc getAttribute is_historical] ne "False"} {
+            # Variables are historical by default for backwards compatibility purposes
+            continue
+        }
+
+        set n [$nc getName]
+        set pn [$nc getPublicName]
+        set v [$nc getAttribute v]
+        if {$v eq ""} {set v "Yes"}
+
+        set state [$nc getAttribute state]
+        if {$state eq ""} {set state "CheckNodalConditionState"}
+        set node "<value n='$n' pn='$pn' v='$v' values='Yes,No' state='\[$state $n\]'/>"
+        $base appendXML $node
+        foreach {n1 output} [$nc getOutputs] {
+            set nout [$output getName]
+            set pn [$output getPublicName]
+            set v [$output getAttribute v]
+            if {$v eq ""} {set v "Yes"}
+            set node "<value n='$nout' pn='$pn' v='$v' values='Yes,No' state='\[CheckNodalConditionOutputState $n\]'/>"
+            $base appendXML $node
+        }
+    }
+    $basenode delete
+}
+
 
 proc spdAux::GetBooleanForTree {raw} {
     set goodList [list "Yes" "1" "yes" "ok" "YES" "Ok" "True" "TRUE" "true"]
@@ -793,7 +851,7 @@ proc spdAux::CheckAnyPartState {domNode {parts_uns ""}} {
         lappend parts_uns [apps::getAppUniqueName $nodeApp Parts]
     }
     foreach parts_un $parts_uns {
-        set parts_path [spdAux::getRoute $parts_un]
+        set parts_path [spdAux::getRoute $parts_un $domNode]
         if {$parts_path ne ""} {
             set parts_base [[customlib::GetBaseRoot] selectNodes $parts_path]
             lappend parts {*}[$parts_base getElementsByTagName group]
@@ -802,23 +860,24 @@ proc spdAux::CheckAnyPartState {domNode {parts_uns ""}} {
     if {[llength $parts] > 0} {return true} {return false}
 }
 
-proc spdAux::SolStratParamState {outnode} {
+proc spdAux::SolStratParamState {domNode} {
 
     set root [customlib::GetBaseRoot]
-    set nodeApp [GetAppIdFromNode $outnode]
+    set nodeApp [GetAppIdFromNode $domNode]
 
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
+    set xpath [spdAux::getRoute $sol_stratUN $domNode]
 
-    if {[get_domnode_attribute [$root selectNodes [spdAux::getRoute $sol_stratUN]] v] eq ""} {
-        get_domnode_attribute [$root selectNodes [spdAux::getRoute $sol_stratUN]] dict
+    if {[get_domnode_attribute [$root selectNodes $xpath] v] eq ""} {
+        get_domnode_attribute [$root selectNodes $xpath] dict
     }
-    set SolStrat [::write::getValue $sol_stratUN]
+    set SolStrat [::write::getValueByXPath $xpath]
 
-    set paramName [$outnode @n]
+    set paramName [$domNode @n]
     set ret [::Model::CheckSolStratInputState $SolStrat $paramName]
     if {$ret} {
         lassign [Model::GetSolStratParamDep $SolStrat $paramName] depN depV
-        foreach node [[$outnode parent] childNodes] {
+        foreach node [[$domNode parent] childNodes] {
             if {[$node @n] eq $depN} {
                 if {[get_domnode_attribute $node v] ni $depV} {
                     set ret 0
@@ -830,10 +889,10 @@ proc spdAux::SolStratParamState {outnode} {
     return $ret
 }
 
-proc spdAux::SchemeParamState {outnode} {
+proc spdAux::SchemeParamState {domNode} {
 
     set root [customlib::GetBaseRoot]
-    set nodeApp [GetAppIdFromNode $outnode]
+    set nodeApp [GetAppIdFromNode $domNode]
 
     set sol_stratUN [apps::getAppUniqueName $nodeApp SolStrat]
     set schemeUN [apps::getAppUniqueName $nodeApp Scheme]
@@ -847,7 +906,7 @@ proc spdAux::SchemeParamState {outnode} {
     set SolStrat [::write::getValue $sol_stratUN]
     set Scheme [write::getValue $schemeUN]
 
-    set paramName [$outnode @n]
+    set paramName [$domNode @n]
     return [::Model::CheckSchemeInputState $SolStrat $Scheme $paramName]
 }
 
@@ -951,16 +1010,25 @@ proc spdAux::injectPartsByElementType {domNode args} {
 
     foreach element [Model::GetElements {*}$args] {
         if {[$element hasAttribute ElementType]} {
-            dict lappend element_types [$element getAttribute ElementType] $element
+            dict lappend element_types [$element getAttribute ElementType] elements $element
+            if {[$element hasAttribute pElementType]} {
+                dict set element_types [$element getAttribute ElementType] name [$element getAttribute pElementType]
+            } else {
+                dict set element_types [$element getAttribute ElementType] name [string map {_ " "} [$element getAttribute ElementType]]
+            }
+            
         }
     }
 
     foreach element_type [dict keys $element_types] {
-        set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type] ov]
+        set element_type_public_name [dict get $element_types $element_type name]
+
+        set ov [spdAux::GetElementsCommonPropertyValues [dict get $element_types $element_type elements] ov]
         if {[llength $ov] == 0} {set ov "point,line,surface,volume"}
         set ovm "node,element"
+        set element_type_pn $element_type_public_name
         #if {[lsearch $ov point] != -1 && [lsearch $ov Point] != -1 } {set ovm "node,element"}
-        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
+        set condition_string "<condition n=\"Parts_${element_type}\" pn=\"${element_type_pn}\" ov=\"$ov\" ovm=\"$ovm\" icon=\"shells16\" help=\"Select your group\" update_proc=\"UpdateParts\">
             <value n=\"Element\" pn=\"Element\" actualize_tree=\"1\" values=\"\" v=\"\" dict=\"\[GetElements ElementType $element_type\]\" state=\"normal\" >
                     <dependencies node=\"../value\[@n!='Material'\]\" actualize=\"1\" />
             </value>

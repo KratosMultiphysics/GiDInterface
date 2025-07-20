@@ -1,7 +1,7 @@
 namespace eval ::DEM::xml {
     namespace path ::DEM
     Kratos::AddNamespace [namespace current]
-    
+
     variable dir
 }
 
@@ -36,17 +36,17 @@ proc ::DEM::xml::CustomTree { args } {
         }
     }
 
-    set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='Element'\]"
-    gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden dict {[GetElements ElementType DEM]} ]
-    set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='AdvancedMeshingFeatures'\]"
-    gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden ]
+    # set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='Element'\]"
+    # gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden dict {[GetElements ElementType DEM]} ]
+    # set custom_smp_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='DEM-CustomSmp'\]/value\[@n='AdvancedMeshingFeatures'\]"
+    # gid_groups_conds::setAttributes $custom_smp_xpath [list state hidden ]
 
     # Inlet 2D or 3D special parameters
     set 3dinlet_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='Inlet'\]/value\[@n='InletElementType'\]"
     gid_groups_conds::setAttributes $3dinlet_xpath [list values "SphericParticle3D,Cluster3D,SingleSphereCluster" ]
     set 2dinlet_xpath "[spdAux::getRoute DEMConditions]/condition\[@n='Inlet2D'\]/value\[@n='InletElementType'\]"
     gid_groups_conds::setAttributes $2dinlet_xpath [list values "CylinderParticle2D" ]
-    
+
 
     # spdAux::parseRoutes
     spdAux::processDynamicNodes [customlib::GetBaseRoot]
@@ -104,7 +104,7 @@ proc ::DEM::xml::InertiaType { args } {
 }
 
 proc ::DEM::xml::injectMaterialRelations { basenode args } {
-    
+
     set base [$basenode parent]
     set materials_relations [Model::GetMaterialRelations {*}$args]
     foreach mat $materials_relations {

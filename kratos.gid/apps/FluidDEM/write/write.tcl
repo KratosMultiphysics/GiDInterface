@@ -21,6 +21,8 @@ proc FluidDEM::write::writeModelPartEvent { } {
     set filename [Kratos::GetModelName]
 
     Fluid::write::Init
+    # Fluid has implemented the geometry mode, but we do not use it yet in inherited apps
+    ::Fluid::write::SetAttribute write_mdpa_mode [::FluidDEM::GetWriteProperty write_mdpa_mode]
     Fluid::write::InitConditionsMap
     Fluid::write::SetCoordinatesByGroups 1
     write::writeAppMDPA Fluid

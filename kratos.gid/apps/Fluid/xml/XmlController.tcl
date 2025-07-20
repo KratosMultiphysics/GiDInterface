@@ -8,7 +8,6 @@ namespace eval ::Fluid::xml {
 
 proc ::Fluid::xml::Init { } {
     # Namespace variables inicialization
-    variable dir
     Model::InitVariables dir $::Fluid::dir
 
     Model::getSolutionStrategies Strategies.xml
@@ -70,7 +69,6 @@ proc ::Fluid::xml::CreateNewInlet { base_group_name {interval_data {new true nam
     set interval_name [dict get $interval_data name]
     if {[write::isBooleanTrue [dict get $interval_data new]]} {
         spdAux::CreateInterval $interval_name [dict get $interval_data ini] [dict get $interval_data end]
-
     }
     GiD_Groups create "$base_group_name//$interval_name"
     GiD_Groups edit state "$base_group_name//$interval_name" hidden
@@ -111,4 +109,20 @@ proc ::Fluid::xml::ClearInlets { delete_groups {fluid_conditions_UN FLBC} {inlet
 proc ::Fluid::xml::ProcHideIfElement { domNode list_elements } {
     set element [lindex [Fluid::write::GetUsedElements] 0]
     if {$element in $list_elements} {return hidden} {return normal}
+}
+
+proc ::Fluid::xml::UpdateParts {domNode args} {
+    set childs [$domNode getElementsByTagName group]
+    if {[llength $childs] > 1} {
+        foreach group [lrange $childs 1 end] {$group delete}
+        gid_groups_conds::actualize_conditions_window
+        error "You can only set one part"
+    }
+}
+
+proc ::Fluid::xml::GetListOfSubModelParts { {stage ""} } {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//condition/group"]
+    return $all_raw
 }

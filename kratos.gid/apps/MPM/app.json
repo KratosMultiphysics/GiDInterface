@@ -3,9 +3,9 @@
     "name": "MPM",
     "prefix": "MPM",
     "themed": false,
-    "kratos_name": "ParticleMechanicsApplication",
+    "kratos_name": "MPMApplication",
     "python_packages": [
-        "KratosParticleMechanicsApplication",
+        "KratosMPMApplication",
         "KratosLinearSolversApplication"
     ],
     "dimensions": [
@@ -16,13 +16,16 @@
     "script_files": [
         "start.tcl",
         "examples/examples.tcl",
+        "examples/StaticCantileverBeam.tcl",
+        "examples/CantileverBeam.tcl",
         "examples/FallingSandBall.tcl",
+        "examples/GranularFlow.tcl",
         "xml/XmlController.tcl",
         "write/write.tcl",
         "write/writeProjectParameters.tcl"
     ],
     "start_script": "::MPM::Init",
-    "requeriments": {
+    "requirements": {
         "apps": [
             "Structural"
         ],
@@ -31,7 +34,7 @@
     "permissions": {
         "open_tree": true,
         "show_toolbar": true,
-        "intervals": true,
+        "intervals": false,
         "wizard": false
     },
     "unique_names": {
@@ -43,7 +46,8 @@
         "coordinates": "all",
         "materials_file": "ParticleMaterials.json",
         "properties_location": "json",
-        "model_part_name": "Background_Grid"
+        "model_part_name": "Background_Grid",
+        "write_mdpa_mode": "entities"
     },
     "main_launch_file": "../../exec/MainKratos.py",
     "examples": "examples/examples.xml"

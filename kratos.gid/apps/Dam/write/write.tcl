@@ -8,12 +8,12 @@ namespace eval ::Dam::write {
 
     variable ThermalSubModelPartDict
 
-    # Variable global definida al principio y utilizada para transferir entre procesos el número de tablas existentes
+    # Global variable defined at the beginning and used to transfer between processes the number of existing tables
     variable number_tables
 }
 
 proc ::Dam::write::Init { } {
-    # Namespace variables inicialization
+    # Namespace variables initialization
     variable ConditionsDictGroupIterators
     variable NodalConditionsGroup
     set ConditionsDictGroupIterators [dict create]
@@ -67,12 +67,30 @@ proc ::Dam::write::UpdateMaterials { } {
     set matdict [write::getMatDict]
     foreach {mat props} $matdict {
         set constlaw [dict get $props ConstitutiveLaw]
-        # Modificar la ley constitutiva
+        # Modify constitutive law
         set newconstlaw $constlaw
-        if {$constlaw eq "BilinearCohesive2DPlaneStress"} {set newconstlaw "BilinearCohesive2DLaw"}
-        if {$constlaw eq "BilinearCohesive2DPlaneStrain"} {
-            dict set matdict $mat THICKNESS  1.0000E+00
-            set newconstlaw "BilinearCohesive2DLaw"
+        if {$constlaw eq "ElasticCohesive3DLaw"} {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  0.0
+        }
+        if {$constlaw eq "ElasticCohesive2DPlaneStrain"} {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  0.0
+            dict set matdict $mat THICKNESS  1.0
+            set newconstlaw "ElasticCohesive2DLaw"
+        }
+        if {$constlaw eq "ElasticCohesive2DPlaneStress"} {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  0.0
+            dict set matdict $mat THICKNESS  1.0
+            set newconstlaw "ElasticCohesive2DLaw"
+        }
+        if {$constlaw eq "IsotropicDamageCohesive2DPlaneStress"}  {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  0.0
+            dict set matdict $mat THICKNESS  1.0
+            set newconstlaw "IsotropicDamageCohesive2DLaw"
+        }
+        if {$constlaw eq "IsotropicDamageCohesive2DPlaneStrain"} {
+            dict set matdict $mat INITIAL_JOINT_WIDTH  0.0
+            dict set matdict $mat THICKNESS  1.0
+            set newconstlaw "IsotropicDamageCohesive2DLaw"
         }
 
         dict set matdict $mat CONSTITUTIVE_LAW_NAME $newconstlaw
@@ -105,10 +123,10 @@ proc ::Dam::write::writeMeshes { } {
         Dam::write::ThermalSubModelPart
     }
 
-    # Solo Malla , no en conditions
+    # Only mesh, not in the condition
     writeNodalConditions [GetAttribute nodal_conditions_un]
 
-    # A Condition y a meshes-> salvo lo que no tenga topologia
+    # To conditions and to meshes-> unless it does not have a topology
     writeLoads [GetAttribute conditions_un]
     writeLoads [GetAttribute thermal_conditions_un]
     writeLoads [GetAttribute nodal_conditions_un]
@@ -203,6 +221,7 @@ proc ::Dam::write::writeTables { } {
     set printed_tables [list ]
     foreach table [GetPrinTables] {
         lassign $table tableid fileid condid groupid valueid
+        set groupid [write::GetWriteGroupName $groupid]
         dict set TableDict $condid $groupid $valueid tableid $tableid
         dict set TableDict $condid $groupid $valueid fileid $fileid
         if {$tableid ni $printed_tables} {
@@ -247,8 +266,8 @@ proc ::Dam::write::GetPrinTables {} {
 
     set root [customlib::GetBaseRoot]
     if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]}
-    set listaTablas [list ]
-    set listaFiles [list ]
+    set tableid_list [list ]
+    set files_list [list ]
     set num 0
     set origins [list [GetAttribute conditions_un] [GetAttribute thermal_conditions_un] [GetAttribute nodal_conditions_un] "DamSelfweight"]
     foreach unique_name $origins {
@@ -260,31 +279,31 @@ proc ::Dam::write::GetPrinTables {} {
             set condid [get_domnode_attribute [[$node parent] parent] n]
             # W $fileid
             if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
-                if {$fileid ni $listaFiles} {
-                    lappend listaFiles $fileid
+                if {$fileid ni $files_list} {
+                    lappend files_list $fileid
                     incr num
                     set tableid $num
                 } else {
                     set tableid 0
-                    foreach table $listaTablas {
+                    foreach table $tableid_list {
                         lassign $table tableid2 fileid2 condid2 groupid2 valueid2
                         if {$fileid2 eq $fileid} {set tableid $tableid2; break}
                     }
                 }
                 #W "$tableid $fileid $condid $groupid $valueid"
-                lappend listaTablas [list $tableid $fileid $condid $groupid $valueid]
+                lappend tableid_list [list $tableid $fileid $condid $groupid $valueid]
             }
         }
     }
-    return $listaTablas
+    return $tableid_list
 }
 
 proc ::Dam::write::GetPrinTables_dev { } {
 
     set root [customlib::GetBaseRoot]
     if {$Kratos::kratos_private(UseFiles) eq 1} {FileSelector::CopyFilesIntoModel [file join [GiD_Info project ModelName] ".gid"]}
-    set listaTablas2 [list ]
-    set listaFiles2 [list ]
+    set tableid_list2 [list ]
+    set files_list2 [list ]
     set num [llength [GetPrinTables]]
 
     set path_devices "[spdAux::getRoute DamTempDevice]/blockdata\[@n='device'\]"
@@ -297,22 +316,22 @@ proc ::Dam::write::GetPrinTables_dev { } {
         set fileid [write::getValueByNode $node_table_device]
 
         if {$fileid ni [list "" "- No file" $::spdAux::no_file_string]} {
-            if {$fileid ni $listaFiles2} {
-                lappend listaFiles2 $fileid
+            if {$fileid ni $files_list2} {
+                lappend files_list2 $fileid
                 incr num
                 set tableid $num
             } else {
                 set tableid 0
-                foreach table $listaTablas2 {
+                foreach table $tableid_list2 {
                     lassign $table tableid2 fileid2
                     if {$fileid2 eq $fileid} {set tableid $tableid2; break}
                 }
             }
             #W "$tableid $fileid $condid $groupid $valueid"
-            lappend listaTablas2 [list $tableid $fileid]
+            lappend tableid_list2 [list $tableid $fileid]
         }
     }
-    return $listaTablas2
+    return $tableid_list2
 }
 
 #-------------------------------------------------------------------------------
@@ -348,7 +367,7 @@ proc ::Dam::write::writeThermalElements {} {
         Dam::write::writeThermalConnectivities [lindex $ThermalGroups $i] hexahedra EulerianConvDiff3D8N "Dam::write::Hexahedron3D8Connectivities" ElementId ElementList
 
         dict set ThermalSubModelPartDict [lindex $ThermalGroups $i] Elements $ElementList
-        # Añado guiones bajos donde hay espacios en los nombres de los submodelparts.
+        # Replace spaces with underscoresn the submodelpart names
         set old_name_SubModelPart "Thermal_[lindex $ThermalGroups $i]"
         set new_name_SubModelPart [string map {" " "_"} $old_name_SubModelPart]
         dict set ThermalSubModelPartDict [lindex $ThermalGroups $i] SubModelPartName $new_name_SubModelPart

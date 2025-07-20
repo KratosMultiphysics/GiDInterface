@@ -22,11 +22,23 @@ proc ::ConjugateHeatTransfer::write::getParametersDict { } {
     # processes
     dict set projectParametersDict processes [ConjugateHeatTransfer::write::GetProcessList]
 
+    # modelers
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+    set projectParametersDict [::ConjugateHeatTransfer::write::PlaceMDPAImports $projectParametersDict]
+    set projectParametersDict [::ConjugateHeatTransfer::write::ModelersPrefix $projectParametersDict]
+
+    dict unset projectParametersDict solver_settings model_import_settings
+
     return $projectParametersDict
 }
 
 proc ::ConjugateHeatTransfer::write::writeParametersEvent { } {
-    set projectParametersDict [getParametersDict]
+    try {
+        set projectParametersDict [getParametersDict]
+    } on error {errorMsg} {
+        apps::setActiveAppSoft ConjugateHeatTransfer
+        error $errorMsg
+    }
     write::SetParallelismConfiguration
     write::WriteJSON $projectParametersDict
 }
@@ -41,15 +53,9 @@ proc ::ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set filename [Kratos::GetModelName]
 
     # Prepare the solver strategies
-    # Buoyancy Fluid > model_import_settings -> mdpa fluid
-    dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings fluid_solver_settings model_import_settings input_filename "${filename}_[GetAttribute fluid_mdpa_suffix]"
-    # Buoyancy Thermic > model_import_settings -> none
-    dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_import_settings input_filename "use_input_model_part"
-    dict unset ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_import_settings input_type
+    dict unset ConjugateHeatTransfer::write::fluid_domain_solver_settings model_import_settings
     # Buoyancy Thermic > model_part_name
     dict set ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings thermal_solver_settings model_part_name "FluidThermalModelPart"
-    # Solid Thermic > Modelpart name -> mdpa solid
-    dict set ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings model_import_settings input_filename "${filename}_[GetAttribute solid_mdpa_suffix]"
 
     dict set solver_settings_dict fluid_domain_solver_settings [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings solver_settings]
     dict set solver_settings_dict solid_domain_solver_settings thermal_solver_settings [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings solver_settings]
@@ -58,7 +64,7 @@ proc ::ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     set solid_interfaces_list_raw [write::GetSubModelPartFromCondition CNVDFFBC SolidThermalInterface$::Model::SpatialDimension]
     set fluid_interfaces_list_raw [write::GetSubModelPartFromCondition Buoyancy_CNVDFFBC FluidThermalInterface$::Model::SpatialDimension]
     foreach solid_interface $solid_interfaces_list_raw {lappend solid_interfaces_list [join [list ThermalModelPart $solid_interface] "."]}
-    foreach fluid_interface $fluid_interfaces_list_raw {lappend fluid_interfaces_list [join [list FluidModelPart $fluid_interface] "."]}
+    foreach fluid_interface $fluid_interfaces_list_raw {lappend fluid_interfaces_list [join [list FluidThermalModelPart $fluid_interface] "."]}
 
     set coupling_settings [dict create]
     dict set coupling_settings max_iteration [write::getValue CHTGeneralParameters max_iteration]
@@ -67,6 +73,8 @@ proc ::ConjugateHeatTransfer::write::GetSolverSettingsDict {} {
     dict set coupling_settings solid_interfaces_list $solid_interfaces_list
     dict set solver_settings_dict coupling_settings $coupling_settings
 
+    dict unset solver_settings_dict fluid_domain_solver_settings model_import_settings
+
     return $solver_settings_dict
 }
 
@@ -74,7 +82,8 @@ proc ::ConjugateHeatTransfer::write::GetProcessList { } {
     set processes [dict create]
 
     # Get and add fluid processes
-    dict set processes fluid_constraints_process_list [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings processes constraints_process_list]
+    set fluid_constraints_process_list [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings processes constraints_process_list]
+    dict set processes fluid_constraints_process_list [::ConjugateHeatTransfer::write::TransformFluidProcess $fluid_constraints_process_list]
 
     # Get and add solid processes
     dict set processes solid_initial_conditions_process_list [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes initial_conditions_process_list]
@@ -82,28 +91,6 @@ proc ::ConjugateHeatTransfer::write::GetProcessList { } {
     dict set processes solid_list_other_processes [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings processes list_other_processes]
 
     return $processes
-}
-
-
-proc write::GetDefaultOutputProcessDict { {appid ""} } {
-    # Output process must be placed inside json lists
-    set gid_output_process_list [list ]
-    set need_gid [write::getValue EnableGiDOutput]
-    if {[write::isBooleanTrue $need_gid]}  {
-        lappend gid_output_process_list [write::GetDefaultGiDOutput $appid]
-    }
-
-    set vtk_output_process_list [list ]
-    set need_vtk [write::getValue EnableVtkOutput]
-    if {[write::isBooleanTrue $need_vtk]} {
-        lappend vtk_output_process_list [write::GetDefaultVTKOutput $appid]
-    }
-
-    set outputProcessesDict [dict create]
-    dict set outputProcessesDict gid_output $gid_output_process_list
-    dict set outputProcessesDict vtk_output $vtk_output_process_list
-
-    return $outputProcessesDict
 }
 
 proc ::ConjugateHeatTransfer::write::GetOutputProcessesList { } {
@@ -134,7 +121,7 @@ proc ::ConjugateHeatTransfer::write::GetOutputProcessesList { } {
 
     set need_vtk [write::getValue EnableVtkOutput]
     if {[write::isBooleanTrue $need_vtk]} {
-    # Set a different output_name for the fluid and solid domains
+        # Set a different output_name for the fluid and solid domains
         set fluid_output [lindex [dict get $ConjugateHeatTransfer::write::fluid_domain_solver_settings output_processes vtk_output] 0]
         set solid_output [lindex [dict get $ConjugateHeatTransfer::write::solid_domain_solver_settings output_processes vtk_output] 0]
 
@@ -164,7 +151,8 @@ proc ::ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     ::ConvectionDiffusion::write::SetAttribute conditions_un Buoyancy_CNVDFFBC
     ::ConvectionDiffusion::write::SetAttribute thermal_bc_un Buoyancy_CNVDFFBC
     ::ConvectionDiffusion::write::SetAttribute model_part_name FluidThermalModelPart
-    set ConjugateHeatTransfer::write::fluid_domain_solver_settings [Buoyancy::write::getParametersDict]
+    set buoyancy_stage [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute CHTBuoyancy]]
+    set ConjugateHeatTransfer::write::fluid_domain_solver_settings [Buoyancy::write::getParametersDict $buoyancy_stage]
 
     # Heating section
     apps::setActiveAppSoft ConvectionDiffusion
@@ -173,7 +161,104 @@ proc ::ConjugateHeatTransfer::write::InitExternalProjectParameters { } {
     ::ConvectionDiffusion::write::SetAttribute model_part_name ThermalModelPart
     ::ConvectionDiffusion::write::SetAttribute thermal_bc_un CNVDFFBC
     write::initWriteConfiguration [ConvectionDiffusion::write::GetAttributes]
-    set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict]
+    set heating_stage [[customlib::GetBaseRoot] selectNodes [spdAux::getRoute CHTCNVDFF]]
+    set ConjugateHeatTransfer::write::solid_domain_solver_settings [ConvectionDiffusion::write::getParametersDict $heating_stage]
 
     apps::setActiveAppSoft ConjugateHeatTransfer
+}
+
+proc ::ConjugateHeatTransfer::write::PlaceMDPAImports { projectParametersDict } {
+    variable mdpa_files
+
+    set new_modelers [list]
+
+    set modelers [dict get $projectParametersDict modelers]
+    # remove the modelers that import the mdpa files (name = Modelers.KratosMultiphysics.ImportMDPAModeler)
+    set modelers [lsearch -all -inline -not -glob $modelers *ImportMDPAModeler*]
+    lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" parameters [dict create input_filename [lindex $mdpa_files 0] model_part_name "FluidModelPart"]]
+    lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" parameters [dict create input_filename [lindex $mdpa_files 1] model_part_name "ThermalModelPart"]]
+    lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ConnectivityPreserveModeler" parameters [dict create origin_model_part_name "FluidModelPart" destination_model_part_name "FluidThermalModelPart"]]
+    set modelers [concat $new_modelers $modelers]
+    dict set projectParametersDict modelers $modelers
+    return $projectParametersDict
+}
+
+proc ::ConjugateHeatTransfer::write::ModelersPrefix { projectParametersDict } {
+    set modelers [dict get $projectParametersDict modelers]
+    set new_modelers [list]
+    set thermal_modelparts [dict get $projectParametersDict solver_settings solid_domain_solver_settings thermal_solver_settings processes_sub_model_part_list]
+    # W "Thermal modelparts: $thermal_modelparts"
+    set fluid_modelparts [dict get $projectParametersDict solver_settings fluid_domain_solver_settings fluid_solver_settings skin_parts]
+    lappend fluid_modelparts [dict get $projectParametersDict solver_settings fluid_domain_solver_settings fluid_solver_settings no_skin_parts]
+    # W "Fluid modelparts: $fluid_modelparts"
+    set fluid_thermal_modelparts [dict get $projectParametersDict solver_settings fluid_domain_solver_settings thermal_solver_settings processes_sub_model_part_list]
+    # W "Fluid thermal modelparts: $fluid_thermal_modelparts"
+    foreach modeler $modelers {
+        set name [dict get $modeler name]
+        if {[string match "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler" $name]} {
+            set new_parameters [dict create]
+            set new_modeler [dict create name $name parameters [dict create elements_list [dict create] conditions_list [dict create]]]
+            set new_element_list [list ]
+            foreach element [dict get $modeler parameters elements_list] {
+                set model_part_name [dict get $element model_part_name]
+                set raw_name [lindex [split $model_part_name "."] 1]
+
+                if {$raw_name in $thermal_modelparts} {
+                    set new_element $element
+                    lappend new_element_list $new_element
+                } else {
+                    set new_element [dict create model_part_name "FluidModelPart.$raw_name" element_name [dict get $element element_name]]
+                    set new_element2 [dict create model_part_name "FluidThermalModelPart.$raw_name" element_name [dict get $element element_name]]
+                    lappend new_element_list $new_element
+                    lappend new_element_list $new_element2
+                }
+                dict set new_parameters elements_list $new_element_list
+            }
+            set new_conditions_list [list ]
+            set cond_submodelpart [list ]
+            foreach condition [dict get $modeler parameters conditions_list] {
+                set model_part_name [dict get $condition model_part_name]
+                set raw_name [lindex [split $model_part_name "."] 1]
+                if {$raw_name in $thermal_modelparts} {
+                    set new_condition [dict create model_part_name "ThermalModelPart.$raw_name" condition_name [dict get $condition condition_name]]
+                } else {
+                    if {$raw_name in $fluid_modelparts && $raw_name ni $cond_submodelpart} {
+                        set new_condition [dict create model_part_name "FluidModelPart.$raw_name" condition_name [dict get $condition condition_name]]
+                        lappend cond_submodelpart $raw_name
+                    } elseif {$raw_name in $fluid_thermal_modelparts} {
+                        set new_condition [dict create model_part_name "FluidThermalModelPart.$raw_name" condition_name [dict get $condition condition_name]]
+                    }
+                }
+                lappend new_conditions_list $new_condition
+                dict set new_parameters conditions_list $new_conditions_list
+            }
+            dict set new_modeler parameters $new_parameters
+            set modeler $new_modeler
+        }
+        lappend new_modelers $modeler
+    }
+    dict set projectParametersDict modelers $new_modelers
+    return $projectParametersDict
+}
+
+proc ::ConjugateHeatTransfer::write::TransformFluidProcess {fluid_constraints_process_list} {
+    # Find any process with python_module = apply_thermal_face_process and change the Parameters.model_part_name to FluidThermalModelPart
+    set new_fluid_constraints_process_list [list]
+    foreach process $fluid_constraints_process_list {
+        set new_process $process
+        # temporal trick to set the model_part base
+        # TODO: set a list of thermal model parts
+        if {[dict get $process python_module] == "apply_thermal_face_process" ||
+        
+            ([dict exists $process Parameters variable_name] &&
+            [dict get $process Parameters variable_name] == "TEMPERATURE") } {
+            set old_name [dict get $process Parameters model_part_name]
+            # old name is in the form FluidModelPart.XXX
+            # new name is in the form FluidThermalModelPart.XXX
+            set new_name "FluidThermalModelPart.[lindex [split $old_name "."] 1]"
+            dict set new_process Parameters model_part_name $new_name
+        }
+        lappend new_fluid_constraints_process_list $new_process
+    }
+    return $new_fluid_constraints_process_list
 }

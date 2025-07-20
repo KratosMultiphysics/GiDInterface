@@ -8,5 +8,11 @@ kratos.gid/exec/Kratos*
 *.orig
 .vscode/
 
-custom_tools/*
+dist
 .DS_Store
+
+*.zip
+*.tgz
+null
+__pycache__
+*.whl

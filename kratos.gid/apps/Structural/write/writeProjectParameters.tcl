@@ -1,6 +1,6 @@
 # Project Parameters
 
-proc ::Structural::write::getOldParametersDict { } {
+proc ::Structural::write::getOldParametersDict { {stage ""} } {
     set model_part_name [GetAttribute model_part_name]
     set projectParametersDict [dict create]
 
@@ -12,19 +12,20 @@ proc ::Structural::write::getOldParametersDict { } {
 
     # Time Parameters
     set timeSteppingDict [dict create]
-    if {$solutiontype eq "Static" || $solutiontype eq "eigen_value"} {
+    set enable_dynamic_substepping [::Structural::GetWriteProperty "enable_dynamic_substepping"]
+    if {[write::isBooleanFalse $enable_dynamic_substepping] || ($solutiontype eq "Static" || $solutiontype eq "eigen_value")} {
         set time_step "1.1"
         dict set problemDataDict start_time "0.0"
         dict set problemDataDict end_time "1.0"
 
         # Time stepping settings for static
-        dict set timeSteppingDict "time_step" $time_step
+        dict set timeSteppingDict time_step $time_step
 
     } {
         set time_step_table [write::GetTimeStepIntervals]
 
         # Time stepping settings for dynamic
-        dict set timeSteppingDict "time_step_table" $time_step_table
+        dict set timeSteppingDict time_step_table $time_step_table
     }
 
     # Add section to document
@@ -92,6 +93,9 @@ proc ::Structural::write::getOldParametersDict { } {
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolutionStrategyParametersDict STSolStrat STScheme STStratParams] ]
     set solverSettingsDict [dict merge $solverSettingsDict [write::getSolversParametersDict Structural] ]
 
+    if {[write::getValue STAnalysisType] ne "non_linear"} {
+        dict unset solverSettingsDict use_old_stiffness_in_first_iteration
+    }
     # Submodelpart lists
 
     # There are some Conditions and nodalConditions that dont generate a submodelpart
@@ -165,12 +169,17 @@ proc ::Structural::write::getOldParametersDict { } {
     if {$solutiontype eq "eigen_value"} {
         dict unset projectParametersDict output_processes
         dict unset projectParametersDict solver_settings analysis_type
+        dict set projectParametersDict solver_settings builder_and_solver_settings use_block_builder false
     }
 
+
+    # Modelers if needed
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+    
     return $projectParametersDict
 }
 
-proc ::Structural::write::GetContactConditionsDict { } {
+proc ::Structural::write::GetContactConditionsDict { {stage ""} } {
     variable ContactsDict
     set root [customlib::GetBaseRoot]
 
@@ -224,16 +233,16 @@ proc ::Structural::write::writeParametersEvent { } {
 }
 
 # Project Parameters
-proc ::Structural::write::getParametersDict { } {
+proc ::Structural::write::getParametersDict { {stage ""} } {
     # Get the base dictionary for the project parameters
-    set project_parameters_dict [getOldParametersDict]
+    set project_parameters_dict [getOldParametersDict $stage]
 
     # Analysis stage field
     dict set project_parameters_dict analysis_stage "KratosMultiphysics.StructuralMechanicsApplication.structural_mechanics_analysis"
 
     # If using any element with the attribute RotationDofs set to true
-    dict set project_parameters_dict solver_settings rotation_dofs [UsingSpecificDofElements RotationDofs]
-    dict set project_parameters_dict solver_settings volumetric_strain_dofs [UsingSpecificDofElements VolumetricStrainDofs]
+    dict set project_parameters_dict solver_settings rotation_dofs [UsingSpecificDofElements RotationDofs $stage]
+    dict set project_parameters_dict solver_settings volumetric_strain_dofs [UsingSpecificDofElements VolumetricStrainDofs $stage]
 
     # Merging the old solver_settings with the common one for this app
     set solverSettingsDict [dict get $project_parameters_dict solver_settings]
@@ -246,13 +255,13 @@ proc ::Structural::write::writeParametersEvent { } {
     write::WriteJSON [::Structural::write::getParametersDict]
 }
 
-proc ::Structural::write::UsingSpecificDofElements { SpecificDof } {
+proc ::Structural::write::UsingSpecificDofElements { SpecificDof {stage ""} } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un] $stage]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set bool false
     foreach element_node $elements {
-        set elemid [$element_node @v]
+        set elemid [write::getValueByNode $element_node]
         set elem [Model::getElement $elemid]
         if {[write::isBooleanTrue [$elem getAttribute $SpecificDof]]} {set bool true; break}
     }
@@ -260,13 +269,13 @@ proc ::Structural::write::UsingSpecificDofElements { SpecificDof } {
     return $bool
 }
 
-proc ::Structural::write::UsingFileInPrestressedMembrane { } {
+proc ::Structural::write::UsingFileInPrestressedMembrane { {stage ""} } {
     set root [customlib::GetBaseRoot]
-    set xp1 "[spdAux::getRoute [GetAttribute parts_un]]/condition/group/value\[@n='Element'\]"
+    set xp1 "[spdAux::getRoute [GetAttribute parts_un] $stage]/condition/group/value\[@n='Element'\]"
     set elements [$root selectNodes $xp1]
     set found false
     foreach element_node $elements {
-        set elemid [$element_node @v]
+        set elemid [write::getValueByNode $element_node]
         if {$elemid eq "PrestressedMembraneElement"} {
             set selector [write::getValueByNode [$element_node selectNodes "../value\[@n = 'PROJECTION_TYPE_COMBO'\]"]]
             if {$selector eq "file"} {set found true; break}

@@ -24,8 +24,12 @@ proc write::tcl2json { value } {
     #if {$type eq "exprcode"} {set type list; W "$type -> $value"}
     switch $type {
         string {
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return null
+            }
             if {[isBooleanFalse $value]} {return [expr "false"]}
             if {[isBooleanTrue $value]} {return [expr "true"]}
             return [json::write string $value]
@@ -57,7 +61,9 @@ proc write::tcl2json { value } {
             } elseif {[string is double -strict $value]} {
                 return [expr {$value}]
             } elseif {[string is boolean -strict $value]} {
-                return [expr {$value ? "true" : "false"}]
+                if {[isBooleanFalse $value]} {return [expr "false"]}
+                if {[isBooleanTrue $value]} {return [expr "true"]}
+                return [json::write string $value]
             } elseif {[string index $value 0] eq "\{"} {
                 return [json::write array {*}[lmap v $value {tcl2json $v}]]
             }
@@ -73,8 +79,12 @@ proc write::tcl2jsonstrings { value } {
     if {$value eq ""} {return [json::write array {*}[lmap v $value {tcl2jsonstrings $v}]]}
     switch $type {
         string {
-            if {$value eq "null"} {return null}
-            if {$value eq "dictnull"} {return {{}}}
+            if {$value eq "null"} {
+                return null
+            }
+            if {$value eq "dictnull"} {
+                return {{}}
+            }
             return [json::write string $value]
         }
         dict {
@@ -110,7 +120,9 @@ proc write::tcl2jsonstrings { value } {
 }
 
 proc write::WriteJSON {processDict} {
-    WriteString [write::tcl2json $processDict]
+    set json_string [write::tcl2json $processDict]
+    set new_string [string map {"\[null\]" "null"} $json_string]
+    WriteString $new_string
 }
 proc write::WriteJSONAsStringFields {processDict} {
     WriteString [write::tcl2jsonstrings $processDict]
@@ -245,6 +257,7 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set cid [[$group parent] @n]
         set groupName [write::GetWriteGroupName $groupName]
         set groupId [::write::getSubModelPartId $cid $groupName]
+       
         set grouping_by ""
         if {$condition_type eq "Condition"} {
             set condition [::Model::getCondition $cid]
@@ -293,7 +306,11 @@ proc write::getConditionsParametersDict {un {condition_type "Condition"}} {
         set process [::Model::GetProcess $processName]
         set processDict [dict create]
         set paramDict [dict create]
-        dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
+        if {[GetConfigurationAttribute write_mdpa_mode] ne "geometries"} {
+            dict set paramDict model_part_name [write::GetModelPartNameWithParent $cid]
+        } else {
+            dict set paramDict model_part_name "[GetConfigurationAttribute model_part_name]._HIDDEN_$cid"
+        }
 
         set process_attributes [$process getAttributes]
         set process_parameters [$process getInputs]
@@ -328,7 +345,7 @@ proc write::GetResultsByXPathList { xpath } {
     set xp1 "$xpath/value"
     set resultxml [$root selectNodes $xp1]
     foreach res $resultxml {
-        if {[get_domnode_attribute $res v] in [list "Yes" "True" "1"] && [get_domnode_attribute $res state] ne "hidden"} {
+        if {[write::isBooleanTrue [get_domnode_attribute $res v]] && [get_domnode_attribute $res state] ne "hidden"} {
             set name [get_domnode_attribute $res n]
             lappend result $name
         }
@@ -425,6 +442,19 @@ proc write::GetDefaultProblemDataDict { {appid ""} } {
     return $problem_data_dict
 }
 
+proc write::GetGravityByModuleDirection { gravity_un } {
+    set gravity_value [write::getValue $gravity_un GravityValue]
+    set gravity_X [write::getValue $gravity_un Cx]
+    set gravity_Y [write::getValue $gravity_un Cy]
+    set gravity_Z [write::getValue $gravity_un Cz]
+    # Normalize director vector
+    lassign [MathUtils::VectorNormalized [list $gravity_X $gravity_Y $gravity_Z]] gravity_X gravity_Y gravity_Z
+    # Get value by components
+    lassign [MathUtils::ScalarByVectorProd $gravity_value [list $gravity_X $gravity_Y $gravity_Z] ] gx gy gz
+
+    return [list $gx $gy $gz]
+}
+
 proc write::GetDefaultOutputProcessDict { {appid ""}  } {
     # Output process must be placed inside json lists
     set gid_output_process_list [list ]
@@ -497,11 +527,15 @@ proc write::GetDefaultOutputGiDDict { {appid ""} {gid_options_xpath ""} } {
 
     set gid_cut_planes_xpath "[spdAux::getRoute $results_UN]/container\[@n='GiDOutput'\]/container\[@n='CutPlanes'\]"
     dict set resultDict plane_output [GetCutPlanesByXPathList $gid_cut_planes_xpath]
+    
     set gid_nodes_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodes'\]"
     dict set resultDict nodal_results [GetResultsByXPathList $gid_nodes_xpath]
+    
+    set gid_nodes_nh_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnNodesNonHistorical'\]"
+    dict set resultDict nodal_nonhistorical_results [GetResultsByXPathList $gid_nodes_nh_xpath]
+
     set gid_elements_xpath "[spdAux::getRoute $results_UN]/container\[@n='OnElement'\]"
     dict set resultDict gauss_point_results [GetResultsByXPathList $gid_elements_xpath]
-    dict set resultDict nodal_nonhistorical_results [list ]
 
     dict set outputDict "result_file_configuration" $resultDict
     dict set outputDict "point_data_configuration" [GetEmptyList]
@@ -544,7 +578,7 @@ proc write::GetDefaultParametersOutputVTKDict { {appid ""} } {
     dict set resultDict output_path                    "vtk_output"
     dict set resultDict save_output_files_in_folder    "true"
     dict set resultDict nodal_solution_step_data_variables [GetResultsList $results_UN OnNodes]
-    dict set resultDict nodal_data_value_variables      [list ]
+    dict set resultDict nodal_data_value_variables      [GetResultsList $results_UN OnNodesNonHistorical]
     dict set resultDict element_data_value_variables    [list ]
     dict set resultDict condition_data_value_variables  [list ]
     dict set resultDict gauss_point_variables_extrapolated_to_nodes   [GetResultsList $results_UN OnElement]
@@ -584,4 +618,115 @@ proc write::GetTimeStepIntervals { {time_parameters_un ""} } {
 
     set time_step_intervals_list [lsort -real -index 0 $time_step_intervals_list]
     return $time_step_intervals_list
+}
+
+proc write::GetModelersDict { projectParametersDict {stage ""}  } {
+    set modelerts_list [list ]
+
+    if {[write::GetConfigurationAttribute write_mdpa_mode] eq "geometries"} {
+        # Move the import to the modelers
+        dict unset projectParametersDict solver_settings model_import_settings 
+        dict set projectParametersDict solver_settings model_import_settings input_type use_input_model_part
+        set importer_modeler [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler"]  
+        dict set importer_modeler "parameters" [dict create input_filename [Kratos::GetModelName] model_part_name [write::GetConfigurationAttribute model_part_name]]  
+        lappend modelerts_list $importer_modeler
+
+        # Add the entities creation modeler
+        set entities_modeler [dict create name "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler"]
+        dict set entities_modeler "parameters" elements_list [::write::GetMatchSubModelPart element $stage]
+        dict set entities_modeler "parameters" conditions_list [::write::GetMatchSubModelPart condition $stage]
+        lappend modelerts_list $entities_modeler
+    
+    
+        dict set projectParametersDict "modelers" $modelerts_list
+    }
+    return $projectParametersDict
+}
+
+
+
+# what can be element, condition
+proc write::GetMatchSubModelPart { what {stage ""} } {
+    set model_part_basename [write::GetConfigurationAttribute model_part_name]
+    set entity_name element_name
+    if {$what == "condition"} {set entity_name condition_name}
+   
+    set elements_list [list ]
+    set processed_groups_list [list ]
+    set groups [apps::ExecuteOnCurrentXML GetListOfSubModelParts $stage]
+    if {$groups eq ""} {
+        set groups [spdAux::GetListOfSubModelParts $stage]
+    }
+    foreach group $groups {
+        set good_name ""
+        # get the group and submodelpart name
+        set group_name [$group @n]
+        
+        set group_name [write::GetWriteGroupName $group_name]
+        #if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
+        if {$what == "condition"} {
+            set cid [[$group parent] @n]
+        } else {
+            set element_node [$group selectNodes "./value\[@n='Element']"]
+            if {[llength $element_node] == 0} {continue}
+            set cid [write::getValueByNode $element_node]
+        }
+        if {$cid eq ""} {continue}
+        if {$what == "condition"} {set entity [::Model::getCondition $cid]} {set entity [::Model::getElement $cid]}
+        if {$entity eq ""} {continue}
+        
+        #if {$group_name ni $processed_groups_list} {lappend processed_groups_list $group_name} {continue}
+        if {$what == "condition"} {
+            if {[$entity getGroupBy] eq "Condition"} {
+                set good_name "_HIDDEN_$cid"
+                if {$good_name ni $processed_groups_list} {lappend processed_groups_list $good_name} {continue}
+            }
+        } 
+        if {$good_name eq ""} {set good_name [write::transformGroupName $group_name]}
+        # Get the entity (element or condition)
+        if {[$group hasAttribute ov]} {set ov [get_domnode_attribute $group ov]} {set ov [get_domnode_attribute [$group parent] ov]}
+
+        lassign [write::getEtype $ov $group_name] etype nnodes
+
+        set kname [$entity getTopologyKratosName $etype $nnodes]
+        # If no topology present, it may be a nodal condition
+        if {$kname eq ""} {continue}
+
+        # If spd application sets a modelpartname, use it
+        set model_part_name [write::GetModelPartNameFromParentTree $group stage]
+        if {$model_part_name ne ""} {set model_part_basename $model_part_name}
+
+        set pair [ dict create model_part_name $model_part_basename.$good_name $entity_name $kname]
+
+        set pair_join [join [list $model_part_basename.$good_name $entity_name $kname] "__"]
+        # W "pair_join: $pair_join"
+        if {$pair_join ni $processed_groups_list} {lappend processed_groups_list $pair} {continue}
+
+        lappend elements_list $pair
+        
+    }
+    return $elements_list
+}
+
+
+# in the xml file, look up to find if some of the ancestors define a property modelpartname
+proc write::GetModelPartNameFromParentTree { group {stage ""} } {
+    set modelpart_name ""
+    set parent $group
+    set safety 0
+    set max_safety 10000
+    while {1} {
+        set parent [$parent parent]
+        if {$parent eq ""} {break}
+        if {[$parent hasAttribute modelpart_name]} {
+            set modelpart_name [get_domnode_attribute $parent modelpart_name]
+            break
+        }
+        if {$safety > $max_safety} {
+            W "GetModelPartNameFromParentTree: safety limit reached"
+            break
+        }
+        incr safety
+    }
+    return $modelpart_name
 }

@@ -6,7 +6,7 @@
   <Process n="ApplyConstraintVectorDamTableProcess" pn="Impose vector value by components process" python_module="apply_constraint_vector_dam_table_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the selected components of a given vector variable">
     <inputs>
-		    <parameter n="is_fixed" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
+		    <parameter n="constrained" pn="Imposed" type="vector" vectorType="bool" v="1,1,1"/>
         <parameter n="value" pn="Value" type="vector" v="0.0,0.0,0.0"/>
         <parameter n="Value_Table" pn="Value table filename" type="vector" vectorType="tablefile" v=""/>
     </inputs>
@@ -16,7 +16,7 @@
   <Process n="ImposeUniformPressureProcess" pn="Impose uniform value of pressure by process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+		    <parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="value" pn="Value" type="double" v="0.0"/>
         <parameter n="table" pn="Pressure table filename" type="tablefile" v=""/>
     </inputs>
@@ -26,7 +26,7 @@
   <Process n="ImposeUniformTemperatureProcess" pn="Impose uniform value of temperature by process" python_module="impose_uniform_temperature_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-		    <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+		    <parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="value" pn="Value" type="double" v="0.0"/>
         <parameter n="table" pn="Uniform Temperature table filename" type="tablefile" v=""/>
     </inputs>
@@ -36,14 +36,14 @@
   <Process n="ImposeBofangConditionProcess" pn="Impose Bofang scalar field value" python_module="impose_reservoir_temperature_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-		<parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+		<parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Surface_Temp" pn="Surface Temperature" type="double" v="0.0"/>
         <parameter n="Bottom_Temp" pn="Bottom Temperature" type="double" v="0.0"/>
         <parameter n="Height_Dam" pn="Height Dam" type="double" v="0.0"/>
         <parameter n="Temperature_Amplitude" pn="Temperature Amplitude" type="double" v="0.0"/>
-        <parameter n="Day_Ambient_Temp" pn="Day" type="integer" v="0.0"/>
+        <parameter n="Day_Max_Temp" pn="Day Maximum Temperature" type="integer" v="0.0"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_level_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Month" pn="Month" type="double" v="0.0"/>
@@ -55,7 +55,7 @@
   <Process n="ImposeReservoirConstantTemperatureConditionProcess" pn="Impose constant reservoir temperature value" python_module="impose_reservoir_temperature_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+        <parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Water_temp" pn="Water Temperature" type="double" v="0.0"/>
@@ -69,7 +69,7 @@
   <Process n="ImposeReservoirMonitoringTemperatureConditionProcess" pn="Impose constant reservoir temperature value" python_module="impose_reservoir_temperature_condition_process"
 		kratos_module="KratosMultiphysics.DamApplication" help="This process fixes the given scalar variable">
     <inputs>
-        <parameter n="is_fixed" pn="Imposed" type="bool" v="1"/>
+        <parameter n="constrained" pn="Imposed" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
         <parameter n="Height_Dam" pn="Height Dam" type="double" v="0.0"/>
@@ -216,7 +216,7 @@
         <parameter n="Modify" pn="Modify" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z"/>
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
-        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="9810"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_Table" pn="Water Level table filename" type="tablefile" v=""/>
     </inputs>
@@ -229,7 +229,7 @@
         <parameter n="Modify" pn="Modify" type="bool" v="1"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z"/>
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
-        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="9810"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Aceleration" pn="Aceleration" type="double" v="0.0"/>
@@ -242,12 +242,13 @@
 		kratos_module="KratosMultiphysics.DamApplication" help="This process sets a scalar value according its law over a condition" >
     <inputs>
         <parameter n="Modify" pn="Modify" type="bool" v="1"/>
-        <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
+        <parameter n="joint_group_name" pn="Joint Group Name" type="combo" v="0"/>
+        <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z"/>
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
-        <parameter n="Upstream_Coordinate" pn="Upstream Coordinate" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Downstream_Coordinate" pn="Downstream Coordinate" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Upstream_Longitudinal_Coordinate" pn="Upstream Longitudinal Coordinate" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Upstream_Coordinate" pn="Upstream Coordinate" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"/>
+        <parameter n="Downstream_Coordinate" pn="Downstream Coordinate" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"/>
+        <parameter n="Upstream_Longitudinal_Coordinate" pn="Upstream Longitudinal Coordinate" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,1.0"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="9810"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Drains" pn="Drains" un="DamDrains" type="bool" v="0"/>
@@ -261,12 +262,13 @@
 		kratos_module="KratosMultiphysics.DamApplication" help="This process sets a scalar value according its law over a condition" >
     <inputs>
         <parameter n="Modify" pn="Modify" type="bool" v="1"/>
+        <parameter n="joint_group_name" pn="Joint Group Name" type="combo" v="0"/>
         <parameter n="Gravity_Direction" pn="Gravity Direction" type="combo" v="Z" values="X,Y,Z" />
         <parameter n="Reservoir_Bottom_Coordinate_in_Gravity_Direction" pn="Reservoir Bottom Coordinate in Gravity Direction" type="double" v="0.0"/>
-        <parameter n="Upstream_Coordinate_first_bracket" pn="Upstream Coordinate First Bracket" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Downstream_Coordinate_first_bracket" pn="Downstream Coordinate First Bracket" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Focus" pn="Focus" type="vector" v="0.0,0.0,0.0"/>
-        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="10000"/>
+        <parameter n="Upstream_Coordinate_first_bracket" pn="Upstream Coordinate First Bracket" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"/>
+        <parameter n="Downstream_Coordinate_first_bracket" pn="Downstream Coordinate First Bracket" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"/>
+        <parameter n="Focus" pn="Focus" type="inline_vector" vectorType="double" function="0" v="0.0,0.0,0.0"/>
+        <parameter n="Spe_weight" pn="Specific Weight" type="double" v="9810"/>
         <parameter n="Water_level" pn="Water Level" type="double" v="0.0"/>
         <parameter n="Water_Table" pn="Water Level table filename" type="tablefile" v=""/>
         <parameter n="Drains" pn="Drains" un="DamDrains" type="bool" v="0"/>
@@ -322,13 +324,25 @@
   </Process>
 
 <!---  YOUNG VARIABLE PROCESS -->
-  <Process n="ImposeInputTableNodalYoungModulusProcess" pn="Variable Young Modulus" python_module="impose_input_table_nodal_young_modulus_process"
-		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according an spatial formulation" >
+  <Process n="Impose3dRandomFieldsVariableProcess" pn="Distrubuted Young Modulus" python_module="impose_3d_random_fields_variable_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according to a Gaussian random field with exponential covariance distribution" >
     <inputs>
-        <parameter n="initial_value" pn="Initial Young Modulus Value" type="double" v="0.0"/>
-        <parameter n="min_value" pn="Minimum Young Modulus Value" type="double" v="0.0"/>
-        <parameter n="max_value" pn="Maximum Young Modulus Value" type="double" v="0.0"/>
-        <parameter n="input_file_name" pn="Table filename" type="tablefile" v=""/>
+        <parameter n="mean_value" pn="Mean Value" type="double" v="0.0"/>
+        <parameter n="min_value" pn="Minimum Value" type="double" v="0.0"/>
+        <parameter n="max_value" pn="Maximum Value" type="double" v="0.0"/>
+        <parameter n="variance" pn="Variance" type="double" v="0.0"/>
+        <parameter n="corr_length" pn="Correlation Length" type="integer" v="0"/>
+    </inputs>
+  </Process>
+
+  <Process n="Impose2dRandomFieldsVariableProcess" pn="Distrubuted Young Modulus" python_module="impose_2d_random_fields_variable_process"
+		kratos_module="KratosMultiphysics.DamApplication" help="This process assigns different values of Young Modulus according to a Gaussian random field with exponential covariance distribution" >
+    <inputs>
+        <parameter n="mean_value" pn="Mean Value" type="double" v="0.0"/>
+        <parameter n="min_value" pn="Minimum Value" type="double" v="0.0"/>
+        <parameter n="max_value" pn="Maximum Value" type="double" v="0.0"/>
+        <parameter n="variance" pn="Variance" type="double" v="0.0"/>
+        <parameter n="corr_length" pn="Correlation Length" type="integer" v="0"/>
     </inputs>
   </Process>
 

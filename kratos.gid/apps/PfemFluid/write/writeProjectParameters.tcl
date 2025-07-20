@@ -29,9 +29,9 @@ proc PfemFluid::write::getNewParametersDict { } {
     set processList [GetPFEM_ProcessList]
     dict set projectParametersDict processes $processList
 
-    ##### Restart
-    # set output_process_list [GetPFEM_OutputProcessList]
-    # dict set projectParametersDict output_process_list $output_process_list
+    ##### WaveMonitor, Restart
+    set output_processes_list [GetPFEM_OutputProcesses]
+    dict set projectParametersDict output_processes $output_processes_list
 
     ##### output_configuration
     # dict set projectParametersDict output_configuration [write::GetDefaultOutputDict]
@@ -157,11 +157,69 @@ proc PfemFluid::write::GetPFEM_SolverSettingsDict { } {
     return $solverSettingsDict
 }
 
-proc PfemFluid::write::GetPFEM_OutputProcessList { } {
-    set resultList [list]
-    # lappend resultList [write::GetRestartProcess Restart]
+proc PfemFluid::write::GetPFEM_OutputProcesses { } {
+    set resultList [dict create]
+
+    set output_process_list [GetPFEM_OutputProcessList]
+    #dict lappend resultList output_list $output_process_list
+    dict set resultList output_list $output_process_list
     return $resultList
 }
+
+
+proc PfemFluid::write::GetPFEM_OutputProcessList { } {
+
+    set resultList [list]
+
+    set xp1 "[spdAux::getRoute "WaveMonitor"]/group"
+    set groups_wave_height [[customlib::GetBaseRoot] selectNodes $xp1]
+    foreach group $groups_wave_height {
+        set process [dict create]
+        dict set process "python_module" "wave_height_output_process"
+        dict set process "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
+        set parameters [GetPFEM_WaveParameters $group]
+        dict set process Parameters $parameters
+
+        lappend resultList $process
+    }
+    return $resultList
+}
+
+
+proc PfemFluid::write::GetPFEM_WaveParameters { group } {
+
+    set parametersWave [dict create]
+
+    #set group_id [::write::getSubModelPartId WaveMonitor [$group @n]]
+    #dict set parametersWave model_part_name [write::GetModelPartNameWithParent $group_id PfemFluidModelPart]
+    dict set parametersWave model_part_name "PfemFluidModelPart"
+
+    set coordinates [list ]
+    foreach node [GiD_EntitiesGroups get [$group @n] nodes ] {
+        set coords [GiD_Mesh get node $node coordinates]
+        lappend coordinates $coords
+    }
+    dict set parametersWave "coordinates" $coordinates
+
+    set WaveCalculationSetting [dict create]
+    dict set WaveCalculationSetting "mean_water_level"        [write::getValueByNodeChild $group MeanWaterLevel]
+    dict set WaveCalculationSetting "relative_search_radius"  [write::getValueByNodeChild $group RelativeSearchRadius]
+    dict set WaveCalculationSetting "search_tolerance"  [write::getValueByNodeChild $group SearchTolerance]
+    dict set WaveCalculationSetting "use_local_element_size"  [write::getValueByNodeChild $group UseLocalElementSize]
+    dict set WaveCalculationSetting "use_nearest_node"  [write::getValueByNodeChild $group UseNearestNode]
+    dict set parametersWave wave_calculation_settings $WaveCalculationSetting
+
+    set OutputFileSettings [dict create]
+    dict set OutputFileSettings "file_name"      "gauge_<X>"
+    dict set OutputFileSettings "output_path"             [write::getValueByNodeChild $group FolderName]
+    dict set parametersWave output_file_settings $OutputFileSettings
+
+    dict set parametersWave "time_between_outputs"    [write::getValueByNodeChild $group TimeBetweenOutputs]
+
+    return $parametersWave
+}
+
+
 proc PfemFluid::write::GetPFEM_ProblemProcessList { free_surface_heat_flux free_surface_thermal_face } {
     set resultList [list ]
     set problemtype [write::getValue PFEMFLUID_DomainType]
@@ -205,71 +263,9 @@ proc PfemFluid::write::GetContactProperty { contact_name property } {
     return $ret
 }
 
-proc PfemFluid::write::GetPFEM_RemeshDict { } {
-    variable bodies_list
-    set resultDict [dict create ]
-    dict set resultDict "help" "This process applies meshing to the problem domains"
-    dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
-    dict set resultDict "python_module" "remesh_domains_process"
-    dict set resultDict "process_name" "RemeshDomainsProcess"
-
-    set paramsDict [dict create]
-    dict set paramsDict "model_part_name" [GetAttribute model_part_name]
-    dict set paramsDict "meshing_control_type" "step"
-    dict set paramsDict "meshing_frequency" 1.0
-    dict set paramsDict "meshing_before_output" true
-    set meshing_domains_list [list ]
-    foreach body $bodies_list {
-        set bodyDict [dict create ]
-        set body_name [dict get $body body_name]
-        dict set bodyDict "python_module" "meshing_domain"
-        dict set bodyDict "model_part_name" $body_name
-        dict set bodyDict "alpha_shape" 2.4
-        set remesh [write::getStringBinaryFromValue [PfemFluid::write::GetRemeshProperty $body_name "Remesh"]]
-        set refine [write::getStringBinaryFromValue [PfemFluid::write::GetRemeshProperty $body_name "Refine"]]
-        set meshing_strategyDict [dict create ]
-        dict set meshing_strategyDict "python_module" "meshing_strategy"
-        dict set meshing_strategyDict "remesh" $remesh
-        dict set meshing_strategyDict "refine" $refine
-        dict set meshing_strategyDict "transfer" false
-        set nDim $::Model::SpatialDimension
-        if {$nDim eq "3D"} {
-            dict set meshing_strategyDict "reference_element_type" "Element3D4N"
-            dict set meshing_strategyDict "reference_condition_type" "CompositeCondition3D3N"
-        } else {
-            dict set meshing_strategyDict "reference_element_type" "Element2D3N"
-            dict set meshing_strategyDict "reference_condition_type" "CompositeCondition2D2N"
-        }
-        dict set bodyDict meshing_strategy $meshing_strategyDict
-
-        set spatial_bounding_boxDict [dict create ]
-        dict set spatial_bounding_boxDict "use_bounding_box" [write::getValue PFEMFLUID_BoundingBox UseBoundingBox]
-        dict set spatial_bounding_boxDict "initial_time"     [write::getValue PFEMFLUID_BoundingBox StartTime]
-        dict set spatial_bounding_boxDict "final_time"       [write::getValue PFEMFLUID_BoundingBox StopTime]
-        dict set spatial_bounding_boxDict "upper_point"      [PfemFluid::write::GetUpperPointBoundingBox]
-        dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
-        dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
-
-        set spatial_refining_boxDict [dict create ]
-        dict set spatial_refining_boxDict "mesh_size"        [write::getValue PFEMFLUID_RefiningBox RefinedMeshSize]
-        dict set spatial_refining_boxDict "use_refining_box" [write::getValue PFEMFLUID_RefiningBox UseRefiningBox]
-        dict set spatial_refining_boxDict "initial_time"     [write::getValue PFEMFLUID_RefiningBox StartTime]
-        dict set spatial_refining_boxDict "final_time"       [write::getValue PFEMFLUID_RefiningBox StopTime]
-        dict set spatial_refining_boxDict "upper_point"      [PfemFluid::write::GetUpperPointRefiningBox]
-        dict set spatial_refining_boxDict "lower_point"      [PfemFluid::write::GetLowerPointRefiningBox]
-        dict set bodyDict spatial_refining_box $spatial_refining_boxDict
-
-        lappend meshing_domains_list $bodyDict
-    }
-    dict set paramsDict meshing_domains $meshing_domains_list
-    dict set resultDict Parameters $paramsDict
-    return $resultDict
-}
-
-
-
 proc PfemFluid::write::GetPFEM_FluidRemeshDict { free_surface_heat_flux free_surface_thermal_face } {
     variable bodies_list
+    set root [customlib::GetBaseRoot]
     set resultDict [dict create ]
     dict set resultDict "help" "This process applies meshing to the problem domains"
     dict set resultDict "kratos_module" "KratosMultiphysics.PfemFluidDynamicsApplication"
@@ -322,15 +318,18 @@ proc PfemFluid::write::GetPFEM_FluidRemeshDict { free_surface_heat_flux free_sur
             dict set spatial_bounding_boxDict "lower_point"      [PfemFluid::write::GetLowerPointBoundingBox]
             dict set bodyDict spatial_bounding_box $spatial_bounding_boxDict
         }
-
-        set spatial_refining_boxDict [dict create ]
-        dict set spatial_refining_boxDict "use_refining_box" [write::getValue PFEMFLUID_RefiningBox UseRefiningBox]
-        dict set spatial_refining_boxDict "mesh_size"        [write::getValue PFEMFLUID_RefiningBox RefinedMeshSize]
-        dict set spatial_refining_boxDict "initial_time"     [write::getValue PFEMFLUID_RefiningBox StartTime]
-        dict set spatial_refining_boxDict "final_time"       [write::getValue PFEMFLUID_RefiningBox StopTime]
-        dict set spatial_refining_boxDict "upper_point"      [PfemFluid::write::GetUpperPointRefiningBox]
-        dict set spatial_refining_boxDict "lower_point"      [PfemFluid::write::GetLowerPointRefiningBox]
-        dict set bodyDict spatial_refining_box $spatial_refining_boxDict
+        set spatial_refining_box_list [list ]
+        foreach box [$root selectNodes "[spdAux::getRoute PFEMFLUID_MeshBoxes]/blockdata"] {
+            set spatial_bounding_box_dict [dict create ]
+            dict set spatial_bounding_box_dict "use_refining_box" [write::getValueByNodeChild $box UseRefiningBox]
+            dict set spatial_bounding_box_dict "transition_elements"        [write::getValueByNodeChild $box TransitionElements]
+            dict set spatial_bounding_box_dict "initial_time"     [write::getValueByNodeChild $box StartTime]
+            dict set spatial_bounding_box_dict "final_time"       [write::getValueByNodeChild $box StopTime]
+            dict set spatial_bounding_box_dict "upper_point"      [PfemFluid::write::GetUpperPointRefiningBox $box]
+            dict set spatial_bounding_box_dict "lower_point"      [PfemFluid::write::GetLowerPointRefiningBox $box]
+            lappend spatial_refining_box_list $spatial_bounding_box_dict
+        }
+        dict set bodyDict spatial_refining_box_list $spatial_refining_box_list
 
         lappend meshing_domains_list $bodyDict
     }
@@ -620,16 +619,16 @@ proc PfemFluid::write::GetUpperPointBoundingBox { } {
     return [list $maxX $maxY $maxZ]
 }
 
-proc PfemFluid::write::GetLowerPointRefiningBox { } {
-    set minX [write::getValue PFEMFLUID_RefiningBox MinX]
-    set minY [write::getValue PFEMFLUID_RefiningBox MinY]
-    set minZ [write::getValue PFEMFLUID_RefiningBox MinZ]
+proc PfemFluid::write::GetLowerPointRefiningBox { box } {
+    set minX [write::getValueByNodeChild $box MinX]
+    set minY [write::getValueByNodeChild $box MinY]
+    set minZ [write::getValueByNodeChild $box MinZ]
     return [list $minX $minY $minZ]
 }
 
-proc PfemFluid::write::GetUpperPointRefiningBox { } {
-    set maxX [write::getValue PFEMFLUID_RefiningBox MaxX]
-    set maxY [write::getValue PFEMFLUID_RefiningBox MaxY]
-    set maxZ [write::getValue PFEMFLUID_RefiningBox MaxZ]
+proc PfemFluid::write::GetUpperPointRefiningBox { box } {
+    set maxX [write::getValueByNodeChild $box MaxX]
+    set maxY [write::getValueByNodeChild $box MaxY]
+    set maxZ [write::getValueByNodeChild $box MaxZ]
     return [list $maxX $maxY $maxZ]
 }

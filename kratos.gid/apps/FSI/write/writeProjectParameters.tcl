@@ -24,6 +24,10 @@ proc ::FSI::write::getParametersDict { } {
     set output_processes [GetOutputProcessesDict]
     dict set projectParametersDict output_processes $output_processes
 
+    set projectParametersDict [::write::GetModelersDict $projectParametersDict]
+    set projectParametersDict [PlaceMDPAImports $projectParametersDict]
+    set projectParametersDict [ModelersPrefix $projectParametersDict]
+
     return $projectParametersDict
 }
 
@@ -90,8 +94,13 @@ proc ::FSI::write::GetSolverSettingsDict { } {
     dict set solver_settings_dict coupling_settings fluid_interfaces_list $fluid_interfaces_list
 
     # Change the input_filenames
-    dict set solver_settings_dict structure_solver_settings model_import_settings input_filename [dict get $mdpa_names Structural]
-    dict set solver_settings_dict fluid_solver_settings model_import_settings input_filename [dict get $mdpa_names Fluid]
+    dict unset solver_settings_dict structure_solver_settings model_import_settings
+    dict set solver_settings_dict structure_solver_settings model_import_settings input_type use_input_model_part
+    dict unset solver_settings_dict fluid_solver_settings model_import_settings
+    dict set solver_settings_dict fluid_solver_settings model_import_settings input_type use_input_model_part
+
+    # Overwrite structural timestep with fluid timestep
+    dict set solver_settings_dict structure_solver_settings time_stepping [dict get $solver_settings_dict fluid_solver_settings time_stepping]
 
     # Add the MESH_DISPLACEMENT to the gid_output process
     # set gid_output [lindex [dict get $FluidParametersDict output_processes gid_output] 0]
@@ -120,7 +129,7 @@ proc ::FSI::write::GetProcessesDict { } {
 proc ::FSI::write::GetNonDeprecatedProcessList { original_process_list } {
     set list [list ]
     foreach process $original_process_list {
-        if {[dict get $process python_module] ne "python_process"} {lappend list $process}
+        if {[dict get $process python_module] ne "process"} {lappend list $process}
     }
     return $list
 }
@@ -181,7 +190,73 @@ proc ::FSI::write::InitExternalProjectParameters { } {
     apps::setActiveAppSoft Structure
     Structural::write::SetAttribute time_parameters_un FLTimeParameters
     write::initWriteConfiguration [Structural::write::GetAttributes]
+    Structural::SetWriteProperty enable_dynamic_substepping [::FSI::GetWriteProperty "enable_dynamic_substepping"]
     set FSI::write::structure_project_parameters [Structural::write::getParametersDict]
 
     apps::setActiveAppSoft FSI
+}
+
+
+proc ::FSI::write::PlaceMDPAImports { projectParametersDict } {
+    variable mdpa_names
+
+    set new_modelers [list]
+
+    set modelers [dict get $projectParametersDict modelers]
+    # remove the modelers that import the mdpa files (name = Modelers.KratosMultiphysics.ImportMDPAModeler)
+    set modelers [lsearch -all -inline -not -glob $modelers *ImportMDPAModeler*]
+    lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" parameters [dict create input_filename [dict get $mdpa_names Fluid] model_part_name "FluidModelPart"]]
+    lappend new_modelers [dict create name "Modelers.KratosMultiphysics.ImportMDPAModeler" parameters [dict create input_filename [dict get $mdpa_names Structural] model_part_name "Structure"]]
+    set modelers [concat $new_modelers $modelers]
+    dict set projectParametersDict modelers $modelers
+    return $projectParametersDict
+}
+
+proc ::FSI::write::ModelersPrefix { projectParametersDict } {
+
+    set modelers [dict get $projectParametersDict modelers]
+    set new_modelers [list]
+    set fluid_modelparts [dict get $projectParametersDict solver_settings fluid_solver_settings skin_parts]
+    set more_fluid_modelparts [dict get $projectParametersDict solver_settings fluid_solver_settings no_skin_parts]
+    set fluid_volume [dict get $projectParametersDict solver_settings fluid_solver_settings volume_model_part_name]
+    set fluid_modelparts [concat $fluid_modelparts $more_fluid_modelparts]
+    lappend fluid_modelparts $fluid_volume
+    # W "Thermal modelparts: $thermal_modelparts"
+    foreach modeler $modelers {
+        set name [dict get $modeler name]
+        if {[string match "Modelers.KratosMultiphysics.CreateEntitiesFromGeometriesModeler" $name]} {
+            set new_parameters [dict create]
+            set new_modeler [dict create name $name parameters [dict create elements_list [dict create] conditions_list [dict create]]]
+            set new_element_list [list ]
+            foreach element [dict get $modeler parameters elements_list] {
+                set model_part_name [dict get $element model_part_name]
+                set raw_name [lindex [split $model_part_name "."] 1]
+
+                if {$raw_name in $fluid_modelparts} {
+                    set new_element [dict create model_part_name "FluidModelPart.$raw_name" element_name [dict get $element element_name]]
+                } else {
+                    set new_element $element
+                }
+                lappend new_element_list $new_element
+                dict set new_parameters elements_list $new_element_list
+            }
+            set new_conditions_list [list ]
+            foreach condition [dict get $modeler parameters conditions_list] {
+                set model_part_name [dict get $condition model_part_name]
+                set raw_name [lindex [split $model_part_name "."] 1]
+                if {$raw_name in $fluid_modelparts} {
+                    set new_condition [dict create model_part_name "FluidModelPart.$raw_name" condition_name [dict get $condition condition_name]]
+                } else {
+                    set new_condition $condition
+                }
+                lappend new_conditions_list $new_condition
+                dict set new_parameters conditions_list $new_conditions_list
+            }
+            dict set new_modeler parameters $new_parameters
+            set modeler $new_modeler
+        }
+        lappend new_modelers $modeler
+    }
+    dict set projectParametersDict modelers $new_modelers
+    return $projectParametersDict
 }

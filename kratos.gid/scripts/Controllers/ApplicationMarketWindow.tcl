@@ -5,7 +5,7 @@ namespace eval ::spdAux {
     set application_window_id .gid.win_app_selection
 }
 
-proc spdAux::CreateWindow {} {
+proc spdAux::CreateInitialApplicationsWindow {} {
     variable initwind
     variable must_open_init_window
     variable application_window_id
@@ -28,15 +28,8 @@ proc spdAux::CreateWindow {} {
     # Close everything else
     gid_groups_conds::close_all_windows
     spdAux::DestroyInitWindow
-    if {[winfo exist $initwind]} {destroy $initwind}
-    toplevel $w
-    wm withdraw $w
-    set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
-    set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-    wm geom $w +$x+$y
-    wm transient $w .gid    
-    
-    InitWindow $w [_ "Kratos Multiphysics - Application market"] Kratos "" "" 1
+
+    InitWindow $w [_ "Kratos Multiphysics - Application market"] PreKratosWindowGeom "" "" 1 0
     
     ttk::frame $w.top
     spdAux::RegisterWindow $initwind
@@ -124,6 +117,65 @@ proc spdAux::CreateWindow {} {
     grid $w.info -columnspan 5 -sticky we
 }
 
+proc spdAux::CreateLauncherWindow { current_launcher available_apps {window_text "Applications"} {action_text "Select an application"} } {
+    set initwind $::spdAux::initwind
+
+    set root [customlib::GetBaseRoot]
+    set nd [ [$root selectNodes "value\[@n='nDim'\]"] getAttribute v]
+    if { $nd ne "undefined" } {
+        
+    } {
+        [$root selectNodes "value\[@n='nDim'\]"] setAttribute v wait
+
+        set initwind $::spdAux::application_window_id
+        spdAux::DestroyWindows
+        spdAux::RegisterWindow $initwind
+        set w $initwind
+
+        InitWindow $w $window_text Kratos "" "" 1
+        set initwind $w
+        ttk::frame $w.top
+        ttk::label $w.top.title_text -text $action_text
+        ttk::frame $w.applications  -relief ridge
+        set i 0
+        set column 0
+        set row 0
+        foreach app $available_apps {
+            # check if app exists
+            if {![::apps::appExists $app]} {continue}
+            set img [::apps::getImgFrom $app]
+            set app_publicname [[::apps::getAppById $app] getPublicName]
+            set but [ttk::button $w.applications.img$app -image $img -command [list ::spdAux::ChangeAppTo $current_launcher $app] ]
+            bind $w.applications.img$app <Enter> {::spdAux::PlaceInformationWindowByPath %W applications}
+            ttk::label $w.applications.text$app -text $app_publicname
+            grid $w.applications.img$app -column $column -row $row
+            grid $w.applications.text$app -column $column -row [expr $row +1]
+            incr i
+            incr column
+            if {$column >= 5} {set column 0; incr row; incr row}
+        }
+        grid $w.top
+        grid $w.top.title_text
+
+        grid $w.applications
+
+        # Information panel
+        set spdAux::info_main_window_text ""
+        ttk::labelframe $w.info -text " Information " -relief ridge 
+        ttk::label $w.info.text -textvariable spdAux::info_main_window_text
+        grid $w.info.text
+        grid $w.info -sticky we
+    }
+
+}
+
+proc spdAux::ChangeAppTo {current_launcher appid} {
+    spdAux::deactiveApp $current_launcher
+    spdAux::SetSpatialDimmension undefined
+    apps::setActiveApp $appid
+}
+
+
 proc spdAux::PlaceInformationWindowByPath {win_path what} {
     variable application_window_id
     set app_id [string trimleft $win_path $application_window_id.$what.img]
@@ -158,20 +210,7 @@ proc spdAux::CreateDimensionWindow { } {
         set dir $::Kratos::kratos_private(Path)
         
         set initwind .gid.win_dimension
-        if { [ winfo exist $initwind]} {
-            destroy $initwind
-        }
-        toplevel $initwind
-        wm withdraw $initwind
-        
-        set w $initwind
-        
-        set x [expr [winfo rootx .gid]+[winfo width .gid]/2-[winfo width $w]/2]
-        set y [expr [winfo rooty .gid]+[winfo height .gid]/2-[winfo height $w]/2]
-        
-        wm geom $initwind +$x+$y
-        wm transient $initwind .gid    
-        
+        set w $initwind 
         InitWindow $w [_ "Kratos Multiphysics"] Kratos "" "" 1
         set initwind $w
         spdAux::RegisterWindow $initwind

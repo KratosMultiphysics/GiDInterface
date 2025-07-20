@@ -85,14 +85,15 @@ proc Kratos::CheckProjectIsNew {filespd} {
 proc Kratos::WarnAboutMinimumRecommendedGiDVersion { } {
     variable kratos_private
 
-    if { [GidUtils::VersionCmp $kratos_private(CheckMinimumGiDVersion)] < 0 } {
-        W "Warning: kratos interface requires GiD $kratos_private(CheckMinimumGiDVersion) or later."
-        if { [GidUtils::VersionCmp 14.0.0] < 0 } {
-            W "If you are still using a GiD version 13.1.7d or later, you can still use most of the features, but think about upgrading to GiD 14."
-        } {
-            W "If you are using an official version of GiD 14, we recommend to use the latest developer version"
-        }
-        W "Download it from: https://www.gidhome.com/download/developer-versions/"
+    if { [GidUtils::VersionCmp $kratos_private(MinimumGiDVersion)] < 0 } {
+        W "Warning: kratos interface requires GiD $kratos_private(MinimumGiDVersion) or later."
+        W "Download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
+    }
+    # Check GiD maximum version
+    if { [GidUtils::VersionCmp $kratos_private(MaximumGiDVersion)] > 0 } {
+        W "Warning: kratos interface requires GiD $kratos_private(MaximumGiDVersion) or less."
+        W "You may experience problems with the python packages"
+        W "You can download it from: https://www.gidsimulation.com/gid-for-science/downloads/"
     }
 }
 
@@ -152,7 +153,7 @@ proc Kratos::RegisterEnvironment { } {
     #do not save preferences starting with flag gid.exe -c (that specify read only an alternative file)
     if { [GiD_Set SaveGidDefaults] } {
         variable kratos_private
-        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration]
+        set vars_to_save [list DevMode echo_level mdpa_format debug_folder allow_logs launch_configuration python_path kratos_bin_path docker_image]
         set preferences [dict create]
         foreach v $vars_to_save {
             if {[info exists kratos_private($v)]} {
@@ -199,7 +200,7 @@ proc Kratos::LoadEnvironment { } {
         # W $data
         # Close the file
         close $fp
-        
+
         # Preferences are written in json format
         foreach {k v} [write::json2dict $data] {
             # W "$k $v"
@@ -291,6 +292,112 @@ proc Kratos::GetMeshBasicData { } {
     return $result
 }
 
+proc Kratos::CheckMeshCriteria { elementsize } {
+
+    set force_mesh_order [dict create]
+    set elements_used [spdAux::GetUsedElements]
+    set forced_mesh_order -1
+    foreach element_id $elements_used {
+        set element [Model::getElement $element_id]
+        if {[$element hasAttribute "MeshOrder"]} {
+            set element_forces [$element getAttribute "MeshOrder"]
+            if {$element_forces eq "Quadratic"} {
+                set element_forces 1
+            } else {
+                set element_forces 0
+            }
+            dict set force_mesh_order $element_id $element_forces
+            if {$forced_mesh_order eq -1} {
+                set forced_mesh_order $element_forces
+            } else {
+                if {$forced_mesh_order ne $element_forces} {
+                    # W "The element $element_id requires a different mesh order"
+                    W "Incompatible mesh orders in elements"
+                    return -1
+                }
+            }
+        }        
+    }
+    
+    if {$forced_mesh_order ne -1} {
+        
+        set element [lindex [dict keys $force_mesh_order] 0]
+        set previous_mesh_order [write::isquadratic]
+        set current_mesh_type [Kratos::GetMeshOrderName $previous_mesh_order]
+        set desired_mesh_type [Kratos::GetMeshOrderName $forced_mesh_order]
+        if {$previous_mesh_order ne $forced_mesh_order} {
+            W "The element $element requires a different mesh order: $desired_mesh_type"
+            W "Currently the mesh order is $current_mesh_type. please change it in the menu Mesh > Quadratic type"
+            return -1
+        }
+    }
+    return 0
+}
+
+proc Kratos::GetMeshOrderName {order} {
+    switch $order {
+        0 {return "Linear"}
+        1 {return "Quadratic"}
+        2 {return "Quadratic9"}
+        default {return "Unknown"}
+    }
+}
+
+proc Kratos::SetMeshCriteria { elementsize } {
+
+    set force_mesh_order [dict create]
+    set elements_used [spdAux::GetUsedElements]
+    set forced_mesh_order -1
+    foreach element_id $elements_used {
+        set element [Model::getElement $element_id]
+        if {[$element hasAttribute "MeshOrder"]} {
+            set element_forces [$element getAttribute "MeshOrder"]
+            if {$element_forces eq "Quadratic"} {
+                set element_forces 1
+            } else {
+                set element_forces 0
+            }
+            dict set force_mesh_order $element_id $element_forces
+            if {$forced_mesh_order eq -1} {
+                set forced_mesh_order $element_forces
+            } else {
+                if {$forced_mesh_order ne $element_forces} {
+                    # W "The element $element_id requires a different mesh order"
+                    error "Incompatible mesh orders in elements"
+                }
+            }
+        }        
+    }
+    
+    if {$forced_mesh_order ne -1} {
+        
+    set previous_mesh_order [write::isquadratic]
+        variable mesh_criteria_forced
+        dict set mesh_criteria_forced "PreviousMeshOrder" [write::isquadratic]
+        GiD_Set Model(QuadraticType) $forced_mesh_order
+        set mesh_type "Quadratic"
+        if {$forced_mesh_order eq 0} {
+            set mesh_type "Linear"
+        }
+        ::GidUtils::SetWarnLine "Setting mesh mode: $mesh_type"
+    }
+}
+
+
+proc Kratos::ResetMeshCriteria { fail } {
+    variable mesh_criteria_forced
+    if {[dict exists $mesh_criteria_forced "PreviousMeshOrder"]} {
+        set previous_mesh_order [dict get $mesh_criteria_forced "PreviousMeshOrder"]
+        GiD_Set Model(QuadraticType) $previous_mesh_order
+        set mesh_type "Quadratic"
+        if {$previous_mesh_order eq 0} {
+            set mesh_type "Linear"
+        }
+        ::GidUtils::SetWarnLine "Restoring mesh mode: $mesh_type"
+        dict unset mesh_criteria_forced "PreviousMeshOrder"
+    }
+}
+
 proc ? {question true_val false_val} {
     return [expr $question ? $true_val : $false_val]
 }
@@ -310,8 +417,16 @@ proc Kratos::OpenCaseIn {program} {
 }
 
 if { ![GidUtils::IsTkDisabled] } {
-    proc xmlprograms::OpenBrowserForDirectory { baseframe variable} {
-        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug"]]
+    proc xmlprograms::OpenBrowserForDirectoryDebug { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos debug compiled folder (kratos / bin / debug)"]]
+        return variable
+    }
+    proc xmlprograms::OpenBrowserForDirectoryPython { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select python installation folder (python path, where python3.exe is)"]]
+        return variable
+    }
+    proc xmlprograms::OpenBrowserForDirectoryKratos { baseframe variable} {
+        set $variable [MessageBoxGetFilename directory write [_ "Select kratos compiled folder (kratos / bin / (release | debug))"]]
         return variable
     }
 }
@@ -320,5 +435,18 @@ proc Kratos::IsDeveloperMode {} {
     set is_dev 0
     if {[info exists ::Kratos::kratos_private(DevMode)] && $::Kratos::kratos_private(DevMode) eq "dev"} {set is_dev 1}
     return $is_dev
+}
+
+proc Kratos::GetFilePath { var_name type_names_extensions } {
+    set file [MessageBoxGetFilename file read "Get file" "" $type_names_extensions]
+    # set filename [MessageBoxGetFilename file read [_ "Read HDF5 Vibez file"] {} {{{HDF5 Vibez} {.h5 }} {{All files} {.*}}} {} $multiple [list [_ "Import options"] Vibez::MoreImportOptions]]
+    return $file
+}
+
+if { ![GidUtils::IsTkDisabled] } {
+    proc xmlprograms::GetPythonPath { baseframe variable } {
+        set $variable [Kratos::GetFilePath ::Kratos(python_path) {{{python path} {.exe }} {{All files} {.*}}}]
+        return variable
+    }
 }
 
