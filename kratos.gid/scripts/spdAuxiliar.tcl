@@ -393,18 +393,20 @@ proc spdAux::MergeGroups {result_group_name group_list} {
 
 
 proc spdAux::GetUsedElements {{alt_un ""}} {
+    set lista [list ]
     set root [customlib::GetBaseRoot]
 
     set un $alt_un
     if {$un eq ""} {set un [apps::ExecuteOnCurrentApp write::GetAttribute parts_un]}
 
-    set xp1 "[spdAux::getRoute $un]/group"
-    set lista [list ]
-    foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
-        set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
-        if {$name ni $lista} {lappend lista $name}
-    }
+    if {$un ne ""} {
 
+        set xp1 "[spdAux::getRoute $un]/group"
+        foreach gNode [[customlib::GetBaseRoot] selectNodes $xp1] {
+            set name [write::getValueByNode [$gNode selectNodes ".//value\[@n='Element']"] ]
+            if {$name ni $lista} {lappend lista $name}
+        }
+    }
     return $lista
 }
 
@@ -448,6 +450,14 @@ proc spdAux::RenameIntervalGroup { oldname newname } {
     }
 }
 
+proc spdAux::GetListOfSubModelParts { {stage ""} } {
+    set root [customlib::GetBaseRoot]
+    if {$stage ne ""} {set root $stage}
+    set all_raw [$root selectNodes ".//condition/group"]
+
+    return $all_raw
+}
+
 proc spdAux::GetAppliedGroups { {root ""} } {
     customlib::UpdateDocument
     
@@ -463,9 +473,11 @@ proc spdAux::GetAppliedGroups { {root ""} } {
     }
     return [lsort -unique $group_list]
 }
+
 proc spdAux::RegisterWindow {window_name} {
     variable list_of_windows
     lappend list_of_windows $window_name
 }
+
 
 spdAux::Init
