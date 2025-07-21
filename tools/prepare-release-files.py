@@ -11,6 +11,17 @@ def get_version_number(file_name):
     return version
 
 if __name__ == "__main__":
+
+    # Open kratos.xml and set Production to 1
+    file_name = "../kratos.gid/kratos.xml"
+    tree = ET.parse(file_name)
+    root = tree.getroot()
+    production = root.find('Production')
+    if production is not None:
+        production.text = '1'
+    else:
+        production = ET.SubElement(root, 'Production')
+        production.text = '1'
     
     file_name = "../kratos.gid/kratos.spd"
     version = get_version_number(file_name)

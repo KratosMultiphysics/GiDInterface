@@ -127,6 +127,16 @@ proc spdAux::processAppIncludes { root } {
         if {[$elem hasAttribute "public"]} {set public [$elem getAttribute "public"]}
         set app [apps::NewApp $appid $pn $prefix]
         $app setPublic $public
+
+        # set the app as production ready if the attribute is present
+        if {[$elem hasAttribute "production"] && [$elem getAttribute "production"] eq "1"} {
+            # W "Setting app $appid as production ready = [$elem getAttribute "production"]"
+            $app setProductionReady 1
+        } else {
+            # W "Setting app $appid as production ready = 0"
+            $app setProductionReady 0
+        }
+        
         if {[$elem hasAttribute "is_tool"] } {$app setIsTool [$elem getAttribute "is_tool"]}
 
         if {$active} {

@@ -209,6 +209,14 @@ proc apps::isPublic {appId} {
     return [$app isPublic]
 }
 
+proc apps::isProductionAvailable {appId} {
+    set app [getAppById $appId]
+    if {$app eq ""} {return 0}
+    if {$::Kratos::kratos_private(Production) eq "0"} {return 1}
+    # W "Checking if app $appId is production ready = [$app isProductionReady]"
+    return [$app isProductionReady]
+}
+
 proc apps::CheckElemState {elem inputid {arg ""} } {
     variable activeApp
 
@@ -227,7 +235,7 @@ oo::class create App {
     variable writeCustomEvent
     variable writeValidateEvent
     variable prefix
-    variable release
+    variable production_ready
     variable is_tool
 
     variable properties
@@ -244,6 +252,7 @@ oo::class create App {
         variable public
         variable is_tool
         variable properties
+        variable production_ready
 
         set name $n
         set publicname $n
@@ -263,6 +272,7 @@ oo::class create App {
         set prefix ""
         set public 0
         set is_tool 0
+        set production_ready 0
 
         set properties [dict create ]
         apps::LoadAppProperties [self]
@@ -302,6 +312,8 @@ oo::class create App {
 
     method setPublic {v} {variable public; set public $v}
     method isPublic { } {variable public; return $public}
+    method setProductionReady {v} {variable production_ready; set production_ready $v}
+    method isProductionReady { } {variable production_ready; return $production_ready}
 
     method setIsTool {v} {variable is_tool; set is_tool $v}
     method isTool { } {variable is_tool; return $is_tool}

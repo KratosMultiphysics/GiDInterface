@@ -4,6 +4,7 @@
   <Program>
     <Name>Kratos</Name>
     <Version>10.3.0</Version>
+    <Production>0</Production>
     <ExecutableVersion></ExecutableVersion>
     <MinimumGiDVersion>16.1.10d</MinimumGiDVersion>
     <MaximumGiDVersion>17.99.99d</MaximumGiDVersion>
