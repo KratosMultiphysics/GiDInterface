@@ -22,6 +22,8 @@ if __name__ == "__main__":
     else:
         production = ET.SubElement(root, 'Production')
         production.text = '1'
+    tree.write(file_name)
+    
     
     file_name = "../kratos.gid/kratos.spd"
     version = get_version_number(file_name)

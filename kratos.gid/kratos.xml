@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- -*- coding: utf-8;-*- -->
 <Infoproblemtype version="1.0">
   <Program>
     <Name>Kratos</Name>
     <Version>10.3.0</Version>
     <Production>0</Production>
-    <ExecutableVersion></ExecutableVersion>
+    <ExecutableVersion />
     <MinimumGiDVersion>16.1.10d</MinimumGiDVersion>
     <MaximumGiDVersion>17.99.99d</MaximumGiDVersion>
     <CustomLibAutomatic>0</CustomLibAutomatic>
@@ -48,4 +46,4 @@ Kratos is FREE because is devoted mainly to developers, researchers and students
     </Description>
 
   </Program>
-</Infoproblemtype>
+<Production>1</Production></Infoproblemtype>

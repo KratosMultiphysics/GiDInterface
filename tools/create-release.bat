@@ -25,6 +25,8 @@ git push --tags --force
 cd ..
 mkdir dist
 set FOLDER=dist\kratos-%VERSION%
+@REM delete the folder recursive if it exists
+if exist %FOLDER% rmdir /s /q %FOLDER%
 mkdir %FOLDER%
 xcopy /s/e/y/q kratos.gid %FOLDER%\kratos.gid\
 copy LICENSE.md %FOLDER%\kratos.gid\LICENSE.md
