@@ -167,7 +167,7 @@ proc Kratos::InitGlobalVariables {dir} {
     # Is using files modules
     set kratos_private(UseFiles) 0
     # Variables from the problemtype definition (kratos.xml)
-    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version MinimumGiDVersion MaximumGiDVersion}]
+    array set kratos_private [ReadProblemtypeXml [file join $kratos_private(Path) kratos.xml] Infoproblemtype {Name Version MinimumGiDVersion MaximumGiDVersion Production}]
 
     variable namespaces
     set namespaces [list ]
