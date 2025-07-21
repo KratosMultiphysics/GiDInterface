@@ -105,7 +105,7 @@ proc Kratos::LoadProblemtypeLibraries {} {
 
     gid_groups_conds::SetProgramName $kratos_private(Name)
     gid_groups_conds::SetLibDir [file join $kratos_private(Path) exec]
-    set spdfile [file join $kratos_private(Path) kratos_default.spd]
+    set spdfile [file join $kratos_private(Path) kratos.spd]
     if {[llength [info args {gid_groups_conds::begin_problemtype}]] eq 4} {
         gid_groups_conds::begin_problemtype $spdfile [Kratos::GiveKratosDefaultsFile] ""
     } {
