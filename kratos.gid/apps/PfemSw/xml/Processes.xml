@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+
+	<Process
+        n="DepthIntegrationOutputProcess" 
+        pn="DepthIntegrationOutputProcess"
+        python_module="depth_integration_output_process"
+        kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
+		<inputs>
+            <!-- <parameter n="volume_model_part_name" pn="Volume model part" help="This is the computing part, doesnt need to be selected by the user"/> -->
+            <!-- <parameter n="interface_model_part_name" pn="Interface model part" help="An interface belonging to the PFEM structure/fixed domain"/> -->
+            <parameter n="output_model_part_name" pn="Output model part name" v="Interface" help="This name must be in accordance with the shallow water input model part name. It is an auxiliary name and the corresponding model part mustnt exist"/>
+            <parameter n="store_historical_database" pn="Store historical database" type="bool" v="0"/>
+            <parameter n="extrapolate_boundaries" pn="Extrapolate boundaries" type="bool" v="0"/>
+            <parameter n="print_velocity_profile" pn="Print velocity profile" type="bool" v="0"/>
+            <!-- <parameter n="file_settings" pn="File settings" help="container of output file settings"/> -->
+            <!-- <parameter n="file_name" pn="File name" v="hdf5/<model_part_name>-<time>.h5" help="The path must be in accordance with the shallow water simulation"/> -->
+            <!-- <parameter n="output_time_settings" pn="Output time settings" help="container of output time settings"/> -->
+            <parameter n="step_frequency" pn="step_frequency" v="10" />
+		</inputs>
+	</Process>
+
+	<Process
+        n="DepthIntegrationInputProcess"
+        pn="DepthIntegrationInputProcess"
+        python_module="depth_integration_input_process"
+        kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
+		<inputs>
+            <!-- <parameter n="interface_model_part_name" pn="Interface model part" help="The boundary condition belonging to the shallow water domain."/> -->
+            <parameter n="input_model_part_name" pn="Input model part name" v="Interface" help="This name must be in accordance with the PFEM output model part name. It is an auxiliary name and the corresponding model part mustnt exist"/>
+            <parameter n="read_historical_database" pn="Read historical database" type="bool" v="0" help="This option must be the same than the one selected on the PFEM settings."/>
+            <!-- <parameter n="list_of_variables" pn="List of variables" v="MOMENTUM"/> -->
+            <!-- <parameter n="list_of_variables_to_fix" pn="List of variables to fix" v="MOMENTUM_X,MOMENTUM_Y"/> -->
+            <parameter n="smooth_solution_after_interval" pn="Smooth solution after interval" type="bool" v="1"/>
+            <parameter n="default_time_after_interval" pn="Default time after interval" type="double" v="0.0" help="This time step will be applied after the interval."/>
+            <parameter n="semi_period_after_interval" pn="Semi period after interval" type="double" v="1.0" help="The exponential decay between the last value read and the default value."/>
+            <parameter n="swap_yz_axis" pn="Swap YZ axis" type="bool" v="0" help="Select this option whether the gravity vector is orthogonal among the PFEM and SW simulations"/>
+            <parameter n="ignore_vertical_component" pn="Ignore vertical component" type="bool" v="1" help="Ignore the Z component of the vector applied a SW BC."/>
+            <!-- <parameter n="file_settings" pn="File settings" help="container of output file settings"/> -->
+            <!-- <parameter n="file_name" pn="File name" v="../pfem/hdf5/<model_part_name>-<time>.h5" help="The path must be in accordance with the PFEM simulation"/> -->
+		</inputs>
+	</Process>
+
+	<Process
+        n="DepthExtrapolationOutputProcess"
+        pn="DepthExtrapolationOutputProcess"
+        python_module="depth_extrapolation_output_process"
+        kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
+		<inputs>
+		</inputs>
+	</Process>
+
+	<Process
+        n="DepthExtrapolationInputProcess"
+        pn="DepthExtrapolationInputProcess"
+        python_module="DepthExtrapolationInputProcess"
+        kratos_module="KratosMultiphysics.ShallowWaterApplication.coupling">
+		<inputs>
+		</inputs>
+	</Process>
+
+</ProcessList>

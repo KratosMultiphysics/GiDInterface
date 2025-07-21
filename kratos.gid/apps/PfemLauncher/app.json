@@ -6,7 +6,7 @@
     ],
     "start_script":"::PfemLauncher::Init",
     "requirements":{
-        "display_apps":["PfemFluid", "DEMPFEM", "PfemThermic", "PfemMelting"],
+        "display_apps":["PfemFluid", "DEMPFEM", "PfemThermic", "PfemMelting", "PfemSw"],
         "minimum_gid_version":"15.1.3d"
     },
     "permissions": {
