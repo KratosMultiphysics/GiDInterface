@@ -130,7 +130,6 @@ proc write::writeGroupConditionByUniqueId {groupid kname nnodes iter ConditionMa
     return $iter
 }
 
-
 proc write::writeConditionGroupedSubmodelPartsByUniqueId {cid groups_dict conditions_map} {
     set s [mdpaIndent]
     WriteString "${s}Begin SubModelPart $cid // Condition $cid"
@@ -222,4 +221,3 @@ proc write::writeGroupSubModelPartByUniqueId { cid group ConditionsMap {what "El
     if {[GetConfigurationAttribute time_monitor]} {set endtime [clock seconds]; set ttime [expr {$endtime-$inittime}]; W "writeGroupSubModelPartByUniqueId $group time: [Kratos::Duration $ttime]"}
     return $mid
 }
-

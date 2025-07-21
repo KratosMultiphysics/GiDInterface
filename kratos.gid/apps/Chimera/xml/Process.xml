@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ProcessList>
+
+	<!--Kratos base process -->
+	<Process n="ChimeraInternalBoundary" pn="ChimeraInternalBoundary" python_module="python_process" kratos_module="KratosMultiphysics" help="Python processes empty base class which does nothing">
+		<inputs>
+		</inputs>
+	</Process>
+</ProcessList>

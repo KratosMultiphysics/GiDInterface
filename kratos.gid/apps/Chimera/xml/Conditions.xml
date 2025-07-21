@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConditionList>
+
+  <ConditionItem n="ChimeraInternalBoundary3D" pn="Chimera internal boundary" ImplementedInFile=".cpp" Interval="False"
+  ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="3D" LocalSpaceDimension="2" SkinConditions="False"
+  VariableName="Interface" App="Fluid" ElementType="Surface" ProcessName="ChimeraInternalBoundary" help="Fixes the pressure to a constant scalar value." >
+    <TopologyFeatures>
+      <item GeometryType="Triangle" nodes="3" KratosName="LineCondition3D3N"/>
+    </TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+  <ConditionItem n="ChimeraInternalBoundary2D" pn="Chimera internal boundary" ImplementedInFile=".cpp" Interval="False"
+  ImplementedInApplication="FluidApplication" MinimumKratosVersion="9000" ProductionReady="ProductionReady" WorkingSpaceDimension="2D" LocalSpaceDimension="1" SkinConditions="False"
+  VariableName="Interface" App="Fluid" ElementType="Line" ProcessName="ChimeraInternalBoundary" help="Fixes the pressure to a constant scalar value." >
+    <TopologyFeatures>
+      <item GeometryType="Line" nodes="2" KratosName="LineCondition2D2N"/>
+    </TopologyFeatures>
+    <DegreesOfFreedom></DegreesOfFreedom>
+    <inputs></inputs>
+    <outputs></outputs>
+  </ConditionItem>
+
+</ConditionList>

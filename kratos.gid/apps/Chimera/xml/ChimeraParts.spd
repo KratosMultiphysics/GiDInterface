@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<condition n="ChimeraParts" pn="Chimera patches" ov="[CheckGeometry 1]" ovm="node,element" icon="Import16" un="ChimParts">
+    <value n="overlap_distance" pn="Overlap distance" v="0.8"></value>
+</condition>

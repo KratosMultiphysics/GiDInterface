@@ -257,7 +257,10 @@ proc ::Fluid::write::writeConditionsMesh { } {
     foreach group [$root selectNodes $xp1] {
         set groupid [$group @n]
         set groupid [write::GetWriteGroupName $groupid]
-        set condid [[$group parent] @n]
+        set condnode [$group parent]
+        set condid [$condnode @n]
+        set print_smp [get_domnode_attribute $condnode print_smp 1]
+        if {[write::isBooleanFalse $print_smp]} {continue}
         set cond [::Model::getCondition $condid]
         if {[$cond getGroupBy] eq "Condition"} {
             # Grouped conditions will be written later
@@ -285,7 +288,20 @@ proc ::Fluid::write::writeConditionsMesh { } {
     }
 }
 
+proc Fluid::write::GetFluidPartGroups { } {
+    set xp "[spdAux::getRoute [GetAttribute parts_un]]/group"
+    set root [customlib::GetBaseRoot]
+    set parts_name_list [list]
+    foreach group [$root selectNodes $xp] {
+        lappend parts_name_list [get_domnode_attribute $group n]
+    }
+    return $parts_name_list
+}
+
+proc Fluid::write::InitConditionsMap { {map "" } } {
 # Overwrite this function to print something at the end of the mdpa
+
+}
 proc ::Fluid::write::writeCustomBlocks { } {
     
 }

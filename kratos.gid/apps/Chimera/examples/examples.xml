@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Group id="Chimera" name="Chimera examples">
+    <Example id="ChimeraCross2D" app="Chimera" logo="HighRiseBuilding2D.png" name="Chimera Cross" dim="2D" cmd="::Chimera::examples::ChimeraCross::Init">
+        <Description>This example applies an inlet condition to the air surrounding a 2D building.
+        The default mesh is made of 4.000 trianglular elements, and the calculation generates results for 800 timesteps.
+        - Size of model: 0.4 MB
+        - Time: Avg calulation time: 2 minutes
+        - Size with results: 250 MB
+        </Description>
+    </Example>
+</Group>

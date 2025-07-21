@@ -205,7 +205,6 @@ proc write::getSubModelPartNames { args } {
     return $listOfProcessedGroups
 }
 
-
 proc write::GetSubModelPartFromCondition { base_UN condition_id } {
     
     set root [customlib::GetBaseRoot]
