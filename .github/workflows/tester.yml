@@ -19,7 +19,7 @@ jobs:
     if: github.event_name != 'pull_request' || github.event.label.name == 'safe-to-test'
 
     # The type of runner that the job will run on
-    runs-on: [self-hosted, kratos-runner]
+    runs-on: [self-hosted]
 
     env:
       GITHUB_ACTION: true
